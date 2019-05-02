@@ -2,60 +2,99 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257B5C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFECC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF79A2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF9020873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:15:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cw7o1hcl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfEBHOq (ORCPT
+        id S1726399AbfEBHPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 03:14:46 -0400
-Received: from mga11.intel.com ([192.55.52.93]:30653 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbfEBHOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 03:14:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 00:14:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,420,1549958400"; 
-   d="scan'208";a="147482633"
-Received: from mylly.fi.intel.com (HELO [10.237.72.57]) ([10.237.72.57])
-  by orsmga003.jf.intel.com with ESMTP; 02 May 2019 00:14:43 -0700
-Subject: Re: [PATCH v2] mfd: intel-lpss: Add Intel Comet Lake PCI IDs
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        Evan Green <evgreen@chromium.org>
-References: <20190430165626.31639-1-andriy.shevchenko@linux.intel.com>
-From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Message-ID: <6f789244-64b9-bd1f-6a9e-e5aeacbf2407@linux.intel.com>
-Date:   Thu, 2 May 2019 10:14:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 03:15:03 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46544 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbfEBHPC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 03:15:02 -0400
+Received: by mail-io1-f66.google.com with SMTP id m14so1159427ion.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 00:15:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0j/hy+dXgc/RAD1S28k76wVU38bkzXROFiJee/uy828=;
+        b=cw7o1hclMVDYD/mFSXXORj8k6owJ56onVZPfH09xygF9uxK4qjYMP+dvtxhcH8xSVX
+         unyG8nRFxcr+vKPkF0aqwp2FJ6t44k02rHFxIP+3FZID4voAH48LxjsffUcNfI48hlpj
+         BQg/QNZnuXxe64Uy2niIYoZzJcqprwnFK7Yuy3zilrCeV1kZ4m9oX3GRQ9kCnwpgy4W2
+         JXTyOvMsSYAwZF/xGCUjdWF/2z6GsXLBZMuWpHsx2EaYhZC0qLPwvipUzFrBHsxhU8Pi
+         awPEKVdHmGODJf6c0uVZCgrNapYJCSfmu/I5c13IkBxSvbyGyEoMguLbtWCYdtlebfxi
+         CZBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0j/hy+dXgc/RAD1S28k76wVU38bkzXROFiJee/uy828=;
+        b=UJhk/oHwAu2Asj4nACvjUsOZPhFq2fDqlnPF8F/wbqUDTKPeL0dix7OVh87iuu7jzA
+         CtP0vz+JZQm7/kniibd1vvY/zo3irmcUW28mapSN7KVTSjydUpjkD5P3Edychl2mK3s3
+         wUCwwCqEbBteNJhc4mc/ZhFoBz5FgaVtTzdobpxXLy4ENhKuTwh8vbBFkKIAX8ktKMvr
+         6fMGe42HYHkkqkGIvhFZ6rEAog3K6sqSo/oLCMDYZQpgb/dfehJj9xTo/njJIAnfISq3
+         ALB1Rjkg0X+UCk1DfamdAgmewx7MUGhv/1+ukJrI+EY+4nT7sbY0CcwqxwfgM6sNQlWI
+         GMVQ==
+X-Gm-Message-State: APjAAAUs46AiORmNRJ8GO5tch6cZhk6Y1dpdLcrqXyyawZ1Khb9CA0Us
+        oFF26vhsf14Nc+lmP3jfwCP4k4ERrXy+iFWDNuULbg==
+X-Google-Smtp-Source: APXvYqyLXFhanRapf4HA+mfoEWHn5Jxfo9LLiiHWDJl2//wytx+jBGTeO77YmBHW8+v51a7Y5BRQwKsa/QawpWYEXPg=
+X-Received: by 2002:a6b:7b47:: with SMTP id m7mr1443589iop.173.1556781301704;
+ Thu, 02 May 2019 00:15:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190430165626.31639-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190227202658.197113-1-matthewgarrett@google.com>
+ <20190227202658.197113-3-matthewgarrett@google.com> <CAJzaN5pUJoOCz5-ZDSnTb6dbVPuy0QwmFD0CeofAGK+bRQx0og@mail.gmail.com>
+ <CACdnJutpBPAX6TOGgs3Ng2v_cC5hAf-3pHThESvjQ9vbvQeVkA@mail.gmail.com>
+In-Reply-To: <CACdnJutpBPAX6TOGgs3Ng2v_cC5hAf-3pHThESvjQ9vbvQeVkA@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 2 May 2019 09:14:49 +0200
+Message-ID: <CAKv+Gu9PF4u=-7QL4e36Q3S5kC4+5Z=yLYHLT9jE+eNY7YUV7A@mail.gmail.com>
+Subject: Re: [PATCH V5 2/4] tpm: Reserve the TPM final events table
+To:     Matthew Garrett <mjg59@google.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Bartosz Szczepanek <bsz@semihalf.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/30/19 7:56 PM, Andy Shevchenko wrote:
-> Intel Comet Lake has the same LPSS than Intel Cannon Lake.
-> Add the new IDs to the list of supported devices.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> - update i2c info
->   drivers/mfd/intel-lpss-pci.c | 13 +++++++++++++
->   1 file changed, 13 insertions(+)
-> 
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+(+ Ingo)
+
+On Tue, 30 Apr 2019 at 21:52, Matthew Garrett <mjg59@google.com> wrote:
+>
+> On Tue, Apr 30, 2019 at 6:07 AM Bartosz Szczepanek <bsz@semihalf.com> wrote:
+> >
+> > I may be a little late with this comment, but I've just tested these
+> > patches on aarch64 platform (from the top of jjs/master) and got
+> > kernel panic ("Unable to handle kernel read", full log at the end of
+> > mail). I think there's problem with below call to
+> > tpm2_calc_event_log_size(), where physical address of efi.tpm_log is
+> > passed as (void *) and never remapped:
+>
+> Yes, it looks like this is just broken. Can you try with the attached patch?
+
+I'm a bit uncomfortable with EFI code that is obviously broken and
+untested being queued for the next merge window in another tree.
+
+What is currently queued there? Can we revert this change for the time
+being, and resubmit it via the EFI tree for v5.3?
