@@ -2,245 +2,241 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CA7C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394DDC46460
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD04205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFD802085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:28:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="com3sCaU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfEBO2q (ORCPT
+        id S1726379AbfEBO25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:28:46 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.36]:19117 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726197AbfEBO2q (ORCPT
+        Thu, 2 May 2019 10:28:57 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:53815 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfEBO24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:28:46 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 36DF1400D7A2E
-        for <linux-kernel@vger.kernel.org>; Thu,  2 May 2019 09:28:44 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id MChYhIyKviQerMChYhyVJ8; Thu, 02 May 2019 09:28:44 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.119.203] (port=55820 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hMChX-000a4y-Fh; Thu, 02 May 2019 09:28:43 -0500
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190501213329.GA26972@embeddedor>
- <20190502102608.GS26546@localhost>
- <df1feb28-58d0-7ac8-644d-0b48e5078edf@embeddedor.com>
- <20190502135636.GT26546@localhost>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH v2] USB: serial: io_edgeport: mark expected switch
- fall-throughs
-Message-ID: <f3fd7ece-98ff-4b67-6115-5f599e183508@embeddedor.com>
-Date:   Thu, 2 May 2019 09:28:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 10:28:56 -0400
+Received: by mail-it1-f196.google.com with SMTP id l10so3626138iti.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 07:28:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BqHJ4mKCqV4ZGSDIdcnHrlBfq1c/O0ILprJjcbsuKxg=;
+        b=com3sCaUbNmDKYX9/c5R+Szvf04X7EZ4tn/wfCS/BU0LTNv6c+nRVC4wASCSoqTjhz
+         Cn4K7TqAYCy6JbLvppR/ADv/CBq8EBhfNp9GTjKKe96GJewCZvF4Pch1lfqzBBmBFmsC
+         hot8x00MO/pDkp48ppQmvOT2nA1ueTrdl+wlE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BqHJ4mKCqV4ZGSDIdcnHrlBfq1c/O0ILprJjcbsuKxg=;
+        b=Qw0p/6D3uMlMGKFFTfCCcy1JPQUfuGes1JWgKkE0o8w0qkLCDf7fhr/raa6QAe6VTb
+         zCXBO5pYZ1Gt0O3ckGxanUVRD4eaOtOYcHx5z9NTI6hgsdawIstCYCY1b2Y3quPsfVXW
+         zJRFNChXlDEPVKcA2Ymh/G6omxDro8lRAhFjPLqQu3EJWZWzBdY/dPWfrnyePyB2927Q
+         4SvtkhrUnWvx3BIeBY2R9DSvckgZ789cztGuN84lyY4kTtSUKXGWkIDSfp8ktTorBhsM
+         DZ0p30BUw6DnHaq4JfK1H5dW7+pB+f5xbi3qYxqC041af4/Rl2Eodq7HR5Gu7DmBuM/4
+         aZaw==
+X-Gm-Message-State: APjAAAWiAkE7ke13olZWlupvJ8uGSfFg9VZjp8uPpzCTTBu+QrKbUvCs
+        YDLiFswuJcPFIW05NhPSJ1UHNH6CcdNuSHGsHLoduQ==
+X-Google-Smtp-Source: APXvYqwiDaSe7oR13TqnAe4ifdblvh6sX0UjdKbinWlL2NINaz4O5wVQDsGbSp4jFuCH25uLqaqshcY7ngDOXzPt63U=
+X-Received: by 2002:a24:b342:: with SMTP id z2mr2342309iti.121.1556807335385;
+ Thu, 02 May 2019 07:28:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190502135636.GT26546@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.119.203
-X-Source-L: No
-X-Exim-ID: 1hMChX-000a4y-Fh
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.119.203]:55820
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
+ <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
+ <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
+ <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
+ <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com>
+ <875zqt4igg.fsf@notabene.neil.brown.name> <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com>
+In-Reply-To: <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Thu, 2 May 2019 10:28:44 -0400
+Message-ID: <CAJfpegsthQn_=3AQJf7ojxoQBpHMA3dz1fCBjNZXsCA1E0oqnw@mail.gmail.com>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     NeilBrown <neilb@suse.com>, Amir Goldstein <amir73il@gmail.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 2, 2019 at 10:05 AM Andreas Gruenbacher <agruenba@redhat.com> w=
+rote:
+>
+> On Thu, 2 May 2019 at 05:57, NeilBrown <neilb@suse.com> wrote:
+> > On Wed, May 01 2019, Amir Goldstein wrote:
+> > > On Wed, May 1, 2019 at 10:03 PM NeilBrown <neilb@suse.com> wrote:
+> > >> On Tue, Dec 06 2016, J. Bruce Fields wrote:
+> > >> > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrot=
+e:
+> > >> >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.h=
+u> wrote:
+> > >> >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
+> > >> >> > <andreas.gruenbacher@gmail.com> wrote:
+> > >> >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.gru=
+enbacher@gmail.com>:
+> > >> >> >
+> > >> >> >>> It's not hard to come up with a heuristic that determines if =
+a
+> > >> >> >>> system.nfs4_acl value is equivalent to a file mode, and to ig=
+nore the
+> > >> >> >>> attribute in that case. (The file mode is transmitted in its =
+own
+> > >> >> >>> attribute already, so actually converting .) That way, overla=
+yfs could
+> > >> >> >>> still fail copying up files that have an actual ACL. It's sti=
+ll an
+> > >> >> >>> ugly hack ...
+> > >> >> >>
+> > >> >> >> Actually, that kind of heuristic would make sense in the NFS c=
+lient
+> > >> >> >> which could then hide the "system.nfs4_acl" attribute.
+>
+> I still think the nfs client could make this problem mostly go away by
+> not exposing "system.nfs4_acl" xattrs when the acl is equivalent to
+> the file mode. The richacl patches contain a workable abgorithm for
+> that. The problem would remain for files that have an actual NFS4 ACL,
+> which just cannot be mapped to a file mode or to POSIX ACLs in the
+> general case, as well as for files that have a POSIX ACL. Mapping NFS4
+> ACL that used to be a POSIX ACL back to POSIX ACLs could be achieved
+> in many cases as well, but the code would be quite messy. A better way
+> seems to be to using a filesystem that doesn't support POSIX ACLs in
+> the first place. Unfortunately, xfs doesn't allow turning off POSIX
+> ACLs, for example.
 
+How about mounting NFSv4 with noacl?  That should fix this issue, right?
 
-On 5/2/19 8:56 AM, Johan Hovold wrote:
-> On Thu, May 02, 2019 at 08:22:30AM -0500, Gustavo A. R. Silva wrote:
->>
->>
->> On 5/2/19 5:26 AM, Johan Hovold wrote:
->>> On Wed, May 01, 2019 at 04:33:29PM -0500, Gustavo A. R. Silva wrote:
->>>> In preparation to enabling -Wimplicit-fallthrough, mark switch
->>>> cases where we are expecting to fall through.
->>>>
->>>> This patch fixes the following warnings:
->>>>
->>>> drivers/usb/serial/io_edgeport.c: In function ‘process_rcvd_data’:
->>>> drivers/usb/serial/io_edgeport.c:1750:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>>>     if (bufferLength == 0) {
->>>>        ^
->>>> drivers/usb/serial/io_edgeport.c:1755:3: note: here
->>>>    case EXPECT_HDR2:
->>>>    ^~~~
->>>> drivers/usb/serial/io_edgeport.c:1810:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>>>      if (bufferLength == 0) {
->>>>         ^
->>>> drivers/usb/serial/io_edgeport.c:1816:3: note: here
->>>>    case EXPECT_DATA: /* Expect data */
->>>>    ^~~~
->>>>
->>>> Warning level 3 was used: -Wimplicit-fallthrough=3
->>>>
->>>> Notice that, in this particular case, the code comments are modified
->>>> in accordance with what GCC is expecting to find.
->>>>
->>>> This patch is part of the ongoing efforts to enable
->>>> -Wimplicit-fallthrough.
->>>>
->>>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>>> ---
->>>> Changes in v2:
->>>>  - Warning level 3 is now used: -Wimplicit-fallthrough=3
->>>>    instead of warning level 2.
->>>>  - All warnings in the switch statement are addressed now.
->>>>
->>>> Notice that these are the last remaining fall-through warnings
->>>> in the USB subsystem. :)
->>>
->>>>  drivers/usb/serial/io_edgeport.c | 3 ++-
->>>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
->>>> index 4ca31c0e4174..7ad10328f4e2 100644
->>>> --- a/drivers/usb/serial/io_edgeport.c
->>>> +++ b/drivers/usb/serial/io_edgeport.c
->>>> @@ -1751,7 +1751,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
->>>>  				edge_serial->rxState = EXPECT_HDR2;
->>>>  				break;
->>>>  			}
->>>> -			/* otherwise, drop on through */
->>>> +			/* Fall through - otherwise, drop on through */
->>>>  		case EXPECT_HDR2:
->>>>  			edge_serial->rxHeader2 = *buffer;
->>>>  			++buffer;
->>>> @@ -1813,6 +1813,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
->>>>  				}
->>>>  				/* Else, drop through */
->>>>  			}
->>>> +			/* Fall through */
->>>>  		case EXPECT_DATA: /* Expect data */
->>>
->>> Looks like you forgot to take the original review feedback you got into
->>> account:
->>>
->>> 	https://lkml.kernel.org/r/87k1zf4k24.fsf@miraculix.mork.no
->>>
->>
->> Oh, the thing is that the fall-through comments have to be placed at
->> the very bottom of the case. Also, based on that feedback, this time
->> I left the "Else, drop through" comment in place, so people can be
->> informed that such fall-through is conditional.
->>
->> What do you think about this:
->>
->> diff --git a/drivers/usb/serial/io_edgeport.c b/drivers/usb/serial/io_edgeport.c
->> index 4ca31c0e4174..52f27fc82563 100644
->> --- a/drivers/usb/serial/io_edgeport.c
->> +++ b/drivers/usb/serial/io_edgeport.c
->> @@ -1751,7 +1751,7 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
->>                                 edge_serial->rxState = EXPECT_HDR2;
->>                                 break;
->>                         }
->> -                       /* otherwise, drop on through */
->> +                       /* Fall through - otherwise, drop on through */
->>                 case EXPECT_HDR2:
->>                         edge_serial->rxHeader2 = *buffer;
->>                         ++buffer;
->> @@ -1813,6 +1813,11 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
->>                                 }
->>                                 /* Else, drop through */
->>                         }
->> +                       /* Beware that, currently, there are at least three
->> +                        * break statements in this case block, so the
->> +                        * fall-through marked below is NOT unconditional.
->> +                        */
->> +                       /* Fall through */
->>                 case EXPECT_DATA: /* Expect data */
->>                         if (bufferLength < edge_serial->rxBytesRemaining) {
->>                                 rxLen = bufferLength;
-> 
-> It's better than v2, but I thought you said you were gonna look into
-> restructuring the code to maintain (or even improve) readability?
-> 
-
-At first, I thought about that, but now I don't think that's realistic.
-I'd turn the if-else into a switch, and based on the history of feedback
-on this patch, we will end up having the same complains about the break
-statements in that new switch and the possibility of a fall-through to
-case EXPECT_DATA. At the end I would still have to add a comment explaining
-that the last fall-through mark in unconditional.
-
-Thanks
---
-Gustavo
+Thanks,
+Miklos
 
 
 
-
-
+>
+> Andreas
+>
+> > >> >> > Even simpler would be if knfsd didn't send the attribute if not
+> > >> >> > necessary.  Looks like there's code actively creating the nfs4_=
+acl on
+> > >> >> > the wire even if the filesystem had none:
+> > >> >> >
+> > >> >> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
+> > >> >> >     if (!pacl)
+> > >> >> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL)=
+;
+> > >> >> >
+> > >> >> > What's the point?
+> > >> >>
+> > >> >> That's how the protocol is specified.
+> > >> >
+> > >> > Yep, even if we could make that change to nfsd it wouldn't help th=
+e
+> > >> > client with the large number of other servers that are out there
+> > >> > (including older knfsd's).
+> > >> >
+> > >> > --b.
+> > >> >
+> > >> >> (I'm not saying that that's very helpful.)
+> > >> >>
+> > >> >> Andreas
+> > >>
+> > >> Hi everyone.....
+> > >>  I have a customer facing this problem, and so stumbled onto the ema=
+il
+> > >>  thread.
+> > >>  Unfortunately it didn't resolve anything.  Maybe I can help kick th=
+ings
+> > >>  along???
+> > >>
+> > >>  The core problem here is that NFSv4 and ext4 use different and larg=
+ely
+> > >>  incompatible ACL implementations.  There is no way to accurately
+> > >>  translate from one to the other in general (common specific example=
+s
+> > >>  can be converted).
+> > >>
+> > >>  This means that either:
+> > >>    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
+> > >>       versa) or
+> > >>    2/ overlayfs need to accept that sometimes it cannot copy ACLs, a=
+nd
+> > >>       that is OK.
+> > >>
+> > >>  Silently not copying the ACLs is probably not a good idea as it mig=
+ht
+> > >>  result in inappropriate permissions being given away.
+> > >
+> > > For example? permissions given away to do what?
+> > > Note that ovl_permission() only check permissions of *mounter*
+> > > to read the lower NFS file and ovl_open()/ovl_read_iter() access
+> > > the lower file with *mounter* credentials.
+> > >
+> > > I might be wrong, but seems to me that once admin mounted
+> > > overlayfs with lower NFS, NFS ACLs are not being enforced at all
+> > > even before copy up.
+> >
+> > I guess it is just as well that copy-up fails then - if the lower-level
+> > permission check is being ignored.
+> >
+> > >
+> > >> So if the
+> > >>  sysadmin wants this (and some clearly do), they need a way to
+> > >>  explicitly say "I accept the risk".  If only standard Unix permissi=
+ons
+> > >>  are used, there is no risk, so this seems reasonable.
+> > >>
+> > >>  So I would like to propose a new option for overlayfs
+> > >>     nocopyupacl:   when overlayfs is copying a file (or directory et=
+c)
+> > >>         from the lower filesystem to the upper filesystem, it does n=
+ot
+> > >>         copy extended attributes with the "system." prefix.  These a=
+re
+> > >>         used for storing ACL information and this is sometimes not
+> > >>         compatible between different filesystem types (e.g. ext4 and
+> > >>         NFSv4).  Standard Unix ownership permission flags (rwx) *are=
+*
+> > >>         copied so this option does not risk giving away inappropriat=
+e
+> > >>         permissions unless the lowerfs uses unusual ACLs.
+> > >>
+> > >>
+> > >
+> > > I am wondering if it would make more sense for nfs to register a
+> > > security_inode_copy_up_xattr() hook.
+> > > That is the mechanism that prevents copying up other security.*
+> > > xattrs?
+> >
+> > No, I don't think that would make sense.
+> > Support some day support for nfs4 acls were added to ext4 (not a totall=
+y
+> > ridiculous suggestion).  We would then want NFS to allow it's ACLs to b=
+e
+> > copied up.
+> >
+> > Thanks,
+> > NeilBrown
+> >
+> >
+> > >
+> > > Thanks,
+> > > Amir.
