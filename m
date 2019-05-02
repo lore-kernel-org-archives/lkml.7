@@ -2,136 +2,140 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22ECC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA06CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08CF20651
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="Ix+JXVfo"
+	by mail.kernel.org (Postfix) with ESMTP id B1FC820B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbfEBTup (ORCPT
+        id S1726730AbfEBTuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 15:50:45 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43380 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbfEBTui (ORCPT
+        Thu, 2 May 2019 15:50:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:42318 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfEBTuy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 15:50:38 -0400
-Received: by mail-qt1-f196.google.com with SMTP id g4so4054103qtq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 12:50:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IADIU/EJ9FI/G06p19V/c4J8lEcHwqipgCGxkBiLylg=;
-        b=Ix+JXVfo5ioRlNyP7UOsKwtCE1OZDBhyykPeRvW+abKdoCm2K5Iwhtt9QaXnM5CyQT
-         QFEfeE1IT/KketqZA5YmdbDSrdGnTEUv2hi+OaOgcE3WEG+scLnzz/ecldOczc8PblKe
-         w7t7g/f+LUB23NhiJqV/Amje431fC0KPD9WcMUVbNEwBA38DsWzYUpXxpNdRvbVnzuS6
-         RULSnXewuPeKU00sikjI+d2D1Cmc+ZpvMfPDTcg54RpVtubQsm7pvWnTiOYhTRig4Sod
-         0yy24k5oVH7rnk8M4EnOgcCx+k/lrqn5jGBDkzYlVas4d8kBKOK0DSjkrRHQddd8i0l5
-         zCFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IADIU/EJ9FI/G06p19V/c4J8lEcHwqipgCGxkBiLylg=;
-        b=pfXHg26uXHQV+Z9KB3DBR7FJZ7A/Rk1pF/JzVXOZ8esetRzFex18VMDS8LRovQfYKA
-         M8YVys2lAuAocXNJDQ9kGPZMZ/4Z0giM554K1ZHvCEXv8eRhXiBaUg/1d3Ae/ajgXcMl
-         b5+0iRlObz9SpB2tyM5SaiMNnpn/XilApwRJjFKtgBeMW7jk4HtEH8T2lCkuEsy86YTF
-         wVvwknO9jKewAVZ8KGr97x1f+0i+KHLJLnXP8nMzT6PW/T99Pt7jHOnrYpFztWv3B1oO
-         CTGDyuOLzDvqrl9futrHDz/0jdSBiGooiZ8IzGMejf4cIFG9M58tHnPzfyG1awo8BsfJ
-         GxwQ==
-X-Gm-Message-State: APjAAAWRRFG9ByLcstzQlXa5GVM/6zyZgT2dwB+/zA1O8Y89+fbAb55b
-        I/316ooCzl8mfNEUGFehQGa+Cg==
-X-Google-Smtp-Source: APXvYqxoEjvDEwkFiRYlf8cfhBENPjVWtZtE47VplWYS6ASODl3pXsDRHDYt5Doku3c45vfLjiwn3g==
-X-Received: by 2002:ac8:3166:: with SMTP id h35mr4853635qtb.268.1556826637769;
-        Thu, 02 May 2019 12:50:37 -0700 (PDT)
-Received: from rosewood.cam.corp.google.com ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id k36sm34366qtc.52.2019.05.02.12.50.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 12:50:37 -0700 (PDT)
-From:   Sean Paul <sean@poorly.run>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Sean Paul <seanpaul@chromium.org>, Zain Wang <wzz@rock-chips.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/10] drm/rockchip: Use drm_atomic_helper_commit_tail_rpm
-Date:   Thu,  2 May 2019 15:49:52 -0400
-Message-Id: <20190502194956.218441-11-sean@poorly.run>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-In-Reply-To: <20190502194956.218441-1-sean@poorly.run>
-References: <20190502194956.218441-1-sean@poorly.run>
+        Thu, 2 May 2019 15:50:54 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id A84AF28423D
+Received: by earth.universe (Postfix, from userid 1000)
+        id 65A1B3C0D1B; Thu,  2 May 2019 21:50:49 +0200 (CEST)
+Date:   Thu, 2 May 2019 21:50:49 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+Subject: Re: [PATCH v14 7/8] power: supply: Initial support for ROHM BD70528
+ PMIC charger block
+Message-ID: <20190502195049.brysexbyyq7khtr4@earth.universe>
+References: <cover.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
+ <eece016c86483d55befab1a06fb299c9d6d17134.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bhukgbujt2wxql42"
+Content-Disposition: inline
+In-Reply-To: <eece016c86483d55befab1a06fb299c9d6d17134.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
 
-Now that we use the drm psr helpers, we no longer need to hand-roll our
-atomic_commit_tail implementation. So use the helper
+--bhukgbujt2wxql42
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v2:
-- None
-Changes in v3:
-- None
+Hi,
 
-Link to v1: https://patchwork.freedesktop.org/patch/msgid/20190228210939.83386-6-sean@poorly.run
-Link to v2: https://patchwork.freedesktop.org/patch/msgid/20190326204509.96515-5-sean@poorly.run
+On Thu, May 02, 2019 at 12:17:12PM +0300, Matti Vaittinen wrote:
+> ROHM BD70528 PMIC includes battery charger block. Support charger
+> staus queries and doing few basic settings like input current limit
+> and charging current.
+>=20
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Cc: Zain Wang <wzz@rock-chips.com>
-Cc: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
----
- drivers/gpu/drm/rockchip/rockchip_drm_fb.c | 21 +--------------------
- 1 file changed, 1 insertion(+), 20 deletions(-)
+Please only add Acked-by when you receive one, especially when you
+do not implement all requested changes :)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-index 214064d599ee..1c63d9e833bc 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-@@ -117,27 +117,8 @@ rockchip_user_fb_create(struct drm_device *dev, struct drm_file *file_priv,
- 	return ERR_PTR(ret);
- }
- 
--static void
--rockchip_atomic_helper_commit_tail_rpm(struct drm_atomic_state *old_state)
--{
--	struct drm_device *dev = old_state->dev;
--
--	drm_atomic_helper_commit_modeset_disables(dev, old_state);
--
--	drm_atomic_helper_commit_modeset_enables(dev, old_state);
--
--	drm_atomic_helper_commit_planes(dev, old_state,
--					DRM_PLANE_COMMIT_ACTIVE_ONLY);
--
--	drm_atomic_helper_commit_hw_done(old_state);
--
--	drm_atomic_helper_wait_for_vblanks(dev, old_state);
--
--	drm_atomic_helper_cleanup_planes(dev, old_state);
--}
--
- static const struct drm_mode_config_helper_funcs rockchip_mode_config_helpers = {
--	.atomic_commit_tail = rockchip_atomic_helper_commit_tail_rpm,
-+	.atomic_commit_tail = drm_atomic_helper_commit_tail_rpm,
- };
- 
- static const struct drm_mode_config_funcs rockchip_drm_mode_config_funcs = {
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+[...]
 
+> +static int bd70528_get_irqs(struct platform_device *pdev,
+> +			    struct bd70528_psy *bdpsy)
+> +{
+> +	int irq, i, ret;
+> +	unsigned int mask;
+> +	const struct irq_name_pair bd70528_chg_irqs[] =3D {
+> +		{ .n =3D "bd70528-bat-ov-res", .h =3D BD_IRQ_HND(BAT_OV_RES) },
+> +		{ .n =3D "bd70528-bat-ov-det", .h =3D BD_IRQ_HND(BAT_OV_DET) },
+> +		{ .n =3D "bd70528-bat-dead", .h =3D BD_IRQ_HND(DBAT_DET) },
+> +		{ .n =3D "bd70528-bat-warmed", .h =3D BD_IRQ_HND(COLD_RES) },
+> +		{ .n =3D "bd70528-bat-cold", .h =3D BD_IRQ_HND(COLD_DET) },
+> +		{ .n =3D "bd70528-bat-cooled", .h =3D BD_IRQ_HND(HOT_RES) },
+> +		{ .n =3D "bd70528-bat-hot", .h =3D BD_IRQ_HND(HOT_DET) },
+> +		{ .n =3D "bd70528-chg-tshd", .h =3D BD_IRQ_HND(CHG_TSD) },
+> +		{ .n =3D "bd70528-bat-removed", .h =3D BD_IRQ_HND(BAT_RMV) },
+> +		{ .n =3D "bd70528-bat-detected", .h =3D BD_IRQ_HND(BAT_DET) },
+> +		{ .n =3D "bd70528-dcin2-ov-res", .h =3D BD_IRQ_HND(DCIN2_OV_RES) },
+> +		{ .n =3D "bd70528-dcin2-ov-det", .h =3D BD_IRQ_HND(DCIN2_OV_DET) },
+> +		{ .n =3D "bd70528-dcin2-removed", .h =3D BD_IRQ_HND(DCIN2_RMV) },
+> +		{ .n =3D "bd70528-dcin2-detected", .h =3D BD_IRQ_HND(DCIN2_DET) },
+> +		{ .n =3D "bd70528-dcin1-removed", .h =3D BD_IRQ_HND(DCIN1_RMV) },
+> +		{ .n =3D "bd70528-dcin1-detected", .h =3D BD_IRQ_HND(DCIN1_DET) },
+> +	};
+
+Please also make it static. That will move the whole thing to
+read-only (because of const) data section. This improves the
+security and the required cpu time at the same time (no need
+to copy values to the stack).
+
+But this can be changed later, so no need to block the whole
+patchset just because of this. If Lee wants to merge this for
+5.2, that would be fine with me. But please add it directly in
+a new patch revision if the patch does not make it into 5.2.
+
+-- Sebastian
+
+--bhukgbujt2wxql42
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzLShUACgkQ2O7X88g7
++pqErhAAgZNXEYhrDHkaaYDwxjL4Ch28ycvgjE9+HjCig5co2F2nW25/cQPj3IeQ
+KLwc3hAAy0RzDKTc72fMtg//7b8L21Dzj4Qz4pHmQ3vhOETyAvwt3mOK8kiCSh9F
+MlrJ7vtUSnOo3S/QGiBCQ6gjTzrkyYWYtJAK3UabGbwagf9t8bKAUquWNbwFbvuu
+0Q2L++Z8eX4O0b8sbLJ5YxCx9eib2j3W6C2CNHUFG+WLjLom4IskqYq3Y7KELQ4U
+1YQbFUI5p+WFnxZU0uklYPEBfMCRBXd4iG2XBc8c/KBMkeQKOlXkURqUl7lmNT9u
+jgdqBpp0qgOlmJE7YsJTFjgyuwWR/BWLpE9QMKxBR1Ua94G6HRnoNiveq2qty18b
+s6G53YnvJsjI2y0cnP0+wACEKBATa33dUCLDABsKlyXl1jSdeE8csDM3XZ/SMNxZ
+CWayrYggYz3nk9y1bnJK3bkyVNAKaDRlNOA+kezZGAPUdcojFJOWin45Vkm5CFma
+t9SNRSBFArbG/9x/iOcETTVE+Hb7w5czGr+D41vJd/OUM/oE+sCt4ylIi4PA6a/y
+IF5fC7XzuTspKeoLuUo7WWght3JjD5+aGZ5OF6GKOSn7sdn0N2D53CdXp482U+jv
+a3ojwbXAqujhOIZhw5WYMfXjMyfKvhoPjjSIbk+NNRt8ksWKMc8=
+=CJv+
+-----END PGP SIGNATURE-----
+
+--bhukgbujt2wxql42--
