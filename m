@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E57C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4C8C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C4C21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E2E2177B
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810923;
-	bh=IrfZlWArowlj4XAYmIMnowmF9GVSWBoqIzTFQcWYWMc=;
+	s=default; t=1556810926;
+	bh=PoPu/I84kFCzCWxj8UouCBzrxnj1cCJbzkgCqkMbJBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iaOCOXsv8x3SZfdp1w7sep81BjmBpTI1JyREqrFPjxIUTTjJbrA7QR78ROamY0jy4
-	 TOX2/cfTQN2vxwMCiFGjfbkK1hlY97BaIJBmFhFCpXU8cd5WvTLOYRwwtppgrIzMm1
-	 BCqTReaf4fcFTKABWeK2I0nWhUh7RkSFZDFJ4zzk=
+	b=mk8/A/iOmDSybL7MO/EuCFRH3Rm4M9U5qJAqlkdU5ZOzbU32LcXnuVpSNS+RbO2KG
+	 2ovnPejybgwDzwHQ1dToeYmGeF5ImI5PrCWxJF07lJHOcKOTW4YimRuzWYJU736/dT
+	 mZVUvup98PkSnesuJfZKsVsuttuv9840Mw9HlP74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfEBP2l (ORCPT
+        id S1727827AbfEBP2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45968 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728263AbfEBP2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:28:40 -0400
+        id S1727481AbfEBP2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:28:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A18A20449;
-        Thu,  2 May 2019 15:28:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4936020B7C;
+        Thu,  2 May 2019 15:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810919;
-        bh=IrfZlWArowlj4XAYmIMnowmF9GVSWBoqIzTFQcWYWMc=;
+        s=default; t=1556810921;
+        bh=PoPu/I84kFCzCWxj8UouCBzrxnj1cCJbzkgCqkMbJBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oU/hxVKm0mMMvYx4xkhTUhrbaOCk+NZ8yZv63bhcBOKPTlGIcePk9APcUAAd4ML1G
-         0PeDKehRAv8kUwr+dUkhIKse49oEe4z5JlJphW5ovmmKDqFq3wItxxlfDX1OkJUiT8
-         33QIfFohww/dJNZWI9dCJg+KCBVXWP7w9kfa7aMY=
+        b=DEy6oo8Gra7qvffo7x4UPegKVfiemGDOBhTOjitD3gkwnrLab7ldckvPriyRD8A/W
+         vEYDtQBntIqF+L/CXTEI61ay0v9ZUUsItCsIw2EQtlkSeBSGtEugcx1FZPSRfXpkkq
+         sfxRdsV++/1WWmFMnDB2D1RDB+of92+KMbiP9apA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <sean@poorly.run>, Dave Airlie <airlied@redhat.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 58/72] leds: trigger: netdev: fix refcnt leak on interface rename
-Date:   Thu,  2 May 2019 17:21:20 +0200
-Message-Id: <20190502143337.986275826@linuxfoundation.org>
+Subject: [PATCH 4.19 49/72] drm: Fix drm_release() and device unplug
+Date:   Thu,  2 May 2019 17:21:11 +0200
+Message-Id: <20190502143337.314286147@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -62,72 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4cb6560514fa19d556954b88128f3846fee66a03 ]
+[ Upstream commit 3f04e0a6cfebf48152ac64502346cdc258811f79 ]
 
-Renaming a netdev-trigger-tracked interface was resulting in an
-unbalanced dev_hold().
+If userspace has open fd(s) when drm_dev_unplug() is run, it will result
+in drm_dev_unregister() being called twice. First in drm_dev_unplug() and
+then later in drm_release() through the call to drm_put_dev().
 
-Example:
-> iw phy phy0 interface add foo type __ap
-> echo netdev > trigger
-> echo foo > device_name
-> ip link set foo name bar
-> iw dev bar del
-[  237.355366] unregister_netdevice: waiting for bar to become free. Usage count = 1
-[  247.435362] unregister_netdevice: waiting for bar to become free. Usage count = 1
-[  257.545366] unregister_netdevice: waiting for bar to become free. Usage count = 1
+Since userspace already holds a ref on drm_device through the drm_minor,
+it's not necessary to add extra ref counting based on no open file
+handles. Instead just drm_dev_put() unconditionally in drm_dev_unplug().
 
-Above problem was caused by trigger checking a dev->name which obviously
-changes after renaming an interface. It meant missing all further events
-including the NETDEV_UNREGISTER which is required for calling dev_put().
+We now have this:
+- Userpace holds a ref on drm_device as long as there's open fd(s)
+- The driver holds a ref on drm_device as long as it's bound to the
+  struct device
 
-This change fixes that by:
-1) Comparing device struct *address* for notification-filtering purposes
-2) Dropping unneeded NETDEV_CHANGENAME code (no behavior change)
+When both sides are done with drm_device, it is released.
 
-Fixes: 06f502f57d0d ("leds: trigger: Introduce a NETDEV trigger")
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: Sean Paul <sean@poorly.run>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190208140103.28919-2-noralf@tronnes.org
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/leds/trigger/ledtrig-netdev.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/drm_drv.c  | 6 +-----
+ drivers/gpu/drm/drm_file.c | 6 ++----
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
-index 3dd3ed46d473..167a94c02d05 100644
---- a/drivers/leds/trigger/ledtrig-netdev.c
-+++ b/drivers/leds/trigger/ledtrig-netdev.c
-@@ -301,11 +301,11 @@ static int netdev_trig_notify(struct notifier_block *nb,
- 		container_of(nb, struct led_netdev_data, notifier);
+diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+index ea4941da9b27..0201ccb22f4c 100644
+--- a/drivers/gpu/drm/drm_drv.c
++++ b/drivers/gpu/drm/drm_drv.c
+@@ -381,11 +381,7 @@ void drm_dev_unplug(struct drm_device *dev)
+ 	synchronize_srcu(&drm_unplug_srcu);
  
- 	if (evt != NETDEV_UP && evt != NETDEV_DOWN && evt != NETDEV_CHANGE
--	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER
--	    && evt != NETDEV_CHANGENAME)
-+	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER)
- 		return NOTIFY_DONE;
+ 	drm_dev_unregister(dev);
+-
+-	mutex_lock(&drm_global_mutex);
+-	if (dev->open_count == 0)
+-		drm_dev_put(dev);
+-	mutex_unlock(&drm_global_mutex);
++	drm_dev_put(dev);
+ }
+ EXPORT_SYMBOL(drm_dev_unplug);
  
--	if (strcmp(dev->name, trigger_data->device_name))
-+	if (!(dev == trigger_data->net_dev ||
-+	      (evt == NETDEV_REGISTER && !strcmp(dev->name, trigger_data->device_name))))
- 		return NOTIFY_DONE;
+diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
+index ffa8dc35515f..e4ccb52c67ea 100644
+--- a/drivers/gpu/drm/drm_file.c
++++ b/drivers/gpu/drm/drm_file.c
+@@ -479,11 +479,9 @@ int drm_release(struct inode *inode, struct file *filp)
  
- 	cancel_delayed_work_sync(&trigger_data->work);
-@@ -320,12 +320,9 @@ static int netdev_trig_notify(struct notifier_block *nb,
- 		dev_hold(dev);
- 		trigger_data->net_dev = dev;
- 		break;
--	case NETDEV_CHANGENAME:
- 	case NETDEV_UNREGISTER:
--		if (trigger_data->net_dev) {
--			dev_put(trigger_data->net_dev);
--			trigger_data->net_dev = NULL;
--		}
-+		dev_put(trigger_data->net_dev);
-+		trigger_data->net_dev = NULL;
- 		break;
- 	case NETDEV_UP:
- 	case NETDEV_CHANGE:
+ 	drm_file_free(file_priv);
+ 
+-	if (!--dev->open_count) {
++	if (!--dev->open_count)
+ 		drm_lastclose(dev);
+-		if (drm_dev_is_unplugged(dev))
+-			drm_put_dev(dev);
+-	}
++
+ 	mutex_unlock(&drm_global_mutex);
+ 
+ 	drm_minor_release(minor);
 -- 
 2.19.1
 
