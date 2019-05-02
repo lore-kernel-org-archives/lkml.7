@@ -2,200 +2,188 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA49C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD138C04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F592075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:56:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dwHn/Twm"
+	by mail.kernel.org (Postfix) with ESMTP id 75D1B2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbfEBJ4z (ORCPT
+        id S1726349AbfEBKBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 05:56:55 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:34074 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbfEBJ4z (ORCPT
+        Thu, 2 May 2019 06:01:42 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:37692 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbfEBKBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 05:56:55 -0400
-Received: by mail-vs1-f67.google.com with SMTP id b23so1018369vso.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 02:56:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YTKXG2BvapVjfHjBieKgNIDpAb1iozjfKpPYlJpJCFY=;
-        b=dwHn/TwmEZtLalAjTJaZ3KIcPdZ9rZYVCzoASmcBLCQ2HZz+JrS8iAHfSMi03PVOlX
-         jhQJRblKhXQte3p8Dps8571Kx2Pm4z1iWhEdMaUSI3abVmfoUcnOZIU7f8HmmAorvpZT
-         N4ReNlAJZyVfyPyNBN0iox/p+5gU8/icOBDPUqW0CCMcy8o6sSB1m8SQHRyRAXGn63YB
-         0sQcy7iQrHetWP89TrhaBNg0n90VomGRDsDNsRjxtqAWyS8aFNdg9Gjck0mhE9McG1rN
-         ah7Ik2b0DBjcwiGSizHzzAa4obeoj7CpVfh7L1vdlFvow8Id7IiUeDYh7ftUDN5RuvdO
-         g89w==
+        Thu, 2 May 2019 06:01:41 -0400
+Received: by mail-vs1-f65.google.com with SMTP id w13so1016122vsc.4;
+        Thu, 02 May 2019 03:01:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YTKXG2BvapVjfHjBieKgNIDpAb1iozjfKpPYlJpJCFY=;
-        b=GYJz6Sy7gn2XEhHZ8C8BBHhhVHrCFfPZbvJIBOYNqkoEf/Vu9XTLw5OH+Rbp/ALNIo
-         ey8VqcpgbB80Uc8avfBulleHjwFn5vWLqXh9BeUToesHcdADpGHfaZJLW/e9IcKsPCwl
-         OzqxayKv7JPTLRCJweAUOhE2P/xBs7Ci2jvipY+YupORBiyOCYGIxVRbJsntWMoRFi59
-         UNMeGmsvaX0bv1sGmAqO+g/vwqx+PzAkgcGlb4JRPWUwe8NyBaRvTY73cfRTt2fMQvOb
-         rRCZ/ZEK+Cw+bjTuzpKtmgR6L78BnFv/QLBwygcpihhOFL8+VjuFrtM1lLQMfAzIUlJt
-         wsjA==
-X-Gm-Message-State: APjAAAVpQW7GyJLKgb4ACONOKvfOXC6Z1RzlTQG0OHX0PoRG6e/kkWHV
-        NzY5vAhOorow/KOKJCxW4s8wO2nOWFbxIYo0XWc/sg==
-X-Google-Smtp-Source: APXvYqzna4Ba9px66ruZmRjnBEj2xyZLRILQtXV8Oiu172P7DHpQmbk1B3YbTZWyFveVlgVkmqJjC9k4n8Us7sC2mlY=
-X-Received: by 2002:a67:7286:: with SMTP id n128mr1437892vsc.116.1556791013544;
- Thu, 02 May 2019 02:56:53 -0700 (PDT)
+        bh=lY4wqimi6KIXhDTp2FMcmT5sWThlsbCODtZxfIHA9lc=;
+        b=iR1rXZJMI2CEfKPWalFIjgoE0c5H54etWT/l40e4O/nfET5rPe+9nn+yY4Z37dujSe
+         nVCH4nQ8uNL3TSVasoK26HIwa/vkJnNvx8AZ6yd5oXvBfDAyAAJW/w2OxmETXLTnH6Mi
+         QM2RwmW5fyH+CUDaxPX5+LqHDGgVsdUyqHXfu+pcqPQTsi37g8KRHva91/tb21LSuyni
+         I8gl59iO6E9iGn8/Yajw6p0HOY1EATl8nWeBIcqFK/tsDwIcXP5ylL+tBA5wYx9MX0wd
+         3InIUzo1nR/rofyzproUfDer6y2am/Txe7B4xFHkDy9AvH5V4PUgaNA8AeiipLOkLPuY
+         qHwg==
+X-Gm-Message-State: APjAAAXJBEyHTE/rB4uInCeOSTpkEB3TiujmF8icolbEJKg7NcigLuxd
+        BYfAYa2gIzH2A4m1NZwnmeNLNtCAAAFoe2ua6EE=
+X-Google-Smtp-Source: APXvYqwdUxeifpdKXX2YgxZlWqXfwu1RGJmGof+iP52hIj3a7jIVA7vCJgbOEQ5ZhF1zWSsjZwt7ANfUh43DSiG9wDw=
+X-Received: by 2002:a67:83cf:: with SMTP id f198mr1349911vsd.63.1556791299969;
+ Thu, 02 May 2019 03:01:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <1556474956-27786-1-git-send-email-sagar.kadam@sifive.com>
- <1556474956-27786-3-git-send-email-sagar.kadam@sifive.com> <alpine.DEB.2.21.9999.1904301016400.7063@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1904301016400.7063@viisi.sifive.com>
-From:   Sagar Kadam <sagar.kadam@sifive.com>
-Date:   Thu, 2 May 2019 15:26:42 +0530
-Message-ID: <CAARK3HmzH8cNb1rTtWGwg3g8cOkGFx52v=eomZWcBkeLcx4+-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] mtd: spi-nor: add support to unlock flash device.
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        bbrezillon@kernel.org, richard@nod.at,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
+References: <20190430121254.3737-1-geert+renesas@glider.be>
+ <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+ <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com> <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
+ <CAMuHMdWgrcfABOVZti+BYn6ujcYjUHNL7oeyJLgaxB8uPp5hwg@mail.gmail.com> <CAL_JsqKq0KP9H4DumyxJTjD=7rqwgOM=+5jHhkUxQqamrA3h7g@mail.gmail.com>
+In-Reply-To: <CAL_JsqKq0KP9H4DumyxJTjD=7rqwgOM=+5jHhkUxQqamrA3h7g@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 2 May 2019 12:01:27 +0200
+Message-ID: <CAMuHMdVWG4LDAAht-6Rendt8L96vW+VEJK4tGnOCMJ38pRDybA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 10:49 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> On Sun, 28 Apr 2019, Sagar Shrikant Kadam wrote:
->
-> > Nor device (is25wp256 mounted on HiFive unleashed Rev A00 board) from ISSI
-> > have memory blocks guarded by block protection bits BP[0,1,2,3].
-> >
-> > Clearing block protection bits,unlocks the flash memory regions
-> > The unlock scheme is registered during nor scans.
->
-> This also looks like it's partially based on Wes or Palmer's patch from
->
-> https://github.com/riscv/riscv-linux/commit/c94e267766d62bc9a669611c3d0c8ed5ea26569b
->
-> Please note that in the patch message.
-Thank you Paul for pointing this out.
-Yes,  I missed to add it to commit message and will submit a V3
-version of the patch.
+Hi Rob,
 
-> > Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> > ---
-> >  drivers/mtd/spi-nor/spi-nor.c | 48 ++++++++++++++++++++++++++++++++++++++++++-
-> >  include/linux/mtd/spi-nor.h   |  1 +
-> >  2 files changed, 48 insertions(+), 1 deletion(-)
+On Wed, May 1, 2019 at 9:38 PM Rob Herring <robh+dt@kernel.org> wrote:
+> On Wed, May 1, 2019 at 2:16 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Apr 30, 2019 at 10:26 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > > On Tue, Apr 30, 2019 at 10:34 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
+> > > > On 30/04/2019 16:02, Rob Herring wrote:
+> > > > > On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
+> > > > > <geert+renesas@glider.be> wrote:
+> > > > >>
+> > > > >> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+> > > > >>
+> > > > >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > >> ---
+> > > > >> v2:
+> > > > >>   - Add "renesas,gic-spi-base",
+> > > > >>   - Document RZ/A2M.
+> > > > >> ---
+> > > > >>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
+> > > > >>  1 file changed, 30 insertions(+)
+> > > > >>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > > > >>
+> > > > >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > > > >> new file mode 100644
+> > > > >> index 0000000000000000..ea8ddb6955338ccd
+> > > > >> --- /dev/null
+> > > > >> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > > > >> @@ -0,0 +1,30 @@
+> > > > >> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+> > > > >> +
+> > > > >> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+> > > > >> +RZ/A1 and RZ/A2 SoCs:
+> > > > >> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+> > > > >> +    interrupts,
+> > > > >> +  - NMI edge select.
+> > > > >> +
+> > > > >> +Required properties:
+> > > > >> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+> > > > >> +               fallback.
+> > > > >> +               Examples with soctypes are:
+> > > > >> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+> > > > >> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+> > > > >> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+> > > > >> +                                in interrupts.txt in this directory)
+> > > > >> +  - interrupt-controller: Marks the device as an interrupt controller
+> > > > >> +  - reg: Base address and length of the memory resource used by the interrupt
+> > > > >> +         controller
+> > > > >> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
+> > > > >
+> > > > > Why isn't this just an 'interrupts' property?
+> > > >
+> > > > That's likely because of kernel limitations. The DT code does an
+> > > > of_populate() on any device that it finds, parse the "interrupts"
+> > > > propertiy, resulting in the irq_descs being populated.
+> > > >
+> > > > That creates havoc, as these interrupts are not for this device, but for
+> > > > something that is connected to it. This is merely a bridge of some sort.
+> > >
+> > > 'interrupt-map' would avoid that problem I think.
 > >
-> > diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> > index c5408ed..81c7b3e 100644
-> > --- a/drivers/mtd/spi-nor/spi-nor.c
-> > +++ b/drivers/mtd/spi-nor/spi-nor.c
-> > @@ -1461,6 +1461,46 @@ static int macronix_quad_enable(struct spi_nor *nor)
-> >  }
-> >
-> >  /**
-> > + * issi_unlock() - clear BP[0123] write-protection.
-> > + * @nor: pointer to a 'struct spi_nor'
-> > + * @ofs: offset from which to unlock memory
-> > + * @len: number of bytes to unlock
-> > + * Bits [2345] of the Status Register are BP[0123].
-> > + * ISSI chips use a different block protection scheme than other chips.
-> > + * Just disable the write-protect unilaterally.
-> > + * Return: 0 on success, -errno otherwise.
+> > "interrupt-map" seems to be meant for translation on a bus?
+> > What to do with the child and parent unit addresses fields?
+> > The parent unit address size depends on the #address-cells of the parent
+> > interrupt-controller (i.e. GIC, so it's zero).
+> > But the child unit address size depends on the #address-cells of the bus node
+> > on which the child is located, so that's a (non-zero) bus #address-cells
+> > (from the root node), not an interrupt-controller #address-cells.
 >
-> This is closer to kernel-doc format, but not quite.  Please update this to
-> align to
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/doc-guide/kernel-doc.rst#n57
->
-This is a good pointer. I will align the function description
-according to kernel-doc format.
+> The #address-cells is always retrieved from the interrupt-parent node
+> (or its parent). The interrupt-parent can implicitly be the child's
+> parent, but that is rarely used in modern systems.
 
+That's not what Devicetree Specification, Release v0.2 says:
+
+    child unit address The unit address of the child node being mapped.
+    The number of 32-bit cells required to specify this is described by
+    the #address-cells property of the bus node on which the child is
+    located.
+
+2.4.4 Interrupt Mapping Example (for PCI) says the bus node is the PCI
+bridge, with #address-cells = <3>.
+
+But in the RZ/A1 case the child unit address is irrelevant, as its an
+external interrupt input not related to a specific bus.  It could be
+used by a device without unit address (e.g. gpio-keys), or some device
+on an external local bus (root #adress-cells is <1> on 32-bit without
+LPAE, but this block could be reused in a future LPAE or arm64 SoCs),
+or on e.g. an SPI or i2c bus, with its own #adress-cells value
+(coincidentally <1>, too).
+
+I see of_irq_parse_raw() does use the address-cells of the parent
+interrupt controller (which is usually 0) when iterating its way up,
+following interrupt-map.
+
+So the child unit address does have two different meanings?
+
+> > Each line in an interrupt-map also contains a child interrupt specifier.
+> > As the RZ/A1 IRQC supports 8 interrupt inputs with 4 sense types,
+> > that would mean 32 lines? Or should I just ignore the senses here,
+> > and specify 0?
 >
-> - Paul
->
-> > + */
-> > +static int issi_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-> > +{
-> > +     int ret, val;
-> > +     u8 mask = SR_BP0 | SR_BP1 | SR_BP2 | SR_BP3;
-> > +
-> > +     val = read_sr(nor);
-> > +     if (val < 0)
-> > +             return val;
-> > +     if (!(val & mask))
-> > +             return 0;
-> > +
-> > +     write_enable(nor);
-> > +
-> > +     write_sr(nor, val & ~mask);
-> > +
-> > +     ret = spi_nor_wait_till_ready(nor);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret = read_sr(nor);
-> > +     if (ret > 0 && !(ret & mask)) {
-> > +             dev_info(nor->dev,
-> > +                     "ISSI Block Protection Bits cleared SR=0x%x", ret);
-> > +             return 0;
-> > +     } else {
-> > +             dev_err(nor->dev, "ISSI Block Protection Bits not cleared\n");
-> > +             return -EINVAL;
-> > +     }
-> > +}
-> > +
-> > +/**
-> >   * spansion_quad_enable() - set QE bit in Configuraiton Register.
-> >   * @nor:     pointer to a 'struct spi_nor'
-> >   *
-> > @@ -1836,7 +1876,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
-> >                       SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> >       { "is25wp256", INFO(0x9d7019, 0, 64 * 1024, 1024,
-> >                       SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-> > -                     SPI_NOR_4B_OPCODES)
-> > +                     SPI_NOR_4B_OPCODES | SPI_NOR_HAS_LOCK)
-> >       },
-> >
-> >       /* Macronix */
-> > @@ -4078,6 +4118,12 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
-> >               nor->flash_is_locked = stm_is_locked;
-> >       }
-> >
-> > +     /* NOR protection support for ISSI chips */
-> > +     if (JEDEC_MFR(info) == SNOR_MFR_ISSI ||
-> > +         info->flags & SPI_NOR_HAS_LOCK) {
-> > +             nor->flash_unlock = issi_unlock;
-> > +
-> > +     }
-> >       if (nor->flash_lock && nor->flash_unlock && nor->flash_is_locked) {
-> >               mtd->_lock = spi_nor_lock;
-> >               mtd->_unlock = spi_nor_unlock;
-> > diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> > index ff13297..9a7d719 100644
-> > --- a/include/linux/mtd/spi-nor.h
-> > +++ b/include/linux/mtd/spi-nor.h
-> > @@ -127,6 +127,7 @@
-> >  #define SR_BP0                       BIT(2)  /* Block protect 0 */
-> >  #define SR_BP1                       BIT(3)  /* Block protect 1 */
-> >  #define SR_BP2                       BIT(4)  /* Block protect 2 */
-> > +#define SR_BP3                       BIT(5)  /* Block protect 3 for ISSI device*/
-> >  #define SR_TB                        BIT(5)  /* Top/Bottom protect */
-> >  #define SR_SRWD                      BIT(7)  /* SR write protect */
-> >  /* Spansion/Cypress specific status bits */
-> > --
-> > 1.9.1
-> >
-> >
+> You can ignore parts of the child cells with interrupt-map-mask, so
+> you should just need 8 entries.
+
+Right, thanks.
+
+
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
