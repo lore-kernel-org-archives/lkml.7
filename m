@@ -2,105 +2,91 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E12DC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD9EC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65AD420B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:44:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JRr0iAoI"
+	by mail.kernel.org (Postfix) with ESMTP id 90D1B208CB
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfEBQoH (ORCPT
+        id S1726531AbfEBQpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:44:07 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36247 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbfEBQoH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:44:07 -0400
-Received: by mail-qk1-f195.google.com with SMTP id m137so1857877qke.3
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 09:44:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f4ibFJXvRn07AkRB9EEIU1REKuJjQVK60zzVIafbvUE=;
-        b=JRr0iAoI+MM91RQu5rsmPJAedIzsKoYF4oA8RlnAKMvuuZ/R7kd7D6jWop+wCSo/IH
-         sjZx/RTzm7bEAImU5BPlvdZbDYOxetIu5lUNjH5SUzMUueOLgxdNIsotblxkSYsuH8ei
-         4yHzKCAOujHbiE3xq6PVq6FXLockojf1RGomAuLlXggsW53AGTifnYmEtSoW8KmW7JdL
-         LLsjuiCApF6aWjynaZsPnWsROBXNZ+qRnDz5+PC9NqiBLGHLoKhOqQrnPeuKY1HCRv7h
-         CnH3bK+ums2L6nLw1ajGrG0FjkZTT0C4HhS4ulTaF76wO/tyj+pBabQ0TdHsK9mP+VLq
-         jFHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f4ibFJXvRn07AkRB9EEIU1REKuJjQVK60zzVIafbvUE=;
-        b=A+TMCiH1WS3upY7vXQ6ZiHJy1MGxo7dXA6xbIgTF72ma236Im6W2qU87T1qdoKcNc5
-         bwqY/zARnoKwSMNtALElxD4BuH6pSd8hJqIX7AxjBX2Nf+56fZvIMyHnIavUVMk7oVA7
-         NKy97vSK1d4D3P5nKBhWLpxjo2kI8B0fiudj4+UlJH5YC2R79z4srlzZYvcbYj5CO7fq
-         cZa+m56ouvXVHq/DGCCz9MquO5x6BVJhfyYyTR2fQMPcaYELyfNqd4Axkb7bNVK1noAn
-         6kfhNTm0qWEOgza52dBlCDxPvSqf7kegPE2dwuDlgyyi9seSsyb6Sfg9/UcNVYmaJAMn
-         MjEA==
-X-Gm-Message-State: APjAAAXXludNz/rWclskpQlaGDarDSL2fMR8lEIWpAszIXwm8oJdpdRr
-        7uDYdNDssXAJYbWZiwP7y+2Y967eN7yb7WT8xVQUNA==
-X-Google-Smtp-Source: APXvYqxYG/ata7SfkJHe93kUfj6sEEF1lUSMwcEiOOO+swPuj+74SX/aaBFPAxBXFOQaVg003EcEY/DtPNywIAO+hBk=
-X-Received: by 2002:a37:508a:: with SMTP id e132mr3689247qkb.281.1556815446374;
- Thu, 02 May 2019 09:44:06 -0700 (PDT)
+        Thu, 2 May 2019 12:45:20 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49234 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfEBQpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 12:45:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4C6AA78;
+        Thu,  2 May 2019 09:45:19 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA8073F5AF;
+        Thu,  2 May 2019 09:45:16 -0700 (PDT)
+Date:   Thu, 2 May 2019 17:45:12 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Richard Weinberger <richard@nod.at>, jdike@addtoit.com,
+        Steve Capper <Steve.Capper@arm.com>,
+        Haibo Xu <haibo.xu@arm.com>, Bin Lu <bin.lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v3 1/4] ptrace: move clearing of TIF_SYSCALL_EMU flag to
+ core
+Message-ID: <20190502164512.GA10635@fuggles.cambridge.arm.com>
+References: <20190430170520.29470-1-sudeep.holla@arm.com>
+ <20190430170520.29470-2-sudeep.holla@arm.com>
+ <20190501161330.GD30235@redhat.com>
+ <20190501161752.GA12498@e107155-lin>
+ <20190502161329.GE7323@redhat.com>
 MIME-Version: 1.0
-References: <20190502110247.681-1-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20190502110247.681-1-manivannan.sadhasivam@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 2 May 2019 22:13:55 +0530
-Message-ID: <CAP245DUZ9PWoCWvcB8zP_zTEANqo++FCmmJhKESVW=LrBdfyGQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: multi_v7_defconfig: Enable panic and disk LED triggers
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux@armlinux.org.uk,
-        Lists LAKML <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502161329.GE7323@redhat.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 4:33 PM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> Most development boards and devices have one or more LEDs. It is
-> useful during debugging if they can be wired to show different
-> behaviours such as disk or cpu activity or a load-average dependent
-> heartbeat. Enable panic and disk activity triggers so they can be tied
-> to LED activity during debugging as well.
->
-> There was a similar patch which added these triggers for ARM64 as well:
-> https://patchwork.kernel.org/patch/10042681/
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+On Thu, May 02, 2019 at 06:13:30PM +0200, Oleg Nesterov wrote:
+> On 05/01, Sudeep Holla wrote:
+> >
+> > On Wed, May 01, 2019 at 06:13:30PM +0200, Oleg Nesterov wrote:
+> > > On 04/30, Sudeep Holla wrote:
+> > > >
+> > > > While the TIF_SYSCALL_EMU is set in ptrace_resume independent of any
+> > > > architecture, currently only powerpc and x86 unset the TIF_SYSCALL_EMU
+> > > > flag in ptrace_disable which gets called from ptrace_detach.
+> > > >
+> > > > Let's move the clearing of TIF_SYSCALL_EMU flag to __ptrace_unlink
+> > > > which gets executed from ptrace_detach and also keep it along with
+> > > > or close to clearing of TIF_SYSCALL_TRACE.
+> > > >
+> > > > Cc: Oleg Nesterov <oleg@redhat.com>
+> > > > Cc: Paul Mackerras <paulus@samba.org>
+> > > > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > >
+> > > Acked-by: Oleg Nesterov <oleg@redhat.com>
+> > >
+> >
+> > Since 1/4 and 2/4 are completely independent of arm64 changes in 3&4/4,
+> > I prefer you take these via your tree.
+> 
+> Sorry Sudeep, I can't do this, I need to reanimate my account on kernel.org.
 
-> ---
->  arch/arm/configs/multi_v7_defconfig | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> index 2e9fa5312616..466ccc305a05 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -821,6 +821,8 @@ CONFIG_LEDS_TRIGGER_GPIO=y
->  CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
->  CONFIG_LEDS_TRIGGER_TRANSIENT=y
->  CONFIG_LEDS_TRIGGER_CAMERA=y
-> +CONFIG_LEDS_TRIGGER_PANIC=y
-> +CONFIG_LEDS_TRIGGER_DISK=y
->  CONFIG_EDAC=y
->  CONFIG_EDAC_HIGHBANK_MC=y
->  CONFIG_EDAC_HIGHBANK_L2=y
-> --
-> 2.17.1
->
+Ok, if you're happy for us to take them via arm64 with your ack, then we can
+do that as well. Just don't want to step on anybody's toes!
+
+Will
