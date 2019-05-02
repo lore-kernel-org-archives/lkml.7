@@ -2,42 +2,42 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E403C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A899EC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBDB02089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AE12133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rDps1gDi"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IJWij8F6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfEBMzy (ORCPT
+        id S1726700AbfEBM4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:55:54 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17122 "EHLO
+        Thu, 2 May 2019 08:56:01 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17139 "EHLO
         hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfEBMzt (ORCPT
+        with ESMTP id S1726282AbfEBM4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:55:49 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ccae8cf0000>; Thu, 02 May 2019 05:55:43 -0700
+        Thu, 2 May 2019 08:56:00 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ccae8da0000>; Thu, 02 May 2019 05:55:54 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 02 May 2019 05:55:47 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 02 May 2019 05:55:58 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 02 May 2019 05:55:47 -0700
-Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
- 2019 12:55:46 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 2 May 2019 12:55:46 +0000
+        by hqpgpgate101.nvidia.com on Thu, 02 May 2019 05:55:58 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
+ 2019 12:55:57 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 2 May 2019 12:55:57 +0000
 Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ccae8cf0004>; Thu, 02 May 2019 05:55:46 -0700
+        id <B5ccae8da0000>; Thu, 02 May 2019 05:55:57 -0700
 From:   Sameer Pujar <spujar@nvidia.com>
 To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>
@@ -45,171 +45,103 @@ CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <ldewangan@nvidia.com>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH 3/6] dmaengine: tegra210-adma: add support for Tegra186/Tegra194
-Date:   Thu, 2 May 2019 18:25:14 +0530
-Message-ID: <1556801717-31507-4-git-send-email-spujar@nvidia.com>
+Subject: [PATCH 5/6] dmaengine: tegra210-dma: free dma controller in remove()
+Date:   Thu, 2 May 2019 18:25:16 +0530
+Message-ID: <1556801717-31507-6-git-send-email-spujar@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
 References: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556801743; bh=7mtsR+WFg5blIIg7MunRDttrtfPeHP9Yge2pSN/ZO9g=;
+        t=1556801754; bh=P4zIL626HO9TKcEIuZdJBsckmL2U2jxasfFus+sRTz0=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:Content-Type;
-        b=rDps1gDiSnUv990wMIO1+kXRqeUfCtq9pJeoHoWLrGN3QBpgwEec+AIZB4GptLnn9
-         1Ra75Ob6cDOi8F1qXnufu6YWP0TkqHfv1OPDTDoE4ngCoE3wSrRKizzCWEIUReXnJ6
-         zxApzavrjmZ7oI4kJEGQ3FhCDV/nChc9JCJ81YiZ8adzR8eibbnLXBsvoL9SmZYYKk
-         GsWrAg4bZ7hM8KJCusMBt5oLPAI3gU9gTX/p7I6uzj38cDD3B+UoEDUy4AqpmrUcQC
-         piEgvYDIxdGPbHZ9eYX4ftUJV2c8Sn2vpM2Ye22FKibsv5F1p3a7AhjkLyrU0Kjh0z
-         xGKqJFRI1Z3yw==
+        b=IJWij8F6RNzkDfig0BuP36yi/vzaMNSb5ZlxjSqPrLWR3nD51BSGNnjyvC8cwX4UM
+         KOeoBrCIms4RYWbKVNCr5347vda4WhOJBY779mMaJcU21Hy/LQY4yxcgHqsD68QPQT
+         U6RqQhXiurdAteP80sw8mqsWppGha2bcrVlYyhbszNZq5F/e/P67TQzLAmJ7IMhfhh
+         yYs47mvM4QKSvWoZpKgyVBzDdhUzoFwrg4+kFzx/4Tm7Ib189IQnmhrCDS6CJd3ITU
+         k+4fLT79ADReOS/cVxZ0QeOCcv/jVGsrIYGr9Pk3Mm7hIhTPaU1v98hbNHWVgakn0e
+         3u81uOs/faBtA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Tegra186 specific macro defines and chip_data structure for chip
-specific information. New compatibility is added to select relevant
-chip details. There is no major change for Tegra194 and hence it can
-use the same chip data.
+Following kernel panic is seen during DMA driver unload->load sequence
+==========================================================================
+Unable to handle kernel paging request at virtual address ffffff8001198880
+Internal error: Oops: 86000007 [#1] PREEMPT SMP
+CPU: 0 PID: 5907 Comm: HwBinder:4123_1 Tainted: G C 4.9.128-tegra-g065839f
+Hardware name: galen (DT)
+task: ffffffc3590d1a80 task.stack: ffffffc3d0678000
+PC is at 0xffffff8001198880
+LR is at of_dma_request_slave_channel+0xd8/0x1f8
+pc : [<ffffff8001198880>] lr : [<ffffff8008746f30>] pstate: 60400045
+sp : ffffffc3d067b710
+x29: ffffffc3d067b710 x28: 000000000000002f
+x27: ffffff800949e000 x26: ffffff800949e750
+x25: ffffff800949e000 x24: ffffffbefe817d84
+x23: ffffff8009f77cb0 x22: 0000000000000028
+x21: ffffffc3ffda49c8 x20: 0000000000000029
+x19: 0000000000000001 x18: ffffffffffffffff
+x17: 0000000000000000 x16: ffffff80082b66a0
+x15: ffffff8009e78250 x14: 000000000000000a
+x13: 0000000000000038 x12: 0101010101010101
+x11: 0000000000000030 x10: 0101010101010101
+x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
+x7 : 62ff726b6b64622c x6 : 0000000000008064
+x5 : 6400000000000000 x4 : ffffffbefe817c44
+x3 : ffffffc3ffda3e08 x2 : ffffff8001198880
+x1 : ffffffc3d48323c0 x0 : ffffffc3d067b788
 
-The bits in the BURST_SIZE field of the ADMA CH_CONFIG register are
-encoded differently on Tegra186 and Tegra194 compared with Tegra210.
-On Tegra210 the bits are encoded as follows ...
+Process HwBinder:4123_1 (pid: 5907, stack limit = 0xffffffc3d0678028)
+Call trace:
+[<ffffff8001198880>] 0xffffff8001198880
+[<ffffff80087459f8>] dma_request_chan+0x50/0x1f0
+[<ffffff8008745bc0>] dma_request_slave_channel+0x28/0x40
+[<ffffff8001552c44>] tegra_alt_pcm_open+0x114/0x170
+[<ffffff8008d65fa4>] soc_pcm_open+0x10c/0x878
+[<ffffff8008d18618>] snd_pcm_open_substream+0xc0/0x170
+[<ffffff8008d1878c>] snd_pcm_open+0xc4/0x240
+[<ffffff8008d189e0>] snd_pcm_playback_open+0x58/0x80
+[<ffffff8008cfc6d4>] snd_open+0xb4/0x178
+[<ffffff8008250628>] chrdev_open+0xb8/0x1d0
+[<ffffff8008246fdc>] do_dentry_open+0x214/0x318
+[<ffffff80082485d0>] vfs_open+0x58/0x88
+[<ffffff800825bce0>] do_last+0x450/0xde0
+[<ffffff800825c718>] path_openat+0xa8/0x368
+[<ffffff800825dd84>] do_filp_open+0x8c/0x110
+[<ffffff8008248a74>] do_sys_open+0x164/0x220
+[<ffffff80082b66dc>] compat_SyS_openat+0x3c/0x50
+[<ffffff8008083040>] el0_svc_naked+0x34/0x38
+---[ end trace 67e6d544e65b5145 ]---
+Kernel panic - not syncing: Fatal exception
+==========================================================================
 
- 1 = WORD_1
- 2 = WORDS_2
- 3 = WORDS_4
- 4 = WORDS_8
- 5 = WORDS_16
+In device probe(), of_dma_controller_register() registers DMA controller.
+But when driver is removed, this is not freed. During driver reload this
+results in data abort and kernel panic. Add of_dma_controller_free() in
+driver remove path to fix the issue.
 
-Where as on Tegra186 and Tegra194 the bits are encoded as ...
-
- 0 = WORD_1
- 1 = WORDS_2
- 2 = WORDS_3
- 3 = WORDS_4
- 4 = WORDS_5
- ...
- 15 = WORDS_16
-
-Add helper functions for generating the correct burst size.
-
+Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
 Signed-off-by: Sameer Pujar <spujar@nvidia.com>
 ---
- drivers/dma/tegra210-adma.c | 45 +++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 37 insertions(+), 8 deletions(-)
+ drivers/dma/tegra210-adma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 9aee015..115ee10f 100644
+index f26c458..953669d 100644
 --- a/drivers/dma/tegra210-adma.c
 +++ b/drivers/dma/tegra210-adma.c
-@@ -45,8 +45,8 @@
- #define ADMA_CH_CONFIG					0x28
- #define ADMA_CH_CONFIG_SRC_BUF(val)			(((val) & 0x7) << 28)
- #define ADMA_CH_CONFIG_TRG_BUF(val)			(((val) & 0x7) << 24)
--#define ADMA_CH_CONFIG_BURST_SIZE(val)			(((val) & 0x7) << 20)
--#define ADMA_CH_CONFIG_BURST_16				5
-+#define ADMA_CH_CONFIG_BURST_SIZE_SHIFT			20
-+#define ADMA_CH_CONFIG_MAX_BURST_SIZE                   16
- #define ADMA_CH_CONFIG_WEIGHT_FOR_WRR(val)		((val) & 0xf)
- #define ADMA_CH_CONFIG_MAX_BUFS				8
+@@ -888,6 +888,7 @@ static int tegra_adma_remove(struct platform_device *pdev)
+ 	struct tegra_adma *tdma = platform_get_drvdata(pdev);
+ 	int i;
  
-@@ -87,6 +87,7 @@ struct tegra_adma;
-  * @nr_channels: Number of DMA channels available.
-  */
- struct tegra_adma_chip_data {
-+	unsigned int (*adma_get_burst_config)(unsigned int burst_size);
- 	unsigned int global_reg_offset;
- 	unsigned int global_int_clear;
- 	unsigned int ch_req_tx_shift;
-@@ -489,6 +490,22 @@ static enum dma_status tegra_adma_tx_status(struct dma_chan *dc,
- 	return ret;
- }
++	of_dma_controller_free(pdev->dev.of_node);
+ 	dma_async_device_unregister(&tdma->dma_dev);
  
-+static unsigned int tegra210_adma_get_burst_config(unsigned int burst_size)
-+{
-+	if (!burst_size || burst_size > ADMA_CH_CONFIG_MAX_BURST_SIZE)
-+		burst_size = ADMA_CH_CONFIG_MAX_BURST_SIZE;
-+
-+	return fls(burst_size) << ADMA_CH_CONFIG_BURST_SIZE_SHIFT;
-+}
-+
-+static unsigned int tegra186_adma_get_burst_config(unsigned int burst_size)
-+{
-+	if (!burst_size || burst_size > ADMA_CH_CONFIG_MAX_BURST_SIZE)
-+		burst_size = ADMA_CH_CONFIG_MAX_BURST_SIZE;
-+
-+	return (burst_size - 1) << ADMA_CH_CONFIG_BURST_SIZE_SHIFT;
-+}
-+
- static int tegra_adma_set_xfer_params(struct tegra_adma_chan *tdc,
- 				      struct tegra_adma_desc *desc,
- 				      dma_addr_t buf_addr,
-@@ -504,7 +521,7 @@ static int tegra_adma_set_xfer_params(struct tegra_adma_chan *tdc,
- 	switch (direction) {
- 	case DMA_MEM_TO_DEV:
- 		adma_dir = ADMA_CH_CTRL_DIR_MEM2AHUB;
--		burst_size = fls(tdc->sconfig.dst_maxburst);
-+		burst_size = tdc->sconfig.dst_maxburst;
- 		ch_regs->config = ADMA_CH_CONFIG_SRC_BUF(desc->num_periods - 1);
- 		ch_regs->ctrl = ADMA_CH_REG_FIELD_VAL(tdc->sreq_index,
- 						      cdata->ch_req_mask,
-@@ -514,7 +531,7 @@ static int tegra_adma_set_xfer_params(struct tegra_adma_chan *tdc,
- 
- 	case DMA_DEV_TO_MEM:
- 		adma_dir = ADMA_CH_CTRL_DIR_AHUB2MEM;
--		burst_size = fls(tdc->sconfig.src_maxburst);
-+		burst_size = tdc->sconfig.src_maxburst;
- 		ch_regs->config = ADMA_CH_CONFIG_TRG_BUF(desc->num_periods - 1);
- 		ch_regs->ctrl = ADMA_CH_REG_FIELD_VAL(tdc->sreq_index,
- 						      cdata->ch_req_mask,
-@@ -527,13 +544,10 @@ static int tegra_adma_set_xfer_params(struct tegra_adma_chan *tdc,
- 		return -EINVAL;
- 	}
- 
--	if (!burst_size || burst_size > ADMA_CH_CONFIG_BURST_16)
--		burst_size = ADMA_CH_CONFIG_BURST_16;
--
- 	ch_regs->ctrl |= ADMA_CH_CTRL_DIR(adma_dir) |
- 			 ADMA_CH_CTRL_MODE_CONTINUOUS |
- 			 ADMA_CH_CTRL_FLOWCTRL_EN;
--	ch_regs->config |= ADMA_CH_CONFIG_BURST_SIZE(burst_size);
-+	ch_regs->config |= cdata->adma_get_burst_config(burst_size);
- 	ch_regs->config |= ADMA_CH_CONFIG_WEIGHT_FOR_WRR(1);
- 	ch_regs->fifo_ctrl = ADMA_CH_FIFO_CTRL_DEFAULT;
- 	ch_regs->tc = desc->period_len & ADMA_CH_TC_COUNT_MASK;
-@@ -671,6 +685,7 @@ static int tegra_adma_runtime_resume(struct device *dev)
- }
- 
- static const struct tegra_adma_chip_data tegra210_chip_data = {
-+	.adma_get_burst_config  = tegra210_adma_get_burst_config,
- 	.global_reg_offset	= 0xc00,
- 	.global_int_clear	= 0x20,
- 	.ch_req_tx_shift	= 28,
-@@ -682,8 +697,22 @@ static const struct tegra_adma_chip_data tegra210_chip_data = {
- 	.nr_channels		= 22,
- };
- 
-+static const struct tegra_adma_chip_data tegra186_chip_data = {
-+	.adma_get_burst_config  = tegra186_adma_get_burst_config,
-+	.global_reg_offset	= 0,
-+	.global_int_clear	= 0x402c,
-+	.ch_req_tx_shift	= 27,
-+	.ch_req_rx_shift	= 22,
-+	.ch_base_offset		= 0x10000,
-+	.ch_req_mask		= 0x1f,
-+	.ch_req_max		= 20,
-+	.ch_reg_size		= 0x100,
-+	.nr_channels		= 32,
-+};
-+
- static const struct of_device_id tegra_adma_of_match[] = {
- 	{ .compatible = "nvidia,tegra210-adma", .data = &tegra210_chip_data },
-+	{ .compatible = "nvidia,tegra186-adma", .data = &tegra186_chip_data },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, tegra_adma_of_match);
+ 	for (i = 0; i < tdma->nr_channels; ++i)
 -- 
 2.7.4
 
