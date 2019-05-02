@@ -2,131 +2,131 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B0AC04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354BBC04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742DC206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05696206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 22:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="VyGHNfvl"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="twO8KFQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbfEBWqX (ORCPT
+        id S1726369AbfEBWqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 18:46:23 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44433 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfEBWqW (ORCPT
+        Thu, 2 May 2019 18:46:33 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34486 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfEBWqc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 18:46:22 -0400
-Received: by mail-ed1-f66.google.com with SMTP id b8so3739059edm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 15:46:21 -0700 (PDT)
+        Thu, 2 May 2019 18:46:32 -0400
+Received: by mail-wm1-f66.google.com with SMTP id b67so7562913wmg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 15:46:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GA6AE3nbkJUtYedDned7ovjPAtRn38Gv/WcLw3WyhRM=;
-        b=VyGHNfvlwO8ONwk/KifhHlo6j+UxiIO6vZVAJEIh/1HVZiBQdm6hsv7Pe0s7LBhtib
-         DYwvUG89sAGEQgMraZsleAVrkfz3yCSF5e3mdty7AI3w8fvGzLvrD6iNdbwKzPPO6tB2
-         WB6DAwnVzZVm4VW3ZepbbgIK47+nbIKMwSPeEpBw3fktP/V2czpbTX5jTue1sPbgj/eG
-         6O2VZ1pwM/NbdV22t+0aEDCpaSSB5dVP9kd5aYfREuFkFv28OxBKfCldjaWjhv274Pe7
-         2KZs9Qw1vLvH2eDnNdOeFw5/7sMhPbarlsTLuWEEHjLPnsnzTcCJN1/Gaatld2q9auYL
-         jgjQ==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=2xX1DTWDMMg4NiNeilKXOGy/BGadjxHNrX+2mYxFkMo=;
+        b=twO8KFQIFxs4OxXm2U8wzP/vEdqkIPCn6+KgrvFnGRHqArF5Ez7cSbJOPoNPCqUlvD
+         VIqFnOdPHpFFvGxuZifxbGFZM+TMgQhpREFL2w4Auh6Svd9fopo8BTatFKxTVyWIdQFu
+         x4pGiKgeRFi66cJGRoK6HH6BINmWFjiWS5v56bOlc1Hu0g7ixoMquMmD6K3Og2fquUKL
+         zRYumOfaqslLchUfexmz4H1C6s/dTiaaNRIoVn8ZiNQARHZ+F4kYol8KlvxkiV1DwWgu
+         5m+xSyb0n8ril6/GcIg8GlcL4hZnS8Xbnc8Zfrs46H8lQZnI5gMnLbX1GxmKV3n8sEEm
+         8c8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GA6AE3nbkJUtYedDned7ovjPAtRn38Gv/WcLw3WyhRM=;
-        b=jEkXH92clqickkGETcuVtcwuOWgAOkZeLIzgke5r66kCyv2EnU7iSSzQwl4G+W9qCY
-         mMvV+YLN9Pn/rW0flwoKf58sk5b9M/kk4zHVeBnVhwiwnQ46WUvWlepJaXvWCAdcalPR
-         Cy6Acox62MQv7EAQasX8ubmicPGearEAagcKCj5C57W9Qod8sTBYj+CDfNvZU+pJzDMO
-         e3O4vxYCCNrkj5EOfRovmdOkfqEtOKt+iqQP/PFD7gRtU/PjtCJyzpg0rMIz8RhGArRx
-         uiw24sIG4nPl60msPX5K7wTbGmyEyHCstUfoR7rea4NGrl67JHiS8afIMhUZymGXaHwf
-         8yhw==
-X-Gm-Message-State: APjAAAUAvR7EyMNmDYfVcVISjBR8MfSL/7nu/wIV0Ncem+TEV46B21vm
-        xj/GsmAy+zq+1IOADaAWoBWUfF+VN54G2b0stJi2Dw==
-X-Google-Smtp-Source: APXvYqyxp62Y9u8Dg6nAw9ZEhyrJmqsbIRm9Uomm765huXXDRUc3RQdFsZu/ihmrxpq8Al0EC7JMIkEOIXHtl4sV7+o=
-X-Received: by 2002:a50:fb19:: with SMTP id d25mr4513007edq.61.1556837180746;
- Thu, 02 May 2019 15:46:20 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=2xX1DTWDMMg4NiNeilKXOGy/BGadjxHNrX+2mYxFkMo=;
+        b=dWNdoilcxY8vFOMgyfgqQ8U3aCYFXvIjDQacRJDyFiE6R0qlQSoE7QT+8yLcc1ZahB
+         UcyooCccDYMaDz4R89PhBOzq916F99IgaXYkZISRzM5XxO/h6kmI2IgngH7rR+s4QW90
+         oDtiq1JRK8MWKK+d1GUtQZnWaLRQM9meCn/OpegWnogUPVs7GzVhMHCshpdZum089uMM
+         Cm5uYZP1ptOtWvqySwvGsLATaRBtBdQFSdZDRU0wB0gu4x6dfggMOIRgQGqxllT4CyXI
+         4XYmyMcQy8BTJ9i5ZDrAPY1MmtNiZO5sPifIU1u1hcBosK0l5ipzZC5e5ZmQwGgo8CpL
+         XUPA==
+X-Gm-Message-State: APjAAAW/uCZjkMefeKPy5fBb9bjozyDF3auE1K1oWKHiDoBQ2a73M7fx
+        HyX6LU4UwFK72qatfKvq7hDoBw==
+X-Google-Smtp-Source: APXvYqw+OfEEyB3xfAI37oaK29RA9mDOKTLFw5nj3JKGiort/AyaMdl7y16Gqto4M+I0KVjNmb6jKg==
+X-Received: by 2002:a1c:a509:: with SMTP id o9mr4232367wme.6.1556837190231;
+        Thu, 02 May 2019 15:46:30 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id t27sm1017030wrb.27.2019.05.02.15.46.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 15:46:29 -0700 (PDT)
+Message-ID: <5ccb7345.1c69fb81.f4fd8.64b5@mx.google.com>
+Date:   Thu, 02 May 2019 15:46:29 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 2 May 2019 18:46:09 -0400
-Message-ID: <CA+CK2bBT=goxf5KWLhca7uQutUj9670aL9r02_+BsJ+bLkjj=g@mail.gmail.com>
-Subject: Re: [PATCH v6 00/12] mm: Sub-section memory hotplug support
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        stable <stable@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.19.38-73-gdb2d00a74567
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: linux-4.19.y
+X-Kernelci-Tree: stable-rc
+In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
+References: <20190502143333.437607839@linuxfoundation.org>
+Subject: Re: [PATCH 4.19 00/72] 4.19.39-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+stable-rc/linux-4.19.y boot: 123 boots: 1 failed, 119 passed with 3 offline=
+ (v4.19.38-73-gdb2d00a74567)
 
-How do you test these patches? Do you have any instructions?
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.19.y/kernel/v4.19.38-73-gdb2d00a74567/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
+y/kernel/v4.19.38-73-gdb2d00a74567/
 
-I see for example that check_hotplug_memory_range() still enforces
-memory_block_size_bytes() alignment.
+Tree: stable-rc
+Branch: linux-4.19.y
+Git Describe: v4.19.38-73-gdb2d00a74567
+Git Commit: db2d00a74567be6e93472fcc4bfa8ada96cc6397
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 69 unique boards, 24 SoC families, 14 builds out of 206
 
-Also, after removing check_hotplug_memory_range(), I tried to online
-16M aligned DAX memory, and got the following panic:
+Boot Regressions Detected:
 
-# echo online > /sys/devices/system/memory/memory7/state
-[  202.193132] WARNING: CPU: 2 PID: 351 at drivers/base/memory.c:207
-memory_block_action+0x110/0x178
-[  202.193391] Modules linked in:
-[  202.193698] CPU: 2 PID: 351 Comm: sh Not tainted
-5.1.0-rc7_pt_devdax-00038-g865af4385544-dirty #9
-[  202.193909] Hardware name: linux,dummy-virt (DT)
-[  202.194122] pstate: 60000005 (nZCv daif -PAN -UAO)
-[  202.194243] pc : memory_block_action+0x110/0x178
-[  202.194404] lr : memory_block_action+0x90/0x178
-[  202.194506] sp : ffff000016763ca0
-[  202.194592] x29: ffff000016763ca0 x28: ffff80016fd29b80
-[  202.194724] x27: 0000000000000000 x26: 0000000000000000
-[  202.194838] x25: ffff000015546000 x24: 00000000001c0000
-[  202.194949] x23: 0000000000000000 x22: 0000000000040000
-[  202.195058] x21: 00000000001c0000 x20: 0000000000000008
-[  202.195168] x19: 0000000000000007 x18: 0000000000000000
-[  202.195281] x17: 0000000000000000 x16: 0000000000000000
-[  202.195393] x15: 0000000000000000 x14: 0000000000000000
-[  202.195505] x13: 0000000000000000 x12: 0000000000000000
-[  202.195614] x11: 0000000000000000 x10: 0000000000000000
-[  202.195744] x9 : 0000000000000000 x8 : 0000000180000000
-[  202.195858] x7 : 0000000000000018 x6 : ffff000015541930
-[  202.195966] x5 : ffff000015541930 x4 : 0000000000000001
-[  202.196074] x3 : 0000000000000001 x2 : 0000000000000000
-[  202.196185] x1 : 0000000000000070 x0 : 0000000000000000
-[  202.196366] Call trace:
-[  202.196455]  memory_block_action+0x110/0x178
-[  202.196589]  memory_subsys_online+0x3c/0x80
-[  202.196681]  device_online+0x6c/0x90
-[  202.196761]  state_store+0x84/0x100
-[  202.196841]  dev_attr_store+0x18/0x28
-[  202.196927]  sysfs_kf_write+0x40/0x58
-[  202.197010]  kernfs_fop_write+0xcc/0x1d8
-[  202.197099]  __vfs_write+0x18/0x40
-[  202.197187]  vfs_write+0xa4/0x1b0
-[  202.197295]  ksys_write+0x64/0xd8
-[  202.197430]  __arm64_sys_write+0x18/0x20
-[  202.197521]  el0_svc_common.constprop.0+0x7c/0xe8
-[  202.197621]  el0_svc_handler+0x28/0x78
-[  202.197706]  el0_svc+0x8/0xc
-[  202.197828] ---[ end trace 57719823dda6d21e ]---
+arm:
 
-Thank you,
-Pasha
+    multi_v7_defconfig:
+        gcc-7:
+          stih410-b2120:
+              lab-baylibre-seattle: new failure (last pass: v4.19.38)
+
+Boot Failure Detected:
+
+arm:
+    multi_v7_defconfig:
+        gcc-7:
+            stih410-b2120: 1 failed lab
+
+Offline Platforms:
+
+arm:
+
+    davinci_all_defconfig:
+        gcc-7
+            dm365evm,legacy: 1 offline lab
+
+    exynos_defconfig:
+        gcc-7
+            exynos5800-peach-pi: 1 offline lab
+
+    multi_v7_defconfig:
+        gcc-7
+            exynos5800-peach-pi: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
