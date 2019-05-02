@@ -3,145 +3,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262B6C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A5DC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E992720578
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556830540;
-	bh=45Rdfhr1bntZwkSCUyzJ4d2d7mBe7xp+jSE4IRmie1s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uWVln/POIFyZKehVoaxOgkHeTMea18qtfy8JUY5+AqFoptqo5EG+kXdGf5VrJmmeo
-	 qBhvgaFGAkPLT28vxS5trtB2yE/OW+zaOjqmXD0uB3d5hP2ckbAznJCGQiwQ9K+6Pf
-	 fRY4pms3j38/V4Imo/NOFDlxo+YeTMeLTdM21OQw=
+	by mail.kernel.org (Postfix) with ESMTP id 8006A20578
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 20:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KgC8Txd4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfEBUzi (ORCPT
+        id S1726394AbfEBU4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 16:55:38 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41262 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfEBUzi (ORCPT
+        Thu, 2 May 2019 16:56:41 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44850 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbfEBU4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 16:55:38 -0400
-Received: by mail-lf1-f67.google.com with SMTP id d8so2907294lfb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 13:55:37 -0700 (PDT)
+        Thu, 2 May 2019 16:56:40 -0400
+Received: by mail-io1-f67.google.com with SMTP id r71so3444603iod.11
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 13:56:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9eWa5vFKZPEJ8DW2XaC7JXAPKdGCG2IN2Y9wVvZv45s=;
-        b=Cx3zQ0UKjjMz51LsOvr1ic+6VE8tQ4HPzkevgcUly/S86/MNpxZqSG4o20EQv0So+W
-         xHmowGihlJAYSjpRF77/Gi8EjbFtkwBPUA5dnvni2jvpBKK7LKBaOoNVRF0Hc3/Mrf0r
-         AikJgVeOLVaZ2oVA0t3qkDKimhPFDbi9a26ks=
+        bh=W3LPddwCKGY2xDs2u/DUWFbBGqANYJTYynM8oS/U41s=;
+        b=KgC8Txd4sqFpfNVIU5Wc0c0htULB4U6DQmgHOL62Lo4Qhb7H8HeoP6A5oyBRfRlIxH
+         nbujZgFqKo77czxlk/kYHMvFORPVv3giYwy/vyNp+e5oH4IrW1KDEJN1DWBhUNtI7QWi
+         Jud+60EOp+yWaRfrdV/xm2B2vgIN4UsTjluESbASHsPOg2gqqxpsMYXqfKwILZWxH4Qf
+         xY8RD73W6/ytjIAP8KEyoS53A04zKtk6p1VGqlaftgWj7DFwAErc2E/gr9bz3vf8H1Ae
+         y3fHfE6gJdC97GBgVgLqfluYDtX+PSbeRDTlYIaOf3VAmN5x9tJYBIkgwJ8kvCLdXigZ
+         Rhkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9eWa5vFKZPEJ8DW2XaC7JXAPKdGCG2IN2Y9wVvZv45s=;
-        b=UhR/uRO3E88lH39I9M/fu0cXnDDOykNyLUQNpvM+NhRXS72CPua8QLFh5GlavrcTd7
-         p+KDDNzZvo1h0AipRF5UiTdBZew8C+VD2CFq6tfGV6bRbbIqZfY03TeYyfjrhhxjviGJ
-         1qG/0vhUvQ1WMTvvjHX2I+RsqnNvpLbECNTcQvd/hlm/kFbPAOEcVozBlOI/lZDty3x4
-         aWuMLFVL8pWPmfhG5cNILfMKwDfvfF9jPiqDbuTsGvqZ4O7LO8zdxnO1tJXwZ7fVgJ5q
-         594THYpigmrqDelM/OvXCt2bcn1vq439bMA2exvTif7WifLnV5GsAgmHndsHqu92KLWt
-         BBOg==
-X-Gm-Message-State: APjAAAWGfdnhHQIHPug/gsasmqKt4uHZ+p2N7pNQ+BXdNEhdl06XspSO
-        U/FbsW0Q4+ECRfZHwUo7tbRFQow46KM=
-X-Google-Smtp-Source: APXvYqy9AbTPk0e/LJq8Q+PBptznS1ckVtfPLZfqORfl44KT8CyzkmhqUCllKhTCN7tl+LEqRFaJcQ==
-X-Received: by 2002:a19:c216:: with SMTP id l22mr3001231lfc.112.1556830536162;
-        Thu, 02 May 2019 13:55:36 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id s6sm13014ljh.65.2019.05.02.13.55.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 13:55:35 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id v18so725433lfi.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 13:55:35 -0700 (PDT)
-X-Received: by 2002:ac2:598b:: with SMTP id w11mr3275555lfn.62.1556830185843;
- Thu, 02 May 2019 13:49:45 -0700 (PDT)
+        bh=W3LPddwCKGY2xDs2u/DUWFbBGqANYJTYynM8oS/U41s=;
+        b=bRtoz/d6I5cu1wQm6UQgJIyGHHcCZiy4GY6qnWhQrQ8wxBBlZYaKD8EW4JdDXz1I0o
+         klZFB7KRh5vCAF4Ai/6CObqKcJWG3f7KvtECaECk71LA7vT+7mn3rqxo/ZsRbCq1WMN7
+         r0JL2qPTnuc0HhpH7z675ku4VedU/dtpTBaDpBUVVre509ITO3JjzeQGdxlHelFS7GsD
+         DJ6RPW4wXG/OUWBMEBsKwdfAvg7vd49uJ+XVBJ7D6XX1nQxtzji2yW7tk22YE3qRoRch
+         1jwfmVjMcmI0VPLDJPfPQmxowuVRHe/nGvVaVBm0H8mjYkapyh/kGn5q5Vs80t12X85J
+         W2ag==
+X-Gm-Message-State: APjAAAUJEE+WQ3EDkGNKbmm2GCT887fo7N60QbMv+Gc+pKRbLkQlmSdy
+        BZOfHWTVsxqIuL7818XV0vSogHR/m5m6rVOZYyDSow==
+X-Google-Smtp-Source: APXvYqw8fJr5vPiI/5b4rrryNsL0YNv88XUlTZMDz7MCDm+On7B/QMbwAD7N2VgsEzqDAu88wY0gE9GedHWaSxSS7n4=
+X-Received: by 2002:a6b:7b47:: with SMTP id m7mr4208092iop.173.1556830599457;
+ Thu, 02 May 2019 13:56:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190501202830.347656894@goodmis.org> <20190501203152.397154664@goodmis.org>
- <20190501232412.1196ef18@oasis.local.home> <20190502162133.GX2623@hirez.programming.kicks-ass.net>
- <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
- <20190502181811.GY2623@hirez.programming.kicks-ass.net> <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
- <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 2 May 2019 13:49:29 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com>
-Message-ID: <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+References: <20190227202658.197113-1-matthewgarrett@google.com>
+ <20190227202658.197113-3-matthewgarrett@google.com> <CAJzaN5pUJoOCz5-ZDSnTb6dbVPuy0QwmFD0CeofAGK+bRQx0og@mail.gmail.com>
+ <CACdnJutpBPAX6TOGgs3Ng2v_cC5hAf-3pHThESvjQ9vbvQeVkA@mail.gmail.com>
+ <CAKv+Gu9PF4u=-7QL4e36Q3S5kC4+5Z=yLYHLT9jE+eNY7YUV7A@mail.gmail.com> <CACdnJuvDuw0X9iwEqOu7EjM5ca1f+n7f=xqzrTPS9PyrmqKNHQ@mail.gmail.com>
+In-Reply-To: <CACdnJuvDuw0X9iwEqOu7EjM5ca1f+n7f=xqzrTPS9PyrmqKNHQ@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 2 May 2019 22:56:27 +0200
+Message-ID: <CAKv+Gu9GpmK7-kb2GJuhrL2Qau7ebqDdy4-LdwFDmPz-Os0quw@mail.gmail.com>
+Subject: Re: [PATCH V5 2/4] tpm: Reserve the TPM final events table
+To:     Matthew Garrett <mjg59@google.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 1:22 PM Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, 2 May 2019 at 20:04, Matthew Garrett <mjg59@google.com> wrote:
 >
-> Something like so; it boots; but I could've made some horrible mistake
-> (again).
+> On Thu, May 2, 2019 at 12:15 AM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+> >
+> > (+ Ingo)
+> >
+> > On Tue, 30 Apr 2019 at 21:52, Matthew Garrett <mjg59@google.com> wrote:
+> > >
+> > > On Tue, Apr 30, 2019 at 6:07 AM Bartosz Szczepanek <bsz@semihalf.com> wrote:
+> > > >
+> > > > I may be a little late with this comment, but I've just tested these
+> > > > patches on aarch64 platform (from the top of jjs/master) and got
+> > > > kernel panic ("Unable to handle kernel read", full log at the end of
+> > > > mail). I think there's problem with below call to
+> > > > tpm2_calc_event_log_size(), where physical address of efi.tpm_log is
+> > > > passed as (void *) and never remapped:
+> > >
+> > > Yes, it looks like this is just broken. Can you try with the attached patch?
+> >
+> > I'm a bit uncomfortable with EFI code that is obviously broken and
+> > untested being queued for the next merge window in another tree.
+>
+> The patchset was Cc:ed to linux-efi@. Is there anything else I should
+> have done to ensure you picked it up rather than Jarkko?
 
-This actually looks much better to me.
-
-Maybe it's more lines (I didn't check), but it's a lot simpler in that
-now the magic of the int3 stack doesn't get exposed to anything else.
-
-We *could* also make this kernel-mode-only do_int3() be a special
-function, and do something like
-
-        # args: pt_regs pointer (no error code for int3)
-        movl %esp,%eax
-        # allocate a bit of extra room on the stack, so that
-'kernel_int3' can move the pt_regs
-        subl $8,%esp
-        call kernel_int3
-        movl %eax,%esp
-
-and not do any stack switching magic in the asm code AT ALL. We'd do
-
-    struct pt_regs *kernel_int3(struct pt_regs *regs)
-    {
-        ..
-        return regs;
-    }
-
-and now you the rule for call emulation ends up being that you need to
-"memmove()" the ptregs up and down properly, and return the new
-pt_regs pointer.
-
-Hmm? That would simplify the asm code further, but some people might
-find it objectionable?
-
-                  Linus
+No, I am not saying it was you who did anything wrong - Jarkko and I
+should probably have aligned better. But my own testing wouldn't have
+caught this particular issue either (I am still in the process of
+getting access to ARM machines with a TPM), so it wouldn't have made a
+huge difference in any case.
