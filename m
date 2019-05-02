@@ -2,114 +2,91 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9441CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E596C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6C02081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B132081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:52:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZSaTxtU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfEBNsw (ORCPT
+        id S1726324AbfEBNwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 09:48:52 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:65520 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726203AbfEBNsw (ORCPT
+        Thu, 2 May 2019 09:52:49 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37397 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBNws (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 09:48:52 -0400
-X-UUID: de439af8b9254a9896a23ebec1854f85-20190502
-X-UUID: de439af8b9254a9896a23ebec1854f85-20190502
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1561821656; Thu, 02 May 2019 21:48:22 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 2 May 2019 21:48:21 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 2 May 2019 21:48:08 +0800
-Message-ID: <1556804888.28808.6.camel@mtksdaap41>
-Subject: Re: [PATCH 1/2] pinctrl: mediatek: Add mtk_eint_pm_ops to common-v2
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-CC:     <linux-mediatek@lists.infradead.org>,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <evgreen@chromium.org>,
-        <swboyd@chromium.org>, <linux-gpio@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 2 May 2019 21:48:08 +0800
-In-Reply-To: <20190429032551.65975-2-drinkcat@chromium.org>
-References: <20190429032551.65975-1-drinkcat@chromium.org>
-         <20190429032551.65975-2-drinkcat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 2 May 2019 09:52:48 -0400
+Received: by mail-lj1-f196.google.com with SMTP id b12so2263458lji.4;
+        Thu, 02 May 2019 06:52:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5anwCJxZnrogG1HpaX5y6QTVoKVHb6NYl3V1OWC8Maw=;
+        b=fZSaTxtUp9KZxUwqiulAv3Yf8e0/0Tk8FoqOybYS6zR3CxOOmSDfy0TNx+CGk4Eoch
+         v1bVlaK+AAFJvqFsHux0G0CChokbiD1DMQXApebfeG3bEna9BB7jTs+NTPVBaTaXXqVH
+         Kg7dyYsa/qzl21EcdbRGK5viwRJwQLI7e4+Vmb0zeO+PaGqJ5uUVpEKG+rqzHYIQ+ujL
+         PV2Lzv2rg/TGcg/Aq37DYQgbmD1hOCK9lU8mcvBxG90juU/77zDTveC+nz7OIMNFbbSq
+         QIQrKrZtqle2y6b3rLC5UqXFHhhZrZmQjvAid7C59nmKpVTddv6ESm8AZsk+kS75rKGR
+         3fzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5anwCJxZnrogG1HpaX5y6QTVoKVHb6NYl3V1OWC8Maw=;
+        b=bC7PCgWg09wNgB2un8IiutHay7w2FUcmkk/vZKmzVXwO15XL8WIApH/igeVscqH8vl
+         wGuCxf6viMspIr2X0j5rY78KDgR53etsdVjh7Gp8OXm0BczFAbyvrmhJUsKrsD4t6mEX
+         gbiXafvNgK5Aq50o8pk3HN9HpKqtexGk2jD1Cpnpv7Kgv3B50NtBs8G/pXuw5GOmkgTs
+         kDAGG8QJtyPS81HidWfOwGVnTUkyKDlX2uHF68bz0Kssujz1JOUu4jMVDEa3ehjDkLqm
+         kGS1u8GE6mA3i/rtMgEu17USmSiDWBMw0mHAvAtjGb7Ccg7MncXSSeiSFotoN8yxRqlY
+         7FpQ==
+X-Gm-Message-State: APjAAAVJs8Cb8wVD+w5TT7syaasRLAUzYAF9TrCBG3rofpYd5kVM73Ff
+        dcWZaF9JtVU+Gg0MM+XO+1+n19VsLQ5vZIVksf0=
+X-Google-Smtp-Source: APXvYqwpy0wkkhhf9ipmjbRgmrEAJI6N5SaQzNQ2z75ilDtSMuEnGod5PWv+zB0VGlgyLHDHCTU+WJ1wY+nHifNPqTA=
+X-Received: by 2002:a2e:a0c4:: with SMTP id f4mr2067329ljm.100.1556805166266;
+ Thu, 02 May 2019 06:52:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+References: <55a0abac1c2efc4921588ee87986da43af1eb35a.1556802190.git.agx@sigxcpu.org>
+In-Reply-To: <55a0abac1c2efc4921588ee87986da43af1eb35a.1556802190.git.agx@sigxcpu.org>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 2 May 2019 10:52:40 -0300
+Message-ID: <CAOMZO5B3GqJoGtN42OeukxVXEUxsDRPsgMGf1huKQ7xZFYedZQ@mail.gmail.com>
+Subject: Re: [PATCH v2] clk: imx8mq: Add dsi_ipg_div
+To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-04-29 at 11:25 +0800, Nicolas Boichat wrote:
-> pinctrl variants that include pinctrl-mtk-common-v2.h (and not
-> pinctrl-mtk-common.h) also need to use mtk_eint_pm_ops to setup
-> wake mask properly, so copy over the pm_ops to v2.
-> 
-> It is not easy to merge the 2 copies (or move
-> mtk_eint_suspend/resume to mtk-eint.c), as we need to
-> dereference pctrl->eint, and struct mtk_pinctrl *pctl has a
-> different structure definition for v1 and v2.
-> 
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> Reviewed-by: Chuanjia Liu <Chuanjia.Liu@mediatek.com>
-> ---
->  .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 19 +++++++++++++++++++
->  .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  1 +
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 20e1c890e73b30c..7e19b5a4748eafe 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -723,3 +723,22 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +
-> +static int mtk_eint_suspend(struct device *device)
-> +{
-> +	struct mtk_pinctrl *pctl = dev_get_drvdata(device);
-> +
-> +	return mtk_eint_do_suspend(pctl->eint);
-> +}
-> +
-> +static int mtk_eint_resume(struct device *device)
-> +{
-> +	struct mtk_pinctrl *pctl = dev_get_drvdata(device);
-> +
-> +	return mtk_eint_do_resume(pctl->eint);
-> +}
-> +
-> +const struct dev_pm_ops mtk_eint_pm_ops = {
-> +	.suspend_noirq = mtk_eint_suspend,
-> +	.resume_noirq = mtk_eint_resume,
-> +};
+On Thu, May 2, 2019 at 10:07 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+>
+> It's defined in imx8mq-clock.h but wasn't assigned yet. It's used as
+> clk_tx_esc in the nwl dsi host controller (i.MX8MQ RM, Rev. 0, 01/2018
+> Sect. 13.5.3.7.4).
+>
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
 
-This is identical to the one in pinctrl-mtk-common.c and will have name
-clash if both pinctrl-mtk-common.c and pinctrl-mtk-common-v2.c are
-built.
-
-It would be better if we try to merge both version into mtk-eint.c, this
-way we could also remove some global functions.
-
-Joe.C
-
-
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
