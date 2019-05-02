@@ -3,27 +3,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A73C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EA4C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFE52081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 633222089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfEBF7b (ORCPT
+        id S1726387AbfEBF7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 01:59:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60928 "EHLO mx1.suse.de"
+        Thu, 2 May 2019 01:59:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60998 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725763AbfEBF7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 01:59:30 -0400
+        id S1725763AbfEBF7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 01:59:51 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7065AABE1;
-        Thu,  2 May 2019 05:59:29 +0000 (UTC)
-Subject: Re: [PATCH 03/24] scsi_netlink: remove duplicate GPL boilerplate text
+        by mx1.suse.de (Postfix) with ESMTP id 439FAABE1;
+        Thu,  2 May 2019 05:59:50 +0000 (UTC)
+Subject: Re: [PATCH 04/24] scsi_transport.h: switch to SPDX tags
 To:     Christoph Hellwig <hch@lst.de>,
         "James E . J . Bottomley" <jejb@linux.ibm.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>
@@ -35,14 +35,14 @@ Cc:     Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
         linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
         osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org
 References: <20190501161417.32592-1-hch@lst.de>
- <20190501161417.32592-4-hch@lst.de>
+ <20190501161417.32592-5-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <dd20309a-9fe2-ae63-c49e-a6645980e352@suse.de>
-Date:   Thu, 2 May 2019 07:59:28 +0200
+Message-ID: <90aa5954-1f69-5fd1-1884-a781ff23fcc6@suse.de>
+Date:   Thu, 2 May 2019 07:59:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190501161417.32592-4-hch@lst.de>
+In-Reply-To: <20190501161417.32592-5-hch@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -52,13 +52,12 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 5/1/19 6:13 PM, Christoph Hellwig wrote:
-> The SCSI netlink uapi header already has a proper SPDX tag, remove the
-> duplicate boilerplate text.
+> Use the the GPLv2+ SPDX tag instead of verbose boilerplate text.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->   include/uapi/scsi/scsi_netlink.h | 15 ---------------
->   1 file changed, 15 deletions(-)
+>   include/scsi/scsi_transport.h | 15 +--------------
+>   1 file changed, 1 insertion(+), 14 deletions(-)
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.com>
 
