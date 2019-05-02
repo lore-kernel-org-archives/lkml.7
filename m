@@ -2,191 +2,198 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43596C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863B0C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1879B2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5624D20449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556811442;
+	bh=klZujYFh1t8r4SX5xtfER9Ci59R3FWOL3P+EcRdPjJI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=09BPt1vSfAZdzVnDsmWWWiNSAk+DV3nl0fbmn23jFWPVldayuQalyJHcqN9+Y8LnP
+	 2e646ez2O0c3Gk+N40NxEpkDCfK+XDBpZbomRFNZgFrZWehFhp54yFhimlAYZDXHIu
+	 hCHDgZuE7lD49nao3wGE8knRl95yI0id0pw/SNaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbfEBPaf (ORCPT
+        id S1728731AbfEBPhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:30:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35474 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728737AbfEBPa2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:28 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42FS4a3121025
-        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 11:30:27 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s824xbdt1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:30:26 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 2 May 2019 16:30:24 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 2 May 2019 16:30:15 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42FUEvu28835860
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 May 2019 15:30:14 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56FB84C058;
-        Thu,  2 May 2019 15:30:14 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E40C54C052;
-        Thu,  2 May 2019 15:30:09 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.205.209])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  2 May 2019 15:30:09 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Thu, 02 May 2019 18:30:08 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
-        Helge Deller <deller@gmx.de>, Ley Foon Tan <lftan@altera.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Richard Kuo <rkuo@codeaurora.org>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        nios2-dev@lists.rocketboards.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 15/15] unicore32: switch to generic version of pte allocation
-Date:   Thu,  2 May 2019 18:28:42 +0300
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
-References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19050215-0020-0000-0000-00000338993E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050215-0021-0000-0000-0000218B21F5
-Message-Id: <1556810922-20248-16-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=772 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905020103
+        Thu, 2 May 2019 11:37:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48876 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728721AbfEBPaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:30:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6C472081C;
+        Thu,  2 May 2019 15:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556811024;
+        bh=klZujYFh1t8r4SX5xtfER9Ci59R3FWOL3P+EcRdPjJI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2AuCSkcbH0BCHcmpqnsAmTaFVPapGbVmURoM4ULqcCwdUJRaHdl5ZcBObDHZDyfjl
+         nZRl6d6lSQ9SOHqFMIW7/rxQg1McDsaffKM93oyhr/ALCiGpKpGd80KQE0BCQIZWiw
+         Ki1clS2k9jIaUQ+GILybKcGBwboKqk1/cmL7hCgU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 5.0 046/101] staging: rtl8188eu: Fix potential NULL pointer dereference of kcalloc
+Date:   Thu,  2 May 2019 17:20:48 +0200
+Message-Id: <20190502143342.777450026@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
+References: <20190502143339.434882399@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace __get_free_page() and alloc_pages() calls with the generic
-__pte_alloc_one_kernel() and __pte_alloc_one().
+[ Upstream commit 7671ce0d92933762f469266daf43bd34d422d58c ]
 
-There is no functional change for the kernel PTE allocation.
+hwxmits is allocated via kcalloc and not checked for failure before its
+dereference. The patch fixes this problem by returning error upstream
+in rtl8723bs, rtl8188eu.
 
-The difference for the user PTEs, is that the clear_pte_table() is now
-called after pgtable_page_ctor() and the addition of __GFP_ACCOUNT to the
-GFP flags.
-
-The pte_free() and pte_free_kernel() versions are identical to the generic
-ones and can be simply dropped.
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Acked-by: Mukesh Ojha <mojha@codeaurora.org>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/unicore32/include/asm/pgalloc.h | 36 ++++++++----------------------------
- 1 file changed, 8 insertions(+), 28 deletions(-)
+ drivers/staging/rtl8188eu/core/rtw_xmit.c    |  9 +++++++--
+ drivers/staging/rtl8188eu/include/rtw_xmit.h |  2 +-
+ drivers/staging/rtl8723bs/core/rtw_xmit.c    | 14 +++++++-------
+ drivers/staging/rtl8723bs/include/rtw_xmit.h |  2 +-
+ 4 files changed, 16 insertions(+), 11 deletions(-)
 
-diff --git a/arch/unicore32/include/asm/pgalloc.h b/arch/unicore32/include/asm/pgalloc.h
-index 7cceabe..dd09af6 100644
---- a/arch/unicore32/include/asm/pgalloc.h
-+++ b/arch/unicore32/include/asm/pgalloc.h
-@@ -17,6 +17,10 @@
- #include <asm/cacheflush.h>
- #include <asm/tlbflush.h>
+diff --git a/drivers/staging/rtl8188eu/core/rtw_xmit.c b/drivers/staging/rtl8188eu/core/rtw_xmit.c
+index 3b1ccd138c3f..6fb6ea29a8b6 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_xmit.c
++++ b/drivers/staging/rtl8188eu/core/rtw_xmit.c
+@@ -174,7 +174,9 @@ s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, struct adapter *padapter)
  
-+#define __HAVE_ARCH_PTE_ALLOC_ONE_KERNEL
-+#define __HAVE_ARCH_PTE_ALLOC_ONE
-+#include <asm-generic/pgalloc.h>
-+
- #define check_pgt_cache()		do { } while (0)
+ 	pxmitpriv->free_xmit_extbuf_cnt = num_xmit_extbuf;
  
- #define _PAGE_USER_TABLE	(PMD_TYPE_TABLE | PMD_PRESENT)
-@@ -28,17 +32,14 @@ extern void free_pgd_slow(struct mm_struct *mm, pgd_t *pgd);
- #define pgd_alloc(mm)			get_pgd_slow(mm)
- #define pgd_free(mm, pgd)		free_pgd_slow(mm, pgd)
+-	rtw_alloc_hwxmits(padapter);
++	res = rtw_alloc_hwxmits(padapter);
++	if (res == _FAIL)
++		goto exit;
+ 	rtw_init_hwxmits(pxmitpriv->hwxmits, pxmitpriv->hwxmit_entry);
  
--#define PGALLOC_GFP	(GFP_KERNEL | __GFP_ZERO)
--
- /*
-  * Allocate one PTE table.
-  */
- static inline pte_t *
- pte_alloc_one_kernel(struct mm_struct *mm)
- {
--	pte_t *pte;
-+	pte_t *pte = __pte_alloc_one_kernel(mm);
- 
--	pte = (pte_t *)__get_free_page(PGALLOC_GFP);
- 	if (pte)
- 		clean_dcache_area(pte, PTRS_PER_PTE * sizeof(pte_t));
- 
-@@ -50,35 +51,14 @@ pte_alloc_one(struct mm_struct *mm)
- {
- 	struct page *pte;
- 
--	pte = alloc_pages(PGALLOC_GFP, 0);
-+	pte = __pte_alloc_one(mm, GFP_PGTABLE_USER);
- 	if (!pte)
- 		return NULL;
--	if (!PageHighMem(pte)) {
--		void *page = page_address(pte);
--		clean_dcache_area(page, PTRS_PER_PTE * sizeof(pte_t));
--	}
--	if (!pgtable_page_ctor(pte)) {
--		__free_page(pte);
--	}
--
-+	if (!PageHighMem(pte))
-+		clean_pte_table(page_address(pte));
- 	return pte;
+ 	for (i = 0; i < 4; i++)
+@@ -1503,7 +1505,7 @@ s32 rtw_xmit_classifier(struct adapter *padapter, struct xmit_frame *pxmitframe)
+ 	return res;
  }
  
--/*
-- * Free one PTE table.
-- */
--static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
--{
--	if (pte)
--		free_page((unsigned long)pte);
--}
--
--static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
--{
--	pgtable_page_dtor(pte);
--	__free_page(pte);
--}
--
- static inline void __pmd_populate(pmd_t *pmdp, unsigned long pmdval)
+-void rtw_alloc_hwxmits(struct adapter *padapter)
++s32 rtw_alloc_hwxmits(struct adapter *padapter)
  {
- 	set_pmd(pmdp, __pmd(pmdval));
+ 	struct hw_xmit *hwxmits;
+ 	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
+@@ -1512,6 +1514,8 @@ void rtw_alloc_hwxmits(struct adapter *padapter)
+ 
+ 	pxmitpriv->hwxmits = kcalloc(pxmitpriv->hwxmit_entry,
+ 				     sizeof(struct hw_xmit), GFP_KERNEL);
++	if (!pxmitpriv->hwxmits)
++		return _FAIL;
+ 
+ 	hwxmits = pxmitpriv->hwxmits;
+ 
+@@ -1519,6 +1523,7 @@ void rtw_alloc_hwxmits(struct adapter *padapter)
+ 	hwxmits[1] .sta_queue = &pxmitpriv->vi_pending;
+ 	hwxmits[2] .sta_queue = &pxmitpriv->be_pending;
+ 	hwxmits[3] .sta_queue = &pxmitpriv->bk_pending;
++	return _SUCCESS;
+ }
+ 
+ void rtw_free_hwxmits(struct adapter *padapter)
+diff --git a/drivers/staging/rtl8188eu/include/rtw_xmit.h b/drivers/staging/rtl8188eu/include/rtw_xmit.h
+index 788f59c74ea1..ba7e15fbde72 100644
+--- a/drivers/staging/rtl8188eu/include/rtw_xmit.h
++++ b/drivers/staging/rtl8188eu/include/rtw_xmit.h
+@@ -336,7 +336,7 @@ s32 rtw_txframes_sta_ac_pending(struct adapter *padapter,
+ void rtw_init_hwxmits(struct hw_xmit *phwxmit, int entry);
+ s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, struct adapter *padapter);
+ void _rtw_free_xmit_priv(struct xmit_priv *pxmitpriv);
+-void rtw_alloc_hwxmits(struct adapter *padapter);
++s32 rtw_alloc_hwxmits(struct adapter *padapter);
+ void rtw_free_hwxmits(struct adapter *padapter);
+ s32 rtw_xmit(struct adapter *padapter, struct sk_buff **pkt);
+ 
+diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+index 625e67f39889..a36b2213d8ee 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
++++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+@@ -260,7 +260,9 @@ s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, struct adapter *padapter)
+ 		}
+ 	}
+ 
+-	rtw_alloc_hwxmits(padapter);
++	res = rtw_alloc_hwxmits(padapter);
++	if (res == _FAIL)
++		goto exit;
+ 	rtw_init_hwxmits(pxmitpriv->hwxmits, pxmitpriv->hwxmit_entry);
+ 
+ 	for (i = 0; i < 4; i++) {
+@@ -2144,7 +2146,7 @@ s32 rtw_xmit_classifier(struct adapter *padapter, struct xmit_frame *pxmitframe)
+ 	return res;
+ }
+ 
+-void rtw_alloc_hwxmits(struct adapter *padapter)
++s32 rtw_alloc_hwxmits(struct adapter *padapter)
+ {
+ 	struct hw_xmit *hwxmits;
+ 	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
+@@ -2155,10 +2157,8 @@ void rtw_alloc_hwxmits(struct adapter *padapter)
+ 
+ 	pxmitpriv->hwxmits = rtw_zmalloc(sizeof(struct hw_xmit) * pxmitpriv->hwxmit_entry);
+ 
+-	if (pxmitpriv->hwxmits == NULL) {
+-		DBG_871X("alloc hwxmits fail!...\n");
+-		return;
+-	}
++	if (!pxmitpriv->hwxmits)
++		return _FAIL;
+ 
+ 	hwxmits = pxmitpriv->hwxmits;
+ 
+@@ -2204,7 +2204,7 @@ void rtw_alloc_hwxmits(struct adapter *padapter)
+ 
+ 	}
+ 
+-
++	return _SUCCESS;
+ }
+ 
+ void rtw_free_hwxmits(struct adapter *padapter)
+diff --git a/drivers/staging/rtl8723bs/include/rtw_xmit.h b/drivers/staging/rtl8723bs/include/rtw_xmit.h
+index 1b38b9182b31..37f42b2f22f1 100644
+--- a/drivers/staging/rtl8723bs/include/rtw_xmit.h
++++ b/drivers/staging/rtl8723bs/include/rtw_xmit.h
+@@ -487,7 +487,7 @@ s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, struct adapter *padapter);
+ void _rtw_free_xmit_priv (struct xmit_priv *pxmitpriv);
+ 
+ 
+-void rtw_alloc_hwxmits(struct adapter *padapter);
++s32 rtw_alloc_hwxmits(struct adapter *padapter);
+ void rtw_free_hwxmits(struct adapter *padapter);
+ 
+ 
 -- 
-2.7.4
+2.19.1
+
+
 
