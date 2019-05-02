@@ -2,107 +2,169 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=FSL_HELO_FAKE,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 581C8C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A076C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA8C204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811774;
-	bh=ScKkV3RlCgegUjZxC97f52fjXHPn9Qxp5wXrr3irFr8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OMwXpP1Q4DeCePTfYu3OMJlBD6PSqrkCCuOfRJNm9BzSzpKz0MmjuLqg+7NwekSLo
-	 wWCQ73JLMkdV8/dVMydYzD6R9RSnzavgSrYOK+hQCkd2Kz/iEXmvEaYurNqXlL4khl
-	 486dlUaNWv/DCgFqQUse7iIwnq0qrDaRVJ9ZUJOM=
+	by mail.kernel.org (Postfix) with ESMTP id 427C8205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfEBP1s (ORCPT
+        id S1728295AbfEBPm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbfEBP1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:27:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99FDA21783;
-        Thu,  2 May 2019 15:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810865;
-        bh=ScKkV3RlCgegUjZxC97f52fjXHPn9Qxp5wXrr3irFr8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eHl99IsLxGEO5ZSOsNG83m/OZOx/lG5hxAdDvwNfs+hs4SjsQgpbcR1qoVQagv3uD
-         IvzHuG9uHfI/v57c3p5fdPrHSC3vcFuq4jnC9XtlvSNo9FW2/lC2DgoI5wOe2ZyzQP
-         G8iSoZUWZP1LhwExZO9AZ4+QeN6e/Wb1hxdvE6dU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 59/72] x86/realmode: Dont leak the trampoline kernel address
-Date:   Thu,  2 May 2019 17:21:21 +0200
-Message-Id: <20190502143338.064447209@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
-References: <20190502143333.437607839@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 2 May 2019 11:42:57 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:54324 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727852AbfEBPmz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:42:55 -0400
+Received: by mail-it1-f194.google.com with SMTP id a190so4106695ite.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 08:42:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HgRltt9mKzKFkWid2jC0d7CivMviw3PVlrovQvkWUY0=;
+        b=O9/HfWL3UvwxCHJFkzkMph2Nnviw8rDOoib6l8c+NaX4b66t8HPovC+8H+IPDfzERq
+         IQTKNTx90hXFy108h7lvAXA0EVa5TquvuMhHDFYZ/CaWtb2hQXRBo1ikSbOY+fIzryxm
+         u9QbQcqVwxuqt4FyRj1jbKips8qkFIIahPTA4tXB2ZLDo2YS7tWZq7BqlujEMEUqE6jq
+         M2LjvmBADn7eolaG4gwHWpqb23AHybSOFSghO8xtwPyt+5j4ZLVlHQ2zqwxfApgDzUhN
+         BWGIHmQKD3f8C7y2k07b5XVARyvhnmm4z0ya1JY+E5J3UAhS0D+WyCYywaFNOB3ZRMvp
+         f+kA==
+X-Gm-Message-State: APjAAAXaRUt+mKR9mPBlovnMpeu0qfNz1hY8wfxKtXnVp1YwBV5HRRSj
+        oAx0yPSwTNzgH7aLUeHppsugdw==
+X-Google-Smtp-Source: APXvYqzEE6fGCQnogPRhO8dCkQ+ch5Y4EWRqETjULbeEJ7Mnea0b6DvrcjoovagYfJos3eSUEjIYdg==
+X-Received: by 2002:a02:a1d4:: with SMTP id o20mr3155865jah.49.1556811774318;
+        Thu, 02 May 2019 08:42:54 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id 127sm33865iox.65.2019.05.02.08.42.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 02 May 2019 08:42:53 -0700 (PDT)
+Date:   Thu, 2 May 2019 09:42:49 -0600
+From:   Raul Rangel <rrangel@chromium.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     linux-mmc@vger.kernel.org,
+        "Agrawal, Nitesh-kumar" <Nitesh-kumar.Agrawal@amd.com>,
+        djkurtz@chromium.org, linux-kernel@vger.kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "Sen, Pankaj" <Pankaj.Sen@amd.com>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
+        Avri Altman <avri.altman@wdc.com>, gene.chen@amd.com,
+        Chris.Wang@amd.com
+Subject: Re: [RFC PATCH 2/2] mmc: sdhci: Quirk for AMD SDHC Device 0x7906
+Message-ID: <20190502154249.GA25027@google.com>
+References: <20190501175457.195855-1-rrangel@chromium.org>
+ <20190501175457.195855-2-rrangel@chromium.org>
+ <08c3dc49-f5cb-401d-b900-12879f469728@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <08c3dc49-f5cb-401d-b900-12879f469728@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b929a500d68479163c48739d809cbf4c1335db6f ]
+Ou Thu, May 02, 2019 at 09:32:16AM +0300, Adrian Hunter wrote:
 
-Since commit
+Gene or Chris,
+Can you sign off on the patch.
 
-  ad67b74d2469 ("printk: hash addresses printed with %p")
-
-at boot "____ptrval____" is printed instead of the trampoline addresses:
-
-  Base memory trampoline at [(____ptrval____)] 99000 size 24576
-
-Remove the print as we don't want to leak kernel addresses and this
-statement is not needed anymore.
-
-Fixes: ad67b74d2469d9b8 ("printk: hash addresses printed with %p")
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190326203046.20787-1-mcroce@redhat.com
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- arch/x86/realmode/init.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-index d10105825d57..47d097946872 100644
---- a/arch/x86/realmode/init.c
-+++ b/arch/x86/realmode/init.c
-@@ -20,8 +20,6 @@ void __init set_real_mode_mem(phys_addr_t mem, size_t size)
- 	void *base = __va(mem);
- 
- 	real_mode_header = (struct real_mode_header *) base;
--	printk(KERN_DEBUG "Base memory trampoline at [%p] %llx size %zu\n",
--	       base, (unsigned long long)mem, size);
- }
- 
- void __init reserve_real_mode(void)
--- 
-2.19.1
-
-
-
+Thanks,
+Raul
+> Cc: some AMD people
+> 
+> On 1/05/19 8:54 PM, Raul E Rangel wrote:
+> > AMD SDHC 0x7906 requires a hard reset to clear all internal state.
+> > Otherwise it can get into a bad state where the DATA lines are always
+> > read as zeros.
+> > 
+> > This change requires firmware that can transition the device into
+> > D3Cold for it to work correctly. If the firmware does not support
+> > transitioning to D3Cold then the power state transitions are a no-op.
+> > 
+> > Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> > ---
+> > 
+> >  drivers/mmc/host/sdhci-pci-core.c | 51 ++++++++++++++++++++++++++++++-
+> >  1 file changed, 50 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
+> > index 99b0fec2836b..532fbcbd373b 100644
+> > --- a/drivers/mmc/host/sdhci-pci-core.c
+> > +++ b/drivers/mmc/host/sdhci-pci-core.c
+> > @@ -25,6 +25,7 @@
+> >  #include <linux/mmc/mmc.h>
+> >  #include <linux/scatterlist.h>
+> >  #include <linux/io.h>
+> > +#include <linux/iopoll.h>
+> >  #include <linux/gpio.h>
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/mmc/slot-gpio.h>
+> > @@ -1498,11 +1499,59 @@ static int amd_probe(struct sdhci_pci_chip *chip)
+> >  	return 0;
+> >  }
+> >  
+> > +static u32 sdhci_read_present_state(struct sdhci_host *host)
+> > +{
+> > +	return sdhci_readl(host, SDHCI_PRESENT_STATE);
+> > +}
+> > +
+> > +void amd_sdhci_reset(struct sdhci_host *host, u8 mask)
+> > +{
+> > +	struct sdhci_pci_slot *slot = sdhci_priv(host);
+> > +	struct pci_dev *pdev = slot->chip->pdev;
+> > +	u32 present_state;
+> > +
+> > +	/*
+> > +	 * SDHC 0x7906 requires a hard reset to clear all internal state.
+> > +	 * Otherwise it can get into a bad state where the DATA lines are always
+> > +	 * read as zeros.
+> > +	 */
+> > +	if (pdev->device == 0x7906 && (mask & SDHCI_RESET_ALL)) {
+> > +		pci_clear_master(pdev);
+> > +
+> > +		pci_save_state(pdev);
+> > +
+> > +		pci_set_power_state(pdev, PCI_D3cold);
+> > +		pr_debug("%s: power_state=%u\n", mmc_hostname(host->mmc),
+> > +			pdev->current_state);
+> > +		pci_set_power_state(pdev, PCI_D0);
+> > +
+> > +		pci_restore_state(pdev);
+> > +
+> > +		/*
+> > +		 * SDHCI_RESET_ALL says the card detect logic should not be
+> > +		 * reset, but since we need to reset the entire controller
+> > +		 * we should wait until the card detect logic has stabilized.
+> > +		 *
+> > +		 * This normally takes about 40ms.
+> > +		 */
+> > +		readx_poll_timeout(
+> > +			sdhci_read_present_state,
+> > +			host,
+> > +			present_state,
+> > +			present_state & SDHCI_CD_STABLE,
+> > +			10000,
+> > +			100000
+> > +		);
+> > +	}
+> > +
+> > +	return sdhci_reset(host, mask);
+> > +}
+> > +
+> >  static const struct sdhci_ops amd_sdhci_pci_ops = {
+> >  	.set_clock			= sdhci_set_clock,
+> >  	.enable_dma			= sdhci_pci_enable_dma,
+> >  	.set_bus_width			= sdhci_set_bus_width,
+> > -	.reset				= sdhci_reset,
+> > +	.reset				= amd_sdhci_reset,
+> >  	.set_uhs_signaling		= sdhci_set_uhs_signaling,
+> >  };
+> >  
+> > 
+> 
