@@ -2,79 +2,73 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D438C04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6691C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42BD7208C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 977892081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556781746;
+	bh=CQipXRbzbW8+BqJtJPyk/Gmg8NtCxOcXlOwFdQ+0OvQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mi1JxkwdcbdAnwWj+nFdqUCSXEFwXCzJ7wzcyac8n9OF+GyWA4mL7f6d3orY0RCKg
+	 iwyEHKlgrsQ7xUS6uE17ob2ZAFHIc2y71AupgAtKL1nS1zzAwDfJbHkISvwmfbC+Iq
+	 CXV1YUFM1vyDQBE3ZGfEYaD6EHv1X511e2vL+LsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbfEBHWJ (ORCPT
+        id S1726390AbfEBHWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 03:22:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:12074 "EHLO mga05.intel.com"
+        Thu, 2 May 2019 03:22:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbfEBHWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 03:22:09 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 00:22:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,420,1549958400"; 
-   d="scan'208";a="342704860"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by fmsmga006.fm.intel.com with ESMTP; 02 May 2019 00:22:05 -0700
-Date:   Thu, 2 May 2019 10:22:05 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jonas Witschel <diabonas@gmx.de>
-Cc:     Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Tadeusz Struk <tadeusz.struk@intel.com>, grawity@gmail.com,
-        James.Bottomley@hansenpartnership.com,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v4] tpm: fix an invalid condition in tpm_common_poll
-Message-ID: <20190502072205.GF14532@linux.intel.com>
-References: <155371155820.17863.10580533125620125669.stgit@tstruk-mobl1.jf.intel.com>
- <20190328123428.GF7094@linux.intel.com>
- <b29aaf62-2ea0-d6c6-32ee-44bc3fe8f03f@intel.com>
- <20190408120138.GA951@gandi.net>
- <20190409134421.GD9759@linux.intel.com>
- <e9cfa3db-42d7-4e1c-a371-2c810f911dab@gmx.de>
+        id S1725795AbfEBHWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 03:22:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D45102081C;
+        Thu,  2 May 2019 07:22:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556781744;
+        bh=CQipXRbzbW8+BqJtJPyk/Gmg8NtCxOcXlOwFdQ+0OvQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oDnxBiBT6HSRHlaWYmUFZQ08ia66Y5djWKTpd8nYmNrIfcEs8B4eN8yJes8HkPIXk
+         pa1nIy3kBumIdWzIn9cYT/dcMz+SKo0UK8P4yLQxj7IxLZhHQsijFwn/2I3ALq5qlF
+         oNnERViqNcC2nbHRgTAQSXHe+yr6nWBRQBIZ5gmo=
+Date:   Thu, 2 May 2019 09:22:21 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/5] livepatch: Fix kobject memleak
+Message-ID: <20190502072221.GA17544@kroah.com>
+References: <20190502023142.20139-1-tobin@kernel.org>
+ <20190502023142.20139-2-tobin@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e9cfa3db-42d7-4e1c-a371-2c810f911dab@gmx.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190502023142.20139-2-tobin@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 10:54:47PM +0200, Jonas Witschel wrote:
-> On 2019-04-09 15:44, Jarkko Sakkinen wrote:
-> > On Mon, Apr 08, 2019 at 02:01:38PM +0200, Thibaut Sautereau wrote:
-> >> [...]
-> >> What's the status of this patch now? It's needed in linux-5.0.y as TPM
-> >> 2.0 support is currently broken with those stable kernels without this
-> >> commit.
-> > 
-> > part of a PR.
-> > 
-> > https://lore.kernel.org/linux-integrity/20190329115544.GA27351@linux.intel.com/
+On Thu, May 02, 2019 at 12:31:38PM +1000, Tobin C. Harding wrote:
+> Currently error return from kobject_init_and_add() is not followed by a
+> call to kobject_put().  This means there is a memory leak.
 > 
-> It appears that the final version of the patch that was merged to
-> Linus's tree [1] does not include the "Cc: stable@vger.kernel.org" tag.
-> If I understand correctly, this means that the patch will not be
-> automatically included in the -stable tree without further action. Is
-> there a specific reason not to apply this patch to 5.0.x, or did the tag
+> Add call to kobject_put() in error path of kobject_init_and_add().
+> 
+> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 
-It is my mistake. What I can do is to post it manually to stable.
-I promise to do it as soon as it reaches the mainline.
-
-/Jarkko
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
