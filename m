@@ -2,220 +2,188 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3500CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A50C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E448620651
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD13C21734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXNG4ojT"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="D8noIPyB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfEBTt7 (ORCPT
+        id S1726542AbfEBTuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 15:49:59 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44173 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfEBTt7 (ORCPT
+        Thu, 2 May 2019 15:50:16 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41518 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfEBTuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 15:49:59 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d24so3211668otl.11;
-        Thu, 02 May 2019 12:49:58 -0700 (PDT)
+        Thu, 2 May 2019 15:50:16 -0400
+Received: by mail-qt1-f196.google.com with SMTP id c13so4062531qtn.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 12:50:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d7+HVRFu2AM1fwp/Uxq8TRBExBNTog8jh7HtzwRzt94=;
-        b=lXNG4ojT3BglYHazpv3qSM3NYPE1mD57Aeou3aln3uVU5dqizMm8TMaFk8WMB+Tvn+
-         LTrPsYrfaH/PMfgCoZTo49152T4a4aWVo/AX3QWQWyllUqTqA0eLxDxDYAVWLC/dhck7
-         yDcWwLw0x+R4bNKBnq3o0vinuEf5EfJEdyKHMIXCBwi4DLKehfIr1MRoLz8He63SeRRK
-         lX04fQmbW8mmPaUucAXaBAPEnSdYkTbjMsaGThj+YAEdDF2l0+RqL5jOlwl9PM5X0q+R
-         SoyOMKA+uvbW1z96NwVTp8MEb81gj/ptikBF1j8NXC9WuMG5DJq0UlDPwfXG8CzzlZBN
-         /M1A==
+        d=poorly.run; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5/u+2wMWD5qgsv9mU8zFBG54a7HxlNWxbgZL8h1Zsk8=;
+        b=D8noIPyBltKrHNdSLQv7QwB5qTJfo2xDPFC/KvHjHwbbZxsQRAFHWU7b3vXAAvEHvZ
+         5TxYtvys+v824zV3i33ByAa95amPXEwvI44S9nyP641VX+lI/6Gh6giAK8RbwU+Ejmf6
+         xbvbJxTBP4hP0xmhATwTHiBjqIZsarK+ZCZ2dVacQkWL3cH1uYl0xZw6uRVomJRKi3Qx
+         RbtPVEwYHf5RwppKGHDksQvLa67KHuYniPsdjCGJhHXba+A+zrib10fimTk+oIZPaw5P
+         GN3rVEAXdwlllHeoyq1qbeH2zHFV8CPmDb8uBlYCJi2xebkFwSVSaO7DdT96FLM/a8WF
+         /3XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=d7+HVRFu2AM1fwp/Uxq8TRBExBNTog8jh7HtzwRzt94=;
-        b=ghRg0jxhbIUi5jIvxSO3LzM2/SfcHsjeKStVRARJ3XBOx5mVmw3elrr/YXZ8tXaBM5
-         MTLCh1MKGCgLcKYs9LNFH2UpygEAm/dORtu8IIrbemgdwZWh3SPokEiO8ZiZoOU4br9o
-         OFcqom25Hjw81bQ+6EO2hlbE3cYu105AV4H9Ne46zmOLrXXUL1OL/w6idNqX0gov03RP
-         zh4IPtORZziizxKOfRks/tYfzbI9QGFxz1M3jt1ABMI//l6c8ZUeE5HyVVmLClE4tAyw
-         yB5wiW8pq38zT7V0hh4+eKjlYWG/6RDYUpIUp8Q6vnnq5BtjxZy8PrBgmM1OCCcPswXq
-         yQwQ==
-X-Gm-Message-State: APjAAAUq1CLcPv2A/OKJBCZtPzUjLc+m3neSexY3he/9fRPIyvDNIoiq
-        At46SWxK3ofWhXrv1f0UUyvqUYE=
-X-Google-Smtp-Source: APXvYqy3yUl1wopzjKHf7MOpJTgph/paN0jdERludfx+3GS9QCVlRhdPn2LWvW5MZjwV3ClkyV3lqA==
-X-Received: by 2002:a9d:7411:: with SMTP id n17mr3699349otk.205.1556826598024;
-        Thu, 02 May 2019 12:49:58 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.134.43])
-        by smtp.gmail.com with ESMTPSA id o5sm17085160otl.44.2019.05.02.12.49.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 12:49:56 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:d5e:aa5a:44d8:6907])
-        by serve.minyard.net (Postfix) with ESMTPSA id C9A031800D6;
-        Thu,  2 May 2019 19:49:55 +0000 (UTC)
-Date:   Thu, 2 May 2019 14:49:54 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Asmaa Mnebhi <Asmaa@mellanox.com>
-Cc:     Vadim Pasternak <vadimp@mellanox.com>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        Michael Shych <michaelsh@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Subject: Re: [PATCH v4 0/1] Add support for IPMB driver
-Message-ID: <20190502194954.GJ6623@minyard.net>
-Reply-To: minyard@acm.org
-References: <cover.1556645340.git.Asmaa@mellanox.com>
- <AM6PR05MB5224FCACBD4EF55F3890EC6AA23A0@AM6PR05MB5224.eurprd05.prod.outlook.com>
- <VI1PR05MB62392EDC0FD3C960519C91ABDA340@VI1PR05MB6239.eurprd05.prod.outlook.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5/u+2wMWD5qgsv9mU8zFBG54a7HxlNWxbgZL8h1Zsk8=;
+        b=du1RU4gegPbLYYL012BGg0Eq07Jg6S5JABbW8+u+L2ka8ezfGTaFrOUi2AlqYZwVv4
+         tR8RfCdS1TRZQpRje5+hVsWfMiUJ1nLwyZciXimIsJROyVwvf9AvlKrDKhsTSolh7wJ1
+         kwKeGH4Y98txFnf0kwUjdC+juejb7yNHKMn4h1Ju3FBjzZf1KuMBGXPkLWsMTffgXwdg
+         sNMCg7DNwh1zARsTEeo++VmD3LpFp5xtUret0/+UgpnwOe536bijT7MxGaE7Gw/dJOKM
+         L9mRfXLQIjIEKZawOTnRfMjzFUYq8lBktPwTDv9Ep5DAb3p+CLAWw9cVYCM63iUjdAVF
+         Fk1Q==
+X-Gm-Message-State: APjAAAVjNfBss5TTeD2ig6h8fSNwFp80chJ8mJwgi74TXuSGhx3s7Gb6
+        dUWBDNw0z/TjK6Av8aiceFfl4FOmpJo=
+X-Google-Smtp-Source: APXvYqxIvmYWNDjFSgSitmtaXaEYuycKYhYf5LPkJShiYp2oXu8Cmuhjsdd+iZmhigaosQYCQoLaJg==
+X-Received: by 2002:aed:2188:: with SMTP id l8mr4937051qtc.332.1556826614723;
+        Thu, 02 May 2019 12:50:14 -0700 (PDT)
+Received: from rosewood.cam.corp.google.com ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id k36sm34366qtc.52.2019.05.02.12.50.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 12:50:14 -0700 (PDT)
+From:   Sean Paul <sean@poorly.run>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Sean Paul <seanpaul@chromium.org>, Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 01/10] drm: Add atomic variants of enable/disable to encoder helper funcs
+Date:   Thu,  2 May 2019 15:49:43 -0400
+Message-Id: <20190502194956.218441-2-sean@poorly.run>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+In-Reply-To: <20190502194956.218441-1-sean@poorly.run>
+References: <20190502194956.218441-1-sean@poorly.run>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR05MB62392EDC0FD3C960519C91ABDA340@VI1PR05MB6239.eurprd05.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 06:06:12PM +0000, Asmaa Mnebhi wrote:
-> Hi Vadim, Hi Corey,
-> 
-> Please find inline comments answering your questions.
-> 
-> -----Original Message-----
-> From: Vadim Pasternak 
-> Sent: Tuesday, April 30, 2019 5:24 PM
-> To: Asmaa Mnebhi <Asmaa@mellanox.com>; minyard@acm.org; wsa@the-dreams.de; Michael Shych <michaelsh@mellanox.com>
-> Cc: Asmaa Mnebhi <Asmaa@mellanox.com>; linux-kernel@vger.kernel.org; linux-i2c@vger.kernel.org
-> Subject: RE: [PATCH v4 0/1] Add support for IPMB driver
-> 
-> 
-> 
-> > -----Original Message-----
-> > From: Asmaa Mnebhi <Asmaa@mellanox.com>
-> > Sent: Tuesday, April 30, 2019 8:59 PM
-> > To: minyard@acm.org; wsa@the-dreams.de; Vadim Pasternak 
-> > <vadimp@mellanox.com>; Michael Shych <michaelsh@mellanox.com>
-> > Cc: Asmaa Mnebhi <Asmaa@mellanox.com>; linux-kernel@vger.kernel.org; 
-> > linux-i2c@vger.kernel.org
-> > Subject: [PATCH v4 0/1] Add support for IPMB driver
-> > 
-> > Thank you for your feedback Vadim. I have addressed your comments.
-> 
-> Hi Asmaa,
-> 
-> Thank you for your comments and added doc.
-> 
-> > 
-> > 1) You are correct. This driver is not specific to Mellanox so I have 
-> > removed the Mellanox attribute.
-> > 
-> > 2) I have added a documentation file called IPMB.txt which explains 
-> > how this module works and how it should be instantiated. It is very 
-> > similar to the existing linux i2c-slave-eeprom module.
-> > 
-> > The HW for my testing works as follows:
-> > A BMC is connected to a Satellite MC via I2C (I2C is equivalent to 
-> > IPMB). The BMC initiates the IPMB requests and sends them via I2C.
-> > Obviously the BMC needs its own driver to do this which I haven't 
-> > included in this code. We have no intent of upstreaming that at the moment.
-> 
-> >> I believe you are going to do it at some point, right?
-> @Vadim Pasternak: I would.
-> @Corey: The ipmb-dev-int driver is not responsible for sending requests via I2C (unlike for example the ipmi_ssif driver). It is only responsible for receiving those requests and passing them to a user space program. Once a response is received from user space, it will forward that response back to the requester So in my testing for example, the source requester is the BMC, so I issue ipmitool commands from the BMC itself.
-> 
-> The driver that I have on my BMC (which I primarily designed for testing ipmb-dev-int) works hand in hand with the ipmi_msghandler and ipmi_devint to create the /dev/ipmi0 device file to enable the use of ipmitool program on the BMC. Once an ipmitool command is issued on the BMC,  the request message is sent to the Satellite MC. Once the BMC driver gets the response back from the Satellite MC, it will pass it to the ipmitool program which will display the output to the user. 
-> 
-> Please note that this ipmb-dev-int driver does not need ipmi_msghandler nor does it need ipmi_devintf to be loaded.
+From: Sean Paul <seanpaul@chromium.org>
 
-Ah, I misunderstood.  I thought you were talking about the IPMB driver on
-the BMC.  So what you have is something like:
+This patch adds atomic_enable and atomic_disable callbacks to the
+encoder helpers. This will allow encoders to make informed decisions in
+their start-up/shutdown based on the committed state.
 
-    Host                   BMC              Sat MC
-    ----                   ---              ------
-                       ipmb-dev-int <----> ipmb-dev-int
-    Linux IPMI drv <---> ipmi-host-int
+Aside from the new hooks, this patch also introduces the new signature
+for .atomic_* functions going forward. Instead of passing object state
+(well, encoders don't have atomic state, but let's ignore that), we pass
+the entire atomic state so the driver can inspect more than what's
+happening locally.
 
-I assume you can use the same ipmb-dev-int on the BMC and satellite MCs
-(assuming Linux runs on both).  You have another driver that runs on
-the BMC that talks to the host system through some sort of semi-custom
-interface, and then another driver that's on the Linux host that sits
-under ipmi_msghandler and provides the host access to that interface.
+This is particularly important for the upcoming self refresh helpers.
 
-That's a separate issue, as you said.
+Changes in v3:
+- Added patch to the set
 
--corey
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+---
+ drivers/gpu/drm/drm_atomic_helper.c      |  6 +++-
+ include/drm/drm_modeset_helper_vtables.h | 45 ++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+), 1 deletion(-)
 
-> 
-> > This ipmb-dev-int driver is to be loaded and instantiated on the 
-> > Satellite MC to be able to receive IPMB requests. These IPMB request 
-> > messages will be picked up by a user space program such (in my case it 
-> > is OpenIPMI) to handle the request and generate a response.
-> > The response will be then passed from the user program back to kernel space.
-> > Then this driver would send that response back to the BMC.
-> > 
-> > 3) You asked the following:
-> > 
-> > "Is it expected to be zero in vaid case?"
-> > The 8 least significant bits of the sum is always expected to be 0 in 
-> > the case where the checksum is valid. I have added a comment for clarifications.
-> 
-> 
-> > 
-> > "why do you need this cast?"
-> > buf[++ipmb_dev_p->msg_idx]=(u8)(client->addr<<1)
-> > This is because client->addr is of type unsigned short which is
-> > 2 bytes so it is safer to typecast it to u8 (u8* buf)
-> 
-> >>Better, if you can avoid cast.
-> >>Would compiler warn if you use for example rol16(client->addr, 1) & GENMASK(7, 0); or something like it?
-> I thought it wouldn't be too much of an issue to use typecast here since other existing ipmi drivers use typecasting: bt-bmc.c, kcs_bmc_aspeed.c, kcs_bmc_npcm7xx.c all use (u8) typecasting. 
-> But if you really think it is worth it, I could do that.
-> I just think it is not as straight forward to read this code as using a simple typecast. Some might wonder why a GENMASK is needed in this case.
-> 
-> 
-> 
-> > 
-> > "It could be only single ipmb-dev within the system? Couldn't it be 
-> > few, like master/slave for example?"
-> > My understanding of your question is that: what if we have multiple 
-> > instances of ipmb-dev-int, that we register it under different addresses?
-> > This driver only works as a slave so it will only be instantiated once 
-> > on the Satellite MC under one slave address.
-> 
-> >>I mentioned some config like:
-> >>BMC1 (master)  -- busA --|
-> >>			Satellite
-> >>BMC2 (standby)	-- busB --| 
-> 
-> >>Since this is not Mellanox specific driver, maybe it would be good to support multiple instances of it.
-> 
-> I see, I understand now. That sounds good.
-> I added support to instantiate several ipmb devices for the purpose of having multiple BMC masters for one Satellite MC. The design consists in naming each instantiated device with the IPMBus/I2C bus number associated with it. For example, :
-> BMC1 -----I2C/IPMB bus 1 ----- Satellite MC (/dev/ipmb-1)
-> BMC2 -----I2C/IPMB bus 2 ----- Satellite MC (/dev/ipmb-2)
-> 
-> I added documentation for that as well.
-> 
-> >
-> > Asmaa Mnebhi (1):
-> >   Add support for IPMB driver
-> > 
-> >  Documentation/IPMB.txt           |  53 ++++++
-> >  drivers/char/ipmi/Kconfig        |   8 +
-> >  drivers/char/ipmi/Makefile       |   1 +
-> >  drivers/char/ipmi/ipmb_dev_int.c | 381
-> > +++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 443 insertions(+)
-> >  create mode 100644 Documentation/IPMB.txt  create mode 100644 
-> > drivers/char/ipmi/ipmb_dev_int.c
-> > 
-> > --
-> > 2.1.2
-> 
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index 553415fe8ede..71cc7d6b0644 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -1001,6 +1001,8 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
+ 		if (funcs) {
+ 			if (new_conn_state->crtc && funcs->prepare)
+ 				funcs->prepare(encoder);
++			else if (funcs->atomic_disable)
++				funcs->atomic_disable(encoder, old_state);
+ 			else if (funcs->disable)
+ 				funcs->disable(encoder);
+ 			else if (funcs->dpms)
+@@ -1309,7 +1311,9 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+ 		drm_bridge_pre_enable(encoder->bridge);
+ 
+ 		if (funcs) {
+-			if (funcs->enable)
++			if (funcs->atomic_enable)
++				funcs->atomic_enable(encoder, old_state);
++			else if (funcs->enable)
+ 				funcs->enable(encoder);
+ 			else if (funcs->commit)
+ 				funcs->commit(encoder);
+diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
+index 8f3602811eb5..de57fb40cb6e 100644
+--- a/include/drm/drm_modeset_helper_vtables.h
++++ b/include/drm/drm_modeset_helper_vtables.h
+@@ -675,6 +675,51 @@ struct drm_encoder_helper_funcs {
+ 	enum drm_connector_status (*detect)(struct drm_encoder *encoder,
+ 					    struct drm_connector *connector);
+ 
++	/**
++	 * @atomic_disable:
++	 *
++	 * This callback should be used to disable the encoder. With the atomic
++	 * drivers it is called before this encoder's CRTC has been shut off
++	 * using their own &drm_crtc_helper_funcs.atomic_disable hook. If that
++	 * sequence is too simple drivers can just add their own driver private
++	 * encoder hooks and call them from CRTC's callback by looping over all
++	 * encoders connected to it using for_each_encoder_on_crtc().
++	 *
++	 * This callback is a variant of @disable that provides the atomic state
++	 * to the driver. It takes priority over @disable during atomic commits.
++	 *
++	 * This hook is used only by atomic helpers. Atomic drivers don't need
++	 * to implement it if there's no need to disable anything at the encoder
++	 * level. To ensure that runtime PM handling (using either DPMS or the
++	 * new "ACTIVE" property) works @atomic_disable must be the inverse of
++	 * @atomic_enable.
++	 */
++	void (*atomic_disable)(struct drm_encoder *encoder,
++			       struct drm_atomic_state *state);
++
++	/**
++	 * @atomic_enable:
++	 *
++	 * This callback should be used to enable the encoder. It is called
++	 * after this encoder's CRTC has been enabled using their own
++	 * &drm_crtc_helper_funcs.atomic_enable hook. If that sequence is
++	 * too simple drivers can just add their own driver private encoder
++	 * hooks and call them from CRTC's callback by looping over all encoders
++	 * connected to it using for_each_encoder_on_crtc().
++	 *
++	 * This callback is a variant of @enable that provides the atomic state
++	 * to the driver. It is called in place of @enable during atomic
++	 * commits.
++	 *
++	 * This hook is used only by atomic helpers, for symmetry with @disable.
++	 * Atomic drivers don't need to implement it if there's no need to
++	 * enable anything at the encoder level. To ensure that runtime PM
++	 * handling (using either DPMS or the new "ACTIVE" property) works
++	 * @enable must be the inverse of @disable for atomic drivers.
++	 */
++	void (*atomic_enable)(struct drm_encoder *encoder,
++			      struct drm_atomic_state *state);
++
+ 	/**
+ 	 * @disable:
+ 	 *
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
+
