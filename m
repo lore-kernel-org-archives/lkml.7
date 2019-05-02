@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C77C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FC4C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C735204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73D9F204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811830;
-	bh=AEVPONUc6OvFBB8Yxfip2dKnmzoT+a1ZJIOAZcEZVHQ=;
+	s=default; t=1556811841;
+	bh=pHbvQtuiIa1/SxLZDMZIIYi6w9fDBefFdWpM3Fmaiy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CQzd2BipXMJUmVS9hMjcRKAnnZ5vkN7PuzCwX7e/rcd3ZO1oe2ReOAZ+lBn5INL/i
-	 D+UaMsJhBpIk7rGb9KRRZcxeEhIsCCOskKHqdRVXLsuUPBpj3VcBGTNgMUlH4kEDR/
-	 zghrUtOemouHpGlvkUtpQzXhGd/b/ccHOuZMhvks=
+	b=sdDjjHNkUfl5cNygdOAAuc5NWB+g3F/E2LZGncFVi0QxoGZDaJbXIJG8XK4rMsINv
+	 O5q8yI4z5Lq4ar5Lfkj8n02DJ9iZvsyur7ToYw3MeeIC0p1MlsDCx0RbettTzS4hre
+	 +cnsi8j6AmYHFpEiTMKU4GkKudbpsH285Ycxbtj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfEBPnt (ORCPT
+        id S1727868AbfEBP1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:43:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43904 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:27:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbfEBP1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:27:09 -0400
+        id S1727853AbfEBP04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:26:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8B37208C4;
-        Thu,  2 May 2019 15:27:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3342920675;
+        Thu,  2 May 2019 15:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810828;
-        bh=AEVPONUc6OvFBB8Yxfip2dKnmzoT+a1ZJIOAZcEZVHQ=;
+        s=default; t=1556810815;
+        bh=pHbvQtuiIa1/SxLZDMZIIYi6w9fDBefFdWpM3Fmaiy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V0ZWYexExhYmzK1fIDS4InV/WMJCmTZ+v+LLW6Av2eauApgvLdr86iKQLGd0J6oFX
-         00doOXsz2UNkkX2GNZTBBAtuHoYf8Gqt9KNJnD3RMXhIvgATjgFIcSfK2UGx3paHKE
-         22KQ2s2RreXpaOboag8ntzeN5ItpBs/ws55GWrsA=
+        b=YKUJoj4oR+73eRcfl//Rt8d77xwWlvAyT0+vp4Cz0acl/NkvUxtkcvpLomyqS1GaW
+         zeGGpcsS0+fCrl+wbQOu4LCPpqzI3mN3vzmDZZikT+MPK8IyUgbb1lYZt/UJ1ISyO7
+         JUuu66CIIZzs+wD9SY7ffUCBh1c96vUrnGdxIHQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masanari Iida <standby24x7@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 43/72] ARM: dts: imx6qdl: Fix typo in imx6qdl-icore-rqs.dtsi
-Date:   Thu,  2 May 2019 17:21:05 +0200
-Message-Id: <20190502143336.915085208@linuxfoundation.org>
+Subject: [PATCH 4.19 39/72] staging: rtl8712: uninitialized memory in read_bbreg_hdl()
+Date:   Thu,  2 May 2019 17:21:01 +0200
+Message-Id: <20190502143336.631162263@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -60,40 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 41b37f4c0fa67185691bcbd30201cad566f2f0d1 ]
+[ Upstream commit 22c971db7dd4b0ad8dd88e99c407f7a1f4231a2e ]
 
-This patch fixes a spelling typo.
+Colin King reported a bug in read_bbreg_hdl():
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
-Fixes: cc42603de320 ("ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7 initial support")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+	memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+
+The problem is that "val" is uninitialized.
+
+This code is obviously not useful, but so far as I can tell
+"pcmd->cmdcode" is never GEN_CMD_CODE(_Read_BBREG) so it's not harmful
+either.  For now the easiest fix is to just call r8712_free_cmd_obj()
+and return.
+
+Fixes: 2865d42c78a9 ("staging: r8712u: Add the new driver to the mainline kernel")
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8712/rtl8712_cmd.c | 10 +---------
+ drivers/staging/rtl8712/rtl8712_cmd.h |  2 +-
+ 2 files changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-index acc3b11fba2a..cde3025d9603 100644
---- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-@@ -298,7 +298,7 @@
- 	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
- 	vmcc-supply = <&reg_sd3_vmmc>;
- 	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
--	bus-witdh = <4>;
-+	bus-width = <4>;
- 	no-1-8-v;
- 	status = "okay";
- };
-@@ -309,7 +309,7 @@
- 	pinctrl-1 = <&pinctrl_usdhc4_100mhz>;
- 	pinctrl-2 = <&pinctrl_usdhc4_200mhz>;
- 	vmcc-supply = <&reg_sd4_vmmc>;
--	bus-witdh = <8>;
-+	bus-width = <8>;
- 	no-1-8-v;
- 	non-removable;
- 	status = "okay";
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.c b/drivers/staging/rtl8712/rtl8712_cmd.c
+index b1dfe9f46619..63bc811681d9 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.c
++++ b/drivers/staging/rtl8712/rtl8712_cmd.c
+@@ -159,17 +159,9 @@ static u8 write_macreg_hdl(struct _adapter *padapter, u8 *pbuf)
+ 
+ static u8 read_bbreg_hdl(struct _adapter *padapter, u8 *pbuf)
+ {
+-	u32 val;
+-	void (*pcmd_callback)(struct _adapter *dev, struct cmd_obj	*pcmd);
+ 	struct cmd_obj *pcmd  = (struct cmd_obj *)pbuf;
+ 
+-	if (pcmd->rsp && pcmd->rspsz > 0)
+-		memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+-	pcmd_callback = cmd_callback[pcmd->cmdcode].callback;
+-	if (!pcmd_callback)
+-		r8712_free_cmd_obj(pcmd);
+-	else
+-		pcmd_callback(padapter, pcmd);
++	r8712_free_cmd_obj(pcmd);
+ 	return H2C_SUCCESS;
+ }
+ 
+diff --git a/drivers/staging/rtl8712/rtl8712_cmd.h b/drivers/staging/rtl8712/rtl8712_cmd.h
+index 9181bb6b04c3..a101a0a50955 100644
+--- a/drivers/staging/rtl8712/rtl8712_cmd.h
++++ b/drivers/staging/rtl8712/rtl8712_cmd.h
+@@ -152,7 +152,7 @@ enum rtl8712_h2c_cmd {
+ static struct _cmd_callback	cmd_callback[] = {
+ 	{GEN_CMD_CODE(_Read_MACREG), NULL}, /*0*/
+ 	{GEN_CMD_CODE(_Write_MACREG), NULL},
+-	{GEN_CMD_CODE(_Read_BBREG), &r8712_getbbrfreg_cmdrsp_callback},
++	{GEN_CMD_CODE(_Read_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Write_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Read_RFREG), &r8712_getbbrfreg_cmdrsp_callback},
+ 	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
 -- 
 2.19.1
 
