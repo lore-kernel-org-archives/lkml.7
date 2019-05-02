@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8654C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49CFC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADDE20C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A95D62081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811167;
-	bh=TC2ocAAMRnN/1stHeTPvtPRxwADOe+1p8h/G+G2vz0I=;
+	s=default; t=1556811172;
+	bh=qrom8PA1R3LAmTi7oI5KN6iS7Bh5BjG+4lldCyM88SI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GGxzqdHKWQWwDpAAhkqS15LmUlbAPY51D6KkhM0H3J+aVonOGkV8xJ2A4aqGJRlRn
-	 ckEs6I7Mkx+72qUhY8L+N64Vw1kM9ktZbLNa6cHrlno7v5Zl9KsK8NJ02Toye6jmIk
-	 5DkfCTCx5tJb3ikROQ/mckajQ4CzVOQExvI+ki8M=
+	b=gsNMNmKpCkdkw0xLa0YihiU5We/cCaRL2kzRTo1quvnNimnA559JpfO7SR/2AZAZh
+	 31trQA3Jogy5PRS+JBmZHQY7XvrU8x0JBuTXdZOCrTmtCj0fmWa9pU1ZsVUy4mpRzS
+	 eLZzFbEzl0BKtmaa0XsdxWzcbrWMwVRqD18kZ7VU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfEBPcq (ORCPT
+        id S1729273AbfEBPcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:32:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52566 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:32:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728849AbfEBPcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:32:43 -0400
+        id S1728349AbfEBPcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:32:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15BC8204FD;
-        Thu,  2 May 2019 15:32:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31A4820675;
+        Thu,  2 May 2019 15:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811162;
-        bh=TC2ocAAMRnN/1stHeTPvtPRxwADOe+1p8h/G+G2vz0I=;
+        s=default; t=1556811167;
+        bh=qrom8PA1R3LAmTi7oI5KN6iS7Bh5BjG+4lldCyM88SI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aEMC3wVXvsB/4/j2mlII8sf2BpcjwPF2dK2F3B+3l5q+oabif4xoHqzngvq3rvSAt
-         ZBdr+S5ziaTihkDZ6Ai5fJSzyewD54WMtNY4v7l/6y8m/jgYRDp6kV2zMawNzepHyL
-         GfF5d0hZTZbI1oERJgCDdPeGwrs61f9sX5k6C7PY=
+        b=Axh/waGiq4KRTQufLYTO6njIan3GONl5kuAkXxwARLc6PY3TRtwyT+o9RF4E7N3ez
+         Ilm7qPze7NzaNfIQZTkx7M0Vp+/Kk5wn/z0euoYgts2r+DydGi4uJtzb8BDtKVcg4y
+         sha3KjpRsoXBdBgeaeLNlH4ftL+6gtMuJKPRbKCU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Gary R Hook <gary.hook@amd.com>,
+        stable@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 097/101] iommu/amd: Reserve exclusion range in iova-domain
-Date:   Thu,  2 May 2019 17:21:39 +0200
-Message-Id: <20190502143346.348458634@linuxfoundation.org>
+Subject: [PATCH 5.0 099/101] ptrace: take into account saved_sigmask in PTRACE{GET,SET}SIGMASK
+Date:   Thu,  2 May 2019 17:21:41 +0200
+Message-Id: <20190502143346.455665723@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -60,96 +63,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8aafaaf2212192012f5bae305bb31cdf7681d777 ]
+[ Upstream commit fcfc2aa0185f4a731d05a21e9f359968fdfd02e7 ]
 
-If a device has an exclusion range specified in the IVRS
-table, this region needs to be reserved in the iova-domain
-of that device. This hasn't happened until now and can cause
-data corruption on data transfered with these devices.
+There are a few system calls (pselect, ppoll, etc) which replace a task
+sigmask while they are running in a kernel-space
 
-Treat exclusion ranges as reserved regions in the iommu-core
-to fix the problem.
+When a task calls one of these syscalls, the kernel saves a current
+sigmask in task->saved_sigmask and sets a syscall sigmask.
 
-Fixes: be2a022c0dd0 ('x86, AMD IOMMU: add functions to parse IOMMU memory mapping requirements for devices')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Reviewed-by: Gary R Hook <gary.hook@amd.com>
+On syscall-exit-stop, ptrace traps a task before restoring the
+saved_sigmask, so PTRACE_GETSIGMASK returns the syscall sigmask and
+PTRACE_SETSIGMASK does nothing, because its sigmask is replaced by
+saved_sigmask, when the task returns to user-space.
+
+This patch fixes this problem.  PTRACE_GETSIGMASK returns saved_sigmask
+if it's set.  PTRACE_SETSIGMASK drops the TIF_RESTORE_SIGMASK flag.
+
+Link: http://lkml.kernel.org/r/20181120060616.6043-1-avagin@gmail.com
+Fixes: 29000caecbe8 ("ptrace: add ability to get/set signal-blocked mask")
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c       | 9 ++++++---
- drivers/iommu/amd_iommu_init.c  | 7 ++++---
- drivers/iommu/amd_iommu_types.h | 2 ++
- 3 files changed, 12 insertions(+), 6 deletions(-)
+ include/linux/sched/signal.h | 18 ++++++++++++++++++
+ kernel/ptrace.c              | 15 +++++++++++++--
+ 2 files changed, 31 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index e628ef23418f..55b3e4b9d5dc 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -3166,21 +3166,24 @@ static void amd_iommu_get_resv_regions(struct device *dev,
- 		return;
- 
- 	list_for_each_entry(entry, &amd_iommu_unity_map, list) {
-+		int type, prot = 0;
- 		size_t length;
--		int prot = 0;
- 
- 		if (devid < entry->devid_start || devid > entry->devid_end)
- 			continue;
- 
-+		type   = IOMMU_RESV_DIRECT;
- 		length = entry->address_end - entry->address_start;
- 		if (entry->prot & IOMMU_PROT_IR)
- 			prot |= IOMMU_READ;
- 		if (entry->prot & IOMMU_PROT_IW)
- 			prot |= IOMMU_WRITE;
-+		if (entry->prot & IOMMU_UNITY_MAP_FLAG_EXCL_RANGE)
-+			/* Exclusion range */
-+			type = IOMMU_RESV_RESERVED;
- 
- 		region = iommu_alloc_resv_region(entry->address_start,
--						 length, prot,
--						 IOMMU_RESV_DIRECT);
-+						 length, prot, type);
- 		if (!region) {
- 			pr_err("Out of memory allocating dm-regions for %s\n",
- 				dev_name(dev));
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 66123b911ec8..84fa5b22371e 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2013,6 +2013,9 @@ static int __init init_unity_map_range(struct ivmd_header *m)
- 	if (e == NULL)
- 		return -ENOMEM;
- 
-+	if (m->flags & IVMD_FLAG_EXCL_RANGE)
-+		init_exclusion_range(m);
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index 13789d10a50e..76b8399b17f6 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -417,10 +417,20 @@ static inline void set_restore_sigmask(void)
+ 	set_thread_flag(TIF_RESTORE_SIGMASK);
+ 	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
+ }
 +
- 	switch (m->type) {
- 	default:
- 		kfree(e);
-@@ -2059,9 +2062,7 @@ static int __init init_memory_definitions(struct acpi_table_header *table)
- 
- 	while (p < end) {
- 		m = (struct ivmd_header *)p;
--		if (m->flags & IVMD_FLAG_EXCL_RANGE)
--			init_exclusion_range(m);
--		else if (m->flags & IVMD_FLAG_UNITY_MAP)
-+		if (m->flags & (IVMD_FLAG_UNITY_MAP | IVMD_FLAG_EXCL_RANGE))
- 			init_unity_map_range(m);
- 
- 		p += m->length;
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index eae0741f72dc..87965e4d9647 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -374,6 +374,8 @@
- #define IOMMU_PROT_IR 0x01
- #define IOMMU_PROT_IW 0x02
- 
-+#define IOMMU_UNITY_MAP_FLAG_EXCL_RANGE	(1 << 2)
++static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	clear_tsk_thread_flag(tsk, TIF_RESTORE_SIGMASK);
++}
 +
- /* IOMMU capabilities */
- #define IOMMU_CAP_IOTLB   24
- #define IOMMU_CAP_NPCACHE 26
+ static inline void clear_restore_sigmask(void)
+ {
+ 	clear_thread_flag(TIF_RESTORE_SIGMASK);
+ }
++static inline bool test_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	return test_tsk_thread_flag(tsk, TIF_RESTORE_SIGMASK);
++}
+ static inline bool test_restore_sigmask(void)
+ {
+ 	return test_thread_flag(TIF_RESTORE_SIGMASK);
+@@ -438,6 +448,10 @@ static inline void set_restore_sigmask(void)
+ 	current->restore_sigmask = true;
+ 	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
+ }
++static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	tsk->restore_sigmask = false;
++}
+ static inline void clear_restore_sigmask(void)
+ {
+ 	current->restore_sigmask = false;
+@@ -446,6 +460,10 @@ static inline bool test_restore_sigmask(void)
+ {
+ 	return current->restore_sigmask;
+ }
++static inline bool test_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	return tsk->restore_sigmask;
++}
+ static inline bool test_and_clear_restore_sigmask(void)
+ {
+ 	if (!current->restore_sigmask)
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index 771e93f9c43f..6f357f4fc859 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -29,6 +29,7 @@
+ #include <linux/hw_breakpoint.h>
+ #include <linux/cn_proc.h>
+ #include <linux/compat.h>
++#include <linux/sched/signal.h>
+ 
+ /*
+  * Access another process' address space via ptrace.
+@@ -924,18 +925,26 @@ int ptrace_request(struct task_struct *child, long request,
+ 			ret = ptrace_setsiginfo(child, &siginfo);
+ 		break;
+ 
+-	case PTRACE_GETSIGMASK:
++	case PTRACE_GETSIGMASK: {
++		sigset_t *mask;
++
+ 		if (addr != sizeof(sigset_t)) {
+ 			ret = -EINVAL;
+ 			break;
+ 		}
+ 
+-		if (copy_to_user(datavp, &child->blocked, sizeof(sigset_t)))
++		if (test_tsk_restore_sigmask(child))
++			mask = &child->saved_sigmask;
++		else
++			mask = &child->blocked;
++
++		if (copy_to_user(datavp, mask, sizeof(sigset_t)))
+ 			ret = -EFAULT;
+ 		else
+ 			ret = 0;
+ 
+ 		break;
++	}
+ 
+ 	case PTRACE_SETSIGMASK: {
+ 		sigset_t new_set;
+@@ -961,6 +970,8 @@ int ptrace_request(struct task_struct *child, long request,
+ 		child->blocked = new_set;
+ 		spin_unlock_irq(&child->sighand->siglock);
+ 
++		clear_tsk_restore_sigmask(child);
++
+ 		ret = 0;
+ 		break;
+ 	}
 -- 
 2.19.1
 
