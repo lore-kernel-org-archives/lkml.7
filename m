@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF75C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9385FC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD5B20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6776920B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810763;
-	bh=qQn0/K5CrRb6a/UDIpJ0+TmSgtkLdapNLzx/sKNBoVw=;
+	s=default; t=1556810767;
+	bh=kw0SEU1fYOOVed2EWjsU4W6r8umOhNzjGb+OOAZ2sms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KDuTfk0UqOqyIKX7iWWqrq44OmQMQxLi/SFQv3hkk2X6ok7TyjWSzYtxl9eW6nBf/
-	 qtvKhlnevZmAzW4viEuWaboYMUtaj0Wb6xLuwkyYskoCbwXTmMw+na0/NMl937n+lL
-	 +e4PqhATPIZjOmUAQyZAjBnCimrpsjMKr/EQLt2M=
+	b=l4faFfR3SHesCMkW1D1rlrPeMw0VEVkpDOr//fNAT2osrAP4oqMn6vcL25HyAtvEm
+	 uuajz0+ejSG1y0HGv9STY+I5sygkgZXXilQ7ipA8B6h7bAq574v2R4lCxWYSw1z5aW
+	 xDTJgey836YPUYwMqdqgPucPsk0X3Nb48XcNm1ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbfEBP0C (ORCPT
+        id S1726578AbfEBP0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:26:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42530 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:26:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727145AbfEBP0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:26:00 -0400
+        id S1727663AbfEBP0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:26:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4878A20675;
-        Thu,  2 May 2019 15:25:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D393C2081C;
+        Thu,  2 May 2019 15:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810759;
-        bh=qQn0/K5CrRb6a/UDIpJ0+TmSgtkLdapNLzx/sKNBoVw=;
+        s=default; t=1556810762;
+        bh=kw0SEU1fYOOVed2EWjsU4W6r8umOhNzjGb+OOAZ2sms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxt9aYoT+wR+xwBYwiLqNGB6To0o5Pr48t5tCXZnZ4Fv4HjsQEGPFAAouJnkLz23w
-         GcVrNKPSzxFDS9faRugG8xVONCWWb6vt922HSRILlJ563b6wyD2FzsrvAaXgkCwRYG
-         9V2uug7VDesY7cy87yeeNhsTJSNJ1Py5Mf5Wo7PQ=
+        b=QYwzPkZq+uIXEgqqO6ET2IyXOw/AKF2rIDFJRR5ppK8ix1FgeOKpWOEDAtL8+Hfcs
+         KWHwT5CcjyN94IXiJPQkC1kkIKEAM+qZQ6ApGFXgakGJY1Ih5P+GuEVCEFpeinTkcC
+         RAmRpzrO7IwVFpsizh+Jm2rXW3yoNT94E9daAGKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Jose Abreu <joabreu@synopsys.com>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 11/72] net: stmmac: dont set own bit too early for jumbo frames
-Date:   Thu,  2 May 2019 17:20:33 +0200
-Message-Id: <20190502143334.324197718@linuxfoundation.org>
+Subject: [PATCH 4.19 20/72] s390/qeth: fix race when initializing the IP address table
+Date:   Thu,  2 May 2019 17:20:42 +0200
+Message-Id: <20190502143334.955647649@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -61,55 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 80acbed9f8fca1db3fbe915540b756f048aa0fd7 ]
+[ Upstream commit 7221b727f0079a32aca91f657141e1de564d4b97 ]
 
-Commit 0e80bdc9a72d ("stmmac: first frame prep at the end of xmit
-routine") overlooked jumbo frames when re-ordering the code, and as a
-result the own bit was not getting set anymore for the first jumbo frame
-descriptor. Commit 487e2e22ab79 ("net: stmmac: Set OWN bit for jumbo
-frames") tried to fix this, but now the bit is getting set too early and
-the DMA may start while we are still setting up the remaining descriptors.
-And with the chain mode the own bit remains still unset.
+The ucast IP table is utilized by some of the L3-specific sysfs attributes
+that qeth_l3_create_device_attributes() provides. So initialize the table
+_before_ registering the attributes.
 
-Fix by setting the own bit at the end of xmit also with jumbo frames.
-
-Fixes: 0e80bdc9a72d ("stmmac: first frame prep at the end of xmit routine")
-Fixes: 487e2e22ab79 ("net: stmmac: Set OWN bit for jumbo frames")
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Acked-by: Jose Abreu <joabreu@synopsys.com>
+Fixes: ebccc7397e4a ("s390/qeth: add missing hash table initializations")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/s390/net/qeth_l3_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 62460a5b4ad9..39c105092214 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3195,14 +3195,16 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
- 		stmmac_prepare_tx_desc(priv, first, 1, nopaged_len,
- 				csum_insertion, priv->mode, 1, last_segment,
- 				skb->len);
--
--		/* The own bit must be the latest setting done when prepare the
--		 * descriptor and then barrier is needed to make sure that
--		 * all is coherent before granting the DMA engine.
--		 */
--		wmb();
-+	} else {
-+		stmmac_set_tx_owner(priv, first);
- 	}
+diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
+index 7f71ca0d08e7..9c5e801b3f6c 100644
+--- a/drivers/s390/net/qeth_l3_main.c
++++ b/drivers/s390/net/qeth_l3_main.c
+@@ -2586,12 +2586,14 @@ static int qeth_l3_probe_device(struct ccwgroup_device *gdev)
+ 	struct qeth_card *card = dev_get_drvdata(&gdev->dev);
+ 	int rc;
  
-+	/* The own bit must be the latest setting done when prepare the
-+	 * descriptor and then barrier is needed to make sure that
-+	 * all is coherent before granting the DMA engine.
-+	 */
-+	wmb();
++	hash_init(card->ip_htable);
 +
- 	netdev_tx_sent_queue(netdev_get_tx_queue(dev, queue), skb->len);
- 
- 	stmmac_enable_dma_transmission(priv, priv->ioaddr);
+ 	if (gdev->dev.type == &qeth_generic_devtype) {
+ 		rc = qeth_l3_create_device_attributes(&gdev->dev);
+ 		if (rc)
+ 			return rc;
+ 	}
+-	hash_init(card->ip_htable);
++
+ 	hash_init(card->ip_mc_htable);
+ 	card->options.layer2 = 0;
+ 	card->info.hwtrap = 0;
 -- 
 2.19.1
 
