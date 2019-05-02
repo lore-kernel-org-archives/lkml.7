@@ -2,187 +2,79 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D860C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D438C04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6C62085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42BD7208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfEBHVb convert rfc822-to-8bit (ORCPT
+        id S1726372AbfEBHWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 03:21:31 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38780 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfEBHVb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 03:21:31 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 86C1527124E;
-        Thu,  2 May 2019 08:21:28 +0100 (BST)
-Date:   Thu, 2 May 2019 09:21:26 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Tomasz Figa <tomasz.figa@gmail.com>, computersforpeace@gmail.com,
-        marek.vasut@gmail.com, Mark Rutland <mark.rutland@arm.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        =?UTF-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        bbrezillon@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
-        David Woodhouse <dwmw2@infradead.org>,
-        linux-mtd@lists.infradead.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 4/5] dt-binding: mtd: onenand/samsung: Add device tree
- support
-Message-ID: <20190502092126.22f1ace5@collabora.com>
-In-Reply-To: <CA+Ln22EJ3G9ez4XZ3ysZBt6thsqDYDtik8fw-gfExR9Y7wFN9A@mail.gmail.com>
-References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
-        <20190426164224.11327-5-pawel.mikolaj.chmiel@gmail.com>
-        <20190502015408.GA11612@bogus>
-        <CA+Ln22HLqnbbY37FG6CwjZvZH7G35Z+0kNq7XFU4WtZyk_EqZQ@mail.gmail.com>
-        <20190502083632.0ec0fb4e@collabora.com>
-        <CA+Ln22H4ua9Zuh4eKaWfHtqh8DieyiS=5s7wS6-TbmA5Dsop4A@mail.gmail.com>
-        <20190502085518.5d248167@collabora.com>
-        <CA+Ln22EJ3G9ez4XZ3ysZBt6thsqDYDtik8fw-gfExR9Y7wFN9A@mail.gmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 2 May 2019 03:22:09 -0400
+Received: from mga05.intel.com ([192.55.52.43]:12074 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725795AbfEBHWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 03:22:09 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 00:22:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,420,1549958400"; 
+   d="scan'208";a="342704860"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by fmsmga006.fm.intel.com with ESMTP; 02 May 2019 00:22:05 -0700
+Date:   Thu, 2 May 2019 10:22:05 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Jonas Witschel <diabonas@gmx.de>
+Cc:     Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Tadeusz Struk <tadeusz.struk@intel.com>, grawity@gmail.com,
+        James.Bottomley@hansenpartnership.com,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v4] tpm: fix an invalid condition in tpm_common_poll
+Message-ID: <20190502072205.GF14532@linux.intel.com>
+References: <155371155820.17863.10580533125620125669.stgit@tstruk-mobl1.jf.intel.com>
+ <20190328123428.GF7094@linux.intel.com>
+ <b29aaf62-2ea0-d6c6-32ee-44bc3fe8f03f@intel.com>
+ <20190408120138.GA951@gandi.net>
+ <20190409134421.GD9759@linux.intel.com>
+ <e9cfa3db-42d7-4e1c-a371-2c810f911dab@gmx.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9cfa3db-42d7-4e1c-a371-2c810f911dab@gmx.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 May 2019 15:58:24 +0900
-Tomasz Figa <tomasz.figa@gmail.com> wrote:
-
-> 2019年5月2日(木) 15:55 Boris Brezillon <boris.brezillon@collabora.com>:
-> >
-> > On Thu, 2 May 2019 15:42:59 +0900
-> > Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> >  
-> > > 2019年5月2日(木) 15:36 Boris Brezillon <boris.brezillon@collabora.com>:  
-> > > >
-> > > > Hi Tomasz,
-> > > >
-> > > > On Thu, 2 May 2019 15:23:33 +0900
-> > > > Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> > > >  
-> > > > > 2019年5月2日(木) 10:54 Rob Herring <robh@kernel.org>:  
-> > > > > >
-> > > > > > On Fri, Apr 26, 2019 at 06:42:23PM +0200, Paweł Chmiel wrote:  
-> > > > > > > From: Tomasz Figa <tomasz.figa@gmail.com>
-> > > > > > >
-> > > > > > > This patch adds dt-bindings for Samsung OneNAND driver.
-> > > > > > >
-> > > > > > > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> > > > > > > Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> > > > > > > ---
-> > > > > > >  .../bindings/mtd/samsung-onenand.txt          | 46 +++++++++++++++++++
-> > > > > > >  1 file changed, 46 insertions(+)
-> > > > > > >  create mode 100644 Documentation/devicetree/bindings/mtd/samsung-onenand.txt
-> > > > > > >
-> > > > > > > diff --git a/Documentation/devicetree/bindings/mtd/samsung-onenand.txt b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
-> > > > > > > new file mode 100644
-> > > > > > > index 000000000000..341d97cc1513
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
-> > > > > > > @@ -0,0 +1,46 @@
-> > > > > > > +Device tree bindings for Samsung SoC OneNAND controller
-> > > > > > > +
-> > > > > > > +Required properties:
-> > > > > > > + - compatible : value should be either of the following.
-> > > > > > > +   (a) "samsung,s3c6400-onenand" - for onenand controller compatible with
-> > > > > > > +       S3C6400 SoC,
-> > > > > > > +   (b) "samsung,s3c6410-onenand" - for onenand controller compatible with
-> > > > > > > +       S3C6410 SoC,
-> > > > > > > +   (c) "samsung,s5pc100-onenand" - for onenand controller compatible with
-> > > > > > > +       S5PC100 SoC,
-> > > > > > > +   (d) "samsung,s5pv210-onenand" - for onenand controller compatible with
-> > > > > > > +       S5PC110/S5PV210 SoCs.
-> > > > > > > +
-> > > > > > > + - reg : two memory mapped register regions:
-> > > > > > > +   - first entry: control registers.
-> > > > > > > +   - second and next entries: memory windows of particular OneNAND chips;
-> > > > > > > +     for variants a), b) and c) only one is allowed, in case of d) up to
-> > > > > > > +     two chips can be supported.
-> > > > > > > +
-> > > > > > > + - interrupt-parent : phandle of interrupt controller to which the OneNAND
-> > > > > > > +   controller is wired,  
-> > > > > >
-> > > > > > This is implied and can be removed.
-> > > > > >  
-> > > > > > > + - interrupts : specifier of interrupt signal to which the OneNAND controller
-> > > > > > > +   is wired; should contain just one entry.
-> > > > > > > + - clock-names : should contain two entries:
-> > > > > > > +   - "bus" - bus clock of the controller,
-> > > > > > > +   - "onenand" - clock supplied to OneNAND memory.  
-> > > > > >
-> > > > > > If the clock just goes to the OneNAND device, then it should be in the
-> > > > > > nand device node rather than the controller node.
-> > > > > >  
-> > > > >
-> > > > > (Trying hard to recall the details about this hardware.)
-> > > > > AFAIR the clock goes to the controller and the controller then feeds
-> > > > > it to the memory chips.
-> > > > >
-> > > > > Also I don't think we should have any nand device nodes here, since
-> > > > > the memory itself is only exposed via the controller, which offers
-> > > > > various queries to probe the memory at runtime, so there is no need to
-> > > > > describe it in DT.  
-> > > >
-> > > > It's probably true, though not providing this controller/device
-> > > > separation for NAND controller/devices has proven to be a mistake for
-> > > > raw NAND controllers (some props apply to the controllers and others to
-> > > > the NAND device, not to mention that some controllers support
-> > > > interacting with several chips), so, if that's a new binding, I'd
-> > > > recommend having this separation even if it's not strictly required.
-> > > >  
-> > >
-> > > Note that OneNAND is a totally different thing than the typical NAND
-> > > memory with NAND interface. OneNAND chips have a NOR-like interface,
-> > > with internal controller and buffers inside, so technically they can
-> > > be even used without any special controller on the SoC, via a generic
-> > > parallel host interface and possibly some regular DMA engine for CPU
-> > > offload.  
-> >
-> > Yes, I know that.
-> >  
-> > >
-> > > The controller design of the SoCs in question further abstracts the
-> > > OneNAND's programming interface into a number of high level operations
-> > > and attempts to hide the details of the underlying memory, so I don't
-> > > see the point of describing the memory in DT here, it would actually
-> > > defeat the purpose of this controller.  
-> >
-> > I don't see how having a subnode for the NAND chip would change
-> > anything on how the controller interacts with the NAND device. My point
-> > is, if we ever need to add props that apply to the device rather than
-> > the controller itself, having a single node to represent both elements
-> > is not that great.  
+On Tue, Apr 23, 2019 at 10:54:47PM +0200, Jonas Witschel wrote:
+> On 2019-04-09 15:44, Jarkko Sakkinen wrote:
+> > On Mon, Apr 08, 2019 at 02:01:38PM +0200, Thibaut Sautereau wrote:
+> >> [...]
+> >> What's the status of this patch now? It's needed in linux-5.0.y as TPM
+> >> 2.0 support is currently broken with those stable kernels without this
+> >> commit.
+> > 
+> > part of a PR.
+> > 
+> > https://lore.kernel.org/linux-integrity/20190329115544.GA27351@linux.intel.com/
 > 
-> You mean, just having a very generic onenand@0 node that doesn't
-> really include any information, except maybe the partition table?
+> It appears that the final version of the patch that was merged to
+> Linus's tree [1] does not include the "Cc: stable@vger.kernel.org" tag.
+> If I understand correctly, this means that the patch will not be
+> automatically included in the -stable tree without further action. Is
+> there a specific reason not to apply this patch to 5.0.x, or did the tag
 
-Yes.
+It is my mistake. What I can do is to post it manually to stable.
+I promise to do it as soon as it reaches the mainline.
 
-> I
-> guess that wouldn't have any negative side effects indeed.
-> 
-> My point was that we don't want to put things like chip vendor, size,
-> etc. in DT, since that's enumerable.
-
-Oh, definitely not, and that's exactly how we do it for NAND devices.
-Everything that's discoverable is not described in the DT, but some
-things can't be discovered this way (like when you want to override the
-ECC strength and use SW-based implem instead of the HW-based one). I
-know none of this applies to OneNAND yet, I'm just over-cautious about
-that since DT bindings changes are hard to make once the bindings are
-in use.
+/Jarkko
