@@ -2,73 +2,110 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FEFC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10900C04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2466520645
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61AB2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:15:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuabbuKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfEBMOs (ORCPT
+        id S1726381AbfEBMPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:14:48 -0400
-Received: from mga03.intel.com ([134.134.136.65]:60991 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbfEBMOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:14:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 05:14:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,421,1549958400"; 
-   d="scan'208";a="154129005"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.164]) ([10.237.72.164])
-  by FMSMGA003.fm.intel.com with ESMTP; 02 May 2019 05:14:44 -0700
-Subject: Re: [PATCH v2] xhci: Convert xhci_handshake() to use
- readl_poll_timeout_atomic()
-To:     Raul Rangel <rrangel@chromium.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-References: <20190208014816.21869-1-andrew.smirnov@gmail.com>
- <20190429200541.GA116440@google.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <c102196e-1250-307f-0b2e-d76c62a161a0@linux.intel.com>
-Date:   Thu, 2 May 2019 15:17:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190429200541.GA116440@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 2 May 2019 08:15:41 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42084 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbfEBMPk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 08:15:40 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p6so967042pgh.9;
+        Thu, 02 May 2019 05:15:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=auCY3PzhugcAdArS7AYx5TEJOOjQXZAWuV/mKevsN1Q=;
+        b=XuabbuKVSY7a2TM5F6FvBFQn2davKNOV1y7Lr6scBDIEa+acuivbsLTj5HYd71Zzt6
+         sJXngEGEvlPSLXN6Gp2QAKTx9r4BhjQLOcyh7oyyT76eo0PW3t3uWf2K9M3wL2VrCqPb
+         dzoE7YfVfatqZM4E1NjkZZtgSRXYjcVxPLUr0SUnS5VlrBhSYGhSl5oDmSqpzgeEOgD7
+         0IMQueDF6Kd1ijK2aE9FUd7xv+94J0F04o4H1UA6gtPVzfHORRGmZKo1MqN5D61FpTu2
+         W/lm74RDzcUfD7ZLUMg9YnHGvpsH6HOT1LNZhaAh6BWwyylOtktnXXxfV4+FzxkU6NPr
+         GTig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=auCY3PzhugcAdArS7AYx5TEJOOjQXZAWuV/mKevsN1Q=;
+        b=rfcdXzzZzGH6w+0z15YETqGAarJ+AIizvHLU79735ffnYhe+X0nN6OoH0xSBBilNNM
+         CtJWMGxqxC57+TBCdFtj6SklQ8ymuFGRg+QrEJii8x4hIHMnh+ADObjtE6eBQ8nzFhxw
+         VNCmSDx/O4f58/a7J4WOVKBWSphOM8god1ujHDebzhOiu2SENTab8SWuvVrm4ABDZWmC
+         6UiYt8fUKAq4d4cmd4yD+RrTjb+mhRCPGSOO0Amdxa8T8U5QtTHhq5uKSf+yLGqoBRFw
+         s8lfxM9e1zKDtLFY8wNSSznvNydfmLpkwDay2Rxtcb8pbKXVopQZ5ZUh3TZEACCxHll2
+         vA7g==
+X-Gm-Message-State: APjAAAWgG0PmGwA2RQgujpW3/E+Nv33nGeIz9bIjwXn079y6gItmBQYb
+        JBPw9k2MywNwRrmT7FJjqDc=
+X-Google-Smtp-Source: APXvYqyNDzr4VF4z/AVRLM0JxesMpf6pLO1/Hf/qL0RfemyI7luIkHnjwSRcCepUsyWRR+ut+H+Ryw==
+X-Received: by 2002:aa7:9116:: with SMTP id 22mr3801463pfh.165.1556799340062;
+        Thu, 02 May 2019 05:15:40 -0700 (PDT)
+Received: from localhost.localdomain ([149.129.49.136])
+        by smtp.gmail.com with ESMTPSA id j9sm97547364pfc.43.2019.05.02.05.15.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 02 May 2019 05:15:39 -0700 (PDT)
+From:   Chengguang Xu <cgxu519@gmail.com>
+To:     gregkh@linuxfoundation.org, dan.carpenter@oracle.com
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Chengguang Xu <cgxu519@gmail.com>
+Subject: [PATCH v2] chardev: set variable ret to -EBUSY before checking minor range overlap
+Date:   Thu,  2 May 2019 20:15:05 +0800
+Message-Id: <1556799305-13288-1-git-send-email-cgxu519@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.4.2019 23.05, Raul Rangel wrote:
-> On Thu, Feb 07, 2019 at 05:48:16PM -0800, Andrey Smirnov wrote:
->> Xhci_handshake() implements the algorithm already captured by
->> readl_poll_timeout_atomic(). Convert the former to use the latter to
->> avoid repetition.
->>
->> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Tested-by: Raul E Rangel <rrangel@chromium.org>
-> Reviewed-by: Raul E Rangel <rrangel@chromium.org>
-> 
-> This fixes a bug on the AMD Stoneyridge platform. usleep(1) sometimes
-> takes over 10ms. This means a 5 second timeout can easily take over 15
-> seconds which will trigger the watchdog and reboot the system.
-> 
-> Thanks for the patch.
+When allocating dynamic major, the minor range overlap check
+in __register_chrdev_region() will not fail, so actually
+there is no real case to passing non negative error code to
+caller. However, set variable ret to -EBUSY before checking
+minor range overlap will avoid false-positive warning from
+code analyzing tool(like Smatch) and also make the code more
+easy to understand.
 
-Adding to queue
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Chengguang Xu <cgxu519@gmail.com>
+---
+v1->v2:
+- Rebase against the latest char-misc-next.
+- Modify signed-off mail address.
 
--Mathias
+ fs/char_dev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/char_dev.c b/fs/char_dev.c
+index d18cad28c1c3..00dfe17871ac 100644
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -98,7 +98,7 @@ __register_chrdev_region(unsigned int major, unsigned int baseminor,
+ 			   int minorct, const char *name)
+ {
+ 	struct char_device_struct *cd, *curr, *prev = NULL;
+-	int ret = -EBUSY;
++	int ret;
+ 	int i;
+ 
+ 	if (major >= CHRDEV_MAJOR_MAX) {
+@@ -129,6 +129,7 @@ __register_chrdev_region(unsigned int major, unsigned int baseminor,
+ 		major = ret;
+ 	}
+ 
++	ret = -EBUSY;
+ 	i = major_to_index(major);
+ 	for (curr = chrdevs[i]; curr; prev = curr, curr = curr->next) {
+ 		if (curr->major < major)
+-- 
+2.17.2
 
