@@ -2,52 +2,51 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3BCC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4C3C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F15220675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E48F3208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810656;
-	bh=QPHzdWYbBDeBIYi5bJW3KluFtC6XYAyeq1sc+vd1Jco=;
+	s=default; t=1556810662;
+	bh=9VusDEM0Dk+CvbhfFruOjQti9yM7gvFuK8A5wTVuoSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pTYDSADR6LQ4LB5VXelVbLJIcKoXoHs/76orbn4n1cQuqeaZpL9uK3GiVguIhdGOu
-	 SXaGAIIWtJ+nOqH9pc/jOtipImxROCZbPrtsISj9sgSmX/l5VJUPbj6VKNlExrchVq
-	 arRiWUC0K0aplnWM7dIJfFStlc36BB6Pt7ycUS1U=
+	b=t20LSmngXfXEdAFKPL8A+8cka62zF51tl+nDJW45s7OjongWW6S5IgT632Lnqi722
+	 WRC+H/Nog1SNAiAv76jlNtGfIM30wkaNJnOb2wdUslHfUxNiCL46GfVBfAGdZVqWbV
+	 8p0L9lgV7taOTiQ9n1qlyLTWj0wO2v2nwV1aAepM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfEBPYP (ORCPT
+        id S1727265AbfEBPYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:24:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40036 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:24:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727226AbfEBPYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:24:12 -0400
+        id S1726614AbfEBPYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:24:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82BB02081C;
-        Thu,  2 May 2019 15:24:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5A26217D7;
+        Thu,  2 May 2019 15:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810652;
-        bh=QPHzdWYbBDeBIYi5bJW3KluFtC6XYAyeq1sc+vd1Jco=;
+        s=default; t=1556810657;
+        bh=9VusDEM0Dk+CvbhfFruOjQti9yM7gvFuK8A5wTVuoSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqDiNBXXqsnjrr7vDykaBNSJFE7a1+iY5O2sAu87/9M0Ed92eyK6DeNzwp4GxMCqg
-         u+xN/KHm1OaVLPo+9VresBigBvOhb1AuK5NIYmrBaja3V+ypeIow/Ele99xOqpSwhE
-         qU9WUTa+zozS3YbC9WoQvL7QaVzSjvzGwabMSNDk=
+        b=tQBa2vpcyfeWTXFfuR9sOX7t1M3e/moZIEeZ748V0KHo+5E5qs4rzz7wFB+TTF1vs
+         3LUOn3iIA8JYcIEyzMHU4Fc5hp6JSB4ZIuHSN5AmdOvo464G2QJDctHxFm43GQOjUV
+         BXZ2YPjPTIWV4oK26jIBYkJxSMF2Uu6qnjxRYBP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 27/49] staging: rtl8712: uninitialized memory in read_bbreg_hdl()
-Date:   Thu,  2 May 2019 17:21:04 +0200
-Message-Id: <20190502143327.315629463@linuxfoundation.org>
+        stable@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>, stable@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 04/49] mm: make page ref count overflow check tighter and more explicit
+Date:   Thu,  2 May 2019 17:20:41 +0200
+Message-Id: <20190502143324.526640348@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -60,67 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 22c971db7dd4b0ad8dd88e99c407f7a1f4231a2e ]
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-Colin King reported a bug in read_bbreg_hdl():
+commit f958d7b528b1b40c44cfda5eabe2d82760d868c3 upstream.
 
-	memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+We have a VM_BUG_ON() to check that the page reference count doesn't
+underflow (or get close to overflow) by checking the sign of the count.
 
-The problem is that "val" is uninitialized.
+That's all fine, but we actually want to allow people to use a "get page
+ref unless it's already very high" helper function, and we want that one
+to use the sign of the page ref (without triggering this VM_BUG_ON).
 
-This code is obviously not useful, but so far as I can tell
-"pcmd->cmdcode" is never GEN_CMD_CODE(_Read_BBREG) so it's not harmful
-either.  For now the easiest fix is to just call r8712_free_cmd_obj()
-and return.
+Change the VM_BUG_ON to only check for small underflows (or _very_ close
+to overflowing), and ignore overflows which have strayed into negative
+territory.
 
-Fixes: 2865d42c78a9 ("staging: r8712u: Add the new driver to the mainline kernel")
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Matthew Wilcox <willy@infradead.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: stable@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- drivers/staging/rtl8712/rtl8712_cmd.c | 10 +---------
- drivers/staging/rtl8712/rtl8712_cmd.h |  2 +-
- 2 files changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/staging/rtl8712/rtl8712_cmd.c b/drivers/staging/rtl8712/rtl8712_cmd.c
-index 0104aced113e..ccda04e916c5 100644
---- a/drivers/staging/rtl8712/rtl8712_cmd.c
-+++ b/drivers/staging/rtl8712/rtl8712_cmd.c
-@@ -159,17 +159,9 @@ static u8 write_macreg_hdl(struct _adapter *padapter, u8 *pbuf)
+---
+ include/linux/mm.h |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -824,6 +824,10 @@ static inline bool is_device_public_page
+ #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
  
- static u8 read_bbreg_hdl(struct _adapter *padapter, u8 *pbuf)
+ 
++/* 127: arbitrary random number, small enough to assemble well */
++#define page_ref_zero_or_close_to_overflow(page) \
++	((unsigned int) page_ref_count(page) + 127u <= 127u)
++
+ static inline void get_page(struct page *page)
  {
--	u32 val;
--	void (*pcmd_callback)(struct _adapter *dev, struct cmd_obj	*pcmd);
- 	struct cmd_obj *pcmd  = (struct cmd_obj *)pbuf;
- 
--	if (pcmd->rsp && pcmd->rspsz > 0)
--		memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
--	pcmd_callback = cmd_callback[pcmd->cmdcode].callback;
--	if (!pcmd_callback)
--		r8712_free_cmd_obj(pcmd);
--	else
--		pcmd_callback(padapter, pcmd);
-+	r8712_free_cmd_obj(pcmd);
- 	return H2C_SUCCESS;
+ 	page = compound_head(page);
+@@ -831,7 +835,7 @@ static inline void get_page(struct page
+ 	 * Getting a normal page or the head of a compound page
+ 	 * requires to already have an elevated page->_refcount.
+ 	 */
+-	VM_BUG_ON_PAGE(page_ref_count(page) <= 0, page);
++	VM_BUG_ON_PAGE(page_ref_zero_or_close_to_overflow(page), page);
+ 	page_ref_inc(page);
  }
  
-diff --git a/drivers/staging/rtl8712/rtl8712_cmd.h b/drivers/staging/rtl8712/rtl8712_cmd.h
-index 67e9e910aef9..d10a59d4a550 100644
---- a/drivers/staging/rtl8712/rtl8712_cmd.h
-+++ b/drivers/staging/rtl8712/rtl8712_cmd.h
-@@ -152,7 +152,7 @@ enum rtl8712_h2c_cmd {
- static struct _cmd_callback	cmd_callback[] = {
- 	{GEN_CMD_CODE(_Read_MACREG), NULL}, /*0*/
- 	{GEN_CMD_CODE(_Write_MACREG), NULL},
--	{GEN_CMD_CODE(_Read_BBREG), &r8712_getbbrfreg_cmdrsp_callback},
-+	{GEN_CMD_CODE(_Read_BBREG), NULL},
- 	{GEN_CMD_CODE(_Write_BBREG), NULL},
- 	{GEN_CMD_CODE(_Read_RFREG), &r8712_getbbrfreg_cmdrsp_callback},
- 	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
--- 
-2.19.1
-
 
 
