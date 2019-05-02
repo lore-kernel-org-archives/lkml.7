@@ -2,173 +2,308 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EF3C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41020C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82152087F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0248E20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OrjlPAyp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VwljnxSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfEBXpn (ORCPT
+        id S1726404AbfEBXrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 19:45:43 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40846 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfEBXpm (ORCPT
+        Thu, 2 May 2019 19:47:25 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45268 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfEBXrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 19:45:42 -0400
-Received: by mail-oi1-f194.google.com with SMTP id y64so3150938oia.7
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 16:45:41 -0700 (PDT)
+        Thu, 2 May 2019 19:47:25 -0400
+Received: by mail-pf1-f196.google.com with SMTP id e24so1898841pfi.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 16:47:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ylV5gAlOXI2nFNZnhMPfqqvANEP1/evAl3taiRkcInQ=;
-        b=OrjlPAypoDuLTmMWabsyH76U4J0Mgjkpr3DQnHBX1C/sWw9dQWGJZqdGNPLs+jVmSg
-         c3bYyd65ExNrwdSzAF9/C3j2TwsTXUxo6mYRYKux2ifXavoN2kS9n00OiZWShZJ2VN9E
-         Jey0nYLCGUng4+ySvL4+XGzNZ7sYP4XCUNcymRLj9xf6jLOnFx+3mvowrkn0pYKwRyZg
-         3M2fA5czV+OipZELphNhEy5iD2t61ukDrrNzVoHA9OjKJNH0VGnLzAHCbuiCf9QjtvzN
-         IDmzum+SPe0jeiAShs/g76LnFAxiI2OcVPBTp+1OnYkCXtTKkvmMFQSC+CcJJLS2aj7L
-         YRtg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QJQDgj2CvgU1Nk4JPrhowGXn7xmhLDQsiKE4NE6njlg=;
+        b=VwljnxScs8kOqpppHNXPiElhbQ9nIObY2jpqSzvbY6suvhvVUndbVCd+QamdYwW/fT
+         uxt+PQiibVuukhj+mp34DCraa44rJl5DDa9F/Q5d8QJ6hi8Gf+bocmytkayFMBjwwSU9
+         xiEQ4+u3BGwaIqifI3waz4a0xf+6O9GcxjvXsAg9Tv5Qray0gBnErqLBB7l76e5KrDkb
+         q6/PdYHy/1ddM9Ud11M+TqVRW1+l1BBdok3Ssvp5cTxF4gSdnFAJogbY4gX5KJCTvswv
+         nmUkMcYFoBWwtVSuvZd6z+iKBToO/4N6QZtRkGaUspco2u9gnAJNRTPa7oZZQLIl8+1W
+         B+4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ylV5gAlOXI2nFNZnhMPfqqvANEP1/evAl3taiRkcInQ=;
-        b=efJ5VewyMzKxgm5/PDCWk7t0PONyYilKuZZi34kJ6o7sDTix30VB14OUBpkV4lLrsf
-         5KVbXg6TtRDiife++j9XKaqSxxQawd5XzRyHgS2uNTGxt8PoeOBWVXnJcxaReVQzYYP3
-         kPOuQ+a3j4Cr1/xh//bRhDeYvTMbIibSzKjDr7GGDGUmEfGppUussppJ5g4/kG/lSDP+
-         CYOZ375t04Zw/PLQCze2bwQeb/D0K5L5FCJyEjCRkxB3TtnsX3gJww1IdHPWmKFTGOnG
-         pZ04ZuI8IBnVxrrUJOVeaP4rv699nJYwAMoS+evpHc2bC2xBCvnl0drN2w6qVq8EqJ0F
-         y1xw==
-X-Gm-Message-State: APjAAAVpLqRpoTa4QrDAGBWmBEyTwhoST6LuWNcNwz6WlTa5CCvJvUOg
-        pemwux3VtER+5iz7RQmiIxctkbRU6VjebXVvX4RZMw==
-X-Google-Smtp-Source: APXvYqza1ahwn/TDeWwW8NfzPMf/2RsvBcbxrAIWRnpkKGe/w6LvErCEtGQm7aaUbxq8tyCdcrjFzojfQN03A2rWnss=
-X-Received: by 2002:aca:57d8:: with SMTP id l207mr4208582oib.44.1556840740661;
- Thu, 02 May 2019 16:45:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-13-brendanhiggins@google.com> <20190502110220.GD12416@kroah.com>
- <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com> <a49c5088-a821-210c-66de-f422536f5b01@gmail.com>
-In-Reply-To: <a49c5088-a821-210c-66de-f422536f5b01@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 2 May 2019 16:45:29 -0700
-Message-ID: <CAFd5g44iWRchQKdJYtjRtPY6e-6e0eXpKXXsx5Ooi6sWE474KA@mail.gmail.com>
-Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
- KUnit tests
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah@kernel.org, devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Felix Guo <felixguoxiuping@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QJQDgj2CvgU1Nk4JPrhowGXn7xmhLDQsiKE4NE6njlg=;
+        b=iPq04zEl2/9MugtKyfYN8GNhNaHIWB6nA6EQUyrPIouyBLxXHdYiLkhrNwc0/vHf5E
+         926dFAvQJgjq8VO4Pdu30DCTpKN7SvNupX79WJQZZwoVymYmcRARZo4cmBT2awUwqWVZ
+         dhQgf6iVUz0Gh60rRcxhR0EAasoBaLd+P/mJernJmiZgkGyWEpCPAs67otpWOVZVCrHU
+         ckXq4iOwSkHBu+TaSzZSnV/rlXYy3zBADFr61UXTVGXODg/kgaiw6OcO7EcPZJHBFsfJ
+         jWzMGgAkTN58l+tV9DaK+QR91fq67fg50+0ECdDpa6VKFgDyGC0r9Rqw0ZsmaEQld6n0
+         NuyQ==
+X-Gm-Message-State: APjAAAX+QheaUmTauYELfAyiCXse6iMwJIQcYc0ZCL5o1U1OHQBSu7bM
+        8hUKGWgrzxM3+HyM1ukO+QeM1EBs
+X-Google-Smtp-Source: APXvYqxtfs5PqXcQ8hwoNurV+HvU9aZnW2Qco08IqlP+iQbzW/XMYmtkwHpFHmQRuCWqal2TnAr+xQ==
+X-Received: by 2002:a63:fb56:: with SMTP id w22mr6619408pgj.354.1556840843238;
+        Thu, 02 May 2019 16:47:23 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id n15sm374798pfb.111.2019.05.02.16.47.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 16:47:21 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     john.garry@huawei.com, Florian Fainelli <f.fainelli@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PMU PROFILING
+        AND DEBUGGING)
+Subject: [PATCH v2] perf vendor events arm64: Add Cortex-A57 and Cortex-A72 events
+Date:   Thu,  2 May 2019 16:47:04 -0700
+Message-Id: <20190502234704.7663-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 2:16 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 5/2/19 11:07 AM, Brendan Higgins wrote:
-> > On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >>
-> >> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
-> >>> From: Felix Guo <felixguoxiuping@gmail.com>
-> >>>
-> >>> The ultimate goal is to create minimal isolated test binaries; in the
-> >>> meantime we are using UML to provide the infrastructure to run tests, so
-> >>> define an abstract way to configure and run tests that allow us to
-> >>> change the context in which tests are built without affecting the user.
-> >>> This also makes pretty and dynamic error reporting, and a lot of other
-> >>> nice features easier.
-> >>>
-> >>> kunit_config.py:
-> >>>   - parse .config and Kconfig files.
-> >>>
-> >>> kunit_kernel.py: provides helper functions to:
-> >>>   - configure the kernel using kunitconfig.
-> >>>   - build the kernel with the appropriate configuration.
-> >>>   - provide function to invoke the kernel and stream the output back.
-> >>>
-> >>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
-> >>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> >>
-> >> Ah, here's probably my answer to my previous logging format question,
-> >> right?  What's the chance that these wrappers output stuff in a standard
-> >> format that test-framework-tools can already parse?  :)
+The Cortex-A57 and Cortex-A72 both support all ARMv8 recommended events
+up to the RC_ST_SPEC (0x91) event with the exception of:
 
-To be clear, the test-framework-tools format we are talking about is
-TAP13[1], correct?
+- L1D_CACHE_REFILL_INNER (0x44)
+- L1D_CACHE_REFILL_OUTER (0x45)
+- L1D_TLB_RD (0x4E)
+- L1D_TLB_WR (0x4F)
+- L2D_TLB_REFILL_RD (0x5C)
+- L2D_TLB_REFILL_WR (0x5D)
+- L2D_TLB_RD (0x5E)
+- L2D_TLB_WR (0x5F)
+- STREX_SPEC (0x6F)
 
-My understanding is that is what kselftest is being converted to use.
+Create an appropriate JSON file for mapping those events and update the
+mapfile.csv for matching the Cortex-A57 and Cortex-A72 MIDR to that
+file.
 
-> >
-> > It should be pretty easy to do. I had some patches that pack up the
-> > results into a serialized format for a presubmit service; it should be
-> > pretty straightforward to take the same logic and just change the
-> > output format.
->
-> When examining and trying out the previous versions of the patch I found
-> the wrappers useful to provide information about how to control and use
-> the tests, but I had no interest in using the scripts as they do not
-> fit in with my personal environment and workflow.
->
-> In the previous versions of the patch, these helper scripts are optional,
-> which is good for my use case.  If the helper scripts are required to
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Changes in v2:
 
-They are still optional.
+- added a shared directory for both Cortex-A57 and A72 (Will)
+- removed unsupported ARMv8 v3 events (John)
 
-> get the data into the proper format then the scripts are not quite so
-> optional, they become the expected environment.  I think the proper
-> format should exist without the helper scripts.
+ .../arm/cortex-a57-a72/core-imp-def.json      | 179 ++++++++++++++++++
+ tools/perf/pmu-events/arch/arm64/mapfile.csv  |   2 +
+ 2 files changed, 181 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
 
-That's a good point. A couple things,
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
+new file mode 100644
+index 000000000000..0ac9b7927450
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
+@@ -0,0 +1,179 @@
++[
++    {
++        "ArchStdEvent": "L1D_CACHE_RD",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WR",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_RD",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WB_VICTIM",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WB_CLEAN",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_INVAL",
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_REFILL_RD",
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_REFILL_WR",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_RD",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WR",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_REFILL_RD",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_REFILL_WR",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_INVAL",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_RD",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_WR",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_SHARED",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_NORMAL",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_PERIPH",
++    },
++    {
++        "ArchStdEvent": "MEM_ACCESS_RD",
++    },
++    {
++        "ArchStdEvent": "MEM_ACCESS_WR",
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_LD_SPEC",
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_ST_SPEC",
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_LDST_SPEC",
++    },
++    {
++        "ArchStdEvent": "LDREX_SPEC",
++    },
++    {
++        "ArchStdEvent": "STREX_PASS_SPEC",
++    },
++    {
++        "ArchStdEvent": "STREX_FAIL_SPEC",
++    },
++    {
++        "ArchStdEvent": "LD_SPEC",
++    },
++    {
++        "ArchStdEvent": "ST_SPEC",
++    },
++    {
++        "ArchStdEvent": "LDST_SPEC",
++    },
++    {
++        "ArchStdEvent": "DP_SPEC",
++    },
++    {
++        "ArchStdEvent": "ASE_SPEC",
++    },
++    {
++        "ArchStdEvent": "VFP_SPEC",
++    },
++    {
++        "ArchStdEvent": "PC_WRITE_SPEC",
++    },
++    {
++        "ArchStdEvent": "CRYPTO_SPEC",
++    },
++    {
++        "ArchStdEvent": "BR_IMMED_SPEC",
++    },
++    {
++        "ArchStdEvent": "BR_RETURN_SPEC",
++    },
++    {
++        "ArchStdEvent": "BR_INDIRECT_SPEC",
++    },
++    {
++        "ArchStdEvent": "ISB_SPEC",
++    },
++    {
++        "ArchStdEvent": "DSB_SPEC",
++    },
++    {
++        "ArchStdEvent": "DMB_SPEC",
++    },
++    {
++        "ArchStdEvent": "EXC_UNDEF",
++    },
++    {
++        "ArchStdEvent": "EXC_SVC",
++    },
++    {
++        "ArchStdEvent": "EXC_PABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_DABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_IRQ",
++    },
++    {
++        "ArchStdEvent": "EXC_FIQ",
++    },
++    {
++        "ArchStdEvent": "EXC_SMC",
++    },
++    {
++        "ArchStdEvent": "EXC_HVC",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_PABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_DABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_OTHER",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_IRQ",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_FIQ",
++    },
++    {
++        "ArchStdEvent": "RC_LD_SPEC",
++    },
++    {
++        "ArchStdEvent": "RC_ST_SPEC",
++    },
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+index 59cd8604b0bd..69a73957e35c 100644
+--- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
++++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+@@ -13,6 +13,8 @@
+ #
+ #Family-model,Version,Filename,EventType
+ 0x00000000410fd03[[:xdigit:]],v1,arm/cortex-a53,core
++0x00000000411fd07[[:xdigit:]],v1,arm/cortex-a57-a72,core
++0x00000000410fd08[[:xdigit:]],v1,arm/cortex-a57-a72,core
+ 0x00000000420f5160,v1,cavium/thunderx2,core
+ 0x00000000430f0af0,v1,cavium/thunderx2,core
+ 0x00000000480fd010,v1,hisilicon/hip08,core
+-- 
+2.17.1
 
-First off, supporting TAP13, either in the kernel or the wrapper
-script is not hard, but I don't think that is the real issue that you
-raise.
-
-If your only concern is that you will always be able to have human
-readable KUnit results printed to the kernel log, that is a guarantee
-I feel comfortable making. Beyond that, I think it is going to take a
-long while before I would feel comfortable guaranteeing anything about
-how will KUnit work, what kind of data it will want to expose, and how
-it will be organized. I think the wrapper script provides a nice
-facade that I can maintain, can mediate between the implementation
-details and the user, and can mediate between the implementation
-details and other pieces of software that might want to consume
-results.
-
-[1] https://testanything.org/tap-version-13-specification.html
