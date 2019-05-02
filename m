@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FC4C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61483C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D9F204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0A2204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811841;
-	bh=pHbvQtuiIa1/SxLZDMZIIYi6w9fDBefFdWpM3Fmaiy4=;
+	s=default; t=1556811853;
+	bh=KlR5qBkFFwyurYyyRxUc8BxwSlXbeqURBub8Huv9Img=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sdDjjHNkUfl5cNygdOAAuc5NWB+g3F/E2LZGncFVi0QxoGZDaJbXIJG8XK4rMsINv
-	 O5q8yI4z5Lq4ar5Lfkj8n02DJ9iZvsyur7ToYw3MeeIC0p1MlsDCx0RbettTzS4hre
-	 +cnsi8j6AmYHFpEiTMKU4GkKudbpsH285Ycxbtj0=
+	b=sD0zdn0EYaC5C7kIgt3ARALgCOWHT8HEq+yenho1edhVTabl3Da6rWh/wJPgQsEMj
+	 wi0HRksqUC1LMB93xS1VWcLh6QOcIFzsb47BgnryJcS2MPS36xSkXIPqG6aptitwty
+	 FCTo04Y/JJSQnx4c/pVdTUYkXgJVLcFbyKmdg1OU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfEBP1A (ORCPT
+        id S1727821AbfEBP0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:27:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43642 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727853AbfEBP04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:26:56 -0400
+        id S1727781AbfEBP0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:26:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3342920675;
-        Thu,  2 May 2019 15:26:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5EBB2081C;
+        Thu,  2 May 2019 15:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810815;
-        bh=pHbvQtuiIa1/SxLZDMZIIYi6w9fDBefFdWpM3Fmaiy4=;
+        s=default; t=1556810804;
+        bh=KlR5qBkFFwyurYyyRxUc8BxwSlXbeqURBub8Huv9Img=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YKUJoj4oR+73eRcfl//Rt8d77xwWlvAyT0+vp4Cz0acl/NkvUxtkcvpLomyqS1GaW
-         zeGGpcsS0+fCrl+wbQOu4LCPpqzI3mN3vzmDZZikT+MPK8IyUgbb1lYZt/UJ1ISyO7
-         JUuu66CIIZzs+wD9SY7ffUCBh1c96vUrnGdxIHQo=
+        b=lRBhNBHNZ6I6WzMcXNR3P/3WSIwVXXm3HtTmttDw6iruuXtqTGxT9KWKnj+rTrpRA
+         APi9bDDWZ816cFFhLjEuPD65eaeK/rQTAjM91ch7Ybq++mH7T8tS8Zy4yzhPUl+e8a
+         w3iXgTpfXVSRylBCre/JscinkEPY4yQg8LZhLDFs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Frank Pavlic <f.pavlic@kunbus.de>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 39/72] staging: rtl8712: uninitialized memory in read_bbreg_hdl()
-Date:   Thu,  2 May 2019 17:21:01 +0200
-Message-Id: <20190502143336.631162263@linuxfoundation.org>
+Subject: [PATCH 4.19 35/72] net: ks8851: Delay requesting IRQ until opened
+Date:   Thu,  2 May 2019 17:20:57 +0200
+Message-Id: <20190502143336.320146336@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -60,65 +63,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 22c971db7dd4b0ad8dd88e99c407f7a1f4231a2e ]
+[ Upstream commit d268f31552794abf5b6aa5af31021643411f25f5 ]
 
-Colin King reported a bug in read_bbreg_hdl():
+The ks8851 driver currently requests the IRQ before registering the
+net_device.  Because the net_device name is used as IRQ name and is
+still "eth%d" when the IRQ is requested, it's impossibe to tell IRQs
+apart if multiple ks8851 chips are present.  Most other drivers delay
+requesting the IRQ until the net_device is opened.  Do the same.
 
-	memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
+The driver doesn't enable interrupts on the chip before opening the
+net_device and disables them when closing it, so there doesn't seem to
+be a need to request the IRQ already on probe.
 
-The problem is that "val" is uninitialized.
-
-This code is obviously not useful, but so far as I can tell
-"pcmd->cmdcode" is never GEN_CMD_CODE(_Read_BBREG) so it's not harmful
-either.  For now the easiest fix is to just call r8712_free_cmd_obj()
-and return.
-
-Fixes: 2865d42c78a9 ("staging: r8712u: Add the new driver to the mainline kernel")
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Tristram Ha <Tristram.Ha@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/staging/rtl8712/rtl8712_cmd.c | 10 +---------
- drivers/staging/rtl8712/rtl8712_cmd.h |  2 +-
- 2 files changed, 2 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/micrel/ks8851.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/staging/rtl8712/rtl8712_cmd.c b/drivers/staging/rtl8712/rtl8712_cmd.c
-index b1dfe9f46619..63bc811681d9 100644
---- a/drivers/staging/rtl8712/rtl8712_cmd.c
-+++ b/drivers/staging/rtl8712/rtl8712_cmd.c
-@@ -159,17 +159,9 @@ static u8 write_macreg_hdl(struct _adapter *padapter, u8 *pbuf)
- 
- static u8 read_bbreg_hdl(struct _adapter *padapter, u8 *pbuf)
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index 1633fa5c709c..c9faec4c5b25 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -785,6 +785,15 @@ static void ks8851_tx_work(struct work_struct *work)
+ static int ks8851_net_open(struct net_device *dev)
  {
--	u32 val;
--	void (*pcmd_callback)(struct _adapter *dev, struct cmd_obj	*pcmd);
- 	struct cmd_obj *pcmd  = (struct cmd_obj *)pbuf;
+ 	struct ks8851_net *ks = netdev_priv(dev);
++	int ret;
++
++	ret = request_threaded_irq(dev->irq, NULL, ks8851_irq,
++				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++				   dev->name, ks);
++	if (ret < 0) {
++		netdev_err(dev, "failed to get irq\n");
++		return ret;
++	}
  
--	if (pcmd->rsp && pcmd->rspsz > 0)
--		memcpy(pcmd->rsp, (u8 *)&val, pcmd->rspsz);
--	pcmd_callback = cmd_callback[pcmd->cmdcode].callback;
--	if (!pcmd_callback)
--		r8712_free_cmd_obj(pcmd);
--	else
--		pcmd_callback(padapter, pcmd);
-+	r8712_free_cmd_obj(pcmd);
- 	return H2C_SUCCESS;
+ 	/* lock the card, even if we may not actually be doing anything
+ 	 * else at the moment */
+@@ -899,6 +908,8 @@ static int ks8851_net_stop(struct net_device *dev)
+ 		dev_kfree_skb(txb);
+ 	}
+ 
++	free_irq(dev->irq, ks);
++
+ 	return 0;
  }
  
-diff --git a/drivers/staging/rtl8712/rtl8712_cmd.h b/drivers/staging/rtl8712/rtl8712_cmd.h
-index 9181bb6b04c3..a101a0a50955 100644
---- a/drivers/staging/rtl8712/rtl8712_cmd.h
-+++ b/drivers/staging/rtl8712/rtl8712_cmd.h
-@@ -152,7 +152,7 @@ enum rtl8712_h2c_cmd {
- static struct _cmd_callback	cmd_callback[] = {
- 	{GEN_CMD_CODE(_Read_MACREG), NULL}, /*0*/
- 	{GEN_CMD_CODE(_Write_MACREG), NULL},
--	{GEN_CMD_CODE(_Read_BBREG), &r8712_getbbrfreg_cmdrsp_callback},
-+	{GEN_CMD_CODE(_Read_BBREG), NULL},
- 	{GEN_CMD_CODE(_Write_BBREG), NULL},
- 	{GEN_CMD_CODE(_Read_RFREG), &r8712_getbbrfreg_cmdrsp_callback},
- 	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
+@@ -1529,14 +1540,6 @@ static int ks8851_probe(struct spi_device *spi)
+ 	ks8851_read_selftest(ks);
+ 	ks8851_init_mac(ks);
+ 
+-	ret = request_threaded_irq(spi->irq, NULL, ks8851_irq,
+-				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+-				   ndev->name, ks);
+-	if (ret < 0) {
+-		dev_err(&spi->dev, "failed to get irq\n");
+-		goto err_irq;
+-	}
+-
+ 	ret = register_netdev(ndev);
+ 	if (ret) {
+ 		dev_err(&spi->dev, "failed to register network device\n");
+@@ -1549,11 +1552,7 @@ static int ks8851_probe(struct spi_device *spi)
+ 
+ 	return 0;
+ 
+-
+ err_netdev:
+-	free_irq(ndev->irq, ks);
+-
+-err_irq:
+ err_id:
+ 	if (gpio_is_valid(gpio))
+ 		gpio_set_value(gpio, 0);
+@@ -1574,7 +1573,6 @@ static int ks8851_remove(struct spi_device *spi)
+ 		dev_info(&spi->dev, "remove\n");
+ 
+ 	unregister_netdev(priv->netdev);
+-	free_irq(spi->irq, priv);
+ 	if (gpio_is_valid(priv->gpio))
+ 		gpio_set_value(priv->gpio, 0);
+ 	regulator_disable(priv->vdd_reg);
 -- 
 2.19.1
 
