@@ -2,78 +2,119 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5839CC04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208E5C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167AF2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:30:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlTLRdKx"
+	by mail.kernel.org (Postfix) with ESMTP id DC0C42133F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556775151;
+	bh=iTQiL4LvMH0l1z4GfH2eWic6igDsZT3xNziA83eKMz0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D4bQcgJ2Qlwzo75YkeLoO4ABLJMB+z6ZX2JT05ctKfAXfjdPXGDIMPvy27yiiWmlg
+	 XQ/nwMYfhnu3ybak2ggDhWYgoFlNDSrdFUkvGS+PAMWNqd/xOKTvM6jxxIMrJbgZTJ
+	 8mvai4O7qxH/PqM8EhHpsbzQi5I9ZwYsy3T3u/+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfEBFau (ORCPT
+        id S1726249AbfEBFca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 01:30:50 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45041 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfEBFat (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 01:30:49 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y13so555394pfm.11;
-        Wed, 01 May 2019 22:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G1H2mznxyiCrdP5jek33Vwv2jHBMLfA2Vm7i6qxcHhI=;
-        b=WlTLRdKxgydzyk23QkKr42fzuwDtTf0qlbfbNFx5Igs1K80zGEGoy9RjdV6R6hbun/
-         RKdY/iGaJGyXyDXRbaV1ZYFt8fR+FVb/cYeDOaRo5r/L9raOtw6QYY+H0AyQicxs7LTQ
-         kq2UGHGKgkAr53uB7VOG1czx3bJxZm7hRa96xk6emOv13nQVreTc7LhbLavqTruYAJS8
-         EDrdB6weFtleqHG59BvGf5Qs+gZ9j1pX7vIe4jOx2kVVlxET1ravJ6VPmnjzhjHaOLa2
-         TNXM31heukjJylE4bFfoKMmkNgFMmUgwUumAG994rTPPBgGS19Pis5Tx4gp9UMV5cg0G
-         jQew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G1H2mznxyiCrdP5jek33Vwv2jHBMLfA2Vm7i6qxcHhI=;
-        b=RCdeYBJMH4ojc18cF6ah+Gd08FV2tahz6BfqGIN+ES4/ntTnib3OU1PsYhYxbSGCkj
-         FNXQvpwK3QMez/4KaG0W0J0BkpE+js06SVIp1ACdoKtlt4wcLcijsOO7SFTIXk5qbjmE
-         rTmSA3ZPTXBrM7rTxxRWwP0f3otXhNK7c1ib9k6K5OeyaKPfa2KX2g7d3CY6G51akBFV
-         Ogmgiw5q8MnITuztm6EVDC1YeXPXM2+GPjkSOjv4uhq7G/h3tNbHO1hfZgeU9WX5IOVA
-         zwOF9Jl53FH4P4Uh5I4u/EuP/CR09IIK9LZR7FjyxG94V6hnYh79xM7gUxXMZAUIMg2E
-         VpRg==
-X-Gm-Message-State: APjAAAWMQ43/R5/5DCW1rIyH+9K7u3esR9eofHvsmlGi4sa6KI3K0dXH
-        wH8CVsCiMwg3HMXUXckfI2w=
-X-Google-Smtp-Source: APXvYqyKFKpHK7t5LFzjm0ak+LiDyStIGpygRmTWgQcalTkeUtufQA2pxpx2jm38eWH74GtbyFuBBA==
-X-Received: by 2002:a62:4697:: with SMTP id o23mr2044192pfi.224.1556775048640;
-        Wed, 01 May 2019 22:30:48 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.31])
-        by smtp.gmail.com with ESMTPSA id m21sm1400167pff.146.2019.05.01.22.30.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 22:30:48 -0700 (PDT)
-Date:   Thu, 2 May 2019 11:00:39 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.0 00/89] 5.0.11-stable review
-Message-ID: <20190502053039.GB419@bharath12345-Inspiron-5559>
-References: <20190430113609.741196396@linuxfoundation.org>
+        Thu, 2 May 2019 01:32:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725681AbfEBFca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 01:32:30 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B01202085A;
+        Thu,  2 May 2019 05:32:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556775149;
+        bh=iTQiL4LvMH0l1z4GfH2eWic6igDsZT3xNziA83eKMz0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T2w1SqOqXtg5zSQGVl4R9VNW1JPfDT4d8saIAFFxwkUKzvM2Z89BOZ7f/drPoAuYP
+         Af/Sm7/8osejfkVf+O4mKhZe+BBdXi+ZYs3bTocRSCrvw6SYSMiBvR259c1RLPgdfN
+         V7g6j8HiLPvYe7bpJlnXU3Fw1hSKD6HmDgq7jUJM=
+Date:   Thu, 2 May 2019 11:02:20 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH v4 06/22] soundwire: bus: remove useless parentheses
+Message-ID: <20190502053220.GC3845@vkoul-mobl.Dlink>
+References: <20190501155745.21806-1-pierre-louis.bossart@linux.intel.com>
+ <20190501155745.21806-7-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430113609.741196396@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190501155745.21806-7-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Built and booted on my x86 machine. No dmesg regression.
+On 01-05-19, 10:57, Pierre-Louis Bossart wrote:
+> and make the code more readable
+
+Well patch subject and log are not meant to be read as a continuous
+statement, It would nice to have a proper lines for this
+
+> 
+> Reviewed-by: Takashi Iwai <tiwai@suse.de>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/bus.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+> index efdcefc62e1a..423dc6d17999 100644
+> --- a/drivers/soundwire/bus.c
+> +++ b/drivers/soundwire/bus.c
+> @@ -415,10 +415,10 @@ static struct sdw_slave *sdw_get_slave(struct sdw_bus *bus, int i)
+>  static int sdw_compare_devid(struct sdw_slave *slave, struct sdw_slave_id id)
+>  {
+>  
+> -	if ((slave->id.unique_id != id.unique_id) ||
+> -	    (slave->id.mfg_id != id.mfg_id) ||
+> -	    (slave->id.part_id != id.part_id) ||
+> -	    (slave->id.class_id != id.class_id))
+> +	if (slave->id.unique_id != id.unique_id ||
+> +	    slave->id.mfg_id != id.mfg_id ||
+> +	    slave->id.part_id != id.part_id ||
+> +	    slave->id.class_id != id.class_id)
+>  		return -ENODEV;
+>  
+>  	return 0;
+> @@ -896,8 +896,8 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
+>  		}
+>  
+>  		/* Update the Slave driver */
+> -		if (slave_notify && (slave->ops) &&
+> -					(slave->ops->interrupt_callback)) {
+> +		if (slave_notify && slave->ops &&
+> +		    slave->ops->interrupt_callback) {
+>  			slave_intr.control_port = clear;
+>  			memcpy(slave_intr.port, &port_status,
+>  			       sizeof(slave_intr.port));
+> @@ -955,7 +955,7 @@ static int sdw_handle_slave_alerts(struct sdw_slave *slave)
+>  static int sdw_update_slave_status(struct sdw_slave *slave,
+>  				   enum sdw_slave_status status)
+>  {
+> -	if ((slave->ops) && (slave->ops->update_status))
+> +	if (slave->ops && slave->ops->update_status)
+>  		return slave->ops->update_status(slave, status);
+>  
+>  	return 0;
+> -- 
+> 2.17.1
+
+-- 
+~Vinod
