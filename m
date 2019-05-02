@@ -2,112 +2,176 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 130AFC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE7DC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD5221734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811002;
-	bh=fpzIvYxbbVMxE87nXsbrxX8bl+v/uaZPk+QbJ4RNM7s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=doYs5RRcpYX4n3sjA0r0VysBo44YBx0G3cV2fbmPPUCXDnW8M6MfYeRzajwsqihL9
-	 nJ3uWLJpjvN4b8BuoU1CI5FQLDC6RrjwkuaQne0vds1nPKJ85uDzEm06DpLV+i49aN
-	 lN8RF23eqbpyqV9GRmdns9qsBEtwhkfS6rmxkSBM=
+	by mail.kernel.org (Postfix) with ESMTP id 1D48C217D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbfEBPaB (ORCPT
+        id S1728640AbfEBPaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:30:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728591AbfEBPaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 312C3214DA;
-        Thu,  2 May 2019 15:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810999;
-        bh=fpzIvYxbbVMxE87nXsbrxX8bl+v/uaZPk+QbJ4RNM7s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gIJP18gVbSCQEqdvLHcMg4Ks2bsN9DapI4XKCU5e21+QYQVWaDVo4siQJjV+3q35R
-         TO4VIvKburyn1esTBlJI0KQIWjR7f/vpoTTJcM9oHQIIRWNvyMDzzagMW/qcaC0PhH
-         6xyyR3W9e03VMlnsxesAg5I9LSksXGO4K+8DkTu0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 029/101] sc16is7xx: missing unregister/delete driver on error in sc16is7xx_init()
-Date:   Thu,  2 May 2019 17:20:31 +0200
-Message-Id: <20190502143341.621454889@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
-References: <20190502143339.434882399@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 2 May 2019 11:30:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50928 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728591AbfEBPaC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:30:02 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42FTpHw076179
+        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 11:30:02 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s81chnupr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:29:57 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 2 May 2019 16:28:58 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 2 May 2019 16:28:50 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42FSnXd45023486
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 May 2019 15:28:49 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 830D5A4051;
+        Thu,  2 May 2019 15:28:49 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12855A404D;
+        Thu,  2 May 2019 15:28:45 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.205.209])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  2 May 2019 15:28:44 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Thu, 02 May 2019 18:28:43 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
+        Helge Deller <deller@gmx.de>, Ley Foon Tan <lftan@altera.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Richard Kuo <rkuo@codeaurora.org>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
+        nios2-dev@lists.rocketboards.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH 00/15] introduce generic pte_{alloc,free}_one[_kernel]
+Date:   Thu,  2 May 2019 18:28:27 +0300
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 19050215-0008-0000-0000-000002E29914
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050215-0009-0000-0000-0000224F082B
+Message-Id: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=1 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=1
+ clxscore=1015 lowpriorityscore=0 mlxscore=1 impostorscore=0
+ mlxlogscore=207 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905020103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ac0cdb3d990108df795b676cd0d0e65ac34b2273 ]
+Hi,
 
-Add the missing uart_unregister_driver() and i2c_del_driver() before return
-from sc16is7xx_init() in the error handling case.
+I've tried to trim down the recipients list, but it's still quite long, so
+sorry for the spam.
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- drivers/tty/serial/sc16is7xx.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Many architectures have similar, if not identical implementation of
+pte_alloc_one_kernel(), pte_alloc_one(), pte_free_kernel() and pte_free().
 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index 268098681856..114e94f476c6 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -1509,7 +1509,7 @@ static int __init sc16is7xx_init(void)
- 	ret = i2c_add_driver(&sc16is7xx_i2c_uart_driver);
- 	if (ret < 0) {
- 		pr_err("failed to init sc16is7xx i2c --> %d\n", ret);
--		return ret;
-+		goto err_i2c;
- 	}
- #endif
- 
-@@ -1517,10 +1517,18 @@ static int __init sc16is7xx_init(void)
- 	ret = spi_register_driver(&sc16is7xx_spi_uart_driver);
- 	if (ret < 0) {
- 		pr_err("failed to init sc16is7xx spi --> %d\n", ret);
--		return ret;
-+		goto err_spi;
- 	}
- #endif
- 	return ret;
-+
-+err_spi:
-+#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
-+	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
-+#endif
-+err_i2c:
-+	uart_unregister_driver(&sc16is7xx_uart);
-+	return ret;
- }
- module_init(sc16is7xx_init);
- 
+A while ago Anshuman suggested to introduce a common definition of
+GFP_PGTABLE and during the discussion it was suggested to rather
+consolidate the allocators.
+
+These patches introduce generic version of PTE allocation and free and
+enable their use on several architectures.
+
+The conversion introduces some changes for some of the architectures.
+Here's the executive summary and the details are described at each patch.
+
+* Most architectures do not set __GFP_ACCOUNT for the user page tables.
+Switch to the generic functions is "spreading that goodness to all other
+architectures"
+* arm, arm64 and unicore32 used to check if the pte is not NULL before
+freeing its memory in pte_free_kernel(). It's dropped during the
+conversion as it seems superfluous.
+* x86 used to BUG_ON() is pte was not page aligned duirng
+pte_free_kernel(), the generic version simply frees the memory without any
+checks.
+
+This set only performs the straightforward conversion, the architectures
+with different logic in pte_alloc_one() and pte_alloc_one_kernel() are not
+touched, as well as architectures that have custom page table allocators.
+
+[1] https://lore.kernel.org/lkml/1547619692-7946-1-git-send-email-anshuman.khandual@arm.com
+
+ asm-generic, x86: introduce generic pte_{alloc,free}_one[_kernel]
+
+Mike Rapoport (15):
+  asm-generic, x86: introduce generic pte_{alloc,free}_one[_kernel]
+  alpha: switch to generic version of pte allocation
+  arm: switch to generic version of pte allocation
+  arm64: switch to generic version of pte allocation
+  csky: switch to generic version of pte allocation
+  hexagon: switch to generic version of pte allocation
+  m68k: sun3: switch to generic version of pte allocation
+  mips: switch to generic version of pte allocation
+  nds32: switch to generic version of pte allocation
+  nios2: switch to generic version of pte allocation
+  parisc: switch to generic version of pte allocation
+  powerpc/nohash/64: switch to generic version of pte allocation
+  riscv: switch to generic version of pte allocation
+  um: switch to generic version of pte allocation
+  unicore32: switch to generic version of pte allocation
+
+ arch/alpha/include/asm/pgalloc.h             |  40 +---------
+ arch/arm/include/asm/pgalloc.h               |  41 ++++------
+ arch/arm/mm/mmu.c                            |   2 +-
+ arch/arm64/include/asm/pgalloc.h             |  43 +----------
+ arch/arm64/mm/mmu.c                          |   2 +-
+ arch/arm64/mm/pgd.c                          |   4 +-
+ arch/csky/include/asm/pgalloc.h              |  30 +-------
+ arch/hexagon/include/asm/pgalloc.h           |  34 +--------
+ arch/m68k/include/asm/sun3_pgalloc.h         |  41 +---------
+ arch/mips/include/asm/pgalloc.h              |  33 +--------
+ arch/nds32/include/asm/pgalloc.h             |  31 +-------
+ arch/nios2/include/asm/pgalloc.h             |  37 +--------
+ arch/parisc/include/asm/pgalloc.h            |  33 +--------
+ arch/powerpc/include/asm/nohash/64/pgalloc.h |  35 +--------
+ arch/riscv/include/asm/pgalloc.h             |  29 +-------
+ arch/um/include/asm/pgalloc.h                |  16 +---
+ arch/um/kernel/mem.c                         |  22 ------
+ arch/unicore32/include/asm/pgalloc.h         |  36 ++-------
+ arch/x86/include/asm/pgalloc.h               |  19 +----
+ arch/x86/mm/pgtable.c                        |  33 +++------
+ include/asm-generic/pgalloc.h                | 107 ++++++++++++++++++++++++++-
+ virt/kvm/arm/mmu.c                           |   2 +-
+ 22 files changed, 171 insertions(+), 499 deletions(-)
+
 -- 
-2.19.1
-
-
+2.7.4
 
