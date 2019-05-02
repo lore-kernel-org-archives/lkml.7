@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C732BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ED5C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F2C20C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6C9217F9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810565;
-	bh=wn9NK9BonpFtix8c3B2GMJjIcTZDq56qxvXJhz5UG1Q=;
+	s=default; t=1556810569;
+	bh=CfDOrmqhvB71SpN/Uis/7pUbTsJcuGsoD1/3ZjtSGlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A2JYokQhYfQIoyFiRLmW/4esdK1mlVfbVf+CNdemsnJ2QRLlEFkC0DltRKSo8xRi+
-	 +S+k/DcS2NPdeImDf0zPo9bg5ilAD0OX4b1l/jgr421IRbwUC0xYgRmwgzQHjyIh3H
-	 Fswj95M2reOFzhZrnZPFURKcM0rurqkAvH78fzIs=
+	b=OWgyeLimJyJOJUiGFgvKOyDK3tzoJxLJRUdejPEKB6z6L9ZFQaYtzjM/Lwl7uaPE/
+	 4zmcK2KYbznbdbr++ZWYgmfLvE5RCdzFqdTS8xPdP6mutwbyTHJyhllCis3R9dEm6d
+	 dUxnm3PTmGG6OofNzVDUzZFaOJMHSCHgekmbzt3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfEBPWo (ORCPT
+        id S1726826AbfEBPWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:22:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38110 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726711AbfEBPWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:22:42 -0400
+        id S1726797AbfEBPWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:22:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2B0E214DA;
-        Thu,  2 May 2019 15:22:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70CD6216FD;
+        Thu,  2 May 2019 15:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810561;
-        bh=wn9NK9BonpFtix8c3B2GMJjIcTZDq56qxvXJhz5UG1Q=;
+        s=default; t=1556810563;
+        bh=CfDOrmqhvB71SpN/Uis/7pUbTsJcuGsoD1/3ZjtSGlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oKwDDiSTgmkq0Dj7QASfpPReynxM6UgBcS04WVWsLSZ0+nmsTonFyMVVCoAl8RZXM
-         ocPgUyQq4gSqZE7XA+UqmxCR/jLeENvOyqRw/LTG9qZWjKeweDOTGh2Jcf/F2qv6O4
-         cdHM15voO+FF1mifYKHQuaZuabPPg2N8cZU7F4cw=
+        b=G0QGNcsvdgUvURc13tgg5e46oj61wt4cYxCua16uy8goxmLIjBfmgrjmbF4bzw/lO
+         vLE5TS9ZdyINKaXPE3G11N9SjH3Vh8a0RWzGt2+koNzEoiLaYY/oBQZt6xfKTZg3zY
+         JPZJZefXuBLOG263TCW7ZTCUT/ZhU+fw2SPkMPuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, raymond pang <raymondpangxd@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.9 27/32] scsi: zfcp: reduce flood of fcrscn1 trace records on multi-element RSCN
-Date:   Thu,  2 May 2019 17:21:13 +0200
-Message-Id: <20190502143322.130184791@linuxfoundation.org>
+Subject: [PATCH 4.9 28/32] libata: fix using DMA buffers on stack
+Date:   Thu,  2 May 2019 17:21:14 +0200
+Message-Id: <20190502143322.591277926@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
 References: <20190502143314.649935114@linuxfoundation.org>
@@ -62,109 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c8206579175c34a2546de8a74262456278a7795a ]
+[ Upstream commit dd08a8d9a66de4b54575c294a92630299f7e0fe7 ]
 
-If an incoming ELS of type RSCN contains more than one element, zfcp
-suboptimally causes repeated erp trigger NOP trace records for each
-previously failed port. These could be ports that went away.  It loops over
-each RSCN element, and for each of those in an inner loop over all
-zfcp_ports.
+When CONFIG_VMAP_STACK=y, __pa() returns incorrect physical address for
+a stack virtual address. Stack DMA buffers must be avoided.
 
-The trigger to recover failed ports should be just the reception of some
-RSCN, no matter how many elements it has. So we can loop over failed ports
-separately, and only then loop over each RSCN element to handle the
-non-failed ports.
-
-The call chain was:
-
-  zfcp_fc_incoming_rscn
-    for (i = 1; i < no_entries; i++)
-      _zfcp_fc_incoming_rscn
-        list_for_each_entry(port, &adapter->port_list, list)
-          if (masked port->d_id match) zfcp_fc_test_link
-          if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"   <===
-
-In order the reduce the "flooding" of the REC trace area in such cases, we
-factor out handling the failed ports to be outside of the entries loop:
-
-  zfcp_fc_incoming_rscn
-    if (no_entries > 1)                                     <===
-      list_for_each_entry(port, &adapter->port_list, list)  <===
-        if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"     <===
-    for (i = 1; i < no_entries; i++)
-      _zfcp_fc_incoming_rscn
-        list_for_each_entry(port, &adapter->port_list, list)
-          if (masked port->d_id match) zfcp_fc_test_link
-
-Abbreviated example trace records before this code change:
-
-Tag            : fcrscn1
-WWPN           : 0x500507630310d327
-ERP want       : 0x02
-ERP need       : 0x02
-
-Tag            : fcrscn1
-WWPN           : 0x500507630310d327
-ERP want       : 0x02
-ERP need       : 0x00                 NOP => superfluous trace record
-
-The last trace entry repeats if there are more than 2 RSCN elements.
-
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: raymond pang <raymondpangxd@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/s390/scsi/zfcp_fc.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/ata/libata-zpodd.c | 34 ++++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
-index 237688af179b..f7630cf581cd 100644
---- a/drivers/s390/scsi/zfcp_fc.c
-+++ b/drivers/s390/scsi/zfcp_fc.c
-@@ -238,10 +238,6 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
- 	list_for_each_entry(port, &adapter->port_list, list) {
- 		if ((port->d_id & range) == (ntoh24(page->rscn_fid) & range))
- 			zfcp_fc_test_link(port);
--		if (!port->d_id)
--			zfcp_erp_port_reopen(port,
--					     ZFCP_STATUS_COMMON_ERP_FAILED,
--					     "fcrscn1");
- 	}
- 	read_unlock_irqrestore(&adapter->port_list_lock, flags);
- }
-@@ -249,6 +245,7 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
- static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
+diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
+index 0ad96c647541..7017a81d53cf 100644
+--- a/drivers/ata/libata-zpodd.c
++++ b/drivers/ata/libata-zpodd.c
+@@ -51,38 +51,52 @@ static int eject_tray(struct ata_device *dev)
+ /* Per the spec, only slot type and drawer type ODD can be supported */
+ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
  {
- 	struct fsf_status_read_buffer *status_buffer = (void *)fsf_req->data;
-+	struct zfcp_adapter *adapter = fsf_req->adapter;
- 	struct fc_els_rscn *head;
- 	struct fc_els_rscn_page *page;
- 	u16 i;
-@@ -261,6 +258,22 @@ static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
- 	/* see FC-FS */
- 	no_entries = head->rscn_plen / sizeof(struct fc_els_rscn_page);
+-	char buf[16];
++	char *buf;
+ 	unsigned int ret;
+-	struct rm_feature_desc *desc = (void *)(buf + 8);
++	struct rm_feature_desc *desc;
+ 	struct ata_taskfile tf;
+ 	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
+ 			2,      /* only 1 feature descriptor requested */
+ 			0, 3,   /* 3, removable medium feature */
+ 			0, 0, 0,/* reserved */
+-			0, sizeof(buf),
++			0, 16,
+ 			0, 0, 0,
+ 	};
  
-+	if (no_entries > 1) {
-+		/* handle failed ports */
-+		unsigned long flags;
-+		struct zfcp_port *port;
++	buf = kzalloc(16, GFP_KERNEL);
++	if (!buf)
++		return ODD_MECH_TYPE_UNSUPPORTED;
++	desc = (void *)(buf + 8);
 +
-+		read_lock_irqsave(&adapter->port_list_lock, flags);
-+		list_for_each_entry(port, &adapter->port_list, list) {
-+			if (port->d_id)
-+				continue;
-+			zfcp_erp_port_reopen(port,
-+					     ZFCP_STATUS_COMMON_ERP_FAILED,
-+					     "fcrscn1");
-+		}
-+		read_unlock_irqrestore(&adapter->port_list_lock, flags);
+ 	ata_tf_init(dev, &tf);
+ 	tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_DEVICE;
+ 	tf.command = ATA_CMD_PACKET;
+ 	tf.protocol = ATAPI_PROT_PIO;
+-	tf.lbam = sizeof(buf);
++	tf.lbam = 16;
+ 
+ 	ret = ata_exec_internal(dev, &tf, cdb, DMA_FROM_DEVICE,
+-				buf, sizeof(buf), 0);
+-	if (ret)
++				buf, 16, 0);
++	if (ret) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
 +	}
-+
- 	for (i = 1; i < no_entries; i++) {
- 		/* skip head and start with 1st element */
- 		page++;
+ 
+-	if (be16_to_cpu(desc->feature_code) != 3)
++	if (be16_to_cpu(desc->feature_code) != 3) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
++	}
+ 
+-	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1)
++	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_SLOT;
+-	else if (desc->mech_type == 1 && desc->load == 0 && desc->eject == 1)
++	} else if (desc->mech_type == 1 && desc->load == 0 &&
++		   desc->eject == 1) {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_DRAWER;
+-	else
++	} else {
++		kfree(buf);
+ 		return ODD_MECH_TYPE_UNSUPPORTED;
++	}
+ }
+ 
+ /* Test if ODD is zero power ready by sense code */
 -- 
 2.19.1
 
