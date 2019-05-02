@@ -7,58 +7,60 @@ X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E13DC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9177CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D96821734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62C90208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556763527;
-	bh=z6AMoiqDA6/Pf4JsrLqTuH5ejkuIUZf327jdRh+6PJ4=;
+	s=default; t=1556763532;
+	bh=UEjvnr2Zyb24n1aVFsCCRFCmPqbUNgdqyHWwfOVMQkI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=YbeUxZvmz8DMeuKnyXFlyE6SfZxwd8JFRWmVOWhA7YtJ49sEhf5aPTXrFhEaaCvcd
-	 q591SrEKbeAFZl52VoL7s/9cpYYAiLEPnA9E/RFz2Eo34pfHkazQWuArWpbcetHq7U
-	 PIaOHC7dmIRZYzagStPzrAsq0k0z75mgntt2Y/lA=
+	b=oUJl3Rbqn7c9fI0rZP5mBCjiG2yj9X8OI6pi6mMH7Sv+8j4adxLvqvEt51szAysaC
+	 ZfnfqUxgO9MbjfC0T3S3TceZhP4SvnCNx0itDHDxrVSbPAGIQDDZMNMMbfx8c7I9nI
+	 AduJsrVQlFCPgo24XkPyRlhPFj47TVv3uEace7xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfEBCSq (ORCPT
+        id S1726487AbfEBCSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:18:46 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55786 "EHLO
+        Wed, 1 May 2019 22:18:51 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56044 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbfEBCSp (ORCPT
+        with ESMTP id S1726186AbfEBCSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:18:45 -0400
+        Wed, 1 May 2019 22:18:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=r3CyppHMBbbvBau7Gtud8BstrQ70gDTeNXRpDTmvaMk=; b=R4ctCByoicg3
-        nB+OqNmdXltXegvsA4azXvfJ2+4EQajUsBHMo+uIGLZt1jrmUb6AvB7Legheyc5675NmEfTs0aApG
-        EQuEpltuCZVb9ynZddLGvq5Q7fV4OrftOk/3SvbYiS3U+L4RGGSwaRjtyyi7agYLv9GZeSo+bIUsj
-        bCbkk=;
+        List-Archive; bh=gUX7cgUSecfjVH1YPs8zG06dexR+UJShlkpV9/2EzyE=; b=c8EcTqPhucPW
+        y8sW8JkO1Nt+N+n8ulkl7Nx2swEWdqNZ26DL/bvv5PQz7bH3SypyKoACZkQVzo+Ag0ZDh911ZTqI/
+        ly9+HXsAy1TjPC59revy/JKGOWj0xhauDWhuKPW7Fbh0xiIf9rIw0mUAP2a9ujBXXk5BUH/W9ovVL
+        pbkQc=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1J1-0005sk-PO; Thu, 02 May 2019 02:18:40 +0000
+        id 1hM1Ix-0005sN-At; Thu, 02 May 2019 02:18:35 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id A4527441D3C; Thu,  2 May 2019 03:18:36 +0100 (BST)
+        id 499DE441D3C; Thu,  2 May 2019 03:18:32 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     alsa-devel@alsa-project.org,
-        Cosmin Samoila <cosmin.samoila@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>
-Subject: Applied "ASoC: imx: fix fiq dependencies" to the asoc tree
-In-Reply-To:  <20190416131242.1232143-1-arnd@arndb.de>
+To:     Andra Danciu <andradanciu1997@gmail.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Daniel Baluta <daniel.baluta@nxp.com>, daniel.baluta@gmail.com,
+        festevam@gmail.com, kernel@pengutronix.de, lgirdwood@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Mark Brown <broonie@kernel.org>, nicoleotsuka@gmail.com,
+        perex@perex.cz, s.hauer@pengutronix.de, shawnguo@kernel.org,
+        tglx@linutronix.de, Thomas Gleixner <tglx@linutronix.de>,
+        timur@kernel.org, tiwai@suse.com, Xiubo.Lee@gmail.com
+Subject: Applied "ASoC: mpc5200_psc_i2s: Fix invalid license ID" to the asoc tree
+In-Reply-To:  <20190414191450.18377-3-andradanciu1997@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021836.A4527441D3C@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:36 +0100 (BST)
+Message-Id: <20190502021832.499DE441D3C@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:18:32 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +68,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: imx: fix fiq dependencies
+   ASoC: mpc5200_psc_i2s: Fix invalid license ID
 
 has been applied to the asoc tree at
 
@@ -91,67 +93,33 @@ to this mail.
 Thanks,
 Mark
 
-From ea751227c813ab833609afecfeedaf0aa26f327e Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Tue, 16 Apr 2019 15:12:23 +0200
-Subject: [PATCH] ASoC: imx: fix fiq dependencies
+From 680ae69d52279474ecb204f0f7bae1f4d9361cbd Mon Sep 17 00:00:00 2001
+From: Andra Danciu <andradanciu1997@gmail.com>
+Date: Sun, 14 Apr 2019 22:14:50 +0300
+Subject: [PATCH] ASoC: mpc5200_psc_i2s: Fix invalid license ID
 
-During randconfig builds, I occasionally run into an invalid configuration
-of the freescale FIQ sound support:
+As the file had no other license notice/reference, it falls under the
+project license and therefore the proper SPDX id is: GPL-2.0-only
 
-WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
-  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
-  Selected by [y]:
-  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
-
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
-imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
-sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
-imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
-
-The Kconfig warning is a result of the symbol being defined inside of
-the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
-is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
-imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
-time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
-which then causes a link failure from imx-ssi.
-
-The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
-one of its potential users is built-in.
-
-Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>
+Fixes: 864a8472c4412 ("ASoC: mpc5200_psc_i2s: Switch to SPDX identifier")
+Reported-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/fsl/Kconfig | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ sound/soc/fsl/mpc5200_psc_i2s.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index d87c842806bd..55ed47c599e2 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -189,16 +189,17 @@ config SND_MPC52xx_SOC_EFIKA
- 
- endif # SND_POWERPC_SOC
- 
-+config SND_SOC_IMX_PCM_FIQ
-+	tristate
-+	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
-+	select FIQ
-+
- if SND_IMX_SOC
- 
- config SND_SOC_IMX_SSI
- 	tristate
- 	select SND_SOC_FSL_UTILS
- 
--config SND_SOC_IMX_PCM_FIQ
--	tristate
--	select FIQ
--
- comment "SoC Audio support for Freescale i.MX boards:"
- 
- config SND_MXC_SOC_WM1133_EV1
+diff --git a/sound/soc/fsl/mpc5200_psc_i2s.c b/sound/soc/fsl/mpc5200_psc_i2s.c
+index 6de97461ba25..9bc01f374b39 100644
+--- a/sound/soc/fsl/mpc5200_psc_i2s.c
++++ b/sound/soc/fsl/mpc5200_psc_i2s.c
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL
++// SPDX-License-Identifier: GPL-2.0-only
+ //
+ // Freescale MPC5200 PSC in I2S mode
+ // ALSA SoC Digital Audio Interface (DAI) driver
 -- 
 2.20.1
 
