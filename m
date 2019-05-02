@@ -2,161 +2,200 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED9EC04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78656C04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895BB2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAF92081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QtiQDJhM"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tzF7wPw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfEBFI2 (ORCPT
+        id S1726203AbfEBFOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 01:08:28 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:50718 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfEBFI1 (ORCPT
+        Thu, 2 May 2019 01:14:46 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:60003 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfEBFOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 01:08:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Fudg6aBxe0TkPNIqYA88Y89agb4T2MW29SCxmEQ3FDg=; b=QtiQDJhMITB8z86q7y2rFHLizw
-        A0n7Ay+W13jFlrAu5jmXGN4yKvKjZQkip/Al1Dj2gLr1dMSxDf6ckHScQ3SFxcYdmxVmCUu0yywtu
-        C6oru7DSuxU41Q6vaaEvQKdWQ4Z5WI4LiMKKeU/N/4Xqdguq1hvSNjl7pXg6QTqq/NIW4zIkxKjWJ
-        xdDrHL1MdmTrauH/fAxyax92MpcYlnZrjmYaEXrV0PVn39KohTnHNl3c0IHSDVBJkwX43bqMYdi1Q
-        WiyyznShpO4/IGLm/RXiUaspQ7bwkO35wthrNfb+Cr4qtlg9+PNy18wDkkC8Xm+SgjRUqx9BNqm3h
-        M5pbJwzg==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hM3xG-0004oT-En; Thu, 02 May 2019 05:08:22 +0000
-Subject: Re: [PATCH] OVL: add honoracl=off mount option.
-To:     NeilBrown <neilb@suse.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        =?UTF-8?Q?Andreas_Gr=c3=bcnbacher?= <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
- <20161205151933.GA17517@fieldses.org>
- <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
- <20161205162559.GB17517@fieldses.org>
- <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de>
- <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org>
- <87bm0l4nra.fsf@notabene.neil.brown.name>
- <8736lx4goa.fsf@notabene.neil.brown.name>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9ada42cb-8783-49bb-fd0d-31e7fb7dacf4@infradead.org>
-Date:   Wed, 1 May 2019 22:08:19 -0700
+        Thu, 2 May 2019 01:14:45 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190502051442epoutp0493b4b95a17e1b5fddc94e9163b3b97ef~axcezIrs32435324353epoutp04L
+        for <linux-kernel@vger.kernel.org>; Thu,  2 May 2019 05:14:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190502051442epoutp0493b4b95a17e1b5fddc94e9163b3b97ef~axcezIrs32435324353epoutp04L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1556774082;
+        bh=XLV5tk/LWS1F7CKYRYZhM+g9pIWwdU+llTi5XmZU/PA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=tzF7wPw4YIhQnWIo7q+2WHw+c+uVD5aJqQqgf8G3m8mFSjVZFGMdoL5CmloQu6J/n
+         oq2F+8pxyr5H1nh3uD23dKMotWqXINIKNge4uE/QQxO8bEPswdSGF2dxEtRS38oEue
+         lomfqdqrHLY8dqsbrVajeXh+p8len4pAkmhTcXyo=
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.152]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190502051439epcas1p19684e29355ffd9313a8c98a9d0db47fb~axccJ6NvN1771017710epcas1p1L;
+        Thu,  2 May 2019 05:14:39 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B5.F4.04143.FBC7ACC5; Thu,  2 May 2019 14:14:39 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190502051439epcas1p2a6894ac4ccfe59d87388fa949d6ef7e3~axcbvID3i0842208422epcas1p2q;
+        Thu,  2 May 2019 05:14:39 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190502051439epsmtrp141fd018dbbe33a58dfb424b6652788f0~axcbuFVsZ2560525605epsmtrp15;
+        Thu,  2 May 2019 05:14:39 +0000 (GMT)
+X-AuditID: b6c32a37-f31ff7000000102f-b2-5cca7cbf70f7
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E2.DC.03662.FBC7ACC5; Thu,  2 May 2019 14:14:39 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190502051439epsmtip2241f85ad7a40881b2e0a68a46e7dc486~axcbcjc_q1959519595epsmtip2Q;
+        Thu,  2 May 2019 05:14:39 +0000 (GMT)
+Subject: Re: [PATCH v6 03/10] clk: samsung: add BPLL rate table for Exynos
+ 5422 SoC
+To:     Lukasz Luba <l.luba@partner.samsung.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <62f85c18-d3ac-3425-8ee3-538f8c677603@samsung.com>
+Date:   Thu, 2 May 2019 14:15:57 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <8736lx4goa.fsf@notabene.neil.brown.name>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1555683568-20882-4-git-send-email-l.luba@partner.samsung.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNJsWRmVeSWpSXmKPExsWy7bCmge7+mlMxBtefG1psnLGe1WL+kXOs
+        Fqs/Pma0mHxqLpPFme5ci/7Hr5ktzp/fwG5xtukNu8WtBhmLy7vmsFl87j3CaDHj/D4mi7VH
+        7rJb3G5cwWZx+E07q8X+K14Wt3/zWXw78YjRQcjj29dJLB6zGy6yeOycdZfdY9OqTjaP3uZ3
+        bB4H3+1h8ujbsorRY/Ppao/Pm+QCOKOybTJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwMdQ0t
+        LcyVFPISc1NtlVx8AnTdMnOAnlFSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTkFFgW
+        6BUn5haX5qXrJefnWhkaGBiZAhUmZGfMmfScreCiVMWkRXfYGxivinYxcnBICJhIfPlT0MXI
+        xSEksINRYvPRE4wQzidGiZONS9kgnG+MEqv3PGXvYuQE6zg4eRUjiC0ksJdRYmUnH0TReyB7
+        92NmkISwQKhE69zjTCAJEYHljBL7pt4Fm8sssJpJ4s/XtawgVWwCWhL7X9xgA7H5BRQlrv54
+        DDaWV8BOYsrLJWA1LAIqEvs33WMCsUUFIiTuH9vAClEjKHFy5hMWEJtTwFvi27plYOcxC4hL
+        3HoynwnClpdo3jqbGWSxhMA9dond7Q8YIb52kVjyzhviHWGJV8e3QL0mJfGyvw3KrpZYefII
+        G0RvB6PElv0XWCESxhL7l05mApnDLKApsX6XPsQuPol3X3tYIcbzSnS0CUFUK0tcfnCXCcKW
+        lFjc3skGYXtIPD76ln0Co+IsJN/MQvLBLCQfzEJYtoCRZRWjWGpBcW56arFhgTFybG9iBCd0
+        LfMdjBvO+RxiFOBgVOLh/TH1ZIwQa2JZcWXuIUYJDmYlEd5be4BCvCmJlVWpRfnxRaU5qcWH
+        GE2BgT2RWUo0OR+YbfJK4g1NjYyNjS1MDM1MDQ2VxHnXOzjHCAmkJ5akZqemFqQWwfQxcXBK
+        NTDqd25Ypnl/V5+VK8eEb4vOLt21qLg4+pnztoDZDaxFKy+daHh9MSoo6M9K13k+z68e2xE+
+        c9fe15W6EwOeu0h9Y2s72PEhfvZP7xNLt9yad71YyfPhldwP6/O6bXkmJBgluXIY+17cdfeh
+        bcFW3Sl/v1/OOPVX53CBv7KNnz3n9j9v7/DmOHibKrEUZyQaajEXFScCADDQNpv+AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBIsWRmVeSWpSXmKPExsWy7bCSvO7+mlMxBpNmC1lsnLGe1WL+kXOs
+        Fqs/Pma0mHxqLpPFme5ci/7Hr5ktzp/fwG5xtukNu8WtBhmLy7vmsFl87j3CaDHj/D4mi7VH
+        7rJb3G5cwWZx+E07q8X+K14Wt3/zWXw78YjRQcjj29dJLB6zGy6yeOycdZfdY9OqTjaP3uZ3
+        bB4H3+1h8ujbsorRY/Ppao/Pm+QCOKO4bFJSczLLUov07RK4MuZMes5WcFGqYtKiO+wNjFdF
+        uxg5OSQETCQOTl7F2MXIxSEksJtR4t/vbcwQCUmJaRePAtkcQLawxOHDxRA1bxkl7j04yAJS
+        IywQKtE69zgTSEJEYDmjxNy/S1lAHGaB1UwSkz5uYYNouc8ocfXaC1aQFjYBLYn9L26wgdj8
+        AooSV388ZgSxeQXsJKa8XAJWwyKgIrF/0z0mEFtUIELizPsVLBA1ghInZz4BszkFvCW+rVvG
+        DmIzC6hL/Jl3iRnCFpe49WQ+E4QtL9G8dTbzBEbhWUjaZyFpmYWkZRaSlgWMLKsYJVMLinPT
+        c4sNC4zyUsv1ihNzi0vz0vWS83M3MYLjW0trB+OJE/GHGAU4GJV4eH9MPRkjxJpYVlyZe4hR
+        goNZSYT31h6gEG9KYmVValF+fFFpTmrxIUZpDhYlcV75/GORQgLpiSWp2ampBalFMFkmDk6p
+        BsZq3zRpyZc13BnnHNLirDv2H9zEWyYvLsV5dZHwfNOO6Qk3c2Tmeild3OTrrBh4Zs7pmTeE
+        fZ6s/nBDtPrKegsTrQ3yi69Ln7mesCJLfPJX/gvWj+7MzMs8/aJ0SomPVXO+YZzQt/MzV3e+
+        8HO7v9iyb8E39f+7zpb+XHi2/KGznHIX3zx2MT0lluKMREMt5qLiRABQQiCD6wIAAA==
+X-CMS-MailID: 20190502051439epcas1p2a6894ac4ccfe59d87388fa949d6ef7e3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190419141943eucas1p220d77bacfc4fcba8ec6a10f540e1a27d
+References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190419141943eucas1p220d77bacfc4fcba8ec6a10f540e1a27d@eucas1p2.samsung.com>
+        <1555683568-20882-4-git-send-email-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+Hi Lukasz,
 
-On 5/1/19 9:35 PM, NeilBrown wrote:
+On 19. 4. 19. 오후 11:19, Lukasz Luba wrote:
+> Add new table rate for BPLL for Exynos5422 SoC supporting Dynamic Memory
+> Controller frequencies for driver's DRAM timings.
 > 
-> If the upper and lower layers use incompatible ACL formats, it is not
-> possible to copy the ACL xttr from one to the other, so overlayfs
-
-                           attr (?)
-
-> cannot work with them.
-> This happens particularly with NFSv4 which uses system.nfs4_acl, and
-> ext4 which uses system.posix_acl_access.
-> 
-> If all ACLs actually make to Unix permissions, then there is no need
-
-                       map (?)
-
-> to copy up the ACLs, but overlayfs cannot determine this.
-> 
-> So allow the sysadmin it assert that ACLs are not needed with a mount
-> option
->   honoracl=off
-> This causes the ACLs to not be copied, so filesystems with different
-> ACL formats can be overlaid together.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.com>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
 > ---
->  Documentation/filesystems/overlayfs.txt | 24 ++++++++++++++++++++++++
->  fs/overlayfs/copy_up.c                  |  9 +++++++--
->  fs/overlayfs/dir.c                      |  2 +-
->  fs/overlayfs/overlayfs.h                |  2 +-
->  fs/overlayfs/ovl_entry.h                |  1 +
->  fs/overlayfs/super.c                    | 15 +++++++++++++++
->  6 files changed, 49 insertions(+), 4 deletions(-)
+>  drivers/clk/samsung/clk-exynos5420.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/filesystems/overlayfs.txt b/Documentation/filesystems/overlayfs.txt
-> index eef7d9d259e8..7ad675940c93 100644
-> --- a/Documentation/filesystems/overlayfs.txt
-> +++ b/Documentation/filesystems/overlayfs.txt
-> @@ -245,6 +245,30 @@ filesystem - future operations on the file are barely noticed by the
->  overlay filesystem (though an operation on the name of the file such as
->  rename or unlink will of course be noticed and handled).
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index d9e6653..ddee8bd 100644
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -1323,6 +1323,17 @@ static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __ini
+>  	PLL_35XX_RATE(24 * MHZ, 200000000,  200, 3, 3),
+>  };
 >  
-> +ACL copy-up
-> +-----------
+> +static const struct samsung_pll_rate_table exynos5422_bpll_rate_table[] = {
+> +	PLL_35XX_RATE(24 * MHZ, 825000000, 275, 4, 1),
+> +	PLL_35XX_RATE(24 * MHZ, 728000000, 182, 3, 1),
+> +	PLL_35XX_RATE(24 * MHZ, 633000000, 211, 4, 1),
+> +	PLL_35XX_RATE(24 * MHZ, 543000000, 181, 2, 2),
+> +	PLL_35XX_RATE(24 * MHZ, 413000000, 413, 6, 2),
+> +	PLL_35XX_RATE(24 * MHZ, 275000000, 275, 3, 3),
+> +	PLL_35XX_RATE(24 * MHZ, 206000000, 206, 3, 3),
+> +	PLL_35XX_RATE(24 * MHZ, 165000000, 110, 2, 3),
+> +};
 > +
-> +When a file that only exists on the lower layer is modified it needs
-> +to be copied up to the upper layer.  This means copying the metadata
-> +and (usually) the data (though see "Metadata only copy up" below).
-> +One part of the metadata can be problematic: the ACLs.
-> +
-> +Now all filesystems support ACLs, and when they do they don't all use
+>  static const struct samsung_pll_rate_table exynos5420_epll_24mhz_tbl[] = {
+>  	PLL_36XX_RATE(24 * MHZ, 600000000U, 100, 2, 1, 0),
+>  	PLL_36XX_RATE(24 * MHZ, 400000000U, 200, 3, 2, 0),
+> @@ -1465,7 +1476,7 @@ static void __init exynos5x_clk_init(struct device_node *np,
+>  		exynos5x_plls[apll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+>  		exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
+>  		exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+> -		exynos5x_plls[bpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+> +		exynos5x_plls[bpll].rate_table = exynos5422_bpll_rate_table;
 
-   Not
+According to your previous reply, the released odroid-xu3 board by hardkernel
+might be only CONFIG_SOC_EXYNOS5422_REV_0. Because the kernel configurattion
+from hardkernel has 'CONFIG_SOC_EXYNOS5422_REV_0=y'. I'm ok about adding bpll rate_table.
 
-> +the same format.  A significant conflict appears between POSIX acls
+But, just I have one question. I think that this bpll rate_table is for
+only Exynos5422 series. Because the kernel of hardkernel used
+driver/clk/samsung/clk-exynos5422.c instead of clk-exynos5420.c commonn driver.
+It means that the clk-exynos5422.c of hardkernel's kernel support only Exynos5422
+without any considering the Exynos5420 series. 
 
-                                                                  ACLs
+I think that it might need to check the soc version to use
+bpll rate_table as following:
 
-> +used on many local filesystems, and NFSv4 ACLs used with NFSv4.  There
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -1438,7 +1438,10 @@ static void __init exynos5x_clk_init(struct device_node *np,
+                exynos5x_plls[apll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+                exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
+                exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+-               exynos5x_plls[bpll].rate_table = exynos5422_bpll_rate_table;
++
++               if (soc == EXYNOS5800)
++                       exynos5x_plls[bpll].rate_table
++                               = exynos5422_bpll_rate_table;
+        }
 
-                                                                    These (or the)
 
-> +two formats are, in general, not inter-convertible.
-> +
-> +If a site only uses regular Unix permissions (Read, Write, eXecute by
-> +User, Group and Other), then as these permissions are compatible with
-> +all ACLs, there is no need to copy ACLs.  overlayfs cannot determine
-> +if this is the case itself.
-> +
-> +For this reason, overlayfs supports a mount option "honoracl=off"
-> +which causes ACLs, any "system." extended attribute, on the lower
-> +layer to be ignored and, particularly, not copied to the upper later.
-> +This allows NFSv4 to be overlaid with a local filesystem, but should
-> +only be used if the only access controls used on the filesystem are
-> +Unix permission bits.
+>  	}
 >  
->  Multiple lower layers
->  ---------------------
-
+>  	samsung_clk_register_pll(ctx, exynos5x_plls, ARRAY_SIZE(exynos5x_plls),
+> 
 
 
 -- 
-~Randy
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
