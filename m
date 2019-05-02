@@ -2,257 +2,193 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE16EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818DFC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 879AC20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B072075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:39:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="aGzLo+3v";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="gOnhXDMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfEBIeP (ORCPT
+        id S1726326AbfEBIjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:34:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60130 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725905AbfEBIeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:34:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 56E9EABE7;
-        Thu,  2 May 2019 08:34:13 +0000 (UTC)
-Date:   Thu, 2 May 2019 10:34:12 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     "Tobin C. Harding" <me@tobin.cc>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: kobject_init_and_add() confusion
-Message-ID: <20190502083412.dhqw35juhm42wgmk@pathway.suse.cz>
-References: <20190430233803.GB10777@eros.localdomain>
+        Thu, 2 May 2019 04:39:00 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:56656 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725951AbfEBIjA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 04:39:00 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x428b6mZ025655;
+        Thu, 2 May 2019 01:38:45 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=v9ur+npx6FMF0rJCLY8QFry516fHZkwqI1ShYjmdl4w=;
+ b=aGzLo+3vPzj1M0utXaLd5FhVy6pwaTg4d42ivSXu3DLkUPMNGRRZOtmI3rJH3TDSH0G6
+ ZiKEnmRkQfD4AyFKBceoNIHkoY9TBfpUBjENQ7iqfJ64x+973LhfwcF28FII9PH9TnJc
+ 8O28/ZzjSkqkFaQcKKluKjRPBrSbgyDA3vkl5nCJpASqZ8zZz4m0ECndCLjOugUgelJb
+ BvR4+s9tUfM/gSIAGt1Wh+Ub3RyklkIYanwSfgtdL8ErS0CCOH7av7cs/bBv7BE2jyOE
+ VCof0rSpSi56N4vFL6hBPjuz7uc0pmHEdmf/sUo98Blu79VSS3JeluPgWqGyiA7zilLj 3A== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2s7k3b9v1r-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 02 May 2019 01:38:44 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 2 May
+ 2019 01:38:43 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.56) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 2 May 2019 01:38:43 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v9ur+npx6FMF0rJCLY8QFry516fHZkwqI1ShYjmdl4w=;
+ b=gOnhXDMn3WCQ+VgS9gCqyJ2o5UYSHEk8XWxDA9KBTeQ2x2J0p5Y0I7VM5w4rQUr6/5pveMRURO9CLf0fkQQgSa6CVZx19uHrLWL47D/oP69ZHK5HHC6ugoWXdGL9zlbBtUn87j9DiV9VDQFiMATP17bUfQpaPKxo6nzcOwH9KlA=
+Received: from DM5PR18MB1578.namprd18.prod.outlook.com (10.175.224.136) by
+ DM5PR18MB2325.namprd18.prod.outlook.com (52.132.208.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Thu, 2 May 2019 08:38:42 +0000
+Received: from DM5PR18MB1578.namprd18.prod.outlook.com
+ ([fe80::28da:f8bb:4901:b0aa]) by DM5PR18MB1578.namprd18.prod.outlook.com
+ ([fe80::28da:f8bb:4901:b0aa%10]) with mapi id 15.20.1835.018; Thu, 2 May 2019
+ 08:38:41 +0000
+From:   Jan Glauber <jglauber@marvell.com>
+To:     Will Deacon <will.deacon@arm.com>
+CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+Subject: Re: [RFC] Disable lockref on arm64
+Thread-Topic: [RFC] Disable lockref on arm64
+Thread-Index: AQHVAMJyX/jERFJO0EaZn9HXlo62yQ==
+Date:   Thu, 2 May 2019 08:38:41 +0000
+Message-ID: <20190502083834.GG13955@hc>
+References: <20190429145159.GA29076@hc>
+ <20190501160140.GC28109@fuggles.cambridge.arm.com>
+In-Reply-To: <20190501160140.GC28109@fuggles.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM5PR0701CA0014.eurprd07.prod.outlook.com
+ (2603:10a6:203:51::24) To DM5PR18MB1578.namprd18.prod.outlook.com
+ (2603:10b6:3:14d::8)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [78.43.208.63]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e65ca083-92bb-4e52-7292-08d6ced994a5
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR18MB2325;
+x-ms-traffictypediagnostic: DM5PR18MB2325:
+x-microsoft-antispam-prvs: <DM5PR18MB2325D03E71804B7797FEDD16D8340@DM5PR18MB2325.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0025434D2D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(396003)(136003)(346002)(376002)(366004)(39860400002)(199004)(189003)(7736002)(66066001)(316002)(486006)(446003)(8676002)(305945005)(6486002)(2906002)(102836004)(6512007)(6916009)(99286004)(9686003)(71190400001)(53936002)(186003)(14444005)(256004)(1076003)(68736007)(6246003)(33716001)(26005)(76176011)(4326008)(54906003)(229853002)(81166006)(81156014)(71200400001)(8936002)(478600001)(86362001)(11346002)(6436002)(66556008)(66946007)(73956011)(66476007)(476003)(64756008)(66446008)(6116002)(3846002)(52116002)(25786009)(6506007)(386003)(33656002)(14454004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR18MB2325;H:DM5PR18MB1578.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eAaFqx7iwTp3eMJFpAOCKRjzoqyOwbePAT7GxgPSZ50uRC1M6M+mIaGV/N03EGocGlcoZQNSob0bTcGytup4qmNs/q7yWneDNpZbGEO1c2s9WoprkRrJxwdQ13nqkOyp/nxWYabDAdOiFVdObWRnIryBngz78OoVhl+lvjM/uVrayKOArPtNWMyldTCQwmwiNNpKmvF54RoBL59usQ7XDfc8djyfmmOl6+wZp0ENoW9pUxzV9iYLpA08/o60Rad96bPaksJqIRSu7FnDKe69+ixxaqu/a6QF3UB6QafuqTljjR12W1+DoifiqQIxAWKLeGZCC3qFxpjIuq+NzevRQ6YYY13jJLEfLaObNrEzfCCW0Ua0C0SmPB39OYC0HIzcNIB8cQZIo9n41Zr4kr9S4ZR8G/HBLEIEFXPpsK8rpqo=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3D280D6F2517CD4F98E2699985E02545@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430233803.GB10777@eros.localdomain>
-User-Agent: NeoMutt/20170912 (1.9.0)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e65ca083-92bb-4e52-7292-08d6ced994a5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 08:38:41.9121
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR18MB2325
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-05-01 09:38:03, Tobin C. Harding wrote:
-> Hi,
-> 
-> Looks like I've created a bit of confusion trying to fix memleaks in
-> calls to kobject_init_and_add().  Its spread over various patches and
-> mailing lists so I'm starting a new thread and CC'ing anyone that
-> commented on one of those patches.
-> 
-> If there is a better way to go about this discussion please do tell me.
-> 
-> The problem
-> -----------
-> 
-> Calls to kobject_init_and_add() are leaking memory throughout the kernel
-> because of how the error paths are handled.
-> 
-> The solution
-> ------------
-> 
-> Write the error path code correctly.
-> 
-> Example
-> -------
-> 
-> We have samples/kobject/kobject-example.c but it uses
-> kobject_create_and_add().  I thought of adding another example file here
-> but could not think of how to do it off the top of my head without being
-> super contrived.  Can add this to the TODO list if it will help.
-> 
-> Here is an attempted canonical usage of kobject_init_and_add() typical
-> of the code that currently is getting it wrong.  This is the second time
-> I've written this and the first time it was wrong even after review (you
-> know who you are, you are definitely buying the next round of drinks :)
-> 
-> 
-> Assumes we have an object in memory already that has the kobject
-> embedded in it. Variable 'kobj' below would typically be &ptr->kobj
-> 
-> 
-> 	void fn(void)
-> 	{
-> 	        int ret;
-> 
-> 	        ret = kobject_init_and_add(kobj, ktype, NULL, "foo");
-> 	        if (ret) {
-> 			/*
-> 			 * This means kobject_init() has succeeded
-> 			 * but kobject_add() failed.
-> 			 */
-> 			goto err_put;
-> 		}
+On Wed, May 01, 2019 at 05:01:40PM +0100, Will Deacon wrote:
+> Hi Jan,
+>=20
+> [+Peter and Linus, since they enjoy this stuff]
+>=20
+> On Mon, Apr 29, 2019 at 02:52:11PM +0000, Jan Glauber wrote:
+> > I've been looking into performance issues that were reported for severa=
+l
+> > test-cases, for instance an nginx benchmark.
+>=20
+> Could you share enough specifics here so that we can reproduce the issue
+> locally, please? That would help us in our attempts to develop a fix with=
+out
+> simply disabling the option for everybody else.
 
-It is strange to make the structure visible in sysfs before
-we initialize it.
+I can send my test-case which is a trivial open-read-close loop with one
+thread per CPU and increasing read sizes.
 
-> 	        ret = some_init_fn();
-> 	        if (ret) {
-> 			/*
-> 			 * We need to wind back kobject_add() AND kobject_put().
-> 			 * kobject_add() incremented the refcount in
-> 			 * kobj->parent, that needs to be decremented THEN we need
-> 			 * the call to kobject_put() to decrement the
->			 * refcount of kobj.
- 			 */
-> 			goto err_del;
-> 		}
-> 
-> 	        ret = some_other_init_fn();
-> 	        if (ret)
-> 	                goto other_err;
-> 
-> 	        kobject_uevent(kobj, KOBJ_ADD);
-> 	        return 0;
-> 
-> 	other_err:
-> 	        other_clean_up_fn();
-> 	err_del:
-> 	        kobject_del(kobj);
-> 	err_put:
-> 		kobject_put(kobj);
+> > It turned out the issue we have on ThunderX2 is the file open-close seq=
+uence
+> > with small read sizes. If the used files are opened read-only the
+> > lockref code (enabled by ARCH_USE_CMPXCHG_LOCKREF) is used.
+> >=20
+> > The lockref CMPXCHG_LOOP uses an unbound (as long as the associated
+> > spinlock isn't taken) while loop to change the lock count. This behaves
+> > badly under heavy contention (~25x retries for one cmpxchg to succeed
+> > with 28 threads operating on the same file). In case of a NUMA system
+> > it also behaves badly as the access from the other socket is much slowe=
+r.
+>=20
+> It's surprising that this hasn't been reported on x86. I suspect their
+> implementation of cmpxchg is a little more forgiving under contention.
+>=20
+> > The fact that on ThunderX2 cpu_relax() turns only into one NOP
+> > instruction doesn't help either. On Intel pause seems to block the thre=
+ad
+> > much longer, avoiding the heavy contention thereby.
+>=20
+> NOPing out the yield instruction seems like a poor choice for an SMT CPU
+> such as TX2. That said, the yield was originally added to cpu_relax() as
+> a scheduling hint for QEMU.
 
-IMHO, separate kobject_del() makes only sense when the sysfs
-interface must be destroyed before some other actions.
+The issue is not limited to SMT, it also shows without SMT.
 
-I guess that we need two examples. I currently understand
-it the following way:
+> > With the queued spinlocks implementation I can see a major improvement
+> > when I disable lockref. A trivial open-close test-case improves by
+> > factor 2 while system time is decreasing also 2x. Looking at kernel com=
+pile
+> > and dbench numbers didn't show any regression with lockref disabled.
+> >=20
+> > Can we simply disable lockref? Is anyone else seeing this issue? Is the=
+re
+> > an arm64 platform that actually implements yield?
+>=20
+> There are two issues with disabling lockref like this:
+>=20
+>   1. It's a compile-time thing, so systems that would benefit from the co=
+de
+>      are unfairly penalised.
+>=20
+>   2. You're optimising for the contended case at the cost of the
+>      uncontended case, which should actually be the common case as well.
 
-1. sysfs interface and the structure can be freed anytime:
+I completely agree with 2). Nevertheless limiting the retry attempts
+like Linus suggested looks like a fair change that should not penalize
+anyone and would still help the contented case.
 
-   	struct A
-	{
-		struct kobject kobj;
-		...
-	};
+--Jan
 
-	void fn(void)
-	{
-		struct A *a;
-		int ret;
-
-		a = kzalloc(sizeof(*a), GFP_KERNEL);
-		if (!a)
-			return;
-
-		/*
-		 * Initialize structure before we make it accessible via
-		 * sysfs.
-		 */
-		ret = some_init_fn();
-		if (ret) {
-			goto init_err;
-		}
-
-		ret = kobject_init_and_add(&a->kobj, ktype, NULL, "foo");
-		if (ret)
-			goto kobj_err;
-
-		return 0;
-
-	kobj_err:
-		/* kobject_init() always succeds and take reference. */
-		kobject_put(kobj);
-		return ret;
-
-	init_err:
-		/* kobject was not initialized, simple free is enough */
-		kfree(a);
-		return ret;
-	}
-
-
-2. Structure must be registered into the subsystem before
-   it can be made visible via sysfs:
-
-   	struct A
-	{
-		struct kobject kobj;
-		...
-	};
-
-	void fn(void)
-	{
-		struct A *a;
-		int ret;
-
-		a = kzalloc(sizeof(*a), GFP_KERNEL);
-		if (!a)
-			return;
-
-		ret = some_init_fn();
-		if (ret) {
-			goto init_err;
-		}
-
-		/*
-		 * Structure is in a reasonable state and can be freed
-		 * via the kobject release callback.
-		 */
-		kobject_init(&a->kobj);
-
-		/*
-		 * Register the structure so that it can cooperate
-		 * with the rest of the system.
-		 */
-		ret = register_fn(a);
-`		if (ret)
-			goto register_err;
-
-
-		/* Make it visible via sysfs */
-		ret = kobject_add(&a->kobj, ktype, NULL, "foo");
-		if (ret) {
-			goto kobj_add_err;
-		}
-
-		/* Manipulate the structure somehow */
-		ret = action_fn(a);
-		if (ret)
-			goto action_err;
-
-		mutex_unlock(&my_mutex);
-		return 0;
-
-	action_err:
-		/*
-		 * Destroy sysfs interface but the structure
-		 * is still needed.
-		 */
-		kobject_del(&a->kboject);
-	kobject_add_err:
-		/* Make it invisible to the system. */
-		unregister_fn(a);
-	register_err:
-		/* Release the structure unsing the kobject callback */
-		kobject_put(&a->kobj);
-		return;
-
-	init_err:
-		/*
-		 * Custom init failed. Kobject release callback would do
-		 * a double free or so. Simple free is enough.
-		 */
-		 kfree(a);
-	}
-
-I would really prefer if we clearly understand where each variant makes
-sense before we start modifying the code and documentation.
-
-Best Regards,
-Petr
+> Now, nobody expects contended CAS to scale well, so the middle ground
+> probably involves backing off to the lock under contention, a bit like
+> an optimistic trylock(). Unfortunately, that will need some tuning, hence
+> my initial request for a reproducer.
+>=20
+> Cheers,
+>=20
+> Will
