@@ -2,92 +2,92 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85694C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6312C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4984420873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:28:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jsHYTre/"
+	by mail.kernel.org (Postfix) with ESMTP id 7AEEF208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:31:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556778703;
+	bh=9kQfTgRbn7BgX36DKuhOlMTBnMrgYJ3lA2q1ZFCe0Oc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C8lo/gs+NV6/aSiQ70dBlG1aEp8eLwnJLZ1i3t5Q34mQxqqAr52/ADMpnIIyGiBrW
+	 lFgYpMg9+59vO6MAPB5woEcQaetkMUlLnulj2Na7XeJR8dPFhkooMBx8/qhUF0tEGR
+	 O78R8n/Px/QMtJc5wV5+SBpz7x3Kna5qX/0+ed2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfEBG2Q (ORCPT
+        id S1726255AbfEBGbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 02:28:16 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38620 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfEBG2Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 02:28:16 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x426S9PR088543;
-        Thu, 2 May 2019 01:28:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556778489;
-        bh=4W5NF5LPDXhXIgev9Ksl3pErFzytM1EAAoht5kAVYFk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=jsHYTre/9ZJSYePtw3BbKHZQJQfuAHLuoF1D7S85oNCIA5WTtkv/FIp5VxmEab+k8
-         hg0otHbpVuv3mCAIReqfLL7LseckGf44lmdOMBI6bZ/r+192b2JdLlvooTS2jWclJ1
-         yjJPVR+NPh653z+tQ6F1uA2hnZk6uAGvWUF7O8Hg=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x426S9xQ081780
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 2 May 2019 01:28:09 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 2 May
- 2019 01:28:09 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 2 May 2019 01:28:09 -0500
-Received: from [172.24.190.215] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x426S6nl116280;
-        Thu, 2 May 2019 01:28:07 -0500
-Subject: Re: [PATCH] ARM: dts: dra76x: Update MMC2_HS200_MANUAL1 iodelay
- values
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <bcousson@baylibre.com>
-References: <20190430060856.18445-1-faiz_abbas@ti.com>
- <20190430155415.GI8007@atomide.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <9e32440f-cdab-eb79-2abb-9b0596701743@ti.com>
-Date:   Thu, 2 May 2019 11:58:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 02:31:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725772AbfEBGbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 02:31:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4559B20873;
+        Thu,  2 May 2019 06:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556778701;
+        bh=9kQfTgRbn7BgX36DKuhOlMTBnMrgYJ3lA2q1ZFCe0Oc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bRpPFrI+nLqoXGHxtKnq8xxjxssnaGXPV0SqZzMNBnpUjrEtuMM6kuRllc4mN/1yD
+         MJVeEpkfeFnh/1e6fmotR7ygT2ys5GIDJyLzqhfGbcYmN7PLYFjwMRaNNslvNpGwSW
+         e7C3rdU2qD9OIzh2nZn/+6rRRdpXycWWxZGHlEXY=
+Date:   Thu, 2 May 2019 08:31:39 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, liam.r.girdwood@linux.intel.com,
+        jank@cadence.com, joe@perches.com, srinivas.kandagatla@linaro.org,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH v4 02/22] soundwire: fix SPDX license for header files
+Message-ID: <20190502063139.GA14347@kroah.com>
+References: <20190501155745.21806-1-pierre-louis.bossart@linux.intel.com>
+ <20190501155745.21806-3-pierre-louis.bossart@linux.intel.com>
+ <20190502051440.GA3845@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-In-Reply-To: <20190430155415.GI8007@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502051440.GA3845@vkoul-mobl.Dlink>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
-
-On 30/04/19 9:24 PM, Tony Lindgren wrote:
-> Hi,
+On Thu, May 02, 2019 at 10:46:49AM +0530, Vinod Koul wrote:
+> On 01-05-19, 10:57, Pierre-Louis Bossart wrote:
+> > No C++ comments in .h files
+> > 
+> > Reviewed-by: Takashi Iwai <tiwai@suse.de>
+> > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > ---
+> >  drivers/soundwire/bus.h            | 4 ++--
+> >  drivers/soundwire/cadence_master.h | 4 ++--
+> >  drivers/soundwire/intel.h          | 4 ++--
 > 
-> * Faiz Abbas <faiz_abbas@ti.com> [190429 23:09]:
->> Update the MMC2_HS200_MANUAL1 iodelay values to match with the latest
->> dra76x data manual[1].
->>
->> Also this particular pinctrl-array is using spaces instead of tabs for
->> spacing between the values and the comments. Fix this as well.
-> 
-> Is this needed as a fix or can this wait?
-> 
+> As I said previously this touches subsystem header as well as driver
+> headers which is not ideal.
 
-This is a fix. The new iodelay values will have better marginality and
-should prevent issues in corner cases.
+What?  Who knows that?  Who cares?
 
-Thanks,
-Faiz
+This is doing "one logical thing" to all of the needed files.  Your
+split of "this is a driver" vs. "this is a subsystem" split is _VERY_
+arbritary.
+
+That's just too picky and assumes a subsystem-internal-knowledge much
+deeper than anyone submitting a normal cleanup patch would ever know.
+
+I think you have swung too far to the "too picky" side, you might want
+to dial it back.
+
+thanks,
+
+greg k-h
