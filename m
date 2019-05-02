@@ -7,65 +7,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3E4C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366B9C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C8D20651
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556826465;
-	bh=tT3dxNpGuYBhbduvDygoS6CeszKx4PgZRS95HuVKCOE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=id3FnNkCA/+giT0MkriJtucpQbbE7jam+dgxunmRFXHpXavpuLz0NwNIcCvEBQQ8k
-	 wQfWuPtqQ6drDVofGE4aR2zg4801Syb8I3QefqehPLtlue/YiPmI7HpuTPToWsESU9
-	 y390utJZw/CU0HM5Y3WqGm50bthE0ilAYz1x7eyk=
+	by mail.kernel.org (Postfix) with ESMTP id EC45920651
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:48:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vz1HuF/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfEBTro (ORCPT
+        id S1726549AbfEBTsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 15:47:44 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:33014 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbfEBTrn (ORCPT
+        Thu, 2 May 2019 15:48:16 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38890 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfEBTsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 15:47:43 -0400
-Received: by mail-it1-f195.google.com with SMTP id u16so1479094itc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 12:47:43 -0700 (PDT)
+        Thu, 2 May 2019 15:48:16 -0400
+Received: by mail-io1-f66.google.com with SMTP id y6so3290846ior.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 12:48:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
+        d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BlRlXXCdCQ8ojS85wg4oVL7jRwgqCApJr9d2CW9N/kk=;
-        b=hlmMwKaTwo8QkQ4w59AlaHa1gPjDqmFKP51ibnEIOqxvpVM4+UHLOj35EdfiGp9C1i
-         g7B7YmNkJtO8upmjc7K+jEym4Fyf4w+4UzkCuroDMQxsNLAS1DjyfCCM3mi9zNkZHmaX
-         W9BdloyTGe2xFOCDO8SMbUzbt1HoTTeAB47cI=
+        bh=7pqAbbGmAH866hhv2CWn1/a2UtcPAW35gnabgPgAghM=;
+        b=Vz1HuF/BEHGs0vrltc6iayVJQYApNpNTqqkksa0tqS9J+cfl+8iwJkC7evwIqAQPil
+         oE5IzvlOtvBEqMFdDqeTYEFPuyFfuix54qOswATJfvuRLQQdArgg4Yj4+37qL5saYyAc
+         Dli+gR1IkxZnPNcewgApt32EdFZps9j1ViQTg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BlRlXXCdCQ8ojS85wg4oVL7jRwgqCApJr9d2CW9N/kk=;
-        b=XAHDQb200onrcXAPxl5lxwjOkI4bHJcCMn8M8wciKXDfTjzJYLNK4ONSpTP1r7AkW6
-         BIrTOh7ckoO+74c7CvyZIolVfPvqRxxhzpHnnxA9tmGSgh8qiCXPKzGoDm4FO3TQZFdT
-         BL76I0R7Htg7IgVy/HmZkjyiFwi2b7VCWP8PCQTIbdjTil0Eudj8JwpgGc/j9ulZhrds
-         FzVah5nhxoLWi1WSetBu0Y5CKOjsSJ95dbtmbT0B3F1osWZbgPtd7pCjfC/FqxN0WZPs
-         JKPnUEX5xOf/iiOuKT9yP1sDlpPqWgqkUxiWsHrouJqxQEROCr0ASsoyWJ3Hd0c5LLgR
-         LwIQ==
-X-Gm-Message-State: APjAAAVkkkwZo8Ebi1y4wBKsC9J4aVW4uFml+Z15zlIIA40QBr2Y8lyG
-        V5vM07t57H90X2sJ3t/E5kU96Q==
-X-Google-Smtp-Source: APXvYqzxV1flOpU2yjAYsjvpcGQ06uNmg+YUXTWwTD4S3a4FvSgciwOuQPCWH1C2VXlxaZHzEYUFTg==
-X-Received: by 2002:a02:3b55:: with SMTP id i21mr4012523jaf.128.1556826463209;
-        Thu, 02 May 2019 12:47:43 -0700 (PDT)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id n4sm14741ioh.52.2019.05.02.12.47.42
+        bh=7pqAbbGmAH866hhv2CWn1/a2UtcPAW35gnabgPgAghM=;
+        b=scVeIDhp/l3X7fJmLECBzspjmQ2DN3zwutDxQF36rBoaF8j+WCx5Kk2Mpz7DBI+ljv
+         nWqP+LRuwsPufIcXoacFoGj/80zqaP7t/XI8YHxIoFEu/IsbTnf4LWdCkMVDhmMQNeet
+         P22PVwhYVMVWqOV9zoteDq+9LnHQQVv0b/F3BS7VO8m52k0mJIEtHYuZHUem/o1LQxBA
+         p6EbNpKu7yPFNEFQa6qGN96+BN3sgTzuasEmvXfqRpAL9miKq42TI2m30eNo4hZ8OMwe
+         Yzf73s5wTToaGYJnome8PnWX1JA2bSsEhdtSPkjccWIcwQUmno8K5Lg790u1B8W4c41k
+         IWiw==
+X-Gm-Message-State: APjAAAXg0tuHbpzREbhUTyqzQCfYCuqCpafE2t+lnvG2gKkKL9Kdi/cB
+        zavwA7y3bNQwGAOYxFtGHkNVSA==
+X-Google-Smtp-Source: APXvYqwwLQP25fP1ExsutjkA8ZN9vEmRnbaeAXWEvPdG6Tywh9Q0UgEXO2AlPxYBPxtE3Rjrrtt8hw==
+X-Received: by 2002:a5d:8f82:: with SMTP id l2mr4094494iol.110.1556826495625;
+        Thu, 02 May 2019 12:48:15 -0700 (PDT)
+Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id t127sm78565itb.32.2019.05.02.12.48.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 12:47:42 -0700 (PDT)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     valentina.manea.m@gmail.com, shuah@kernel.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>, linux-usb@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: add sleep between detach and usbip list -l
-Date:   Thu,  2 May 2019 13:47:40 -0600
-Message-Id: <20190502194740.15344-1-skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.19.1
+        Thu, 02 May 2019 12:48:14 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-block@vger.kernel.org
+Cc:     Raul E Rangel <rrangel@chromium.org>, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] block: Fix function name in comment
+Date:   Thu,  2 May 2019 13:48:11 -0600
+Message-Id: <20190502194811.200677-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,35 +68,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a sleep between detach and check for exportable devices to avoid
-the following segfault from libc-2.27.so
+The comment was out of date.
 
-[ 6268.136108] usbip[5565]: segfault at 0 ip 00007f2a947bddfd sp 00007ffd1a8705e8 error 4 in libc-2.27.so[7f2a94703000+1e7000]
-
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 ---
- tools/testing/selftests/drivers/usb/usbip/usbip_test.sh | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/drivers/usb/usbip/usbip_test.sh b/tools/testing/selftests/drivers/usb/usbip/usbip_test.sh
-index 128f0ab24307..beacf24a8df7 100755
---- a/tools/testing/selftests/drivers/usb/usbip/usbip_test.sh
-+++ b/tools/testing/selftests/drivers/usb/usbip/usbip_test.sh
-@@ -171,10 +171,14 @@ echo "Detach invalid port tests - expect invalid port error message";
- src/usbip detach -p 100;
- echo "=============================================================="
- 
-+# let detach complete. Avoid segfaults from libc-2.27.so
-+sleep 3;
-+
- echo "Expect to see export-able devices";
- src/usbip list -l;
- echo "=============================================================="
- 
-+
- echo "Remove usbip_host module";
- rmmod usbip_host;
- 
+ block/blk-mq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 9516304a38ee..0e467ff440a2 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -2062,7 +2062,7 @@ void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
+ 		list_del_init(&page->lru);
+ 		/*
+ 		 * Remove kmemleak object previously allocated in
+-		 * blk_mq_init_rq_map().
++		 * blk_mq_alloc_rqs().
+ 		 */
+ 		kmemleak_free(page_address(page));
+ 		__free_pages(page, page->private);
 -- 
-2.17.1
+2.21.0.593.g511ec345e18-goog
 
