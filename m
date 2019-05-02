@@ -7,56 +7,58 @@ X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3B0C43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5058C46470
 	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44726208E4
+	by mail.kernel.org (Postfix) with ESMTP id 7163821479
 	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1556763507;
-	bh=sMPhMPuD1Mj3n2jIswgvZWsEZM/ix9fCGK0kAThce+U=;
+	bh=AmKBle4THPBXUGuyggoySaG9lkv1B+0yaGY2jdJId/4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=no5YnNoKArsHMca7vIX8E0x9mUOycxawQg0LXbFvEdhSRCsDf3kkskiZQo2U6PN7Q
-	 3req/roF1A/pRAyRYExPbfyGJwemS+pRu8D8oI1wbuNzHv2MW5keEzQRMS65ADnfYo
-	 HONZsoo/f8ncPxqEwY8b/LfPNQTBxyc2aDevci/Q=
+	b=FAsg9HLZuk1FSisSl29dv8VdPIJU92vvw4RycA4FQyMKMNB1FPqQjd4H4fPQRWRUM
+	 s+m7olovD+W0+26Gn/pWo7fw5Fr5hsH9VscfqwAnhq/rsvQr0croc6CWEGBl2+FuZZ
+	 KavsHoyJbDJdJCNVAO95GybiKcz0nddXVf9shk6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfEBCSR (ORCPT
+        id S1726360AbfEBCSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:18:17 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54792 "EHLO
+        Wed, 1 May 2019 22:18:18 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54828 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfEBCSQ (ORCPT
+        with ESMTP id S1726166AbfEBCSR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:18:16 -0400
+        Wed, 1 May 2019 22:18:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=sDWuThU3xsEo4SgQTOzat0wz9Zc/a+PRsiFsYfLhmUE=; b=WYv+9b1SJiKI
-        GYh1I3M03W+FsWQOrm2gPdMUKmBTls8GQ63brUZ2buaglD6KEQgSaQumt3AFfjiGQOzZmT30wbbM/
-        iczEDCOJ6EUACi38bRmcMtm1uSmo50YHzxP43Rp9Tc1yCxxoRC+NxS9SWHYrHVP/xkOxdbmAW8px2
-        yNkGE=;
+        List-Archive; bh=w52+WD1FRjYJTS1b/QlKeFRTLrKcf/MWXa48o0J7BR8=; b=wv38btT2KChe
+        tdM3DnV0rSaLva6jN2TxBVg/+98h0I8EJ2FIeE5zY1bVDogbV2Aq6ATypOhlNptyymuVa2tIDI4Gt
+        HrtPVICwFbw7gviM1+P2BfckKhaUMryzzhJXX8/G6Ui14drVEt5ai+kMSUD8TW8+43UuuNmZz7X42
+        0qDQ8=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1IV-0005pt-75; Thu, 02 May 2019 02:18:07 +0000
+        id 1hM1IT-0005pm-8v; Thu, 02 May 2019 02:18:05 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 9926D441D56; Thu,  2 May 2019 03:18:03 +0100 (BST)
+        id 515C4441D3D; Thu,  2 May 2019 03:18:01 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Logesh <logesh.kolandavel@timesys.com>
-Cc:     Adam.Thomson.Opensource@diasemi.com, alsa-devel@alsa-project.org,
-        broonie@kernel.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, logesh.kolandavel@timesys.com,
-        Mark Brown <broonie@kernel.org>, perex@perex.cz,
-        support.opensource@diasemi.com, tiwai@suse.com
-Subject: Applied "ASoC: da7213: fix DAI_CLK_EN register bit overwrite" to the asoc tree
-In-Reply-To: <20190501090424.28861-1-logesh.kolandavel@timesys.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: SOF: Intel: fix spelling mistake "incompatble" -> "incompatible"" to the asoc tree
+In-Reply-To: <20190501102308.30390-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021803.9926D441D56@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:03 +0100 (BST)
+Message-Id: <20190502021801.515C4441D3D@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:18:01 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: da7213: fix DAI_CLK_EN register bit overwrite
+   ASoC: SOF: Intel: fix spelling mistake "incompatble" -> "incompatible"
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,54 +91,35 @@ to this mail.
 Thanks,
 Mark
 
-From 414a7321d60bc0abced4a760e22b8187e2b4aecf Mon Sep 17 00:00:00 2001
-From: Logesh <logesh.kolandavel@timesys.com>
-Date: Wed, 1 May 2019 14:34:24 +0530
-Subject: [PATCH] ASoC: da7213: fix DAI_CLK_EN register bit overwrite
+From 07f80454369e5a8141dbbf4ae0a535230f223f2b Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Wed, 1 May 2019 11:23:08 +0100
+Subject: [PATCH] ASoC: SOF: Intel: fix spelling mistake "incompatble" ->
+ "incompatible"
 
-If the da7213 codec is configured as Master with the DAPM power down
-delay time set, 'snd_soc_component_write' function overwrites the
-DAI_CLK_EN bit of DAI_CLK_MODE register which leads to audio play
-only once until it re-initialize after codec power up.
+There is a spelling mistake in a hda_dsp_rom_msg message, fix it.
 
-Signed-off-by: Logesh <logesh.kolandavel@timesys.com>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/da7213.c | 5 ++++-
- sound/soc/codecs/da7213.h | 2 ++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ sound/soc/sof/intel/hda.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/da7213.c b/sound/soc/codecs/da7213.c
-index 92d006a5283e..425c11d63e49 100644
---- a/sound/soc/codecs/da7213.c
-+++ b/sound/soc/codecs/da7213.c
-@@ -1305,7 +1305,10 @@ static int da7213_set_dai_fmt(struct snd_soc_dai *codec_dai, unsigned int fmt)
- 	/* By default only 64 BCLK per WCLK is supported */
- 	dai_clk_mode |= DA7213_DAI_BCLKS_PER_WCLK_64;
- 
--	snd_soc_component_write(component, DA7213_DAI_CLK_MODE, dai_clk_mode);
-+	snd_soc_component_update_bits(component, DA7213_DAI_CLK_MODE,
-+			    DA7213_DAI_BCLKS_PER_WCLK_MASK |
-+			    DA7213_DAI_CLK_POL_MASK | DA7213_DAI_WCLK_POL_MASK,
-+			    dai_clk_mode);
- 	snd_soc_component_update_bits(component, DA7213_DAI_CTRL, DA7213_DAI_FORMAT_MASK,
- 			    dai_ctrl);
- 	snd_soc_component_write(component, DA7213_DAI_OFFSET, dai_offset);
-diff --git a/sound/soc/codecs/da7213.h b/sound/soc/codecs/da7213.h
-index 5a78dba1dcb5..9d31efc3cfe5 100644
---- a/sound/soc/codecs/da7213.h
-+++ b/sound/soc/codecs/da7213.h
-@@ -181,7 +181,9 @@
- #define DA7213_DAI_BCLKS_PER_WCLK_256				(0x3 << 0)
- #define DA7213_DAI_BCLKS_PER_WCLK_MASK				(0x3 << 0)
- #define DA7213_DAI_CLK_POL_INV					(0x1 << 2)
-+#define DA7213_DAI_CLK_POL_MASK					(0x1 << 2)
- #define DA7213_DAI_WCLK_POL_INV					(0x1 << 3)
-+#define DA7213_DAI_WCLK_POL_MASK				(0x1 << 3)
- #define DA7213_DAI_CLK_EN_MASK					(0x1 << 7)
- 
- /* DA7213_DAI_CTRL = 0x29 */
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index b8fc19790f3b..84baf275b467 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -54,7 +54,7 @@ static const struct hda_dsp_msg_code hda_dsp_rom_msg[] = {
+ 	{HDA_DSP_ROM_L2_CACHE_ERROR, "error: L2 cache error"},
+ 	{HDA_DSP_ROM_LOAD_OFFSET_TO_SMALL, "error: load offset too small"},
+ 	{HDA_DSP_ROM_API_PTR_INVALID, "error: API ptr invalid"},
+-	{HDA_DSP_ROM_BASEFW_INCOMPAT, "error: base fw incompatble"},
++	{HDA_DSP_ROM_BASEFW_INCOMPAT, "error: base fw incompatible"},
+ 	{HDA_DSP_ROM_UNHANDLED_INTERRUPT, "error: unhandled interrupt"},
+ 	{HDA_DSP_ROM_MEMORY_HOLE_ECC, "error: ECC memory hole"},
+ 	{HDA_DSP_ROM_KERNEL_EXCEPTION, "error: kernel exception"},
 -- 
 2.20.1
 
