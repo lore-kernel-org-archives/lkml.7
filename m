@@ -2,121 +2,129 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D0AC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6604C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22FBD206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:48:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFpuR83N"
+	by mail.kernel.org (Postfix) with ESMTP id 847962089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 00:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556758133;
+	bh=DZcQobR9/wQCf0xZy2gO/3nNgDwOdfTWMRJMmL87hls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YIBtqZJ6LIZd47OVvsmlXI4g+bV27AC8cFts8Uh7PU1z+VFfkauvJuzciRvjeCNOn
+	 ZBnKb6HYjxSZuXbR9Z74mLk8th5OMK9gFhdwMHTsryT+i12W84P6geqaxYyYe9s1jO
+	 Dfp0ZVbB3Cr/azMlIq2bX1jsEKh/H4jEraGa3XnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfEBAsb (ORCPT
+        id S1726359AbfEBAsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 20:48:31 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42078 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfEBAsb (ORCPT
+        Wed, 1 May 2019 20:48:52 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34225 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbfEBAsw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 20:48:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w25so245686pfi.9;
-        Wed, 01 May 2019 17:48:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zgtlpUluE15XFZp7lLxAuNyJeOtodD5ENmV00jQLwaM=;
-        b=OFpuR83Np2ZHuYo1i9jf55GwlEXwD5YoeeAHb/aWd/gPrHw3+t/QGBBpAYUT4zb84G
-         daPs1WLFCwxlkBfTKAYTP/PSRkSpaBWe74oLbDl+bPHwetJipbwsnd0SaErnxmExuz7V
-         vAPhvOK+ANONizglQKcKTlDFeG7Ik18eqPMYHkZ+z5pENqCRD3/hLiQS+skuTz/uskjb
-         3kwwzM97v6/3QAzJ0A6lf2mZMpCXNvSUV8vod34LFB42eIkazL7LXW+9ea3vy+KXJahj
-         kvzpIQYudeNE5pJ8fGhparkGFD21VuVC2Z79mEnOrCG9kywYC8HwbA5KJtlnxK+pD9S+
-         45/Q==
+        Wed, 1 May 2019 20:48:52 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v10so427778oib.1;
+        Wed, 01 May 2019 17:48:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zgtlpUluE15XFZp7lLxAuNyJeOtodD5ENmV00jQLwaM=;
-        b=IMHw5shf5uRF8y0skGPBW7eRi+RRqoYgMWm7h8J9NniKvUfcchJ0kGj/FuwnY6r4pS
-         W00ftadhjGD1/gKH8f4rECM+XnmoP8T9M1cOIBhFczvuPl7sSpGo5dnKFHPPfk6oQ/NT
-         qyIAmwgZwjIlRkwZoybHY0XesCsl1jyBz8XYVux9L5lFeAGSrIZrtEt5u3OQJdes2HlT
-         CWaITLF93ff22has9e8b8d3hwac+TH78zl8Vs/RxyrFntYNaEVl3Td3VRHHXU4Ll4tAP
-         i3coQGEoNgsSBOghtf4TGbRU051wcb211gX4SjMDpdJTFVYx7tqp6KiAw7kdmN6aGmSp
-         SxSA==
-X-Gm-Message-State: APjAAAXC8qw30EyoaJMWBeZVoWHNi2xH37oA5MNBlDbb0wNQVo7/FKm1
-        ftkgV6nrBSsyqf3a908PKTBMgDBnJ1ZOGAbS7/c=
-X-Google-Smtp-Source: APXvYqxIwTfslovSe+KCRHjpGPm+5mhidqGqDoIQ2dE/oNSiN8BxyvQjlnafe/4HeLG6xg7nw+fmVAXbLny1nC9RxrY=
-X-Received: by 2002:a62:e101:: with SMTP id q1mr965126pfh.160.1556758110283;
- Wed, 01 May 2019 17:48:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=/DJSVXUD6ihdDGPu0GZjl5uPL7+MwkMGdNWZHLgSEZ0=;
+        b=FV2f99ZGRYMYUthNqY65zhIZx0jdIuRg49qo49W6Okp+Ncmymi6C/PPiSJ7LwIq2wH
+         V/py9IEexclqxm2NJG1q3HlskOh8TkhjMlGjpLHgZPjyFOyDmrLsOdW3aWco9eEsLpKL
+         E/2vpKbQIB3FXtBhuNOQQZixzrLEuPH33X6X+8X8f3tw2ZNkZkwABGdnoLdMEuLg0OKC
+         ItlbqqR9Lv4//rv7D7C6tRW2x+9w0p29Cv3uRFeSBl7TCfCb924j/aw9CkkS22tMTFJC
+         S7ECsCXxP516Jzbh3DYcdheHRj560mqUOKlMDm13+LkZmMzgx9qRUYDgVGTdDpkIr/NN
+         yWOg==
+X-Gm-Message-State: APjAAAWHHjf9qpesIAoEfSrH7Gwta7svu4ZleaP60nGxk6O/91KFpMNP
+        As9zbrEJLyqZ9sD1xFlMGb4AhSY=
+X-Google-Smtp-Source: APXvYqzw6vNDK3Wzkdy9CxKtL6Q3ubGrIjPHnrFf021GVDCBaGS2/NFROx9ihayNuO+j0GGbsvHoYg==
+X-Received: by 2002:aca:3306:: with SMTP id z6mr748777oiz.25.1556758131022;
+        Wed, 01 May 2019 17:48:51 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i11sm16269124otl.27.2019.05.01.17.48.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 17:48:50 -0700 (PDT)
+Date:   Wed, 1 May 2019 19:48:49 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [RFC PATCH 1/4] dt-bindings: input: Add support for the MPR121
+ without interrupt line
+Message-ID: <20190502004849.GA8232@bogus>
+References: <1556267420-93219-1-git-send-email-michal.vokac@ysoft.com>
+ <1556267420-93219-2-git-send-email-michal.vokac@ysoft.com>
 MIME-Version: 1.0
-References: <20190429173805.4455-1-mcroce@redhat.com> <CAM_iQpXB83o+Nnbef8-h_8cg6rTVZn194uZvP1-VKPcJ+xMEjA@mail.gmail.com>
- <CAGnkfhzPZjqnemq+Sh=pAQPsoadYD2UYfdVf8UHt-Dd7gqhVOg@mail.gmail.com>
-In-Reply-To: <CAGnkfhzPZjqnemq+Sh=pAQPsoadYD2UYfdVf8UHt-Dd7gqhVOg@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Wed, 1 May 2019 17:48:19 -0700
-Message-ID: <CAM_iQpXNdZPAWiGuwRGhgX4WdRGEwVnax5VyMrXZ+hM9xhhzCQ@mail.gmail.com>
-Subject: Re: [PATCH net] cls_matchall: avoid panic when receiving a packet
- before filter set
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     Vlad Buslov <vladbu@mellanox.com>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1556267420-93219-2-git-send-email-michal.vokac@ysoft.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 1, 2019 at 2:27 AM Matteo Croce <mcroce@redhat.com> wrote:
->
-> On Tue, Apr 30, 2019 at 11:25 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> >
-> > On Mon, Apr 29, 2019 at 10:38 AM Matteo Croce <mcroce@redhat.com> wrote:
-> > >
-> > > When a matchall classifier is added, there is a small time interval in
-> > > which tp->root is NULL. If we receive a packet in this small time slice
-> > > a NULL pointer dereference will happen, leading to a kernel panic:
-> >
-> > Hmm, why not just check tp->root against NULL in mall_classify()?
-> >
-> > Also, which is the offending commit here? Please add a Fixes: tag.
-> >
-> > Thanks.
->
-> Hi,
->
-> I just want to avoid an extra check which would be made for every packet.
-> Probably the benefit over a check is negligible, but it's still a
-> per-packet thing.
-> If you prefer a simple check, I can make a v2 that way.
+On Fri, Apr 26, 2019 at 10:30:17AM +0200, Michal Vokáč wrote:
+> Normally, the MPR121 controller uses separate interrupt line to notify
+> the I2C host that a key was touched/released. To support platforms that
+> can not use the interrupt line, polling of the MPR121 registers can be
+> used.
 
-Yeah, I think that is better, you can add an unlikely() for performance
-concern, as NULL is a rare case.
+Other than making the 'interrupts' property optional, that's a driver 
+change, not a DT change. IOW, we shouldn't need a whole new binding.
 
-
->
-> For the fixes tag, I didn't put it as I'm not really sure about the
-> offending commit. I guess it's the following, what do you think?
->
-> commit ed76f5edccc98fa66f2337f0b3b255d6e1a568b7
-> Author: Vlad Buslov <vladbu@mellanox.com>
-> Date:   Mon Feb 11 10:55:38 2019 +0200
->
->     net: sched: protect filter_chain list with filter_chain_lock mutex
-
-I think you are right, this is the commit introduced the code
-that inserts the tp before fully initializing it. Please Cc Vlad
-for your v2, in case we blame a wrong commit here.
-
-
-BTW, it looks like cls_cgroup needs a same fix. Please audit
-other tc filters as well.
-
-Thanks!
+> 
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> ---
+>  .../bindings/input/mpr121-touchkey-polled.txt      | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt b/Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt
+> new file mode 100644
+> index 000000000000..6bb1d312614c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/mpr121-touchkey-polled.txt
+> @@ -0,0 +1,26 @@
+> +* Freescale MPR121 Controller without interrupt line
+> +
+> +Required Properties:
+> +- compatible:		Should be "fsl,mpr121-touchkey-polled"
+> +- reg:			The I2C slave address of the device.
+> +- vdd-supply:		Phandle to the Vdd power supply.
+> +- linux,keycodes:	Specifies an array of numeric keycode values to
+> +			be used for reporting button presses. The array can
+> +			contain up to 12 entries.
+> +
+> +Optional Properties:
+> +- autorepeat:		Enable autorepeat feature.
+> +
+> +Example:
+> +
+> +#include "dt-bindings/input/input.h"
+> +
+> +	touchkeys: keys@5a {
+> +		compatible = "fsl,mpr121-touchkey-polled";
+> +		reg = <0x5a>;
+> +		autorepeat;
+> +		vdd-supply = <&ldo4_reg>;
+> +		linux,keycodes = <KEY_0>, <KEY_1>, <KEY_2>, <KEY_3>,
+> +				<KEY_4> <KEY_5>, <KEY_6>, <KEY_7>,
+> +				<KEY_8>, <KEY_9>, <KEY_A>, <KEY_B>;
+> +	};
+> -- 
+> 2.1.4
+> 
