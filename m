@@ -1,51 +1,122 @@
 Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1CDC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33AFC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF49E2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B93A20C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfEBQ4m (ORCPT
+        id S1726510AbfEBQ5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:56:42 -0400
-Received: from zxv.publicvm.com ([5.206.225.187]:53161 "EHLO zxv.publicvm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbfEBQ4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:56:42 -0400
-X-Greylist: delayed 5936 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 May 2019 12:56:42 EDT
-Received: from WIN-UFVMAPBRAME (localhost [IPv6:::1])
-        by zxv.publicvm.com (Postfix) with ESMTP id 4B68C80291
-        for <linux-kernel@vger.kernel.org>; Thu,  2 May 2019 15:06:09 +0000 (GMT)
-Message-ID: <037f1bb3-43587-cc536709392245@win-ufvmapbrame>
-Reply-To: "Stefanie Hubner" <ddvv.vv@yandex.com>
-From:   "Stefanie Hubner" <info@zxv.publicvm.com>
-To:     linux-kernel@vger.kernel.org
-Subject: Hallo 5/2/2019  4:06:09 PM
-Date:   Thu, 2 May 2019 16:05:09 +0100
+        Thu, 2 May 2019 12:57:40 -0400
+Received: from gateway21.websitewelcome.com ([192.185.46.113]:39902 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726120AbfEBQ5j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 12:57:39 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id A698F400C5B42
+        for <linux-kernel@vger.kernel.org>; Thu,  2 May 2019 11:57:38 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id MF1ehYwYD4FKpMF1ehzHBp; Thu, 02 May 2019 11:57:38 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.119.203] (port=38124 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hMF1b-00233d-Ko; Thu, 02 May 2019 11:57:37 -0500
+Date:   Thu, 2 May 2019 11:57:33 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] posix_acl: Use struct_size() helper
+Message-ID: <20190502165733.GA3679@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Priority: 3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.119.203
+X-Source-L: No
+X-Exim-ID: 1hMF1b-00233d-Ko
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.119.203]:38124
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hallo linux-kernel@vger.kernel.org
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes, in particular in the
+context in which this code is being used.
 
-Sehr geehrte Damen und Herren
+So, replace code of the following form:
 
-Wir gewähren Darlehen in Höhe von 20.000,00 € bis 5 Mio. € mit einem Zinssatz von 2% 
+sizeof(struct posix_acl) + count * sizeof(struct posix_acl_entry)
 
-Die Zinsen und die Laufzeiten sind sehr attraktiv (2%) und in punkto Sicherheit beschränken wir uns auf das absolute 
-Minimum. Interessiert? Dann kontaktieren Sie uns doch für weitere Informationen per e-mail
+with:
 
-Stefanie Hubner.
+struct_size(acl, a_entries, count)
+
+and so on...
+
+Notice that variable size is unnecessary, hence it is removed.
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ fs/posix_acl.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/fs/posix_acl.c b/fs/posix_acl.c
+index 2fd0fde16fe1..d654d8f87280 100644
+--- a/fs/posix_acl.c
++++ b/fs/posix_acl.c
+@@ -175,9 +175,9 @@ EXPORT_SYMBOL(posix_acl_init);
+ struct posix_acl *
+ posix_acl_alloc(int count, gfp_t flags)
+ {
+-	const size_t size = sizeof(struct posix_acl) +
+-	                    count * sizeof(struct posix_acl_entry);
+-	struct posix_acl *acl = kmalloc(size, flags);
++	struct posix_acl *acl;
++
++	acl = kmalloc(struct_size(acl, a_entries, count), flags);
+ 	if (acl)
+ 		posix_acl_init(acl, count);
+ 	return acl;
+@@ -193,9 +193,9 @@ posix_acl_clone(const struct posix_acl *acl, gfp_t flags)
+ 	struct posix_acl *clone = NULL;
+ 
+ 	if (acl) {
+-		int size = sizeof(struct posix_acl) + acl->a_count *
+-		           sizeof(struct posix_acl_entry);
+-		clone = kmemdup(acl, size, flags);
++		clone = kmemdup(acl,
++				struct_size(clone, a_entries, acl->a_count),
++				flags);
+ 		if (clone)
+ 			refcount_set(&clone->a_refcount, 1);
+ 	}
+-- 
+2.21.0
 
