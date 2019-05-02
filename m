@@ -2,84 +2,104 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A10FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD7DC04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A98A2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556832741;
-	bh=JbL7nIFwXUDRCAX4RLgBzlh4JpV5r2+B7vsWI4aJf3g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WRMDU838TNWi1Eot0kMz7+G7HCqKCOjiq9rWRtOgYcEi4lI5wp0S8tma55aYPiNUX
-	 Vhj4rRg/K+0ZiyxHio/1TulP/1YntVHF1VGA6r2X1bjyzR5gvGrLdWJR6MWJ4Tgpzq
-	 hIr+7bqLndkpBwk8zDiaNybfad4xUkDFe2i72P3Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1E8A02081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:33:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RQWf4Str"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfEBVcU (ORCPT
+        id S1726280AbfEBVdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 17:32:20 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36964 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfEBVcT (ORCPT
+        Thu, 2 May 2019 17:33:13 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55544 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfEBVdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 17:32:19 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r20so3518306otg.4;
-        Thu, 02 May 2019 14:32:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=orS40jFtqb35Wbp7JodVtiOmNi03+OR+s9mWL3M/pTo=;
-        b=D/JCcWotYNLyZKfL2bzhRp1xd6g+p2AZ7Qsxcwf/EK6f6BfP7MgsEN5kdnRPGl1+v0
-         WK2PTt2azvJe4QZyaI0B532X+X3/Q3pAjhPJyVXpMg93h9Nu9EaxtbMVAZqegXnrdw4v
-         tH4rElbYTNkNHY6EMf4V4NOBxRFPdf5nbNKh3GeMNFOtnuQYpNjYJHuElSHilbbOTu8D
-         z/fk+L8hVSUQ+YhEmOUH9siiP0rl8gBKwfIXjeMB1adJutHd25MAJENMEywKQ7W+jNLV
-         UStCysll/cZxYwmq0r58DI4amO9onvgZktW6nCQkLbmkM/Au+zfDbKNCD06G+uNLwu7P
-         vJJQ==
-X-Gm-Message-State: APjAAAWRwCoGnqfEneRb8zAGp7bOvEBUUjy+CtG8IJjycTwGeNY1YjaH
-        y6rpZbM19iFHbr1P2CSBBQ==
-X-Google-Smtp-Source: APXvYqycgFFoT6XyDRCj95MK86JH5d0iSJKNsTW2unTnGgy0mZGyLggORq55HQkw5az2wxF69nEyYQ==
-X-Received: by 2002:a9d:66a:: with SMTP id 97mr4150543otn.234.1556832739089;
-        Thu, 02 May 2019 14:32:19 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 38sm92068otg.10.2019.05.02.14.32.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 14:32:17 -0700 (PDT)
-Date:   Thu, 2 May 2019 16:32:17 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] Input: edt-ft5x06 - add support for polled
- configuration
-Message-ID: <20190502213217.GA14901@bogus>
-References: <20190430185859.24015-1-nsaenzjulienne@suse.de>
- <20190430185859.24015-2-nsaenzjulienne@suse.de>
+        Thu, 2 May 2019 17:33:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZXqnuo0JSIuRggTcqyOSAvcyo1xhZ/4jSajZfdhhW24=; b=RQWf4StrNHmwEF6NAVXxFPJ2s
+        Sxzl51CDrOJuvMAA+fYwI41eZ3d7WnH69VgOI8/coS6GZjyfBkyouvMkqz0y4EFDW6C90it/y+BMI
+        lstFwapGleV7DCIkgIZCWUp78icSvdsGnF5QiJREea/5Sw6MNdWEEGOIFUwkl15Yx1+ai0jlv3w91
+        +yrUGaP4xHamqYJCQa6ZPGC0dYo1uWWJGS+rA8yjN4/fPvrYV9Wu2PDu4v0yjn4rk7OzEJt25cg7C
+        nC1O8DHz7/yJdbKdhlfmTV8mChs6Kt8K8AGEb7fQWqMw48YUjfCXSTLGkvupy9TvKXNgjlIhJmEXi
+        1/2p9Dl+A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hMJJq-0004Nq-5V; Thu, 02 May 2019 21:32:42 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 69A4F209A1C85; Thu,  2 May 2019 23:32:39 +0200 (CEST)
+Date:   Thu, 2 May 2019 23:32:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+Message-ID: <20190502213239.GA2623@hirez.programming.kicks-ass.net>
+References: <20190501202830.347656894@goodmis.org>
+ <20190501203152.397154664@goodmis.org>
+ <20190501232412.1196ef18@oasis.local.home>
+ <20190502162133.GX2623@hirez.programming.kicks-ass.net>
+ <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
+ <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+ <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
+ <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
+ <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430185859.24015-2-nsaenzjulienne@suse.de>
+In-Reply-To: <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019 20:58:59 +0200, Nicolas Saenz Julienne wrote:
-> Some devices might not provide an interrupt line for the touchscreen.
-> In that case the driver defaults to using a polled interface.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  .../devicetree/bindings/input/touchscreen/edt-ft5x06.txt  | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
+On Thu, May 02, 2019 at 01:49:29PM -0700, Linus Torvalds wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> We *could* also make this kernel-mode-only do_int3() be a special
+> function, and do something like
+
+I think I prefer the variant we have now. The int3_emulate_*() things
+work uniformly and as expected on 32 and 64 bit (it would even work for
+userspace if it weren't for SMAP).
+
+So while the 32bit kernel entry is 'special' all the INT3 handlers can
+uniformly prod at pt_regs in a natural way and have it work.
+
+Making it special -- just for 32bit, seems like the wrong thing to me.
