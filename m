@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8782C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28955C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE0720449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE34720449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:42:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811740;
-	bh=UQbqGMDCgBNAjQjZMA67nwKs/q9PTTAcMDrta56byeg=;
+	s=default; t=1556811750;
+	bh=y7BOXXaN8v9vDrDLxNuTeWSQJqbJNlFPXXod/PLTK5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2f593qIkHg5iFLQZSmirjaTI+4PNxha0RpR5qxUIBEZjcWtMBNU5KUqb5ofc1cmzq
-	 2VlxnoXQJPt/zcD+LFaMiSBvHMXJw8LoDDcGSLb0yOtqkIoDKRv1ALpne6cnT7Lzjd
-	 aBa5TQgTBkls+lqKCeElC/C8L6oPG7pM7z/gpREo=
+	b=ZucpvTtCZDr/Uh4rhGukj8it5vbozjA9CrWF9DnZd2bNyVwHHRJBqUo44luzipUA1
+	 y3p9wE0fWhvfyyV/PxciJf3vhYGWVjCnW1znpF0Cz4d8j96a03Ck38QbA3kb5092vX
+	 /3bxHcwj8UKLZn3d16kac58F5lF6bPe+E6Xqdn1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbfEBPmT (ORCPT
+        id S1726541AbfEBPm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:42:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45496 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:42:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbfEBP2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:28:19 -0400
+        id S1728153AbfEBP2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:28:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8CF2216FD;
-        Thu,  2 May 2019 15:28:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FAEE2081C;
+        Thu,  2 May 2019 15:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810898;
-        bh=UQbqGMDCgBNAjQjZMA67nwKs/q9PTTAcMDrta56byeg=;
+        s=default; t=1556810888;
+        bh=y7BOXXaN8v9vDrDLxNuTeWSQJqbJNlFPXXod/PLTK5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l4j/5XbO7ukMI2fu8jzJMFIRFs4++zLSusscyAOk4w8lAEkC2mW/CDiY+BIWyDhiM
-         kOvbT3Qz70WueF4K1yqzgkvIv3AXTD7MBqgzB1ockhfpCCg2luFJNg6RDvWDbpPIcj
-         pLOS0bPAh1IinyXrfEI7WWXYjK1pGVIWRTusTsy4=
+        b=KZUA6IqPkAuSJgHK/goWU7As0RYXOuPVAjIsiPuTDQGHGhcgTLUcG3Vn2yNR/tkr2
+         84UEH6nBpl5vurlJP16kutXjO5V3Mc0VbIwBOs9BiMPSYAD/c0YJ1sy/2jYtYEiicN
+         bqhLWR4OqZt/cFaS4rA6MRNc3JmV6fjnOWJDwcbY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 71/72] leds: pca9532: fix a potential NULL pointer dereference
-Date:   Thu,  2 May 2019 17:21:33 +0200
-Message-Id: <20190502143338.881186186@linuxfoundation.org>
+Subject: [PATCH 4.19 68/72] kconfig/[mn]conf: handle backspace (^H) key
+Date:   Thu,  2 May 2019 17:21:30 +0200
+Message-Id: <20190502143338.680368135@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -60,45 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0aab8e4df4702b31314a27ec4b0631dfad0fae0a ]
+[ Upstream commit 9c38f1f044080392603c497ecca4d7d09876ff99 ]
 
-In case of_match_device cannot find a match, return -EINVAL to avoid
-NULL pointer dereference.
+Backspace is not working on some terminal emulators which do not send the
+key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
+But currently only '^?' is handled. Let's also handle '^H' for those
+terminals.
 
-Fixes: fa4191a609f2 ("leds: pca9532: Add device tree support")
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/leds/leds-pca9532.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ scripts/kconfig/lxdialog/inputbox.c | 3 ++-
+ scripts/kconfig/nconf.c             | 2 +-
+ scripts/kconfig/nconf.gui.c         | 3 ++-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-index 7fea18b0c15d..7cb4d685a1f1 100644
---- a/drivers/leds/leds-pca9532.c
-+++ b/drivers/leds/leds-pca9532.c
-@@ -513,6 +513,7 @@ static int pca9532_probe(struct i2c_client *client,
- 	const struct i2c_device_id *id)
- {
- 	int devid;
-+	const struct of_device_id *of_id;
- 	struct pca9532_data *data = i2c_get_clientdata(client);
- 	struct pca9532_platform_data *pca9532_pdata =
- 			dev_get_platdata(&client->dev);
-@@ -528,8 +529,11 @@ static int pca9532_probe(struct i2c_client *client,
- 			dev_err(&client->dev, "no platform data\n");
- 			return -EINVAL;
- 		}
--		devid = (int)(uintptr_t)of_match_device(
--			of_pca9532_leds_match, &client->dev)->data;
-+		of_id = of_match_device(of_pca9532_leds_match,
-+				&client->dev);
-+		if (unlikely(!of_id))
-+			return -EINVAL;
-+		devid = (int)(uintptr_t) of_id->data;
- 	} else {
- 		devid = id->driver_data;
- 	}
+diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
+index fe82ff6d744e..b15c8d1744f5 100644
+--- a/scripts/kconfig/lxdialog/inputbox.c
++++ b/scripts/kconfig/lxdialog/inputbox.c
+@@ -126,7 +126,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
+ 			case KEY_DOWN:
+ 				break;
+ 			case KEY_BACKSPACE:
+-			case 127:
++			case 8:   /* ^H */
++			case 127: /* ^? */
+ 				if (pos) {
+ 					wattrset(dialog, dlg.inputbox.atr);
+ 					if (input_x == 0) {
+diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
+index 1ef232ae5ab9..c8ff1c99dd5c 100644
+--- a/scripts/kconfig/nconf.c
++++ b/scripts/kconfig/nconf.c
+@@ -1049,7 +1049,7 @@ static int do_match(int key, struct match_state *state, int *ans)
+ 		state->match_direction = FIND_NEXT_MATCH_UP;
+ 		*ans = get_mext_match(state->pattern,
+ 				state->match_direction);
+-	} else if (key == KEY_BACKSPACE || key == 127) {
++	} else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
+ 		state->pattern[strlen(state->pattern)-1] = '\0';
+ 		adj_match_dir(&state->match_direction);
+ 	} else
+diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
+index 88874acfda36..820fc9256532 100644
+--- a/scripts/kconfig/nconf.gui.c
++++ b/scripts/kconfig/nconf.gui.c
+@@ -440,7 +440,8 @@ int dialog_inputbox(WINDOW *main_window,
+ 		case KEY_F(F_EXIT):
+ 		case KEY_F(F_BACK):
+ 			break;
+-		case 127:
++		case 8:   /* ^H */
++		case 127: /* ^? */
+ 		case KEY_BACKSPACE:
+ 			if (cursor_position > 0) {
+ 				memmove(&result[cursor_position-1],
 -- 
 2.19.1
 
