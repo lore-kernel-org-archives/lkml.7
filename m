@@ -2,105 +2,127 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CA3C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE61BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B2C217D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810933;
-	bh=CKB00b82O/m91mqSznLKclqk4o1K3nQnzd/FY7DCOsw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2T8I61aOIqq0lg676Syc3EWeIGxS/Sv3od03zC7S59gmiIXR/Mu1yTosntBDDQgsU
-	 iykwrMFHyxtCoP08NNmwuegSx/iLBUNbyV8NByYr1+odI46U7cE8RWKyeM9xXPBe7b
-	 F2vkbOqzm5w6CQ7h9VZ1XY0mhCF0ZzS+elkuBVhM=
+	by mail.kernel.org (Postfix) with ESMTP id 9FBBC21734
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r0Ah6TDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfEBP2v (ORCPT
+        id S1727593AbfEBP26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:28:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727568AbfEBP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:28:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9875421783;
-        Thu,  2 May 2019 15:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810927;
-        bh=CKB00b82O/m91mqSznLKclqk4o1K3nQnzd/FY7DCOsw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TAzSLk5cw9ECIPn1yzriQZC4sXJex/t1fDN1j7xSTAfJdBiJ4t52oMrQhIaQJEsEo
-         3PlscDIWbWL5FanBJPgkDT6gAI/YthNWTPR+AFruq1g77ul7EFtg7WyHuv32NnmZe+
-         MocMm0gB8qXsHv0qCpxec8MEn96UlETmNPI1kGOQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Liebler <stli@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 010/101] s390: limit brk randomization to 32MB
-Date:   Thu,  2 May 2019 17:20:12 +0200
-Message-Id: <20190502143340.694072618@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
-References: <20190502143339.434882399@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 2 May 2019 11:28:58 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40161 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728305AbfEBP2y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:28:54 -0400
+Received: by mail-lf1-f68.google.com with SMTP id o16so2194143lfl.7;
+        Thu, 02 May 2019 08:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=prm1fyhXs0jWTAHPn6CLV/HtaSlxTqydNTX71G2xSCs=;
+        b=r0Ah6TDQTHwK7cH76U0v6wgZe6avx5iEHW7ZyZtQeMWJ0BM96xdA5Cl0z7TybVCWq2
+         GdJs4hBIjaMk2+bN1HDaTf6zOqe5hO2sgp6ZtwfTS5/fgwSJDtrNJWjCDsbNjpl3/Sa4
+         pymiyFG6nYLpfuMR0Z6lMg2u0eUJ4y2Q7N2OfhBsIvVvaOFxPAvTamFXL7Nc7D/v6Wfu
+         IAjQPZdRp88rdrNlYeCMsQUlqoccabRM797x4zAWUFICHLLBwyerZdw7uU9+/LxV2+Cf
+         JPDpJOTOT9fun6uCI1IgogwQHc91rbibBlm3/21cJycV86XiKrFcKaWknQV1nMlUbn7F
+         S9lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=prm1fyhXs0jWTAHPn6CLV/HtaSlxTqydNTX71G2xSCs=;
+        b=da7XReLoTdCycnQ2Jbl/0iF4haiP5uF7YMWetEv/mlynALo1sON1DqkLzlp+KpL35p
+         NbSN1tZ781FacuMU9QCa5SgC8Vy2GqEKzpqbi+zwO6d6CNVm6PmsIAbnRZmVHgAEuueB
+         0Z4Y2/6LiwEk02FiwwTQn2UcQyZctJRle/lDIdteQSUGg/awodmE0rX42xNPxBXxYAA2
+         0EHI2nB+Q31dmngcLqvT348X3mfBUJZSiv+JRxUiQCeY8v1sChSHWqDG8dWP3fzYY37V
+         qkgSeC8x0YikSVxT43/ddoaajmkXJl7BH1VLtxXotFw18+7e5Ve7cIqt36S2vlJ3P7EE
+         gLkQ==
+X-Gm-Message-State: APjAAAXfHWs61zcOWrSXzrVx6WgavmHMaGmrAZXaXtilHl242T/6sCRw
+        ojA4g93aLpQE0PHiIJcBbVdbr729ATcqKuXD+9s=
+X-Google-Smtp-Source: APXvYqzMcVGIejleD+/wKh8TcnzqGnJxMNAmrH86SrHVOreuURuClXNb7c4WEX+3sFRf5peisBBVvSR/1IhjXSA4LuM=
+X-Received: by 2002:a19:f001:: with SMTP id p1mr2498539lfc.27.1556810932481;
+ Thu, 02 May 2019 08:28:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
+In-Reply-To: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 2 May 2019 12:28:46 -0300
+Message-ID: <CAOMZO5D=BHWgOieLfz4bxL8v4bDmNOutUUnYSzW89KNtYn=Z9g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6ul: Add csi node
+To:     =?UTF-8?Q?S=C3=A9bastien_Szymanski?= 
+        <sebastien.szymanski@armadeus.com>,
+        Rui Miguel Silva <rui.silva@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cd479eccd2e057116d504852814402a1e68ead80 ]
+[Adding Rui]
 
-For a 64-bit process the randomization of the program break is quite
-large with 1GB. That is as big as the randomization of the anonymous
-mapping base, for a test case started with '/lib/ld64.so.1 <exec>'
-it can happen that the heap is placed after the stack. To avoid
-this limit the program break randomization to 32MB for 64-bit and
-keep 8MB for 31-bit.
+On Tue, Apr 30, 2019 at 4:47 AM S=C3=A9bastien Szymanski
+<sebastien.szymanski@armadeus.com> wrote:
+>
+> Add csi node for i.MX6UL SoC.
+>
+> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com=
+>
+> ---
+>  arch/arm/boot/dts/imx6ul.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dts=
+i
+> index 62ed30c781ed..af322bc58333 100644
+> --- a/arch/arm/boot/dts/imx6ul.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> @@ -951,6 +951,17 @@
+>                                 };
+>                         };
+>
+> +                       csi: csi@21c4000 {
+> +                               compatible =3D "fsl,imx6ul-csi", "fsl,imx=
+7-csi";
+> +                               reg =3D <0x021c4000 0x4000>;
+> +                               interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_=
+HIGH>;
+> +                               clocks =3D <&clks IMX6UL_CLK_DUMMY>,
+> +                                        <&clks IMX6UL_CLK_CSI>,
+> +                                        <&clks IMX6UL_CLK_DUMMY>;
+> +                               clock-names =3D "axi", "mclk", "dcic";
 
-Reported-by: Stefan Liebler <stli@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- arch/s390/include/asm/elf.h | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Also, I understand you followed
+Documentation/devicetree/bindings/media/imx7-csi.txt and passed these
+three clocks, but looking at the i.MX7D and i.MX6UL/ULL Reference
+Manuals, I don't find the  the descriptions for the "axi" and "dcic"
+CSI clocks.
 
-diff --git a/arch/s390/include/asm/elf.h b/arch/s390/include/asm/elf.h
-index 7d22a474a040..f74639a05f0f 100644
---- a/arch/s390/include/asm/elf.h
-+++ b/arch/s390/include/asm/elf.h
-@@ -252,11 +252,14 @@ do {								\
- 
- /*
-  * Cache aliasing on the latest machines calls for a mapping granularity
-- * of 512KB. For 64-bit processes use a 512KB alignment and a randomization
-- * of up to 1GB. For 31-bit processes the virtual address space is limited,
-- * use no alignment and limit the randomization to 8MB.
-+ * of 512KB for the anonymous mapping base. For 64-bit processes use a
-+ * 512KB alignment and a randomization of up to 1GB. For 31-bit processes
-+ * the virtual address space is limited, use no alignment and limit the
-+ * randomization to 8MB.
-+ * For the additional randomization of the program break use 32MB for
-+ * 64-bit and 8MB for 31-bit.
-  */
--#define BRK_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x3ffffUL)
-+#define BRK_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x1fffUL)
- #define MMAP_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x3ff80UL)
- #define MMAP_ALIGN_MASK	(is_compat_task() ? 0 : 0x7fUL)
- #define STACK_RND_MASK	MMAP_RND_MASK
--- 
-2.19.1
+It looks like that only "mclk" is what we really need here.
 
+Should we change the bindings and the imx7-csi driver to not request
+"axi" and "dcic" clocks?
 
+Rui, what do you think? If you agree I can send a fix for this.
 
+Thanks
