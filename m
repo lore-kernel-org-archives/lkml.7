@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8238AC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A969BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF4221670
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7853F216FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811471;
-	bh=n6TmpvV7ZyMKI+KcjMHX070YR43loG/ifxmOyCgMVwI=;
+	s=default; t=1556811482;
+	bh=kZs4w61Wm8GmupGl4Zl/dizDqciv2pjqxJ5g7Jr4eVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TwqSN/Q4tmt60Bv8obIMsnAWceSlgX9XkLiIH1wW3eMTXxg6lf3kzMbu+bBJm8DGA
-	 zI8BGDM4eTzxl172DqvRI399L9mEJYNdoDrF2KcmgW9cV22/tEoJjYRD/uiE7kJ8OE
-	 3X0d2TBdXmkssUj31lvd2flPHhuH+pmz7Ym6uzoU=
+	b=xdm1udLx3aWp05jgCVCqiimI0nWGpxVQliBEL4DvCrJ1ZbAulyAC7bS6YsTF5XJoC
+	 7zSyKXkt0XNZMKnT25slxij8UoWv2ctrVQtG9wR+bqnPbKdhD1Fizh7ePl72MhTifj
+	 4unBqy052zI/SVKTXofvpzIoXBWysLkqDywjD24c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfEBPhu (ORCPT
+        id S1727410AbfEBPiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:37:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48602 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:38:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728190AbfEBPaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:14 -0400
+        id S1728647AbfEBPaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:30:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 509652081C;
-        Thu,  2 May 2019 15:30:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB462214DA;
+        Thu,  2 May 2019 15:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811013;
-        bh=n6TmpvV7ZyMKI+KcjMHX070YR43loG/ifxmOyCgMVwI=;
+        s=default; t=1556811007;
+        bh=kZs4w61Wm8GmupGl4Zl/dizDqciv2pjqxJ5g7Jr4eVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jsxdLAIUu2WW5Idnb1uZp4Ohz7slmvoO4sxLXf0m4QEjwVkvHquF8Ylhx6xJ6DPBg
-         20+PO60AdzQPEuUCCngp2VdvOmuShU+Jqvu/p7oLaoE4BHYxb20Kbya+43ezIruyN4
-         jgv1X3DP8wGLLdp60F27ERTyHYZKKVIv32gyBhr4=
+        b=MFczbivE7hIHqC0tW7KAP9u9P/YG7CyC+GF0iiAAc9pkNM/EdJAZ7IPYuEjxyB9C8
+         SoPlSBaT2uacH6ebB5t0KbYEYaDxb0ZY2VBtJWia4Jh4kYifSeqtAYP8pLkg/ISMJi
+         YJexW5O7GiIDd4z35HSSf0e94DauRO3d3icFC30k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Frank Pavlic <f.pavlic@kunbus.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Wolfram Sang <wsa@the-dreams.de>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 042/101] net: ks8851: Dequeue RX packets explicitly
-Date:   Thu,  2 May 2019 17:20:44 +0200
-Message-Id: <20190502143342.510168850@linuxfoundation.org>
+Subject: [PATCH 5.0 040/101] i2c: i801: Add support for Intel Comet Lake
+Date:   Thu,  2 May 2019 17:20:42 +0200
+Message-Id: <20190502143342.378307833@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -63,74 +62,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 536d3680fd2dab5c39857d62a3e084198fc74ff9 ]
+[ Upstream commit 5cd1c56c42beb6d228cc8d4373fdc5f5ec78a5ad ]
 
-The ks8851 driver lets the chip auto-dequeue received packets once they
-have been read in full. It achieves that by setting the ADRFE flag in
-the RXQCR register ("Auto-Dequeue RXQ Frame Enable").
+Add PCI ID for Intel Comet Lake PCH.
 
-However if allocation of a packet's socket buffer or retrieval of the
-packet over the SPI bus fails, the packet will not have been read in
-full and is not auto-dequeued. Such partial retrieval of a packet
-confuses the chip's RX queue management:  On the next RX interrupt,
-the first packet read from the queue will be the one left there
-previously and this one can be retrieved without issues. But for any
-newly received packets, the frame header status and byte count registers
-(RXFHSR and RXFHBCR) contain bogus values, preventing their retrieval.
-
-The chip allows explicitly dequeueing a packet from the RX queue by
-setting the RRXEF flag in the RXQCR register ("Release RX Error Frame").
-This could be used to dequeue the packet in case of an error, but if
-that error is a failed SPI transfer, it is unknown if the packet was
-transferred in full and was auto-dequeued or if it was only transferred
-in part and requires an explicit dequeue. The safest approach is thus
-to always dequeue packets explicitly and forgo auto-dequeueing.
-
-Without this change, I've witnessed packet retrieval break completely
-when an SPI DMA transfer fails, requiring a chip reset. Explicit
-dequeueing magically fixes this and makes packet retrieval absolutely
-robust for me.
-
-The chip's documentation suggests auto-dequeuing and uses the RRXEF
-flag only to dequeue error frames which the driver doesn't want to
-retrieve. But that seems to be a fair-weather approach.
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/i2c/busses/i2c-i801 | 1 +
+ drivers/i2c/busses/Kconfig        | 1 +
+ drivers/i2c/busses/i2c-i801.c     | 4 ++++
+ 3 files changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index bd6e9014bc74..a93f8e842c07 100644
---- a/drivers/net/ethernet/micrel/ks8851.c
-+++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -535,9 +535,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
- 		/* set dma read address */
- 		ks8851_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI | 0x00);
+diff --git a/Documentation/i2c/busses/i2c-i801 b/Documentation/i2c/busses/i2c-i801
+index d1ee484a787d..ee9984f35868 100644
+--- a/Documentation/i2c/busses/i2c-i801
++++ b/Documentation/i2c/busses/i2c-i801
+@@ -36,6 +36,7 @@ Supported adapters:
+   * Intel Cannon Lake (PCH)
+   * Intel Cedar Fork (PCH)
+   * Intel Ice Lake (PCH)
++  * Intel Comet Lake (PCH)
+    Datasheets: Publicly available at the Intel website
  
--		/* start the packet dma process, and set auto-dequeue rx */
--		ks8851_wrreg16(ks, KS_RXQCR,
--			       ks->rc_rxqcr | RXQCR_SDA | RXQCR_ADRFE);
-+		/* start DMA access */
-+		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
+ On Intel Patsburg and later chipsets, both the normal host SMBus controller
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index f2c681971201..f8979abb9a19 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -131,6 +131,7 @@ config I2C_I801
+ 	    Cannon Lake (PCH)
+ 	    Cedar Fork (PCH)
+ 	    Ice Lake (PCH)
++	    Comet Lake (PCH)
  
- 		if (rxlen > 4) {
- 			unsigned int rxalign;
-@@ -568,7 +567,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
- 			}
- 		}
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called i2c-i801.
+diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+index c91e145ef5a5..679c6c41f64b 100644
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -71,6 +71,7 @@
+  * Cannon Lake-LP (PCH)		0x9da3	32	hard	yes	yes	yes
+  * Cedar Fork (PCH)		0x18df	32	hard	yes	yes	yes
+  * Ice Lake-LP (PCH)		0x34a3	32	hard	yes	yes	yes
++ * Comet Lake (PCH)		0x02a3	32	hard	yes	yes	yes
+  *
+  * Features supported by this driver:
+  * Software PEC				no
+@@ -240,6 +241,7 @@
+ #define PCI_DEVICE_ID_INTEL_LEWISBURG_SSKU_SMBUS	0xa223
+ #define PCI_DEVICE_ID_INTEL_KABYLAKE_PCH_H_SMBUS	0xa2a3
+ #define PCI_DEVICE_ID_INTEL_CANNONLAKE_H_SMBUS		0xa323
++#define PCI_DEVICE_ID_INTEL_COMETLAKE_SMBUS		0x02a3
  
--		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
-+		/* end DMA access and dequeue packet */
-+		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_RRXEF);
- 	}
- }
+ struct i801_mux_config {
+ 	char *gpio_chip;
+@@ -1038,6 +1040,7 @@ static const struct pci_device_id i801_ids[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CANNONLAKE_H_SMBUS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_CANNONLAKE_LP_SMBUS) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ICELAKE_LP_SMBUS) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_COMETLAKE_SMBUS) },
+ 	{ 0, }
+ };
  
+@@ -1534,6 +1537,7 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	case PCI_DEVICE_ID_INTEL_DNV_SMBUS:
+ 	case PCI_DEVICE_ID_INTEL_KABYLAKE_PCH_H_SMBUS:
+ 	case PCI_DEVICE_ID_INTEL_ICELAKE_LP_SMBUS:
++	case PCI_DEVICE_ID_INTEL_COMETLAKE_SMBUS:
+ 		priv->features |= FEATURE_I2C_BLOCK_READ;
+ 		priv->features |= FEATURE_IRQ;
+ 		priv->features |= FEATURE_SMBUS_PEC;
 -- 
 2.19.1
 
