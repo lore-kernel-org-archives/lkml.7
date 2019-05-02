@@ -2,168 +2,226 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD97C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B118C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B67F20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D4A02089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:28:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="IDpnpA8P"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="GOeBl2cW";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="Mhtx4AIM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbfEBI1k (ORCPT
+        id S1726533AbfEBI2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:27:40 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45538 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbfEBI1k (ORCPT
+        Thu, 2 May 2019 04:28:05 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:54530 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726159AbfEBI2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:27:40 -0400
-Received: by mail-ed1-f68.google.com with SMTP id g57so1309887edc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 01:27:39 -0700 (PDT)
+        Thu, 2 May 2019 04:28:04 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x428K7sq027610;
+        Thu, 2 May 2019 01:27:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=AJnjTbtQKNDiHUvR/Et9zpGCDpQiI/GWOcEHAS9GjKw=;
+ b=GOeBl2cW+JGcdWLcV783+JzmW7Aor9KPr+I0dLhOwADZsB9P0BFGjAGMeR7GUirPXFTc
+ djBa4BOpIc0PAg/r/llpIteWMwfdS/ohxc9JNOZs1U2Yc/OcY0P72VXsJcjAawKjpnkA
+ NPut+GeeyYhSsVZPQpfuIzfHJ55fW/nfjNTi+sYSpi2Nr7LPCclS+kW5SKY8WujE0OZb
+ DMKuDy1n4FL3w6oRfxN7tVyDqfNJAGU0OiubIx4Hv57jrc6f+pmNtgR608KlnbAHHgrn
+ 0BrznSrwXJiPZ3pNRciVKkNcizXwrL3jiFEXsFIGKG73pSmgtzMEeg3TSqgvJtgHnJRW pQ== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2s7gk4afw3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 02 May 2019 01:27:53 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 2 May
+ 2019 01:27:53 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (104.47.49.56) by
+ SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 2 May 2019 01:27:53 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=dSmbxNpQUXqOAF+wyYt/oF/nK39mDwCtjQCLrs4dIww=;
-        b=IDpnpA8P7Ng/MqSrVhbClQlwqEs0i4b85XUADMhNeu68gyf5nqHS0qDg9RkZWmczUd
-         SyVal7y8LCFnEUsWcbjJKP8I9PDYNrIwaehuvLbL5+nd/DvvuKJwQcFz5y87LoGi27UL
-         p3xWjvUx+OfBa632s2zu9kRHa3VifCDs/pRqwo5IIEz9sJsE/zt9BQBKXHM8eMjFcDtD
-         mFCNtez71oT5Q6ay8JW118+gRvX7HdzyC6ZMMfKL3LriHyrWDvrx83q0xf1FNUM3+Ki2
-         PGX/WfbPpXQu8lRmuWmKbJsOHlxLNgOpRsvRR0wl8UGHZtnt3c1oZv0ubNrllzWbwstF
-         0cIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=dSmbxNpQUXqOAF+wyYt/oF/nK39mDwCtjQCLrs4dIww=;
-        b=MYNZq7hQ7A2q6SMEOyDPOS6X+SCxlG6BvDeVgbVmR9wBWef8ctTd7Fh4A1Vy5CvJ/b
-         eafcZyvArpCjiXwnKeJaXQHjPZ2eT67BSRCHOd2UeigboweTAj1Bg/NX3IBw5h3SBBlj
-         aw6uzAbtiwWMankuZPrNqml9idkmNubc0ecG3vFxNG7lcefLuiWthBwn28R4wiNV244u
-         s5g04AZOnHqpRANnKneYfMQDYfRQHzpormtlfT2p/asscMmdayiJtLPhwdTGQqr4crLd
-         enEIrLSrqXX8A2dclf/OSB+/6jgPFi+VAlsv1nLsANM4CudBxTBK3m8Ve3prU7BbE0Kz
-         iLMA==
-X-Gm-Message-State: APjAAAWl6D18hieWrpnMyI1IzTZWnbDqFoCvSylOlxJQEPqOoOI475hm
-        knHZvIYe0kpyOxGDaQH3ZCg/VA==
-X-Google-Smtp-Source: APXvYqyXBbFUVmNmNH/NEtD63E0om1IHMQ3xpK0ZWqnKeJ3FfUv8v8pVMHoC7gkhcYUh1GaN4hGLpA==
-X-Received: by 2002:a50:885b:: with SMTP id c27mr1637782edc.155.1556785658429;
-        Thu, 02 May 2019 01:27:38 -0700 (PDT)
-Received: from [192.168.1.119] (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
-        by smtp.gmail.com with ESMTPSA id w14sm1038734ejv.58.2019.05.02.01.27.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 01:27:37 -0700 (PDT)
-From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
-Message-Id: <22C6C23E-BAE8-4AC2-8D6A-FECA10F2F55D@javigon.com>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_00A15516-FDF5-444B-8D42-D909364E2105";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] lightnvm: pblk: Introduce hot-cold data separation
-Date:   Thu, 2 May 2019 10:27:36 +0200
-In-Reply-To: <CAJbgVnWTRWZB_Dc7F1cvtgWdYPCbJ_aJJ_mas01m51+8siHvHA@mail.gmail.com>
-Cc:     "Konopko, Igor J" <igor.j.konopko@intel.com>,
-        =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>,
-        linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-To:     Heiner Litz <hlitz@ucsc.edu>
-References: <20190425052152.6571-1-hlitz@ucsc.edu>
- <66434cc7-2bac-dd10-6edc-4560e6a0f89f@intel.com>
- <F305CAB7-F566-40D7-BC91-E88DE821520B@javigon.com>
- <a1df8967-2169-1c43-c55a-e2144fa53b9a@intel.com>
- <CAJbgVnWsHQRpEPkd77E6u0hoW5jKQaOGR-3dW9+drGNq_JYpfA@mail.gmail.com>
- <139AF16B-E69C-4AA5-A9AC-38576BB9BD4B@javigon.com>
- <CAJbgVnWTRWZB_Dc7F1cvtgWdYPCbJ_aJJ_mas01m51+8siHvHA@mail.gmail.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+ d=marvell.onmicrosoft.com; s=selector1-marvell-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AJnjTbtQKNDiHUvR/Et9zpGCDpQiI/GWOcEHAS9GjKw=;
+ b=Mhtx4AIMtyRA+xYie4BCkxlMcZockR9h6TN8siHz/1/wVRQzvZ71KefRrdOj+3DZsqR9tE5pJn3ofc2HokQCJqZAyC7AobPltCySf554M2rnxwoZUcEpjGGO/Hp5V3TVZdOHkxc1Y1RGZ2qNZ6YE9PUkEkrXnwo4q5HrkdmrQwY=
+Received: from DM5PR18MB1578.namprd18.prod.outlook.com (10.175.224.136) by
+ DM5PR18MB1401.namprd18.prod.outlook.com (10.173.211.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Thu, 2 May 2019 08:27:50 +0000
+Received: from DM5PR18MB1578.namprd18.prod.outlook.com
+ ([fe80::28da:f8bb:4901:b0aa]) by DM5PR18MB1578.namprd18.prod.outlook.com
+ ([fe80::28da:f8bb:4901:b0aa%10]) with mapi id 15.20.1835.018; Thu, 2 May 2019
+ 08:27:50 +0000
+From:   Jan Glauber <jglauber@marvell.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>
+Subject: Re: [RFC] Disable lockref on arm64
+Thread-Topic: [RFC] Disable lockref on arm64
+Thread-Index: AQHVAMDuiGdhpYBMrkiBLQqY4hG0yQ==
+Date:   Thu, 2 May 2019 08:27:50 +0000
+Message-ID: <20190502082741.GE13955@hc>
+References: <20190429145159.GA29076@hc>
+ <CAHk-=wjPqcPYkiWKFc=R3+18DXqEhV+Nfbo=JWa32Xp8Nze67g@mail.gmail.com>
+In-Reply-To: <CAHk-=wjPqcPYkiWKFc=R3+18DXqEhV+Nfbo=JWa32Xp8Nze67g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR0102CA0095.eurprd01.prod.exchangelabs.com
+ (2603:10a6:803:15::36) To DM5PR18MB1578.namprd18.prod.outlook.com
+ (2603:10b6:3:14d::8)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [78.43.208.63]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f5707948-4818-4c71-442b-08d6ced81051
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR18MB1401;
+x-ms-traffictypediagnostic: DM5PR18MB1401:
+x-microsoft-antispam-prvs: <DM5PR18MB1401610B612A94AE58F685F3D8340@DM5PR18MB1401.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0025434D2D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(396003)(136003)(346002)(39860400002)(376002)(366004)(189003)(199004)(54906003)(73956011)(316002)(25786009)(229853002)(186003)(6436002)(446003)(7736002)(53546011)(476003)(386003)(99286004)(6916009)(26005)(52116002)(11346002)(6486002)(6116002)(6506007)(76176011)(8676002)(66066001)(8936002)(102836004)(33716001)(81156014)(6246003)(107886003)(9686003)(4326008)(5660300002)(2906002)(6512007)(3846002)(66946007)(66556008)(33656002)(66476007)(66446008)(64756008)(1076003)(305945005)(14454004)(81166006)(256004)(53936002)(478600001)(5024004)(14444005)(86362001)(71200400001)(68736007)(486006)(71190400001)(88384005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR18MB1401;H:DM5PR18MB1578.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: bUIe9pVyWAOkLRh3Dzv+JTF0pT7r+up8i85lwP0DLQj8x+it3WooDqEVltJdUg7tCQS/t9gRJKcmuRvJBsbiV0P5aW/6pdJrO289QHDhPX0Ysn5lKMVHxFYyg7vK9260TZlDX0NSyujpVKNCNuOn71oiqcnLxYQb3xgxA4o9AE6t+rfdqwfHcF213TjhHiK5Ra6Q9AtKytwVB7lNVJSktKJnt8p/8ICiF3Rj9Fckaksz8LWFC5THH3PYtsHAf/rG8GzYrv0EOS9mb86Vmy1bouH9jUV3vVDP6L+GReylkOwjdPDo7DOnHFlFsiSq7Kc4H5D08xcupe7TFkwKGi60F0wYRHKkf6PoqIrDgjSHufOCUoeBmw6cvi68Nqn9ARWfevZsFDerqP6toO2DCnIf6T+LVLw3Y2S+YYu4rV8Ckeg=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AA9753A4232DB742A473B8D7CFA2454E@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5707948-4818-4c71-442b-08d6ced81051
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 08:27:50.4895
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR18MB1401
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 01, 2019 at 09:41:08AM -0700, Linus Torvalds wrote:
+> On Mon, Apr 29, 2019 at 7:52 AM Jan Glauber <jglauber@marvell.com> wrote:
+> >
+> > It turned out the issue we have on ThunderX2 is the file open-close seq=
+uence
+> > with small read sizes. If the used files are opened read-only the
+> > lockref code (enabled by ARCH_USE_CMPXCHG_LOCKREF) is used.
+> >
+> > The lockref CMPXCHG_LOOP uses an unbound (as long as the associated
+> > spinlock isn't taken) while loop to change the lock count. This behaves
+> > badly under heavy contention
+>=20
+> Ok, excuse me when I rant a bit.
+>=20
+> Since you're at Marvell, maybe you can forward this rant to the proper
+> guilty parties?
 
---Apple-Mail=_00A15516-FDF5-444B-8D42-D909364E2105
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
+Sure :)
 
-> On 1 May 2019, at 22.20, Heiner Litz <hlitz@ucsc.edu> wrote:
-> 
-> Javier, Igor,
-> you are correct. The problem exists if we have a power loss and we
-> have an open gc and an open user line and both contain the same LBA.
-> In that case, I think we need to care about the 4 scenarios:
-> 
-> 1. user_seq_id > gc_seq_id and user_write after gc_write: No issue
-> 2. user_seq_id > gc_seq_id and gc_write > user_write: Cannot happen,
-> open user lines are not gc'ed
-> 3. gc_seq_id > user_seq_id and user_write after gc_write: RACE
-> 4. gc_seq_id > user_seq_id and gc_write after user_write: No issue
-> 
-> To address 3.) we can do the following:
-> Whenever a gc line is opened, determine all open user lines and store
-> them in a field of pblk_line. When choosing a victim for GC, ignore
-> those lines.
+> Who was the absolute *GENIUS* who went
+>=20
+>  Step 1: "Oh, we have a middling CPU that isn't world-class on its own"
+>=20
+>  Step 2: "BUT! We can put a lot of them on a die, because that's 'easy'"
+>=20
+>  Step 3: "But let's make sure the interconnect isn't all that special,
+> because that would negate the the whole 'easy' part, and really strong
+> interconnects are even harder than CPU's and use even more power, so
+> that wouldn't work"
+>=20
+>  Step 4: "I wonder why this thing scales badly?"
+>=20
+> Seriously. Why are you guys doing this? Has nobody ever looked at the
+> fundamental thought process above and gone "Hmm"?
+>=20
+> If you try to compensate for a not-great core by putting twice the
+> number of them in a system, you need a cache system and interconnect
+> between them that is more than twice as good as the competition.
+>=20
+> And honestly, from everything that I hear, you don't have it. The
+> whole chip is designed for "throughput when there is no contention".
+> Is it really a huge surprise that it then falls flat on its face when
+> there's something fancy going on?
 
-What if the following happens:
-  - LBA0 is mapped to line 3
-  - GC kicks in
-  - Open user line 5
-  - Open GC line 6
-  - Choose line 3 for GC
-  - GC LBA0
-  - LBA 0 updated and mapped to line 5
-  - Power loss
+I'll see how x86 runs the same testcase, I thought that playing
+cacheline ping-pong is not the optimal use case for any CPU.
 
-In this case, recovering in order will make that the last mapped LBA is
-the one on the GC line. Note that even when the mapping has been
-invalidated, scan recovery does not know this and it will just update
-the L2P as new lines are being recovered.
+My assumption was that x86 probably doesn't suffer that much because
+of cpu_relax() -> pause insn could slow down the retry rate.
 
-I think we need to enforce that no use line is open prior a new open GC
-line. This is, when creating a GC line, we wait until the next user line
-is to be allocated, and then we assign first the GC line and then the
-user line. This can be extended for several open user and GC lines. This
-way, the case above (3) cannot occur. In the example above we would
-have:
+> So now you want to penalize everybody else in the ARM community
+> because you have a badly balanced system?
 
-  - LBA0 is mapped to line 3
-  - GC kicks in
-  - Open GC line 5.        \\ enforced
-  - Open user line 6.      \\ enforced
-  - Choose line 3 for GC
-  - GC LBA0
-  - LBA 0 updated and mapped to line 6
-  - Power loss
+Not really, as I intentionally did not include a patch and sent this as
+RFC.
 
-Javier
+> Ok, rant over.
+>=20
+> The good news is that we can easily fix _this_ particular case by just
+> limiting the CMPXCHG_LOOP to a maximum number of retries, since the
+> loop is already designed to fail quickly if the spin lock value isn't
+> unlocked, and all the lockref code is already organized to fall back
+> to spinlocks.
+>=20
+> So the attached three-liner patch may just work for you. Once _one_
+> thread hits the maximum retry case and goes into the spinlocked case,
+> everybody else will also fall back to spinlocks because they now see
+> that the lockref is contended. So the "retry" value probably isn't all
+> that important, but let's make it big enough that it probably never
+> happens on a well-balanced system.
 
---Apple-Mail=_00A15516-FDF5-444B-8D42-D909364E2105
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
+Agreed, your patch would solve the issue for ThunderX2. Limiting the
+retry attempts was one of the things I tried beside extending the number
+of NOPs in cpu_relax().
 
------BEGIN PGP SIGNATURE-----
+> But seriously: the whole "let's just do lots of CPU cores because it's
+> easy" needs to stop. It's fine if you have a network processor and
+> you're doing independent things, but it's not a GP processor approach.
+>=20
+> Your hardware people need to improve on your CPU core (maybe the
+> server version of Cortex A76 is starting to approach being good
+> enough?) and your interconnect (seriously!) instead of just slapping
+> 32 cores on a die and calling it a day.
+>=20
+>                 Linus "not a fan of the flock of chickens" Torvalds
 
-iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAlzKqfgACgkQPEYBfS0l
-eOAA0Q//ezKsWCFsw2Iu5FLq8shnnNUTcU46vdOmEmBitktx2RGiqlNlVqCBWW18
-iFRYr9IT13s+PrqETXZ0QFQ6hYVyf+B4YGfhXYkJfNUoOPK5xrm3C4iT/tu+bIHR
-t5w02m5hBRN1v/ZR02LJ+6KfN2rQ6KmDX09QKFtH5Iqf9WQ5VaN/uqmXzY7Vaqa9
-/smZRhgDAHQ7F5idMLnukOkBOhTZaIeBMh7pohRn9CUJ5C5etIh8ohDM59lmpEtX
-st0ynkBkQu0wfoRQzSa3aplIgTxrp0poLxVqa9JEsETsJBH0amxA8YneGSO4MNcQ
-B8nXhZAby801sBsANerturYtR6IDf3WmDUmvVZl/lui53orIML3o/me5oC5sZeBP
-KuNEyCJZMkBpCMbMRPyUeCiykVqIwXAZuVylAdYG0OYifnu4l1hla230RP7zhFwU
-MM1nhK9Njn04pFa7NOZ0m0uS697Dpx9TTqHnNYIrj4tcD4f1GquWlDlOy6wMvT//
-Oy28kT4A46icWT8AU+cIBc6U46Kucf5FqJFHPi44U1i6B5dw5HFuHSQj6Rvztk2+
-l1AXyZzvXflvYrwlG7Kxnlhh8dRJo6HTkS/9gIi06b7CQFgV22Tw4YzxrqDAKK78
-QHgnHIzO1KE2rRaib/W7PHenMfxp8y8SYpVpptlsOSug+ZNMKeg=
-=Rrvw
------END PGP SIGNATURE-----
+>  lib/lockref.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/lib/lockref.c b/lib/lockref.c
+> index 3d468b53d4c9..a6762f8f45c9 100644
+> --- a/lib/lockref.c
+> +++ b/lib/lockref.c
+> @@ -9,6 +9,7 @@
+>   * failure case.
+>   */
+>  #define CMPXCHG_LOOP(CODE, SUCCESS) do {					\
+> +	int retry =3D 15;		/* Guaranteed random number */			\
+>  	struct lockref old;							\
+>  	BUILD_BUG_ON(sizeof(old) !=3D 8);						\
+>  	old.lock_count =3D READ_ONCE(lockref->lock_count);			\
+> @@ -21,6 +22,8 @@
+>  		if (likely(old.lock_count =3D=3D prev.lock_count)) {		\
+>  			SUCCESS;						\
+>  		}								\
+> +		if (!--retry)							\
+> +			break;							\
+>  		cpu_relax();							\
+>  	}									\
+>  } while (0)
 
---Apple-Mail=_00A15516-FDF5-444B-8D42-D909364E2105--
