@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A50C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AB4C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA79D20C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75357216FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811125;
-	bh=ajV3JpXOrvSXip+WAVQ2R56F6sOHZ8UgqSRoshVk9yk=;
+	s=default; t=1556811129;
+	bh=xzmBgJ22017BcCzc+hucSVt6pT8/FR8VIxfZOMT914w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v8GSyXIbSWA6eUuRhSAxqXi+ObO9GXczK/D3WYh9R6D5zvjEaZtvXRwttYHy0f29N
-	 lPuikrs4tE9PwqEZvoB/c0PK83y+eJ5SjkMiBXvEOakK6lR5VRpx0a6bgnXjZZy637
-	 m70ZENAvN2/4lGazrruOoKgl4ZAMDwrwgUa1JExI=
+	b=0M4MnS1Wdoti00ZyauGN793ifjUE499aagprkhK1UUdiaSKWlAKhJpCQxgteksKf/
+	 H6+2rmXSMIMwX5Eh9ojBVXnNO/okt65aF2HrQEHG2o/qqtDnETFWs1GgotXoGNew6j
+	 K8hkmHOgeR04EDEIopOcrQxexiZh36l6vbowt4g4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfEBPcE (ORCPT
+        id S1729121AbfEBPcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:32:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:32:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729074AbfEBPb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:31:57 -0400
+        id S1728572AbfEBPcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:32:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E034521670;
-        Thu,  2 May 2019 15:31:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91A7B21670;
+        Thu,  2 May 2019 15:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811116;
-        bh=ajV3JpXOrvSXip+WAVQ2R56F6sOHZ8UgqSRoshVk9yk=;
+        s=default; t=1556811124;
+        bh=xzmBgJ22017BcCzc+hucSVt6pT8/FR8VIxfZOMT914w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LZMMf5WYBg8NE+rFa/csdea13Qee4s/2lm6vKL+Dh7lmE555Qp0UaOqbQcPD6Ixif
-         CyT04HqeQKMBwlkqXoEjUraPVZDi5koWBYiv/sAjwtyCT0DmDnb2KMQ1AkrN450lHh
-         LWz2HTCvtQqW7OuU+pWp3dxmKomC6+sxxfTHmLqM=
+        b=PHmgV8xRaWN2AtLfsX+Fek81mSLkDEBsicBSGm5IOIajJosCEDwYNih/rzSkDAKum
+         53KF79pbcJAd+ArP38g+IJdx+J2ot9orAB73yjlb2EkPNBbhpGcyeU8gqoNYb5ITT8
+         yOKUGiW5MUxl3ttpLyTN3w5QRwR0mOBGOUklqVlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Chris Healy <cphealy@gmail.com>, linux-gpio@vger.kernel.org,
+        stable@vger.kernel.org, Xiaoyao Li <xiaoyao.li@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 081/101] gpio: of: Check for "spi-cs-high" in child instead of parent node
-Date:   Thu,  2 May 2019 17:21:23 +0200
-Message-Id: <20190502143345.297630995@linuxfoundation.org>
+Subject: [PATCH 5.0 084/101] kvm/x86: Move MSR_IA32_ARCH_CAPABILITIES to array emulated_msrs
+Date:   Thu,  2 May 2019 17:21:26 +0200
+Message-Id: <20190502143345.487137167@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -62,48 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7ce40277bf848391705011ba37eac2e377cbd9e6 ]
+[ Upstream commit 2bdb76c015df7125783d8394d6339d181cb5bc30 ]
 
-"spi-cs-high" is going to be specified in child node of an SPI
-controller's representing attached SPI device, so change the code to
-look for it there, instead of checking parent node.
+Since MSR_IA32_ARCH_CAPABILITIES is emualted unconditionally even if
+host doesn't suppot it. We should move it to array emulated_msrs from
+arry msrs_to_save, to report to userspace that guest support this msr.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-of.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kvm/x86.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 9470563f2506..f1ae28289a67 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -142,16 +142,16 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 				 * conflict and the "spi-cs-high" flag will
- 				 * take precedence.
- 				 */
--				if (of_property_read_bool(np, "spi-cs-high")) {
-+				if (of_property_read_bool(child, "spi-cs-high")) {
- 					if (*flags & OF_GPIO_ACTIVE_LOW) {
- 						pr_warn("%s GPIO handle specifies active low - ignored\n",
--							of_node_full_name(np));
-+							of_node_full_name(child));
- 						*flags &= ~OF_GPIO_ACTIVE_LOW;
- 					}
- 				} else {
- 					if (!(*flags & OF_GPIO_ACTIVE_LOW))
- 						pr_info("%s enforce active low on chipselect handle\n",
--							of_node_full_name(np));
-+							of_node_full_name(child));
- 					*flags |= OF_GPIO_ACTIVE_LOW;
- 				}
- 				break;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 2db58067bb59..8c9fb6453b2f 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1127,7 +1127,7 @@ static u32 msrs_to_save[] = {
+ #endif
+ 	MSR_IA32_TSC, MSR_IA32_CR_PAT, MSR_VM_HSAVE_PA,
+ 	MSR_IA32_FEATURE_CONTROL, MSR_IA32_BNDCFGS, MSR_TSC_AUX,
+-	MSR_IA32_SPEC_CTRL, MSR_IA32_ARCH_CAPABILITIES,
++	MSR_IA32_SPEC_CTRL,
+ 	MSR_IA32_RTIT_CTL, MSR_IA32_RTIT_STATUS, MSR_IA32_RTIT_CR3_MATCH,
+ 	MSR_IA32_RTIT_OUTPUT_BASE, MSR_IA32_RTIT_OUTPUT_MASK,
+ 	MSR_IA32_RTIT_ADDR0_A, MSR_IA32_RTIT_ADDR0_B,
+@@ -1160,6 +1160,7 @@ static u32 emulated_msrs[] = {
+ 
+ 	MSR_IA32_TSC_ADJUST,
+ 	MSR_IA32_TSCDEADLINE,
++	MSR_IA32_ARCH_CAPABILITIES,
+ 	MSR_IA32_MISC_ENABLE,
+ 	MSR_IA32_MCG_STATUS,
+ 	MSR_IA32_MCG_CTL,
 -- 
 2.19.1
 
