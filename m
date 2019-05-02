@@ -2,110 +2,108 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2599C004C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F40C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AED69206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:28:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRcsMvPF"
+	by mail.kernel.org (Postfix) with ESMTP id 2A815206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 01:31:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556760664;
+	bh=ur9DF3hKCoRuZMcLVEItK2+G/8oBBRntd47mJXWbxiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KluuUhuMrlckbh9s5YVOiBMM901RNEzixYY4/3dWxWgDhpIEeJYXugHNkISQljZLf
+	 +ii+GqYz2k4xPzfK9lNmgrp+9GAkqn3KPNeMNfBDj1rr8ksQkOXAiOugX1h8DNsjcc
+	 TZd2fJWNO7YvUWv260k+IW3XOqi0edk+tmIJNgw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfEBB2Q (ORCPT
+        id S1726267AbfEBBbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 21:28:16 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38473 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfEBB2Q (ORCPT
+        Wed, 1 May 2019 21:31:02 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60156 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfEBBbC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 21:28:16 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 10so296956pfo.5;
-        Wed, 01 May 2019 18:28:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=phRIMmYflgZfcBCKyZBekM9N7nqlxyMrFktT8H7bj/g=;
-        b=SRcsMvPFbeG5f/i+HYue0NAlkY4H5dDGVbVQkIo3G55R9KKkMvE18oZxLPAquZQciy
-         0Bv1RdCGvWkFAhCIAZxcn8r7rdo9m96MgyH4IsRViBCYRxy6QrgbdtDigY71CsBxUzPw
-         wNRunHxztue++rSq52ob9QMRs1Uc3ojskKt5+ul2uYX/7VxfEotopbOrRRnRxlky79l0
-         H60lK6QYozS7Y9DTq047UQ/bqCZ1bmKnKXTOA90Sy4qH5pdyjHyrZaUFsOYtqAZBOlQg
-         IuGAJa1Jf2yTjQTetIsFkZTSbJI8e//6QEbuY2BJBGbZWtbJDdTZF9N4EuMcgtww1yrv
-         AlZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=phRIMmYflgZfcBCKyZBekM9N7nqlxyMrFktT8H7bj/g=;
-        b=A6QQiSyN/AI1cIlZetTTG33GSBo2Qelc0694A+geIjCf2kSrJYdGIaImjIy/L1U62c
-         bUNqg+OEMi3KYwFBX0sadK8GnFOZ25g9lSqegJTURd4hCrG7KcfM8VtDSB22Z8xoRndn
-         Va+dljOgH6nAH6V7CHjpJG7O0IDA80cGrdv7iMXz5B8XhLcOctaoRx649kx4ARHKfYco
-         wwSNfTdXy3SpXX1t2uvBb8vLYxwRbtHnvjBntH82MrOvisDlGbgHem5315JGA8O+jor2
-         gZP8R0djlGCwSqu01/DLpMsxEh8rXAYEIPMOPNByZ3D4f8WaJWgBQdtqWUYN3ZQoR1Hb
-         EjuA==
-X-Gm-Message-State: APjAAAUOGtAm8UjKs0uFdQz0IbDudIlGg/eK6kZ+oZJhv56bQZ/pIqFb
-        gtZPwiffTNhopmXb0+2WLGY=
-X-Google-Smtp-Source: APXvYqwNVSAQpOxLtgWlqQd/72L1IhMEV16HeGwcAYSLquTMU+jTJpbm7BrsycrG8DZpWTjgSrRApA==
-X-Received: by 2002:aa7:928b:: with SMTP id j11mr1111291pfa.200.1556760495454;
-        Wed, 01 May 2019 18:28:15 -0700 (PDT)
-Received: from debian.net.fpt ([42.114.18.133])
-        by smtp.gmail.com with ESMTPSA id 10sm53728342pfh.14.2019.05.01.18.28.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 18:28:14 -0700 (PDT)
-From:   Phong Tran <tranmanphong@gmail.com>
-To:     sre@kernel.org
-Cc:     ndesaulniers@google.com, natechancellor@gmail.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Phong Tran <tranmanphong@gmail.com>
-Subject: [PATCH] power: supply: core: fix clang -Wunsequenced
-Date:   Thu,  2 May 2019 08:27:06 +0700
-Message-Id: <20190502012704.12505-1-tranmanphong@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 1 May 2019 21:31:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BtxNJuTi7c3Tm7Seqwv07Ixzy3v5k8zXO4yysFcyrAY=; b=n7KTPS7Hip3Do1cImIfuzKRoF
+        gp6miykBujjShJmfKLlbPRC6vUFMYma5H2cjMLsrAZ+X+Mei+o6wobozcDXhNwAXHSR3St4H9ozjU
+        +riBDVgyCwoNO5BQewK98McYRpfI0xXa7favAXRhawPvaB2Oz2DHyrJwQRfackEy7K2ZI=;
+Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hM0YN-0005QG-Gf; Thu, 02 May 2019 01:30:27 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 7C2EB441D3B; Thu,  2 May 2019 02:30:22 +0100 (BST)
+Date:   Thu, 2 May 2019 10:30:22 +0900
+From:   Mark Brown <broonie@kernel.org>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Akshu Agrawal <Akshu.Agrawal@amd.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>
+Subject: Re: [PATCH] ASoC: da7219: Use clk_round_rate to handle enabled
+ bclk/wclk case
+Message-ID: <20190502013022.GN14916@sirena.org.uk>
+References: <20190426125925.04F3F3FB4A@swsrvapps-01.diasemi.com>
+ <20190427171955.GH14916@sirena.org.uk>
+ <AM5PR1001MB0994EA351AEF82224D9AA6BF80390@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TN8pJM9vJMHHFgJc"
+Content-Disposition: inline
+In-Reply-To: <AM5PR1001MB0994EA351AEF82224D9AA6BF80390@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+X-Cookie: -- I have seen the FUN --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The increment operator of  pointer in be32_to_cpu() is not explicitly.
-It made the warning from clang:
 
-drivers/power/supply/power_supply_core.c:674:36: error: multiple
-unsequenced modifications to 'list' [-Werror,-Wunsequenced]
-drivers/power/supply/power_supply_core.c:675:41: error: multiple
-unsequenced modifications to 'list' [-Werror,-Wunsequenced]
+--TN8pJM9vJMHHFgJc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/460
+On Mon, Apr 29, 2019 at 09:16:08AM +0000, Adam Thomson wrote:
+> On 27 April 2019 18:20, Mark Brown wrote:
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
----
- drivers/power/supply/power_supply_core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> > Don't we need to validate that the rounded rate is actually viable for
+> > the parameters we're trying to set here?  If there's missing constraints
+> > causing something to try to do something unsupportable then we should
+> > return an error rather than silently accept.
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index c917a8b43b2b..7cc6f5fac0d0 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -665,8 +665,10 @@ int power_supply_get_battery_info(struct power_supply *psy,
- 		}
- 
- 		for (i = 0; i < tab_len; i++) {
--			table[i].ocv = be32_to_cpu(*list++);
--			table[i].capacity = be32_to_cpu(*list++);
-+			table[i].ocv = be32_to_cpu(*list);
-+			list++;
-+			table[i].capacity = be32_to_cpu(*list);
-+			list++;
- 		}
- 	}
- 
--- 
-2.21.0
+> Thanks for directing my gaze to this again. Actually I don't think the SR should
+> be rounded at all. If it doesn't match exactly it should fail so I'll remove the
+> rounding here. Not sure what my brain was doing there.
 
+Yeah, rounding is dubious with sample rate.  Many applications will be
+able to tolerate *some* variation as there's tolerances in the crystals
+if nothing else but intentionally allowing it is a bit different.
+
+--TN8pJM9vJMHHFgJc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzKSCsACgkQJNaLcl1U
+h9DXvAf+P9971wrO2YV773UVMXkelPV+MmTYvPVA/VL4bLD1Mg7EU4Q42Xm2TrC+
+p6me4v618rDTK6qjyHbVW2naAgUgMEMYWmY53WO50rDBM6CcmLdpp0U0jqZTd2La
+/fVKdYNXJf3ZUpoe6OqJ05GpD/Ah3yq4iEdCTHCkiEjsRuSO3PbZxZvlU6QqOXeJ
+doBoeBlBU0XT/bjO/W9tzUUVQFtBQWHG19mzuSosxosl4AVMjBzajSITE9QsjGQE
+0xRfb1ClDpLFyypsOBhM7cuTuPCcnJvWHbJeKy8lrr8TpZ+LE0AxRLUX/d5oLdqN
+0Z+RhTSeFWZpThbExo/oc9/sqBSDaA==
+=XOH+
+-----END PGP SIGNATURE-----
+
+--TN8pJM9vJMHHFgJc--
