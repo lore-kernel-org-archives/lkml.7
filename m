@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A20C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05251C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880FB21670
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F5E21670
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810621;
-	bh=rrITFjnyUhhYDVW/naiSucdeagEbMJbBsJwj+gWcrIM=;
+	s=default; t=1556810624;
+	bh=FFUxckku55aYF+vNj6cgcjlmXt3McZTVMynRU+WtYj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZZNzFyAjqYTgIQYykxfDBddjESR3hNQGsy0Tc3rqLQuwE9FOy6qDojsn+axLQEHPw
-	 xCShT8UAmbQkBRAh+tRcnLTLgC9o3FC+s1TYeJIR/JoWNB4xbMGOe7RV4sxM/AyQDl
-	 8DSXVGKHRwaY2xYhXSd2A9YaKRcaEWYhHKQ+hHeU=
+	b=XYzHN3PLpuRTsGBBNuZ982EqzaTt9sV1Rq3pgxgnq27qsdQE/LfMXnGeEIGO3Ji/c
+	 AsikkdT9B6ExdxsWBaSYvzuYZUFiTac3fLSx6FM7a2gp1ih3yLbR0LFZqXjjY5YXVe
+	 k2L/4s5i3kWxpI2N1zcrrlDe1Rku9dTwVWs0J2EU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfEBPXk (ORCPT
+        id S1727109AbfEBPXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:23:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39318 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:23:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726457AbfEBPXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:23:38 -0400
+        id S1727097AbfEBPXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:23:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DB9820B7C;
-        Thu,  2 May 2019 15:23:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C17A620675;
+        Thu,  2 May 2019 15:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810617;
-        bh=rrITFjnyUhhYDVW/naiSucdeagEbMJbBsJwj+gWcrIM=;
+        s=default; t=1556810620;
+        bh=FFUxckku55aYF+vNj6cgcjlmXt3McZTVMynRU+WtYj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z3m/sue4bXsvULDpnNVwXL54BFoCcgI78P82RzbU7+prQ1rrLDpuGZ+dH1/UaM4Ct
-         86znn6MuTOq3vTZHsvsvPRGjWSiGiT7aTzOZjvJ5sePgVKhx/uKbg7Hn9JCCyozpRs
-         jVgjyutz7na6+gYZTiCk7xWmCpXUoFldKDDk4zMs=
+        b=NmA7DBPiw0K2RtzcbpgmYp5JadnMp3kb0HefsLizD6IPd2IeqDfyU+b5uCcrxl/3T
+         Y0cVfsiNGL6NvKUCUp6Sy6cf3M4YJrH9iK8iSPz0LVTD8ILYofDzojGW4iVPsz/NCq
+         yMvXdjufIoZq/Fgz+uo+9J8g+Ocke6uCrCUhO3rY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
-        Andrey Batyiev <batyiev@gmail.com>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 15/49] serial: ar933x_uart: Fix build failure with disabled console
-Date:   Thu,  2 May 2019 17:20:52 +0200
-Message-Id: <20190502143325.917009539@linuxfoundation.org>
+Subject: [PATCH 4.14 16/49] KVM: arm/arm64: vgic-its: Take the srcu lock when parsing the memslots
+Date:   Thu,  2 May 2019 17:20:53 +0200
+Message-Id: <20190502143326.115353309@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -61,97 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 72ff51d8dd262d1fef25baedc2ac35116435be47 ]
+[ Upstream commit 7494cec6cb3ba7385a6a223b81906384f15aae34 ]
 
-Andrey has reported on OpenWrt's bug tracking system[1], that he
-currently can't use ar93xx_uart as pure serial UART without console
-(CONFIG_SERIAL_8250_CONSOLE and CONFIG_SERIAL_AR933X_CONSOLE undefined),
-because compilation ends with following error:
+Calling kvm_is_visible_gfn() implies that we're parsing the memslots,
+and doing this without the srcu lock is frown upon:
 
- ar933x_uart.c: In function 'ar933x_uart_console_write':
- ar933x_uart.c:550:14: error: 'struct uart_port' has no
-                               member named 'sysrq'
+[12704.164532] =============================
+[12704.164544] WARNING: suspicious RCU usage
+[12704.164560] 5.1.0-rc1-00008-g600025238f51-dirty #16 Tainted: G        W
+[12704.164573] -----------------------------
+[12704.164589] ./include/linux/kvm_host.h:605 suspicious rcu_dereference_check() usage!
+[12704.164602] other info that might help us debug this:
+[12704.164616] rcu_scheduler_active = 2, debug_locks = 1
+[12704.164631] 6 locks held by qemu-system-aar/13968:
+[12704.164644]  #0: 000000007ebdae4f (&kvm->lock){+.+.}, at: vgic_its_set_attr+0x244/0x3a0
+[12704.164691]  #1: 000000007d751022 (&its->its_lock){+.+.}, at: vgic_its_set_attr+0x250/0x3a0
+[12704.164726]  #2: 00000000219d2706 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164761]  #3: 00000000a760aecd (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164794]  #4: 000000000ef8e31d (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164827]  #5: 000000007a872093 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164861] stack backtrace:
+[12704.164878] CPU: 2 PID: 13968 Comm: qemu-system-aar Tainted: G        W         5.1.0-rc1-00008-g600025238f51-dirty #16
+[12704.164887] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2019.04-rc3-00124-g2feec69fb1 03/15/2019
+[12704.164896] Call trace:
+[12704.164910]  dump_backtrace+0x0/0x138
+[12704.164920]  show_stack+0x24/0x30
+[12704.164934]  dump_stack+0xbc/0x104
+[12704.164946]  lockdep_rcu_suspicious+0xcc/0x110
+[12704.164958]  gfn_to_memslot+0x174/0x190
+[12704.164969]  kvm_is_visible_gfn+0x28/0x70
+[12704.164980]  vgic_its_check_id.isra.0+0xec/0x1e8
+[12704.164991]  vgic_its_save_tables_v0+0x1ac/0x330
+[12704.165001]  vgic_its_set_attr+0x298/0x3a0
+[12704.165012]  kvm_device_ioctl_attr+0x9c/0xd8
+[12704.165022]  kvm_device_ioctl+0x8c/0xf8
+[12704.165035]  do_vfs_ioctl+0xc8/0x960
+[12704.165045]  ksys_ioctl+0x8c/0xa0
+[12704.165055]  __arm64_sys_ioctl+0x28/0x38
+[12704.165067]  el0_svc_common+0xd8/0x138
+[12704.165078]  el0_svc_handler+0x38/0x78
+[12704.165089]  el0_svc+0x8/0xc
 
-So this patch moves all the code related to console handling behind
-series of CONFIG_SERIAL_AR933X_CONSOLE ifdefs.
+Make sure the lock is taken when doing this.
 
-1. https://bugs.openwrt.org/index.php?do=details&task_id=2152
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: Andrey Batyiev <batyiev@gmail.com>
-Reported-by: Andrey Batyiev <batyiev@gmail.com>
-Tested-by: Andrey Batyiev <batyiev@gmail.com>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: bf308242ab98 ("KVM: arm/arm64: VGIC/ITS: protect kvm_read_guest() calls with SRCU lock")
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/tty/serial/ar933x_uart.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ virt/kvm/arm/vgic/vgic-its.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-index decc7f3c1ab2..ed545a61413c 100644
---- a/drivers/tty/serial/ar933x_uart.c
-+++ b/drivers/tty/serial/ar933x_uart.c
-@@ -52,11 +52,6 @@ struct ar933x_uart_port {
- 	struct clk		*clk;
- };
+diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+index d72b8481f250..dc06f5e40041 100644
+--- a/virt/kvm/arm/vgic/vgic-its.c
++++ b/virt/kvm/arm/vgic/vgic-its.c
+@@ -704,8 +704,9 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
+ 	int l1_tbl_size = GITS_BASER_NR_PAGES(baser) * SZ_64K;
+ 	u64 indirect_ptr, type = GITS_BASER_TYPE(baser);
+ 	int esz = GITS_BASER_ENTRY_SIZE(baser);
+-	int index;
++	int index, idx;
+ 	gfn_t gfn;
++	bool ret;
  
--static inline bool ar933x_uart_console_enabled(void)
--{
--	return IS_ENABLED(CONFIG_SERIAL_AR933X_CONSOLE);
--}
--
- static inline unsigned int ar933x_uart_read(struct ar933x_uart_port *up,
- 					    int offset)
- {
-@@ -511,6 +506,7 @@ static const struct uart_ops ar933x_uart_ops = {
- 	.verify_port	= ar933x_uart_verify_port,
- };
+ 	switch (type) {
+ 	case GITS_BASER_TYPE_DEVICE:
+@@ -732,7 +733,8 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
  
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
- static struct ar933x_uart_port *
- ar933x_console_ports[CONFIG_SERIAL_AR933X_NR_UARTS];
+ 		if (eaddr)
+ 			*eaddr = addr;
+-		return kvm_is_visible_gfn(its->dev->kvm, gfn);
++
++		goto out;
+ 	}
  
-@@ -607,14 +603,7 @@ static struct console ar933x_uart_console = {
- 	.index		= -1,
- 	.data		= &ar933x_uart_driver,
- };
--
--static void ar933x_uart_add_console_port(struct ar933x_uart_port *up)
--{
--	if (!ar933x_uart_console_enabled())
--		return;
--
--	ar933x_console_ports[up->port.line] = up;
--}
-+#endif /* CONFIG_SERIAL_AR933X_CONSOLE */
+ 	/* calculate and check the index into the 1st level */
+@@ -766,7 +768,12 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
  
- static struct uart_driver ar933x_uart_driver = {
- 	.owner		= THIS_MODULE,
-@@ -703,7 +692,9 @@ static int ar933x_uart_probe(struct platform_device *pdev)
- 	baud = ar933x_uart_get_baud(port->uartclk, 0, AR933X_UART_MAX_STEP);
- 	up->max_baud = min_t(unsigned int, baud, AR933X_UART_MAX_BAUD);
+ 	if (eaddr)
+ 		*eaddr = indirect_ptr;
+-	return kvm_is_visible_gfn(its->dev->kvm, gfn);
++
++out:
++	idx = srcu_read_lock(&its->dev->kvm->srcu);
++	ret = kvm_is_visible_gfn(its->dev->kvm, gfn);
++	srcu_read_unlock(&its->dev->kvm->srcu, idx);
++	return ret;
+ }
  
--	ar933x_uart_add_console_port(up);
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
-+	ar933x_console_ports[up->port.line] = up;
-+#endif
- 
- 	ret = uart_add_one_port(&ar933x_uart_driver, &up->port);
- 	if (ret)
-@@ -752,8 +743,9 @@ static int __init ar933x_uart_init(void)
- {
- 	int ret;
- 
--	if (ar933x_uart_console_enabled())
--		ar933x_uart_driver.cons = &ar933x_uart_console;
-+#ifdef CONFIG_SERIAL_AR933X_CONSOLE
-+	ar933x_uart_driver.cons = &ar933x_uart_console;
-+#endif
- 
- 	ret = uart_register_driver(&ar933x_uart_driver);
- 	if (ret)
+ static int vgic_its_alloc_collection(struct vgic_its *its,
 -- 
 2.19.1
 
