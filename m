@@ -2,112 +2,257 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73775C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE16EC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4163020873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:34:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="X3XPvY/U"
+	by mail.kernel.org (Postfix) with ESMTP id 879AC20873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:34:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbfEBIeI (ORCPT
+        id S1726462AbfEBIeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:34:08 -0400
-Received: from mail-eopbgr800059.outbound.protection.outlook.com ([40.107.80.59]:43072
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        Thu, 2 May 2019 04:34:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60130 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725905AbfEBIeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:34:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qiBYKqmqGR3NyCC5ZhXK8tLVafGOWZvsftCc9bfQvC4=;
- b=X3XPvY/U+6FWs7XKs38r3IIu/LP/H/+eIc69JPzUt8DZiSn5sIuiO0SjSDmD6kI4QGUrTZcbyl68SZw18lmsTCvvcgZHbiJyE7/vwEkpBnv8hJAGd/Yxg7SDN1g4t0suyH/16/mNZ3r8DZVCdpa49mAZjy6FCjQvOlhHKUtAJJI=
-Received: from MN2PR08MB5951.namprd08.prod.outlook.com (20.179.85.220) by
- MN2PR08MB5776.namprd08.prod.outlook.com (20.179.86.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Thu, 2 May 2019 08:34:05 +0000
-Received: from MN2PR08MB5951.namprd08.prod.outlook.com
- ([fe80::b45d:52ac:9ad5:9549]) by MN2PR08MB5951.namprd08.prod.outlook.com
- ([fe80::b45d:52ac:9ad5:9549%4]) with mapi id 15.20.1835.018; Thu, 2 May 2019
- 08:34:05 +0000
-From:   "Shivamurthy Shastri (sshivamurthy)" <sshivamurthy@micron.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-CC:     Boris Brezillon <bbrezillon@kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>
-Subject: RE: [EXT] Re: [PATCH 1/4] mtd: rawnand: Turn the ONFI support to
- generic
-Thread-Topic: [EXT] Re: [PATCH 1/4] mtd: rawnand: Turn the ONFI support to
- generic
-Thread-Index: AdTjwBGl+eQMQxE9TGefSYYUoa3ZUwbXjRqAAGjIC4A=
-Date:   Thu, 2 May 2019 08:34:05 +0000
-Message-ID: <MN2PR08MB59519933896248F923FB07E1B8340@MN2PR08MB5951.namprd08.prod.outlook.com>
-References: <MN2PR08MB5951BDBAC83D3D04B3B122A5B85F0@MN2PR08MB5951.namprd08.prod.outlook.com>
- <20190430083059.629e0bf1@xps13>
-In-Reply-To: <20190430083059.629e0bf1@xps13>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sshivamurthy@micron.com; 
-x-originating-ip: [165.225.81.56]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e4ab9a10-d6ad-4a49-5ce3-08d6ced8eff7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR08MB5776;
-x-ms-traffictypediagnostic: MN2PR08MB5776:|MN2PR08MB5776:
-x-microsoft-antispam-prvs: <MN2PR08MB57766D2064ABE79B928239AAB8340@MN2PR08MB5776.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-forefront-prvs: 0025434D2D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(376002)(346002)(366004)(39860400002)(199004)(189003)(99286004)(76176011)(5660300002)(486006)(6436002)(81156014)(305945005)(7696005)(6916009)(7736002)(81166006)(33656002)(68736007)(74316002)(8676002)(8936002)(11346002)(25786009)(229853002)(54906003)(316002)(476003)(7416002)(52536014)(66446008)(4326008)(446003)(2906002)(186003)(6246003)(71200400001)(73956011)(64756008)(66556008)(76116006)(66946007)(66476007)(9686003)(55016002)(53936002)(6506007)(55236004)(26005)(14454004)(71190400001)(478600001)(66574012)(66066001)(102836004)(3846002)(6116002)(256004)(86362001)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR08MB5776;H:MN2PR08MB5951.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZorzBzN5QlcVFpkdG+D5MI2E8a1y9njxHabLLektX0QPn1B4r92S+RyefjeG1835L93ThXvPH4EkwwuwFDi5s5NzknO6QSBIn1dqqPa/LU64BgW08PDsELczqhjAZePjcf2kt4BG2ImMxsraZDiHtz2kTSXDRNETznXU7fRWLBwIiZW2J78lcWmWNcNXbpqtF5A/jf9pmvKFDGe8a97zxV72xiIi1yTTzyjtDas52z2NhdATAyTBehP+CsPBAWQBK2XPAOOWL1rjSF2ZWwkCLVfrBy9g1x7CuNnWl+lCKEBCIPBA2ojUiZa+8t27DDKd3ZLYYvXy/6Hc3RmIrXUvUlg1Qswyzeu7Ckwt35spJp7a8xWwxWY3s4xu5GGyDmeCjSmKlWmTwkCGwU8ewm/mBOkBgrzRTsk+biFi1VOhg68=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725905AbfEBIeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 04:34:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 56E9EABE7;
+        Thu,  2 May 2019 08:34:13 +0000 (UTC)
+Date:   Thu, 2 May 2019 10:34:12 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     "Tobin C. Harding" <me@tobin.cc>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: kobject_init_and_add() confusion
+Message-ID: <20190502083412.dhqw35juhm42wgmk@pathway.suse.cz>
+References: <20190430233803.GB10777@eros.localdomain>
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4ab9a10-d6ad-4a49-5ce3-08d6ced8eff7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 08:34:05.1495
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR08MB5776
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430233803.GB10777@eros.localdomain>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWlxdWVsLA0KDQo+IEhpIFNoaXZhbXVydGh5LA0KPiANCj4gU29ycnkgZm9yIHRoZSBsb25n
-IGRlbGF5IEkgd2FzIGEgYml0IG92ZXJsb2FkZWQuDQo+IA0KPiAiU2hpdmFtdXJ0aHkgU2hhc3Ry
-aSAoc3NoaXZhbXVydGh5KSIgPHNzaGl2YW11cnRoeUBtaWNyb24uY29tPiB3cm90ZQ0KPiBvbg0K
-PiBUdWUsIDI2IE1hciAyMDE5IDEwOjUxOjQ3ICswMDAwOg0KPiANCj4gPiBGaXggaGVhZGVycyB0
-byBtYWtlIHdheSBmb3IgYWRkaW5nIGhlbHBlciBmdW5jdGlvbnMuDQo+ID4NCj4gPiBBZGQgb25m
-aSBoZWxwZXIgc3RydWN0dXJlLg0KPiA+DQo+ID4gQWRkIGhlbHBlciBmdW5jdGlvbnMgaW4gcmF3
-IE5BTkQgY29yZSwgd2hpY2ggbGF0ZXIgd2lsbCBiZSB1c2VkIGR1cmluZw0KPiA+IE9ORkkgZGV0
-ZWN0aW9uLg0KPiA+DQo+IA0KPiBBcyB5b3UgYXJlIHRvdWNoaW5nIHRoZSBjb3JlLCBJIG5lZWQg
-dG8gaWRlbnRpZnkgY2xlYXJseSBlYWNoIGNoYW5nZQ0KPiB5b3UgbWFrZTsgdHlwaWNhbGx5IGlu
-IHRoaXMgY29tbWl0IHlvdSBkbyBzZXZlcmFsIGRpZmZlcmVudCBjaGFuZ2VzLg0KPiBQbGVhc2Ug
-c3BsaXQgdGhpcyBwYXRjaCBpbiBzbWFsbCBtZWFuaW5nZnVsIHBlYWNlcy4NCj4gDQoNCkkgd2ls
-bCBzZW5kIHRoZSBuZXcgdmVyc2lvbi4NCg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNoaXZhbXVydGh5
-IFNoYXN0cmkgPHNzaGl2YW11cnRoeUBtaWNyb24uY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJz
-L210ZC9uYW5kL3Jhdy9pbnRlcm5hbHMuaCB8ICAgNiArLQ0KPiA+ICBkcml2ZXJzL210ZC9uYW5k
-L3Jhdy9uYW5kX2Jhc2UuYyB8IDIzNg0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0t
-DQo+ID4gIGRyaXZlcnMvbXRkL25hbmQvcmF3L25hbmRfb25maS5jIHwgMjE1ICsrKysrLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0NCj4gPiAgaW5jbHVkZS9saW51eC9tdGQvbmFuZC5oICAgICAgICAg
-fCAgMzAgKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L210ZC9yYXduYW5kLmggICAgICB8ICAgNSAr
-DQo+ID4gIDUgZmlsZXMgY2hhbmdlZCwgMjg5IGluc2VydGlvbnMoKyksIDIwMyBkZWxldGlvbnMo
-LSkNCj4gPg0KPiANCj4gVGhhbmtzLA0KPiBNaXF1w6hsDQoNClRoYW5rcywNClNoaXZhDQo=
+On Wed 2019-05-01 09:38:03, Tobin C. Harding wrote:
+> Hi,
+> 
+> Looks like I've created a bit of confusion trying to fix memleaks in
+> calls to kobject_init_and_add().  Its spread over various patches and
+> mailing lists so I'm starting a new thread and CC'ing anyone that
+> commented on one of those patches.
+> 
+> If there is a better way to go about this discussion please do tell me.
+> 
+> The problem
+> -----------
+> 
+> Calls to kobject_init_and_add() are leaking memory throughout the kernel
+> because of how the error paths are handled.
+> 
+> The solution
+> ------------
+> 
+> Write the error path code correctly.
+> 
+> Example
+> -------
+> 
+> We have samples/kobject/kobject-example.c but it uses
+> kobject_create_and_add().  I thought of adding another example file here
+> but could not think of how to do it off the top of my head without being
+> super contrived.  Can add this to the TODO list if it will help.
+> 
+> Here is an attempted canonical usage of kobject_init_and_add() typical
+> of the code that currently is getting it wrong.  This is the second time
+> I've written this and the first time it was wrong even after review (you
+> know who you are, you are definitely buying the next round of drinks :)
+> 
+> 
+> Assumes we have an object in memory already that has the kobject
+> embedded in it. Variable 'kobj' below would typically be &ptr->kobj
+> 
+> 
+> 	void fn(void)
+> 	{
+> 	        int ret;
+> 
+> 	        ret = kobject_init_and_add(kobj, ktype, NULL, "foo");
+> 	        if (ret) {
+> 			/*
+> 			 * This means kobject_init() has succeeded
+> 			 * but kobject_add() failed.
+> 			 */
+> 			goto err_put;
+> 		}
+
+It is strange to make the structure visible in sysfs before
+we initialize it.
+
+> 	        ret = some_init_fn();
+> 	        if (ret) {
+> 			/*
+> 			 * We need to wind back kobject_add() AND kobject_put().
+> 			 * kobject_add() incremented the refcount in
+> 			 * kobj->parent, that needs to be decremented THEN we need
+> 			 * the call to kobject_put() to decrement the
+>			 * refcount of kobj.
+ 			 */
+> 			goto err_del;
+> 		}
+> 
+> 	        ret = some_other_init_fn();
+> 	        if (ret)
+> 	                goto other_err;
+> 
+> 	        kobject_uevent(kobj, KOBJ_ADD);
+> 	        return 0;
+> 
+> 	other_err:
+> 	        other_clean_up_fn();
+> 	err_del:
+> 	        kobject_del(kobj);
+> 	err_put:
+> 		kobject_put(kobj);
+
+IMHO, separate kobject_del() makes only sense when the sysfs
+interface must be destroyed before some other actions.
+
+I guess that we need two examples. I currently understand
+it the following way:
+
+1. sysfs interface and the structure can be freed anytime:
+
+   	struct A
+	{
+		struct kobject kobj;
+		...
+	};
+
+	void fn(void)
+	{
+		struct A *a;
+		int ret;
+
+		a = kzalloc(sizeof(*a), GFP_KERNEL);
+		if (!a)
+			return;
+
+		/*
+		 * Initialize structure before we make it accessible via
+		 * sysfs.
+		 */
+		ret = some_init_fn();
+		if (ret) {
+			goto init_err;
+		}
+
+		ret = kobject_init_and_add(&a->kobj, ktype, NULL, "foo");
+		if (ret)
+			goto kobj_err;
+
+		return 0;
+
+	kobj_err:
+		/* kobject_init() always succeds and take reference. */
+		kobject_put(kobj);
+		return ret;
+
+	init_err:
+		/* kobject was not initialized, simple free is enough */
+		kfree(a);
+		return ret;
+	}
+
+
+2. Structure must be registered into the subsystem before
+   it can be made visible via sysfs:
+
+   	struct A
+	{
+		struct kobject kobj;
+		...
+	};
+
+	void fn(void)
+	{
+		struct A *a;
+		int ret;
+
+		a = kzalloc(sizeof(*a), GFP_KERNEL);
+		if (!a)
+			return;
+
+		ret = some_init_fn();
+		if (ret) {
+			goto init_err;
+		}
+
+		/*
+		 * Structure is in a reasonable state and can be freed
+		 * via the kobject release callback.
+		 */
+		kobject_init(&a->kobj);
+
+		/*
+		 * Register the structure so that it can cooperate
+		 * with the rest of the system.
+		 */
+		ret = register_fn(a);
+`		if (ret)
+			goto register_err;
+
+
+		/* Make it visible via sysfs */
+		ret = kobject_add(&a->kobj, ktype, NULL, "foo");
+		if (ret) {
+			goto kobj_add_err;
+		}
+
+		/* Manipulate the structure somehow */
+		ret = action_fn(a);
+		if (ret)
+			goto action_err;
+
+		mutex_unlock(&my_mutex);
+		return 0;
+
+	action_err:
+		/*
+		 * Destroy sysfs interface but the structure
+		 * is still needed.
+		 */
+		kobject_del(&a->kboject);
+	kobject_add_err:
+		/* Make it invisible to the system. */
+		unregister_fn(a);
+	register_err:
+		/* Release the structure unsing the kobject callback */
+		kobject_put(&a->kobj);
+		return;
+
+	init_err:
+		/*
+		 * Custom init failed. Kobject release callback would do
+		 * a double free or so. Simple free is enough.
+		 */
+		 kfree(a);
+	}
+
+I would really prefer if we clearly understand where each variant makes
+sense before we start modifying the code and documentation.
+
+Best Regards,
+Petr
