@@ -2,132 +2,76 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA04C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3AAC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90614205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:08:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p6+GkF2p"
+	by mail.kernel.org (Postfix) with ESMTP id 383B4205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:09:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfEBSIX (ORCPT
+        id S1726486AbfEBSJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:08:23 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38937 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfEBSIX (ORCPT
+        Thu, 2 May 2019 14:09:57 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:60715 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfEBSJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:08:23 -0400
-Received: by mail-ot1-f66.google.com with SMTP id o39so2941726ota.6
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:08:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=79fGKeHlH9FAaVSR1O2RxcfKwTsSnTq5QCRHjsEaUQU=;
-        b=p6+GkF2pa0r8kIFWr3Ue5xSJ4hl91lXS3nyMKkOj5gQv9nBUeqd4BeLUxnZv1anIlK
-         lg1rsW/DG5+gG35Q6B+ZLV3xvGi60oYqbQR6qqrpeA01srJDWSHy+u56ea2PsXrn8x+q
-         dAZDe0q27TZ76u7UainpJzKpuJcdKWXXDrVVYsacHOUkrblZnv39zmUQ3mgKo/PyMxtj
-         cBGYHB2uWwE8NxbLX7q9WWmg2lFe3RBeI4j2lZBmhh5c2j8csXxGrExgKmjwwY08DAy9
-         PMxuPc1keMhPOI13z500WCy1D+qUSgNiYEXKQhnXWgZ+09G9ndEGtieagtsVwWkzEqOt
-         uIWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=79fGKeHlH9FAaVSR1O2RxcfKwTsSnTq5QCRHjsEaUQU=;
-        b=COE1zS67fNVW1+Slp/O/oQuJHulCGXolK+TGfybC87jPKnbXc22tjn7ZN6RcjeAXX6
-         2Qr8emqAx2nh/yK/qYEvU0Elpg+LTVVoxp92ev6Blz0LhFVbveU95V36W/LBhZHlwS8H
-         sMo/COZN8h9u7FShcjrquNt6eSmJae+t5Tg7ck5f1mgWkA4KsiIrm7vlm42Rq9DmadH2
-         NAxD/xQ3AMcla1hHg+ZmyaL063BDF39ZeD6Mw/PPsrLbsBget45dfHxDPcDS2rVHK534
-         YkHl32x0Dt/9rs6d762RO6Wyynwrp2fwzG1Cx0dPPcg/j/McZ4v+phpjTXFm8LFJtlnJ
-         mbmw==
-X-Gm-Message-State: APjAAAVEurj5QXqEpe9pQ4DjLHedhX6h0F3CsUHw7/clJ3fBBTau/QUb
-        kF/zYlh2Dgu2xxFkziSxFjIN5GnozdTFSC2q8PazaQ==
-X-Google-Smtp-Source: APXvYqw/nI7b+z83V0GIDl0oQazXtqsfs+CMRGbHgYqDLdBGzPB7zXqfHkbXMcNZ2dozl9lGwjO1NMDSJQAOJdRu1uE=
-X-Received: by 2002:a9d:3621:: with SMTP id w30mr3409606otb.98.1556820502021;
- Thu, 02 May 2019 11:08:22 -0700 (PDT)
+        Thu, 2 May 2019 14:09:56 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id ACD61240005;
+        Thu,  2 May 2019 18:09:53 +0000 (UTC)
+Date:   Thu, 2 May 2019 20:09:52 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Pablo Greco <pgreco@centosproject.org>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/5] ARM: dts: sun8i: v40 Rewrite BPi M2 Berry DTS
+ based on BPi M2 Ultra
+Message-ID: <20190502180952.vsnccuoefnbzddu7@flea>
+References: <1556804030-25291-1-git-send-email-pgreco@centosproject.org>
 MIME-Version: 1.0
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-13-brendanhiggins@google.com> <20190502110220.GD12416@kroah.com>
-In-Reply-To: <20190502110220.GD12416@kroah.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 2 May 2019 11:07:57 -0700
-Message-ID: <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
-Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
- KUnit tests
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah@kernel.org, devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Felix Guo <felixguoxiuping@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="slwwbo4od3ptjqjp"
+Content-Disposition: inline
+In-Reply-To: <1556804030-25291-1-git-send-email-pgreco@centosproject.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
-> > From: Felix Guo <felixguoxiuping@gmail.com>
-> >
-> > The ultimate goal is to create minimal isolated test binaries; in the
-> > meantime we are using UML to provide the infrastructure to run tests, so
-> > define an abstract way to configure and run tests that allow us to
-> > change the context in which tests are built without affecting the user.
-> > This also makes pretty and dynamic error reporting, and a lot of other
-> > nice features easier.
-> >
-> > kunit_config.py:
-> >   - parse .config and Kconfig files.
-> >
-> > kunit_kernel.py: provides helper functions to:
-> >   - configure the kernel using kunitconfig.
-> >   - build the kernel with the appropriate configuration.
-> >   - provide function to invoke the kernel and stream the output back.
-> >
-> > Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->
-> Ah, here's probably my answer to my previous logging format question,
-> right?  What's the chance that these wrappers output stuff in a standard
-> format that test-framework-tools can already parse?  :)
 
-It should be pretty easy to do. I had some patches that pack up the
-results into a serialized format for a presubmit service; it should be
-pretty straightforward to take the same logic and just change the
-output format.
+--slwwbo4od3ptjqjp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cheers
+On Thu, May 02, 2019 at 10:33:44AM -0300, Pablo Greco wrote:
+> BPi M2 Berry is a trimmed down version of the BPi M2 Ultra, completely
+> software compatible.
+
+Queued all for 5.3, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--slwwbo4od3ptjqjp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMsyaAAKCRDj7w1vZxhR
+xX09AP0WVJEEWFiWEqNzh0Os9U6AfuUj64vmMokvrL7gb92eggD6AxtREGX3bitW
+fe0PKVusH6CQI0mnJijOubZyWQpYjAA=
+=nFqn
+-----END PGP SIGNATURE-----
+
+--slwwbo4od3ptjqjp--
