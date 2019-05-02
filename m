@@ -2,171 +2,249 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64ECFC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1001CC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C08205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D049720675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:32:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LLL8nE+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbfEBS1d (ORCPT
+        id S1726336AbfEBScR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:27:33 -0400
-Received: from anholt.net ([50.246.234.109]:60138 "EHLO anholt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbfEBS1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:27:32 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 2536F10A3444;
-        Thu,  2 May 2019 11:27:32 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id iNnVifLik6UJ; Thu,  2 May 2019 11:27:30 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 735FC10A343C;
-        Thu,  2 May 2019 11:27:30 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id BE0A12FE3AA9; Thu,  2 May 2019 11:27:29 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Eben Upton <eben@raspberrypi.org>
-Subject: Re: [PATCH v7 4/4] drm/vc4: Allocate binner bo when starting to use the V3D
-In-Reply-To: <5d8dadb34c9f845e21349253ff21c036c417f37a.camel@bootlin.com>
-References: <20190425122917.26536-1-paul.kocialkowski@bootlin.com> <20190425122917.26536-5-paul.kocialkowski@bootlin.com> <87tvemj80z.fsf@anholt.net> <5d8dadb34c9f845e21349253ff21c036c417f37a.camel@bootlin.com>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/26.1 (x86_64-pc-linux-gnu)
-Date:   Thu, 02 May 2019 11:27:29 -0700
-Message-ID: <87k1f8ww32.fsf@anholt.net>
+        Thu, 2 May 2019 14:32:17 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58300 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbfEBScQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 14:32:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=OlMWSzvvuWVM+bMJ90y7miF3ovjNqjeLOMeQybDfWCY=; b=LLL8nE+IMEm4e5NbX296wcIJy
+        72ObaVzXBxCiGFsDho7vK/7twOopAQQvm8Fwd9kxcwwybNXa5QUg9cGtwathsMIqjtGeXBB1XigOA
+        4Kb9vCVGVgS9rprRCjuVVlf6yFJcha6+7ECRSl+esDCRqkIG1ZhIdUJJ2CXEVEh6wozpyKfACmN4T
+        SdMTbl+t6Cii05UxH+DurhyM7cGUXMI8Px5yszA4GGLmrV1r6Biymo5WBg77pd1lCEgyAxsh0cgDR
+        PNRzSOHQD0f8ZhcbZ/M5vGNwnOroKraBrpQ4jxMfcqKILPtpZTB/6FyoMrl94psHHbgyYS0gRdU9O
+        jTJnG2dsQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hMGU0-0002LM-0f; Thu, 02 May 2019 18:31:00 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B87382066BB8B; Thu,  2 May 2019 20:30:58 +0200 (CEST)
+Date:   Thu, 2 May 2019 20:30:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+Message-ID: <20190502183058.GD2650@hirez.programming.kicks-ass.net>
+References: <20190501202830.347656894@goodmis.org>
+ <20190501203152.397154664@goodmis.org>
+ <20190501232412.1196ef18@oasis.local.home>
+ <20190502162133.GX2623@hirez.programming.kicks-ass.net>
+ <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
+ <20190502181811.GY2623@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 02, 2019 at 08:18:11PM +0200, Peter Zijlstra wrote:
 
-Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
+> ARGH; I knew it was too pretty :/ Yes, something like what you suggest
+> will be needed, I'll go look at that once my brain recovers a bit from
+> staring at entry code all day.
 
-> Hi,
->
-> On Thu, 2019-04-25 at 10:42 -0700, Eric Anholt wrote:
->> Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
->>=20
->> > The binner BO is not required until the V3D is in use, so avoid
->> > allocating it at probe and do it on the first non-dumb BO allocation.
->> >=20
->> > Keep track of which clients are using the V3D and liberate the buffer
->> > when there is none left, using a kref. Protect the logic with a
->> > mutex to avoid race conditions.
->> >=20
->> > The binner BO is created at the time of the first render ioctl and is
->> > destroyed when there is no client and no exec job using it left.
->> >=20
->> > The Out-Of-Memory (OOM) interrupt also gets some tweaking, to avoid
->> > enabling it before having allocated a binner bo.
->> >=20
->> > We also want to keep the BO alive during runtime suspend/resume to avo=
-id
->> > failing to allocate it at resume. This happens when the CMA pool is
->> > full at that point and results in a hard crash.
->> >=20
->> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
->> > ---
->> >  drivers/gpu/drm/vc4/vc4_bo.c  | 33 +++++++++++++++++++-
->> >  drivers/gpu/drm/vc4/vc4_drv.c |  6 ++++
->> >  drivers/gpu/drm/vc4/vc4_drv.h | 14 +++++++++
->> >  drivers/gpu/drm/vc4/vc4_gem.c | 13 ++++++++
->> >  drivers/gpu/drm/vc4/vc4_irq.c | 21 +++++++++----
->> >  drivers/gpu/drm/vc4/vc4_v3d.c | 58 +++++++++++++++++++++++++++--------
->> >  6 files changed, 125 insertions(+), 20 deletions(-)
->> >=20
->> > diff --git a/drivers/gpu/drm/vc4/vc4_bo.c b/drivers/gpu/drm/vc4/vc4_bo=
-.c
->> > index 88ebd681d7eb..2b3ec5926fe2 100644
->> > --- a/drivers/gpu/drm/vc4/vc4_bo.c
->> > +++ b/drivers/gpu/drm/vc4/vc4_bo.c
->> > @@ -799,13 +799,38 @@ vc4_prime_import_sg_table(struct drm_device *dev,
->> >  	return obj;
->> >  }
->> >=20=20
->> > +static int vc4_grab_bin_bo(struct vc4_dev *vc4, struct vc4_file *vc4f=
-ile)
->> > +{
->> > +	int ret;
->> > +
->> > +	if (!vc4->v3d)
->> > +		return -ENODEV;
->> > +
->> > +	if (vc4file->bin_bo_used)
->> > +		return 0;
->> > +
->> > +	ret =3D vc4_v3d_bin_bo_get(vc4);
->> > +	if (ret)
->> > +		return ret;
->> > +
->> > +	vc4file->bin_bo_used =3D true;
->>=20
->> I think I found one last race.  Multiple threads could be in an ioctl
->> trying to grab the bin BO at the same time (while this is only during
->> app startup, since the fd only needs to get the ref once, it's
->> particularly plausible given that allocating the bin BO is slow).  I
->> think if you replace this line with:
->>=20
->> 	mutex_lock(&vc4->bin_bo_lock);
->>         if (vc4file->bin_bo_used) {
->>         	mutex_unlock(&vc4->bin_bo_lock);
->>                 vc4_v3d_bin_bo_put(vc4);
->>         } else {
->>         	vc4file->bin_bo_used =3D true;
->>         	mutex_unlock(&vc4->bin_bo_lock);
->>         }
->
-> Huh, very good catch once again, thanks! It took me some time to grasp
-> this one, but as far as I understand, the risk is that we could ref our
-> bin bo twice (although it would only be allocated once) since
-> bin_bo_used is not protected.
->
-> I'd like to suggest another solution, which would avoid re-locking and
-> doing an extra put if we got an extra ref: adding a "bool *used"
-> argument to vc4_v3d_bin_bo_get and, which only gets dereferenced with
-> the bin_bo lock held. Then we can skip obtaining a new reference if
-> (used && *used) in vc4_v3d_bin_bo_get.
->
-> So we could pass a pointer to vc4file->bin_bo_used for vc4_grab_bin_bo
-> and exec->bin_bo_used for the exec case (where there is no such issue
-> since we'll only ever try to _get the bin bo once there anyway).
->
-> What do you think?
+I forgot I can just run the thing, and it works!
 
-I like it!
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+---
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 7b23431be5cb..73b7bca8712f 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -203,7 +203,7 @@
+ .Lend_\@:
+ .endm
+ 
+-.macro SAVE_ALL pt_regs_ax=%eax switch_stacks=0
++.macro SAVE_ALL pt_regs_ax=%eax switch_stacks=0 clear_csh=1
+ 	cld
+ 	PUSH_GS
+ 	pushl	%fs
+@@ -225,7 +225,7 @@
+ 
+ 	/* Switch to kernel stack if necessary */
+ .if \switch_stacks > 0
+-	SWITCH_TO_KERNEL_STACK
++	SWITCH_TO_KERNEL_STACK \clear_csh
+ .endif
+ 
+ .endm
+@@ -377,8 +377,9 @@
+ 
+ #define CS_FROM_ENTRY_STACK	(1 << 31)
+ #define CS_FROM_USER_CR3	(1 << 30)
++#define CS_FROM_INT3		(1 << 29)
+ 
+-.macro SWITCH_TO_KERNEL_STACK
++.macro SWITCH_TO_KERNEL_STACK clear_csh=1
+ 
+ 	ALTERNATIVE     "", "jmp .Lend_\@", X86_FEATURE_XENPV
+ 
+@@ -391,12 +392,13 @@
+ 	 * that register for the time this macro runs
+ 	 */
+ 
++	.if \clear_csh
+ 	/*
+-	 * The high bits of the CS dword (__csh) are used for
+-	 * CS_FROM_ENTRY_STACK and CS_FROM_USER_CR3. Clear them in case
+-	 * hardware didn't do this for us.
++	 * The high bits of the CS dword (__csh) are used for CS_FROM_*. Clear
++	 * them in case hardware didn't do this for us.
+ 	 */
+ 	andl	$(0x0000ffff), PT_CS(%esp)
++	.endif
+ 
+ 	/* Are we on the entry stack? Bail out if not! */
+ 	movl	PER_CPU_VAR(cpu_entry_area), %ecx
+@@ -1019,6 +1021,40 @@ ENTRY(entry_INT80_32)
+ 	/* Restore user state */
+ 	RESTORE_REGS pop=4			# skip orig_eax/error_code
+ .Lirq_return:
++	testl $CS_FROM_INT3, 4(%esp)
++	jz .Lno_iret_fixup
++
++	/*
++	 * Undo the magic from ENTRY(int3), in particular consider the case
++	 * where regs->sp has been modified.
++	 *
++	 * Reconstruct the 3 entry IRET frame right after the (modified)
++	 * regs->sp without lowering %esp in between, such that an NMI in the
++	 * middle doesn't scribble our stack.
++	 */
++
++	pushl	%eax
++	pushl	%ecx
++	movl	5*4(%esp), %eax		# (modified) regs->sp
++
++	movl	4*4(%esp), %ecx		# flags
++	movl	%ecx, -4(%eax)
++
++	movl	3*4(%esp), %ecx		# cs
++	andl	$0x0000ffff, %ecx
++	movl	%ecx, -8(%eax)
++
++	movl	2*4(%esp), %ecx		# ip
++	movl	%ecx, -12(%eax)
++
++	movl	1*4(%esp), %ecx		# eax
++	movl	%ecx, -16(%eax)
++
++	popl	%ecx
++	lea	-16(%eax), %esp
++	popl	%eax
++
++.Lno_iret_fixup:
+ 	/*
+ 	 * ARCH_HAS_MEMBARRIER_SYNC_CORE rely on IRET core serialization
+ 	 * when returning from IPI handler and when returning from
+@@ -1477,9 +1513,57 @@ END(nmi)
+ 
+ ENTRY(int3)
+ 	ASM_CLAC
++
++	/*
++	 * The high bits of the CS dword (__csh) are used for CS_FROM_*. Clear
++	 * them in case hardware didn't do this for us.
++	 */
++	andl	$0x0000ffff, 4(%esp)
++
++#ifdef CONFIG_VM86
++	testl	$X86_EFLAGS_VM, 8(%esp)
++	jnz	.Lfrom_usermode_no_gap
++#endif
++	testl	$SEGMENT_RPL_MASK, 4(%esp)
++	jnz	.Lfrom_usermode_no_gap
++
++	/*
++	 * Here from kernel mode; so the (exception) stack looks like:
++	 *
++	 * 12(esp) - <previous context>
++	 *  8(esp) - flags
++	 *  4(esp) - cs
++	 *  0(esp) - ip
++	 *
++	 * Lets build a 5 entry IRET frame after that, such that struct pt_regs
++	 * is complete and in particular regs->sp is correct. This gives us
++	 * the original 3 enties as gap:
++	 *
++	 * 32(esp) - <previous context>
++	 * 28(esp) - orig_flags / gap
++	 * 24(esp) - orig_cs	/ gap
++	 * 20(esp) - orig_ip	/ gap
++	 * 16(esp) - ss
++	 * 12(esp) - sp
++	 *  8(esp) - flags
++	 *  4(esp) - cs
++	 *  0(esp) - ip
++	 */
++	pushl	%ss	  # ss
++	pushl	%esp      # sp (points at ss)
++	pushl	4*4(%esp) # flags
++	pushl	4*4(%esp) # cs
++	pushl	4*4(%esp) # ip
++
++	add	$16, 12(%esp) # point sp back at the previous context
++
++	orl	$CS_FROM_INT3, 4(%esp) # mark magic IRET
++
++.Lfrom_usermode_no_gap:
++
+ 	pushl	$-1				# mark this as an int
+ 
+-	SAVE_ALL switch_stacks=1
++	SAVE_ALL switch_stacks=1 clear_csh=0
+ 	ENCODE_FRAME_POINTER
+ 	TRACE_IRQS_OFF
+ 	xorl	%edx, %edx			# zero error code
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlzLNpEACgkQtdYpNtH8
-nuhALRAApZt7IqOa5t+ZSGZt1v8iX5qpd40P+ssx8Iq7L52Rd3OYItwCk38Mcxla
-UutDWr0LMMNDr9AkXvFOw4gR3xR2Tjzoi5mggR25hZCVB92xECXpLUc+HkH64mxk
-VbROrGdV5v4qlnEu1s0AwyUHsDdb+lr5jMS3OqWvYTHYCMX4Bft2HoXENypQD+MQ
-ZKdJXDnDLlR2uPqPfpIQJbsaHOzRufq4JdgokxEaHaOF3sAUcQbekGPY5ZgZF6uZ
-IZ0iI7mHMUt245ewIjpZrvWZjB+raqDJdzQQtorxwfc2EGJHhKQILQTJ2zC47AqU
-Mb7r6jeU6zMh4tupXopo+OpURZJA28fUqkE9+yyqjrPDeh2trJgQbfEEMuK3oREc
-NXmSwXWuW6zCk0xgr3QrbfCjHbMRSeJcKdSg0i/6+MkGoinWzBjE1KDRFtjgYQVM
-ykXIDATYVzV0lTBYtSk3/Cgv3Gk0sGJ5J149xVaUqnAuCfbrtVN5BV5TipE3N6GX
-9U5MybuD8MkywvkRrnpCsupUGY8tB1QJfZGo+2nuCiFfcCZvTq17bDwrMa1CW/Hc
-yJZ3gnq91xOsCckqKD683cT58YohdIKPu7QBLSMJi3SAq8k1eHNBmLCry5etPZY+
-ux7Kd48np0r/N0ja6oz+mZlLcxoj+gCP3hxnpBQMSHUEBcEfmGw=
-=qPta
------END PGP SIGNATURE-----
---=-=-=--
