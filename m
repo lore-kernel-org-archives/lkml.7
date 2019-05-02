@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2019C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ABCC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 727B220C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62AC21670
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810647;
-	bh=Y1q/zmXcyw9R3cDss6gqtKA4Dug7mtQrDsv8A40xHbU=;
+	s=default; t=1556810649;
+	bh=i54gu8M1Gac1Abp/1+h0ZD6qWrpfaSAE41vGpfFq4/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aKWyvm5H6nxhFK2AsIeJHhX4vTVkR1s1GeYk0HtTBfyanTXGI4FE2TK/PBCTWc8Ue
-	 +mYSzFI5Y5KhrEI0Sg/J5eRrcoI8omyAHwuGNeJll/HH4mHeigXrPeL26bS32HgNUH
-	 /fS3Fg7PPAV+iNS8Hm08Mt5efV2fuUHvJ0xWlkQo=
+	b=Y+k+X3X7piNvV9jIB/PIMDflSPlcRbhF1Ds0vJLzDWqdtVGroP9QxgAJ7Hh4jqWbf
+	 3XDotUyG88odzVASa5qb+x/6lrDCVtNOHTH4dFiZDe3vJVAtkMJ3pDaZZ3PvVJjn1K
+	 YRp5CfKpTySVbCHxCXfxt2nSbdh/vVrUoG/FTGlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfEBPYG (ORCPT
+        id S1727216AbfEBPYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:24:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39802 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:24:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727183AbfEBPYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:24:02 -0400
+        id S1727189AbfEBPYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:24:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1042B2081C;
-        Thu,  2 May 2019 15:24:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9E0D2085A;
+        Thu,  2 May 2019 15:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810641;
-        bh=Y1q/zmXcyw9R3cDss6gqtKA4Dug7mtQrDsv8A40xHbU=;
+        s=default; t=1556810644;
+        bh=i54gu8M1Gac1Abp/1+h0ZD6qWrpfaSAE41vGpfFq4/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ScuAKeuPV0Pa331tYRs+mEYjDKubbuuOV6IPHXanFdohNHyFQzcExTY6RROQoJjA+
-         suaUp+x4NVgs15kF5z5iQX6NfKiDHNTN5Jw8tacanAfEqWUhG/csdpezSA3artBxMq
-         TaGTP2YFqMG/cPhJu6S+UJTqqSKI2bb1QoqQpJeA=
+        b=AYb8MR8ZkfdLhwwyLNyMecFENxKIFi5hM4+F7sX7YE/LNLjpkIs9MbwIf3XJcgiTm
+         jzqbO0NvT6nsz/RYSC5brb5gawoC6gq7tInpQ9tJ/Xgkw4kC4QVFmNx6Fx6jIcUkj9
+         DQDOL+bwpif9sao+fe7fWdigabMfkKlRu9TYhHSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Tristram Ha <Tristram.Ha@microchip.com>,
         "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 23/49] net: ks8851: Delay requesting IRQ until opened
-Date:   Thu,  2 May 2019 17:21:00 +0200
-Message-Id: <20190502143326.834120750@linuxfoundation.org>
+Subject: [PATCH 4.14 24/49] net: ks8851: Set initial carrier state to down
+Date:   Thu,  2 May 2019 17:21:01 +0200
+Message-Id: <20190502143326.953300590@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -63,17 +63,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d268f31552794abf5b6aa5af31021643411f25f5 ]
+[ Upstream commit 9624bafa5f6418b9ca5b3f66d1f6a6a2e8bf6d4c ]
 
-The ks8851 driver currently requests the IRQ before registering the
-net_device.  Because the net_device name is used as IRQ name and is
-still "eth%d" when the IRQ is requested, it's impossibe to tell IRQs
-apart if multiple ks8851 chips are present.  Most other drivers delay
-requesting the IRQ until the net_device is opened.  Do the same.
+The ks8851 chip's initial carrier state is down. A Link Change Interrupt
+is signaled once interrupts are enabled if the carrier is up.
 
-The driver doesn't enable interrupts on the chip before opening the
-net_device and disables them when closing it, so there doesn't seem to
-be a need to request the IRQ already on probe.
+The ks8851 driver has it backwards by assuming that the initial carrier
+state is up. The state is therefore misrepresented if the interface is
+opened with no cable attached. Fix it.
+
+The Link Change interrupt is sometimes not signaled unless the P1MBSR
+register (which contains the Link Status bit) is read on ->ndo_open().
+This might be a hardware erratum. Read the register by calling
+mii_check_link(), which has the desirable side effect of setting the
+carrier state to down if the cable was detached while the interface was
+closed.
 
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
 Cc: Frank Pavlic <f.pavlic@kunbus.de>
@@ -82,73 +86,29 @@ Cc: Tristram Ha <Tristram.Ha@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ drivers/net/ethernet/micrel/ks8851.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index 546a79b9cb15..b8f20aa2b7ad 100644
+index b8f20aa2b7ad..7ddaa7d88f1d 100644
 --- a/drivers/net/ethernet/micrel/ks8851.c
 +++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -776,6 +776,15 @@ static void ks8851_tx_work(struct work_struct *work)
- static int ks8851_net_open(struct net_device *dev)
- {
- 	struct ks8851_net *ks = netdev_priv(dev);
-+	int ret;
-+
-+	ret = request_threaded_irq(dev->irq, NULL, ks8851_irq,
-+				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+				   dev->name, ks);
-+	if (ret < 0) {
-+		netdev_err(dev, "failed to get irq\n");
-+		return ret;
-+	}
+@@ -849,6 +849,7 @@ static int ks8851_net_open(struct net_device *dev)
+ 	netif_dbg(ks, ifup, ks->netdev, "network device up\n");
  
- 	/* lock the card, even if we may not actually be doing anything
- 	 * else at the moment */
-@@ -890,6 +899,8 @@ static int ks8851_net_stop(struct net_device *dev)
- 		dev_kfree_skb(txb);
- 	}
- 
-+	free_irq(dev->irq, ks);
-+
+ 	mutex_unlock(&ks->lock);
++	mii_check_link(&ks->mii);
  	return 0;
  }
  
-@@ -1520,14 +1531,6 @@ static int ks8851_probe(struct spi_device *spi)
- 	ks8851_read_selftest(ks);
- 	ks8851_init_mac(ks);
+@@ -1510,6 +1511,7 @@ static int ks8851_probe(struct spi_device *spi)
  
--	ret = request_threaded_irq(spi->irq, NULL, ks8851_irq,
--				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
--				   ndev->name, ks);
--	if (ret < 0) {
--		dev_err(&spi->dev, "failed to get irq\n");
--		goto err_irq;
--	}
--
- 	ret = register_netdev(ndev);
- 	if (ret) {
- 		dev_err(&spi->dev, "failed to register network device\n");
-@@ -1540,11 +1543,7 @@ static int ks8851_probe(struct spi_device *spi)
+ 	spi_set_drvdata(spi, ks);
  
- 	return 0;
- 
--
- err_netdev:
--	free_irq(ndev->irq, ks);
--
--err_irq:
- err_id:
- 	if (gpio_is_valid(gpio))
- 		gpio_set_value(gpio, 0);
-@@ -1565,7 +1564,6 @@ static int ks8851_remove(struct spi_device *spi)
- 		dev_info(&spi->dev, "remove\n");
- 
- 	unregister_netdev(priv->netdev);
--	free_irq(spi->irq, priv);
- 	if (gpio_is_valid(priv->gpio))
- 		gpio_set_value(priv->gpio, 0);
- 	regulator_disable(priv->vdd_reg);
++	netif_carrier_off(ks->netdev);
+ 	ndev->if_port = IF_PORT_100BASET;
+ 	ndev->netdev_ops = &ks8851_netdev_ops;
+ 	ndev->irq = spi->irq;
 -- 
 2.19.1
 
