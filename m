@@ -2,116 +2,105 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00EBC04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8DAC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903362089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:05:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rw4iV60C"
+	by mail.kernel.org (Postfix) with ESMTP id B8BC72086C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556762976;
+	bh=/xvat0Dy24eH97apuIldA6Kz8uuGYiYT1K0fyKfCg4U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LKwnHxGj85tU5ca3eyb7acwiY8QIS9ERiyxUy2relF4RSbFL1sTYcWleCDpllFLKj
+	 jH4URg7tUFKNygJAuDo/D260N2dOsXn30uqtvdt7ybyBbWzeGH8l3y9RQn6XrOpvva
+	 lYGeAQryPWSwdIriDm9P2SpBkP3VWGkjZXx7FxTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfEBCFJ (ORCPT
+        id S1726297AbfEBCJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:05:09 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43178 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfEBCFJ (ORCPT
+        Wed, 1 May 2019 22:09:35 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40158 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbfEBCJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:05:09 -0400
-Received: by mail-qt1-f193.google.com with SMTP id g4so764410qtq.10;
-        Wed, 01 May 2019 19:05:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ux5b965d508SI5nyhUWR5JM2SSNy1WKrzRHcMYwUexE=;
-        b=rw4iV60Ck+fjUmTU9oUz6dTdQVc1A9uiwQfjMjVPHoJvrzak6iCg1wy+0Nb2j8n1bm
-         NCbDQjTm9MNyWhrE0jF7jofmB66HaCdgPToSNyCowQ/4qgb6D5w+vBmZp//mnzGYrTu8
-         gYleIgBAT/oy8OXP1gF5t+C9YjjRmAmz6JnYi4gbqwfm+MQPzcSzx66Xq7v+urARtKoH
-         zmqxAU9szkxg+gGFVRMBEnB2Lv0nOfCZfRQwaTqu5y1jIxFXkHnxrrvxNU4LdA+X6t3+
-         JXMKbbWYUh4k5CQY95oxS33vwWhGvuzku9cRyFxWPpdx+mG21Dc3ACzYWtcOAO61rSwm
-         PnHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ux5b965d508SI5nyhUWR5JM2SSNy1WKrzRHcMYwUexE=;
-        b=JZoh5DyB2KeLJFVaoxIta1/n0VnjpIxnfTY6VuYI9/orO2O7ah+N1DLeBO6hX60XHw
-         9PFs3R/hSXr4fUdCxNrmXpJIepPRCtPDajiy5W5DgHSYEsht5M5mztsTDWHtFN3nUBPe
-         JeWUIeQfTBHBZQhmjiLAx7SGJaG+TKU6JZBMd/rXUlgLWUA78FSx03jC2iKESPigXOUn
-         X1eTxDpzv6P8IG5qd7b6mixt4EvPbFu9HyEH5pwrhE2FiwButY3Uo/4Buu9iag4uKncb
-         Ar3oX0HjWy41m/rGc7XC2yyZDp1aqK9x5Ox3NLRnJQTYHcfz48Drj4FgTLSRT/8AN1A9
-         5VGA==
-X-Gm-Message-State: APjAAAV0pK+6ekhQR0o/H0Zomu59z4yxf7MKYvmYzBfvOvpyQz9LcaES
-        Ye4dm6Gnw3jD0zL/6N9S0Goa1HzU8sg=
-X-Google-Smtp-Source: APXvYqz29ToL8dwP614jRR3suZl7AeEDj7LX0sNAHG8r1I8hQfjaMjfJHPb8TRvaaJms5WBT/YHWsw==
-X-Received: by 2002:ac8:3334:: with SMTP id t49mr1058795qta.295.1556762707557;
-        Wed, 01 May 2019 19:05:07 -0700 (PDT)
-Received: from laptop (189.26.185.89.dynamic.adsl.gvt.net.br. [189.26.185.89])
-        by smtp.gmail.com with ESMTPSA id n21sm14714915qkk.30.2019.05.01.19.05.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 19:05:06 -0700 (PDT)
-Date:   Wed, 1 May 2019 23:04:57 -0300
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
-        Chaitanya.Kulkarni@wdc.com
-Subject: Re: [PATCH v2 1/3] blk-mq.c: Add documention of function
- blk_mq_init_queue
-Message-ID: <20190502020455.GA71748@laptop>
-References: <20190416032801.200694-1-marcos.souza.org@gmail.com>
+        Wed, 1 May 2019 22:09:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9qrOjXUAzoL3QukZfNxj9Z2f6/cNNtJl5gF/8qMJ/nM=; b=k1j3roMBI641G/c+bxN1yEEbF
+        cAlY0SqS8Mkq1cFSLFGCTq3yFmYeHaZUzF+yDjSGElj/2zbti6J/jbLMR8rD4C+ANsOblUq1HUBiJ
+        sdX5THxIJTjsQ49Jrk4cJ4+11L0oj+lbLFdK43+oVHWAQ13zQ+M4xwPgc+1sZJB1PtFHY=;
+Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hM1A5-0005ng-Jg; Thu, 02 May 2019 02:09:25 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 2D2DA441D3B; Thu,  2 May 2019 03:09:22 +0100 (BST)
+Date:   Thu, 2 May 2019 11:09:22 +0900
+From:   Mark Brown <broonie@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ASoC: tlv320aic3x: Add support for high power analog
+ output
+Message-ID: <20190502020922.GA1602@sirena.org.uk>
+References: <20190430200118.13014-1-sravanhome@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
 Content-Disposition: inline
-In-Reply-To: <20190416032801.200694-1-marcos.souza.org@gmail.com>
+In-Reply-To: <20190430200118.13014-1-sravanhome@gmail.com>
+X-Cookie: Do YOU have redeeming social value?
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gentle ping v2.
 
-On Tue, Apr 16, 2019 at 12:27:59AM -0300, Marcos Paulo de Souza wrote:
-> Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> ---
-> 
->  No changes from v1.
-> 
->  block/blk-mq.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index 9516304a38ee..4a8277a54c03 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -2650,6 +2650,15 @@ void blk_mq_release(struct request_queue *q)
->  	blk_mq_sysfs_deinit(q);
->  }
->  
-> +/**
-> + * blk_mq_init_queue - Create a new request queue associating a blk_mq_tag_set
-> + * @set: tag_set to be associated with the request queue
-> + *
-> + * Description:
-> + * This function creates a new request queue, associating @set with it.
-> + *
-> + * Returns a new request queue on success, or ERR_PTR() on failure.
-> + */
->  struct request_queue *blk_mq_init_queue(struct blk_mq_tag_set *set)
->  {
->  	struct request_queue *uninit_q, *q;
-> -- 
-> 2.16.4
-> 
+--Qxx1br4bt0+wmkIi
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Thanks,
-Marcos
+On Tue, Apr 30, 2019 at 10:01:18PM +0200, Saravanan Sekar wrote:
+> Add support to output level control for the analog high power output
+> drivers HPOUT and HPCOM.
+>=20
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+
+This doesn't build with current code:
+
+  CC      sound/soc/codecs/tlv320aic3x.o
+sound/soc/codecs/tlv320aic3x.c:428:20: error: expected =E2=80=98}=E2=80=99 =
+before =E2=80=98;=E2=80=99 token
+    4, 9, 0, hp_tlv);
+                    ^
+sound/soc/codecs/tlv320aic3x.c:330:61: note: to match this =E2=80=98{=E2=80=
+=99
+ static const struct snd_kcontrol_new aic3x_snd_controls[] =3D {
+                                                             ^
+
+--Qxx1br4bt0+wmkIi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzKUVEACgkQJNaLcl1U
+h9COAgf/bEXTHlf3176QpGpGHCWyhIp2dGCP6gMgr0PXVEVWSMHxsgsy+VoB9x/n
+lApLY1dU5su1ZFAIfrgKw50lYRcplng82rn9ucAWXaU/mRh5siPAvHoNajCauI8n
+6mjjlv4gngHg8ctQQ2y0vNyzs96MlMcs9aYnIBYnLDOthFBbcai8IBRcgxw2pWp7
+dqJK+je2hIFMyJN3ChvgU0h9/C0OFWraSShvMEZRmQJJQ04IxjjuCUXKqHUYoqcZ
+QkGa/zyYw/rrD4XlTp0dQF3aVwe+b4SuytbQ6Hf0bd6Z8G2ze70jSXuArQpLa/Tq
+jx6FAB963mIStEewayY4z0zmNbQqzQ==
+=WLwu
+-----END PGP SIGNATURE-----
+
+--Qxx1br4bt0+wmkIi--
