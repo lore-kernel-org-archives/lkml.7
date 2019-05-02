@@ -2,151 +2,117 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869CEC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2546C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478822075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959442089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfEBIvJ (ORCPT
+        id S1726512AbfEBIv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:51:09 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44616 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfEBIvI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:51:08 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c5so2126146wrs.11
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 01:51:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8A56Rre3k7aBGmNQU4YWhBjgqJZl+Mib35DSUhbaDps=;
-        b=f2UO0E1Y7ob9T//O//RPlwmEn+XT/XBwxqruuGU/sxOmnbU+tsm9e9LG1mTWL3XcPW
-         rcEg1y7G9SDcf6TxmbK9sqYPJeSVV+CRET17Vp5psRSop23EouW3y2WLXlE7DGDL3x7B
-         M0Dd+4WVdF/pQYgdvn6zTASxBKqV38eDbAV2dlUiI/xayCjFSrYAAWbV6Q19xm80+5Ut
-         6S90cqGjpNUC7TRG99hS89wedQdgGgXHyjoXjHxusDWbtN5EuHQQpVrY817yWCxGWt8j
-         S5ZonCyNSzQk6GEf2+wOfxWW/2Z54kRKBm9AH014HrotoZWvyS5mx1IM1Ba4eFVx33F5
-         WTxw==
-X-Gm-Message-State: APjAAAWzCQt7HFjENhWF8/cvJRfjGA85JJvOSThVLrTboR8WctclD6vC
-        mX+0dyUlOXj4odREB/2FKVbTa4DnnLM=
-X-Google-Smtp-Source: APXvYqzKqA26TTVFlks64WQcHDvLTQwxTMy9/MTjIb4emoa26zr+WwjZxZm/vqVP61IX92eMbf3LlQ==
-X-Received: by 2002:a5d:5545:: with SMTP id g5mr1902942wrw.146.1556787067242;
-        Thu, 02 May 2019 01:51:07 -0700 (PDT)
-Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
-        by smtp.gmail.com with ESMTPSA id y4sm6523232wmj.20.2019.05.02.01.51.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 01:51:06 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vlad Buslov <vladbu@mellanox.com>
-Subject: [PATCH net] cls_matchall: avoid panic when receiving a packet before filter set
-Date:   Thu,  2 May 2019 10:51:05 +0200
-Message-Id: <20190502085105.2967-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 2 May 2019 04:51:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36198 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726011AbfEBIv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 04:51:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9339AAF3E;
+        Thu,  2 May 2019 08:51:27 +0000 (UTC)
+Date:   Thu, 2 May 2019 10:51:27 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     "Tobin C. Harding" <me@tobin.cc>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 5/5] livepatch: Do not manually track kobject
+ initialization
+Message-ID: <20190502085127.5kiuxdey2fmrx4kr@pathway.suse.cz>
+References: <20190502023142.20139-1-tobin@kernel.org>
+ <20190502023142.20139-6-tobin@kernel.org>
+ <20190502071232.GB16247@kroah.com>
+ <20190502073044.bfzugymrncnaajxe@pathway.suse.cz>
+ <20190502083127.GC18363@eros.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502083127.GC18363@eros.localdomain>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a matchall classifier is added, there is a small time interval in
-which tp->root is NULL. If we receive a packet in this small time slice
-a NULL pointer dereference will happen, leading to a kernel panic:
+On Thu 2019-05-02 18:31:27, Tobin C. Harding wrote:
+> On Thu, May 02, 2019 at 09:30:44AM +0200, Petr Mladek wrote:
+> > On Thu 2019-05-02 09:12:32, Greg Kroah-Hartman wrote:
+> > > On Thu, May 02, 2019 at 12:31:42PM +1000, Tobin C. Harding wrote:
+> > > > Currently we use custom logic to track kobject initialization.  Recently
+> > > > a predicate function was added to the kobject API so we now no longer
+> > > > need to do this.
+> > > > 
+> > > > Use kobject API to check for initialized state of kobjects instead of
+> > > > using custom logic to track state.
+> > > > 
+> > > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > > > ---
+> > > >  include/linux/livepatch.h |  6 ------
+> > > >  kernel/livepatch/core.c   | 18 +++++-------------
+> > > >  2 files changed, 5 insertions(+), 19 deletions(-)
+> > > > 
+> > > > @@ -626,7 +626,7 @@ static void __klp_free_objects(struct klp_patch *patch, bool nops_only)
+> > > >  		list_del(&obj->node);
+> > > >  
+> > > >  		/* Might be called from klp_init_patch() error path. */
+> > > > -		if (obj->kobj_added) {
+> > > > +		if (kobject_is_initialized(&obj->kobj)) {
+> > > >  			kobject_put(&obj->kobj);
+> > > >  		} else if (obj->dynamic) {
+> > > >  			klp_free_object_dynamic(obj);
+> > > 
+> > > Same here, let's not be lazy.
+> > > 
+> > > The code should "know" if the kobject has been initialized or not
+> > > because it is the entity that asked for it to be initialized.  Don't add
+> > > extra logic to the kobject core (like the patch before this did) just
+> > > because this one subsystem wanted to only write 1 "cleanup" function.
+> > 
+> > We use kobject for a mix of statically and dynamically defined
+> > structures[*]. And we misunderstood the behavior of kobject_init().
+> > 
+> > Anyway, the right solution is to call kobject_init()
+> > already in klp_init_patch_early() for the statically
+> > defined structures and in klp_alloc*() for the dynamically
+> > allocated ones. Then we could simply call kobject_put()
+> > every time.
+> > 
+> > Tobin, this goes deeper into the livepatching code that
+> > you probably expected. Do you want to do the above
+> > suggested change or should I prepare the patch?
+> 
+> I'd love for you to handle this one Petr, I'd say its a net gain
+> time wise that way since if I do it you'll have to review it too
+> carefully anyways.
+> 
+> So that will mean patch #1 and #5 of this series are dropped and handed
+> off to you (thanks).  Patch #2 and #3 Greg said he will take.  Patch #4
+> is not needed.  That's a win in my books :)
 
-    # tc qdisc replace dev eth0 ingress
-    # tc filter add dev eth0 parent ffff: matchall action gact drop
-    Unable to handle kernel NULL pointer dereference at virtual address 0000000000000034
-    Mem abort info:
-      ESR = 0x96000005
-      Exception class = DABT (current EL), IL = 32 bits
-      SET = 0, FnV = 0
-      EA = 0, S1PTW = 0
-    Data abort info:
-      ISV = 0, ISS = 0x00000005
-      CM = 0, WnR = 0
-    user pgtable: 4k pages, 39-bit VAs, pgdp = 00000000a623d530
-    [0000000000000034] pgd=0000000000000000, pud=0000000000000000
-    Internal error: Oops: 96000005 [#1] SMP
-    Modules linked in: cls_matchall sch_ingress nls_iso8859_1 nls_cp437 vfat fat m25p80 spi_nor mtd xhci_plat_hcd xhci_hcd phy_generic sfp mdio_i2c usbcore i2c_mv64xxx marvell10g mvpp2 usb_common spi_orion mvmdio i2c_core sbsa_gwdt phylink ip_tables x_tables autofs4
-    Process ksoftirqd/0 (pid: 9, stack limit = 0x0000000009de7d62)
-    CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.1.0-rc6 #21
-    Hardware name: Marvell 8040 MACCHIATOBin Double-shot (DT)
-    pstate: 40000005 (nZcv daif -PAN -UAO)
-    pc : mall_classify+0x28/0x78 [cls_matchall]
-    lr : tcf_classify+0x78/0x138
-    sp : ffffff80109db9d0
-    x29: ffffff80109db9d0 x28: ffffffc426058800
-    x27: 0000000000000000 x26: ffffffc425b0dd00
-    x25: 0000000020000000 x24: 0000000000000000
-    x23: ffffff80109dbac0 x22: 0000000000000001
-    x21: ffffffc428ab5100 x20: ffffffc425b0dd00
-    x19: ffffff80109dbac0 x18: 0000000000000000
-    x17: 0000000000000000 x16: 0000000000000000
-    x15: 0000000000000000 x14: 0000000000000000
-    x13: ffffffbf108ad288 x12: dead000000000200
-    x11: 00000000f0000000 x10: 0000000000000001
-    x9 : ffffffbf1089a220 x8 : 0000000000000001
-    x7 : ffffffbebffaa950 x6 : 0000000000000000
-    x5 : 000000442d6ba000 x4 : 0000000000000000
-    x3 : ffffff8008735ad8 x2 : ffffff80109dbac0
-    x1 : ffffffc425b0dd00 x0 : ffffff8010592078
-    Call trace:
-     mall_classify+0x28/0x78 [cls_matchall]
-     tcf_classify+0x78/0x138
-     __netif_receive_skb_core+0x29c/0xa20
-     __netif_receive_skb_one_core+0x34/0x60
-     __netif_receive_skb+0x28/0x78
-     netif_receive_skb_internal+0x2c/0xc0
-     napi_gro_receive+0x1a0/0x1d8
-     mvpp2_poll+0x928/0xb18 [mvpp2]
-     net_rx_action+0x108/0x378
-     __do_softirq+0x128/0x320
-     run_ksoftirqd+0x44/0x60
-     smpboot_thread_fn+0x168/0x1b0
-     kthread+0x12c/0x130
-     ret_from_fork+0x10/0x1c
-    Code: aa0203f3 aa1e03e0 d503201f f9400684 (b9403480)
-    ---[ end trace fc71e2ef7b8ab5a5 ]---
-    Kernel panic - not syncing: Fatal exception in interrupt
-    SMP: stopping secondary CPUs
-    Kernel Offset: disabled
-    CPU features: 0x002,00002000
-    Memory Limit: none
-    Rebooting in 1 seconds..
+Sound like a great plan. I am going to work on the patch for
+the livepatching code.
 
-Fix this by adding a NULL check in mall_classify().
+Anyway, thanks a lot for your patches. It is a big relief to realize
+that we could remove some hacks and do it clearly, modulo the static
+structures ;-)
 
-Fixes: ed76f5edccc9 ("net: sched: protect filter_chain list with filter_chain_lock mutex")
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- net/sched/cls_matchall.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/net/sched/cls_matchall.c b/net/sched/cls_matchall.c
-index a13bc351a414..3d021f2aad1c 100644
---- a/net/sched/cls_matchall.c
-+++ b/net/sched/cls_matchall.c
-@@ -32,6 +32,9 @@ static int mall_classify(struct sk_buff *skb, const struct tcf_proto *tp,
- {
- 	struct cls_mall_head *head = rcu_dereference_bh(tp->root);
- 
-+	if (unlikely(!head))
-+		return -1;
-+
- 	if (tc_skip_sw(head->flags))
- 		return -1;
- 
--- 
-2.21.0
-
+Best Regards,
+Petr
