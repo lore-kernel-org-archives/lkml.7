@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050A1C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7C6C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B7D20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D131820873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:11:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="leNUqZhQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qg66572S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfEBHL1 (ORCPT
+        id S1726812AbfEBHLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 03:11:27 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35623 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbfEBHL0 (ORCPT
+        Thu, 2 May 2019 03:11:31 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45826 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfEBHLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 03:11:26 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h1so655072pgs.2;
-        Thu, 02 May 2019 00:11:26 -0700 (PDT)
+        Thu, 2 May 2019 03:11:30 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i21so630794pgi.12;
+        Thu, 02 May 2019 00:11:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+ht7GrFTU79fToPKb9Iep8eH6HLgwHBDoqhSDEh8xGU=;
-        b=leNUqZhQaIC2E++KYr7LBdudAD48gDl5Gwwv4xMk64LRBCZsGsncfyj+BD2zmsHvMK
-         qO9w5KpQ/yKD/c/MYAkP7yb2AsoIdpb/5Qtefdsj676OQ/lS7FDh7P67+KTuOF0RB6qH
-         LpINMiKF93ja6rHewQ7vL85KsEQqBwEfmyJyJObgVRY9nFA5Ju3MQzwPbng8N8Nr3LJO
-         HKcEbok3fGIs0+lcwFvHR6tDoGT2o1rd9VpTBpB/PY+bpNWJlH7z/5c6M8C6/j4IBzUr
-         Q/meT59LQ2ToE/cVDvcleIBwll5HcyamuOziFzNi3/9Xh9pRKnCwY79koZ05s4/p4VSz
-         L4cw==
+        bh=mCYB/f33HOqS1mtaKEbHbUDuAOKpC4D6CXfqGMUJYqU=;
+        b=qg66572SERXiQv2MVXoUcoozmMiQ0E6Dngn7c2PI4eYqNF6HLu5jL6AlDVM+2C92CH
+         zRugvSeonvh2MYc4baZXXGa1GDjNIpngwTaIROyw8UhEqxYbQlcw/FDXtXuPysFz9bEQ
+         9X0yQPA1P00FyeJVf11ZKCgnh6SGpVfCde6M7pv3D0f+7RcL84742JyLLFulBhPtpelC
+         AdIu8Je2h6inx5i4LD/ubM+ipltziFgDc37tanhCmD42ht36JQ0FHYgrw4cKaR4zqkZZ
+         zCF1HhHwdjQKI/XBBM1rj1BTY/6Max86IJg9N0hUkXOP4aepisF22HXeLWww0sLI+kNl
+         Ih1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+ht7GrFTU79fToPKb9Iep8eH6HLgwHBDoqhSDEh8xGU=;
-        b=TM+6E5KThPOUp11c1r4f66wyRga6MtRE4+qXQLodGKCjzqo33ldDRGVGmGmvx0OTs9
-         SOdaEG498HXKB36d14WbSc40JRLZzvjoAa8q3eZCT+fYxTS0BM0FyvzoZykes5zCIZP3
-         e6PQdcmwZ2ckIUHKIQa3i0Gp1LLpnkfvO8d1DF/RrRqtRDc7+KetcPHzT3Rkfl6HAPox
-         AJFFG6XjE/pLl1sY+XoyPi3WNCdrvLge4doXRjKgIP9NPgHNeMYYeiqxjhSFErwNFWj9
-         dYh1h5zJW7Qkjl2w1GyAcV/AbF4n9ao5XL3ZQHXBJZUYv7jGDQJG9Z0Z5ZZhKKihXQR1
-         nQEQ==
-X-Gm-Message-State: APjAAAVZ8139AjZWaPNJTpajwwBseoBBhA1GvkcVh10LJotINu0X+DSL
-        ebnbLYyyqyEjaUGpKbcNSiw=
-X-Google-Smtp-Source: APXvYqx4RDrqub0ciRxOeiw7+beyuzBKmwGhPd628qNerr+hZmAjKMRCpP/QvXKsErFf4tQGtPD9xQ==
-X-Received: by 2002:a62:4e86:: with SMTP id c128mr2466915pfb.39.1556781085723;
-        Thu, 02 May 2019 00:11:25 -0700 (PDT)
+        bh=mCYB/f33HOqS1mtaKEbHbUDuAOKpC4D6CXfqGMUJYqU=;
+        b=jN53GDnd1YTdhk2WyYELi3fR1efmfS9QCb5+vLblAbAgPV3QuoXK3uHcch4okcyldb
+         efDKh/Zd2wRlkH1vzq2CGizo/BZO8nJbthJZlk1BTnm0zWmxBPThyCPrpzImD/MpPDi8
+         1PWEam+LsJabgK5dv7PXca6hoDx3cN4U3h+kvJm+v/eO+mirHQPsOxG+wvcZXHbRCUVK
+         mAMzFufppsr/m8ghlBOu/migft3ax2ZGL826W+GfolJehblnnA9eYH2WquL8jD6+Z4LW
+         osZ0b37YEPq28fpv5UfjRe28OfxtjX3ji8dfc/r7C9eng7n2z8VI8emNw7oUBi1d+SeO
+         tcJA==
+X-Gm-Message-State: APjAAAWShbxO/foILe/i0E5NdSiVZsT/LEsZNNYk6oQafxLqv+reJoEp
+        VYxprLexoehjdsjKPyfYjKE=
+X-Google-Smtp-Source: APXvYqx7wzAOxLWk/y3jzGr+VYPxhUS9L7NUdl7xQypInjCecIQ2B9c0K8udJ9i/rp5f+u8NzTKhgQ==
+X-Received: by 2002:a62:61c2:: with SMTP id v185mr2484759pfb.117.1556781089654;
+        Thu, 02 May 2019 00:11:29 -0700 (PDT)
 Received: from laptop.DHCP ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id u24sm4686976pfh.91.2019.05.02.00.11.21
+        by smtp.gmail.com with ESMTPSA id u24sm4686976pfh.91.2019.05.02.00.11.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 00:11:24 -0700 (PDT)
+        Thu, 02 May 2019 00:11:28 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
 Cc:     x86@kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH v2 19/27] Documentation: x86: convert usb-legacy-support.txt to reST
-Date:   Thu,  2 May 2019 15:06:25 +0800
-Message-Id: <20190502070633.9809-20-changbin.du@gmail.com>
+Subject: [PATCH v2 20/27] Documentation: x86: convert i386/IO-APIC.txt to reST
+Date:   Thu,  2 May 2019 15:06:26 +0800
+Message-Id: <20190502070633.9809-21-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190502070633.9809-1-changbin.du@gmail.com>
 References: <20190502070633.9809-1-changbin.du@gmail.com>
@@ -80,77 +80,140 @@ add it to Sphinx TOC tree. No essential content change.
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
+ .../x86/i386/{IO-APIC.txt => IO-APIC.rst}     | 28 +++++++++++--------
+ Documentation/x86/i386/index.rst              | 10 +++++++
  Documentation/x86/index.rst                   |  1 +
- ...acy-support.txt => usb-legacy-support.rst} | 40 +++++++++++--------
- 2 files changed, 24 insertions(+), 17 deletions(-)
- rename Documentation/x86/{usb-legacy-support.txt => usb-legacy-support.rst} (53%)
+ 3 files changed, 27 insertions(+), 12 deletions(-)
+ rename Documentation/x86/i386/{IO-APIC.txt => IO-APIC.rst} (93%)
+ create mode 100644 Documentation/x86/i386/index.rst
 
-diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index 453557097743..3eb0334ae2d4 100644
---- a/Documentation/x86/index.rst
-+++ b/Documentation/x86/index.rst
-@@ -25,3 +25,4 @@ x86-specific Documentation
-    pti
-    microcode
-    resctrl_ui
-+   usb-legacy-support
-diff --git a/Documentation/x86/usb-legacy-support.txt b/Documentation/x86/usb-legacy-support.rst
-similarity index 53%
-rename from Documentation/x86/usb-legacy-support.txt
-rename to Documentation/x86/usb-legacy-support.rst
-index 1894cdfc69d9..e01c08b7c981 100644
---- a/Documentation/x86/usb-legacy-support.txt
-+++ b/Documentation/x86/usb-legacy-support.rst
-@@ -1,7 +1,11 @@
-+
+diff --git a/Documentation/x86/i386/IO-APIC.txt b/Documentation/x86/i386/IO-APIC.rst
+similarity index 93%
+rename from Documentation/x86/i386/IO-APIC.txt
+rename to Documentation/x86/i386/IO-APIC.rst
+index 15f5baf7e1b6..ce4d8df15e7c 100644
+--- a/Documentation/x86/i386/IO-APIC.txt
++++ b/Documentation/x86/i386/IO-APIC.rst
+@@ -1,3 +1,11 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+==================
- USB Legacy support
--~~~~~~~~~~~~~~~~~~
-+==================
- 
--Vojtech Pavlik <vojtech@suse.cz>, January 2004
-+:Author: Vojtech Pavlik <vojtech@suse.cz>, January 2004
- 
- 
- Also known as "USB Keyboard" or "USB Mouse support" in the BIOS Setup is a
-@@ -27,18 +31,20 @@ It has several drawbacks, though:
- 
- Solutions:
- 
--Problem 1) can be solved by loading the USB drivers prior to loading the
--PS/2 mouse driver. Since the PS/2 mouse driver is in 2.6 compiled into
--the kernel unconditionally, this means the USB drivers need to be
--compiled-in, too.
--
--Problem 2) can currently only be solved by either disabling HIGHMEM64G
--in the kernel config or USB Legacy support in the BIOS. A BIOS update
--could help, but so far no such update exists.
--
--Problem 3) is usually fixed by a BIOS update. Check the board
--manufacturers web site. If an update is not available, disable USB
--Legacy support in the BIOS. If this alone doesn't help, try also adding
--idle=poll on the kernel command line. The BIOS may be entering the SMM
--on the HLT instruction as well.
--
-+Problem 1)
-+  can be solved by loading the USB drivers prior to loading the
-+  PS/2 mouse driver. Since the PS/2 mouse driver is in 2.6 compiled into
-+  the kernel unconditionally, this means the USB drivers need to be
-+  compiled-in, too.
++=======
++IO-APIC
++=======
 +
-+Problem 2)
-+  can currently only be solved by either disabling HIGHMEM64G
-+  in the kernel config or USB Legacy support in the BIOS. A BIOS update
-+  could help, but so far no such update exists.
++:Author: Ingo Molnar <mingo@kernel.org>
 +
-+Problem 3)
-+  is usually fixed by a BIOS update. Check the board
-+  manufacturers web site. If an update is not available, disable USB
-+  Legacy support in the BIOS. If this alone doesn't help, try also adding
-+  idle=poll on the kernel command line. The BIOS may be entering the SMM
-+  on the HLT instruction as well.
+ Most (all) Intel-MP compliant SMP boards have the so-called 'IO-APIC',
+ which is an enhanced interrupt controller. It enables us to route
+ hardware interrupts to multiple CPUs, or to CPU groups. Without an
+@@ -13,9 +21,8 @@ usually worked around by the kernel. If your MP-compliant SMP board does
+ not boot Linux, then consult the linux-smp mailing list archives first.
+ 
+ If your box boots fine with enabled IO-APIC IRQs, then your
+-/proc/interrupts will look like this one:
++/proc/interrupts will look like this one::
+ 
+-   ---------------------------->
+   hell:~> cat /proc/interrupts
+              CPU0
+     0:    1360293    IO-APIC-edge  timer
+@@ -28,7 +35,6 @@ If your box boots fine with enabled IO-APIC IRQs, then your
+   NMI:          0
+   ERR:          0
+   hell:~>
+-  <----------------------------
+ 
+ Some interrupts are still listed as 'XT PIC', but this is not a problem;
+ none of those IRQ sources is performance-critical.
+@@ -37,14 +43,14 @@ none of those IRQ sources is performance-critical.
+ In the unlikely case that your board does not create a working mp-table,
+ you can use the pirq= boot parameter to 'hand-construct' IRQ entries. This
+ is non-trivial though and cannot be automated. One sample /etc/lilo.conf
+-entry:
++entry::
+ 
+ 	append="pirq=15,11,10"
+ 
+ The actual numbers depend on your system, on your PCI cards and on their
+ PCI slot position. Usually PCI slots are 'daisy chained' before they are
+ connected to the PCI chipset IRQ routing facility (the incoming PIRQ1-4
+-lines):
++lines)::
+ 
+                ,-.        ,-.        ,-.        ,-.        ,-.
+      PIRQ4 ----| |-.    ,-| |-.    ,-| |-.    ,-| |--------| |
+@@ -56,7 +62,7 @@ lines):
+      PIRQ1 ----| |-  `----| |-  `----| |-  `----| |--------| |
+                `-'        `-'        `-'        `-'        `-'
+ 
+-Every PCI card emits a PCI IRQ, which can be INTA, INTB, INTC or INTD:
++Every PCI card emits a PCI IRQ, which can be INTA, INTB, INTC or INTD::
+ 
+                                ,-.
+                          INTD--| |
+@@ -78,19 +84,19 @@ to have non shared interrupts). Slot5 should be used for videocards, they
+ do not use interrupts normally, thus they are not daisy chained either.
+ 
+ so if you have your SCSI card (IRQ11) in Slot1, Tulip card (IRQ9) in
+-Slot2, then you'll have to specify this pirq= line:
++Slot2, then you'll have to specify this pirq= line::
+ 
+ 	append="pirq=11,9"
+ 
+ the following script tries to figure out such a default pirq= line from
+-your PCI configuration:
++your PCI configuration::
+ 
+ 	echo -n pirq=; echo `scanpci | grep T_L | cut -c56-` | sed 's/ /,/g'
+ 
+ note that this script won't work if you have skipped a few slots or if your
+ board does not do default daisy-chaining. (or the IO-APIC has the PIRQ pins
+ connected in some strange way). E.g. if in the above case you have your SCSI
+-card (IRQ11) in Slot3, and have Slot1 empty:
++card (IRQ11) in Slot3, and have Slot1 empty::
+ 
+ 	append="pirq=0,9,11"
+ 
+@@ -105,7 +111,7 @@ won't function properly (e.g. if it's inserted as a module).
+ If you have 2 PCI buses, then you can use up to 8 pirq values, although such
+ boards tend to have a good configuration.
+ 
+-Be prepared that it might happen that you need some strange pirq line:
++Be prepared that it might happen that you need some strange pirq line::
+ 
+ 	append="pirq=0,0,0,0,0,0,9,11"
+ 
+@@ -115,5 +121,3 @@ Good luck and mail to linux-smp@vger.kernel.org or
+ linux-kernel@vger.kernel.org if you have any problems that are not covered
+ by this document.
+ 
+--- mingo
+-
+diff --git a/Documentation/x86/i386/index.rst b/Documentation/x86/i386/index.rst
+new file mode 100644
+index 000000000000..8747cf5bbd49
+--- /dev/null
++++ b/Documentation/x86/i386/index.rst
+@@ -0,0 +1,10 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++============
++i386 Support
++============
++
++.. toctree::
++   :maxdepth: 2
++
++   IO-APIC
+diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+index 3eb0334ae2d4..4e15bcc6456c 100644
+--- a/Documentation/x86/index.rst
++++ b/Documentation/x86/index.rst
+@@ -26,3 +26,4 @@ x86-specific Documentation
+    microcode
+    resctrl_ui
+    usb-legacy-support
++   i386/index
 -- 
 2.20.1
 
