@@ -2,103 +2,229 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB15C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A976C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B34B32089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16AA20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:06:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f6K3kASC"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DETiqvG1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfEBSEQ (ORCPT
+        id S1726396AbfEBSGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:04:16 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37575 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfEBSEQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:04:16 -0400
-Received: by mail-io1-f67.google.com with SMTP id j14so2482122ioj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:04:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SU8aAABM065YNEdWIrP9VLfp6wM73Cy7sMn9LwYteHs=;
-        b=f6K3kASCYwWOdpWL00hYEo/+O/+CwPAE2qa1EtzQcxap9LAXrl7bqlrPM0S9hqlXsQ
-         qX1HzZF4jMJasflI6Mybe9MKHpeTHoWe5acw8gOxw8Hf9pIhift/FFiimHgdv2e4xZfb
-         9kf/xiRQxrC/X8/LFpH6zxYwZ4Wn+mxVYzkhqbPxAfzwgjb60gpIKkR4SlezVynmltla
-         wTVQkENc8evGTLe+QtK8AJopchFw5aKJ7SA+Gf4T3TrKQPeZB9KFLZ+YusbTSKcVvgf+
-         8lb7chFVhHZ5bqsR3MBHXCsCgth8bLv9Qb4BtrcxHEASc7H/izDiylpK/cJV/CYmLy8D
-         gDSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SU8aAABM065YNEdWIrP9VLfp6wM73Cy7sMn9LwYteHs=;
-        b=owg2jTcRWYOUy8Ls9Qtlkgig5ne5xHDwE1CdE8v19da4HbV0OBpUaQvQJsWx5F03fh
-         bgtoHuXjz7S9upb9SmEou1JJMop46MRWga94VGd1wY8JqNs1ekHFTFE2DQakQqKbAVx1
-         6TSxa8rTVEhYsVMeYvV3fHRWPeqr3//UI7AmFrMBP7SPTzB+te4nERKE6rGx/FJdQ7Ce
-         otss7FevKX605CIhFlK4qJ467iYdxy4APeoGBt5G7OwgNH+qTe0bMJA1jInKj6YGmccV
-         J+Lb7aQ0AfFe5rG+wqezf7oevRZ3A+4SmwoAIPYNvPovunTlPbPlfhr2+W3N6ddyRIpg
-         fdvA==
-X-Gm-Message-State: APjAAAVJ7z33tXt0fRh4s7He/eteVvjE6zQHORFIh5xQhwQ0iEWYu8IH
-        NWqIuYa0ZH2GO5UOJXTHfCbj/13Pf8qOOaucNpfYMA==
-X-Google-Smtp-Source: APXvYqyOj3bra2PT4XDD15cGgua2vqDCD5l2gbA7o5aTdMvJLqabYtOM7r7Cn1WgphZlqar6cqRNgFtIRQ6JGsZ4xt0=
-X-Received: by 2002:a5e:8348:: with SMTP id y8mr3682573iom.88.1556820254756;
- Thu, 02 May 2019 11:04:14 -0700 (PDT)
+        Thu, 2 May 2019 14:06:20 -0400
+Received: from mail-eopbgr40060.outbound.protection.outlook.com ([40.107.4.60]:52836
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725962AbfEBSGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 14:06:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=adBeJlgzs88ftsQpQuMeyw/XjOUOE/vjmHFU5hrIirI=;
+ b=DETiqvG14q06YfZu+SKJURh5M0aCjS+CcVksGzkQgkirAbq3keAWVy5fxTeA6ky/exigLQHGAi163MF5M7jrpsWoUl92un8kBjJ3pArm/m7unqL26pem3chB8O2ZsbMadlvenjMkbtMBA0cnMwh1I/ZExfPyp3aD3Vy6uqXL0AQ=
+Received: from VI1PR05MB6239.eurprd05.prod.outlook.com (20.178.124.30) by
+ VI1PR05MB5984.eurprd05.prod.outlook.com (20.178.127.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Thu, 2 May 2019 18:06:13 +0000
+Received: from VI1PR05MB6239.eurprd05.prod.outlook.com
+ ([fe80::cd72:ad84:2379:1f55]) by VI1PR05MB6239.eurprd05.prod.outlook.com
+ ([fe80::cd72:ad84:2379:1f55%2]) with mapi id 15.20.1856.008; Thu, 2 May 2019
+ 18:06:12 +0000
+From:   Asmaa Mnebhi <Asmaa@mellanox.com>
+To:     Vadim Pasternak <vadimp@mellanox.com>,
+        "minyard@acm.org" <minyard@acm.org>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        Michael Shych <michaelsh@mellanox.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Subject: RE: [PATCH v4 0/1] Add support for IPMB driver
+Thread-Topic: [PATCH v4 0/1] Add support for IPMB driver
+Thread-Index: AQHU/36JYRxgAz5nX0+eYBy40WDgaqZVNzOAgAEMmbA=
+Date:   Thu, 2 May 2019 18:06:12 +0000
+Message-ID: <VI1PR05MB62392EDC0FD3C960519C91ABDA340@VI1PR05MB6239.eurprd05.prod.outlook.com>
+References: <cover.1556645340.git.Asmaa@mellanox.com>
+ <AM6PR05MB5224FCACBD4EF55F3890EC6AA23A0@AM6PR05MB5224.eurprd05.prod.outlook.com>
+In-Reply-To: <AM6PR05MB5224FCACBD4EF55F3890EC6AA23A0@AM6PR05MB5224.eurprd05.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-Mentions: vadimp@mellanox.com
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Asmaa@mellanox.com; 
+x-originating-ip: [216.156.69.42]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6ebd4a25-100e-4258-5311-08d6cf28dccc
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5984;
+x-ms-traffictypediagnostic: VI1PR05MB5984:
+x-microsoft-antispam-prvs: <VI1PR05MB59843858C33E2CA3F11D891CDA340@VI1PR05MB5984.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0025434D2D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(366004)(396003)(346002)(13464003)(199004)(189003)(305945005)(7736002)(256004)(2501003)(68736007)(55016002)(33656002)(76116006)(66446008)(7696005)(316002)(66556008)(6636002)(9686003)(99286004)(14454004)(66476007)(64756008)(73956011)(86362001)(66066001)(72206003)(71200400001)(71190400001)(2201001)(74316002)(14444005)(54906003)(110136005)(66946007)(229853002)(81156014)(4326008)(6436002)(81166006)(25786009)(52536014)(2906002)(6246003)(53936002)(5660300002)(102836004)(478600001)(6116002)(3846002)(8676002)(6506007)(80792005)(53546011)(486006)(26005)(11346002)(476003)(8936002)(186003)(446003)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5984;H:VI1PR05MB6239.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6c4nkOvZxU8DL826iod4Fd14Dqlx+nhjIjgowQSH7J/YPB2TCnY9RU8cvVqQuy2/j2h6Th0Oa6++SdJd/mgPdh2LiOE8gEoSWNMavLZy+3QMfFcN3qBYu8Uj88OdPSYxOq6N4M/pZnY/8Lza7R4iH5hQsT6sGjUHtAPXfTDuthTFXn5HZrHUIJU246Ar5z4HNNYFioIzDpaqMGv8NhgwAUDNFYt7YGj2mmsL9wTHAZCTQ/zZpfynabUD2JwRMMz9vmbUDZsBxpvhNVO1cWEtUDOFA8c98LrILd6JU2ZV2K8DjMDPC2yxHahRtr0TmeFcsS58LXYZ6BbMyYLVDUnzARco1b6xfQHawQr0ckkuOEWTk9LWP8ADaf+203Xmx4hersaHWfh1TOv6wgFu0r695HRfTV1Jzp0man8X23X8l9c=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190227202658.197113-1-matthewgarrett@google.com>
- <20190227202658.197113-3-matthewgarrett@google.com> <CAJzaN5pUJoOCz5-ZDSnTb6dbVPuy0QwmFD0CeofAGK+bRQx0og@mail.gmail.com>
- <CACdnJutpBPAX6TOGgs3Ng2v_cC5hAf-3pHThESvjQ9vbvQeVkA@mail.gmail.com> <CAKv+Gu9PF4u=-7QL4e36Q3S5kC4+5Z=yLYHLT9jE+eNY7YUV7A@mail.gmail.com>
-In-Reply-To: <CAKv+Gu9PF4u=-7QL4e36Q3S5kC4+5Z=yLYHLT9jE+eNY7YUV7A@mail.gmail.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Thu, 2 May 2019 11:04:03 -0700
-Message-ID: <CACdnJuvDuw0X9iwEqOu7EjM5ca1f+n7f=xqzrTPS9PyrmqKNHQ@mail.gmail.com>
-Subject: Re: [PATCH V5 2/4] tpm: Reserve the TPM final events table
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ebd4a25-100e-4258-5311-08d6cf28dccc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 18:06:12.6491
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5984
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 12:15 AM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
->
-> (+ Ingo)
->
-> On Tue, 30 Apr 2019 at 21:52, Matthew Garrett <mjg59@google.com> wrote:
-> >
-> > On Tue, Apr 30, 2019 at 6:07 AM Bartosz Szczepanek <bsz@semihalf.com> wrote:
-> > >
-> > > I may be a little late with this comment, but I've just tested these
-> > > patches on aarch64 platform (from the top of jjs/master) and got
-> > > kernel panic ("Unable to handle kernel read", full log at the end of
-> > > mail). I think there's problem with below call to
-> > > tpm2_calc_event_log_size(), where physical address of efi.tpm_log is
-> > > passed as (void *) and never remapped:
-> >
-> > Yes, it looks like this is just broken. Can you try with the attached patch?
->
-> I'm a bit uncomfortable with EFI code that is obviously broken and
-> untested being queued for the next merge window in another tree.
+Hi Vadim, Hi Corey,
 
-The patchset was Cc:ed to linux-efi@. Is there anything else I should
-have done to ensure you picked it up rather than Jarkko?
+Please find inline comments answering your questions.
+
+-----Original Message-----
+From: Vadim Pasternak=20
+Sent: Tuesday, April 30, 2019 5:24 PM
+To: Asmaa Mnebhi <Asmaa@mellanox.com>; minyard@acm.org; wsa@the-dreams.de; =
+Michael Shych <michaelsh@mellanox.com>
+Cc: Asmaa Mnebhi <Asmaa@mellanox.com>; linux-kernel@vger.kernel.org; linux-=
+i2c@vger.kernel.org
+Subject: RE: [PATCH v4 0/1] Add support for IPMB driver
+
+
+
+> -----Original Message-----
+> From: Asmaa Mnebhi <Asmaa@mellanox.com>
+> Sent: Tuesday, April 30, 2019 8:59 PM
+> To: minyard@acm.org; wsa@the-dreams.de; Vadim Pasternak=20
+> <vadimp@mellanox.com>; Michael Shych <michaelsh@mellanox.com>
+> Cc: Asmaa Mnebhi <Asmaa@mellanox.com>; linux-kernel@vger.kernel.org;=20
+> linux-i2c@vger.kernel.org
+> Subject: [PATCH v4 0/1] Add support for IPMB driver
+>=20
+> Thank you for your feedback Vadim. I have addressed your comments.
+
+Hi Asmaa,
+
+Thank you for your comments and added doc.
+
+>=20
+> 1) You are correct. This driver is not specific to Mellanox so I have=20
+> removed the Mellanox attribute.
+>=20
+> 2) I have added a documentation file called IPMB.txt which explains=20
+> how this module works and how it should be instantiated. It is very=20
+> similar to the existing linux i2c-slave-eeprom module.
+>=20
+> The HW for my testing works as follows:
+> A BMC is connected to a Satellite MC via I2C (I2C is equivalent to=20
+> IPMB). The BMC initiates the IPMB requests and sends them via I2C.
+> Obviously the BMC needs its own driver to do this which I haven't=20
+> included in this code. We have no intent of upstreaming that at the momen=
+t.
+
+>> I believe you are going to do it at some point, right?
+@Vadim Pasternak: I would.
+@Corey: The ipmb-dev-int driver is not responsible for sending requests via=
+ I2C (unlike for example the ipmi_ssif driver). It is only responsible for =
+receiving those requests and passing them to a user space program. Once a r=
+esponse is received from user space, it will forward that response back to =
+the requester So in my testing for example, the source requester is the BMC=
+, so I issue ipmitool commands from the BMC itself.
+
+The driver that I have on my BMC (which I primarily designed for testing ip=
+mb-dev-int) works hand in hand with the ipmi_msghandler and ipmi_devint to =
+create the /dev/ipmi0 device file to enable the use of ipmitool program on =
+the BMC. Once an ipmitool command is issued on the BMC,  the request messag=
+e is sent to the Satellite MC. Once the BMC driver gets the response back f=
+rom the Satellite MC, it will pass it to the ipmitool program which will di=
+splay the output to the user.=20
+
+Please note that this ipmb-dev-int driver does not need ipmi_msghandler nor=
+ does it need ipmi_devintf to be loaded.
+
+> This ipmb-dev-int driver is to be loaded and instantiated on the=20
+> Satellite MC to be able to receive IPMB requests. These IPMB request=20
+> messages will be picked up by a user space program such (in my case it=20
+> is OpenIPMI) to handle the request and generate a response.
+> The response will be then passed from the user program back to kernel spa=
+ce.
+> Then this driver would send that response back to the BMC.
+>=20
+> 3) You asked the following:
+>=20
+> "Is it expected to be zero in vaid case?"
+> The 8 least significant bits of the sum is always expected to be 0 in=20
+> the case where the checksum is valid. I have added a comment for clarific=
+ations.
+
+
+>=20
+> "why do you need this cast?"
+> buf[++ipmb_dev_p->msg_idx]=3D(u8)(client->addr<<1)
+> This is because client->addr is of type unsigned short which is
+> 2 bytes so it is safer to typecast it to u8 (u8* buf)
+
+>>Better, if you can avoid cast.
+>>Would compiler warn if you use for example rol16(client->addr, 1) & GENMA=
+SK(7, 0); or something like it?
+I thought it wouldn't be too much of an issue to use typecast here since ot=
+her existing ipmi drivers use typecasting: bt-bmc.c, kcs_bmc_aspeed.c, kcs_=
+bmc_npcm7xx.c all use (u8) typecasting.=20
+But if you really think it is worth it, I could do that.
+I just think it is not as straight forward to read this code as using a sim=
+ple typecast. Some might wonder why a GENMASK is needed in this case.
+
+
+
+>=20
+> "It could be only single ipmb-dev within the system? Couldn't it be=20
+> few, like master/slave for example?"
+> My understanding of your question is that: what if we have multiple=20
+> instances of ipmb-dev-int, that we register it under different addresses?
+> This driver only works as a slave so it will only be instantiated once=20
+> on the Satellite MC under one slave address.
+
+>>I mentioned some config like:
+>>BMC1 (master)  -- busA --|
+>>			Satellite
+>>BMC2 (standby)	-- busB --|=20
+
+>>Since this is not Mellanox specific driver, maybe it would be good to sup=
+port multiple instances of it.
+
+I see, I understand now. That sounds good.
+I added support to instantiate several ipmb devices for the purpose of havi=
+ng multiple BMC masters for one Satellite MC. The design consists in naming=
+ each instantiated device with the IPMBus/I2C bus number associated with it=
+. For example, :
+BMC1 -----I2C/IPMB bus 1 ----- Satellite MC (/dev/ipmb-1)
+BMC2 -----I2C/IPMB bus 2 ----- Satellite MC (/dev/ipmb-2)
+
+I added documentation for that as well.
+
+>
+> Asmaa Mnebhi (1):
+>   Add support for IPMB driver
+>=20
+>  Documentation/IPMB.txt           |  53 ++++++
+>  drivers/char/ipmi/Kconfig        |   8 +
+>  drivers/char/ipmi/Makefile       |   1 +
+>  drivers/char/ipmi/ipmb_dev_int.c | 381
+> +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 443 insertions(+)
+>  create mode 100644 Documentation/IPMB.txt  create mode 100644=20
+> drivers/char/ipmi/ipmb_dev_int.c
+>=20
+> --
+> 2.1.2
+
