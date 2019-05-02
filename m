@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B498C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB88C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D7520675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 297592081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810829;
-	bh=5IKcHb/BiqpQ9jsv0SapryPbCO4oCW5m2Nfmbwo9D9k=;
+	s=default; t=1556810832;
+	bh=FDNU4kDC2n76Cl9nLieE106/2Os9s6nt8AFRwtENVIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EqX3vY6m6biywNFWJ8BKNuhGc9qdKWhQTBI1dCBpp+yKrVTdo/uxpuhpCe6FnnNmq
-	 OfvJa4j99bTPJpHueD130ERgJL9PrYutVo6wDg2SxNYlBMCh/yrXAWxCO2bOSwX9g/
-	 n1I4e1SKkJrp4sHXbltV5Jd6Un/cNuYNhmgWKpto=
+	b=JgbTDDW6Dg1UCsvLHLPz70cnGWMvE3yJwt7OOsKi3QF9SEj19LNhwBIMhezt8zHO6
+	 00eSsH654XRE20q1YZQWsKMDxT1Hx9fk/9qJCiYuOmkGij7Br66IPPL/d5LVLNHU4p
+	 Q2Tz0h4fQTobVxGwECu2eh1JE1KG6Clp6YFa8YP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfEBP1I (ORCPT
+        id S1727914AbfEBP1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:27:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43848 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:27:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbfEBP1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:27:06 -0400
+        id S1727872AbfEBP1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:27:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F7422081C;
-        Thu,  2 May 2019 15:27:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E884320675;
+        Thu,  2 May 2019 15:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810825;
-        bh=5IKcHb/BiqpQ9jsv0SapryPbCO4oCW5m2Nfmbwo9D9k=;
+        s=default; t=1556810823;
+        bh=FDNU4kDC2n76Cl9nLieE106/2Os9s6nt8AFRwtENVIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=znShkYjH2jAwJtjo0NQkCYYmiR2e82UTrfjN1tJ/xKVvrlq+/TMFvDLS5Rgwttxag
-         JVSzHw3/LyMqsDlSsEntq6av76S+na7yIPVThpiiC1CE1pjKt0ax1AJ35iiaFN+B7E
-         JcAeHzebr1scGCrP5aV9JJfS8lALuiO6iePSwQWo=
+        b=U3swyAHHUo+ZIT/E/cr9a8xJ20zrZAH8IG3mSXWBPzDLVUn7/Q+RMadX0u7FPt8ap
+         W0iy2YwLmQyTTxAgAPPtlAxjLYwyO7QgVV9loW+OCJlQmlep2MK20b9ec6p1qKxH65
+         aDntSVtx6dh7I24W+z9Bmawma4E4LE5zFUZeOpnA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
+        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
         "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 42/72] net/sched: dont dereference a->goto_chain to read the chain index
-Date:   Thu,  2 May 2019 17:21:04 +0200
-Message-Id: <20190502143336.829714760@linuxfoundation.org>
+Subject: [PATCH 4.19 41/72] net: macb: Add null check for PCLK and HCLK
+Date:   Thu,  2 May 2019 17:21:03 +0200
+Message-Id: <20190502143336.755702883@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -60,37 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fe384e2fa36ca084a456fd30558cccc75b4b3fbd ]
+[ Upstream commit cd5afa91f078c0787be0a62b5ef90301c00b0271 ]
 
-callers of tcf_gact_goto_chain_index() can potentially read an old value
-of the chain index, or even dereference a NULL 'goto_chain' pointer,
-because 'goto_chain' and 'tcfa_action' are read in the traffic path
-without caring of concurrent write in the control path. The most recent
-value of chain index can be read also from a->tcfa_action (it's encoded
-there together with TC_ACT_GOTO_CHAIN bits), so we don't really need to
-dereference 'goto_chain': just read the chain id from the control action.
+Both PCLK and HCLK are "required" clocks according to macb devicetree
+documentation. There is a chance that devm_clk_get doesn't return a
+negative error but just a NULL clock structure instead. In such a case
+the driver proceeds as usual and uses pclk value 0 to calculate MDC
+divisor which is incorrect. Hence fix the same in clock initialization.
 
-Fixes: e457d86ada27 ("net: sched: add couple of goto_chain helpers")
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- include/net/tc_act/tc_gact.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/cadence/macb_main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/include/net/tc_act/tc_gact.h b/include/net/tc_act/tc_gact.h
-index ef8dd0db70ce..56935bf027a7 100644
---- a/include/net/tc_act/tc_gact.h
-+++ b/include/net/tc_act/tc_gact.h
-@@ -56,7 +56,7 @@ static inline bool is_tcf_gact_goto_chain(const struct tc_action *a)
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 8abea1c3844f..7d7b51383adf 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3323,14 +3323,20 @@ static int macb_clk_init(struct platform_device *pdev, struct clk **pclk,
+ 		*hclk = devm_clk_get(&pdev->dev, "hclk");
+ 	}
  
- static inline u32 tcf_gact_goto_chain_index(const struct tc_action *a)
- {
--	return a->goto_chain->index;
-+	return READ_ONCE(a->tcfa_action) & TC_ACT_EXT_VAL_MASK;
- }
+-	if (IS_ERR(*pclk)) {
++	if (IS_ERR_OR_NULL(*pclk)) {
+ 		err = PTR_ERR(*pclk);
++		if (!err)
++			err = -ENODEV;
++
+ 		dev_err(&pdev->dev, "failed to get macb_clk (%u)\n", err);
+ 		return err;
+ 	}
  
- #endif /* __NET_TC_GACT_H */
+-	if (IS_ERR(*hclk)) {
++	if (IS_ERR_OR_NULL(*hclk)) {
+ 		err = PTR_ERR(*hclk);
++		if (!err)
++			err = -ENODEV;
++
+ 		dev_err(&pdev->dev, "failed to get hclk (%u)\n", err);
+ 		return err;
+ 	}
 -- 
 2.19.1
 
