@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5058C46470
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9C7C004C9
 	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7163821479
+	by mail.kernel.org (Postfix) with ESMTP id 9DB23208E4
 	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1556763507;
-	bh=AmKBle4THPBXUGuyggoySaG9lkv1B+0yaGY2jdJId/4=;
+	bh=3w7Sxuhq6uUJtqJi1NGUsChHu2DJW2I1rVxiJz5+OYU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=FAsg9HLZuk1FSisSl29dv8VdPIJU92vvw4RycA4FQyMKMNB1FPqQjd4H4fPQRWRUM
-	 s+m7olovD+W0+26Gn/pWo7fw5Fr5hsH9VscfqwAnhq/rsvQr0croc6CWEGBl2+FuZZ
-	 KavsHoyJbDJdJCNVAO95GybiKcz0nddXVf9shk6o=
+	b=BOYn09qwFS/Xd2hu9othuAmFlWbUytm6CEpAUqVy+OIdwGUO9F7EpCQ2U7Xf64Z7J
+	 U8Rtgnljig23B5W+RknUI+OVQLQmKqzIIqhnaRhkCFN+8rdeo75h/iJuuH6LKcrZiT
+	 q6qCWR1v6phqDjnSW6pwFYwgW9631x2EkMyR4iBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfEBCSS (ORCPT
+        id S1726383AbfEBCST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:18:18 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54828 "EHLO
+        Wed, 1 May 2019 22:18:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54858 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbfEBCSR (ORCPT
+        with ESMTP id S1726205AbfEBCSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:18:17 -0400
+        Wed, 1 May 2019 22:18:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=w52+WD1FRjYJTS1b/QlKeFRTLrKcf/MWXa48o0J7BR8=; b=wv38btT2KChe
-        tdM3DnV0rSaLva6jN2TxBVg/+98h0I8EJ2FIeE5zY1bVDogbV2Aq6ATypOhlNptyymuVa2tIDI4Gt
-        HrtPVICwFbw7gviM1+P2BfckKhaUMryzzhJXX8/G6Ui14drVEt5ai+kMSUD8TW8+43UuuNmZz7X42
-        0qDQ8=;
+        List-Archive; bh=qPjR5TzRDbnAqxV3DwfYDMNhhBwZAe2KIxcyy2P9zos=; b=h10UDky+3huF
+        btSF4G/2IKX2b6vivJBPW/IGONFd3A3bVh0bZ/vrZHQWUs0DuB+dp7Pg3IovUUy5dbvhXvvqcDFdg
+        YvWf+WOdz29/LdR2ZxTvxxY9fovVeYIUzc2vfGqVu3jxivs/sSwjSnfksyMeeyAcaqSzUuLvnCf/S
+        HNOiI=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1IT-0005pm-8v; Thu, 02 May 2019 02:18:05 +0000
+        id 1hM1IT-0005pn-MY; Thu, 02 May 2019 02:18:06 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 515C4441D3D; Thu,  2 May 2019 03:18:01 +0100 (BST)
+        id 767DF441D3F; Thu,  2 May 2019 03:18:02 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     alsa-devel@alsa-project.org, Baolin Wang <baolin.wang@linaro.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
         kernel-janitors@vger.kernel.org,
-        Keyon Jie <yang.jie@linux.intel.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: SOF: Intel: fix spelling mistake "incompatble" -> "incompatible"" to the asoc tree
-In-Reply-To: <20190501102308.30390-1-colin.king@canonical.com>
+        Orson Zhai <orsonzhai@gmail.com>, Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: sprd: Fix to use list_for_each_entry_safe() when delete items" to the asoc tree
+In-Reply-To: <20190429123713.64280-1-weiyongjun1@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021801.515C4441D3D@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:01 +0100 (BST)
+Message-Id: <20190502021802.767DF441D3F@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:18:02 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: SOF: Intel: fix spelling mistake "incompatble" -> "incompatible"
+   ASoC: sprd: Fix to use list_for_each_entry_safe() when delete items
 
 has been applied to the asoc tree at
 
@@ -91,35 +91,44 @@ to this mail.
 Thanks,
 Mark
 
-From 07f80454369e5a8141dbbf4ae0a535230f223f2b Mon Sep 17 00:00:00 2001
-From: Colin Ian King <colin.king@canonical.com>
-Date: Wed, 1 May 2019 11:23:08 +0100
-Subject: [PATCH] ASoC: SOF: Intel: fix spelling mistake "incompatble" ->
- "incompatible"
+From 81a812c98b6eda7e3101305d57354433e3edc541 Mon Sep 17 00:00:00 2001
+From: Wei Yongjun <weiyongjun1@huawei.com>
+Date: Mon, 29 Apr 2019 12:37:13 +0000
+Subject: [PATCH] ASoC: sprd: Fix to use list_for_each_entry_safe() when delete
+ items
 
-There is a spelling mistake in a hda_dsp_rom_msg message, fix it.
+Since we will remove items off the list using list_del() we need
+to use a safe version of the list_for_each_entry() macro aptly named
+list_for_each_entry_safe().
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Fixes: d7bff893e04f ("ASoC: sprd: Add Spreadtrum multi-channel data transfer support")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sof/intel/hda.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sprd/sprd-mcdt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
-index b8fc19790f3b..84baf275b467 100644
---- a/sound/soc/sof/intel/hda.c
-+++ b/sound/soc/sof/intel/hda.c
-@@ -54,7 +54,7 @@ static const struct hda_dsp_msg_code hda_dsp_rom_msg[] = {
- 	{HDA_DSP_ROM_L2_CACHE_ERROR, "error: L2 cache error"},
- 	{HDA_DSP_ROM_LOAD_OFFSET_TO_SMALL, "error: load offset too small"},
- 	{HDA_DSP_ROM_API_PTR_INVALID, "error: API ptr invalid"},
--	{HDA_DSP_ROM_BASEFW_INCOMPAT, "error: base fw incompatble"},
-+	{HDA_DSP_ROM_BASEFW_INCOMPAT, "error: base fw incompatible"},
- 	{HDA_DSP_ROM_UNHANDLED_INTERRUPT, "error: unhandled interrupt"},
- 	{HDA_DSP_ROM_MEMORY_HOLE_ECC, "error: ECC memory hole"},
- 	{HDA_DSP_ROM_KERNEL_EXCEPTION, "error: kernel exception"},
+diff --git a/sound/soc/sprd/sprd-mcdt.c b/sound/soc/sprd/sprd-mcdt.c
+index e9318d7a4810..7448015a4935 100644
+--- a/sound/soc/sprd/sprd-mcdt.c
++++ b/sound/soc/sprd/sprd-mcdt.c
+@@ -978,12 +978,12 @@ static int sprd_mcdt_probe(struct platform_device *pdev)
+ 
+ static int sprd_mcdt_remove(struct platform_device *pdev)
+ {
+-	struct sprd_mcdt_chan *temp;
++	struct sprd_mcdt_chan *chan, *temp;
+ 
+ 	mutex_lock(&sprd_mcdt_list_mutex);
+ 
+-	list_for_each_entry(temp, &sprd_mcdt_chan_list, list)
+-		list_del(&temp->list);
++	list_for_each_entry_safe(chan, temp, &sprd_mcdt_chan_list, list)
++		list_del(&chan->list);
+ 
+ 	mutex_unlock(&sprd_mcdt_list_mutex);
+ 
 -- 
 2.20.1
 
