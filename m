@@ -2,284 +2,170 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E287C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB591C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFB521743
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8795D208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556764822;
-	bh=bk49jWLYORnN3NlEoGyzZkU1laNzVm9BQ1ojwiwrQYQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=psv6GHXYbSELak9/bRrZfRdekCImI4UAVQ4S9FFaM7T+YjY0P/NV36hmpo9hH6+pp
-	 HB3wsl1/wwU0JYIjcy1N5qsmfaxhbLheHGhrNCq2DfURudvjM4r+70Xz28W/ZfaphO
-	 Hqc6/vyseM7Ws023VZHX+fg8wLODDmQ76qffXgHI=
+	s=default; t=1556764844;
+	bh=1hfvxyAy45qntQJ8YUrHMobWcwZHq5USXoXB/I4jx9o=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=bc31TCSA4ue/kTtx8dxt8HnrBeTOxMyA0Kto17R+r4OE72ZoWsuYsLb3hSR9kpFYv
+	 ODKdr0nDg7LVyZWw9HeNa/0/DDASzH6o3GohtzMPiV6DzTGzW2sDf3e2ZO+Rp8hj5B
+	 PBcdcr+ADN6na7/cg86SpjviB8oz+4Ar4x88wwp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfEBCkU (ORCPT
+        id S1726563AbfEBCkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:40:20 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:35797 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726387AbfEBCj7 (ORCPT
+        Wed, 1 May 2019 22:40:43 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36648 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbfEBCkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:39:59 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 8A12F661;
-        Wed,  1 May 2019 22:32:43 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 01 May 2019 22:32:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=mJppJN/yvnZhTI/+iVBtiobnBONgEpn2WiqOjq41o6U=; b=ZvMqQtsI
-        viW8LB+LC/s/b2wMQI+Zjz8vBgJ9Frcj8oQV342JWI6hngdMcl0db+9av8UPW4LJ
-        M3zpICrs5ORRiTWXrU+NFE0bKbA63NzuBwazdAOzLnxs0ixfbt0CTttatdKq3Jyv
-        60qMf9r7FTe7sVXlor2BJNb09sj3py0NFIERXnhr8HUwDwGOR/r0UV7GSb8THMXJ
-        1ivRt641wkQ1ACBQCib3fJO0AgoHvfMgU5xhRVBvzKzQewjVofcgbibCWB3BcFFL
-        BIFkdC0Fu1AxuAo3yAC6tH0BamH4rssqB642Tye6XZ4W3I42oQzufDYlPyF3DYmg
-        DwZvSdJVe2F1gQ==
-X-ME-Sender: <xms:ylbKXEsPo7zpXypHa8MisRZPPsJ0Wl4XhZdX0SZoUp1eyUw2txUWnA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieekgdehtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
-    epuddvuddrgeegrddvtdegrddvfeehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedv
-X-ME-Proxy: <xmx:y1bKXFvac5Xgn1_3qpPZuAOj31LWaz2xyLnfS58YwufYLueXbbxrzw>
-    <xmx:y1bKXKynELBO5psyNEVhmZ8iHuzBbIQlqTNqrIBdF-n4dt2rdnxy9Q>
-    <xmx:y1bKXLj1Sre8b1LS7xQTNhQL7TYhgaDGeyU70xMCKAc7pTnar2ITEQ>
-    <xmx:y1bKXPo_6bXv6yJNkiIim7P2YsGbAWIeErcjtWjD9NZhXWRv3-zr_Q>
-Received: from eros.localdomain (ppp121-44-204-235.bras1.syd2.internode.on.net [121.44.204.235])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1F29FE4176;
-        Wed,  1 May 2019 22:32:38 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 3/5] kobject: Fix kernel-doc comment first line
-Date:   Thu,  2 May 2019 12:31:40 +1000
-Message-Id: <20190502023142.20139-4-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502023142.20139-1-tobin@kernel.org>
-References: <20190502023142.20139-1-tobin@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 1 May 2019 22:40:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=cXtMjzP8cWAlpfCwO5TSBDzBd4YnAQjIOZyKXqyt03Y=; b=oIhrXmZkvNtb
+        yVF1MyjDyQlIfkSEufz4kVndt34EVQ+uj//AdfYBO5YvLsvW5nSx9NJdZunFwsIaqRf/n0LQ9qd+c
+        lF4rHkyyWFql12AGVGW3UwGtr8K1foxSldbufC7espm5jnCCijHfVtaan8gc7Vl/p+9/goj2ZBq6Q
+        K2we4=;
+Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hM1eA-000604-6W; Thu, 02 May 2019 02:40:30 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 0D700441D3C; Thu,  2 May 2019 03:40:27 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Akshu Agrawal <Akshu.Agrawal@amd.com>, alsa-devel@alsa-project.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: da7219: Use clk_round_rate to handle enabled bclk/wclk case" to the asoc tree
+In-Reply-To: <20190429105733.71FB83FBCC@swsrvapps-01.diasemi.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190502024027.0D700441D3C@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:40:26 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kernel-doc comments have a prescribed format.  This includes parenthesis
-on the function name.  To be _particularly_ correct we should also
-capitalise the brief description and terminate it with a period.
+The patch
 
-In preparation for adding/updating kernel-doc function comments clean up
-the ones currently present.
+   ASoC: da7219: Use clk_round_rate to handle enabled bclk/wclk case
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 1cd472d2ac1654f939ae01164b29e81fc76e0a93 Mon Sep 17 00:00:00 2001
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Date: Mon, 29 Apr 2019 11:57:33 +0100
+Subject: [PATCH] ASoC: da7219: Use clk_round_rate to handle enabled bclk/wclk
+ case
+
+For some platforms where DA7219 is the DAI clock master, BCLK/WCLK
+will be set and enabled prior to the codec's hw_params() function
+being called. It is possible the platform requires a different
+BCLK configuration than would be chosen by hw_params(), for
+example S16_LE format needed with a 64-bit frame to satisfy certain
+devices using the clocks.
+
+To handle those kinds of scenarios, the use of clk_round_rate() is
+now employed as part of hw_params(). If BCLK is already enabled
+then this function will just return the currently set rate, if it
+is valid for the desired frame size, so the subsequent call to
+clk_set_rate() will succeed and nothing changes with regards to
+clocking. In addition the specific BCLK & WCLK recalc_rate()
+implementations needed updating to always give back a real value,
+as those functions are called as part of the clk init code and a
+real value is needed for the clk_round_rate() call to work as
+expected.
+
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- lib/kobject.c | 43 ++++++++++++++++++++++---------------------
- 1 file changed, 22 insertions(+), 21 deletions(-)
+ sound/soc/codecs/da7219.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/lib/kobject.c b/lib/kobject.c
-index 3eacd5b4643f..0181f102cd1c 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -18,7 +18,7 @@
- #include <linux/random.h>
+diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
+index 5f5fa3416af3..206d01c6eb7e 100644
+--- a/sound/soc/codecs/da7219.c
++++ b/sound/soc/codecs/da7219.c
+@@ -1621,6 +1621,21 @@ static int da7219_hw_params(struct snd_pcm_substream *substream,
  
- /**
-- * kobject_namespace - return @kobj's namespace tag
-+ * kobject_namespace() - Return @kobj's namespace tag.
-  * @kobj: kobject in question
-  *
-  * Returns namespace tag of @kobj if its parent has namespace ops enabled
-@@ -36,7 +36,7 @@ const void *kobject_namespace(struct kobject *kobj)
- }
+ 		if (bclk) {
+ 			bclk_rate = frame_size * sr;
++			/*
++			 * Rounding the rate here avoids failure trying to set a
++			 * new rate on an already enabled bclk. In that
++			 * instance this will just set the same rate as is
++			 * currently in use, and so should continue without
++			 * problem, as long as the BCLK rate is suitable for the
++			 * desired frame size.
++			 */
++			bclk_rate = clk_round_rate(bclk, bclk_rate);
++			if ((bclk_rate / sr) < frame_size) {
++				dev_err(component->dev,
++					"BCLK rate mismatch against frame size");
++				return -EINVAL;
++			}
++
+ 			ret = clk_set_rate(bclk, bclk_rate);
+ 			if (ret) {
+ 				dev_err(component->dev,
+@@ -1927,9 +1942,6 @@ static unsigned long da7219_wclk_recalc_rate(struct clk_hw *hw,
+ 	struct snd_soc_component *component = da7219->component;
+ 	u8 fs = snd_soc_component_read32(component, DA7219_SR);
  
- /**
-- * kobject_get_ownership - get sysfs ownership data for @kobj
-+ * kobject_get_ownership() - Get sysfs ownership data for @kobj.
-  * @kobj: kobject in question
-  * @uid: kernel user ID for sysfs objects
-  * @gid: kernel group ID for sysfs objects
-@@ -264,7 +264,7 @@ static int kobject_add_internal(struct kobject *kobj)
- }
+-	if (!da7219->master)
+-		return 0;
+-
+ 	switch (fs & DA7219_SR_MASK) {
+ 	case DA7219_SR_8000:
+ 		return 8000;
+@@ -2016,9 +2028,6 @@ static unsigned long da7219_bclk_recalc_rate(struct clk_hw *hw,
+ 	u8 bclks_per_wclk = snd_soc_component_read32(component,
+ 						     DA7219_DAI_CLK_MODE);
  
- /**
-- * kobject_set_name_vargs - Set the name of an kobject
-+ * kobject_set_name_vargs() - Set the name of a kobject.
-  * @kobj: struct kobject to set the name of
-  * @fmt: format string used to build the name
-  * @vargs: vargs to format the string.
-@@ -304,7 +304,7 @@ int kobject_set_name_vargs(struct kobject *kobj, const char *fmt,
- }
- 
- /**
-- * kobject_set_name - Set the name of a kobject
-+ * kobject_set_name() - Set the name of a kobject.
-  * @kobj: struct kobject to set the name of
-  * @fmt: format string used to build the name
-  *
-@@ -326,7 +326,7 @@ int kobject_set_name(struct kobject *kobj, const char *fmt, ...)
- EXPORT_SYMBOL(kobject_set_name);
- 
- /**
-- * kobject_init - initialize a kobject structure
-+ * kobject_init() - Initialize a kobject structure.
-  * @kobj: pointer to the kobject to initialize
-  * @ktype: pointer to the ktype for this kobject.
-  *
-@@ -382,7 +382,7 @@ static __printf(3, 0) int kobject_add_varg(struct kobject *kobj,
- }
- 
- /**
-- * kobject_add - the main kobject add function
-+ * kobject_add() - The main kobject add function.
-  * @kobj: the kobject to add
-  * @parent: pointer to the parent of the kobject.
-  * @fmt: format to name the kobject with.
-@@ -430,7 +430,8 @@ int kobject_add(struct kobject *kobj, struct kobject *parent,
- EXPORT_SYMBOL(kobject_add);
- 
- /**
-- * kobject_init_and_add - initialize a kobject structure and add it to the kobject hierarchy
-+ * kobject_init_and_add() - Initialize a kobject structure and add it to
-+ *                          the kobject hierarchy.
-  * @kobj: pointer to the kobject to initialize
-  * @ktype: pointer to the ktype for this kobject.
-  * @parent: pointer to the parent of this kobject.
-@@ -457,7 +458,7 @@ int kobject_init_and_add(struct kobject *kobj, struct kobj_type *ktype,
- EXPORT_SYMBOL_GPL(kobject_init_and_add);
- 
- /**
-- * kobject_rename - change the name of an object
-+ * kobject_rename() - Change the name of an object.
-  * @kobj: object in question.
-  * @new_name: object's new name
-  *
-@@ -524,7 +525,7 @@ int kobject_rename(struct kobject *kobj, const char *new_name)
- EXPORT_SYMBOL_GPL(kobject_rename);
- 
- /**
-- * kobject_move - move object to another parent
-+ * kobject_move() - Move object to another parent.
-  * @kobj: object in question.
-  * @new_parent: object's new parent (can be NULL)
-  */
-@@ -577,7 +578,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
- EXPORT_SYMBOL_GPL(kobject_move);
- 
- /**
-- * kobject_del - unlink kobject from hierarchy.
-+ * kobject_del() - Unlink kobject from hierarchy.
-  * @kobj: object.
-  */
- void kobject_del(struct kobject *kobj)
-@@ -599,7 +600,7 @@ void kobject_del(struct kobject *kobj)
- EXPORT_SYMBOL(kobject_del);
- 
- /**
-- * kobject_get - increment refcount for object.
-+ * kobject_get() - Increment refcount for object.
-  * @kobj: object.
-  */
- struct kobject *kobject_get(struct kobject *kobj)
-@@ -692,7 +693,7 @@ static void kobject_release(struct kref *kref)
- }
- 
- /**
-- * kobject_put - decrement refcount for object.
-+ * kobject_put() - Decrement refcount for object.
-  * @kobj: object.
-  *
-  * Decrement the refcount, and if 0, call kobject_cleanup().
-@@ -721,7 +722,7 @@ static struct kobj_type dynamic_kobj_ktype = {
- };
- 
- /**
-- * kobject_create - create a struct kobject dynamically
-+ * kobject_create() - Create a struct kobject dynamically.
-  *
-  * This function creates a kobject structure dynamically and sets it up
-  * to be a "dynamic" kobject with a default release function set up.
-@@ -744,8 +745,8 @@ struct kobject *kobject_create(void)
- }
- 
- /**
-- * kobject_create_and_add - create a struct kobject dynamically and register it with sysfs
-- *
-+ * kobject_create_and_add() - Create a struct kobject dynamically and
-+ *                            register it with sysfs.
-  * @name: the name for the kobject
-  * @parent: the parent kobject of this kobject, if any.
-  *
-@@ -776,7 +777,7 @@ struct kobject *kobject_create_and_add(const char *name, struct kobject *parent)
- EXPORT_SYMBOL_GPL(kobject_create_and_add);
- 
- /**
-- * kset_init - initialize a kset for use
-+ * kset_init() - Initialize a kset for use.
-  * @k: kset
-  */
- void kset_init(struct kset *k)
-@@ -818,7 +819,7 @@ const struct sysfs_ops kobj_sysfs_ops = {
- EXPORT_SYMBOL_GPL(kobj_sysfs_ops);
- 
- /**
-- * kset_register - initialize and add a kset.
-+ * kset_register() - Initialize and add a kset.
-  * @k: kset.
-  */
- int kset_register(struct kset *k)
-@@ -838,7 +839,7 @@ int kset_register(struct kset *k)
- EXPORT_SYMBOL(kset_register);
- 
- /**
-- * kset_unregister - remove a kset.
-+ * kset_unregister() - Remove a kset.
-  * @k: kset.
-  */
- void kset_unregister(struct kset *k)
-@@ -851,7 +852,7 @@ void kset_unregister(struct kset *k)
- EXPORT_SYMBOL(kset_unregister);
- 
- /**
-- * kset_find_obj - search for object in kset.
-+ * kset_find_obj() - Search for object in kset.
-  * @kset: kset we're looking in.
-  * @name: object's name.
-  *
-@@ -899,7 +900,7 @@ static struct kobj_type kset_ktype = {
- };
- 
- /**
-- * kset_create - create a struct kset dynamically
-+ * kset_create() - Create a struct kset dynamically.
-  *
-  * @name: the name for the kset
-  * @uevent_ops: a struct kset_uevent_ops for the kset
-@@ -943,7 +944,7 @@ static struct kset *kset_create(const char *name,
- }
- 
- /**
-- * kset_create_and_add - create a struct kset dynamically and add it to sysfs
-+ * kset_create_and_add() - Create a struct kset dynamically and add it to sysfs.
-  *
-  * @name: the name for the kset
-  * @uevent_ops: a struct kset_uevent_ops for the kset
+-	if (!da7219->master)
+-		return 0;
+-
+ 	switch (bclks_per_wclk & DA7219_DAI_BCLKS_PER_WCLK_MASK) {
+ 	case DA7219_DAI_BCLKS_PER_WCLK_32:
+ 		return parent_rate * 32;
 -- 
-2.21.0
+2.20.1
 
