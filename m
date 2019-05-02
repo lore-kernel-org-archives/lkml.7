@@ -3,419 +3,892 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECE2C04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93732C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E6F2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29DA82075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="UGMfjE4I";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Dtrp7XP5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqH8TJnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfEBFCn (ORCPT
+        id S1726302AbfEBFDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 01:02:43 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:47504 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfEBFCm (ORCPT
+        Thu, 2 May 2019 01:03:31 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42143 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfEBFDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 01:02:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1556773362; x=1588309362;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=R2kn8Hnf+2huJg5eK64kcJ1VLqW+CKWjBk7vutYyrAM=;
-  b=UGMfjE4IBAM539GHlFQJe8PNh+AzO7ZT9XKI+8VO+gQ7fypwyFo9CAtI
-   DbSpETwWgYr4ZRfc1YytE0Z7fMao3D4GDxD3Yuw9nLBliM/bepIlgsNrl
-   fyn/BHk5elhpXlo8x5RcnLoGzfsYFnYvZkIin80qFGOOKWDbLHvmP2atI
-   lyiOseRMoM1cD6VhRaOa7MisrVReVAkErc6QRdNzt9gq7rBK0efu6Bf1L
-   7eGsD6lS5DSAImF58nrEYURrqVfGRni4i21VH2uYdHF8eZzLaRh19sqmH
-   WdvLEOA41Dq+DRMtbweqVBbrZGyzut32kN2z1I9oAn1nQiK7OBLL4LAWq
-   g==;
-X-IronPort-AV: E=Sophos;i="5.60,420,1549900800"; 
-   d="scan'208";a="107321542"
-Received: from mail-bn3nam04lp2053.outbound.protection.outlook.com (HELO NAM04-BN3-obe.outbound.protection.outlook.com) ([104.47.46.53])
-  by ob1.hgst.iphmx.com with ESMTP; 02 May 2019 13:02:41 +0800
+        Thu, 2 May 2019 01:03:30 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p6so495731pgh.9;
+        Wed, 01 May 2019 22:03:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R2kn8Hnf+2huJg5eK64kcJ1VLqW+CKWjBk7vutYyrAM=;
- b=Dtrp7XP5jlYPP4hw2sNbP5cV2VSDUt635njmDKxejKAXXOf3MmRu1t1iMMTKp2WEGwK4dsF0QJZVDdK0f1wb8hfrAN8WtwWAD7vUnp1ENmBjWqeHXOSXtBRCyHrNJjLg9Vj9vxknTEQv34EO8qu5LdLZgr53/memzUdKp5cXsJ4=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB5582.namprd04.prod.outlook.com (20.178.248.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Thu, 2 May 2019 05:02:39 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::c500:5fd2:9194:e38]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::c500:5fd2:9194:e38%3]) with mapi id 15.20.1835.015; Thu, 2 May 2019
- 05:02:39 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-CC:     Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v4 2/2] RISC-V: Setup initial page tables in two stages
-Thread-Topic: [PATCH v4 2/2] RISC-V: Setup initial page tables in two stages
-Thread-Index: AQHVAKRDJGtbwJU08UqZEJU5BFR/cQ==
-Date:   Thu, 2 May 2019 05:02:38 +0000
-Message-ID: <20190502050206.23373-3-anup.patel@wdc.com>
-References: <20190502050206.23373-1-anup.patel@wdc.com>
-In-Reply-To: <20190502050206.23373-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR07CA0049.namprd07.prod.outlook.com
- (2603:10b6:a03:60::26) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [129.253.179.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e497745-df5c-4622-fb8b-08d6cebb65da
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5582;
-x-ms-traffictypediagnostic: MN2PR04MB5582:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <MN2PR04MB5582F74F7CF561C44922BC5F8D340@MN2PR04MB5582.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0025434D2D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(39860400002)(396003)(346002)(189003)(199004)(5660300002)(1076003)(6436002)(486006)(305945005)(66066001)(476003)(71200400001)(71190400001)(26005)(44832011)(81156014)(86362001)(81166006)(8676002)(11346002)(102836004)(54906003)(446003)(30864003)(2171002)(25786009)(186003)(110136005)(316002)(6486002)(386003)(14444005)(50226002)(72206003)(6506007)(8936002)(53936002)(256004)(73956011)(36756003)(53946003)(76176011)(3846002)(6116002)(2906002)(4326008)(68736007)(2616005)(66946007)(99286004)(7736002)(14454004)(6512007)(478600001)(66446008)(64756008)(66556008)(66476007)(52116002)(2004002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5582;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lgO/GKn8Sr+DJMNMf3tR7j9AyD9CgtchYrR5/bL3t7uyhDKo+cijz//vbtn9UUycBRi06HVTgm4do4F4AHFZAC65BAt2gwO0ABJVVfe9UySNs4aesjmInuN/PHo8TDxNwgvVJbx1II4HOnqU5fZ4ZTuoyOjVb6Pe1nIJuxJEkSjZ5itCoHvHT2dUsgz3f4NasF02XC0Yk7WBqkVeYSWnG4hkxXTg45/fBBQIPllWnxTENnL3bp7eBWmMDHP4SqcqEy+PRyrm6Mu0Qhsh37qezDE4h79JZ0lhzSxXtajTyjHrIPi30GaAA+aF/+G8dbmVa4tigcwRKnkrX4+D/mplBsC7ACKLq2xSvXU9CRrlC6y3pRTSswVCLkS5XmrVyDXclnuESy0TqzmiTB/EbSSg94VX/RpwmffzFtscpfFKYCc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R/OamYJfKXCvyfOrUN0sAGyJojFI5qavANDaDGLXqTs=;
+        b=iqH8TJnJdJnddTSGZJbmT8Hgu706e9auL2TTGCoX/1U9n+wSXPLllzXZqm4DhnUcun
+         OrN4sV4e+1sAshz5eBWMzHxiY5xRHFDp0KAmjouWu+wt2kWKO40t4E2lRh9g3jVwh/EY
+         IWaekaciOLPNVHMaUu424IyzzLnxYFJ0mjlyYxyU49Z0B1dQlJwxE6jisbWpqx7jFJc4
+         DQGWd6JjTrWl6LF9EwH3pa/RJFJXT6sjy492lL4aJYLkOQuO1jezByvv4U0BifgbSjeS
+         U2j/3vgSteHm1/7mVnxxolYKSrmR5BOHSozLXrcixg2MCmpb/ImdOEhE8jnwQN+2+mvO
+         vQhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R/OamYJfKXCvyfOrUN0sAGyJojFI5qavANDaDGLXqTs=;
+        b=OyOT+wqDhSEy9d2OL2peRklu00AFZo1JL7BSBWDpLuPcnFMe470mO3YvXnoyoYjjC0
+         NuVd8qc7c8zrVwxA8LHdo9H2sDlFzVF/8fUfHK3j2zgEcMZfqsxjsrewfhAgZFY8XDe7
+         gwjXxbvWmv8J3e9uQZ5635zr2d1zA9BHPSPHXhLWloP883l9k7BRvAaw4sagTZSV7dIk
+         XIH2pI3wtcy/QMXwoABPoRQolbz9n+kqZSWUBVzTBdjSGJgVI+RIFHwOSHSO6UwU0WIS
+         wHB6QZu6MHUozW6nLFJWyGgrLiQ3aKJJzHKlq2dzboWDQkBlopZ0PD2CbWjeY9mzoCPk
+         ox8g==
+X-Gm-Message-State: APjAAAW3YTZgpPgqvs4bNK9m9wRtQkE+/WPyYBo3rptheIUrgF+z+RGd
+        +oSvx99JdzCQFZG6gf6iq6w=
+X-Google-Smtp-Source: APXvYqyxW+CwGsii+rBGTpLFNbviIdlihTS29F5xf6F6oAYuxv/4A4syav7YnGSHhpiqLPHVdUIgkQ==
+X-Received: by 2002:a63:1462:: with SMTP id 34mr1774813pgu.155.1556773409043;
+        Wed, 01 May 2019 22:03:29 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id 15sm14191887pfy.88.2019.05.01.22.03.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 22:03:28 -0700 (PDT)
+Date:   Thu, 2 May 2019 13:03:17 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/27] Documentation: x86: convert mtrr.txt to reST
+Message-ID: <20190502050314.oy742o7lobpfpl4a@mail.google.com>
+References: <20190426153150.21228-1-changbin.du@gmail.com>
+ <20190426153150.21228-11-changbin.du@gmail.com>
+ <20190427143213.3c0d2286@coco.lan>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e497745-df5c-4622-fb8b-08d6cebb65da
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 05:02:38.8774
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5582
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190427143213.3c0d2286@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q3VycmVudGx5LCB0aGUgc2V0dXBfdm0oKSBkb2VzIGluaXRpYWwgcGFnZSB0YWJsZSBzZXR1cCBp
-biBvbmUtc2hvdA0KdmVyeSBlYXJseSBiZWZvcmUgZW5hYmxpbmcgTU1VLiBEdWUgdG8gdGhpcywg
-dGhlIHNldHVwX3ZtKCkgaGFzIHRvIG1hcA0KYWxsIHBvc3NpYmxlIGtlcm5lbCB2aXJ0dWFsIGFk
-ZHJlc3NlcyBzaW5jZSBpdCBkb2VzIG5vdCBrbm93IHNpemUgYW5kDQpsb2NhdGlvbiBvZiBSQU0u
-IFRoaXMgbWVhbnMgd2UgaGF2ZSBrZXJuZWwgbWFwcGluZ3MgZm9yIG5vbi1leGlzdGVudA0KUkFN
-IGFuZCBhbnkgYnVnZ3kgZHJpdmVyIChvciBrZXJuZWwpIGNvZGUgZG9pbmcgb3V0LW9mLWJvdW5k
-IGFjY2Vzcw0KdG8gUkFNIHdpbGwgbm90IGZhdWx0IGFuZCBjYXVzZSB1bmRlcnRlcm1pbmlzdGlj
-IGJlaGF2aW91ci4NCg0KRnVydGhlciwgdGhlIHNldHVwX3ZtKCkgY3JlYXRlcyBQTUQgbWFwcGlu
-Z3MgKGkuZS4gMk0gbWFwcGluZ3MpIGZvcg0KUlY2NCBzeXN0ZW1zLiBUaGlzIG1lYW5zIGZvciBQ
-QUdFX09GRlNFVD0weGZmZmZmZmUwMDAwMDAwMDAgKGkuZS4NCk1BWFBIWVNNRU1fMTI4R0I9eSks
-IHRoZSBzZXR1cF92bSgpIHdpbGwgcmVxdWlyZSAxMjkgcGFnZXMgKGkuZS4NCjUxNiBLQikgb2Yg
-bWVtb3J5IGZvciBpbml0aWFsIHBhZ2UgdGFibGVzIHdoaWNoIGlzIG5ldmVyIGZyZWVkLiBUaGUN
-Cm1lbW9yeSByZXF1aXJlZCBmb3IgaW5pdGlhbCBwYWdlIHRhYmxlcyB3aWxsIGZ1cnRoZXIgaW5j
-cmVhc2UgaWYNCndlIGNob3NlIGEgbG93ZXIgdmFsdWUgb2YgUEFHRV9PRkZTRVQgKGUuZy4gMHhm
-ZmZmZmYwMDAwMDAwMDAwKQ0KDQpUaGlzIHBhdGNoIGltcGxlbWVudHMgdHdvLXN0YWdlZCBpbml0
-aWFsIHBhZ2UgdGFibGUgc2V0dXAsIGFzIGZvbGxvd3M6DQoxLiBFYXJseSAoaS5lLiBzZXR1cF92
-bSgpKTogVGhpcyBzdGFnZSBtYXBzIGtlcm5lbCBpbWFnZSBhbmQgRFRCIGluDQphIGVhcmx5IHBh
-Z2UgdGFibGUgKGkuZS4gZWFybHlfcGdfZGlyKS4gVGhlIGVhcmx5X3BnX2RpciB3aWxsIGJlIHVz
-ZWQNCm9ubHkgYnkgYm9vdCBIQVJUIHNvIGl0IGNhbiBiZSBmcmVlZCBhcy1wYXJ0IG9mIGluaXQg
-bWVtb3J5IGZyZWUtdXAuDQoyLiBGaW5hbCAoaS5lLiBzZXR1cF92bV9maW5hbCgpKTogVGhpcyBz
-dGFnZSBtYXBzIGFsbCBwb3NzaWJsZSBSQU0NCmJhbmtzIGluIHRoZSBmaW5hbCBwYWdlIHRhYmxl
-IChpLmUuIHN3YXBwZXJfcGdfZGlyKS4gVGhlIGJvb3QgSEFSVA0Kd2lsbCBzdGFydCB1c2luZyBz
-d2FwcGVyX3BnX2RpciBhdCB0aGUgZW5kIG9mIHNldHVwX3ZtX2ZpbmFsKCkuIEFsbA0Kbm9uLWJv
-b3QgSEFSVHMgZGlyZWN0bHkgdXNlIHRoZSBzd2FwcGVyX3BnX2RpciBjcmVhdGVkIGJ5IGJvb3Qg
-SEFSVC4NCg0KV2UgaGF2ZSBmb2xsb3dpbmcgYWR2YW50YWdlcyB3aXRoIHRoaXMgbmV3IGFwcHJv
-YWNoOg0KMS4gS2VybmVsIG1hcHBpbmdzIGZvciBub24tZXhpc3RlbnQgUkFNIGRvbid0IGV4aXN0
-cyBhbnltb3JlLg0KMi4gTWVtb3J5IGNvbnN1bWVkIGJ5IGluaXRpYWwgcGFnZSB0YWJsZXMgaXMg
-bm93IGluZHBlbmRlbnQgb2YgdGhlDQpjaG9zZW4gUEFHRV9PRkZTRVQuDQozLiBNZW1vcnkgY29u
-c3VtZWQgYnkgaW5pdGlhbCBwYWdlIHRhYmxlcyBvbiBSVjY0IHN5c3RlbSBpcyAyIHBhZ2VzDQoo
-aS5lLiA4IEtCKSB3aGljaCBoYXMgc2lnbmlmaWNhbnRseSByZWR1Y2VkIGFuZCB0aGVzZSBwYWdl
-cyB3aWxsIGJlDQpmcmVlZCBhcy1wYXJ0IG9mIHRoZSBpbml0IG1lbW9yeSBmcmVlLXVwLg0KDQpU
-aGUgcGF0Y2ggYWxzbyBwcm92aWRlcyBhIGZvdW5kYXRpb24gZm9yIGltcGxlbWVudGluZyBzdHJp
-Y3Qga2VybmVsDQptYXBwaW5ncyB3aGVyZSB3ZSBwcm90ZWN0IGtlcm5lbCB0ZXh0IGFuZCByb2Rh
-dGEgdXNpbmcgUFRFIHBlcm1pc3Npb25zLg0KDQpTdWdnZXN0ZWQtYnk6IE1pa2UgUmFwb3BvcnQg
-PHJwcHRAbGludXguaWJtLmNvbT4NClNpZ25lZC1vZmYtYnk6IEFudXAgUGF0ZWwgPGFudXAucGF0
-ZWxAd2RjLmNvbT4NCi0tLQ0KIGFyY2gvcmlzY3YvaW5jbHVkZS9hc20vZml4bWFwLmggICAgIHwg
-ICA1ICsNCiBhcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL3BndGFibGUtNjQuaCB8ICAgNSArDQogYXJj
-aC9yaXNjdi9pbmNsdWRlL2FzbS9wZ3RhYmxlLmggICAgfCAgIDcgKw0KIGFyY2gvcmlzY3Yva2Vy
-bmVsL2hlYWQuUyAgICAgICAgICAgIHwgIDE3ICstDQogYXJjaC9yaXNjdi9rZXJuZWwvc2V0dXAu
-YyAgICAgICAgICAgfCAgIDQgKy0NCiBhcmNoL3Jpc2N2L21tL2luaXQuYyAgICAgICAgICAgICAg
-ICB8IDMxMyArKysrKysrKysrKysrKysrKysrKysrLS0tLS0tDQogNiBmaWxlcyBjaGFuZ2VkLCAy
-ODIgaW5zZXJ0aW9ucygrKSwgNjkgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9hcmNoL3Jp
-c2N2L2luY2x1ZGUvYXNtL2ZpeG1hcC5oIGIvYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9maXhtYXAu
-aA0KaW5kZXggYzIwN2Y2NjM0YjkxLi45YzY2MDMzYzNhNTQgMTAwNjQ0DQotLS0gYS9hcmNoL3Jp
-c2N2L2luY2x1ZGUvYXNtL2ZpeG1hcC5oDQorKysgYi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2Zp
-eG1hcC5oDQpAQCAtMjEsNiArMjEsMTEgQEANCiAgKi8NCiBlbnVtIGZpeGVkX2FkZHJlc3NlcyB7
-DQogCUZJWF9IT0xFLA0KKyNkZWZpbmUgRklYX0ZEVF9TSVpFCVNaXzFNDQorCUZJWF9GRFRfRU5E
-LA0KKwlGSVhfRkRUID0gRklYX0ZEVF9FTkQgKyBGSVhfRkRUX1NJWkUgLyBQQUdFX1NJWkUgLSAx
-LA0KKwlGSVhfUFRFLA0KKwlGSVhfUE1ELA0KIAlGSVhfRUFSTFlDT05fTUVNX0JBU0UsDQogCV9f
-ZW5kX29mX2ZpeGVkX2FkZHJlc3Nlcw0KIH07DQpkaWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9pbmNs
-dWRlL2FzbS9wZ3RhYmxlLTY0LmggYi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL3BndGFibGUtNjQu
-aA0KaW5kZXggN2FhMGVhOWJkOGJiLi41NmVjYzNkYzkzOWQgMTAwNjQ0DQotLS0gYS9hcmNoL3Jp
-c2N2L2luY2x1ZGUvYXNtL3BndGFibGUtNjQuaA0KKysrIGIvYXJjaC9yaXNjdi9pbmNsdWRlL2Fz
-bS9wZ3RhYmxlLTY0LmgNCkBAIC03OCw2ICs3OCwxMSBAQCBzdGF0aWMgaW5saW5lIHBtZF90IHBm
-bl9wbWQodW5zaWduZWQgbG9uZyBwZm4sIHBncHJvdF90IHByb3QpDQogCXJldHVybiBfX3BtZCgo
-cGZuIDw8IF9QQUdFX1BGTl9TSElGVCkgfCBwZ3Byb3RfdmFsKHByb3QpKTsNCiB9DQogDQorc3Rh
-dGljIGlubGluZSB1bnNpZ25lZCBsb25nIF9wbWRfcGZuKHBtZF90IHBtZCkNCit7DQorCXJldHVy
-biBwbWRfdmFsKHBtZCkgPj4gX1BBR0VfUEZOX1NISUZUOw0KK30NCisNCiAjZGVmaW5lIHBtZF9F
-UlJPUihlKSBcDQogCXByX2VycigiJXM6JWQ6IGJhZCBwbWQgJTAxNmx4LlxuIiwgX19GSUxFX18s
-IF9fTElORV9fLCBwbWRfdmFsKGUpKQ0KIA0KZGlmZiAtLWdpdCBhL2FyY2gvcmlzY3YvaW5jbHVk
-ZS9hc20vcGd0YWJsZS5oIGIvYXJjaC9yaXNjdi9pbmNsdWRlL2FzbS9wZ3RhYmxlLmgNCmluZGV4
-IDExNDEzNjRkOTkwZS4uM2RmZTdiYTk1YWNiIDEwMDY0NA0KLS0tIGEvYXJjaC9yaXNjdi9pbmNs
-dWRlL2FzbS9wZ3RhYmxlLmgNCisrKyBiL2FyY2gvcmlzY3YvaW5jbHVkZS9hc20vcGd0YWJsZS5o
-DQpAQCAtNjcsNiArNjcsOCBAQA0KICNkZWZpbmUgUEFHRV9LRVJORUwJCV9fcGdwcm90KF9QQUdF
-X0tFUk5FTCkNCiAjZGVmaW5lIFBBR0VfS0VSTkVMX0VYRUMJX19wZ3Byb3QoX1BBR0VfS0VSTkVM
-IHwgX1BBR0VfRVhFQykNCiANCisjZGVmaW5lIFBBR0VfVEFCTEUJCV9fcGdwcm90KF9QQUdFX1RB
-QkxFKQ0KKw0KIGV4dGVybiBwZ2RfdCBzd2FwcGVyX3BnX2RpcltdOw0KIA0KIC8qIE1BUF9QUklW
-QVRFIHBlcm1pc3Npb25zOiB4d3IgKGNvcHktb24td3JpdGUpICovDQpAQCAtMTI3LDYgKzEyOSwx
-MSBAQCBzdGF0aWMgaW5saW5lIHBnZF90IHBmbl9wZ2QodW5zaWduZWQgbG9uZyBwZm4sIHBncHJv
-dF90IHByb3QpDQogCXJldHVybiBfX3BnZCgocGZuIDw8IF9QQUdFX1BGTl9TSElGVCkgfCBwZ3By
-b3RfdmFsKHByb3QpKTsNCiB9DQogDQorc3RhdGljIGlubGluZSB1bnNpZ25lZCBsb25nIF9wZ2Rf
-cGZuKHBnZF90IHBnZCkNCit7DQorCXJldHVybiBwZ2RfdmFsKHBnZCkgPj4gX1BBR0VfUEZOX1NI
-SUZUOw0KK30NCisNCiAjZGVmaW5lIHBnZF9pbmRleChhZGRyKSAoKChhZGRyKSA+PiBQR0RJUl9T
-SElGVCkgJiAoUFRSU19QRVJfUEdEIC0gMSkpDQogDQogLyogTG9jYXRlIGFuIGVudHJ5IGluIHRo
-ZSBwYWdlIGdsb2JhbCBkaXJlY3RvcnkgKi8NCmRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2tlcm5l
-bC9oZWFkLlMgYi9hcmNoL3Jpc2N2L2tlcm5lbC9oZWFkLlMNCmluZGV4IGZlODg0Y2Q2OWFiZC4u
-Zjk0Zjg5YmMzMjFmIDEwMDY0NA0KLS0tIGEvYXJjaC9yaXNjdi9rZXJuZWwvaGVhZC5TDQorKysg
-Yi9hcmNoL3Jpc2N2L2tlcm5lbC9oZWFkLlMNCkBAIC02Miw3ICs2Miw5IEBAIGNsZWFyX2Jzc19k
-b25lOg0KIA0KIAkvKiBJbml0aWFsaXplIHBhZ2UgdGFibGVzIGFuZCByZWxvY2F0ZSB0byB2aXJ0
-dWFsIGFkZHJlc3NlcyAqLw0KIAlsYSBzcCwgaW5pdF90aHJlYWRfdW5pb24gKyBUSFJFQURfU0la
-RQ0KKwltdiBhMCwgczENCiAJY2FsbCBzZXR1cF92bQ0KKwlsYSBhMCwgZWFybHlfcGdfZGlyDQog
-CWNhbGwgcmVsb2NhdGUNCiANCiAJLyogUmVzdG9yZSBDIGVudmlyb25tZW50ICovDQpAQCAtODIs
-MTggKzg0LDE3IEBAIGNsZWFyX2Jzc19kb25lOg0KIHJlbG9jYXRlOg0KIAkvKiBSZWxvY2F0ZSBy
-ZXR1cm4gYWRkcmVzcyAqLw0KIAlsaSBhMSwgUEFHRV9PRkZTRVQNCi0JbGEgYTAsIF9zdGFydA0K
-LQlzdWIgYTEsIGExLCBhMA0KKwlsYSBhMiwgX3N0YXJ0DQorCXN1YiBhMSwgYTEsIGEyDQogCWFk
-ZCByYSwgcmEsIGExDQogDQogCS8qIFBvaW50IHN0dmVjIHRvIHZpcnR1YWwgYWRkcmVzcyBvZiBp
-bnRydWN0aW9uIGFmdGVyIHNhdHAgd3JpdGUgKi8NCi0JbGEgYTAsIDFmDQotCWFkZCBhMCwgYTAs
-IGExDQotCWNzcncgc3R2ZWMsIGEwDQorCWxhIGEyLCAxZg0KKwlhZGQgYTIsIGEyLCBhMQ0KKwlj
-c3J3IHN0dmVjLCBhMg0KIA0KIAkvKiBDb21wdXRlIHNhdHAgZm9yIGtlcm5lbCBwYWdlIHRhYmxl
-cywgYnV0IGRvbid0IGxvYWQgaXQgeWV0ICovDQotCWxhIGEyLCBzd2FwcGVyX3BnX2Rpcg0KLQlz
-cmwgYTIsIGEyLCBQQUdFX1NISUZUDQorCXNybCBhMiwgYTAsIFBBR0VfU0hJRlQNCiAJbGkgYTEs
-IFNBVFBfTU9ERQ0KIAlvciBhMiwgYTIsIGExDQogDQpAQCAtMTIwLDYgKzEyMSw3IEBAIHJlbG9j
-YXRlOg0KIA0KIAkvKiBTd2l0Y2ggdG8ga2VybmVsIHBhZ2UgdGFibGVzICovDQogCWNzcncgc3B0
-YnIsIGEyDQorCXNmZW5jZS52bWENCiANCiAJcmV0DQogDQpAQCAtMTUxLDYgKzE1Myw3IEBAIHJl
-bG9jYXRlOg0KIAlmZW5jZQ0KIA0KIAkvKiBFbmFibGUgdmlydHVhbCBtZW1vcnkgYW5kIHJlbG9j
-YXRlIHRvIHZpcnR1YWwgYWRkcmVzcyAqLw0KKwlsYSBhMCwgc3dhcHBlcl9wZ19kaXINCiAJY2Fs
-bCByZWxvY2F0ZQ0KIA0KIAl0YWlsIHNtcF9jYWxsaW4NCmRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2
-L2tlcm5lbC9zZXR1cC5jIGIvYXJjaC9yaXNjdi9rZXJuZWwvc2V0dXAuYw0KaW5kZXggNTQwYTMz
-MWQxMzc2Li43OTY3MDQ1ODUyN2QgMTAwNjQ0DQotLS0gYS9hcmNoL3Jpc2N2L2tlcm5lbC9zZXR1
-cC5jDQorKysgYi9hcmNoL3Jpc2N2L2tlcm5lbC9zZXR1cC5jDQpAQCAtMzAsNiArMzAsNyBAQA0K
-ICNpbmNsdWRlIDxsaW51eC9zY2hlZC90YXNrLmg+DQogI2luY2x1ZGUgPGxpbnV4L3N3aW90bGIu
-aD4NCiANCisjaW5jbHVkZSA8YXNtL2ZpeG1hcC5oPg0KICNpbmNsdWRlIDxhc20vc2V0dXAuaD4N
-CiAjaW5jbHVkZSA8YXNtL3NlY3Rpb25zLmg+DQogI2luY2x1ZGUgPGFzbS9wZ3RhYmxlLmg+DQpA
-QCAtNTQsNyArNTUsOCBAQCB1bnNpZ25lZCBsb25nIGJvb3RfY3B1X2hhcnRpZDsNCiANCiB2b2lk
-IF9faW5pdCBwYXJzZV9kdGIodW5zaWduZWQgaW50IGhhcnRpZCwgdm9pZCAqZHRiKQ0KIHsNCi0J
-aWYgKGVhcmx5X2luaXRfZHRfc2NhbihfX3ZhKGR0YikpKQ0KKwlkdGIgPSAodm9pZCAqKWZpeF90
-b192aXJ0KEZJWF9GRFQpICsgKCh1aW50cHRyX3QpZHRiICYgflBBR0VfTUFTSyk7DQorCWlmIChl
-YXJseV9pbml0X2R0X3NjYW4oZHRiKSkNCiAJCXJldHVybjsNCiANCiAJcHJfZXJyKCJObyBEVEIg
-cGFzc2VkIHRvIHRoZSBrZXJuZWxcbiIpOw0KZGlmZiAtLWdpdCBhL2FyY2gvcmlzY3YvbW0vaW5p
-dC5jIGIvYXJjaC9yaXNjdi9tbS9pbml0LmMNCmluZGV4IGFiMTc1YjY1NTkzMy4uNDIyMDc0M2M0
-OWM1IDEwMDY0NA0KLS0tIGEvYXJjaC9yaXNjdi9tbS9pbml0LmMNCisrKyBiL2FyY2gvcmlzY3Yv
-bW0vaW5pdC5jDQpAQCAtMSwxNCArMSw3IEBADQorLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
-IEdQTC0yLjAgKi8NCiAvKg0KICAqIENvcHlyaWdodCAoQykgMjAxMiBSZWdlbnRzIG9mIHRoZSBV
-bml2ZXJzaXR5IG9mIENhbGlmb3JuaWENCi0gKg0KLSAqICAgVGhpcyBwcm9ncmFtIGlzIGZyZWUg
-c29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcg0KLSAqICAgbW9kaWZ5IGl0
-IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UNCi0gKiAg
-IGFzIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLCB2ZXJzaW9uIDIu
-DQotICoNCi0gKiAgIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0
-IGl0IHdpbGwgYmUgdXNlZnVsLA0KLSAqICAgYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRo
-b3V0IGV2ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YNCi0gKiAgIE1FUkNIQU5UQUJJTElUWSBv
-ciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUNCi0gKiAgIEdOVSBH
-ZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuDQorICogQ29weXJpZ2h0IChD
-KSAyMDE5IFdlc3Rlcm4gRGlnaXRhbCBDb3Jwb3JhdGlvbiBvciBpdHMgYWZmaWxpYXRlcy4NCiAg
-Ki8NCiANCiAjaW5jbHVkZSA8bGludXgvaW5pdC5oPg0KQEAgLTQ5LDEzICs0Miw2IEBAIHZvaWQg
-c2V0dXBfemVyb19wYWdlKHZvaWQpDQogCW1lbXNldCgodm9pZCAqKWVtcHR5X3plcm9fcGFnZSwg
-MCwgUEFHRV9TSVpFKTsNCiB9DQogDQotdm9pZCBfX2luaXQgcGFnaW5nX2luaXQodm9pZCkNCi17
-DQotCXNldHVwX3plcm9fcGFnZSgpOw0KLQlsb2NhbF9mbHVzaF90bGJfYWxsKCk7DQotCXpvbmVf
-c2l6ZXNfaW5pdCgpOw0KLX0NCi0NCiB2b2lkIF9faW5pdCBtZW1faW5pdCh2b2lkKQ0KIHsNCiAj
-aWZkZWYgQ09ORklHX0ZMQVRNRU0NCkBAIC0xNjIsMTYgKzE0OCwxMyBAQCB1bnNpZ25lZCBsb25n
-IHBmbl9iYXNlOw0KIEVYUE9SVF9TWU1CT0wocGZuX2Jhc2UpOw0KIA0KIHBnZF90IHN3YXBwZXJf
-cGdfZGlyW1BUUlNfUEVSX1BHRF0gX19wYWdlX2FsaWduZWRfYnNzOw0KLXBnZF90IHRyYW1wb2xp
-bmVfcGdfZGlyW1BUUlNfUEVSX1BHRF0gX19pbml0ZGF0YSBfX2FsaWduZWQoUEFHRV9TSVpFKTsN
-CitwZ2RfdCB0cmFtcG9saW5lX3BnX2RpcltQVFJTX1BFUl9QR0RdIF9fcGFnZV9hbGlnbmVkX2Jz
-czsNCitwdGVfdCBmaXhtYXBfcHRlW1BUUlNfUEVSX1BURV0gX19wYWdlX2FsaWduZWRfYnNzOw0K
-K3N0YXRpYyBib29sIG1tdV9lbmFibGVkOw0KIA0KLSNpZm5kZWYgX19QQUdFVEFCTEVfUE1EX0ZP
-TERFRA0KLSNkZWZpbmUgTlVNX1NXQVBQRVJfUE1EUyAoKHVpbnRwdHJfdCktUEFHRV9PRkZTRVQg
-Pj4gUEdESVJfU0hJRlQpDQotcG1kX3Qgc3dhcHBlcl9wbWRbUFRSU19QRVJfUE1EKigoLVBBR0Vf
-T0ZGU0VUKS9QR0RJUl9TSVpFKV0gX19wYWdlX2FsaWduZWRfYnNzOw0KLXBtZF90IHRyYW1wb2xp
-bmVfcG1kW1BUUlNfUEVSX1BHRF0gX19pbml0ZGF0YSBfX2FsaWduZWQoUEFHRV9TSVpFKTsNCi1w
-bWRfdCBmaXhtYXBfcG1kW1BUUlNfUEVSX1BNRF0gX19wYWdlX2FsaWduZWRfYnNzOw0KLSNlbmRp
-Zg0KKyNkZWZpbmUgTUFYX0VBUkxZX01BUFBJTkdfU0laRQlTWl8xMjhNDQogDQotcHRlX3QgZml4
-bWFwX3B0ZVtQVFJTX1BFUl9QVEVdIF9fcGFnZV9hbGlnbmVkX2JzczsNCitwZ2RfdCBlYXJseV9w
-Z19kaXJbUFRSU19QRVJfUEdEXSBfX2luaXRkYXRhIF9fYWxpZ25lZChQQUdFX1NJWkUpOw0KIA0K
-IHZvaWQgX19zZXRfZml4bWFwKGVudW0gZml4ZWRfYWRkcmVzc2VzIGlkeCwgcGh5c19hZGRyX3Qg
-cGh5cywgcGdwcm90X3QgcHJvdCkNCiB7DQpAQCAtMTkwLDYgKzE3MywxNTYgQEAgdm9pZCBfX3Nl
-dF9maXhtYXAoZW51bSBmaXhlZF9hZGRyZXNzZXMgaWR4LCBwaHlzX2FkZHJfdCBwaHlzLCBwZ3By
-b3RfdCBwcm90KQ0KIAl9DQogfQ0KIA0KK3N0YXRpYyBwdGVfdCAqX19pbml0IGdldF9wdGVfdmly
-dChwaHlzX2FkZHJfdCBwYSkNCit7DQorCWlmIChtbXVfZW5hYmxlZCkgew0KKwkJY2xlYXJfZml4
-bWFwKEZJWF9QVEUpOw0KKwkJcmV0dXJuIChwdGVfdCAqKXNldF9maXhtYXBfb2Zmc2V0KEZJWF9Q
-VEUsIHBhKTsNCisJfSBlbHNlIHsNCisJCXJldHVybiAocHRlX3QgKikoKHVpbnRwdHJfdClwYSk7
-DQorCX0NCit9DQorDQorc3RhdGljIHBoeXNfYWRkcl90IF9faW5pdCBhbGxvY19wdGUodWludHB0
-cl90IHZhKQ0KK3sNCisJLyoNCisJICogV2Ugb25seSBjcmVhdGUgUE1EIG9yIFBHRCBlYXJseSBt
-YXBwaW5ncyBzbyB3ZQ0KKwkgKiBzaG91bGQgbmV2ZXIgcmVhY2ggaGVyZSB3aXRoIE1NVSBkaXNh
-YmxlZC4NCisJICovDQorCUJVR19PTighbW11X2VuYWJsZWQpOw0KKw0KKwlyZXR1cm4gbWVtYmxv
-Y2tfcGh5c19hbGxvYyhQQUdFX1NJWkUsIFBBR0VfU0laRSk7DQorfQ0KKw0KK3N0YXRpYyB2b2lk
-IF9faW5pdCBjcmVhdGVfcHRlX21hcHBpbmcocHRlX3QgKnB0ZXAsDQorCQkJCSAgICAgIHVpbnRw
-dHJfdCB2YSwgcGh5c19hZGRyX3QgcGEsDQorCQkJCSAgICAgIHBoeXNfYWRkcl90IHN6LCBwZ3By
-b3RfdCBwcm90KQ0KK3sNCisJdWludHB0cl90IHB0ZV9pbmRleCA9IHB0ZV9pbmRleCh2YSk7DQor
-DQorCUJVR19PTihzeiAhPSBQQUdFX1NJWkUpOw0KKw0KKwlpZiAocHRlX25vbmUocHRlcFtwdGVf
-aW5kZXhdKSkNCisJCXB0ZXBbcHRlX2luZGV4XSA9IHBmbl9wdGUoUEZOX0RPV04ocGEpLCBwcm90
-KTsNCit9DQorDQorI2lmbmRlZiBfX1BBR0VUQUJMRV9QTURfRk9MREVEDQorDQorcG1kX3QgdHJh
-bXBvbGluZV9wbWRbUFRSU19QRVJfUE1EXSBfX3BhZ2VfYWxpZ25lZF9ic3M7DQorcG1kX3QgZml4
-bWFwX3BtZFtQVFJTX1BFUl9QTURdIF9fcGFnZV9hbGlnbmVkX2JzczsNCisNCisjaWYgTUFYX0VB
-UkxZX01BUFBJTkdfU0laRSA8IFBHRElSX1NJWkUNCisjZGVmaW5lIE5VTV9FQVJMWV9QTURTCQkx
-VUwNCisjZWxzZQ0KKyNkZWZpbmUgTlVNX0VBUkxZX1BNRFMJCSgxVUwgKyBNQVhfRUFSTFlfTUFQ
-UElOR19TSVpFIC8gUEdESVJfU0laRSkNCisjZW5kaWYNCitwbWRfdCBlYXJseV9wbWRbUFRSU19Q
-RVJfUE1EKk5VTV9FQVJMWV9QTURTXSBfX2luaXRkYXRhIF9fYWxpZ25lZChQQUdFX1NJWkUpOw0K
-Kw0KK3N0YXRpYyBwbWRfdCAqX19pbml0IGdldF9wbWRfdmlydChwaHlzX2FkZHJfdCBwYSkNCit7
-DQorCWlmIChtbXVfZW5hYmxlZCkgew0KKwkJY2xlYXJfZml4bWFwKEZJWF9QTUQpOw0KKwkJcmV0
-dXJuIChwbWRfdCAqKXNldF9maXhtYXBfb2Zmc2V0KEZJWF9QTUQsIHBhKTsNCisJfSBlbHNlIHsN
-CisJCXJldHVybiAocG1kX3QgKikoKHVpbnRwdHJfdClwYSk7DQorCX0NCit9DQorDQorc3RhdGlj
-IHBoeXNfYWRkcl90IF9faW5pdCBhbGxvY19wbWQodWludHB0cl90IHZhKQ0KK3sNCisJdWludHB0
-cl90IHBtZF9udW07DQorDQorCWlmIChtbXVfZW5hYmxlZCkNCisJCXJldHVybiBtZW1ibG9ja19w
-aHlzX2FsbG9jKFBBR0VfU0laRSwgUEFHRV9TSVpFKTsNCisNCisJcG1kX251bSA9ICh2YSAtIFBB
-R0VfT0ZGU0VUKSA+PiBQR0RJUl9TSElGVDsNCisJQlVHX09OKHBtZF9udW0gPj0gTlVNX0VBUkxZ
-X1BNRFMpOw0KKwlyZXR1cm4gKHVpbnRwdHJfdCkmZWFybHlfcG1kW3BtZF9udW0gKiBQVFJTX1BF
-Ul9QTURdOw0KK30NCisNCitzdGF0aWMgdm9pZCBfX2luaXQgY3JlYXRlX3BtZF9tYXBwaW5nKHBt
-ZF90ICpwbWRwLA0KKwkJCQkgICAgICB1aW50cHRyX3QgdmEsIHBoeXNfYWRkcl90IHBhLA0KKwkJ
-CQkgICAgICBwaHlzX2FkZHJfdCBzeiwgcGdwcm90X3QgcHJvdCkNCit7DQorCXB0ZV90ICpwdGVw
-Ow0KKwlwaHlzX2FkZHJfdCBwdGVfcGh5czsNCisJdWludHB0cl90IHBtZF9pbmRleCA9IHBtZF9p
-bmRleCh2YSk7DQorDQorCWlmIChzeiA9PSBQTURfU0laRSkgew0KKwkJaWYgKHBtZF9ub25lKHBt
-ZHBbcG1kX2luZGV4XSkpDQorCQkJcG1kcFtwbWRfaW5kZXhdID0gcGZuX3BtZChQRk5fRE9XTihw
-YSksIHByb3QpOw0KKwkJcmV0dXJuOw0KKwl9DQorDQorCWlmIChwbWRfbm9uZShwbWRwW3BtZF9p
-bmRleF0pKSB7DQorCQlwdGVfcGh5cyA9IGFsbG9jX3B0ZSh2YSk7DQorCQlwbWRwW3BtZF9pbmRl
-eF0gPSBwZm5fcG1kKFBGTl9ET1dOKHB0ZV9waHlzKSwgUEFHRV9UQUJMRSk7DQorCQlwdGVwID0g
-Z2V0X3B0ZV92aXJ0KHB0ZV9waHlzKTsNCisJCW1lbXNldChwdGVwLCAwLCBQQUdFX1NJWkUpOw0K
-Kwl9IGVsc2Ugew0KKwkJcHRlX3BoeXMgPSBQRk5fUEhZUyhfcG1kX3BmbihwbWRwW3BtZF9pbmRl
-eF0pKTsNCisJCXB0ZXAgPSBnZXRfcHRlX3ZpcnQocHRlX3BoeXMpOw0KKwl9DQorDQorCWNyZWF0
-ZV9wdGVfbWFwcGluZyhwdGVwLCB2YSwgcGEsIHN6LCBwcm90KTsNCit9DQorDQorI2RlZmluZSBw
-Z2RfbmV4dF90CQlwbWRfdA0KKyNkZWZpbmUgYWxsb2NfcGdkX25leHQoX192YSkJYWxsb2NfcG1k
-KF9fdmEpDQorI2RlZmluZSBnZXRfcGdkX25leHRfdmlydChfX3BhKQlnZXRfcG1kX3ZpcnQoX19w
-YSkNCisjZGVmaW5lIGNyZWF0ZV9wZ2RfbmV4dF9tYXBwaW5nKF9fbmV4dHAsIF9fdmEsIF9fcGEs
-IF9fc3osIF9fcHJvdCkJXA0KKwljcmVhdGVfcG1kX21hcHBpbmcoX19uZXh0cCwgX192YSwgX19w
-YSwgX19zeiwgX19wcm90KQ0KKyNkZWZpbmUgUFRFX1BBUkVOVF9TSVpFCQlQTURfU0laRQ0KKyNk
-ZWZpbmUgZml4bWFwX3BnZF9uZXh0CQlmaXhtYXBfcG1kDQorI2Vsc2UNCisjZGVmaW5lIHBnZF9u
-ZXh0X3QJCXB0ZV90DQorI2RlZmluZSBhbGxvY19wZ2RfbmV4dChfX3ZhKQlhbGxvY19wdGUoX192
-YSkNCisjZGVmaW5lIGdldF9wZ2RfbmV4dF92aXJ0KF9fcGEpCWdldF9wdGVfdmlydChfX3BhKQ0K
-KyNkZWZpbmUgY3JlYXRlX3BnZF9uZXh0X21hcHBpbmcoX19uZXh0cCwgX192YSwgX19wYSwgX19z
-eiwgX19wcm90KQlcDQorCWNyZWF0ZV9wdGVfbWFwcGluZyhfX25leHRwLCBfX3ZhLCBfX3BhLCBf
-X3N6LCBfX3Byb3QpDQorI2RlZmluZSBQVEVfUEFSRU5UX1NJWkUJCVBHRElSX1NJWkUNCisjZGVm
-aW5lIGZpeG1hcF9wZ2RfbmV4dAkJZml4bWFwX3B0ZQ0KKyNlbmRpZg0KKw0KK3N0YXRpYyB2b2lk
-IF9faW5pdCBjcmVhdGVfcGdkX21hcHBpbmcocGdkX3QgKnBnZHAsDQorCQkJCSAgICAgIHVpbnRw
-dHJfdCB2YSwgcGh5c19hZGRyX3QgcGEsDQorCQkJCSAgICAgIHBoeXNfYWRkcl90IHN6LCBwZ3By
-b3RfdCBwcm90KQ0KK3sNCisJcGdkX25leHRfdCAqbmV4dHA7DQorCXBoeXNfYWRkcl90IG5leHRf
-cGh5czsNCisJdWludHB0cl90IHBnZF9pbmRleCA9IHBnZF9pbmRleCh2YSk7DQorDQorCWlmIChz
-eiA9PSBQR0RJUl9TSVpFKSB7DQorCQlpZiAocGdkX3ZhbChwZ2RwW3BnZF9pbmRleF0pID09IDAp
-DQorCQkJcGdkcFtwZ2RfaW5kZXhdID0gcGZuX3BnZChQRk5fRE9XTihwYSksIHByb3QpOw0KKwkJ
-cmV0dXJuOw0KKwl9DQorDQorCWlmIChwZ2RfdmFsKHBnZHBbcGdkX2luZGV4XSkgPT0gMCkgew0K
-KwkJbmV4dF9waHlzID0gYWxsb2NfcGdkX25leHQodmEpOw0KKwkJcGdkcFtwZ2RfaW5kZXhdID0g
-cGZuX3BnZChQRk5fRE9XTihuZXh0X3BoeXMpLCBQQUdFX1RBQkxFKTsNCisJCW5leHRwID0gZ2V0
-X3BnZF9uZXh0X3ZpcnQobmV4dF9waHlzKTsNCisJCW1lbXNldChuZXh0cCwgMCwgUEFHRV9TSVpF
-KTsNCisJfSBlbHNlIHsNCisJCW5leHRfcGh5cyA9IFBGTl9QSFlTKF9wZ2RfcGZuKHBnZHBbcGdk
-X2luZGV4XSkpOw0KKwkJbmV4dHAgPSBnZXRfcGdkX25leHRfdmlydChuZXh0X3BoeXMpOw0KKwl9
-DQorDQorCWNyZWF0ZV9wZ2RfbmV4dF9tYXBwaW5nKG5leHRwLCB2YSwgcGEsIHN6LCBwcm90KTsN
-Cit9DQorDQorc3RhdGljIHVpbnRwdHJfdCBfX2luaXQgYmVzdF9tYXBfc2l6ZShwaHlzX2FkZHJf
-dCBiYXNlLCBwaHlzX2FkZHJfdCBzaXplKQ0KK3sNCisJdWludHB0cl90IG1hcF9zaXplID0gUEFH
-RV9TSVpFOw0KKw0KKwkvKiBVcGdyYWRlIHRvIFBNRC9QR0RJUiBtYXBwaW5ncyB3aGVuZXZlciBw
-b3NzaWJsZSAqLw0KKwlpZiAoIShiYXNlICYgKFBURV9QQVJFTlRfU0laRSAtIDEpKSAmJg0KKwkg
-ICAgIShzaXplICYgKFBURV9QQVJFTlRfU0laRSAtIDEpKSkNCisJCW1hcF9zaXplID0gUFRFX1BB
-UkVOVF9TSVpFOw0KKw0KKwlyZXR1cm4gbWFwX3NpemU7DQorfQ0KKw0KIC8qDQogICogc2V0dXBf
-dm0oKSBpcyBjYWxsZWQgZnJvbSBoZWFkLlMgd2l0aCBNTVUtb2ZmLg0KICAqDQpAQCAtMjA5LDU0
-ICszNDIsMTEyIEBAIHZvaWQgX19zZXRfZml4bWFwKGVudW0gZml4ZWRfYWRkcmVzc2VzIGlkeCwg
-cGh5c19hZGRyX3QgcGh5cywgcGdwcm90X3QgcHJvdCkNCiAJIm5vdCB1c2UgYWJzb2x1dGUgYWRk
-cmVzc2luZy4iDQogI2VuZGlmDQogDQotYXNtbGlua2FnZSB2b2lkIF9faW5pdCBzZXR1cF92bSh2
-b2lkKQ0KK2FzbWxpbmthZ2Ugdm9pZCBfX2luaXQgc2V0dXBfdm0odWludHB0cl90IGR0Yl9wYSkN
-CiB7DQotCXVpbnRwdHJfdCBpOw0KLQl1aW50cHRyX3QgcGEgPSAodWludHB0cl90KSAmX3N0YXJ0
-Ow0KLQlwZ3Byb3RfdCBwcm90ID0gX19wZ3Byb3QocGdwcm90X3ZhbChQQUdFX0tFUk5FTCkgfCBf
-UEFHRV9FWEVDKTsNCisJdWludHB0cl90IHZhLCBlbmRfdmE7DQorCXVpbnRwdHJfdCBsb2FkX3Bh
-ID0gKHVpbnRwdHJfdCkoJl9zdGFydCk7DQorCXVpbnRwdHJfdCBsb2FkX3N6ID0gKHVpbnRwdHJf
-dCkoJl9lbmQpIC0gbG9hZF9wYTsNCisJdWludHB0cl90IG1hcF9zaXplID0gYmVzdF9tYXBfc2l6
-ZShsb2FkX3BhLCBNQVhfRUFSTFlfTUFQUElOR19TSVpFKTsNCisNCisJdmFfcGFfb2Zmc2V0ID0g
-UEFHRV9PRkZTRVQgLSBsb2FkX3BhOw0KKwlwZm5fYmFzZSA9IFBGTl9ET1dOKGxvYWRfcGEpOw0K
-IA0KLQl2YV9wYV9vZmZzZXQgPSBQQUdFX09GRlNFVCAtIHBhOw0KLQlwZm5fYmFzZSA9IFBGTl9E
-T1dOKHBhKTsNCisJLyoNCisJICogRW5mb3JjZSBib290IGFsaWdubWVudCByZXF1aXJlbWVudHMg
-b2YgUlYzMiBhbmQNCisJICogUlY2NCBieSBvbmx5IGFsbG93aW5nIFBNRCBvciBQR0QgbWFwcGlu
-Z3MuDQorCSAqLw0KKwlCVUdfT04obWFwX3NpemUgPT0gUEFHRV9TSVpFKTsNCiANCiAJLyogU2Fu
-aXR5IGNoZWNrIGFsaWdubWVudCBhbmQgc2l6ZSAqLw0KIAlCVUdfT04oKFBBR0VfT0ZGU0VUICUg
-UEdESVJfU0laRSkgIT0gMCk7DQotCUJVR19PTigocGEgJSAoUEFHRV9TSVpFICogUFRSU19QRVJf
-UFRFKSkgIT0gMCk7DQorCUJVR19PTigobG9hZF9wYSAlIG1hcF9zaXplKSAhPSAwKTsNCisJQlVH
-X09OKGxvYWRfc3ogPiBNQVhfRUFSTFlfTUFQUElOR19TSVpFKTsNCisNCisJLyogU2V0dXAgZWFy
-bHkgUEdEIGZvciBmaXhtYXAgKi8NCisJY3JlYXRlX3BnZF9tYXBwaW5nKGVhcmx5X3BnX2Rpciwg
-RklYQUREUl9TVEFSVCwNCisJCQkgICAodWludHB0cl90KWZpeG1hcF9wZ2RfbmV4dCwgUEdESVJf
-U0laRSwgUEFHRV9UQUJMRSk7DQogDQogI2lmbmRlZiBfX1BBR0VUQUJMRV9QTURfRk9MREVEDQot
-CXRyYW1wb2xpbmVfcGdfZGlyWyhQQUdFX09GRlNFVCA+PiBQR0RJUl9TSElGVCkgJSBQVFJTX1BF
-Ul9QR0RdID0NCi0JCXBmbl9wZ2QoUEZOX0RPV04oKHVpbnRwdHJfdCl0cmFtcG9saW5lX3BtZCks
-DQotCQkJX19wZ3Byb3QoX1BBR0VfVEFCTEUpKTsNCi0JdHJhbXBvbGluZV9wbWRbMF0gPSBwZm5f
-cG1kKFBGTl9ET1dOKHBhKSwgcHJvdCk7DQorCS8qIFNldHVwIGZpeG1hcCBQTUQgKi8NCisJY3Jl
-YXRlX3BtZF9tYXBwaW5nKGZpeG1hcF9wbWQsIEZJWEFERFJfU1RBUlQsDQorCQkJICAgKHVpbnRw
-dHJfdClmaXhtYXBfcHRlLCBQTURfU0laRSwgUEFHRV9UQUJMRSk7DQorCS8qIFNldHVwIHRyYW1w
-b2xpbmUgUEdEIGFuZCBQTUQgKi8NCisJY3JlYXRlX3BnZF9tYXBwaW5nKHRyYW1wb2xpbmVfcGdf
-ZGlyLCBQQUdFX09GRlNFVCwNCisJCQkgICAodWludHB0cl90KXRyYW1wb2xpbmVfcG1kLCBQR0RJ
-Ul9TSVpFLCBQQUdFX1RBQkxFKTsNCisJY3JlYXRlX3BtZF9tYXBwaW5nKHRyYW1wb2xpbmVfcG1k
-LCBQQUdFX09GRlNFVCwNCisJCQkgICBsb2FkX3BhLCBQTURfU0laRSwgUEFHRV9LRVJORUxfRVhF
-Qyk7DQorI2Vsc2UNCisJLyogU2V0dXAgdHJhbXBvbGluZSBQR0QgKi8NCisJY3JlYXRlX3BnZF9t
-YXBwaW5nKHRyYW1wb2xpbmVfcGdfZGlyLCBQQUdFX09GRlNFVCwNCisJCQkgICBsb2FkX3BhLCBQ
-R0RJUl9TSVpFLCBQQUdFX0tFUk5FTF9FWEVDKTsNCisjZW5kaWYNCiANCi0JZm9yIChpID0gMDsg
-aSA8ICgtUEFHRV9PRkZTRVQpL1BHRElSX1NJWkU7ICsraSkgew0KLQkJc2l6ZV90IG8gPSAoUEFH
-RV9PRkZTRVQgPj4gUEdESVJfU0hJRlQpICUgUFRSU19QRVJfUEdEICsgaTsNCisJLyoNCisJICog
-U2V0dXAgZWFybHkgUEdEIGNvdmVyaW5nIGVudGlyZSBrZXJuZWwgd2hpY2ggd2lsbCBhbGxvd3MN
-CisJICogdXMgdG8gcmVhY2ggcGFnaW5nX2luaXQoKS4gV2UgbWFwIGFsbCBtZW1vcnkgYmFua3Mg
-bGF0ZXINCisJICogaW4gc2V0dXBfdm1fZmluYWwoKSBiZWxvdy4NCisJICovDQorCWVuZF92YSA9
-IFBBR0VfT0ZGU0VUICsgbG9hZF9zejsNCisJZm9yICh2YSA9IFBBR0VfT0ZGU0VUOyB2YSA8IGVu
-ZF92YTsgdmEgKz0gbWFwX3NpemUpDQorCQljcmVhdGVfcGdkX21hcHBpbmcoZWFybHlfcGdfZGly
-LCB2YSwNCisJCQkJICAgbG9hZF9wYSArICh2YSAtIFBBR0VfT0ZGU0VUKSwNCisJCQkJICAgbWFw
-X3NpemUsIFBBR0VfS0VSTkVMX0VYRUMpOw0KKw0KKwkvKiBDcmVhdGUgZml4ZWQgbWFwcGluZyBm
-b3IgZWFybHkgRkRUIHBhcnNpbmcgKi8NCisJZW5kX3ZhID0gX19maXhfdG9fdmlydChGSVhfRkRU
-KSArIEZJWF9GRFRfU0laRTsNCisJZm9yICh2YSA9IF9fZml4X3RvX3ZpcnQoRklYX0ZEVCk7IHZh
-IDwgZW5kX3ZhOyB2YSArPSBQQUdFX1NJWkUpDQorCQljcmVhdGVfcHRlX21hcHBpbmcoZml4bWFw
-X3B0ZSwgdmEsDQorCQkJCSAgIGR0Yl9wYSArICh2YSAtIF9fZml4X3RvX3ZpcnQoRklYX0ZEVCkp
-LA0KKwkJCQkgICBQQUdFX1NJWkUsIFBBR0VfS0VSTkVMKTsNCit9DQogDQotCQlzd2FwcGVyX3Bn
-X2RpcltvXSA9DQotCQkJcGZuX3BnZChQRk5fRE9XTigodWludHB0cl90KXN3YXBwZXJfcG1kKSAr
-IGksDQotCQkJCV9fcGdwcm90KF9QQUdFX1RBQkxFKSk7DQotCX0NCi0JZm9yIChpID0gMDsgaSA8
-IEFSUkFZX1NJWkUoc3dhcHBlcl9wbWQpOyBpKyspDQotCQlzd2FwcGVyX3BtZFtpXSA9IHBmbl9w
-bWQoUEZOX0RPV04ocGEgKyBpICogUE1EX1NJWkUpLCBwcm90KTsNCi0NCi0Jc3dhcHBlcl9wZ19k
-aXJbKEZJWEFERFJfU1RBUlQgPj4gUEdESVJfU0hJRlQpICUgUFRSU19QRVJfUEdEXSA9DQotCQlw
-Zm5fcGdkKFBGTl9ET1dOKCh1aW50cHRyX3QpZml4bWFwX3BtZCksDQotCQkJCV9fcGdwcm90KF9Q
-QUdFX1RBQkxFKSk7DQotCWZpeG1hcF9wbWRbKEZJWEFERFJfU1RBUlQgPj4gUE1EX1NISUZUKSAl
-IFBUUlNfUEVSX1BNRF0gPQ0KLQkJcGZuX3BtZChQRk5fRE9XTigodWludHB0cl90KWZpeG1hcF9w
-dGUpLA0KLQkJCQlfX3BncHJvdChfUEFHRV9UQUJMRSkpOw0KLSNlbHNlDQotCXRyYW1wb2xpbmVf
-cGdfZGlyWyhQQUdFX09GRlNFVCA+PiBQR0RJUl9TSElGVCkgJSBQVFJTX1BFUl9QR0RdID0NCi0J
-CXBmbl9wZ2QoUEZOX0RPV04ocGEpLCBwcm90KTsNCitzdGF0aWMgdm9pZCBfX2luaXQgc2V0dXBf
-dm1fZmluYWwodm9pZCkNCit7DQorCXVpbnRwdHJfdCB2YSwgbWFwX3NpemU7DQorCXBoeXNfYWRk
-cl90IHBhLCBzdGFydCwgZW5kOw0KKwlzdHJ1Y3QgbWVtYmxvY2tfcmVnaW9uICpyZWc7DQorDQor
-CS8qIFNldCBtbXVfZW5hYmxlZCBmbGFnICovDQorCW1tdV9lbmFibGVkID0gdHJ1ZTsNCiANCi0J
-Zm9yIChpID0gMDsgaSA8ICgtUEFHRV9PRkZTRVQpL1BHRElSX1NJWkU7ICsraSkgew0KLQkJc2l6
-ZV90IG8gPSAoUEFHRV9PRkZTRVQgPj4gUEdESVJfU0hJRlQpICUgUFRSU19QRVJfUEdEICsgaTsN
-CisJLyogU2V0dXAgc3dhcHBlciBQR0QgZm9yIGZpeG1hcCAqLw0KKwljcmVhdGVfcGdkX21hcHBp
-bmcoc3dhcHBlcl9wZ19kaXIsIEZJWEFERFJfU1RBUlQsDQorCQkJICAgX19wYShmaXhtYXBfcGdk
-X25leHQpLA0KKwkJCSAgIFBHRElSX1NJWkUsIFBBR0VfVEFCTEUpOw0KIA0KLQkJc3dhcHBlcl9w
-Z19kaXJbb10gPQ0KLQkJCXBmbl9wZ2QoUEZOX0RPV04ocGEgKyBpICogUEdESVJfU0laRSksIHBy
-b3QpOw0KKwkvKiBNYXAgYWxsIG1lbW9yeSBiYW5rcyAqLw0KKwlmb3JfZWFjaF9tZW1ibG9jayht
-ZW1vcnksIHJlZykgew0KKwkJc3RhcnQgPSByZWctPmJhc2U7DQorCQllbmQgPSBzdGFydCArIHJl
-Zy0+c2l6ZTsNCisNCisJCWlmIChzdGFydCA+PSBlbmQpDQorCQkJYnJlYWs7DQorCQlpZiAobWVt
-YmxvY2tfaXNfbm9tYXAocmVnKSkNCisJCQljb250aW51ZTsNCisJCWlmIChzdGFydCA8PSBfX3Bh
-KFBBR0VfT0ZGU0VUKSAmJg0KKwkJICAgIF9fcGEoUEFHRV9PRkZTRVQpIDwgZW5kKQ0KKwkJCXN0
-YXJ0ID0gX19wYShQQUdFX09GRlNFVCk7DQorDQorCQltYXBfc2l6ZSA9IGJlc3RfbWFwX3NpemUo
-c3RhcnQsIGVuZCAtIHN0YXJ0KTsNCisJCWZvciAocGEgPSBzdGFydDsgcGEgPCBlbmQ7IHBhICs9
-IG1hcF9zaXplKSB7DQorCQkJdmEgPSAodWludHB0cl90KV9fdmEocGEpOw0KKwkJCWNyZWF0ZV9w
-Z2RfbWFwcGluZyhzd2FwcGVyX3BnX2RpciwgdmEsIHBhLA0KKwkJCQkJICAgbWFwX3NpemUsIFBB
-R0VfS0VSTkVMX0VYRUMpOw0KKwkJfQ0KIAl9DQogDQotCXN3YXBwZXJfcGdfZGlyWyhGSVhBRERS
-X1NUQVJUID4+IFBHRElSX1NISUZUKSAlIFBUUlNfUEVSX1BHRF0gPQ0KLQkJcGZuX3BnZChQRk5f
-RE9XTigodWludHB0cl90KWZpeG1hcF9wdGUpLA0KLQkJCQlfX3BncHJvdChfUEFHRV9UQUJMRSkp
-Ow0KLSNlbmRpZg0KKwkvKiBDbGVhciBmaXhtYXAgUFRFIGFuZCBQTUQgbWFwcGluZ3MgKi8NCisJ
-Y2xlYXJfZml4bWFwKEZJWF9QVEUpOw0KKwljbGVhcl9maXhtYXAoRklYX1BNRCk7DQorDQorCS8q
-IE1vdmUgdG8gc3dhcHBlciBwYWdlIHRhYmxlICovDQorCWNzcl93cml0ZShzcHRiciwgUEZOX0RP
-V04oX19wYShzd2FwcGVyX3BnX2RpcikpIHwgU0FUUF9NT0RFKTsNCisJbG9jYWxfZmx1c2hfdGxi
-X2FsbCgpOw0KK30NCisNCit2b2lkIF9faW5pdCBwYWdpbmdfaW5pdCh2b2lkKQ0KK3sNCisJc2V0
-dXBfdm1fZmluYWwoKTsNCisJc2V0dXBfemVyb19wYWdlKCk7DQorCXpvbmVfc2l6ZXNfaW5pdCgp
-Ow0KIH0NCi0tIA0KMi4xNy4xDQoNCg==
+On Sat, Apr 27, 2019 at 02:32:13PM -0300, Mauro Carvalho Chehab wrote:
+> Em Fri, 26 Apr 2019 23:31:33 +0800
+> Changbin Du <changbin.du@gmail.com> escreveu:
+> 
+> > This converts the plain text documentation to reStructuredText format and
+> > add it to Sphinx TOC tree. No essential content change.
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  Documentation/x86/index.rst |   1 +
+> >  Documentation/x86/mtrr.rst  | 350 ++++++++++++++++++++++++++++++++++++
+> >  Documentation/x86/mtrr.txt  | 329 ---------------------------------
+> >  3 files changed, 351 insertions(+), 329 deletions(-)
+> >  create mode 100644 Documentation/x86/mtrr.rst
+> >  delete mode 100644 Documentation/x86/mtrr.txt
+> > 
+> > diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
+> > index fd54b859db9b..d805962a7238 100644
+> > --- a/Documentation/x86/index.rst
+> > +++ b/Documentation/x86/index.rst
+> > @@ -16,3 +16,4 @@ Linux x86 Support
+> >     earlyprintk
+> >     zero-page
+> >     tlb
+> > +   mtrr
+> > diff --git a/Documentation/x86/mtrr.rst b/Documentation/x86/mtrr.rst
+> > new file mode 100644
+> > index 000000000000..72da61022861
+> > --- /dev/null
+> > +++ b/Documentation/x86/mtrr.rst
+> > @@ -0,0 +1,350 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=========================================
+> > +MTRR (Memory Type Range Register) control
+> > +=========================================
+> > +
+> > +:Ahthors: - Richard Gooch <rgooch@atnf.csiro.au> - 3 Jun 1999
+> > +          - Luis R. Rodriguez <mcgrof@do-not-panic.com> - April 9, 2015
+> 
+> Typo: Authors
+> 
+Fixed.
+
+> > +
+> > +
+> > +Phasing out MTRR use
+> > +====================
+> > +
+> > +MTRR use is replaced on modern x86 hardware with PAT. Direct MTRR use by
+> > +drivers on Linux is now completely phased out, device drivers should use
+> > +arch_phys_wc_add() in combination with ioremap_wc() to make MTRR effective on
+> > +non-PAT systems while a no-op but equally effective on PAT enabled systems.
+> > +
+> > +Even if Linux does not use MTRRs directly, some x86 platform firmware may still
+> > +set up MTRRs early before booting the OS. They do this as some platform
+> > +firmware may still have implemented access to MTRRs which would be controlled
+> > +and handled by the platform firmware directly. An example of platform use of
+> > +MTRRs is through the use of SMI handlers, one case could be for fan control,
+> > +the platform code would need uncachable access to some of its fan control
+> > +registers. Such platform access does not need any Operating System MTRR code in
+> > +place other than mtrr_type_lookup() to ensure any OS specific mapping requests
+> > +are aligned with platform MTRR setup. If MTRRs are only set up by the platform
+> > +firmware code though and the OS does not make any specific MTRR mapping
+> > +requests mtrr_type_lookup() should always return MTRR_TYPE_INVALID.
+> > +
+> > +For details refer to :doc:`x86/pat`.
+> 
+> I'm in doubt about the block below:
+> 
+> > +
+> > +On Intel P6 family processors (Pentium Pro, Pentium II and later)
+> > +the Memory Type Range Registers (MTRRs) may be used to control
+> > +processor access to memory ranges. This is most useful when you have
+> > +a video (VGA) card on a PCI or AGP bus. Enabling write-combining
+> > +allows bus write transfers to be combined into a larger transfer
+> > +before bursting over the PCI/AGP bus. This can increase performance
+> > +of image write operations 2.5 times or more.
+> > +
+> > +The Cyrix 6x86, 6x86MX and M II processors have Address Range
+> > +Registers (ARRs) which provide a similar functionality to MTRRs. For
+> > +these, the ARRs are used to emulate the MTRRs.
+> > +
+> > +The AMD K6-2 (stepping 8 and above) and K6-3 processors have two
+> > +MTRRs. These are supported.  The AMD Athlon family provide 8 Intel
+> > +style MTRRs.
+> > +
+> > +The Centaur C6 (WinChip) has 8 MCRs, allowing write-combining. These
+> > +are supported.
+> > +
+> > +The VIA Cyrix III and VIA C3 CPUs offer 8 Intel style MTRRs.
+> > +
+> > +The CONFIG_MTRR option creates a /proc/mtrr file which may be used
+> > +to manipulate your MTRRs. Typically the X server should use
+> > +this. This should have a reasonably generic interface so that
+> > +similar control registers on other processors can be easily
+> > +supported.
+> 
+> All the above were originally indented, and marked by an horizontal
+> bar (together with the next paragraph).
+> 
+> Perhaps the intention there were to mark them as some sort of per-CPU 
+> type notes.
+> 
+> Anyway, I would preserve the original indentation - possibly
+> replacing the horizontal bar using non-ReST standard:
+> 
+> ===============================================================================
+> 
+> By the ReST equivalent:
+> 
+> -------------------------------------------------------------------------------
+> 
+> Later, if x86 maintainers thing it is worth, they could add a note markup
+> before the block.
+>
+I converted this to a 'tip' block which looks better. If have different idea, please
+comment.
+
+.. tip::
+  On Intel P6 family processors (Pentium Pro, Pentium II and later)
+  the Memory Type Range Registers (MTRRs) may be used to control
+  processor access to memory ranges. This is most useful when you have
+  a video (VGA) card on a PCI or AGP bus. Enabling write-combining
+  allows bus write transfers to be combined into a larger transfer
+  before bursting over the PCI/AGP bus. This can increase performance
+  of image write operations 2.5 times or more.
+
+  The Cyrix 6x86, 6x86MX and M II processors have Address Range
+  Registers (ARRs) which provide a similar functionality to MTRRs. For
+  these, the ARRs are used to emulate the MTRRs.
+
+  The AMD K6-2 (stepping 8 and above) and K6-3 processors have two
+  MTRRs. These are supported.  The AMD Athlon family provide 8 Intel
+  style MTRRs.
+
+  The Centaur C6 (WinChip) has 8 MCRs, allowing write-combining. These
+  are supported.
+
+  The VIA Cyrix III and VIA C3 CPUs offer 8 Intel style MTRRs.
+
+  The CONFIG_MTRR option creates a /proc/mtrr file which may be used
+  to manipulate your MTRRs. Typically the X server should use
+  this. This should have a reasonably generic interface so that
+  similar control registers on other processors can be easily
+  supported.
+
+
+> > +
+> > +There are two interfaces to /proc/mtrr: one is an ASCII interface
+> > +which allows you to read and write. The other is an ioctl()
+> > +interface. The ASCII interface is meant for administration. The
+> > +ioctl() interface is meant for C programs (i.e. the X server). The
+> > +interfaces are described below, with sample commands and C code.
+> > +
+> > +Reading MTRRs from the shell::
+> > +
+> > +  % cat /proc/mtrr
+> > +  reg00: base=0x00000000 (   0MB), size= 128MB: write-back, count=1
+> > +  reg01: base=0x08000000 ( 128MB), size=  64MB: write-back, count=1
+> > +
+> > +Creating MTRRs from the C-shell::
+> > +
+> > +  # echo "base=0xf8000000 size=0x400000 type=write-combining" >! /proc/mtrr
+> > +
+> > +or if you use bash::
+> > +
+> > +  # echo "base=0xf8000000 size=0x400000 type=write-combining" >| /proc/mtrr
+> > +
+> > +And the result thereof::
+> > +
+> > +  % cat /proc/mtrr
+> > +  reg00: base=0x00000000 (   0MB), size= 128MB: write-back, count=1
+> > +  reg01: base=0x08000000 ( 128MB), size=  64MB: write-back, count=1
+> > +  reg02: base=0xf8000000 (3968MB), size=   4MB: write-combining, count=1
+> > +
+> > +This is for video RAM at base address 0xf8000000 and size 4 megabytes. To
+> > +find out your base address, you need to look at the output of your X
+> > +server, which tells you where the linear framebuffer address is. A
+> > +typical line that you may get is:
+> > +
+> > +(--) S3: PCI: 968 rev 0, Linear FB @ 0xf8000000
+> > +
+> > +Note that you should only use the value from the X server, as it may
+> > +move the framebuffer base address, so the only value you can trust is
+> > +that reported by the X server.
+> > +
+> > +To find out the size of your framebuffer (what, you don't actually
+> > +know?), the following line will tell you:
+> > +
+> > +(--) S3: videoram:  4096k
+> > +
+> > +That's 4 megabytes, which is 0x400000 bytes (in hexadecimal).
+> > +A patch is being written for XFree86 which will make this automatic:
+> > +in other words the X server will manipulate /proc/mtrr using the
+> > +ioctl() interface, so users won't have to do anything. If you use a
+> > +commercial X server, lobby your vendor to add support for MTRRs.
+> > +
+> > +
+> > +Creating overlapping MTRRs
+> > +==========================
+> > +::
+> > +
+> > +  %echo "base=0xfb000000 size=0x1000000 type=write-combining" >/proc/mtrr
+> > +  %echo "base=0xfb000000 size=0x1000 type=uncachable" >/proc/mtrr
+> > +
+> > +And the results::
+> > +
+> > +  % cat /proc/mtrr
+> > +  reg00: base=0x00000000 (   0MB), size=  64MB: write-back, count=1
+> > +  reg01: base=0xfb000000 (4016MB), size=  16MB: write-combining, count=1
+> > +  reg02: base=0xfb000000 (4016MB), size=   4kB: uncachable, count=1
+> > +
+> > +Some cards (especially Voodoo Graphics boards) need this 4 kB area
+> > +excluded from the beginning of the region because it is used for
+> > +registers.
+> > +
+> > +NOTE: You can only create type=uncachable region, if the first
+> > +region that you created is type=write-combining.
+> 
+> If you don't want to use a note markup, I would, at least, do:
+> 
+> Note:
+>    You can only create type=uncachable region, if the first
+>    region that you created is type=write-combining.
+> 
+> > +
+> > +
+> > +Removing MTRRs from the C-shel
+> > +==============================
+> 
+> There's also a typo above: C-shel -> C-shell...
+> 
+> > +::
+> > +
+> > +  % echo "disable=2" >! /proc/mtrr
+> > +
+> > +or using bash::
+> > +
+> > +  % echo "disable=2" >| /proc/mtrr
+> 
+> 
+> Yet, I would, instead rewrite this block as:
+> 
+> 
+> 	Removing MTRRs
+> 	==============
+> 
+> 	Using C-shell::
+> 
+> 		% echo "disable=2" >! /proc/mtrr
+> 
+> 	or using bash::
+> 
+> 		% echo "disable=2" >| /proc/mtrr
+> 
+> 
+> As it contains both csh and bash instructions there.
+> 
+> > +
+> > +
+> > +Reading MTRRs from a C program using ioctl()'s
+> > +==============================================
+> > +::
+> > +
+> > +  /*  mtrr-show.c
+> > +
+> > +      Source file for mtrr-show (example program to show MTRRs using ioctl()'s)
+> > +
+> > +      Copyright (C) 1997-1998  Richard Gooch
+> > +
+> > +      This program is free software; you can redistribute it and/or modify
+> > +      it under the terms of the GNU General Public License as published by
+> > +      the Free Software Foundation; either version 2 of the License, or
+> > +      (at your option) any later version.
+> > +
+> > +      This program is distributed in the hope that it will be useful,
+> > +      but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > +      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > +      GNU General Public License for more details.
+> > +
+> > +      You should have received a copy of the GNU General Public License
+> > +      along with this program; if not, write to the Free Software
+> > +      Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+> > +
+> > +      Richard Gooch may be reached by email at  rgooch@atnf.csiro.au
+> > +      The postal address is:
+> > +        Richard Gooch, c/o ATNF, P. O. Box 76, Epping, N.S.W., 2121, Australia.
+> > +  */
+> > +
+> > +  /*
+> > +      This program will use an ioctl() on /proc/mtrr to show the current MTRR
+> > +      settings. This is an alternative to reading /proc/mtrr.
+> > +
+> > +
+> > +      Written by      Richard Gooch   17-DEC-1997
+> > +
+> > +      Last updated by Richard Gooch   2-MAY-1998
+> > +
+> > +
+> > +  */
+> > +  #include <stdio.h>
+> > +  #include <stdlib.h>
+> > +  #include <string.h>
+> > +  #include <sys/types.h>
+> > +  #include <sys/stat.h>
+> > +  #include <fcntl.h>
+> > +  #include <sys/ioctl.h>
+> > +  #include <errno.h>
+> > +  #include <asm/mtrr.h>
+> > +
+> > +  #define TRUE 1
+> > +  #define FALSE 0
+> > +  #define ERRSTRING strerror (errno)
+> > +
+> > +  static char *mtrr_strings[MTRR_NUM_TYPES] =
+> > +  {
+> > +      "uncachable",               /* 0 */
+> > +      "write-combining",          /* 1 */
+> > +      "?",                        /* 2 */
+> > +      "?",                        /* 3 */
+> > +      "write-through",            /* 4 */
+> > +      "write-protect",            /* 5 */
+> > +      "write-back",               /* 6 */
+> > +  };
+> > +
+> > +  int main ()
+> > +  {
+> > +      int fd;
+> > +      struct mtrr_gentry gentry;
+> > +
+> > +      if ( ( fd = open ("/proc/mtrr", O_RDONLY, 0) ) == -1 )
+> > +      {
+> > +    if (errno == ENOENT)
+> > +    {
+> > +        fputs ("/proc/mtrr not found: not supported or you don't have a PPro?\n",
+> > +        stderr);
+> > +        exit (1);
+> > +    }
+> > +    fprintf (stderr, "Error opening /proc/mtrr\t%s\n", ERRSTRING);
+> > +    exit (2);
+> > +      }
+> > +      for (gentry.regnum = 0; ioctl (fd, MTRRIOC_GET_ENTRY, &gentry) == 0;
+> > +    ++gentry.regnum)
+> > +      {
+> > +    if (gentry.size < 1)
+> > +    {
+> > +        fprintf (stderr, "Register: %u disabled\n", gentry.regnum);
+> > +        continue;
+> > +    }
+> > +    fprintf (stderr, "Register: %u base: 0x%lx size: 0x%lx type: %s\n",
+> > +      gentry.regnum, gentry.base, gentry.size,
+> > +      mtrr_strings[gentry.type]);
+> > +      }
+> > +      if (errno == EINVAL) exit (0);
+> > +      fprintf (stderr, "Error doing ioctl(2) on /dev/mtrr\t%s\n", ERRSTRING);
+> > +      exit (3);
+> > +  }   /*  End Function main  */
+> > +
+> > +
+> > +Creating MTRRs from a C programme using ioctl()'s
+> > +=================================================
+> > +::
+> > +
+> > +  /*  mtrr-add.c
+> > +
+> > +      Source file for mtrr-add (example programme to add an MTRRs using ioctl())
+> > +
+> > +      Copyright (C) 1997-1998  Richard Gooch
+> > +
+> > +      This program is free software; you can redistribute it and/or modify
+> > +      it under the terms of the GNU General Public License as published by
+> > +      the Free Software Foundation; either version 2 of the License, or
+> > +      (at your option) any later version.
+> > +
+> > +      This program is distributed in the hope that it will be useful,
+> > +      but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > +      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > +      GNU General Public License for more details.
+> > +
+> > +      You should have received a copy of the GNU General Public License
+> > +      along with this program; if not, write to the Free Software
+> > +      Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+> > +
+> > +      Richard Gooch may be reached by email at  rgooch@atnf.csiro.au
+> > +      The postal address is:
+> > +        Richard Gooch, c/o ATNF, P. O. Box 76, Epping, N.S.W., 2121, Australia.
+> > +  */
+> > +
+> > +  /*
+> > +      This programme will use an ioctl() on /proc/mtrr to add an entry. The first
+> > +      available mtrr is used. This is an alternative to writing /proc/mtrr.
+> > +
+> > +
+> > +      Written by      Richard Gooch   17-DEC-1997
+> > +
+> > +      Last updated by Richard Gooch   2-MAY-1998
+> > +
+> > +
+> > +  */
+> > +  #include <stdio.h>
+> > +  #include <string.h>
+> > +  #include <stdlib.h>
+> > +  #include <unistd.h>
+> > +  #include <sys/types.h>
+> > +  #include <sys/stat.h>
+> > +  #include <fcntl.h>
+> > +  #include <sys/ioctl.h>
+> > +  #include <errno.h>
+> > +  #include <asm/mtrr.h>
+> > +
+> > +  #define TRUE 1
+> > +  #define FALSE 0
+> > +  #define ERRSTRING strerror (errno)
+> > +
+> > +  static char *mtrr_strings[MTRR_NUM_TYPES] =
+> > +  {
+> > +      "uncachable",               /* 0 */
+> > +      "write-combining",          /* 1 */
+> > +      "?",                        /* 2 */
+> > +      "?",                        /* 3 */
+> > +      "write-through",            /* 4 */
+> > +      "write-protect",            /* 5 */
+> > +      "write-back",               /* 6 */
+> > +  };
+> > +
+> > +  int main (int argc, char **argv)
+> > +  {
+> > +      int fd;
+> > +      struct mtrr_sentry sentry;
+> > +
+> > +      if (argc != 4)
+> > +      {
+> > +    fprintf (stderr, "Usage:\tmtrr-add base size type\n");
+> > +    exit (1);
+> > +      }
+> > +      sentry.base = strtoul (argv[1], NULL, 0);
+> > +      sentry.size = strtoul (argv[2], NULL, 0);
+> > +      for (sentry.type = 0; sentry.type < MTRR_NUM_TYPES; ++sentry.type)
+> > +      {
+> > +    if (strcmp (argv[3], mtrr_strings[sentry.type]) == 0) break;
+> > +      }
+> > +      if (sentry.type >= MTRR_NUM_TYPES)
+> > +      {
+> > +    fprintf (stderr, "Illegal type: \"%s\"\n", argv[3]);
+> > +    exit (2);
+> > +      }
+> > +      if ( ( fd = open ("/proc/mtrr", O_WRONLY, 0) ) == -1 )
+> > +      {
+> > +    if (errno == ENOENT)
+> > +    {
+> > +        fputs ("/proc/mtrr not found: not supported or you don't have a PPro?\n",
+> > +        stderr);
+> > +        exit (3);
+> > +    }
+> > +    fprintf (stderr, "Error opening /proc/mtrr\t%s\n", ERRSTRING);
+> > +    exit (4);
+> > +      }
+> > +      if (ioctl (fd, MTRRIOC_ADD_ENTRY, &sentry) == -1)
+> > +      {
+> > +    fprintf (stderr, "Error doing ioctl(2) on /dev/mtrr\t%s\n", ERRSTRING);
+> > +    exit (5);
+> > +      }
+> > +      fprintf (stderr, "Sleeping for 5 seconds so you can see the new entry\n");
+> > +      sleep (5);
+> > +      close (fd);
+> > +      fputs ("I've just closed /proc/mtrr so now the new entry should be gone\n",
+> > +      stderr);
+> > +  }   /*  End Function main  */
+> > diff --git a/Documentation/x86/mtrr.txt b/Documentation/x86/mtrr.txt
+> > deleted file mode 100644
+> > index dc3e703913ac..000000000000
+> > --- a/Documentation/x86/mtrr.txt
+> > +++ /dev/null
+> > @@ -1,329 +0,0 @@
+> > -MTRR (Memory Type Range Register) control
+> > -
+> > -Richard Gooch <rgooch@atnf.csiro.au> - 3 Jun 1999
+> > -Luis R. Rodriguez <mcgrof@do-not-panic.com> - April 9, 2015
+> > -
+> > -===============================================================================
+> > -Phasing out MTRR use
+> > -
+> > -MTRR use is replaced on modern x86 hardware with PAT. Direct MTRR use by
+> > -drivers on Linux is now completely phased out, device drivers should use
+> > -arch_phys_wc_add() in combination with ioremap_wc() to make MTRR effective on
+> > -non-PAT systems while a no-op but equally effective on PAT enabled systems.
+> > -
+> > -Even if Linux does not use MTRRs directly, some x86 platform firmware may still
+> > -set up MTRRs early before booting the OS. They do this as some platform
+> > -firmware may still have implemented access to MTRRs which would be controlled
+> > -and handled by the platform firmware directly. An example of platform use of
+> > -MTRRs is through the use of SMI handlers, one case could be for fan control,
+> > -the platform code would need uncachable access to some of its fan control
+> > -registers. Such platform access does not need any Operating System MTRR code in
+> > -place other than mtrr_type_lookup() to ensure any OS specific mapping requests
+> > -are aligned with platform MTRR setup. If MTRRs are only set up by the platform
+> > -firmware code though and the OS does not make any specific MTRR mapping
+> > -requests mtrr_type_lookup() should always return MTRR_TYPE_INVALID.
+> > -
+> > -For details refer to Documentation/x86/pat.txt.
+> > -
+> > -===============================================================================
+> > -
+> > -  On Intel P6 family processors (Pentium Pro, Pentium II and later)
+> > -  the Memory Type Range Registers (MTRRs) may be used to control
+> > -  processor access to memory ranges. This is most useful when you have
+> > -  a video (VGA) card on a PCI or AGP bus. Enabling write-combining
+> > -  allows bus write transfers to be combined into a larger transfer
+> > -  before bursting over the PCI/AGP bus. This can increase performance
+> > -  of image write operations 2.5 times or more.
+> > -
+> > -  The Cyrix 6x86, 6x86MX and M II processors have Address Range
+> > -  Registers (ARRs) which provide a similar functionality to MTRRs. For
+> > -  these, the ARRs are used to emulate the MTRRs.
+> > -
+> > -  The AMD K6-2 (stepping 8 and above) and K6-3 processors have two
+> > -  MTRRs. These are supported.  The AMD Athlon family provide 8 Intel
+> > -  style MTRRs.
+> > -
+> > -  The Centaur C6 (WinChip) has 8 MCRs, allowing write-combining. These
+> > -  are supported.
+> > -
+> > -  The VIA Cyrix III and VIA C3 CPUs offer 8 Intel style MTRRs.
+> > -
+> > -  The CONFIG_MTRR option creates a /proc/mtrr file which may be used
+> > -  to manipulate your MTRRs. Typically the X server should use
+> > -  this. This should have a reasonably generic interface so that
+> > -  similar control registers on other processors can be easily
+> > -  supported.
+> > -
+> > -
+> > -There are two interfaces to /proc/mtrr: one is an ASCII interface
+> > -which allows you to read and write. The other is an ioctl()
+> > -interface. The ASCII interface is meant for administration. The
+> > -ioctl() interface is meant for C programs (i.e. the X server). The
+> > -interfaces are described below, with sample commands and C code.
+> > -
+> > -===============================================================================
+> > -Reading MTRRs from the shell:
+> > -
+> > -% cat /proc/mtrr
+> > -reg00: base=0x00000000 (   0MB), size= 128MB: write-back, count=1
+> > -reg01: base=0x08000000 ( 128MB), size=  64MB: write-back, count=1
+> > -===============================================================================
+> > -Creating MTRRs from the C-shell:
+> > -# echo "base=0xf8000000 size=0x400000 type=write-combining" >! /proc/mtrr
+> > -or if you use bash:
+> > -# echo "base=0xf8000000 size=0x400000 type=write-combining" >| /proc/mtrr
+> > -
+> > -And the result thereof:
+> > -% cat /proc/mtrr
+> > -reg00: base=0x00000000 (   0MB), size= 128MB: write-back, count=1
+> > -reg01: base=0x08000000 ( 128MB), size=  64MB: write-back, count=1
+> > -reg02: base=0xf8000000 (3968MB), size=   4MB: write-combining, count=1
+> > -
+> > -This is for video RAM at base address 0xf8000000 and size 4 megabytes. To
+> > -find out your base address, you need to look at the output of your X
+> > -server, which tells you where the linear framebuffer address is. A
+> > -typical line that you may get is:
+> > -
+> > -(--) S3: PCI: 968 rev 0, Linear FB @ 0xf8000000
+> > -
+> > -Note that you should only use the value from the X server, as it may
+> > -move the framebuffer base address, so the only value you can trust is
+> > -that reported by the X server.
+> > -
+> > -To find out the size of your framebuffer (what, you don't actually
+> > -know?), the following line will tell you:
+> > -
+> > -(--) S3: videoram:  4096k
+> > -
+> > -That's 4 megabytes, which is 0x400000 bytes (in hexadecimal).
+> > -A patch is being written for XFree86 which will make this automatic:
+> > -in other words the X server will manipulate /proc/mtrr using the
+> > -ioctl() interface, so users won't have to do anything. If you use a
+> > -commercial X server, lobby your vendor to add support for MTRRs.
+> > -===============================================================================
+> > -Creating overlapping MTRRs:
+> > -
+> > -%echo "base=0xfb000000 size=0x1000000 type=write-combining" >/proc/mtrr
+> > -%echo "base=0xfb000000 size=0x1000 type=uncachable" >/proc/mtrr
+> > -
+> > -And the results: cat /proc/mtrr
+> > -reg00: base=0x00000000 (   0MB), size=  64MB: write-back, count=1
+> > -reg01: base=0xfb000000 (4016MB), size=  16MB: write-combining, count=1
+> > -reg02: base=0xfb000000 (4016MB), size=   4kB: uncachable, count=1
+> > -
+> > -Some cards (especially Voodoo Graphics boards) need this 4 kB area
+> > -excluded from the beginning of the region because it is used for
+> > -registers.
+> > -
+> > -NOTE: You can only create type=uncachable region, if the first
+> > -region that you created is type=write-combining.
+> > -===============================================================================
+> > -Removing MTRRs from the C-shell:
+> > -% echo "disable=2" >! /proc/mtrr
+> > -or using bash:
+> > -% echo "disable=2" >| /proc/mtrr
+> > -===============================================================================
+> > -Reading MTRRs from a C program using ioctl()'s:
+> > -
+> > -/*  mtrr-show.c
+> > -
+> > -    Source file for mtrr-show (example program to show MTRRs using ioctl()'s)
+> > -
+> > -    Copyright (C) 1997-1998  Richard Gooch
+> > -
+> > -    This program is free software; you can redistribute it and/or modify
+> > -    it under the terms of the GNU General Public License as published by
+> > -    the Free Software Foundation; either version 2 of the License, or
+> > -    (at your option) any later version.
+> > -
+> > -    This program is distributed in the hope that it will be useful,
+> > -    but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > -    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > -    GNU General Public License for more details.
+> > -
+> > -    You should have received a copy of the GNU General Public License
+> > -    along with this program; if not, write to the Free Software
+> > -    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+> > -
+> > -    Richard Gooch may be reached by email at  rgooch@atnf.csiro.au
+> > -    The postal address is:
+> > -      Richard Gooch, c/o ATNF, P. O. Box 76, Epping, N.S.W., 2121, Australia.
+> > -*/
+> > -
+> > -/*
+> > -    This program will use an ioctl() on /proc/mtrr to show the current MTRR
+> > -    settings. This is an alternative to reading /proc/mtrr.
+> > -
+> > -
+> > -    Written by      Richard Gooch   17-DEC-1997
+> > -
+> > -    Last updated by Richard Gooch   2-MAY-1998
+> > -
+> > -
+> > -*/
+> > -#include <stdio.h>
+> > -#include <stdlib.h>
+> > -#include <string.h>
+> > -#include <sys/types.h>
+> > -#include <sys/stat.h>
+> > -#include <fcntl.h>
+> > -#include <sys/ioctl.h>
+> > -#include <errno.h>
+> > -#include <asm/mtrr.h>
+> > -
+> > -#define TRUE 1
+> > -#define FALSE 0
+> > -#define ERRSTRING strerror (errno)
+> > -
+> > -static char *mtrr_strings[MTRR_NUM_TYPES] =
+> > -{
+> > -    "uncachable",               /* 0 */
+> > -    "write-combining",          /* 1 */
+> > -    "?",                        /* 2 */
+> > -    "?",                        /* 3 */
+> > -    "write-through",            /* 4 */
+> > -    "write-protect",            /* 5 */
+> > -    "write-back",               /* 6 */
+> > -};
+> > -
+> > -int main ()
+> > -{
+> > -    int fd;
+> > -    struct mtrr_gentry gentry;
+> > -
+> > -    if ( ( fd = open ("/proc/mtrr", O_RDONLY, 0) ) == -1 )
+> > -    {
+> > -	if (errno == ENOENT)
+> > -	{
+> > -	    fputs ("/proc/mtrr not found: not supported or you don't have a PPro?\n",
+> > -		   stderr);
+> > -	    exit (1);
+> > -	}
+> > -	fprintf (stderr, "Error opening /proc/mtrr\t%s\n", ERRSTRING);
+> > -	exit (2);
+> > -    }
+> > -    for (gentry.regnum = 0; ioctl (fd, MTRRIOC_GET_ENTRY, &gentry) == 0;
+> > -	 ++gentry.regnum)
+> > -    {
+> > -	if (gentry.size < 1)
+> > -	{
+> > -	    fprintf (stderr, "Register: %u disabled\n", gentry.regnum);
+> > -	    continue;
+> > -	}
+> > -	fprintf (stderr, "Register: %u base: 0x%lx size: 0x%lx type: %s\n",
+> > -		 gentry.regnum, gentry.base, gentry.size,
+> > -		 mtrr_strings[gentry.type]);
+> > -    }
+> > -    if (errno == EINVAL) exit (0);
+> > -    fprintf (stderr, "Error doing ioctl(2) on /dev/mtrr\t%s\n", ERRSTRING);
+> > -    exit (3);
+> > -}   /*  End Function main  */
+> > -===============================================================================
+> > -Creating MTRRs from a C programme using ioctl()'s:
+> > -
+> > -/*  mtrr-add.c
+> > -
+> > -    Source file for mtrr-add (example programme to add an MTRRs using ioctl())
+> > -
+> > -    Copyright (C) 1997-1998  Richard Gooch
+> > -
+> > -    This program is free software; you can redistribute it and/or modify
+> > -    it under the terms of the GNU General Public License as published by
+> > -    the Free Software Foundation; either version 2 of the License, or
+> > -    (at your option) any later version.
+> > -
+> > -    This program is distributed in the hope that it will be useful,
+> > -    but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > -    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > -    GNU General Public License for more details.
+> > -
+> > -    You should have received a copy of the GNU General Public License
+> > -    along with this program; if not, write to the Free Software
+> > -    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+> > -
+> > -    Richard Gooch may be reached by email at  rgooch@atnf.csiro.au
+> > -    The postal address is:
+> > -      Richard Gooch, c/o ATNF, P. O. Box 76, Epping, N.S.W., 2121, Australia.
+> > -*/
+> > -
+> > -/*
+> > -    This programme will use an ioctl() on /proc/mtrr to add an entry. The first
+> > -    available mtrr is used. This is an alternative to writing /proc/mtrr.
+> > -
+> > -
+> > -    Written by      Richard Gooch   17-DEC-1997
+> > -
+> > -    Last updated by Richard Gooch   2-MAY-1998
+> > -
+> > -
+> > -*/
+> > -#include <stdio.h>
+> > -#include <string.h>
+> > -#include <stdlib.h>
+> > -#include <unistd.h>
+> > -#include <sys/types.h>
+> > -#include <sys/stat.h>
+> > -#include <fcntl.h>
+> > -#include <sys/ioctl.h>
+> > -#include <errno.h>
+> > -#include <asm/mtrr.h>
+> > -
+> > -#define TRUE 1
+> > -#define FALSE 0
+> > -#define ERRSTRING strerror (errno)
+> > -
+> > -static char *mtrr_strings[MTRR_NUM_TYPES] =
+> > -{
+> > -    "uncachable",               /* 0 */
+> > -    "write-combining",          /* 1 */
+> > -    "?",                        /* 2 */
+> > -    "?",                        /* 3 */
+> > -    "write-through",            /* 4 */
+> > -    "write-protect",            /* 5 */
+> > -    "write-back",               /* 6 */
+> > -};
+> > -
+> > -int main (int argc, char **argv)
+> > -{
+> > -    int fd;
+> > -    struct mtrr_sentry sentry;
+> > -
+> > -    if (argc != 4)
+> > -    {
+> > -	fprintf (stderr, "Usage:\tmtrr-add base size type\n");
+> > -	exit (1);
+> > -    }
+> > -    sentry.base = strtoul (argv[1], NULL, 0);
+> > -    sentry.size = strtoul (argv[2], NULL, 0);
+> > -    for (sentry.type = 0; sentry.type < MTRR_NUM_TYPES; ++sentry.type)
+> > -    {
+> > -	if (strcmp (argv[3], mtrr_strings[sentry.type]) == 0) break;
+> > -    }
+> > -    if (sentry.type >= MTRR_NUM_TYPES)
+> > -    {
+> > -	fprintf (stderr, "Illegal type: \"%s\"\n", argv[3]);
+> > -	exit (2);
+> > -    }
+> > -    if ( ( fd = open ("/proc/mtrr", O_WRONLY, 0) ) == -1 )
+> > -    {
+> > -	if (errno == ENOENT)
+> > -	{
+> > -	    fputs ("/proc/mtrr not found: not supported or you don't have a PPro?\n",
+> > -		   stderr);
+> > -	    exit (3);
+> > -	}
+> > -	fprintf (stderr, "Error opening /proc/mtrr\t%s\n", ERRSTRING);
+> > -	exit (4);
+> > -    }
+> > -    if (ioctl (fd, MTRRIOC_ADD_ENTRY, &sentry) == -1)
+> > -    {
+> > -	fprintf (stderr, "Error doing ioctl(2) on /dev/mtrr\t%s\n", ERRSTRING);
+> > -	exit (5);
+> > -    }
+> > -    fprintf (stderr, "Sleeping for 5 seconds so you can see the new entry\n");
+> > -    sleep (5);
+> > -    close (fd);
+> > -    fputs ("I've just closed /proc/mtrr so now the new entry should be gone\n",
+> > -	   stderr);
+> > -}   /*  End Function main  */
+> > -===============================================================================
+> 
+> 
+> 
+> Thanks,
+> Mauro
+
+-- 
+Cheers,
+Changbin Du
