@@ -2,91 +2,136 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52614C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9F9C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C0720675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556812211;
-	bh=+TO7gHlyhoWJKA0F5aJpmLHgOAqbaaTgOMJ+5YIaN2M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G1AjwsIM9GdzLsmnqiftDL1roEOWkvnwfj5F6LP689zYaKXf1QaUXpqayWY0p9/or
-	 MdoYklwECOL7KtB+13bFbPKCU73zjpApY36tYtToi3qxj4G6Kmc46l+uVK2TlE+oSz
-	 oX2xmG3ZoxW3A8hHy/hV+IArXgbeI5Id2APUI9kM=
+	by mail.kernel.org (Postfix) with ESMTP id 7FE4A20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfEBPWH (ORCPT
+        id S1726552AbfEBPyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:22:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37224 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:54:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:43578 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726425AbfEBPWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:22:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8A4820B7C;
-        Thu,  2 May 2019 15:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810522;
-        bh=+TO7gHlyhoWJKA0F5aJpmLHgOAqbaaTgOMJ+5YIaN2M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DsL38ODHnXPq+2niVRaFhTUEDY9AMNhYOQme8+vPLlXpjTuaN6NNYKF9/PkVYjbCH
-         WDlaMoYddzEzVxmyerz1vjs13wrXguml0CcmdezQ4zbeFpPCXPkwC9FUX4u0zhfCCI
-         yjsY3k5V12bQS7GmsIzoJ2PKUJkdnuJAzbJc/Um0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helen Koike <helen.koike@collabora.com>,
-        Eric Anholt <eric@anholt.net>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.9 04/32] ARM: dts: bcm283x: Fix hdmi hpd gpio pull
-Date:   Thu,  2 May 2019 17:20:50 +0200
-Message-Id: <20190502143316.405963045@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
-References: <20190502143314.649935114@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1726321AbfEBPyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:54:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 08:54:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,422,1549958400"; 
+   d="scan'208";a="320874382"
+Received: from yyu32-desk1.sc.intel.com ([143.183.136.147])
+  by orsmga005.jf.intel.com with ESMTP; 02 May 2019 08:54:33 -0700
+Message-ID: <5b2c6cee345e00182e97842ae90c02cdcd830135.camel@intel.com>
+Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha@sourceware.org
+Date:   Thu, 02 May 2019 08:47:06 -0700
+In-Reply-To: <20190502111003.GO3567@e103592.cambridge.arm.com>
+References: <20190501211217.5039-1-yu-cheng.yu@intel.com>
+         <20190502111003.GO3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 544e784188f1dd7c797c70b213385e67d92005b6 ]
+On Thu, 2019-05-02 at 12:10 +0100, Dave Martin wrote:
+> On Wed, May 01, 2019 at 02:12:17PM -0700, Yu-cheng Yu wrote:
+> > An ELF file's .note.gnu.property indicates features the executable file
+> > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
+> > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
+> > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
 
-Raspberry pi board model B revison 2 have the hot plug detector gpio
-active high (and not low as it was in the dts).
+[...]
+> A couple of questions before I look in more detail:
+> 
+> 1) Can we rely on PT_GNU_PROPERTY being present in the phdrs to describe
+> the NT_GNU_PROPERTY_TYPE_0 note?  If so, we can avoid trying to parse
+> irrelevant PT_NOTE segments.
 
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Fixes: 49ac67e0c39c ("ARM: bcm2835: Add VC4 to the device tree.")
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Some older linkers can create multiples of NT_GNU_PROPERTY_TYPE_0.  The code
+scans all PT_NOTE segments to ensure there is only one NT_GNU_PROPERTY_TYPE_0. 
+If there are multiples, then all are considered invalid.
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-index 84df85ea6296..7efde03daadd 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -26,5 +26,5 @@
- };
- 
- &hdmi {
--	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
-+	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
- };
--- 
-2.19.1
+> 
+> 
+> 2) Are there standard types for things like the program property header?
+> If not, can we add something in elf.h?  We should try to coordinate with
+> libc on that.  Something like
+> 
+> typedef __u32 Elf_Word;
+> 
+> typedef struct {
+> 	Elf_Word pr_type;
+> 	Elf_Word pr_datasz;
+> } Elf_Gnu_Prophdr;
+> 
+> (i.e., just the header part from [1], with a more specific name -- which
+> I just made up).
 
+Yes, I will fix that.
 
+[...]
+> 3) It looks like we have to go and re-parse all the notes for every
+> property requested by the arch code.
+
+As explained above, it is necessary to scan all PT_NOTE segments.  But there
+should be only one NT_GNU_PROPERTY_TYPE_0 in an ELF file.  Once that is found,
+perhaps we can store it somewhere, or call into the arch code as you mentioned
+below.  I will look into that.
+
+> 
+> For now there is only one property requested anyway, so this is probably
+> not too bad.  But could we flip things around so that we have some
+> CONFIG_ARCH_WANTS_ELF_GNU_PROPERTY (say), and have the ELF core code
+> call into the arch backend for each property found?
+> 
+> The arch could provide some hook
+> 
+> 	int arch_elf_has_gnu_property(const Elf_Gnu_Prophdr *prop,
+> 					const void *data);
+> 
+> to consume the properties as they are found.
+> 
+> This would effectively replace the arch_setup_property() hook you
+> currently have.
+> 
+> Cheers
+> ---Dave
+> 
+> [1] https://github.com/hjl-tools/linux-abi/wiki/Linux-Extensions-to-gABI
 
