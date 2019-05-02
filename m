@@ -2,167 +2,73 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0098C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CB0C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C49C2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:01:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RyhiUhGM"
+	by mail.kernel.org (Postfix) with ESMTP id DB77D2081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:02:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfEBPB3 (ORCPT
+        id S1726379AbfEBPCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:01:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41699 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfEBPB0 (ORCPT
+        Thu, 2 May 2019 11:02:42 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40916 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBPCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:01:26 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f6so1182657pgs.8
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 08:01:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=UuMFcOk4PKj91APfBr8006g4N2giQ/z6xm9K7QOYvPU=;
-        b=RyhiUhGMu/07Fiptheef7l3Im7ZUgKwPpMGS171+3DfjyFghriz8AOvRTi8Me4ogUb
-         5CDP5WtPupbfM5B0sODlecbeWn0+sDne5D+oprjQzCmrQwCx3oZHRp9+bKcQCBxlOyuK
-         mT49R5DO+VPww+b/sKHXtQL8oDw/pvjKN8zcuitbVaLHAIGPfEv7mVB3lY3bpFfJq+Mq
-         v9h9NoX2vL5P+ugHDTfKE5/6Fi/Undu5B1Dmq0AJ4FNV12IzcZaTIB9dhe2E4KCV+Bg7
-         PDJJeYJAWaSL9/rdUNI7JYv8UcjtwGMqXUHaA61fFxQlkNwMnKC5k/iUotEXsQSOTTKj
-         g37Q==
+        Thu, 2 May 2019 11:02:42 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b3so1152902plr.7;
+        Thu, 02 May 2019 08:02:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UuMFcOk4PKj91APfBr8006g4N2giQ/z6xm9K7QOYvPU=;
-        b=tYhdDvbLnpOZt9+W0fq474yBN3CvEtM3/rhmg9OhdwrYRgpEXiSEjoOHMtSdXg+msb
-         SpSrpV8J4yQVmD46JaU8VWc047dbwH6A56Wrq2ypHe/+Vi1Uw6/NZxJkcrLkT5o4cp0t
-         0Vny4NDleQs1YhF4WYIF3jeR11pGi+QBuKTbLnyAeG/xDlgr8DNWQTvvfk5USBV23Rp3
-         rI2+GDJNloU3TwwSQl+hnachK28893C7V4eCETkXCaJonF9OFUXx3kwxIyyu1oMAKgOv
-         mTO7jRAZG4ROJY2s1lZzHnBCjDHIDQ3n0GtFihXTZeGzmUt2oaoFublTZWDVac32gBfX
-         V32A==
-X-Gm-Message-State: APjAAAXJFTb0UCWfS8Esvv5luFIT4OchDHwPjbEb3Drri+Zmv0Uyg3E1
-        dUmfKokmnkBsRdyBtCmvW14=
-X-Google-Smtp-Source: APXvYqzp8Vsv3csm5hTN6igjY/ka0x3tKKPaQLzTG2OHdwte3ZIu4AHSVJo95JQxGCw4JKKtULZcqg==
-X-Received: by 2002:a63:9214:: with SMTP id o20mr4452130pgd.203.1556809285953;
-        Thu, 02 May 2019 08:01:25 -0700 (PDT)
-Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id o15sm21581450pgb.85.2019.05.02.08.01.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 08:01:25 -0700 (PDT)
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH v2] mtd: nand: raw: brcmnand: When oops in progress use pio and interrupt polling
-Date:   Thu,  2 May 2019 11:01:01 -0400
-Message-Id: <1556809273-40009-1-git-send-email-kdasu.kdev@gmail.com>
-X-Mailer: git-send-email 1.9.0.138.g2de3478
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=anO7lfUc9r8EAyhsYOxpxvhPk9AVy84BcEYav0cFPYU=;
+        b=M1Qpe/OeLR6oAHYSqABfgTgStlKhZT4wmQPHji+BvIr9t6nPYLi6ApZqpWWikylmG/
+         Wb4LaC669NUIX8EZTO7L7WYtHN3oKenp4DNMMkW9K21fHAkLy22DED+/GjDtQpfs0PuP
+         /wJ0ftfW1KCcuK/jUo0rCWEcGl20uWt9qpO7d6X6z8BsUuqkajQMbyT7/dVoBHma5QXW
+         wSOfetvhcS7TNfkx5ZNWRWyKF6WMcMvJ6AsgYrwkkMyckER0IdzP7/213mJ7PTLo6HXh
+         ObCasFEGbALGzXFr4OL6QNjA9ZgEgJdC5qY95udH8iMsip8VE/7foJsWjwXim1z7hoEa
+         TKYA==
+X-Gm-Message-State: APjAAAUVgp4peaxx9PZgTn77H17B9538vLzqTpwaZLRwwsbXb/Jq9PSB
+        vy9Og+Kb50OyeBhaHyc/mlI=
+X-Google-Smtp-Source: APXvYqxwYBE+nRYoUncXZj3vOczocwKkkzBuY9BeY7WD4f0ITDINtwsG7p6VdGfcMssfK86gE2PKvQ==
+X-Received: by 2002:a17:902:7892:: with SMTP id q18mr4274244pll.163.1556809361485;
+        Thu, 02 May 2019 08:02:41 -0700 (PDT)
+Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
+        by smtp.gmail.com with ESMTPSA id r197sm54790824pfc.178.2019.05.02.08.02.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 May 2019 08:02:40 -0700 (PDT)
+Message-ID: <1556809358.12970.4.camel@acm.org>
+Subject: Re: [PATCH 10/24] scsi_transport_srp: switch to SPDX tags
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Christoph Hellwig <hch@lst.de>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     Hannes Reinecke <hare@suse.de>, Lee Duncan <lduncan@suse.com>,
+        Chris Leech <cleech@redhat.com>, Willem Riede <osst@riede.org>,
+        Doug Gilbert <dgilbert@interlog.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Kai =?ISO-8859-1?Q?M=E4kisara?= <Kai.Makisara@kolumbus.fi>,
+        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
+        osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Date:   Thu, 02 May 2019 08:02:38 -0700
+In-Reply-To: <20190501161417.32592-11-hch@lst.de>
+References: <20190501161417.32592-1-hch@lst.de>
+         <20190501161417.32592-11-hch@lst.de>
+Content-Type: text/plain; charset="UTF-7"
+X-Mailer: Evolution 3.26.2-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If mtd_oops is in progress, switch to polling during NAND command
-completion instead of relying on DMA/interrupts so that the mtd_oops
-buffer can be completely written in the assigned NAND partition.
-This is needed in cases where and there is only one online CPU and
-the panic is not on cpu0 as all IRQs are wired to cpu0.
+On Wed, 2019-05-01 at 12:14 -0400, Christoph Hellwig wrote:
++AD4 Use the the GPLv2 SPDX tag instead of verbose boilerplate text.
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
----
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 55 ++++++++++++++++++++++++++++++--
- 1 file changed, 52 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 482c6f0..128a806 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -823,6 +823,12 @@ static inline bool has_flash_dma(struct brcmnand_controller *ctrl)
- 	return ctrl->flash_dma_base;
- }
- 
-+static inline void disable_flash_dma_xfer(struct brcmnand_controller *ctrl)
-+{
-+	if (has_flash_dma(ctrl))
-+		ctrl->flash_dma_base = 0;
-+}
-+
- static inline bool flash_dma_buf_ok(const void *buf)
- {
- 	return buf && !is_vmalloc_addr(buf) &&
-@@ -1237,15 +1243,58 @@ static void brcmnand_cmd_ctrl(struct nand_chip *chip, int dat,
- 	/* intentionally left blank */
- }
- 
-+static bool is_mtd_oops_in_progress(void)
-+{
-+	int i = 0;
-+
-+#ifdef CONFIG_MTD_OOPS
-+	if (oops_in_progress && smp_processor_id()) {
-+		int cpu = 0;
-+
-+		for_each_online_cpu(cpu)
-+			++i;
-+	}
-+#endif
-+	return (i == 1);
-+}
-+
-+static bool brcmstb_nand_wait_for_completion(struct nand_chip *chip)
-+{
-+	struct brcmnand_host *host = nand_get_controller_data(chip);
-+	struct brcmnand_controller *ctrl = host->ctrl;
-+	bool err = false;
-+	int sts;
-+
-+	if (is_mtd_oops_in_progress()) {
-+		/* Switch to interrupt polling and PIO mode */
-+		disable_flash_dma_xfer(ctrl);
-+		sts = bcmnand_ctrl_poll_status(ctrl, NAND_CTRL_RDY |
-+					       NAND_STATUS_READY,
-+					       NAND_CTRL_RDY |
-+					       NAND_STATUS_READY, 0);
-+		err = (sts < 0) ? true : false;
-+	} else {
-+		unsigned long timeo = msecs_to_jiffies(
-+						NAND_POLL_STATUS_TIMEOUT_MS);
-+		/* wait for completion interrupt */
-+		sts = wait_for_completion_timeout(&ctrl->done, timeo);
-+		err = (sts <= 0) ? true : false;
-+	}
-+
-+	return err;
-+}
-+
- static int brcmnand_waitfunc(struct nand_chip *chip)
- {
- 	struct brcmnand_host *host = nand_get_controller_data(chip);
- 	struct brcmnand_controller *ctrl = host->ctrl;
--	unsigned long timeo = msecs_to_jiffies(100);
-+	bool err = false;
- 
- 	dev_dbg(ctrl->dev, "wait on native cmd %d\n", ctrl->cmd_pending);
--	if (ctrl->cmd_pending &&
--			wait_for_completion_timeout(&ctrl->done, timeo) <= 0) {
-+	if (ctrl->cmd_pending)
-+		err = brcmstb_nand_wait_for_completion(chip);
-+
-+	if (err) {
- 		u32 cmd = brcmnand_read_reg(ctrl, BRCMNAND_CMD_START)
- 					>> brcmnand_cmd_shift(ctrl);
- 
--- 
-1.9.0.138.g2de3478
+Acked-by: Bart Van Assche +ADw-bvanassche+AEA-acm.org+AD4
 
