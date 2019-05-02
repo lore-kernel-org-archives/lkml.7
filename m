@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00DCC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C739C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7545B20449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C42205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811551;
-	bh=/lnWhQL+d20XErr3t+AELXpFzYO/iy5TFR8rzFo2Dao=;
+	s=default; t=1556811558;
+	bh=dlIPRiQwHmgV41SHZ+rhrz0xbtgOVkapfmBtKyxx64c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FtfvwI7ogsHZ//4VeBS018hcyXA699PVtEnzGrgZ3QmJqYOkHMGaAU82SWghH1clo
-	 BsE7ItLJNQUcwBqMrhZPr528logZhzACdmZMN5g0Gm4k/SPnu5lUL321NP240NS8kM
-	 P5kH5a06gow9mkS9+j6RQBy2zk9H8C2jJunbeTOk=
+	b=kbYlxPL5LjDTdRBuMn9LWoaURELCSZyMmRFA+A+PbR7Id7t9q198tAJn0ufrSCVYd
+	 xFvQiy5mt7TY9fdkAewNmn8tT1JFxpBBUT8iW2lFw40M32dQHC0thz0FEdIFSs3nZ5
+	 BHVkOr+K7OJFsTu6o7F2yPCuPSEr1CgKywh4xQtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbfEBPjK (ORCPT
+        id S1728503AbfEBPjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:39:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbfEBP3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:29:42 -0400
+        id S1728504AbfEBP3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:29:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67E2220675;
-        Thu,  2 May 2019 15:29:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7B7221743;
+        Thu,  2 May 2019 15:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810981;
-        bh=/lnWhQL+d20XErr3t+AELXpFzYO/iy5TFR8rzFo2Dao=;
+        s=default; t=1556810979;
+        bh=dlIPRiQwHmgV41SHZ+rhrz0xbtgOVkapfmBtKyxx64c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tq0oXF8SqyF4u+zKX1gmY+dsuE2G8sHVEG3xt7G6F113uHKzSk4qSnVFbHHlLohQu
-         YVuRRDuBBCpyroWmA4gmLlv9dDUr7b3ZB2S2A6vS0ObsxmoEmvFbHOeYbiKA2dHINU
-         hbsEBE5Ijx9MPw4yXXq5x4fhVSS9OAHOL+R7Om/Y=
+        b=U7L5vy7o2Jrn3UZd5uVyhnnZA38hNVfZ2RmUpF4v3twEQj82VWzVMqe/FQ/wCHNOU
+         LO6juXd+mxMl6twfr1eRWuOILzo/WQ4e756OWzzmHGI2bwrcxzwh7t7ooRMGByaelC
+         BbGTI6I2SRDi3sjbD3Hinr5glZB2Q41e0imQNdNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
         Jann Horn <jannh@google.com>, stable@kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 005/101] mm: add try_get_page() helper function
-Date:   Thu,  2 May 2019 17:20:07 +0200
-Message-Id: <20190502143339.868493580@linuxfoundation.org>
+Subject: [PATCH 5.0 004/101] mm: make page ref count overflow check tighter and more explicit
+Date:   Thu,  2 May 2019 17:20:06 +0200
+Message-Id: <20190502143339.771236765@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -61,26 +61,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 88b1a17dfc3ed7728316478fae0f5ad508f50397 upstream.
+commit f958d7b528b1b40c44cfda5eabe2d82760d868c3 upstream.
 
-This is the same as the traditional 'get_page()' function, but instead
-of unconditionally incrementing the reference count of the page, it only
-does so if the count was "safe".  It returns whether the reference count
-was incremented (and is marked __must_check, since the caller obviously
-has to be aware of it).
+We have a VM_BUG_ON() to check that the page reference count doesn't
+underflow (or get close to overflow) by checking the sign of the count.
 
-Also like 'get_page()', you can't use this function unless you already
-had a reference to the page.  The intent is that you can use this
-exactly like get_page(), but in situations where you want to limit the
-maximum reference count.
+That's all fine, but we actually want to allow people to use a "get page
+ref unless it's already very high" helper function, and we want that one
+to use the sign of the page ref (without triggering this VM_BUG_ON).
 
-The code currently does an unconditional WARN_ON_ONCE() if we ever hit
-the reference count issues (either zero or negative), as a notification
-that the conditional non-increment actually happened.
-
-NOTE! The count access for the "safety" check is inherently racy, but
-that doesn't matter since the buffer we use is basically half the range
-of the reference count (ie we look at the sign of the count).
+Change the VM_BUG_ON to only check for small underflows (or _very_ close
+to overflowing), and ignore overflows which have strayed into negative
+territory.
 
 Acked-by: Matthew Wilcox <willy@infradead.org>
 Cc: Jann Horn <jannh@google.com>
@@ -89,26 +81,30 @@ Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/mm.h |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/linux/mm.h |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -980,6 +980,15 @@ static inline void get_page(struct page
+@@ -965,6 +965,10 @@ static inline bool is_pci_p2pdma_page(co
+ }
+ #endif /* CONFIG_DEV_PAGEMAP_OPS */
+ 
++/* 127: arbitrary random number, small enough to assemble well */
++#define page_ref_zero_or_close_to_overflow(page) \
++	((unsigned int) page_ref_count(page) + 127u <= 127u)
++
+ static inline void get_page(struct page *page)
+ {
+ 	page = compound_head(page);
+@@ -972,7 +976,7 @@ static inline void get_page(struct page
+ 	 * Getting a normal page or the head of a compound page
+ 	 * requires to already have an elevated page->_refcount.
+ 	 */
+-	VM_BUG_ON_PAGE(page_ref_count(page) <= 0, page);
++	VM_BUG_ON_PAGE(page_ref_zero_or_close_to_overflow(page), page);
  	page_ref_inc(page);
  }
  
-+static inline __must_check bool try_get_page(struct page *page)
-+{
-+	page = compound_head(page);
-+	if (WARN_ON_ONCE(page_ref_count(page) <= 0))
-+		return false;
-+	page_ref_inc(page);
-+	return true;
-+}
-+
- static inline void put_page(struct page *page)
- {
- 	page = compound_head(page);
 
 
