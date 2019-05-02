@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C375CC04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C77C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857FE204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C735204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811823;
-	bh=5bPuPdaKczs4UqEYiFRfvaXCm3/b733eld0mt8DMLF0=;
+	s=default; t=1556811830;
+	bh=AEVPONUc6OvFBB8Yxfip2dKnmzoT+a1ZJIOAZcEZVHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b5+z920+evcsMPQpjJjrFsh01HjKtiWI1nFn5eN6cDHPqrvHL6WvTruN/Qiz+yzB5
-	 /JVFn1aYq8o5eyjC4i+ht71+Z9BjoxOqLIqaexPM1Iop7S8LA+DGeNsEm3Gltx8R8P
-	 +09e/5wOOX8WvOYmZnh1dGHbORaywIeHxpZ/52mM=
+	b=CQzd2BipXMJUmVS9hMjcRKAnnZ5vkN7PuzCwX7e/rcd3ZO1oe2ReOAZ+lBn5INL/i
+	 D+UaMsJhBpIk7rGb9KRRZcxeEhIsCCOskKHqdRVXLsuUPBpj3VcBGTNgMUlH4kEDR/
+	 zghrUtOemouHpGlvkUtpQzXhGd/b/ccHOuZMhvks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbfEBPnm (ORCPT
+        id S1728117AbfEBPnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:43:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44012 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:43:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727167AbfEBP1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:27:14 -0400
+        id S1727340AbfEBP1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:27:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 176702081C;
-        Thu,  2 May 2019 15:27:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8B37208C4;
+        Thu,  2 May 2019 15:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810833;
-        bh=5bPuPdaKczs4UqEYiFRfvaXCm3/b733eld0mt8DMLF0=;
+        s=default; t=1556810828;
+        bh=AEVPONUc6OvFBB8Yxfip2dKnmzoT+a1ZJIOAZcEZVHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yohsB8nwxLwZlE/Kq3Xo05vLcvekzEn094AWfTtZQdy/GB84slZovWOVb/xjUN/xH
-         8yFKnX3ft0CJdtxsu4zuU7hLsTT57Uxw5dSnfAaYbzkZlBVyAI8H8zYVEwHC4GcOtO
-         qXyjb6DYM64mRG4VxsgRCiDq15x2len8KhuX5Zsc=
+        b=V0ZWYexExhYmzK1fIDS4InV/WMJCmTZ+v+LLW6Av2eauApgvLdr86iKQLGd0J6oFX
+         00doOXsz2UNkkX2GNZTBBAtuHoYf8Gqt9KNJnD3RMXhIvgATjgFIcSfK2UGx3paHKE
+         22KQ2s2RreXpaOboag8ntzeN5ItpBs/ws55GWrsA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Masanari Iida <standby24x7@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 45/72] NFS: Fix a typo in nfs_init_timeout_values()
-Date:   Thu,  2 May 2019 17:21:07 +0200
-Message-Id: <20190502143337.048238268@linuxfoundation.org>
+Subject: [PATCH 4.19 43/72] ARM: dts: imx6qdl: Fix typo in imx6qdl-icore-rqs.dtsi
+Date:   Thu,  2 May 2019 17:21:05 +0200
+Message-Id: <20190502143336.915085208@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -60,32 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5a698243930c441afccec04e4d5dc8febfd2b775 ]
+[ Upstream commit 41b37f4c0fa67185691bcbd30201cad566f2f0d1 ]
 
-Specifying a retrans=0 mount parameter to a NFS/TCP mount, is
-inadvertently causing the NFS client to rewrite any specified
-timeout parameter to the default of 60 seconds.
+This patch fixes a spelling typo.
 
-Fixes: a956beda19a6 ("NFS: Allow the mount option retrans=0")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+Fixes: cc42603de320 ("ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7 initial support")
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- fs/nfs/client.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 96d5f8135eb9..751ca65da8a3 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -459,7 +459,7 @@ void nfs_init_timeout_values(struct rpc_timeout *to, int proto,
- 	case XPRT_TRANSPORT_RDMA:
- 		if (retrans == NFS_UNSPEC_RETRANS)
- 			to->to_retries = NFS_DEF_TCP_RETRANS;
--		if (timeo == NFS_UNSPEC_TIMEO || to->to_retries == 0)
-+		if (timeo == NFS_UNSPEC_TIMEO || to->to_initval == 0)
- 			to->to_initval = NFS_DEF_TCP_TIMEO * HZ / 10;
- 		if (to->to_initval > NFS_MAX_TCP_TIMEOUT)
- 			to->to_initval = NFS_MAX_TCP_TIMEOUT;
+diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+index acc3b11fba2a..cde3025d9603 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+@@ -298,7 +298,7 @@
+ 	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
+ 	vmcc-supply = <&reg_sd3_vmmc>;
+ 	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+-	bus-witdh = <4>;
++	bus-width = <4>;
+ 	no-1-8-v;
+ 	status = "okay";
+ };
+@@ -309,7 +309,7 @@
+ 	pinctrl-1 = <&pinctrl_usdhc4_100mhz>;
+ 	pinctrl-2 = <&pinctrl_usdhc4_200mhz>;
+ 	vmcc-supply = <&reg_sd4_vmmc>;
+-	bus-witdh = <8>;
++	bus-width = <8>;
+ 	no-1-8-v;
+ 	non-removable;
+ 	status = "okay";
 -- 
 2.19.1
 
