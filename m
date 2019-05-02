@@ -2,53 +2,52 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A797C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EBAC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED152205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BDF20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556812136;
-	bh=xEwRVn6vW+YzMDRZ0xmL2n1BTiwlSjzDzU4hfBMfsfY=;
+	s=default; t=1556812140;
+	bh=071qU4FYFqP+jfSHj3u5DwRgRM6TOMGyikw3DM6siUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=snElPaAfeHv1jP1zvjfVjBHqtOV0Y5dyU/nCrYBQVTEkpoNkzGGMeuIIiyWnena+8
-	 mP9Tcy04z8ICP394yk24Ie3hWt/H6P5bDjK95AHyLF4pK5XoYaodLYTWYl6cENfQz2
-	 9mndVwopMOYH9kXav9TWjK7aUVPF5z7IbuBBRhWQ=
+	b=NvVfz3vOPHjeTY04wDRylCtktOI8xVhZWRPa1TSBOxJYkhmOKWhZI+81VHplxfknW
+	 lFOWTJl7PFLZ6u8AxzLj1XyO5EOnWCIyvvCGeDKRNf5cdjBEUUeqUQepCEoK5y0TYC
+	 SQpCvQ8l3yzy/lwtJ9mjW7ovSFUof5KC8IYPsIbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfEBPsz (ORCPT
+        id S1726884AbfEBPW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:48:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38504 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:22:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbfEBPW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:22:58 -0400
+        id S1726809AbfEBPWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:22:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FAF220C01;
-        Thu,  2 May 2019 15:22:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D71B216FD;
+        Thu,  2 May 2019 15:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810577;
-        bh=xEwRVn6vW+YzMDRZ0xmL2n1BTiwlSjzDzU4hfBMfsfY=;
+        s=default; t=1556810574;
+        bh=071qU4FYFqP+jfSHj3u5DwRgRM6TOMGyikw3DM6siUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dL3eAgAwngHPuZY+5oEZ8RhCFph5V69Oy926PDModq7Z2NGhV3FV8kWFcbpK0cP/r
-         7wzZaj3IeRfbQ9Hn6H/1+lUQVxDGHI33RBtEKSaa6ebxfV+GrGxL85ro7SRpme/ZwH
-         /NY4Eo0dTk9OgjUlaRDV+eEJmkZgO0UDAgfIshTk=
+        b=HCd6WvCvdRYOamEhYfTjr/DP66D6Vx6u133mPm9f8vsEd02CbitP6IzISLedFM5Jt
+         0JD7AMQHHt6KCGZi325JZTsuSyNY3eJ85ygpsqVkHshYDHgqpCg0krtcum5vjWsk26
+         sxABfYpZvND2QY80kJB5f71BsND3bup6WV/T192U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 32/32] vfio/type1: Limit DMA mappings per container
-Date:   Thu,  2 May 2019 17:21:18 +0200
-Message-Id: <20190502143323.641847384@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 4.9 31/32] leds: pca9532: fix a potential NULL pointer dereference
+Date:   Thu,  2 May 2019 17:21:17 +0200
+Message-Id: <20190502143323.337421780@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
 References: <20190502143314.649935114@linuxfoundation.org>
@@ -61,93 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+[ Upstream commit 0aab8e4df4702b31314a27ec4b0631dfad0fae0a ]
 
-commit 492855939bdb59c6f947b0b5b44af9ad82b7e38c upstream.
+In case of_match_device cannot find a match, return -EINVAL to avoid
+NULL pointer dereference.
 
-Memory backed DMA mappings are accounted against a user's locked
-memory limit, including multiple mappings of the same memory.  This
-accounting bounds the number of such mappings that a user can create.
-However, DMA mappings that are not backed by memory, such as DMA
-mappings of device MMIO via mmaps, do not make use of page pinning
-and therefore do not count against the user's locked memory limit.
-These mappings still consume memory, but the memory is not well
-associated to the process for the purpose of oom killing a task.
-
-To add bounding on this use case, we introduce a limit to the total
-number of concurrent DMA mappings that a user is allowed to create.
-This limit is exposed as a tunable module option where the default
-value of 64K is expected to be well in excess of any reasonable use
-case (a large virtual machine configuration would typically only make
-use of tens of concurrent mappings).
-
-This fixes CVE-2019-3882.
-
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Tested-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-[groeck: Adjust for missing upstream commit]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: fa4191a609f2 ("leds: pca9532: Add device tree support")
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/vfio/vfio_iommu_type1.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/leds/leds-pca9532.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -53,10 +53,16 @@ module_param_named(disable_hugepages,
- MODULE_PARM_DESC(disable_hugepages,
- 		 "Disable VFIO IOMMU support for IOMMU hugepages.");
- 
-+static unsigned int dma_entry_limit __read_mostly = U16_MAX;
-+module_param_named(dma_entry_limit, dma_entry_limit, uint, 0644);
-+MODULE_PARM_DESC(dma_entry_limit,
-+		 "Maximum number of user DMA mappings per container (65535).");
-+
- struct vfio_iommu {
- 	struct list_head	domain_list;
- 	struct mutex		lock;
- 	struct rb_root		dma_list;
-+	unsigned int		dma_avail;
- 	bool			v2;
- 	bool			nesting;
- };
-@@ -384,6 +390,7 @@ static void vfio_remove_dma(struct vfio_
- 	vfio_unmap_unpin(iommu, dma);
- 	vfio_unlink_dma(iommu, dma);
- 	kfree(dma);
-+	iommu->dma_avail++;
- }
- 
- static unsigned long vfio_pgsize_bitmap(struct vfio_iommu *iommu)
-@@ -584,12 +591,18 @@ static int vfio_dma_do_map(struct vfio_i
- 		return -EEXIST;
+diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
+index 09a7cffbc46f..896b38f6f9c0 100644
+--- a/drivers/leds/leds-pca9532.c
++++ b/drivers/leds/leds-pca9532.c
+@@ -488,6 +488,7 @@ static int pca9532_probe(struct i2c_client *client,
+ 	const struct i2c_device_id *id)
+ {
+ 	int devid;
++	const struct of_device_id *of_id;
+ 	struct pca9532_data *data = i2c_get_clientdata(client);
+ 	struct pca9532_platform_data *pca9532_pdata =
+ 			dev_get_platdata(&client->dev);
+@@ -503,8 +504,11 @@ static int pca9532_probe(struct i2c_client *client,
+ 			dev_err(&client->dev, "no platform data\n");
+ 			return -EINVAL;
+ 		}
+-		devid = (int)(uintptr_t)of_match_device(
+-			of_pca9532_leds_match, &client->dev)->data;
++		of_id = of_match_device(of_pca9532_leds_match,
++				&client->dev);
++		if (unlikely(!of_id))
++			return -EINVAL;
++		devid = (int)(uintptr_t) of_id->data;
+ 	} else {
+ 		devid = id->driver_data;
  	}
- 
-+	if (!iommu->dma_avail) {
-+		mutex_unlock(&iommu->lock);
-+		return -ENOSPC;
-+	}
-+
- 	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
- 	if (!dma) {
- 		mutex_unlock(&iommu->lock);
- 		return -ENOMEM;
- 	}
- 
-+	iommu->dma_avail--;
- 	dma->iova = iova;
- 	dma->vaddr = vaddr;
- 	dma->prot = prot;
-@@ -905,6 +918,7 @@ static void *vfio_iommu_type1_open(unsig
- 
- 	INIT_LIST_HEAD(&iommu->domain_list);
- 	iommu->dma_list = RB_ROOT;
-+	iommu->dma_avail = dma_entry_limit;
- 	mutex_init(&iommu->lock);
- 
- 	return iommu;
+-- 
+2.19.1
+
 
 
