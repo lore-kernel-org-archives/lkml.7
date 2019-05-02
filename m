@@ -2,107 +2,124 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAE3C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C05C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50DD321734
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E8C72075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfEBMrw (ORCPT
+        id S1726491AbfEBMsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:47:52 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:55384 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfEBMrv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:47:51 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1hMB7s-0000qc-KI; Thu, 02 May 2019 14:47:48 +0200
-Message-ID: <f0f772e5e33519dac93672be26fa7995f8109721.camel@sipsolutions.net>
-Subject: Re: [PATCH 2/4] devcoredump: allow to create several coredump files
- in one device
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Akinobu Mita <akinobu.mita@gmail.com>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Date:   Thu, 02 May 2019 14:47:47 +0200
-In-Reply-To: <1556787561-5113-3-git-send-email-akinobu.mita@gmail.com> (sfid-20190502_105944_673346_AEC5725E)
-References: <1556787561-5113-1-git-send-email-akinobu.mita@gmail.com>
-         <1556787561-5113-3-git-send-email-akinobu.mita@gmail.com>
-         (sfid-20190502_105944_673346_AEC5725E)
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 2 May 2019 08:48:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33934 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726267AbfEBMsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 08:48:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0565CADEA;
+        Thu,  2 May 2019 12:48:00 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 662ABE0157; Thu,  2 May 2019 14:48:00 +0200 (CEST)
+Message-Id: <75a0887b3eb70005c272685d8ef9a712f37d7a54.1556798793.git.mkubecek@suse.cz>
+In-Reply-To: <cover.1556798793.git.mkubecek@suse.cz>
+References: <cover.1556798793.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next 3/3] netlink: add validation of NLA_F_NESTED flag
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        David Ahern <dsahern@gmail.com>, linux-kernel@vger.kernel.org
+Date:   Thu,  2 May 2019 14:48:00 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-02 at 17:59 +0900, Akinobu Mita wrote:
-> 
->  static void devcd_del(struct work_struct *wk)
->  {
->  	struct devcd_entry *devcd;
-> +	int i;
->  
->  	devcd = container_of(wk, struct devcd_entry, del_wk.work);
->  
-> +	for (i = 0; i < devcd->num_files; i++) {
-> +		device_remove_bin_file(&devcd->devcd_dev,
-> +				       &devcd->files[i].bin_attr);
-> +	}
+Add new validation flag NL_VALIDATE_NESTED which adds three consistency
+checks of NLA_F_NESTED_FLAG:
 
-Not much value in the braces?
+  - the flag is set on attributes with NLA_NESTED{,_ARRAY} policy
+  - the flag is not set on attributes with other policies except NLA_UNSPEC
+  - the flag is set on attribute passed to nla_parse_nested()
 
-> +static struct devcd_entry *devcd_alloc(struct dev_coredumpm_bulk_data *files,
-> +				       int num_files, gfp_t gfp)
-> +{
-> +	struct devcd_entry *devcd;
-> +	int i;
-> +
-> +	devcd = kzalloc(sizeof(*devcd), gfp);
-> +	if (!devcd)
-> +		return NULL;
-> +
-> +	devcd->files = kcalloc(num_files, sizeof(devcd->files[0]), gfp);
-> +	if (!devcd->files) {
-> +		kfree(devcd);
-> +		return NULL;
-> +	}
-> +	devcd->num_files = num_files;
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+---
+ include/net/netlink.h | 10 +++++++++-
+ lib/nlattr.c          | 15 +++++++++++++++
+ 2 files changed, 24 insertions(+), 1 deletion(-)
 
-IMHO it would be nicer to allocate all of this in one struct, i.e. have
-
-struct devcd_entry {
-	...
-	struct devcd_file files[];
-}
-
-(and then use struct_size())
-
-> @@ -309,7 +339,41 @@ void dev_coredumpm(struct device *dev, struct module *owner,
->   put_module:
->  	module_put(owner);
->   free:
-> -	free(data);
-> +	for (i = 0; i < num_files; i++)
-> +		files[i].free(files[i].data);
-> +}
-
-and then you don't need to do all this kind of thing to free
-
-Otherwise looks fine. I'd worry a bit that existing userspace will only
-capture the 'data' file, rather than a tarball of all files, but I guess
-that's something you'd have to work out then when actually desiring to
-use multiple files.
-
-johannes
+diff --git a/include/net/netlink.h b/include/net/netlink.h
+index 679f649748d4..55f68e00fb6e 100644
+--- a/include/net/netlink.h
++++ b/include/net/netlink.h
+@@ -401,6 +401,8 @@ struct nl_info {
+  *	are enforced going forward.
+  * @NL_VALIDATE_STRICT_ATTRS: strict attribute policy parsing (e.g.
+  *	U8, U16, U32 must have exact size, etc.)
++ * @NL_VALIDATE_NESTED: Check that NLA_F_NESTED is set for NLA_NESTED(_ARRAY)
++ *	and unset for other policies.
+  */
+ enum netlink_validation {
+ 	NL_VALIDATE_LIBERAL = 0,
+@@ -408,6 +410,7 @@ enum netlink_validation {
+ 	NL_VALIDATE_MAXTYPE = BIT(1),
+ 	NL_VALIDATE_UNSPEC = BIT(2),
+ 	NL_VALIDATE_STRICT_ATTRS = BIT(3),
++	NL_VALIDATE_NESTED = BIT(4),
+ };
+ 
+ #define NL_VALIDATE_DEPRECATED_STRICT (NL_VALIDATE_TRAILING |\
+@@ -415,7 +418,8 @@ enum netlink_validation {
+ #define NL_VALIDATE_STRICT (NL_VALIDATE_TRAILING |\
+ 			    NL_VALIDATE_MAXTYPE |\
+ 			    NL_VALIDATE_UNSPEC |\
+-			    NL_VALIDATE_STRICT_ATTRS)
++			    NL_VALIDATE_STRICT_ATTRS |\
++			    NL_VALIDATE_NESTED)
+ 
+ int netlink_rcv_skb(struct sk_buff *skb,
+ 		    int (*cb)(struct sk_buff *, struct nlmsghdr *,
+@@ -1132,6 +1136,10 @@ static inline int nla_parse_nested(struct nlattr *tb[], int maxtype,
+ 				   const struct nla_policy *policy,
+ 				   struct netlink_ext_ack *extack)
+ {
++	if (!(nla->nla_type & NLA_F_NESTED)) {
++		NL_SET_ERR_MSG_ATTR(extack, nla, "nested attribute expected");
++		return -EINVAL;
++	}
+ 	return __nla_parse(tb, maxtype, nla_data(nla), nla_len(nla), policy,
+ 			   NL_VALIDATE_STRICT, extack);
+ }
+diff --git a/lib/nlattr.c b/lib/nlattr.c
+index adc919b32bf9..92da65cb6637 100644
+--- a/lib/nlattr.c
++++ b/lib/nlattr.c
+@@ -184,6 +184,21 @@ static int validate_nla(const struct nlattr *nla, int maxtype,
+ 		}
+ 	}
+ 
++	if (validate & NL_VALIDATE_NESTED) {
++		if ((pt->type == NLA_NESTED || pt->type == NLA_NESTED_ARRAY) &&
++		    !(nla->nla_type & NLA_F_NESTED)) {
++			NL_SET_ERR_MSG_ATTR(extack, nla,
++					    "nested attribute expected");
++			return -EINVAL;
++		}
++		if (pt->type != NLA_NESTED && pt->type != NLA_NESTED_ARRAY &&
++		    pt->type != NLA_UNSPEC && (nla->nla_type & NLA_F_NESTED)) {
++			NL_SET_ERR_MSG_ATTR(extack, nla,
++					    "nested attribute not expected");
++			return -EINVAL;
++		}
++	}
++
+ 	switch (pt->type) {
+ 	case NLA_EXACT_LEN:
+ 		if (attrlen != pt->len)
+-- 
+2.21.0
 
