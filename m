@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0B0C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E537C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCE82085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E512A20C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810729;
-	bh=Z5Q3p7tnXJAzzJtZccMCQ5DxuI62SO5FeHj3JdloG34=;
+	s=default; t=1556810733;
+	bh=r+ZSj1TIX7JKLkzV3urREXxfRbXAatv90V2Lp5h6Nps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sbJ/ltSq3bxl8NUm5HteP2GqwYV7f3mX80EgGlUVVmGoqMKnBPeYCNDK6/Dmpwmww
-	 F42vX72vWRejwrk/YHQcxbkB4eG23XWR+Rp5LxV4uDij1MptUw/7p9cnakHa6Sx3zF
-	 P7Bhy8W8vrV+lqNYB3PCPQ1opqyO/OfXIFFc4hmg=
+	b=V4fpp2/KWcRAPD3itJFfeHhck3NQPKNW8/mOqOQ+5coytq3+CWhGtTYjaGc0vcRP8
+	 urv84yVxWi7H+GYH4tZ/WxlTA9hr6TdZmXGS2UEa20NfMDQpQ0Fwr+whO6wxuYDsxT
+	 +LWrw/0YDvYuRtpu7fWYXV8VXU5R8crZhK2n3LTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfEBPZ2 (ORCPT
+        id S1726473AbfEBPZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:25:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41560 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:25:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbfEBPZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:25:20 -0400
+        id S1727549AbfEBPZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:25:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7048721670;
-        Thu,  2 May 2019 15:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DDBE20C01;
+        Thu,  2 May 2019 15:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810719;
-        bh=Z5Q3p7tnXJAzzJtZccMCQ5DxuI62SO5FeHj3JdloG34=;
+        s=default; t=1556810727;
+        bh=r+ZSj1TIX7JKLkzV3urREXxfRbXAatv90V2Lp5h6Nps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fyYyp0SYzq0tVgU0CXTUZF5HnZRd7fxhFu+pZ+LGQ2mFSzEx+TidUUcaXhHGoeHF+
-         9gj3Jnxwth9wvQxzWofD/IP/iOH7vJ/h4l8BZP+DhmpMermkUb0aNxg0TbAKjpfABK
-         VcZpCTNQOz+5OkUeDSapeYElF4AdoLMCNslmUqTo=
+        b=P3T7qzYMAlhBl2cEQQxvy18+2/AxBux75ckLZ03qtmvMCVDh97uEkRisyF8yWPWl4
+         HmjgIqQFwrnkftjLdG6b/Eo+Im3fxrX+TEeddnsKy62SVU8mRgqocPJWHFOZXZ02az
+         HBdrnHLqGlxrsf6ug96/copYjWn1gMeyufVOJi1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Douglas Miller <dougmill@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 34/49] net: ibm: fix possible object reference leak
-Date:   Thu,  2 May 2019 17:21:11 +0200
-Message-Id: <20190502143328.133935883@linuxfoundation.org>
+Subject: [PATCH 4.14 37/49] drm/meson: Fix invalid pointer in meson_drv_unbind()
+Date:   Thu,  2 May 2019 17:21:14 +0200
+Message-Id: <20190502143328.617041308@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -61,38 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit be693df3cf9dd113ff1d2c0d8150199efdba37f6 ]
+[ Upstream commit 776e78677f514ecddd12dba48b9040958999bd5a ]
 
-The call to ehea_get_eth_dn returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+meson_drv_bind() registers a meson_drm struct as the device's privdata,
+but meson_drv_unbind() tries to retrieve a drm_device. This may cause a
+segfault on shutdown:
 
-Detected by coccinelle with the following warnings:
-./drivers/net/ethernet/ibm/ehea/ehea_main.c:3163:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3154, but without a corresponding object release within this function.
+[ 5194.593429] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000197
+ ...
+[ 5194.788850] Call trace:
+[ 5194.791349]  drm_dev_unregister+0x1c/0x118 [drm]
+[ 5194.795848]  meson_drv_unbind+0x50/0x78 [meson_drm]
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Douglas Miller <dougmill@linux.ibm.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Retrieve the right pointer in meson_drv_unbind().
+
+Fixes: bbbe775ec5b5 ("drm: Add support for Amlogic Meson Graphic Controller")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190322152657.13752-1-jean-philippe.brucker@arm.com
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ehea/ehea_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/meson/meson_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-index 4878b7169e0f..30cbdf0fed59 100644
---- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
-+++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-@@ -3176,6 +3176,7 @@ static ssize_t ehea_probe_port(struct device *dev,
+diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
+index 5deb44ac6791..1a1b0b9cf1fa 100644
+--- a/drivers/gpu/drm/meson/meson_drv.c
++++ b/drivers/gpu/drm/meson/meson_drv.c
+@@ -294,8 +294,8 @@ static int meson_drv_bind(struct device *dev)
  
- 	if (ehea_add_adapter_mr(adapter)) {
- 		pr_err("creating MR failed\n");
-+		of_node_put(eth_dn);
- 		return -EIO;
- 	}
+ static void meson_drv_unbind(struct device *dev)
+ {
+-	struct drm_device *drm = dev_get_drvdata(dev);
+-	struct meson_drm *priv = drm->dev_private;
++	struct meson_drm *priv = dev_get_drvdata(dev);
++	struct drm_device *drm = priv->drm;
  
+ 	drm_dev_unregister(drm);
+ 	drm_kms_helper_poll_fini(drm);
 -- 
 2.19.1
 
