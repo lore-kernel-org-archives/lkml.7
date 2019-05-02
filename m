@@ -7,57 +7,56 @@ X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E19C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F9AC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 489A1208E4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6F9208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556763518;
-	bh=hi2TcNVr06ts0wCsKqCkkkLgKc7GuBEvkNH9Hf22IYU=;
+	s=default; t=1556763521;
+	bh=Dcq3HMZ089dT2H0uJpY0MlvZg9Sw/j9m1tDjpVHY92s=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=jGDI6mXSNuFmMl2BEMCb1ceWJBGt1GeLql8gV8BvVJkwz/I8j+1rCyaXPWTB29KhL
-	 CZTA9mrW8IV7edUuV3qHJQof3pBeI4phVAqNtAYsT91Nar+8wiiDG4+pNWlicrpEE4
-	 z5hFOuTNyA12zhfllc8nVKDMQmR2vun7d6+XBDps=
+	b=yZS4Raj/DWwNyGMmGWMJY1LktlUa7mlJfyPCabQjCRuSKB64YgwV4FgLosAtg1Adg
+	 Gqt2PAdyLlFCwt0ERYJsm3O6VYQachQBt8JJeF+KmbZPiTo0v9kG52y1tRT3CIjKV5
+	 MYylvbO0FEOTjcIcKo0u712VaPCYPmy7YQkV1N9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbfEBCSg (ORCPT
+        id S1726449AbfEBCSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:18:36 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55466 "EHLO
+        Wed, 1 May 2019 22:18:40 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55504 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfEBCSg (ORCPT
+        with ESMTP id S1726409AbfEBCSh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:18:36 -0400
+        Wed, 1 May 2019 22:18:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=QjCPGci74UmifJtpBqzOP72e1ynNhraaHvIcf4rf0co=; b=W8AbRtvWtJpZ
-        R6IG8s4CIHH0C2oDH5Vs/J5a39kA7O7QUSS9QdngbpqgtsvdLmHWlDXKg29TBcub/TLRLOJ5Ersex
-        UhP4nTrRYqbQKcNezLxpAXyUHSFEWZrapbY+dDE3TspbbfdAmHxUsEHVaPDR9e1/ccWElkYH26VUL
-        FKGew=;
+        List-Archive; bh=v7BNy5FY8VVxeuyTtTXhkNB4mGH8vIIA5LpX6bCLpJ8=; b=V1cGA/05FX50
+        uuJCa27A5ApgejS5gJ9WHiWtsQZmO+GJz/0LxRIHZ+STJtN9zvkDjb7DsHCUjkWVSQQaqa0eEpK0X
+        ca0it7N5oVyYWx+70SkLNp/NStgDY46CXcv0aSUtHCoLQadcYEygmlwWMYfbRsbCztdf5hhrD8vvB
+        6tW00=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1Il-0005re-MR; Thu, 02 May 2019 02:18:24 +0000
+        id 1hM1Im-0005rm-Ua; Thu, 02 May 2019 02:18:25 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 053F2441D3C; Thu,  2 May 2019 03:18:19 +0100 (BST)
+        id E7690441D3B; Thu,  2 May 2019 03:18:21 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     alsa-devel@alsa-project.org,
-        Brian Austin <brian.austin@cirrus.com>, kjlu@umn.edu,
-        Liam Girdwood <lgirdwood@gmail.com>,
+Cc:     alsa-devel@alsa-project.org, Bard Liao <bardliao@realtek.com>,
+        kjlu@umn.edu, Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        pakki001@umn.edu, Paul Handrigan <Paul.Handrigan@cirrus.com>,
+        Oder Chiou <oder_chiou@realtek.com>, pakki001@umn.edu,
         Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: cs43130: fix a NULL pointer dereference" to the asoc tree
-In-Reply-To:  <20190315035120.25913-1-kjlu@umn.edu>
+Subject: Applied "ASoC: rt5645: fix a NULL pointer dereference" to the asoc tree
+In-Reply-To:  <20190315034833.25037-1-kjlu@umn.edu>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021820.053F2441D3C@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:19 +0100 (BST)
+Message-Id: <20190502021821.E7690441D3B@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:18:21 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: cs43130: fix a NULL pointer dereference
+   ASoC: rt5645: fix a NULL pointer dereference
 
 has been applied to the asoc tree at
 
@@ -90,32 +89,33 @@ to this mail.
 Thanks,
 Mark
 
-From a2be42f18d409213bb7e7a736e3ef6ba005115bb Mon Sep 17 00:00:00 2001
+From 51dd97d1df5fb9ac58b9b358e63e67b530f6ae21 Mon Sep 17 00:00:00 2001
 From: Kangjie Lu <kjlu@umn.edu>
-Date: Thu, 14 Mar 2019 22:51:20 -0500
-Subject: [PATCH] ASoC: cs43130: fix a NULL pointer dereference
+Date: Thu, 14 Mar 2019 22:48:32 -0500
+Subject: [PATCH] ASoC: rt5645: fix a NULL pointer dereference
 
-In case create_singlethread_workqueue fails, the fix returns
--ENOMEM to avoid potential NULL pointer dereference.
+devm_kcalloc() may fail and return NULL. The fix returns ENOMEM
+in case it fails to avoid NULL pointer dereference.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/cs43130.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/codecs/rt5645.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/soc/codecs/cs43130.c b/sound/soc/codecs/cs43130.c
-index 3f7b255587e6..80d672710eae 100644
---- a/sound/soc/codecs/cs43130.c
-+++ b/sound/soc/codecs/cs43130.c
-@@ -2322,6 +2322,8 @@ static int cs43130_probe(struct snd_soc_component *component)
- 			return ret;
+diff --git a/sound/soc/codecs/rt5645.c b/sound/soc/codecs/rt5645.c
+index 9a0751978090..f842775dbf2c 100644
+--- a/sound/soc/codecs/rt5645.c
++++ b/sound/soc/codecs/rt5645.c
+@@ -3419,6 +3419,9 @@ static int rt5645_probe(struct snd_soc_component *component)
+ 		RT5645_HWEQ_NUM, sizeof(struct rt5645_eq_param_s),
+ 		GFP_KERNEL);
  
- 		cs43130->wq = create_singlethread_workqueue("cs43130_hp");
-+		if (!cs43130->wq)
-+			return -ENOMEM;
- 		INIT_WORK(&cs43130->work, cs43130_imp_meas);
- 	}
++	if (!rt5645->eq_param)
++		return -ENOMEM;
++
+ 	return 0;
+ }
  
 -- 
 2.20.1
