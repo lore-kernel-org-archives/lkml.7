@@ -2,105 +2,141 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8DAC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3B0C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8BC72086C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44726208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556762976;
-	bh=/xvat0Dy24eH97apuIldA6Kz8uuGYiYT1K0fyKfCg4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LKwnHxGj85tU5ca3eyb7acwiY8QIS9ERiyxUy2relF4RSbFL1sTYcWleCDpllFLKj
-	 jH4URg7tUFKNygJAuDo/D260N2dOsXn30uqtvdt7ybyBbWzeGH8l3y9RQn6XrOpvva
-	 lYGeAQryPWSwdIriDm9P2SpBkP3VWGkjZXx7FxTk=
+	s=default; t=1556763507;
+	bh=sMPhMPuD1Mj3n2jIswgvZWsEZM/ix9fCGK0kAThce+U=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=no5YnNoKArsHMca7vIX8E0x9mUOycxawQg0LXbFvEdhSRCsDf3kkskiZQo2U6PN7Q
+	 3req/roF1A/pRAyRYExPbfyGJwemS+pRu8D8oI1wbuNzHv2MW5keEzQRMS65ADnfYo
+	 HONZsoo/f8ncPxqEwY8b/LfPNQTBxyc2aDevci/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfEBCJf (ORCPT
+        id S1726276AbfEBCSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:09:35 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40158 "EHLO
+        Wed, 1 May 2019 22:18:17 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54792 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfEBCJf (ORCPT
+        with ESMTP id S1726152AbfEBCSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:09:35 -0400
+        Wed, 1 May 2019 22:18:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9qrOjXUAzoL3QukZfNxj9Z2f6/cNNtJl5gF/8qMJ/nM=; b=k1j3roMBI641G/c+bxN1yEEbF
-        cAlY0SqS8Mkq1cFSLFGCTq3yFmYeHaZUzF+yDjSGElj/2zbti6J/jbLMR8rD4C+ANsOblUq1HUBiJ
-        sdX5THxIJTjsQ49Jrk4cJ4+11L0oj+lbLFdK43+oVHWAQ13zQ+M4xwPgc+1sZJB1PtFHY=;
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=sDWuThU3xsEo4SgQTOzat0wz9Zc/a+PRsiFsYfLhmUE=; b=WYv+9b1SJiKI
+        GYh1I3M03W+FsWQOrm2gPdMUKmBTls8GQ63brUZ2buaglD6KEQgSaQumt3AFfjiGQOzZmT30wbbM/
+        iczEDCOJ6EUACi38bRmcMtm1uSmo50YHzxP43Rp9Tc1yCxxoRC+NxS9SWHYrHVP/xkOxdbmAW8px2
+        yNkGE=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1A5-0005ng-Jg; Thu, 02 May 2019 02:09:25 +0000
+        id 1hM1IV-0005pt-75; Thu, 02 May 2019 02:18:07 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 2D2DA441D3B; Thu,  2 May 2019 03:09:22 +0100 (BST)
-Date:   Thu, 2 May 2019 11:09:22 +0900
+        id 9926D441D56; Thu,  2 May 2019 03:18:03 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: tlv320aic3x: Add support for high power analog
- output
-Message-ID: <20190502020922.GA1602@sirena.org.uk>
-References: <20190430200118.13014-1-sravanhome@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Qxx1br4bt0+wmkIi"
-Content-Disposition: inline
-In-Reply-To: <20190430200118.13014-1-sravanhome@gmail.com>
-X-Cookie: Do YOU have redeeming social value?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     Logesh <logesh.kolandavel@timesys.com>
+Cc:     Adam.Thomson.Opensource@diasemi.com, alsa-devel@alsa-project.org,
+        broonie@kernel.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, logesh.kolandavel@timesys.com,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz,
+        support.opensource@diasemi.com, tiwai@suse.com
+Subject: Applied "ASoC: da7213: fix DAI_CLK_EN register bit overwrite" to the asoc tree
+In-Reply-To: <20190501090424.28861-1-logesh.kolandavel@timesys.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190502021803.9926D441D56@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:18:03 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   ASoC: da7213: fix DAI_CLK_EN register bit overwrite
 
-On Tue, Apr 30, 2019 at 10:01:18PM +0200, Saravanan Sekar wrote:
-> Add support to output level control for the analog high power output
-> drivers HPOUT and HPCOM.
->=20
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+has been applied to the asoc tree at
 
-This doesn't build with current code:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.1
 
-  CC      sound/soc/codecs/tlv320aic3x.o
-sound/soc/codecs/tlv320aic3x.c:428:20: error: expected =E2=80=98}=E2=80=99 =
-before =E2=80=98;=E2=80=99 token
-    4, 9, 0, hp_tlv);
-                    ^
-sound/soc/codecs/tlv320aic3x.c:330:61: note: to match this =E2=80=98{=E2=80=
-=99
- static const struct snd_kcontrol_new aic3x_snd_controls[] =3D {
-                                                             ^
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
---Qxx1br4bt0+wmkIi
-Content-Type: application/pgp-signature; name="signature.asc"
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
------BEGIN PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzKUVEACgkQJNaLcl1U
-h9COAgf/bEXTHlf3176QpGpGHCWyhIp2dGCP6gMgr0PXVEVWSMHxsgsy+VoB9x/n
-lApLY1dU5su1ZFAIfrgKw50lYRcplng82rn9ucAWXaU/mRh5siPAvHoNajCauI8n
-6mjjlv4gngHg8ctQQ2y0vNyzs96MlMcs9aYnIBYnLDOthFBbcai8IBRcgxw2pWp7
-dqJK+je2hIFMyJN3ChvgU0h9/C0OFWraSShvMEZRmQJJQ04IxjjuCUXKqHUYoqcZ
-QkGa/zyYw/rrD4XlTp0dQF3aVwe+b4SuytbQ6Hf0bd6Z8G2ze70jSXuArQpLa/Tq
-jx6FAB963mIStEewayY4z0zmNbQqzQ==
-=WLwu
------END PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---Qxx1br4bt0+wmkIi--
+Thanks,
+Mark
+
+From 414a7321d60bc0abced4a760e22b8187e2b4aecf Mon Sep 17 00:00:00 2001
+From: Logesh <logesh.kolandavel@timesys.com>
+Date: Wed, 1 May 2019 14:34:24 +0530
+Subject: [PATCH] ASoC: da7213: fix DAI_CLK_EN register bit overwrite
+
+If the da7213 codec is configured as Master with the DAPM power down
+delay time set, 'snd_soc_component_write' function overwrites the
+DAI_CLK_EN bit of DAI_CLK_MODE register which leads to audio play
+only once until it re-initialize after codec power up.
+
+Signed-off-by: Logesh <logesh.kolandavel@timesys.com>
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/da7213.c | 5 ++++-
+ sound/soc/codecs/da7213.h | 2 ++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/da7213.c b/sound/soc/codecs/da7213.c
+index 92d006a5283e..425c11d63e49 100644
+--- a/sound/soc/codecs/da7213.c
++++ b/sound/soc/codecs/da7213.c
+@@ -1305,7 +1305,10 @@ static int da7213_set_dai_fmt(struct snd_soc_dai *codec_dai, unsigned int fmt)
+ 	/* By default only 64 BCLK per WCLK is supported */
+ 	dai_clk_mode |= DA7213_DAI_BCLKS_PER_WCLK_64;
+ 
+-	snd_soc_component_write(component, DA7213_DAI_CLK_MODE, dai_clk_mode);
++	snd_soc_component_update_bits(component, DA7213_DAI_CLK_MODE,
++			    DA7213_DAI_BCLKS_PER_WCLK_MASK |
++			    DA7213_DAI_CLK_POL_MASK | DA7213_DAI_WCLK_POL_MASK,
++			    dai_clk_mode);
+ 	snd_soc_component_update_bits(component, DA7213_DAI_CTRL, DA7213_DAI_FORMAT_MASK,
+ 			    dai_ctrl);
+ 	snd_soc_component_write(component, DA7213_DAI_OFFSET, dai_offset);
+diff --git a/sound/soc/codecs/da7213.h b/sound/soc/codecs/da7213.h
+index 5a78dba1dcb5..9d31efc3cfe5 100644
+--- a/sound/soc/codecs/da7213.h
++++ b/sound/soc/codecs/da7213.h
+@@ -181,7 +181,9 @@
+ #define DA7213_DAI_BCLKS_PER_WCLK_256				(0x3 << 0)
+ #define DA7213_DAI_BCLKS_PER_WCLK_MASK				(0x3 << 0)
+ #define DA7213_DAI_CLK_POL_INV					(0x1 << 2)
++#define DA7213_DAI_CLK_POL_MASK					(0x1 << 2)
+ #define DA7213_DAI_WCLK_POL_INV					(0x1 << 3)
++#define DA7213_DAI_WCLK_POL_MASK				(0x1 << 3)
+ #define DA7213_DAI_CLK_EN_MASK					(0x1 << 7)
+ 
+ /* DA7213_DAI_CTRL = 0x29 */
+-- 
+2.20.1
+
