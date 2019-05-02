@@ -2,71 +2,63 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB55EC04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A50C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8951220B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:00:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556802037;
-	bh=3afereDZg20659xr8n3IaM3wR+YaxdiF5u/sFeJRbY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dRlFkCun2ERakAaGBxjkQ4fLEFWnaOXuDChFo9ZDQA/UpntpvxHeDtQ1R2nSlOB7U
-	 JclU89dg6tT0sd9Vf2uJG6Qi1dYHYF8rQhCqFPI1I8IcxXb2sW6vOmNK2jj6DPcn+n
-	 bJFp/nT0RvyScUTsibqOs/LQYiUvCAXgSeKc53aA=
+	by mail.kernel.org (Postfix) with ESMTP id 049142063F
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfEBNAg (ORCPT
+        id S1726427AbfEBNDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 09:00:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36218 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726270AbfEBNAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 09:00:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7A7E5AEF9;
-        Thu,  2 May 2019 13:00:34 +0000 (UTC)
-Date:   Thu, 2 May 2019 09:00:31 -0400
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Barret Rhoden <brho@google.com>
-Cc:     linux-mm@kvack.org, Pingfan Liu <kernelfans@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-ia64@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH 1/2] x86, numa: always initialize all possible nodes
-Message-ID: <20190502130031.GC29835@dhcp22.suse.cz>
-References: <20190212095343.23315-1-mhocko@kernel.org>
- <20190212095343.23315-2-mhocko@kernel.org>
- <34f96661-41c2-27cc-422d-5a7aab526f87@google.com>
+        Thu, 2 May 2019 09:03:09 -0400
+Received: from mga18.intel.com ([134.134.136.126]:32995 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbfEBNDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 09:03:08 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 06:03:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,421,1549958400"; 
+   d="scan'208";a="147550129"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga003.jf.intel.com with ESMTP; 02 May 2019 06:03:07 -0700
+Date:   Thu, 2 May 2019 06:57:23 -0600
+From:   Keith Busch <keith.busch@intel.com>
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Subject: Re: [PATCH 0/4] nvme-pci: support device coredump
+Message-ID: <20190502125722.GA28470@localhost.localdomain>
+References: <1556787561-5113-1-git-send-email-akinobu.mita@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <34f96661-41c2-27cc-422d-5a7aab526f87@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1556787561-5113-1-git-send-email-akinobu.mita@gmail.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 01-05-19 15:12:32, Barret Rhoden wrote:
-[...]
-> A more elegant solution may be to avoid registering with sysfs during early
-> boot, or something else entirely.  But I figured I'd ask for help at this
-> point.  =)
+On Thu, May 02, 2019 at 05:59:17PM +0900, Akinobu Mita wrote:
+> This enables to capture snapshot of controller information via device
+> coredump machanism, and it helps diagnose and debug issues.
+> 
+> The nvme device coredump is triggered before resetting the controller
+> caused by I/O timeout, and creates the following coredump files.
+> 
+> - regs: NVMe controller registers, including each I/O queue doorbell
+>         registers, in nvme-show-regs style text format.
 
-Thanks for the report and an excellent analysis! This is really helpful.
-I will think about this some more but I am traveling this week. It seems
-really awkward to register a sysfs file for an empty range. That looks
-like a bug to me.
+You're supposed to treat queue doorbells as write-only. Spec says:
 
--- 
-Michal Hocko
-SUSE Labs
+  The host should not read the doorbell registers. If a doorbell register
+  is read, the value returned is vendor specific.
