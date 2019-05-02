@@ -2,73 +2,137 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CB0C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22A8C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB77D2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B564D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:03:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tq72OJ96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfEBPCm (ORCPT
+        id S1726435AbfEBPDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:02:42 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40916 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEBPCm (ORCPT
+        Thu, 2 May 2019 11:03:06 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39767 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBPDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:02:42 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b3so1152902plr.7;
-        Thu, 02 May 2019 08:02:42 -0700 (PDT)
+        Thu, 2 May 2019 11:03:06 -0400
+Received: by mail-ed1-f67.google.com with SMTP id e24so2408350edq.6;
+        Thu, 02 May 2019 08:03:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TkF9Hp+nVZ6H1AjfuCnC+ng5EY02GRsXnvKx+KkYxQo=;
+        b=Tq72OJ96OAc0q+hwdQt8AwjfNnkRAgsgXXrdf7XLuvTqDUQnWdQnS6+Kc1t9wv3dr7
+         hBgTWwYVionGn1ZW/yOB7YYHJ2Ba+r2iz80JKNN0RVEJe2tfec7SQbcEnxqRaxs+K1dB
+         cRugASuy2Lno6f/v/MhiheP8Sr7N/QMCll+3ZU02eUuJ5+4phLY2Kqo7ASque9H6FS8U
+         3CbV25rE2+LhqRzm9FlMgWKSrnZlXTSoL91AbJ/yCF3m1/mM7xwU2xhrM50lEmmyvHiZ
+         gEaMrPgIhzc9I7M7dyBQlz1ZEc641at3uRRo8+CjVYcLpjoDtLthxZIs11shbSjauNab
+         Wa3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=anO7lfUc9r8EAyhsYOxpxvhPk9AVy84BcEYav0cFPYU=;
-        b=M1Qpe/OeLR6oAHYSqABfgTgStlKhZT4wmQPHji+BvIr9t6nPYLi6ApZqpWWikylmG/
-         Wb4LaC669NUIX8EZTO7L7WYtHN3oKenp4DNMMkW9K21fHAkLy22DED+/GjDtQpfs0PuP
-         /wJ0ftfW1KCcuK/jUo0rCWEcGl20uWt9qpO7d6X6z8BsUuqkajQMbyT7/dVoBHma5QXW
-         wSOfetvhcS7TNfkx5ZNWRWyKF6WMcMvJ6AsgYrwkkMyckER0IdzP7/213mJ7PTLo6HXh
-         ObCasFEGbALGzXFr4OL6QNjA9ZgEgJdC5qY95udH8iMsip8VE/7foJsWjwXim1z7hoEa
-         TKYA==
-X-Gm-Message-State: APjAAAUVgp4peaxx9PZgTn77H17B9538vLzqTpwaZLRwwsbXb/Jq9PSB
-        vy9Og+Kb50OyeBhaHyc/mlI=
-X-Google-Smtp-Source: APXvYqxwYBE+nRYoUncXZj3vOczocwKkkzBuY9BeY7WD4f0ITDINtwsG7p6VdGfcMssfK86gE2PKvQ==
-X-Received: by 2002:a17:902:7892:: with SMTP id q18mr4274244pll.163.1556809361485;
-        Thu, 02 May 2019 08:02:41 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id r197sm54790824pfc.178.2019.05.02.08.02.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 08:02:40 -0700 (PDT)
-Message-ID: <1556809358.12970.4.camel@acm.org>
-Subject: Re: [PATCH 10/24] scsi_transport_srp: switch to SPDX tags
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Christoph Hellwig <hch@lst.de>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     Hannes Reinecke <hare@suse.de>, Lee Duncan <lduncan@suse.com>,
-        Chris Leech <cleech@redhat.com>, Willem Riede <osst@riede.org>,
-        Doug Gilbert <dgilbert@interlog.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Kai =?ISO-8859-1?Q?M=E4kisara?= <Kai.Makisara@kolumbus.fi>,
-        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
-        osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Date:   Thu, 02 May 2019 08:02:38 -0700
-In-Reply-To: <20190501161417.32592-11-hch@lst.de>
-References: <20190501161417.32592-1-hch@lst.de>
-         <20190501161417.32592-11-hch@lst.de>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        bh=TkF9Hp+nVZ6H1AjfuCnC+ng5EY02GRsXnvKx+KkYxQo=;
+        b=iS1lm8/ExioGps4mgiQDVJNS5nkwrI5snasC1OuPL0Ukw6kfKgBGM3B6DE1IYQ3z7X
+         cYRV0D3Cc14C3XPq6M9kA3d1EAgGzM90qNRdZOjCYlOQKcLu22Kdl81xEJOEXMFjZ88m
+         WrEmkVtv5k3rAOYxqOZ8ZIKIyx8vQriE6+a9nQew9mBSHSdJvTkqOaAd/bnJNn9YhIn1
+         ZU/WgEWTVM/cebzZ4uxEADsrB9ZyfRmxEf2W5PlIasd/P5mi44q/M9D0JCcAxKu+JpyI
+         guwa6NLLZHBWm+/FTvJ0kJI0cHG+9iP5Nj/HRdHBw7LwvZxmIuX7pGRCQOxsnc3hPrA5
+         T5FA==
+X-Gm-Message-State: APjAAAX8mDADEJqaydvYr7ZMC8c0pdeZ1oB1yVlMbMC4Bj+IG0CO7Qdd
+        eEFpSG7oiDEYClC2BBXxG24=
+X-Google-Smtp-Source: APXvYqxPK1tA48H7Ar4Sg5qBAablpNrcjB1TDiCPvPJRN12IfZH8s20HOQiU/dIQMS5rHkK6azQNRA==
+X-Received: by 2002:a17:906:9519:: with SMTP id u25mr2110038ejx.34.1556809383965;
+        Thu, 02 May 2019 08:03:03 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id d59sm7450726edc.34.2019.05.02.08.03.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 08:03:02 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH v2] rtw88: Make RA_MASK macros ULL
+Date:   Thu,  2 May 2019 08:02:10 -0700
+Message-Id: <20190502150209.4475-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190502150022.4182-1-natechancellor@gmail.com>
+References: <20190502150022.4182-1-natechancellor@gmail.com>
+MIME-Version: 1.0
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-01 at 12:14 -0400, Christoph Hellwig wrote:
-+AD4 Use the the GPLv2 SPDX tag instead of verbose boilerplate text.
+Clang warns about the definitions of these macros (full warnings trimmed
+for brevity):
 
-Acked-by: Bart Van Assche +ADw-bvanassche+AEA-acm.org+AD4
+drivers/net/wireless/realtek/rtw88/main.c:524:15: warning: signed shift
+result (0x3FF00000000) requires 43 bits to represent, but 'int' only has
+32 bits [-Wshift-overflow]
+                        ra_mask &= RA_MASK_VHT_RATES | RA_MASK_OFDM_IN_VHT;
+                                   ^~~~~~~~~~~~~~~~~
+drivers/net/wireless/realtek/rtw88/main.c:527:15: warning: signed shift
+result (0xFF0000000) requires 37 bits to represent, but 'int' only has
+32 bits [-Wshift-overflow]
+                        ra_mask &= RA_MASK_HT_RATES | RA_MASK_OFDM_IN_HT_5G;
+                                   ^~~~~~~~~~~~~~~~
+
+Given that these are all used with ra_mask, which is of type u64, we can
+just declare the macros to be ULL as well.
+
+Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/467
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+
+v1 -> v2:
+
+* Fix commit message wording (made -> make)...
+
+ drivers/net/wireless/realtek/rtw88/main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
+index 9893e5e297e3..a14a5f1b4b6d 100644
+--- a/drivers/net/wireless/realtek/rtw88/main.c
++++ b/drivers/net/wireless/realtek/rtw88/main.c
+@@ -462,15 +462,15 @@ static u8 get_rate_id(u8 wireless_set, enum rtw_bandwidth bw_mode, u8 tx_num)
+ 
+ #define RA_MASK_CCK_RATES	0x0000f
+ #define RA_MASK_OFDM_RATES	0x00ff0
+-#define RA_MASK_HT_RATES_1SS	(0xff000 << 0)
+-#define RA_MASK_HT_RATES_2SS	(0xff000 << 8)
+-#define RA_MASK_HT_RATES_3SS	(0xff000 << 16)
++#define RA_MASK_HT_RATES_1SS	(0xff000ULL << 0)
++#define RA_MASK_HT_RATES_2SS	(0xff000ULL << 8)
++#define RA_MASK_HT_RATES_3SS	(0xff000ULL << 16)
+ #define RA_MASK_HT_RATES	(RA_MASK_HT_RATES_1SS | \
+ 				 RA_MASK_HT_RATES_2SS | \
+ 				 RA_MASK_HT_RATES_3SS)
+-#define RA_MASK_VHT_RATES_1SS	(0x3ff000 << 0)
+-#define RA_MASK_VHT_RATES_2SS	(0x3ff000 << 10)
+-#define RA_MASK_VHT_RATES_3SS	(0x3ff000 << 20)
++#define RA_MASK_VHT_RATES_1SS	(0x3ff000ULL << 0)
++#define RA_MASK_VHT_RATES_2SS	(0x3ff000ULL << 10)
++#define RA_MASK_VHT_RATES_3SS	(0x3ff000ULL << 20)
+ #define RA_MASK_VHT_RATES	(RA_MASK_VHT_RATES_1SS | \
+ 				 RA_MASK_VHT_RATES_2SS | \
+ 				 RA_MASK_VHT_RATES_3SS)
+-- 
+2.21.0
 
