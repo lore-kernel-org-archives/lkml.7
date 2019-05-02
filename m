@@ -2,94 +2,108 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E957BC04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65916C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1A820652
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4BB20652
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfEBRxZ convert rfc822-to-8bit (ORCPT
+        id S1726402AbfEBRzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 13:53:25 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35831 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbfEBRxZ (ORCPT
+        Thu, 2 May 2019 13:55:16 -0400
+Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:44981 "EHLO
+        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725962AbfEBRzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 13:53:25 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g24so2916746otq.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 10:53:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GBDNR7dZoJr86zYykorTJ/IjzJwi83xXzsZS+RvPfCM=;
-        b=DZKHx6EQMIiCJRF+A1q8iyuOsT7TOaN/LSrKLqez0bAcuSFtwIqq5N8C6hfI0qyJeI
-         Q5s1kR3zfUXyM08p0exB2PXzK1do+OQ4ry3CHe9zDwOOVwaga0eEDFdjN2uFNYkpwLdI
-         +NWb+KNoi8RrpvGsCOQnfTi2wDlAAYHJwhJJ6dZOb9J4NatmNPYbWGIZQ7kbywOu4DfE
-         vTxBo8NDtQVM5frO/G7TzGFVnkVMzeBU7wUrFbsQeS0sWK/+LOqLjQDqnOi0so/8Zw9+
-         4BeF9AfzxSfG/3+TVKYIJvUlDBQcmy1G2Z4za3rGpO1lg4aPAVYb+n/AOcZA5b5u7vAw
-         71cQ==
-X-Gm-Message-State: APjAAAWYCwJBX5w/NrwJzeutoWz6Vcw4LxcVMEl7wiS7p/fdc/o80KCy
-        iyTLgVSrNPq6Mk5eTZmqEOSBU9Qatj7+1uHzYqV0Uw==
-X-Google-Smtp-Source: APXvYqzST1Dup9n2jNMYyXmGV8wykLPR0kBeWfOpX/RmNcI7EMUp4H3q7uEXhTXI757a8zkKf8qMd/e6iIelmwu8cxc=
-X-Received: by 2002:a9d:61c6:: with SMTP id h6mr3337115otk.316.1556819604755;
- Thu, 02 May 2019 10:53:24 -0700 (PDT)
+        Thu, 2 May 2019 13:55:16 -0400
+Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
+        id DC830461D3A; Thu,  2 May 2019 13:55:13 -0400 (EDT)
+Date:   Thu, 2 May 2019 13:55:13 -0400
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
+Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
+ packets
+Message-ID: <20190502175513.ei7kjug3az6fe753@csclub.uwaterloo.ca>
+References: <20190501205215.ptoi2czhklte5jbm@csclub.uwaterloo.ca>
+ <CAKgT0UczVvREiXwde6yJ8_i9RT2z7FhenEutXJKW8AmDypn_0g@mail.gmail.com>
+ <20190502151140.gf5ugodqamtdd5tz@csclub.uwaterloo.ca>
+ <CAKgT0Uc_OUAcPfRe6yCSwpYXCXomOXKG2Yvy9c1_1RJn-7Cb5g@mail.gmail.com>
+ <20190502171636.3yquioe3gcwsxlus@csclub.uwaterloo.ca>
+ <CAKgT0Ufk8LXMb9vVWfvgbjbQFKAuenncf95pfkA0P1t-3+Ni_g@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
- <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com>
- <875zqt4igg.fsf@notabene.neil.brown.name> <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com>
- <CAJfpegsthQn_=3AQJf7ojxoQBpHMA3dz1fCBjNZXsCA1E0oqnw@mail.gmail.com>
- <CAHpGcML0KuoGSyXyyDnXHkSp3nDnSjJPeZeWEmt8CXxQeojxwg@mail.gmail.com> <20190502171603.GA1778@fieldses.org>
-In-Reply-To: <20190502171603.GA1778@fieldses.org>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Thu, 2 May 2019 19:53:13 +0200
-Message-ID: <CAHc6FU5fBorvOCkxvX58hEKmDgwu+-m_RDwEWDY36XpH1F03Hw@mail.gmail.com>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>, NeilBrown <neilb@suse.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0Ufk8LXMb9vVWfvgbjbQFKAuenncf95pfkA0P1t-3+Ni_g@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 May 2019 at 19:16, J. Bruce Fields <bfields@fieldses.org> wrote:
-> On Thu, May 02, 2019 at 05:08:14PM +0200, Andreas Grünbacher wrote:
-> > You'll still see permissions that differ from what the filesystem
-> > enforces, and copy-up would change that behavior.
->
-> That's always true, and this issue isn't really specific to NFSv4 ACLs
-> (or ACLs at all), it already exists with just mode bits.  The client
-> doesn't know how principals may be mapped on the server, doesn't know
-> group membership, etc.
->
-> That's the usual model, anyway.  Permissions are almost entirely the
-> server's responsibility, and we just provide a few attributes to set/get
-> those server-side permissions.
+On Thu, May 02, 2019 at 10:28:22AM -0700, Alexander Duyck wrote:
+> The thing is the firmware has to have some idea what it is dealing
+> with. As far as I know I don't believe port number 4500 is being
+> auto-flagged as any special type. In the case of the other tunnel
+> types such as VXLAN, NVGRE, and GENEVE the driver has to set a port
+> value indicating that the port will receive special handling. If it
+> isn't added via i40e_udp_tunnel_add then the firmware/hardware
+> shouldn't know anything about the tunnel.
 
-Sure, if the client and server don't share the same user and group
-databases, ACLs can get a very different meaning.
+Well that makes some sense.  I was wondering why there didn't seem to
+be an on/off switch for that feature.
 
-Andreas
+> It really isn't that unusual of a feature. Many NICs have this
+> functionality now. In order to support it we usually have to populate
+> the port values for the device so the internal parser knows to expect
+> them.
+> 
+> That is one of the reasons I suggested testing with netperf as I did
+> below. Basically if we construct all the outer headers the same as
+> your packet we can see if some specific combination is causing a
+> parsing issue. I tested the netperf approach on an XL710 and didn't
+> see any issues, but perhaps the XL722 is doing something differently.
+> 
+> Thanks. If nothing else it should make it possible to just use
+> tcpreplay if needed to reproduce the issue.
 
-> The overlayfs/NFS case is different, I think: the nfs filesystem may be
-> just a static read-only template for a filesystem that's only ever used
-> by clients, and for all I know maybe permissions should only be
-> interpreted on the client side in that case.
->
-> --b.
+Here is the same packets as before with the link level header included
+(I forgot to use -XX rather than -X):
+
+13:43:49.081567 54:ee:75:30:f1:e1 > a4:bf:01:4e:0c:87, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 21783, offset 0, flags [DF], proto UDP (17), length 160)
+    1.99.99.2.4500 > 1.99.99.1.4500: [no cksum] UDP-encap: ESP(spi=0x8de82290,seq=0x6a56), length 132
+        0x0000:  a4bf 014e 0c87 54ee 7530 f1e1 0800 4500  ...N..T.u0....E.
+        0x0010:  00a0 5517 4000 4011 1c6d 0163 6302 0163  ..U.@.@..m.cc..c
+        0x0020:  6301 1194 1194 008c 0000 8de8 2290 0000  c..........."...
+        0x0030:  6a56 72da 0734 52f6 406e 9346 f946 c698  jVr..4R.@n.F.F..
+        0x0040:  a38c 280c 94da 53e1 91e0 35bf 812a 4500  ..(...S...5..*E.
+        0x0050:  6003 ca7d 6872 a50b d41a 5c4d 7c22 3fb8  `..}hr....\M|"?.
+        0x0060:  56d8 2a0f bc3f d3a6 5853 682c 914c c1b1  V.*..?..XSh,.L..
+        0x0070:  c5c3 94e8 4789 d8b4 4ab4 e5f9 d20a e5ef  ....G...J.......
+        0x0080:  de1d 05dd e98a 996b 5c11 6657 b667 6af1  .......k\.fW.gj.
+        0x0090:  2a97 694b 16de 74e2 f8fe 13a3 d45e e3e9  *.iK..t......^..
+        0x00a0:  f0b1 b83b 99e3 55cb b40b 5ba8 9c23       ...;..U...[..#
+13:43:49.081658 a4:bf:01:4e:0c:87 > 54:ee:75:30:f1:e1, ethertype IPv4 (0x0800), length 174: (tos 0x0, ttl 64, id 44552, offset 0, flags [none], proto UDP (17), length 160)
+    1.99.99.1.4500 > 1.99.99.2.4500: [no cksum] UDP-encap: ESP(spi=0x1d4ecfdf,seq=0x6a56), length 132
+        0x0000:  54ee 7530 f1e1 a4bf 014e 0c87 0800 4500  T.u0.....N....E.
+        0x0010:  00a0 ae08 0000 4011 037c 0163 6301 0163  ......@..|.cc..c
+        0x0020:  6302 1194 1194 008c 0000 1d4e cfdf 0000  c..........N....
+        0x0030:  6a56 28ca 4809 8933 911d f2be 4510 e757  jV(.H..3....E..W
+        0x0040:  3885 7d26 5238 8c58 38e3 6c07 2f8e 335a  8.}&R8.X8.l./.3Z
+        0x0050:  6d48 2a72 4619 e8a3 c421 bc54 48b2 6239  mH*rF....!.TH.b9
+        0x0060:  5e07 7e89 a68e 0161 4e6a 5b6f 8b89 9f53  ^.~....aNj[o...S
+        0x0070:  4c40 1c6c d159 60f8 68e7 24db 8b21 2ec2  L@.l.Y`.h.$..!..
+        0x0080:  4b67 9b83 643b b0ac 6e2d bf4f 1ee1 9508  Kg..d;..n-.O....
+        0x0090:  d1bd dcd4 74ee e4dc 78d0 578a 5905 1f4d  ....t...x.W.Y..M
+        0x00a0:  74be e643 910b b4d3 f428 8822 e22b       t..C.....(.".+
+
+I will try to see what I can do with netperf.
+
+-- 
+Len Sorensen
