@@ -2,149 +2,69 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4C4C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AE5C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A0C21670
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:32:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="LCS9VKDB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="guWCvW61"
+	by mail.kernel.org (Postfix) with ESMTP id 0FE9A20873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfEBIcF (ORCPT
+        id S1726446AbfEBIco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:32:05 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:34327 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbfEBIcF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:32:05 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 24D5923026;
-        Thu,  2 May 2019 04:32:04 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 02 May 2019 04:32:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=9T+k5rhFq2p15SaNrTJiSOQ3z5m
-        GBYA29Dg0f0zyPFA=; b=LCS9VKDB8hFVerPvgo0PQU4B+6ha5Pi+xRLsKNnjxdQ
-        x5/ufZHh1BrbdBn9G3b58HlYhlfffxYjiVa26wUK8qJgFGDlXUS7nCoXJx6Nkbof
-        aRg+NAnMFPDukyNrrSPYME62frATSHqItpKxegkFXXuTNOvMk8+qdJ7w2GvKczl0
-        0kvm7JN8qSiwE/Xy0j+2AoCktdxvzXhWQ2zr5NNI+ZpxNoaAfZJsH97upMIJ5F+K
-        xev2wko0ZLACB6hdty6+G5zaZi2u6l9BQRNIwyh1ehZt9jB01fH5MsmH5hbPy8ZC
-        o/vay6fSKkZ4Cc51miPb8wZW+9X4SFQHFRzLyA+2O9Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=9T+k5r
-        hFq2p15SaNrTJiSOQ3z5mGBYA29Dg0f0zyPFA=; b=guWCvW61i6EowDvseB24sm
-        EtLzX3+mMiYdj7D5pH/vBvDRws0JtdhB0BiQ4lVGn1l+R+MWZGgbVGzU5mFcalr4
-        hCQfJm6s0MqocJEuMNXY/us4RnqF50twCG6KmlqI3rfiJazfoueOsu0/MYMF5w4l
-        zvVly3YsF4P7kD2Q+2s0kGD8dcxwwCt0BaYY2XDypEAneouqU/VuvxZulqqEDWnJ
-        tq0M5AVOVO6y+7z1CZPkuENug1EEtvqfUFQ3kk1g8msEaK4MH8hmv9WP4xZVpwz+
-        yUZ5Ap2Z/B0MIKGxOLokVNoIZrYWD2hbbDlpZjNxgOkl40NH/E5VAJscNx/GGRUg
-        ==
-X-ME-Sender: <xms:A6vKXBqdFENsK-Y8vFlXq4WRa87p9OHrxYZ7EOgOwQnRNPAYwJCgeA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieelgddthecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
-    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
-    hinhdrtggtqeenucfkphepuddvuddrgeegrddvtdegrddvfeehnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:A6vKXJ-ITQhwgQYDE-mO-5H4th5r39-Q3XqwZT7ZJ193z8NMG5ewzw>
-    <xmx:A6vKXEN74vdRizpOmlsLgUHuyxAwCm7ChwOUQd9OBLDswxbnbLQR3w>
-    <xmx:A6vKXKNO7SCvVBINoNtn2NC-u_xjYvZOb0bPN0T-8RhlW1NLTC1n0w>
-    <xmx:BKvKXLlinelSkvnmO0Ix6gEbhxNNa8hinddUJ0PHufFISoqFN6Vh7A>
-Received: from localhost (ppp121-44-204-235.bras1.syd2.internode.on.net [121.44.204.235])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 64262E4625;
-        Thu,  2 May 2019 04:32:02 -0400 (EDT)
-Date:   Thu, 2 May 2019 18:31:27 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 5/5] livepatch: Do not manually track kobject
- initialization
-Message-ID: <20190502083127.GC18363@eros.localdomain>
-References: <20190502023142.20139-1-tobin@kernel.org>
- <20190502023142.20139-6-tobin@kernel.org>
- <20190502071232.GB16247@kroah.com>
- <20190502073044.bfzugymrncnaajxe@pathway.suse.cz>
+        Thu, 2 May 2019 04:32:44 -0400
+Received: from mga06.intel.com ([134.134.136.31]:47842 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbfEBIcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 04:32:43 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 01:32:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,421,1549958400"; 
+   d="scan'208";a="145370147"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by fmsmga008.fm.intel.com with ESMTP; 02 May 2019 01:32:40 -0700
+Date:   Thu, 2 May 2019 11:32:40 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Bartosz Szczepanek <bsz@semihalf.com>
+Cc:     Matthew Garrett <matthewgarrett@google.com>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+        roberto.sassu@huawei.com, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tweek@google.com,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: [PATCH V5 2/4] tpm: Reserve the TPM final events table
+Message-ID: <20190502083240.GJ14532@linux.intel.com>
+References: <20190227202658.197113-1-matthewgarrett@google.com>
+ <20190227202658.197113-3-matthewgarrett@google.com>
+ <CAJzaN5pUJoOCz5-ZDSnTb6dbVPuy0QwmFD0CeofAGK+bRQx0og@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190502073044.bfzugymrncnaajxe@pathway.suse.cz>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAJzaN5pUJoOCz5-ZDSnTb6dbVPuy0QwmFD0CeofAGK+bRQx0og@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 09:30:44AM +0200, Petr Mladek wrote:
-> On Thu 2019-05-02 09:12:32, Greg Kroah-Hartman wrote:
-> > On Thu, May 02, 2019 at 12:31:42PM +1000, Tobin C. Harding wrote:
-> > > Currently we use custom logic to track kobject initialization.  Recently
-> > > a predicate function was added to the kobject API so we now no longer
-> > > need to do this.
-> > > 
-> > > Use kobject API to check for initialized state of kobjects instead of
-> > > using custom logic to track state.
-> > > 
-> > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> > > ---
-> > >  include/linux/livepatch.h |  6 ------
-> > >  kernel/livepatch/core.c   | 18 +++++-------------
-> > >  2 files changed, 5 insertions(+), 19 deletions(-)
-> > > 
-> > > @@ -626,7 +626,7 @@ static void __klp_free_objects(struct klp_patch *patch, bool nops_only)
-> > >  		list_del(&obj->node);
-> > >  
-> > >  		/* Might be called from klp_init_patch() error path. */
-> > > -		if (obj->kobj_added) {
-> > > +		if (kobject_is_initialized(&obj->kobj)) {
-> > >  			kobject_put(&obj->kobj);
-> > >  		} else if (obj->dynamic) {
-> > >  			klp_free_object_dynamic(obj);
-> > 
-> > Same here, let's not be lazy.
-> > 
-> > The code should "know" if the kobject has been initialized or not
-> > because it is the entity that asked for it to be initialized.  Don't add
-> > extra logic to the kobject core (like the patch before this did) just
-> > because this one subsystem wanted to only write 1 "cleanup" function.
-> 
-> We use kobject for a mix of statically and dynamically defined
-> structures[*]. And we misunderstood the behavior of kobject_init().
-> 
-> Anyway, the right solution is to call kobject_init()
-> already in klp_init_patch_early() for the statically
-> defined structures and in klp_alloc*() for the dynamically
-> allocated ones. Then we could simply call kobject_put()
-> every time.
-> 
-> Tobin, this goes deeper into the livepatching code that
-> you probably expected. Do you want to do the above
-> suggested change or should I prepare the patch?
+On Tue, Apr 30, 2019 at 03:07:09PM +0200, Bartosz Szczepanek wrote:
+> I may be a little late with this comment, but I've just tested these
+> patches on aarch64 platform (from the top of jjs/master) and got
+> kernel panic ("Unable to handle kernel read", full log at the end of
+> mail). I think there's problem with below call to
+> tpm2_calc_event_log_size(), where physical address of efi.tpm_log is
+> passed as (void *) and never remapped:
 
-I'd love for you to handle this one Petr, I'd say its a net gain
-time wise that way since if I do it you'll have to review it too
-carefully anyways.
+Not late. This is not part of any PR yet. Thank you for the
+feedback!
 
-So that will mean patch #1 and #5 of this series are dropped and handed
-off to you (thanks).  Patch #2 and #3 Greg said he will take.  Patch #4
-is not needed.  That's a win in my books :)
+Matthew, can you send an updated version of the whole patch set
+with fixes to this issue and also reordering of the includes?
 
-Thanks,
-Tobin.
+/Jarkko
