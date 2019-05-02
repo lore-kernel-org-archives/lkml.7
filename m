@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F025FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8A9C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C94DE2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563452085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfEBGJl (ORCPT
+        id S1726602AbfEBGJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 02:09:41 -0400
-Received: from mga07.intel.com ([134.134.136.100]:11385 "EHLO mga07.intel.com"
+        Thu, 2 May 2019 02:09:47 -0400
+Received: from mga17.intel.com ([192.55.52.151]:59382 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbfEBGJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 02:09:41 -0400
+        id S1726285AbfEBGJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 02:09:46 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 23:09:40 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 May 2019 23:09:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,420,1549958400"; 
-   d="scan'208";a="169819071"
+   d="scan'208";a="154054353"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga001.fm.intel.com with ESMTP; 01 May 2019 23:09:40 -0700
-Subject: [PATCH v7 06/12] mm/hotplug: Kill is_dev_zone() usage in
- __remove_pages()
+  by FMSMGA003.fm.intel.com with ESMTP; 01 May 2019 23:09:45 -0700
+Subject: [PATCH v7 07/12] mm: Kill is_dev_zone() helper
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     akpm@linux-foundation.org
 Cc:     Michal Hocko <mhocko@suse.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         David Hildenbrand <david@redhat.com>,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, osalvador@suse.de, mhocko@suse.com
-Date:   Wed, 01 May 2019 22:55:53 -0700
-Message-ID: <155677655373.2336373.15845721823034005000.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Oscar Salvador <osalvador@suse.de>, linux-nvdimm@lists.01.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        osalvador@suse.de, mhocko@suse.com
+Date:   Wed, 01 May 2019 22:55:59 -0700
+Message-ID: <155677655941.2336373.17601391574483353034.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <155677652226.2336373.8700273400832001094.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <155677652226.2336373.8700273400832001094.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-2-gc94f
@@ -50,34 +50,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The zone type check was a leftover from the cleanup that plumbed altmap
-through the memory hotplug path, i.e. commit da024512a1fa "mm: pass the
-vmem_altmap to arch_remove_memory and __remove_pages".
+Given there are no more usages of is_dev_zone() outside of 'ifdef
+CONFIG_ZONE_DEVICE' protection, kill off the compilation helper.
 
 Cc: Michal Hocko <mhocko@suse.com>
 Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: David Hildenbrand <david@redhat.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- mm/memory_hotplug.c |    7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ include/linux/mmzone.h |   12 ------------
+ mm/page_alloc.c        |    2 +-
+ 2 files changed, 1 insertion(+), 13 deletions(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 0d379da0f1a8..108380e20d8f 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -544,11 +544,8 @@ void __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
- 	unsigned long map_offset = 0;
- 	int sections_to_remove;
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index b13f0cddf75e..3237c5e456df 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -855,18 +855,6 @@ static inline int local_memory_node(int node_id) { return node_id; };
+  */
+ #define zone_idx(zone)		((zone) - (zone)->zone_pgdat->node_zones)
  
--	/* In the ZONE_DEVICE case device driver owns the memory region */
--	if (is_dev_zone(zone)) {
--		if (altmap)
--			map_offset = vmem_altmap_offset(altmap);
--	}
-+	if (altmap)
-+		map_offset = vmem_altmap_offset(altmap);
+-#ifdef CONFIG_ZONE_DEVICE
+-static inline bool is_dev_zone(const struct zone *zone)
+-{
+-	return zone_idx(zone) == ZONE_DEVICE;
+-}
+-#else
+-static inline bool is_dev_zone(const struct zone *zone)
+-{
+-	return false;
+-}
+-#endif
+-
+ /*
+  * Returns true if a zone has pages managed by the buddy allocator.
+  * All the reclaim decisions have to use this function rather than
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index a68735c79609..be309d6a79de 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5864,7 +5864,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
+ 	unsigned long start = jiffies;
+ 	int nid = pgdat->node_id;
  
- 	clear_zone_contiguous(zone);
+-	if (WARN_ON_ONCE(!pgmap || !is_dev_zone(zone)))
++	if (WARN_ON_ONCE(!pgmap || zone_idx(zone) != ZONE_DEVICE))
+ 		return;
  
+ 	/*
 
