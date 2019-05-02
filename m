@@ -2,140 +2,163 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC97C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FCBC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60B0204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E5D204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:45:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="Xsp6jgyU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P9mmkEct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfEBSpm (ORCPT
+        id S1726485AbfEBSp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:45:42 -0400
-Received: from mail-eopbgr810134.outbound.protection.outlook.com ([40.107.81.134]:30016
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726120AbfEBSpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:45:41 -0400
+        Thu, 2 May 2019 14:45:56 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40763 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfEBSpz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 14:45:55 -0400
+Received: by mail-oi1-f193.google.com with SMTP id y64so2547485oia.7
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:45:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Igez3ZhEECzuniXIZs4JvulGrVB7TtxjPe1FB6QvZ38=;
- b=Xsp6jgyURzBCjrhgt9abYo/IfGt/9IkkgZ3EV5eOP6Gd6BIwINJ2oifOxOqfNaWEsH8rcv50tPvBZlOntEBlbPfijuRDLAep8zoIdO1stjqczwsb0RsuzDF/RfxLStUgn6z2lSKjO7RLbv0cd4Sf0rZtzYNVD0IsFxq8NYPrmU0=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1053.namprd22.prod.outlook.com (10.174.169.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.15; Thu, 2 May 2019 18:45:39 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765%7]) with mapi id 15.20.1835.018; Thu, 2 May 2019
- 18:45:39 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Juergen Gross <jgross@suse.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/12] mips: Reserve memory for the kernel image resources
-Thread-Topic: [PATCH 04/12] mips: Reserve memory for the kernel image
- resources
-Thread-Index: AQHU+ibQQIEJaXUkgEWNBapHcAUrdaZL6giAgAGn0ACAB8pRAIAClRSAgABI7QA=
-Date:   Thu, 2 May 2019 18:45:39 +0000
-Message-ID: <20190502184537.ccxnrh6x7vg55kly@pburton-laptop>
-References: <20190423224748.3765-1-fancer.lancer@gmail.com>
- <20190423224748.3765-5-fancer.lancer@gmail.com>
- <20190424224343.4skr727fszycwksq@pburton-laptop>
- <20190426000035.yfonfvrapmm4j3fg@mobilestation>
- <20190430225832.cjk7mj6dotw3cib6@pburton-laptop>
- <20190502142434.mpoyu4hhbunur5xe@mobilestation>
-In-Reply-To: <20190502142434.mpoyu4hhbunur5xe@mobilestation>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR05CA0105.namprd05.prod.outlook.com
- (2603:10b6:a03:e0::46) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b02fd9b4-3310-4561-a12b-08d6cf2e5f34
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1053;
-x-ms-traffictypediagnostic: MWHPR2201MB1053:
-x-microsoft-antispam-prvs: <MWHPR2201MB1053FEC62A21FB2B4BB800E2C1340@MWHPR2201MB1053.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0025434D2D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(346002)(376002)(136003)(39850400004)(396003)(199004)(189003)(51914003)(66446008)(99286004)(6506007)(7736002)(66946007)(66556008)(66476007)(64756008)(66066001)(8676002)(8936002)(186003)(256004)(102836004)(26005)(73956011)(305945005)(81166006)(71200400001)(81156014)(71190400001)(386003)(1076003)(6916009)(6486002)(11346002)(25786009)(6116002)(6436002)(486006)(58126008)(6512007)(76176011)(3846002)(44832011)(229853002)(7416002)(42882007)(9686003)(53936002)(446003)(33716001)(54906003)(2906002)(478600001)(316002)(52116002)(5660300002)(4326008)(6246003)(68736007)(476003)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1053;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZthgMNS03g/4hPaeXHz38VMJU63bxwNgWWH0xhqIclKoybESnGYKhpntcvpV1KEQfsmhFU28xAsbB1tQHFQERgSVxk9aLCaeXxY6DZFyJNZjjAT9mVP4tc4sBUXFzkBpmEBpqm39t1NTBCvjRMTmK82Yt8npGyu3/gDMNgol5mAZUQXh+vWY25gn6W0aRj9rngqmQoINb9UmUC+Jcw/XhnLFGyDmUzwGPhNKNpDM/0AV70XT/vuFLDDxexhWIT+OkxRT4YvBxXFV/bPK3TFC7rVeWB84ffnugwTtxjva/VyfUseFyYbWNtW6liKuy06XLYvigrdivmMvWwOtY+26OiS4nwpQFRADRjv4YdE6Q7G6AUPZR1AbKaiGdB9T9o2TxHCW3f0UYZt7mdE7ECvkKlGj2/K7yn3s1vl+Ltau+MQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <AC4A28D6B9FB4C4DACE9B3C37428CD5A@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=17OVt5sF62dgswwCTgJsxP7RAt3WsAf5VJ4Ut9AHOnQ=;
+        b=P9mmkEctGFviK6NgZSHwMcUWXoaX/YoeIAK9bJMcE3Lx9wj9ioBeHG7azUaTRvfMEz
+         TY2RHOx0ThWPnz2RyK/JeVea8tpHo/vQkabwSgIPQaucOPCDrRgdtpJvHIeyfXSXZIdh
+         EEpMDUWFYZWhjIh9jDc8FJvMTlSL8vQ8VfgY4koM+if0RzgjLUM+G7N96Iar9oJO2RWW
+         y2bZo1FvLirTsbvZcF5UvfSKsfdjWdxyGHNZOdT8DOFyQvGPVysWQaUTlUo3hkMnOD0e
+         RSC2W/FJE39vCVMCViynhllAgBlnR6+D6q04cTiRfgx2IG0+4k0zkzJ9Spq984jh3G9l
+         lWjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=17OVt5sF62dgswwCTgJsxP7RAt3WsAf5VJ4Ut9AHOnQ=;
+        b=NckCsoKRVIQhHmOV35GbUcvctQKNsyxH1Gd5Gxq/gYFwYX5LBlxVSqoEaZG6u4xVN+
+         UvXXJGpNHj1a9fyMgCAD+P1xCKiYtMpR7OaCJ5ay7N1aQ0W65ftBRrJEpcSiXkwiCN83
+         XeLGxL4bMt5VPpJ8hzFtRHb81vkgYkRRVrhV4TswjqNz2dR1XGvlGURVziwdwJXGlhKz
+         6ljres2i3e/wa1PxKu90N0uqEjy/Xr+sJQlIzbsr6E/FTBVnfYAjOO6Hv1GuQjEgaFSa
+         FdL/1FN4rzVjs00r5L30cMFGlSNCmMJe4A0OUU66ol3pHtxu+DilZeH6b57CBpWZwwLt
+         oA5Q==
+X-Gm-Message-State: APjAAAXfbCJBGexwVTzJmwKmCuqF6VaMnEnoxgogw9hoqsNJLw5cy3Ya
+        gh1BEaLwlhXtuJUqgFecgrdK9jqF2rfJczDgWm9/sA==
+X-Google-Smtp-Source: APXvYqzC6lEhFzCwba9WNGtoNJlN2/sxNxsRqKIHnQJUgSQQ4oc4XCI9kW3OGRwazcEXau+lGinuQZlka+T3d8xNOxI=
+X-Received: by 2002:aca:4586:: with SMTP id s128mr3264542oia.148.1556822754511;
+ Thu, 02 May 2019 11:45:54 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b02fd9b4-3310-4561-a12b-08d6cf2e5f34
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 18:45:39.5556
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1053
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-17-brendanhiggins@google.com> <20190502110347.GE12416@kroah.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770A3A0@USCULXMSG01.am.sony.com>
+In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF9770A3A0@USCULXMSG01.am.sony.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 2 May 2019 11:45:43 -0700
+Message-ID: <CAFd5g471Wawu6g14p0AO3aY8VPBKLA0mjHSdfR1qStFGzp3iGQ@mail.gmail.com>
+Subject: Re: [PATCH v2 16/17] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+To:     "Bird, Timothy" <Tim.Bird@sony.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah@kernel.org, devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Iurii Zaikin <yzaikin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Serge,
+On Thu, May 2, 2019 at 11:15 AM <Tim.Bird@sony.com> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Greg KH
+> >
+> > On Wed, May 01, 2019 at 04:01:25PM -0700, Brendan Higgins wrote:
+> > > From: Iurii Zaikin <yzaikin@google.com>
+> > >
+> > > KUnit tests for initialized data behavior of proc_dointvec that is
+> > > explicitly checked in the code. Includes basic parsing tests including
+> > > int min/max overflow.
+> > >
+> > > Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+> > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > > ---
+> > >  kernel/Makefile      |   2 +
+> > >  kernel/sysctl-test.c | 292
+> > +++++++++++++++++++++++++++++++++++++++++++
+> > >  lib/Kconfig.debug    |   6 +
+> > >  3 files changed, 300 insertions(+)
+> > >  create mode 100644 kernel/sysctl-test.c
+> > >
+> > > diff --git a/kernel/Makefile b/kernel/Makefile
+> > > index 6c57e78817dad..c81a8976b6a4b 100644
+> > > --- a/kernel/Makefile
+> > > +++ b/kernel/Makefile
+> > > @@ -112,6 +112,8 @@ obj-$(CONFIG_HAS_IOMEM) += iomem.o
+> > >  obj-$(CONFIG_ZONE_DEVICE) += memremap.o
+> > >  obj-$(CONFIG_RSEQ) += rseq.o
+> > >
+> > > +obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
+> >
+> > You are going to have to have a "standard" naming scheme for test
+> > modules, are you going to recommend "foo-test" over "test-foo"?  If so,
+> > that's fine, we should just be consistant and document it somewhere.
+> >
+> > Personally, I'd prefer "test-foo", but that's just me, naming is hard...
+>
+> My preference would be "test-foo" as well.  Just my 2 cents.
 
-On Thu, May 02, 2019 at 05:24:37PM +0300, Serge Semin wrote:
-> Just reviewed and tested your series on my machine. I tagged the whole se=
-ries
-> in a response to the cover-letter of [1].
+I definitely agree we should be consistent. My personal bias
+(unsurprisingly) is "foo-test," but this is just because that is the
+convention I am used to in other projects I have worked on.
 
-Thanks for the review & testing; that series is now in mips-next.
+On an unbiased note, we are currently almost evenly split between the
+two conventions with *slight* preference for "foo-test": I ran the two
+following grep commands on v5.1-rc7:
 
-> Could you please proceed with this patchset review procedure? There are
-> also eight more patches left without your tag or comment.  This patch
-> is also left with no explicit tag.
->=20
-> BTW I see you already applied patches 1-3 to the mips-next, so what shall=
- I
-> do when sending a v2 patchset with fixes asked to be provided for patch 1=
-2
-> and possibly for others in future? Shall I just resend the series without=
- that
-> applied patches or send them over with your acked-by tagges?
+grep -Hrn --exclude-dir="build" -e "config [a-zA-Z_0-9]\+_TEST$" | wc -l
+grep -Hrn --exclude-dir="build" -e "config TEST_[a-zA-Z_0-9]\+" | wc -l
 
-I've so far applied patches 1-7 of your series to mips-next, and stopped
-at patch 8 which has a comment to address.
+"foo-test" has 36 occurrences.
+"test-foo" has 33 occurrences.
 
-My preference would be if you could send a v2 which just contains the
-remaining patches (ie. patches 8-12 become patches 1-5), ideally atop
-the mips-next branch.
+The things I am more concerned about is how this would affect file
+naming. If we have a unit test for foo.c, I think foo_test.c is more
+consistent with our namespacing conventions. The other thing, is if we
+already have a Kconfig symbol called FOO_TEST (or TEST_FOO) what
+should we name the KUnit test in this case? FOO_UNIT_TEST?
+FOO_KUNIT_TEST, like I did above?
 
-The series looks good to me once the review comments are addressed, but
-no need to add an Acked-by - it'll be implicit when I apply them to
-mips-next.
-
-Thanks,
-    Paul
+Cheers
