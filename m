@@ -2,104 +2,93 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93014C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E576C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6065A20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:00:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRe6eGaE"
+	by mail.kernel.org (Postfix) with ESMTP id D80A42085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfEBMAR (ORCPT
+        id S1726452AbfEBMCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:00:17 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34815 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfEBMAQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:00:16 -0400
-Received: by mail-wr1-f65.google.com with SMTP id e9so2992495wrc.1;
-        Thu, 02 May 2019 05:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SM8TsU3OFAbO4NmdaDg8HRLgXAeSxN+PITGV00fL/z8=;
-        b=RRe6eGaE2NobACjwADYIVifI7MLCrf179q/tvPwaPyETmkPdktv2tLUKfAdFhG8wju
-         ZdEBVQHzBK5n5BoDfz9jMZc7+n/yW3+B8crJINVwUZZpSF8jRcEL+lSgnQEOM3p3Rxvt
-         zLiy+PE/wLaLj7v6Kmpv0kJg3SgrHmv698Wz91H1+hlJQ2Tn8zSEm42/dI2RyxUVVWyp
-         atSsAbd+TFTQAA+kolYOgm1IbswbtxfzMKTTl2jb40Pc19soZQmG9Lq9dCTGy+qZCE1q
-         JIjW1AMtLteXKFpZ7K+oxbmSf0svRvFvDnGKc7BzA4l7Qv1WFKpUXvR8veMKd5kgf4p0
-         +yVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SM8TsU3OFAbO4NmdaDg8HRLgXAeSxN+PITGV00fL/z8=;
-        b=KqaAmlimuCd5QCLVrIr9fcwA0ZWVGndFB6T9/gjlGiaJQ6YqeImgLzZDsXPXCd3S5N
-         AGmXAdo29jh+/wW9yCMEBDf+mfNa7Dh5WHfmDuDuAPF7OYDCJokgKHQ4mTs5gxYwTrtv
-         OCfHD6XbVKksrO9HLOOSMOyLHt/kI+ZmVVL3E4O/4oQyh/W/xUVJ0c9upQV9pd8qRImD
-         UwFhvDb8OLOM9b1fDdiamyT3R8+GvM30u4ek4CyWOTYdTFqcuw1KMcxG+uNJf2+08r6i
-         LvzbyfsHf6myJfqBLusTKv4zG7BqnpevPLPpiOU9cqz9aRnHMegHalZkov2wLGYwT5Ko
-         LUnQ==
-X-Gm-Message-State: APjAAAXbkw9+XiGRr9pJMbPSsMdGDCgDp7436iF+4YuqFgzYrMSofxeL
-        eanFUe7jN9hNLTr0Dr76zCM=
-X-Google-Smtp-Source: APXvYqzn+hnz0noXV+/bfazc6gltFsCxIEfAJCDaQjenHHOvuLVabnZScGwgi7BuP3+NSYMljUc0fw==
-X-Received: by 2002:a5d:40cd:: with SMTP id b13mr2579466wrq.103.1556798414862;
-        Thu, 02 May 2019 05:00:14 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id t126sm752981wma.1.2019.05.02.05.00.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 05:00:14 -0700 (PDT)
-Date:   Thu, 2 May 2019 14:00:12 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Kalyani Akula <kalyani.akula@xilinx.com>
-Cc:     herbert@gondor.apana.org.au, kstewart@linuxfoundation.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        pombredanne@nexb.com, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        saratcha@xilinx.com, Kalyani Akula <kalyania@xilinx.com>
-Subject: Re: [RFC PATCH V3 0/4] Add Xilinx's ZynqMP SHA3 driver support
-Message-ID: <20190502120012.GA19008@Red>
-References: <1556793282-17346-1-git-send-email-kalyani.akula@xilinx.com>
+        Thu, 2 May 2019 08:02:09 -0400
+Received: from ozlabs.org ([203.11.71.1]:45015 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbfEBMCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 08:02:09 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vv5B0821z9s9N;
+        Thu,  2 May 2019 22:02:05 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, aneesh.kumar@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 01/17] powerpc/mm: Don't BUG() in hugepd_page()
+In-Reply-To: <ff4366d14b3ef4de6af835a880a772477577139f.1556258135.git.christophe.leroy@c-s.fr>
+References: <cover.1556258134.git.christophe.leroy@c-s.fr> <ff4366d14b3ef4de6af835a880a772477577139f.1556258135.git.christophe.leroy@c-s.fr>
+Date:   Thu, 02 May 2019 22:02:05 +1000
+Message-ID: <87o94lxdxe.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556793282-17346-1-git-send-email-kalyani.akula@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 04:04:38PM +0530, Kalyani Akula wrote:
-> This patch set adds support for
-> - dt-binding docs for Xilinx ZynqMP SHA3 driver
-> - Adds communication layer support for sha_hash in zynqmp.c
-> - Adds Xilinx ZynqMP driver for SHA3 Algorithm
-> - Adds device tree node for ZynqMP SHA3 driver
-> 
-> V3 Changes :
-> - Removed zynqmp_sha_import and export APIs.The reason as follows
-> The user space code does an accept on an already accepted FD
-> when we create AF_ALG socket and call accept on it,
-> it calls af_alg_accept and not hash_accept.
-> import and export APIs are called from hash_accept.
-> The flow is as below
-> accept--> af_alg_accept-->hash_accept_parent-->hash_accept_parent_nokey
-> for hash salg_type.
-> - Resolved comments from 
->         https://patchwork.kernel.org/patch/10753719/
-> 
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Use VM_BUG_ON() instead of BUG_ON(), as those BUG_ON()
+> are not there to catch runtime errors but to catch errors
+> during development cycle only.
 
+I've dropped this one and the next, because I don't like VM_BUG_ON().
 
-Your driver still doesnt handle the case where two hash are done in parallel.
+Why not? Because it's contradictory. It's a condition that's so
+important that we should BUG, but only if the kernel has been built
+specially for debugging.
 
-Furthermore, you miss the export/import functions.
+I don't really buy the development cycle distinction, it's not like we
+have a rigorous test suite that we run and then we declare everything's
+gold and ship a product. We often don't find bugs until they're hit in
+the wild.
 
-Regards
+For example the recent corruption Joel discovered with STRICT_KERNEL_RWX
+could have been caught by a BUG_ON() to check we weren't patching kernel
+text in radix__change_memory_range(), but he wouldn't have been using
+CONFIG_DEBUG_VM. (See 8adddf349fda)
+
+I know Aneesh disagrees with me on this, so maybe you two can convince
+me otherwise.
+
+cheers
+
+> diff --git a/arch/powerpc/include/asm/hugetlb.h b/arch/powerpc/include/asm/hugetlb.h
+> index 8d40565ad0c3..7f1867e428c0 100644
+> --- a/arch/powerpc/include/asm/hugetlb.h
+> +++ b/arch/powerpc/include/asm/hugetlb.h
+> @@ -14,7 +14,7 @@
+>   */
+>  static inline pte_t *hugepd_page(hugepd_t hpd)
+>  {
+> -	BUG_ON(!hugepd_ok(hpd));
+> +	VM_BUG_ON(!hugepd_ok(hpd));
+>  	/*
+>  	 * We have only four bits to encode, MMU page size
+>  	 */
+> @@ -42,7 +42,7 @@ static inline void flush_hugetlb_page(struct vm_area_struct *vma,
+>  
+>  static inline pte_t *hugepd_page(hugepd_t hpd)
+>  {
+> -	BUG_ON(!hugepd_ok(hpd));
+> +	VM_BUG_ON(!hugepd_ok(hpd));
+>  #ifdef CONFIG_PPC_8xx
+>  	return (pte_t *)__va(hpd_val(hpd) & ~HUGEPD_SHIFT_MASK);
+>  #else
+> -- 
+> 2.13.3
