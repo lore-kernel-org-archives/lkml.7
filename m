@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF92C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021E8C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC2C20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB33216FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810611;
-	bh=wMW1TWyHtuzFr8usuvPxlbRK7oWcUQqAaSlgBosbkMo=;
+	s=default; t=1556810615;
+	bh=6bC4sujzDPneC8WgMYJgejpI4ScXjciKFuUAV5WoXwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AItBafvGixbXSBSsK0W6RKcrelUlVTBLTC6uI9W8qp19+oLl6CIlkMgDSUfm6ijbT
-	 NldBuyu4LTAB3EwjQCEOvnCcreimbaDpiBmPAsOrCULgEdm5VRmMVoJHpWkWXlfU1N
-	 fpjd2qhmGKsKZeqSbpEQ0e8LrgiG2XGU3cckCaW8=
+	b=0w+YOWHWi1G4XGP0xD5/sQ3k0Vq1C9SUZI2t1KdePiCv4DvCq52lcCRhlK5TjHgl4
+	 8MGD4hRwxOC60nNN9LuVaMQGDdq2pYxAEOqmBeotQJEI6kN1lX7fjRWYGcPqvHTy48
+	 iT3IjsnGOeWwteJcBTs/uIilJkoI7karADj97U40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbfEBPXb (ORCPT
+        id S1727075AbfEBPXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:23:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39158 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:23:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbfEBPX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:23:29 -0400
+        id S1726424AbfEBPXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:23:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E2DE20449;
-        Thu,  2 May 2019 15:23:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D91A921743;
+        Thu,  2 May 2019 15:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810608;
-        bh=wMW1TWyHtuzFr8usuvPxlbRK7oWcUQqAaSlgBosbkMo=;
+        s=default; t=1556810612;
+        bh=6bC4sujzDPneC8WgMYJgejpI4ScXjciKFuUAV5WoXwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qd+2gkORBpIoDFA7mvrlycYH2oa0T/7enlT/RB3z8jHWO9mtT4h8L9bHZ90IG2Vzm
-         cSBtcTtQp/tGvhx37Gd4o9hyeQZqByjYrvyDhBwfAPZLLapHvcqtwUFPTtFeksW1dB
-         7CyKGWf3rihx5E1vVXw3eZdAct2vJ/XgdoaRC6Hc=
+        b=P5WVi1zlsBbneDUI6+FF7PGBlfN4c40i+iv3i/H5enNwmWGVbY6Rx8N7yWP8+YWS8
+         a08VKZIqIURnDiIe6ICeMAFO4HpLWGktH2Qf7Wt5NEzFzUf8t8dI4eHaTESSV0KaqH
+         scY5AyFci5hDpeIqdznXGivmiKyNbkQVc+d+IBxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Florian Westphal <fw@strlen.de>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 12/49] netfilter: bridge: set skb transport_header before entering NF_INET_PRE_ROUTING
-Date:   Thu,  2 May 2019 17:20:49 +0200
-Message-Id: <20190502143325.644289870@linuxfoundation.org>
+Subject: [PATCH 4.14 13/49] s390/qeth: fix race when initializing the IP address table
+Date:   Thu,  2 May 2019 17:20:50 +0200
+Message-Id: <20190502143325.771108416@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -63,54 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e166e4fdaced850bee3d5ee12a5740258fb30587 ]
+[ Upstream commit 7221b727f0079a32aca91f657141e1de564d4b97 ]
 
-Since Commit 21d1196a35f5 ("ipv4: set transport header earlier"),
-skb->transport_header has been always set before entering INET
-netfilter. This patch is to set skb->transport_header for bridge
-before entering INET netfilter by bridge-nf-call-iptables.
+The ucast IP table is utilized by some of the L3-specific sysfs attributes
+that qeth_l3_create_device_attributes() provides. So initialize the table
+_before_ registering the attributes.
 
-It also fixes an issue that sctp_error() couldn't compute a right
-csum due to unset skb->transport_header.
-
-Fixes: e6d8b64b34aa ("net: sctp: fix and consolidate SCTP checksumming code")
-Reported-by: Li Shuang <shuali@redhat.com>
-Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: ebccc7397e4a ("s390/qeth: add missing hash table initializations")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/bridge/br_netfilter_hooks.c | 1 +
- net/bridge/br_netfilter_ipv6.c  | 2 ++
- 2 files changed, 3 insertions(+)
+ drivers/s390/net/qeth_l3_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
-index 5fd283d9929e..89936e0d55c9 100644
---- a/net/bridge/br_netfilter_hooks.c
-+++ b/net/bridge/br_netfilter_hooks.c
-@@ -512,6 +512,7 @@ static unsigned int br_nf_pre_routing(void *priv,
- 	nf_bridge->ipv4_daddr = ip_hdr(skb)->daddr;
+diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
+index a19f2dc69e8a..d9830c86d0c1 100644
+--- a/drivers/s390/net/qeth_l3_main.c
++++ b/drivers/s390/net/qeth_l3_main.c
+@@ -3022,12 +3022,14 @@ static int qeth_l3_probe_device(struct ccwgroup_device *gdev)
+ 	struct qeth_card *card = dev_get_drvdata(&gdev->dev);
+ 	int rc;
  
- 	skb->protocol = htons(ETH_P_IP);
-+	skb->transport_header = skb->network_header + ip_hdr(skb)->ihl * 4;
- 
- 	NF_HOOK(NFPROTO_IPV4, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
- 		skb->dev, NULL,
-diff --git a/net/bridge/br_netfilter_ipv6.c b/net/bridge/br_netfilter_ipv6.c
-index 5811208863b7..09d5e0c7b3ba 100644
---- a/net/bridge/br_netfilter_ipv6.c
-+++ b/net/bridge/br_netfilter_ipv6.c
-@@ -235,6 +235,8 @@ unsigned int br_nf_pre_routing_ipv6(void *priv,
- 	nf_bridge->ipv6_daddr = ipv6_hdr(skb)->daddr;
- 
- 	skb->protocol = htons(ETH_P_IPV6);
-+	skb->transport_header = skb->network_header + sizeof(struct ipv6hdr);
++	hash_init(card->ip_htable);
 +
- 	NF_HOOK(NFPROTO_IPV6, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
- 		skb->dev, NULL,
- 		br_nf_pre_routing_finish_ipv6);
+ 	if (gdev->dev.type == &qeth_generic_devtype) {
+ 		rc = qeth_l3_create_device_attributes(&gdev->dev);
+ 		if (rc)
+ 			return rc;
+ 	}
+-	hash_init(card->ip_htable);
++
+ 	hash_init(card->ip_mc_htable);
+ 	card->options.layer2 = 0;
+ 	card->info.hwtrap = 0;
 -- 
 2.19.1
 
