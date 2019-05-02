@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ED5C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED18C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6C9217F9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0B9217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810569;
-	bh=CfDOrmqhvB71SpN/Uis/7pUbTsJcuGsoD1/3ZjtSGlc=;
+	s=default; t=1556810573;
+	bh=rPDTKpxLtWVx3Ngis1eC/2Bn9FdqpXs4F64UVxD6DTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWgyeLimJyJOJUiGFgvKOyDK3tzoJxLJRUdejPEKB6z6L9ZFQaYtzjM/Lwl7uaPE/
-	 4zmcK2KYbznbdbr++ZWYgmfLvE5RCdzFqdTS8xPdP6mutwbyTHJyhllCis3R9dEm6d
-	 dUxnm3PTmGG6OofNzVDUzZFaOJMHSCHgekmbzt3E=
+	b=v4Z+3RGWI4HFS67EDfeX45d+MhV+XBSRcgs9GXYFWfwg3vI6gbSEe1SYFvP+vmz1M
+	 E/EdEvuSWmLb2XBnKEBScBf019oqmLkHqCqIfmas2rBZwkX9YItvwrHT1RJjcpQwEv
+	 kn8Ai0NCqfMRQ3CWjpCHcx6qDbUL5Unx5VdCEUFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbfEBPWs (ORCPT
+        id S1726865AbfEBPWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:22:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38168 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:22:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbfEBPWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:22:44 -0400
+        id S1726809AbfEBPWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:22:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70CD6216FD;
-        Thu,  2 May 2019 15:22:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1687A20675;
+        Thu,  2 May 2019 15:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810563;
-        bh=CfDOrmqhvB71SpN/Uis/7pUbTsJcuGsoD1/3ZjtSGlc=;
+        s=default; t=1556810566;
+        bh=rPDTKpxLtWVx3Ngis1eC/2Bn9FdqpXs4F64UVxD6DTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G0QGNcsvdgUvURc13tgg5e46oj61wt4cYxCua16uy8goxmLIjBfmgrjmbF4bzw/lO
-         vLE5TS9ZdyINKaXPE3G11N9SjH3Vh8a0RWzGt2+koNzEoiLaYY/oBQZt6xfKTZg3zY
-         JPZJZefXuBLOG263TCW7ZTCUT/ZhU+fw2SPkMPuQ=
+        b=MncP7KfghXYzgiWO5DUVbDo+iz3uSmwcxJ/hVuspJlxFsMYR4iBXRl2H0Y1twK3PX
+         jEoX1tZVJOE6C5unDjWiIQFa/iTLZygqgjxcByjYQziYpKMNHOYJrhiMi+pmwpoUG2
+         JTqWuBz1yHpLQ7xiJRjBP8MtUz/5WEkAfKHC14yI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, raymond pang <raymondpangxd@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.9 28/32] libata: fix using DMA buffers on stack
-Date:   Thu,  2 May 2019 17:21:14 +0200
-Message-Id: <20190502143322.591277926@linuxfoundation.org>
+Subject: [PATCH 4.9 29/32] gpio: of: Fix of_gpiochip_add() error path
+Date:   Thu,  2 May 2019 17:21:15 +0200
+Message-Id: <20190502143322.727461789@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
 References: <20190502143314.649935114@linuxfoundation.org>
@@ -60,85 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dd08a8d9a66de4b54575c294a92630299f7e0fe7 ]
+[ Upstream commit f7299d441a4da8a5088e651ea55023525a793a13 ]
 
-When CONFIG_VMAP_STACK=y, __pa() returns incorrect physical address for
-a stack virtual address. Stack DMA buffers must be avoided.
+If the call to of_gpiochip_scan_gpios() in of_gpiochip_add() fails, no
+error handling is performed.  This lead to the need of callers to call
+of_gpiochip_remove() on failure, which causes "BAD of_node_put() on ..."
+if the failure happened before the call to of_node_get().
 
-Signed-off-by: raymond pang <raymondpangxd@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fix this by adding proper error handling.
+
+Note that calling gpiochip_remove_pin_ranges() multiple times causes no
+harm: subsequent calls are a no-op.
+
+Fixes: dfbd379ba9b7431e ("gpio: of: Return error if gpio hog configuration failed")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/ata/libata-zpodd.c | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+ drivers/gpio/gpiolib-of.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
-index 0ad96c647541..7017a81d53cf 100644
---- a/drivers/ata/libata-zpodd.c
-+++ b/drivers/ata/libata-zpodd.c
-@@ -51,38 +51,52 @@ static int eject_tray(struct ata_device *dev)
- /* Per the spec, only slot type and drawer type ODD can be supported */
- static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
- {
--	char buf[16];
-+	char *buf;
- 	unsigned int ret;
--	struct rm_feature_desc *desc = (void *)(buf + 8);
-+	struct rm_feature_desc *desc;
- 	struct ata_taskfile tf;
- 	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
- 			2,      /* only 1 feature descriptor requested */
- 			0, 3,   /* 3, removable medium feature */
- 			0, 0, 0,/* reserved */
--			0, sizeof(buf),
-+			0, 16,
- 			0, 0, 0,
- 	};
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index aac84329c759..b863386be911 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -531,7 +531,13 @@ int of_gpiochip_add(struct gpio_chip *chip)
  
-+	buf = kzalloc(16, GFP_KERNEL);
-+	if (!buf)
-+		return ODD_MECH_TYPE_UNSUPPORTED;
-+	desc = (void *)(buf + 8);
+ 	of_node_get(chip->of_node);
+ 
+-	return of_gpiochip_scan_gpios(chip);
++	status = of_gpiochip_scan_gpios(chip);
++	if (status) {
++		of_node_put(chip->of_node);
++		gpiochip_remove_pin_ranges(chip);
++	}
 +
- 	ata_tf_init(dev, &tf);
- 	tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_DEVICE;
- 	tf.command = ATA_CMD_PACKET;
- 	tf.protocol = ATAPI_PROT_PIO;
--	tf.lbam = sizeof(buf);
-+	tf.lbam = 16;
- 
- 	ret = ata_exec_internal(dev, &tf, cdb, DMA_FROM_DEVICE,
--				buf, sizeof(buf), 0);
--	if (ret)
-+				buf, 16, 0);
-+	if (ret) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
- 
--	if (be16_to_cpu(desc->feature_code) != 3)
-+	if (be16_to_cpu(desc->feature_code) != 3) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
- 
--	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1)
-+	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_SLOT;
--	else if (desc->mech_type == 1 && desc->load == 0 && desc->eject == 1)
-+	} else if (desc->mech_type == 1 && desc->load == 0 &&
-+		   desc->eject == 1) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_DRAWER;
--	else
-+	} else {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
++	return status;
  }
  
- /* Test if ODD is zero power ready by sense code */
+ void of_gpiochip_remove(struct gpio_chip *chip)
 -- 
 2.19.1
 
