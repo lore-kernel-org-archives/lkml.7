@@ -2,175 +2,117 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDA0C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FE4C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C89206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:41:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C9B20873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:41:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="EgB6mGwd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfEBJl3 (ORCPT
+        id S1726416AbfEBJlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 05:41:29 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:64068 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbfEBJl2 (ORCPT
+        Thu, 2 May 2019 05:41:35 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38531 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfEBJld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 05:41:28 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Joergen.Andreasen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Joergen.Andreasen@microchip.com";
-  x-sender="Joergen.Andreasen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Joergen.Andreasen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Joergen.Andreasen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,421,1549954800"; 
-   d="scan'208";a="28787435"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 02 May 2019 02:41:02 -0700
-Received: from localhost (10.10.76.4) by chn-sv-exch04.mchp-main.com
- (10.10.76.105) with Microsoft SMTP Server id 14.3.352.0; Thu, 2 May 2019
- 02:41:02 -0700
-From:   Joergen Andreasen <joergen.andreasen@microchip.com>
-To:     <netdev@vger.kernel.org>
-CC:     Joergen Andreasen <joergen.andreasen@microchip.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Paul Burton" <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 1/3] net/sched: act_police: move police parameters into separate header file
-Date:   Thu, 2 May 2019 11:40:27 +0200
-Message-ID: <20190502094029.22526-2-joergen.andreasen@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190502094029.22526-1-joergen.andreasen@microchip.com>
-References: <20190502094029.22526-1-joergen.andreasen@microchip.com>
+        Thu, 2 May 2019 05:41:33 -0400
+Received: by mail-lf1-f68.google.com with SMTP id v1so1383904lfg.5
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 02:41:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=060caLbyZI4zk0ZjA7Fiouwu98LQI7AWRp5h7x3hZmQ=;
+        b=EgB6mGwdWeIn3vIPHsngENAUNgzb9IiX4BoErNZL46CNGAaquzw9mGlUYs7Zh6UbJn
+         vYqOEdIhzJYxZQcMquB5S7abAjQEiy2HiC477MOze+j8OJOQnc9oSTyRKKhLZT7Cn2tH
+         Og8q35ad1q3I9CKQJxRoMcFKNlfpCtLJWtSd8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=060caLbyZI4zk0ZjA7Fiouwu98LQI7AWRp5h7x3hZmQ=;
+        b=mhjz6fy0SZ7AWiPpNmr03HtMMf+moHuGhXPLQeybxhhCpOjNoAzHdhKwQcFFHRajyk
+         nQuT6/Y8hmqzIGJiwuPiHNyro6mbvnojHdRHRxlm6NmrDT067x1ybNwKZjDVchZcvuFO
+         2Ehx7u+f2Kz8SB5x65P67Cnc9qFPYxLEr0gW/QgnFhDt6e/dBDPfapbd67QPtsZ6k1t+
+         g5VB7etQZi7J9kUeh0zZ37vOiD76AP8aNMaABrgXFdBGaY9MuMf0R62mOzqHtUnFPO3p
+         3nw4vo6X4PFmAM3Y0MjJMpRklQf3svpZ0m9F3iGaEhjGS1PfZQAhfDVXyhiQZ7y2RV8R
+         rMfw==
+X-Gm-Message-State: APjAAAW/OLCXEDQDPXqPdQ1OYqSGtgjxOpvu33lTWLnJO1MAVXH0qX1I
+        HedahH3wQjAxsGIIq9PuVIMk4zkQsZ6K4vVc
+X-Google-Smtp-Source: APXvYqzCKARzaa7KDntpBOsDXCBZb0O1Ck2efsStbjzbQ90RsUz1DOVYRjLf1CDCOVyuQGSrWgkOAw==
+X-Received: by 2002:a19:7719:: with SMTP id s25mr1442278lfc.69.1556790091338;
+        Thu, 02 May 2019 02:41:31 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-118-63.cgn.fibianet.dk. [5.186.118.63])
+        by smtp.gmail.com with ESMTPSA id 77sm403262ljs.77.2019.05.02.02.41.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 02:41:30 -0700 (PDT)
+Subject: Re: [PATCH] mod_devicetable.h: reduce sizeof(struct of_device_id) by
+ 80 bytes
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        Mattias Jacobsson <2pi@mok.nu>, Jeff Mahoney <jeffm@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190425203101.9403-1-linux@rasmusvillemoes.dk>
+ <CAK8P3a1Fu64YhQzvSEy8j3oZ3XwUN81fY+K6Z6ksHhqDWzbxNA@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <73918e46-e3c8-edc4-c941-e650c05519c8@rasmusvillemoes.dk>
+Date:   Thu, 2 May 2019 11:41:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAK8P3a1Fu64YhQzvSEy8j3oZ3XwUN81fY+K6Z6ksHhqDWzbxNA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hardware offloading a policer requires access to it's parameters.
-This is now possible by including net/tc_act/tc_police.h.
+On 26/04/2019 11.27, Arnd Bergmann wrote:
+> On Thu, Apr 25, 2019 at 10:31 PM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+>>
+>> For an arm imx_v6_v7_defconfig kernel, .rodata becomes 70K smaller;
+>> .init.data shrinks by another ~13K, making the whole kernel image
+>> about 83K, or 0.3%, smaller.
+>>
+>> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> 
+> The space savings are nice, but I wonder if the format of these
+> structures is part of the ABI or not. I have some vague recollection
+> of that, but it's possible that it's no longer true in this century.
+> 
+> scripts/mod/file2alias.c processes the structures into a different
+> format and seems to be written specifically to avoid problems
+> with changes like the one you did. Can anyone confirm that
+> this is true before we apply the patch?
 
-Signed-off-by: Joergen Andreasen <joergen.andreasen@microchip.com>
----
- include/net/tc_act/tc_police.h | 41 ++++++++++++++++++++++++++++++++++
- net/sched/act_police.c         | 27 +---------------------
- 2 files changed, 42 insertions(+), 26 deletions(-)
- create mode 100644 include/net/tc_act/tc_police.h
+I can't confirm it, of course, but I did do some digging around and
+couldn't find anything other than file2alias, which as you mention is
+prepared for such a change. I also couldn't find any specific reason for
+the 128 (it's not a #define, so at least originally it didn't seem to be
+tied to some external consumer) - Jeff, do you remember why you chose
+that back when you did 5e6557722e69?
 
-diff --git a/include/net/tc_act/tc_police.h b/include/net/tc_act/tc_police.h
-new file mode 100644
-index 000000000000..052dc5f37aa9
---- /dev/null
-+++ b/include/net/tc_act/tc_police.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __NET_TC_POLICE_H
-+#define __NET_TC_POLICE_H
-+
-+#include <net/act_api.h>
-+
-+struct tcf_police_params {
-+	int			tcfp_result;
-+	u32			tcfp_ewma_rate;
-+	s64			tcfp_burst;
-+	u32			tcfp_mtu;
-+	s64			tcfp_mtu_ptoks;
-+	struct psched_ratecfg	rate;
-+	bool			rate_present;
-+	struct psched_ratecfg	peak;
-+	bool			peak_present;
-+	struct rcu_head rcu;
-+};
-+
-+struct tcf_police {
-+	struct tc_action	common;
-+	struct tcf_police_params __rcu *params;
-+
-+	spinlock_t		tcfp_lock ____cacheline_aligned_in_smp;
-+	s64			tcfp_toks;
-+	s64			tcfp_ptoks;
-+	s64			tcfp_t_c;
-+};
-+
-+#define to_police(pc) ((struct tcf_police *)pc)
-+
-+static inline bool is_tcf_police(const struct tc_action *a)
-+{
-+#ifdef CONFIG_NET_CLS_ACT
-+	if (a->ops && a->ops->id == TCA_ID_POLICE)
-+		return true;
-+#endif
-+	return false;
-+}
-+
-+#endif /* __NET_TC_POLICE_H */
-diff --git a/net/sched/act_police.c b/net/sched/act_police.c
-index 2b8581f6ab51..5cb053f2c7b1 100644
---- a/net/sched/act_police.c
-+++ b/net/sched/act_police.c
-@@ -19,35 +19,10 @@
- #include <linux/rtnetlink.h>
- #include <linux/init.h>
- #include <linux/slab.h>
--#include <net/act_api.h>
-+#include <net/tc_act/tc_police.h>
- #include <net/netlink.h>
- #include <net/pkt_cls.h>
- 
--struct tcf_police_params {
--	int			tcfp_result;
--	u32			tcfp_ewma_rate;
--	s64			tcfp_burst;
--	u32			tcfp_mtu;
--	s64			tcfp_mtu_ptoks;
--	struct psched_ratecfg	rate;
--	bool			rate_present;
--	struct psched_ratecfg	peak;
--	bool			peak_present;
--	struct rcu_head rcu;
--};
--
--struct tcf_police {
--	struct tc_action	common;
--	struct tcf_police_params __rcu *params;
--
--	spinlock_t		tcfp_lock ____cacheline_aligned_in_smp;
--	s64			tcfp_toks;
--	s64			tcfp_ptoks;
--	s64			tcfp_t_c;
--};
--
--#define to_police(pc) ((struct tcf_police *)pc)
--
- /* old policer structure from before tc actions */
- struct tc_police_compat {
- 	u32			index;
--- 
-2.17.1
+But we cannot really know whether there is some userspace tool that
+parses the .ko ELF objects the same way that file2alias does, doing
+pattern matching on the symbol names etc. I cannot see why anybody would
+_do_ that (the in-tree infrastructure already generates the
+MODULE_ALIAS() from which modules.alias gets generated), but the only
+way of knowing, I think, is to try to apply the patch and see if anybody
+complains.
+
+Rasmus
+
 
