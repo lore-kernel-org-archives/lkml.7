@@ -2,143 +2,165 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA018C04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C47C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E1D20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD192089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:23:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OUxx+AAH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQE+pYv7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfEBGWT (ORCPT
+        id S1726334AbfEBGXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 02:22:19 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:55119 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbfEBGWS (ORCPT
+        Thu, 2 May 2019 02:23:45 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44806 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbfEBGXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 02:22:18 -0400
-Received: by mail-it1-f196.google.com with SMTP id a190so1381374ite.4;
-        Wed, 01 May 2019 23:22:18 -0700 (PDT)
+        Thu, 2 May 2019 02:23:45 -0400
+Received: by mail-io1-f67.google.com with SMTP id r71so1052351iod.11;
+        Wed, 01 May 2019 23:23:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k56mmNJm2c37muwGSNyw5prel5SUd23hcD0vEkYllYY=;
-        b=OUxx+AAHpV80+7jWx8f1+E7itJj9D1rgHeIv5/3VMm7TKAnaU1bHWCA0kR/Uu4B/N0
-         YiDM2kOhNwjBsVDh7yPbvcSscs4wrg/XbXz1H/w3lDdnJU4TQ9QwedxsTFe/Bbjt18D3
-         JRn/qzW0ooD8Rl7s9nAI0qgl8XU1Fhb9EsRc0VNWcSWwmT5yQ/Ep3gbO5ZmDWB/2TOjs
-         56aGZ16FpdQ10TxCUNbdRMfiLjvkeIGo1brUr0GBhS/X+j6ZJRXFbl8XXTiVI/tpSorx
-         HgJ21xXoiQgpOYV/KzFy4OYZm4ZtO8AhUMxPfwPWagYl7mDnLgavitYf7mYuADYjNy/N
-         5KRA==
+         :cc:content-transfer-encoding;
+        bh=ZhEnpCiK38dEYBr2uzx8FJBZlmYQCiMhky3F4FoA1gQ=;
+        b=BQE+pYv7YdStjjZYwA3VXk0sjcHeVCvkicQKlA2YUgZgPegb7+25JLDs5Sy5rMwvSZ
+         OhP6Je0CtJR6DVV/sp1CbcyNrST3IbvYuXboU0plXYtOKxt/GBRpB2raZCZ/7DeBGr0E
+         p0CTmS1qUc10v0a1KMkiyKb2H7hapQm3i8gmHmM+rpU2Lkt/YgLnzSoFGrbDUs2P1S80
+         UGYb7M8pDZa1EMHMqzLE1cQIHNmpDxlD/+cDlWRHuyQLPjT5NafBgOI7o+pE6eUPZK9E
+         WuoTB+yIFScSYctxgzSwrnc5HPuWHn2pzv3nInu4M7MSRKpZPkrj7itDwkNBQTyJW+Mi
+         G9bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k56mmNJm2c37muwGSNyw5prel5SUd23hcD0vEkYllYY=;
-        b=MIyo4SDSGi/WvE33ca1hznAocUQEWoDqMwzG+5wsQ8x40U+aElZTVV6cC1Cay8TR+M
-         KI654MWkZ+5cI6RqMrG+Fq+ijr0oCojrjuLS0dpAbm2IDNcKuG9jFI2I+ue5JVnChLwO
-         tF/tdKd5JmbtCLlErt2pO87fridJB/nnsFlLngNnYFi+fn084SQYS+K8xx6ur+tiKdlM
-         3j3klGWMGeanQkoCtACPslOEvMj4G9tKlM9s/4LcW4uco0583l+ldyM/HjsKxet/i4+3
-         vnZeub/YcYzhfV/b7z9ZKnk6B2BWAGdpsF2bWqrrs9w2MbbNAwK9oKxCkxQDuimTJ87C
-         5cLw==
-X-Gm-Message-State: APjAAAVC7lf9nWQ7pU6RjkY1B7DsjoFlcku1nJgZzzMxboY5YwajECx/
-        hZAeysXcmv0Kj+IDOSlrwExVawlnhycTOLvuTg==
-X-Google-Smtp-Source: APXvYqx2USGvNZCoaLJnd+1UamBCWbf1OMfqf8foQXGwbUGpu68tSJhvorSVm2AnXEjYEs1kPbB4DdJnuY+hXU3VFhQ=
-X-Received: by 2002:a05:660c:38e:: with SMTP id x14mr1138760itj.146.1556778137619;
- Wed, 01 May 2019 23:22:17 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZhEnpCiK38dEYBr2uzx8FJBZlmYQCiMhky3F4FoA1gQ=;
+        b=OmmvcH7vyxcHAZFX3KIfGuK9pP7Mbo+5Ew57Apk7G0BD41syCFOgRprM38OZz8+QOP
+         UkU3QaDNkqpyDzJENXJmJp1rmFHAiHicyonV3Yyp11rn7OjNbgw6ceuwqU/1cMYXRtJb
+         YrccGuk5ag21id2bl7tnFiGl3iBMvk83NI9nwXU9yT56NNlMfmO6yKe8ySaTDtrt8zin
+         bp4syU8Px4hmhTohxru4HRh4Or+Zw/lLIRhbGGr3LmFzpHMxuzBpeYvkhbhhny0XasBx
+         KhT96FDyTXJltdc0yBDF+aXXXPWvtxUI3dwjEcaWFjLaOY8OnDo7HCnWt1vY91fw2ACO
+         fexw==
+X-Gm-Message-State: APjAAAX5YYw4nvZQOAgiGmGvv+VzmSNH8SKg8eFvgh1XdijalfJx3wbB
+        sSrwmd9SOP4weHTHoSVBLF+laNMxNEKStH/gFW8=
+X-Google-Smtp-Source: APXvYqxoAwhRx+e3Wq+/p+L/aiuaPbf2PkVB26huHmGBGPw0izOihcwI/g4G+h/PSSTN0vAD/uVmLCKioGLA6a5P0GI=
+X-Received: by 2002:a05:6602:12:: with SMTP id b18mr1290631ioa.224.1556778224306;
+ Wed, 01 May 2019 23:23:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <1556087581-14513-1-git-send-email-kernelfans@gmail.com>
- <10dc5468-6cd9-85c7-ba66-1dfa5aa922b7@suse.com> <CAFgQCTstd667wP6g+maxYekz4u3iBR2R=FHUiS1V=XxTs6MKUw@mail.gmail.com>
-In-Reply-To: <CAFgQCTstd667wP6g+maxYekz4u3iBR2R=FHUiS1V=XxTs6MKUw@mail.gmail.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Thu, 2 May 2019 14:22:06 +0800
-Message-ID: <CAFgQCTtQm7SuBRfXik6B065Aa+uQ=Mx6i+Y1q+NJU1GEiUgH4g@mail.gmail.com>
-Subject: Re: [PATCHv2] kernel/crash: make parse_crashkernel()'s return value
- more indicant
-To:     Matthias Brugger <mbrugger@suse.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Rich Felker <dalias@libc.org>,
-        linux-ia64@vger.kernel.org,
-        Julien Thierry <julien.thierry@arm.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org,
-        linux-mips@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-s390@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        David Hildenbrand <david@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dave Young <dyoung@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>,
-        Borislav Petkov <bp@alien8.de>, Stefan Agner <stefan@agner.ch>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, Tony Luck <tony.luck@intel.com>,
-        Baoquan He <bhe@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Greg Hackmann <ghackmann@android.com>
+References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
+ <20190426164224.11327-5-pawel.mikolaj.chmiel@gmail.com> <20190502015408.GA11612@bogus>
+In-Reply-To: <20190502015408.GA11612@bogus>
+From:   Tomasz Figa <tomasz.figa@gmail.com>
+Date:   Thu, 2 May 2019 15:23:33 +0900
+Message-ID: <CA+Ln22HLqnbbY37FG6CwjZvZH7G35Z+0kNq7XFU4WtZyk_EqZQ@mail.gmail.com>
+Subject: Re: [PATCH 4/5] dt-binding: mtd: onenand/samsung: Add device tree support
+To:     Rob Herring <robh@kernel.org>
+Cc:     =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        bbrezillon@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
+        David Woodhouse <dwmw2@infradead.org>,
+        computersforpeace@gmail.com, marek.vasut@gmail.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-mtd@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 4:20 PM Pingfan Liu <kernelfans@gmail.com> wrote:
+2019=E5=B9=B45=E6=9C=882=E6=97=A5(=E6=9C=A8) 10:54 Rob Herring <robh@kernel=
+.org>:
 >
-> On Wed, Apr 24, 2019 at 4:31 PM Matthias Brugger <mbrugger@suse.com> wrote:
+> On Fri, Apr 26, 2019 at 06:42:23PM +0200, Pawe=C5=82 Chmiel wrote:
+> > From: Tomasz Figa <tomasz.figa@gmail.com>
 > >
+> > This patch adds dt-bindings for Samsung OneNAND driver.
 > >
-> [...]
-> > > @@ -139,6 +141,8 @@ static int __init parse_crashkernel_simple(char *cmdline,
-> > >               pr_warn("crashkernel: unrecognized char: %c\n", *cur);
-> > >               return -EINVAL;
-> > >       }
-> > > +     if (*crash_size == 0)
-> > > +             return -EINVAL;
+> > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > ---
+> >  .../bindings/mtd/samsung-onenand.txt          | 46 +++++++++++++++++++
+> >  1 file changed, 46 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mtd/samsung-onena=
+nd.txt
 > >
-> > This covers the case where I pass an argument like "crashkernel=0M" ?
-> > Can't we fix that by using kstrtoull() in memparse and check if the return value
-> > is < 0? In that case we could return without updating the retptr and we will be
-> > fine.
-After a series of work, I suddenly realized that it can not be done
-like this way. "0M" causes kstrtoull() to return -EINVAL, but this is
-caused by "M", not "0". If passing "0" to kstrtoull(), it will return
-0 on success.
-
-> >
-> It seems that kstrtoull() treats 0M as invalid parameter, while
-> simple_strtoull() does not.
+> > diff --git a/Documentation/devicetree/bindings/mtd/samsung-onenand.txt =
+b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+> > new file mode 100644
+> > index 000000000000..341d97cc1513
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+> > @@ -0,0 +1,46 @@
+> > +Device tree bindings for Samsung SoC OneNAND controller
+> > +
+> > +Required properties:
+> > + - compatible : value should be either of the following.
+> > +   (a) "samsung,s3c6400-onenand" - for onenand controller compatible w=
+ith
+> > +       S3C6400 SoC,
+> > +   (b) "samsung,s3c6410-onenand" - for onenand controller compatible w=
+ith
+> > +       S3C6410 SoC,
+> > +   (c) "samsung,s5pc100-onenand" - for onenand controller compatible w=
+ith
+> > +       S5PC100 SoC,
+> > +   (d) "samsung,s5pv210-onenand" - for onenand controller compatible w=
+ith
+> > +       S5PC110/S5PV210 SoCs.
+> > +
+> > + - reg : two memory mapped register regions:
+> > +   - first entry: control registers.
+> > +   - second and next entries: memory windows of particular OneNAND chi=
+ps;
+> > +     for variants a), b) and c) only one is allowed, in case of d) up =
+to
+> > +     two chips can be supported.
+> > +
+> > + - interrupt-parent : phandle of interrupt controller to which the One=
+NAND
+> > +   controller is wired,
 >
-My careless going through the code. And I tested with a valid value
-"256M" using kstrtoull(), it also returned -EINVAL.
+> This is implied and can be removed.
+>
+> > + - interrupts : specifier of interrupt signal to which the OneNAND con=
+troller
+> > +   is wired; should contain just one entry.
+> > + - clock-names : should contain two entries:
+> > +   - "bus" - bus clock of the controller,
+> > +   - "onenand" - clock supplied to OneNAND memory.
+>
+> If the clock just goes to the OneNAND device, then it should be in the
+> nand device node rather than the controller node.
+>
 
-So I think there is no way to distinguish 0 from a positive value
-inside this basic math function.
-Do I miss anything?
+(Trying hard to recall the details about this hardware.)
+AFAIR the clock goes to the controller and the controller then feeds
+it to the memory chips.
 
-Thanks and regards,
-Pingfan
+Also I don't think we should have any nand device nodes here, since
+the memory itself is only exposed via the controller, which offers
+various queries to probe the memory at runtime, so there is no need to
+describe it in DT.
+
+> > + - clock: should contain list of phandles and specifiers for all clock=
+s listed
+> > +   in clock-names property.
+> > + - #address-cells : must be 1,
+> > + - #size-cells : must be 1.
+>
+> This implies some child nodes. What are the child nodes?
+>
+
+I can't recall the reason for this unfortunately.
+
+Best regards,
+Tomasz
