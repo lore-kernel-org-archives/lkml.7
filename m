@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F65BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA48C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5FCB204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96620204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556812096;
-	bh=8QoOLA2arZzGnx3Ye1ntHdQCr/hlpEVYqBpnGIy5P2Y=;
+	s=default; t=1556812103;
+	bh=NB++TD4k0RyFqmsC49wxFNlELGHFOpxdzABIcfI+bM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iJT49a4x5U/bGTG5WeUJrXm9AkDNl1NLQ6R6AjC7mIRGkdURZuOlUqvXLhw25RmaN
-	 O9KpP3b4HalyRt67Ur/q8wl1eQ57zYHo/0Z9Myah5AMaMXxbAa1QY5LkxMzfTUwGqB
-	 glq9mLWTpEZkextBuS6QVqYrTdUZ/j1ytGVInleg=
+	b=jBypUt/CxrxtnN/y8JQ6a7Q8oPD+zfg3FMAWJ48AlAfu0DWg0TiXhA8GFQzsuKDxE
+	 oydd+iyM7jToaY+LK4+55xBB6CXZzDTwnHXyKzg0FKDzB+s/6NFFyWd1ulN1OaLcUv
+	 l2MOrDmw0Lwkt3lqnnT31V9f97Bc4U94kwsNLciw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfEBPX3 (ORCPT
+        id S1727397AbfEBPsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:23:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39112 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:48:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbfEBPX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:23:26 -0400
+        id S1726992AbfEBPXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:23:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B338A20675;
-        Thu,  2 May 2019 15:23:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2566420449;
+        Thu,  2 May 2019 15:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810606;
-        bh=8QoOLA2arZzGnx3Ye1ntHdQCr/hlpEVYqBpnGIy5P2Y=;
+        s=default; t=1556810603;
+        bh=NB++TD4k0RyFqmsC49wxFNlELGHFOpxdzABIcfI+bM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jY6WsmgZK3Bueed7DxunV7zNG5rvO2I/Qyr2mDhnD1GkDJEpl4tDDfNknQliRBc1K
-         ZoVUd+HC0BoL3vg4uHiKdu620T7RZ5PwE344I9gwABo497uVPtg29M3ibgVOWT2MBJ
-         grr56cMC3eCP1IOQ1Ulj+MWO2RhDXtorNOmMCTSw=
+        b=JYphA+VsV6bcsSjCpqd8p4+mYsDYFWyMaw52Yi5kYNaLxnUdIOwBh//AbQbBklpP7
+         NWsA+Qclifa5wROVpKfSrZvgEgP+7DHHUV6r/KwbKfdoqKR4/54DGuJzwqWEETbeC+
+         R9e4/co4pzsuSzGrmGVJptUIlXzVaeuDwQIUJTh8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?V=C3=A1clav=20Zindulka?= <vaclav.zindulka@tlapnet.cz>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 11/49] netfilter: nft_set_rbtree: check for inactive element after flag mismatch
-Date:   Thu,  2 May 2019 17:20:48 +0200
-Message-Id: <20190502143325.495677584@linuxfoundation.org>
+Subject: [PATCH 4.14 10/49] qlcnic: Avoid potential NULL pointer dereference
+Date:   Thu,  2 May 2019 17:20:47 +0200
+Message-Id: <20190502143325.403863781@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -61,43 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 05b7639da55f5555b9866a1f4b7e8995232a6323 ]
+[ Upstream commit 5bf7295fe34a5251b1d241b9736af4697b590670 ]
 
-Otherwise, we hit bogus ENOENT when removing elements.
+netdev_alloc_skb can fail and return a NULL pointer which is
+dereferenced without a check. The patch avoids such a scenario.
 
-Fixes: e701001e7cbe ("netfilter: nft_rbtree: allow adjacent intervals with dynamic updates")
-Reported-by: Václav Zindulka <vaclav.zindulka@tlapnet.cz>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/netfilter/nft_set_rbtree.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index d83a4ec5900d..6f3205de887f 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -224,10 +224,6 @@ static void *nft_rbtree_deactivate(const struct net *net,
- 		else if (d > 0)
- 			parent = parent->rb_right;
- 		else {
--			if (!nft_set_elem_active(&rbe->ext, genmask)) {
--				parent = parent->rb_left;
--				continue;
--			}
- 			if (nft_rbtree_interval_end(rbe) &&
- 			    !nft_rbtree_interval_end(this)) {
- 				parent = parent->rb_left;
-@@ -236,6 +232,9 @@ static void *nft_rbtree_deactivate(const struct net *net,
- 				   nft_rbtree_interval_end(this)) {
- 				parent = parent->rb_right;
- 				continue;
-+			} else if (!nft_set_elem_active(&rbe->ext, genmask)) {
-+				parent = parent->rb_left;
-+				continue;
- 			}
- 			nft_rbtree_flush(net, set, rbe);
- 			return rbe;
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
+index 7f7deeaf1cf0..da042bc520d4 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
+@@ -1047,6 +1047,8 @@ int qlcnic_do_lb_test(struct qlcnic_adapter *adapter, u8 mode)
+ 
+ 	for (i = 0; i < QLCNIC_NUM_ILB_PKT; i++) {
+ 		skb = netdev_alloc_skb(adapter->netdev, QLCNIC_ILB_PKT_SIZE);
++		if (!skb)
++			break;
+ 		qlcnic_create_loopback_buff(skb->data, adapter->mac_addr);
+ 		skb_put(skb, QLCNIC_ILB_PKT_SIZE);
+ 		adapter->ahw->diag_cnt = 0;
 -- 
 2.19.1
 
