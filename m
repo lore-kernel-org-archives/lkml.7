@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F43C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9940C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1D220C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE7020C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811062;
-	bh=Y0K7P0IsU1YwVGWUMhlOZ8Zl2XsPlxv4nMMMN/QNaAQ=;
+	s=default; t=1556811064;
+	bh=H4BmzPu75TbcvgMnOx08EDQr38HeGXYDIua4wtQW1U4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gVoJXveRvT5xPexCr+eZwRT5m2+7VONl80F7i/QpggaRxmM9ipWoPN8monDL50FQx
-	 aunCSh+yMtG8wklVwAkaapinciNh81yvnb+cw4i1KqvxbfeihARfMR/am4knjqsTf3
-	 aICfA7qNX0/NuKYFG/sd2HdJ6yqO52PQeC5/MtzM=
+	b=xPduHMv/drlE5/UHG2Bz6L1QEmqmy5bm8yBw35poYW82eKup8rVr3MU63ApoupgRC
+	 W3g1p595j4Ry0hMzRUuCfKWd09Exjce2M34i0k8O770cK2H8w27oqrLL18WfWIF7z7
+	 AjTU+5Gb10M5LDGSw1dT+qqtrVpY8/cRzf4d2R5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbfEBPbB (ORCPT
+        id S1728923AbfEBPbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:31:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49842 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:31:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728898AbfEBPa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:59 -0400
+        id S1728901AbfEBPbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:31:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F127520B7C;
-        Thu,  2 May 2019 15:30:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 743A820B7C;
+        Thu,  2 May 2019 15:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811058;
-        bh=Y0K7P0IsU1YwVGWUMhlOZ8Zl2XsPlxv4nMMMN/QNaAQ=;
+        s=default; t=1556811061;
+        bh=H4BmzPu75TbcvgMnOx08EDQr38HeGXYDIua4wtQW1U4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=frNC/7WT5gu2ykpn8HTZenwZ+RjtU/e5QG2UjkucOc447VCrOESDYvTLDAm1Fg5JM
-         bgzGGUW3TvlNaxBYCElbL8lzX4aasU7yl1rgiSnaE6f5ek2Q/ZYV/ZxOwvdlKGGADd
-         C90MPg5qf7kua/IYjxk4WiKumQKf4DWs8px6nZu0=
+        b=J0vfiolCHnpUrzSqPJaeblTuMHax0UQrUPTTgAlhSu4lX2W07y+/RjNbGcRpPh5YQ
+         Sa0sbppFhIvbY/WDsKY7kpcoCyGzA98W7Ov4oTbSCTOyrehhmKVqFcaSI3Mfq6yuai
+         YFPUN8bBUka/lLeZW5EU6Ibo6WIePYYV+d0ZC/kw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Grall <julien.grall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Wingman Kwok <w-kwok2@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 031/101] KVM: arm64: Reset the PMU in preemptible context
-Date:   Thu,  2 May 2019 17:20:33 +0200
-Message-Id: <20190502143341.723021357@linuxfoundation.org>
+Subject: [PATCH 5.0 058/101] net: ethernet: ti: fix possible object reference leak
+Date:   Thu,  2 May 2019 17:21:00 +0200
+Message-Id: <20190502143343.551515987@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -60,52 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ebff0b0e3d3c862c16c487959db5e0d879632559 ]
+[ Upstream commit 75eac7b5f68b0a0671e795ac636457ee27cc11d8 ]
 
-We've become very cautious to now always reset the vcpu when nothing
-is loaded on the physical CPU. To do so, we now disable preemption
-and do a kvm_arch_vcpu_put() to make sure we have all the state
-in memory (and that it won't be loaded behind out back).
+The call to of_get_child_by_name returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-This now causes issues with resetting the PMU, which calls into perf.
-Perf itself uses mutexes, which clashes with the lack of preemption.
-It is worth realizing that the PMU is fully emulated, and that
-no PMU state is ever loaded on the physical CPU. This means we can
-perfectly reset the PMU outside of the non-preemptible section.
+Detected by coccinelle with the following warnings:
+./drivers/net/ethernet/ti/netcp_ethss.c:3661:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
+./drivers/net/ethernet/ti/netcp_ethss.c:3665:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3654, but without a corresponding object release within this function.
 
-Fixes: e761a927bc9a ("KVM: arm/arm64: Reset the VCPU without preemption and vcpu state loaded")
-Reported-by: Julien Grall <julien.grall@arm.com>
-Tested-by: Julien Grall <julien.grall@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Wingman Kwok <w-kwok2@ti.com>
+Cc: Murali Karicheri <m-karicheri2@ti.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm64/kvm/reset.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/ti/netcp_ethss.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index f16a5f8ff2b4..e2a0500cd7a2 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -123,6 +123,9 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- 	int ret = -EINVAL;
- 	bool loaded;
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index 5174d318901e..0a920c5936b2 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -3657,12 +3657,16 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
  
-+	/* Reset PMU outside of the non-preemptible section */
-+	kvm_pmu_vcpu_reset(vcpu);
-+
- 	preempt_disable();
- 	loaded = (vcpu->cpu != -1);
- 	if (loaded)
-@@ -170,9 +173,6 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- 		vcpu->arch.reset_state.reset = false;
- 	}
+ 	ret = netcp_txpipe_init(&gbe_dev->tx_pipe, netcp_device,
+ 				gbe_dev->dma_chan_name, gbe_dev->tx_queue_id);
+-	if (ret)
++	if (ret) {
++		of_node_put(interfaces);
+ 		return ret;
++	}
  
--	/* Reset PMU */
--	kvm_pmu_vcpu_reset(vcpu);
--
- 	/* Default workaround setup is enabled (if supported) */
- 	if (kvm_arm_have_ssbd() == KVM_SSBD_KERNEL)
- 		vcpu->arch.workaround_flags |= VCPU_WORKAROUND_2_FLAG;
+ 	ret = netcp_txpipe_open(&gbe_dev->tx_pipe);
+-	if (ret)
++	if (ret) {
++		of_node_put(interfaces);
+ 		return ret;
++	}
+ 
+ 	/* Create network interfaces */
+ 	INIT_LIST_HEAD(&gbe_dev->gbe_intf_head);
 -- 
 2.19.1
 
