@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F227C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E55AC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164842085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93F02085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810892;
-	bh=tFwOcYdBwnNQrXnokDuMr2z2Fknctptsdej0/v3dbGA=;
+	s=default; t=1556810896;
+	bh=103IIVtV6+xh/OXIIjA/YpQjaO27tWWfkEtJ1a/NFaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ikJI8d1iqzO8jFlGBD+CBCVfTT6wPjx8hpyXZT6l2ZTHQqaHuRSI9ZBSX7jTL9OdA
-	 YplDoj0EgUtCTW1DpTGPykZcT8vCzDVA+NigRqRGh8AmCiRANjmI3uf8n5D+/PS8sv
-	 wuTdscmahb1H8crFM84M/pibnjPiRtxSWwr2bDA4=
+	b=n1Ry3a2E7opAQlIUbSSJ5+83GW6LPXTKqXun4isiw3CKMpJdUVlsB/hWldsPlJ+PA
+	 TfoIoCTMIsSZZ/w6IzOjnNGsYWq39qnjyuVp7e5NDsuj/TcbrwmsXofZ7qXd2e0JuW
+	 0m2CtFn4IM1Zb/B0qVJva4V3WadLqfFU56MU2L/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbfEBP2K (ORCPT
+        id S1727758AbfEBP2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:28:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45162 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727726AbfEBP2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:28:06 -0400
+        id S1727726AbfEBP2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:28:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5EF020449;
-        Thu,  2 May 2019 15:28:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D682081C;
+        Thu,  2 May 2019 15:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810885;
-        bh=tFwOcYdBwnNQrXnokDuMr2z2Fknctptsdej0/v3dbGA=;
+        s=default; t=1556810890;
+        bh=103IIVtV6+xh/OXIIjA/YpQjaO27tWWfkEtJ1a/NFaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xvhxoIbm6OM+EuSJCj5WhCCoiDTKkSqvhiH/PaIcrtyM7XXr02ziRdki7L7EhC4BP
-         GoT1Txn1CnLHilCHN+Ep1uQa0/Mdj8rcBGyIFzgYBAFW3h1v/A41SAXgjV2XbrSMrH
-         7EqQbFLKKzBOoZ9RoM5nzsvm7dsn1wjP+CnHBQ6M=
+        b=txRNBnctveZjAuEow8FXatEKowC9RRvzDqh6+opG5l5b5joT+wcK6xrpdwhNvvHzy
+         43JSTkfLQsvjMpJf+YwvRpYDIftfjs8Vs42hIEOJQ50t24uFaJIImwEB2HBlyNY31D
+         RfIuRyIlJua+8UTRL1KMkI9HEdZcywd9ZQRv0F10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        David Ahern <dsahern@gmail.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Kim Phillips <kim.phillips@arm.com>,
-        Li Bin <huawei.libin@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 67/72] perf machine: Update kernel map address and re-order properly
-Date:   Thu,  2 May 2019 17:21:29 +0200
-Message-Id: <20190502143338.609980215@linuxfoundation.org>
+Subject: [PATCH 4.19 51/72] drm/meson: Fix invalid pointer in meson_drv_unbind()
+Date:   Thu,  2 May 2019 17:21:13 +0200
+Message-Id: <20190502143337.487724584@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -68,133 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 977c7a6d1e263ff1d755f28595b99e4bc0c48a9f ]
+[ Upstream commit 776e78677f514ecddd12dba48b9040958999bd5a ]
 
-Since commit 1fb87b8e9599 ("perf machine: Don't search for active kernel
-start in __machine__create_kernel_maps"), the __machine__create_kernel_maps()
-just create a map what start and end are both zero. Though the address will be
-updated later, the order of map in the rbtree may be incorrect.
+meson_drv_bind() registers a meson_drm struct as the device's privdata,
+but meson_drv_unbind() tries to retrieve a drm_device. This may cause a
+segfault on shutdown:
 
-The commit ee05d21791db ("perf machine: Set main kernel end address properly")
-fixed the logic in machine__create_kernel_maps(), but it's still wrong in
-function machine__process_kernel_mmap_event().
+[ 5194.593429] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000197
+ ...
+[ 5194.788850] Call trace:
+[ 5194.791349]  drm_dev_unregister+0x1c/0x118 [drm]
+[ 5194.795848]  meson_drv_unbind+0x50/0x78 [meson_drm]
 
-To reproduce this issue, we need an environment which the module address
-is before the kernel text segment. I tested it on an aarch64 machine with
-kernel 4.19.25:
+Retrieve the right pointer in meson_drv_unbind().
 
-  [root@localhost hulk]# grep _stext /proc/kallsyms
-  ffff000008081000 T _stext
-  [root@localhost hulk]# grep _etext /proc/kallsyms
-  ffff000009780000 R _etext
-  [root@localhost hulk]# tail /proc/modules
-  hisi_sas_v2_hw 77824 0 - Live 0xffff00000191d000
-  nvme_core 126976 7 nvme, Live 0xffff0000018b6000
-  mdio 20480 1 ixgbe, Live 0xffff0000018ab000
-  hisi_sas_main 106496 1 hisi_sas_v2_hw, Live 0xffff000001861000
-  hns_mdio 20480 2 - Live 0xffff000001822000
-  hnae 28672 3 hns_dsaf,hns_enet_drv, Live 0xffff000001815000
-  dm_mirror 40960 0 - Live 0xffff000001804000
-  dm_region_hash 32768 1 dm_mirror, Live 0xffff0000017f5000
-  dm_log 32768 2 dm_mirror,dm_region_hash, Live 0xffff0000017e7000
-  dm_mod 315392 17 dm_mirror,dm_log, Live 0xffff000001780000
-  [root@localhost hulk]#
-
-Before fix:
-
-  [root@localhost bin]# perf record sleep 3
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.011 MB perf.data (9 samples) ]
-  [root@localhost bin]# perf buildid-list -i perf.data
-  4c4e46c971ca935f781e603a09b52a92e8bdfee8 [vdso]
-  [root@localhost bin]# perf buildid-list -i perf.data -H
-  0000000000000000000000000000000000000000 /proc/kcore
-  [root@localhost bin]#
-
-After fix:
-
-  [root@localhost tools]# ./perf/perf record sleep 3
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.011 MB perf.data (9 samples) ]
-  [root@localhost tools]# ./perf/perf buildid-list -i perf.data
-  28a6c690262896dbd1b5e1011ed81623e6db0610 [kernel.kallsyms]
-  106c14ce6e4acea3453e484dc604d66666f08a2f [vdso]
-  [root@localhost tools]# ./perf/perf buildid-list -i perf.data -H
-  28a6c690262896dbd1b5e1011ed81623e6db0610 /proc/kcore
-
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Li Bin <huawei.libin@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190228092003.34071-1-liwei391@huawei.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: bbbe775ec5b5 ("drm: Add support for Amlogic Meson Graphic Controller")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190322152657.13752-1-jean-philippe.brucker@arm.com
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- tools/perf/util/machine.c | 32 ++++++++++++++++++++------------
- 1 file changed, 20 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/meson/meson_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index b1508ce3e412..076718a7b3ea 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1358,6 +1358,20 @@ static void machine__set_kernel_mmap(struct machine *machine,
- 		machine->vmlinux_map->end = ~0ULL;
- }
+diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
+index 611ac340fb28..4a72fa53a1d5 100644
+--- a/drivers/gpu/drm/meson/meson_drv.c
++++ b/drivers/gpu/drm/meson/meson_drv.c
+@@ -317,8 +317,8 @@ static int meson_drv_bind(struct device *dev)
  
-+static void machine__update_kernel_mmap(struct machine *machine,
-+				     u64 start, u64 end)
-+{
-+	struct map *map = machine__kernel_map(machine);
-+
-+	map__get(map);
-+	map_groups__remove(&machine->kmaps, map);
-+
-+	machine__set_kernel_mmap(machine, start, end);
-+
-+	map_groups__insert(&machine->kmaps, map);
-+	map__put(map);
-+}
-+
- int machine__create_kernel_maps(struct machine *machine)
+ static void meson_drv_unbind(struct device *dev)
  {
- 	struct dso *kernel = machine__get_kernel(machine);
-@@ -1390,17 +1404,11 @@ int machine__create_kernel_maps(struct machine *machine)
- 			goto out_put;
- 		}
+-	struct drm_device *drm = dev_get_drvdata(dev);
+-	struct meson_drm *priv = drm->dev_private;
++	struct meson_drm *priv = dev_get_drvdata(dev);
++	struct drm_device *drm = priv->drm;
  
--		/* we have a real start address now, so re-order the kmaps */
--		map = machine__kernel_map(machine);
--
--		map__get(map);
--		map_groups__remove(&machine->kmaps, map);
--
--		/* assume it's the last in the kmaps */
--		machine__set_kernel_mmap(machine, addr, ~0ULL);
--
--		map_groups__insert(&machine->kmaps, map);
--		map__put(map);
-+		/*
-+		 * we have a real start address now, so re-order the kmaps
-+		 * assume it's the last in the kmaps
-+		 */
-+		machine__update_kernel_mmap(machine, addr, ~0ULL);
- 	}
- 
- 	if (machine__create_extra_kernel_maps(machine, kernel))
-@@ -1536,7 +1544,7 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
- 		if (strstr(kernel->long_name, "vmlinux"))
- 			dso__set_short_name(kernel, "[kernel.vmlinux]", false);
- 
--		machine__set_kernel_mmap(machine, event->mmap.start,
-+		machine__update_kernel_mmap(machine, event->mmap.start,
- 					 event->mmap.start + event->mmap.len);
- 
- 		/*
+ 	drm_dev_unregister(drm);
+ 	drm_kms_helper_poll_fini(drm);
 -- 
 2.19.1
 
