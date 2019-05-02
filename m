@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450BDC04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3BBC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABD2204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A89204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811600;
-	bh=bYW8/Xmc7CpnAqWyvgEBWI/CoTdqcYb11ufflwpm/rg=;
+	s=default; t=1556811607;
+	bh=NDvVz4P9ETnzeV1AMycWhc1GB4KZgJcAaZTW4I65oug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WE0uMzygevXDZhznM6rGBO2RSwTKEItgPVFUBjTqIp/bOzdycVfVrK3JoBpSWWGWw
-	 HNia+NBp8vBawbG4c1zRWbZZ1Z4icbmkc1a9Am7bjCAlq9oWhBxUsqroKXXxp7EUoy
-	 HP+jiUFfJvUFnjbGqzkOWeI9u41Cv6szrM/rBESM=
+	b=CAxGI7R2a4SbweAQ7OC4IhKEPvFAJdEm6i7fHaZf4kZlVVX4r720wlcKWRo0AP7zY
+	 5CoU8FLOWoAujG3U7AvTjV/3xLBGigDa6CnCm41xSYYVO5JAbmov6Q9ooyiRMEAAIU
+	 YsTZQ3qPTPa0OobX5YOsd7Fu1Pgq4ojChfY0q80A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfEBPj7 (ORCPT
+        id S1728762AbfEBPkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:39:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47266 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:40:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbfEBP31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:29:27 -0400
+        id S1728414AbfEBP3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:29:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08341216FD;
-        Thu,  2 May 2019 15:29:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71C5320B7C;
+        Thu,  2 May 2019 15:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810966;
-        bh=bYW8/Xmc7CpnAqWyvgEBWI/CoTdqcYb11ufflwpm/rg=;
+        s=default; t=1556810963;
+        bh=NDvVz4P9ETnzeV1AMycWhc1GB4KZgJcAaZTW4I65oug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mjN7Nd/6WCH3oo5f7N5LJAbcIKbfmzmy9sT4bgj/ogI/jVWb6AXQwnfW1bM6chNDB
-         /0qpd5wlW1l9IoauLtQVcfBn9k8o6eQ+xuLaVxRYQR3Fnfsr0/qaXxkTeWiljXEwiW
-         5pSJHBfM7Z+2BPXQVaS+nJ1tEW04bp31gQO8RmQI=
+        b=zPs87VcmCIzl+kLtW3XC8VsOOiokBxP+yejs7TOHWKGC2Yri9HJ69ZJ+++18vZMNu
+         bbcKbylAaOjf+zxW8wnyFeOO4euNALhuEONtnfsqokTr2miWMjAdV4MMidE6jRjszB
+         3m75qDAAWt6IuT/HTbwG42wZRSW8Aef2GpZIoyW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?V=C3=A1clav=20Zindulka?= <vaclav.zindulka@tlapnet.cz>,
         Pablo Neira Ayuso <pablo@netfilter.org>,
-        Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Florian Westphal <fw@strlen.de>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 024/101] netfilter: bridge: set skb transport_header before entering NF_INET_PRE_ROUTING
-Date:   Thu,  2 May 2019 17:20:26 +0200
-Message-Id: <20190502143341.423182462@linuxfoundation.org>
+Subject: [PATCH 5.0 023/101] netfilter: nft_set_rbtree: check for inactive element after flag mismatch
+Date:   Thu,  2 May 2019 17:20:25 +0200
+Message-Id: <20190502143341.384720385@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -63,54 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e166e4fdaced850bee3d5ee12a5740258fb30587 ]
+[ Upstream commit 05b7639da55f5555b9866a1f4b7e8995232a6323 ]
 
-Since Commit 21d1196a35f5 ("ipv4: set transport header earlier"),
-skb->transport_header has been always set before entering INET
-netfilter. This patch is to set skb->transport_header for bridge
-before entering INET netfilter by bridge-nf-call-iptables.
+Otherwise, we hit bogus ENOENT when removing elements.
 
-It also fixes an issue that sctp_error() couldn't compute a right
-csum due to unset skb->transport_header.
-
-Fixes: e6d8b64b34aa ("net: sctp: fix and consolidate SCTP checksumming code")
-Reported-by: Li Shuang <shuali@redhat.com>
-Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Acked-by: Florian Westphal <fw@strlen.de>
+Fixes: e701001e7cbe ("netfilter: nft_rbtree: allow adjacent intervals with dynamic updates")
+Reported-by: Václav Zindulka <vaclav.zindulka@tlapnet.cz>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/bridge/br_netfilter_hooks.c | 1 +
- net/bridge/br_netfilter_ipv6.c  | 2 ++
- 2 files changed, 3 insertions(+)
+ net/netfilter/nft_set_rbtree.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
-index 40d058378b52..fc605758323b 100644
---- a/net/bridge/br_netfilter_hooks.c
-+++ b/net/bridge/br_netfilter_hooks.c
-@@ -502,6 +502,7 @@ static unsigned int br_nf_pre_routing(void *priv,
- 	nf_bridge->ipv4_daddr = ip_hdr(skb)->daddr;
- 
- 	skb->protocol = htons(ETH_P_IP);
-+	skb->transport_header = skb->network_header + ip_hdr(skb)->ihl * 4;
- 
- 	NF_HOOK(NFPROTO_IPV4, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
- 		skb->dev, NULL,
-diff --git a/net/bridge/br_netfilter_ipv6.c b/net/bridge/br_netfilter_ipv6.c
-index 564710f88f93..e88d6641647b 100644
---- a/net/bridge/br_netfilter_ipv6.c
-+++ b/net/bridge/br_netfilter_ipv6.c
-@@ -235,6 +235,8 @@ unsigned int br_nf_pre_routing_ipv6(void *priv,
- 	nf_bridge->ipv6_daddr = ipv6_hdr(skb)->daddr;
- 
- 	skb->protocol = htons(ETH_P_IPV6);
-+	skb->transport_header = skb->network_header + sizeof(struct ipv6hdr);
-+
- 	NF_HOOK(NFPROTO_IPV6, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
- 		skb->dev, NULL,
- 		br_nf_pre_routing_finish_ipv6);
+diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
+index fa61208371f8..321a0036fdf5 100644
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -308,10 +308,6 @@ static void *nft_rbtree_deactivate(const struct net *net,
+ 		else if (d > 0)
+ 			parent = parent->rb_right;
+ 		else {
+-			if (!nft_set_elem_active(&rbe->ext, genmask)) {
+-				parent = parent->rb_left;
+-				continue;
+-			}
+ 			if (nft_rbtree_interval_end(rbe) &&
+ 			    !nft_rbtree_interval_end(this)) {
+ 				parent = parent->rb_left;
+@@ -320,6 +316,9 @@ static void *nft_rbtree_deactivate(const struct net *net,
+ 				   nft_rbtree_interval_end(this)) {
+ 				parent = parent->rb_right;
+ 				continue;
++			} else if (!nft_set_elem_active(&rbe->ext, genmask)) {
++				parent = parent->rb_left;
++				continue;
+ 			}
+ 			nft_rbtree_flush(net, set, rbe);
+ 			return rbe;
 -- 
 2.19.1
 
