@@ -2,96 +2,102 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C03EC04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 151B5C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7213820645
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF40820645
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="NlEn64f9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hp7vtlBl";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="irXBtcht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfEBQ0j (ORCPT
+        id S1726585AbfEBQ1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:26:39 -0400
-Received: from sonic308-8.consmr.mail.bf2.yahoo.com ([74.6.130.47]:42074 "EHLO
-        sonic308-8.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726321AbfEBQ0i (ORCPT
+        Thu, 2 May 2019 12:27:00 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55512 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfEBQ07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:26:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1556814397; bh=4PgbqVnvHOQkUk3YG4PidmP1RHiYRTKxgvCKv2qGFds=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=NlEn64f9wIy74YHwaX7rTyoZLz1CsP60rIouktR01XF/phcxjejrFpEyeT9lWPf/fV1EP8aXKwxBx6uNnJ58KN/1U9S2dXBpKCMiiMBTM+4T2y8vaRVt+PwmRLMXfjCPjLIOmaqKx7NYfBAnk2onWmepVdD2B8C5XFiuTAmJCY5h04ZK+eDUzlM6qqHHfWH7o86YKudh/5N+iyAxTGQ7jp7IFqk8rZIXCzy0GN73Ev/y8RL9SQW+tKCrViF7lL746c+sqn9kdfrOc8dTiouweqg5l7jn4IvLBrIJex+g1twLTBGdhghzc8jgCmdl1sGZuefsMVzxRlOGILsm2RFSiA==
-X-YMail-OSG: v1ft5gMVM1kVZeTpHCyFvDoJ6nhxxeayX7D1x3kizyyCsuGnYX.uALbteJM6lzS
- X1gi51Qt8bQacimWdA9VvgwHHf4D5u.Pm6KEokoPLMdGI9FSlYyekFocVqUwoQrZG1U5.i1QW_qR
- Pe.ydTnqpI_EYa1sAYxhJMK0qZnuGdr_6IKHmG3Ch4OBeX0MRynJQdv4_iHBmgrlCoG1x087OOmG
- 9Svy4nD8VCyAlrRvRr_sRITOettukAimLiOXgf2tkFLDJGPWE.Q40nS9trkoo61b_D5Qibg7Ocnu
- mGnr7vS5EI2sv5zpI81LF4sleXeS3EHX_2LQarviZfpqwZ6gGekavlqH6mXcC342AnKwSiS.tXL7
- DPpN_P6e4z.ybisQKyN4cyowL3ACXZkQXpQjTLftjjk_gumjj_fmdFpImlsHXfhkX8.fndVQ0W.k
- InDW.AvkYlzJ7HVbIDxaAG0iFnli9lp99rblsVyh5z1auqbhizyPmD7_6zeHt0.xOAiCWEJ4vmsn
- lwaluspgwfNkxU1WDSpdBlKqvL9YT.Wnuz2OO8mXROxPDaAM8aAOnEuIt3DPH6LjA9LZ0suDoOWL
- ODIxr2e40AStAo8A4O1bfxtWG3FJJZkHVf1Gad_Jql1ysoZbDJS10L3QIkKg2hHVTitS2MjsyHGn
- UST6VHDMXFCEdzsRRV6VkyNsZDmXoHRBWYD9jR7HF5rMb_x6rOBCoePPCnd.tIUSz4Vi5aRu.KkN
- O0ZTT4WPEyGExim0Kkp3b8DD9TY1EJwvUsUoU3BDznDhkSy8p7dQbwK5ACaDRVXix2xhIbKtN7Lm
- HFzoUMYqeCSA_8ZOxHnrREZg1TEyWfjZvoegIDgO2ez6J0zu1LGNNqRsmIwEQkHkpaGQ_HPACZNs
- D.Ig067Cs55LtsmgE7rDOexn4t_Uo36e9LcoAJ2PUwMQgPF47GEJXX_n1g94Pje5FbfaK6Eg2sVe
- mk1zmhfnFqaWgLkVnCrwWkGW8Bl.L7YMJwQsLKb7ewF342utHEk._xTHUM1i3PIStbHiw.6l73rq
- P2l.MxMvbE.CmZE6gW42Kn4vr9vZVDjLOz_zyKUt7bYqGvZKs6KSI9.kD6yY3_Y9EGLc.3bsPnsb
- 19pWRYv4QIHeDuBFn7Md0kSFv7xODdGoeG2YKJDxztfPsAAxLhSHhf0ZDlnS0JCsEtfjaGg6oXen
- rnJsLBtlPipw_FlPL8sahzSy9DwCK_Q--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.bf2.yahoo.com with HTTP; Thu, 2 May 2019 16:26:37 +0000
-Received: from c-67-169-65-224.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([67.169.65.224])
-          by smtp414.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID c5863758f5d33a2aa8aed50d6f642b99;
-          Thu, 02 May 2019 16:26:36 +0000 (UTC)
-Subject: Re: [PATCH] kexec_buffer measure
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        prakhar srivastava <prsriva02@gmail.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        John Johansen <john.johansen@canonical.com>,
-        casey@schaufler-ca.com
-References: <CAEFn8qKkXgxUKtribbtFwvG9NykGQo10jQ5Du_i9wJz-wKreOA@mail.gmail.com>
- <1555978681.4914.305.camel@linux.ibm.com>
- <1556812101.4134.28.camel@linux.ibm.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Message-ID: <a30f7742-8368-be0c-4bab-28bcce0966aa@schaufler-ca.com>
-Date:   Thu, 2 May 2019 09:26:34 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 12:26:59 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A3E5B6083E; Thu,  2 May 2019 16:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556814418;
+        bh=4odLYN4jUCJCzuV9WQU82jYINI/bjqsc5/jaSqVbFvI=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=hp7vtlBledDfIdDiTCjJxCZ392orplE5rk1jJeghhCUjQTCwRTsKvWLbwAP+YincW
+         sSWPOlK+Z0C51USQGbEJFEeJVosCasEJio5DOjxapbo3W5QOzrY6U63u8Dkx/FWHeB
+         RdmCvY4QMoyoEdCe5lbOJMuk5B1kkOy4TcfVGgMQ=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 69849608D4;
+        Thu,  2 May 2019 16:26:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556814418;
+        bh=4odLYN4jUCJCzuV9WQU82jYINI/bjqsc5/jaSqVbFvI=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=irXBtchtqKmL5KPkQeC53tejKauDKzMHgOVvG3NgvhRWZyZglakmclIjb4VV/TnBt
+         qRPBhBm+njcO33WM6FaP26iW7ytQvSYsMVFw/C7jjBPcYTgJdwvVNYBG31LkapyCfP
+         eFsrPCoF8RksNOAuNOj2pF0cRor3ws+2W8So1Epg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 69849608D4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <1556812101.4134.28.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] rtw88: Make RA_MASK macros ULL
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190502150209.4475-1-natechancellor@gmail.com>
+References: <20190502150209.4475-1-natechancellor@gmail.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190502162658.A3E5B6083E@smtp.codeaurora.org>
+Date:   Thu,  2 May 2019 16:26:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/2/2019 8:48 AM, Mimi Zohar wrote:
-> [Cc'ing Paul, John, Casey]
->
-> On Mon, 2019-04-22 at 20:18 -0400, Mimi Zohar wrote:
->> [Cc'ing LSM mailing list]
->>
->> On Fri, 2019-04-19 at 17:30 -0700, prakhar srivastava wrote:
->>
->>> 2) Adding a LSM hook
->>> We are doing both the command line and kernel version measurement in IMA.
->>> Can you please elaborate on how this can be used outside of the scenario?
->>> That will help me come back with a better design and code. I am
->>> neutral about this.
->> As I said previously, initially you might want to only measure the
->> kexec boot command line, but will you ever want to verify or audit log
->> the boot command line hash?????Perhaps LSMs would be interested in the
->> boot command line. ??Should this be an LSM hook?
->  From an LSM perspective, is there any interest in the boot command line?
+Nathan Chancellor <natechancellor@gmail.com> wrote:
 
-I can imagine an LSM that cares about the command line,
-but I have an interest in it for any work I have in progress.
+> Clang warns about the definitions of these macros (full warnings trimmed
+> for brevity):
+> 
+> drivers/net/wireless/realtek/rtw88/main.c:524:15: warning: signed shift
+> result (0x3FF00000000) requires 43 bits to represent, but 'int' only has
+> 32 bits [-Wshift-overflow]
+>                         ra_mask &= RA_MASK_VHT_RATES | RA_MASK_OFDM_IN_VHT;
+>                                    ^~~~~~~~~~~~~~~~~
+> drivers/net/wireless/realtek/rtw88/main.c:527:15: warning: signed shift
+> result (0xFF0000000) requires 37 bits to represent, but 'int' only has
+> 32 bits [-Wshift-overflow]
+>                         ra_mask &= RA_MASK_HT_RATES | RA_MASK_OFDM_IN_HT_5G;
+>                                    ^~~~~~~~~~~~~~~~
+> 
+> Given that these are all used with ra_mask, which is of type u64, we can
+> just declare the macros to be ULL as well.
+> 
+> Fixes: e3037485c68e ("rtw88: new Realtek 802.11ac driver")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/467
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
->
-> Mimi
->
+Patch applied to wireless-drivers-next.git, thanks.
+
+237b47efcdbc rtw88: Make RA_MASK macros ULL
+
+-- 
+https://patchwork.kernel.org/patch/10927105/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
