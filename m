@@ -2,113 +2,178 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077A9C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C625C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD44B20C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810982;
-	bh=4ccVWNT2Tr70kaPTsw1BldkHwE63xEjvmTgBVq7Pshs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ffZ4nRxwCLTSWTt8/Wnl2cq8OEttY+e9ns7ndQb0cqhcPRTCJGOA661T+aODRcMT4
-	 jv3bzg0UjgDu/FRe9i84i6zVA8clpEn9SmzhUY9iRQ+sgqnsJwG6DmP+qAsW7lE0uZ
-	 whsz8rOotI9WZEJRTINO6DClmwJ0xxVOZKSVuV4g=
+	by mail.kernel.org (Postfix) with ESMTP id E8E5A20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbfEBP3l (ORCPT
+        id S1728524AbfEBP3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:29:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728489AbfEBP3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:29:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5764020675;
-        Thu,  2 May 2019 15:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810976;
-        bh=4ccVWNT2Tr70kaPTsw1BldkHwE63xEjvmTgBVq7Pshs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VetEtNO6Xay7vihiswbvicnkAOtXkRECBF9pfV3roqYFmafJ8UDKtp55LYrY02mB6
-         FD0NBcYtunO+uJxAksT0wnfWktuU6K8hrzvNGk2NrEqnaVvavCvnF4nrCwvC6Nn45k
-         BnxigToy0oMv+J31iPoF9Xz+hFi2VCzUXEgP1V+Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anusha Srivatsa <anusha.srivatsa@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.0 003/101] drm/i915: Do not enable FEC without DSC
-Date:   Thu,  2 May 2019 17:20:05 +0200
-Message-Id: <20190502143339.703409532@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
-References: <20190502143339.434882399@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 2 May 2019 11:29:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54196 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728507AbfEBP3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:29:42 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42FSaLs129911
+        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 11:29:41 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s81j5wa3s-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:29:40 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 2 May 2019 16:29:38 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 2 May 2019 16:29:30 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42FTTIY59834382
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 May 2019 15:29:29 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 156BEA4054;
+        Thu,  2 May 2019 15:29:29 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 78D30A405F;
+        Thu,  2 May 2019 15:29:24 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.205.209])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  2 May 2019 15:29:24 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Thu, 02 May 2019 18:29:23 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
+        Helge Deller <deller@gmx.de>, Ley Foon Tan <lftan@altera.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Richard Kuo <rkuo@codeaurora.org>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
+        nios2-dev@lists.rocketboards.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH 07/15] m68k: sun3: switch to generic version of pte allocation
+Date:   Thu,  2 May 2019 18:28:34 +0300
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
+References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19050215-0028-0000-0000-000003699E27
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050215-0029-0000-0000-000024290A10
+Message-Id: <1556810922-20248-8-git-send-email-rppt@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=780 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905020103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+The sun3 MMU variant of m68k uses GFP_KERNEL to allocate a PTE page and
+then memset(0) or clear_highpage() to clear it.
 
-commit 5aae7832d1b4ec614996ea0f4fafc4d9855ec0b0 upstream.
+This is equivalent to allocating the page with GFP_KERNEL | __GFP_ZERO,
+which allows replacing sun3 implementation of pte_alloc_one() and
+pte_alloc_one_kernel() with the generic ones.
 
-Currently we enable FEC even when DSC is no used. While that is
-theoretically valid supposedly there isn't much of a benefit from
-this. But more importantly we do not account for the FEC link
-bandwidth overhead (2.4%) in the non-DSC link bandwidth computations.
-So the code may think we have enough bandwidth when we in fact
-do not.
+The pte_free() and pte_free_kernel() versions are identical to the generic
+ones and can be simply dropped.
 
-Cc: stable@vger.kernel.org
-Cc: Anusha Srivatsa <anusha.srivatsa@intel.com>
-Cc: Manasi Navare <manasi.d.navare@intel.com>
-Fixes: 240999cf339f ("i915/dp/fec: Add fec_enable to the crtc state.")
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190326144903.6617-1-ville.syrjala@linux.intel.com
-Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
-(cherry picked from commit 6fd3134ae3551d4802a04669c0f39f2f5c56f77d)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- drivers/gpu/drm/i915/intel_dp.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/m68k/include/asm/sun3_pgalloc.h | 41 ++----------------------------------
+ 1 file changed, 2 insertions(+), 39 deletions(-)
 
---- a/drivers/gpu/drm/i915/intel_dp.c
-+++ b/drivers/gpu/drm/i915/intel_dp.c
-@@ -1871,6 +1871,9 @@ static bool intel_dp_dsc_compute_config(
- 	u8 dsc_max_bpc;
- 	int pipe_bpp;
+diff --git a/arch/m68k/include/asm/sun3_pgalloc.h b/arch/m68k/include/asm/sun3_pgalloc.h
+index 1456c5e..1a8ddbd 100644
+--- a/arch/m68k/include/asm/sun3_pgalloc.h
++++ b/arch/m68k/include/asm/sun3_pgalloc.h
+@@ -13,55 +13,18 @@
  
-+	pipe_config->fec_enable = !intel_dp_is_edp(intel_dp) &&
-+		intel_dp_supports_fec(intel_dp, pipe_config);
+ #include <asm/tlb.h>
+ 
++#include <asm-generic/pgalloc.h>	/* for pte_{alloc,free}_one */
 +
- 	if (!intel_dp_supports_dsc(intel_dp, pipe_config))
- 		return false;
+ extern const char bad_pmd_string[];
  
-@@ -2097,9 +2100,6 @@ intel_dp_compute_config(struct intel_enc
- 	if (adjusted_mode->flags & DRM_MODE_FLAG_DBLCLK)
- 		return false;
+ #define pmd_alloc_one(mm,address)       ({ BUG(); ((pmd_t *)2); })
  
--	pipe_config->fec_enable = !intel_dp_is_edp(intel_dp) &&
--				  intel_dp_supports_fec(intel_dp, pipe_config);
 -
- 	if (!intel_dp_compute_link_config(encoder, pipe_config, conn_state))
- 		return false;
+-static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+-{
+-        free_page((unsigned long) pte);
+-}
+-
+-static inline void pte_free(struct mm_struct *mm, pgtable_t page)
+-{
+-	pgtable_page_dtor(page);
+-        __free_page(page);
+-}
+-
+ #define __pte_free_tlb(tlb,pte,addr)			\
+ do {							\
+ 	pgtable_page_dtor(pte);				\
+ 	tlb_remove_page((tlb), pte);			\
+ } while (0)
  
-
+-static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+-{
+-	unsigned long page = __get_free_page(GFP_KERNEL);
+-
+-	if (!page)
+-		return NULL;
+-
+-	memset((void *)page, 0, PAGE_SIZE);
+-	return (pte_t *) (page);
+-}
+-
+-static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
+-{
+-        struct page *page = alloc_pages(GFP_KERNEL, 0);
+-
+-	if (page == NULL)
+-		return NULL;
+-
+-	clear_highpage(page);
+-	if (!pgtable_page_ctor(page)) {
+-		__free_page(page);
+-		return NULL;
+-	}
+-	return page;
+-
+-}
+-
+ static inline void pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmd, pte_t *pte)
+ {
+ 	pmd_val(*pmd) = __pa((unsigned long)pte);
+-- 
+2.7.4
 
