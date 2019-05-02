@@ -2,90 +2,97 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1346C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD85C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A928D206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12DF206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 10:25:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HR3vKaZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfEBKYm (ORCPT
+        id S1726442AbfEBKZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 06:24:42 -0400
-Received: from mail2.sp2max.com.br ([138.185.4.9]:42980 "EHLO
-        mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbfEBKYi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 06:24:38 -0400
-Received: from [172.17.0.2] (unknown [186.137.130.251])
-        (Authenticated sender: pablo@fliagreco.com.ar)
-        by mail2.sp2max.com.br (Postfix) with ESMTPA id 023877B05A2;
-        Thu,  2 May 2019 07:24:30 -0300 (-03)
-Subject: Re: [linux-sunxi] Re: [PATCH v5 2/7] ARM: dts: sun8i: v40:
- bananapi-m2-berry: Add GPIO pin-bank regulator supplies
-To:     maxime.ripard@bootlin.com
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1556040365-10913-1-git-send-email-pgreco@centosproject.org>
- <1556040365-10913-3-git-send-email-pgreco@centosproject.org>
- <20190502073815.56ktbpiieviqr4ss@flea>
-From:   =?UTF-8?Q?Pablo_Sebasti=c3=a1n_Greco?= <pgreco@centosproject.org>
-Message-ID: <c1bc4831-ba63-fd51-9e0c-7c988096b1f4@centosproject.org>
-Date:   Thu, 2 May 2019 07:24:29 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 06:25:23 -0400
+Received: from ozlabs.org ([203.11.71.1]:59885 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726283AbfEBKZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 06:25:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vrxX40gfz9s7T;
+        Thu,  2 May 2019 20:25:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556792720;
+        bh=IHI6mMQFoDYS/j9O7HioSeiNF1mnixqCkIlh/69QZwA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HR3vKaZ6pTMWuKEjESqMOXJY/mS2N/8FIzplswJSyDRIXJKvQGfmyR1uyHfrsE4Lp
+         D5AoDa4S3w6fFriL/XznFXtBlpXcG7W5gc5o/K5vD8ad91dV858+eQp8nS+ZW0b4sU
+         8GZkdFDKsHU8An+p/nk4oV7nn3kBKPTwCn93iQ9gBF8bWL0dzEivAxemjQkEE5zzK2
+         P93jr2BkgODuwTSTe6nUl4uEWN6U5bBQcAtmkuwRn2igYYOFqBRPH+2hWqFcYujxlD
+         DR64Wt2OZVTw0qCUuUw/jZqf8HS4Hj0zKOXc6nk3khCBZ+aMWnodvsDVq6PPMQmblV
+         6bn9z/w4wCygQ==
+Date:   Thu, 2 May 2019 20:25:15 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the vfs tree
+Message-ID: <20190502202515.22f72e48@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190502073815.56ktbpiieviqr4ss@flea>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-SP2Max-MailScanner-Information: Please contact the ISP for more information
-X-SP2Max-MailScanner-ID: 023877B05A2.A1029
-X-SP2Max-MailScanner: Sem Virus encontrado
-X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
-        escore=-2.9, requerido 6, autolearn=not spam, ALL_TRUSTED -1.00,
-        BAYES_00 -1.90)
-X-SP2Max-MailScanner-From: pgreco@centosproject.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/ulH.JuB/uS1=Eg7Pvri=9W1"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/ulH.JuB/uS1=Eg7Pvri=9W1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-El 2/5/19 a las 04:38, Maxime Ripard escribió:
-> On Tue, Apr 23, 2019 at 02:25:59PM -0300, Pablo Greco wrote:
->> The bananapi-m2-berry has the PMIC providing voltage to all the pin-bank
->> supply rails from its various regulator outputs, tie them to the pio
->> node.
->>
->> Signed-off-by: Pablo Greco <pgreco@centosproject.org>
->> ---
->>   arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
->> index f05cabd..2cb2ce0 100644
->> --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
->> +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
->> @@ -123,6 +123,16 @@
->>   	status = "okay";
->>   };
->>
->> +&pio {
->> +	pinctrl-names = "default";
-> A pinctrl-names property without any other one?
->
-> Looks good otherwise, thanks
-> Maxime
-Right, I'll move this to the patch that adds pinctrl-0
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
-Pablo
+Hi Al,
+
+In commit
+
+  4e9036042fed ("ufs: fix braino in ufs_get_inode_gid() for solaris UFS fla=
+vour")
+
+Fixes tag
+
+  Fixes: 252e211e90ce
+
+has these problem(s):
+
+  - missing subject
+
+Did you mean
+
+Fixes: 252e211e90ce ("Add in SunOS 4.1.x compatible mode for UFS")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ulH.JuB/uS1=Eg7Pvri=9W1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzKxYsACgkQAVBC80lX
+0Gw4AggAlK4m/cnMIbRK9g7eVyWYyLZ7cuBvVD34bhMkYgl1nPA0JquX5lQtOeU/
+Mb+Pl7fJteE9bURcq27eRC2W4aJWu7/B4uhpwA8D94aHfS8ttHk2xBBY4HXsmwsU
+s4RYjG9qmpZZ6giMr1YqB9hWzF+HjMQNuuqfms5ZcPhSUYa30sBQtVHmN2gWIrAo
+UFdL83cadlHfmxl3XPcjXsqxp8wGKxc0iJ6F6O0slkXfEjhwth9QKW2fzoGplBx8
+yZOTTGXGo+uFSrZBrTbrWUbN0KTp7mtY3JqungkZ2Fd1IKITPRzXYRR061rUHYQ1
+k76GxELmJ0hTQev9J4sSIb7O8ksMaA==
+=SwSu
+-----END PGP SIGNATURE-----
+
+--Sig_/ulH.JuB/uS1=Eg7Pvri=9W1--
