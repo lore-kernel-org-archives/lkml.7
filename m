@@ -7,47 +7,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9385FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC947C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6776920B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C4B20B7C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810767;
-	bh=kw0SEU1fYOOVed2EWjsU4W6r8umOhNzjGb+OOAZ2sms=;
+	s=default; t=1556810769;
+	bh=TlKxbaWIZGpv9TtVGGYTktQJNZ3Mj7RiqgeTUz7E6qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l4faFfR3SHesCMkW1D1rlrPeMw0VEVkpDOr//fNAT2osrAP4oqMn6vcL25HyAtvEm
-	 uuajz0+ejSG1y0HGv9STY+I5sygkgZXXilQ7ipA8B6h7bAq574v2R4lCxWYSw1z5aW
-	 xDTJgey836YPUYwMqdqgPucPsk0X3Nb48XcNm1ng=
+	b=oU+njv85KuIq0g0nov/VEyMx+SDS/hY5EigeiCl6zOXRAL/axQ0XhmlHhHXg3UN3q
+	 NJyCJ7T0QMFwXCOATxKVb0zn9lLBn5HHnL3EAkpZdYc3sG57cqUBTtTkuiV885AiSQ
+	 Nfi8gwO6VRsVyXeldE2dhWW7ZOWS5J6jIncmgnpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfEBP0G (ORCPT
+        id S1726594AbfEBP0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:26:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42592 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:26:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727663AbfEBP0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:26:03 -0400
+        id S1727174AbfEBP0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:26:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D393C2081C;
-        Thu,  2 May 2019 15:26:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B1AF2085A;
+        Thu,  2 May 2019 15:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810762;
-        bh=kw0SEU1fYOOVed2EWjsU4W6r8umOhNzjGb+OOAZ2sms=;
+        s=default; t=1556810764;
+        bh=TlKxbaWIZGpv9TtVGGYTktQJNZ3Mj7RiqgeTUz7E6qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QYwzPkZq+uIXEgqqO6ET2IyXOw/AKF2rIDFJRR5ppK8ix1FgeOKpWOEDAtL8+Hfcs
-         KWHwT5CcjyN94IXiJPQkC1kkIKEAM+qZQ6ApGFXgakGJY1Ih5P+GuEVCEFpeinTkcC
-         RAmRpzrO7IwVFpsizh+Jm2rXW3yoNT94E9daAGKk=
+        b=2Q6CD68XnRnjeJwO5JTahEu6vLzMpHNW8RnWSfq56nwAVmRc1Gp6F1zG5ASk20uen
+         R20Cj8RdYb91nQLpmI2QTqk5/mpgy2ccHRN3/j4UKIpno+Wt6yXwK3T2jMiZV6TDuT
+         YhIZuFFx1xbd3iYvTLJCUJ5/s4rwyWM4abo1HQQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 20/72] s390/qeth: fix race when initializing the IP address table
-Date:   Thu,  2 May 2019 17:20:42 +0200
-Message-Id: <20190502143334.955647649@linuxfoundation.org>
+Subject: [PATCH 4.19 21/72] ARM: imx51: fix a leaked reference by adding missing of_node_put
+Date:   Thu,  2 May 2019 17:20:43 +0200
+Message-Id: <20190502143335.077820578@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -60,40 +67,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7221b727f0079a32aca91f657141e1de564d4b97 ]
+[ Upstream commit 0c17e83fe423467e3ccf0a02f99bd050a73bbeb4 ]
 
-The ucast IP table is utilized by some of the L3-specific sysfs attributes
-that qeth_l3_create_device_attributes() provides. So initialize the table
-_before_ registering the attributes.
+The call to of_get_next_child returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Fixes: ebccc7397e4a ("s390/qeth: add missing hash table initializations")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Detected by coccinelle with the following warnings:
+./arch/arm/mach-imx/mach-imx51.c:64:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 57, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l3_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/mach-imx/mach-imx51.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 7f71ca0d08e7..9c5e801b3f6c 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -2586,12 +2586,14 @@ static int qeth_l3_probe_device(struct ccwgroup_device *gdev)
- 	struct qeth_card *card = dev_get_drvdata(&gdev->dev);
- 	int rc;
+diff --git a/arch/arm/mach-imx/mach-imx51.c b/arch/arm/mach-imx/mach-imx51.c
+index c7169c2f94c4..08c7892866c2 100644
+--- a/arch/arm/mach-imx/mach-imx51.c
++++ b/arch/arm/mach-imx/mach-imx51.c
+@@ -59,6 +59,7 @@ static void __init imx51_m4if_setup(void)
+ 		return;
  
-+	hash_init(card->ip_htable);
-+
- 	if (gdev->dev.type == &qeth_generic_devtype) {
- 		rc = qeth_l3_create_device_attributes(&gdev->dev);
- 		if (rc)
- 			return rc;
- 	}
--	hash_init(card->ip_htable);
-+
- 	hash_init(card->ip_mc_htable);
- 	card->options.layer2 = 0;
- 	card->info.hwtrap = 0;
+ 	m4if_base = of_iomap(np, 0);
++	of_node_put(np);
+ 	if (!m4if_base) {
+ 		pr_err("Unable to map M4IF registers\n");
+ 		return;
 -- 
 2.19.1
 
