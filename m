@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9334C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52614C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFE7204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C0720675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556812210;
-	bh=mCAzXQYMfAxlLqu0U3V4Avl84lWfKttGlE1GuRFcAKE=;
+	s=default; t=1556812211;
+	bh=+TO7gHlyhoWJKA0F5aJpmLHgOAqbaaTgOMJ+5YIaN2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQnp4uKijnBvMG0QXAIsxkaOvQw2a8igL6i/c8hIfZ/F64c14LEobt7NCPmxL0f2j
-	 mjwbc8fBe72qTFPct5+/At2NYKZZtdAtN+2wEet3vBsR6+kxyMZ0zFXxorK/FkYm+f
-	 BDJ8nrFvfETVo/geYPy48tMHjS0qY953QG9VTozE=
+	b=G1AjwsIM9GdzLsmnqiftDL1roEOWkvnwfj5F6LP689zYaKXf1QaUXpqayWY0p9/or
+	 MdoYklwECOL7KtB+13bFbPKCU73zjpApY36tYtToi3qxj4G6Kmc46l+uVK2TlE+oSz
+	 oX2xmG3ZoxW3A8hHy/hV+IArXgbeI5Id2APUI9kM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfEBPWI (ORCPT
+        id S1726472AbfEBPWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37284 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:22:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbfEBPWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:22:05 -0400
+        id S1726425AbfEBPWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:22:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 862152081C;
-        Thu,  2 May 2019 15:22:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8A4820B7C;
+        Thu,  2 May 2019 15:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810525;
-        bh=mCAzXQYMfAxlLqu0U3V4Avl84lWfKttGlE1GuRFcAKE=;
+        s=default; t=1556810522;
+        bh=+TO7gHlyhoWJKA0F5aJpmLHgOAqbaaTgOMJ+5YIaN2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLwZmErPi8pgqFlo1nlPNeRnAvugtnfBJdVdpywvJssDufV8+ognZbzx2aRxVtqp8
-         lKBNrrb22jduZ6jN7YJdhXU6yNipgJaJ6AIqK+sz/Jdpj9ehShOm2VnF27JTgAHbJs
-         pNFqdjW9iCBV5edgUsC3EOpyYEmRC8G+U8sGjGyw=
+        b=DsL38ODHnXPq+2niVRaFhTUEDY9AMNhYOQme8+vPLlXpjTuaN6NNYKF9/PkVYjbCH
+         WDlaMoYddzEzVxmyerz1vjs13wrXguml0CcmdezQ4zbeFpPCXPkwC9FUX4u0zhfCCI
+         yjsY3k5V12bQS7GmsIzoJ2PKUJkdnuJAzbJc/Um0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Liebler <stli@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Helen Koike <helen.koike@collabora.com>,
+        Eric Anholt <eric@anholt.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.9 05/32] s390: limit brk randomization to 32MB
-Date:   Thu,  2 May 2019 17:20:51 +0200
-Message-Id: <20190502143317.201689230@linuxfoundation.org>
+Subject: [PATCH 4.9 04/32] ARM: dts: bcm283x: Fix hdmi hpd gpio pull
+Date:   Thu,  2 May 2019 17:20:50 +0200
+Message-Id: <20190502143316.405963045@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
 References: <20190502143314.649935114@linuxfoundation.org>
@@ -60,45 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cd479eccd2e057116d504852814402a1e68ead80 ]
+[ Upstream commit 544e784188f1dd7c797c70b213385e67d92005b6 ]
 
-For a 64-bit process the randomization of the program break is quite
-large with 1GB. That is as big as the randomization of the anonymous
-mapping base, for a test case started with '/lib/ld64.so.1 <exec>'
-it can happen that the heap is placed after the stack. To avoid
-this limit the program break randomization to 32MB for 64-bit and
-keep 8MB for 31-bit.
+Raspberry pi board model B revison 2 have the hot plug detector gpio
+active high (and not low as it was in the dts).
 
-Reported-by: Stefan Liebler <stli@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Fixes: 49ac67e0c39c ("ARM: bcm2835: Add VC4 to the device tree.")
+Reviewed-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Eric Anholt <eric@anholt.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/s390/include/asm/elf.h | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/elf.h b/arch/s390/include/asm/elf.h
-index 8d665f1b29f8..f0fe566a9910 100644
---- a/arch/s390/include/asm/elf.h
-+++ b/arch/s390/include/asm/elf.h
-@@ -215,11 +215,14 @@ do {								\
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 84df85ea6296..7efde03daadd 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -26,5 +26,5 @@
+ };
  
- /*
-  * Cache aliasing on the latest machines calls for a mapping granularity
-- * of 512KB. For 64-bit processes use a 512KB alignment and a randomization
-- * of up to 1GB. For 31-bit processes the virtual address space is limited,
-- * use no alignment and limit the randomization to 8MB.
-+ * of 512KB for the anonymous mapping base. For 64-bit processes use a
-+ * 512KB alignment and a randomization of up to 1GB. For 31-bit processes
-+ * the virtual address space is limited, use no alignment and limit the
-+ * randomization to 8MB.
-+ * For the additional randomization of the program break use 32MB for
-+ * 64-bit and 8MB for 31-bit.
-  */
--#define BRK_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x3ffffUL)
-+#define BRK_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x1fffUL)
- #define MMAP_RND_MASK	(is_compat_task() ? 0x7ffUL : 0x3ff80UL)
- #define MMAP_ALIGN_MASK	(is_compat_task() ? 0 : 0x7fUL)
- #define STACK_RND_MASK	MMAP_RND_MASK
+ &hdmi {
+-	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
++	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
+ };
 -- 
 2.19.1
 
