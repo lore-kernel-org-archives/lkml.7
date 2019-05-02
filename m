@@ -2,194 +2,299 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58781C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94967C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 216252089E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5636C2089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:06:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bKjBe+dq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfEBOFD convert rfc822-to-8bit (ORCPT
+        id S1726380AbfEBOG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:05:03 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42288 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbfEBOFC (ORCPT
+        Thu, 2 May 2019 10:06:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34430 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfEBOG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:05:02 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k9so1699175oig.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 07:05:02 -0700 (PDT)
+        Thu, 2 May 2019 10:06:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b67so6705727wmg.1;
+        Thu, 02 May 2019 07:06:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=QGgQfDpOC9GynBt/HJwUnNrT3bmyX6mwS6UqDLi7QQ8=;
+        b=bKjBe+dqOnsrcqtMj0TiGJlgZ14Ixvdw6Hn9wrx4AxmmuSQ3thnQBSM8atO2YZ3OZj
+         CUrq/DbFIUqQ43IZuaqGMcfUklWjxUSwgjtKlDDkhdB+xnVn2pKugkfRkk0SWVhHXUOf
+         6O6rnBQ8Hn8gmp1dm//3et3sh7Fz4qN/3wqy+cACNkwc9LKzhG4XWIvZX6O54OJz0Ofz
+         YURV80ECF3JjftX15fUIr/5rxiy8LSqEouWuyBCnVbi+icNYd54MJK5WczVk0y10QQpu
+         ZwAK8i61zzkZL6pTde1z3OgHlfArtROuX93kNS4PxNRirQ898bhMA9fLiJQ0d+6zmde/
+         NbRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4IqJbBFrVtTZ0oqzJ67Gm9A7iC2geeoklI44WKE5eEI=;
-        b=io5rGSAr74vc+U105LdFChJhKq2BM58RmxGFe96nlyTCLt30rJhpGoApCv8LKG6mSD
-         yA0+o6uEm99cDg5+TeE0sUupG3q4GQVzJglvwzUrXokM18Tw32cvA18J4oc/vgX4ec22
-         Fel/gC68lkAiWRjmXm6q0ogG1xxlUVe2TmEuCmDEfjOSYCKt/nTKAxP59dDzejfgXOCJ
-         VmWBD0yb/wcqVw8w3wOAn8gQheWIUaAivoyfQO+p2tDyzaIsd/JuB7uJ/pfSdfdpmJRi
-         a9CL4CIU66I8fjxQblcWcdXKwu+GbJomYBFHZ1Q7yqy+C7F9sQRlfiQrJoVnzmf9lDzl
-         5aBQ==
-X-Gm-Message-State: APjAAAWv8wPssgJDga5v9izrLIviP0WGJttMyOX7KnAl8r3v6QpCqPVz
-        aBJMXIwr+iu1HIhZ7QQUK9BsDVUD65U8eEHQtdqsVw==
-X-Google-Smtp-Source: APXvYqxQaPoecIhQ0ywakL0+8rFGAnEtV+06xebpZjZ4MXPOOp6535GBw75TR32zAWw/jHJ5jS5EoUX8/OA/7dCk4P0=
-X-Received: by 2002:aca:f086:: with SMTP id o128mr2371553oih.101.1556805901943;
- Thu, 02 May 2019 07:05:01 -0700 (PDT)
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
+        bh=QGgQfDpOC9GynBt/HJwUnNrT3bmyX6mwS6UqDLi7QQ8=;
+        b=chPi3pD/lU9QBgf0u+x4dyOg/V38+vELYaP30QhXRS3jqSoVYkTVY2Irwr4hRvAgYQ
+         wswb/Mb163lCFzwHDpWrOyt4L17Tevb1REbt7Vto6PKxUYcrzRgRZUtM37k/vOYJFb/n
+         H12vPg0muGRPxpPPruDskVAZn+J1vstD2rFM7ol3bA+1shrReb1fTMd2eaZtdjfQlLfc
+         7V3+FuSFf1Ia9gNty46n1XqGdX/krWKEaTthisCHjUW7sNl7zKNoCaZwdTNhgWBfE+Rs
+         N53l5GeoeZndSjaalMoevcRQ4PuCR1AbstXonICV1Czq7Td9aOPHl8HITHEUbrAx6RNs
+         dxUg==
+X-Gm-Message-State: APjAAAUnvvlbMIINvxGY4sbhhNMDLTP240OtH4jJf9DuOIkqmunWJNAf
+        QFmB2IuGofbe3JEsYztUK3g=
+X-Google-Smtp-Source: APXvYqxZXZ22Iljv7+3hgL97YvrsJFnjhKlJsF8hKZ3bTipu9wZZ9dxg6aqgHYdr8QVWRbqQoBPVQg==
+X-Received: by 2002:a7b:c38c:: with SMTP id s12mr2432243wmj.136.1556805984157;
+        Thu, 02 May 2019 07:06:24 -0700 (PDT)
+Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
+        by smtp.gmail.com with ESMTPSA id s3sm44918727wre.97.2019.05.02.07.06.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 May 2019 07:06:23 -0700 (PDT)
+References: <20190430074911.8361-1-sebastien.szymanski@armadeus.com>
+User-agent: mu4e 1.2.0; emacs 27.0.50
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     =?utf-8?Q?S=C3=A9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH 2/2] media: imx7-media-csi: add i.MX6UL support
+In-reply-to: <20190430074911.8361-1-sebastien.szymanski@armadeus.com>
+Date:   Thu, 02 May 2019 15:06:21 +0100
+Message-ID: <m3imut54te.fsf@gmail.com>
 MIME-Version: 1.0
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
- <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
- <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
- <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com> <875zqt4igg.fsf@notabene.neil.brown.name>
-In-Reply-To: <875zqt4igg.fsf@notabene.neil.brown.name>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Thu, 2 May 2019 16:04:50 +0200
-Message-ID: <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-To:     NeilBrown <neilb@suse.com>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 May 2019 at 05:57, NeilBrown <neilb@suse.com> wrote:
-> On Wed, May 01 2019, Amir Goldstein wrote:
-> > On Wed, May 1, 2019 at 10:03 PM NeilBrown <neilb@suse.com> wrote:
-> >> On Tue, Dec 06 2016, J. Bruce Fields wrote:
-> >> > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrote:
-> >> >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.hu> wrote:
-> >> >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Grünbacher
-> >> >> > <andreas.gruenbacher@gmail.com> wrote:
-> >> >> >> 2016-12-06 0:19 GMT+01:00 Andreas Grünbacher <andreas.gruenbacher@gmail.com>:
-> >> >> >
-> >> >> >>> It's not hard to come up with a heuristic that determines if a
-> >> >> >>> system.nfs4_acl value is equivalent to a file mode, and to ignore the
-> >> >> >>> attribute in that case. (The file mode is transmitted in its own
-> >> >> >>> attribute already, so actually converting .) That way, overlayfs could
-> >> >> >>> still fail copying up files that have an actual ACL. It's still an
-> >> >> >>> ugly hack ...
-> >> >> >>
-> >> >> >> Actually, that kind of heuristic would make sense in the NFS client
-> >> >> >> which could then hide the "system.nfs4_acl" attribute.
+Hi Sebastien,
+Many thanks for this patch.
 
-I still think the nfs client could make this problem mostly go away by
-not exposing "system.nfs4_acl" xattrs when the acl is equivalent to
-the file mode. The richacl patches contain a workable abgorithm for
-that. The problem would remain for files that have an actual NFS4 ACL,
-which just cannot be mapped to a file mode or to POSIX ACLs in the
-general case, as well as for files that have a POSIX ACL. Mapping NFS4
-ACL that used to be a POSIX ACL back to POSIX ACLs could be achieved
-in many cases as well, but the code would be quite messy. A better way
-seems to be to using a filesystem that doesn't support POSIX ACLs in
-the first place. Unfortunately, xfs doesn't allow turning off POSIX
-ACLs, for example.
+Please note that there is another series on top of this code [0],
+that turns my patch that you mention below obsolete, maybe you may
+want to rebase on top of that. and also a different patch from me
+[1].
 
-Andreas
+[0]: https://lore.kernel.org/lkml/20190430225018.30252-2-slongerbeam@gmail.=
+com/#b
+[1]: https://lore.kernel.org/linux-media/20190430222523.22814-1-rui.silva@l=
+inaro.org/
 
-> >> >> > Even simpler would be if knfsd didn't send the attribute if not
-> >> >> > necessary.  Looks like there's code actively creating the nfs4_acl on
-> >> >> > the wire even if the filesystem had none:
-> >> >> >
-> >> >> >     pacl = get_acl(inode, ACL_TYPE_ACCESS);
-> >> >> >     if (!pacl)
-> >> >> >         pacl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
-> >> >> >
-> >> >> > What's the point?
-> >> >>
-> >> >> That's how the protocol is specified.
-> >> >
-> >> > Yep, even if we could make that change to nfsd it wouldn't help the
-> >> > client with the large number of other servers that are out there
-> >> > (including older knfsd's).
-> >> >
-> >> > --b.
-> >> >
-> >> >> (I'm not saying that that's very helpful.)
-> >> >>
-> >> >> Andreas
-> >>
-> >> Hi everyone.....
-> >>  I have a customer facing this problem, and so stumbled onto the email
-> >>  thread.
-> >>  Unfortunately it didn't resolve anything.  Maybe I can help kick things
-> >>  along???
-> >>
-> >>  The core problem here is that NFSv4 and ext4 use different and largely
-> >>  incompatible ACL implementations.  There is no way to accurately
-> >>  translate from one to the other in general (common specific examples
-> >>  can be converted).
-> >>
-> >>  This means that either:
-> >>    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
-> >>       versa) or
-> >>    2/ overlayfs need to accept that sometimes it cannot copy ACLs, and
-> >>       that is OK.
-> >>
-> >>  Silently not copying the ACLs is probably not a good idea as it might
-> >>  result in inappropriate permissions being given away.
-> >
-> > For example? permissions given away to do what?
-> > Note that ovl_permission() only check permissions of *mounter*
-> > to read the lower NFS file and ovl_open()/ovl_read_iter() access
-> > the lower file with *mounter* credentials.
-> >
-> > I might be wrong, but seems to me that once admin mounted
-> > overlayfs with lower NFS, NFS ACLs are not being enforced at all
-> > even before copy up.
+On Tue 30 Apr 2019 at 08:49, S=C3=A9bastien Szymanski wrote:
+> i.MX7 and i.MX6UL/L have the same CSI controller. So add i.MX6UL/L support
+> to imx7-media-csi driver.
 >
-> I guess it is just as well that copy-up fails then - if the lower-level
-> permission check is being ignored.
+> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com>
+
+Can you also add i.MX6UL/L to the header of this file and maybe in
+the help string in the Kconfig. That would make it clear that this
+is supported also by this driver.
+
+> ---
+>  This patch needs the following patch from Rui Miguel Silva:
+>  https://patchwork.linuxtv.org/patch/55657/
 >
-> >
-> >> So if the
-> >>  sysadmin wants this (and some clearly do), they need a way to
-> >>  explicitly say "I accept the risk".  If only standard Unix permissions
-> >>  are used, there is no risk, so this seems reasonable.
-> >>
-> >>  So I would like to propose a new option for overlayfs
-> >>     nocopyupacl:   when overlayfs is copying a file (or directory etc)
-> >>         from the lower filesystem to the upper filesystem, it does not
-> >>         copy extended attributes with the "system." prefix.  These are
-> >>         used for storing ACL information and this is sometimes not
-> >>         compatible between different filesystem types (e.g. ext4 and
-> >>         NFSv4).  Standard Unix ownership permission flags (rwx) *are*
-> >>         copied so this option does not risk giving away inappropriate
-> >>         permissions unless the lowerfs uses unusual ACLs.
-> >>
-> >>
-> >
-> > I am wondering if it would make more sense for nfs to register a
-> > security_inode_copy_up_xattr() hook.
-> > That is the mechanism that prevents copying up other security.*
-> > xattrs?
+>  I have tested this patch with a OV5640 sensor (8-bit parallel). The pipe=
+line is:
 >
-> No, I don't think that would make sense.
-> Support some day support for nfs4 acls were added to ext4 (not a totally
-> ridiculous suggestion).  We would then want NFS to allow it's ACLs to be
-> copied up.
+>  Device topology
+>  - entity 1: csi (2 pads, 2 links)
+>             type V4L2 subdev subtype Unknown flags 0
+>             device node name /dev/v4l-subdev0
+>         pad0: Sink
+>                 [fmt:UYVY8_2X8/640x480 field:none colorspace:smpte170m xf=
+er:709 ycbcr:601 quantization:lim-range]
+>                 <- "ov5640 1-003c":0 [ENABLED]
+>         pad1: Source
+>                 [fmt:UYVY8_2X8/640x480 field:none colorspace:smpte170m xf=
+er:709 ycbcr:601 quantization:lim-range]
+>                 -> "csi capture":0 [ENABLED]
 >
-> Thanks,
-> NeilBrown
+>  - entity 4: csi capture (1 pad, 1 link)
+>             type Node subtype V4L flags 0
+>             device node name /dev/video0
+>         pad0: Sink
+>                 <- "csi":1 [ENABLED]
 >
+>  - entity 10: ov5640 1-003c (1 pad, 1 link)
+>              type V4L2 subdev subtype Sensor flags 0
+>              device node name /dev/v4l-subdev1
+>         pad0: Source
+>                 [fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:srgb xf=
+er:srgb ycbcr:601 quantization:full-range]
+>                 -> "csi":0 [ENABLED]
 >
-> >
-> > Thanks,
-> > Amir.
+>  drivers/staging/media/imx/imx7-media-csi.c | 61 ++++++++++++++++------
+>  1 file changed, 46 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging=
+/media/imx/imx7-media-csi.c
+> index a708a0340eb1..ef4534a96fa0 100644
+> --- a/drivers/staging/media/imx/imx7-media-csi.c
+> +++ b/drivers/staging/media/imx/imx7-media-csi.c
+> @@ -154,6 +154,11 @@
+>=20=20
+>  static const char * const imx7_csi_clk_id[] =3D {"axi", "dcic", "mclk"};
+>=20=20
+> +enum csi_type {
+
+maybe here the name could be something along enum csi_device_id, I
+don't know, type does not sound good to me??
+
+> +	IMX7,
+> +	IMX6UL
+> +};
+> +
+>  struct imx7_csi {
+>  	struct device *dev;
+>  	struct v4l2_subdev sd;
+> @@ -195,6 +200,7 @@ struct imx7_csi {
+>  	bool is_init;
+>  	bool is_streaming;
+>  	bool is_csi2;
+> +	enum csi_type type;
+
+here the same, instead type maybe dev_id?? or dev_type??
+
+>=20=20
+>  	struct completion last_eof_completion;
+>  };
+> @@ -554,6 +560,14 @@ static int imx7_csi_pad_link_validate(struct v4l2_su=
+bdev *sd,
+>  	if (ret)
+>  		return ret;
+>=20=20
+> +	if (csi->type =3D=3D IMX6UL) {
+> +		mutex_lock(&csi->lock);
+> +		csi->is_csi2 =3D false;
+> +		mutex_unlock(&csi->lock);
+> +
+> +		return 0;
+> +	}
+> +
+>  	ret =3D imx7_csi_get_upstream_endpoint(csi, &upstream_ep, true);
+>  	if (ret) {
+>  		v4l2_err(&csi->sd, "failed to find upstream endpoint\n");
+> @@ -763,6 +777,7 @@ static int imx7_csi_configure(struct imx7_csi *csi)
+>  	struct v4l2_pix_format *out_pix =3D &vdev->fmt.fmt.pix;
+>  	__u32 in_code =3D csi->format_mbus[IMX7_CSI_PAD_SINK].code;
+>  	u32 cr1, cr18;
+> +	int width =3D out_pix->width;
+>=20=20
+>  	if (out_pix->field =3D=3D V4L2_FIELD_INTERLACED) {
+>  		imx7_csi_deinterlace_enable(csi, true);
+> @@ -772,15 +787,27 @@ static int imx7_csi_configure(struct imx7_csi *csi)
+>  		imx7_csi_buf_stride_set(csi, 0);
+>  	}
+>=20=20
+> -	imx7_csi_set_imagpara(csi, out_pix->width, out_pix->height);
+> +	cr18 =3D imx7_csi_reg_read(csi, CSI_CSICR18);
+> +
+> +	if (!csi->is_csi2) {
+> +		if (out_pix->pixelformat =3D=3D V4L2_PIX_FMT_UYVY ||
+> +		    out_pix->pixelformat =3D=3D V4L2_PIX_FMT_YUYV)
+> +			width *=3D 2;
+> +
+> +		imx7_csi_set_imagpara(csi, width, out_pix->height);
+> +
+> +		cr18 |=3D (BIT_BASEADDR_SWITCH_EN | BIT_BASEADDR_SWITCH_SEL |
+> +			BIT_BASEADDR_CHG_ERR_EN);
+> +		imx7_csi_reg_write(csi, cr18, CSI_CSICR18);
+>=20=20
+> -	if (!csi->is_csi2)
+>  		return 0;
+> +	}
+> +
+> +	imx7_csi_set_imagpara(csi, width, out_pix->height);
+>=20=20
+>  	cr1 =3D imx7_csi_reg_read(csi, CSI_CSICR1);
+>  	cr1 &=3D ~BIT_GCLK_MODE;
+>=20=20
+> -	cr18 =3D imx7_csi_reg_read(csi, CSI_CSICR18);
+>  	cr18 &=3D BIT_MIPI_DATA_FORMAT_MASK;
+>  	cr18 |=3D BIT_DATA_FROM_MIPI;
+>=20=20
+> @@ -815,12 +842,9 @@ static int imx7_csi_enable(struct imx7_csi *csi)
+>  {
+>  	imx7_csi_sw_reset(csi);
+>=20=20
+> -	if (csi->is_csi2) {
+> -		imx7_csi_dmareq_rff_enable(csi);
+> -		imx7_csi_hw_enable_irq(csi);
+> -		imx7_csi_hw_enable(csi);
+> -		return 0;
+> -	}
+> +	imx7_csi_dmareq_rff_enable(csi);
+> +	imx7_csi_hw_enable_irq(csi);
+> +	imx7_csi_hw_enable(csi);
+>=20=20
+>  	return 0;
+>  }
+> @@ -1218,20 +1242,33 @@ static int imx7_csi_clocks_get(struct imx7_csi *c=
+si)
+>  	return devm_clk_bulk_get(dev, csi->num_clks, csi->clks);
+>  }
+>=20=20
+> +static const struct of_device_id imx7_csi_of_match[] =3D {
+> +	{ .compatible =3D "fsl,imx7-csi", .data =3D (void *)IMX7 },
+> +	{ .compatible =3D "fsl,imx6ul-csi", .data =3D (void *)IMX6UL },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
+> +
+>  static int imx7_csi_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev =3D &pdev->dev;
+>  	struct device_node *node =3D dev->of_node;
+>  	struct imx_media_dev *imxmd;
+>  	struct imx7_csi *csi;
+> +	const struct of_device_id *of_id;
+>  	struct resource *res;
+>  	int ret;
+>=20=20
+> +	of_id =3D of_match_node(imx7_csi_of_match, node);
+> +	if (!of_id)
+> +		return -ENODEV;
+> +
+>  	csi =3D devm_kzalloc(&pdev->dev, sizeof(*csi), GFP_KERNEL);
+>  	if (!csi)
+>  		return -ENOMEM;
+>=20=20
+>  	csi->dev =3D dev;
+> +	csi->type =3D (enum csi_type)of_id->data;
+>=20=20
+>  	ret =3D imx7_csi_clocks_get(csi);
+>  	if (ret < 0) {
+> @@ -1349,12 +1386,6 @@ static int imx7_csi_remove(struct platform_device =
+*pdev)
+>  	return 0;
+>  }
+>=20=20
+> -static const struct of_device_id imx7_csi_of_match[] =3D {
+> -	{ .compatible =3D "fsl,imx7-csi" },
+> -	{ },
+> -};
+> -MODULE_DEVICE_TABLE(of, imx7_csi_of_match);
+> -
+>  static struct platform_driver imx7_csi_driver =3D {
+>  	.probe =3D imx7_csi_probe,
+>  	.remove =3D imx7_csi_remove,
+
