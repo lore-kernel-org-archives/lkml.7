@@ -2,86 +2,149 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E50CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA33C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06665206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2470A205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:22:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="YdLPiUFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfEBOUn (ORCPT
+        id S1726350AbfEBOWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:20:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51520 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfEBOUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:20:43 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B380530ADBC3;
-        Thu,  2 May 2019 14:20:42 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA761827BC;
-        Thu,  2 May 2019 14:20:32 +0000 (UTC)
-Message-ID: <be56bf51cebb7f373c279adf3e9a46e6df5dfe76.camel@redhat.com>
-Subject: Re: [PATCH v2 08/10] nvme/pci: implement the mdev external queue
- allocation interface
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     linux-nvme@lists.infradead.org
-Cc:     Fam Zheng <fam@euphon.net>, Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>, kvm@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liang Cunming <cunming.liang@intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Jens Axboe <axboe@fb.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        John Ferlan <jferlan@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liu Changpeng <changpeng.liu@intel.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Amnon Ilan <ailan@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>
-Date:   Thu, 02 May 2019 17:20:31 +0300
-In-Reply-To: <20190502114801.23116-9-mlevitsk@redhat.com>
-References: <20190502114801.23116-1-mlevitsk@redhat.com>
-         <20190502114801.23116-9-mlevitsk@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 02 May 2019 14:20:43 +0000 (UTC)
+        Thu, 2 May 2019 10:22:46 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43776 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBOWp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 10:22:45 -0400
+Received: by mail-pf1-f196.google.com with SMTP id e67so1198023pfe.10
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 07:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SaC3CyEpnIvyDl6CAhIhixQUIs6TW3hTPrV/tsa7jKQ=;
+        b=YdLPiUFz+23S/TEzjzbgk+QjIRunn9ceVTO7eXkw4bP8J/N7AMEUCz4GF+kOt+8H43
+         yqoHUil0onwgdjpqyz1drCYD3UyPRqLZyl8zm9Et8i1Baw3FEBQUtZKqqzegXPjliHVL
+         Nr1HL6z2TGQUK3o0b/ryywyesEE8XB8m1GcMQTbnwtTm4jgio+f/2+W4OuMT/fwfk6fB
+         DJ3rRFXXtwy1CSOXa7/Odsy9fcOjDUygMehG90HUEIHi2BPIy8A+cyqiB4OaKqs3u8e2
+         cvh4liwtngh5H/4beEnT6IV4Yf8tYHRArtzyyZNEAcEu5RzotxzXPpDJrMYLKZQ7LAbZ
+         wjew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SaC3CyEpnIvyDl6CAhIhixQUIs6TW3hTPrV/tsa7jKQ=;
+        b=TKLbUu6BzWPrSwmr1xl1FSxhOxsKfuUpjk/LcMGCXucE9UfC++hQ3C7QWDZe2S1NL4
+         5z/oivEgUUj/8uEd0VloK8Xq5Cs9AZREfIWMMNA9ZB/vu8QvwtCrNMB0gfnBArpL7rBH
+         7BAuS1dAfOt7iFnzlxsrn1zc0BUFRQMuAVevt+47JIaH8+VuI759kekOMj8PV6BoNZOj
+         m9ZhAI8cdHnduOfzkqfvNUazGlcu292x/uwiLxFGfV0auMYwMXiyDucsGCrm6+duZu60
+         jNLdjzQsi6zn4zKOp/bV0XaXu/lacVW1HJIFzM1oGxSBqgl9uy0o06kwb8KoS/It+rpD
+         2R5A==
+X-Gm-Message-State: APjAAAX+QiCsdxrculeieacMEdNFM7L8KSZtsuejDORK+Muuk495NjEa
+        Mtz18JFgA6wCvSwkmGgqD94KJA==
+X-Google-Smtp-Source: APXvYqyKd4bnuBPmGZR0076mhJ+dFmgZh1uGwig14vOfQseYPw927HHy20YBPd1kn5v5lYZ2FgPB7w==
+X-Received: by 2002:aa7:9285:: with SMTP id j5mr4453265pfa.129.1556806964838;
+        Thu, 02 May 2019 07:22:44 -0700 (PDT)
+Received: from localhost.localdomain (36-239-226-61.dynamic-ip.hinet.net. [36.239.226.61])
+        by smtp.gmail.com with ESMTPSA id h127sm64750452pgc.31.2019.05.02.07.22.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 07:22:44 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH 1/2] regulator: ab3100: Constify regulator_ops and ab3100_regulator_desc
+Date:   Thu,  2 May 2019 22:22:32 +0800
+Message-Id: <20190502142233.24730-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-02 at 14:47 +0300, Maxim Levitsky wrote:
-> Note that currently the number of hw queues reserved for mdev,
-> has to be pre determined on module load.
-> 
-> (I used to allocate the queues dynamicaly on demand, but
-> recent changes to allocate polled/read queues made
-> this somewhat difficult, so I dropped this for now)
-> 
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> ---
->  drivers/nvme/host/pci.c  | 375 ++++++++++++++++++++++++++++++++++++++-
->  drivers/nvme/mdev/host.c |  46 ++---
->  drivers/nvme/mdev/io.c   |  46 +++--
->  drivers/nvme/mdev/mmio.c |   3 -
->  4 files changed, 421 insertions(+), 49 deletions(-)
+These regulator_ops variables and ab3100_regulator_desc array never need
+to be modified, make them const so compiler can put them to .rodata.
 
-The changes in drivers/nvme/mdev aren't supposed to be here, this was some code
-moving around to reduce the diff in the generic block layer support code,
-it supposed to go to the main mdev commit.
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/ab3100.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Best regards,
-	Maxim Levitsky
+diff --git a/drivers/regulator/ab3100.c b/drivers/regulator/ab3100.c
+index c92966a79a7e..edde907a7062 100644
+--- a/drivers/regulator/ab3100.c
++++ b/drivers/regulator/ab3100.c
+@@ -353,14 +353,14 @@ static int ab3100_get_voltage_regulator_external(struct regulator_dev *reg)
+ 		return 0;
+ }
+ 
+-static struct regulator_ops regulator_ops_fixed = {
++static const struct regulator_ops regulator_ops_fixed = {
+ 	.list_voltage = regulator_list_voltage_linear,
+ 	.enable      = ab3100_enable_regulator,
+ 	.disable     = ab3100_disable_regulator,
+ 	.is_enabled  = ab3100_is_enabled_regulator,
+ };
+ 
+-static struct regulator_ops regulator_ops_variable = {
++static const struct regulator_ops regulator_ops_variable = {
+ 	.enable      = ab3100_enable_regulator,
+ 	.disable     = ab3100_disable_regulator,
+ 	.is_enabled  = ab3100_is_enabled_regulator,
+@@ -369,7 +369,7 @@ static struct regulator_ops regulator_ops_variable = {
+ 	.list_voltage = regulator_list_voltage_table,
+ };
+ 
+-static struct regulator_ops regulator_ops_variable_sleepable = {
++static const struct regulator_ops regulator_ops_variable_sleepable = {
+ 	.enable      = ab3100_enable_regulator,
+ 	.disable     = ab3100_disable_regulator,
+ 	.is_enabled  = ab3100_is_enabled_regulator,
+@@ -385,14 +385,14 @@ static struct regulator_ops regulator_ops_variable_sleepable = {
+  * is an on/off switch plain an simple. The external
+  * voltage is defined in the board set-up if any.
+  */
+-static struct regulator_ops regulator_ops_external = {
++static const struct regulator_ops regulator_ops_external = {
+ 	.enable      = ab3100_enable_regulator,
+ 	.disable     = ab3100_disable_regulator,
+ 	.is_enabled  = ab3100_is_enabled_regulator,
+ 	.get_voltage = ab3100_get_voltage_regulator_external,
+ };
+ 
+-static struct regulator_desc
++static const struct regulator_desc
+ ab3100_regulator_desc[AB3100_NUM_REGULATORS] = {
+ 	{
+ 		.name = "LDO_A",
+@@ -499,7 +499,7 @@ static int ab3100_regulator_register(struct platform_device *pdev,
+ 				     struct device_node *np,
+ 				     unsigned long id)
+ {
+-	struct regulator_desc *desc;
++	const struct regulator_desc *desc;
+ 	struct ab3100_regulator *reg;
+ 	struct regulator_dev *rdev;
+ 	struct regulator_config config = { };
+@@ -688,7 +688,7 @@ static int ab3100_regulators_probe(struct platform_device *pdev)
+ 
+ 	/* Register the regulators */
+ 	for (i = 0; i < AB3100_NUM_REGULATORS; i++) {
+-		struct regulator_desc *desc = &ab3100_regulator_desc[i];
++		const struct regulator_desc *desc = &ab3100_regulator_desc[i];
+ 
+ 		err = ab3100_regulator_register(pdev, plfdata, NULL, NULL,
+ 						desc->id);
+-- 
+2.20.1
 
