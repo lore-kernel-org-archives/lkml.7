@@ -2,179 +2,213 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B37C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA3AC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D470B2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C026B205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:39:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556811546;
+	bh=zZkQzkSVMfG3hqzvYbzwypBs82ZxoHlj0DmBp+v1nrY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wYm4FPGFB3tmqO0EP9ItTlyh2P3R1sNKtUbc0Sj8yHcG6danLKdfqtZ8weLdY583D
+	 xNIInzPRMAmtOmPsm5Zi33XzKa3mRhMW2h3So796kOqZ5pc805+gnCnj+XoAsVMMYh
+	 4yrXcmJzeDEc1cHGmhCbm5PYyLLnVOvu7c/WUEUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbfEBPix (ORCPT
+        id S1728824AbfEBPjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:38:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56616 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728544AbfEBP3y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:29:54 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42FT8o8007479
-        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 11:29:53 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s8235uc59-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:29:53 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 2 May 2019 16:29:50 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 2 May 2019 16:29:41 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42FTe3a53215466
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 May 2019 15:29:40 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 617B852052;
-        Thu,  2 May 2019 15:29:40 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.205.209])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id C91C15204F;
-        Thu,  2 May 2019 15:29:35 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Thu, 02 May 2019 18:29:34 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
-        Helge Deller <deller@gmx.de>, Ley Foon Tan <lftan@altera.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Richard Kuo <rkuo@codeaurora.org>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        nios2-dev@lists.rocketboards.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 09/15] nds32: switch to generic version of pte allocation
-Date:   Thu,  2 May 2019 18:28:36 +0300
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
-References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19050215-0012-0000-0000-000003179C5E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050215-0013-0000-0000-000021500C32
-Message-Id: <1556810922-20248-10-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905020103
+        Thu, 2 May 2019 11:39:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727498AbfEBP3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:29:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AA3620C01;
+        Thu,  2 May 2019 15:29:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556810984;
+        bh=zZkQzkSVMfG3hqzvYbzwypBs82ZxoHlj0DmBp+v1nrY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Slu/WbglLUN/RyXs1aKf1nxy7uYIPEXIcfgZtcxQz7VUEg3KgG70/Mm5C+goLMwMm
+         FSEq4IcXJy8ecgpsTR7a4VbvChB0UxKc1Hwtp8hsGipqp77lcT+bYQFP/f6ijQGzW+
+         Z7YYegUpAhIXS19S0Ext531W8YxiyrvT+e4fiZm8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Matthew Wilcox <willy@infradead.org>, stable@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.0 006/101] mm: prevent get_user_pages() from overflowing page refcount
+Date:   Thu,  2 May 2019 17:20:08 +0200
+Message-Id: <20190502143340.034488925@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
+References: <20190502143339.434882399@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nds32 implementation of pte_alloc_one_kernel() differs from the generic
-in the use of __GFP_RETRY_MAYFAIL flag, which is removed after the
-conversion.
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-The nds32 version of pte_alloc_one() missed the call to pgtable_page_ctor()
-and also used __GFP_RETRY_MAYFAIL. Switching it to use generic
-__pte_alloc_one() for the PTE page allocation ensures that page table
-constructor is run and the user page tables are allocated with
-__GFP_ACCOUNT.
+commit 8fde12ca79aff9b5ba951fce1a2641901b8d8e64 upstream.
 
-The conversion to the generic version of pte_free_kernel() removes the NULL
-check for pte.
+If the page refcount wraps around past zero, it will be freed while
+there are still four billion references to it.  One of the possible
+avenues for an attacker to try to make this happen is by doing direct IO
+on a page multiple times.  This patch makes get_user_pages() refuse to
+take a new page reference if there are already more than two billion
+references to the page.
 
-The pte_free() version on nds32 is identical to the generic one and can be
-simply dropped.
+Reported-by: Jann Horn <jannh@google.com>
+Acked-by: Matthew Wilcox <willy@infradead.org>
+Cc: stable@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 ---
- arch/nds32/include/asm/pgalloc.h | 31 ++++---------------------------
- 1 file changed, 4 insertions(+), 27 deletions(-)
+ mm/gup.c     |   48 ++++++++++++++++++++++++++++++++++++------------
+ mm/hugetlb.c |   13 +++++++++++++
+ 2 files changed, 49 insertions(+), 12 deletions(-)
 
-diff --git a/arch/nds32/include/asm/pgalloc.h b/arch/nds32/include/asm/pgalloc.h
-index 3c5fee5..954696c 100644
---- a/arch/nds32/include/asm/pgalloc.h
-+++ b/arch/nds32/include/asm/pgalloc.h
-@@ -9,6 +9,9 @@
- #include <asm/tlbflush.h>
- #include <asm/proc-fns.h>
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -157,8 +157,12 @@ retry:
+ 		goto retry;
+ 	}
  
-+#define __HAVE_ARCH_PTE_ALLOC_ONE
-+#include <asm-generic/pgalloc.h>	/* for pte_{alloc,free}_one */
-+
- /*
-  * Since we have only two-level page tables, these are trivial
-  */
-@@ -22,22 +25,11 @@ extern void pgd_free(struct mm_struct *mm, pgd_t * pgd);
- 
- #define check_pgt_cache()		do { } while (0)
- 
--static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
--{
--	pte_t *pte;
--
--	pte =
--	    (pte_t *) __get_free_page(GFP_KERNEL | __GFP_RETRY_MAYFAIL |
--				      __GFP_ZERO);
--
--	return pte;
--}
--
- static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
- {
- 	pgtable_t pte;
- 
--	pte = alloc_pages(GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO, 0);
-+	pte = __pte_alloc_one(mm, GFP_PGTABLE_USER);
- 	if (pte)
- 		cpu_dcache_wb_page((unsigned long)page_address(pte));
- 
-@@ -45,21 +37,6 @@ static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
+-	if (flags & FOLL_GET)
+-		get_page(page);
++	if (flags & FOLL_GET) {
++		if (unlikely(!try_get_page(page))) {
++			page = ERR_PTR(-ENOMEM);
++			goto out;
++		}
++	}
+ 	if (flags & FOLL_TOUCH) {
+ 		if ((flags & FOLL_WRITE) &&
+ 		    !pte_dirty(pte) && !PageDirty(page))
+@@ -295,7 +299,10 @@ retry_locked:
+ 			if (pmd_trans_unstable(pmd))
+ 				ret = -EBUSY;
+ 		} else {
+-			get_page(page);
++			if (unlikely(!try_get_page(page))) {
++				spin_unlock(ptl);
++				return ERR_PTR(-ENOMEM);
++			}
+ 			spin_unlock(ptl);
+ 			lock_page(page);
+ 			ret = split_huge_page(page);
+@@ -497,7 +504,10 @@ static int get_gate_page(struct mm_struc
+ 		if (is_device_public_page(*page))
+ 			goto unmap;
+ 	}
+-	get_page(*page);
++	if (unlikely(!try_get_page(*page))) {
++		ret = -ENOMEM;
++		goto unmap;
++	}
+ out:
+ 	ret = 0;
+ unmap:
+@@ -1393,6 +1403,20 @@ static void undo_dev_pagemap(int *nr, in
+ 	}
  }
  
- /*
-- * Free one PTE table.
-- */
--static inline void pte_free_kernel(struct mm_struct *mm, pte_t * pte)
--{
--	if (pte) {
--		free_page((unsigned long)pte);
--	}
--}
--
--static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
--{
--	__free_page(pte);
--}
--
--/*
-  * Populate the pmdp entry with a pointer to the pte.  This pmd is part
-  * of the mm address space.
-  *
--- 
-2.7.4
++/*
++ * Return the compund head page with ref appropriately incremented,
++ * or NULL if that failed.
++ */
++static inline struct page *try_get_compound_head(struct page *page, int refs)
++{
++	struct page *head = compound_head(page);
++	if (WARN_ON_ONCE(page_ref_count(head) < 0))
++		return NULL;
++	if (unlikely(!page_cache_add_speculative(head, refs)))
++		return NULL;
++	return head;
++}
++
+ #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
+ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 			 int write, struct page **pages, int *nr)
+@@ -1427,9 +1451,9 @@ static int gup_pte_range(pmd_t pmd, unsi
+ 
+ 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+ 		page = pte_page(pte);
+-		head = compound_head(page);
+ 
+-		if (!page_cache_get_speculative(head))
++		head = try_get_compound_head(page, 1);
++		if (!head)
+ 			goto pte_unmap;
+ 
+ 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+@@ -1568,8 +1592,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pmd_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pmd_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+@@ -1606,8 +1630,8 @@ static int gup_huge_pud(pud_t orig, pud_
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pud_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pud_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+@@ -1643,8 +1667,8 @@ static int gup_huge_pgd(pgd_t orig, pgd_
+ 		refs++;
+ 	} while (addr += PAGE_SIZE, addr != end);
+ 
+-	head = compound_head(pgd_page(orig));
+-	if (!page_cache_add_speculative(head, refs)) {
++	head = try_get_compound_head(pgd_page(orig), refs);
++	if (!head) {
+ 		*nr -= refs;
+ 		return 0;
+ 	}
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4298,6 +4298,19 @@ long follow_hugetlb_page(struct mm_struc
+ 
+ 		pfn_offset = (vaddr & ~huge_page_mask(h)) >> PAGE_SHIFT;
+ 		page = pte_page(huge_ptep_get(pte));
++
++		/*
++		 * Instead of doing 'try_get_page()' below in the same_page
++		 * loop, just check the count once here.
++		 */
++		if (unlikely(page_count(page) <= 0)) {
++			if (pages) {
++				spin_unlock(ptl);
++				remainder = 0;
++				err = -ENOMEM;
++				break;
++			}
++		}
+ same_page:
+ 		if (pages) {
+ 			pages[i] = mem_map_offset(page, pfn_offset);
+
 
