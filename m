@@ -2,98 +2,149 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EB8C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D856C004C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED762085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:29:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HhyNhPER"
+	by mail.kernel.org (Postfix) with ESMTP id 2D1D32085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556764408;
+	bh=f5XfXf1Dxp1tYa2yQhLz3f1w47JqIBGylru+cBrfg28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=M+FV50frZPLz9BfLmHegVrPOZmsa50AQjJFR2AKRhl4wQgfPjjqep3/4O62Kaa/g4
+	 3NDI3KHXq7B0HwNwSdQxUuE/ySwlCpndxYZ2B1GkzjE/HI+15z+rruykZH5rdkoG8W
+	 UIl0SK/MMZKTFHccFhchUpQIq0ojk7UWs4OTDIXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbfEBC3o (ORCPT
+        id S1726370AbfEBCd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:29:44 -0400
-Received: from mail-yw1-f45.google.com ([209.85.161.45]:37322 "EHLO
-        mail-yw1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfEBC3o (ORCPT
+        Wed, 1 May 2019 22:33:27 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52582 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbfEBCd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:29:44 -0400
-Received: by mail-yw1-f45.google.com with SMTP id a62so493377ywa.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 19:29:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H1U2mJXBbnkWOnvmjM7JApU8kCjuCk0GAzDiJe0SSQ8=;
-        b=HhyNhPER21cKXrmuPmPHmnjvXbBpYYCdGpMAWXbBnuVSKm35ii3+zr47c07qUIxCtE
-         kpxIKagdzxPIIgRSrfKgEd7BwxlESTY+lWAn8RzsWw/E5ZP3yQHRL57GtD5cUsViV5Ot
-         16t1lQ///dE+3A/FI39hvUZadgfIhWD+VnHI3SP5Ic6H3azruGl+VZUqFPILyyadS6GG
-         lbI30N99yOtU5qE+sWz7oKl0fK3kaT7ATJxWt4D+HG+tch1RA93Yegpx2wuD41x0ktMP
-         mETEUEtXJHfn0qPrOI6JGR0o9Z0gRRWQzUZryzc1ph6iwNmK8KVCUivX9qKk/5mEwU33
-         gdyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H1U2mJXBbnkWOnvmjM7JApU8kCjuCk0GAzDiJe0SSQ8=;
-        b=X5g+AjFiZO3EzLEj9EWrIZO9EgW0E1LBKTtlRTE+Ew0/MT4VDVplDM2oRnpDv2DeLK
-         t+TKKuy/ZKyMFv3G2MSUTQgNpOULJ8gOU9HwDZ1WrCK5GMucmvl2ywiByI5fUYs+JMVr
-         oyDByDkOUtoiyWW08WGqHoucLN6slwnnqPK3A7b/QZI8WxFSLbgozip4XkvZE7kaP2mN
-         eKwqlDrbrBDaCbpooar9C9YZ1/Vs5WBTq9FUCdqHbyrte16Xywm+Ww025+yyAu4gNO7Q
-         3GVwpIELAfTAASXUYEKb6HhATWl60/Ivohh1aK4Qw63R9sgn2UNbmLiGhsgfVK8vO97C
-         ptFw==
-X-Gm-Message-State: APjAAAVnr1c/eaKrVt8VhxCJxf8v3QF2mV+tQ5P/AudylZB0pQSmYuDn
-        dyLiMD/qBcgHHheR0E43o2Q=
-X-Google-Smtp-Source: APXvYqwiqBdAZ2Op0tTtlyQx/W77Z7fZU/x3DkLyj8DO/TL4D0NenRU2IltJnGLYqvLRkaPf6n34xA==
-X-Received: by 2002:a81:9203:: with SMTP id j3mr933715ywg.511.1556764183630;
-        Wed, 01 May 2019 19:29:43 -0700 (PDT)
-Received: from [10.230.25.168] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id h3sm7436807ywb.87.2019.05.01.19.29.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 19:29:42 -0700 (PDT)
-Subject: Re: [PATCH v2] mtd: rawnand: brcmnand: fix bch ecc layout for large
- page nand
-To:     Kamal Dasu <kdasu.kdev@gmail.com>, linux-mtd@lists.infradead.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>
-References: <1556738544-29857-1-git-send-email-kdasu.kdev@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <baffcda4-84f8-cd5f-8872-a2e2572024ff@gmail.com>
-Date:   Wed, 1 May 2019 19:29:39 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 1 May 2019 22:33:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FFKovFdQTg5OJY5i063qAtTB6erYm+spnUt2RsGxwCU=; b=JTkOOzkpa2AgLB/H1z7i9Ta29
+        nwuy3p6YYaIv61JcB04usEfZ2SvkIkfhKVp0gLyrbdUN01vpGILYrgak3mgt4utJWdlNibX/lIbUz
+        Pkml9MzPnZQ82WH7285KddG+ZKYuTLlVS3A0LNMDBzEYLkKZQmYQr5o2ZPWC8qus5iExc=;
+Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hM1XE-0005zR-0e; Thu, 02 May 2019 02:33:20 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id DD91A441D3C; Thu,  2 May 2019 03:33:16 +0100 (BST)
+Date:   Thu, 2 May 2019 11:33:16 +0900
+From:   Mark Brown <broonie@kernel.org>
+To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        bjorn.andersson@linaro.org, vinod.koul@linaro.org,
+        niklas.cassel@linaro.org, khasim.mohammed@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/3] drivers: regulator: qcom: add PMS405 SPMI regulator
+Message-ID: <20190502023316.GS14916@sirena.org.uk>
+References: <a3c281d5-d30e-294f-71ab-957decde2ba0@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <1556738544-29857-1-git-send-email-kdasu.kdev@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7WENQHN97/U9vH7R"
+Content-Disposition: inline
+In-Reply-To: <a3c281d5-d30e-294f-71ab-957decde2ba0@linaro.org>
+X-Cookie: -- I have seen the FUN --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--7WENQHN97/U9vH7R
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 5/1/2019 12:22 PM, Kamal Dasu wrote:
-> The oobregion->offset for large page nand parts was wrong, change
-> fixes this error in calculation.
-> 
-> Fixes: ef5eeea6e911 ("mtd: nand: brcm: switch to mtd_ooblayout_ops")
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+On Mon, Apr 29, 2019 at 02:31:55PM +0200, Jorge Ramirez wrote:
+> On 4/27/19 20:21, Mark Brown wrote:
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+> > Since the point of this change is AFAICT that this regulator only has a
+> > single linear range it seems like it should just be able to use the
+> > existing generic functions shouldn't it? =20
+
+> yes that would have been ideal but it does not seem to be the case for
+> this hardware.
+
+> The register that stores the voltage range for all other SPMI regulators
+> (SPMI_COMMON_REG_VOLTAGE_RANGE 0x40) is used by something else in the
+> HFS430: SPMI_HFS430_REG_VOLTAGE_LB 0x40 stores the voltage level in two
+> bytes 0x40 and 0x41;
+
+> This overlap really what is creating the pain: HFS430 cant use 0x40 to
+> store the range (even if it is only one)
+
+> so yeah, most of the changes in the patch are working around this fact.
+
+I'm not sure I follow here, sorry - I can see that the driver needs a
+custom get/set selector operation but shouldn't it be able to use the
+standard list and map operations for linear ranges?
+
+>=20
+> enum spmi_common_regulator_registers {
+> 	SPMI_COMMON_REG_DIG_MAJOR_REV		=3D 0x01,
+> 	SPMI_COMMON_REG_TYPE			=3D 0x04,
+> 	SPMI_COMMON_REG_SUBTYPE			=3D 0x05,
+> 	SPMI_COMMON_REG_VOLTAGE_RANGE		=3D 0x40, ******
+> 	SPMI_COMMON_REG_VOLTAGE_SET		=3D 0x41,
+> 	SPMI_COMMON_REG_MODE			=3D 0x45,
+> 	SPMI_COMMON_REG_ENABLE			=3D 0x46,
+> 	SPMI_COMMON_REG_PULL_DOWN		=3D 0x48,
+> 	SPMI_COMMON_REG_SOFT_START		=3D 0x4c,
+> 	SPMI_COMMON_REG_STEP_CTRL		=3D 0x61,
+> };
+>=20
+> enum spmi_hfs430_registers {
+> 	SPMI_HFS430_REG_VOLTAGE_LB		=3D 0x40, *******
+> 	SPMI_HFS430_REG_VOLTAGE_VALID_LB	=3D 0x42,
+> 	SPMI_HFS430_REG_MODE			=3D 0x45,
+> };
+>=20
+> It just needs it's own
+> > set/get_voltage_sel() operations.  As far as I can see the main thing
+> > the driver is doing with the custom stuff is handling the fact that
+> > there's multiple ranges but that's not an issue for this regulator.
+> > It's possible I'm missing something there but that was the main thing
+> > (and we do have some generic support for multiple linear ranges in the
+> > helper code already, can't remember why this driver isn't using that -
+> > the ranges overlap IIRC?).
+> >=20
+> > TBH looking at the uses of find_range() I'm not sure they're 100%
+> > sensible as they are - the existing _time_sel() is assuming we only need
+> > to work out the ramp time between voltages in the same range which is
+> > going to have trouble.
+> >=20
+>=20
+
+--7WENQHN97/U9vH7R
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzKVuwACgkQJNaLcl1U
+h9DtBAf/fJs9R87cXNcFsxrNNksszOWu5ND0JxSJzxsn6F/SqOtvQqIWwvNkZFnn
+xAnvKxojILHRP1HP1bAZTpeH0tQumGjDYWgXWOiexYkar6+TZbQjftk+WEOvuXnE
+H/Z8H6ZU+7dNneX7vyyM2cWjjngayoM2GWHdEE531uMUnRGhyvjPbiBTP9109Pnx
+nN6FG8+ENYurZpOKSJS+0AvzdoEz22WMYo+fKENqtRP/yi0ERtabto5NOWkN7qub
+OVcNIA3zR+5YxFGoXlA/0v3Y4ado+0sC+9kRpmE9eZ/oIQ/uKSXX0UzN1+WmDGIy
+qv/iLyyNvpa1F18cw9aNNCfQSUL5QA==
+=1c2Q
+-----END PGP SIGNATURE-----
+
+--7WENQHN97/U9vH7R--
