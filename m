@@ -3,251 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9544DC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C03EC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D17820652
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7213820645
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:26:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FAsw2ER1"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="NlEn64f9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfEBQZP (ORCPT
+        id S1726511AbfEBQ0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:25:15 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51147 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbfEBQZP (ORCPT
+        Thu, 2 May 2019 12:26:39 -0400
+Received: from sonic308-8.consmr.mail.bf2.yahoo.com ([74.6.130.47]:42074 "EHLO
+        sonic308-8.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726321AbfEBQ0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:25:15 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p21so3686491wmc.0;
-        Thu, 02 May 2019 09:25:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OMunPQaVSstTa2sPVSZhzlVtlE+/TQJXLadjah4hR08=;
-        b=FAsw2ER1/ZpkWocR3zu5UHhWQChbz82rIJiB3K6apB0fRNtixGluSAb44GUmUqO5pc
-         HK32NKXmOb4jI/DIL1MIo8y29EDN6qI3HmaMiKuas0Q/SDUv/MfnWuSTNd6fu3YHW1fj
-         2+jtHqyMJmZihUKhLFPGB2aQtq+Jrdf49+QdsYEkz2mqhtBFUhw2kFIwaD6wBbK3xNYE
-         aKCnTejUDwoj6hRK//T2Yif42TfKISNssVW2MCm7nk5xdfyOCEki5C3f5LvLWHHDRX3x
-         2L2c0Jnb8sQc9EcR6ClTOecF9iNnk7O4pqVo1bmzEROAGthiG5k1/vhoQVY2B7MLRLXM
-         iWrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OMunPQaVSstTa2sPVSZhzlVtlE+/TQJXLadjah4hR08=;
-        b=dljXYXNhAhu+vvguMP5qRvjmXcBceA6NW5tZS9ytCrrSJF1p7wDCPiZuVXVzju4SW0
-         p+Z9XypPI1WP44OdqTchdRHTWfrELGUrWfACaVaI2FMr4eGX1dWQfdRl/s/JGnJSUvBs
-         ORPC7nuTgySMYgp3u10jl9KdiC0qrNf7ND+7vXa6Tlj/cuiR9q8tCCK3ivnUGIgYjJ0n
-         7bijcicaqwzubEGLcUZoiYL315P2dlunovZPPdWK2quxj8pvPxoyUufek+j6UxsIH/vs
-         QChbcfoC2HR3UwdXdWbFxgUM30pA42XTgnpgRYbazXcAerDnMkru3wBRSaB87R6D4ukq
-         8xIg==
-X-Gm-Message-State: APjAAAVtSiPd4XJ4l4LyQbfKpJWoeZAQ+VYcay3Btxg7eSJIBt/nN+qW
-        z+XzUG4g7FlyTrNejGfGTs35oxcn0Y76SG+e0UA=
-X-Google-Smtp-Source: APXvYqzkmgDmEomBZgx1jIEpRwv0AXAvCX+ZJ3zDN6KQAmdRedobwJRsgSOLmKIGRtFUH4rHhNIxIGoHR8/xE5cgWuQ=
-X-Received: by 2002:a1c:e904:: with SMTP id q4mr2906888wmc.43.1556814312796;
- Thu, 02 May 2019 09:25:12 -0700 (PDT)
+        Thu, 2 May 2019 12:26:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1556814397; bh=4PgbqVnvHOQkUk3YG4PidmP1RHiYRTKxgvCKv2qGFds=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=NlEn64f9wIy74YHwaX7rTyoZLz1CsP60rIouktR01XF/phcxjejrFpEyeT9lWPf/fV1EP8aXKwxBx6uNnJ58KN/1U9S2dXBpKCMiiMBTM+4T2y8vaRVt+PwmRLMXfjCPjLIOmaqKx7NYfBAnk2onWmepVdD2B8C5XFiuTAmJCY5h04ZK+eDUzlM6qqHHfWH7o86YKudh/5N+iyAxTGQ7jp7IFqk8rZIXCzy0GN73Ev/y8RL9SQW+tKCrViF7lL746c+sqn9kdfrOc8dTiouweqg5l7jn4IvLBrIJex+g1twLTBGdhghzc8jgCmdl1sGZuefsMVzxRlOGILsm2RFSiA==
+X-YMail-OSG: v1ft5gMVM1kVZeTpHCyFvDoJ6nhxxeayX7D1x3kizyyCsuGnYX.uALbteJM6lzS
+ X1gi51Qt8bQacimWdA9VvgwHHf4D5u.Pm6KEokoPLMdGI9FSlYyekFocVqUwoQrZG1U5.i1QW_qR
+ Pe.ydTnqpI_EYa1sAYxhJMK0qZnuGdr_6IKHmG3Ch4OBeX0MRynJQdv4_iHBmgrlCoG1x087OOmG
+ 9Svy4nD8VCyAlrRvRr_sRITOettukAimLiOXgf2tkFLDJGPWE.Q40nS9trkoo61b_D5Qibg7Ocnu
+ mGnr7vS5EI2sv5zpI81LF4sleXeS3EHX_2LQarviZfpqwZ6gGekavlqH6mXcC342AnKwSiS.tXL7
+ DPpN_P6e4z.ybisQKyN4cyowL3ACXZkQXpQjTLftjjk_gumjj_fmdFpImlsHXfhkX8.fndVQ0W.k
+ InDW.AvkYlzJ7HVbIDxaAG0iFnli9lp99rblsVyh5z1auqbhizyPmD7_6zeHt0.xOAiCWEJ4vmsn
+ lwaluspgwfNkxU1WDSpdBlKqvL9YT.Wnuz2OO8mXROxPDaAM8aAOnEuIt3DPH6LjA9LZ0suDoOWL
+ ODIxr2e40AStAo8A4O1bfxtWG3FJJZkHVf1Gad_Jql1ysoZbDJS10L3QIkKg2hHVTitS2MjsyHGn
+ UST6VHDMXFCEdzsRRV6VkyNsZDmXoHRBWYD9jR7HF5rMb_x6rOBCoePPCnd.tIUSz4Vi5aRu.KkN
+ O0ZTT4WPEyGExim0Kkp3b8DD9TY1EJwvUsUoU3BDznDhkSy8p7dQbwK5ACaDRVXix2xhIbKtN7Lm
+ HFzoUMYqeCSA_8ZOxHnrREZg1TEyWfjZvoegIDgO2ez6J0zu1LGNNqRsmIwEQkHkpaGQ_HPACZNs
+ D.Ig067Cs55LtsmgE7rDOexn4t_Uo36e9LcoAJ2PUwMQgPF47GEJXX_n1g94Pje5FbfaK6Eg2sVe
+ mk1zmhfnFqaWgLkVnCrwWkGW8Bl.L7YMJwQsLKb7ewF342utHEk._xTHUM1i3PIStbHiw.6l73rq
+ P2l.MxMvbE.CmZE6gW42Kn4vr9vZVDjLOz_zyKUt7bYqGvZKs6KSI9.kD6yY3_Y9EGLc.3bsPnsb
+ 19pWRYv4QIHeDuBFn7Md0kSFv7xODdGoeG2YKJDxztfPsAAxLhSHhf0ZDlnS0JCsEtfjaGg6oXen
+ rnJsLBtlPipw_FlPL8sahzSy9DwCK_Q--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.bf2.yahoo.com with HTTP; Thu, 2 May 2019 16:26:37 +0000
+Received: from c-67-169-65-224.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([67.169.65.224])
+          by smtp414.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID c5863758f5d33a2aa8aed50d6f642b99;
+          Thu, 02 May 2019 16:26:36 +0000 (UTC)
+Subject: Re: [PATCH] kexec_buffer measure
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        prakhar srivastava <prsriva02@gmail.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        John Johansen <john.johansen@canonical.com>,
+        casey@schaufler-ca.com
+References: <CAEFn8qKkXgxUKtribbtFwvG9NykGQo10jQ5Du_i9wJz-wKreOA@mail.gmail.com>
+ <1555978681.4914.305.camel@linux.ibm.com>
+ <1556812101.4134.28.camel@linux.ibm.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <a30f7742-8368-be0c-4bab-28bcce0966aa@schaufler-ca.com>
+Date:   Thu, 2 May 2019 09:26:34 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190429001706.7449-1-olteanv@gmail.com>
-In-Reply-To: <20190429001706.7449-1-olteanv@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 2 May 2019 19:25:01 +0300
-Message-ID: <CA+h21hrezraBUP8aY85m=T7qAU1u58iiidGeQqdrNDenyL+Rnw@mail.gmail.com>
-Subject: Re: [PATCH v4 net-next 00/12] NXP SJA1105 DSA driver
-To:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1556812101.4134.28.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019 at 03:18, Vladimir Oltean <olteanv@gmail.com> wrote:
+On 5/2/2019 8:48 AM, Mimi Zohar wrote:
+> [Cc'ing Paul, John, Casey]
 >
-> This patchset adds a DSA driver for the SPI-controlled NXP SJA1105
-> switch.  Due to the hardware's unfriendliness, most of its state needs
-> to be shadowed in kernel memory by the driver. To support this and keep
-> a decent amount of cleanliness in the code, a new generic API for
-> converting between CPU-accessible ("unpacked") structures and
-> hardware-accessible ("packed") structures is proposed and used.
->
-> The driver is GPL-2.0 licensed. The source code files which are licensed
-> as BSD-3-Clause are hardware support files and derivative of the
-> userspace NXP sja1105-tool program, which is BSD-3-Clause licensed.
->
-> TODO items:
-> * Add support for traffic.
-> * Add full support for the P/Q/R/S series. The patches were mostly
->   tested on a first-generation T device.
-> * Add timestamping support and PTP clock manipulation.
-> * Figure out how the tc-taprio hardware offload that was just proposed
->   by Vinicius can be used to configure the switch's time-aware scheduler.
-> * Rework link state callbacks to use phylink once the SGMII port
->   is supported.
->
-> Changes in v4:
-> 1. Previous patchset was broken apart, and for the moment the driver is
->    configuring the switch as unmanaged. Support for regular and management
->    traffic, as well as for PTP timestamping, will be submitted once the
->    basic driver is accepted. Some core DSA patches were also broken out
->    of the series, and are a dependency for this series:
->    https://patchwork.ozlabs.org/project/netdev/list/?series=105069
-> 2. Addressed Jiri Pirko's feedback about too generic function and macro
->    naming.
-> 3. Re-introduced ETH_P_DSA_8021Q.
->
-> v3 patchset can be found at:
-> https://lkml.org/lkml/2019/4/12/978
->
-> Changes in v3:
-> 1. Removed the patch for a dedicated Ethertype to use with 802.1Q DSA
->    tagging
-> 2. Changed the SJA1105 switch tagging protocol sysfs label from
->    "sja1105" to "8021q" to denote to users such as tcpdump that the
->    structure is more generic.
-> 3. Respun previous patch "net: dsa: Allow drivers to modulate between
->    presence and absence of tagging". Current equivalent patch is called
->    "net: dsa: Allow drivers to filter packets they can decode source
->    port from" and at least allows reception of management traffic during
->    the time when switch tagging is not enabled.
-> 4. Added DSA-level fixes for the bridge core not unsetting
->    vlan_filtering when ports leave. The global VLAN filtering is treated
->    as a special case. Made the mt7530 driver use this. This patch
->    benefits the SJA1105 because otherwise traffic in standalone mode
->    would no longer work after removing the ports from a vlan_filtering
->    bridge, since the driver and the hardware would be in an inconsistent
->    state.
-> 5. Restructured the documentation as rst. This depends upon the recently
->    submitted "[PATCH net-next] Documentation: net: dsa: transition to
->    the rst format": https://patchwork.ozlabs.org/patch/1084658/.
->
-> v2 patchset can be found at:
-> https://www.spinics.net/lists/netdev/msg563454.html
->
-> Changes in v2:
-> 1. Device ID is no longer auto-detected but enforced based on explicit DT
->    compatible string. This helps with stricter checking of DT bindings.
-> 2. Group all device-specific operations into a sja1105_info structure and
->    avoid using the IS_ET() and IS_PQRS() macros at runtime as much as possible.
-> 3. Added more verbiage to commit messages and documentation.
-> 4. Treat the case where RGMII internal delays are requested through DT bindings
->    and return error.
-> 5. Miscellaneous cosmetic cleanup in sja1105_clocking.c
-> 6. Not advertising link features that are not supported, such as pause frames
->    and the half duplex modes.
-> 7. Fixed a mistake in previous patchset where the switch tagging was not
->    actually enabled (lost during a rebase). This brought up another uncaught
->    issue where switching at runtime between tagging and no-tagging was not
->    supported by DSA. Fixed up the mistake in "net: dsa: sja1105: Add support
->    for traffic through standalone ports", and added the new patch "net: dsa:
->    Allow drivers to modulate between presence and absence of tagging" to
->    address the other issue.
-> 8. Added a workaround for switch resets cutting a frame in the middle of
->    transmission, which would throw off some link partners.
-> 9. Changed the TPID from ETH_P_EDSA (0xDADA) to a newly introduced one:
->    ETH_P_DSA_8021Q (0xDADB). Uncovered another mistake in the previous patchset
->    with a missing ntohs(), which was not caught because 0xDADA is
->    endian-agnostic.
-> 10. Made NET_DSA_TAG_8021Q select VLAN_8021Q
-> 11. Renamed __dsa_port_vlan_add to dsa_port_vid_add and not to
->     dsa_port_vlan_add_trans, as suggested, because the corresponding _del function
->     does not have a transactional phase and the naming is more uniform this way.
->
-> v1 patchset can be found at:
-> https://www.spinics.net/lists/netdev/msg561589.html
->
-> Changes from RFC:
-> 1. Removed the packing code for the static configuration tables that were
->    not currently used
-> 2. Removed the code for unpacking a static configuration structure from
->    a memory buffer (not used)
-> 3. Completely removed the SGMII stubs, since the configuration is not
->    complete anyway.
-> 4. Moved some code from the SJA1105 introduction commit into the patch
->    that used it.
-> 5. Made the code for checking global VLAN filtering generic and made b53
->    driver use it.
-> 6. Made mt7530 driver use the new generic dp->vlan_filtering
-> 7. Fixed check for stringset in .get_sset_count
-> 8. Minor cleanup in sja1105_clocking.c
-> 9. Fixed a confusing typo in DSA
->
-> RFC can be found at:
-> https://www.mail-archive.com/netdev@vger.kernel.org/msg291717.html
->
-> Vladimir Oltean (12):
->   lib: Add support for generic packing operations
->   net: dsa: Introduce driver for NXP SJA1105 5-port L2 switch
->   net: dsa: sja1105: Add support for FDB and MDB management
->   net: dsa: sja1105: Error out if RGMII delays are requested in DT
->   ether: Add dedicated Ethertype for pseudo-802.1Q DSA tagging
->   net: dsa: sja1105: Add support for VLAN operations
->   net: dsa: sja1105: Add support for ethtool port counters
->   net: dsa: sja1105: Add support for configuring address aging time
->   net: dsa: sja1105: Prevent PHY jabbering during switch reset
->   net: dsa: sja1105: Reject unsupported link modes for AN
->   Documentation: net: dsa: Add details about NXP SJA1105 driver
->   dt-bindings: net: dsa: Add documentation for NXP SJA1105 driver
->
->  .../devicetree/bindings/net/dsa/sja1105.txt   |  157 ++
->  Documentation/networking/dsa/index.rst        |    1 +
->  Documentation/networking/dsa/sja1105.rst      |  167 ++
->  Documentation/packing.txt                     |  150 ++
->  MAINTAINERS                                   |   14 +
->  drivers/net/dsa/Kconfig                       |    2 +
->  drivers/net/dsa/Makefile                      |    1 +
->  drivers/net/dsa/sja1105/Kconfig               |   15 +
->  drivers/net/dsa/sja1105/Makefile              |   10 +
->  drivers/net/dsa/sja1105/sja1105.h             |  154 ++
->  drivers/net/dsa/sja1105/sja1105_clocking.c    |  602 +++++++
->  .../net/dsa/sja1105/sja1105_dynamic_config.c  |  533 ++++++
->  .../net/dsa/sja1105/sja1105_dynamic_config.h  |   43 +
->  drivers/net/dsa/sja1105/sja1105_ethtool.c     |  418 +++++
->  drivers/net/dsa/sja1105/sja1105_main.c        | 1459 +++++++++++++++++
->  drivers/net/dsa/sja1105/sja1105_spi.c         |  591 +++++++
->  .../net/dsa/sja1105/sja1105_static_config.c   |  988 +++++++++++
->  .../net/dsa/sja1105/sja1105_static_config.h   |  254 +++
->  include/linux/dsa/sja1105.h                   |   23 +
->  include/linux/packing.h                       |   49 +
->  include/uapi/linux/if_ether.h                 |    1 +
->  lib/Makefile                                  |    2 +-
->  lib/packing.c                                 |  211 +++
->  23 files changed, 5844 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/sja1105.txt
->  create mode 100644 Documentation/networking/dsa/sja1105.rst
->  create mode 100644 Documentation/packing.txt
->  create mode 100644 drivers/net/dsa/sja1105/Kconfig
->  create mode 100644 drivers/net/dsa/sja1105/Makefile
->  create mode 100644 drivers/net/dsa/sja1105/sja1105.h
->  create mode 100644 drivers/net/dsa/sja1105/sja1105_clocking.c
->  create mode 100644 drivers/net/dsa/sja1105/sja1105_dynamic_config.c
->  create mode 100644 drivers/net/dsa/sja1105/sja1105_dynamic_config.h
->  create mode 100644 drivers/net/dsa/sja1105/sja1105_ethtool.c
->  create mode 100644 drivers/net/dsa/sja1105/sja1105_main.c
->  create mode 100644 drivers/net/dsa/sja1105/sja1105_spi.c
->  create mode 100644 drivers/net/dsa/sja1105/sja1105_static_config.c
->  create mode 100644 drivers/net/dsa/sja1105/sja1105_static_config.h
->  create mode 100644 include/linux/dsa/sja1105.h
->  create mode 100644 include/linux/packing.h
->  create mode 100644 lib/packing.c
->
-> --
-> 2.17.1
->
+> On Mon, 2019-04-22 at 20:18 -0400, Mimi Zohar wrote:
+>> [Cc'ing LSM mailing list]
+>>
+>> On Fri, 2019-04-19 at 17:30 -0700, prakhar srivastava wrote:
+>>
+>>> 2) Adding a LSM hook
+>>> We are doing both the command line and kernel version measurement in IMA.
+>>> Can you please elaborate on how this can be used outside of the scenario?
+>>> That will help me come back with a better design and code. I am
+>>> neutral about this.
+>> As I said previously, initially you might want to only measure the
+>> kexec boot command line, but will you ever want to verify or audit log
+>> the boot command line hash?????Perhaps LSMs would be interested in the
+>> boot command line. ??Should this be an LSM hook?
+>  From an LSM perspective, is there any interest in the boot command line?
 
-Hi Dave,
+I can imagine an LSM that cares about the command line,
+but I have an interest in it for any work I have in progress.
 
-Just thought I'd check up on this and found something that looks like a mistake.
-In patchwork it looks like the series is in the "Changes Requested"
-state. However I didn't notice any comment that was requesting any
-change?
-
-Thank you,
--Vladimir
+>
+> Mimi
+>
