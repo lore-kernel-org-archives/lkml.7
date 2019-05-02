@@ -2,138 +2,129 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77900C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA559C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D23420873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A758D20873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:11:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="h+18VXzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfEBJKu (ORCPT
+        id S1726366AbfEBJLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 05:10:50 -0400
-Received: from foss.arm.com ([217.140.101.70]:42536 "EHLO foss.arm.com"
+        Thu, 2 May 2019 05:11:24 -0400
+Received: from ozlabs.org ([203.11.71.1]:45765 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbfEBJKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 05:10:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D42CB374;
-        Thu,  2 May 2019 02:10:48 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00C993F5AF;
-        Thu,  2 May 2019 02:10:46 -0700 (PDT)
-Date:   Thu, 2 May 2019 10:10:44 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     Rob Herring <robh@kernel.org>, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
-        mark.rutland@arm.com, Sachin Ghadi <sachin.ghadi@sifive.com>
-Subject: Re: [PATCH 1/2] RISC-V: Add DT documentation for SiFive L2 Cache
- Controller
-Message-ID: <20190502091044.GD12498@e107155-lin>
-References: <1556171696-7741-1-git-send-email-yash.shah@sifive.com>
- <1556171696-7741-2-git-send-email-yash.shah@sifive.com>
- <20190425101318.GA8469@e107155-lin>
- <CAJ2_jOEBqBnorz9PcQp72Jjju9RX_P8mU=Gq+0xCCcWsBiJksw@mail.gmail.com>
- <20190426093358.GA28309@e107155-lin>
- <CAJ2_jOEoD=Njp+L+H=jG59mA-j9SnwzyNmz7ECogWmbvei_f5Q@mail.gmail.com>
- <20190502004130.GA20802@bogus>
- <CAJ2_jOETZa_oC-xSwfQVw-9Q6OivRG2R0rKMhwCk1knbxWJQVw@mail.gmail.com>
+        id S1726196AbfEBJLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 05:11:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44vqJ92hbXz9sBb;
+        Thu,  2 May 2019 19:11:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556788281;
+        bh=6yw6lFiL2VJdps6TUQAjMUxeS1o//YaEA61Fispl6yw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=h+18VXzDeCsQTC1hTs3/s4lOd1kkFj+AsJAxO3QXn6+N5NYM5QVAo/B8oGMPByHLr
+         H89/V36nhCQ6a9LqmF1HSoQ/ghYHjHr/jg5+ZSdinPV2xyttgwVePQXmfr+VRW3v6i
+         C4uRq9illkwppZyJLLd1pL7HIA8foMl9W4hwP+z338aQhdK0L8IcM4ZjCZDdJw/HRD
+         fVYroZKBwVJT7CpKqhGrjDKJr/P+q6QFf2M8SE6AXSJlnsHOT8xAB2mH5CuDAE3uVb
+         DIzMpaOryuFZHZknjq9D/9K9BoPav/VVJmUecR8iJFv3rGhtU1Uy6l+61OjbP9TjfW
+         nV2aWHhXZPAaA==
+Date:   Thu, 2 May 2019 19:11:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Helge Deller <deller@gmx.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: manual merge of the akpm-current tree with the
+ parisc-hd tree
+Message-ID: <20190502191119.2707499f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJ2_jOETZa_oC-xSwfQVw-9Q6OivRG2R0rKMhwCk1knbxWJQVw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/BsfIab0PZhRmkZAhb4BTTxp"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 10:50:12AM +0530, Yash Shah wrote:
-> On Thu, May 2, 2019 at 6:11 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, Apr 30, 2019 at 09:50:45AM +0530, Yash Shah wrote:
-> > > On Fri, Apr 26, 2019 at 3:04 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > > >
-> > > > On Fri, Apr 26, 2019 at 11:20:17AM +0530, Yash Shah wrote:
-> > > > > On Thu, Apr 25, 2019 at 3:43 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > > > > >
-> > > > > > On Thu, Apr 25, 2019 at 11:24:55AM +0530, Yash Shah wrote:
-> > > > > > > Add device tree bindings for SiFive FU540 L2 cache controller driver
-> > > > > > >
-> > > > > > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> > > > > > > ---
-> > > > > > >  .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 53 ++++++++++++++++++++++
-> > > > > > >  1 file changed, 53 insertions(+)
-> > > > > > >  create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > > > > > >
-> > > > > > > diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > > > > > > new file mode 100644
-> > > > > > > index 0000000..15132e2
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > > > > > > @@ -0,0 +1,53 @@
-> > > > > > > +SiFive L2 Cache Controller
-> > > > > > > +--------------------------
-> > > > > > > +The SiFive Level 2 Cache Controller is used to provide access to fast copies
-> > > > > > > +of memory for masters in a Core Complex. The Level 2 Cache Controller also
-> > > > > > > +acts as directory-based coherency manager.
-> > > > > > > +
-> > > > > > > +Required Properties:
-> > > > > > > +--------------------
-> > > > > > > +- compatible: Should be "sifive,fu540-c000-ccache"
-> > > > > > > +
-> > > > > > > +- cache-block-size: Specifies the block size in bytes of the cache
-> > > > > > > +
-> > > > > > > +- cache-level: Should be set to 2 for a level 2 cache
-> > > > > > > +
-> > > > > > > +- cache-sets: Specifies the number of associativity sets of the cache
-> > > > > > > +
-> > > > > > > +- cache-size: Specifies the size in bytes of the cache
-> > > > > > > +
-> > > > > > > +- cache-unified: Specifies the cache is a unified cache
-> > > > > > > +
-> > > > > > > +- interrupt-parent: Must be core interrupt controller
-> > > > > > > +
-> > > > > > > +- interrupts: Must contain 3 entries (DirError, DataError and DataFail signals)
-> > > > > > > +
-> > > > > > > +- reg: Physical base address and size of L2 cache controller registers map
-> > > > > > > +
-> > > > > > > +- reg-names: Should be "control"
-> > > > > > > +
-> > > > > >
-> > > > > > It would be good if you mark the properties that are present in DT
-> > > > > > specification and those that are added for sifive,fu540-c000-ccache
-> > > > >
-> > > > > I believe there isn't any property which is added explicitly for
-> > > > > sifive,fu540-c000-ccache.
-> > > > >
-> > > >
-> > > > reg and interrupts are generally optional for normal cache and may be
-> > > > required for cache controller like this. DT specification[1] covers
-> > > > only caches and not cache controllers.
-> > >
-> > > Are you suggesting something like this:
-> > >
-> > > Required Properties:
-> > > --------------------
-> > > Standard Properties:
-> >
-> > I don't think we need this separation.
->
-> Ok. Won't include this "Standard/Non-standard properties" separation
-> in the next revision of this patch.
->
+--Sig_/BsfIab0PZhRmkZAhb4BTTxp
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sorry if I created confusion. I just wanted a note saying all the properties
-in ePAPR/DeviceTree specification applies for this platform. That would
-help me check if the standard cacheinfo infrastruction works as is or not.
+Hi all,
 
---
-Regards,
-Sudeep
+Today's linux-next merge of the akpm-current tree got a conflict in:
+
+  arch/parisc/mm/init.c
+
+between commit:
+
+  1fb55c4cf4e6 ("parisc: Enable SPARSEMEM_VMEMMAP")
+
+from the parisc-hd tree and commit:
+
+  2e5adbd9e97a ("initramfs: provide a generic free_initrd_mem implementatio=
+n")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/parisc/mm/init.c
+index 6d29eb22d460,437d4c35c562..000000000000
+--- a/arch/parisc/mm/init.c
++++ b/arch/parisc/mm/init.c
+@@@ -927,18 -921,3 +927,11 @@@ void flush_tlb_all(void
+  	spin_unlock(&sid_lock);
+  }
+  #endif
+ +
+- #ifdef CONFIG_BLK_DEV_INITRD
+- void free_initrd_mem(unsigned long start, unsigned long end)
+- {
+- 	free_reserved_area((void *)start, (void *)end, -1, "initrd");
+- }
+- #endif
+-=20
+ +#if defined(CONFIG_SPARSEMEM_VMEMMAP)
+ +int __meminit vmemmap_populate(unsigned long vstart, unsigned long vend,
+ +			       int node, struct vmem_altmap *altmap)
+ +{
+ +	return vmemmap_populate_basepages(vstart, vend, node);
+ +}
+ +#endif
+
+--Sig_/BsfIab0PZhRmkZAhb4BTTxp
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzKtDcACgkQAVBC80lX
+0GxBzQf/aVRtbemK5KkZpF1uc7l8rw8TQAKfmSjJAb2MNgsCw61ZhPWpBE2mThNo
+BxUOofS2A0ykz34jPLM5RsmctAgYqcKNzx8+ErzQcZYOcB3GmIxNrUiFB+wFhcGa
+X1r5FAO/tkqR64pi96LwLA0Ny6vmfFvZjTsW4W8ha/33X9rdMde/4rQu16ASbIuz
++fIM9qjeJkB9WFQ5D+R7L7tlyEwiGCNoD86Pq5FMkMB8LwN2kYmxKs/gfCyWOgdN
+KZJFAZ5TLS3/QuhwPOMVx9ktXm6yL2CnrBRtJSOfuEJP7Gi046hZdMWG4AWjbsLm
+iN2ZhM//dRFcwxLqENi2JfIuOQ2wVw==
+=md76
+-----END PGP SIGNATURE-----
+
+--Sig_/BsfIab0PZhRmkZAhb4BTTxp--
