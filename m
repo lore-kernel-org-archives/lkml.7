@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEE6C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B3FC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440AA20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBE1A204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811148;
-	bh=BZ7m/WjVfm5vLO2WjcqXbMk+q18pxu9+ZouJHyseVis=;
+	s=default; t=1556811153;
+	bh=nKnfFAXeiKLBlx2nKx070WDhRTUsQCSsZJz4+ogYXyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CdmfXk9WUVxjU6nP1y38qhc2xrr/S3Yc3JcnIz0CEAe8K3wdQJuvbFS3oxWvaGe9Q
-	 wGRJU84CG4cIck5fRYJ5wwF6JU2cxh6x966xqNevEuYUqAjpA8WOA+j8zLsYdZob6I
-	 4PVKVxkib5skffNyNYeTfiuu2KqEfeaL/OfepAOo=
+	b=YZPZm+YOlihcd9WC5Ejyqvayg8O8Hv6XKwvtfyAciSjY5lNLVLAlXng8YXNLRCdJi
+	 1XKThxCM6Q55GlRr93JggGCJTLSCZ82oLFyTANqQ713CyfSPlQsJ2TndDptD/9WZCS
+	 jc5q64u4ZI1CksXqxtH5yqQ+drx4le9Ek2KWRdtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbfEBPc1 (ORCPT
+        id S1729205AbfEBPcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:32:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52008 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:32:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728705AbfEBPcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:32:25 -0400
+        id S1729187AbfEBPca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:32:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4ED1120675;
-        Thu,  2 May 2019 15:32:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60BC4204FD;
+        Thu,  2 May 2019 15:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811144;
-        bh=BZ7m/WjVfm5vLO2WjcqXbMk+q18pxu9+ZouJHyseVis=;
+        s=default; t=1556811149;
+        bh=nKnfFAXeiKLBlx2nKx070WDhRTUsQCSsZJz4+ogYXyQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ADNanTN9OTpgrOK8QzMhz3CyGExlg+U+I8HwzVgwFtSUxot4ptXIjWZSpTIMrDnuO
-         PMf0vnCt8pLibNC141dASYmo26RoPc4FxGI4ptI0q8BtnutzUPFPKq5v0+FcPOci5X
-         mU2oWCq3Xy4RqEUff7wSRMZ0yCI42MIiAH4tWGh8=
+        b=TROx0FDUtPTm/TeMAvjZOMrONv6BqjLD4L+hb/wv5+tWHdd9+4TU5Zv0U0xfa4cO3
+         Dg1kgOdt+sVkTZePZVdgdm+N8qzX9JadzcIQrynTZ439R7pXlIxLpnRZmexw/+U1kp
+         VtJ+zXQDzAgOlUYR55zW1UeV5K7WEbPzp0fqoJ2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin George <marting@netapp.com>,
-        Gargi Srinivas <sring@netapp.com>,
-        Hannes Reinecke <hare@suse.com>,
+        stable@vger.kernel.org, Stephen Bates <sbates@raithlin.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
         Christoph Hellwig <hch@lst.de>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 091/101] nvme-multipath: relax ANA state check
-Date:   Thu,  2 May 2019 17:21:33 +0200
-Message-Id: <20190502143345.957245446@linuxfoundation.org>
+Subject: [PATCH 5.0 093/101] nvmet: fix error flow during ns enable
+Date:   Thu,  2 May 2019 17:21:35 +0200
+Message-Id: <20190502143346.096568864@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -62,42 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cc2278c413c3a06a93c23ee8722e4dd3d621de12 ]
+[ Upstream commit a536b49785759bf99465fdf6e248d34322123fcd ]
 
-When undergoing state transitions I/O might be requeued, hence
-we should always call nvme_mpath_set_live() to schedule requeue_work
-whenever the nvme device is live, independent on whether the
-old state was live or not.
+In case we fail to enable p2pmem on the current namespace, disable the
+backing store device before exiting.
 
-Signed-off-by: Martin George <marting@netapp.com>
-Signed-off-by: Gargi Srinivas <sring@netapp.com>
-Signed-off-by: Hannes Reinecke <hare@suse.com>
+Cc: Stephen Bates <sbates@raithlin.com>
+Signed-off-by: Max Gurtovoy <maxg@mellanox.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/nvme/target/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index b9fff3b8ed1b..23da7beadd62 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -366,15 +366,12 @@ static inline bool nvme_state_is_live(enum nvme_ana_state state)
- static void nvme_update_ns_ana_state(struct nvme_ana_group_desc *desc,
- 		struct nvme_ns *ns)
- {
--	enum nvme_ana_state old;
--
- 	mutex_lock(&ns->head->lock);
--	old = ns->ana_state;
- 	ns->ana_grpid = le32_to_cpu(desc->grpid);
- 	ns->ana_state = desc->state;
- 	clear_bit(NVME_NS_ANA_PENDING, &ns->flags);
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 02c63c463222..7bad21a2283f 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -517,7 +517,7 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
  
--	if (nvme_state_is_live(ns->ana_state) && !nvme_state_is_live(old))
-+	if (nvme_state_is_live(ns->ana_state))
- 		nvme_mpath_set_live(ns);
- 	mutex_unlock(&ns->head->lock);
+ 	ret = nvmet_p2pmem_ns_enable(ns);
+ 	if (ret)
+-		goto out_unlock;
++		goto out_dev_disable;
+ 
+ 	list_for_each_entry(ctrl, &subsys->ctrls, subsys_entry)
+ 		nvmet_p2pmem_ns_add_p2p(ctrl, ns);
+@@ -558,7 +558,7 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
+ out_dev_put:
+ 	list_for_each_entry(ctrl, &subsys->ctrls, subsys_entry)
+ 		pci_dev_put(radix_tree_delete(&ctrl->p2p_ns_map, ns->nsid));
+-
++out_dev_disable:
+ 	nvmet_ns_dev_disable(ns);
+ 	goto out_unlock;
  }
 -- 
 2.19.1
