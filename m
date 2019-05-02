@@ -2,128 +2,140 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFD2C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94181C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DC62081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A932081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:06:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="yCeZj362"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfEBXEa (ORCPT
+        id S1726329AbfEBXGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 19:04:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53278 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726030AbfEBXEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 19:04:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EA620AF0C;
-        Thu,  2 May 2019 23:04:27 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Fri, 03 May 2019 09:04:17 +1000
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs\@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-In-Reply-To: <CAJfpegsthQn_=3AQJf7ojxoQBpHMA3dz1fCBjNZXsCA1E0oqnw@mail.gmail.com>
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com> <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com> <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com> <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com> <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com> <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com> <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com> <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name> <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com> <875zqt4igg.fsf@notabene.neil.brown.name> <CAHc6FU52OCCGUnHXOCFTv1diP_5i4yZvF6fAth9=aynwS+twQg@mail.gmail.com> <CAJfpegsthQn_=3AQJf7ojxoQBpHMA3dz1fCBjNZXsCA1E0oqnw@mail.gmail.com>
-Message-ID: <87woj831ce.fsf@notabene.neil.brown.name>
+        Thu, 2 May 2019 19:06:32 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33033 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfEBXGc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 19:06:32 -0400
+Received: by mail-wm1-f66.google.com with SMTP id b188so4473295wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 16:06:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=0E50fivlvhtJbA/C1wWaK+JHqMSweUK9UeAr3comb18=;
+        b=yCeZj3621KuN4oceXlPvAU0hpwT3SAzPwE/LsTRc8wgpNDpP17Iq/2bg9HxaUk5tub
+         JIMm5qFTFG8yy5eVKtF3BQq1cGQq4V2McQI6K+6wHqFE5UMp1P/ZC1cRI2NLQSCe+myc
+         FTm0ui66nwopkjz+vxP30XLAfbgB2pJUk05dUidId4vVxV6vm9nzgLOdoDRetgby2Tyz
+         OVxx5ASBK/xcfD9o+DKwtyP6bHibnHJsQTnvrXUqNAre1muUdJmz5NqchN4NX2hEUEsp
+         Ht0Lj76lvSfi5EA0jAQ6RFUFp0ME37reQwPz2iCVRbtKL12GFjPR697RWf3uMDxGzsZy
+         HAgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=0E50fivlvhtJbA/C1wWaK+JHqMSweUK9UeAr3comb18=;
+        b=fLx1relZbDXvbuUV8551Nrd76CJ9oU+pfUTpKjjPz/zRY7hmS7T+RHIsE8JZ8Bh82A
+         iUbcG5j7J0mHIjPT6UJ1MfYD8CMxtHlM40QvBRg1dQorC1zclbpNTaBvv+gNb0D911Sk
+         OFO7uRDlIa6meF+jRbtbyy0eBTEoiiksfivDLwSVbL8D3bzNN4WtOXKLT4w0lo22IOCy
+         ZS6E0LzlBQKW+ubY6PPthtbu0PQyJdFcaR5jAJMSlNn9PlZLgTfgFLqi8xjP4mCmEsp5
+         l+H2KxDy/ivD+FI85XUt8706GOB6LQl/B+EzBErywcGczycsPyD4ErmjyifQtc7+L9rD
+         tLeg==
+X-Gm-Message-State: APjAAAWESub3nImRlWn9AXuSgtdKwknKcmBnmIXDGJIbRQyXioOsaTJg
+        Beoq7PjOkR79/LgLtGrZ3V3gPw==
+X-Google-Smtp-Source: APXvYqx/LYGheLToLCWG1PrctCZkgw0sgdA0aFsSXmkQUQpa9E4GkeLsY67rMgbfN0lOKS2XwOf6ww==
+X-Received: by 2002:a1c:7005:: with SMTP id l5mr4068452wmc.149.1556838389957;
+        Thu, 02 May 2019 16:06:29 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id s17sm906627wra.94.2019.05.02.16.06.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 16:06:29 -0700 (PDT)
+Message-ID: <5ccb77f5.1c69fb81.aa068.57b6@mx.google.com>
+Date:   Thu, 02 May 2019 16:06:29 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.9.172-33-gd35bcd092304
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: linux-4.9.y
+X-Kernelci-Tree: stable-rc
+In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
+References: <20190502143314.649935114@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 00/32] 4.9.173-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+stable-rc/linux-4.9.y boot: 104 boots: 2 failed, 99 passed with 3 offline (=
+v4.9.172-33-gd35bcd092304)
 
-On Thu, May 02 2019, Miklos Szeredi wrote:
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.172-33-gd35bcd092304/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.172-33-gd35bcd092304/
 
-> On Thu, May 2, 2019 at 10:05 AM Andreas Gruenbacher <agruenba@redhat.com>=
- wrote:
->>
->> On Thu, 2 May 2019 at 05:57, NeilBrown <neilb@suse.com> wrote:
->> > On Wed, May 01 2019, Amir Goldstein wrote:
->> > > On Wed, May 1, 2019 at 10:03 PM NeilBrown <neilb@suse.com> wrote:
->> > >> On Tue, Dec 06 2016, J. Bruce Fields wrote:
->> > >> > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wro=
-te:
->> > >> >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.=
-hu> wrote:
->> > >> >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
->> > >> >> > <andreas.gruenbacher@gmail.com> wrote:
->> > >> >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.gr=
-uenbacher@gmail.com>:
->> > >> >> >
->> > >> >> >>> It's not hard to come up with a heuristic that determines if=
- a
->> > >> >> >>> system.nfs4_acl value is equivalent to a file mode, and to i=
-gnore the
->> > >> >> >>> attribute in that case. (The file mode is transmitted in its=
- own
->> > >> >> >>> attribute already, so actually converting .) That way, overl=
-ayfs could
->> > >> >> >>> still fail copying up files that have an actual ACL. It's st=
-ill an
->> > >> >> >>> ugly hack ...
->> > >> >> >>
->> > >> >> >> Actually, that kind of heuristic would make sense in the NFS =
-client
->> > >> >> >> which could then hide the "system.nfs4_acl" attribute.
->>
->> I still think the nfs client could make this problem mostly go away by
->> not exposing "system.nfs4_acl" xattrs when the acl is equivalent to
->> the file mode. The richacl patches contain a workable abgorithm for
->> that. The problem would remain for files that have an actual NFS4 ACL,
->> which just cannot be mapped to a file mode or to POSIX ACLs in the
->> general case, as well as for files that have a POSIX ACL. Mapping NFS4
->> ACL that used to be a POSIX ACL back to POSIX ACLs could be achieved
->> in many cases as well, but the code would be quite messy. A better way
->> seems to be to using a filesystem that doesn't support POSIX ACLs in
->> the first place. Unfortunately, xfs doesn't allow turning off POSIX
->> ACLs, for example.
->
-> How about mounting NFSv4 with noacl?  That should fix this issue, right?
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.172-33-gd35bcd092304
+Git Commit: d35bcd0923041bd98c18947041f8929b2fb12674
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 51 unique boards, 22 SoC families, 15 builds out of 197
 
-No.
-"noacl" only affect NFSv3 (and maybe v2) and it disables use of the
-NFSACL side-protocol.
-"noacl" has no effect on an NFSv4 mount.
+Boot Regressions Detected:
 
-NeilBrown
+arm:
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+    exynos_defconfig:
+        gcc-7:
+          exynos5250-snow:
+              lab-collabora: new failure (last pass: v4.9.172)
 
------BEGIN PGP SIGNATURE-----
+    multi_v7_defconfig:
+        gcc-7:
+          stih410-b2120:
+              lab-baylibre-seattle: new failure (last pass: v4.9.172)
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzLd3EACgkQOeye3VZi
-gbm7ShAAgFO2IV6B0rQjQjJRJNWPCq1/rOKOmOZtssw/B8rl1YZYnMKUeFtNgSuX
-KfAs6rK4sntvRkPnc/ObeZiXEQ3kLIqY9UQ8f7+u32eODZZUvJ8UjZTH6slVBpE3
-IG2p6y35SRG0kS52l9AE1ktca+ZIGj4QyvBY1XgHZMG1hD/w3joUcoqWqMUofAqG
-hedTE7db4rPEiYiBLVdmu/VZ6b6fNanPxD+zuWfYUJEertsPYE42pLbZsofMJKmc
-KK4ijv1q33qhrgeZbj0vDGR0RQrSLgKgMa64xM6iYKBwLKuj6Q16gk7WgrMl+wMP
-hmcL+3DmhMErwxH+/C7tOlymyrU36kJLQ1GjndMCKRejdh6z8imZC9jbt6pesL9E
-DO09nblJ+NEuuvKitKtdnpcPuzMXoP7IM4p3xki9lRw5Cg87zcDlnPQI36x54y9d
-4AFiqrKq8qvStl3ZlSLlyCou/UePbzlU3AAV+Pi3bT/o3/O/IgdwDmWqbS/hhJ+z
-371LcGReYKVKyaEkCM9uYc9zuklmDkRGAPUyLyzRkR4061VpB9JlrsFoWlK41T1K
-5jncgXLZDLmB8H+sXFwFYMFAkOA/0ZbHSGNIuKTetMlpXR2tEJ9GaPNtQmA1aV7k
-14cQvKXpVwbY8z0+MTaPrW83lMpNCaLvMGj1lvOx5qjBFEeuVlk=
-=JMrR
------END PGP SIGNATURE-----
---=-=-=--
+Boot Failures Detected:
+
+arm:
+    exynos_defconfig:
+        gcc-7:
+            exynos5250-snow: 1 failed lab
+
+    multi_v7_defconfig:
+        gcc-7:
+            stih410-b2120: 1 failed lab
+
+Offline Platforms:
+
+arm:
+
+    davinci_all_defconfig:
+        gcc-7
+            dm365evm,legacy: 1 offline lab
+
+    exynos_defconfig:
+        gcc-7
+            exynos5800-peach-pi: 1 offline lab
+
+    multi_v7_defconfig:
+        gcc-7
+            exynos5800-peach-pi: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
