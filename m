@@ -2,69 +2,68 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA9FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4CFC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9402085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758562085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:10:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTIZLyH/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1koxGU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbfEBHKc (ORCPT
+        id S1726657AbfEBHKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 03:10:32 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44263 "EHLO
+        Thu, 2 May 2019 03:10:37 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45424 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfEBHKa (ORCPT
+        with ESMTP id S1726231AbfEBHKg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 03:10:30 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y13so670811pfm.11;
-        Thu, 02 May 2019 00:10:29 -0700 (PDT)
+        Thu, 2 May 2019 03:10:36 -0400
+Received: by mail-pf1-f194.google.com with SMTP id e24so664555pfi.12;
+        Thu, 02 May 2019 00:10:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fT6fKUDneaQnm0YoLlzMM+7vctBScZZAX5mgwPkTNso=;
-        b=hTIZLyH/APtqOEoserZT/jTIQoBsv4lCVfwMjK0GTOl9do3dYZ2iAJJp/XJazyjtfM
-         GKl+q/ER4/X00YTK0igbvhxxNQtPgQdCWSk/jCesbE7dqVNL5vzuL7lRluHeDOnsZlbi
-         uSlvqLROLx9aYXbdye9lSvmVSiGYlbaGuupagou+dEPV7fHLkvZ9IC1eEbTDO8v+CPlR
-         hY0Y0vBfzk/vw9lEFH6UNG7nfaBhFhUAZ+u5XYTIz5N0XIYmplQ+WgnDitRNhOLgQSgn
-         Xhdw7NSxR4VfCzKHlN+ZY8CZuQIZYsH7bz522G/Nzf1OEK91GeJ4xsDwfSaHqHte4qcj
-         Uw4A==
+        bh=pQhkBTtwP+irqIGGDfGnY1/kYhhSZux0oR1yLjerCFU=;
+        b=I1koxGU/b3YfpTJ+JZzWZU22Qffo3g02jzW26sODVXrTFAFkQGAqMqxLC0Q9LPTy9y
+         RLG+WsCCfymC2W58Pg+PJ8jmbcdohxbZfL9jtb8LlmDE8z8/T6l81aah8rMepZW1wucY
+         nVrZBPBHY/TZ8+c4aeHem48JAS9hNdgswbjgZUjaKp/b/VlHTvTnI9PbAgV3gfcPais5
+         4UiuVvZsNnCuD5cYOTOqkXm3hg/PWzIt8t8Iv5zrMWih99bS0C1CdZs2xSBDBjGqf7iQ
+         EUl7wrhXeLYkhW0U9BAw39iRD/EZgaiMJjLFo9S0SsBTd6oEgY5qvyYH6Iv2lXOw6GXJ
+         jTDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fT6fKUDneaQnm0YoLlzMM+7vctBScZZAX5mgwPkTNso=;
-        b=CNsycByzReCHBlJgR5Y116OX/3110VP5o0XejrG1p0OzBfuDkjXN5xCzpfz6pAgyBn
-         SXvaMLMjicodLCNVN3Ojpcr6adg6U018T1jI2qeRXIFjeeZQcAFoG/pO9CKNlIB6KfS7
-         J7kqvx320oOXNny/iEcfkLTdzdxjk13ZeyE+Ysa5ulCo7spW8HlAgmOoS/iUMXOLghm0
-         umeMZC0EYQCaLQFVcMqDmE7ItdFJyNJUdHGwLS0XpWVTWQb/ZSrQc/UkWCLD4wq3CP0/
-         JTzEmMNqMJif2EZXl8M8qfAJbDYDvA+ALv9i8NRt/AUD2csmiIIXmkAbkyC6WrYbK85D
-         oQrg==
-X-Gm-Message-State: APjAAAVaXdoZmHEZ9hPTFdfsQXXxpBpjp5kHwRvPkksnqrIp8QQUdVlf
-        eanZgHSZWJlSMuUnbaRumt5gYF4o
-X-Google-Smtp-Source: APXvYqzqrSFkrt6lWyTemgzx7CandWb1YkfT4BCDliD6X/327L8SeUPKK4OB9XW/ZXM9iMm3DNwXxQ==
-X-Received: by 2002:a62:b418:: with SMTP id h24mr2431148pfn.145.1556781029700;
-        Thu, 02 May 2019 00:10:29 -0700 (PDT)
+        bh=pQhkBTtwP+irqIGGDfGnY1/kYhhSZux0oR1yLjerCFU=;
+        b=dlVaWufAxBKqYSwGfxWcfZgdoN//0zPLxbFJ7x6lvGyiVd50Q3VlwYPVBebdcj659W
+         i/BDyfabgnKbb1q2GtPysefvLBNejCRyP/DpFx2fhf/+D9ZKri/2PCKxvYCIWLXQ20Qs
+         AvRZf/Xulk2k7RtVF11OyGR6Vy09twd2/7WoLMnWl7SK7nPevwuH82EU38NFgKbJpOpa
+         HUngvoi2e5X9Lw53wfpb1YJZfCzdVsViJJBejY9UaLlfI0AjjXphKpCNiTR08BWB8yC7
+         22hY4u1QYRHoiOuaOekITEnVoFIXxMj3vAeFvXPzl9iAXsOXDxqUgmNTgkRUAxv3ge36
+         Y9tg==
+X-Gm-Message-State: APjAAAXdG3yXfnAWhgM+TY0IZr4XjR0oNdQm0aotFKXgncGmod7/5HZY
+        0jmkfKAU5OO37kLyJDLKhBc=
+X-Google-Smtp-Source: APXvYqwHnBJZsKlVVsMmN17+Efok3MdIFv+ndpDdRZrznc2deMZW706lLfcL1G9sSt1RDsjKDdgB6g==
+X-Received: by 2002:a62:46c7:: with SMTP id o68mr2584448pfi.54.1556781035016;
+        Thu, 02 May 2019 00:10:35 -0700 (PDT)
 Received: from laptop.DHCP ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id u24sm4686976pfh.91.2019.05.02.00.10.24
+        by smtp.gmail.com with ESMTPSA id u24sm4686976pfh.91.2019.05.02.00.10.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 00:10:28 -0700 (PDT)
+        Thu, 02 May 2019 00:10:34 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
 Cc:     x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH v2 09/27] Documentation: x86: convert tlb.txt to reST
-Date:   Thu,  2 May 2019 15:06:15 +0800
-Message-Id: <20190502070633.9809-10-changbin.du@gmail.com>
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v2 10/27] Documentation: x86: convert mtrr.txt to reST
+Date:   Thu,  2 May 2019 15:06:16 +0800
+Message-Id: <20190502070633.9809-11-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190502070633.9809-1-changbin.du@gmail.com>
 References: <20190502070633.9809-1-changbin.du@gmail.com>
@@ -79,100 +78,718 @@ This converts the plain text documentation to reStructuredText format and
 add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/x86/index.rst            |  1 +
- Documentation/x86/{tlb.txt => tlb.rst} | 30 ++++++++++++++++----------
- 2 files changed, 20 insertions(+), 11 deletions(-)
- rename Documentation/x86/{tlb.txt => tlb.rst} (81%)
+ Documentation/x86/index.rst |   1 +
+ Documentation/x86/mtrr.rst  | 354 ++++++++++++++++++++++++++++++++++++
+ Documentation/x86/mtrr.txt  | 329 ---------------------------------
+ 3 files changed, 355 insertions(+), 329 deletions(-)
+ create mode 100644 Documentation/x86/mtrr.rst
+ delete mode 100644 Documentation/x86/mtrr.txt
 
 diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index e43aa9b31976..c4ea25350221 100644
+index c4ea25350221..769c4491e9cb 100644
 --- a/Documentation/x86/index.rst
 +++ b/Documentation/x86/index.rst
-@@ -15,3 +15,4 @@ x86-specific Documentation
-    entry_64
+@@ -16,3 +16,4 @@ x86-specific Documentation
     earlyprintk
     zero-page
-+   tlb
-diff --git a/Documentation/x86/tlb.txt b/Documentation/x86/tlb.rst
-similarity index 81%
-rename from Documentation/x86/tlb.txt
-rename to Documentation/x86/tlb.rst
-index 6a0607b99ed8..82ec58ae63a8 100644
---- a/Documentation/x86/tlb.txt
-+++ b/Documentation/x86/tlb.rst
-@@ -1,5 +1,12 @@
+    tlb
++   mtrr
+diff --git a/Documentation/x86/mtrr.rst b/Documentation/x86/mtrr.rst
+new file mode 100644
+index 000000000000..c5b695d75349
+--- /dev/null
++++ b/Documentation/x86/mtrr.rst
+@@ -0,0 +1,354 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=======
-+The TLB
-+=======
++=========================================
++MTRR (Memory Type Range Register) control
++=========================================
 +
- When the kernel unmaps or modified the attributes of a range of
- memory, it has two choices:
++:Authors: - Richard Gooch <rgooch@atnf.csiro.au> - 3 Jun 1999
++          - Luis R. Rodriguez <mcgrof@do-not-panic.com> - April 9, 2015
 +
-  1. Flush the entire TLB with a two-instruction sequence.  This is
-     a quick operation, but it causes collateral damage: TLB entries
-     from areas other than the one we are trying to flush will be
-@@ -10,6 +17,7 @@ memory, it has two choices:
-     damage to other TLB entries.
- 
- Which method to do depends on a few things:
 +
-  1. The size of the flush being performed.  A flush of the entire
-     address space is obviously better performed by flushing the
-     entire TLB than doing 2^48/PAGE_SIZE individual flushes.
-@@ -33,7 +41,7 @@ well.  There is essentially no "right" point to choose.
- You may be doing too many individual invalidations if you see the
- invlpg instruction (or instructions _near_ it) show up high in
- profiles.  If you believe that individual invalidations being
--called too often, you can lower the tunable:
-+called too often, you can lower the tunable::
- 
- 	/sys/kernel/debug/x86/tlb_single_page_flush_ceiling
- 
-@@ -43,7 +51,7 @@ Setting it to 1 is a very conservative setting and it should
- never need to be 0 under normal circumstances.
- 
- Despite the fact that a single individual flush on x86 is
--guaranteed to flush a full 2MB [1], hugetlbfs always uses the full
-+guaranteed to flush a full 2MB [1]_, hugetlbfs always uses the full
- flushes.  THP is treated exactly the same as normal memory.
- 
- You might see invlpg inside of flush_tlb_mm_range() show up in
-@@ -54,15 +62,15 @@ Essentially, you are balancing the cycles you spend doing invlpg
- with the cycles that you spend refilling the TLB later.
- 
- You can measure how expensive TLB refills are by using
--performance counters and 'perf stat', like this:
-+performance counters and 'perf stat', like this::
- 
--perf stat -e
--	cpu/event=0x8,umask=0x84,name=dtlb_load_misses_walk_duration/,
--	cpu/event=0x8,umask=0x82,name=dtlb_load_misses_walk_completed/,
--	cpu/event=0x49,umask=0x4,name=dtlb_store_misses_walk_duration/,
--	cpu/event=0x49,umask=0x2,name=dtlb_store_misses_walk_completed/,
--	cpu/event=0x85,umask=0x4,name=itlb_misses_walk_duration/,
--	cpu/event=0x85,umask=0x2,name=itlb_misses_walk_completed/
-+  perf stat -e
-+    cpu/event=0x8,umask=0x84,name=dtlb_load_misses_walk_duration/,
-+    cpu/event=0x8,umask=0x82,name=dtlb_load_misses_walk_completed/,
-+    cpu/event=0x49,umask=0x4,name=dtlb_store_misses_walk_duration/,
-+    cpu/event=0x49,umask=0x2,name=dtlb_store_misses_walk_completed/,
-+    cpu/event=0x85,umask=0x4,name=itlb_misses_walk_duration/,
-+    cpu/event=0x85,umask=0x2,name=itlb_misses_walk_completed/
- 
- That works on an IvyBridge-era CPU (i5-3320M).  Different CPUs
- may have differently-named counters, but they should at least
-@@ -70,6 +78,6 @@ be there in some form.  You can use pmu-tools 'ocperf list'
- (https://github.com/andikleen/pmu-tools) to find the right
- counters for a given CPU.
- 
--1. A footnote in Intel's SDM "4.10.4.2 Recommended Invalidation"
-+.. [1] A footnote in Intel's SDM "4.10.4.2 Recommended Invalidation"
-    says: "One execution of INVLPG is sufficient even for a page
-    with size greater than 4 KBytes."
++Phasing out MTRR use
++====================
++
++MTRR use is replaced on modern x86 hardware with PAT. Direct MTRR use by
++drivers on Linux is now completely phased out, device drivers should use
++arch_phys_wc_add() in combination with ioremap_wc() to make MTRR effective on
++non-PAT systems while a no-op but equally effective on PAT enabled systems.
++
++Even if Linux does not use MTRRs directly, some x86 platform firmware may still
++set up MTRRs early before booting the OS. They do this as some platform
++firmware may still have implemented access to MTRRs which would be controlled
++and handled by the platform firmware directly. An example of platform use of
++MTRRs is through the use of SMI handlers, one case could be for fan control,
++the platform code would need uncachable access to some of its fan control
++registers. Such platform access does not need any Operating System MTRR code in
++place other than mtrr_type_lookup() to ensure any OS specific mapping requests
++are aligned with platform MTRR setup. If MTRRs are only set up by the platform
++firmware code though and the OS does not make any specific MTRR mapping
++requests mtrr_type_lookup() should always return MTRR_TYPE_INVALID.
++
++For details refer to :doc:`pat`.
++
++.. tip::
++  On Intel P6 family processors (Pentium Pro, Pentium II and later)
++  the Memory Type Range Registers (MTRRs) may be used to control
++  processor access to memory ranges. This is most useful when you have
++  a video (VGA) card on a PCI or AGP bus. Enabling write-combining
++  allows bus write transfers to be combined into a larger transfer
++  before bursting over the PCI/AGP bus. This can increase performance
++  of image write operations 2.5 times or more.
++
++  The Cyrix 6x86, 6x86MX and M II processors have Address Range
++  Registers (ARRs) which provide a similar functionality to MTRRs. For
++  these, the ARRs are used to emulate the MTRRs.
++
++  The AMD K6-2 (stepping 8 and above) and K6-3 processors have two
++  MTRRs. These are supported.  The AMD Athlon family provide 8 Intel
++  style MTRRs.
++
++  The Centaur C6 (WinChip) has 8 MCRs, allowing write-combining. These
++  are supported.
++
++  The VIA Cyrix III and VIA C3 CPUs offer 8 Intel style MTRRs.
++
++  The CONFIG_MTRR option creates a /proc/mtrr file which may be used
++  to manipulate your MTRRs. Typically the X server should use
++  this. This should have a reasonably generic interface so that
++  similar control registers on other processors can be easily
++  supported.
++
++There are two interfaces to /proc/mtrr: one is an ASCII interface
++which allows you to read and write. The other is an ioctl()
++interface. The ASCII interface is meant for administration. The
++ioctl() interface is meant for C programs (i.e. the X server). The
++interfaces are described below, with sample commands and C code.
++
++
++Reading MTRRs from the shell
++============================
++::
++
++  % cat /proc/mtrr
++  reg00: base=0x00000000 (   0MB), size= 128MB: write-back, count=1
++  reg01: base=0x08000000 ( 128MB), size=  64MB: write-back, count=1
++
++Creating MTRRs from the C-shell::
++
++  # echo "base=0xf8000000 size=0x400000 type=write-combining" >! /proc/mtrr
++
++or if you use bash::
++
++  # echo "base=0xf8000000 size=0x400000 type=write-combining" >| /proc/mtrr
++
++And the result thereof::
++
++  % cat /proc/mtrr
++  reg00: base=0x00000000 (   0MB), size= 128MB: write-back, count=1
++  reg01: base=0x08000000 ( 128MB), size=  64MB: write-back, count=1
++  reg02: base=0xf8000000 (3968MB), size=   4MB: write-combining, count=1
++
++This is for video RAM at base address 0xf8000000 and size 4 megabytes. To
++find out your base address, you need to look at the output of your X
++server, which tells you where the linear framebuffer address is. A
++typical line that you may get is::
++
++  (--) S3: PCI: 968 rev 0, Linear FB @ 0xf8000000
++
++Note that you should only use the value from the X server, as it may
++move the framebuffer base address, so the only value you can trust is
++that reported by the X server.
++
++To find out the size of your framebuffer (what, you don't actually
++know?), the following line will tell you::
++
++  (--) S3: videoram:  4096k
++
++That's 4 megabytes, which is 0x400000 bytes (in hexadecimal).
++A patch is being written for XFree86 which will make this automatic:
++in other words the X server will manipulate /proc/mtrr using the
++ioctl() interface, so users won't have to do anything. If you use a
++commercial X server, lobby your vendor to add support for MTRRs.
++
++
++Creating overlapping MTRRs
++==========================
++::
++
++  %echo "base=0xfb000000 size=0x1000000 type=write-combining" >/proc/mtrr
++  %echo "base=0xfb000000 size=0x1000 type=uncachable" >/proc/mtrr
++
++And the results::
++
++  % cat /proc/mtrr
++  reg00: base=0x00000000 (   0MB), size=  64MB: write-back, count=1
++  reg01: base=0xfb000000 (4016MB), size=  16MB: write-combining, count=1
++  reg02: base=0xfb000000 (4016MB), size=   4kB: uncachable, count=1
++
++Some cards (especially Voodoo Graphics boards) need this 4 kB area
++excluded from the beginning of the region because it is used for
++registers.
++
++NOTE: You can only create type=uncachable region, if the first
++region that you created is type=write-combining.
++
++
++Removing MTRRs from the C-shel
++==============================
++::
++
++  % echo "disable=2" >! /proc/mtrr
++
++or using bash::
++
++  % echo "disable=2" >| /proc/mtrr
++
++
++Reading MTRRs from a C program using ioctl()'s
++==============================================
++::
++
++  /*  mtrr-show.c
++
++      Source file for mtrr-show (example program to show MTRRs using ioctl()'s)
++
++      Copyright (C) 1997-1998  Richard Gooch
++
++      This program is free software; you can redistribute it and/or modify
++      it under the terms of the GNU General Public License as published by
++      the Free Software Foundation; either version 2 of the License, or
++      (at your option) any later version.
++
++      This program is distributed in the hope that it will be useful,
++      but WITHOUT ANY WARRANTY; without even the implied warranty of
++      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++      GNU General Public License for more details.
++
++      You should have received a copy of the GNU General Public License
++      along with this program; if not, write to the Free Software
++      Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++
++      Richard Gooch may be reached by email at  rgooch@atnf.csiro.au
++      The postal address is:
++        Richard Gooch, c/o ATNF, P. O. Box 76, Epping, N.S.W., 2121, Australia.
++  */
++
++  /*
++      This program will use an ioctl() on /proc/mtrr to show the current MTRR
++      settings. This is an alternative to reading /proc/mtrr.
++
++
++      Written by      Richard Gooch   17-DEC-1997
++
++      Last updated by Richard Gooch   2-MAY-1998
++
++
++  */
++  #include <stdio.h>
++  #include <stdlib.h>
++  #include <string.h>
++  #include <sys/types.h>
++  #include <sys/stat.h>
++  #include <fcntl.h>
++  #include <sys/ioctl.h>
++  #include <errno.h>
++  #include <asm/mtrr.h>
++
++  #define TRUE 1
++  #define FALSE 0
++  #define ERRSTRING strerror (errno)
++
++  static char *mtrr_strings[MTRR_NUM_TYPES] =
++  {
++      "uncachable",               /* 0 */
++      "write-combining",          /* 1 */
++      "?",                        /* 2 */
++      "?",                        /* 3 */
++      "write-through",            /* 4 */
++      "write-protect",            /* 5 */
++      "write-back",               /* 6 */
++  };
++
++  int main ()
++  {
++      int fd;
++      struct mtrr_gentry gentry;
++
++      if ( ( fd = open ("/proc/mtrr", O_RDONLY, 0) ) == -1 )
++      {
++    if (errno == ENOENT)
++    {
++        fputs ("/proc/mtrr not found: not supported or you don't have a PPro?\n",
++        stderr);
++        exit (1);
++    }
++    fprintf (stderr, "Error opening /proc/mtrr\t%s\n", ERRSTRING);
++    exit (2);
++      }
++      for (gentry.regnum = 0; ioctl (fd, MTRRIOC_GET_ENTRY, &gentry) == 0;
++    ++gentry.regnum)
++      {
++    if (gentry.size < 1)
++    {
++        fprintf (stderr, "Register: %u disabled\n", gentry.regnum);
++        continue;
++    }
++    fprintf (stderr, "Register: %u base: 0x%lx size: 0x%lx type: %s\n",
++      gentry.regnum, gentry.base, gentry.size,
++      mtrr_strings[gentry.type]);
++      }
++      if (errno == EINVAL) exit (0);
++      fprintf (stderr, "Error doing ioctl(2) on /dev/mtrr\t%s\n", ERRSTRING);
++      exit (3);
++  }   /*  End Function main  */
++
++
++Creating MTRRs from a C programme using ioctl()'s
++=================================================
++::
++
++  /*  mtrr-add.c
++
++      Source file for mtrr-add (example programme to add an MTRRs using ioctl())
++
++      Copyright (C) 1997-1998  Richard Gooch
++
++      This program is free software; you can redistribute it and/or modify
++      it under the terms of the GNU General Public License as published by
++      the Free Software Foundation; either version 2 of the License, or
++      (at your option) any later version.
++
++      This program is distributed in the hope that it will be useful,
++      but WITHOUT ANY WARRANTY; without even the implied warranty of
++      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++      GNU General Public License for more details.
++
++      You should have received a copy of the GNU General Public License
++      along with this program; if not, write to the Free Software
++      Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++
++      Richard Gooch may be reached by email at  rgooch@atnf.csiro.au
++      The postal address is:
++        Richard Gooch, c/o ATNF, P. O. Box 76, Epping, N.S.W., 2121, Australia.
++  */
++
++  /*
++      This programme will use an ioctl() on /proc/mtrr to add an entry. The first
++      available mtrr is used. This is an alternative to writing /proc/mtrr.
++
++
++      Written by      Richard Gooch   17-DEC-1997
++
++      Last updated by Richard Gooch   2-MAY-1998
++
++
++  */
++  #include <stdio.h>
++  #include <string.h>
++  #include <stdlib.h>
++  #include <unistd.h>
++  #include <sys/types.h>
++  #include <sys/stat.h>
++  #include <fcntl.h>
++  #include <sys/ioctl.h>
++  #include <errno.h>
++  #include <asm/mtrr.h>
++
++  #define TRUE 1
++  #define FALSE 0
++  #define ERRSTRING strerror (errno)
++
++  static char *mtrr_strings[MTRR_NUM_TYPES] =
++  {
++      "uncachable",               /* 0 */
++      "write-combining",          /* 1 */
++      "?",                        /* 2 */
++      "?",                        /* 3 */
++      "write-through",            /* 4 */
++      "write-protect",            /* 5 */
++      "write-back",               /* 6 */
++  };
++
++  int main (int argc, char **argv)
++  {
++      int fd;
++      struct mtrr_sentry sentry;
++
++      if (argc != 4)
++      {
++    fprintf (stderr, "Usage:\tmtrr-add base size type\n");
++    exit (1);
++      }
++      sentry.base = strtoul (argv[1], NULL, 0);
++      sentry.size = strtoul (argv[2], NULL, 0);
++      for (sentry.type = 0; sentry.type < MTRR_NUM_TYPES; ++sentry.type)
++      {
++    if (strcmp (argv[3], mtrr_strings[sentry.type]) == 0) break;
++      }
++      if (sentry.type >= MTRR_NUM_TYPES)
++      {
++    fprintf (stderr, "Illegal type: \"%s\"\n", argv[3]);
++    exit (2);
++      }
++      if ( ( fd = open ("/proc/mtrr", O_WRONLY, 0) ) == -1 )
++      {
++    if (errno == ENOENT)
++    {
++        fputs ("/proc/mtrr not found: not supported or you don't have a PPro?\n",
++        stderr);
++        exit (3);
++    }
++    fprintf (stderr, "Error opening /proc/mtrr\t%s\n", ERRSTRING);
++    exit (4);
++      }
++      if (ioctl (fd, MTRRIOC_ADD_ENTRY, &sentry) == -1)
++      {
++    fprintf (stderr, "Error doing ioctl(2) on /dev/mtrr\t%s\n", ERRSTRING);
++    exit (5);
++      }
++      fprintf (stderr, "Sleeping for 5 seconds so you can see the new entry\n");
++      sleep (5);
++      close (fd);
++      fputs ("I've just closed /proc/mtrr so now the new entry should be gone\n",
++      stderr);
++  }   /*  End Function main  */
+diff --git a/Documentation/x86/mtrr.txt b/Documentation/x86/mtrr.txt
+deleted file mode 100644
+index dc3e703913ac..000000000000
+--- a/Documentation/x86/mtrr.txt
++++ /dev/null
+@@ -1,329 +0,0 @@
+-MTRR (Memory Type Range Register) control
+-
+-Richard Gooch <rgooch@atnf.csiro.au> - 3 Jun 1999
+-Luis R. Rodriguez <mcgrof@do-not-panic.com> - April 9, 2015
+-
+-===============================================================================
+-Phasing out MTRR use
+-
+-MTRR use is replaced on modern x86 hardware with PAT. Direct MTRR use by
+-drivers on Linux is now completely phased out, device drivers should use
+-arch_phys_wc_add() in combination with ioremap_wc() to make MTRR effective on
+-non-PAT systems while a no-op but equally effective on PAT enabled systems.
+-
+-Even if Linux does not use MTRRs directly, some x86 platform firmware may still
+-set up MTRRs early before booting the OS. They do this as some platform
+-firmware may still have implemented access to MTRRs which would be controlled
+-and handled by the platform firmware directly. An example of platform use of
+-MTRRs is through the use of SMI handlers, one case could be for fan control,
+-the platform code would need uncachable access to some of its fan control
+-registers. Such platform access does not need any Operating System MTRR code in
+-place other than mtrr_type_lookup() to ensure any OS specific mapping requests
+-are aligned with platform MTRR setup. If MTRRs are only set up by the platform
+-firmware code though and the OS does not make any specific MTRR mapping
+-requests mtrr_type_lookup() should always return MTRR_TYPE_INVALID.
+-
+-For details refer to Documentation/x86/pat.txt.
+-
+-===============================================================================
+-
+-  On Intel P6 family processors (Pentium Pro, Pentium II and later)
+-  the Memory Type Range Registers (MTRRs) may be used to control
+-  processor access to memory ranges. This is most useful when you have
+-  a video (VGA) card on a PCI or AGP bus. Enabling write-combining
+-  allows bus write transfers to be combined into a larger transfer
+-  before bursting over the PCI/AGP bus. This can increase performance
+-  of image write operations 2.5 times or more.
+-
+-  The Cyrix 6x86, 6x86MX and M II processors have Address Range
+-  Registers (ARRs) which provide a similar functionality to MTRRs. For
+-  these, the ARRs are used to emulate the MTRRs.
+-
+-  The AMD K6-2 (stepping 8 and above) and K6-3 processors have two
+-  MTRRs. These are supported.  The AMD Athlon family provide 8 Intel
+-  style MTRRs.
+-
+-  The Centaur C6 (WinChip) has 8 MCRs, allowing write-combining. These
+-  are supported.
+-
+-  The VIA Cyrix III and VIA C3 CPUs offer 8 Intel style MTRRs.
+-
+-  The CONFIG_MTRR option creates a /proc/mtrr file which may be used
+-  to manipulate your MTRRs. Typically the X server should use
+-  this. This should have a reasonably generic interface so that
+-  similar control registers on other processors can be easily
+-  supported.
+-
+-
+-There are two interfaces to /proc/mtrr: one is an ASCII interface
+-which allows you to read and write. The other is an ioctl()
+-interface. The ASCII interface is meant for administration. The
+-ioctl() interface is meant for C programs (i.e. the X server). The
+-interfaces are described below, with sample commands and C code.
+-
+-===============================================================================
+-Reading MTRRs from the shell:
+-
+-% cat /proc/mtrr
+-reg00: base=0x00000000 (   0MB), size= 128MB: write-back, count=1
+-reg01: base=0x08000000 ( 128MB), size=  64MB: write-back, count=1
+-===============================================================================
+-Creating MTRRs from the C-shell:
+-# echo "base=0xf8000000 size=0x400000 type=write-combining" >! /proc/mtrr
+-or if you use bash:
+-# echo "base=0xf8000000 size=0x400000 type=write-combining" >| /proc/mtrr
+-
+-And the result thereof:
+-% cat /proc/mtrr
+-reg00: base=0x00000000 (   0MB), size= 128MB: write-back, count=1
+-reg01: base=0x08000000 ( 128MB), size=  64MB: write-back, count=1
+-reg02: base=0xf8000000 (3968MB), size=   4MB: write-combining, count=1
+-
+-This is for video RAM at base address 0xf8000000 and size 4 megabytes. To
+-find out your base address, you need to look at the output of your X
+-server, which tells you where the linear framebuffer address is. A
+-typical line that you may get is:
+-
+-(--) S3: PCI: 968 rev 0, Linear FB @ 0xf8000000
+-
+-Note that you should only use the value from the X server, as it may
+-move the framebuffer base address, so the only value you can trust is
+-that reported by the X server.
+-
+-To find out the size of your framebuffer (what, you don't actually
+-know?), the following line will tell you:
+-
+-(--) S3: videoram:  4096k
+-
+-That's 4 megabytes, which is 0x400000 bytes (in hexadecimal).
+-A patch is being written for XFree86 which will make this automatic:
+-in other words the X server will manipulate /proc/mtrr using the
+-ioctl() interface, so users won't have to do anything. If you use a
+-commercial X server, lobby your vendor to add support for MTRRs.
+-===============================================================================
+-Creating overlapping MTRRs:
+-
+-%echo "base=0xfb000000 size=0x1000000 type=write-combining" >/proc/mtrr
+-%echo "base=0xfb000000 size=0x1000 type=uncachable" >/proc/mtrr
+-
+-And the results: cat /proc/mtrr
+-reg00: base=0x00000000 (   0MB), size=  64MB: write-back, count=1
+-reg01: base=0xfb000000 (4016MB), size=  16MB: write-combining, count=1
+-reg02: base=0xfb000000 (4016MB), size=   4kB: uncachable, count=1
+-
+-Some cards (especially Voodoo Graphics boards) need this 4 kB area
+-excluded from the beginning of the region because it is used for
+-registers.
+-
+-NOTE: You can only create type=uncachable region, if the first
+-region that you created is type=write-combining.
+-===============================================================================
+-Removing MTRRs from the C-shell:
+-% echo "disable=2" >! /proc/mtrr
+-or using bash:
+-% echo "disable=2" >| /proc/mtrr
+-===============================================================================
+-Reading MTRRs from a C program using ioctl()'s:
+-
+-/*  mtrr-show.c
+-
+-    Source file for mtrr-show (example program to show MTRRs using ioctl()'s)
+-
+-    Copyright (C) 1997-1998  Richard Gooch
+-
+-    This program is free software; you can redistribute it and/or modify
+-    it under the terms of the GNU General Public License as published by
+-    the Free Software Foundation; either version 2 of the License, or
+-    (at your option) any later version.
+-
+-    This program is distributed in the hope that it will be useful,
+-    but WITHOUT ANY WARRANTY; without even the implied warranty of
+-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-    GNU General Public License for more details.
+-
+-    You should have received a copy of the GNU General Public License
+-    along with this program; if not, write to the Free Software
+-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+-
+-    Richard Gooch may be reached by email at  rgooch@atnf.csiro.au
+-    The postal address is:
+-      Richard Gooch, c/o ATNF, P. O. Box 76, Epping, N.S.W., 2121, Australia.
+-*/
+-
+-/*
+-    This program will use an ioctl() on /proc/mtrr to show the current MTRR
+-    settings. This is an alternative to reading /proc/mtrr.
+-
+-
+-    Written by      Richard Gooch   17-DEC-1997
+-
+-    Last updated by Richard Gooch   2-MAY-1998
+-
+-
+-*/
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <string.h>
+-#include <sys/types.h>
+-#include <sys/stat.h>
+-#include <fcntl.h>
+-#include <sys/ioctl.h>
+-#include <errno.h>
+-#include <asm/mtrr.h>
+-
+-#define TRUE 1
+-#define FALSE 0
+-#define ERRSTRING strerror (errno)
+-
+-static char *mtrr_strings[MTRR_NUM_TYPES] =
+-{
+-    "uncachable",               /* 0 */
+-    "write-combining",          /* 1 */
+-    "?",                        /* 2 */
+-    "?",                        /* 3 */
+-    "write-through",            /* 4 */
+-    "write-protect",            /* 5 */
+-    "write-back",               /* 6 */
+-};
+-
+-int main ()
+-{
+-    int fd;
+-    struct mtrr_gentry gentry;
+-
+-    if ( ( fd = open ("/proc/mtrr", O_RDONLY, 0) ) == -1 )
+-    {
+-	if (errno == ENOENT)
+-	{
+-	    fputs ("/proc/mtrr not found: not supported or you don't have a PPro?\n",
+-		   stderr);
+-	    exit (1);
+-	}
+-	fprintf (stderr, "Error opening /proc/mtrr\t%s\n", ERRSTRING);
+-	exit (2);
+-    }
+-    for (gentry.regnum = 0; ioctl (fd, MTRRIOC_GET_ENTRY, &gentry) == 0;
+-	 ++gentry.regnum)
+-    {
+-	if (gentry.size < 1)
+-	{
+-	    fprintf (stderr, "Register: %u disabled\n", gentry.regnum);
+-	    continue;
+-	}
+-	fprintf (stderr, "Register: %u base: 0x%lx size: 0x%lx type: %s\n",
+-		 gentry.regnum, gentry.base, gentry.size,
+-		 mtrr_strings[gentry.type]);
+-    }
+-    if (errno == EINVAL) exit (0);
+-    fprintf (stderr, "Error doing ioctl(2) on /dev/mtrr\t%s\n", ERRSTRING);
+-    exit (3);
+-}   /*  End Function main  */
+-===============================================================================
+-Creating MTRRs from a C programme using ioctl()'s:
+-
+-/*  mtrr-add.c
+-
+-    Source file for mtrr-add (example programme to add an MTRRs using ioctl())
+-
+-    Copyright (C) 1997-1998  Richard Gooch
+-
+-    This program is free software; you can redistribute it and/or modify
+-    it under the terms of the GNU General Public License as published by
+-    the Free Software Foundation; either version 2 of the License, or
+-    (at your option) any later version.
+-
+-    This program is distributed in the hope that it will be useful,
+-    but WITHOUT ANY WARRANTY; without even the implied warranty of
+-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-    GNU General Public License for more details.
+-
+-    You should have received a copy of the GNU General Public License
+-    along with this program; if not, write to the Free Software
+-    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+-
+-    Richard Gooch may be reached by email at  rgooch@atnf.csiro.au
+-    The postal address is:
+-      Richard Gooch, c/o ATNF, P. O. Box 76, Epping, N.S.W., 2121, Australia.
+-*/
+-
+-/*
+-    This programme will use an ioctl() on /proc/mtrr to add an entry. The first
+-    available mtrr is used. This is an alternative to writing /proc/mtrr.
+-
+-
+-    Written by      Richard Gooch   17-DEC-1997
+-
+-    Last updated by Richard Gooch   2-MAY-1998
+-
+-
+-*/
+-#include <stdio.h>
+-#include <string.h>
+-#include <stdlib.h>
+-#include <unistd.h>
+-#include <sys/types.h>
+-#include <sys/stat.h>
+-#include <fcntl.h>
+-#include <sys/ioctl.h>
+-#include <errno.h>
+-#include <asm/mtrr.h>
+-
+-#define TRUE 1
+-#define FALSE 0
+-#define ERRSTRING strerror (errno)
+-
+-static char *mtrr_strings[MTRR_NUM_TYPES] =
+-{
+-    "uncachable",               /* 0 */
+-    "write-combining",          /* 1 */
+-    "?",                        /* 2 */
+-    "?",                        /* 3 */
+-    "write-through",            /* 4 */
+-    "write-protect",            /* 5 */
+-    "write-back",               /* 6 */
+-};
+-
+-int main (int argc, char **argv)
+-{
+-    int fd;
+-    struct mtrr_sentry sentry;
+-
+-    if (argc != 4)
+-    {
+-	fprintf (stderr, "Usage:\tmtrr-add base size type\n");
+-	exit (1);
+-    }
+-    sentry.base = strtoul (argv[1], NULL, 0);
+-    sentry.size = strtoul (argv[2], NULL, 0);
+-    for (sentry.type = 0; sentry.type < MTRR_NUM_TYPES; ++sentry.type)
+-    {
+-	if (strcmp (argv[3], mtrr_strings[sentry.type]) == 0) break;
+-    }
+-    if (sentry.type >= MTRR_NUM_TYPES)
+-    {
+-	fprintf (stderr, "Illegal type: \"%s\"\n", argv[3]);
+-	exit (2);
+-    }
+-    if ( ( fd = open ("/proc/mtrr", O_WRONLY, 0) ) == -1 )
+-    {
+-	if (errno == ENOENT)
+-	{
+-	    fputs ("/proc/mtrr not found: not supported or you don't have a PPro?\n",
+-		   stderr);
+-	    exit (3);
+-	}
+-	fprintf (stderr, "Error opening /proc/mtrr\t%s\n", ERRSTRING);
+-	exit (4);
+-    }
+-    if (ioctl (fd, MTRRIOC_ADD_ENTRY, &sentry) == -1)
+-    {
+-	fprintf (stderr, "Error doing ioctl(2) on /dev/mtrr\t%s\n", ERRSTRING);
+-	exit (5);
+-    }
+-    fprintf (stderr, "Sleeping for 5 seconds so you can see the new entry\n");
+-    sleep (5);
+-    close (fd);
+-    fputs ("I've just closed /proc/mtrr so now the new entry should be gone\n",
+-	   stderr);
+-}   /*  End Function main  */
+-===============================================================================
 -- 
 2.20.1
 
