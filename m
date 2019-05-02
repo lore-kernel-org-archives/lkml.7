@@ -2,249 +2,232 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC65FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FD5C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B0F208C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F642085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rAdPy5Uw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nA/Hb8t6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfEBOJg (ORCPT
+        id S1726455AbfEBOKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:09:36 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51031 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726399AbfEBOJd (ORCPT
+        Thu, 2 May 2019 10:10:11 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:39203 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBOKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:09:33 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42E6GFQ024265;
-        Thu, 2 May 2019 16:08:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=B2mjvFp5tZAreydQuG21Xnr2OG+nuKN2OB+0hiwhvgw=;
- b=rAdPy5UwUrmDtWn9MfR35H0Q0EXfhwc0y2DbMd1Mo4UdowuuKIMcvkzh6zJ9jpA32KuV
- zSzq1BZt50UZwELV1jP5j+g/uFZVLdEnSw1krUFjaj5dows2NwBWYvr+H0lLGY0PmIs5
- k9e5Vyvy3zSpxfBl7oWxxurUcOSS0FQ0/xTq3N0K7PHTqw2BdkKntKLW/AqfUYl713t+
- YKxOVF9WLzTekqT3/jLmU4nOFXH/3XrAjHhqfCodhR6o7UnUvayy8ExlcMoKql+TfC94
- KxmxLR1+tFtAqytAcWu0N1519LBJADusLXVoujlGk7iYqPMpNoD1tNS+DSFB4s+QVtA9 +A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2s6xgrrq00-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 02 May 2019 16:08:53 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 20A3441;
-        Thu,  2 May 2019 14:08:52 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CEBEC2730;
-        Thu,  2 May 2019 14:08:51 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 2 May 2019
- 16:08:51 +0200
-Received: from lmecxl0923.lme.st.com (10.48.0.237) by webmail-ga.st.com
- (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 2 May 2019
- 16:08:51 +0200
-From:   Ludovic Barre <ludovic.Barre@st.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V2 3/3] watchdog: stm32: add dynamic prescaler support
-Date:   Thu, 2 May 2019 16:08:46 +0200
-Message-ID: <1556806126-15890-4-git-send-email-ludovic.Barre@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
-References: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
+        Thu, 2 May 2019 10:10:11 -0400
+Received: by mail-it1-f194.google.com with SMTP id t200so3598169itf.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 07:10:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CzTxP9dt0cEMXB8ZLT3bRjyPydmwtmQUnqm59Ipu0B4=;
+        b=nA/Hb8t6zTovVxuEPyklmYdY8j53hus6O8CQ38Q+5dhleYhDtgeBymV3sa5M28ICVj
+         fmDBLtsYtXmcjdf15PVFxtxzM34IkSVqF6HIKVOprxxBedZVp27TlplVqtHXU89wTogK
+         rcnj0busIRJz6arYPdZEmsIOGqsZkGz0RGaXdZaluJ7r06VdYT8J0+VZp3aWX9FrAfPo
+         wQ3aEVOIwN7t8aE2iOiScg0Jk7a3U2TNAKcUWVFJf49P1Bd40J6pqnngAqr3UUTGFDu1
+         qwdRsSADf2nQauOacVpLiKe7n/2kL0lFSsmwptI0Ltwa0aYQBOJtGhTsl7iLgzmkl/PR
+         Cayw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CzTxP9dt0cEMXB8ZLT3bRjyPydmwtmQUnqm59Ipu0B4=;
+        b=fDgnnJH28AlORI3jA21QBi03xLHnSk3M/YMbWiF/bcq4ya1sN9576aB5AfdW3A887l
+         G00EhUhZAWC+e+95F+Q9gerh9OR5ErU06l5D0C8CeEtwHehYkugB+eSfLqJR+AjZOhb3
+         xxmMkzVb3DT/xXsy22Wtig7fST2MAIkxM5dhMoP4hV/i90HWQD3l1RcX5Lv7vKMsEifI
+         HhE3RmXBBVxZke3YxTH6DQYG6NZ1/jGSz1yanD7D8BBDXdIdu3+qdzJMBsEtDPAAwxZp
+         vOhtc6vj199F0GW9Nz4hEJ74V4VMRdQ9HUgLv1MM6oUSibodquGirq+DMVskU/X+OIyR
+         Sjjg==
+X-Gm-Message-State: APjAAAVSSMQbRdudFcwcXokdDaDj9pyjg+VRQMUad+xsabFe+aXHYXHQ
+        c9SXSZvlKQVJlnUqQP3TZLQi5+9LbPyaBfj+kIc=
+X-Google-Smtp-Source: APXvYqyQnBVy3tEgs5ZeUQB4BK48k9tZQKIHeXjzwFyc6B01aQ5kAp66xuotttqQt1dOlzXHQwgs9f3oiw+VqcpCsVE=
+X-Received: by 2002:a24:1104:: with SMTP id 4mr2237306itf.10.1556806210165;
+ Thu, 02 May 2019 07:10:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.237]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_08:,,
- signatures=0
+References: <1556733121-20133-1-git-send-email-kdasu.kdev@gmail.com> <20190502102504.32b45247@xps13>
+In-Reply-To: <20190502102504.32b45247@xps13>
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+Date:   Thu, 2 May 2019 10:09:59 -0400
+Message-ID: <CAC=U0a2O8V9O8b-dZhn7DRptP3fg1BBCbxhxKXVcsWHykQovaA@mail.gmail.com>
+Subject: Re: [PATCH] mtd: nand: raw: brcmnand: When oops in progress use pio
+ and interrupt polling
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     MTD Maling List <linux-mtd@lists.infradead.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+On Thu, May 2, 2019 at 4:25 AM Miquel Raynal <miquel.raynal@bootlin.com> wr=
+ote:
+>
+> Hi Kamal,
+>
+> Kamal Dasu <kdasu.kdev@gmail.com> wrote on Wed,  1 May 2019 13:46:15
+> -0400:
+>
+> > If mtd_oops is in progress switch to polling for nand command completio=
+n
+>
+> s/nand/NAND/
 
-This patch allows to define the max prescaler by compatible.
-To set a large range of timeout, the prescaler should be set
-dynamically (from the timeout request) to improve the resolution
-in order to have a timeout close to the expected value.
+Will change this.
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/watchdog/stm32_iwdg.c | 76 ++++++++++++++++++++++++-------------------
- 1 file changed, 42 insertions(+), 34 deletions(-)
+>
+> > interrupts and use PIO mode wihtout DMA so that the mtd_oops buffer can
+> > be completely written in the assinged nand partition.
+>
+> What about:
+>
+> "If mtd_oops is in progress, switch to polling during NAND command
+> completion instead of relying on DMA/interrupts so that the mtd_oops
+> buffer can be completely written in the assigned NAND partition."
+>
 
-diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-index f19a6d4..0c765d4 100644
---- a/drivers/watchdog/stm32_iwdg.c
-+++ b/drivers/watchdog/stm32_iwdg.c
-@@ -34,18 +34,12 @@
- #define KR_KEY_EWA	0x5555 /* write access enable */
- #define KR_KEY_DWA	0x0000 /* write access disable */
- 
--/* IWDG_PR register bit values */
--#define PR_4		0x00 /* prescaler set to 4 */
--#define PR_8		0x01 /* prescaler set to 8 */
--#define PR_16		0x02 /* prescaler set to 16 */
--#define PR_32		0x03 /* prescaler set to 32 */
--#define PR_64		0x04 /* prescaler set to 64 */
--#define PR_128		0x05 /* prescaler set to 128 */
--#define PR_256		0x06 /* prescaler set to 256 */
-+#define PR_SHIFT	2
-+#define PR_MIN		BIT(PR_SHIFT)
- 
- /* IWDG_RLR register values */
--#define RLR_MIN		0x07C /* min value supported by reload register */
--#define RLR_MAX		0xFFF /* max value supported by reload register */
-+#define RLR_MIN		0x2		/* min value recommended */
-+#define RLR_MAX		GENMASK(11, 0)	/* max value of reload register */
- 
- /* IWDG_SR register bit mask */
- #define FLAG_PVU	BIT(0) /* Watchdog prescaler value update */
-@@ -55,15 +49,28 @@
- #define TIMEOUT_US	100000
- #define SLEEP_US	1000
- 
--#define HAS_PCLK	true
-+struct stm32_iwdg_data {
-+	bool has_pclk;
-+	u32 max_prescaler;
-+};
-+
-+static const struct stm32_iwdg_data stm32_iwdg_data = {
-+	.has_pclk = false,
-+	.max_prescaler = 256,
-+};
-+
-+static const struct stm32_iwdg_data stm32mp1_iwdg_data = {
-+	.has_pclk = true,
-+	.max_prescaler = 1024,
-+};
- 
- struct stm32_iwdg {
- 	struct watchdog_device	wdd;
-+	const struct stm32_iwdg_data *data;
- 	void __iomem		*regs;
- 	struct clk		*clk_lsi;
- 	struct clk		*clk_pclk;
- 	unsigned int		rate;
--	bool			has_pclk;
- };
- 
- static inline u32 reg_read(void __iomem *base, u32 reg)
-@@ -79,26 +86,28 @@ static inline void reg_write(void __iomem *base, u32 reg, u32 val)
- static int stm32_iwdg_start(struct watchdog_device *wdd)
- {
- 	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
--	u32 val = FLAG_PVU | FLAG_RVU;
--	u32 reload;
-+	u32 presc, iwdg_rlr, iwdg_pr, iwdg_sr;
- 
- 	dev_dbg(wdd->parent, "%s\n", __func__);
- 
--	/* prescaler fixed to 256 */
--	reload = clamp_t(unsigned int, ((wdd->timeout * wdt->rate) / 256) - 1,
--			 RLR_MIN, RLR_MAX);
-+	presc = DIV_ROUND_UP(wdd->timeout * wdt->rate, RLR_MAX + 1);
-+
-+	/* The prescaler is align on power of 2 and start at 2 ^ PR_SHIFT. */
-+	presc = roundup_pow_of_two(presc);
-+	iwdg_pr = presc <= 1 << PR_SHIFT ? 0 : ilog2(presc) - PR_SHIFT;
-+	iwdg_rlr = ((wdd->timeout * wdt->rate) / presc) - 1;
- 
-+	/* enable watchdog */
-+	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
- 	/* enable write access */
- 	reg_write(wdt->regs, IWDG_KR, KR_KEY_EWA);
--
- 	/* set prescaler & reload registers */
--	reg_write(wdt->regs, IWDG_PR, PR_256); /* prescaler fix to 256 */
--	reg_write(wdt->regs, IWDG_RLR, reload);
--	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
-+	reg_write(wdt->regs, IWDG_PR, iwdg_pr);
-+	reg_write(wdt->regs, IWDG_RLR, iwdg_rlr);
- 
- 	/* wait for the registers to be updated (max 100ms) */
--	if (readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, val,
--				       !(val & (FLAG_PVU | FLAG_RVU)),
-+	if (readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, iwdg_sr,
-+				       !(iwdg_sr & (FLAG_PVU | FLAG_RVU)),
- 				       SLEEP_US, TIMEOUT_US)) {
- 		dev_err(wdd->parent, "Fail to set prescaler, reload regs\n");
- 		return -EIO;
-@@ -155,7 +164,7 @@ static int stm32_iwdg_clk_init(struct platform_device *pdev,
- 	}
- 
- 	/* optional peripheral clock */
--	if (wdt->has_pclk) {
-+	if (wdt->data->has_pclk) {
- 		wdt->clk_pclk = devm_clk_get(&pdev->dev, "pclk");
- 		if (IS_ERR(wdt->clk_pclk)) {
- 			dev_err(&pdev->dev, "Unable to get pclk clock\n");
-@@ -196,8 +205,8 @@ static const struct watchdog_ops stm32_iwdg_ops = {
- };
- 
- static const struct of_device_id stm32_iwdg_of_match[] = {
--	{ .compatible = "st,stm32-iwdg", .data = (void *)!HAS_PCLK },
--	{ .compatible = "st,stm32mp1-iwdg", .data = (void *)HAS_PCLK },
-+	{ .compatible = "st,stm32-iwdg", .data = &stm32_iwdg_data },
-+	{ .compatible = "st,stm32mp1-iwdg", .data = &stm32mp1_iwdg_data },
- 	{ /* end node */ }
- };
- MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
-@@ -205,20 +214,17 @@ MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
- static int stm32_iwdg_probe(struct platform_device *pdev)
- {
- 	struct watchdog_device *wdd;
--	const struct of_device_id *match;
- 	struct stm32_iwdg *wdt;
- 	struct resource *res;
- 	int ret;
- 
--	match = of_match_device(stm32_iwdg_of_match, &pdev->dev);
--	if (!match)
--		return -ENODEV;
--
- 	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
- 	if (!wdt)
- 		return -ENOMEM;
- 
--	wdt->has_pclk = match->data;
-+	wdt->data = of_device_get_match_data(&pdev->dev);
-+	if (!wdt->data)
-+		return -ENODEV;
- 
- 	/* This is the timer base. */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -236,8 +242,10 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
- 	wdd = &wdt->wdd;
- 	wdd->info = &stm32_iwdg_info;
- 	wdd->ops = &stm32_iwdg_ops;
--	wdd->min_timeout = ((RLR_MIN + 1) * 256) / wdt->rate;
--	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * 256 * 1000) / wdt->rate;
-+	wdd->min_timeout = max_t(unsigned int, 1,
-+				 (((RLR_MIN + 1) * PR_MIN) / wdt->rate));
-+	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * wdt->data->max_prescaler *
-+				    1000) / wdt->rate;
- 	wdd->parent = &pdev->dev;
- 
- 	watchdog_set_drvdata(wdd, wdt);
--- 
-2.7.4
+Will make this change as well
 
+> > This is needed in
+> > cases where the panic does not happen on cpu0 and there is only one onl=
+ine
+> > CPU and the panic is not on cpu0.
+>
+> "This is needed in case the panic does not happen on CPU0 and there is
+> only one online CPU."
+>
+> I am not sure to understand the problem or how this can happen (and
+> be a problem). Have you met such issue already or is this purely
+> speculative?
+
+We have seen this issue and tested it on multi core SoCs.
+
+>
+> >
+> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+> > ---
+> >  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 55 ++++++++++++++++++++++++=
+++++++--
+> >  1 file changed, 52 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nan=
+d/raw/brcmnand/brcmnand.c
+> > index 482c6f0..cfbe51a 100644
+> > --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> > @@ -823,6 +823,12 @@ static inline bool has_flash_dma(struct brcmnand_c=
+ontroller *ctrl)
+> >       return ctrl->flash_dma_base;
+> >  }
+> >
+> > +static inline void disable_flash_dma_xfer(struct brcmnand_controller *=
+ctrl)
+> > +{
+> > +     if (has_flash_dma(ctrl))
+> > +             ctrl->flash_dma_base =3D 0;
+> > +}
+> > +
+> >  static inline bool flash_dma_buf_ok(const void *buf)
+> >  {
+> >       return buf && !is_vmalloc_addr(buf) &&
+> > @@ -1237,15 +1243,58 @@ static void brcmnand_cmd_ctrl(struct nand_chip =
+*chip, int dat,
+> >       /* intentionally left blank */
+> >  }
+> >
+> > +static bool is_mtd_oops_in_progress(void)
+> > +{
+> > +     int i =3D 0;
+> > +
+> > +#ifdef CONFIG_MTD_OOPS
+> > +     if (oops_in_progress && smp_processor_id()) {
+> > +             int cpu =3D 0;
+> > +
+> > +             for_each_online_cpu(cpu)
+> > +                     ++i;
+> > +     }
+> > +#endif
+> > +     return i =3D=3D 1 ? true : false;
+>
+> I suppose return (i =3D=3D 1); is enough
+>
+
+Ok will make the change.
+
+> > +}
+> > +
+> > +static bool brcmstb_nand_wait_for_completion(struct nand_chip *chip)
+> > +{
+> > +     struct brcmnand_host *host =3D nand_get_controller_data(chip);
+> > +     struct brcmnand_controller *ctrl =3D host->ctrl;
+> > +     bool err =3D false;
+> > +     int sts;
+> > +
+> > +     if (is_mtd_oops_in_progress()) {
+> > +             /* Switch to interrupt polling and PIO mode */
+> > +             disable_flash_dma_xfer(ctrl);
+> > +             sts =3D bcmnand_ctrl_poll_status(ctrl, NAND_CTRL_RDY |
+> > +                                            NAND_STATUS_READY,
+> > +                                            NAND_CTRL_RDY |
+> > +                                            NAND_STATUS_READY, 0);
+> > +             err =3D (sts < 0) ? true : false;
+> > +     } else {
+> > +             unsigned long timeo =3D msecs_to_jiffies(
+> > +                                             NAND_POLL_STATUS_TIMEOUT_=
+MS);
+> > +             /* wait for completion interrupt */
+> > +             sts =3D wait_for_completion_timeout(&ctrl->done, timeo);
+> > +             err =3D (sts <=3D 0) ? true : false;
+> > +     }
+> > +
+> > +     return err;
+> > +}
+> > +
+> >  static int brcmnand_waitfunc(struct nand_chip *chip)
+> >  {
+> >       struct brcmnand_host *host =3D nand_get_controller_data(chip);
+> >       struct brcmnand_controller *ctrl =3D host->ctrl;
+> > -     unsigned long timeo =3D msecs_to_jiffies(100);
+> > +     bool err =3D false;
+> >
+> >       dev_dbg(ctrl->dev, "wait on native cmd %d\n", ctrl->cmd_pending);
+> > -     if (ctrl->cmd_pending &&
+> > -                     wait_for_completion_timeout(&ctrl->done, timeo) <=
+=3D 0) {
+>
+> What about the wait_for_completion_timeout() call in brcmnand_write()?
+>
+
+brcmnand_write() too calls brcmnand_waitfunc(), will poll if it needs
+to for completion.
+
+> > +     if (ctrl->cmd_pending)
+> > +             err =3D brcmstb_nand_wait_for_completion(chip);
+> > +
+> > +     if (err) {
+> >               u32 cmd =3D brcmnand_read_reg(ctrl, BRCMNAND_CMD_START)
+> >                                       >> brcmnand_cmd_shift(ctrl);
+> >
+>
+>
+> Thanks,
+> Miqu=C3=A8l
+
+Thanks
+Kamal
