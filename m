@@ -2,110 +2,185 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43758C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE0DC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1203A20C01
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:48:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="SFbei6R/"
+	by mail.kernel.org (Postfix) with ESMTP id C8B3B20C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:51:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556815870;
+	bh=j/F8Err226AP96vXweFKgqE+muADxZNr6D1JUPjWuMo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=We6xT1S56j3qIumGIJQoLvKH417oqQokNMACHId8q1PWL89z4ti4faYVyiHk1LPl0
+	 XJUARlH5dG6x7qQwI0MfcwRS6C22/edE2wTqrweDqNCB3pS5dGAltFS/BC6JKPBZBk
+	 jYtZLWz5su92X5jrsZG5WvKuZEPU/rZslOBhYQco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfEBQsF (ORCPT
+        id S1726468AbfEBQvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:48:05 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34864 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfEBQsF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:48:05 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p26so2737702edr.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 09:48:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rcAYlClV3WYMLJTodjrLc+GMcN8cBX8qnEYUrl9knag=;
-        b=SFbei6R/fTHbrGWi+/N+oWim6SS5KPKvxv1TfgMvbJ1pIR8OajbduDS3nFo+mTzicg
-         XVys/It0mRnuhAz4kjM8EiZPi2qESa1Ad7BuVtZXc1AhD6SYmi1WTfMnCEAxTNkaT811
-         wtR9FZXA8gRcO+e/pbRwpO9NwRgtNQkNQixypgNzB90FxwHw7uDXDkb5kVruMBFHCmWK
-         aDFBzlffvUNDnS4Q6tEIHtK+tlNPSguzMFFvyNwltQHrvgbB4cHlbIie4LsGFzTGdkuJ
-         7Yg0FEJD9BqWiLWh/W+DXQN7jVHxZsopXpdlsd205vwlCjzC9uuOvIUXoBsgyR88IvAg
-         zT4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rcAYlClV3WYMLJTodjrLc+GMcN8cBX8qnEYUrl9knag=;
-        b=qdB+ueB+etR+mH5kca/lBXHklnl612oHdqUPE+9MauTM0JF2TQRScgluq6Ufdx60+c
-         k6VnuYmzUrE2pvwI24ReWOBqgRrFfJTd9qzd4cNxwb5YMQPFgZecdq4hqDLj3e7P4Ubx
-         ZiW4OxraS5guTe4dvXJfD0oeD3NcsBu5bEW15AE2konYfnHA5JOMyZ3YO4Me84L7Vv77
-         roG8tByI3nt9mMApNCjHL8y1uETJqi9Fc/jazYhYp10TqSPyw/mHn6JMeKOPtBxHQsxW
-         oBDQ6ePXRBIT3oI1esxmfiDUBArVBaapWLGYK492Kb4aVl7zhQs6TQq8XqqZVOrHngL+
-         Odpg==
-X-Gm-Message-State: APjAAAWHja5sUpdCgKRQtqF9ojWlXp+u83d+KxR/8iYp0Ios5edvvWOb
-        NHVge3MRdbj2l6R4FpRntD0MaTsXjoWfP0Nrq3zGXQ==
-X-Google-Smtp-Source: APXvYqzbaWRuAebout5s4Iqp5ku1hhP9/l4QkLIfxTg/R4+sKpNKvDwBBtR0sOzGL8kxvPpg3HdXxRKpBddZWv64kk8=
-X-Received: by 2002:a17:906:3154:: with SMTP id e20mr2340820eje.263.1556815683667;
- Thu, 02 May 2019 09:48:03 -0700 (PDT)
+        Thu, 2 May 2019 12:51:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726121AbfEBQvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 12:51:09 -0400
+Received: from mail-yw1-f52.google.com (mail-yw1-f52.google.com [209.85.161.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C98932177B;
+        Thu,  2 May 2019 16:51:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556815867;
+        bh=j/F8Err226AP96vXweFKgqE+muADxZNr6D1JUPjWuMo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=D+buKVZ/P+c/5dK5QJ0Uf4jsZV3M1JyWnPYzYabnXXKA+lV7cVhOq5uuDNoErLxGh
+         DYYwlBoeWa5RbbYSJq+S7JuHtkTU+Q59GytDOoxS/dIEtEWlmk6nGKFOFypERbq+qJ
+         yBVp20iDZIb64E7XUC4PEEiNXvqSuba9eaYQkgJc=
+Received: by mail-yw1-f52.google.com with SMTP id t79so2077984ywc.7;
+        Thu, 02 May 2019 09:51:07 -0700 (PDT)
+X-Gm-Message-State: APjAAAUX++UMEdBrS5SJl1AinvpDQGXPR1j99cmRAruk7uFQOIts6K3h
+        Qwsng0+c7go8za8VAnxmNylGE66NN4yK+IO7ZA==
+X-Google-Smtp-Source: APXvYqxD9LcjXVbe2ii7BTnARq19nBFtVGc/blWrzvG4y4x6vf5IRzZXMon1pIFvBdx0Wj5at9/tiBhSlHx/nyRzhX0=
+X-Received: by 2002:a25:3850:: with SMTP id f77mr3852123yba.93.1556815866946;
+ Thu, 02 May 2019 09:51:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190501191846.12634-1-pasha.tatashin@soleen.com>
- <20190501191846.12634-3-pasha.tatashin@soleen.com> <CAPcyv4iPzpP-gzuDtPB2ixd6_uTuO8-YdVSfGw_Dq=igaKuOEg@mail.gmail.com>
-In-Reply-To: <CAPcyv4iPzpP-gzuDtPB2ixd6_uTuO8-YdVSfGw_Dq=igaKuOEg@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 2 May 2019 12:47:52 -0400
-Message-ID: <CA+CK2bB3G_tO04M1eXPdm4b=OojD6QpYkW51YArj6z44RhQo+g@mail.gmail.com>
-Subject: Re: [v4 2/2] device-dax: "Hotremove" persistent memory that is used
- like normal RAM
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        David Hildenbrand <david@redhat.com>
+References: <20190430121254.3737-1-geert+renesas@glider.be>
+ <20190430121254.3737-2-geert+renesas@glider.be> <CAL_Jsq+KwOLqd=ZqT-bdM5mp8jfPHu=XingBb6kBsUqHvO=m+g@mail.gmail.com>
+ <29e95406-b9fb-fbb6-9240-c3914d885e88@arm.com> <CAL_Jsq+FJDdka9BMcXvGveBHiUf=YUU=3gz3e2wxjtXZ+K+NEA@mail.gmail.com>
+ <CAMuHMdWgrcfABOVZti+BYn6ujcYjUHNL7oeyJLgaxB8uPp5hwg@mail.gmail.com>
+ <CAL_JsqKq0KP9H4DumyxJTjD=7rqwgOM=+5jHhkUxQqamrA3h7g@mail.gmail.com> <CAMuHMdVWG4LDAAht-6Rendt8L96vW+VEJK4tGnOCMJ38pRDybA@mail.gmail.com>
+In-Reply-To: <CAMuHMdVWG4LDAAht-6Rendt8L96vW+VEJK4tGnOCMJ38pRDybA@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 2 May 2019 11:50:53 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ34-0T_XjmRaXc3YTp4OHhptUaO3F+yygAy6L0iaNhdg@mail.gmail.com>
+Message-ID: <CAL_JsqJ34-0T_XjmRaXc3YTp4OHhptUaO3F+yygAy6L0iaNhdg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Currently the kmem driver can be built as a module, and I don't see a
-> need to drop that flexibility. What about wrapping these core
-> routines:
+On Thu, May 2, 2019 at 5:01 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
->     unlock_device_hotplug
->     __remove_memory
->     walk_memory_range
->     lock_device_hotplug
+> Hi Rob,
 >
-> ...into a common exported (gpl) helper like:
+> On Wed, May 1, 2019 at 9:38 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > On Wed, May 1, 2019 at 2:16 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Tue, Apr 30, 2019 at 10:26 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > > > On Tue, Apr 30, 2019 at 10:34 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
+> > > > > On 30/04/2019 16:02, Rob Herring wrote:
+> > > > > > On Tue, Apr 30, 2019 at 7:13 AM Geert Uytterhoeven
+> > > > > > <geert+renesas@glider.be> wrote:
+> > > > > >>
+> > > > > >> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+> > > > > >>
+> > > > > >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > > >> ---
+> > > > > >> v2:
+> > > > > >>   - Add "renesas,gic-spi-base",
+> > > > > >>   - Document RZ/A2M.
+> > > > > >> ---
+> > > > > >>  .../renesas,rza1-irqc.txt                     | 30 +++++++++++++++++++
+> > > > > >>  1 file changed, 30 insertions(+)
+> > > > > >>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > > > > >>
+> > > > > >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > > > > >> new file mode 100644
+> > > > > >> index 0000000000000000..ea8ddb6955338ccd
+> > > > > >> --- /dev/null
+> > > > > >> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> > > > > >> @@ -0,0 +1,30 @@
+> > > > > >> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+> > > > > >> +
+> > > > > >> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+> > > > > >> +RZ/A1 and RZ/A2 SoCs:
+> > > > > >> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+> > > > > >> +    interrupts,
+> > > > > >> +  - NMI edge select.
+> > > > > >> +
+> > > > > >> +Required properties:
+> > > > > >> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+> > > > > >> +               fallback.
+> > > > > >> +               Examples with soctypes are:
+> > > > > >> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+> > > > > >> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+> > > > > >> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+> > > > > >> +                                in interrupts.txt in this directory)
+> > > > > >> +  - interrupt-controller: Marks the device as an interrupt controller
+> > > > > >> +  - reg: Base address and length of the memory resource used by the interrupt
+> > > > > >> +         controller
+> > > > > >> +  - renesas,gic-spi-base: Lowest GIC SPI interrupt number this block maps to.
+> > > > > >
+> > > > > > Why isn't this just an 'interrupts' property?
+> > > > >
+> > > > > That's likely because of kernel limitations. The DT code does an
+> > > > > of_populate() on any device that it finds, parse the "interrupts"
+> > > > > propertiy, resulting in the irq_descs being populated.
+> > > > >
+> > > > > That creates havoc, as these interrupts are not for this device, but for
+> > > > > something that is connected to it. This is merely a bridge of some sort.
+> > > >
+> > > > 'interrupt-map' would avoid that problem I think.
+> > >
+> > > "interrupt-map" seems to be meant for translation on a bus?
+> > > What to do with the child and parent unit addresses fields?
+> > > The parent unit address size depends on the #address-cells of the parent
+> > > interrupt-controller (i.e. GIC, so it's zero).
+> > > But the child unit address size depends on the #address-cells of the bus node
+> > > on which the child is located, so that's a (non-zero) bus #address-cells
+> > > (from the root node), not an interrupt-controller #address-cells.
+> >
+> > The #address-cells is always retrieved from the interrupt-parent node
+> > (or its parent). The interrupt-parent can implicitly be the child's
+> > parent, but that is rarely used in modern systems.
 >
->     int try_remove_memory(int nid, struct resource *res)
+> That's not what Devicetree Specification, Release v0.2 says:
 >
-> Because as far as I can see there's nothing device-dax specific about
-> this "try remove iff offline" functionality outside of looking up the
-> related 'struct resource'. The check_devdax_mem_offlined_cb callback
-> can be made generic if the callback argument is the resource pointer.
+>     child unit address The unit address of the child node being mapped.
+>     The number of 32-bit cells required to specify this is described by
+>     the #address-cells property of the bus node on which the child is
+>     located.
+>
+> 2.4.4 Interrupt Mapping Example (for PCI) says the bus node is the PCI
+> bridge, with #address-cells = <3>.
 
-Makes sense, I will do both things that you suggested.
+PCI is more inline with the spec wording, but systems evolved where
+the interrupt hierarchy doesn't match the bus hierarchy.
 
-Thank you,
-Pasha
+> But in the RZ/A1 case the child unit address is irrelevant, as its an
+> external interrupt input not related to a specific bus.  It could be
+> used by a device without unit address (e.g. gpio-keys), or some device
+> on an external local bus (root #adress-cells is <1> on 32-bit without
+> LPAE, but this block could be reused in a future LPAE or arm64 SoCs),
+> or on e.g. an SPI or i2c bus, with its own #adress-cells value
+> (coincidentally <1>, too).
+>
+> I see of_irq_parse_raw() does use the address-cells of the parent
+> interrupt controller (which is usually 0) when iterating its way up,
+> following interrupt-map.
+>
+> So the child unit address does have two different meanings?
+
+Indeed. That's why you'll see interrupt-controller nodes with the odd
+'#address-cells = <0>;' in them. It's often omitted because it only
+matters if there's an interrupt-map. We should clarify the spec.
+
+Rob
