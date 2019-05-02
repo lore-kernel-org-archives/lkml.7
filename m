@@ -2,62 +2,61 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614A1C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C58C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB68208C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 907F4208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556764815;
-	bh=iDPb6eyZpa8dZ+KVUQbDk4j9mCZaYH6i2846ggVYqT0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f6E0PU6612FfvqO34saj6Z1nxRS3DtmAkOhHMMMt6xtlpB6WynMxKW8+qplQvuzke
-	 ty4LRkgzpPJD51367KMD0ObKayD4RdTQ62u/o6RKbXzXZe+YKYUIRAE9oZV3Bi3ojA
-	 J5GrLKGXEcii8MW8UBJ5CZ4YF+afoZQdCjjGFqDk=
+	s=default; t=1556764820;
+	bh=HIyfY+2FkS0s1JzGAYWmc38EGa7ipE4vDneMoOUNJmE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=B5C82/ssOuZPEOsYdY9vIdHZ1tx32OW5yR798EktZiJZ0tFaDddyAw9dRtFs9Lpm1
+	 U7WpshtLQsL0HKoAcMfyVIVR3OvbH42gt0D9WUozpJoRe65FzmrSsvLyZFmQNfpECn
+	 JA/83Yoa1JCDeRVvvYZ7gpdeuBrxi+lKcNSA4u68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfEBCkO (ORCPT
+        id S1726524AbfEBCkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:40:14 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:35033 "EHLO
+        Wed, 1 May 2019 22:40:19 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:47459 "EHLO
         wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726403AbfEBCkA (ORCPT
+        by vger.kernel.org with ESMTP id S1726386AbfEBCj7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:40:00 -0400
+        Wed, 1 May 2019 22:39:59 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 4C288602;
-        Wed,  1 May 2019 22:32:39 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id 2948A658;
+        Wed,  1 May 2019 22:32:32 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 01 May 2019 22:32:39 -0400
+  by compute3.internal (MEProxy); Wed, 01 May 2019 22:32:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=T9nKSChfea+oLMY5Kpw3eMK6igS+zn5o65ZT0pR8nNs=; b=3IsP2xoj
-        pcneIPGwZYM2nu7GBCgzNfeZJQxD7gTFVLqWqbNYdsFy5lGAt0j+Yftmhm37wCtO
-        olS+we/4bFLZUXU/03houOPuS2myw5US81M5yBTV5MkgOQ0CNErciyJedNXK+ni0
-        u2cOvKWfvXO7ED6Eqken56FRXurUl8wDT+7aVx6yzQCH+jRUrn6qcnyQ3W1Tv64j
-        dCpWKG9W52JWaGvxm4wkR3P8eoZGKTbN0xGex/Khq1snMeQrX7KqJM2bvITDuibX
-        NOyyh2zl+LXM8xy8wu5JQjX7kts1qM4tnO1Pn90b1gciQgUlfomdMCmFyk/SbJtT
-        v13oTN1Lln+vdg==
-X-ME-Sender: <xms:xlbKXJR6uF5rUak898Rvo-aujCJFAwDXwwnrMvYqvByX74fFonjccA>
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=g7oDYn0FII0T/Yixf
+        mxwmi9xKUU1gQhrv1XNZ2l/Aog=; b=1AlxjvtWqz6uPLhuiKS/7HT1o57XrVoP9
+        jBiYitao8Glgghf9QiX9Qlmqfa3BP99WSImI08GgertYCmAA4ZSa5opbhkepI8z/
+        kC7K2bPocryh5UANj4Tv0S/eE14SNAdmWksd6FXXdgjjaJrDVtZvkZRoU71EKoc8
+        FfMCbhfZyQLHaLPp3bI6epvNBcFaI75v0yDfn6EC4a5Mqyk6VZ9Pp+9aH6fVI0Zq
+        4rXg1tnryb/V+Obk2B0ni17Wcvkuw4eNPmKXw/P6xXXPEwRP0HNrq7HT51duw/do
+        JdL+9S99Lrlf0yDxXATcnUVpAcMo//Wfm3Q+o2IJigl34GenhWhXA==
+X-ME-Sender: <xms:vlbKXLv_p91ClTqjEGTIKVr6EQoj7FVdXQAsVQcfTdT5sYb14T4AgQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrieekgdehtdcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
-    epuddvuddrgeegrddvtdegrddvfeehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedu
-X-ME-Proxy: <xmx:xlbKXOJbCgjvxAtCN-K2iKlFjLMA69TN5wIvvL_7v8xFA4jJZklNVA>
-    <xmx:xlbKXMkttnrWxbhNZ_4RtFeGNM0NXWwYxKot8IVCWAjJBzG_Ut2oig>
-    <xmx:xlbKXHhLLz4GQR0rve3FRnIrbHKLVpaOSVKou9Vi7t6-5sX0_JU2qw>
-    <xmx:xlbKXGNLj8t60Gv9s9HQXHrVbwC8_eJNsmaaGcyNyv47noDZ1JAr4w>
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
+    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkphepud
+    dvuddrgeegrddvtdegrddvfeehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhn
+    sehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:vlbKXE198qRD5-2msi22zIZW5nYYRYNC-OXDGcbOO3LsFSZe6SL82Q>
+    <xmx:vlbKXA_gkou5Ygtm0DLL1Y_Tr1lC4uxE88ijqkifuHRkrrBiugwMog>
+    <xmx:vlbKXCASCeRWEmyEodxZpdQbGyq8iAgOhRn81KpBkUKD8eVR2Dexiw>
+    <xmx:v1bKXLSmw6-fThuLQ4stDG0aBAx51mOFURnzGOSqlQdLRp2fHecdWw>
 Received: from eros.localdomain (ppp121-44-204-235.bras1.syd2.internode.on.net [121.44.204.235])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6D226E407B;
-        Wed,  1 May 2019 22:32:35 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 77E91E407B;
+        Wed,  1 May 2019 22:32:27 -0400 (EDT)
 From:   "Tobin C. Harding" <tobin@kernel.org>
 To:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Jiri Kosina <jikos@kernel.org>,
@@ -68,12 +67,10 @@ Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Joe Lawrence <joe.lawrence@redhat.com>,
         live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 2/5] kobject: Remove docstring reference to kset
-Date:   Thu,  2 May 2019 12:31:39 +1000
-Message-Id: <20190502023142.20139-3-tobin@kernel.org>
+Subject: [RFC PATCH 0/5] kobject: Add and use init predicate
+Date:   Thu,  2 May 2019 12:31:37 +1000
+Message-Id: <20190502023142.20139-1-tobin@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502023142.20139-1-tobin@kernel.org>
-References: <20190502023142.20139-1-tobin@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,35 +78,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the docstring for kobject_get_path() mentions 'kset'.  The
-kset is not used in the function callchain starting from this function.
+Hi,
 
-Remove docstring reference to kset from the function kobject_get_path().
+This set patches kobject to add a predicate function for determining the
+initialization state of a kobject.  Stripped down, the predicate is:
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
- lib/kobject.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+	bool kobject_is_initialized(struct kobject *kobj)
+	{
+		return kobj->state_initialized
+	}
 
-diff --git a/lib/kobject.c b/lib/kobject.c
-index aa89edcd2b63..3eacd5b4643f 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -153,12 +153,11 @@ static void fill_kobj_path(struct kobject *kobj, char *path, int length)
- }
- 
- /**
-- * kobject_get_path - generate and return the path associated with a given kobj and kset pair.
-- *
-+ * kobject_get_path() - Allocate memory and fill in the path for @kobj.
-  * @kobj:	kobject in question, with which to build the path
-  * @gfp_mask:	the allocation type used to allocate the path
-  *
-- * The result must be freed by the caller with kfree().
-+ * Return: The newly allocated memory, caller must free with kfree().
-  */
- char *kobject_get_path(struct kobject *kobj, gfp_t gfp_mask)
- {
+This is RFC because there are merge conflicts with Greg's driver-core
+tree.  I'm guessing this is caused by the cleanup patches (#2 and #3).
+If the set is deemed likeable then I can re-work the set targeting
+whomever's tree this would go in through.
+
+Applies on top of:
+
+	mainline tag: v5.1-rc6
+	livepatching branch: for-next
+
+Series Description
+------------------
+	
+Patch #1 is a memleak patch, previously posted and not overly
+interesting.  Comment by Greg on the thread on that patch was the
+incentive for this series.
+
+Patch #2 and #3 are kobject kernel-doc comment clean ups.  Can be
+dropped if not liked.
+
+Patch #4 adds the predicate function to the kobject API.
+
+Patch #5 uses the new predicate to remove the custom logic from livepatch
+for tracking kobject initialization state.
+
+Testing
+-------
+
+Kernel build configuration
+
+	$ egrep LIVEPATCH .config
+	CONFIG_HAVE_LIVEPATCH=y
+	CONFIG_LIVEPATCH=y
+	CONFIG_TEST_LIVEPATCH=m
+
+	$ egrep FTRACE .config
+	CONFIG_KPROBES_ON_FTRACE=y
+	CONFIG_HAVE_KPROBES_ON_FTRACE=y
+	CONFIG_HAVE_DYNAMIC_FTRACE=y
+	CONFIG_HAVE_DYNAMIC_FTRACE_WITH_REGS=y
+	CONFIG_HAVE_FTRACE_MCOUNT_RECORD=y
+	CONFIG_FTRACE=y
+	CONFIG_FTRACE_SYSCALLS=y
+	CONFIG_DYNAMIC_FTRACE=y
+	CONFIG_DYNAMIC_FTRACE_WITH_REGS=y
+	CONFIG_FTRACE_MCOUNT_RECORD=y
+	# CONFIG_FTRACE_STARTUP_TEST is not set
+
+Builds fine but doesn't boot in Qemu.  I've never run dynamic Ftrace, it
+appears to crash during this.  Was hoping to run the livepatch tests but
+not sure how to at this moment.  Is dynamic Ftrace and livepatch testing
+something that can even be done in a VM or do I need to do this or
+baremetal?
+
+Thanks for taking the time to look at this.
+
+	Tobin
+
+
+Tobin C. Harding (5):
+  livepatch: Fix kobject memleak
+  kobject: Remove docstring reference to kset
+  kobject: Fix kernel-doc comment first line
+  kobject: Add kobject initialized predicate
+  livepatch: Do not manually track kobject initialization
+
+ include/linux/kobject.h   |  2 ++
+ include/linux/livepatch.h |  6 ----
+ kernel/livepatch/core.c   | 28 +++++++++---------
+ lib/kobject.c             | 60 +++++++++++++++++++++++----------------
+ 4 files changed, 51 insertions(+), 45 deletions(-)
+
 -- 
 2.21.0
 
