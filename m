@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37736C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A24C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09201204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1397204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811198;
-	bh=K88QpaDu6awBn+i1ugyXXw2XyuEuhunQVRDth2+HNXg=;
+	s=default; t=1556811208;
+	bh=trZFVr/mcfnl1e/lvg9fpklzwz9lS/uDICL5IXnW5wA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lvqewM3DF3OAxkTVDqb7GLa1c4yF4cl6Sq8biX0ManH5Eu9XICp7Ec1jrFLRQLlYk
-	 UytPi8YVM7Zr+DzzIF+fLzZVsj1kcn8cpFhhvArvEfYGCFImaEmfG1MvZ4xqBrf/N8
-	 R4JemQMNsVn3eVdGFWhEIJ+fw58jIzE5N5lv1jEY=
+	b=YO2vZ4dsLTg0T8AC21l3FDsOKiNOchgZLzI4KOPTZ7bOY0byn/dbVjtJOdw3kcE1Q
+	 FkrJPjQ4QXByRlR2jrXwy7N5KmOcWsK11RpzYqq3wCMokSry5B5GP1MC1fxy3+ngNf
+	 MzoavCAC2X8vC6YBjcrQRA1mYzmrU7mdu89qdtsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbfEBPdQ (ORCPT
+        id S1729314AbfEBPd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:33:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53336 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:33:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729338AbfEBPdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:33:11 -0400
+        id S1728942AbfEBPdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:33:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B95C204FD;
-        Thu,  2 May 2019 15:33:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE95121479;
+        Thu,  2 May 2019 15:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811190;
-        bh=K88QpaDu6awBn+i1ugyXXw2XyuEuhunQVRDth2+HNXg=;
+        s=default; t=1556811183;
+        bh=trZFVr/mcfnl1e/lvg9fpklzwz9lS/uDICL5IXnW5wA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OD0nsh92A7R9L/CWLkJTq+lwkXXgJzTLSeOY+j/uqNvIg52bmIDzFelK89Z5sUAFx
-         yVcVwwdVqH0COoLldjiIPv3QShWu6Jas3iVOfD43r510ScQvX3gXk9xy8CnuiKT4S/
-         uTCRruBZbrcviokkv8P+x7+4WNz3qVwHskKhoQ24=
+        b=F7ZqERK2sPmDL1AiArml3LAuXv6aP3yNhxfEd3Pq8rCNEb2Tyr4WzUp2y/gLRh4x1
+         bsC6+rZirNIbUi41Z9A5nc9AXciNfx2eQ4symDJ/XwH9k0hyGs8PWNYCPeYKsRbe/z
+         HXH7/4H4fXAxa/Asnefx5BpxuXzbvjKJSWUcANqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Carroll <david.carroll@microsemi.com>,
-        Sagar Biradar <sagar.biradar@microchip.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 067/101] scsi: aacraid: Insure we dont access PCIe space during AER/EEH
-Date:   Thu,  2 May 2019 17:21:09 +0200
-Message-Id: <20190502143344.314278251@linuxfoundation.org>
+Subject: [PATCH 5.0 074/101] ceph: fix use-after-free on symlink traversal
+Date:   Thu,  2 May 2019 17:21:16 +0200
+Message-Id: <20190502143344.855114210@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -61,63 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b6554cfe09e1f610aed7d57164ab7760be57acd9 ]
+[ Upstream commit daf5cc27eed99afdea8d96e71b89ba41f5406ef6 ]
 
-There are a few windows during AER/EEH when we can access PCIe I/O mapped
-registers. This will harden the access to insure we do not allow PCIe
-access during errors
+free the symlink body after the same RCU delay we have for freeing the
+struct inode itself, so that traversal during RCU pathwalk wouldn't step
+into freed memory.
 
-Signed-off-by: Dave Carroll <david.carroll@microsemi.com>
-Reviewed-by: Sagar Biradar <sagar.biradar@microchip.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/scsi/aacraid/aacraid.h | 7 ++++++-
- drivers/scsi/aacraid/commsup.c | 4 ++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ fs/ceph/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
-index 3291d1c16864..8bd09b96ea18 100644
---- a/drivers/scsi/aacraid/aacraid.h
-+++ b/drivers/scsi/aacraid/aacraid.h
-@@ -2640,9 +2640,14 @@ static inline unsigned int cap_to_cyls(sector_t capacity, unsigned divisor)
- 	return capacity;
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 9d1f34d46627..f7f9e305aaf8 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -524,6 +524,7 @@ static void ceph_i_callback(struct rcu_head *head)
+ 	struct inode *inode = container_of(head, struct inode, i_rcu);
+ 	struct ceph_inode_info *ci = ceph_inode(inode);
+ 
++	kfree(ci->i_symlink);
+ 	kmem_cache_free(ceph_inode_cachep, ci);
  }
  
-+static inline int aac_pci_offline(struct aac_dev *dev)
-+{
-+	return pci_channel_offline(dev->pdev) || dev->handle_pci_error;
-+}
-+
- static inline int aac_adapter_check_health(struct aac_dev *dev)
- {
--	if (unlikely(pci_channel_offline(dev->pdev)))
-+	if (unlikely(aac_pci_offline(dev)))
- 		return -1;
+@@ -561,7 +562,6 @@ void ceph_destroy_inode(struct inode *inode)
+ 		ceph_put_snap_realm(mdsc, realm);
+ 	}
  
- 	return (dev)->a_ops.adapter_check_health(dev);
-diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
-index a3adc954f40f..09367b8a3885 100644
---- a/drivers/scsi/aacraid/commsup.c
-+++ b/drivers/scsi/aacraid/commsup.c
-@@ -672,7 +672,7 @@ int aac_fib_send(u16 command, struct fib *fibptr, unsigned long size,
- 					return -ETIMEDOUT;
- 				}
- 
--				if (unlikely(pci_channel_offline(dev->pdev)))
-+				if (unlikely(aac_pci_offline(dev)))
- 					return -EFAULT;
- 
- 				if ((blink = aac_adapter_check_health(dev)) > 0) {
-@@ -772,7 +772,7 @@ int aac_hba_send(u8 command, struct fib *fibptr, fib_callback callback,
- 
- 		spin_unlock_irqrestore(&fibptr->event_lock, flags);
- 
--		if (unlikely(pci_channel_offline(dev->pdev)))
-+		if (unlikely(aac_pci_offline(dev)))
- 			return -EFAULT;
- 
- 		fibptr->flags |= FIB_CONTEXT_FLAG_WAIT;
+-	kfree(ci->i_symlink);
+ 	while ((n = rb_first(&ci->i_fragtree)) != NULL) {
+ 		frag = rb_entry(n, struct ceph_inode_frag, node);
+ 		rb_erase(n, &ci->i_fragtree);
 -- 
 2.19.1
 
