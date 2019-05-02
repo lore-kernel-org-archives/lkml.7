@@ -2,170 +2,85 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F2BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D43C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5F8420651
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:38:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lNHVBPlA"
+	by mail.kernel.org (Postfix) with ESMTP id EECFE20C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556815152;
+	bh=gDPHbxt9LVMK97B1ZrH7kdXOc8HPO6c4G8WTx15fEc4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EBP7QZoDpKiwKR1l/q8IqNBkM4x0aglseNhBrW58LeJj21dRU3vJUvh+pDsHhs9J6
+	 bqZ8ziV39cHGRCXGoX7c3appJmvud51G0EZE8JGRyYB0O/KDMu5lXZkey8oaqucaf7
+	 NZ1fKbJ/B6SsAcZyKRH3kXSJ2AOed5QmYMXPcnJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfEBQig (ORCPT
+        id S1726598AbfEBQjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:38:36 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44077 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbfEBQig (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:38:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c5so4255660wrs.11;
-        Thu, 02 May 2019 09:38:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WCg55UBvofcQY30vp8bMKEAotS2TiPrUJ6KwYRg11YI=;
-        b=lNHVBPlAVsb+yxpdWN5v/UhJVOtaNgJFPQb2sQSuiYfFLlL2CrW5ZDWAQ9KiMpdF0K
-         nDjQNufIYiyVlwikLnJiauBUAeae84SvldowG/xD9BUW5UA2GjCEaQ5myb9AdvnZODFw
-         oY1q96dW8qRCBcHYb9Q/qGSlorHE+N4cVdBc26ooXCamWDGQVUc7QP3z/vuT8UEsiTYY
-         UqxpuUWz+hYCOI4c7pdsK7Iwhbaac0Oi1MJj3ddun33u7ROsbegX8W7I7A1nmzdEKBFv
-         lqnmGGhaXJMoMN17uv48NVzE9uOiChHXUhFVLG02nYoYlNwwz+BcLKbQOzgW5hnYO83A
-         Mnqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WCg55UBvofcQY30vp8bMKEAotS2TiPrUJ6KwYRg11YI=;
-        b=eyTdecZoLpaVQXfPOT/24bHYQ/F2En3SuN39BJfN3uuXtlCAZngcETyX8WsvvDGvpg
-         aXe7d3aDXPXavEOoYaqeaC2NxFq1gbSGqjpzoKpxn6eUASJKvWjM4OdjjAcBmTt/qwxj
-         qJN2lOlvY/zzeryr199Jnilq9zXjLlSfTs3b090xMne4LaXu+ro7HZ/yWqWHWEdUv89K
-         jIy4paoqMCF/pZzWpq4bQHNNNVNlLIsAmmDY3o9FYqrbU3RiZtmjsYut7gzfyPYhsEv0
-         D17buyUndBp7ZpUSqLvNFQxYVJoLnFbVCmYKLnfrk1OMPWOD5QNv8UYltpMvIpeWQPAd
-         +tiw==
-X-Gm-Message-State: APjAAAWNSPA3Y8qHtSZ8hNWi337XaU3ZPIHFMPbRU6rIAMRcPTfACCuR
-        Qr/y9ikOlp2PgbjNaHNWnYu6go+z
-X-Google-Smtp-Source: APXvYqxgguvaBA/sLmAZwJGt4LrBldv5la5wkWpKEvQwNY1Z/EXq01oe4B3DJzXGTQ0gN+7LJNy+rw==
-X-Received: by 2002:adf:dd46:: with SMTP id u6mr3355658wrm.228.1556815113954;
-        Thu, 02 May 2019 09:38:33 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id u64sm1122347wmg.23.2019.05.02.09.38.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 09:38:23 -0700 (PDT)
-Date:   Thu, 2 May 2019 18:38:21 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Kalyani Akula <kalyania@xilinx.com>
-Cc:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pombredanne@nexb.com" <pombredanne@nexb.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Sarat Chand Savitala <saratcha@xilinx.com>
-Subject: Re: [RFC PATCH V3 0/4] Add Xilinx's ZynqMP SHA3 driver support
-Message-ID: <20190502163821.GA22561@Red>
-References: <1556793282-17346-1-git-send-email-kalyani.akula@xilinx.com>
- <20190502120012.GA19008@Red>
- <BN7PR02MB512413C534A8EFA925105441AF340@BN7PR02MB5124.namprd02.prod.outlook.com>
+        Thu, 2 May 2019 12:39:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726338AbfEBQjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 12:39:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79DA720651;
+        Thu,  2 May 2019 16:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556815150;
+        bh=gDPHbxt9LVMK97B1ZrH7kdXOc8HPO6c4G8WTx15fEc4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=140yulC8DoadNyUZ55ayejb1130wdBTw4D4+IfUpMQyEniosXTdV1uwLZ5z/ezqbc
+         kCooq5wv7R8fe1Y8i714S8VgLKGRANs7Fy89FW2dzlhDU+rpO20wdeZ41ET5bd/PsJ
+         piHve0dSw8BVyFfDIjaUL2P5vN4iJeXt2eQBUjsI=
+Date:   Thu, 2 May 2019 18:39:07 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-usb@vger.kernel.org, linux-media@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mike Isely <isely@pobox.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com,
+        syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com
+Subject: Re: [PATCH] media: pvrusb2: use a different format for warnings
+Message-ID: <20190502163907.GA14995@kroah.com>
+References: <b3761c6479a49b60316325ebc22da904e36d4538.1556813333.git.andreyknvl@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BN7PR02MB512413C534A8EFA925105441AF340@BN7PR02MB5124.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b3761c6479a49b60316325ebc22da904e36d4538.1556813333.git.andreyknvl@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 03:12:55PM +0000, Kalyani Akula wrote:
-> Hi Corentin,
+On Thu, May 02, 2019 at 06:09:26PM +0200, Andrey Konovalov wrote:
+> When the pvrusb2 driver detects that there's something wrong with the
+> device, it prints a warning message. Right now those message are
+> printed in two different formats:
 > 
-> Please find my response inline.
+> 1. ***WARNING*** message here
+> 2. WARNING: message here
 > 
-> > -----Original Message-----
-> > From: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > Sent: Thursday, May 2, 2019 5:30 PM
-> > To: Kalyani Akula <kalyania@xilinx.com>
-> > Cc: herbert@gondor.apana.org.au; kstewart@linuxfoundation.org;
-> > gregkh@linuxfoundation.org; tglx@linutronix.de; pombredanne@nexb.com;
-> > linux-crypto@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > netdev@vger.kernel.org; Sarat Chand Savitala <saratcha@xilinx.com>; Kalyani
-> > Akula <kalyania@xilinx.com>
-> > Subject: Re: [RFC PATCH V3 0/4] Add Xilinx's ZynqMP SHA3 driver support
-> > 
-> > On Thu, May 02, 2019 at 04:04:38PM +0530, Kalyani Akula wrote:
-> > > This patch set adds support for
-> > > - dt-binding docs for Xilinx ZynqMP SHA3 driver
-> > > - Adds communication layer support for sha_hash in zynqmp.c
-> > > - Adds Xilinx ZynqMP driver for SHA3 Algorithm
-> > > - Adds device tree node for ZynqMP SHA3 driver
-> > >
-> > > V3 Changes :
-> > > - Removed zynqmp_sha_import and export APIs.The reason as follows The
-> > > user space code does an accept on an already accepted FD when we
-> > > create AF_ALG socket and call accept on it, it calls af_alg_accept and
-> > > not hash_accept.
-> > > import and export APIs are called from hash_accept.
-> > > The flow is as below
-> > > accept--> af_alg_accept-->hash_accept_parent-->hash_accept_parent_noke
-> > > accept--> y
-> > > for hash salg_type.
-> > > - Resolved comments from
-> > >         https://patchwork.kernel.org/patch/10753719/
-> > >
-> > 
-> > 
-> > Your driver still doesnt handle the case where two hash are done in parallel.
-> > 
+> There's an issue with the second format. Syzkaller recognizes it as a
+> message produced by a WARN_ON(), which is used to indicate a bug in the
+> kernel. However pvrusb2 prints those warnings to indicate an issue with
+> the device, not the bug in the kernel.
 > 
-> Our Firmware uses IPI protocol to send this SHA3 requests to SHA3 HW engine, which doesn't support parallel processing of 2 hash requests.
-> The flow is 
-> SHA3 request from App -> SHA3 driver-> ZynqMp driver-> Firmware (which doesn't support parallel processing of 2 requests) -> SHA3 HW Engine
+> This patch changes the pvrusb2 driver to consistently use the first
+> warning message format. This will unblock syzkaller testing of this
+> driver.
 > 
-> 
+> Reported-by: syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com
+> Reported-by: syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-So your driver will just send bad result in that case.
-
-You need to export and store the intermediate result in a request context.
-
-> > Furthermore, you miss the export/import functions.
-> > 
-> 
-> When user space code does an accept on an already accepted FD as below
-> sockfd = socket(AF_ALG, SOCK_SEQPACKET, 0);
-> bind(sockfd, (struct sockaddr *)&sa, sizeof(sa));
-> fd = accept(sockfd, NULL, 0);
-> 
-> where my sockaddr is 
-> struct sockaddr_alg sa = {
->         .salg_family = AF_ALG,
->         .salg_type = "hash",
->         .salg_name = "xilinx-sha3-384"
->  };
-> 
-> Upon calling accept the flow in the kernel is as mentioned
-> accept--> af_alg_accept-->hash_accept_parent-->hash_accept_parent_nokey
-> for hash salg_type.
-> 
-> And where import and export functions are called from hash_accept. hence, these functions never be called from the application.
-> So, I removed those from the driver.
-> 
-> Regards
-> Kalyani.
-> 
-
-Handling your own worflow is not enough.
-
-You need to support two client doing multiple update in parallel.
-It seems that your driver is bugged in that case.
-
-Furthermore, i am pretty sure that export and import are mandatory, and without them self-test should fail.
-Do you have self test enabled and tryed to load the tcrypt module ?
-
-Regards
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
