@@ -2,146 +2,142 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A899EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B6FC04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78AE12133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IJWij8F6"
+	by mail.kernel.org (Postfix) with ESMTP id 031DD208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556801765;
+	bh=wv+mgDneohG38AY2L0hUxKbaLVYUeDN4c6JUgJDvYdU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fTqBQY8+GDcAVUVFm6aWEd5wg93l9J4FD+DyuSR72RgGtwvUFVFxf/f+WG6+qsn0+
+	 AgWlYg29Yw+UkHC4XWFEUSXVGqsQvtq/krWBROOdOKChPJ+O0d5NdXULxGpE9GuxIM
+	 16sX/Ti4YFuUsvuxUIUG8MiLnPzkdk9bY91bad1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfEBM4B (ORCPT
+        id S1726725AbfEBM4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:56:01 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17139 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfEBM4A (ORCPT
+        Thu, 2 May 2019 08:56:04 -0400
+Received: from casper.infradead.org ([85.118.1.10]:33114 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfEBM4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:56:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ccae8da0000>; Thu, 02 May 2019 05:55:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 02 May 2019 05:55:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 02 May 2019 05:55:58 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
- 2019 12:55:57 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 2 May 2019 12:55:57 +0000
-Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ccae8da0000>; Thu, 02 May 2019 05:55:57 -0700
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <ldewangan@nvidia.com>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH 5/6] dmaengine: tegra210-dma: free dma controller in remove()
-Date:   Thu, 2 May 2019 18:25:16 +0530
-Message-ID: <1556801717-31507-6-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
-References: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
+        Thu, 2 May 2019 08:56:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tcHL2blm9ynOYpWqMzfbIx2YVy5kv7jk6z9Ht/ZJGMo=; b=Ye2vyuEt1720XjqEirU81HuFcI
+        sSatA2vLMSPIIZup8V0sLaHawpOaLhfeUuezk0LsH2nPXTDYiPFgoeck9CEExOmXEtcfBQZHrjV24
+        NygfavLsmfQ3SYElZrQorV70Ey/J60KyTyqxmrZDXM09XmAsfINtJd9+GeWImefjp51LjxTITAEaQ
+        cuUFbthCdvLHLf28W6iZ2lSWidExHke/CyPXOs/jVP7hZ9rrI4T1oBa8+K6GcOJGC9iAPzoxkXSMD
+        23FxlWVbNsDAxUtJU+J7YAtC07LBtejiIDs8L83Dl0qMuUij6/lNp40HiGgA4VtBQyGxFLOXgeLl6
+        d3mt788g==;
+Received: from [177.159.247.19] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hMBFl-0002uH-Oa; Thu, 02 May 2019 12:55:58 +0000
+Date:   Thu, 2 May 2019 09:55:50 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] media/doc: Allow sizeimage to be set by v4l clients
+Message-ID: <20190502095550.31282c0d@coco.lan>
+In-Reply-To: <20190412155915.16849-1-stanimir.varbanov@linaro.org>
+References: <20190412155915.16849-1-stanimir.varbanov@linaro.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556801754; bh=P4zIL626HO9TKcEIuZdJBsckmL2U2jxasfFus+sRTz0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:Content-Type;
-        b=IJWij8F6RNzkDfig0BuP36yi/vzaMNSb5ZlxjSqPrLWR3nD51BSGNnjyvC8cwX4UM
-         KOeoBrCIms4RYWbKVNCr5347vda4WhOJBY779mMaJcU21Hy/LQY4yxcgHqsD68QPQT
-         U6RqQhXiurdAteP80sw8mqsWppGha2bcrVlYyhbszNZq5F/e/P67TQzLAmJ7IMhfhh
-         yYs47mvM4QKSvWoZpKgyVBzDdhUzoFwrg4+kFzx/4Tm7Ib189IQnmhrCDS6CJd3ITU
-         k+4fLT79ADReOS/cVxZ0QeOCcv/jVGsrIYGr9Pk3Mm7hIhTPaU1v98hbNHWVgakn0e
-         3u81uOs/faBtA==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following kernel panic is seen during DMA driver unload->load sequence
-==========================================================================
-Unable to handle kernel paging request at virtual address ffffff8001198880
-Internal error: Oops: 86000007 [#1] PREEMPT SMP
-CPU: 0 PID: 5907 Comm: HwBinder:4123_1 Tainted: G C 4.9.128-tegra-g065839f
-Hardware name: galen (DT)
-task: ffffffc3590d1a80 task.stack: ffffffc3d0678000
-PC is at 0xffffff8001198880
-LR is at of_dma_request_slave_channel+0xd8/0x1f8
-pc : [<ffffff8001198880>] lr : [<ffffff8008746f30>] pstate: 60400045
-sp : ffffffc3d067b710
-x29: ffffffc3d067b710 x28: 000000000000002f
-x27: ffffff800949e000 x26: ffffff800949e750
-x25: ffffff800949e000 x24: ffffffbefe817d84
-x23: ffffff8009f77cb0 x22: 0000000000000028
-x21: ffffffc3ffda49c8 x20: 0000000000000029
-x19: 0000000000000001 x18: ffffffffffffffff
-x17: 0000000000000000 x16: ffffff80082b66a0
-x15: ffffff8009e78250 x14: 000000000000000a
-x13: 0000000000000038 x12: 0101010101010101
-x11: 0000000000000030 x10: 0101010101010101
-x9 : fffffffffffffffc x8 : 7f7f7f7f7f7f7f7f
-x7 : 62ff726b6b64622c x6 : 0000000000008064
-x5 : 6400000000000000 x4 : ffffffbefe817c44
-x3 : ffffffc3ffda3e08 x2 : ffffff8001198880
-x1 : ffffffc3d48323c0 x0 : ffffffc3d067b788
+Em Fri, 12 Apr 2019 18:59:15 +0300
+Stanimir Varbanov <stanimir.varbanov@linaro.org> escreveu:
 
-Process HwBinder:4123_1 (pid: 5907, stack limit = 0xffffffc3d0678028)
-Call trace:
-[<ffffff8001198880>] 0xffffff8001198880
-[<ffffff80087459f8>] dma_request_chan+0x50/0x1f0
-[<ffffff8008745bc0>] dma_request_slave_channel+0x28/0x40
-[<ffffff8001552c44>] tegra_alt_pcm_open+0x114/0x170
-[<ffffff8008d65fa4>] soc_pcm_open+0x10c/0x878
-[<ffffff8008d18618>] snd_pcm_open_substream+0xc0/0x170
-[<ffffff8008d1878c>] snd_pcm_open+0xc4/0x240
-[<ffffff8008d189e0>] snd_pcm_playback_open+0x58/0x80
-[<ffffff8008cfc6d4>] snd_open+0xb4/0x178
-[<ffffff8008250628>] chrdev_open+0xb8/0x1d0
-[<ffffff8008246fdc>] do_dentry_open+0x214/0x318
-[<ffffff80082485d0>] vfs_open+0x58/0x88
-[<ffffff800825bce0>] do_last+0x450/0xde0
-[<ffffff800825c718>] path_openat+0xa8/0x368
-[<ffffff800825dd84>] do_filp_open+0x8c/0x110
-[<ffffff8008248a74>] do_sys_open+0x164/0x220
-[<ffffff80082b66dc>] compat_SyS_openat+0x3c/0x50
-[<ffffff8008083040>] el0_svc_naked+0x34/0x38
----[ end trace 67e6d544e65b5145 ]---
-Kernel panic - not syncing: Fatal exception
-==========================================================================
+> This changes v4l2_pix_format and v4l2_plane_pix_format sizeimage
+> field description to allow v4l clients to set bigger image size
+> in case of variable length compressed data.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst | 13 ++++++++++++-
+>  Documentation/media/uapi/v4l/pixfmt-v4l2.rst        | 11 ++++++++++-
+>  2 files changed, 22 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+> index 5688c816e334..005428a8121e 100644
+> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+> @@ -31,7 +31,18 @@ describing all planes of that format.
+>  
+>      * - __u32
+>        - ``sizeimage``
+> -      - Maximum size in bytes required for image data in this plane.
+> +      - Maximum size in bytes required for image data in this plane,
+> +	set by the driver. When the image consists of variable length
+> +	compressed data this is the number of bytes required by the
+> +	codec to support the worst-case compression scenario.
+> +
+> +	For uncompressed images the driver will set the value. For
+> +	variable length compressed data clients are allowed to set
+> +	the sizeimage field, but the driver may ignore it and set the
+> +	value itself, or it may modify the provided value based on
+> +	alignment requirements or minimum/maximum size requirements.
+> +	If the client wants to leave this to the driver, then it should
+> +	set sizeimage to 0.
+>      * - __u32
+>        - ``bytesperline``
+>        - Distance in bytes between the leftmost pixels in two adjacent
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+> index 71eebfc6d853..0f7771151db9 100644
+> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+> @@ -89,7 +89,16 @@ Single-planar format structure
+>        - Size in bytes of the buffer to hold a complete image, set by the
+>  	driver. Usually this is ``bytesperline`` times ``height``. When
+>  	the image consists of variable length compressed data this is the
+> -	maximum number of bytes required to hold an image.
+> +	number of bytes required by the codec to support the worst-case
+> +	compression scenario.
+> +
+> +	For uncompressed images the driver will set the value. For
+> +	variable length compressed data clients are allowed to set
+> +	the sizeimage field, but the driver may ignore it and set the
+> +	value itself, or it may modify the provided value based on
+> +	alignment requirements or minimum/maximum size requirements.
+> +	If the client wants to leave this to the driver, then it should
+> +	set sizeimage to 0.
 
-In device probe(), of_dma_controller_register() registers DMA controller.
-But when driver is removed, this is not freed. During driver reload this
-results in data abort and kernel panic. Add of_dma_controller_free() in
-driver remove path to fix the issue.
+It is very confusing to understand what you meant by the above paragraph,
+as you inverted the sentence order and forgot a comma.
 
-Fixes: f46b195799b5 ("dmaengine: tegra-adma: Add support for Tegra210 ADMA")
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- drivers/dma/tegra210-adma.c | 1 +
- 1 file changed, 1 insertion(+)
+I would, instead, write the phrases using the direct order, and break
+into two paragraphs, e. g., changing the above to:
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index f26c458..953669d 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -888,6 +888,7 @@ static int tegra_adma_remove(struct platform_device *pdev)
- 	struct tegra_adma *tdma = platform_get_drvdata(pdev);
- 	int i;
- 
-+	of_dma_controller_free(pdev->dev.of_node);
- 	dma_async_device_unregister(&tdma->dma_dev);
- 
- 	for (i = 0; i < tdma->nr_channels; ++i)
--- 
-2.7.4
+	"The driver will set the value for uncompressed images.
 
+	Clients are allowed to set the sizeimage field for variable length
+	compressed data, but the driver may ignore it and set the
+	value itself, or it may modify the provided value based on
+	alignment requirements or minimum/maximum size requirements.
+	If the client wants to leave this to the driver, then it should
+	set sizeimage to 0."
+
+That makes it a lot easier to read, hopefully preventing mistakes from
+app and driver developers when reading about sizeimage.
+
+Yet, I'm not too comfortable on letting this too generic. I mean,
+how an app writer would know what formats are "variable length
+compressed data", specially since libv4l may actually change that.
+
+Thanks,
+Mauro
