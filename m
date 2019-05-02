@@ -2,75 +2,150 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4C1C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A90DC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9CC2075E
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556817829;
-	bh=McLzeHbUb8hhAEei4Huj6kA/W8PLv+h6CtyGE9IeRbU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hN9CRFS8IBu6Yqaxx9Kprxbpo3eqET63TtGJnEchJFkgGhNfDTyYppECofHwrgG49
-	 valKhFFmH5d6W0uJbMOW84TUDUUjbADkH5f71p1QKH+eWmQI4VzkHj4fNLuJKCrfXe
-	 HtaAYI9fhWLIyvfI8dc17s85BXIB0d3anVAIBShg=
+	by mail.kernel.org (Postfix) with ESMTP id E146B2081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:27:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H6QCS63+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfEBRXs (ORCPT
+        id S1726338AbfEBR1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 13:23:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfEBRXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 13:23:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD78420651;
-        Thu,  2 May 2019 17:23:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556817827;
-        bh=McLzeHbUb8hhAEei4Huj6kA/W8PLv+h6CtyGE9IeRbU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qIg+PSOalUjXdKZSRF3dRJG7mfX614lAUkNLHXJ00iX0jNPuqvaFAvVWCCuGIVfwq
-         kN/M+RVaGXpxtfR2xVxT5xTh73mIZcoPOYKV1PKO+RB8tAsl1OKo97hjEd/HQM8WgI
-         Oczf8LQf8RaZWxf8SC1R166ygmBq9kaiju0IF/78=
-Date:   Thu, 2 May 2019 19:23:45 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dragan Cvetic <dragan.cvetic@xilinx.com>
-Cc:     arnd@arndb.de, michal.simek@xilinx.com,
-        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Derek Kiernan <derek.kiernan@xilinx.com>
-Subject: Re: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioctl
-Message-ID: <20190502172345.GC1874@kroah.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-5-git-send-email-dragan.cvetic@xilinx.com>
+        Thu, 2 May 2019 13:27:09 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35481 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfEBR1J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 13:27:09 -0400
+Received: by mail-io1-f66.google.com with SMTP id r18so2907767ioh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 10:27:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fSV3za5h6TmBn30fKr9DcVJtEpE2QIEo0gVfRz6Uuuk=;
+        b=H6QCS63+H4ulewvjtJZ8/K4jbaKx4q0voM+BcLBzjr+tM1MNXqKjejQCw/TgvsayL+
+         fz3wYlr9IPyR46iOl1vMq+xkHfmkAfDCkymf8Xv9D1HFZPku1N0NreMIkZ6Z4i1HIGdm
+         7t1HvtCNornGg5c30FvEx4lWyjl9MSwTFsybo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fSV3za5h6TmBn30fKr9DcVJtEpE2QIEo0gVfRz6Uuuk=;
+        b=JTOxs2o+QffnX8VUS2dcM2zj9R6pWzJb6nL02YLYLsnpQmcteUGaus2+EWBwZKrm4m
+         dhLjK0dKqJ4VI4GZKaxuClhLWw4rDfRQHKVfiiiyFchhHeOMVWw/zg4240otiY5XLMll
+         yEEOztXahKhJy0XTcvGOYq4m5iG8UX/KyeM3+rAXkx2IIzyfPHy5vEn928LjeWMDvQ55
+         nzT4O2quQrSaCWQ2fdB73k/6+T8hMuu9IiGqmevoduEnJhRv17qAFV7vXU6Hv2paZc+E
+         MG6JDxmjPWWpcWlYqZCWrwl0vomQJif2liqIp//IoBLJ2VF1M/mQddP5xV4YGqelGUHd
+         QIOw==
+X-Gm-Message-State: APjAAAXmvPP2/M5CavTz5Bn/ydQWgxnYKytddkg9sRZ6uyofl0AmyK6E
+        DtPFYSH+sQQx/57Oc2X7gACVQCtC9nw=
+X-Google-Smtp-Source: APXvYqxf9/LTf8Om4JbEc+c1oOqa3tbBbDX8hfcc/WF7j7McISDSQTro/vzmlVOXO8ATigMRH0U3Og==
+X-Received: by 2002:a6b:3b11:: with SMTP id i17mr3543172ioa.105.1556818027933;
+        Thu, 02 May 2019 10:27:07 -0700 (PDT)
+Received: from localhost ([2620:15c:183:200:855f:8919:84a7:4794])
+        by smtp.gmail.com with ESMTPSA id 125sm5019437itx.21.2019.05.02.10.27.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 10:27:07 -0700 (PDT)
+From:   Ross Zwisler <zwisler@chromium.org>
+X-Google-Original-From: Ross Zwisler <zwisler@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ross Zwisler <zwisler@google.com>, Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH] MAINTAINERS: update git tree for sound entries
+Date:   Thu,  2 May 2019 11:27:00 -0600
+Message-Id: <20190502172700.215737-1-zwisler@google.com>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556402706-176271-5-git-send-email-dragan.cvetic@xilinx.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 11:04:58PM +0100, Dragan Cvetic wrote:
-> Add char device interface per DT node present and support
-> file operations:
-> - open(),
-> - close(),
-> - unlocked_ioctl(),
-> - compat_ioctl().
+Several sound related entries in MAINTAINERS refer to the old git tree
+at "git://git.alsa-project.org/alsa-kernel.git".  This is no longer used
+for development, and Takashi Iwai's kernel.org tree is used instead.
 
-Why do you need compat_ioctl() at all?  Any "new" driver should never
-need it.  Just create your structures properly.
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+---
+ MAINTAINERS | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-thanks,
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e17ebf70b5480..d373d976a9317 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3351,7 +3351,7 @@ F:	include/uapi/linux/bsg.h
+ BT87X AUDIO DRIVER
+ M:	Clemens Ladisch <clemens@ladisch.de>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+-T:	git git://git.alsa-project.org/alsa-kernel.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+ S:	Maintained
+ F:	Documentation/sound/cards/bt87x.rst
+ F:	sound/pci/bt87x.c
+@@ -3404,7 +3404,7 @@ F:	drivers/scsi/FlashPoint.*
+ C-MEDIA CMI8788 DRIVER
+ M:	Clemens Ladisch <clemens@ladisch.de>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+-T:	git git://git.alsa-project.org/alsa-kernel.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+ S:	Maintained
+ F:	sound/pci/oxygen/
+ 
+@@ -5696,7 +5696,7 @@ F:	drivers/edac/qcom_edac.c
+ EDIROL UA-101/UA-1000 DRIVER
+ M:	Clemens Ladisch <clemens@ladisch.de>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+-T:	git git://git.alsa-project.org/alsa-kernel.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+ S:	Maintained
+ F:	sound/usb/misc/ua101.c
+ 
+@@ -6036,7 +6036,7 @@ F:	include/linux/f75375s.h
+ FIREWIRE AUDIO DRIVERS
+ M:	Clemens Ladisch <clemens@ladisch.de>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+-T:	git git://git.alsa-project.org/alsa-kernel.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+ S:	Maintained
+ F:	sound/firewire/
+ 
+@@ -11593,7 +11593,7 @@ F:	Documentation/devicetree/bindings/opp/
+ OPL4 DRIVER
+ M:	Clemens Ladisch <clemens@ladisch.de>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+-T:	git git://git.alsa-project.org/alsa-kernel.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+ S:	Maintained
+ F:	sound/drivers/opl4/
+ 
+@@ -14490,7 +14490,6 @@ M:	Takashi Iwai <tiwai@suse.com>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+ W:	http://www.alsa-project.org/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+-T:	git git://git.alsa-project.org/alsa-kernel.git
+ Q:	http://patchwork.kernel.org/project/alsa-devel/list/
+ S:	Maintained
+ F:	Documentation/sound/
+@@ -16100,7 +16099,7 @@ F:	drivers/usb/storage/
+ USB MIDI DRIVER
+ M:	Clemens Ladisch <clemens@ladisch.de>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+-T:	git git://git.alsa-project.org/alsa-kernel.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
+ S:	Maintained
+ F:	sound/usb/midi.*
+ 
+-- 
+2.21.0.593.g511ec345e18-goog
 
-greg k-h
