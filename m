@@ -2,168 +2,96 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADF7C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EA9C04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3B221479
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:16:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556824583;
-	bh=ztapzPlmSiYCt4nMj4OICaKQS1K1FzkfxA+tbrWwVwI=;
-	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=X50Fn8fMZwSg3Ma5GPQoPfaTehO0VUGMQ2M84Ibmomg1d+pdAaBSFyjuLHORBOI4/
-	 r8LbOHQZLsS7lNY1WIWWjtKo48+S7fX99/5ixNPQz21uD+VzV8A/G8SAH3b3eekhNo
-	 mezBUaMcePF8atVmLLwS7M0fOUEIwwNwoBF6mbHA=
+	by mail.kernel.org (Postfix) with ESMTP id D193D2081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:18:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="oY66xYN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfEBTQW (ORCPT
+        id S1726402AbfEBTSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 15:16:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbfEBTQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 15:16:04 -0400
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0FAC2087F;
-        Thu,  2 May 2019 19:16:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556824563;
-        bh=ztapzPlmSiYCt4nMj4OICaKQS1K1FzkfxA+tbrWwVwI=;
-        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=eMrYT3UX28W25Euer93AaJnulBqVmpc32cms0MggPiO5wp9eeSwrNlLdQwCngEQ5n
-         givX2m0+SIAdnN1iM0gLD5kqaSjuZ/pb4b0W117KuU49NQJaPpzqZqNGowqzM5LADL
-         tFtBjW9BlWA9KTuh4yeZ5YcdQN+r54vyM3L62dlM=
-From:   zanussi@kernel.org
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <daniel.wagner@siemens.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Julia Cartwright <julia@ni.com>
-Subject: [PATCH RT 2/4] powerpc/pseries/iommu: Use a locallock instead local_irq_save()
-Date:   Thu,  2 May 2019 14:15:37 -0500
-Message-Id: <abec789dc411b74f8033fb340c792e94cd2372ba.1556824516.git.tom.zanussi@linux.intel.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1556824516.git.tom.zanussi@linux.intel.com>
-References: <cover.1556824516.git.tom.zanussi@linux.intel.com>
-In-Reply-To: <cover.1556824516.git.tom.zanussi@linux.intel.com>
-References: <cover.1556824516.git.tom.zanussi@linux.intel.com>
+        Thu, 2 May 2019 15:18:49 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36433 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbfEBTSt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 15:18:49 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a8so3149380edx.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 12:18:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/EtrDUZnPlRu7IrcyamY8IpVJksLUEb2L4C6Vl0TUQE=;
+        b=oY66xYN+gJbH6VpzA77vhKfQaiig9FE2gWSvaganWGQHxbnAWNBjdK5IxmHDl/lulB
+         6W2/Xu6OkEtP8EzI5IoyuCT9YBGVw5tvyjPDFWBkUqfZQpnYmkvUeHHSR6HD9M3whi9I
+         0RcBrH0LDorwvHBC018lfCEvaAiT8BwChZuwyw0bGNQ8t6reNn9yI72NAJTHpjLRUJlg
+         LCM39zL0LwzvspTxYRli24Jer9qJRz+CVCjC6684O6EDMB0WaaYj3PyULoK2HTbRkXDi
+         ghyRy0ZVgVkbC6WyahwWy/PSLoe00mm05d6lyrce//A9Vuv45sVK7mWoQ+xalrdJVd8R
+         AILw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/EtrDUZnPlRu7IrcyamY8IpVJksLUEb2L4C6Vl0TUQE=;
+        b=SvYC0LFoN/TRhQKDl7DBBoWVYb1pvRMaMgOP6QFrwUuXlLGv5uEqOdb8m9o89HS0G9
+         dtSKoiHFAdfgIieQd6yEMXAEEhLdoNfe+CPFkw3Le/mMyDUoLfa+V371p8C3Szs9hB5J
+         45nZIxV/XGTdNEEyloolz7JSnwBr0i7nwjiduqvGzrwO4TqB0fSDfY7pyZw+EFuVfNxh
+         J6diObkF7N4VxS5RIr8BqfiAKcPJp3c+E0rh6p2DZdg2LY4va6WImaNDopsqS81ARZLh
+         /kXOgnCNOx/XGE4bLI4IY0Eph515qY0//Po/5ZR+eunfQXvVbQp2zFmZhLNPUA/3anNR
+         JEIQ==
+X-Gm-Message-State: APjAAAW0YJU5cTCy4jqDt+8Vp2JQx6/P8xxgwDTaLmbFj9UnOY1UGsHd
+        JZ/loiCLQwMNc1XKDFHZVO6LkpDbY2fdct/cvTrvSQ==
+X-Google-Smtp-Source: APXvYqzLcGp30q9Ib2/zU1la10GlqsQhJRi/epzUUZiwaqPYnOeJoISItPcXmhWHqTVl0n32Bm0pjTtLjkVqAOIx8xo=
+X-Received: by 2002:a50:fb19:: with SMTP id d25mr3732372edq.61.1556824727400;
+ Thu, 02 May 2019 12:18:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155552635609.2015392.6246305135559796835.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <155552635609.2015392.6246305135559796835.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 2 May 2019 15:18:36 -0400
+Message-ID: <CA+CK2bD2b5XZCxGXQ47XXRA2RFvc69u2LKx7pu4Mtvw_ezMDLg@mail.gmail.com>
+Subject: Re: [PATCH v6 04/12] mm/hotplug: Prepare shrink_{zone, pgdat}_span
+ for sub-section removal
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+On Wed, Apr 17, 2019 at 2:53 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> Sub-section hotplug support reduces the unit of operation of hotplug
+> from section-sized-units (PAGES_PER_SECTION) to sub-section-sized units
+> (PAGES_PER_SUBSECTION). Teach shrink_{zone,pgdat}_span() to consider
+> PAGES_PER_SUBSECTION boundaries as the points where pfn_valid(), not
+> valid_section(), can toggle.
+>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  include/linux/mmzone.h |    2 ++
+>  mm/memory_hotplug.c    |   16 ++++++++--------
+>  2 files changed, 10 insertions(+), 8 deletions(-)
 
-v3.18.138-rt116-rc1 stable review patch.
-If anyone has any objections, please let me know.
+given removing all unused "*ms"
 
------------
-
-
-[ Upstream commit 5c1b4cd70e2ca0c81038b65babe6dc66086322e0 ]
-
-The locallock protects the per-CPU variable tce_page. The function
-attempts to allocate memory while tce_page is protected (by disabling
-interrupts).
-
-Use local_irq_save() instead of local_irq_disable().
-
-Cc: stable-rt@vger.kernel.org
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-
- Conflicts:
-	arch/powerpc/platforms/pseries/iommu.c
----
- arch/powerpc/platforms/pseries/iommu.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-index 05a2c9eefc08..acc6f64f0cb8 100644
---- a/arch/powerpc/platforms/pseries/iommu.c
-+++ b/arch/powerpc/platforms/pseries/iommu.c
-@@ -36,6 +36,7 @@
- #include <linux/crash_dump.h>
- #include <linux/memory.h>
- #include <linux/of.h>
-+#include <linux/locallock.h>
- #include <asm/io.h>
- #include <asm/prom.h>
- #include <asm/rtas.h>
-@@ -177,6 +178,7 @@ static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
- }
- 
- static DEFINE_PER_CPU(__be64 *, tce_page);
-+static DEFINE_LOCAL_IRQ_LOCK(tcp_page_lock);
- 
- static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
- 				     long npages, unsigned long uaddr,
-@@ -197,7 +199,8 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
- 		                           direction, attrs);
- 	}
- 
--	local_irq_save(flags);	/* to protect tcep and the page behind it */
-+	/* to protect tcep and the page behind it */
-+	local_lock_irqsave(tcp_page_lock, flags);
- 
- 	tcep = __get_cpu_var(tce_page);
- 
-@@ -208,7 +211,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
- 		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
- 		/* If allocation fails, fall back to the loop implementation */
- 		if (!tcep) {
--			local_irq_restore(flags);
-+			local_unlock_irqrestore(tcp_page_lock, flags);
- 			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
- 					    direction, attrs);
- 		}
-@@ -242,7 +245,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
- 		tcenum += limit;
- 	} while (npages > 0 && !rc);
- 
--	local_irq_restore(flags);
-+	local_unlock_irqrestore(tcp_page_lock, flags);
- 
- 	if (unlikely(rc == H_NOT_ENOUGH_RESOURCES)) {
- 		ret = (int)rc;
-@@ -397,13 +400,14 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
- 	u64 rc = 0;
- 	long l, limit;
- 
--	local_irq_disable();	/* to protect tcep and the page behind it */
-+	/* to protect tcep and the page behind it */
-+	local_lock_irq(tcp_page_lock);
- 	tcep = __get_cpu_var(tce_page);
- 
- 	if (!tcep) {
- 		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
- 		if (!tcep) {
--			local_irq_enable();
-+			local_unlock_irq(tcp_page_lock);
- 			return -ENOMEM;
- 		}
- 		__get_cpu_var(tce_page) = tcep;
-@@ -449,7 +453,7 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
- 
- 	/* error cleanup: caller will clear whole range */
- 
--	local_irq_enable();
-+	local_unlock_irq(tcp_page_lock);
- 	return rc;
- }
- 
--- 
-2.14.1
-
+Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
