@@ -2,115 +2,190 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C59C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B10C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C46F2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F53204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:37:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="dsDeqU+L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NqZvTaSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfEBSgE (ORCPT
+        id S1726299AbfEBShk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:36:04 -0400
-Received: from mail-eopbgr790104.outbound.protection.outlook.com ([40.107.79.104]:20256
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726407AbfEBSf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:35:56 -0400
+        Thu, 2 May 2019 14:37:40 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:39620 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfEBShk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 14:37:40 -0400
+Received: by mail-it1-f193.google.com with SMTP id t200so5158303itf.4
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:37:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8xOhiHv6IAyds2onIWT6VtMgqzwePGMV06DbDbPJaZY=;
- b=dsDeqU+LqJlCgwRVUJwIP3eiStb2LJ4PcgM0UaZKpNgFXRLiB25rWEiB+i4VmtTejTDwcSq31C9MZU5V/bh0YBb8ViMTeImq7KLQZ6eCpSQ0McgIBqulelu82yxQXKeuE/mdzg7TVjBKbOUFCZB24/g7IvzmlYo+OxNIalfAUio=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
- MWHPR2201MB1582.namprd22.prod.outlook.com (10.174.167.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.13; Thu, 2 May 2019 18:35:55 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::b9d6:bf19:ec58:2765%7]) with mapi id 15.20.1835.018; Thu, 2 May 2019
- 18:35:55 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Juergen Gross <jgross@suse.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH 07/12] mips: Add reserve-nomap memory type support
-Thread-Topic: [PATCH 07/12] mips: Add reserve-nomap memory type support
-Thread-Index: AQHU+ibTcQYAUQYKTEW4hY4kn9Oli6ZYN3GA
-Date:   Thu, 2 May 2019 18:35:54 +0000
-Message-ID: <MWHPR2201MB1277D76A39CA0146537BFEB4C1340@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190423224748.3765-8-fancer.lancer@gmail.com>
-In-Reply-To: <20190423224748.3765-8-fancer.lancer@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR11CA0084.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::25) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:24::17)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3d9d98f9-5412-4594-ace4-08d6cf2d02ca
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1582;
-x-ms-traffictypediagnostic: MWHPR2201MB1582:
-x-microsoft-antispam-prvs: <MWHPR2201MB15828CBB93171BFC7EC57D73C1340@MWHPR2201MB1582.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0025434D2D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(376002)(366004)(39840400004)(199004)(189003)(33656002)(53936002)(52116002)(9686003)(99286004)(54906003)(229853002)(7696005)(6916009)(6436002)(186003)(4326008)(486006)(6116002)(476003)(3846002)(2906002)(26005)(11346002)(42882007)(102836004)(6506007)(386003)(446003)(44832011)(71190400001)(71200400001)(8676002)(4744005)(66066001)(81166006)(7736002)(478600001)(55016002)(76176011)(74316002)(7416002)(52536014)(316002)(66476007)(66556008)(73956011)(64756008)(66446008)(66946007)(256004)(25786009)(8936002)(81156014)(14454004)(68736007)(5660300002)(305945005)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1582;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4irDIuXaCul0vMRSevqpnO7luBiw7QclpXHuV1FpwBY0Z18f5LdYo24Udf8uCE5eqo9++6E5UkUAcbgMm41AGZvmQ9F1UZhd2Nq4+Sl2rLMO3nS4X7UsEaSPCY5IkqZC+UEA+8gFjuHo3a4cbXHQD31hw7jmRrXFNmF85EHiRkwzPdCCFppf04Qq+kIq+77mmZfYl28YjWqC8THnZNyJHSqoftQ2CdCidCnZT3QTTdU+9OY0MNqTYSWsNVxN6PD0mC78HUBau9v7pVk4x7gpLctsYLn024iq8arDg+rFluP22FFFSBICcFk0UnCqZS4DlTHNy5rzQY8Hf2fU5lKMFtennCN5lh3mnMbX9gQAKkh4qSYhQcjrsiIO+ZfS8q8rlkEM/aXVO096UGdCDU4RBDzA9jqa79WhwVtfO/09KMM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d9d98f9-5412-4594-ace4-08d6cf2d02ca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 18:35:54.9490
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1582
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=3bTGTbTE8gGlzRl/POqzvQikyqE1rXFDWwJSoA19kt4=;
+        b=NqZvTaSOo7uS4QqtoXCyXNDR4MTzOFCymDIYrBV/xH3OHScHgrHDqiUHPGj/nSPzFd
+         K4GHaokfN+BPVUf6IYjKFwjoEPbEyrWttzYY1ZvjO/kzzZDRCyUuDmzE0n4HgIvBWSv7
+         GoFdgyAfNXliayepT0vgzm0HOpo9mTF87vHTZjfwe7LGne07W+kOrWJ9XnuLTO2fOEdb
+         pNEpBljheyiqrUPD8qVWDu4WgXDL/2GhJm3/ZZA8JmiS8L1zHsggNGt6S8HgP2y03KA3
+         /mNcgAyQgwjtPf/tPRRcbV3RTztVYzExIX9xPZVn77ds5goQt+FUq6azcpDZYNOk2vKg
+         ycvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=3bTGTbTE8gGlzRl/POqzvQikyqE1rXFDWwJSoA19kt4=;
+        b=WR+vEDgoCdCkotHVxtNw/sSmSYqIxA+AIEyqi9MjwcVirHkmIYXB8D4qBlrEoQo6Oq
+         vD/NFRey8CEEA3QAPErqwE3nxbCLDuJgylBv8KVp9p+I7DvVaeCkLM2edK/rejO/Xsv+
+         5dpBurR47l84zFoHTYVLAreKuZp5VprATAGAewEuV5+S+P6rpwMeYZL14eN1AEcRhlaT
+         Em8sNUKPXtMB1uuYVTXYa91uiykCVKRMxIJCuB9Ozg67Y+nrycm+tlA5wF1MUoxB9DvJ
+         sSFz6cfVZ6rA/ROOxcFgaeDDgUKAFjdbum/zd2/jdJZr/3FHSAvNoiKH9Dq5D542tiQi
+         UFKA==
+X-Gm-Message-State: APjAAAXpUncf8qsvFUooA+HAmj6WcizrdLTQfhWNch3XYT033qwjGQXv
+        pta5YSzod3GSHFUe20Kit+a/t59WEQ==
+X-Google-Smtp-Source: APXvYqwXZ9iW3ueXbFsrht124bBnKI982DqtgkNeLPEMOcNcbdz9Iaqu3cxF0+jajH0mXndUhFO+uw==
+X-Received: by 2002:a24:4614:: with SMTP id j20mr3344210itb.72.1556822259065;
+        Thu, 02 May 2019 11:37:39 -0700 (PDT)
+Received: from localhost.localdomain ([92.117.168.44])
+        by smtp.gmail.com with ESMTPSA id y62sm4213ita.15.2019.05.02.11.37.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 11:37:38 -0700 (PDT)
+From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Viktor Rosendahl <viktor.rosendahl@gmail.com>
+Subject: Re: [PATCH v2 4/4] ftrace: Add an option for tracing console latencies
+Date:   Thu,  2 May 2019 20:37:31 +0200
+Message-Id: <20190502183731.9571-1-viktor.rosendahl@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190501213857.157e3741@oasis.local.home>
+References: <20190501213857.157e3741@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNClNlcmdlIFNlbWluIHdyb3RlOg0KPiBJdCBtaWdodCBiZSBuZWNlc3NhcnkgdG8g
-cHJldmVudCB0aGUgdmlydHVhbCBtYXBwaW5nIGNyZWF0aW9uIGZvciBhDQo+IHJlcXVlc3RlZCBt
-ZW1vcnkgcmVnaW9uLiBGb3IgaW5zdGFuY2UgdGhlcmUgaXMgYSAibm8tbWFwIiBwcm9wZXJ0eQ0K
-PiBpbmRpY2F0aW5nIGV4YWN0bHkgdGhpcyBmZWF0dXJlLiBJbiB0aGlzIGNhc2Ugd2UgbmVlZCB0
-byBub3Qgb25seQ0KPiByZXNlcnZlIHRoZSBzcGVjaWZpZWQgcmVnaW9uIGJ5IHByZXRlbmRpbmcg
-aXQgZG9lc24ndCBleGlzdCBpbiB0aGUNCj4gbWVtb3J5IHNwYWNlLCBidXQgY29tcGxldGVseSBy
-ZW1vdmUgdGhlIHJhbmdlIGZyb20gc3lzdGVtIGp1c3QgYnkNCj4gcmVtb3ZpbmcgaXQgZnJvbSBt
-ZW1ibG9jay4gVGhlIHNhbWUgd2F5IGl0J3MgZG9uZSBpbiBkZWZhdWx0DQo+IGVhcmx5X2luaXRf
-ZHRfcmVzZXJ2ZV9tZW1vcnlfYXJjaCgpIG1ldGhvZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFNl
-cmdlIFNlbWluIDxmYW5jZXIubGFuY2VyQGdtYWlsLmNvbT4NCg0KQXBwbGllZCB0byBtaXBzLW5l
-eHQuDQoNClRoYW5rcywNCiAgICBQYXVsDQoNClsgVGhpcyBtZXNzYWdlIHdhcyBhdXRvLWdlbmVy
-YXRlZDsgaWYgeW91IGJlbGlldmUgYW55dGhpbmcgaXMgaW5jb3JyZWN0DQogIHRoZW4gcGxlYXNl
-IGVtYWlsIHBhdWwuYnVydG9uQG1pcHMuY29tIHRvIHJlcG9ydCBpdC4gXQ0K
+> Instead of this being turned into a nop, don't have a kconfig option
+> but instead have this call into the trace_irqsoff.c code, and depending
+> on what the options are, it should stop it. Of course, this would need
+> to be smart enough to pair it. Perhaps return the result of
+> console_stop_critical_timings() and have that passed to
+> console_start_critical_timings(), and only have start do something if
+> stop did something. This way the option only needs to disable the stop
+> part.
+
+Something like this?
+
+I have only compile tested it so far.
+
+best regards,
+
+Viktor
+---
+ include/linux/irqflags.h     | 17 +++++++++++++++++
+ kernel/printk/printk.c       |  6 ++++--
+ kernel/trace/trace.h         |  1 +
+ kernel/trace/trace_irqsoff.c | 13 +++++++++++++
+ 4 files changed, 35 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index 21619c92c377..e4f7ebc67a53 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -68,9 +68,26 @@ do {						\
+ 	defined(CONFIG_PREEMPT_TRACER)
+  extern void stop_critical_timings(void);
+  extern void start_critical_timings(void);
++ extern bool console_tracing_disabled(void);
++
++#define console_stop_critical_timings(FLAG)		\
++	do {						\
++		FLAG = console_tracing_disabled();	\
++		if (FLAG)				\
++			stop_critical_timings();	\
++	} while(0)
++
++#define console_start_critical_timings(FLAG)		 \
++	do {						 \
++		if (FLAG)				 \
++			start_critical_timings();	 \
++	} while(0)
++
+ #else
+ # define stop_critical_timings() do { } while (0)
+ # define start_critical_timings() do { } while (0)
++# define console_stop_critical_timings(FLAG) do { } while (0)
++# define console_start_critical_timings(FLAG) do { } while (0)
+ #endif
+ 
+ /*
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 02ca827b8fac..3a18b7208399 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2348,6 +2348,7 @@ void console_unlock(void)
+ 	static char ext_text[CONSOLE_EXT_LOG_MAX];
+ 	static char text[LOG_LINE_MAX + PREFIX_MAX];
+ 	unsigned long flags;
++	bool cflag;
+ 	bool do_cond_resched, retry;
+ 
+ 	if (console_suspended) {
+@@ -2448,9 +2449,10 @@ void console_unlock(void)
+ 		 */
+ 		console_lock_spinning_enable();
+ 
+-		stop_critical_timings();	/* don't trace print latency */
++		/* don't trace print latency if it's disabled */
++		console_stop_critical_timings(cflag);
+ 		call_console_drivers(ext_text, ext_len, text, len);
+-		start_critical_timings();
++		console_start_critical_timings(cflag);
+ 
+ 		if (console_lock_spinning_disable_and_check()) {
+ 			printk_safe_exit_irqrestore(flags);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 59dc01ac52fd..3eed4756dba3 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1253,6 +1253,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 		C(PRINTK_MSGONLY,	"printk-msg-only"),	\
+ 		C(CONTEXT_INFO,		"context-info"),   /* Print pid/cpu/time */ \
+ 		C(LATENCY_FMT,		"latency-format"),	\
++		C(CONSOLE_LATENCY,	"console-latency"),	\
+ 		C(RECORD_CMD,		"record-cmd"),		\
+ 		C(RECORD_TGID,		"record-tgid"),		\
+ 		C(OVERWRITE,		"overwrite"),		\
+diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
+index 07a391e845de..659a82209c1e 100644
+--- a/kernel/trace/trace_irqsoff.c
++++ b/kernel/trace/trace_irqsoff.c
+@@ -490,6 +490,19 @@ void stop_critical_timings(void)
+ EXPORT_SYMBOL_GPL(stop_critical_timings);
+ NOKPROBE_SYMBOL(stop_critical_timings);
+ 
++bool console_tracing_disabled(void)
++{
++	struct trace_array *tr = irqsoff_trace;
++	int pc = preempt_count();
++
++	if (!preempt_trace(pc) && !irq_trace())
++		return false;
++
++	return !(tr->trace_flags & CONSOLE_LATENCY);
++}
++
++EXPORT_SYMBOL_GPL(console_tracing_disabled);
++
+ #ifdef CONFIG_FUNCTION_TRACER
+ static bool function_enabled;
+ 
+-- 
+2.17.1
+
