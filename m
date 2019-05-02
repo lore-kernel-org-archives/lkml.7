@@ -2,235 +2,144 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDE9C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C673FC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3CF620873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E7A20873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqyT76+V"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="IHjgdsOq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfEBFmR (ORCPT
+        id S1726201AbfEBFst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 01:42:17 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43509 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfEBFmR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 01:42:17 -0400
-Received: by mail-pl1-f193.google.com with SMTP id n8so504026plp.10;
-        Wed, 01 May 2019 22:42:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EGH1MUM577FslO7/IvvF8BfMS+g7IS6EKHX5XHDHMT0=;
-        b=bqyT76+VjZxOOqydpx77q1wViWG7RzQEH9NCYNlp0Cd6961tPtT1TUxSSvorjxVkXT
-         0MDTSReKNbdrkbn1CEj29FDcQg5gnMAJMOhBK2lD3eocquQYQimBnmFFJwov7D4uMn+o
-         iAWSpc40IQPGEOcHlZRq6xiXW42L4rccv+UvToiWBQ5JIkryVCjUD98dbtsHwkMg3YWD
-         kvW09h9GxYF3AO/zila7bLOnS9qz2dSCCV4M6vJQLnIM9JGwmRDoY/G/AS+OzQGrsMfd
-         72cHexwl2gIrTTAZlNGq3X37qfMvhhBhwDR9wK8wv1grL8X3F10vRNeyFyDouqMdG8bs
-         +j1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EGH1MUM577FslO7/IvvF8BfMS+g7IS6EKHX5XHDHMT0=;
-        b=XLFj1q8qzujLS4YW9NcAHvHUmcfGPtyeiCKiGEAiT8+Ju+Rb5nX/I3NmPlxXOpzEiS
-         MYo0le+8Jbt3qydaDd2KrRAAL4vliMqUnq8YTuocn6A3aI3+SSCzH2kOu4MiCsTM+amH
-         Lec7iwnF18y5RQx1Jm597D6BrTVdcRHq7A8ZnWShwgVY/DIZFc3/nR1kJtQEU+j01Kjq
-         lnq0AyzZlJFmvb0NefaFdfxBnmMGZuQerX+mBT7eFT+t/J/JKTwQN3EkQgO90c5TB+DL
-         yjTnqoOtjYGkEhuQe69L59mumn/qBQmLQK2NprUMGNlUPGh23KAousy/sz94xIm2477f
-         zIPQ==
-X-Gm-Message-State: APjAAAVbBzN9HSUCD646a6wqsVtHioRAaV3/2Z/OTvXeEcmTLGTfi89s
-        cejljwEVzHVdUudbDK2FEJU=
-X-Google-Smtp-Source: APXvYqw29TdjQIPjhLiujKI2+RF1Knz+NGn3wdpOxVdqER07W9h+l0ZWPM3S1DYD7PYFyecAl8Myhw==
-X-Received: by 2002:a17:902:4523:: with SMTP id m32mr1705967pld.98.1556775735796;
-        Wed, 01 May 2019 22:42:15 -0700 (PDT)
-Received: from mail.google.com ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id u5sm20047305pfb.60.2019.05.01.22.42.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 01 May 2019 22:42:15 -0700 (PDT)
-Date:   Thu, 2 May 2019 13:42:04 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 20/27] Documentation: x86: convert i386/IO-APIC.txt to
- reST
-Message-ID: <20190502054202.x2oli2ceseneyzdo@mail.google.com>
-References: <20190426153150.21228-1-changbin.du@gmail.com>
- <20190426153150.21228-21-changbin.du@gmail.com>
- <20190427152449.19df3fcb@coco.lan>
+        Thu, 2 May 2019 01:48:49 -0400
+Received: from mout.gmx.net ([212.227.15.19]:44929 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbfEBFss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 01:48:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1556776125;
+        bh=e97h7Oc+V3PzWYZf2aXC12eE1cAnqC2ASIoNjMs0snE=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=IHjgdsOq9ofWWDQqAuyujIO80DxHvUj0kHX3bUrW0Fmok2LmvpNdApOERYiLO8xqi
+         A8xM+129JDA7J85F+hQUWLWSXM08BtU5pdoULjHLy7hceyfQD4xyxuScpF3u8E+RRE
+         u6r1J4BMgbd+788keptQZz5IGgrEP2PmkAiG1kOg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.20.60] ([92.116.154.93]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmlT2-1gw7Q23IAA-00jomi; Thu, 02
+ May 2019 07:48:44 +0200
+Subject: Re: linux-next: Signed-off-by missing for commit in the parisc-hd
+ tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Parisc List <linux-parisc@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190502074519.61272b42@canb.auug.org.au>
+From:   Helge Deller <deller@gmx.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=deller@gmx.de; keydata=
+ xsBNBFDPIPYBCAC6PdtagIE06GASPWQJtfXiIzvpBaaNbAGgmd3Iv7x+3g039EV7/zJ1do/a
+ y9jNEDn29j0/jyd0A9zMzWEmNO4JRwkMd5Z0h6APvlm2D8XhI94r/8stwroXOQ8yBpBcP0yX
+ +sqRm2UXgoYWL0KEGbL4XwzpDCCapt+kmarND12oFj30M1xhTjuFe0hkhyNHkLe8g6MC0xNg
+ KW3x7B74Rk829TTAtj03KP7oA+dqsp5hPlt/hZO0Lr0kSAxf3kxtaNA7+Z0LLiBqZ1nUerBh
+ OdiCasCF82vQ4/y8rUaKotXqdhGwD76YZry9AQ9p6ccqKaYEzWis078Wsj7p0UtHoYDbABEB
+ AAHNHEhlbGdlIERlbGxlciA8ZGVsbGVyQGdteC5kZT7CwJIEEwECADwCGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEE9M/0wAvkPPtRU6Boh8nBUbUeOGQFAlrHzIICGQEACgkQh8nB
+ UbUeOGT1GAgAt+EeoHB4DbAx+pZoGbBYp6ZY8L6211n8fSi7wiwgM5VppucJ+C+wILoPkqiU
+ +ZHKlcWRbttER2oBUvKOt0+yDfAGcoZwHS0P+iO3HtxR81h3bosOCwek+TofDXl+TH/WSQJa
+ iaitof6iiPZLygzUmmW+aLSSeIAHBunpBetRpFiep1e5zujCglKagsW78Pq0DnzbWugGe26A
+ 288JcK2W939bT1lZc22D9NhXXRHfX2QdDdrCQY7UsI6g/dAm1d2ldeFlGleqPMdaaQMcv5+E
+ vDOur20qjTlenjnR/TFm9tA1zV+K7ePh+JfwKc6BSbELK4EHv8J8WQJjfTphakYLVM7ATQRQ
+ zyD2AQgA2SJJapaLvCKdz83MHiTMbyk8yj2AHsuuXdmB30LzEQXjT3JEqj1mpvcEjXrX1B3h
+ +0nLUHPI2Q4XWRazrzsseNMGYqfVIhLsK6zT3URPkEAp7R1JxoSiLoh4qOBdJH6AJHex4CWu
+ UaSXX5HLqxKl1sq1tO8rq2+hFxY63zbWINvgT0FUEME27Uik9A5t8l9/dmF0CdxKdmrOvGMw
+ T770cTt76xUryzM3fAyjtOEVEglkFtVQNM/BN/dnq4jDE5fikLLs8eaJwsWG9k9wQUMtmLpL
+ gRXeFPRRK+IT48xuG8rK0g2NOD8aW5ThTkF4apznZe74M7OWr/VbuZbYW443QQARAQABwsBf
+ BBgBAgAJBQJQzyD2AhsMAAoJEIfJwVG1HjhkNTgH/idWz2WjLE8DvTi7LvfybzvnXyx6rWUs
+ 91tXUdCzLuOtjqWVsqBtSaZynfhAjlbqRlrFZQ8i8jRyJY1IwqgvHP6PO9s+rIxKlfFQtqhl
+ kR1KUdhNGtiI90sTpi4aeXVsOyG3572KV3dKeFe47ALU6xE5ZL5U2LGhgQkbjr44I3EhPWc/
+ lJ/MgLOPkfIUgjRXt0ZcZEN6pAMPU95+u1N52hmqAOQZvyoyUOJFH1siBMAFRbhgWyv+YE2Y
+ ZkAyVDL2WxAedQgD/YCCJ+16yXlGYGNAKlvp07SimS6vBEIXk/3h5Vq4Hwgg0Z8+FRGtYZyD
+ KrhlU0uMP9QTB5WAUvxvGy8=
+Message-ID: <a645ff18-4c55-6b4c-0913-5b397ab83e03@gmx.de>
+Date:   Thu, 2 May 2019 07:48:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190427152449.19df3fcb@coco.lan>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190502074519.61272b42@canb.auug.org.au>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="IHQdC5p6ai1NPrnPei5omsyXdpU1jMhqJ"
+X-Provags-ID: V03:K1:67sW+rL/niYAXbd/GQxVSM1nGSafXBOnOiZTciJmGXr+MtAK1ie
+ 5JChfChtwezWC6IbCbK/779/T/MvqFmJscLMgfOOpwW2m/8l14UyJ+BuSf0XknlkjW03X88
+ FXNBTQtjdfKpndlha1wwE051gBQrFJMMbO85hkr4TPrUxqjQHdC4aYWWtKr1Pm7WZQrFGea
+ D7Mh61PzazwnLBejlFlMQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WrAke0Jlj7w=:r1JHH4efPlV0Cb1k7lZ4bc
+ UgFoUsgf14tB0XWjcG78Bxxq01uKKsRBtULgRT58B06GPCpu2BpWBKbzrfSK5395LRnvLRvzF
+ wnyp4qEuMdfKCtXBeaH/sJ34IZ3yno1h/g6x2hb5FPKjDOPx7L7xEJSougipfBtte4SJpEIlH
+ cwWaJF/uLSB8VqmquprU8wwhdH1neH/qglGlyD25mxt5Ys8+z9ijQuJ14ilCKdSD4UQeQa7s+
+ iKhXzczjslNYwRSaJhve/rS5s1uNWEriYcGOKq7CSVXoqGxfXy23HF9iXQNLho/eLBczF7W2U
+ fNhrpLM6YtFnO4b67GqUEPI2zllWQcq07LJEkmiK09pg4D26oaLh3mgGOrYeXMChck0xjYqq9
+ vc+mG7bGbCTyA366BZG16dMFvJMo6xEUCzgD0ezgPJXfWuJaewCjbfunBrYNnoFkv0+qKQUcY
+ xfCc2peJNaFthIk8hiMZYj7SL0RZjkfdU5pRbECvC9dRKudLweei7BT35YHoVcVY/NPwNXg9N
+ Etg4iWAfMI93HZyppCyYD2a3EgGYml2SEK4ryX7htMwY93KiY8UJFLYeVN7BCBR3ffHYMvMgn
+ OZsSeAc9ewBEeqtfX0KrwaegBQ/81Dx945i7dQ9Dxgk80l1xN6E/Kca+0Ez2n6dUtP/LiXo5s
+ hNO968+Y3wqJxXSYgJKTfKNU77P6Vf8X2v5mkirHDDH6mnmEZJTp59/zBvqDyPO34XrQxb4Tn
+ tIj2jJ6SLmFrm44DTJzD4vwdB7ORqO8yykJd4dH1zKuYD+hAw6DxDzeMqXHX5mGlSQyCLA6vA
+ qwn852E7v5HapGYEmEdOxzP2/+kXd15iv05KZQvTlKttrclhacpjcZE+cQCeF9oikD8BvYc89
+ 4R5dvOKmS4J6PXpXAKU9osZtE8xsXtppaMYV8yTCYdek8WmmmRTMPz4b2VhAss
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 03:24:49PM -0300, Mauro Carvalho Chehab wrote:
-> Em Fri, 26 Apr 2019 23:31:43 +0800
-> Changbin Du <changbin.du@gmail.com> escreveu:
-> 
-> > This converts the plain text documentation to reStructuredText format and
-> > add it to Sphinx TOC tree. No essential content change.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > ---
-> >  .../x86/i386/{IO-APIC.txt => IO-APIC.rst}     | 26 ++++++++++++-------
-> >  Documentation/x86/i386/index.rst              | 10 +++++++
-> >  Documentation/x86/index.rst                   |  1 +
-> >  3 files changed, 27 insertions(+), 10 deletions(-)
-> >  rename Documentation/x86/i386/{IO-APIC.txt => IO-APIC.rst} (93%)
-> >  create mode 100644 Documentation/x86/i386/index.rst
-> > 
-> > diff --git a/Documentation/x86/i386/IO-APIC.txt b/Documentation/x86/i386/IO-APIC.rst
-> > similarity index 93%
-> > rename from Documentation/x86/i386/IO-APIC.txt
-> > rename to Documentation/x86/i386/IO-APIC.rst
-> > index 15f5baf7e1b6..aec98f742763 100644
-> > --- a/Documentation/x86/i386/IO-APIC.txt
-> > +++ b/Documentation/x86/i386/IO-APIC.rst
-> > @@ -1,3 +1,11 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=======
-> > +IO-APIC
-> > +=======
-> > +
-> > +:Author: Ingo Molnar <mingo@kernel.org>
-> > +
-> >  Most (all) Intel-MP compliant SMP boards have the so-called 'IO-APIC',
-> >  which is an enhanced interrupt controller. It enables us to route
-> >  hardware interrupts to multiple CPUs, or to CPU groups. Without an
-> > @@ -13,7 +21,7 @@ usually worked around by the kernel. If your MP-compliant SMP board does
-> >  not boot Linux, then consult the linux-smp mailing list archives first.
-> >  
-> >  If your box boots fine with enabled IO-APIC IRQs, then your
-> > -/proc/interrupts will look like this one:
-> > +/proc/interrupts will look like this one::
-> >  
-> >     ---------------------------->
-> ...
->      <----------------------------
-> 
-> I would remove those lines, as they sounds like a way used by the
-> doc author to "escape" a literal block.
->
-Removed.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--IHQdC5p6ai1NPrnPei5omsyXdpU1jMhqJ
+Content-Type: multipart/mixed; boundary="C1TGjZwGUWBQWVPFWmHFWHOr2RqEe39YE";
+ protected-headers="v1"
+From: Helge Deller <deller@gmx.de>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Parisc List <linux-parisc@vger.kernel.org>
+Cc: Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <a645ff18-4c55-6b4c-0913-5b397ab83e03@gmx.de>
+Subject: Re: linux-next: Signed-off-by missing for commit in the parisc-hd
+ tree
+References: <20190502074519.61272b42@canb.auug.org.au>
+In-Reply-To: <20190502074519.61272b42@canb.auug.org.au>
 
-> Either way:
-> 
-> Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> 
-> 
-> >    hell:~> cat /proc/interrupts  
-> > @@ -37,14 +45,14 @@ none of those IRQ sources is performance-critical.
-> >  In the unlikely case that your board does not create a working mp-table,
-> >  you can use the pirq= boot parameter to 'hand-construct' IRQ entries. This
-> >  is non-trivial though and cannot be automated. One sample /etc/lilo.conf
-> > -entry:
-> > +entry::
-> >  
-> >  	append="pirq=15,11,10"
-> >  
-> >  The actual numbers depend on your system, on your PCI cards and on their
-> >  PCI slot position. Usually PCI slots are 'daisy chained' before they are
-> >  connected to the PCI chipset IRQ routing facility (the incoming PIRQ1-4
-> > -lines):
-> > +lines)::
-> >  
-> >                 ,-.        ,-.        ,-.        ,-.        ,-.
-> >       PIRQ4 ----| |-.    ,-| |-.    ,-| |-.    ,-| |--------| |
-> > @@ -56,7 +64,7 @@ lines):
-> >       PIRQ1 ----| |-  `----| |-  `----| |-  `----| |--------| |
-> >                 `-'        `-'        `-'        `-'        `-'
-> >  
-> > -Every PCI card emits a PCI IRQ, which can be INTA, INTB, INTC or INTD:
-> > +Every PCI card emits a PCI IRQ, which can be INTA, INTB, INTC or INTD::
-> >  
-> >                                 ,-.
-> >                           INTD--| |
-> > @@ -78,19 +86,19 @@ to have non shared interrupts). Slot5 should be used for videocards, they
-> >  do not use interrupts normally, thus they are not daisy chained either.
-> >  
-> >  so if you have your SCSI card (IRQ11) in Slot1, Tulip card (IRQ9) in
-> > -Slot2, then you'll have to specify this pirq= line:
-> > +Slot2, then you'll have to specify this pirq= line::
-> >  
-> >  	append="pirq=11,9"
-> >  
-> >  the following script tries to figure out such a default pirq= line from
-> > -your PCI configuration:
-> > +your PCI configuration::
-> >  
-> >  	echo -n pirq=; echo `scanpci | grep T_L | cut -c56-` | sed 's/ /,/g'
-> >  
-> >  note that this script won't work if you have skipped a few slots or if your
-> >  board does not do default daisy-chaining. (or the IO-APIC has the PIRQ pins
-> >  connected in some strange way). E.g. if in the above case you have your SCSI
-> > -card (IRQ11) in Slot3, and have Slot1 empty:
-> > +card (IRQ11) in Slot3, and have Slot1 empty::
-> >  
-> >  	append="pirq=0,9,11"
-> >  
-> > @@ -105,7 +113,7 @@ won't function properly (e.g. if it's inserted as a module).
-> >  If you have 2 PCI buses, then you can use up to 8 pirq values, although such
-> >  boards tend to have a good configuration.
-> >  
-> > -Be prepared that it might happen that you need some strange pirq line:
-> > +Be prepared that it might happen that you need some strange pirq line::
-> >  
-> >  	append="pirq=0,0,0,0,0,0,9,11"
-> >  
-> > @@ -115,5 +123,3 @@ Good luck and mail to linux-smp@vger.kernel.org or
-> >  linux-kernel@vger.kernel.org if you have any problems that are not covered
-> >  by this document.
-> >  
-> > --- mingo
-> > -
-> > diff --git a/Documentation/x86/i386/index.rst b/Documentation/x86/i386/index.rst
-> > new file mode 100644
-> > index 000000000000..8747cf5bbd49
-> > --- /dev/null
-> > +++ b/Documentation/x86/i386/index.rst
-> > @@ -0,0 +1,10 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +============
-> > +i386 Support
-> > +============
-> > +
-> > +.. toctree::
-> > +   :maxdepth: 2
-> > +
-> > +   IO-APIC
-> > diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-> > index 526f7a008b8e..19323c5b89ce 100644
-> > --- a/Documentation/x86/index.rst
-> > +++ b/Documentation/x86/index.rst
-> > @@ -26,3 +26,4 @@ Linux x86 Support
-> >     microcode
-> >     resctrl_ui
-> >     usb-legacy-support
-> > +   i386/index
-> 
-> 
-> 
-> Thanks,
-> Mauro
+--C1TGjZwGUWBQWVPFWmHFWHOr2RqEe39YE
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Cheers,
-Changbin Du
+On 01.05.19 23:45, Stephen Rothwell wrote:
+> Commit
+>   2b731a920986 ("parisc: Update huge TLB page support to use per-pageta=
+ble spinlock")
+> is missing a Signed-off-by from its committer.
+
+Thanks. Fixed now.
+Helge
+
+
+--C1TGjZwGUWBQWVPFWmHFWHOr2RqEe39YE--
+
+--IHQdC5p6ai1NPrnPei5omsyXdpU1jMhqJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYIAB0WIQTPnDOmy1/TQodsisYgKkl43U+sXQUCXMqEuwAKCRAgKkl43U+s
+XcYZAP9NTF3n2FZHZEYF5b0jMWIrXPfbPFaSt1Qo5OJea/Jn7wD+KXVgjkZohu/M
+77SaaKd3negeywaSR6bXPj6XftKPIQg=
+=DobL
+-----END PGP SIGNATURE-----
+
+--IHQdC5p6ai1NPrnPei5omsyXdpU1jMhqJ--
