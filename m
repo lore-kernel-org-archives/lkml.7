@@ -2,147 +2,68 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2CEC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A5AC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6EB820652
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FDAC2075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 16:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556813705;
+	bh=48dOdRmMVPXBsowhpGEfeSxCWlng0Hchxv8f1hORoPI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=JW2TPngKY9lGTikbPtntzBw/kDFo8qUcG31ze2f+sIVP/dIe5p6amF298x+8uVQ5R
+	 oxBmPb+dXKyK3FQeprncj4LYVhT63XRTab9NKey3neIFJgeLB3dovVsZ1m8THkeV5D
+	 OW6iDeiMcy3EaWtTEuaKcHGxiWXBzpQnfANIfA/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfEBQOd (ORCPT
+        id S1726559AbfEBQPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 12:14:33 -0400
-Received: from foss.arm.com ([217.140.101.70]:48710 "EHLO foss.arm.com"
+        Thu, 2 May 2019 12:15:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbfEBQOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 12:14:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D96CA78;
-        Thu,  2 May 2019 09:14:32 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B9783F5AF;
-        Thu,  2 May 2019 09:14:27 -0700 (PDT)
-Date:   Thu, 2 May 2019 17:14:24 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha@sourceware.org
-Subject: Re: [PATCH] binfmt_elf: Extract .note.gnu.property from an ELF file
-Message-ID: <20190502161424.GQ3567@e103592.cambridge.arm.com>
-References: <20190501211217.5039-1-yu-cheng.yu@intel.com>
- <20190502111003.GO3567@e103592.cambridge.arm.com>
- <5b2c6cee345e00182e97842ae90c02cdcd830135.camel@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b2c6cee345e00182e97842ae90c02cdcd830135.camel@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        id S1726278AbfEBQPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 12:15:04 -0400
+Subject: Re: [GIT PULL] MTD fixes for 5.1 final
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556813703;
+        bh=48dOdRmMVPXBsowhpGEfeSxCWlng0Hchxv8f1hORoPI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=RPWNbSbD56omBBiQaXhuzBNOZAriW3Ly/T7knVtPG4xedUyC88Eg2S9RQRZHCIvnI
+         kOaS5uj/1RIw4CSLzyFHgXKtFuyaEpW1NqboAESo+ZG+VHdtNLG8bzKRgrgXG53rje
+         Uw99MA7DDkKFzMsg1cEcv40WX3uA/ylfWAQ38qGs=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <1906022472.41848.1556787246765.JavaMail.zimbra@nod.at>
+References: <1906022472.41848.1556787246765.JavaMail.zimbra@nod.at>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1906022472.41848.1556787246765.JavaMail.zimbra@nod.at>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git
+ tags/mtd/fixes-for-5.1-rc6
+X-PR-Tracked-Commit-Id: 9a8f612ca0d6a436e6471c9bed516d34a2cc626f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e2a4b102d48be7f6055e0e70696ab243ee791e51
+Message-Id: <155681370345.16515.15182479020110698359.pr-tracker-bot@kernel.org>
+Date:   Thu, 02 May 2019 16:15:03 +0000
+To:     Richard Weinberger <richard@nod.at>
+Cc:     torvalds@linux-foundation.org, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 08:47:06AM -0700, Yu-cheng Yu wrote:
-> On Thu, 2019-05-02 at 12:10 +0100, Dave Martin wrote:
-> > On Wed, May 01, 2019 at 02:12:17PM -0700, Yu-cheng Yu wrote:
-> > > An ELF file's .note.gnu.property indicates features the executable file
-> > > can support.  For example, the property GNU_PROPERTY_X86_FEATURE_1_AND
-> > > indicates the file supports GNU_PROPERTY_X86_FEATURE_1_IBT and/or
-> > > GNU_PROPERTY_X86_FEATURE_1_SHSTK.
-> 
-> [...]
-> > A couple of questions before I look in more detail:
-> > 
-> > 1) Can we rely on PT_GNU_PROPERTY being present in the phdrs to describe
-> > the NT_GNU_PROPERTY_TYPE_0 note?  If so, we can avoid trying to parse
-> > irrelevant PT_NOTE segments.
-> 
-> Some older linkers can create multiples of NT_GNU_PROPERTY_TYPE_0.  The code
-> scans all PT_NOTE segments to ensure there is only one NT_GNU_PROPERTY_TYPE_0. 
-> If there are multiples, then all are considered invalid.
+The pull request you sent on Thu, 2 May 2019 10:54:06 +0200 (CEST):
 
-I'm concerned that in the arm64 case we would waste some effort by
-scanning multiple notes.
+> git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/fixes-for-5.1-rc6
 
-Could we do something like iterating over the phdrs, and if we find
-exactly one PT_GNU_PROPERTY then use that, else fall back to scanning
-all PT_NOTEs?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e2a4b102d48be7f6055e0e70696ab243ee791e51
 
-> > 2) Are there standard types for things like the program property header?
-> > If not, can we add something in elf.h?  We should try to coordinate with
-> > libc on that.  Something like
-> > 
-> > typedef __u32 Elf_Word;
-> > 
-> > typedef struct {
-> > 	Elf_Word pr_type;
-> > 	Elf_Word pr_datasz;
-> > } Elf_Gnu_Prophdr;
-> > 
-> > (i.e., just the header part from [1], with a more specific name -- which
-> > I just made up).
-> 
-> Yes, I will fix that.
-> 
-> [...]
-> > 3) It looks like we have to go and re-parse all the notes for every
-> > property requested by the arch code.
-> 
-> As explained above, it is necessary to scan all PT_NOTE segments.  But there
-> should be only one NT_GNU_PROPERTY_TYPE_0 in an ELF file.  Once that is found,
-> perhaps we can store it somewhere, or call into the arch code as you mentioned
-> below.  I will look into that.
+Thank you!
 
-Just to get something working on arm64, I'm working on some hacks that
-move things around a bit -- I'll post when I have something.
-
-Did you have any view on my other point, below?
-
-Cheers
----Dave
-
-> > For now there is only one property requested anyway, so this is probably
-> > not too bad.  But could we flip things around so that we have some
-> > CONFIG_ARCH_WANTS_ELF_GNU_PROPERTY (say), and have the ELF core code
-> > call into the arch backend for each property found?
-> > 
-> > The arch could provide some hook
-> > 
-> > 	int arch_elf_has_gnu_property(const Elf_Gnu_Prophdr *prop,
-> > 					const void *data);
-> > 
-> > to consume the properties as they are found.
-> > 
-> > This would effectively replace the arch_setup_property() hook you
-> > currently have.
-> > 
-> > Cheers
-> > ---Dave
-> > 
-> > [1] https://github.com/hjl-tools/linux-abi/wiki/Linux-Extensions-to-gABI
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
