@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BF6C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89535C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F5F20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 597A62081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810858;
-	bh=djyInSHTCQqaF8tjMhJZ3EopzTq1PtfC9tQnVRxQMkY=;
+	s=default; t=1556810861;
+	bh=EkyQN7rAV/ZmEFPsoY8BzF4fbX5QKRdMXmRTLhBN8QA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UrZTt1iO6n1IL9xZ4k+EZ+UGM2qhcCpH/ObsDtw0laJRlTzaRCwrM2VEuaViXoDVR
-	 xZbiKQF+RkaB6YgOmlYaPpvb6gt5D5YyTK8W8mhOy/Bsqzwe/d9o1fR0UZCzhDAkGT
-	 /ST/zip0vUe+TKda9lcNp3+SJ6QBxb2mwLj5OHBM=
+	b=nPXKME29x0cePp98413XogSgYyuhaZQBgUwPomcBnOwto53ufNLqgor6HueCnOJYU
+	 ZwwJp7aBdc5yzHuehRyB1xQSuiVdtc7cDd5z7vc1fcz8m701nVhkHp7+4hQfWrmVF2
+	 eKtIBhKXJJR/gydHnVtAjG2/beYOqG2lReWepU8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbfEBP1h (ORCPT
+        id S1728031AbfEBP1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:27:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44470 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:27:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727996AbfEBP1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:27:35 -0400
+        id S1728015AbfEBP1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:27:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BA892081C;
-        Thu,  2 May 2019 15:27:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD1CB216FD;
+        Thu,  2 May 2019 15:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810854;
-        bh=djyInSHTCQqaF8tjMhJZ3EopzTq1PtfC9tQnVRxQMkY=;
+        s=default; t=1556810857;
+        bh=EkyQN7rAV/ZmEFPsoY8BzF4fbX5QKRdMXmRTLhBN8QA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+L6yvZ1OPQOnANjrhg4BS3EqpXEuzudeQdu4SeP3mqHWztBqE5vw84FItDXftACk
-         eJtpvkv2B3rxGDHwZAdtj3tkFvg8SBatTg5kvEq44JSZbTPBCHHzRpXBPQiGSwEPmD
-         KH4VBZBgu4iLzgT4PC3aqSqhjgeYPBUwAC96mMLc=
+        b=FpeKRTcLWdRwCm0a34q8xoCDPDOkDH7iebZiYwY3nRIRLENCLKLv1Rz61iMwBrbwU
+         D/u329WQUp8Jdq2+gHUgrgMSnbs8RdS+jfUNrXyFpLKqyCvBQMAcNKVqsypSe3I2qh
+         NNjkbxMlzPpRcAFhhAK2VMBW+FjYswOkTwpuELT4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?M=C3=A1t=C3=A9=20Eckl?= <ecklm94@gmail.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
         Pablo Neira Ayuso <pablo@netfilter.org>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 18/72] netfilter: fix NETFILTER_XT_TARGET_TEE dependencies
-Date:   Thu,  2 May 2019 17:20:40 +0200
-Message-Id: <20190502143334.764997451@linuxfoundation.org>
+Subject: [PATCH 4.19 19/72] netfilter: ip6t_srh: fix NULL pointer dereferences
+Date:   Thu,  2 May 2019 17:20:41 +0200
+Message-Id: <20190502143334.892729703@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -65,45 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d1fa381033eb718df5c602f64b6e88676138dfc6 ]
+[ Upstream commit 6d65561f3d5ec933151939c543d006b79044e7a6 ]
 
-With NETFILTER_XT_TARGET_TEE=y and IP6_NF_IPTABLES=m, we get a link
-error when referencing the NF_DUP_IPV6 module:
+skb_header_pointer may return NULL. The current code dereference
+its return values without a NULL check.
 
-net/netfilter/xt_TEE.o: In function `tee_tg6':
-xt_TEE.c:(.text+0x14): undefined reference to `nf_dup_ipv6'
+The fix inserts the checks to avoid NULL pointer dereferences.
 
-The problem here is the 'select NF_DUP_IPV6 if IP6_NF_IPTABLES'
-that forces NF_DUP_IPV6 to be =m as well rather than setting it
-to =y as was intended here. Adding a soft dependency on
-IP6_NF_IPTABLES avoids that broken configuration.
-
-Fixes: 5d400a4933e8 ("netfilter: Kconfig: Change select IPv6 dependencies")
-Cc: Máté Eckl <ecklm94@gmail.com>
-Cc: Taehee Yoo <ap420073@gmail.com>
-Link: https://patchwork.ozlabs.org/patch/999498/
-Link: https://lore.kernel.org/patchwork/patch/960062/
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 202a8ff545cc ("netfilter: add IPv6 segment routing header 'srh' match")
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/netfilter/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ net/ipv6/netfilter/ip6t_srh.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
-index f61c306de1d0..e0fb56d67d42 100644
---- a/net/netfilter/Kconfig
-+++ b/net/netfilter/Kconfig
-@@ -1003,6 +1003,7 @@ config NETFILTER_XT_TARGET_TEE
- 	depends on NETFILTER_ADVANCED
- 	depends on IPV6 || IPV6=n
- 	depends on !NF_CONNTRACK || NF_CONNTRACK
-+	depends on IP6_NF_IPTABLES || !IP6_NF_IPTABLES
- 	select NF_DUP_IPV4
- 	select NF_DUP_IPV6 if IP6_NF_IPTABLES
- 	---help---
+diff --git a/net/ipv6/netfilter/ip6t_srh.c b/net/ipv6/netfilter/ip6t_srh.c
+index 1059894a6f4c..4cb83fb69844 100644
+--- a/net/ipv6/netfilter/ip6t_srh.c
++++ b/net/ipv6/netfilter/ip6t_srh.c
+@@ -210,6 +210,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		psidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
+ 			  ((srh->segments_left + 1) * sizeof(struct in6_addr));
+ 		psid = skb_header_pointer(skb, psidoff, sizeof(_psid), &_psid);
++		if (!psid)
++			return false;
+ 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_PSID,
+ 				ipv6_masked_addr_cmp(psid, &srhinfo->psid_msk,
+ 						     &srhinfo->psid_addr)))
+@@ -223,6 +225,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		nsidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
+ 			  ((srh->segments_left - 1) * sizeof(struct in6_addr));
+ 		nsid = skb_header_pointer(skb, nsidoff, sizeof(_nsid), &_nsid);
++		if (!nsid)
++			return false;
+ 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_NSID,
+ 				ipv6_masked_addr_cmp(nsid, &srhinfo->nsid_msk,
+ 						     &srhinfo->nsid_addr)))
+@@ -233,6 +237,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 	if (srhinfo->mt_flags & IP6T_SRH_LSID) {
+ 		lsidoff = srhoff + sizeof(struct ipv6_sr_hdr);
+ 		lsid = skb_header_pointer(skb, lsidoff, sizeof(_lsid), &_lsid);
++		if (!lsid)
++			return false;
+ 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_LSID,
+ 				ipv6_masked_addr_cmp(lsid, &srhinfo->lsid_msk,
+ 						     &srhinfo->lsid_addr)))
 -- 
 2.19.1
 
