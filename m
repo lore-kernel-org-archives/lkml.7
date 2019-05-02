@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-12.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AE2C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E19C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C979221479
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489A1208E4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556763507;
-	bh=g4DgSLnxQUp37XINiryGrlJ7kTFqOE0hfmdCLys/4fE=;
+	s=default; t=1556763518;
+	bh=hi2TcNVr06ts0wCsKqCkkkLgKc7GuBEvkNH9Hf22IYU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=NWjJHh3WmabfTllCGhW77D1mvrGyRuPcCvegtXqsM+8vxk/z5yEghjOR4Jhzrr31U
-	 tO8bMP+qzgb3GYwzjzZW+bwfm1PbfLmFdE3WuLBNPKZREDf8syR2jw0dp3+qwWreTx
-	 6oYkxm5lTg8amkangcJ0dFUzDGJMfvRh54NaveSs=
+	b=jGDI6mXSNuFmMl2BEMCb1ceWJBGt1GeLql8gV8BvVJkwz/I8j+1rCyaXPWTB29KhL
+	 CZTA9mrW8IV7edUuV3qHJQof3pBeI4phVAqNtAYsT91Nar+8wiiDG4+pNWlicrpEE4
+	 z5hFOuTNyA12zhfllc8nVKDMQmR2vun7d6+XBDps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfEBCSU (ORCPT
+        id S1726429AbfEBCSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:18:20 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54866 "EHLO
+        Wed, 1 May 2019 22:18:36 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55466 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfEBCST (ORCPT
+        with ESMTP id S1726152AbfEBCSg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:18:19 -0400
+        Wed, 1 May 2019 22:18:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=tSRP9AREY1phAztSLdhpxjCCxjAVr/6vVxlS8p739D8=; b=ulRALQv+WaEZ
-        dWAzFCLY+CxW6k6PgY3Y8PFjrGSd3H7DCO491Tl3E05IMZiuViUgwAlR4nmwo6GZgtZqKiPUxLFxl
-        uxoNGF6k89EDqMqzlE+I96cwLemX7HXY6YehuuhQdwAKu6kauZrd3N6VoGnzGwnKyhG9dze4qa13Y
-        5CEiU=;
+        List-Archive; bh=QjCPGci74UmifJtpBqzOP72e1ynNhraaHvIcf4rf0co=; b=W8AbRtvWtJpZ
+        R6IG8s4CIHH0C2oDH5Vs/J5a39kA7O7QUSS9QdngbpqgtsvdLmHWlDXKg29TBcub/TLRLOJ5Ersex
+        UhP4nTrRYqbQKcNezLxpAXyUHSFEWZrapbY+dDE3TspbbfdAmHxUsEHVaPDR9e1/ccWElkYH26VUL
+        FKGew=;
 Received: from [211.55.52.15] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hM1IV-0005ps-20; Thu, 02 May 2019 02:18:07 +0000
+        id 1hM1Il-0005re-MR; Thu, 02 May 2019 02:18:24 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 0F5F9441D41; Thu,  2 May 2019 03:18:03 +0100 (BST)
+        id 053F2441D3C; Thu,  2 May 2019 03:18:19 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     alsa-devel@alsa-project.org, Baolin Wang <baolin.wang@linaro.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        kernel-janitors@vger.kernel.org,
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     alsa-devel@alsa-project.org,
+        Brian Austin <brian.austin@cirrus.com>, kjlu@umn.edu,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>, Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: sprd: Fix return value check in sprd_mcdt_probe()" to the asoc tree
-In-Reply-To: <20190429122512.59242-1-weiyongjun1@huawei.com>
+        pakki001@umn.edu, Paul Handrigan <Paul.Handrigan@cirrus.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: cs43130: fix a NULL pointer dereference" to the asoc tree
+In-Reply-To:  <20190315035120.25913-1-kjlu@umn.edu>
 X-Patchwork-Hint: ignore
-Message-Id: <20190502021803.0F5F9441D41@finisterre.ee.mobilebroadband>
-Date:   Thu,  2 May 2019 03:18:02 +0100 (BST)
+Message-Id: <20190502021820.053F2441D3C@finisterre.ee.mobilebroadband>
+Date:   Thu,  2 May 2019 03:18:19 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: sprd: Fix return value check in sprd_mcdt_probe()
+   ASoC: cs43130: fix a NULL pointer dereference
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,38 +90,33 @@ to this mail.
 Thanks,
 Mark
 
-From 7c88b92816dfe5eab224b96577b50ac00b4be68a Mon Sep 17 00:00:00 2001
-From: Wei Yongjun <weiyongjun1@huawei.com>
-Date: Mon, 29 Apr 2019 12:25:12 +0000
-Subject: [PATCH] ASoC: sprd: Fix return value check in sprd_mcdt_probe()
+From a2be42f18d409213bb7e7a736e3ef6ba005115bb Mon Sep 17 00:00:00 2001
+From: Kangjie Lu <kjlu@umn.edu>
+Date: Thu, 14 Mar 2019 22:51:20 -0500
+Subject: [PATCH] ASoC: cs43130: fix a NULL pointer dereference
 
-In case of error, the function devm_ioremap_resource() returns ERR_PTR()
-and never returns NULL. The NULL test in the return value check should
-be replaced with IS_ERR().
+In case create_singlethread_workqueue fails, the fix returns
+-ENOMEM to avoid potential NULL pointer dereference.
 
-Fixes: d7bff893e04f ("ASoC: sprd: Add Spreadtrum multi-channel data transfer support")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sprd/sprd-mcdt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/cs43130.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/sprd/sprd-mcdt.c b/sound/soc/sprd/sprd-mcdt.c
-index 28f5e649733d..e9318d7a4810 100644
---- a/sound/soc/sprd/sprd-mcdt.c
-+++ b/sound/soc/sprd/sprd-mcdt.c
-@@ -951,8 +951,8 @@ static int sprd_mcdt_probe(struct platform_device *pdev)
+diff --git a/sound/soc/codecs/cs43130.c b/sound/soc/codecs/cs43130.c
+index 3f7b255587e6..80d672710eae 100644
+--- a/sound/soc/codecs/cs43130.c
++++ b/sound/soc/codecs/cs43130.c
+@@ -2322,6 +2322,8 @@ static int cs43130_probe(struct snd_soc_component *component)
+ 			return ret;
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	mcdt->base = devm_ioremap_resource(&pdev->dev, res);
--	if (!mcdt->base)
--		return -ENOMEM;
-+	if (IS_ERR(mcdt->base))
-+		return PTR_ERR(mcdt->base);
+ 		cs43130->wq = create_singlethread_workqueue("cs43130_hp");
++		if (!cs43130->wq)
++			return -ENOMEM;
+ 		INIT_WORK(&cs43130->work, cs43130_imp_meas);
+ 	}
  
- 	mcdt->dev = &pdev->dev;
- 	spin_lock_init(&mcdt->lock);
 -- 
 2.20.1
 
