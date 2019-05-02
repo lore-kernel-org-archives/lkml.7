@@ -2,60 +2,118 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D346C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFA6C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F682085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015EB20449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:55:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfEBMxc (ORCPT
+        id S1726515AbfEBMzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:53:32 -0400
-Received: from verein.lst.de ([213.95.11.211]:59099 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfEBMxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:53:32 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id E2FAA68AA6; Thu,  2 May 2019 14:53:12 +0200 (CEST)
-Date:   Thu, 2 May 2019 14:53:12 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
-        Willem Riede <osst@riede.org>,
-        Doug Gilbert <dgilbert@interlog.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Kai =?iso-8859-1?Q?M=E4kisara?= <Kai.Makisara@kolumbus.fi>,
-        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
-        osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Chriosstoph Hellwig <hch@losst.de>
-Subject: Re: [PATCH 24/24] osst: add a SPDX tag to osst.c
-Message-ID: <20190502125312.GA2560@lst.de>
-References: <20190501161417.32592-1-hch@lst.de> <20190501161417.32592-25-hch@lst.de> <70277444-5b5b-6e3c-5af3-c658a841b144@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70277444-5b5b-6e3c-5af3-c658a841b144@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Thu, 2 May 2019 08:55:02 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:55590 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfEBMzC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 08:55:02 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hMBEn-000103-Sz; Thu, 02 May 2019 14:54:58 +0200
+Message-ID: <3e8291cb2491e9a1830afdb903ed2c52e9f7475c.camel@sipsolutions.net>
+Subject: Re: [PATCH net-next 3/3] netlink: add validation of NLA_F_NESTED
+ flag
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        David Ahern <dsahern@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 02 May 2019 14:54:56 +0200
+In-Reply-To: <75a0887b3eb70005c272685d8ef9a712f37d7a54.1556798793.git.mkubecek@suse.cz>
+References: <cover.1556798793.git.mkubecek@suse.cz>
+         <75a0887b3eb70005c272685d8ef9a712f37d7a54.1556798793.git.mkubecek@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 08:06:38AM +0200, Hannes Reinecke wrote:
-> On 5/1/19 6:14 PM, Christoph Hellwig wrote:
->> osst.c is the only osst file missing licensing information.  Add a
->> GPLv2 tag for the default kernel license.
->>
->> Signed-off-by: Chriosstoph Hellwig <hch@losst.de>
+On Thu, 2019-05-02 at 12:48 +0000, Michal Kubecek wrote:
+> Add new validation flag NL_VALIDATE_NESTED which adds three consistency
+> checks of NLA_F_NESTED_FLAG:
+> 
+>   - the flag is set on attributes with NLA_NESTED{,_ARRAY} policy
+>   - the flag is not set on attributes with other policies except NLA_UNSPEC
+>   - the flag is set on attribute passed to nla_parse_nested()
 
-FYI, my s/st/osst/ on the commit message message up my signoff, this
-should be:
+Looks good to me!
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+> @@ -415,7 +418,8 @@ enum netlink_validation {
+>  #define NL_VALIDATE_STRICT (NL_VALIDATE_TRAILING |\
+>  			    NL_VALIDATE_MAXTYPE |\
+>  			    NL_VALIDATE_UNSPEC |\
+> -			    NL_VALIDATE_STRICT_ATTRS)
+> +			    NL_VALIDATE_STRICT_ATTRS |\
+> +			    NL_VALIDATE_NESTED)
+
+This is fine _right now_, but in general we cannot keep adding here
+after the next release :-)
+
+>  int netlink_rcv_skb(struct sk_buff *skb,
+>  		    int (*cb)(struct sk_buff *, struct nlmsghdr *,
+> @@ -1132,6 +1136,10 @@ static inline int nla_parse_nested(struct nlattr *tb[], int maxtype,
+>  				   const struct nla_policy *policy,
+>  				   struct netlink_ext_ack *extack)
+>  {
+> +	if (!(nla->nla_type & NLA_F_NESTED)) {
+> +		NL_SET_ERR_MSG_ATTR(extack, nla, "nested attribute expected");
+
+Maybe reword that to say "NLA_F_NESTED is missing" or so? The "nested
+attribute expected" could result in a lot of headscratching (without
+looking at the code) because it looks nested if you do nla_nest_start()
+etc.
+
+> +		return -EINVAL;
+> +	}
+>  	return __nla_parse(tb, maxtype, nla_data(nla), nla_len(nla), policy,
+>  			   NL_VALIDATE_STRICT, extack);
+
+I'd probably put a blank line there but ymmv.
+
+>  }
+> diff --git a/lib/nlattr.c b/lib/nlattr.c
+> index adc919b32bf9..92da65cb6637 100644
+> --- a/lib/nlattr.c
+> +++ b/lib/nlattr.c
+> @@ -184,6 +184,21 @@ static int validate_nla(const struct nlattr *nla, int maxtype,
+>  		}
+>  	}
+>  
+> +	if (validate & NL_VALIDATE_NESTED) {
+> +		if ((pt->type == NLA_NESTED || pt->type == NLA_NESTED_ARRAY) &&
+> +		    !(nla->nla_type & NLA_F_NESTED)) {
+> +			NL_SET_ERR_MSG_ATTR(extack, nla,
+> +					    "nested attribute expected");
+> +			return -EINVAL;
+> +		}
+> +		if (pt->type != NLA_NESTED && pt->type != NLA_NESTED_ARRAY &&
+> +		    pt->type != NLA_UNSPEC && (nla->nla_type & NLA_F_NESTED)) {
+> +			NL_SET_ERR_MSG_ATTR(extack, nla,
+> +					    "nested attribute not expected");
+> +			return -EINVAL;
+
+Same comment here wrt. the messages, I think they should more explicitly
+refer to the flag.
+
+johannes
+
+(PS: if you CC me on this address I generally can respond quicker)
+
