@@ -2,80 +2,191 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07507C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5DCC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09F820873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A1F208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfEBHq3 convert rfc822-to-8bit (ORCPT
+        id S1726380AbfEBHsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 03:46:29 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:41439 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfEBHq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 03:46:29 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 8DC4721C48E;
-        Thu,  2 May 2019 07:46:24 +0000 (UTC)
-Date:   Thu, 02 May 2019 15:46:17 +0800
-In-Reply-To: <20190502074303.g3px63n4v4o7xade@flea>
-References: <20190424062543.61852-1-icenowy@aosc.io> <20190502074303.g3px63n4v4o7xade@flea>
+        Thu, 2 May 2019 03:48:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51664 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726159AbfEBHsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 03:48:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5EA80AD6D;
+        Thu,  2 May 2019 07:48:12 +0000 (UTC)
+Date:   Thu, 2 May 2019 09:48:08 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Jane Chu <jane.chu@oracle.com>, linux-nvdimm@lists.01.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 03/12] mm/sparsemem: Add helpers track active portions
+ of a section at boot
+Message-ID: <20190502074803.GA3495@linux>
+References: <155677652226.2336373.8700273400832001094.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155677653785.2336373.11131100812252340469.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH] arm64: dts: allwinner: h6: add PIO VCC bank supplies for Pine H64
-To:     linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-CC:     devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org
-From:   Icenowy Zheng <icenowy@aosc.io>
-Message-ID: <8CB1EDA4-E4B7-486D-8BCD-884E0025C6EA@aosc.io>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155677653785.2336373.11131100812252340469.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 01, 2019 at 10:55:37PM -0700, Dan Williams wrote:
+> Prepare for hot{plug,remove} of sub-ranges of a section by tracking a
+> section active bitmask, each bit representing 2MB (SECTION_SIZE (128M) /
+> map_active bitmask length (64)). If it turns out that 2MB is too large
+> of an active tracking granularity it is trivial to increase the size of
+> the map_active bitmap.
+> 
+> The implications of a partially populated section is that pfn_valid()
+> needs to go beyond a valid_section() check and read the sub-section
+> active ranges from the bitmask.
+> 
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Tested-by: Jane Chu <jane.chu@oracle.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
+Unfortunately I did not hear back about the comments/questions I made for this
+in the previous version.
 
-于 2019年5月2日 GMT+08:00 下午3:43:03, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
->Hi,
->
->On Wed, Apr 24, 2019 at 02:25:43PM +0800, Icenowy Zheng wrote:
->> The Allwinner H6 SoC features tweakable VCC for PC, PD, PG, PL and PM
->> banks.
->>
->> This patch adds supplies for PC and PD banks on Pine H64 board. PG
->and
->> PM banks are used for Wi-Fi and should be added when Wi-Fi is added
->
->Not really. The regulator is still there, whether we use it or not. If
->it's not used, then it will be left disabled so it doesn't really
->change anything.
+> ---
+>  include/linux/mmzone.h |   29 ++++++++++++++++++++++++++++-
+>  mm/page_alloc.c        |    4 +++-
+>  mm/sparse.c            |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 79 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 6726fc175b51..cffde898e345 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -1175,6 +1175,8 @@ struct mem_section_usage {
+>  	unsigned long pageblock_flags[0];
+>  };
+>  
+> +void section_active_init(unsigned long pfn, unsigned long nr_pages);
+> +
+>  struct page;
+>  struct page_ext;
+>  struct mem_section {
+> @@ -1312,12 +1314,36 @@ static inline struct mem_section *__pfn_to_section(unsigned long pfn)
+>  
+>  extern int __highest_present_section_nr;
+>  
+> +static inline int section_active_index(phys_addr_t phys)
+> +{
+> +	return (phys & ~(PA_SECTION_MASK)) / SECTION_ACTIVE_SIZE;
+> +}
+> +
+> +#ifdef CONFIG_SPARSEMEM_VMEMMAP
+> +static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
+> +{
+> +	int idx = section_active_index(PFN_PHYS(pfn));
+> +
+> +	return !!(ms->usage->map_active & (1UL << idx));
 
-Okay, I will include them in the next revision.
+section_active_mask() also converts the value to address/size.
+Why do we need to convert the values and we cannot work with pfn/pages instead?
+It should be perfectly possible unless I am missing something.
 
->
->> PL bank is where PMIC is attached, and currently if a PMIC regulator
->> is added for it a dependency loop will happen.
->
->I guess we should fix that somehow
+The only thing required would be to export earlier your:
 
-But this patch is needed for eMMC to be functional again in HS200 mode, so I hope
-it can get applied before this get fixed.
++#define PAGES_PER_SUB_SECTION (SECTION_ACTIVE_SIZE / PAGE_SIZE)
++#define PAGE_SUB_SECTION_MASK (~(PAGES_PER_SUB_SECTION-1))
 
->
->Maxime
->
->--
->Maxime Ripard, Bootlin
->Embedded Linux and Kernel engineering
->https://bootlin.com
+and change section_active_index to:
+
+static inline int section_active_index(unsigned long pfn)
+{
+	return (pfn & ~(PAGE_SECTION_MASK)) / SUB_SECTION_ACTIVE_PAGES;
+}
+
+In this way we do need to shift the values every time and we can work with them
+directly.
+Maybe you made it work this way because a reason I am missing.
+
+> +static unsigned long section_active_mask(unsigned long pfn,
+> +		unsigned long nr_pages)
+> +{
+> +	int idx_start, idx_size;
+> +	phys_addr_t start, size;
+> +
+> +	if (!nr_pages)
+> +		return 0;
+> +
+> +	start = PFN_PHYS(pfn);
+> +	size = PFN_PHYS(min(nr_pages, PAGES_PER_SECTION
+> +				- (pfn & ~PAGE_SECTION_MASK)));
+
+It seems to me that we already picked the lowest value back in
+section_active_init, so we should be fine if we drop the min() here?
+
+Another thing is why do we need to convert the values to address/size, and we
+cannot work with pfns/pages.
+Unless I am missing something it should be possible.
+
+> +	size = ALIGN(size, SECTION_ACTIVE_SIZE);
+> +
+> +	idx_start = section_active_index(start);
+> +	idx_size = section_active_index(size);
+> +
+> +	if (idx_size == 0)
+> +		return -1;
+
+Maybe we would be better off converting that -1 into something like "FULL_SECTION",
+or at least dropping a comment there that "-1" means that the section is fully
+populated.
+
+> +	return ((1UL << idx_size) - 1) << idx_start;
+> +}
+> +
+> +void section_active_init(unsigned long pfn, unsigned long nr_pages)
+> +{
+> +	int end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
+> +	int i, start_sec = pfn_to_section_nr(pfn);
+> +
+> +	if (!nr_pages)
+> +		return;
+> +
+> +	for (i = start_sec; i <= end_sec; i++) {
+> +		struct mem_section *ms;
+> +		unsigned long mask;
+> +		unsigned long pfns;
+> +
+> +		pfns = min(nr_pages, PAGES_PER_SECTION
+> +				- (pfn & ~PAGE_SECTION_MASK));
+> +		mask = section_active_mask(pfn, pfns);
+> +
+> +		ms = __nr_to_section(i);
+> +		ms->usage->map_active |= mask;
+> +		pr_debug("%s: sec: %d mask: %#018lx\n", __func__, i, ms->usage->map_active);
+> +
+> +		pfn += pfns;
+> +		nr_pages -= pfns;
+> +	}
+> +}
+> +
+>  /* Record a memory area against a node. */
+>  void __init memory_present(int nid, unsigned long start, unsigned long end)
+>  {
+> 
 
 -- 
-使用 K-9 Mail 发送自我的Android设备。
+Oscar Salvador
+SUSE L3
