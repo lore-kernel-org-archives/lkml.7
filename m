@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D679CC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49FEC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72F720449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1FF72085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810800;
-	bh=eMuUugkn/QVnGKH27JUQ/qIsqtVMgnkFRqow9ECHJYM=;
+	s=default; t=1556810804;
+	bh=n6TmpvV7ZyMKI+KcjMHX070YR43loG/ifxmOyCgMVwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pruY9NWaH4MMWsfNYJ93RnTF8ifr+WGmt9xshOK/whMv60EMUZCtD4bS7liUEYFFX
-	 BIJC5RyyAhmLMUJ43Pw7tPPUyBAyc9lRgsGQfBQh3M6vCN0lVQJkuCFZ4x8hILI00V
-	 0TuqaZcPomv37132L+LLCv07lJ6P/9pw5D0v7+QM=
+	b=n7JTDTAfeYT01V6chFjGP43QQKsQfqeiPhNrc6JSdnE0Dt6WEFBN6btj+ag1JT7NZ
+	 52aT92vm5uqdfI2GgrY35KWQzRFjmWnXUOuCEsiqNt/SQW01H9H0JtQ34SqCT30j8e
+	 oifreKr1z062ifjSNULcIRZOCh3iu9U8++fRPBd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbfEBP0j (ORCPT
+        id S1727799AbfEBP0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:26:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:26:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727020AbfEBP0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:26:34 -0400
+        id S1727781AbfEBP0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:26:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 625FF20B7C;
-        Thu,  2 May 2019 15:26:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DF4D208C4;
+        Thu,  2 May 2019 15:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810793;
-        bh=eMuUugkn/QVnGKH27JUQ/qIsqtVMgnkFRqow9ECHJYM=;
+        s=default; t=1556810799;
+        bh=n6TmpvV7ZyMKI+KcjMHX070YR43loG/ifxmOyCgMVwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sOMDIDxjLFhTs53fNc4vq6/84prTgf6PIYZD6FQgJlwbFNFoSM5ghhQz5gbsUq1VW
-         9Z6ji8KbzUbqCwF5j2S9k+6GEu/A0r473+ztjZ3J9guFQMeTZH/9isn/kGqIyDIg2s
-         8zjjfxUcQqOjE9vrkDWjtIV5/TCPdf3LzR85K0xE=
+        b=2abZBkqTOBeT40j2qtviSanRmxc7OOhuWo/PA8vzjf2EV/v+KoQL4LRBHEULYumjq
+         rsKBGiX4A6Vdc5cdYU9bjePF8LAvzH9uya74guB9Bhogi12/CrvkL7h6Dm16rD4EsI
+         6z96aQ0RqA7Ee2dCmvwqNskc3/oZ2SUta6BaFXbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Christ <s.christ@phytec.de>,
-        Christian Hemp <c.hemp@phytec.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Frank Pavlic <f.pavlic@kunbus.de>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 31/72] ARM: dts: pfla02: increase phy reset duration
-Date:   Thu,  2 May 2019 17:20:53 +0200
-Message-Id: <20190502143335.951408855@linuxfoundation.org>
+Subject: [PATCH 4.19 33/72] net: ks8851: Dequeue RX packets explicitly
+Date:   Thu,  2 May 2019 17:20:55 +0200
+Message-Id: <20190502143336.146825791@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -62,46 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 032f85c9360fb1a08385c584c2c4ed114b33c260 ]
+[ Upstream commit 536d3680fd2dab5c39857d62a3e084198fc74ff9 ]
 
-Increase the reset duration to ensure correct phy functionality. The
-reset duration is taken from barebox commit 52fdd510de ("ARM: dts:
-pfla02: use long enough reset for ethernet phy"):
+The ks8851 driver lets the chip auto-dequeue received packets once they
+have been read in full. It achieves that by setting the ADRFE flag in
+the RXQCR register ("Auto-Dequeue RXQ Frame Enable").
 
-  Use a longer reset time for ethernet phy Micrel KSZ9031RNX. Otherwise a
-  small percentage of modules have 'transmission timeouts' errors like
+However if allocation of a packet's socket buffer or retrieval of the
+packet over the SPI bus fails, the packet will not have been read in
+full and is not auto-dequeued. Such partial retrieval of a packet
+confuses the chip's RX queue management:  On the next RX interrupt,
+the first packet read from the queue will be the one left there
+previously and this one can be retrieved without issues. But for any
+newly received packets, the frame header status and byte count registers
+(RXFHSR and RXFHBCR) contain bogus values, preventing their retrieval.
 
-  barebox@Phytec phyFLEX-i.MX6 Quad Carrier-Board:/ ifup eth0
-  warning: No MAC address set. Using random address 7e:94:4d:02:f8:f3
-  eth0: 1000Mbps full duplex link detected
-  eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
+The chip allows explicitly dequeueing a packet from the RX queue by
+setting the RRXEF flag in the RXQCR register ("Release RX Error Frame").
+This could be used to dequeue the packet in case of an error, but if
+that error is a failed SPI transfer, it is unknown if the packet was
+transferred in full and was auto-dequeued or if it was only transferred
+in part and requires an explicit dequeue. The safest approach is thus
+to always dequeue packets explicitly and forgo auto-dequeueing.
 
-Cc: Stefan Christ <s.christ@phytec.de>
-Cc: Christian Hemp <c.hemp@phytec.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Fixes: 3180f956668e ("ARM: dts: Phytec imx6q pfla02 and pbab01 support")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Without this change, I've witnessed packet retrieval break completely
+when an SPI DMA transfer fails, requiring a chip reset. Explicit
+dequeueing magically fixes this and makes packet retrieval absolutely
+robust for me.
+
+The chip's documentation suggests auto-dequeuing and uses the RRXEF
+flag only to dequeue error frames which the driver doesn't want to
+retrieve. But that seems to be a fair-weather approach.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Tristram Ha <Tristram.Ha@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/micrel/ks8851.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-index ed1aafd56973..fe4e89d773f5 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-@@ -89,6 +89,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
-+	phy-reset-duration = <10>; /* in msecs */
- 	phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
- 	phy-supply = <&vdd_eth_io_reg>;
- 	status = "disabled";
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index bd6e9014bc74..a93f8e842c07 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -535,9 +535,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
+ 		/* set dma read address */
+ 		ks8851_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI | 0x00);
+ 
+-		/* start the packet dma process, and set auto-dequeue rx */
+-		ks8851_wrreg16(ks, KS_RXQCR,
+-			       ks->rc_rxqcr | RXQCR_SDA | RXQCR_ADRFE);
++		/* start DMA access */
++		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
+ 
+ 		if (rxlen > 4) {
+ 			unsigned int rxalign;
+@@ -568,7 +567,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
+ 			}
+ 		}
+ 
+-		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
++		/* end DMA access and dequeue packet */
++		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_RRXEF);
+ 	}
+ }
+ 
 -- 
 2.19.1
 
