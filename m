@@ -2,109 +2,125 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6948C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE83C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E022085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:29:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556825342;
-	bh=4+7iWLyZHdlkEaJ9YIk2Zw2gBNmiSwpxVpWt2kUQHoA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XqjL+lNyDb7HkFGnQt9KFJNjEpU1Y3hVZtG/mja9qY4OKdyaAtlfTX6mvP22sPz8s
-	 3FrDfZMYpSr+Es8u8U/O13XFHHoHykjW1b9Xrt5+I6iLN8D1TNDB8YF6rpO4GGcRCN
-	 YzmEyABeuULRYRRZir2nR6rEigx0wyg00WRWTyZ4=
+	by mail.kernel.org (Postfix) with ESMTP id 467DA2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="bsHHJYVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfEBT3C (ORCPT
+        id S1726444AbfEBTfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 15:29:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbfEBT3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 15:29:01 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84A2F205F4;
-        Thu,  2 May 2019 19:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556825340;
-        bh=4+7iWLyZHdlkEaJ9YIk2Zw2gBNmiSwpxVpWt2kUQHoA=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=T3meCuhymsjbqBV1PJ4E8RF0HMtRR78xo9UtI/BzIqosyAJrJej4ouBZOQXFy38v9
-         Xqqac2c12ESnORGAB5k92HVdaVhMRyZdR4m6ewn1XoG1Vcdy9TxLdpkYy6/fs+4emz
-         yrffJxf6fyRF0eI6jBQBaqBaNH9/JMsz7X8WC4x4=
-Date:   Thu, 2 May 2019 21:28:53 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thu, 2 May 2019 15:35:14 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40767 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfEBTfO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 15:35:14 -0400
+Received: by mail-ed1-f66.google.com with SMTP id e56so3170220ede.7
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 12:35:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=odIetb1els/jvXDHDGUMS/oa2CaqqVlxMP0+xlzywv8=;
+        b=bsHHJYVcI0Qp7q2g/0MnFAnP2XdgO+s4OnXJUz1ilz/HeIx6MFO8iBg+7x6H9HWWxm
+         BtWu1EC3QltUp+eDQ/i3iKcqUnqNeElHC49AkCvqi6HVr2m1DTn1buJUt2TCgCpFyq7p
+         /igmbALiHipVcQl4FjiteqhUqDGcXV3Tu8r19SQMGMf2o9V3YJDV74eUsvK2DkWgbilb
+         W+gTuAeQoU9RSEDINzzKMDg4gScIocy9v56jOmBZQvi7bICxpPpPgRf01MRR+bDBtBnE
+         F6+G0Hb24awyZy3mWFG0IDf7L1moYeR8duzR4akQitXWC2Stqwr5MgRbMeXvwjEnMSii
+         ow+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=odIetb1els/jvXDHDGUMS/oa2CaqqVlxMP0+xlzywv8=;
+        b=th+LQ81yjlA3WzdmSP8aKP/kxbkTaD5Sm/SOuKnmsGNIjPuXqtAwnBkF7vtaFA7Xx0
+         ubF4iuHPe9SSlALHnRm7z680ILb/Q+BhO6cUi16Ahg2WTShdolUwW/ZQyMbXtTTXcBQg
+         Mc2RpeCvZ0X/NTiyIuQOweeaSQ+3RTSyCvL6RKJj5a+rX6C/GLbJiv8EX/e6mzb0X/2l
+         Q9sP0YLYRBUQS3kIfiOKS8ue0ww6nlBWktAPi1TWj5B2qdgai/BQp7qpRYhYANz3Xn8U
+         EYbh2R+Nxetd8ul+Te7a3yHMOIVA8+tRX9ypzcVtHo0iJ9/Qv1UFnZXkghXtdmjNnieo
+         zZTw==
+X-Gm-Message-State: APjAAAVlB7zqNjk+1doAEOaJQs55LC6Hx2Mfr6IoVhoo7h+GAIPmI/ea
+        yu+Zflh1Tqpvv97s1SudR4w3wQ==
+X-Google-Smtp-Source: APXvYqzwkvBhlR8S8SS+Zq5LsiZ1ME/oWfT80c4yCOGOM9PinHseBUshBiumSZNNq/U7qxiolxTz+g==
+X-Received: by 2002:a17:906:7b58:: with SMTP id n24mr2745635ejo.224.1556825712661;
+        Thu, 02 May 2019 12:35:12 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id z3sm32010eja.32.2019.05.02.12.35.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 02 May 2019 12:35:11 -0700 (PDT)
+Date:   Thu, 2 May 2019 21:35:10 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>, kernel-team@android.com,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        KJ Tsanaktsidis <ktsanaktsidis@zendesk.com>,
+        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-In-Reply-To: <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
-Message-ID: <nycvar.YFH.7.76.1905022101060.10635@cbobk.fhfr.pm>
-References: <20190501202830.347656894@goodmis.org> <20190501203152.397154664@goodmis.org> <20190501232412.1196ef18@oasis.local.home> <20190502162133.GX2623@hirez.programming.kicks-ass.net> <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
- <20190502181811.GY2623@hirez.programming.kicks-ass.net> <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [PATCH v2 1/2] Add polling support to pidfd
+Message-ID: <20190502193509.poponmy3j67xjxth@brauner.io>
+References: <20190430162154.61314-1-joel@joelfernandes.org>
+ <20190501151312.GA30235@redhat.com>
+ <20190502151320.cvc6uc3b4bmww23k@brauner.io>
+ <20190502160247.GD7323@redhat.com>
+ <20190502191437.GA103213@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190502191437.GA103213@google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 May 2019, Linus Torvalds wrote:
+On Thu, May 02, 2019 at 03:14:37PM -0400, Joel Fernandes wrote:
+> On Thu, May 02, 2019 at 06:02:48PM +0200, Oleg Nesterov wrote:
+> > On 05/02, Christian Brauner wrote:
+> > >
+> > > On Wed, May 01, 2019 at 05:13:12PM +0200, Oleg Nesterov wrote:
+> > > >
+> > > > Otherwise I see no problems.
+> > >
+> > > I'll remove the WARN_ON() check when applying this. Can I get your
+> > > Acked/Review, Oleg?
+> 
+> Oh, ok. Good point about the de_thread race. Agreed with you.
+> 
+> > Yes, feel free to add
+> > 
+> > 	Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> > 
+> > Hmm. Somehow I didn't read the changelog before, I just noticed
+> > Suggested-by: Oleg Nesterov <oleg@redhat.com>
+> > Please remove ;) Thanks Joel, I appreciate it, but it is not my idea.
+> 
+> Ok no problem. You have been very helpful so thank you for that!
 
-> I forget: is #BP _only_ for the "int3" instruction? 
+Yep, big thank you, Oleg! :)
 
-Hmm, according to 17.3.2 in vol 3 of SDM (and table 6-1 there), that 
-indeed seems to be the case, so we should be fine.
-
-> But if "int3 from kernel space" _only_ happens on actual "int3"
-> instructions, then we really could just special-case that case. We'd
-> know that %cr3 has been switched, we'd know that we don't need to do
-> fsgs switching, we'd know we already have a good stack and percpu data
-> etc set up.
-
-That should indeed be doable, under the asumption that noone is doing any 
-int3 games before we've switched away from entry trampoline.
-
-I've briefly looked, and seems like we have proper notrace anotations for 
-stackleak_erase(), which seems to be the only C (ftrace-able) code that's 
-running on a trampoline (off-topic: where does PTI code make sure that we 
-actually map this symbol into user pagetables in case we're not doing 
-global mapping?).
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Christian
