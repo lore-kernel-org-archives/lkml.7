@@ -2,100 +2,101 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0432EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E4BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2DC620873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2742089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556790500;
+	bh=izrYoKTU4xWJRGopNdBEVJaICGTT0gZCvv2SqjNIn1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PXogCUCtg4YEAxDIB+5J1utS20nmby3w5osGR013pEM972HGHwGeBu/pmzINcPJvp
+	 DJNUpNO2g9nkKjS9Kw9IxEl4TdeTLVWqYiMM8vmTz+Q57vzR1XGQglYGNrO60A8ZTz
+	 NkQN5aEPkKAwXfKXMjP6GtKVDE5UNA3QlXaJvAAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbfEBJmn (ORCPT
+        id S1726300AbfEBJsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 05:42:43 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:38882 "EHLO ns.iliad.fr"
+        Thu, 2 May 2019 05:48:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbfEBJmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 05:42:42 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 0F33521186;
-        Thu,  2 May 2019 11:42:40 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id EB2B120BAF;
-        Thu,  2 May 2019 11:42:39 +0200 (CEST)
-Subject: Re: [RFC PATCH v1] PCI: qcom: Use quirk to override incorrect device
- class
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
- <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
- <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
- <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
- <20190430140621.GB18742@e121166-lin.cambridge.arm.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <042b5c87-388f-3d61-de62-4c379bc23abb@free.fr>
-Date:   Thu, 2 May 2019 11:42:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726127AbfEBJsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 05:48:19 -0400
+Received: from linux-8ccs (ip5f5ade58.dynamic.kabel-deutschland.de [95.90.222.88])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588B9206DF;
+        Thu,  2 May 2019 09:48:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556790498;
+        bh=izrYoKTU4xWJRGopNdBEVJaICGTT0gZCvv2SqjNIn1o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mdbUWmrvxijmiVfMWUtjlXpscQSHqZq3GqPkGTrtp/+KqsIObnFELpvpwmTv/CnJ+
+         cmY2ZrmaBiSGD+K6OTlqONxIwG5WrXGPdtzr5Xzd12Udohl86b+i485k1rJlVozc6s
+         MBCFvdBCyeTe40o1Oo0306A1eN8xf2KQxLeVIbcg=
+Date:   Thu, 2 May 2019 11:48:14 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Arcari <darcari@redhat.com>
+Subject: Re: [PATCH v3] kernel/module: Reschedule while waiting for modules
+ to finish loading
+Message-ID: <20190502094813.GA6690@linux-8ccs>
+References: <20190430222207.3002-1-prarit@redhat.com>
+ <90e18809-2b70-52d8-00b3-9c16768db9ad@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190430140621.GB18742@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu May  2 11:42:40 2019 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <90e18809-2b70-52d8-00b3-9c16768db9ad@redhat.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/04/2019 16:06, Lorenzo Pieralisi wrote:
-
-> On Tue, Mar 12, 2019 at 06:34:55PM +0100, Marc Gonzalez wrote:
++++ Prarit Bhargava [01/05/19 17:26 -0400]:
 >
->> On 12/03/2019 18:18, Marc Gonzalez wrote:
+>
+>On 4/30/19 6:22 PM, Prarit Bhargava wrote:
+>> On a s390 z14 LAR with 2 cpus about stalls about 3% of the time while
+>> loading the s390_trng.ko module.
 >>
->>> On 12/03/2019 13:42, Stanimir Varbanov wrote:
->>>
->>>> I wonder, in case that dw_pcie_setup_rc() already has a write to
->>>> PCI_CLASS_DEVICE configuration register to set it as a bridge do we
->>>> still need to do the above fixup?
->>>
->>> I don't know, I don't have an affected device. Unless the msm8998 /is/ affected,
->>> and dw_pcie_setup_rc() actually fixes it?
+>> Add a reschedule point to the loop that waits for modules to complete
+>> loading.
 >>
->> I think you hit the nail on the head...
->>
->> If I comment out
->> //dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
->> from dw_pcie_setup_rc()
->> then pci_class() returns 0xff000000 instead of 0x6040000
->>
->> So perhaps you're right: the quirk can be omitted altogether.
->> Unless it is not possible to program the device class on older chips?
-> 
-> Marc,
-> 
-> I would drop this patch from the PCI queue since in a different
-> form it was already merged, please let me know if I am wrong.
+>> v3: cleanup Fixes line.
+>
+>Jessica, even with this additional patch there appears to be some other issues
+>in the module code that are causing significant delays in boot up on large
+>systems.
 
-I'm confused because you speak of *dropping* this patch (v1) -- but v1 was never
-picked up AFAIK.
+Is this limited to only s390? Or are you seeing this on other arches
+as well? And is it limited to specific modules (like s390_trng)?
 
-You picked up v5 on March 29:
-https://patchwork.kernel.org/patch/10869519/
+>Please revert these fixes from linux-next & modules-next.  I apologize for the
+>extra work but I think it is for the best until I come up with a more complete &
+>better tested patch.
 
-I see it in linux-next as 915347f67d41857a514bed77053b212f3696e8a3
+Sure, then I will revert this patch and the other one as well
+("modules: Only return -EEXIST for modules that have finished
+loading").
 
-Will Bjorn send it to LT during the merge window for 5.2?
+>FWIW, the logic in the original patch is correct.  It's just that there's, as
+>Heiko discovered, some poor scheduling, etc., that is impacting the module
+>loading code after these changes.
 
-Regards.
+I am really curious to see what these performance regressions look
+like :/ Please update us when you find out more.
+
+>Again, my apologies,
+
+No problem! Thanks again.
+
+Jessica
+
