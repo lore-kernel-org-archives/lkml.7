@@ -2,125 +2,138 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54EAC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77900C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B21420873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:10:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Eo3yE/Uy"
+	by mail.kernel.org (Postfix) with ESMTP id 4D23420873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 09:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfEBJKn (ORCPT
+        id S1726324AbfEBJKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 05:10:43 -0400
-Received: from mail-eopbgr30067.outbound.protection.outlook.com ([40.107.3.67]:21694
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726196AbfEBJKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 05:10:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mLoDalNMvJO2k9ZH9S2I3msqVINEPnwBYV3c1d4FHYc=;
- b=Eo3yE/UyUAi83xZd+52e4TW9y4zCx9h7Xanj7yGVMID4O5+fZ0Xz3lyEroJnD1c4XANKJow4Ism6K0ZnNAv3SYpSth7muXmym/8ITQi78+TIHxQ6L4GPTd2CO4beLiMX/uo1uVvbuNXwyHBJ5m/yC5OkHNwDt/8Zjc4/kbyuhgo=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
- VI1PR04MB4221.eurprd04.prod.outlook.com (52.134.31.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Thu, 2 May 2019 09:10:39 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::81d8:f74b:f91e:f071]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::81d8:f74b:f91e:f071%7]) with mapi id 15.20.1835.018; Thu, 2 May 2019
- 09:10:39 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     Christoph Hellwig <hch@infradead.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Madalin-cristian Bucur <madalin.bucur@nxp.com>,
-        Roy Pledge <roy.pledge@nxp.com>,
-        Camelia Alexandra Groza <camelia.groza@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v2 7/9] dpaa_eth: fix iova handling for contiguous frames
-Thread-Topic: [PATCH v2 7/9] dpaa_eth: fix iova handling for contiguous frames
-Thread-Index: AQHU/MhTJGEcyHulVEGnKf6u21efK6ZQN+AAgAdbO3A=
-Date:   Thu, 2 May 2019 09:10:38 +0000
-Message-ID: <VI1PR04MB513490961A52D86E46C02B49EC340@VI1PR04MB5134.eurprd04.prod.outlook.com>
-References: <20190427071031.6563-1-laurentiu.tudor@nxp.com>
- <20190427071031.6563-8-laurentiu.tudor@nxp.com>
- <20190427164612.GA12450@infradead.org>
-In-Reply-To: <20190427164612.GA12450@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [192.88.166.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 949729a3-b344-4971-ab0e-08d6cede0b7c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4221;
-x-ms-traffictypediagnostic: VI1PR04MB4221:
-x-microsoft-antispam-prvs: <VI1PR04MB42210DAD43AADA76D8A8ACE7EC340@VI1PR04MB4221.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0025434D2D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(39860400002)(136003)(376002)(396003)(13464003)(51444003)(199004)(189003)(66066001)(33656002)(44832011)(476003)(14444005)(71190400001)(486006)(71200400001)(186003)(2906002)(55016002)(52536014)(53936002)(9686003)(6246003)(229853002)(6116002)(3846002)(11346002)(256004)(446003)(81156014)(8936002)(8676002)(6916009)(5660300002)(81166006)(54906003)(14454004)(99286004)(25786009)(76176011)(478600001)(6506007)(26005)(102836004)(7696005)(6436002)(68736007)(305945005)(74316002)(66446008)(64756008)(73956011)(86362001)(316002)(66946007)(66556008)(4326008)(76116006)(66476007)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4221;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sBJMuIh7ZVYNoZaRTfgNPy7W7P809zWGFM7EdbsDCmnSHzLgZlornyv/IW//mcN2XIS2kJjfm9i9DhL66lMFSVpk4FWkVORjMuOGhDfnE1oN2kB9LH/bMbsy+Rq7KQSNY+LZCc/ZPMltm9u69EnlvTLZLs5wMVA1YVIhgo0r+7RkycaJs8L/uA6tAU8IS6sauefu7JrQQ18JMPqT2RtCPWbebKWv80Th8YZPBXMuT2IACjl6UQmr1YMla/T2W7nNf5pXLPDV6YcxAynNPZF9CandBotx9sEGUNSPVJKYJTF/aA589lwKYJlUcprD71tGZFAVVqt+piXg8RgPBMb9alv93I6usw/08pmjDFol4ZZimGFb01fq4g7EBlZJlyAXyxFUBPXPhH4EvUH2hhi6AjL3rtmua/7UabMVKiA2eAI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 2 May 2019 05:10:50 -0400
+Received: from foss.arm.com ([217.140.101.70]:42536 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbfEBJKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 05:10:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D42CB374;
+        Thu,  2 May 2019 02:10:48 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00C993F5AF;
+        Thu,  2 May 2019 02:10:46 -0700 (PDT)
+Date:   Thu, 2 May 2019 10:10:44 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
+        mark.rutland@arm.com, Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: Re: [PATCH 1/2] RISC-V: Add DT documentation for SiFive L2 Cache
+ Controller
+Message-ID: <20190502091044.GD12498@e107155-lin>
+References: <1556171696-7741-1-git-send-email-yash.shah@sifive.com>
+ <1556171696-7741-2-git-send-email-yash.shah@sifive.com>
+ <20190425101318.GA8469@e107155-lin>
+ <CAJ2_jOEBqBnorz9PcQp72Jjju9RX_P8mU=Gq+0xCCcWsBiJksw@mail.gmail.com>
+ <20190426093358.GA28309@e107155-lin>
+ <CAJ2_jOEoD=Njp+L+H=jG59mA-j9SnwzyNmz7ECogWmbvei_f5Q@mail.gmail.com>
+ <20190502004130.GA20802@bogus>
+ <CAJ2_jOETZa_oC-xSwfQVw-9Q6OivRG2R0rKMhwCk1knbxWJQVw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 949729a3-b344-4971-ab0e-08d6cede0b7c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 09:10:38.8633
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4221
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ2_jOETZa_oC-xSwfQVw-9Q6OivRG2R0rKMhwCk1knbxWJQVw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Christoph Hellwig <hch@infradead.org>
-> Sent: Saturday, April 27, 2019 7:46 PM
->=20
-> On Sat, Apr 27, 2019 at 10:10:29AM +0300, laurentiu.tudor@nxp.com wrote:
-> > From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+On Thu, May 02, 2019 at 10:50:12AM +0530, Yash Shah wrote:
+> On Thu, May 2, 2019 at 6:11 AM Rob Herring <robh@kernel.org> wrote:
 > >
-> > The driver relies on the no longer valid assumption that dma addresses
-> > (iovas) are identical to physical addressees and uses phys_to_virt() to
-> > make iova -> vaddr conversions. Fix this by adding a function that does
-> > proper iova -> phys conversions using the iommu api and update the code
-> > to use it.
-> > Also, a dma_unmap_single() call had to be moved further down the code
-> > because iova -> vaddr conversions were required before the unmap.
-> > For now only the contiguous frame case is handled and the SG case is
-> > split in a following patch.
-> > While at it, clean-up a redundant dpaa_bpid2pool() and pass the bp
-> > as parameter.
->=20
-> Err, this is broken.  A driver using the DMA API has no business
-> call IOMMU APIs.  Just save the _virtual_ address used for the mapping
-> away and use that again.  We should not go through crazy gymnastics
-> like this.
+> > On Tue, Apr 30, 2019 at 09:50:45AM +0530, Yash Shah wrote:
+> > > On Fri, Apr 26, 2019 at 3:04 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > > >
+> > > > On Fri, Apr 26, 2019 at 11:20:17AM +0530, Yash Shah wrote:
+> > > > > On Thu, Apr 25, 2019 at 3:43 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > > > > >
+> > > > > > On Thu, Apr 25, 2019 at 11:24:55AM +0530, Yash Shah wrote:
+> > > > > > > Add device tree bindings for SiFive FU540 L2 cache controller driver
+> > > > > > >
+> > > > > > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > > > > > > ---
+> > > > > > >  .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 53 ++++++++++++++++++++++
+> > > > > > >  1 file changed, 53 insertions(+)
+> > > > > > >  create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+> > > > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+> > > > > > > new file mode 100644
+> > > > > > > index 0000000..15132e2
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+> > > > > > > @@ -0,0 +1,53 @@
+> > > > > > > +SiFive L2 Cache Controller
+> > > > > > > +--------------------------
+> > > > > > > +The SiFive Level 2 Cache Controller is used to provide access to fast copies
+> > > > > > > +of memory for masters in a Core Complex. The Level 2 Cache Controller also
+> > > > > > > +acts as directory-based coherency manager.
+> > > > > > > +
+> > > > > > > +Required Properties:
+> > > > > > > +--------------------
+> > > > > > > +- compatible: Should be "sifive,fu540-c000-ccache"
+> > > > > > > +
+> > > > > > > +- cache-block-size: Specifies the block size in bytes of the cache
+> > > > > > > +
+> > > > > > > +- cache-level: Should be set to 2 for a level 2 cache
+> > > > > > > +
+> > > > > > > +- cache-sets: Specifies the number of associativity sets of the cache
+> > > > > > > +
+> > > > > > > +- cache-size: Specifies the size in bytes of the cache
+> > > > > > > +
+> > > > > > > +- cache-unified: Specifies the cache is a unified cache
+> > > > > > > +
+> > > > > > > +- interrupt-parent: Must be core interrupt controller
+> > > > > > > +
+> > > > > > > +- interrupts: Must contain 3 entries (DirError, DataError and DataFail signals)
+> > > > > > > +
+> > > > > > > +- reg: Physical base address and size of L2 cache controller registers map
+> > > > > > > +
+> > > > > > > +- reg-names: Should be "control"
+> > > > > > > +
+> > > > > >
+> > > > > > It would be good if you mark the properties that are present in DT
+> > > > > > specification and those that are added for sifive,fu540-c000-ccache
+> > > > >
+> > > > > I believe there isn't any property which is added explicitly for
+> > > > > sifive,fu540-c000-ccache.
+> > > > >
+> > > >
+> > > > reg and interrupts are generally optional for normal cache and may be
+> > > > required for cache controller like this. DT specification[1] covers
+> > > > only caches and not cache controllers.
+> > >
+> > > Are you suggesting something like this:
+> > >
+> > > Required Properties:
+> > > --------------------
+> > > Standard Properties:
+> >
+> > I don't think we need this separation.
+>
+> Ok. Won't include this "Standard/Non-standard properties" separation
+> in the next revision of this patch.
+>
 
-I think that due to the particularity of this hardware we don't have a way =
-of saving the VA, but I'd let my colleagues maintaining this driver to comm=
-ent more on why we need to do this.
+Sorry if I created confusion. I just wanted a note saying all the properties
+in ePAPR/DeviceTree specification applies for this platform. That would
+help me check if the standard cacheinfo infrastruction works as is or not.
 
----
-Best Regards, Laurentiu
+--
+Regards,
+Sudeep
