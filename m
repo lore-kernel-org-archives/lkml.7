@@ -2,130 +2,112 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7710C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4865C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B137620873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A942089E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 07:42:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556782955;
+	bh=TTKkqMKRnS10zsZ6GIqwWKgzc1iZ0VEa/3aFdwJHGaA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sAyOzkeu4vQ1akv3G7VAbJPzAIqbSa+gCKBJkbPOTnt1Wct5SNh0V5Z6zuslJ9tyL
+	 WE43JsIcaHhl0R7IVJtsg0mQRM8OvKqy/hcaLwU3tTeXXufGso02+3wIRFwNM1lAvi
+	 2/kkVZUjo1/SofPmbh3bU5/aCp1PTK10T6qvJOeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfEBHlH (ORCPT
+        id S1726341AbfEBHme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 03:41:07 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:56209 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbfEBHlH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 03:41:07 -0400
-Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 321A3100012;
-        Thu,  2 May 2019 07:41:03 +0000 (UTC)
-Date:   Thu, 2 May 2019 09:41:03 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Pablo Greco <pgreco@centosproject.org>
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 7/7] ARM: dts: sun8i: v40: bananapi-m2-berry: Add
- Bluetooth device node
-Message-ID: <20190502074103.vtuxmsl55u3ygyvl@flea>
-References: <1556040365-10913-1-git-send-email-pgreco@centosproject.org>
- <1556040365-10913-8-git-send-email-pgreco@centosproject.org>
+        Thu, 2 May 2019 03:42:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfEBHmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 03:42:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 803A820873;
+        Thu,  2 May 2019 07:42:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556782953;
+        bh=TTKkqMKRnS10zsZ6GIqwWKgzc1iZ0VEa/3aFdwJHGaA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MMmPcHFJ5qPEdNk1wLQ95fxfpyanD5o8FTZCmJhD7Ml76a8Z6H2fEJ3qiuGXwl2RA
+         a+5/V6a/gxtms62G4dmua1GFV5CRZbSumjLWfdA1WDCmCQwg+uRWU7NQSQHJgbrql4
+         b4PTBSAx7/6Bb4cD4W50uBM2qGutKPgm3v7/4F5M=
+Date:   Thu, 2 May 2019 09:42:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 5/5] livepatch: Do not manually track kobject
+ initialization
+Message-ID: <20190502074230.GA27847@kroah.com>
+References: <20190502023142.20139-1-tobin@kernel.org>
+ <20190502023142.20139-6-tobin@kernel.org>
+ <20190502071232.GB16247@kroah.com>
+ <20190502073044.bfzugymrncnaajxe@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="djstwku7pbrd4t2z"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556040365-10913-8-git-send-email-pgreco@centosproject.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190502073044.bfzugymrncnaajxe@pathway.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 02, 2019 at 09:30:44AM +0200, Petr Mladek wrote:
+> On Thu 2019-05-02 09:12:32, Greg Kroah-Hartman wrote:
+> > On Thu, May 02, 2019 at 12:31:42PM +1000, Tobin C. Harding wrote:
+> > > Currently we use custom logic to track kobject initialization.  Recently
+> > > a predicate function was added to the kobject API so we now no longer
+> > > need to do this.
+> > > 
+> > > Use kobject API to check for initialized state of kobjects instead of
+> > > using custom logic to track state.
+> > > 
+> > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > > ---
+> > >  include/linux/livepatch.h |  6 ------
+> > >  kernel/livepatch/core.c   | 18 +++++-------------
+> > >  2 files changed, 5 insertions(+), 19 deletions(-)
+> > > 
+> > > @@ -626,7 +626,7 @@ static void __klp_free_objects(struct klp_patch *patch, bool nops_only)
+> > >  		list_del(&obj->node);
+> > >  
+> > >  		/* Might be called from klp_init_patch() error path. */
+> > > -		if (obj->kobj_added) {
+> > > +		if (kobject_is_initialized(&obj->kobj)) {
+> > >  			kobject_put(&obj->kobj);
+> > >  		} else if (obj->dynamic) {
+> > >  			klp_free_object_dynamic(obj);
+> > 
+> > Same here, let's not be lazy.
+> > 
+> > The code should "know" if the kobject has been initialized or not
+> > because it is the entity that asked for it to be initialized.  Don't add
+> > extra logic to the kobject core (like the patch before this did) just
+> > because this one subsystem wanted to only write 1 "cleanup" function.
+> 
+> We use kobject for a mix of statically and dynamically defined
+> structures[*]. And we misunderstood the behavior of kobject_init().
 
---djstwku7pbrd4t2z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Eeek, no, a kobject should never be used for a static structure, that's
+just wrong.
 
-On Tue, Apr 23, 2019 at 02:26:04PM -0300, Pablo Greco wrote:
-> The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
-> identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
->
-> The Bluetooth side is connected to UART3 in a 4 wire configuration. Same
-> as the WiFi side, due to being the same chip and package, DLDO1 and
-> DLDO2 regulator outputs from the PMIC provide overall power via VBAT and
-> I/O power via VDDIO. The CLK_OUT_A clock output from the SoC provides
-> the LPO low power clock at 32.768 kHz.
->
-> This patch enables Bluetooth on this board, and also adds the missing
-> LPO clock on the WiFi side. There is also a PCM connection for
-> Bluetooth, but this is not covered here.
->
-> The LPO clock is fed from CLK_OUT_A, which needs to be muxed on pin
-> PI12. This can be represented in multiple ways. This patch puts the
-> pinctrl property in the pin controller node. This is due to limitations
-> in Linux, where pinmux settings, even the same one, can not be shared
-> by multiple devices. Thus we cannot put it in both the WiFi and
-> Bluetooth device nodes. Putting it the CCU node is another option, but
-> Linux's CCU driver does not handle pinctrl. Also the pin controller is
-> guaranteed to be initialized after the CCU, when clocks are available.
-> And any other devices that use muxed pins are guaranteed to be
-> initialized after the pin controller. Thus having the CLK_OUT_A pinmux
-> reference be in the pin controller node is a good choice without having
-> to deal with implementation issues.
->
-> Signed-off-by: Pablo Greco <pgreco@centosproject.org>
-> ---
->  arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-> index c87f2c0..15c22b0 100644
-> --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-> +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-> @@ -96,6 +96,8 @@
->  	wifi_pwrseq: wifi_pwrseq {
->  		compatible = "mmc-pwrseq-simple";
->  		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
-> +		clocks = <&ccu CLK_OUTA>;
-> +		clock-names = "ext_clock";
+Well, almost wrong, ignore how the driver core itself does this in
+places :)
 
-So if you don't have that patch (that enables bluetooth) the wifi
-doesn't work (even though the previous patch is supposed to enable it)
-?
+thanks,
 
->  	};
->  };
->
-> @@ -173,6 +175,7 @@
->
->  &pio {
->  	pinctrl-names = "default";
-> +	pinctrl-0 = <&clk_out_a_pin>;
-
-This one should bein the previous one as well
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---djstwku7pbrd4t2z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMqfDwAKCRDj7w1vZxhR
-xf1yAP0UUsp41Xj0RtPUCE7G8iW/EOtIede2VKkjSbtSJnpIBwD+PuiABK9pwo3G
-FQErru6yLl0Q9pLeQNMdT3ZQ2I3Ubgo=
-=xEhS
------END PGP SIGNATURE-----
-
---djstwku7pbrd4t2z--
+greg k-h
