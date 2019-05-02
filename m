@@ -2,201 +2,145 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5E6C04AAA
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9709AC04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 496DF2064A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6397E2064A
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 23:20:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="o0QO+B7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfEBXUJ (ORCPT
+        id S1726416AbfEBXUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 19:20:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54912 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726022AbfEBXUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 19:20:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BE18FAE2C;
-        Thu,  2 May 2019 23:20:06 +0000 (UTC)
-From:   NeilBrown <neilb@suse.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 03 May 2019 09:19:58 +1000
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs\@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] OVL: add honoracl=off mount option.
-In-Reply-To: <CAOQ4uxgREaBznnr-jNy-g1oX2gH6dXx9zj8wrs5JBJuVMv_9Pw@mail.gmail.com>
-References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com> <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com> <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com> <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com> <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com> <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com> <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com> <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name> <8736lx4goa.fsf@notabene.neil.brown.name> <CAOQ4uxgREaBznnr-jNy-g1oX2gH6dXx9zj8wrs5JBJuVMv_9Pw@mail.gmail.com>
-Message-ID: <87tvec30m9.fsf@notabene.neil.brown.name>
+        Thu, 2 May 2019 19:20:16 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46356 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfEBXUP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 19:20:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id d62so3027601oib.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 16:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vaw/ORyOIX+LivDFjdzavvVFdSzrsfQ8T1otSWpVSIU=;
+        b=o0QO+B7FpHVFXwLKbb17bFFqRW1e+qzOjokLhCa27tCA1lJSASdWhA4P/c4NjmHrqa
+         GOOsRFhnMSC4lUYLJvgInQ6SVvEFblUsDEPZ8ydtIHrpEPx3GuSL/RdaPG2JoFOe4NEe
+         hZl/zdyQUbrHeQuzhQYwqG1rNDOKwqDmtTeAsyxa+01dfkWFPMTmg8v6VfafeW0LRWoY
+         eKOtN2mSnXVe4884pA8yQaBlyW7qSdHDi5TOp8WB42EmRk2DFs+J7zvgxkCbO0IJMGye
+         k2byHYMgYhgXNQtcT2yeAEvkkg0b+TAfCF2UzrtO+4BxVi0uTXN0nuyzPTimga99l9js
+         BHKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vaw/ORyOIX+LivDFjdzavvVFdSzrsfQ8T1otSWpVSIU=;
+        b=bfor+FbBeIjaEQnqJ7AD3khFSbDepUyPMsjUkYskrl2lBdrM5qmZvPFzuQMJe9Fyc4
+         eBSAivomCaoA8ChvjiIqaW70vFz86iSp3GSa9ZQpvfFicOL+H+Gxm0hmcKOlb35eTcVN
+         QkD7XNbdq62cEuEFI296TANX8dNj7QkVz+ttLAhwL91siJpKP1zlLqTrUGhFqli71oUl
+         C6HOscyQOI5z40wdxRIACpbv7KeDAtewy6QEzCPPC+zlI/r9R1+Fz+R1ouzDKFD85JNP
+         eJzAiUoK/2YLnms5N1UtwEO4L+Vdq/QaYbgj6gjdddNRO5HucRQ3XZrFt6rFw6lWWvVc
+         9wyQ==
+X-Gm-Message-State: APjAAAXNDQwAQ6lt7dsCkl18YKG8CUE4H63JUPKOaqmkV3lQjLQYj2ol
+        IhYhtVydGrQlON+dtq1BVeVADgHRYq+GTY6UaXT/9Q==
+X-Google-Smtp-Source: APXvYqyR93jgYdljX7eIKXZzIfYL0esJbUsyTF/5NB+UbuV9bKgSCs+g8m9GOZjm7n5rkAFiUqQBlviACfilFseyMts=
+X-Received: by 2002:aca:de57:: with SMTP id v84mr4398622oig.149.1556839214939;
+ Thu, 02 May 2019 16:20:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CA+CK2bBT=goxf5KWLhca7uQutUj9670aL9r02_+BsJ+bLkjj=g@mail.gmail.com>
+In-Reply-To: <CA+CK2bBT=goxf5KWLhca7uQutUj9670aL9r02_+BsJ+bLkjj=g@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 2 May 2019 16:20:03 -0700
+Message-ID: <CAPcyv4gWZxSepaACiyR43qytA1jR8fVaeLy1rv7dFJW-ZE63EA@mail.gmail.com>
+Subject: Re: [PATCH v6 00/12] mm: Sub-section memory hotplug support
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        stable <stable@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-On Thu, May 02 2019, Amir Goldstein wrote:
-
-> On Thu, May 2, 2019 at 12:35 AM NeilBrown <neilb@suse.com> wrote:
->>
->>
->> If the upper and lower layers use incompatible ACL formats, it is not
->> possible to copy the ACL xttr from one to the other, so overlayfs
->> cannot work with them.
->> This happens particularly with NFSv4 which uses system.nfs4_acl, and
->> ext4 which uses system.posix_acl_access.
->>
->> If all ACLs actually make to Unix permissions, then there is no need
->> to copy up the ACLs, but overlayfs cannot determine this.
->>
->> So allow the sysadmin it assert that ACLs are not needed with a mount
->> option
->>   honoracl=off
->> This causes the ACLs to not be copied, so filesystems with different
->> ACL formats can be overlaid together.
->>
->> Signed-off-by: NeilBrown <neilb@suse.com>
->> ---
->>  Documentation/filesystems/overlayfs.txt | 24 ++++++++++++++++++++++++
->>  fs/overlayfs/copy_up.c                  |  9 +++++++--
->>  fs/overlayfs/dir.c                      |  2 +-
->>  fs/overlayfs/overlayfs.h                |  2 +-
->>  fs/overlayfs/ovl_entry.h                |  1 +
->>  fs/overlayfs/super.c                    | 15 +++++++++++++++
->>  6 files changed, 49 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/filesystems/overlayfs.txt b/Documentation/filesystems/overlayfs.txt
->> index eef7d9d259e8..7ad675940c93 100644
->> --- a/Documentation/filesystems/overlayfs.txt
->> +++ b/Documentation/filesystems/overlayfs.txt
->> @@ -245,6 +245,30 @@ filesystem - future operations on the file are barely noticed by the
->>  overlay filesystem (though an operation on the name of the file such as
->>  rename or unlink will of course be noticed and handled).
->>
->> +ACL copy-up
->> +-----------
->> +
->> +When a file that only exists on the lower layer is modified it needs
->> +to be copied up to the upper layer.  This means copying the metadata
->> +and (usually) the data (though see "Metadata only copy up" below).
->> +One part of the metadata can be problematic: the ACLs.
->> +
->> +Now all filesystems support ACLs, and when they do they don't all use
->> +the same format.  A significant conflict appears between POSIX acls
->> +used on many local filesystems, and NFSv4 ACLs used with NFSv4.  There
->> +two formats are, in general, not inter-convertible.
->> +
->> +If a site only uses regular Unix permissions (Read, Write, eXecute by
->> +User, Group and Other), then as these permissions are compatible with
->> +all ACLs, there is no need to copy ACLs.  overlayfs cannot determine
->> +if this is the case itself.
->> +
->> +For this reason, overlayfs supports a mount option "honoracl=off"
->> +which causes ACLs, any "system." extended attribute, on the lower
->> +layer to be ignored and, particularly, not copied to the upper later.
->> +This allows NFSv4 to be overlaid with a local filesystem, but should
->> +only be used if the only access controls used on the filesystem are
->> +Unix permission bits.
->>
+On Thu, May 2, 2019 at 3:46 PM Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
 >
-> I don't know. On the one hand "system." is not only ACLs.
-
-Isn't it?  What else goes in "system." "??
-
-"man xattr" says:
-
-   Extended system attributes
-       Extended system attributes are used by the kernel to store system
-       objects  such  as  Access Control Lists.  Read and write access
-       permissions to system attributes depend on the policy implemented
-       for each system attribute implemented by filesystems in the
-       kernel.
-
-so it *allows* things other than ACLs, but doesn't confirm that there
-are any.
-
-In the kernel source, "XATTR_SYSTEM_PREFIX" is only used with POSIX acls
-and "system.sockprotoname" - which is socket specific and no likely to
-be found on a filesystem.
-
-"system.
-also appears in
-   CIFS_XATTR_CIFS_ACL
-   SMB3_XATTR_CIFS_ACL
-   F2FS_SYSTEM_ADVISE_NAME
-   XATTR_NAME_NFSV4_ACL
-   SYSTEM_ORANGEFS_KEY
-
-which should all use XATTR_SYSTEM_PREFIX ...
-
-So yes,  I guess they aren't (quite) all ACLs.  Bother.
-
-
-> On the other hand, "honoracl=off" is not the same as -o noacl,
-> but it sure sounds the same.
+> Hi Dan,
 >
-> I'd be a lot more comfortable with "ignore_xattrs=system.nfs4_acl"
-> argument takes a comma separated list of xattr prefixes to ignore.
+> How do you test these patches? Do you have any instructions?
 
-That requires the sysadmin to know a lot more about the internals of the
-relevant filesystems.... Maybe that is a good idea, but it feels rather
-clunky.
-
-In each of these cases, except maybe POSIX_ACLs, it doesn't make sense
-to copy-up the "system." xattr unless it is the exact same filesystem
-type.
-
-So if given a "noacl" flag (or similar), ignoring copy-up failure for
-all "system." attributes is probably the right thing to do, as ACLs are
-the only system. attribute for which it can make any sense at all to
-copy them.
-
-Thanks,
-NeilBrown
-
+Yes, I briefly mentioned this in the cover letter, but here is the
+test I am using:
 
 >
-> ovl_is_private_xattr() can be generalized to ovl_is_ignored_xattr(),
-> going over a blacklist of N>=1 which will also be called from
-> ovl_can_list(), because there is no point in listing the ACLs that
-> are ignored. right?
+> I see for example that check_hotplug_memory_range() still enforces
+> memory_block_size_bytes() alignment.
 >
-> Thanks,
-> Amir.
+> Also, after removing check_hotplug_memory_range(), I tried to online
+> 16M aligned DAX memory, and got the following panic:
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzLex4ACgkQOeye3VZi
-gbnB6Q//WricnDPQVD7qTilrjxqd7c8+zXeiH4QHyEC0tIRP4960ZORnDmAGkSr4
-Cn+D/sUGpJmH5b6wybid4b8zhhZRdUqYqL7bXQX2Ut5lnjljQv9LeV9ZkQlUXMMU
-F11AURU0GmLK7RRZ0eqVz++tIX2rc542cIpXpkVg4GX0L22ww71aNB4S8HdZNbi0
-z4jRCuPl7I+aSpnRDkFk380KplHwEWWLXUYJjmNeSWsEte0FKPnPe2HYyv1u+4D1
-Q3RxgIh7pMTHdnZ8hsAdVNG6s9cLQiKPu7kpcjddAzZdR50r7RZV5A0ZEmQvde6j
-v0c5hjvo+4nHS1/erEf6FbnSCWog6eNV5lQ112RwhgkHmwflZMyzIM+DjOQCSly/
-A1fhOgSwSaI4PNt5Ds40WS5MVwFRjTyWN9sLtgIBNzwbXQmzlF/rJvywcMUhplO0
-eugtUYpLuFNqrf8K7w5ghenOfbLrYQnq8SPqyrBqLM4dikwbttQY1LgZ1xi3tUM4
-TLQzHqK12/BXImd7ZHPqrbdY2jGWCPi/h0VW2PHBNkuYtOoK+lHqCbipteo4CKSb
-tbg6fhYCMij39OAFO/pmycVCfoXn73z1vHTuPYUFhRT3nSmABIzcr5MI30ZEk9uB
-fm+lAwEoEC8pG2aoWehdAspDRIncZKV6sBGHVCsg+PKPuJoNmD4=
-=7gNZ
------END PGP SIGNATURE-----
---=-=-=--
+Right, this functionality is currently strictly limited to the
+devm_memremap_pages() case where there are guarantees that the memory
+will never be onlined. This is due to the fact that the section size
+is entangled with the memblock api. That said I would have expected
+you to trigger the warning in subsection_check() before getting this
+far into the hotplug process.
+>
+> # echo online > /sys/devices/system/memory/memory7/state
+> [  202.193132] WARNING: CPU: 2 PID: 351 at drivers/base/memory.c:207
+> memory_block_action+0x110/0x178
+> [  202.193391] Modules linked in:
+> [  202.193698] CPU: 2 PID: 351 Comm: sh Not tainted
+> 5.1.0-rc7_pt_devdax-00038-g865af4385544-dirty #9
+> [  202.193909] Hardware name: linux,dummy-virt (DT)
+> [  202.194122] pstate: 60000005 (nZCv daif -PAN -UAO)
+> [  202.194243] pc : memory_block_action+0x110/0x178
+> [  202.194404] lr : memory_block_action+0x90/0x178
+> [  202.194506] sp : ffff000016763ca0
+> [  202.194592] x29: ffff000016763ca0 x28: ffff80016fd29b80
+> [  202.194724] x27: 0000000000000000 x26: 0000000000000000
+> [  202.194838] x25: ffff000015546000 x24: 00000000001c0000
+> [  202.194949] x23: 0000000000000000 x22: 0000000000040000
+> [  202.195058] x21: 00000000001c0000 x20: 0000000000000008
+> [  202.195168] x19: 0000000000000007 x18: 0000000000000000
+> [  202.195281] x17: 0000000000000000 x16: 0000000000000000
+> [  202.195393] x15: 0000000000000000 x14: 0000000000000000
+> [  202.195505] x13: 0000000000000000 x12: 0000000000000000
+> [  202.195614] x11: 0000000000000000 x10: 0000000000000000
+> [  202.195744] x9 : 0000000000000000 x8 : 0000000180000000
+> [  202.195858] x7 : 0000000000000018 x6 : ffff000015541930
+> [  202.195966] x5 : ffff000015541930 x4 : 0000000000000001
+> [  202.196074] x3 : 0000000000000001 x2 : 0000000000000000
+> [  202.196185] x1 : 0000000000000070 x0 : 0000000000000000
+> [  202.196366] Call trace:
+> [  202.196455]  memory_block_action+0x110/0x178
+> [  202.196589]  memory_subsys_online+0x3c/0x80
+> [  202.196681]  device_online+0x6c/0x90
+> [  202.196761]  state_store+0x84/0x100
+> [  202.196841]  dev_attr_store+0x18/0x28
+> [  202.196927]  sysfs_kf_write+0x40/0x58
+> [  202.197010]  kernfs_fop_write+0xcc/0x1d8
+> [  202.197099]  __vfs_write+0x18/0x40
+> [  202.197187]  vfs_write+0xa4/0x1b0
+> [  202.197295]  ksys_write+0x64/0xd8
+> [  202.197430]  __arm64_sys_write+0x18/0x20
+> [  202.197521]  el0_svc_common.constprop.0+0x7c/0xe8
+> [  202.197621]  el0_svc_handler+0x28/0x78
+> [  202.197706]  el0_svc+0x8/0xc
+> [  202.197828] ---[ end trace 57719823dda6d21e ]---
+>
+> Thank you,
+> Pasha
