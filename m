@@ -2,58 +2,60 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96F5C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6163FC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A526E206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BE9206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 08:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FnuyaiZM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pe194CRa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfEBI7h (ORCPT
+        id S1726482AbfEBI7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 04:59:37 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44440 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbfEBI7g (ORCPT
+        Thu, 2 May 2019 04:59:41 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36692 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbfEBI7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 04:59:36 -0400
-Received: by mail-pl1-f194.google.com with SMTP id l2so710427plt.11
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 01:59:36 -0700 (PDT)
+        Thu, 2 May 2019 04:59:39 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w20so723108plq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 01:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=nR2hjJ7UdjaiCokIC7QFZTHdxkSdbYuSlKgyi1UOJCc=;
-        b=FnuyaiZMo6zoeUzdXDAHbFFLF00XiKpUHFgqrqvQehNz3iMJgPm/q/ku3A+M+AqYtW
-         YIXUfXzGJhU9zGQVsLZIU/h2BiWsH6o33gQLZBqOnbHR4ZEpcgcF/rGxEXcnDBV1zE40
-         TeGX/L/peWegooaY8tXN45iGg4Pm53yNeUjL8CuwNZK+Nn52TWWPN6Ks770WFgqJSZNl
-         Hv6ueikGZB+0E7k9I6js7oKP8o0pkBQHxD4rWWigT+cwXxVvqXkUVdKN7nHqiEaSgNV4
-         80KPtejo0AmGUj9M2rz3AYdog0XN8qmSCL1LntJ8yvhIUNKm3zR4U7T0JkC1ywdxBx8n
-         g28Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=wImb9CVB4GpKwFy3KJ9W0eoEvKw0F8sKUcEl8Dq86qE=;
+        b=Pe194CRa2me3Ghu8Yu/zv3y+hAl4SMpjEVeenRNYgMHMHQcT+CIAECk8cTTi/MXGMb
+         cLc0WWUnGRJ2Xdz7LMrvy0jYgM298w6ByzFtPn1DN0ZHYDJ3EjMLPzaLXobNAXlAbwWH
+         5wVdgyyR2LoGOzs9//qw7ExIrb/gijuwSpk1iRk7Kl4+w5MUrSAzjSoigSQIk7H1Z6HC
+         Qy3FMAPmCa5DZ5Q/FqKSeYm5AySYILmJ+IQyabQe7Al5oOHfj+uAV+NCrDbWBfBTZQeD
+         prmOOfpQM+fDlRdotLooWaaPLvvai8kirQmdq3YV16fIi6et4pE7QSDKz3n5z2eogtNc
+         Strw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nR2hjJ7UdjaiCokIC7QFZTHdxkSdbYuSlKgyi1UOJCc=;
-        b=MH32zcW67tZ/nycDD5c1r8IO7O1eBkYll+yjqg6TpaODwSIBGKF8U6lRaF3r2ERUhE
-         QqtmPNWDHhcu1tP6quoYjX1zBiPWfOoQsKykLhn7WMf5+yCpAJlzi6Eo5fB8QlfruYww
-         DSpFp+hMBKr0VHWnLTGNT7IGmFnvXAGJ6xCDKaAf6T8E8MY7FtLikE85lFZN2E3UR6vu
-         aq6XAKi/MFkjtnlbhy6MX0fmG7Img5GQgYYcv/NwOkcBCqkmprM8zgpVslHtZ2QEIVjc
-         zwSCPkf/2xJLc81KEyaviASXKjx0EwZyPArHFTfF6z6QRGsZeIMP4T6pPCXbh70fJnWY
-         UoSQ==
-X-Gm-Message-State: APjAAAXS+TZPO7xXuOBNvibigYBPYMP31WXcwbBDiAkaZ8BzH2NkRh2a
-        jq7GIpExxd5qX6H19qNxXHM=
-X-Google-Smtp-Source: APXvYqw/eKFMGVDywRH6P7JDlpGAmL+cFlDS5um4/QOt8InsWmPm8XB9kvyKPJIyUDAGMK5wT1Bw3A==
-X-Received: by 2002:a17:902:294b:: with SMTP id g69mr2491883plb.57.1556787576324;
-        Thu, 02 May 2019 01:59:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=wImb9CVB4GpKwFy3KJ9W0eoEvKw0F8sKUcEl8Dq86qE=;
+        b=Xuqv11f0+R40HdLAo2Qdl1VmynUaXs4NH6Vq21+/7kcNGxNAyH8LsXOOOuBiPYcASc
+         mdS4OHK4Ga4E6DlxpcvlJz5erbW/y0QW+Dx5SSiuIVgmGg3/W3/PFHjiYE+JrxTvPyNx
+         OsNfz5RvZB9vR5cAOyUqSPMMclgUEnnDvhlFV06ZIC+YcE34x2Sq3EkLj0AuMb5d4pjX
+         Y8o0eWrSPz70gCJBjAdUHR0aazOGeF2aq9YOToXHHhE1s4AMHKNTFV+NTPXj4efNKGCA
+         xfZLZ0EsBo2dI/0Ak6X7SNHMJrIlWyvqHZDtf9P22RlpspU4SzqBQ4a3k6YrnpLc6PGO
+         IIjA==
+X-Gm-Message-State: APjAAAWNcJixW/oAS3ECi2URJAH4kfiz7Jkq/zEsZVfbdBVPTjXb1ggF
+        Q61YFvT6BmAF63ZCDhu0wWo=
+X-Google-Smtp-Source: APXvYqxIQ29qxZR0+mT0u+86fJergDHo0If85mcV2/WYaiVy1J7IWdKdwrwEccSrFaEqyG9gJWsnnw==
+X-Received: by 2002:a17:902:b20f:: with SMTP id t15mr2501576plr.341.1556787579352;
+        Thu, 02 May 2019 01:59:39 -0700 (PDT)
 Received: from localhost.localdomain ([240f:34:212d:1:1b24:991b:df50:ea3f])
-        by smtp.gmail.com with ESMTPSA id z7sm74960831pgh.81.2019.05.02.01.59.32
+        by smtp.gmail.com with ESMTPSA id z7sm74960831pgh.81.2019.05.02.01.59.36
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 02 May 2019 01:59:35 -0700 (PDT)
+        Thu, 02 May 2019 01:59:38 -0700 (PDT)
 From:   Akinobu Mita <akinobu.mita@gmail.com>
 To:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
@@ -61,49 +63,51 @@ Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
         Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
         Christoph Hellwig <hch@lst.de>,
         Sagi Grimberg <sagi@grimberg.me>
-Subject: [PATCH 0/4] nvme-pci: support device coredump
-Date:   Thu,  2 May 2019 17:59:17 +0900
-Message-Id: <1556787561-5113-1-git-send-email-akinobu.mita@gmail.com>
+Subject: [PATCH 1/4] devcoredump: use memory_read_from_buffer
+Date:   Thu,  2 May 2019 17:59:18 +0900
+Message-Id: <1556787561-5113-2-git-send-email-akinobu.mita@gmail.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556787561-5113-1-git-send-email-akinobu.mita@gmail.com>
+References: <1556787561-5113-1-git-send-email-akinobu.mita@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This enables to capture snapshot of controller information via device
-coredump machanism, and it helps diagnose and debug issues.
-
-The nvme device coredump is triggered before resetting the controller
-caused by I/O timeout, and creates the following coredump files.
-
-- regs: NVMe controller registers, including each I/O queue doorbell
-        registers, in nvme-show-regs style text format.
-
-- sq<qid>: I/O submission queue
-
-- cq<qid>: I/O completion queue
-
-The device coredump mechanism currently allows drivers to create only a
-single coredump file, so this also provides a new function that allows
-drivers to create several device coredump files in one crashed device.
-
-Akinobu Mita (4):
-  devcoredump: use memory_read_from_buffer
-  devcoredump: allow to create several coredump files in one device
-  nvme-pci: add device coredump support
-  nvme-pci: trigger device coredump before resetting controller
-
- drivers/base/devcoredump.c  | 173 +++++++++++++++++++-----------
- drivers/nvme/host/Kconfig   |   1 +
- drivers/nvme/host/pci.c     | 252 +++++++++++++++++++++++++++++++++++++++++---
- include/linux/devcoredump.h |  33 ++++++
- 4 files changed, 387 insertions(+), 72 deletions(-)
+Use memory_read_from_buffer() to simplify devcd_readv().
 
 Cc: Johannes Berg <johannes@sipsolutions.net>
 Cc: Keith Busch <keith.busch@intel.com>
 Cc: Jens Axboe <axboe@fb.com>
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+---
+ drivers/base/devcoredump.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/drivers/base/devcoredump.c b/drivers/base/devcoredump.c
+index f1a3353..3c960a6 100644
+--- a/drivers/base/devcoredump.c
++++ b/drivers/base/devcoredump.c
+@@ -164,16 +164,7 @@ static struct class devcd_class = {
+ static ssize_t devcd_readv(char *buffer, loff_t offset, size_t count,
+ 			   void *data, size_t datalen)
+ {
+-	if (offset > datalen)
+-		return -EINVAL;
+-
+-	if (offset + count > datalen)
+-		count = datalen - offset;
+-
+-	if (count)
+-		memcpy(buffer, ((u8 *)data) + offset, count);
+-
+-	return count;
++	return memory_read_from_buffer(buffer, count, &offset, data, datalen);
+ }
+ 
+ static void devcd_freev(void *data)
 -- 
 2.7.4
 
