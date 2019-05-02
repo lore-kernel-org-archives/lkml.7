@@ -2,164 +2,75 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3403DC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927F3C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A18205F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC67205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfEBOb0 (ORCPT
+        id S1726350AbfEBOfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:31:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54950 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726203AbfEBOb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:31:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0085DAE47;
-        Thu,  2 May 2019 14:31:23 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 9AB56DA871; Thu,  2 May 2019 16:32:24 +0200 (CEST)
-Date:   Thu, 2 May 2019 16:32:22 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Pan Bian <bianpan2016@163.com>
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [V2] btrfs: drop inode reference count on error path
-Message-ID: <20190502143222.GC20156@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Pan Bian <bianpan2016@163.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1555585576-31045-1-git-send-email-bianpan2016@163.com>
+        Thu, 2 May 2019 10:35:30 -0400
+Received: from muru.com ([72.249.23.125]:47968 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbfEBOf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 10:35:29 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 501FD809B;
+        Thu,  2 May 2019 14:35:46 +0000 (UTC)
+Date:   Thu, 2 May 2019 07:35:25 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Faiz Abbas <a0230074@ti.com>
+Cc:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, bcousson@baylibre.com,
+        ulf.hansson@linaro.org, adrian.hunter@intel.com
+Subject: Re: [PATCH] ARM: dts: am57xx-idk: Remove support for voltage
+ switching for SD card
+Message-ID: <20190502143525.GP8007@atomide.com>
+References: <20190502084748.22518-1-faiz_abbas@ti.com>
+ <20190502142016.GO8007@atomide.com>
+ <50559611-a501-4331-c88b-5d05f6e756e9@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555585576-31045-1-git-send-email-bianpan2016@163.com>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+In-Reply-To: <50559611-a501-4331-c88b-5d05f6e756e9@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 07:06:16PM +0800, Pan Bian wrote:
-> The reference count of inode is incremented by ihold. It should be
-> dropped if not used. However, the reference count is not dropped if
-> error occurs during updating the inode or deleting orphan items. This
-> patch fixes the bug.
+* Faiz Abbas <a0230074@ti.com> [190502 14:30]:
+> Hi Tony,
 > 
-> Signed-off-by: Pan Bian <bianpan2016@163.com>
-> ---
-> V2: move ihold just before device_initialize to make code clearer
-
-There's nothing like device_initialize, what does this refer to?
-
-> ---
->  fs/btrfs/inode.c | 54 +++++++++++++++++++++++++-----------------------------
->  1 file changed, 25 insertions(+), 29 deletions(-)
+> On 02/05/19 7:50 PM, Tony Lindgren wrote:
+> > * Faiz Abbas <faiz_abbas@ti.com> [190502 01:48]:
+> >> If UHS speed modes are enabled, a compatible SD card switches down to
+> >> 1.8V during enumeration. If after this a software reboot/crash takes
+> >> place and on-chip ROM tries to enumerate the SD card, the difference in
+> >> IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
+> >>
+> >> The fix for this is to have support for power cycling the card in
+> >> hardware (with a PORz/soft-reset line causing a power cycle of the
+> >> card). Since am571x-, am572x- and am574x-idk don't have this
+> >> capability, disable voltage switching for these boards.
+> >>
+> >> The major effect of this is that the maximum supported speed
+> >> mode is now high speed(50 MHz) down from SDR104(200 MHz).
+> > 
+> > This sounds a bit urgent, does it also need a stable tag or is
+> > it safe to apply against any earlier kernels?
+> > 
 > 
-> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-> index 82fdda8..d6630df 100644
-> --- a/fs/btrfs/inode.c
-> +++ b/fs/btrfs/inode.c
-> @@ -6579,7 +6579,7 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
->  	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
->  	u64 index;
->  	int err;
-> -	int drop_inode = 0;
-> +	int log_mode;
->  
->  	/* do not allow sys_link's with other subvols of the same device */
->  	if (root->root_key.objectid != BTRFS_I(inode)->root->root_key.objectid)
-> @@ -6616,41 +6616,37 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
->  	err = btrfs_add_nondir(trans, BTRFS_I(dir), dentry, BTRFS_I(inode),
->  			1, index);
->  
-> -	if (err) {
-> -		drop_inode = 1;
-> -	} else {
-> -		struct dentry *parent = dentry->d_parent;
-> -		int ret;
-> +	if (err)
-> +		goto err_link;
->  
-> -		err = btrfs_update_inode(trans, root, inode);
-> +	err = btrfs_update_inode(trans, root, inode);
-> +	if (err)
-> +		goto err_link;
-> +	if (inode->i_nlink == 1) {
-> +		/*
-> +		 * If new hard link count is 1, it's a file created
-> +		 * with open(2) O_TMPFILE flag.
-> +		 */
-> +		err = btrfs_orphan_del(trans, BTRFS_I(inode));
->  		if (err)
-> -			goto fail;
-> -		if (inode->i_nlink == 1) {
-> -			/*
-> -			 * If new hard link count is 1, it's a file created
-> -			 * with open(2) O_TMPFILE flag.
-> -			 */
-> -			err = btrfs_orphan_del(trans, BTRFS_I(inode));
-> -			if (err)
-> -				goto fail;
-> -		}
-> -		BTRFS_I(inode)->last_link_trans = trans->transid;
-> -		d_instantiate(dentry, inode);
-> -		ret = btrfs_log_new_name(trans, BTRFS_I(inode), NULL, parent,
-> -					 true, NULL);
-> -		if (ret == BTRFS_NEED_TRANS_COMMIT) {
-> -			err = btrfs_commit_transaction(trans);
-> -			trans = NULL;
-> -		}
-> +			goto err_link;
-> +	}
-> +	BTRFS_I(inode)->last_link_trans = trans->transid;
-> +	ihold(inode);
-> +	d_instantiate(dentry, inode);
+> This should be good to apply on any previous releases.
 
-So this ihold pairs with d_instantiate, and there's another ihold in the
-function, before call to btrfs_add_nondir. Isn't this leaking the
-references? In normal case it's 2x ihold, in error case 1x.
+OK applying both your MMC patches into fixes today.
 
-6645         /* There are several dir indexes for this inode, clear the cache. */                                                                                                                                               
-6646         BTRFS_I(inode)->dir_index = 0ULL;                                                                                                                                                                                  
-6647         inc_nlink(inode);                                                                                                                                                                                                  
-6648         inode_inc_iversion(inode);                                                                                                                                                                                         
-6649         inode->i_ctime = current_time(inode);                                                                                                                                                                              
-6650         ihold(inode);                                                                                                                                                                                                      
-6651         set_bit(BTRFS_INODE_COPY_EVERYTHING, &BTRFS_I(inode)->runtime_flags);
+Thanks,
 
-> +	log_mode = btrfs_log_new_name(trans, BTRFS_I(inode), NULL,
-> +			dentry->d_parent, true, NULL);
-> +	if (log_mode == BTRFS_NEED_TRANS_COMMIT) {
-> +		err = btrfs_commit_transaction(trans);
-> +		trans = NULL;
->  	}
->  
-> +err_link:
-> +	if (err)
-> +		inode_dec_link_count(inode);
->  fail:
->  	if (trans)
->  		btrfs_end_transaction(trans);
-> -	if (drop_inode) {
-> -		inode_dec_link_count(inode);
-> -		iput(inode);
-
-Ie. this iput does not have any replacement in the new code.
-
-> -	}
->  	btrfs_btree_balance_dirty(fs_info);
->  	return err;
->  }
-> -- 
-> 2.7.4
-> 
+Tony
