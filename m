@@ -2,257 +2,526 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C309BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B354C04AA9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2BD20449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Xv0MYE4U"
+	by mail.kernel.org (Postfix) with ESMTP id 34AB620449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556811516;
+	bh=z40lyj+7G9doNQ1x0I5kUFWEoZ9Hyot6PJFi709FAzw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yz1yYrIilHpQX0mdYdINzoZGciDOZVD08NL9O9PApUwmjei8waEvmy5MvjLWVMmLi
+	 1c9bqxntNIn+phvqemS/Vw1B+sp0Ua6hbKBHL1dDtDnYVIBxdHd2RQkDNY1yTpGKRm
+	 OHWEnMdrO/bs2qAEUYLd6S7Gn4lWUkDb/JTkKTIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfEBPia (ORCPT
+        id S1728599AbfEBPaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:38:30 -0400
-Received: from mail-eopbgr770072.outbound.protection.outlook.com ([40.107.77.72]:3423
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728581AbfEBPaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/EAKepu+6V3dn0h3dNDzgsFkXSI5HnNxZz2wAL8X3pc=;
- b=Xv0MYE4UxI5OvvId+h3A+ly2eYMFRtiJ/mGZil2pfWnr0ltDzm1001lsUeQH2Oaoy80ECgkJXGT7UicAkQn6YqRxp2+0R9hX4xF2RthVYc7547SHnMzlcjim9GIFbdzZw5ByrcV0Afwk+bys4ywFlHrJ4r60sTQ/lN1L/viJWik=
-Received: from CY4PR12MB1798.namprd12.prod.outlook.com (10.175.59.9) by
- CY4PR12MB1320.namprd12.prod.outlook.com (10.168.168.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Thu, 2 May 2019 15:29:47 +0000
-Received: from CY4PR12MB1798.namprd12.prod.outlook.com
- ([fe80::c84c:8885:45d3:fb52]) by CY4PR12MB1798.namprd12.prod.outlook.com
- ([fe80::c84c:8885:45d3:fb52%3]) with mapi id 15.20.1856.008; Thu, 2 May 2019
- 15:29:47 +0000
-From:   "Phillips, Kim" <kim.phillips@amd.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-CC:     "Phillips, Kim" <kim.phillips@amd.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?utf-8?B?TWFydGluIExpxaFrYQ==?= <mliska@suse.cz>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, Pu Wen <puwen@hygon.cn>,
-        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Subject: [PATCH] perf/x86/amd: update generic hardware cache events for Family
- 17h
-Thread-Topic: [PATCH] perf/x86/amd: update generic hardware cache events for
- Family 17h
-Thread-Index: AQHVAPvgBIX8w5KVMESrPrLSY0K7tA==
-Date:   Thu, 2 May 2019 15:29:47 +0000
-Message-ID: <20190502152931.5696-1-kim.phillips@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR0102CA0029.prod.exchangelabs.com (2603:10b6:805:1::42)
- To CY4PR12MB1798.namprd12.prod.outlook.com (2603:10b6:903:11a::9)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=kim.phillips@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.21.0
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3aa1f5aa-6f8d-4820-7f95-08d6cf13028c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:CY4PR12MB1320;
-x-ms-traffictypediagnostic: CY4PR12MB1320:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <CY4PR12MB1320AA420F7B00B81091648B87340@CY4PR12MB1320.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0025434D2D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(366004)(376002)(396003)(189003)(199004)(4326008)(6306002)(7736002)(256004)(305945005)(53936002)(186003)(476003)(2906002)(7416002)(110136005)(966005)(68736007)(54906003)(26005)(71190400001)(316002)(71200400001)(5660300002)(14454004)(66066001)(102836004)(486006)(386003)(6116002)(6512007)(50226002)(14444005)(6506007)(73956011)(66476007)(66556008)(64756008)(66446008)(3846002)(478600001)(66946007)(25786009)(1076003)(8676002)(99286004)(52116002)(36756003)(66574012)(81166006)(8936002)(2616005)(86362001)(81156014)(6436002)(6486002)(2501003)(41533002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1320;H:CY4PR12MB1798.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: U7oVMciHTl5qa91jWxMb/TWlg/+zI0qi5vzaLE7sLjxHhYpU1nAlUG8M8ii5Hm1JZbESYgZv0MPdQQZwGXe2t0MUlmsZbYSpPpwUMc9hRFSyfyXnMYPzMs1PTY6xCDsoHHYRA9gTlBUYu1axU75cUqBSNU/40OnGd9gYuoTWm/jU4sZW3G6G0aogeHNjKLxBi4l765INZXxhRFO84sIS8Db9wmXHhqPeU66jsf16r6i46QPb0htQir7BOT0eXD9CqxcYzgAj9IWhaWPi20QSjl+B8SKlis+2fHxMYiD0Q7KU/y9xtcWF+VEZwWRXducqyM/BQ/zLizYMZLAaj9Z164HtebrRs2auvtY3uS6XynlHPO9BR5KmgD/ZifVD9IlRAO/M2N4UyfXu29vgOR+TMmNX0ManYmtYT8Hsd3yd41A=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E22176CE8C9ABC4EAB2655128356B37F@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 2 May 2019 11:30:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728567AbfEBP36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:29:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A04C720675;
+        Thu,  2 May 2019 15:29:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556810997;
+        bh=z40lyj+7G9doNQ1x0I5kUFWEoZ9Hyot6PJFi709FAzw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wqIWBzxYe5MtwWRanIkTHzmQ/yq/0hFlVs5g7+/HqNWDbV7ssAWNFkd4TLmCOVbeJ
+         UvJMduvcysME8cBFDuJHeudVraUSN2zLbroqmiBH29SUKuS+fu0+aSJgUWnogHlJnj
+         8wCD3/0oBzeOfrWLK9morENMqWcYnJRA8FIudm0E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.0 000/101] 5.0.12-stable review
+Date:   Thu,  2 May 2019 17:20:02 +0200
+Message-Id: <20190502143339.434882399@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3aa1f5aa-6f8d-4820-7f95-08d6cf13028c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 15:29:47.6136
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1320
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.0.12-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.0.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.0.12-rc1
+X-KernelTest-Deadline: 2019-05-04T14:33+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogS2ltIFBoaWxsaXBzIDxraW0ucGhpbGxpcHNAYW1kLmNvbT4NCg0KQWRkIGEgbmV3IGFt
-ZF9od19jYWNoZV9ldmVudF9pZHNfZjE3aCBhc3NpZ25tZW50IHN0cnVjdHVyZSBzZXQNCmZvciBB
-TUQgZmFtaWxpZXMgMTdoIGFuZCBhYm92ZSwgc2luY2UgYSBsb3QgaGFzIGNoYW5nZWQuICBTcGVj
-aWZpY2FsbHk6DQoNCkwxIERhdGEgQ2FjaGUNCg0KVGhlIGRhdGEgY2FjaGUgYWNjZXNzIGNvdW50
-ZXIgcmVtYWlucyB0aGUgc2FtZSBvbiBGYW1pbHkgMTdoLg0KDQpGb3IgREMgbWlzc2VzLCBQTUN4
-MDQxJ3MgZGVmaW5pdGlvbiBjaGFuZ2VzIHdpdGggRmFtaWx5IDE3aCwNCnNvIGluc3RlYWQgd2Ug
-dXNlIHRoZSBMMiBjYWNoZSBhY2Nlc3NlcyBmcm9tIEwxIGRhdGEgY2FjaGUNCm1pc3NlcyBjb3Vu
-dGVyIChQTUN4MDYwLHVtYXNrPTB4YzgpLg0KDQpGb3IgREMgaGFyZHdhcmUgcHJlZmV0Y2ggZXZl
-bnRzLCBGYW1pbHkgMTdoIGJyZWFrcyBjb21wYXRpYmlsaXR5DQpmb3IgUE1DeDA2NyAiRGF0YSBQ
-cmVmZXRjaGVyIiwgc28gaW5zdGVhZCwgd2UgdXNlIFBNQ3gwNWEgIkhhcmR3YXJlDQpQcmVmZXRj
-aCBEQyBGaWxscy4iDQoNCkwxIEluc3RydWN0aW9uIENhY2hlDQoNClBNQ3MgMHg4MCBhbmQgMHg4
-MSAoMzItYnl0ZSBJQyBmZXRjaGVzIGFuZCBtaXNzZXMpIGFyZSBiYWNrd2FyZA0KY29tcGF0aWJs
-ZSBvbiBGYW1pbHkgMTdoLg0KDQpGb3IgcHJlZmV0Y2hlcywgd2UgcmVtb3ZlIHRoZSBlcnJvbmVv
-dXMgUE1DeDA0QiBhc3NpZ25tZW50IHdoaWNoDQpjb3VudHMgaG93IG1hbnkgc29mdHdhcmUgZGF0
-YSBjYWNoZSBwcmVmZXRjaCBsb2FkIGluc3RydWN0aW9ucyB3ZXJlDQpkaXNwYXRjaGVkLg0KDQpM
-TCAtIExhc3QgTGV2ZWwgQ2FjaGUNCg0KUmVtb3ZpbmcgUE1DcyA3RCwgN0UsIGFuZCA3RiBhc3Np
-Z25tZW50cywgYXMgdGhleSBkbyBub3QgZXhpc3QNCm9uIEZhbWlseSAxN2gsIHdoZXJlIHRoZSBs
-YXN0IGxldmVsIGNhY2hlIGlzIEwzLiAgTDMgY291bnRlcnMNCmNhbiBiZSBhY2Nlc3NlZCB1c2lu
-ZyB0aGUgZXhpc3RpbmcgQU1EIFVuY29yZSBkcml2ZXIuDQoNCkRhdGEgVExCDQoNCk9uIEludGVs
-IG1hY2hpbmVzLCBkYXRhIFRMQiBhY2Nlc3NlcyAoImRUTEItbG9hZHMiKSBhcmUgYXNzaWduZWQN
-CnRvIGNvdW50ZXJzIHRoYXQgY291bnQgbG9hZC9zdG9yZSBpbnN0cnVjdGlvbnMgcmV0aXJlZC4g
-IFRoaXMNCmlzIGluY29uc2lzdGVudCB3aXRoIGluc3RydWN0aW9uIFRMQiBhY2Nlc3Nlcywgd2hl
-cmUgSW50ZWwNCmltcGxlbWVudGF0aW9ucyByZXBvcnQgaVRMQiBtaXNzZXMgdGhhdCBoaXQgaW4g
-dGhlIFNUTEIuDQoNCklkZWFsbHksIGRUTEItbG9hZHMgd291bGQgY291bnQgaGlnaGVyIGxldmVs
-IGRUTEIgbWlzc2VzIHRoYXQgaGl0DQppbiBsb3dlciBsZXZlbCBUTEJzLCBhbmQgZFRMQi1sb2Fk
-LW1pc3NlcyB3b3VsZCByZXBvcnQgdGhvc2UNCnRoYXQgYWxzbyBtaXNzZWQgaW4gdGhvc2UgbG93
-ZXItbGV2ZWwgVExCcywgdGhlcmVmb3JlIGNhdXNpbmcNCmEgcGFnZSB0YWJsZSB3YWxrLiAgVGhh
-dCB3b3VsZCBiZSBjb25zaXN0ZW50IHdpdGggaW5zdHJ1Y3Rpb24NClRMQiBvcGVyYXRpb24sIHJl
-bW92ZSB0aGUgcmVkdW5kYW5jeSBiZXR3ZWVuIGRUTEItbG9hZHMgYW5kDQpMMS1kY2FjaGUtbG9h
-ZHMsIGFuZCBwcmV2ZW50IHBlcmYgZnJvbSBwcm9kdWNpbmcgYXJ0aWZpY2lhbGx5DQpsb3cgcGVy
-Y2VudGFnZSByYXRpb3MsIGkuZS4gdGhlICIwLjAxJSIgYmVsb3c6DQoNCiAgICAgICAgNDIsNTUw
-LDg2OSAgICAgIEwxLWRjYWNoZS1sb2Fkcw0KICAgICAgICA0MSw1OTEsODYwICAgICAgZFRMQi1s
-b2Fkcw0KICAgICAgICAgICAgIDQsODAyICAgICAgZFRMQi1sb2FkLW1pc3NlcyAgICAgICAgICAj
-ICAgIDAuMDElIG9mIGFsbCBkVExCIGNhY2hlIGhpdHMNCiAgICAgICAgIDcsMjgzLDY4MiAgICAg
-IEwxLWRjYWNoZS1zdG9yZXMNCiAgICAgICAgIDcsOTEyLDM5MiAgICAgIGRUTEItc3RvcmVzDQog
-ICAgICAgICAgICAgICAzMTAgICAgICBkVExCLXN0b3JlLW1pc3Nlcw0KDQpPbiBBTUQgRmFtaWxp
-ZXMgcHJpb3IgdG8gMTdoLCB0aGUgIkRhdGEgQ2FjaGUgQWNjZXNzZXMiIGNvdW50ZXIgaXMNCnVz
-ZWQsIHdoaWNoIGlzIHNsaWdodGx5IGJldHRlciB0aGFuIGxvYWQvc3RvcmUgaW5zdHJ1Y3Rpb25z
-IHJldGlyZWQsDQpidXQgc3RpbGwgY291bnRzIGluIHRlcm1zIG9mIGluZGl2aWR1YWwgbG9hZC9z
-dG9yZSBvcGVyYXRpb25zDQppbnN0ZWFkIG9mIFRMQiBvcGVyYXRpb25zLg0KDQpTbywgZm9yIEFN
-RCBGYW1pbGllcyAxN2ggYW5kIGhpZ2hlciwgdGhpcyBwYXRjaCBhc3NpZ25zICJkVExCLWxvYWRz
-Ig0KdG8gYSBjb3VudGVyIGZvciBMMSBkVExCIG1pc3NlcyB0aGF0IGhpdCBpbiB0aGUgTDIgZFRM
-QiwgYW5kDQoiZFRMQi1sb2FkLW1pc3NlcyIgdG8gYSBjb3VudGVyIGZvciBMMSBEVExCIG1pc3Nl
-cyB0aGF0IGNhdXNlZA0KTDIgRFRMQiBtaXNzZXMgYW5kIHRoZXJlZm9yZSBhbHNvIGNhdXNlZCBw
-YWdlIHRhYmxlIHdhbGtzLiAgVGhpcw0KcmVzdWx0cyBpbiBhIG11Y2ggbW9yZSBhY2N1cmF0ZSB2
-aWV3IG9mIGRhdGEgVExCIHBlcmZvcm1hbmNlOg0KDQogICAgICAgIDYwLDk2MSw3ODEgICAgICBM
-MS1kY2FjaGUtbG9hZHMNCiAgICAgICAgICAgICA0LDYwMSAgICAgIGRUTEItbG9hZHMNCiAgICAg
-ICAgICAgICAgIDk2MyAgICAgIGRUTEItbG9hZC1taXNzZXMgICAgICAgICAgIyAgIDIwLjkzJSBv
-ZiBhbGwgZFRMQiBjYWNoZSBoaXRzDQoNCk5vdGUgdGhhdCBmb3IgYWxsIEFNRCBmYW1pbGllcywg
-ZGF0YSBsb2FkcyBhbmQgc3RvcmVzIGFyZSBjb21iaW5lZA0KaW4gYSBzaW5nbGUgYWNjZXNzZXMg
-Y291bnRlciwgc28gbm8gJ0wxLWRjYWNoZS1zdG9yZXMnIGFyZSByZXBvcnRlZA0Kc2VwYXJhdGVs
-eSwgYW5kIHN0b3JlcyBhcmUgY291bnRlZCB3aXRoIGxvYWRzIGluICdMMS1kY2FjaGUtbG9hZHMn
-Lg0KDQpBbHNvIG5vdGUgdGhhdCB0aGUgIiUgb2YgYWxsIGRUTEIgY2FjaGUgaGl0cyIgc3RyaW5n
-IGlzIG1pc2xlYWRpbmcNCmJlY2F1c2UgKGEpICJkVExCIGNhY2hlIjogYWx0aG91Z2ggVExCcyBj
-YW4gYmUgY29uc2lkZXJlZCBjYWNoZXMgZm9yDQpwYWdlIHRhYmxlcywgaW4gdGhpcyBjb250ZXh0
-LCBpdCBjYW4gYmUgbWlzaW50ZXJwcmV0ZWQgYXMgZGF0YSBjYWNoZQ0KaGl0cyBiZWNhdXNlIHRo
-ZSBmaWd1cmVzIGFyZSBzaW1pbGFyIChhdCBsZWFzdCBvbiBJbnRlbCksIGFuZCAoYikgbm90DQph
-bGwgdGhvc2UgbG9hZHMgKHRlY2huaWNhbGx5IGFjY2Vzc2VzKSB0ZWNobmljYWxseSAiaGl0IiBh
-dCB0aGF0DQpoYXJkd2FyZSBsZXZlbC4gICIlIG9mIGFsbCBkVExCIGFjY2Vzc2VzIiB3b3VsZCBi
-ZSBtb3JlIGNsZWFyL2FjY3VyYXRlLg0KDQpJbnN0cnVjdGlvbiBUTEINCg0KT24gSW50ZWwgbWFj
-aGluZXMsICdpVExCLWxvYWRzJyBtZWFzdXJlIGlUTEIgbWlzc2VzIHRoYXQgaGl0IGluIHRoZQ0K
-U1RMQiwgYW5kICdpVExCLWxvYWQtbWlzc2VzJyBtZWFzdXJlIGlUTEIgbWlzc2VzIHRoYXQgYWxz
-byBtaXNzZWQgaW4NCnRoZSBTVExCIGFuZCBjb21wbGV0ZWQgYSBwYWdlIHRhYmxlIHdhbGsuDQoN
-CkZvciBBTUQgRmFtaWx5IDE3aCBhbmQgYWJvdmUsIGZvciAnaVRMQi1sb2Fkcycgd2UgcmVwbGFj
-ZSB0aGUNCmVycm9uZW91cyBpbnN0cnVjdGlvbiBjYWNoZSBmZXRjaGVzIGNvdW50ZXIgd2l0aCBQ
-TUN4MDg0DQoiTDEgSVRMQiBNaXNzLCBMMiBJVExCIEhpdCIuDQoNCkZvciAnaVRMQi1sb2FkLW1p
-c3Nlcycgd2Ugc3RpbGwgdXNlIFBNQ3gwODUgIkwxIElUTEIgTWlzcywNCkwyIElUTEIgTWlzcyIs
-IGJ1dCBzZXQgYSAweGZmIHVtYXNrIGJlY2F1c2Ugd2l0aG91dCBpdCB0aGUgZXZlbnQNCmRvZXMg
-bm90IGdldCBjb3VudGVkLg0KDQpCcmFuY2ggUHJlZGljdG9yIChCUFUpDQoNClBNQ3MgMHhjMiBh
-bmQgMHhjMyBjb250aW51ZSB0byBiZSB2YWxpZCBhY3Jvc3MgYWxsIEFNRCBGYW1pbGllcy4NCg0K
-Tm9kZSBMZXZlbCBFdmVudHMNCg0KRmFtaWx5IDE3aCBkb2VzIG5vdCBoYXZlIGEgUE1DeDBlOSBj
-b3VudGVyLCBhbmQgY29ycmVzcG9uZGluZyBjb3VudGVycw0KaGF2ZSBub3QgYmVlbiBtYWRlIGF2
-YWlsYWJsZSBwdWJsaWNseSwgc28gZm9yIG5vdywgd2UgbWFyayB0aGVtIGFzDQp1bnN1cHBvcnRl
-ZCBmb3IgRmFtaWxpZXMgMTdoIGFuZCBhYm92ZS4NCg0KUmVmZXJlbmNlOg0KIk9wZW4tU291cmNl
-IFJlZ2lzdGVyIFJlZmVyZW5jZSBGb3IgQU1EIEZhbWlseSAxN2ggUHJvY2Vzc29ycyBNb2RlbHMg
-MDBoLTJGaCINClJlbGVhc2VkIDcvMTcvMjAxOCwgUHVibGljYXRpb24gIzU2MjU1LCBSZXZpc2lv
-biAzLjAzOg0KaHR0cHM6Ly93d3cuYW1kLmNvbS9zeXN0ZW0vZmlsZXMvVGVjaERvY3MvNTYyNTVf
-T1NSUi5wZGYNCg0KU2lnbmVkLW9mZi1ieTogS2ltIFBoaWxsaXBzIDxraW0ucGhpbGxpcHNAYW1k
-LmNvbT4NCkNjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4gIyB2NC45Kw0KQ2M6IEFsZXhhbmRl
-ciBTaGlzaGtpbiA8YWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNvbT4NCkNjOiBBcm5h
-bGRvIENhcnZhbGhvIGRlIE1lbG8gPGFjbWVAa2VybmVsLm9yZz4NCkNjOiBCb3Jpc2xhdiBQZXRr
-b3YgPGJwQGFsaWVuOC5kZT4NCkNjOiBILiBQZXRlciBBbnZpbiA8aHBhQHp5dG9yLmNvbT4NCkNj
-OiBJbmdvIE1vbG5hciA8bWluZ29Aa2VybmVsLm9yZz4NCkNjOiBKYW5ha2FyYWphbiBOYXRhcmFq
-YW4gPEphbmFrYXJhamFuLk5hdGFyYWphbkBhbWQuY29tPg0KQ2M6IEppcmkgT2xzYSA8am9sc2FA
-cmVkaGF0LmNvbT4NCkNjOiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRhdGlv
-bi5vcmc+DQpDYzogTWFydGluIExpxaFrYSA8bWxpc2thQHN1c2UuY3o+DQpDYzogTmFtaHl1bmcg
-S2ltIDxuYW1oeXVuZ0BrZXJuZWwub3JnPg0KQ2M6IFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5m
-cmFkZWFkLm9yZz4NCkNjOiBQdSBXZW4gPHB1d2VuQGh5Z29uLmNuPg0KQ2M6IFN1cmF2ZWUgU3V0
-aGlrdWxwYW5pdCA8U3VyYXZlZS5TdXRoaWt1bHBhbml0QGFtZC5jb20+DQpDYzogVGhvbWFzIEds
-ZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+DQpDYzogVGhvbWFzIExlbmRhY2t5IDxUaG9tYXMu
-TGVuZGFja3lAYW1kLmNvbT4NCkNjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpDYzog
-bGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmcNCkZpeGVzOiBlNDBlZDE1NDJkZDcgKCJw
-ZXJmL3g4NjogQWRkIHBlcmYgc3VwcG9ydCBmb3IgQU1EIGZhbWlseS0xN2ggcHJvY2Vzc29ycyIp
-DQotLS0NCiBhcmNoL3g4Ni9ldmVudHMvYW1kL2NvcmUuYyB8IDExMyArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKystDQogMSBmaWxlIGNoYW5nZWQsIDExMCBpbnNlcnRpb25zKCsp
-LCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvZXZlbnRzL2FtZC9jb3Jl
-LmMgYi9hcmNoL3g4Ni9ldmVudHMvYW1kL2NvcmUuYw0KaW5kZXggZDQ1ZjNmYmQyMzJlLi5jNTg5
-NWFkNDE5ZWEgMTAwNjQ0DQotLS0gYS9hcmNoL3g4Ni9ldmVudHMvYW1kL2NvcmUuYw0KKysrIGIv
-YXJjaC94ODYvZXZlbnRzL2FtZC9jb3JlLmMNCkBAIC0xMTYsNiArMTE2LDExMCBAQCBzdGF0aWMg
-X19pbml0Y29uc3QgY29uc3QgdTY0IGFtZF9od19jYWNoZV9ldmVudF9pZHMNCiAgfSwNCiB9Ow0K
-IA0KK3N0YXRpYyBfX2luaXRjb25zdCBjb25zdCB1NjQgYW1kX2h3X2NhY2hlX2V2ZW50X2lkc19m
-MTdoDQorCQkJCVtQRVJGX0NPVU5UX0hXX0NBQ0hFX01BWF0NCisJCQkJW1BFUkZfQ09VTlRfSFdf
-Q0FDSEVfT1BfTUFYXQ0KKwkJCQlbUEVSRl9DT1VOVF9IV19DQUNIRV9SRVNVTFRfTUFYXSA9IHsN
-CitbQyhMMUQpXSA9IHsNCisJW0MoT1BfUkVBRCldID0gew0KKwkJW0MoUkVTVUxUX0FDQ0VTUyld
-ID0gMHgwMDQwLCAvKiBEYXRhIENhY2hlIEFjY2Vzc2VzICovDQorCQlbQyhSRVNVTFRfTUlTUyld
-ICAgPSAweGM4NjAsIC8qIEwyJCBhY2Nlc3MgZnJvbSBEQyBNaXNzICovDQorCX0sDQorCVtDKE9Q
-X1dSSVRFKV0gPSB7DQorCQlbQyhSRVNVTFRfQUNDRVNTKV0gPSAwLA0KKwkJW0MoUkVTVUxUX01J
-U1MpXSAgID0gMCwNCisJfSwNCisJW0MoT1BfUFJFRkVUQ0gpXSA9IHsNCisJCVtDKFJFU1VMVF9B
-Q0NFU1MpXSA9IDB4ZmY1YSwgLyogaC93IHByZWZldGNoIERDIEZpbGxzICovDQorCQlbQyhSRVNV
-TFRfTUlTUyldICAgPSAwLA0KKwl9LA0KK30sDQorW0MoTDFJKV0gPSB7DQorCVtDKE9QX1JFQUQp
-XSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IDB4MDA4MCwgLyogSW5zdHJ1Y3Rpb24gY2Fj
-aGUgZmV0Y2hlcyAgKi8NCisJCVtDKFJFU1VMVF9NSVNTKV0gICA9IDB4MDA4MSwgLyogSW5zdHJ1
-Y3Rpb24gY2FjaGUgbWlzc2VzICAgKi8NCisJfSwNCisJW0MoT1BfV1JJVEUpXSA9IHsNCisJCVtD
-KFJFU1VMVF9BQ0NFU1MpXSA9IC0xLA0KKwkJW0MoUkVTVUxUX01JU1MpXSAgID0gLTEsDQorCX0s
-DQorCVtDKE9QX1BSRUZFVENIKV0gPSB7DQorCQlbQyhSRVNVTFRfQUNDRVNTKV0gPSAwLA0KKwkJ
-W0MoUkVTVUxUX01JU1MpXSAgID0gMCwNCisJfSwNCit9LA0KK1tDKExMKV0gPSB7DQorCVtDKE9Q
-X1JFQUQpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IDAsDQorCQlbQyhSRVNVTFRfTUlT
-UyldICAgPSAwLA0KKwl9LA0KKwlbQyhPUF9XUklURSldID0gew0KKwkJW0MoUkVTVUxUX0FDQ0VT
-UyldID0gMCwNCisJCVtDKFJFU1VMVF9NSVNTKV0gICA9IDAsDQorCX0sDQorCVtDKE9QX1BSRUZF
-VENIKV0gPSB7DQorCQlbQyhSRVNVTFRfQUNDRVNTKV0gPSAwLA0KKwkJW0MoUkVTVUxUX01JU1Mp
-XSAgID0gMCwNCisJfSwNCit9LA0KK1tDKERUTEIpXSA9IHsNCisJW0MoT1BfUkVBRCldID0gew0K
-KwkJW0MoUkVTVUxUX0FDQ0VTUyldID0gMHhmZjQ1LCAvKiBBbGwgTDIgRFRMQiBhY2Nlc3NlcyAq
-Lw0KKwkJW0MoUkVTVUxUX01JU1MpXSAgID0gMHhmMDQ1LCAvKiBMMiBEVExCIG1pc3NlcyAoUFQg
-d2Fsa3MpICovDQorCX0sDQorCVtDKE9QX1dSSVRFKV0gPSB7DQorCQlbQyhSRVNVTFRfQUNDRVNT
-KV0gPSAwLA0KKwkJW0MoUkVTVUxUX01JU1MpXSAgID0gMCwNCisJfSwNCisJW0MoT1BfUFJFRkVU
-Q0gpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IDAsDQorCQlbQyhSRVNVTFRfTUlTUyld
-ICAgPSAwLA0KKwl9LA0KK30sDQorW0MoSVRMQildID0gew0KKwlbQyhPUF9SRUFEKV0gPSB7DQor
-CQlbQyhSRVNVTFRfQUNDRVNTKV0gPSAweDAwODQsIC8qIEwxIElUTEIgbWlzc2VzLCBMMiBJVExC
-IGhpdHMgKi8NCisJCVtDKFJFU1VMVF9NSVNTKV0gICA9IDB4ZmY4NSwgLyogTDEgSVRMQiBtaXNz
-ZXMsIEwyIG1pc3NlcyAqLw0KKwl9LA0KKwlbQyhPUF9XUklURSldID0gew0KKwkJW0MoUkVTVUxU
-X0FDQ0VTUyldID0gLTEsDQorCQlbQyhSRVNVTFRfTUlTUyldICAgPSAtMSwNCisJfSwNCisJW0Mo
-T1BfUFJFRkVUQ0gpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IC0xLA0KKwkJW0MoUkVT
-VUxUX01JU1MpXSAgID0gLTEsDQorCX0sDQorfSwNCitbQyhCUFUpXSA9IHsNCisJW0MoT1BfUkVB
-RCldID0gew0KKwkJW0MoUkVTVUxUX0FDQ0VTUyldID0gMHgwMGMyLCAvKiBSZXRpcmVkIEJyYW5j
-aCBJbnN0ci4gICAgICAqLw0KKwkJW0MoUkVTVUxUX01JU1MpXSAgID0gMHgwMGMzLCAvKiBSZXRp
-cmVkIE1pc3ByZWRpY3RlZCBCSSAgICAqLw0KKwl9LA0KKwlbQyhPUF9XUklURSldID0gew0KKwkJ
-W0MoUkVTVUxUX0FDQ0VTUyldID0gLTEsDQorCQlbQyhSRVNVTFRfTUlTUyldICAgPSAtMSwNCisJ
-fSwNCisJW0MoT1BfUFJFRkVUQ0gpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IC0xLA0K
-KwkJW0MoUkVTVUxUX01JU1MpXSAgID0gLTEsDQorCX0sDQorfSwNCitbQyhOT0RFKV0gPSB7DQor
-CVtDKE9QX1JFQUQpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IDAsDQorCQlbQyhSRVNV
-TFRfTUlTUyldICAgPSAwLA0KKwl9LA0KKwlbQyhPUF9XUklURSldID0gew0KKwkJW0MoUkVTVUxU
-X0FDQ0VTUyldID0gLTEsDQorCQlbQyhSRVNVTFRfTUlTUyldICAgPSAtMSwNCisJfSwNCisJW0Mo
-T1BfUFJFRkVUQ0gpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IC0xLA0KKwkJW0MoUkVT
-VUxUX01JU1MpXSAgID0gLTEsDQorCX0sDQorfSwNCit9Ow0KKw0KIC8qDQogICogQU1EIFBlcmZv
-cm1hbmNlIE1vbml0b3IgSzcgYW5kIGxhdGVyLCB1cCB0byBhbmQgaW5jbHVkaW5nIEZhbWlseSAx
-Nmg6DQogICovDQpAQCAtODY1LDkgKzk2OSwxMiBAQCBfX2luaXQgaW50IGFtZF9wbXVfaW5pdCh2
-b2lkKQ0KIAkJeDg2X3BtdS5hbWRfbmJfY29uc3RyYWludHMgPSAwOw0KIAl9DQogDQotCS8qIEV2
-ZW50cyBhcmUgY29tbW9uIGZvciBhbGwgQU1EcyAqLw0KLQltZW1jcHkoaHdfY2FjaGVfZXZlbnRf
-aWRzLCBhbWRfaHdfY2FjaGVfZXZlbnRfaWRzLA0KLQkgICAgICAgc2l6ZW9mKGh3X2NhY2hlX2V2
-ZW50X2lkcykpOw0KKwlpZiAoYm9vdF9jcHVfZGF0YS54ODYgPj0gMHgxNykNCisJCW1lbWNweSho
-d19jYWNoZV9ldmVudF9pZHMsIGFtZF9od19jYWNoZV9ldmVudF9pZHNfZjE3aCwNCisJCSAgICAg
-ICBzaXplb2YoaHdfY2FjaGVfZXZlbnRfaWRzKSk7DQorCWVsc2UNCisJCW1lbWNweShod19jYWNo
-ZV9ldmVudF9pZHMsIGFtZF9od19jYWNoZV9ldmVudF9pZHMsDQorCQkgICAgICAgc2l6ZW9mKGh3
-X2NhY2hlX2V2ZW50X2lkcykpOw0KIA0KIAlyZXR1cm4gMDsNCiB9DQotLSANCjIuMjEuMA0KDQo=
+This is the start of the stable review cycle for the 5.0.12 release.
+There are 101 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
+
+Responses should be made by Sat 04 May 2019 02:32:10 PM UTC.
+Anything received after that time might be too late.
+
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.12-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.0.12-rc1
+
+Rasmus Villemoes <linux@rasmusvillemoes.dk>
+    leds: trigger: netdev: use memcpy in device_name_store
+
+Kangjie Lu <kjlu@umn.edu>
+    leds: pca9532: fix a potential NULL pointer dereference
+
+Andrei Vagin <avagin@gmail.com>
+    ptrace: take into account saved_sigmask in PTRACE{GET,SET}SIGMASK
+
+Qian Cai <cai@lca.pw>
+    kasan: fix variable 'tag' set but not used warning
+
+Joerg Roedel <jroedel@suse.de>
+    iommu/amd: Reserve exclusion range in iova-domain
+
+Changbin Du <changbin.du@gmail.com>
+    kconfig/[mn]conf: handle backspace (^H) key
+
+Wei Li <liwei391@huawei.com>
+    perf machine: Update kernel map address and re-order properly
+
+Solomon Tan <solomonbobstoner@gmail.com>
+    perf cs-etm: Add missing case value
+
+Max Gurtovoy <maxg@mellanox.com>
+    nvmet: fix error flow during ns enable
+
+Ming Lei <ming.lei@redhat.com>
+    nvmet: fix building bvec from sg list
+
+Martin George <marting@netapp.com>
+    nvme-multipath: relax ANA state check
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    gpio: of: Fix of_gpiochip_add() error path
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: selftests: complete IO before migrating guest state
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: selftests: disable stack protector for all KVM tests
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: selftests: explicitly disable PIE for tests
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: selftests: assert on exit reason in CR4/cpuid sync test
+
+Vitaly Kuznetsov <vkuznets@redhat.com>
+    x86/kvm/hyper-v: avoid spurious pending stimer on vCPU init
+
+Xiaoyao Li <xiaoyao.li@linux.intel.com>
+    kvm/x86: Move MSR_IA32_ARCH_CAPABILITIES to array emulated_msrs
+
+Singh, Brijesh <brijesh.singh@amd.com>
+    KVM: SVM: Workaround errata#1096 (insn_len maybe zero on SMAP violation)
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: nVMX: Do not inherit quadrant and invalid for the root shadow EPT
+
+Andrey Smirnov <andrew.smirnov@gmail.com>
+    gpio: of: Check for "spi-cs-high" in child instead of parent node
+
+Andrey Smirnov <andrew.smirnov@gmail.com>
+    gpio: of: Check propname before applying "cs-gpios" quirks
+
+David Howells <dhowells@redhat.com>
+    afs: Fix StoreData op marshalling
+
+Masahiro Yamada <yamada.masahiro@socionext.com>
+    kbuild: skip parsing pre sub-make code for recursion
+
+raymond pang <raymondpangxd@gmail.com>
+    libata: fix using DMA buffers on stack
+
+Ralph Campbell <rcampbell@nvidia.com>
+    x86/mm: Don't exceed the valid physical address space
+
+Steffen Maier <maier@linux.ibm.com>
+    scsi: zfcp: reduce flood of fcrscn1 trace records on multi-element RSCN
+
+Al Viro <viro@zeniv.linux.org.uk>
+    ceph: fix use-after-free on symlink traversal
+
+Mukesh Ojha <mojha@codeaurora.org>
+    usb: u132-hcd: fix resource leak
+
+Matteo Croce <mcroce@redhat.com>
+    x86/realmode: Don't leak the trampoline kernel address
+
+Alakesh Haloi <alakesh.haloi@gmail.com>
+    SUNRPC: fix uninitialized variable warning
+
+Rafał Miłecki <rafal@milecki.pl>
+    leds: trigger: netdev: fix refcnt leak on interface rename
+
+Aditya Pakki <pakki001@umn.edu>
+    usb: usb251xb: fix to avoid potential NULL pointer dereference
+
+Kangjie Lu <kjlu@umn.edu>
+    scsi: qla4xxx: fix a potential NULL pointer dereference
+
+Dave Carroll <david.carroll@microsemi.com>
+    scsi: aacraid: Insure we don't access PCIe space during AER/EEH
+
+Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+    scsi: mpt3sas: Fix kernel panic during expander reset
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    staging: vc04_services: Fix an error code in vchiq_probe()
+
+Ming Lei <ming.lei@redhat.com>
+    sbitmap: order READ/WRITE freed instance and setting clear bit
+
+Sekhar Nori <nsekhar@ti.com>
+    ARM: davinci: fix build failure with allnoconfig
+
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+    drm/meson: Uninstall IRQ handler
+
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+    drm/meson: Fix invalid pointer in meson_drv_unbind()
+
+Kangjie Lu <kjlu@umn.edu>
+    gpio: aspeed: fix a potential NULL pointer dereference
+
+Noralf Trønnes <noralf@tronnes.org>
+    drm: Fix drm_release() and device unplug
+
+Wen Yang <wen.yang99@zte.com.cn>
+    net: ethernet: ti: fix possible object reference leak
+
+Wen Yang <wen.yang99@zte.com.cn>
+    net: ibm: fix possible object reference leak
+
+Wen Yang <wen.yang99@zte.com.cn>
+    net: xilinx: fix possible object reference leak
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    NFS: Fix a typo in nfs_init_timeout_values()
+
+Thierry Reding <treding@nvidia.com>
+    drm/tegra: hub: Fix dereference before check
+
+Masanari Iida <standby24x7@gmail.com>
+    ARM: dts: imx6qdl: Fix typo in imx6qdl-icore-rqs.dtsi
+
+Davide Caratti <dcaratti@redhat.com>
+    net/sched: don't dereference a->goto_chain to read the chain index
+
+Harini Katakam <harini.katakam@xilinx.com>
+    net: macb: Add null check for PCLK and HCLK
+
+Dan Murphy <dmurphy@ti.com>
+    net: phy: Add DP83825I to the DP83822 driver
+
+Aditya Pakki <pakki001@umn.edu>
+    staging: rtlwifi: Fix potential NULL pointer dereference of kzalloc
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    staging: rtl8712: uninitialized memory in read_bbreg_hdl()
+
+Aditya Pakki <pakki001@umn.edu>
+    staging: rtlwifi: rtl8822b: fix to avoid potential NULL pointer dereference
+
+Aditya Pakki <pakki001@umn.edu>
+    staging: rtl8188eu: Fix potential NULL pointer dereference of kcalloc
+
+Lukas Wunner <lukas@wunner.de>
+    net: ks8851: Set initial carrier state to down
+
+Lukas Wunner <lukas@wunner.de>
+    net: ks8851: Delay requesting IRQ until opened
+
+Lukas Wunner <lukas@wunner.de>
+    net: ks8851: Reassert reset pin if chip ID check fails
+
+Lukas Wunner <lukas@wunner.de>
+    net: ks8851: Dequeue RX packets explicitly
+
+Suzuki K Poulose <suzuki.poulose@arm.com>
+    KVM: arm/arm64: Fix handling of stage2 huge mappings
+
+Jarkko Nikula <jarkko.nikula@linux.intel.com>
+    i2c: i801: Add support for Intel Comet Lake
+
+Marco Felsch <m.felsch@pengutronix.de>
+    ARM: dts: pfla02: increase phy reset duration
+
+Guido Kiener <guido@kiener-muenchen.de>
+    usb: gadget: net2272: Fix net2272_dequeue()
+
+Guido Kiener <guido@kiener-muenchen.de>
+    usb: gadget: net2280: Fix net2280_dequeue()
+
+Guido Kiener <guido@kiener-muenchen.de>
+    usb: gadget: net2280: Fix overrun of OUT messages
+
+Felipe Balbi <felipe.balbi@linux.intel.com>
+    usb: dwc3: pci: add support for Comet Lake PCH ID
+
+Marc Zyngier <marc.zyngier@arm.com>
+    KVM: arm/arm64: vgic-its: Take the srcu lock when parsing the memslots
+
+Marc Zyngier <marc.zyngier@arm.com>
+    KVM: arm/arm64: vgic-its: Take the srcu lock when writing to guest memory
+
+Marc Zyngier <marc.zyngier@arm.com>
+    arm64: KVM: Always set ICH_HCR_EL2.EN if GICv4 is enabled
+
+Marc Zyngier <marc.zyngier@arm.com>
+    KVM: arm64: Reset the PMU in preemptible context
+
+Petr Štetiar <ynezz@true.cz>
+    serial: ar933x_uart: Fix build failure with disabled console
+
+Mao Wenan <maowenan@huawei.com>
+    sc16is7xx: missing unregister/delete driver on error in sc16is7xx_init()
+
+Wen Yang <wen.yang99@zte.com.cn>
+    ARM: imx51: fix a leaked reference by adding missing of_node_put
+
+Julian Wiedmann <jwi@linux.ibm.com>
+    s390/qeth: fix race when initializing the IP address table
+
+Kangjie Lu <kjlu@umn.edu>
+    netfilter: ip6t_srh: fix NULL pointer dereferences
+
+Arnd Bergmann <arnd@arndb.de>
+    netfilter: fix NETFILTER_XT_TARGET_TEE dependencies
+
+Xin Long <lucien.xin@gmail.com>
+    netfilter: bridge: set skb transport_header before entering NF_INET_PRE_ROUTING
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nft_set_rbtree: check for inactive element after flag mismatch
+
+Maxim Zhukov <mussitantesmortem@gmail.com>
+    staging, mt7621-pci: fix build without pci support
+
+Arnd Bergmann <arnd@arndb.de>
+    staging: axis-fifo: add CONFIG_OF dependency
+
+Björn Töpel <bjorn.topel@intel.com>
+    xsk: fix umem memory leak on cleanup
+
+Aditya Pakki <pakki001@umn.edu>
+    qlcnic: Avoid potential NULL pointer dereference
+
+Aaro Koskinen <aaro.koskinen@nokia.com>
+    net: stmmac: fix jumbo frame sending with non-linear skbs
+
+Aaro Koskinen <aaro.koskinen@nokia.com>
+    net: stmmac: don't set own bit too early for jumbo frames
+
+Filipe Manana <fdmanana@suse.com>
+    Btrfs: fix file corruption after snapshotting due to mix of buffered/DIO writes
+
+Li RongQing <lirongqing@baidu.com>
+    ieee802154: hwsim: propagate genlmsg_reply return code
+
+Kangjie Lu <kjlu@umn.edu>
+    net: ieee802154: fix a potential NULL pointer dereference
+
+Felix Fietkau <nbd@nbd.name>
+    mt76: mt76x2: fix 2.4 GHz channel gain settings
+
+Felix Fietkau <nbd@nbd.name>
+    mt76: mt76x2: fix external LNA gain settings
+
+Stanislaw Gruszka <sgruszka@redhat.com>
+    mt76x02: fix hdr pointer in write txwi for USB
+
+Martin Schwidefsky <schwidefsky@de.ibm.com>
+    s390: limit brk randomization to 32MB
+
+Helen Koike <helen.koike@collabora.com>
+    ARM: dts: bcm283x: Fix hdmi hpd gpio pull
+
+Takeshi Kihara <takeshi.kihara.df@renesas.com>
+    arm64: dts: renesas: r8a77990: Fix SCIF5 DMA channels
+
+Matthew Wilcox <willy@infradead.org>
+    fs: prevent page refcount overflow in pipe_buf_get
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    mm: prevent get_user_pages() from overflowing page refcount
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    mm: add 'try_get_page()' helper function
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    mm: make page ref count overflow check tighter and more explicit
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    drm/i915: Do not enable FEC without DSC
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    Revert "ACPICA: Clear status of GPEs before enabling them"
+
+Paulo Alcantara <paulo@paulo.ac>
+    selinux: use kernel linux/socket.h for genheaders and mdp
+
+
+-------------
+
+Diffstat:
+
+ Documentation/i2c/busses/i2c-i801                  |  1 +
+ Makefile                                           | 12 +++--
+ arch/arm/Kconfig                                   |  1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts           |  2 +-
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi           |  4 +-
+ arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi       |  1 +
+ arch/arm/include/asm/kvm_mmu.h                     | 11 ++++
+ arch/arm/include/asm/stage2_pgtable.h              |  2 +
+ arch/arm/mach-imx/mach-imx51.c                     |  1 +
+ arch/arm64/boot/dts/renesas/r8a77990.dtsi          |  7 ++-
+ arch/arm64/include/asm/kvm_mmu.h                   | 11 ++++
+ arch/arm64/kvm/reset.c                             |  6 +--
+ arch/s390/include/asm/elf.h                        | 11 ++--
+ arch/x86/include/asm/kvm_host.h                    |  2 +
+ arch/x86/kvm/hyperv.c                              |  9 +++-
+ arch/x86/kvm/mmu.c                                 | 21 +++++---
+ arch/x86/kvm/svm.c                                 | 32 ++++++++++++
+ arch/x86/kvm/vmx/vmx.c                             |  6 +++
+ arch/x86/kvm/x86.c                                 |  3 +-
+ arch/x86/mm/mmap.c                                 |  2 +-
+ arch/x86/realmode/init.c                           |  2 -
+ drivers/acpi/acpica/evgpe.c                        |  6 +--
+ drivers/ata/libata-zpodd.c                         | 34 +++++++++----
+ drivers/gpio/gpio-aspeed.c                         |  2 +
+ drivers/gpio/gpiolib-of.c                          | 17 +++++--
+ drivers/gpu/drm/drm_drv.c                          |  6 +--
+ drivers/gpu/drm/drm_file.c                         |  6 +--
+ drivers/gpu/drm/i915/intel_dp.c                    |  6 +--
+ drivers/gpu/drm/meson/meson_drv.c                  |  9 ++--
+ drivers/gpu/drm/tegra/hub.c                        |  4 +-
+ drivers/i2c/busses/Kconfig                         |  1 +
+ drivers/i2c/busses/i2c-i801.c                      |  4 ++
+ drivers/iommu/amd_iommu.c                          |  9 ++--
+ drivers/iommu/amd_iommu_init.c                     |  7 +--
+ drivers/iommu/amd_iommu_types.h                    |  2 +
+ drivers/leds/leds-pca9532.c                        |  8 ++-
+ drivers/leds/trigger/ledtrig-netdev.c              | 16 +++---
+ drivers/net/ethernet/cadence/macb_main.c           | 10 +++-
+ drivers/net/ethernet/ibm/ehea/ehea_main.c          |  1 +
+ drivers/net/ethernet/micrel/ks8851.c               | 36 ++++++-------
+ .../net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c    |  2 +
+ drivers/net/ethernet/stmicro/stmmac/ring_mode.c    |  8 +--
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 14 ++---
+ drivers/net/ethernet/ti/netcp_ethss.c              |  8 ++-
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c  |  2 +
+ drivers/net/ieee802154/adf7242.c                   |  4 ++
+ drivers/net/ieee802154/mac802154_hwsim.c           |  2 +-
+ drivers/net/phy/dp83822.c                          | 34 ++++++++-----
+ .../net/wireless/mediatek/mt76/mt76x02_usb_core.c  |  3 +-
+ drivers/net/wireless/mediatek/mt76/mt76x2/phy.c    | 30 ++++++++---
+ drivers/nvme/host/multipath.c                      |  5 +-
+ drivers/nvme/target/core.c                         |  4 +-
+ drivers/nvme/target/io-cmd-file.c                  | 20 ++++----
+ drivers/s390/net/qeth_l3_main.c                    |  4 +-
+ drivers/s390/scsi/zfcp_fc.c                        | 21 ++++++--
+ drivers/scsi/aacraid/aacraid.h                     |  7 ++-
+ drivers/scsi/aacraid/commsup.c                     |  4 +-
+ drivers/scsi/mpt3sas/mpt3sas_base.c                |  6 +++
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c               | 12 +++++
+ drivers/scsi/qla4xxx/ql4_os.c                      |  2 +
+ drivers/staging/axis-fifo/Kconfig                  |  1 +
+ drivers/staging/mt7621-pci/Kconfig                 |  1 +
+ drivers/staging/rtl8188eu/core/rtw_xmit.c          |  9 +++-
+ drivers/staging/rtl8188eu/include/rtw_xmit.h       |  2 +-
+ drivers/staging/rtl8712/rtl8712_cmd.c              | 10 +---
+ drivers/staging/rtl8712/rtl8712_cmd.h              |  2 +-
+ drivers/staging/rtl8723bs/core/rtw_xmit.c          | 14 ++---
+ drivers/staging/rtl8723bs/include/rtw_xmit.h       |  2 +-
+ drivers/staging/rtlwifi/phydm/rtl_phydm.c          |  2 +
+ drivers/staging/rtlwifi/rtl8822be/fw.c             |  2 +
+ .../vc04_services/interface/vchiq_arm/vchiq_arm.c  |  8 ++-
+ drivers/tty/serial/ar933x_uart.c                   | 24 +++------
+ drivers/tty/serial/sc16is7xx.c                     | 12 ++++-
+ drivers/usb/dwc3/dwc3-pci.c                        |  4 ++
+ drivers/usb/gadget/udc/net2272.c                   |  1 +
+ drivers/usb/gadget/udc/net2280.c                   |  8 ++-
+ drivers/usb/host/u132-hcd.c                        |  3 ++
+ drivers/usb/misc/usb251xb.c                        |  2 +-
+ fs/afs/fsclient.c                                  |  6 +--
+ fs/afs/yfsclient.c                                 |  2 +-
+ fs/btrfs/transaction.c                             | 49 +++++++++++++++---
+ fs/ceph/inode.c                                    |  2 +-
+ fs/fuse/dev.c                                      | 12 ++---
+ fs/nfs/client.c                                    |  2 +-
+ fs/pipe.c                                          |  4 +-
+ fs/splice.c                                        | 12 ++++-
+ include/linux/mm.h                                 | 15 +++++-
+ include/linux/pipe_fs_i.h                          | 10 ++--
+ include/linux/sched/signal.h                       | 18 +++++++
+ include/net/tc_act/tc_gact.h                       |  2 +-
+ include/net/xdp_sock.h                             |  1 -
+ kernel/ptrace.c                                    | 15 +++++-
+ kernel/trace/trace.c                               |  6 ++-
+ lib/sbitmap.c                                      | 11 ++++
+ mm/gup.c                                           | 48 +++++++++++++-----
+ mm/hugetlb.c                                       | 13 +++++
+ mm/kasan/kasan.h                                   |  5 +-
+ net/bridge/br_netfilter_hooks.c                    |  1 +
+ net/bridge/br_netfilter_ipv6.c                     |  2 +
+ net/ipv6/netfilter/ip6t_srh.c                      |  6 +++
+ net/netfilter/Kconfig                              |  1 +
+ net/netfilter/nft_set_rbtree.c                     |  7 ++-
+ net/sunrpc/xprtsock.c                              |  4 +-
+ net/xdp/xdp_umem.c                                 | 19 +------
+ scripts/kconfig/lxdialog/inputbox.c                |  3 +-
+ scripts/kconfig/nconf.c                            |  2 +-
+ scripts/kconfig/nconf.gui.c                        |  3 +-
+ scripts/selinux/genheaders/genheaders.c            |  1 -
+ scripts/selinux/mdp/mdp.c                          |  1 -
+ security/selinux/include/classmap.h                |  1 +
+ tools/build/feature/test-libopencsd.c              |  4 +-
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |  1 +
+ tools/perf/util/machine.c                          | 32 +++++++-----
+ tools/testing/selftests/kvm/Makefile               |  4 +-
+ tools/testing/selftests/kvm/include/kvm_util.h     |  1 +
+ tools/testing/selftests/kvm/lib/kvm_util.c         | 16 ++++++
+ .../selftests/kvm/x86_64/cr4_cpuid_sync_test.c     | 35 +++++++------
+ tools/testing/selftests/kvm/x86_64/state_test.c    | 18 ++++++-
+ virt/kvm/arm/hyp/vgic-v3-sr.c                      |  4 +-
+ virt/kvm/arm/mmu.c                                 | 59 ++++++++++++++++------
+ virt/kvm/arm/vgic/vgic-its.c                       | 21 +++++---
+ virt/kvm/arm/vgic/vgic-v3.c                        |  4 +-
+ virt/kvm/arm/vgic/vgic.c                           | 14 +++--
+ 123 files changed, 777 insertions(+), 350 deletions(-)
+
+
