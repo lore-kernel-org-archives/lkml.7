@@ -2,106 +2,171 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DB5C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64ECFC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBB420675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C08205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfEBSWx (ORCPT
+        id S1726209AbfEBS1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:22:53 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57862 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbfEBSWw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:22:52 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id A790E802ED; Thu,  2 May 2019 20:22:40 +0200 (CEST)
-Date:   Thu, 2 May 2019 20:22:50 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Nikitas Angelinas <nikitas.angelinas@gmail.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power/poweroff.c: mark variables with __initdata and
- __maybe_unused
-Message-ID: <20190502182250.GA4845@amd>
-References: <20190502074305.GA6039@vostro>
- <20190502101500.GA23980@amd>
- <20190502175958.GA14955@vostro>
+        Thu, 2 May 2019 14:27:33 -0400
+Received: from anholt.net ([50.246.234.109]:60138 "EHLO anholt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725962AbfEBS1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 14:27:32 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id 2536F10A3444;
+        Thu,  2 May 2019 11:27:32 -0700 (PDT)
+X-Virus-Scanned: Debian amavisd-new at anholt.net
+Received: from anholt.net ([127.0.0.1])
+        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id iNnVifLik6UJ; Thu,  2 May 2019 11:27:30 -0700 (PDT)
+Received: from eliezer.anholt.net (localhost [127.0.0.1])
+        by anholt.net (Postfix) with ESMTP id 735FC10A343C;
+        Thu,  2 May 2019 11:27:30 -0700 (PDT)
+Received: by eliezer.anholt.net (Postfix, from userid 1000)
+        id BE0A12FE3AA9; Thu,  2 May 2019 11:27:29 -0700 (PDT)
+From:   Eric Anholt <eric@anholt.net>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Eben Upton <eben@raspberrypi.org>
+Subject: Re: [PATCH v7 4/4] drm/vc4: Allocate binner bo when starting to use the V3D
+In-Reply-To: <5d8dadb34c9f845e21349253ff21c036c417f37a.camel@bootlin.com>
+References: <20190425122917.26536-1-paul.kocialkowski@bootlin.com> <20190425122917.26536-5-paul.kocialkowski@bootlin.com> <87tvemj80z.fsf@anholt.net> <5d8dadb34c9f845e21349253ff21c036c417f37a.camel@bootlin.com>
+User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/26.1 (x86_64-pc-linux-gnu)
+Date:   Thu, 02 May 2019 11:27:29 -0700
+Message-ID: <87k1f8ww32.fsf@anholt.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
-Content-Disposition: inline
-In-Reply-To: <20190502175958.GA14955@vostro>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---OgqxwSJOaUobr8KG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-=-=
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-On Thu 2019-05-02 10:59:58, Nikitas Angelinas wrote:
-> On Thu, May 02, 2019 at 12:15:00PM +0200, Pavel Machek wrote:
-> > On Thu 2019-05-02 00:43:05, Nikitas Angelinas wrote:
-> > > There is no need to keep sysrq_poweroff_op after initialization, so m=
-ark
-> > > it with __initdata.
-> >=20
-> > Are you sure?
-> >=20
-> > pavel@duo:/data/l/k$ grep -ri sysrq_key_op . | grep initdata
-> > pavel@duo:/data/l/k$
-> >=20
-> >=20
-> > 									Pavel
-> >=20
-> I am sorry about this. I completely missed the point of registering this
-> structure. Please ignore this patch.
->=20
+Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
 
-Yup. You can have Acked-by: for the other parts.
+> Hi,
+>
+> On Thu, 2019-04-25 at 10:42 -0700, Eric Anholt wrote:
+>> Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
+>>=20
+>> > The binner BO is not required until the V3D is in use, so avoid
+>> > allocating it at probe and do it on the first non-dumb BO allocation.
+>> >=20
+>> > Keep track of which clients are using the V3D and liberate the buffer
+>> > when there is none left, using a kref. Protect the logic with a
+>> > mutex to avoid race conditions.
+>> >=20
+>> > The binner BO is created at the time of the first render ioctl and is
+>> > destroyed when there is no client and no exec job using it left.
+>> >=20
+>> > The Out-Of-Memory (OOM) interrupt also gets some tweaking, to avoid
+>> > enabling it before having allocated a binner bo.
+>> >=20
+>> > We also want to keep the BO alive during runtime suspend/resume to avo=
+id
+>> > failing to allocate it at resume. This happens when the CMA pool is
+>> > full at that point and results in a hard crash.
+>> >=20
+>> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+>> > ---
+>> >  drivers/gpu/drm/vc4/vc4_bo.c  | 33 +++++++++++++++++++-
+>> >  drivers/gpu/drm/vc4/vc4_drv.c |  6 ++++
+>> >  drivers/gpu/drm/vc4/vc4_drv.h | 14 +++++++++
+>> >  drivers/gpu/drm/vc4/vc4_gem.c | 13 ++++++++
+>> >  drivers/gpu/drm/vc4/vc4_irq.c | 21 +++++++++----
+>> >  drivers/gpu/drm/vc4/vc4_v3d.c | 58 +++++++++++++++++++++++++++--------
+>> >  6 files changed, 125 insertions(+), 20 deletions(-)
+>> >=20
+>> > diff --git a/drivers/gpu/drm/vc4/vc4_bo.c b/drivers/gpu/drm/vc4/vc4_bo=
+.c
+>> > index 88ebd681d7eb..2b3ec5926fe2 100644
+>> > --- a/drivers/gpu/drm/vc4/vc4_bo.c
+>> > +++ b/drivers/gpu/drm/vc4/vc4_bo.c
+>> > @@ -799,13 +799,38 @@ vc4_prime_import_sg_table(struct drm_device *dev,
+>> >  	return obj;
+>> >  }
+>> >=20=20
+>> > +static int vc4_grab_bin_bo(struct vc4_dev *vc4, struct vc4_file *vc4f=
+ile)
+>> > +{
+>> > +	int ret;
+>> > +
+>> > +	if (!vc4->v3d)
+>> > +		return -ENODEV;
+>> > +
+>> > +	if (vc4file->bin_bo_used)
+>> > +		return 0;
+>> > +
+>> > +	ret =3D vc4_v3d_bin_bo_get(vc4);
+>> > +	if (ret)
+>> > +		return ret;
+>> > +
+>> > +	vc4file->bin_bo_used =3D true;
+>>=20
+>> I think I found one last race.  Multiple threads could be in an ioctl
+>> trying to grab the bin BO at the same time (while this is only during
+>> app startup, since the fd only needs to get the ref once, it's
+>> particularly plausible given that allocating the bin BO is slow).  I
+>> think if you replace this line with:
+>>=20
+>> 	mutex_lock(&vc4->bin_bo_lock);
+>>         if (vc4file->bin_bo_used) {
+>>         	mutex_unlock(&vc4->bin_bo_lock);
+>>                 vc4_v3d_bin_bo_put(vc4);
+>>         } else {
+>>         	vc4file->bin_bo_used =3D true;
+>>         	mutex_unlock(&vc4->bin_bo_lock);
+>>         }
+>
+> Huh, very good catch once again, thanks! It took me some time to grasp
+> this one, but as far as I understand, the risk is that we could ref our
+> bin bo twice (although it would only be allocated once) since
+> bin_bo_used is not protected.
+>
+> I'd like to suggest another solution, which would avoid re-locking and
+> doing an extra put if we got an extra ref: adding a "bool *used"
+> argument to vc4_v3d_bin_bo_get and, which only gets dereferenced with
+> the bin_bo lock held. Then we can skip obtaining a new reference if
+> (used && *used) in vc4_v3d_bin_bo_get.
+>
+> So we could pass a pointer to vc4file->bin_bo_used for vc4_grab_bin_bo
+> and exec->bin_bo_used for the exec case (where there is no such issue
+> since we'll only ever try to _get the bin bo once there anyway).
+>
+> What do you think?
 
-									Pavel
+I like it!
 
-> > > =20
-> > > -static struct sysrq_key_op	sysrq_poweroff_op =3D {
-> > > +static struct sysrq_key_op sysrq_poweroff_op __initdata =3D {
-> > >  	.handler        =3D handle_poweroff,
-> > >  	.help_msg       =3D "poweroff(o)",
-> > >  	.action_msg     =3D "Power Off",
-> >=20
-> > --=20
-> > (english) http://www.livejournal.com/~pavelmachek
-> > (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses=
-/blog.html
->=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---OgqxwSJOaUobr8KG
+--=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlzLNXoACgkQMOfwapXb+vKmjgCgnFC4NkPKTlbkBpxuDlHQPYfp
-TToAoKbW6WSTatCwlvhlp9pUbt/Obi4P
-=kXiy
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlzLNpEACgkQtdYpNtH8
+nuhALRAApZt7IqOa5t+ZSGZt1v8iX5qpd40P+ssx8Iq7L52Rd3OYItwCk38Mcxla
+UutDWr0LMMNDr9AkXvFOw4gR3xR2Tjzoi5mggR25hZCVB92xECXpLUc+HkH64mxk
+VbROrGdV5v4qlnEu1s0AwyUHsDdb+lr5jMS3OqWvYTHYCMX4Bft2HoXENypQD+MQ
+ZKdJXDnDLlR2uPqPfpIQJbsaHOzRufq4JdgokxEaHaOF3sAUcQbekGPY5ZgZF6uZ
+IZ0iI7mHMUt245ewIjpZrvWZjB+raqDJdzQQtorxwfc2EGJHhKQILQTJ2zC47AqU
+Mb7r6jeU6zMh4tupXopo+OpURZJA28fUqkE9+yyqjrPDeh2trJgQbfEEMuK3oREc
+NXmSwXWuW6zCk0xgr3QrbfCjHbMRSeJcKdSg0i/6+MkGoinWzBjE1KDRFtjgYQVM
+ykXIDATYVzV0lTBYtSk3/Cgv3Gk0sGJ5J149xVaUqnAuCfbrtVN5BV5TipE3N6GX
+9U5MybuD8MkywvkRrnpCsupUGY8tB1QJfZGo+2nuCiFfcCZvTq17bDwrMa1CW/Hc
+yJZ3gnq91xOsCckqKD683cT58YohdIKPu7QBLSMJi3SAq8k1eHNBmLCry5etPZY+
+ux7Kd48np0r/N0ja6oz+mZlLcxoj+gCP3hxnpBQMSHUEBcEfmGw=
+=qPta
 -----END PGP SIGNATURE-----
-
---OgqxwSJOaUobr8KG--
+--=-=-=--
