@@ -2,97 +2,137 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756E3C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13272C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46807206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:17:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="jeL1TmN+"
+	by mail.kernel.org (Postfix) with ESMTP id DE189206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfEBORJ (ORCPT
+        id S1726439AbfEBOSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:17:09 -0400
-Received: from mail-ed1-f50.google.com ([209.85.208.50]:34125 "EHLO
-        mail-ed1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfEBORI (ORCPT
+        Thu, 2 May 2019 10:18:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57520 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726310AbfEBOSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:17:08 -0400
-Received: by mail-ed1-f50.google.com with SMTP id w35so607222edd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 07:17:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3UwUTSGK3kFDqh59G348P1VSE287YQFCPyBJWkFGT2g=;
-        b=jeL1TmN+9S7rxFSCfW9V3bYCQ9XkkRpCSHGcvfnrOsvTSAjY73LFSt1bUiVgtgHJNq
-         Tv0DbnVWNwa8ZjVzru05IQyRWy3S/5OEqtHtNfr/GR2TVOwOJqI+yAZuJXWBMCL2pG4f
-         re8W5PiiN/831GI+qo4H8mGQodK+253IOfYP2SJv+auBn37OqlvdOokiv0/y9Xk/xMCg
-         T+14TN7gujRPTIqhsFgKKnmV+jKUYGVd5KWX38nwgSzlaAx0CpwFF17YHopwjY1k7gtD
-         MLtUmtFpfiEFPRQtO43++BKD+FVRV2u7zlgVjWl+zwgCdyeyyFCx6zLeHvXkzQcj824S
-         TQtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3UwUTSGK3kFDqh59G348P1VSE287YQFCPyBJWkFGT2g=;
-        b=a641cxa3s0xqq9IXaqludwVaVdVfzKIe+3W7zBK/yCi69m8G5hAy2UgtRLvqInH2P7
-         hd88ShX5+MoGEKJ7REOf1XcjZHPbdNd6Gz/drgLMDisEGUa0XOTxTE7502kbQRbbaRAa
-         oUX7m8g0MsZhKvrZUsqihhzHK0kEjthYiUJa5x71JKA8IOyd6XpQRyz/IsrNyzCF1F2S
-         FcGLtkoWlbEZ7H/RPZgxqM7AFOH3p99IsGsS390zwMeaxF2ggxdK6rXEjQtwj9iW5sv+
-         kvjJzEKicm+h6Ul98HZsqPjunXJIG7ltGrtIxRXdsdABhWrdiDHppSDNKyeZbyU0DZKk
-         TGWQ==
-X-Gm-Message-State: APjAAAWqrZ8xCBAJy/0yBGKJsPqGNQ9FswhuYD/2nOUmqGlxHF2ASN3J
-        tG0lrktOsXf8jm2rOJaw6/MTYI2Rc13o63vU4F3/7g==
-X-Google-Smtp-Source: APXvYqxfxStCJ1a5V9dI9KazHvlQKGkMxuucoOz7ty4S41uLly2rKv78x1mRLAhuezLjjjPUXOHuGcrzAp0ZhX1u2YU=
-X-Received: by 2002:a05:6402:13cf:: with SMTP id a15mr2763367edx.70.1556806626879;
- Thu, 02 May 2019 07:17:06 -0700 (PDT)
+        Thu, 2 May 2019 10:18:08 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42EDPY5092180
+        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 10:18:07 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s81jgsnkx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 10:18:06 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
+        Thu, 2 May 2019 15:18:04 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 2 May 2019 15:18:01 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42EI0U861079606
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 May 2019 14:18:00 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 24FFDAE064;
+        Thu,  2 May 2019 14:18:00 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D47B9AE04D;
+        Thu,  2 May 2019 14:17:59 +0000 (GMT)
+Received: from mschwideX1 (unknown [9.152.212.60])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  2 May 2019 14:17:59 +0000 (GMT)
+Date:   Thu, 2 May 2019 16:17:58 +0200
+From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: Linux 5.1-rc5
+In-Reply-To: <20190502122128.GA2670@kroah.com>
+References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
+        <20190415051919.GA31481@infradead.org>
+        <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+        <20190502122128.GA2670@kroah.com>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190501191846.12634-1-pasha.tatashin@soleen.com>
- <20190501191846.12634-3-pasha.tatashin@soleen.com> <9e15bf41-8e74-3a76-c7b9-9712b2d5290b@redhat.com>
-In-Reply-To: <9e15bf41-8e74-3a76-c7b9-9712b2d5290b@redhat.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 2 May 2019 10:16:56 -0400
-Message-ID: <CA+CK2bCfCoU3JHz=81+=RNwo9M6n_zRbmPgx+DNmAnPYQRcjOA@mail.gmail.com>
-Subject: Re: [v4 2/2] device-dax: "Hotremove" persistent memory that is used
- like normal RAM
-To:     David Hildenbrand <david@redhat.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050214-0028-0000-0000-00000369983F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050214-0029-0000-0000-0000242903D9
+Message-Id: <20190502161758.26972bb2@mschwideX1>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=980 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905020096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> Memory unplug bits
->
-> Reviewed-by: David Hildenbrand <david@redhat.com>
->
+On Thu, 2 May 2019 14:21:28 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-Thank you David.
+> On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:
+> > On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:  
+> > >
+> > > Can we please have the page refcount overflow fixes out on the list
+> > > for review, even if it is after the fact?  
+> > 
+> > They were actually on a list for review long before the fact, but it
+> > was the security mailing list. The issue actually got discussed back
+> > in January along with early versions of the patches, but then we
+> > dropped the ball because it just wasn't on anybody's radar and it got
+> > resurrected late March. Willy wrote a rather bigger patch-series, and
+> > review of that is what then resulted in those commits. So they may
+> > look recent, but that's just because the original patches got
+> > seriously edited down and rewritten.
+> > 
+> > That said, powerpc and s390 should at least look at maybe adding a
+> > check for the page ref in their gup paths too. Powerpc has the special
+> > gup_hugepte() case, and s390 has its own version of gup entirely. I
+> > was actually hoping the s390 guys would look at using the generic gup
+> > code.
+> > 
+> > I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
+> > largely irrelevant, partly since even theoretically this whole issue
+> > needs a _lot_ of memory.
+> > 
+> > Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
+> > (page ref overflow)"). You may or may not really care.  
+> 
+> I've now queued these patches up for the next round of stable releases,
+> as some people seem to care about these.
+> 
+> I didn't see any follow-on patches for s390 or ppc64 hit the tree for
+> these changes, am I just missing them and should also queue up a few
+> more to handle this issue on those platforms?
 
-Pasha
+I fixed that with a different approach. The following two patches are
+queued for the next merge window:
+
+d1874a0c2805 "s390/mm: make the pxd_offset functions more robust"
+1a42010cdc26 "s390/mm: convert to the generic get_user_pages_fast code"
+
+With these two s390 now uses the generic gup code in mm/gup.c
+
+-- 
+blue skies,
+   Martin.
+
+"Reality continues to ruin my life." - Calvin.
+
