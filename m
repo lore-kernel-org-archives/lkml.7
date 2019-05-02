@@ -2,214 +2,86 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A6BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03575C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABB520652
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:44:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B8710WYZ"
+	by mail.kernel.org (Postfix) with ESMTP id D674520652
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbfEBRoV (ORCPT
+        id S1726462AbfEBRoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 2 May 2019 13:44:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45980 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbfEBRoU (ORCPT
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39651 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbfEBRoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 13:44:20 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i21so1371079pgi.12
+        Thu, 2 May 2019 13:44:19 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w130so1968450oie.6
         for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 10:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2uN5X8DUEMQPUBTVS1/pgtLkQocX9RzJ+FmBoMdljaw=;
-        b=B8710WYZnaCMf4TZVtd6PCJnURCPKXx92qNHChx45j/qLHsi9vAPUtsK3W9179oP3E
-         t666/VxF3lIq8OWdFeJkFc6WShlfeyi7OdcjJywwadlyK1KsRw9oMxXJcFwDW+PYxP6M
-         oEohYkbxS/r/wfEi9jAKVFju4CbYsWmQMr9Gg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2uN5X8DUEMQPUBTVS1/pgtLkQocX9RzJ+FmBoMdljaw=;
-        b=sFmfuDdEQ4wphAASnOhZi/BcF+yHmR/wGeqEE7I5KAq2p6QBhaL54u01q9Fq0aSmiR
-         Op3B5eTbtufCIsIRgkfuRfwwXrFmd3Jfs+cuVxeg7heyY8nI42w+K1511Fq8K++9R7Lb
-         q45geMz07zvg7uKm7T62GgVCvK7tSUP/zwArFjVzK50clNidC5xQ9R+5vw0wTmaNnx63
-         knCYhXzM8x26Vm7Xw1F3MAihKrjwALIZ+wmqELcPBslWZWIwJC+9fC9sbsaXj4zYqjSw
-         sxMEuKtilX/tfFh6Mjwv0bQSA/Pnr8uw8dkX0UgDcfnjEsYluJZoM+LGf3iZ5zs2JwOH
-         KB5A==
-X-Gm-Message-State: APjAAAVmRoWku/cTXHzLSt/siLYQ+ogwP38PbVLdQ1UW7cEbR9wJN8AH
-        FG0YTJZunPrXp0fJ+pBnVJOz/w==
-X-Google-Smtp-Source: APXvYqz3MY9OMIuD+T0t4msuqTRgvVxefRUpziJVAJNiLJILsr2BmkxndT3cMrri8m2C+eL8ELrfaw==
-X-Received: by 2002:a63:4548:: with SMTP id u8mr5203600pgk.435.1556819059317;
-        Thu, 02 May 2019 10:44:19 -0700 (PDT)
-Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id w38sm48319600pgk.90.2019.05.02.10.44.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 02 May 2019 10:44:18 -0700 (PDT)
-From:   Evan Green <evgreen@chromium.org>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Martin K Petersen <martin.petersen@oracle.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Alexis Savery <asavery@chromium.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Evan Green <evgreen@chromium.org>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] loop: Better discard support for block devices
-Date:   Thu,  2 May 2019 10:44:09 -0700
-Message-Id: <20190502174409.74623-3-evgreen@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190502174409.74623-1-evgreen@chromium.org>
-References: <20190502174409.74623-1-evgreen@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A/BTpe1GCpx8WOaWkORwszZW4OhHJBOv4flBT0vFDKI=;
+        b=QTn8N7ZDUqmpQQneVvKrFspEvVf0bNtc+pPr5aeoTpgzKNKj2+zaQNFzV7LOjzlgqo
+         Bq7FdV5lfKViekET3UHRCeU4uW6e6f8q3MpdrjEYTTxorG4bVP1UdfWVGUEYvNoFRZi7
+         +OCyoDdlsMi8saK2GQ7JPygo9bMocMN0RIrqyqU75aVXqcerqEvtEPJ+kLIZTewSd1xD
+         PMZAQWUkmaL3WFUyryseMmvlYaGWEowuoWSl5IU+R+JhKl22z7hCi8E8O8KC2DtRJQPp
+         5cDi2FItAbcIKXVLYoNXJyvRT6DU06mU3NwRi+NUae6DWz6Upis5kMzFbTXKwvT/A5F4
+         DNkg==
+X-Gm-Message-State: APjAAAUryl+cp3PFb4C7QNRKYTvN57Pf9mpPnWfBgUoqcnqHn28+ETNB
+        pWJWkxuuynkHPajJPZxNFGrJdMnxbOYfoUgOGOkb7w==
+X-Google-Smtp-Source: APXvYqzkCKVtwDFTAmTjZnr+9E8F6X9oBSJfpx707teMwX2ZIYfEr+1PfRcpNtXqB1Leic/fKOicG15VnaqrRwMWYU0=
+X-Received: by 2002:aca:47c8:: with SMTP id u191mr1503973oia.72.1556819058630;
+ Thu, 02 May 2019 10:44:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAJfpeguwUtRWRGmNmimNp-FXzWqMCCQMb24iWPu0w_J0_rOnnw@mail.gmail.com>
+ <20161205151933.GA17517@fieldses.org> <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
+ <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
+ <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
+ <CAOQ4uxjYEjqbLcVYoUaPzp-jqY_3tpPBhO7cE7kbq63XrPRQLQ@mail.gmail.com>
+ <875zqt4igg.fsf@notabene.neil.brown.name> <8f3ba729-ed44-7bed-5ff8-b962547e5582@math.utexas.edu>
+In-Reply-To: <8f3ba729-ed44-7bed-5ff8-b962547e5582@math.utexas.edu>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Thu, 2 May 2019 19:44:07 +0200
+Message-ID: <CAHc6FU4czPQ8xxv5efvhkizU3obpV_05VEWYKydXDDDYcp8j=w@mail.gmail.com>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+To:     "Goetz, Patrick G" <pgoetz@math.utexas.edu>
+Cc:     NeilBrown <neilb@suse.com>, Amir Goldstein <amir73il@gmail.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the backing device for a loop device is a block device,
-then mirror the "write zeroes" capabilities of the underlying
-block device into the loop device. Copy this capability into both
-max_write_zeroes_sectors and max_discard_sectors of the loop device.
+On Thu, 2 May 2019 at 19:27, Goetz, Patrick G <pgoetz@math.utexas.edu> wrote:
+> On 5/1/19 10:57 PM, NeilBrown wrote:
+> > Support some day support for nfs4 acls were added to ext4 (not a totally
+> > ridiculous suggestion).  We would then want NFS to allow it's ACLs to be
+> > copied up.
+>
+> Is there some reason why there hasn't been a greater effort to add NFSv4
+> ACL support to the mainstream linux filesystems?  I have to support a
+> hybrid linux/windows environment and not having these ACLs on ext4 is a
+> daily headache for me.
 
-The reason for this is that REQ_OP_DISCARD on a loop device translates
-into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
-presents a consistent interface for loop devices (that discarded data
-is zeroed), regardless of the backing device type of the loop device.
-There should be no behavior change for loop devices backed by regular
-files.
+The patches for implementing that have been rejected over and over
+again, and nobody is working on them anymore.
 
-While in there, differentiate between REQ_OP_DISCARD and
-REQ_OP_WRITE_ZEROES, which are different for block devices,
-but which the loop device had just been lumping together, since
-they're largely the same for files.
-
-This change fixes blktest block/003, and removes an extraneous
-error print in block/013 when testing on a loop device backed
-by a block device that does not support discard.
-
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
-
-Changes in v4:
-- Mirror blkdev's write_zeroes into loopdev's discard_sectors.
-
-Changes in v3:
-- Updated commit description
-
-Changes in v2: None
-
- drivers/block/loop.c | 57 ++++++++++++++++++++++++++++----------------
- 1 file changed, 37 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index bbf21ebeccd3..ca6983a2c975 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -417,19 +417,14 @@ static int lo_read_transfer(struct loop_device *lo, struct request *rq,
- 	return ret;
- }
- 
--static int lo_discard(struct loop_device *lo, struct request *rq, loff_t pos)
-+static int lo_discard(struct loop_device *lo, struct request *rq,
-+		int mode, loff_t pos)
- {
--	/*
--	 * We use punch hole to reclaim the free space used by the
--	 * image a.k.a. discard. However we do not support discard if
--	 * encryption is enabled, because it may give an attacker
--	 * useful information.
--	 */
- 	struct file *file = lo->lo_backing_file;
--	int mode = FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE;
-+	struct request_queue *q = lo->lo_queue;
- 	int ret;
- 
--	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
-+	if (!blk_queue_discard(q)) {
- 		ret = -EOPNOTSUPP;
- 		goto out;
- 	}
-@@ -599,8 +594,13 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- 	case REQ_OP_FLUSH:
- 		return lo_req_flush(lo, rq);
- 	case REQ_OP_DISCARD:
-+		return lo_discard(lo, rq,
-+			FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, pos);
-+
- 	case REQ_OP_WRITE_ZEROES:
--		return lo_discard(lo, rq, pos);
-+		return lo_discard(lo, rq,
-+			FALLOC_FL_ZERO_RANGE | FALLOC_FL_KEEP_SIZE, pos);
-+
- 	case REQ_OP_WRITE:
- 		if (lo->transfer)
- 			return lo_write_transfer(lo, rq, pos);
-@@ -854,6 +854,21 @@ static void loop_config_discard(struct loop_device *lo)
- 	struct file *file = lo->lo_backing_file;
- 	struct inode *inode = file->f_mapping->host;
- 	struct request_queue *q = lo->lo_queue;
-+	struct request_queue *backingq;
-+
-+	/*
-+	 * If the backing device is a block device, mirror its zeroing
-+	 * capability. REQ_OP_DISCARD translates to a zero-out even when backed
-+	 * by block devices to keep consistent behavior with file-backed loop
-+	 * devices.
-+	 */
-+	if (S_ISBLK(inode->i_mode)) {
-+		backingq = bdev_get_queue(inode->i_bdev);
-+		blk_queue_max_discard_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
-+
-+		blk_queue_max_write_zeroes_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
- 
- 	/*
- 	 * We use punch hole to reclaim the free space used by the
-@@ -861,22 +876,24 @@ static void loop_config_discard(struct loop_device *lo)
- 	 * encryption is enabled, because it may give an attacker
- 	 * useful information.
- 	 */
--	if ((!file->f_op->fallocate) ||
--	    lo->lo_encrypt_key_size) {
-+	} else if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
- 		q->limits.discard_granularity = 0;
- 		q->limits.discard_alignment = 0;
- 		blk_queue_max_discard_sectors(q, 0);
- 		blk_queue_max_write_zeroes_sectors(q, 0);
--		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
--		return;
--	}
- 
--	q->limits.discard_granularity = inode->i_sb->s_blocksize;
--	q->limits.discard_alignment = 0;
-+	} else {
-+		q->limits.discard_granularity = inode->i_sb->s_blocksize;
-+		q->limits.discard_alignment = 0;
-+
-+		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
-+		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
-+	}
- 
--	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
--	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
--	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+	if (q->limits.max_write_zeroes_sectors)
-+		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+	else
-+		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
- }
- 
- static void loop_unprepare_queue(struct loop_device *lo)
--- 
-2.20.1
-
+Andreas
