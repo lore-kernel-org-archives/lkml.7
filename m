@@ -2,229 +2,168 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A976C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ACCC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D16AA20B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F82D205F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 18:07:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DETiqvG1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A+QWwBsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfEBSGU (ORCPT
+        id S1726445AbfEBSHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 14:06:20 -0400
-Received: from mail-eopbgr40060.outbound.protection.outlook.com ([40.107.4.60]:52836
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725962AbfEBSGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 14:06:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=adBeJlgzs88ftsQpQuMeyw/XjOUOE/vjmHFU5hrIirI=;
- b=DETiqvG14q06YfZu+SKJURh5M0aCjS+CcVksGzkQgkirAbq3keAWVy5fxTeA6ky/exigLQHGAi163MF5M7jrpsWoUl92un8kBjJ3pArm/m7unqL26pem3chB8O2ZsbMadlvenjMkbtMBA0cnMwh1I/ZExfPyp3aD3Vy6uqXL0AQ=
-Received: from VI1PR05MB6239.eurprd05.prod.outlook.com (20.178.124.30) by
- VI1PR05MB5984.eurprd05.prod.outlook.com (20.178.127.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Thu, 2 May 2019 18:06:13 +0000
-Received: from VI1PR05MB6239.eurprd05.prod.outlook.com
- ([fe80::cd72:ad84:2379:1f55]) by VI1PR05MB6239.eurprd05.prod.outlook.com
- ([fe80::cd72:ad84:2379:1f55%2]) with mapi id 15.20.1856.008; Thu, 2 May 2019
- 18:06:12 +0000
-From:   Asmaa Mnebhi <Asmaa@mellanox.com>
-To:     Vadim Pasternak <vadimp@mellanox.com>,
-        "minyard@acm.org" <minyard@acm.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        Michael Shych <michaelsh@mellanox.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Subject: RE: [PATCH v4 0/1] Add support for IPMB driver
-Thread-Topic: [PATCH v4 0/1] Add support for IPMB driver
-Thread-Index: AQHU/36JYRxgAz5nX0+eYBy40WDgaqZVNzOAgAEMmbA=
-Date:   Thu, 2 May 2019 18:06:12 +0000
-Message-ID: <VI1PR05MB62392EDC0FD3C960519C91ABDA340@VI1PR05MB6239.eurprd05.prod.outlook.com>
-References: <cover.1556645340.git.Asmaa@mellanox.com>
- <AM6PR05MB5224FCACBD4EF55F3890EC6AA23A0@AM6PR05MB5224.eurprd05.prod.outlook.com>
-In-Reply-To: <AM6PR05MB5224FCACBD4EF55F3890EC6AA23A0@AM6PR05MB5224.eurprd05.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-Mentions: vadimp@mellanox.com
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Asmaa@mellanox.com; 
-x-originating-ip: [216.156.69.42]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6ebd4a25-100e-4258-5311-08d6cf28dccc
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5984;
-x-ms-traffictypediagnostic: VI1PR05MB5984:
-x-microsoft-antispam-prvs: <VI1PR05MB59843858C33E2CA3F11D891CDA340@VI1PR05MB5984.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0025434D2D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(366004)(396003)(346002)(13464003)(199004)(189003)(305945005)(7736002)(256004)(2501003)(68736007)(55016002)(33656002)(76116006)(66446008)(7696005)(316002)(66556008)(6636002)(9686003)(99286004)(14454004)(66476007)(64756008)(73956011)(86362001)(66066001)(72206003)(71200400001)(71190400001)(2201001)(74316002)(14444005)(54906003)(110136005)(66946007)(229853002)(81156014)(4326008)(6436002)(81166006)(25786009)(52536014)(2906002)(6246003)(53936002)(5660300002)(102836004)(478600001)(6116002)(3846002)(8676002)(6506007)(80792005)(53546011)(486006)(26005)(11346002)(476003)(8936002)(186003)(446003)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5984;H:VI1PR05MB6239.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6c4nkOvZxU8DL826iod4Fd14Dqlx+nhjIjgowQSH7J/YPB2TCnY9RU8cvVqQuy2/j2h6Th0Oa6++SdJd/mgPdh2LiOE8gEoSWNMavLZy+3QMfFcN3qBYu8Uj88OdPSYxOq6N4M/pZnY/8Lza7R4iH5hQsT6sGjUHtAPXfTDuthTFXn5HZrHUIJU246Ar5z4HNNYFioIzDpaqMGv8NhgwAUDNFYt7YGj2mmsL9wTHAZCTQ/zZpfynabUD2JwRMMz9vmbUDZsBxpvhNVO1cWEtUDOFA8c98LrILd6JU2ZV2K8DjMDPC2yxHahRtr0TmeFcsS58LXYZ6BbMyYLVDUnzARco1b6xfQHawQr0ckkuOEWTk9LWP8ADaf+203Xmx4hersaHWfh1TOv6wgFu0r695HRfTV1Jzp0man8X23X8l9c=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 2 May 2019 14:07:55 -0400
+Received: from mail-io1-f46.google.com ([209.85.166.46]:41262 "EHLO
+        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfEBSHz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 14:07:55 -0400
+Received: by mail-io1-f46.google.com with SMTP id r10so2993912ioc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 11:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GYG9gid407fSTqcR1sS3MZsK+2t2f3wkYcvKU9idh/0=;
+        b=A+QWwBszn7IF2LsKKt3bA3qQRVC/8fct9y1/eeeTerQbYsFvHI5zMXlu0aXk0vVrOn
+         naL1Cr/tW58pQnINfGsDF0f4zD6E+P9VbbGdX8UWDESHru5uUOisJRcRKRD6lm5isO0W
+         Pr5sUw6blHQXdjdhrkIHtdlPx1Jn+jxWk3VK77O9RL8eMM0dZlB7cqt9QqRV5rp4pfPR
+         Hji3D//QPGXHr1OE9zBRF8CRHbw3l+50PAGEC01dnKXD2BIsOMb/eLhiaOizBOuW8AX6
+         FUoYZXIFvT9DDpNoK4pm9QYPumEx0ejBOAlENzXSBV4o7Uruy2SZoW1w3oN+GxjGtNKk
+         YqLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GYG9gid407fSTqcR1sS3MZsK+2t2f3wkYcvKU9idh/0=;
+        b=OlxZbZe4FTQfgDorTHHfw8f6GOE6yzHuaP+TQGpmcVRuJyufCmKOgI2iHMYXR0/cSQ
+         4oAxwX6amTtjxGh7YUsFOwrBR+0U/bvUXNpcNiWwYBvciAZDO4LN+NUjTctjzrM9cVQl
+         Q2sBcLtui04grlasgQUr02gFB+4+S8tljFNOi/1FCHxSQAsNLPyr0zxNBzwPex7ajrH4
+         wbfoLO25hQjkqatVoc0rcS+OjhYqM58oewJR7gXFcKj5hurHTLkEVfAn1V8HUGfqRmAh
+         CeCqyIotpLvPy0CKt/ankz838Zx7HOVQlVX9rZvPJQgvKTB7iRZXoQNApeT7OoSGnv7I
+         nkhw==
+X-Gm-Message-State: APjAAAW4c1cmehFgZeSzkU7FbJrBbHdO9AnKClYlu3D3Lr7s05zy0cSU
+        2qGeqBEQSv4bMVjCKWKtUVjL3uzdNMmkzZJJ2gw4sg==
+X-Google-Smtp-Source: APXvYqwPhkHRZZHAu5m0YdmhCF98yH9zmIk5u4ncpmop4ullUZT7lAZNqW2xxhBaiplIU0vZnvNIyaNtfhLTtvTUb2Y=
+X-Received: by 2002:a6b:e20e:: with SMTP id z14mr3597345ioc.169.1556820473380;
+ Thu, 02 May 2019 11:07:53 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ebd4a25-100e-4258-5311-08d6cf28dccc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 18:06:12.6491
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5984
+References: <20190227202658.197113-1-matthewgarrett@google.com>
+ <20190227202658.197113-3-matthewgarrett@google.com> <CAJzaN5pUJoOCz5-ZDSnTb6dbVPuy0QwmFD0CeofAGK+bRQx0og@mail.gmail.com>
+ <CACdnJutpBPAX6TOGgs3Ng2v_cC5hAf-3pHThESvjQ9vbvQeVkA@mail.gmail.com>
+ <CACdnJuvYAfFboej4e5jQ=iwhb-5Pi7BgSKEWGqJ0q=uarCoOfQ@mail.gmail.com> <CAJzaN5ofshg4KseGhOL2LSLDQNoAHC6Ve25gpgWU69bEfBq1fw@mail.gmail.com>
+In-Reply-To: <CAJzaN5ofshg4KseGhOL2LSLDQNoAHC6Ve25gpgWU69bEfBq1fw@mail.gmail.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Thu, 2 May 2019 11:07:42 -0700
+Message-ID: <CACdnJutMC2GBiXYUnFze+E-cigwb1gOK_wRfyWp77XQhTJuw9A@mail.gmail.com>
+Subject: Re: [PATCH V5 2/4] tpm: Reserve the TPM final events table
+To:     Bartosz Szczepanek <barteks7r@gmail.com>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Content-Type: multipart/mixed; boundary="0000000000004c18a80587eb8349"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vadim, Hi Corey,
+--0000000000004c18a80587eb8349
+Content-Type: text/plain; charset="UTF-8"
 
-Please find inline comments answering your questions.
+Sorry, how about this one? I was confused by why I wasn't hitting
+this, but on closer examination it turns out that my system populates
+the final event log with 0 events which means we never hit this
+codepath :(
 
------Original Message-----
-From: Vadim Pasternak=20
-Sent: Tuesday, April 30, 2019 5:24 PM
-To: Asmaa Mnebhi <Asmaa@mellanox.com>; minyard@acm.org; wsa@the-dreams.de; =
-Michael Shych <michaelsh@mellanox.com>
-Cc: Asmaa Mnebhi <Asmaa@mellanox.com>; linux-kernel@vger.kernel.org; linux-=
-i2c@vger.kernel.org
-Subject: RE: [PATCH v4 0/1] Add support for IPMB driver
+--0000000000004c18a80587eb8349
+Content-Type: text/x-patch; charset="US-ASCII"; name="fix_log.diff"
+Content-Disposition: attachment; filename="fix_log.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jv6yoxc70>
+X-Attachment-Id: f_jv6yoxc70
 
-
-
-> -----Original Message-----
-> From: Asmaa Mnebhi <Asmaa@mellanox.com>
-> Sent: Tuesday, April 30, 2019 8:59 PM
-> To: minyard@acm.org; wsa@the-dreams.de; Vadim Pasternak=20
-> <vadimp@mellanox.com>; Michael Shych <michaelsh@mellanox.com>
-> Cc: Asmaa Mnebhi <Asmaa@mellanox.com>; linux-kernel@vger.kernel.org;=20
-> linux-i2c@vger.kernel.org
-> Subject: [PATCH v4 0/1] Add support for IPMB driver
->=20
-> Thank you for your feedback Vadim. I have addressed your comments.
-
-Hi Asmaa,
-
-Thank you for your comments and added doc.
-
->=20
-> 1) You are correct. This driver is not specific to Mellanox so I have=20
-> removed the Mellanox attribute.
->=20
-> 2) I have added a documentation file called IPMB.txt which explains=20
-> how this module works and how it should be instantiated. It is very=20
-> similar to the existing linux i2c-slave-eeprom module.
->=20
-> The HW for my testing works as follows:
-> A BMC is connected to a Satellite MC via I2C (I2C is equivalent to=20
-> IPMB). The BMC initiates the IPMB requests and sends them via I2C.
-> Obviously the BMC needs its own driver to do this which I haven't=20
-> included in this code. We have no intent of upstreaming that at the momen=
-t.
-
->> I believe you are going to do it at some point, right?
-@Vadim Pasternak: I would.
-@Corey: The ipmb-dev-int driver is not responsible for sending requests via=
- I2C (unlike for example the ipmi_ssif driver). It is only responsible for =
-receiving those requests and passing them to a user space program. Once a r=
-esponse is received from user space, it will forward that response back to =
-the requester So in my testing for example, the source requester is the BMC=
-, so I issue ipmitool commands from the BMC itself.
-
-The driver that I have on my BMC (which I primarily designed for testing ip=
-mb-dev-int) works hand in hand with the ipmi_msghandler and ipmi_devint to =
-create the /dev/ipmi0 device file to enable the use of ipmitool program on =
-the BMC. Once an ipmitool command is issued on the BMC,  the request messag=
-e is sent to the Satellite MC. Once the BMC driver gets the response back f=
-rom the Satellite MC, it will pass it to the ipmitool program which will di=
-splay the output to the user.=20
-
-Please note that this ipmb-dev-int driver does not need ipmi_msghandler nor=
- does it need ipmi_devintf to be loaded.
-
-> This ipmb-dev-int driver is to be loaded and instantiated on the=20
-> Satellite MC to be able to receive IPMB requests. These IPMB request=20
-> messages will be picked up by a user space program such (in my case it=20
-> is OpenIPMI) to handle the request and generate a response.
-> The response will be then passed from the user program back to kernel spa=
-ce.
-> Then this driver would send that response back to the BMC.
->=20
-> 3) You asked the following:
->=20
-> "Is it expected to be zero in vaid case?"
-> The 8 least significant bits of the sum is always expected to be 0 in=20
-> the case where the checksum is valid. I have added a comment for clarific=
-ations.
-
-
->=20
-> "why do you need this cast?"
-> buf[++ipmb_dev_p->msg_idx]=3D(u8)(client->addr<<1)
-> This is because client->addr is of type unsigned short which is
-> 2 bytes so it is safer to typecast it to u8 (u8* buf)
-
->>Better, if you can avoid cast.
->>Would compiler warn if you use for example rol16(client->addr, 1) & GENMA=
-SK(7, 0); or something like it?
-I thought it wouldn't be too much of an issue to use typecast here since ot=
-her existing ipmi drivers use typecasting: bt-bmc.c, kcs_bmc_aspeed.c, kcs_=
-bmc_npcm7xx.c all use (u8) typecasting.=20
-But if you really think it is worth it, I could do that.
-I just think it is not as straight forward to read this code as using a sim=
-ple typecast. Some might wonder why a GENMASK is needed in this case.
-
-
-
->=20
-> "It could be only single ipmb-dev within the system? Couldn't it be=20
-> few, like master/slave for example?"
-> My understanding of your question is that: what if we have multiple=20
-> instances of ipmb-dev-int, that we register it under different addresses?
-> This driver only works as a slave so it will only be instantiated once=20
-> on the Satellite MC under one slave address.
-
->>I mentioned some config like:
->>BMC1 (master)  -- busA --|
->>			Satellite
->>BMC2 (standby)	-- busB --|=20
-
->>Since this is not Mellanox specific driver, maybe it would be good to sup=
-port multiple instances of it.
-
-I see, I understand now. That sounds good.
-I added support to instantiate several ipmb devices for the purpose of havi=
-ng multiple BMC masters for one Satellite MC. The design consists in naming=
- each instantiated device with the IPMBus/I2C bus number associated with it=
-. For example, :
-BMC1 -----I2C/IPMB bus 1 ----- Satellite MC (/dev/ipmb-1)
-BMC2 -----I2C/IPMB bus 2 ----- Satellite MC (/dev/ipmb-2)
-
-I added documentation for that as well.
-
->
-> Asmaa Mnebhi (1):
->   Add support for IPMB driver
->=20
->  Documentation/IPMB.txt           |  53 ++++++
->  drivers/char/ipmi/Kconfig        |   8 +
->  drivers/char/ipmi/Makefile       |   1 +
->  drivers/char/ipmi/ipmb_dev_int.c | 381
-> +++++++++++++++++++++++++++++++++++++++
->  4 files changed, 443 insertions(+)
->  create mode 100644 Documentation/IPMB.txt  create mode 100644=20
-> drivers/char/ipmi/ipmb_dev_int.c
->=20
-> --
-> 2.1.2
-
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL3RwbS5jIGIvZHJpdmVycy9maXJtd2Fy
+ZS9lZmkvdHBtLmMKaW5kZXggMmNjYWE2NjYxYWFmLi5kYjBmZGFhOWM2NjYgMTAwNjQ0Ci0tLSBh
+L2RyaXZlcnMvZmlybXdhcmUvZWZpL3RwbS5jCisrKyBiL2RyaXZlcnMvZmlybXdhcmUvZWZpL3Rw
+bS5jCkBAIC0yOCw2ICsyOCw3IEBAIHN0YXRpYyBpbnQgdHBtMl9jYWxjX2V2ZW50X2xvZ19zaXpl
+KHZvaWQgKmRhdGEsIGludCBjb3VudCwgdm9pZCAqc2l6ZV9pbmZvKQogCQlpZiAoZXZlbnRfc2l6
+ZSA9PSAwKQogCQkJcmV0dXJuIC0xOwogCQlzaXplICs9IGV2ZW50X3NpemU7CisJCWNvdW50LS07
+CiAJfQogCiAJcmV0dXJuIHNpemU7CkBAIC00MSw2ICs0Miw3IEBAIGludCBfX2luaXQgZWZpX3Rw
+bV9ldmVudGxvZ19pbml0KHZvaWQpCiAJc3RydWN0IGxpbnV4X2VmaV90cG1fZXZlbnRsb2cgKmxv
+Z190Ymw7CiAJc3RydWN0IGVmaV90Y2cyX2ZpbmFsX2V2ZW50c190YWJsZSAqZmluYWxfdGJsOwog
+CXVuc2lnbmVkIGludCB0Ymxfc2l6ZTsKKwlpbnQgcmV0ID0gMDsKIAogCWlmIChlZmkudHBtX2xv
+ZyA9PSBFRklfSU5WQUxJRF9UQUJMRV9BRERSKSB7CiAJCS8qCkBAIC02MCwxMCArNjIsOSBAQCBp
+bnQgX19pbml0IGVmaV90cG1fZXZlbnRsb2dfaW5pdCh2b2lkKQogCiAJdGJsX3NpemUgPSBzaXpl
+b2YoKmxvZ190YmwpICsgbG9nX3RibC0+c2l6ZTsKIAltZW1ibG9ja19yZXNlcnZlKGVmaS50cG1f
+bG9nLCB0Ymxfc2l6ZSk7Ci0JZWFybHlfbWVtdW5tYXAobG9nX3RibCwgc2l6ZW9mKCpsb2dfdGJs
+KSk7CiAKIAlpZiAoZWZpLnRwbV9maW5hbF9sb2cgPT0gRUZJX0lOVkFMSURfVEFCTEVfQUREUikK
+LQkJcmV0dXJuIDA7CisJCWdvdG8gb3V0OwogCiAJZmluYWxfdGJsID0gZWFybHlfbWVtcmVtYXAo
+ZWZpLnRwbV9maW5hbF9sb2csIHNpemVvZigqZmluYWxfdGJsKSk7CiAKQEAgLTcxLDE3ICs3Miwy
+MCBAQCBpbnQgX19pbml0IGVmaV90cG1fZXZlbnRsb2dfaW5pdCh2b2lkKQogCQlwcl9lcnIoIkZh
+aWxlZCB0byBtYXAgVFBNIEZpbmFsIEV2ZW50IExvZyB0YWJsZSBAIDB4JWx4XG4iLAogCQkgICAg
+ICAgZWZpLnRwbV9maW5hbF9sb2cpOwogCQllZmkudHBtX2ZpbmFsX2xvZyA9IEVGSV9JTlZBTElE
+X1RBQkxFX0FERFI7Ci0JCXJldHVybiAtRU5PTUVNOworCQlyZXQgPSAtRU5PTUVNOworCQlnb3Rv
+IG91dDsKIAl9CiAKIAl0Ymxfc2l6ZSA9IHRwbTJfY2FsY19ldmVudF9sb2dfc2l6ZShmaW5hbF90
+YmwtPmV2ZW50cywKIAkJCQkJICAgIGZpbmFsX3RibC0+bnJfZXZlbnRzLAotCQkJCQkgICAgKHZv
+aWQgKillZmkudHBtX2xvZyk7CisJCQkJCSAgICBsb2dfdGJsLT5sb2cpOwogCW1lbWJsb2NrX3Jl
+c2VydmUoKHVuc2lnbmVkIGxvbmcpZmluYWxfdGJsLAogCQkJIHRibF9zaXplICsgc2l6ZW9mKCpm
+aW5hbF90YmwpKTsKIAllYXJseV9tZW11bm1hcChmaW5hbF90YmwsIHNpemVvZigqZmluYWxfdGJs
+KSk7CiAJZWZpX3RwbV9maW5hbF9sb2dfc2l6ZSA9IHRibF9zaXplOwogCi0JcmV0dXJuIDA7Citv
+dXQ6CisJZWFybHlfbWVtdW5tYXAobG9nX3RibCwgc2l6ZW9mKCpsb2dfdGJsKSk7CisJcmV0dXJu
+IHJldDsKIH0KIApkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC90cG1fZXZlbnRsb2cuaCBiL2lu
+Y2x1ZGUvbGludXgvdHBtX2V2ZW50bG9nLmgKaW5kZXggZGNjYzk3ZTYxMzVjLi4xOTBhMzM5Njhh
+OTEgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvdHBtX2V2ZW50bG9nLmgKKysrIGIvaW5jbHVk
+ZS9saW51eC90cG1fZXZlbnRsb2cuaApAQCAtMTU4LDcgKzE1OCw2IEBAIHN0YXRpYyBpbmxpbmUg
+aW50IF9fY2FsY190cG0yX2V2ZW50X3NpemUoc3RydWN0IHRjZ19wY3JfZXZlbnQyX2hlYWQgKmV2
+ZW50LAogewogCXN0cnVjdCB0Y2dfZWZpX3NwZWNpZF9ldmVudF9oZWFkICplZmlzcGVjaWQ7CiAJ
+c3RydWN0IHRjZ19ldmVudF9maWVsZCAqZXZlbnRfZmllbGQ7Ci0Jdm9pZCAqbWFwcGluZyA9IE5V
+TEw7CiAJaW50IG1hcHBpbmdfc2l6ZTsKIAl2b2lkICptYXJrZXI7CiAJdm9pZCAqbWFya2VyX3N0
+YXJ0OwpAQCAtMTc2LDkgKzE3NSw5IEBAIHN0YXRpYyBpbmxpbmUgaW50IF9fY2FsY190cG0yX2V2
+ZW50X3NpemUoc3RydWN0IHRjZ19wY3JfZXZlbnQyX2hlYWQgKmV2ZW50LAogCS8qIE1hcCB0aGUg
+ZXZlbnQgaGVhZGVyICovCiAJaWYgKGRvX21hcHBpbmcpIHsKIAkJbWFwcGluZ19zaXplID0gbWFy
+a2VyIC0gbWFya2VyX3N0YXJ0OwotCQltYXBwaW5nID0gZWFybHlfbWVtcmVtYXAoKHVuc2lnbmVk
+IGxvbmcpbWFya2VyX3N0YXJ0LAorCQlldmVudCA9IGVhcmx5X21lbXJlbWFwKCh1bnNpZ25lZCBs
+b25nKW1hcmtlcl9zdGFydCwKIAkJCQkJIG1hcHBpbmdfc2l6ZSk7Ci0JCWlmICghbWFwcGluZykg
+eworCQlpZiAoIWV2ZW50KSB7CiAJCQlzaXplID0gMDsKIAkJCWdvdG8gb3V0OwogCQl9CkBAIC0x
+OTksOSArMTk4LDkgQEAgc3RhdGljIGlubGluZSBpbnQgX19jYWxjX3RwbTJfZXZlbnRfc2l6ZShz
+dHJ1Y3QgdGNnX3Bjcl9ldmVudDJfaGVhZCAqZXZlbnQsCiAJCWlmIChkb19tYXBwaW5nKSB7CiAJ
+CQllYXJseV9tZW11bm1hcChtYXBwaW5nLCBtYXBwaW5nX3NpemUpOwogCQkJbWFwcGluZ19zaXpl
+ID0gbWFya2VyIC0gbWFya2VyX3N0YXJ0ICsgaGFsZ19zaXplOwotCQkJbWFwcGluZyA9IGVhcmx5
+X21lbXJlbWFwKCh1bnNpZ25lZCBsb25nKW1hcmtlcl9zdGFydCwKKwkJCWV2ZW50ID0gZWFybHlf
+bWVtcmVtYXAoKHVuc2lnbmVkIGxvbmcpbWFya2VyX3N0YXJ0LAogCQkJCQkJIG1hcHBpbmdfc2l6
+ZSk7Ci0JCQlpZiAoIW1hcHBpbmcpIHsKKwkJCWlmICghZXZlbnQpIHsKIAkJCQlzaXplID0gMDsK
+IAkJCQlnb3RvIG91dDsKIAkJCX0KQEAgLTIxOSw5ICsyMTgsOSBAQCBzdGF0aWMgaW5saW5lIGlu
+dCBfX2NhbGNfdHBtMl9ldmVudF9zaXplKHN0cnVjdCB0Y2dfcGNyX2V2ZW50Ml9oZWFkICpldmVu
+dCwKIAkJCQlpZiAoZG9fbWFwcGluZykgewogCQkJCQllYXJseV9tZW11bm1hcChtYXBwaW5nLCBt
+YXBwaW5nX3NpemUpOwogCQkJCQltYXBwaW5nX3NpemUgPSBtYXJrZXIgLSBtYXJrZXJfc3RhcnQ7
+Ci0JCQkJCW1hcHBpbmcgPSBlYXJseV9tZW1yZW1hcCgodW5zaWduZWQgbG9uZyltYXJrZXJfc3Rh
+cnQsCisJCQkJCWV2ZW50ID0gZWFybHlfbWVtcmVtYXAoKHVuc2lnbmVkIGxvbmcpbWFya2VyX3N0
+YXJ0LAogCQkJCQkJICAgICAgbWFwcGluZ19zaXplKTsKLQkJCQkJaWYgKCFtYXBwaW5nKSB7CisJ
+CQkJCWlmICghZXZlbnQpIHsKIAkJCQkJCXNpemUgPSAwOwogCQkJCQkJZ290byBvdXQ7CiAJCQkJ
+CX0KQEAgLTI0MywxMSArMjQyLDExIEBAIHN0YXRpYyBpbmxpbmUgaW50IF9fY2FsY190cG0yX2V2
+ZW50X3NpemUoc3RydWN0IHRjZ19wY3JfZXZlbnQyX2hlYWQgKmV2ZW50LAogCSAqIHdlIGRvbid0
+IG5lZWQgdG8gbWFwIGl0CiAJICovCiAJaWYgKGRvX21hcHBpbmcpIHsKLQkJZWFybHlfbWVtdW5t
+YXAobWFya2VyX3N0YXJ0LCBtYXBwaW5nX3NpemUpOworCQllYXJseV9tZW11bm1hcChldmVudCwg
+bWFwcGluZ19zaXplKTsKIAkJbWFwcGluZ19zaXplICs9IHNpemVvZihldmVudF9maWVsZC0+ZXZl
+bnRfc2l6ZSk7Ci0JCW1hcHBpbmcgPSBlYXJseV9tZW1yZW1hcCgodW5zaWduZWQgbG9uZyltYXJr
+ZXJfc3RhcnQsCi0JCQkJCSBtYXBwaW5nX3NpemUpOwotCQlpZiAoIW1hcHBpbmcpIHsKKwkJZXZl
+bnQgPSBlYXJseV9tZW1yZW1hcCgodW5zaWduZWQgbG9uZyltYXJrZXJfc3RhcnQsCisJCQkJICAg
+ICAgIG1hcHBpbmdfc2l6ZSk7CisJCWlmICghZXZlbnQpIHsKIAkJCXNpemUgPSAwOwogCQkJZ290
+byBvdXQ7CiAJCX0KQEAgLTI1Nyw4ICsyNTYsNiBAQCBzdGF0aWMgaW5saW5lIGludCBfX2NhbGNf
+dHBtMl9ldmVudF9zaXplKHN0cnVjdCB0Y2dfcGNyX2V2ZW50Ml9oZWFkICpldmVudCwKIAkJKyBl
+dmVudF9maWVsZC0+ZXZlbnRfc2l6ZTsKIAlzaXplID0gbWFya2VyIC0gbWFya2VyX3N0YXJ0Owog
+Ci0JaWYgKChldmVudC0+ZXZlbnRfdHlwZSA9PSAwKSAmJiAoZXZlbnRfZmllbGQtPmV2ZW50X3Np
+emUgPT0gMCkpCi0JCXNpemUgPSAwOwogb3V0OgogCWlmIChkb19tYXBwaW5nKQogCQllYXJseV9t
+ZW11bm1hcChtYXBwaW5nLCBtYXBwaW5nX3NpemUpOwo=
+--0000000000004c18a80587eb8349--
