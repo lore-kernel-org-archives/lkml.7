@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496DEC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8654C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2043320675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ADDE20C01
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811165;
-	bh=IrfZlWArowlj4XAYmIMnowmF9GVSWBoqIzTFQcWYWMc=;
+	s=default; t=1556811167;
+	bh=TC2ocAAMRnN/1stHeTPvtPRxwADOe+1p8h/G+G2vz0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pcCcPKuzk7MOd9dFcXLFAVWNYATNxleNu2ew9IVe3dISgY21O1iM7awEKAEDv6q4l
-	 aB0sp0IUkpgHZ+jZzSl13tJuImCYwioyvg1CAdCbgf/8lg9MXjXAMETCKUVDG0VZA8
-	 BIhbKtNCziNeke/Ys/tq16AZqvmkPuvlLbLkAsdA=
+	b=GGxzqdHKWQWwDpAAhkqS15LmUlbAPY51D6KkhM0H3J+aVonOGkV8xJ2A4aqGJRlRn
+	 ckEs6I7Mkx+72qUhY8L+N64Vw1kM9ktZbLNa6cHrlno7v5Zl9KsK8NJ02Toye6jmIk
+	 5DkfCTCx5tJb3ikROQ/mckajQ4CzVOQExvI+ki8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbfEBPcn (ORCPT
+        id S1728916AbfEBPcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:32:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52484 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:32:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729234AbfEBPck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:32:40 -0400
+        id S1728849AbfEBPcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:32:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D562214DA;
-        Thu,  2 May 2019 15:32:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15BC8204FD;
+        Thu,  2 May 2019 15:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811159;
-        bh=IrfZlWArowlj4XAYmIMnowmF9GVSWBoqIzTFQcWYWMc=;
+        s=default; t=1556811162;
+        bh=TC2ocAAMRnN/1stHeTPvtPRxwADOe+1p8h/G+G2vz0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f9FuVaCnAX/etNBR3if3IsLb+CuHXw3Rrp7HfLoQtHJZzxGVIyLcuauKiDstytyEW
-         LAT3DjOikibgWo8zcg/yxlZ3JfzBbCAJEXcJQL7qISNfv3rvghp30SbBZcx2bF4ZMT
-         FsvwFMBICRnFdf/7akugI7tdSCapThcU6JzLeG/I=
+        b=aEMC3wVXvsB/4/j2mlII8sf2BpcjwPF2dK2F3B+3l5q+oabif4xoHqzngvq3rvSAt
+         ZBdr+S5ziaTihkDZ6Ai5fJSzyewD54WMtNY4v7l/6y8m/jgYRDp6kV2zMawNzepHyL
+         GfF5d0hZTZbI1oERJgCDdPeGwrs61f9sX5k6C7PY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Gary R Hook <gary.hook@amd.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 070/101] leds: trigger: netdev: fix refcnt leak on interface rename
-Date:   Thu,  2 May 2019 17:21:12 +0200
-Message-Id: <20190502143344.567363208@linuxfoundation.org>
+Subject: [PATCH 5.0 097/101] iommu/amd: Reserve exclusion range in iova-domain
+Date:   Thu,  2 May 2019 17:21:39 +0200
+Message-Id: <20190502143346.348458634@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -62,72 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4cb6560514fa19d556954b88128f3846fee66a03 ]
+[ Upstream commit 8aafaaf2212192012f5bae305bb31cdf7681d777 ]
 
-Renaming a netdev-trigger-tracked interface was resulting in an
-unbalanced dev_hold().
+If a device has an exclusion range specified in the IVRS
+table, this region needs to be reserved in the iova-domain
+of that device. This hasn't happened until now and can cause
+data corruption on data transfered with these devices.
 
-Example:
-> iw phy phy0 interface add foo type __ap
-> echo netdev > trigger
-> echo foo > device_name
-> ip link set foo name bar
-> iw dev bar del
-[  237.355366] unregister_netdevice: waiting for bar to become free. Usage count = 1
-[  247.435362] unregister_netdevice: waiting for bar to become free. Usage count = 1
-[  257.545366] unregister_netdevice: waiting for bar to become free. Usage count = 1
+Treat exclusion ranges as reserved regions in the iommu-core
+to fix the problem.
 
-Above problem was caused by trigger checking a dev->name which obviously
-changes after renaming an interface. It meant missing all further events
-including the NETDEV_UNREGISTER which is required for calling dev_put().
-
-This change fixes that by:
-1) Comparing device struct *address* for notification-filtering purposes
-2) Dropping unneeded NETDEV_CHANGENAME code (no behavior change)
-
-Fixes: 06f502f57d0d ("leds: trigger: Introduce a NETDEV trigger")
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Fixes: be2a022c0dd0 ('x86, AMD IOMMU: add functions to parse IOMMU memory mapping requirements for devices')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Gary R Hook <gary.hook@amd.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/leds/trigger/ledtrig-netdev.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/iommu/amd_iommu.c       | 9 ++++++---
+ drivers/iommu/amd_iommu_init.c  | 7 ++++---
+ drivers/iommu/amd_iommu_types.h | 2 ++
+ 3 files changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
-index 3dd3ed46d473..167a94c02d05 100644
---- a/drivers/leds/trigger/ledtrig-netdev.c
-+++ b/drivers/leds/trigger/ledtrig-netdev.c
-@@ -301,11 +301,11 @@ static int netdev_trig_notify(struct notifier_block *nb,
- 		container_of(nb, struct led_netdev_data, notifier);
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index e628ef23418f..55b3e4b9d5dc 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -3166,21 +3166,24 @@ static void amd_iommu_get_resv_regions(struct device *dev,
+ 		return;
  
- 	if (evt != NETDEV_UP && evt != NETDEV_DOWN && evt != NETDEV_CHANGE
--	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER
--	    && evt != NETDEV_CHANGENAME)
-+	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER)
- 		return NOTIFY_DONE;
+ 	list_for_each_entry(entry, &amd_iommu_unity_map, list) {
++		int type, prot = 0;
+ 		size_t length;
+-		int prot = 0;
  
--	if (strcmp(dev->name, trigger_data->device_name))
-+	if (!(dev == trigger_data->net_dev ||
-+	      (evt == NETDEV_REGISTER && !strcmp(dev->name, trigger_data->device_name))))
- 		return NOTIFY_DONE;
+ 		if (devid < entry->devid_start || devid > entry->devid_end)
+ 			continue;
  
- 	cancel_delayed_work_sync(&trigger_data->work);
-@@ -320,12 +320,9 @@ static int netdev_trig_notify(struct notifier_block *nb,
- 		dev_hold(dev);
- 		trigger_data->net_dev = dev;
- 		break;
--	case NETDEV_CHANGENAME:
- 	case NETDEV_UNREGISTER:
--		if (trigger_data->net_dev) {
--			dev_put(trigger_data->net_dev);
--			trigger_data->net_dev = NULL;
--		}
-+		dev_put(trigger_data->net_dev);
-+		trigger_data->net_dev = NULL;
- 		break;
- 	case NETDEV_UP:
- 	case NETDEV_CHANGE:
++		type   = IOMMU_RESV_DIRECT;
+ 		length = entry->address_end - entry->address_start;
+ 		if (entry->prot & IOMMU_PROT_IR)
+ 			prot |= IOMMU_READ;
+ 		if (entry->prot & IOMMU_PROT_IW)
+ 			prot |= IOMMU_WRITE;
++		if (entry->prot & IOMMU_UNITY_MAP_FLAG_EXCL_RANGE)
++			/* Exclusion range */
++			type = IOMMU_RESV_RESERVED;
+ 
+ 		region = iommu_alloc_resv_region(entry->address_start,
+-						 length, prot,
+-						 IOMMU_RESV_DIRECT);
++						 length, prot, type);
+ 		if (!region) {
+ 			pr_err("Out of memory allocating dm-regions for %s\n",
+ 				dev_name(dev));
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 66123b911ec8..84fa5b22371e 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -2013,6 +2013,9 @@ static int __init init_unity_map_range(struct ivmd_header *m)
+ 	if (e == NULL)
+ 		return -ENOMEM;
+ 
++	if (m->flags & IVMD_FLAG_EXCL_RANGE)
++		init_exclusion_range(m);
++
+ 	switch (m->type) {
+ 	default:
+ 		kfree(e);
+@@ -2059,9 +2062,7 @@ static int __init init_memory_definitions(struct acpi_table_header *table)
+ 
+ 	while (p < end) {
+ 		m = (struct ivmd_header *)p;
+-		if (m->flags & IVMD_FLAG_EXCL_RANGE)
+-			init_exclusion_range(m);
+-		else if (m->flags & IVMD_FLAG_UNITY_MAP)
++		if (m->flags & (IVMD_FLAG_UNITY_MAP | IVMD_FLAG_EXCL_RANGE))
+ 			init_unity_map_range(m);
+ 
+ 		p += m->length;
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index eae0741f72dc..87965e4d9647 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -374,6 +374,8 @@
+ #define IOMMU_PROT_IR 0x01
+ #define IOMMU_PROT_IW 0x02
+ 
++#define IOMMU_UNITY_MAP_FLAG_EXCL_RANGE	(1 << 2)
++
+ /* IOMMU capabilities */
+ #define IOMMU_CAP_IOTLB   24
+ #define IOMMU_CAP_NPCACHE 26
 -- 
 2.19.1
 
