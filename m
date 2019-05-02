@@ -2,155 +2,240 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B6FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B5EC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF4282085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479F920651
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 21:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCJFdJII"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7ywdT+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfEBVQ2 (ORCPT
+        id S1726349AbfEBVRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 17:16:28 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36361 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfEBVQ1 (ORCPT
+        Thu, 2 May 2019 17:17:12 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34373 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfEBVRL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 17:16:27 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 85so1633188pgc.3;
-        Thu, 02 May 2019 14:16:27 -0700 (PDT)
+        Thu, 2 May 2019 17:17:11 -0400
+Received: by mail-qk1-f193.google.com with SMTP id n68so2484904qka.1
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 14:17:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SXzn4PL7BS9Zk+Qjz5Z6ao7p78pnuZhgvrrpjIHBgqs=;
-        b=kCJFdJIIF969KctuD3d2wM6Ofbq6dPOZFLTH8wlGl+7+cVokVRuDwro7NOWN9ohV8k
-         ImAl50lyzEBsv7yN+yDsApIRZoLtSCfwhyzyxPvjXoEWcvwOBh4YVBGfYFjfXofVIUhG
-         4IdfwHyJltRS5sW89ee6jcilUM33Ka1rf9l/1hx/r4xvkgirrOsCcjMVyOo7fNRjZFEX
-         W57GSaPxOGJB3pNyXX+NzqVUj3/2JEPXwOjRvCBv8sNkyMt8fb6SSscfdGTffg6t6JdB
-         E1xSneePimV/qvTL3gOacgC8P6jcyMC1ik1HBxyp2Tove1HOXYfOKbo6mTy7cNVaJPvY
-         TkNA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c3Ez0m140xSyDk6GZbTwnctygutWgb3T6pH0/CtvK4w=;
+        b=a7ywdT+k1ux1SvuK+qGboaTCTI7J6QJ20MhPY0rJ2zB0V2XcblZHaeufsU89IvUsI0
+         d+UaqjFFg4TSz89tYijt5dls3LnoTVtnMeNJs3HhN2/zFNGm+nDr+t7PMvH1/QH0wG1s
+         O4sX+8U2tREWE81lXoKUciZ3oADU0FReHlCuy2bZqZOXFMcrthySmxwe+0dl3Q5YLNQV
+         f8dUfNFbzcTB5J2wu5Tb2v2jwYxhDDgl8aGsF5L3GGomKsGVvy3AUng45Lz5ImXoLSll
+         XFJ4ELRUCwSRUPEDCDd7NGxhYwus+gMmlvRVLEYygcyg1HZhSqyi0k7tlepIzAcZv0YB
+         060A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SXzn4PL7BS9Zk+Qjz5Z6ao7p78pnuZhgvrrpjIHBgqs=;
-        b=pcJqDcIzbpppzXFbvgI0rUcsLQ6lnBA27PfHO9JPODM+fQgYK63DOJxxWgTVdq9FWp
-         V2Azdulv3zKvkEnOEVQ/udBOpZsAdMmU+YEkQ5ObvZllNXUnrXPk4z5wo7QEPOp4nybN
-         L7d+5/1X0D05k8J4xphzTNJbcUa4edawtNYodf5pXehhJ96msYgDZWXzVbJ+n0in1CKc
-         x9YaDZsbm1w0AshA5yOMDasYnrX++vdexqLx0T7kpsp4iP+unwGfd/aj9piYTLxaWTo8
-         fC8WVrNCqFlTWQYyMpeNABlAL36Arjc/9hieexCg8SfxSV0/mFT088kBzTf22bhYPP+L
-         HsRw==
-X-Gm-Message-State: APjAAAXZTHeEI4ilZYR6xyaLTDyRV7ZS/GCwKiPFe3/dPT8uX9G468mX
-        aSo5coEv1JtmH2fZJI/vmzI=
-X-Google-Smtp-Source: APXvYqyaAKrOO8dNkOZg12O3d42lENfOgkrL7qBtR/V01hTlj71I+CQb4vEU5IP/L2A0+G0+xdSQEg==
-X-Received: by 2002:a63:5f42:: with SMTP id t63mr6174518pgb.275.1556831786717;
-        Thu, 02 May 2019 14:16:26 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id f63sm102173pfc.180.2019.05.02.14.16.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 14:16:26 -0700 (PDT)
-Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
- KUnit tests
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah@kernel.org, devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Felix Guo <felixguoxiuping@gmail.com>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-13-brendanhiggins@google.com>
- <20190502110220.GD12416@kroah.com>
- <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <a49c5088-a821-210c-66de-f422536f5b01@gmail.com>
-Date:   Thu, 2 May 2019 14:16:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c3Ez0m140xSyDk6GZbTwnctygutWgb3T6pH0/CtvK4w=;
+        b=GpUYLBVaqGqQJJRosFn0ypZB1I0nw2unK4VkjnIbnCsnHdf6/6Fvwd6UtJ6ECqDB/S
+         FNDjttWkNe1jruk1WdPVf4TbjlsPMf/sUkx3fN/dazV8DyznKVlmriDTgMs7K6wk53hE
+         mZJUG3YDB4FrbD7+sSc6ExCOgKbsJi6gTWmaszObLO6SSp1lq1ULaZZx0aLDZA8LaXcM
+         N7U7q4szVVe3tP7JWx4Pb9BDLF94oswlQv9zM/jW5KDU1c4JMbjJYzQo0OYNxqnRloaR
+         415+BgGfiLF9y+yQ4WGMgN+I5PXppD9QSvwX7ppmrdB6SUi1IbYNDghWYy74uQWsdXR9
+         9XqQ==
+X-Gm-Message-State: APjAAAVfj3sfEwZAVP9EJVXZvhf39JTQf70JQaIMNe08YqMIoMCsXheq
+        SfxQnrlxFwfl0hKroPlbsTn+IMlvvekgQvAI3XWtlXzY
+X-Google-Smtp-Source: APXvYqw1d9wl0Ck6MFqgZGLMr5IrPvFzLtNk4LY7BylzcDwY/kcUjzs+NUI+uZff2y9IL0cXD+zvI83oeYZXZxNANio=
+X-Received: by 2002:ae9:e204:: with SMTP id c4mr4880515qkc.16.1556831830620;
+ Thu, 02 May 2019 14:17:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190327182040.112651-1-twawrzynczak@chromium.org> <20190502160931.84177-1-twawrzynczak@chromium.org>
+In-Reply-To: <20190502160931.84177-1-twawrzynczak@chromium.org>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Thu, 2 May 2019 23:16:59 +0200
+Message-ID: <CAFqH_53OvUWN48Uwv7ofaZTB_6Upu6zjcNzfG-aNt1YaLJyyhg@mail.gmail.com>
+Subject: Re: [PATCH v4] platform/chrome: mfd/cros_ec_debugfs: Add debugfs
+ entry to retrieve EC uptime.
+To:     Tim Wawrzynczak <twawrzynczak@chromium.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/2/19 11:07 AM, Brendan Higgins wrote:
-> On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->>
->> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
->>> From: Felix Guo <felixguoxiuping@gmail.com>
->>>
->>> The ultimate goal is to create minimal isolated test binaries; in the
->>> meantime we are using UML to provide the infrastructure to run tests, so
->>> define an abstract way to configure and run tests that allow us to
->>> change the context in which tests are built without affecting the user.
->>> This also makes pretty and dynamic error reporting, and a lot of other
->>> nice features easier.
->>>
->>> kunit_config.py:
->>>   - parse .config and Kconfig files.
->>>
->>> kunit_kernel.py: provides helper functions to:
->>>   - configure the kernel using kunitconfig.
->>>   - build the kernel with the appropriate configuration.
->>>   - provide function to invoke the kernel and stream the output back.
->>>
->>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
->>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->>
->> Ah, here's probably my answer to my previous logging format question,
->> right?  What's the chance that these wrappers output stuff in a standard
->> format that test-framework-tools can already parse?  :)
-> 
-> It should be pretty easy to do. I had some patches that pack up the
-> results into a serialized format for a presubmit service; it should be
-> pretty straightforward to take the same logic and just change the
-> output format.
+Hi Tim,
 
-When examining and trying out the previous versions of the patch I found
-the wrappers useful to provide information about how to control and use
-the tests, but I had no interest in using the scripts as they do not
-fit in with my personal environment and workflow.
+Missatge de Tim Wawrzynczak <twawrzynczak@chromium.org> del dia dj., 2
+de maig 2019 a les 18:10:
+>
+> The new debugfs entry 'uptime' is being made available to userspace so that
+> a userspace daemon can synchronize EC logs with host time.
+>
+> Signed-off-by: Tim Wawrzynczak <twawrzynczak@chromium.org>
+> ---
+> Enric, is there something I can do to help speed this along?  This patch
+> is useful for ChromeOS board bringup, and we would like to see it upstreamed
+> if at all possible.
+>
 
-In the previous versions of the patch, these helper scripts are optional,
-which is good for my use case.  If the helper scripts are required to
-get the data into the proper format then the scripts are not quite so
-optional, they become the expected environment.  I think the proper
-format should exist without the helper scripts.
+The last version looks good to me. The patch is in my list but is too
+late for the next merge window. Will be one of the first patches I'll
+queue for 5.3
 
--Frank
+Thanks,
+ Enric
+
+> Also, AFAIK only the cros_ec supports the 'uptime' command for now.
+> And yes, the file does need to be seekable; the userspace daemon that
+> consumes the file keeps the file open and seeks back to the beginning
+> to get the latest uptime value.
+> Based on your second response to v3, I kept the separate 'create_uptime'
+> function b/c of the logic for checking support for the uptime command.
+> Let me know if you'd like me to move all of that logic into _probe.
+>
+> Changelist from v3:
+>  1) Don't check return values of debugfs_* functions.
+>  2) Only expose 'uptime' file if EC supports it.
+> ---
+>  Documentation/ABI/testing/debugfs-cros-ec | 10 +++
+>  drivers/platform/chrome/cros_ec_debugfs.c | 78 +++++++++++++++++++++++
+>  2 files changed, 88 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/debugfs-cros-ec
+>
+> diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
+> new file mode 100644
+> index 000000000000..24b781c67a4c
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/debugfs-cros-ec
+> @@ -0,0 +1,10 @@
+> +What:          /sys/kernel/debug/cros_ec/uptime
+> +Date:          March 2019
+> +KernelVersion: 5.1
+> +Description:
+> +               Read-only.
+> +               Reads the EC's current uptime information
+> +               (using EC_CMD_GET_UPTIME_INFO) and prints
+> +               time_since_ec_boot_ms into the file.
+> +               This is used for synchronizing AP host time
+> +               with the cros_ec log.
+> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+> index 71308766e891..226545a2150b 100644
+> --- a/drivers/platform/chrome/cros_ec_debugfs.c
+> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
+> @@ -201,6 +201,50 @@ static int cros_ec_console_log_release(struct inode *inode, struct file *file)
+>         return 0;
+>  }
+>
+> +static int cros_ec_get_uptime(struct cros_ec_device *ec_dev, u32 *uptime)
+> +{
+> +       struct {
+> +               struct cros_ec_command msg;
+> +               struct ec_response_uptime_info resp;
+> +       } __packed ec_buf;
+> +       struct ec_response_uptime_info *resp;
+> +       struct cros_ec_command *msg;
+> +
+> +       msg = &ec_buf.msg;
+> +       resp = (struct ec_response_uptime_info *)msg->data;
+> +
+> +       msg->command = EC_CMD_GET_UPTIME_INFO;
+> +       msg->version = 0;
+> +       msg->insize = sizeof(*resp);
+> +       msg->outsize = 0;
+> +
+> +       ret = cros_ec_cmd_xfer_status(ec_dev, msg);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       *uptime = resp->time_since_ec_boot_ms;
+> +       return 0;
+> +}
+> +
+> +static ssize_t cros_ec_uptime_read(struct file *file,
+> +                                  char __user *user_buf,
+> +                                  size_t count,
+> +                                  loff_t *ppos)
+> +{
+> +       struct cros_ec_debugfs *debug_info = file->private_data;
+> +       struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
+> +       char read_buf[32];
+> +       int ret;
+> +       u32 uptime;
+> +
+> +       ret = cros_ec_get_uptime(ec_dev, &uptime);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = scnprintf(read_buf, sizeof(read_buf), "%u\n", uptime);
+> +       return simple_read_from_buffer(user_buf, count, ppos, read_buf, ret);
+> +}
+> +
+>  static ssize_t cros_ec_pdinfo_read(struct file *file,
+>                                    char __user *user_buf,
+>                                    size_t count,
+> @@ -269,6 +313,13 @@ const struct file_operations cros_ec_pdinfo_fops = {
+>         .llseek = default_llseek,
+>  };
+>
+> +const struct file_operations cros_ec_uptime_fops = {
+> +       .owner = THIS_MODULE,
+> +       .open = simple_open,
+> +       .read = cros_ec_uptime_read,
+> +       .llseek = default_llseek,
+> +};
+> +
+>  static int ec_read_version_supported(struct cros_ec_dev *ec)
+>  {
+>         struct ec_params_get_cmd_versions_v1 *params;
+> @@ -413,6 +464,29 @@ static int cros_ec_create_pdinfo(struct cros_ec_debugfs *debug_info)
+>         return 0;
+>  }
+>
+> +static int cros_ec_create_uptime(struct cros_ec_debugfs *debug_info)
+> +{
+> +       struct cros_ec_debugfs *debug_info = file->private_data;
+> +       struct cros_ec_device *ec_dev = debug_info->ec->ec_dev;
+> +       u32 uptime;
+> +       int ret;
+> +
+> +       /*
+> +        * If the EC does not support the uptime command, which is
+> +        * indicated by xfer_status() returning -EINVAL, then no
+> +        * debugfs entry will be created.
+> +        */
+> +       ret = cros_ec_get_uptime(ec_dev, &uptime);
+> +
+> +       if (ret == -EINVAL)
+> +               return supported;
+> +
+> +       debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
+> +                       &cros_ec_uptime_fops);
+> +
+> +       return 0;
+> +}
+> +
+>  static int cros_ec_debugfs_probe(struct platform_device *pd)
+>  {
+>         struct cros_ec_dev *ec = dev_get_drvdata(pd->dev.parent);
+> @@ -442,6 +516,10 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
+>         if (ret)
+>                 goto remove_log;
+>
+> +       ret = cros_ec_create_uptime(debug_info);
+> +       if (ret)
+> +               goto remove_log;
+> +
+>         ec->debug_info = debug_info;
+>
+>         dev_set_drvdata(&pd->dev, ec);
+> --
+> 2.20.1
+>
