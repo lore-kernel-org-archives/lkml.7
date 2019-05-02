@@ -2,92 +2,101 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E2FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D0AC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D7820645
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:21:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pOtaltYC"
+	by mail.kernel.org (Postfix) with ESMTP id C91672075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 12:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556799693;
+	bh=R/ozEIIEfsa2BBgUE6Zb0DzWINwSciwlbxuHIoiZm/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O1afbVJE9Jlj3hD5bAUsUC0M49CRVBXXHVUZrNXX7Nk94o3Rsp9M2QvTeB5yBfS7t
+	 YLKDQzeA+MVEx0AlaLGZAqGeMPs0qTX8yxyglU7XITWYpQ7pVBpxenWlnhT6E0cCfq
+	 iC98jOOLFHh5kbDb/chMVlnBXQtnB26WzDruVk38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfEBMVP (ORCPT
+        id S1726428AbfEBMVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 08:21:15 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35909 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbfEBMVP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 08:21:15 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u17so1727399lfi.3;
-        Thu, 02 May 2019 05:21:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YoRzopPLw6P5ilGOLkCCwo6ncg+nRGCaqA3qJdWLPkk=;
-        b=pOtaltYCjij+nwgRjIdtwgj9znTc9Rk3LcgVKAbP4FdMpQNoR+PQmyu3tG86uIJDJd
-         /XSjQ1WAq1cPH/U3LeAPAPTg+5lei9AopWETGpHqzFzDjn56gB9IkqBrR6sL0pHTTxxM
-         2h3GwE5cRxD82OJAtLDkyFxGjM8YGwwSdIv9UVdC0nvxzinS6Vv2gKseB53tf1rQL3Dl
-         pin8IOhpRJ93QII/OEtxdqjh0TKcKv153cc1xQhuaKFfLvnG9z9fQOXozQUdAG5bLmvA
-         lX4bY/InhTH5oo+J31LjWsmXqcVRb8oQeD12FlDI0uGst880z1QS0Noeu7iRjOrNKQEM
-         2eGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YoRzopPLw6P5ilGOLkCCwo6ncg+nRGCaqA3qJdWLPkk=;
-        b=HuB/w0O2KyENHRceoX8q60wWO4a/gGYebnXYEim6c+W0ktWHyWpp6YZmz6rdY89j1p
-         kQM0/VzTECvdkUmaMStQSAkNOnW9bd2qvxRTyXhqvWl2pv4ym5b1zL1kTWKX6EnASpyQ
-         PgXOOGo5el2/nLr8NfgNEnUOcQpGH+ROPGLmgBYxUEiRrTUoekHQy/dm1qddUrMuZjlm
-         BkmLk+GVgAYRTilF8WdC7ijocnf2V3AS0UbmaQ55/YrihlUFGU/06HIJe9Up9K8vEqiW
-         SImtf//UkBdfz0UqemstuFyFVi+Za5J9lQObkPjQNrX95Hppc3t4CosnnHSGKgSWzU4R
-         0WcQ==
-X-Gm-Message-State: APjAAAXwxzfmWSk2LcKBm8PslDO0zhHYUkOjex6tvfub60nmi6ft6aOc
-        OUckfZgJ8ywnaPjr+t9LONEl0Ih1fovd8A9HYI4=
-X-Google-Smtp-Source: APXvYqyqBIGxYazeIZ6OVG3oD6l17c7c09dmf9ZVSVOxS3YSB4C1RHmrYVvtN7ivy/b4hZFSt817dsEZ1InDgfl70fc=
-X-Received: by 2002:a19:f001:: with SMTP id p1mr1972072lfc.27.1556799673301;
- Thu, 02 May 2019 05:21:13 -0700 (PDT)
+        Thu, 2 May 2019 08:21:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbfEBMVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 08:21:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE6C920645;
+        Thu,  2 May 2019 12:21:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556799691;
+        bh=R/ozEIIEfsa2BBgUE6Zb0DzWINwSciwlbxuHIoiZm/s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0XTRRMUhLI54mTjNUrl3u8Pgw1CnKMLL7BU/VWQQLVvLwEqsg2QGEFYkOLCrfMefg
+         72/5LLgQvaEFw/NGIvQTFrCbD2sBmrd1FZVuXsTUDJcnapwzEJij3k7uGBg9fKZk6J
+         NYNl4NCI3Zb1X9/mQWzxXz0YyeQTvgjb68kltXAw=
+Date:   Thu, 2 May 2019 14:21:28 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: Linux 5.1-rc5
+Message-ID: <20190502122128.GA2670@kroah.com>
+References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
+ <20190415051919.GA31481@infradead.org>
+ <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
-In-Reply-To: <20190430074730.8236-1-sebastien.szymanski@armadeus.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 2 May 2019 09:21:08 -0300
-Message-ID: <CAOMZO5DTAvdxbb8UQufDTNWgkCj55OzXn=SZFXRocUOnkMY55Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: imx6ul: Add csi node
-To:     =?UTF-8?Q?S=C3=A9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi S=C3=A9bastien,
+On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:
+> On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > Can we please have the page refcount overflow fixes out on the list
+> > for review, even if it is after the fact?
+> 
+> They were actually on a list for review long before the fact, but it
+> was the security mailing list. The issue actually got discussed back
+> in January along with early versions of the patches, but then we
+> dropped the ball because it just wasn't on anybody's radar and it got
+> resurrected late March. Willy wrote a rather bigger patch-series, and
+> review of that is what then resulted in those commits. So they may
+> look recent, but that's just because the original patches got
+> seriously edited down and rewritten.
+> 
+> That said, powerpc and s390 should at least look at maybe adding a
+> check for the page ref in their gup paths too. Powerpc has the special
+> gup_hugepte() case, and s390 has its own version of gup entirely. I
+> was actually hoping the s390 guys would look at using the generic gup
+> code.
+> 
+> I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
+> largely irrelevant, partly since even theoretically this whole issue
+> needs a _lot_ of memory.
+> 
+> Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
+> (page ref overflow)"). You may or may not really care.
 
-On Tue, Apr 30, 2019 at 4:47 AM S=C3=A9bastien Szymanski
-<sebastien.szymanski@armadeus.com> wrote:
+I've now queued these patches up for the next round of stable releases,
+as some people seem to care about these.
 
-> +                       csi: csi@21c4000 {
-> +                               compatible =3D "fsl,imx6ul-csi", "fsl,imx=
-7-csi";
+I didn't see any follow-on patches for s390 or ppc64 hit the tree for
+these changes, am I just missing them and should also queue up a few
+more to handle this issue on those platforms?
 
-After adding "fsl,imx6ul-csi" to
-Documentation/devicetree/bindings/media/imx7-csi.txt:
+thanks,
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+greg k-h
