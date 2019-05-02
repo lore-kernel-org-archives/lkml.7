@@ -2,197 +2,144 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9D2C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC31C04AA8
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6CB2081C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:20:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Pp94zrZb"
+	by mail.kernel.org (Postfix) with ESMTP id 719922081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 05:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbfEBFUx (ORCPT
+        id S1726242AbfEBFV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 01:20:53 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33171 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfEBFUw (ORCPT
+        Thu, 2 May 2019 01:21:29 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:49254 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725730AbfEBFV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 01:20:52 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j11so924378lfm.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 22:20:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZIi/hOFHGvpdd8ZxHC2xGumiE5Qm52H/+YsyA0Mp3wc=;
-        b=Pp94zrZbK8g3TalKL/jsZNRTt4pXPht0+i7KnoqIMY9/CC4a0DOOp60lnG4VzQdpXF
-         hVZxgfHMGyg3FMIAbiJq8apr5Rz/rGk4gH+RXUOU6jcsVkUpxt15xJbHkWIOIUJOdcFB
-         bmzSzgOHdBlw3iYDI1J312zA29wxcay3MlZEpJDOPSpFeF1GIeWIxmx2Due3K1zH7cjm
-         6EFPcChVg2PlyIadjhmY31ovtv3rj2w1oVl8L1SSxMSg5qFmSJ1paDXBolf0DE6bmly4
-         AfdA6ti/fUfFvktiqUW06QgHrPC1cfZFi7IGK9YjSSUNSy49agm0LRhuHLDuZZJrPh67
-         +43Q==
+        Thu, 2 May 2019 01:21:28 -0400
+Received: from mr2.cc.vt.edu (inbound.smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x425LRuo022714
+        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 01:21:27 -0400
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x425LMLZ012938
+        for <linux-kernel@vger.kernel.org>; Thu, 2 May 2019 01:21:27 -0400
+Received: by mail-qk1-f199.google.com with SMTP id t63so1339917qkh.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 22:21:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZIi/hOFHGvpdd8ZxHC2xGumiE5Qm52H/+YsyA0Mp3wc=;
-        b=dNERbC2bQc1u1MylqrCSU3Mbi3G3uNhHwga6YFoqEHz3E18xkGAEmjqHAy/Ab7Ll9L
-         qiPnlNWlxf89ztIvT3bnwuFGQTeoPiYyNQ80WKmpDMQRnVMDbZvBIPOEmBe6X1CT6RkM
-         +3Qzk8mOWcnCUFJ3L/c6XupfMBNK5QdpClXGS3kaZ5QmxgwL+5LTX3qhOwdxnTegaDNQ
-         1cjyq29digSWirCw4mCOaa2mBTd1oMmDwSMHZDn9Szy3lpDt3ukfolXanziSBbRmOPqP
-         Fi99eI3q6iQ5IaWYFtdEi3mj8qJ8qotYR3KKaZFpwEK46R5d9Ve1WuyjIgzyCGgZ/agy
-         fw6g==
-X-Gm-Message-State: APjAAAXe5cGxTvGAE8JLM+mI8tri6pdYDOJawxsHIFYxUV1/QdoEywqf
-        OzK3UkIblI7MZwKIsINVBT9EhN4/vVIAfJLbkSiMyQ==
-X-Google-Smtp-Source: APXvYqyUKgaXM4W3YewgggLouSmykoq3FIjWnoOWlifWkKdw/pR1z5cvvAGH8YKyQ4juApeiaTeRw96w/nvv+ylB6dQ=
-X-Received: by 2002:a19:1dc3:: with SMTP id d186mr455221lfd.101.1556774449622;
- Wed, 01 May 2019 22:20:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <1556171696-7741-1-git-send-email-yash.shah@sifive.com>
- <1556171696-7741-2-git-send-email-yash.shah@sifive.com> <20190425101318.GA8469@e107155-lin>
- <CAJ2_jOEBqBnorz9PcQp72Jjju9RX_P8mU=Gq+0xCCcWsBiJksw@mail.gmail.com>
- <20190426093358.GA28309@e107155-lin> <CAJ2_jOEoD=Njp+L+H=jG59mA-j9SnwzyNmz7ECogWmbvei_f5Q@mail.gmail.com>
- <20190502004130.GA20802@bogus>
-In-Reply-To: <20190502004130.GA20802@bogus>
-From:   Yash Shah <yash.shah@sifive.com>
-Date:   Thu, 2 May 2019 10:50:12 +0530
-Message-ID: <CAJ2_jOETZa_oC-xSwfQVw-9Q6OivRG2R0rKMhwCk1knbxWJQVw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] RISC-V: Add DT documentation for SiFive L2 Cache Controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
-        mark.rutland@arm.com, Sachin Ghadi <sachin.ghadi@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=Rx+2vo/TQ6owQB261ooRLIT5wjP1j/4C+RPHBVgcfrM=;
+        b=Se59xXEE/uKg4LUPY4GlxRbmkXh3AHlNu1cECfcEa7wTzeOfBt469hyWY+H3ImUWUu
+         wClABfTaGs3yjCKPViXEBplFcxV2W6XS7HDK2n6+w97XR/waYII5bWxV9ZLHvatiL770
+         dqv7eHvltVUS4PlokiOFj4lVBVe5UDZs7S8ebIvdIfuhpvgMdlDbooHNro78YkJojQ5v
+         rhjpQYoYN6wIgIsvu2diC3r1C3eAIKxXuef/pkLh39ltF8lybyFZezwH6pHAMpTOG12c
+         OqCgStURFyH251jgnx9YtIN8qdHKSp0RbylKtVjFHPI9ooXxm2SzxWcI8ZziCR8nXJOZ
+         3hZw==
+X-Gm-Message-State: APjAAAWbEq3/ztSCPaMtu5OoBJwFlpf/e13A6fbldhNJfMhGkxzL8z5s
+        1vgXZ0MdjECr1nJdSDRlLqRXVxfSCeaXOmeakvizZ5BFpHMlKX59G/i8m1AoCuwai1ad9t0ftey
+        9btkrhIM6e4t242Eye+AqyacBVPLg1n1/3Gk=
+X-Received: by 2002:a37:a849:: with SMTP id r70mr1429444qke.315.1556774481833;
+        Wed, 01 May 2019 22:21:21 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwLjpP4A6jqS3Zqp7sRPBxXNgbo11PiZnuIkaWlHlIKSOnrNhJ4RmhH2xvW9R+LAOL5QtoToA==
+X-Received: by 2002:a37:a849:: with SMTP id r70mr1429435qke.315.1556774481608;
+        Wed, 01 May 2019 22:21:21 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341:5952:f06b:5958:9b7c])
+        by smtp.gmail.com with ESMTPSA id g206sm20904586qkb.75.2019.05.01.22.21.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 May 2019 22:21:20 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kernelnewbies@kernelnewbies.org, Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>, minchan@kernel.org
+Subject: Re: Page Allocation Failure and Page allocation stalls
+In-Reply-To: <CACDBo57s_ZxmxjmRrCSwaqQzzO5r0SadzMhseeb9X0t0mOwJZA@mail.gmail.com>
+References: <CACDBo57s_ZxmxjmRrCSwaqQzzO5r0SadzMhseeb9X0t0mOwJZA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1556774478_11736P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 02 May 2019 01:21:19 -0400
+Message-ID: <11029.1556774479@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 6:11 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Apr 30, 2019 at 09:50:45AM +0530, Yash Shah wrote:
-> > On Fri, Apr 26, 2019 at 3:04 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > >
-> > > On Fri, Apr 26, 2019 at 11:20:17AM +0530, Yash Shah wrote:
-> > > > On Thu, Apr 25, 2019 at 3:43 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > > > >
-> > > > > On Thu, Apr 25, 2019 at 11:24:55AM +0530, Yash Shah wrote:
-> > > > > > Add device tree bindings for SiFive FU540 L2 cache controller driver
-> > > > > >
-> > > > > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 53 ++++++++++++++++++++++
-> > > > > >  1 file changed, 53 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > > > > > new file mode 100644
-> > > > > > index 0000000..15132e2
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > > > > > @@ -0,0 +1,53 @@
-> > > > > > +SiFive L2 Cache Controller
-> > > > > > +--------------------------
-> > > > > > +The SiFive Level 2 Cache Controller is used to provide access to fast copies
-> > > > > > +of memory for masters in a Core Complex. The Level 2 Cache Controller also
-> > > > > > +acts as directory-based coherency manager.
-> > > > > > +
-> > > > > > +Required Properties:
-> > > > > > +--------------------
-> > > > > > +- compatible: Should be "sifive,fu540-c000-ccache"
-> > > > > > +
-> > > > > > +- cache-block-size: Specifies the block size in bytes of the cache
-> > > > > > +
-> > > > > > +- cache-level: Should be set to 2 for a level 2 cache
-> > > > > > +
-> > > > > > +- cache-sets: Specifies the number of associativity sets of the cache
-> > > > > > +
-> > > > > > +- cache-size: Specifies the size in bytes of the cache
-> > > > > > +
-> > > > > > +- cache-unified: Specifies the cache is a unified cache
-> > > > > > +
-> > > > > > +- interrupt-parent: Must be core interrupt controller
-> > > > > > +
-> > > > > > +- interrupts: Must contain 3 entries (DirError, DataError and DataFail signals)
-> > > > > > +
-> > > > > > +- reg: Physical base address and size of L2 cache controller registers map
-> > > > > > +
-> > > > > > +- reg-names: Should be "control"
-> > > > > > +
-> > > > >
-> > > > > It would be good if you mark the properties that are present in DT
-> > > > > specification and those that are added for sifive,fu540-c000-ccache
-> > > >
-> > > > I believe there isn't any property which is added explicitly for
-> > > > sifive,fu540-c000-ccache.
-> > > >
-> > >
-> > > reg and interrupts are generally optional for normal cache and may be
-> > > required for cache controller like this. DT specification[1] covers
-> > > only caches and not cache controllers.
-> >
-> > Are you suggesting something like this:
-> >
-> > Required Properties:
-> > --------------------
-> > Standard Properties:
->
-> I don't think we need this separation.
+--==_Exmh_1556774478_11736P
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Ok. Won't include this "Standard/Non-standard properties" separation
-in the next revision of this patch.
+On Thu, 02 May 2019 04:56:05 +0530, Pankaj Suryawanshi said:
 
->
-> > - cache-block-size: Specifies the block size in bytes of the cache
-> >
-> > - cache-level: Should be set to 2 for a level 2 cache
-> >
-> > - cache-sets: Specifies the number of associativity sets of the cache
-> >
-> > - cache-size: Specifies the size in bytes of the cache
->
-> What are the possible valid values for these? That's what's important.
-> What the properties mean are already defined in the spec.
+> Please help me to decode the error messages and reason for this errors.=
 
-Sure, will mention the valid values for these properties.
 
->
-> >
-> > - cache-unified: Specifies the cache is a unified cache
-> >
-> > Non-Standard Properties:
->
-> I wouldn't call these non-standard.
->
-> > - interrupt-parent: Must be core interrupt controller
->
-> This is implied.
+> =5B 3205.818891=5D HwBinder:1894_6: page allocation failure: order:7, m=
+ode:0x14040c0(GFP_KERNEL=7C__GFP_COMP), nodemask=3D(null)
 
-Will remove this redundant description.
+Order 7 - so it wants 2**7 contiguous pages.  128 4K pages.
 
->
-> > - reg: Physical base address and size of L2 cache controller registers map
-> >
-> > - reg-names: Should be "control"
->
-> -names is not really needed when there is only 1 entry.
+> =5B 3205.967748=5D =5B<802186cc>=5D (__alloc_from_contiguous) from =5B<=
+80218854>=5D (cma_allocator_alloc+0x44/0x4c)
 
-Will remove this property.
+And that 3205.nnn tells me the system has been running for almost an hour=
+. Going
+to be hard finding that much contiguous free memory.
 
->
-> >
-> > - Yash
-> > >
-> > > --
-> > > Regards,
-> > > Sudeep
-> > >
-> > > [1] https://github.com/devicetree-org/devicetree-specification/releases/download/v0.2/devicetree-specification-v0.2.pdf
+Usually CMA is called right at boot to avoid this problem - why is this
+triggering so late?
+
+> =5B =A0671.925663=5D kworker/u8:13: page allocation stalls for 10090ms,=
+ order:1, mode:0x15080c0(GFP_KERNEL_ACCOUNT=7C__GFP_ZERO), nodemask=3D(nu=
+ll)
+
+That's.... a *really* long stall.
+
+> =5B =A0672.031702=5D =5B<8021e800>=5D (copy_process.part.5) from =5B<80=
+2203b0>=5D (_do_fork+0xd0/0x464)
+> =5B =A0672.039617=5D =A0r10:00000000 r9:00000000 r8:9d008400 r7:0000000=
+0 r6:81216588 r5:9b62f840
+> =5B =A0672.047441=5D =A0r4:00808111
+> =5B =A0672.049972=5D =5B<802202e0>=5D (_do_fork) from =5B<802207a4>=5D =
+(kernel_thread+0x38/0x40)
+> =5B =A0672.057281=5D =A0r10:00000000 r9:81422554 r8:9d008400 r7:0000000=
+0 r6:9d004500 r5:9b62f840
+> =5B =A0672.065105=5D =A0r4:81216588
+> =5B =A0672.067642=5D =5B<8022076c>=5D (kernel_thread) from =5B<802399b4=
+>=5D (call_usermodehelper_exec_work+0x44/0xe0)
+
+First possibility that comes to mind is that a usermodehelper got launche=
+d, and
+it then tried to fork with a very large active process image.  Do we have=
+ any
+clues what was going on?  Did a device get hotplugged?
+
+--==_Exmh_1556774478_11736P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXMp+TQdmEQWDXROgAQJZqxAAnxreoU88EHeovAeSkoiTH8XPfW74dkjJ
+YUtiENuZTAiZBz+nMedbFkKpbNYb0eZWoJ8DMZQKhJ4ausU1uXhFT5NKVOZySX8P
+a4vnlAABdw4n2n3weAVGTx/Drvr0wHgrwhZAQRCKDwXmmnRn91RUsX5expYmHRIg
+/h6zZU+CLp0fWQZzUEsstUpV3ExUc/+3/5Jd+/0e0gWtCuK0Sbl7iCnb9TrG6xLW
+7repzilTRzOYrGg9wSpT+FpmHJUoWfhW8Dn02tT0fflVBOlrs9JeFZituXv2+Zos
+7BSoo1QrTYH5l2tQmIqKvkP7DZvwK1tYPcNSzlkISPS6+WcV/pd4YF1E+sPKi1j/
+t3k7pUR76UrQ/yGqnqQyzfHZSYjRDdpeA4G3NBymrwUe7kVvGiUeIdGJ43QhHFnp
+4jBOcR1gmDMkML9sW17pJgYAT5LLrVEonBIEYkje8niIG4D2KJWVjaUryefON33K
+6/GFJGXHpaeT9ZENYEnfjB6viGeMresPs6pky4m1+XgqjZ4DHc6Gpat0gNzEUHid
+wez5Zt4HCSgtifjdycsEyg7Bd4fYkXih/5+5MKwo0djvFT/PeervNyV896+quAP3
+rswghjdziQRts67CakcgNs2+7HGyBAobpJDmr1Be/aWN6bMndk8m8CxENv2yL95p
+ZYh7SZH5Y28=
+=GETR
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1556774478_11736P--
