@@ -2,171 +2,60 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5D4C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730ACC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF7F204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556812005;
-	bh=QY0CkaJasUb/gymM9MFDaVaL3Fy0VspR7b31nI7y2yM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rsBkdW+OEaGdtLDeKNjA37jOYa3LyKXxVkSjjswAQdNWOZ1Axa9fqyEU8JxuqO/zM
-	 K2ZnFGjURp4EXrvJvm1VsG5DviZpBVIFQIN7EYyIzuS7CZfN++iLBshcqLEzw0g56F
-	 p/wRj1JRitOQrWIwnjHoUhzd5twAfwN1wX+ZsHWM=
+	by mail.kernel.org (Postfix) with ESMTP id 4BBDE204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbfEBPqo (ORCPT
+        id S1727535AbfEBPqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:46:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbfEBPYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:24:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D8DF20675;
-        Thu,  2 May 2019 15:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810691;
-        bh=QY0CkaJasUb/gymM9MFDaVaL3Fy0VspR7b31nI7y2yM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Igh+nZQM5JKMoIX4Or/uRt4Ja2UlvQSnfXAK/3usLMEhHN+WPbknQGIOh7UH6n/8g
-         5A29qVvVXqRKho4llYz6P+zrKBIIHpIUIfOV9DzPvZV/3p0GZ6qUqc9LCQx5xuPawH
-         +8148KhnAptDF7b80a7HF+rQ7pYfhBwbJKk2+o5M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 43/49] scsi: zfcp: reduce flood of fcrscn1 trace records on multi-element RSCN
-Date:   Thu,  2 May 2019 17:21:20 +0200
-Message-Id: <20190502143329.317724789@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
-References: <20190502143323.397051088@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 2 May 2019 11:46:52 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:52424 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbfEBPqu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:46:50 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hMDv2-0001VL-TM; Thu, 02 May 2019 15:46:44 +0000
+Date:   Thu, 2 May 2019 16:46:44 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: Alloc refcount increments to fail
+Message-ID: <20190502154644.GV23075@ZenIV.linux.org.uk>
+References: <20190502152621.GB18948@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502152621.GB18948@bombadil.infradead.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c8206579175c34a2546de8a74262456278a7795a ]
+On Thu, May 02, 2019 at 08:26:21AM -0700, Matthew Wilcox wrote:
 
-If an incoming ELS of type RSCN contains more than one element, zfcp
-suboptimally causes repeated erp trigger NOP trace records for each
-previously failed port. These could be ports that went away.  It loops over
-each RSCN element, and for each of those in an inner loop over all
-zfcp_ports.
+> +/**
+> + * refcount_try_inc - Increment a refcount if it's below INT_MAX
+> + * @r: the refcount to increment
+> + *
+> + * Avoid the counter saturating by declining to increment the counter
+> + * if it is more than halfway to saturation.
+> + */
+> +static inline __must_check bool refcount_try_inc(refcount_t *r)
+> +{
+> +	if (refcount_read(r) < 0)
+> +		return false;
+> +	refcount_inc(r);
+> +	return true;
+> +}
 
-The trigger to recover failed ports should be just the reception of some
-RSCN, no matter how many elements it has. So we can loop over failed ports
-separately, and only then loop over each RSCN element to handle the
-non-failed ports.
-
-The call chain was:
-
-  zfcp_fc_incoming_rscn
-    for (i = 1; i < no_entries; i++)
-      _zfcp_fc_incoming_rscn
-        list_for_each_entry(port, &adapter->port_list, list)
-          if (masked port->d_id match) zfcp_fc_test_link
-          if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"   <===
-
-In order the reduce the "flooding" of the REC trace area in such cases, we
-factor out handling the failed ports to be outside of the entries loop:
-
-  zfcp_fc_incoming_rscn
-    if (no_entries > 1)                                     <===
-      list_for_each_entry(port, &adapter->port_list, list)  <===
-        if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"     <===
-    for (i = 1; i < no_entries; i++)
-      _zfcp_fc_incoming_rscn
-        list_for_each_entry(port, &adapter->port_list, list)
-          if (masked port->d_id match) zfcp_fc_test_link
-
-Abbreviated example trace records before this code change:
-
-Tag            : fcrscn1
-WWPN           : 0x500507630310d327
-ERP want       : 0x02
-ERP need       : 0x02
-
-Tag            : fcrscn1
-WWPN           : 0x500507630310d327
-ERP want       : 0x02
-ERP need       : 0x00                 NOP => superfluous trace record
-
-The last trace entry repeats if there are more than 2 RSCN elements.
-
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- drivers/s390/scsi/zfcp_fc.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
-index ca218c82321f..0c5fd722a72d 100644
---- a/drivers/s390/scsi/zfcp_fc.c
-+++ b/drivers/s390/scsi/zfcp_fc.c
-@@ -240,10 +240,6 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
- 	list_for_each_entry(port, &adapter->port_list, list) {
- 		if ((port->d_id & range) == (ntoh24(page->rscn_fid) & range))
- 			zfcp_fc_test_link(port);
--		if (!port->d_id)
--			zfcp_erp_port_reopen(port,
--					     ZFCP_STATUS_COMMON_ERP_FAILED,
--					     "fcrscn1");
- 	}
- 	read_unlock_irqrestore(&adapter->port_list_lock, flags);
- }
-@@ -251,6 +247,7 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
- static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
- {
- 	struct fsf_status_read_buffer *status_buffer = (void *)fsf_req->data;
-+	struct zfcp_adapter *adapter = fsf_req->adapter;
- 	struct fc_els_rscn *head;
- 	struct fc_els_rscn_page *page;
- 	u16 i;
-@@ -264,6 +261,22 @@ static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
- 	no_entries = be16_to_cpu(head->rscn_plen) /
- 		sizeof(struct fc_els_rscn_page);
- 
-+	if (no_entries > 1) {
-+		/* handle failed ports */
-+		unsigned long flags;
-+		struct zfcp_port *port;
-+
-+		read_lock_irqsave(&adapter->port_list_lock, flags);
-+		list_for_each_entry(port, &adapter->port_list, list) {
-+			if (port->d_id)
-+				continue;
-+			zfcp_erp_port_reopen(port,
-+					     ZFCP_STATUS_COMMON_ERP_FAILED,
-+					     "fcrscn1");
-+		}
-+		read_unlock_irqrestore(&adapter->port_list_lock, flags);
-+	}
-+
- 	for (i = 1; i < no_entries; i++) {
- 		/* skip head and start with 1st element */
- 		page++;
--- 
-2.19.1
-
-
-
+So two of those in parallel with have zero protection, won't they?
