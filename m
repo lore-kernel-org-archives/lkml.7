@@ -2,123 +2,99 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB478C04AA8
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAD5C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8CD20873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB49920873
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:03:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G+u2/xbq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbfEBLCq (ORCPT
+        id S1726473AbfEBLDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 07:02:46 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43930 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfEBLCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 07:02:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70351A78;
-        Thu,  2 May 2019 04:02:45 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B7143F719;
-        Thu,  2 May 2019 04:02:43 -0700 (PDT)
-Date:   Thu, 2 May 2019 12:01:52 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, poza@codeaurora.org,
-        Ray Jui <rjui@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] iommu/dma: Reserve IOVA for PCIe inaccessible DMA
- address
-Message-ID: <20190502110152.GA7313@e121166-lin.cambridge.arm.com>
-References: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
- <1556732186-21630-3-git-send-email-srinath.mannam@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556732186-21630-3-git-send-email-srinath.mannam@broadcom.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 2 May 2019 07:03:07 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46890 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfEBLDH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 07:03:07 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j11so917497pff.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 04:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=yOyR8oq8IHtcYKwMKo5EmKseTdIOzma0iWv4YEXZ/yU=;
+        b=G+u2/xbqv6XKQ3fv5UFhAhQ2alxc+A4E//ftmby4grYjd6VJc/kaLWBhvcS4uHCgx6
+         eJqbuhHu2WHoKmVbxyReWdZeyqDVPFQNceYC8OuPq5mCh02u3iDyyyMQT9wAqJRX+NhX
+         qHt4NFJbJ5NCXR/uOXqA0SLEmNtH0PklLxk0fS76ZrZShSLPl7/bJZ9aO0iiyGHCplov
+         TfFYz9uw75S9dQvk0Dwqc8iaZqnOe4lEyGtDLBannLR1V5EXH55KTWrlzTBWS201axA3
+         e+fpO/R7a6rdSFQ4dN3kaeIQ5BeaTfxJdAjfhhtZB9qajt5mRBM8LPeQmCKJX+F6ATQX
+         W6lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yOyR8oq8IHtcYKwMKo5EmKseTdIOzma0iWv4YEXZ/yU=;
+        b=LBlwghY6CX7ZdN/3CA/5CJ/T3WSkUw4bT2JswFgxqVVwQ9NX2tVEyEzltpq+3bsF1B
+         LVJGfpw90nxVaDzFnml5Rod2un6kSCG+iSNeyzezCVf7R8JinhF2ub2JueOH3C8lmAt9
+         gIGZ0gjpNa5XAgv3Wfg13XycCELwdtSdU87HnFKLn92xFkAtiSkir0Uo52HbJ16Ybp+e
+         02tKkO9CaYp+r+KDyzxjal6hpwkf4cNIQTC0vrtlLfwQUHlmMAoDgXFeesTC52zSajFY
+         mPIVGr2GQjV+DdrSCX5jUDeA9H8xIQBcw5TghlCFDQay5r+4cMAXp0zEnlyfxtaX0k5T
+         nE6A==
+X-Gm-Message-State: APjAAAV7rVsHJSO1xEQRZgL5bhSKt03/WIUXVE/u5t3I+9/OWsLcxQen
+        Do8+XNtNqucEmsNddEGbjNOrLHkJtQ==
+X-Google-Smtp-Source: APXvYqy0UGf59Nz+0AnUFACQfMkiY8Zj96iYY+0Sr6qQKLX6BawDpJ4WJhU0prn9RT1py936s+POrQ==
+X-Received: by 2002:a63:f115:: with SMTP id f21mr3291821pgi.65.1556794985829;
+        Thu, 02 May 2019 04:03:05 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:6284:a261:31df:f367:f70b:ed86])
+        by smtp.gmail.com with ESMTPSA id s79sm111595271pfa.31.2019.05.02.04.03.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 04:03:04 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     linux@armlinux.org.uk
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, amit.kucheria@linaro.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH] ARM: multi_v7_defconfig: Enable panic and disk LED triggers
+Date:   Thu,  2 May 2019 16:32:47 +0530
+Message-Id: <20190502110247.681-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 11:06:25PM +0530, Srinath Mannam wrote:
-> dma_ranges field of PCI host bridge structure has resource entries in
-> sorted order of address range given through dma-ranges DT property. This
-> list is the accessible DMA address range. So that this resource list will
-> be processed and reserve IOVA address to the inaccessible address holes in
-> the list.
-> 
-> This method is similar to PCI IO resources address ranges reserving in
-> IOMMU for each EP connected to host bridge.
-> 
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
-> Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
-> Acked-by: Robin Murphy <robin.murphy@arm.com>
-> ---
->  drivers/iommu/dma-iommu.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 77aabe6..da94844 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -212,6 +212,7 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
->  	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
->  	struct resource_entry *window;
->  	unsigned long lo, hi;
-> +	phys_addr_t start = 0, end;
->  
->  	resource_list_for_each_entry(window, &bridge->windows) {
->  		if (resource_type(window->res) != IORESOURCE_MEM)
-> @@ -221,6 +222,24 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
->  		hi = iova_pfn(iovad, window->res->end - window->offset);
->  		reserve_iova(iovad, lo, hi);
->  	}
-> +
-> +	/* Get reserved DMA windows from host bridge */
-> +	resource_list_for_each_entry(window, &bridge->dma_ranges) {
+Most development boards and devices have one or more LEDs. It is
+useful during debugging if they can be wired to show different
+behaviours such as disk or cpu activity or a load-average dependent
+heartbeat. Enable panic and disk activity triggers so they can be tied
+to LED activity during debugging as well.
 
-If this list is not sorted it seems to me the logic in this loop is
-broken and you can't rely on callers to sort it because it is not a
-written requirement and it is not enforced (you know because you
-wrote the code but any other developer is not supposed to guess
-it).
+There was a similar patch which added these triggers for ARM64 as well:
+https://patchwork.kernel.org/patch/10042681/
 
-Can't we rewrite this loop so that it does not rely on list
-entries order ?
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ arch/arm/configs/multi_v7_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I won't merge this series unless you sort it, no pun intended.
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 2e9fa5312616..466ccc305a05 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -821,6 +821,8 @@ CONFIG_LEDS_TRIGGER_GPIO=y
+ CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
+ CONFIG_LEDS_TRIGGER_TRANSIENT=y
+ CONFIG_LEDS_TRIGGER_CAMERA=y
++CONFIG_LEDS_TRIGGER_PANIC=y
++CONFIG_LEDS_TRIGGER_DISK=y
+ CONFIG_EDAC=y
+ CONFIG_EDAC_HIGHBANK_MC=y
+ CONFIG_EDAC_HIGHBANK_L2=y
+-- 
+2.17.1
 
-Lorenzo
-
-> +		end = window->res->start - window->offset;
-> +resv_iova:
-> +		if (end - start) {
-> +			lo = iova_pfn(iovad, start);
-> +			hi = iova_pfn(iovad, end);
-> +			reserve_iova(iovad, lo, hi);
-> +		}
-> +		start = window->res->end - window->offset + 1;
-> +		/* If window is last entry */
-> +		if (window->node.next == &bridge->dma_ranges &&
-> +		    end != ~(dma_addr_t)0) {
-> +			end = ~(dma_addr_t)0;
-> +			goto resv_iova;
-> +		}
-> +	}
->  }
->  
->  static int iova_reserve_iommu_regions(struct device *dev,
-> -- 
-> 2.7.4
-> 
