@@ -2,196 +2,131 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0BCC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A93C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856242086C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:35:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="t/u0WZKR"
+	by mail.kernel.org (Postfix) with ESMTP id 1F15D20645
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 02:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfEBCfm (ORCPT
+        id S1726379AbfEBCiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 22:35:42 -0400
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:32838 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbfEBCfk (ORCPT
+        Wed, 1 May 2019 22:38:06 -0400
+Received: from mail-it1-f197.google.com ([209.85.166.197]:56823 "EHLO
+        mail-it1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfEBCiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 22:35:40 -0400
-Received: by mail-pl1-f170.google.com with SMTP id y3so322587plp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 19:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WVmden30audSDbX5Sw9SZp62wypQnhzg6PaWpC69zVo=;
-        b=t/u0WZKRhcKMr9Be4GBNvKVCo0e9x1CTVjQqiN3IVyxiG0EnneZxB0w0GHda19zTch
-         vlKt+NsJhE9zAamqBRLlOEGUwDgpaLeT+de3SKFxSLzimAlE/VC+n82DqTid+dXmYmur
-         +O4nPAmeYNajUt7Rx/wQYqbD/4wD/dUqRG5ARYlFWq4r6djUorquyhRg3nHfdGrl91Jl
-         WKLwCHD4yVEgr44NLrSlsV89f1I+xcdpeLw5EcdkCbX+oVemUPj67BKFXcxr/Yw4PIkB
-         FRTSZDMw/sxuTx+jHrX6W2Z7+a6a1fpssPcLIQ1ZvZ4cFl/OCDpkyyciEcnXUya6t4SH
-         unmg==
+        Wed, 1 May 2019 22:38:06 -0400
+Received: by mail-it1-f197.google.com with SMTP id s21so518195ite.6
+        for <linux-kernel@vger.kernel.org>; Wed, 01 May 2019 19:38:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=WVmden30audSDbX5Sw9SZp62wypQnhzg6PaWpC69zVo=;
-        b=deJQuFC775Ot7HxTqXefCDRa7JXfCh7epHSuybPEL5rLVRcqfpM1LRFvpAwyBfiudo
-         cJ3kUlrCZQFzMRNw+sH/9S9l0BH1z1LC+WDzBoMt6agqNvwmXtbasy6agMZwrvDpVXwC
-         jQs+2GrB8UIGl5A69GBbGqEebt8WQ1gDMMxtbwlymtQsDkkfgR8NwVi0t6c+2ogreOoy
-         Pnd9HXDFNApbWFy2O8v9w8GVc2gakrH6pmQBZEg96jN3gnTmTRKzN7yReliVLLRKND3P
-         b96XXxEfQRZ7HDdsb86oDWbVUMEdha9qRK/SiHijn6SZbUg7sPNg8l+R0jr9JlehiMTF
-         LEyw==
-X-Gm-Message-State: APjAAAXNLpLqGxfQSPllIYiM/bLi/4qj6avjrQ1uieO4+b2SzbdJqggd
-        OJrOKvi/wtgR8XrJd5KZRTvjYBgnc7U=
-X-Google-Smtp-Source: APXvYqwqqC+tkM5RwBhr3+77V6Z54mW3iVrI26rBh5YzQclFOrATCsliLHeEUB781qWv1RoLm01OmQ==
-X-Received: by 2002:a17:902:32c3:: with SMTP id z61mr965574plb.143.1556764538751;
-        Wed, 01 May 2019 19:35:38 -0700 (PDT)
-Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id i15sm59098577pfr.8.2019.05.01.19.35.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 May 2019 19:35:38 -0700 (PDT)
-Subject: Re: KVM: Introduce a 'release' method for KVM devices
-To:     Colin Ian King <colin.king@canonical.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <5a34a77e-d1bf-c630-ef9b-4f94c2c0c221@canonical.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Openpgp: preference=signencrypt
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <2e7890d2-e433-8553-c466-5b42f7d7776e@ozlabs.ru>
-Date:   Thu, 2 May 2019 12:35:33 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=xtXw2lupwkVjqX6efEcOaASU6ebh70LIWoergDKWJSw=;
+        b=QAv9oMaEMUss618W+/wgPpQ9WKZ8FURg1QWH+e948A2g7njt9NVO6gNWiCJRjm2Cj9
+         YubCBTWyarK+1+S1bmBFmDDeOCU7vKfyk7jLDSx/S2ca2GdcWPaVKguxWTGo4og0JPLn
+         V8XZxr1+QFsiBAFCiXWhYx8Gx7AJ9s/bra0HnjG7JYcRWMgL+PANV8ipc4EJHpWDsL9E
+         PIvoPweCOYCWtndiVXfq+IgN3OZr5j/u2wamto9GmVexnlCqxmXX26wCInBoe9uLxerI
+         WbgVXkfS9Vd8244AGuroF29khsjnLcy1vSArMclyM9GshZX9X+WDEwGA1P2PAuFZlWRd
+         izNA==
+X-Gm-Message-State: APjAAAWKuUBR3azy2x9/xHhSxZmt1SKc/p4ZvFEAoa9OUUuEwm9XXjfi
+        btbgyO7qLrJ2o3nr42OxscTBlMMl3lkBqJ/lQUOYy6UN2w5T
+X-Google-Smtp-Source: APXvYqwQqZI+dOYyfu+U0r6fq/+CcfSqb4y1MWdnmVWFreVqywSXoJDTxuiE6SA1+xZcYWY9y+SAgmmGSNCZZOO6qEp0cHUzU/nJ
 MIME-Version: 1.0
-In-Reply-To: <5a34a77e-d1bf-c630-ef9b-4f94c2c0c221@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5d:83d7:: with SMTP id u23mr897843ior.56.1556764685538;
+ Wed, 01 May 2019 19:38:05 -0700 (PDT)
+Date:   Wed, 01 May 2019 19:38:05 -0700
+In-Reply-To: <000000000000eb6a8e057ab79f82@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000149c440587de8693@google.com>
+Subject: Re: WARNING: refcount bug in p9_req_put
+From:   syzbot <syzbot+edec7868af5997928fe9@syzkaller.appspotmail.com>
+To:     asmadeus@codewreck.org, davem@davemloft.net, ericvh@gmail.com,
+        linux-kernel@vger.kernel.org, lucho@ionkov.net,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        v9fs-developer@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has found a reproducer for the following crash on:
 
+HEAD commit:    459e3a21 gcc-9: properly declare the {pv,hv}clock_page sto..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=136c9284a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ef1b87b455c397cf
+dashboard link: https://syzkaller.appspot.com/bug?extid=edec7868af5997928fe9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1642ee48a00000
 
-On 02/05/2019 00:42, Colin Ian King wrote:
-> Hi,
-> 
-> Static analysis with Coverity picked up an issue in the following commit:
-> 
-> commit 2bde9b3ec8bdf60788e9e2ce8c07a2f8d6003dbd
-> Author: Cédric Le Goater <clg@kaod.org>
-> Date:   Thu Apr 18 12:39:41 2019 +0200
-> 
->     KVM: Introduce a 'release' method for KVM devices
-> 
-> 
->         struct kvm *kvm = dev->kvm;
-> 
-> +       if (!dev)
-> +               return -ENODEV;
-> 
-> If dev is null then the dereference of dev->kvm when assigning pointer
-> kvm will cause an null pointer dereference.  This is easily fixed by
-> assigning kvm after the dev null check.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+edec7868af5997928fe9@syzkaller.appspotmail.com
 
-Yes, this is a bug.
+WARNING: CPU: 1 PID: 7959 at lib/refcount.c:190  
+refcount_sub_and_test_checked lib/refcount.c:190 [inline]
+WARNING: CPU: 1 PID: 7959 at lib/refcount.c:190  
+refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 7959 Comm: syz-executor.1 Not tainted 5.1.0-rc7+ #96
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x65c kernel/panic.c:214
+  __warn.cold+0x20/0x45 kernel/panic.c:571
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:refcount_sub_and_test_checked lib/refcount.c:190 [inline]
+RIP: 0010:refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
+Code: 1d c8 30 2a 06 31 ff 89 de e8 0c 32 40 fe 84 db 75 94 e8 c3 30 40 fe  
+48 c7 c7 60 79 a1 87 c6 05 a8 30 2a 06 01 e8 ae de 12 fe <0f> 0b e9 75 ff  
+ff ff e8 a4 30 40 fe e9 6e ff ff ff 48 89 df e8 37
+RSP: 0018:ffff888089ce7860 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815afcb6 RDI: ffffed101139cefe
+RBP: ffff888089ce78f8 R08: ffff8880a4c584c0 R09: ffffed1015d25011
+R10: ffffed1015d25010 R11: ffff8880ae928087 R12: 00000000ffffffff
+R13: 0000000000000001 R14: ffff888089ce78d0 R15: 0000000000000000
+  refcount_dec_and_test_checked+0x1b/0x20 lib/refcount.c:220
+  kref_put include/linux/kref.h:66 [inline]
+  p9_req_put+0x20/0x60 net/9p/client.c:401
+  p9_conn_destroy net/9p/trans_fd.c:880 [inline]
+  p9_fd_close+0x2ee/0x570 net/9p/trans_fd.c:913
+  p9_client_create+0x998/0x1400 net/9p/client.c:1083
+  v9fs_session_init+0x1e7/0x1960 fs/9p/v9fs.c:421
+  v9fs_mount+0x7d/0x920 fs/9p/vfs_super.c:135
+  legacy_get_tree+0xf2/0x200 fs/fs_context.c:584
+  vfs_get_tree+0x123/0x450 fs/super.c:1481
+  do_new_mount fs/namespace.c:2622 [inline]
+  do_mount+0x1436/0x2c40 fs/namespace.c:2942
+  ksys_mount+0xdb/0x150 fs/namespace.c:3151
+  __do_sys_mount fs/namespace.c:3165 [inline]
+  __se_sys_mount fs/namespace.c:3162 [inline]
+  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3162
+  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458da9
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f2e68c68c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f2e68c68c90 RCX: 0000000000458da9
+RDX: 0000000020000100 RSI: 00000000200000c0 RDI: 0000000000000000
+RBP: 000000000073bf00 R08: 00000000200013c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2e68c696d4
+R13: 00000000004c4da7 R14: 00000000004d8a20 R15: 0000000000000005
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-> 
-> +
-> +       if (dev->kvm != kvm)
-> +               return -EPERM;
-> 
-> I don't understand the logic of the above check. kvm is the same
-> dev->kvm on the earlier assignment, so dev->kvm != kvm seems to be
-> always false, so this check seems to be redundant. Am I missing
-> something more fundamental here?
-
-Nope. This looks like unfortunate cut-n-paste which slipped through out
-reviewing process :-D
-
-
--- 
-Alexey
