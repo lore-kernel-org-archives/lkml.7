@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68256C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5F6C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3049620675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F762081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556811407;
-	bh=JQbYPHIpqP8fqYTV7zW572CvJ9OkL86ocBrnCAKxIwI=;
+	s=default; t=1556811415;
+	bh=XOoIZXUcB+RNeucMSb7LWkOxPRIBwr4WRUQ5danWtXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LSyyI7rmc3iUGWC65WxFUdODCGDYcRSyA7r4k1NyLwH/q+TxDVQcx0Jj3zTw4vX5u
-	 AsVPVdSRqNRgP+AkcmH1IoZR4DQuSEvPauuaSNf/X9Eff1Cn+R9zjiB+xTjpOU7bAM
-	 BYSdDVWk6IXLINFkDeOJghhLbON/ySWYSbKco36c=
+	b=GBwxGyBoodQe6yYfdAfB/3f0tAClCTFxbCMVfvSCYZV7toOSyV9ihdKuyX2W04QMY
+	 /GVNt1w6hQ0MJG4JR0R6ETXwUEEWXzhUqVFDEAuwScvGPEhHP61l9QqLRe4ija0G91
+	 DLyRLqjokX/+fC3SlsZF4pxR2zX8Ls397UoVi4M4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbfEBPan (ORCPT
+        id S1728662AbfEBPgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49210 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:36:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728770AbfEBPaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:30:35 -0400
+        id S1727496AbfEBPal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:30:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0734620B7C;
-        Thu,  2 May 2019 15:30:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 261D52081C;
+        Thu,  2 May 2019 15:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556811035;
-        bh=JQbYPHIpqP8fqYTV7zW572CvJ9OkL86ocBrnCAKxIwI=;
+        s=default; t=1556811040;
+        bh=XOoIZXUcB+RNeucMSb7LWkOxPRIBwr4WRUQ5danWtXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cO+0nq6D+V5GVtcrEp+wS7fr9PszJq/quG/EMe2EOS0kiIBHBy2/ukWP0De03P5YX
-         xncRuzVuH32efVF1BNrd3jELInKGnt5+s05ipOEFNLrCPLJou2eM785qZzra7yAq6O
-         VkFBin6+GqWmUYm7us72E48ZiAGmujnLfF1Hux4I=
+        b=CHeKYdJvmSkO+mZRlJIfTkBCFpqA0pSbbs6n9B4p7n4DM3VaG/s2G59DFMDR36BQ6
+         RjarvneJxrZ8uAWOQ2POAj+ZvICztsuqCt3cBSAgYgWzavf1QMZEFNpYr19hFovKYF
+         92bdjROjsX356aR274riD406fvfxR7cyfH9I85Fo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Mukesh Ojha <mojha@codeaurora.org>,
+        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 049/101] staging: rtlwifi: Fix potential NULL pointer dereference of kzalloc
-Date:   Thu,  2 May 2019 17:20:51 +0200
-Message-Id: <20190502143342.963178335@linuxfoundation.org>
+Subject: [PATCH 5.0 051/101] net: macb: Add null check for PCLK and HCLK
+Date:   Thu,  2 May 2019 17:20:53 +0200
+Message-Id: <20190502143343.099947781@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
 References: <20190502143339.434882399@linuxfoundation.org>
@@ -60,33 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6a8ca24590a2136921439b376c926c11a6effc0e ]
+[ Upstream commit cd5afa91f078c0787be0a62b5ef90301c00b0271 ]
 
-phydm.internal is allocated using kzalloc which is used multiple
-times without a check for NULL pointer. This patch avoids such a
-scenario by returning 0, consistent with the failure case.
+Both PCLK and HCLK are "required" clocks according to macb devicetree
+documentation. There is a chance that devm_clk_get doesn't return a
+negative error but just a NULL clock structure instead. In such a case
+the driver proceeds as usual and uses pclk value 0 to calculate MDC
+divisor which is incorrect. Hence fix the same in clock initialization.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/staging/rtlwifi/phydm/rtl_phydm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/cadence/macb_main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/rtlwifi/phydm/rtl_phydm.c b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-index 9930ed954abb..4cc77b2016e1 100644
---- a/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-+++ b/drivers/staging/rtlwifi/phydm/rtl_phydm.c
-@@ -180,6 +180,8 @@ static int rtl_phydm_init_priv(struct rtl_priv *rtlpriv,
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 2b2882615e8b..6cbe515bfdeb 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3318,14 +3318,20 @@ static int macb_clk_init(struct platform_device *pdev, struct clk **pclk,
+ 		*hclk = devm_clk_get(&pdev->dev, "hclk");
+ 	}
  
- 	rtlpriv->phydm.internal =
- 		kzalloc(sizeof(struct phy_dm_struct), GFP_KERNEL);
-+	if (!rtlpriv->phydm.internal)
-+		return 0;
+-	if (IS_ERR(*pclk)) {
++	if (IS_ERR_OR_NULL(*pclk)) {
+ 		err = PTR_ERR(*pclk);
++		if (!err)
++			err = -ENODEV;
++
+ 		dev_err(&pdev->dev, "failed to get macb_clk (%u)\n", err);
+ 		return err;
+ 	}
  
- 	_rtl_phydm_init_com_info(rtlpriv, ic, params);
- 
+-	if (IS_ERR(*hclk)) {
++	if (IS_ERR_OR_NULL(*hclk)) {
+ 		err = PTR_ERR(*hclk);
++		if (!err)
++			err = -ENODEV;
++
+ 		dev_err(&pdev->dev, "failed to get hclk (%u)\n", err);
+ 		return err;
+ 	}
 -- 
 2.19.1
 
