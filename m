@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9158C04AA9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17584C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1F920449
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D226620449
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810713;
-	bh=UQbqGMDCgBNAjQjZMA67nwKs/q9PTTAcMDrta56byeg=;
+	s=default; t=1556810716;
+	bh=AjiXTbQ+wFTjj3aP/Q6+dQXyutOY9jFe48P2zMrHrsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NO4r3C/rA2og9I34a1hGBc26NIl3ifW1lJHdBTpSlRNZ0iwRj4rovm8zkzxr1Jrc6
-	 nWKeIwxlZ9uwQ0u3lyGvhJA4/6inTT2Zc2xFc3GjzUoRKQXpXpfnHzL8iLq2cwvcvk
-	 6Okq7t+Gvkq74UAOtEz71qo4/UAxP93/OS+ADs+k=
+	b=2oEcJ85t2znmTlBb+3pej8lg+5IgyxBIiTqOh9z4T8yF8yenMEUYp6wdTvvxnrAeh
+	 zC7zOTldrHPe9oslxf5FsxL4IcDNFQ9KQtjsbDFrhgKBQKSYvAMWvqfmB4ibEkcvN8
+	 U7u8nh9IdfbvOK16EAgoK3PpdJ0Fjy6cD3PpxTps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfEBPZM (ORCPT
+        id S1727491AbfEBPZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:25:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41268 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:25:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727454AbfEBPZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:25:10 -0400
+        id S1727476AbfEBPZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:25:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 122C920449;
-        Thu,  2 May 2019 15:25:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8DD020449;
+        Thu,  2 May 2019 15:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810709;
-        bh=UQbqGMDCgBNAjQjZMA67nwKs/q9PTTAcMDrta56byeg=;
+        s=default; t=1556810712;
+        bh=AjiXTbQ+wFTjj3aP/Q6+dQXyutOY9jFe48P2zMrHrsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C8/lYz316SZdjO54Vj5sFCb++yzja3ZzDgJMU9mCWhyU/+0MVzLDNfbCn4QOnFROp
-         TWDxSSjupGmgYH5cP9PVQtJvC2AwZ6ybq3v4vJg2mJeoi1SqHK0h5cIJFFSJcCUSjm
-         wLvHCp2563wjLkhL5BSI3H/bkiFh6JsVZ2Ph1how=
+        b=Gy+erdd7dQdhoC+oM7J1cUk1agt5BjGyKXDHu5MH+u2Gh/BhxfLJ1AZSLEbl5Fwkd
+         v7HtYd3O69/lS6ZYY5jMWLJjxHDp4Xg4Hnmpml+9H4lfGzcuaczFtj1AUGhxp+a1jH
+         UQ/tdVIf1ynyl8CRJ3i8NvOEZJcbxzrUH3GLbBQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        stable@vger.kernel.org, Masanari Iida <standby24x7@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 49/49] leds: pca9532: fix a potential NULL pointer dereference
-Date:   Thu,  2 May 2019 17:21:26 +0200
-Message-Id: <20190502143330.077380974@linuxfoundation.org>
+Subject: [PATCH 4.14 31/49] ARM: dts: imx6qdl: Fix typo in imx6qdl-icore-rqs.dtsi
+Date:   Thu,  2 May 2019 17:21:08 +0200
+Message-Id: <20190502143327.822226131@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -60,45 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0aab8e4df4702b31314a27ec4b0631dfad0fae0a ]
+[ Upstream commit 41b37f4c0fa67185691bcbd30201cad566f2f0d1 ]
 
-In case of_match_device cannot find a match, return -EINVAL to avoid
-NULL pointer dereference.
+This patch fixes a spelling typo.
 
-Fixes: fa4191a609f2 ("leds: pca9532: Add device tree support")
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+Fixes: cc42603de320 ("ARM: dts: imx6q-icore-rqs: Add Engicam IMX6 Q7 initial support")
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/leds/leds-pca9532.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
-index 7fea18b0c15d..7cb4d685a1f1 100644
---- a/drivers/leds/leds-pca9532.c
-+++ b/drivers/leds/leds-pca9532.c
-@@ -513,6 +513,7 @@ static int pca9532_probe(struct i2c_client *client,
- 	const struct i2c_device_id *id)
- {
- 	int devid;
-+	const struct of_device_id *of_id;
- 	struct pca9532_data *data = i2c_get_clientdata(client);
- 	struct pca9532_platform_data *pca9532_pdata =
- 			dev_get_platdata(&client->dev);
-@@ -528,8 +529,11 @@ static int pca9532_probe(struct i2c_client *client,
- 			dev_err(&client->dev, "no platform data\n");
- 			return -EINVAL;
- 		}
--		devid = (int)(uintptr_t)of_match_device(
--			of_pca9532_leds_match, &client->dev)->data;
-+		of_id = of_match_device(of_pca9532_leds_match,
-+				&client->dev);
-+		if (unlikely(!of_id))
-+			return -EINVAL;
-+		devid = (int)(uintptr_t) of_id->data;
- 	} else {
- 		devid = id->driver_data;
- 	}
+diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+index 7ca291e9dbdb..80f1b3fb6abc 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+@@ -222,7 +222,7 @@
+ 	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
+ 	vmcc-supply = <&reg_sd3_vmmc>;
+ 	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+-	bus-witdh = <4>;
++	bus-width = <4>;
+ 	no-1-8-v;
+ 	status = "okay";
+ };
+@@ -233,7 +233,7 @@
+ 	pinctrl-1 = <&pinctrl_usdhc4_100mhz>;
+ 	pinctrl-2 = <&pinctrl_usdhc4_200mhz>;
+ 	vmcc-supply = <&reg_sd4_vmmc>;
+-	bus-witdh = <8>;
++	bus-width = <8>;
+ 	no-1-8-v;
+ 	non-removable;
+ 	status = "okay";
 -- 
 2.19.1
 
