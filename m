@@ -2,108 +2,92 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6663C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 03:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25E1C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 03:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C33B2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 03:10:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="CINXXoyI"
+	by mail.kernel.org (Postfix) with ESMTP id 9D3A4208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 03:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfEBDKQ (ORCPT
+        id S1726417AbfEBDK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 May 2019 23:10:16 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:35032 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfEBDKQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 May 2019 23:10:16 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        Wed, 1 May 2019 23:10:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbfEBDKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 May 2019 23:10:55 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D24498364F;
-        Thu,  2 May 2019 15:10:12 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1556766612;
-        bh=Ex5ej4f1sUQRya9tx03pGqc9hcakoLpecGwtx4QpC6k=;
-        h=From:To:Cc:Subject:Date;
-        b=CINXXoyIQOuO15bXj17vGhtzx8gCaJTyZLFGCBbvfv4tH0a0Zl9Z2SkLX+/PZ+uZZ
-         fZsaBD6q82EGVHJEpRaOuRhClB1Ah+eLzAHbT4QnVUZmpKlXrTuF2+TkXg4SEOKiWQ
-         27RbdjP5O/gS6fFV7l6nqQY/kUNb2hREjUkSpCCD7agoZ3tUZFUvh/KV+r+OHscc4e
-         aNCqaRLkFWtnp0/SnaQvBc7fRk4sxdnJqTM1oLFagYDfm6mLyT+iMeZVMlewPRL6gk
-         HIJsmg3YsyBqPN+cJ5/O2jKY+zRKRlpT5SK9RZ8/F9gVzSnNkFLH0iNSvRUVXf6sQZ
-         Z3A9KsukQSFgA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5cca5f950000>; Thu, 02 May 2019 15:10:13 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id 06F9F13EEA8;
-        Thu,  2 May 2019 15:10:13 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 92C881E1D9E; Thu,  2 May 2019 15:10:12 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     jon.maloy@ericsson.com, ying.xue@windriver.com
-Cc:     netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] tipc: Avoid copying bytes beyond the supplied data
-Date:   Thu,  2 May 2019 15:10:04 +1200
-Message-Id: <20190502031004.7125-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.21.0
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 653D82085A;
+        Thu,  2 May 2019 03:10:53 +0000 (UTC)
+Date:   Wed, 1 May 2019 23:10:51 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     syzbot <syzbot+8d9bb6157e7b379f740e@syzkaller.appspotmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kvm@vger.kernel.org,
+        adrian.hunter@intel.com, davem@davemloft.net, dedekind1@gmail.com,
+        jbaron@redhat.com, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        luto@kernel.org, mingo@kernel.org, peterz@infradead.org,
+        richard@nod.at, riel@surriel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Subject: Re: BUG: soft lockup in kvm_vm_ioctl
+Message-ID: <20190501231051.50eeccd6@oasis.local.home>
+In-Reply-To: <20190502023426.GA804@sol.localdomain>
+References: <000000000000fb78720587d46fe9@google.com>
+        <20190502023426.GA804@sol.localdomain>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TLV_SET is called with a data pointer and a len parameter that tells us
-how many bytes are pointed to by data. When invoking memcpy() we need
-to careful to only copy len bytes.
+On Wed, 1 May 2019 19:34:27 -0700
+Eric Biggers <ebiggers@kernel.org> wrote:
 
-Previously we would copy TLV_LENGTH(len) bytes which would copy an extra
-4 bytes past the end of the data pointer which newer GCC versions
-complain about.
+> > Call Trace:
+> >  smp_call_function_many+0x750/0x8c0 kernel/smp.c:434
+> >  smp_call_function+0x42/0x90 kernel/smp.c:492
+> >  on_each_cpu+0x31/0x200 kernel/smp.c:602
+> >  text_poke_bp+0x107/0x19b arch/x86/kernel/alternative.c:821
+> >  __jump_label_transform+0x263/0x330 arch/x86/kernel/jump_label.c:91
+> >  arch_jump_label_transform+0x2b/0x40 arch/x86/kernel/jump_label.c:99
+> >  __jump_label_update+0x16a/0x210 kernel/jump_label.c:389
+> >  jump_label_update kernel/jump_label.c:752 [inline]
+> >  jump_label_update+0x1ce/0x3d0 kernel/jump_label.c:731
+> >  static_key_slow_inc_cpuslocked+0x1c1/0x250 kernel/jump_label.c:129
+> >  static_key_slow_inc+0x1b/0x30 kernel/jump_label.c:144
+> >  kvm_arch_vcpu_init+0x6b7/0x870 arch/x86/kvm/x86.c:9068
+> >  kvm_vcpu_init+0x272/0x370 arch/x86/kvm/../../../virt/kvm/kvm_main.c:320
+> >  vmx_create_vcpu+0x191/0x2540 arch/x86/kvm/vmx/vmx.c:6577
+> >  kvm_arch_vcpu_create+0x80/0x120 arch/x86/kvm/x86.c:8755
+> >  kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:2569
+> > [inline]
+> >  kvm_vm_ioctl+0x5ce/0x19c0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3105
+> >  vfs_ioctl fs/ioctl.c:46 [inline]
+> >  file_ioctl fs/ioctl.c:509 [inline]
+> >  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
+> >  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+> >  __do_sys_ioctl fs/ioctl.c:720 [inline]
+> >  __se_sys_ioctl fs/ioctl.c:718 [inline]
+> >  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+> >  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
- In file included from test.c:17:
- In function 'TLV_SET',
-     inlined from 'test' at test.c:186:5:
- /usr/include/linux/tipc_config.h:317:3:
- warning: 'memcpy' forming offset [33, 36] is out of the bounds [0, 32]
- of object 'bearer_name' with type 'char[32]' [-Warray-bounds]
-     memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- test.c: In function 'test':
- test.c::161:10: note:
- 'bearer_name' declared here
-     char bearer_name[TIPC_MAX_BEARER_NAME];
-          ^~~~~~~~~~~
+> 
+> I'm also curious how syzbot found the list of people to send this to, as it
+> seems very random.  This should obviously have gone to the kvm mailing list, but
+> it wasn't sent there; I had to manually add it.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- include/uapi/linux/tipc_config.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+My guess is that it went down the call stack, and picked those that
+deal with the functions that are listed at the deepest part of the
+stack. kvm doesn't appear for 12 functions up from the crash. It
+probably stopped its search before that.
 
-diff --git a/include/uapi/linux/tipc_config.h b/include/uapi/linux/tipc_c=
-onfig.h
-index 4b2c93b1934c..f65c5b80ed33 100644
---- a/include/uapi/linux/tipc_config.h
-+++ b/include/uapi/linux/tipc_config.h
-@@ -308,7 +308,7 @@ static inline int TLV_SET(void *tlv, __u16 type, void=
- *data, __u16 len)
- 	tlv_ptr->tlv_type =3D htons(type);
- 	tlv_ptr->tlv_len  =3D htons(tlv_len);
- 	if (len && data)
--		memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
-+		memcpy(TLV_DATA(tlv_ptr), data, len);
- 	return TLV_SPACE(len);
- }
-=20
---=20
-2.21.0
-
+-- Steve
