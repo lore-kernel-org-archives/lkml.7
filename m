@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E80C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4A9C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C337204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54517204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556812168;
-	bh=Y4+DkkEm6qw6MrPYv/QXTPbREB3iYOpAviwK5X3+YB4=;
+	s=default; t=1556812178;
+	bh=sLS4DGfxX2pynUxKD6bhgJx/JP1Hdidayw2k21aaiBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vby1jP5lE9NKWG2LJqTkbj453DqhB3qsfTkQfhzZ5OQGcmneqpjm2/nJGSM+IghEJ
-	 wWa7rD8iJKTu2ibs8XGFhN8VohnVSH5ByCZeNnrCobJ409BBzqawbJVQS+xE9Vz65c
-	 cRfXkK1axt9FcPRj/awPKKr9rQenYdTkwcRwlvs4=
+	b=2tfJs+ae3jSEP8LJ+eoEX30O24E75CPwp5ulp/w0JwgqbgGY9/CkwFt2QLxlxWbg7
+	 lMH5MEAgM6PPi7mYzeKUuqRN94kH92EiziOuuc4jowXmXQuKnxi5HDFsiYoMdiY70r
+	 pjeOC9r4HnH5lG3r2ffHxnlt6Nlti0nUNwnBg1RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfEBPt0 (ORCPT
+        id S1726687AbfEBPWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:49:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38012 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:22:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726729AbfEBPWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:22:36 -0400
+        id S1726617AbfEBPW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:22:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B88F216FD;
-        Thu,  2 May 2019 15:22:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C575B20B7C;
+        Thu,  2 May 2019 15:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810556;
-        bh=Y4+DkkEm6qw6MrPYv/QXTPbREB3iYOpAviwK5X3+YB4=;
+        s=default; t=1556810548;
+        bh=sLS4DGfxX2pynUxKD6bhgJx/JP1Hdidayw2k21aaiBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wGjyQzAqzXJQL/vK1F3Uo90ma5OUoQVKxosQ7lyvn/H7rRrSkbMjHxJTzWzPml/fa
-         Qe5Bt1FofkORud+h4LCRXkY2nH1T6DdBlbWq3kbabanYZ5SGDFzqLJaFGcODyb0PUW
-         atPy2LfTgpOVFAtpact5cwyqJ7VeFZ64r2oyxZ/Q=
+        b=nHVvkQTuqLksuKli9TAlKqmSE23hG4hCbu0X0GWl3HBSqVqKop1uIp7LTWsIRijPw
+         E0istgEINdkcI/0+iBtTi5fJ/MmZ1apVwIDKID4r4L+fLOX3wfN0oAn7T1XDPKvD1w
+         J63SgcxfQQQpd82s7PYYSxpjM5bXharQqAUyFnbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mukesh Ojha <mojha@codeaurora.org>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Douglas Miller <dougmill@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.9 25/32] usb: u132-hcd: fix resource leak
-Date:   Thu,  2 May 2019 17:21:11 +0200
-Message-Id: <20190502143321.788945171@linuxfoundation.org>
+Subject: [PATCH 4.9 22/32] net: ibm: fix possible object reference leak
+Date:   Thu,  2 May 2019 17:21:08 +0200
+Message-Id: <20190502143321.312803981@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
 References: <20190502143314.649935114@linuxfoundation.org>
@@ -59,31 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f276e002793cdb820862e8ea8f76769d56bba575 ]
+[ Upstream commit be693df3cf9dd113ff1d2c0d8150199efdba37f6 ]
 
-if platform_driver_register fails, cleanup the allocated resource
-gracefully.
+The call to ehea_get_eth_dn returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Detected by coccinelle with the following warnings:
+./drivers/net/ethernet/ibm/ehea/ehea_main.c:3163:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3154, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Douglas Miller <dougmill@linux.ibm.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/host/u132-hcd.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/ibm/ehea/ehea_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
-index 43618976d68a..3efb7b0e8269 100644
---- a/drivers/usb/host/u132-hcd.c
-+++ b/drivers/usb/host/u132-hcd.c
-@@ -3208,6 +3208,9 @@ static int __init u132_hcd_init(void)
- 	printk(KERN_INFO "driver %s\n", hcd_name);
- 	workqueue = create_singlethread_workqueue("u132");
- 	retval = platform_driver_register(&u132_platform_driver);
-+	if (retval)
-+		destroy_workqueue(workqueue);
-+
- 	return retval;
- }
+diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+index bd719e25dd76..2dd17e01e3a7 100644
+--- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
++++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+@@ -3184,6 +3184,7 @@ static ssize_t ehea_probe_port(struct device *dev,
+ 
+ 	if (ehea_add_adapter_mr(adapter)) {
+ 		pr_err("creating MR failed\n");
++		of_node_put(eth_dn);
+ 		return -EIO;
+ 	}
  
 -- 
 2.19.1
