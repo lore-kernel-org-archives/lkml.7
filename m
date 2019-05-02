@@ -2,58 +2,64 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4A9C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1AEC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54517204EC
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B01204EC
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:49:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556812178;
-	bh=sLS4DGfxX2pynUxKD6bhgJx/JP1Hdidayw2k21aaiBg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2tfJs+ae3jSEP8LJ+eoEX30O24E75CPwp5ulp/w0JwgqbgGY9/CkwFt2QLxlxWbg7
-	 lMH5MEAgM6PPi7mYzeKUuqRN94kH92EiziOuuc4jowXmXQuKnxi5HDFsiYoMdiY70r
-	 pjeOC9r4HnH5lG3r2ffHxnlt6Nlti0nUNwnBg1RY=
+	s=default; t=1556812195;
+	bh=ZdkIgil3bDGk0PV79nCsXlQ1XE1jRu/b1f7xqdy9RP0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jl2zO4sxTmElDlRUKqj0HEDSvDJrd9S0evOgYhkkU3Zo10QKmueyH3ksIxnqsHq55
+	 VeVeZRIfjbDhWyAk6VD4AvwToFmcP8evU0SFLqj4QE3kRjBNhPn3wrP7NErwH4VcRO
+	 2Rql0eSHLnE3p6J6jLxnuV/v5qDKjvLqtr55Q624=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfEBPWc (ORCPT
+        id S1726586AbfEBPWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:22:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37794 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:22:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbfEBPW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:22:29 -0400
+        id S1726558AbfEBPWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:22:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C575B20B7C;
-        Thu,  2 May 2019 15:22:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79E4620675;
+        Thu,  2 May 2019 15:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810548;
-        bh=sLS4DGfxX2pynUxKD6bhgJx/JP1Hdidayw2k21aaiBg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nHVvkQTuqLksuKli9TAlKqmSE23hG4hCbu0X0GWl3HBSqVqKop1uIp7LTWsIRijPw
-         E0istgEINdkcI/0+iBtTi5fJ/MmZ1apVwIDKID4r4L+fLOX3wfN0oAn7T1XDPKvD1w
-         J63SgcxfQQQpd82s7PYYSxpjM5bXharQqAUyFnbE=
+        s=default; t=1556810538;
+        bh=ZdkIgil3bDGk0PV79nCsXlQ1XE1jRu/b1f7xqdy9RP0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HjpOZF+WR4eBr2m6/7pFZvBjEeZQXTu8aHB5Bblo1IBrCsgo9kNq6zoFs/KvtgOLH
+         Yq+o2lg7DeH+bYKAxThzcwaDy90Ov4UWSXvB9Y0WkQRiycg6XRI8JGNF0HFrIlY6bK
+         U40ItY8WMB32qP+XeySTYHahd1ogwCQP+PHtFe/E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Douglas Miller <dougmill@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.9 22/32] net: ibm: fix possible object reference leak
-Date:   Thu,  2 May 2019 17:21:08 +0200
-Message-Id: <20190502143321.312803981@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/32] 4.9.173-stable review
+Date:   Thu,  2 May 2019 17:20:46 +0200
+Message-Id: <20190502143314.649935114@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
-References: <20190502143314.649935114@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.173-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.173-rc1
+X-KernelTest-Deadline: 2019-05-04T14:33+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,40 +67,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit be693df3cf9dd113ff1d2c0d8150199efdba37f6 ]
+This is the start of the stable review cycle for the 4.9.173 release.
+There are 32 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-The call to ehea_get_eth_dn returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+Responses should be made by Sat 04 May 2019 02:32:02 PM UTC.
+Anything received after that time might be too late.
 
-Detected by coccinelle with the following warnings:
-./drivers/net/ethernet/ibm/ehea/ehea_main.c:3163:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3154, but without a corresponding object release within this function.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.173-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Douglas Miller <dougmill@linux.ibm.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- drivers/net/ethernet/ibm/ehea/ehea_main.c | 1 +
- 1 file changed, 1 insertion(+)
+thanks,
 
-diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-index bd719e25dd76..2dd17e01e3a7 100644
---- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
-+++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-@@ -3184,6 +3184,7 @@ static ssize_t ehea_probe_port(struct device *dev,
- 
- 	if (ehea_add_adapter_mr(adapter)) {
- 		pr_err("creating MR failed\n");
-+		of_node_put(eth_dn);
- 		return -EIO;
- 	}
- 
--- 
-2.19.1
+greg k-h
 
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.173-rc1
+
+Alex Williamson <alex.williamson@redhat.com>
+    vfio/type1: Limit DMA mappings per container
+
+Kangjie Lu <kjlu@umn.edu>
+    leds: pca9532: fix a potential NULL pointer dereference
+
+Changbin Du <changbin.du@gmail.com>
+    kconfig/[mn]conf: handle backspace (^H) key
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    gpio: of: Fix of_gpiochip_add() error path
+
+raymond pang <raymondpangxd@gmail.com>
+    libata: fix using DMA buffers on stack
+
+Steffen Maier <maier@linux.ibm.com>
+    scsi: zfcp: reduce flood of fcrscn1 trace records on multi-element RSCN
+
+Al Viro <viro@zeniv.linux.org.uk>
+    ceph: fix use-after-free on symlink traversal
+
+Mukesh Ojha <mojha@codeaurora.org>
+    usb: u132-hcd: fix resource leak
+
+Kangjie Lu <kjlu@umn.edu>
+    scsi: qla4xxx: fix a potential NULL pointer dereference
+
+Wen Yang <wen.yang99@zte.com.cn>
+    net: ethernet: ti: fix possible object reference leak
+
+Wen Yang <wen.yang99@zte.com.cn>
+    net: ibm: fix possible object reference leak
+
+Wen Yang <wen.yang99@zte.com.cn>
+    net: xilinx: fix possible object reference leak
+
+Trond Myklebust <trond.myklebust@hammerspace.com>
+    NFS: Fix a typo in nfs_init_timeout_values()
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    staging: rtl8712: uninitialized memory in read_bbreg_hdl()
+
+Lukas Wunner <lukas@wunner.de>
+    net: ks8851: Set initial carrier state to down
+
+Lukas Wunner <lukas@wunner.de>
+    net: ks8851: Delay requesting IRQ until opened
+
+Lukas Wunner <lukas@wunner.de>
+    net: ks8851: Reassert reset pin if chip ID check fails
+
+Lukas Wunner <lukas@wunner.de>
+    net: ks8851: Dequeue RX packets explicitly
+
+Marco Felsch <m.felsch@pengutronix.de>
+    ARM: dts: pfla02: increase phy reset duration
+
+Guido Kiener <guido@kiener-muenchen.de>
+    usb: gadget: net2272: Fix net2272_dequeue()
+
+Guido Kiener <guido@kiener-muenchen.de>
+    usb: gadget: net2280: Fix net2280_dequeue()
+
+Guido Kiener <guido@kiener-muenchen.de>
+    usb: gadget: net2280: Fix overrun of OUT messages
+
+Petr Štetiar <ynezz@true.cz>
+    serial: ar933x_uart: Fix build failure with disabled console
+
+Mao Wenan <maowenan@huawei.com>
+    sc16is7xx: missing unregister/delete driver on error in sc16is7xx_init()
+
+Xin Long <lucien.xin@gmail.com>
+    netfilter: bridge: set skb transport_header before entering NF_INET_PRE_ROUTING
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nft_set_rbtree: check for inactive element after flag mismatch
+
+Aditya Pakki <pakki001@umn.edu>
+    qlcnic: Avoid potential NULL pointer dereference
+
+Martin Schwidefsky <schwidefsky@de.ibm.com>
+    s390: limit brk randomization to 32MB
+
+Helen Koike <helen.koike@collabora.com>
+    ARM: dts: bcm283x: Fix hdmi hpd gpio pull
+
+Hans Verkuil <hverkuil@xs4all.nl>
+    media: vivid: check if the cec_adapter is valid
+
+Gustavo A. R. Silva <garsilva@embeddedor.com>
+    usbnet: ipheth: fix potential null pointer dereference in ipheth_carrier_set
+
+Alexander Kappner <agk@godking.net>
+    usbnet: ipheth: prevent TX queue timeouts when device not ready
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +--
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts           |  2 +-
+ arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi       |  1 +
+ arch/s390/include/asm/elf.h                        | 11 ++++---
+ drivers/ata/libata-zpodd.c                         | 34 ++++++++++++++------
+ drivers/gpio/gpiolib-of.c                          |  8 ++++-
+ drivers/leds/leds-pca9532.c                        |  8 +++--
+ drivers/media/platform/vivid/vivid-vid-common.c    |  3 +-
+ drivers/net/ethernet/ibm/ehea/ehea_main.c          |  1 +
+ drivers/net/ethernet/micrel/ks8851.c               | 36 +++++++++++-----------
+ .../net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c    |  2 ++
+ drivers/net/ethernet/ti/netcp_ethss.c              |  8 +++--
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c  |  2 ++
+ drivers/net/usb/ipheth.c                           | 33 ++++++++++++++------
+ drivers/s390/scsi/zfcp_fc.c                        | 21 ++++++++++---
+ drivers/scsi/qla4xxx/ql4_os.c                      |  2 ++
+ drivers/staging/rtl8712/rtl8712_cmd.c              | 10 +-----
+ drivers/staging/rtl8712/rtl8712_cmd.h              |  2 +-
+ drivers/tty/serial/ar933x_uart.c                   | 24 +++++----------
+ drivers/tty/serial/sc16is7xx.c                     | 12 ++++++--
+ drivers/usb/gadget/udc/net2272.c                   |  1 +
+ drivers/usb/gadget/udc/net2280.c                   |  8 ++---
+ drivers/usb/host/u132-hcd.c                        |  3 ++
+ drivers/vfio/vfio_iommu_type1.c                    | 14 +++++++++
+ fs/ceph/inode.c                                    |  2 +-
+ fs/nfs/client.c                                    |  2 +-
+ net/bridge/br_netfilter_hooks.c                    |  1 +
+ net/bridge/br_netfilter_ipv6.c                     |  2 ++
+ net/netfilter/nft_set_rbtree.c                     |  7 ++---
+ scripts/kconfig/lxdialog/inputbox.c                |  3 +-
+ scripts/kconfig/nconf.c                            |  2 +-
+ scripts/kconfig/nconf.gui.c                        |  3 +-
+ 32 files changed, 176 insertions(+), 96 deletions(-)
 
 
