@@ -2,57 +2,109 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F72C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7995AC04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899AE2063F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4137B208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 13:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556805342;
+	bh=BJOpwYueOcMmsggx8Fs2FsoWiOkdNNNmyLmNM6egwks=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=uUMRJNl+egDUXtO8XpuVF1d0aVw3vEURCfWDEOLds+JRF+rT3DgZkmuzCVDZTxmiK
+	 DexbE65KMKWzEpj10C7+Gycb7h/jJS/rejh2uYzzs7vvC/C9Ej628Pga9BU9oabolu
+	 n+4/s6qPPjV4qA6XFFbn3t8lzMb5pHYmaSmYbdL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbfEBNyg (ORCPT
+        id S1726362AbfEBNzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 09:54:36 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46160 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfEBNyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 09:54:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38742374;
-        Thu,  2 May 2019 06:54:35 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58D213F908;
-        Thu,  2 May 2019 06:54:33 -0700 (PDT)
-Date:   Thu, 2 May 2019 14:54:30 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arch@vger.kernel.org, linux-sh@vger.kernel.org,
-        x86@kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/5] arm64: don't use asm-generic/ptrace.h
-Message-ID: <20190502135430.GB25142@arrakis.emea.arm.com>
-References: <20190501173943.5688-1-hch@lst.de>
- <20190501173943.5688-2-hch@lst.de>
+        Thu, 2 May 2019 09:55:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbfEBNzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 09:55:40 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEA572063F;
+        Thu,  2 May 2019 13:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556805340;
+        bh=BJOpwYueOcMmsggx8Fs2FsoWiOkdNNNmyLmNM6egwks=;
+        h=Date:From:To:Cc:Subject:From;
+        b=yzPXz2+vCTN0geh39VSe/WuBNMOq1IwugOctsJXAf0lKMKsQghfE66XQDFTf79gcm
+         NL1DSUuFg6hCmbgP67kzc97xQeQBA+SqDYu+dUQ0Seny19h67di6UymCeOeX5ZPprK
+         +EFohsCtQ6e3b/emE61Xm0/TEBG2b+tALVHkEBiA=
+Date:   Thu, 2 May 2019 08:55:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <alex.gagniuc@dellteam.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: [GIT PULL] PCI fixes for v5.1
+Message-ID: <20190502135538.GB11579@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190501173943.5688-2-hch@lst.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 01:39:39PM -0400, Christoph Hellwig wrote:
-> Doing the indirection through macros for the regs accessors just
-> makes them harder to read, so implement the helpers directly.
-> 
-> Note that only the helpers actually used are implemented now.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Hi Linus,
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+I apologize for sending these so late in the cycle.  We went back and forth
+about how to deal with the unexpected logging of intentional link state
+changes and finally decided to just config them off by default.
+
+PCI fixes:
+
+  - Stop ignoring "pci=disable_acs_redir" parameter (Logan Gunthorpe)
+
+  - Use shared MSI/MSI-X vector for Link Bandwidth Management (Alex
+    Williamson)
+
+  - Add Kconfig option for Link Bandwidth notification messages (Keith
+    Busch)
+
+
+The following changes since commit 3943af9d01e94330d0cfac6fccdbc829aad50c92:
+
+  PCI: pciehp: Ignore Link State Changes after powering off a slot (2019-04-10 16:06:43 -0500)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.1-fixes-3
+
+for you to fetch changes up to 2078e1e7f7e0e21bd0291908f3037c39e666d27b:
+
+  PCI/LINK: Add Kconfig option (default off) (2019-05-02 08:34:32 -0500)
+
+----------------------------------------------------------------
+pci-v5.1-fixes-3
+
+----------------------------------------------------------------
+Alex Williamson (1):
+      PCI/portdrv: Use shared MSI/MSI-X vector for Bandwidth Management
+
+Keith Busch (1):
+      PCI/LINK: Add Kconfig option (default off)
+
+Logan Gunthorpe (1):
+      PCI: Fix issue with "pci=disable_acs_redir" parameter being ignored
+
+ drivers/pci/pci.c               | 19 +++++++++++++++++--
+ drivers/pci/pcie/Kconfig        |  8 ++++++++
+ drivers/pci/pcie/Makefile       |  2 +-
+ drivers/pci/pcie/portdrv.h      |  4 ++++
+ drivers/pci/pcie/portdrv_core.c |  3 ++-
+ 5 files changed, 32 insertions(+), 4 deletions(-)
