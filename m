@@ -7,67 +7,75 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86FEC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B40DC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCFA206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D71206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 19:50:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="CG2fV4o5"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="B0XWQCa9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfEBTuX (ORCPT
+        id S1726620AbfEBTu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 15:50:23 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37564 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfEBTuV (ORCPT
+        Thu, 2 May 2019 15:50:27 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45634 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfEBTuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 15:50:21 -0400
-Received: by mail-qt1-f196.google.com with SMTP id e2so2447972qtb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 12:50:20 -0700 (PDT)
+        Thu, 2 May 2019 15:50:23 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t1so3363543qtc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 12:50:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=poorly.run; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xXRjMMNgMJ7AR2t39ARJeKFFNMtttw1Pb6pW3nWpIeo=;
-        b=CG2fV4o5E0VsgIzVpLdO9WU6LS3o8P2C48qJUjmPnYfDrmg84QHO0QIQOJnK8kPYU4
-         WA+BhLJ1wZ4AdvT8WN9gG8qZY44ljZM9LeAdeJOXmWkcL7SuDfwmZYcTyQ7k8pB44HMo
-         Np+rEOV30AH23gmvihg2oC2E8NN8N1QkZa21B4uAdDtrP0lhcQ/HGiZC4g4Sw/bKz4zi
-         j2XMVV2DFtAwJ5K4kFGEZtwc9KyZ24EFhC4qXkLV7M00oIgr68pOCBvT8SHkRaMryZCQ
-         s0y0oMBLA+nMXiZ5o//+ZekDzXYRmFkD3lXmS1IgOmvU4me41NkTWG2u7jV450M/UrmD
-         Hl6w==
+        bh=mGmNoeHSYXc1FE5QvnrP3TRMonnsa/k3IOpt5JYsQTc=;
+        b=B0XWQCa9CTrrT2KxYU6i22NGDu773B+SALqyfrZcGwp7mrueRgO9v8GIzKRv+BWpZZ
+         GaVZ+RqQImrKnp6n4VwjmJCVIkrQnlAq0u9ekgrClXSvZXfc6J6GzrWJT2JlqKq/vSwB
+         B37Oo1DBSQOjpkkzz4MWWabhEYYmRFhdddHyud/l6Nox0cb5p+wirJuAp/ouvnKLUE5C
+         C99vrBJXMhZ2gBfYiLc4p0BqLEGtBn4iQpefPCOPlygNf+iKuK36XWoB/YZ+XZpW47Mb
+         GhoFIBU4IukMak6ITCFb3QY6rBCu+sgcj4aUmz8evxRhkgP6XCrbWhmtEHgiXOo1Rhps
+         rq6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xXRjMMNgMJ7AR2t39ARJeKFFNMtttw1Pb6pW3nWpIeo=;
-        b=bhmKQdgcUD0BnVvZejA6sSCKcnTS6Yl9ZjsL0sUTvR85GFTXn5DLYVugkCILz7K1PK
-         POQaDMLSMxb9KWd/IPGh2md6VTTOl9pKTTR5l9JJ9WLS4DiVaAI2WtjHVu/p/HVBt6UQ
-         4iKkQUzGpbOnT/ggFjX/4yPnTUhT3ZzjRxZAvz7ATEFQ5NIHxgMfdStwea0EoQJ309s1
-         HjuDLT0lAn0pHVvglkLKBX23kNOkM4oKhr8AD765s6HPnVETdK68iZclgZYA4PwBx3Lq
-         Znsns/see0dlCMxhSqKNfDCtGM31NdvzUhCaxAte4zDGMrc0wLvawP0e2ktytOk2HiJF
-         CQjQ==
-X-Gm-Message-State: APjAAAV8GCSnoN0YTjd7cgSeT599toqzaHnI/fD0atafDdXxOrsWo4OC
-        QnzDCXkeklvSrtfrOlrsRUWM6w==
-X-Google-Smtp-Source: APXvYqzWq5f7dg4chyhc8zhSywRQMasOAeaYaXAtFzVut/t+aNoPXXx9mn7F3d8OSMUcDa/VuWMd3g==
-X-Received: by 2002:a0c:ff21:: with SMTP id x1mr4814780qvt.30.1556826619691;
-        Thu, 02 May 2019 12:50:19 -0700 (PDT)
+        bh=mGmNoeHSYXc1FE5QvnrP3TRMonnsa/k3IOpt5JYsQTc=;
+        b=k/RJ+71uj1I4tmuUi0y/XSMirHTiXnH+t/GPEwxWIzc5Zcn7BA/Yc097xu9KRdr4YH
+         eBIDEGNiw4sAxtSfJxWYCkhslsO4Nw2JlS1Um8wovst9ts8gL1iuAUt7puYra/tHprLv
+         WnT92zcqAHZtIVr3MVzofT2Vd4qNEbHZ+DCeI6/0BDAyRl6mUo+O9bCzwCh7BwpkFOQd
+         nxIghjf9UxRHH3BiMJ58aYBYT+pmvFtfkRWvYT7gdcM8dMea1JSg7WUJYQ/UkbX7h9Gs
+         vW4XF2xnQbD0NOzC57hhZrCw2n8b6yVpb/FUds1WBOtH4hyYROFN2bRkMIy93j2aqHk6
+         GYCg==
+X-Gm-Message-State: APjAAAXD1cctbG3gNq2k636q6WhzEhKbPSGyqbAj3CuX1ioh9z9L2BkG
+        KZftfn5EKaQ7J9hiJz1lXNPk+g==
+X-Google-Smtp-Source: APXvYqzD5HxU6IDW5U14g8wrOfelDFRpJ+I3ZAAp+mHUaIu5IT/F9QO1Q4MwbqchHJMg7LmdHO+eRw==
+X-Received: by 2002:ac8:3696:: with SMTP id a22mr2780028qtc.296.1556826621944;
+        Thu, 02 May 2019 12:50:21 -0700 (PDT)
 Received: from rosewood.cam.corp.google.com ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id k36sm34366qtc.52.2019.05.02.12.50.18
+        by smtp.gmail.com with ESMTPSA id k36sm34366qtc.52.2019.05.02.12.50.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 12:50:19 -0700 (PDT)
+        Thu, 02 May 2019 12:50:21 -0700 (PDT)
 From:   Sean Paul <sean@poorly.run>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Sean Paul <seanpaul@chromium.org>, Daniel Vetter <daniel@ffwll.ch>,
         =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
         <ville.syrjala@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Eric Anholt <eric@anholt.net>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 03/10] drm: Add atomic variants for bridge enable/disable
-Date:   Thu,  2 May 2019 15:49:45 -0400
-Message-Id: <20190502194956.218441-4-sean@poorly.run>
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v3 04/10] drm: Convert connector_helper_funcs->atomic_check to accept drm_atomic_state
+Date:   Thu,  2 May 2019 15:49:46 -0400
+Message-Id: <20190502194956.218441-5-sean@poorly.run>
 X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 In-Reply-To: <20190502194956.218441-1-sean@poorly.run>
 References: <20190502194956.218441-1-sean@poorly.run>
@@ -81,321 +89,283 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Paul <seanpaul@chromium.org>
 
-This patch adds atomic variants for all of
-pre_enable/enable/disable/post_disable bridge functions. These will be
-called from the appropriate atomic helper functions. If the bridge
-driver doesn't implement the atomic version of the function, we will
-fall back to the vanilla implementation.
+Everyone who implements connector_helper_funcs->atomic_check reaches
+into the connector state to get the atomic state. Instead of continuing
+this pattern, change the callback signature to just give atomic state
+and let the driver determine what it does and does not need from it.
 
-Note that some drivers call drm_bridge_disable directly, and these cases
-are not covered. It's up to the driver to decide whether to implement
-both atomic_disable and disable, or if it's not necessary.
+Eventually all atomic functions should do this, but that's just too much
+busy work for me.
 
 Changes in v3:
-- Added to the patchset
+- Added to the set
 
 Cc: Daniel Vetter <daniel@ffwll.ch>
 Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Ben Skeggs <bskeggs@redhat.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc: Eric Anholt <eric@anholt.net>
 Signed-off-by: Sean Paul <seanpaul@chromium.org>
 ---
- drivers/gpu/drm/drm_atomic_helper.c |   8 +-
- drivers/gpu/drm/drm_bridge.c        | 110 +++++++++++++++++++++++++++
- include/drm/drm_bridge.h            | 114 ++++++++++++++++++++++++++++
- 3 files changed, 228 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/drm_atomic_helper.c      |  4 ++--
+ drivers/gpu/drm/i915/intel_atomic.c      |  8 +++++---
+ drivers/gpu/drm/i915/intel_dp_mst.c      |  7 ++++---
+ drivers/gpu/drm/i915/intel_drv.h         |  2 +-
+ drivers/gpu/drm/i915/intel_sdvo.c        |  9 +++++----
+ drivers/gpu/drm/i915/intel_tv.c          |  8 +++++---
+ drivers/gpu/drm/nouveau/dispnv50/disp.c  |  5 +++--
+ drivers/gpu/drm/rcar-du/rcar_lvds.c      | 12 +++++++-----
+ drivers/gpu/drm/vc4/vc4_txp.c            |  7 ++++---
+ include/drm/drm_modeset_helper_vtables.h |  2 +-
+ 10 files changed, 37 insertions(+), 27 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index 1f81ca8daad7..9d9e47276839 100644
+index 9d9e47276839..fa5a367507c1 100644
 --- a/drivers/gpu/drm/drm_atomic_helper.c
 +++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -995,7 +995,7 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
- 		 * Each encoder has at most one connector (since we always steal
- 		 * it away), so we won't call disable hooks twice.
- 		 */
--		drm_bridge_disable(encoder->bridge);
-+		drm_atomic_bridge_disable(encoder->bridge, old_state);
- 
- 		/* Right function depends upon target state. */
- 		if (funcs) {
-@@ -1009,7 +1009,7 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
- 				funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
+@@ -683,7 +683,7 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
  		}
  
--		drm_bridge_post_disable(encoder->bridge);
-+		drm_atomic_bridge_post_disable(encoder->bridge, old_state);
+ 		if (funcs->atomic_check)
+-			ret = funcs->atomic_check(connector, new_connector_state);
++			ret = funcs->atomic_check(connector, state);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -725,7 +725,7 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
+ 			continue;
+ 
+ 		if (funcs->atomic_check)
+-			ret = funcs->atomic_check(connector, new_connector_state);
++			ret = funcs->atomic_check(connector, state);
+ 		if (ret)
+ 			return ret;
  	}
- 
- 	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
-@@ -1308,7 +1308,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- 		 * Each encoder has at most one connector (since we always steal
- 		 * it away), so we won't call enable hooks twice.
- 		 */
--		drm_bridge_pre_enable(encoder->bridge);
-+		drm_atomic_bridge_pre_enable(encoder->bridge, old_state);
- 
- 		if (funcs) {
- 			if (funcs->atomic_enable)
-@@ -1319,7 +1319,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
- 				funcs->commit(encoder);
- 		}
- 
--		drm_bridge_enable(encoder->bridge);
-+		drm_atomic_bridge_enable(encoder->bridge, old_state);
- 	}
- 
- 	drm_atomic_helper_commit_writebacks(dev, old_state);
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index 138b2711d389..accccb586adf 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -352,6 +352,116 @@ void drm_bridge_enable(struct drm_bridge *bridge)
+diff --git a/drivers/gpu/drm/i915/intel_atomic.c b/drivers/gpu/drm/i915/intel_atomic.c
+index b844e8840c6f..e8a5b82e9242 100644
+--- a/drivers/gpu/drm/i915/intel_atomic.c
++++ b/drivers/gpu/drm/i915/intel_atomic.c
+@@ -103,12 +103,14 @@ int intel_digital_connector_atomic_set_property(struct drm_connector *connector,
  }
- EXPORT_SYMBOL(drm_bridge_enable);
  
-+/**
-+ * drm_atomic_bridge_disable - disables all bridges in the encoder chain
-+ * @bridge: bridge control structure
-+ * @state: atomic state being committed
-+ *
-+ * Calls &drm_bridge_funcs.atomic_disable (falls back on
-+ * &drm_bridge_funcs.disable) op for all the bridges in the encoder chain,
-+ * starting from the last bridge to the first. These are called before calling
-+ * the encoder's prepare op.
-+ *
-+ * Note: the bridge passed should be the one closest to the encoder
-+ */
-+void drm_atomic_bridge_disable(struct drm_bridge *bridge,
-+			       struct drm_atomic_state *state)
-+{
-+	if (!bridge)
-+		return;
-+
-+	drm_atomic_bridge_disable(bridge->next, state);
-+
-+	if (bridge->funcs->atomic_disable)
-+		bridge->funcs->atomic_disable(bridge, state);
-+	else if (bridge->funcs->disable)
-+		bridge->funcs->disable(bridge);
-+}
-+EXPORT_SYMBOL(drm_atomic_bridge_disable);
-+
-+/**
-+ * drm_atomic_bridge_post_disable - cleans up after disabling all bridges in the
-+ *				    encoder chain
-+ * @bridge: bridge control structure
-+ * @state: atomic state being committed
-+ *
-+ * Calls &drm_bridge_funcs.atomic_post_disable (falls back on
-+ * &drm_bridge_funcs.post_disable) op for all the bridges in the encoder chain,
-+ * starting from the first bridge to the last. These are called after completing
-+ * the encoder's prepare op.
-+ *
-+ * Note: the bridge passed should be the one closest to the encoder
-+ */
-+void drm_atomic_bridge_post_disable(struct drm_bridge *bridge,
-+				    struct drm_atomic_state *state)
-+{
-+	if (!bridge)
-+		return;
-+
-+	if (bridge->funcs->atomic_post_disable)
-+		bridge->funcs->atomic_post_disable(bridge, state);
-+	else if (bridge->funcs->post_disable)
-+		bridge->funcs->post_disable(bridge);
-+
-+	drm_atomic_bridge_post_disable(bridge->next, state);
-+}
-+EXPORT_SYMBOL(drm_atomic_bridge_post_disable);
-+
-+/**
-+ * drm_bridge_pre_enable - prepares for enabling all bridges in the encoder
-+ *			   chain
-+ * @bridge: bridge control structure
-+ * @state: atomic state being committed
-+ *
-+ * Calls &drm_bridge_funcs.pre_enable (falls back on
-+ * &drm_bridge_funcs.pre_enable) op for all the bridges in the encoder chain,
-+ * starting from the last bridge to the first. These are called before calling
-+ * the encoder's commit op.
-+ *
-+ * Note: the bridge passed should be the one closest to the encoder
-+ */
-+void drm_atomic_bridge_pre_enable(struct drm_bridge *bridge,
-+				  struct drm_atomic_state *state)
-+{
-+	if (!bridge)
-+		return;
-+
-+	drm_atomic_bridge_pre_enable(bridge->next, state);
-+
-+	if (bridge->funcs->atomic_pre_enable)
-+		bridge->funcs->atomic_pre_enable(bridge, state);
-+	else if (bridge->funcs->pre_enable)
-+		bridge->funcs->pre_enable(bridge);
-+}
-+EXPORT_SYMBOL(drm_atomic_bridge_pre_enable);
-+
-+/**
-+ * drm_atomic_bridge_enable - enables all bridges in the encoder chain
-+ * @bridge: bridge control structure
-+ * @state: atomic state being committed
-+ *
-+ * Calls &drm_bridge_funcs.atomic_enable (falls back on
-+ * &drm_bridge_funcs.enable) op for all the bridges in the encoder chain,
-+ * starting from the first bridge to the last. These are called after completing
-+ * the encoder's commit op.
-+ *
-+ * Note: the bridge passed should be the one closest to the encoder
-+ */
-+void drm_atomic_bridge_enable(struct drm_bridge *bridge,
-+			      struct drm_atomic_state *state)
-+{
-+	if (!bridge)
-+		return;
-+
-+	if (bridge->funcs->atomic_enable)
-+		bridge->funcs->atomic_enable(bridge, state);
-+	else if (bridge->funcs->enable)
-+		bridge->funcs->enable(bridge);
-+
-+	drm_atomic_bridge_enable(bridge->next, state);
-+}
-+EXPORT_SYMBOL(drm_atomic_bridge_enable);
-+
- #ifdef CONFIG_OF
- /**
-  * of_drm_find_bridge - find the bridge corresponding to the device node in
-diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index d4428913a4e1..86f436895c7b 100644
---- a/include/drm/drm_bridge.h
-+++ b/include/drm/drm_bridge.h
-@@ -237,6 +237,111 @@ struct drm_bridge_funcs {
- 	 * The enable callback is optional.
- 	 */
- 	void (*enable)(struct drm_bridge *bridge);
-+
-+	/**
-+	 * @atomic_pre_enable:
-+	 *
-+	 * This callback should enable the bridge. It is called right before
-+	 * the preceding element in the display pipe is enabled. If the
-+	 * preceding element is a bridge this means it's called before that
-+	 * bridge's @atomic_pre_enable or @pre_enable function. If the preceding
-+	 * element is a &drm_encoder it's called right before the encoder's
-+	 * &drm_encoder_helper_funcs.atomic_enable,
-+	 * &drm_encoder_helper_funcs.enable, &drm_encoder_helper_funcs.commit or
-+	 * &drm_encoder_helper_funcs.dpms hook.
-+	 *
-+	 * The display pipe (i.e. clocks and timing signals) feeding this bridge
-+	 * will not yet be running when this callback is called. The bridge must
-+	 * not enable the display link feeding the next bridge in the chain (if
-+	 * there is one) when this callback is called.
-+	 *
-+	 * Note that this function will only be invoked in the context of an
-+	 * atomic commit. It will not be invoked from &drm_bridge_pre_enable. It
-+	 * would be prudent to also provide an implementation of @pre_enable if
-+	 * you are expecting driver calls into &drm_bridge_pre_enable.
-+	 *
-+	 * The @atomic_pre_enable callback is optional.
-+	 */
-+	void (*atomic_pre_enable)(struct drm_bridge *bridge,
-+				  struct drm_atomic_state *state);
-+
-+	/**
-+	 * @atomic_enable:
-+	 *
-+	 * This callback should enable the bridge. It is called right after
-+	 * the preceding element in the display pipe is enabled. If the
-+	 * preceding element is a bridge this means it's called after that
-+	 * bridge's @atomic_enable or @enable function. If the preceding element
-+	 * is a &drm_encoder it's called right after the encoder's
-+	 * &drm_encoder_helper_funcs.atomic_enable,
-+	 * &drm_encoder_helper_funcs.enable, &drm_encoder_helper_funcs.commit or
-+	 * &drm_encoder_helper_funcs.dpms hook.
-+	 *
-+	 * The bridge can assume that the display pipe (i.e. clocks and timing
-+	 * signals) feeding it is running when this callback is called. This
-+	 * callback must enable the display link feeding the next bridge in the
-+	 * chain if there is one.
-+	 *
-+	 * Note that this function will only be invoked in the context of an
-+	 * atomic commit. It will not be invoked from &drm_bridge_enable. It
-+	 * would be prudent to also provide an implementation of @enable if
-+	 * you are expecting driver calls into &drm_bridge_enable.
-+	 *
-+	 * The enable callback is optional.
-+	 */
-+	void (*atomic_enable)(struct drm_bridge *bridge,
-+			      struct drm_atomic_state *state);
-+	/**
-+	 * @atomic_disable:
-+	 *
-+	 * This callback should disable the bridge. It is called right before
-+	 * the preceding element in the display pipe is disabled. If the
-+	 * preceding element is a bridge this means it's called before that
-+	 * bridge's @atomic_disable or @disable vfunc. If the preceding element
-+	 * is a &drm_encoder it's called right before the
-+	 * &drm_encoder_helper_funcs.atomic_disable,
-+	 * &drm_encoder_helper_funcs.disable, &drm_encoder_helper_funcs.prepare
-+	 * or &drm_encoder_helper_funcs.dpms hook.
-+	 *
-+	 * The bridge can assume that the display pipe (i.e. clocks and timing
-+	 * signals) feeding it is still running when this callback is called.
-+	 *
-+	 * Note that this function will only be invoked in the context of an
-+	 * atomic commit. It will not be invoked from &drm_bridge_disable. It
-+	 * would be prudent to also provide an implementation of @disable if
-+	 * you are expecting driver calls into &drm_bridge_disable.
-+	 *
-+	 * The disable callback is optional.
-+	 */
-+	void (*atomic_disable)(struct drm_bridge *bridge,
-+			       struct drm_atomic_state *state);
-+
-+	/**
-+	 * @atomic_post_disable:
-+	 *
-+	 * This callback should disable the bridge. It is called right after the
-+	 * preceding element in the display pipe is disabled. If the preceding
-+	 * element is a bridge this means it's called after that bridge's
-+	 * @atomic_post_disable or @post_disable function. If the preceding
-+	 * element is a &drm_encoder it's called right after the encoder's
-+	 * &drm_encoder_helper_funcs.atomic_disable,
-+	 * &drm_encoder_helper_funcs.disable, &drm_encoder_helper_funcs.prepare
-+	 * or &drm_encoder_helper_funcs.dpms hook.
-+	 *
-+	 * The bridge must assume that the display pipe (i.e. clocks and timing
-+	 * singals) feeding it is no longer running when this callback is
-+	 * called.
-+	 *
-+	 * Note that this function will only be invoked in the context of an
-+	 * atomic commit. It will not be invoked from &drm_bridge_post_disable.
-+	 * It would be prudent to also provide an implementation of
-+	 * @post_disable if you are expecting driver calls into
-+	 * &drm_bridge_post_disable.
-+	 *
-+	 * The post_disable callback is optional.
-+	 */
-+	void (*atomic_post_disable)(struct drm_bridge *bridge,
-+				    struct drm_atomic_state *state);
+ int intel_digital_connector_atomic_check(struct drm_connector *conn,
+-					 struct drm_connector_state *new_state)
++					 struct drm_atomic_state *state)
+ {
++	struct drm_connector_state *new_state =
++		drm_atomic_get_new_connector_state(state, conn);
+ 	struct intel_digital_connector_state *new_conn_state =
+ 		to_intel_digital_connector_state(new_state);
+ 	struct drm_connector_state *old_state =
+-		drm_atomic_get_old_connector_state(new_state->state, conn);
++		drm_atomic_get_old_connector_state(state, conn);
+ 	struct intel_digital_connector_state *old_conn_state =
+ 		to_intel_digital_connector_state(old_state);
+ 	struct drm_crtc_state *crtc_state;
+@@ -118,7 +120,7 @@ int intel_digital_connector_atomic_check(struct drm_connector *conn,
+ 	if (!new_state->crtc)
+ 		return 0;
+ 
+-	crtc_state = drm_atomic_get_new_crtc_state(new_state->state, new_state->crtc);
++	crtc_state = drm_atomic_get_new_crtc_state(state, new_state->crtc);
+ 
+ 	/*
+ 	 * These properties are handled by fastset, and might not end
+diff --git a/drivers/gpu/drm/i915/intel_dp_mst.c b/drivers/gpu/drm/i915/intel_dp_mst.c
+index 19d81cef2ab6..89cfec128ba0 100644
+--- a/drivers/gpu/drm/i915/intel_dp_mst.c
++++ b/drivers/gpu/drm/i915/intel_dp_mst.c
+@@ -143,9 +143,10 @@ static int intel_dp_mst_compute_config(struct intel_encoder *encoder,
+ 
+ static int
+ intel_dp_mst_atomic_check(struct drm_connector *connector,
+-			  struct drm_connector_state *new_conn_state)
++			  struct drm_atomic_state *state)
+ {
+-	struct drm_atomic_state *state = new_conn_state->state;
++	struct drm_connector_state *new_conn_state =
++		drm_atomic_get_new_connector_state(state, connector);
+ 	struct drm_connector_state *old_conn_state =
+ 		drm_atomic_get_old_connector_state(state, connector);
+ 	struct intel_connector *intel_connector =
+@@ -155,7 +156,7 @@ intel_dp_mst_atomic_check(struct drm_connector *connector,
+ 	struct drm_dp_mst_topology_mgr *mgr;
+ 	int ret;
+ 
+-	ret = intel_digital_connector_atomic_check(connector, new_conn_state);
++	ret = intel_digital_connector_atomic_check(connector, state);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/gpu/drm/i915/intel_drv.h b/drivers/gpu/drm/i915/intel_drv.h
+index f8c7b291fdc3..88571b8e8d62 100644
+--- a/drivers/gpu/drm/i915/intel_drv.h
++++ b/drivers/gpu/drm/i915/intel_drv.h
+@@ -2481,7 +2481,7 @@ int intel_digital_connector_atomic_set_property(struct drm_connector *connector,
+ 						struct drm_property *property,
+ 						u64 val);
+ int intel_digital_connector_atomic_check(struct drm_connector *conn,
+-					 struct drm_connector_state *new_state);
++					 struct drm_atomic_state *state);
+ struct drm_connector_state *
+ intel_digital_connector_duplicate_state(struct drm_connector *connector);
+ 
+diff --git a/drivers/gpu/drm/i915/intel_sdvo.c b/drivers/gpu/drm/i915/intel_sdvo.c
+index 68f497493d43..72ea164b971c 100644
+--- a/drivers/gpu/drm/i915/intel_sdvo.c
++++ b/drivers/gpu/drm/i915/intel_sdvo.c
+@@ -2342,9 +2342,10 @@ static const struct drm_connector_funcs intel_sdvo_connector_funcs = {
  };
  
- /**
-@@ -314,6 +419,15 @@ void drm_bridge_mode_set(struct drm_bridge *bridge,
- void drm_bridge_pre_enable(struct drm_bridge *bridge);
- void drm_bridge_enable(struct drm_bridge *bridge);
+ static int intel_sdvo_atomic_check(struct drm_connector *conn,
+-				   struct drm_connector_state *new_conn_state)
++				   struct drm_atomic_state *state)
+ {
+-	struct drm_atomic_state *state = new_conn_state->state;
++	struct drm_connector_state *new_conn_state =
++		drm_atomic_get_new_connector_state(state, conn);
+ 	struct drm_connector_state *old_conn_state =
+ 		drm_atomic_get_old_connector_state(state, conn);
+ 	struct intel_sdvo_connector_state *old_state =
+@@ -2356,13 +2357,13 @@ static int intel_sdvo_atomic_check(struct drm_connector *conn,
+ 	    (memcmp(&old_state->tv, &new_state->tv, sizeof(old_state->tv)) ||
+ 	     memcmp(&old_conn_state->tv, &new_conn_state->tv, sizeof(old_conn_state->tv)))) {
+ 		struct drm_crtc_state *crtc_state =
+-			drm_atomic_get_new_crtc_state(new_conn_state->state,
++			drm_atomic_get_new_crtc_state(state,
+ 						      new_conn_state->crtc);
  
-+void drm_atomic_bridge_disable(struct drm_bridge *bridge,
-+			       struct drm_atomic_state *state);
-+void drm_atomic_bridge_post_disable(struct drm_bridge *bridge,
-+				    struct drm_atomic_state *state);
-+void drm_atomic_bridge_pre_enable(struct drm_bridge *bridge,
-+				  struct drm_atomic_state *state);
-+void drm_atomic_bridge_enable(struct drm_bridge *bridge,
-+			      struct drm_atomic_state *state);
-+
- #ifdef CONFIG_DRM_PANEL_BRIDGE
- struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
- 					u32 connector_type);
+ 		crtc_state->connectors_changed = true;
+ 	}
+ 
+-	return intel_digital_connector_atomic_check(conn, new_conn_state);
++	return intel_digital_connector_atomic_check(conn, state);
+ }
+ 
+ static const struct drm_connector_helper_funcs intel_sdvo_connector_helper_funcs = {
+diff --git a/drivers/gpu/drm/i915/intel_tv.c b/drivers/gpu/drm/i915/intel_tv.c
+index 3924c4944e1f..a41c5b467c14 100644
+--- a/drivers/gpu/drm/i915/intel_tv.c
++++ b/drivers/gpu/drm/i915/intel_tv.c
+@@ -1817,16 +1817,18 @@ static const struct drm_connector_funcs intel_tv_connector_funcs = {
+ };
+ 
+ static int intel_tv_atomic_check(struct drm_connector *connector,
+-				 struct drm_connector_state *new_state)
++				 struct drm_atomic_state *state)
+ {
++	struct drm_connector_state *new_state;
+ 	struct drm_crtc_state *new_crtc_state;
+ 	struct drm_connector_state *old_state;
+ 
++	new_state = drm_atomic_get_new_connector_state(state, connector);
+ 	if (!new_state->crtc)
+ 		return 0;
+ 
+-	old_state = drm_atomic_get_old_connector_state(new_state->state, connector);
+-	new_crtc_state = drm_atomic_get_new_crtc_state(new_state->state, new_state->crtc);
++	old_state = drm_atomic_get_old_connector_state(state, connector);
++	new_crtc_state = drm_atomic_get_new_crtc_state(state, new_state->crtc);
+ 
+ 	if (old_state->tv.mode != new_state->tv.mode ||
+ 	    old_state->tv.margins.left != new_state->tv.margins.left ||
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index 4b1650f51955..7ba373f493b2 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -948,11 +948,12 @@ nv50_mstc_get_modes(struct drm_connector *connector)
+ 
+ static int
+ nv50_mstc_atomic_check(struct drm_connector *connector,
+-		       struct drm_connector_state *new_conn_state)
++		       struct drm_atomic_state *state)
+ {
+-	struct drm_atomic_state *state = new_conn_state->state;
+ 	struct nv50_mstc *mstc = nv50_mstc(connector);
+ 	struct drm_dp_mst_topology_mgr *mgr = &mstc->mstm->mgr;
++	struct drm_connector_state *new_conn_state =
++		drm_atomic_get_new_connector_state(state, connector);
+ 	struct drm_connector_state *old_conn_state =
+ 		drm_atomic_get_old_connector_state(state, connector);
+ 	struct drm_crtc_state *crtc_state;
+diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+index 620b51aab291..5b81ba2a7f27 100644
+--- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
++++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
+@@ -92,13 +92,15 @@ static int rcar_lvds_connector_get_modes(struct drm_connector *connector)
+ }
+ 
+ static int rcar_lvds_connector_atomic_check(struct drm_connector *connector,
+-					    struct drm_connector_state *state)
++					    struct drm_atomic_state *state)
+ {
+ 	struct rcar_lvds *lvds = connector_to_rcar_lvds(connector);
+ 	const struct drm_display_mode *panel_mode;
++	struct drm_connector_state *conn_state;
+ 	struct drm_crtc_state *crtc_state;
+ 
+-	if (!state->crtc)
++	conn_state = drm_atomic_get_new_connector_state(state, connector);
++	if (!conn_state->crtc)
+ 		return 0;
+ 
+ 	if (list_empty(&connector->modes)) {
+@@ -110,9 +112,9 @@ static int rcar_lvds_connector_atomic_check(struct drm_connector *connector,
+ 				      struct drm_display_mode, head);
+ 
+ 	/* We're not allowed to modify the resolution. */
+-	crtc_state = drm_atomic_get_crtc_state(state->state, state->crtc);
+-	if (IS_ERR(crtc_state))
+-		return PTR_ERR(crtc_state);
++	crtc_state = drm_atomic_get_crtc_state(state, conn_state->crtc);
++	if (!crtc_state)
++		return -EINVAL;
+ 
+ 	if (crtc_state->mode.hdisplay != panel_mode->hdisplay ||
+ 	    crtc_state->mode.vdisplay != panel_mode->vdisplay)
+diff --git a/drivers/gpu/drm/vc4/vc4_txp.c b/drivers/gpu/drm/vc4/vc4_txp.c
+index c8b89a78f9f4..96f91c1b4b6e 100644
+--- a/drivers/gpu/drm/vc4/vc4_txp.c
++++ b/drivers/gpu/drm/vc4/vc4_txp.c
+@@ -221,17 +221,18 @@ static const u32 txp_fmts[] = {
+ };
+ 
+ static int vc4_txp_connector_atomic_check(struct drm_connector *conn,
+-					struct drm_connector_state *conn_state)
++					  struct drm_atomic_state *state)
+ {
++	struct drm_connector_state *conn_state;
+ 	struct drm_crtc_state *crtc_state;
+ 	struct drm_framebuffer *fb;
+ 	int i;
+ 
++	conn_state = drm_atomic_get_new_connector_state(state, conn);
+ 	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
+ 		return 0;
+ 
+-	crtc_state = drm_atomic_get_new_crtc_state(conn_state->state,
+-						   conn_state->crtc);
++	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
+ 
+ 	fb = conn_state->writeback_job->fb;
+ 	if (fb->width != crtc_state->mode.hdisplay ||
+diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
+index de57fb40cb6e..adc8b7cf64b5 100644
+--- a/include/drm/drm_modeset_helper_vtables.h
++++ b/include/drm/drm_modeset_helper_vtables.h
+@@ -1020,7 +1020,7 @@ struct drm_connector_helper_funcs {
+ 	 * deadlock.
+ 	 */
+ 	int (*atomic_check)(struct drm_connector *connector,
+-			    struct drm_connector_state *state);
++			    struct drm_atomic_state *state);
+ 
+ 	/**
+ 	 * @atomic_commit:
 -- 
 Sean Paul, Software Engineer, Google / Chromium OS
 
