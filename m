@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B1FC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5DEC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC5220B7C
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33C121670
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810907;
-	bh=Q984PhZJaqWQhoxwI2oOnGJKlVH9apJtEXUjudJ3Zlw=;
+	s=default; t=1556810911;
+	bh=PeQNwpKu156ZX5RNfPNd+bn0ZWD4GX+lQ/kHFxQtfDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iyXSGUBDYG/3A1vqB0hX1CuMhJp/Q3O6Wxb6kIvHXLg9Dk+TTr6PhmY1bAWHJzkHy
-	 how+bJIGkJNN4oLaFd+/tgpbhLAIhhaO+eTQUkb5V//oQVaXmV9mVTELBmUroJgrlZ
-	 bYtKVDxBfAc/ScJ1tcxMyHHui606zfc+98Cs5rUg=
+	b=LQCB5eNc9X2eGgb+0+8lCxS5qOpOGRJ9xfTIgmVk9w5+AZh0PB9o9Yay5iZcp89hS
+	 5l0GUt/2G1poUwfyV9C6YyvbmGsRAweoRXE+GWUxUA5H7zp9NDKNBfOwDzfTfNCvAV
+	 VXmw+BtNWWio5o2YgKKO/wJ0mn0K33Vh74WQ+14k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbfEBP20 (ORCPT
+        id S1728240AbfEBP2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:28:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45584 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:28:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727366AbfEBP2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:28:24 -0400
+        id S1728210AbfEBP23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:28:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05FB8216FD;
-        Thu,  2 May 2019 15:28:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 341AB20B7C;
+        Thu,  2 May 2019 15:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810903;
-        bh=Q984PhZJaqWQhoxwI2oOnGJKlVH9apJtEXUjudJ3Zlw=;
+        s=default; t=1556810908;
+        bh=PeQNwpKu156ZX5RNfPNd+bn0ZWD4GX+lQ/kHFxQtfDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QusinD/Por2o7JKochmdAwRsS4yUJHXy5zP0Pe8hAxm/oTRhWlILkrZe07M9FeVYE
-         vtG42CVn+bnYJh0xi0/QnpvsiJXew2G1I3ecXWoAIHVDXPhHsqME6cwXvByxmdG5XA
-         gfjWvfr/4tHURBq3aysUn3WY9cn0KYR6ZKb21QGA=
+        b=VFreuhLqZ5bZ159gQu3IqQe+hNibS0j5WMsQTJS0C/mIZZ31baOH0yuCrxrtkEsl7
+         uJ3MggSOgPGKbiYGC1ywkxneyrh5i5MXWUdYr1RL1NxwlXPzKA6dV1B9xTGO3bwHnu
+         aCC+3NR9CQZe4LDHntTsq/LAhhqV3mtTv3sxhKrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 52/72] drm/meson: Uninstall IRQ handler
-Date:   Thu,  2 May 2019 17:21:14 +0200
-Message-Id: <20190502143337.548443721@linuxfoundation.org>
+Subject: [PATCH 4.19 54/72] scsi: mpt3sas: Fix kernel panic during expander reset
+Date:   Thu,  2 May 2019 17:21:16 +0200
+Message-Id: <20190502143337.677951915@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
 References: <20190502143333.437607839@linuxfoundation.org>
@@ -61,54 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2d8f92897ad816f5dda54b2ed2fd9f2d7cb1abde ]
+[ Upstream commit c2fe742ff6e77c5b4fe4ad273191ddf28fdea25e ]
 
-meson_drv_unbind() doesn't unregister the IRQ handler, which can lead to
-use-after-free if the IRQ fires after unbind:
+During expander reset handling, the driver invokes kernel function
+scsi_host_find_tag() to obtain outstanding requests associated with the
+scsi host managed by the driver. Driver loops from tag value zero to hba
+queue depth to obtain the outstanding scmds. But when blk-mq is enabled,
+the block layer may return stale entry for one or more requests. This may
+lead to kernel panic if the returned value is inaccessible or the memory
+pointed by the returned value is reused.
 
-[   64.656876] Unable to handle kernel paging request at virtual address ffff000011706dbc
-...
-[   64.662001] pc : meson_irq+0x18/0x30 [meson_drm]
+Reference of upstream discussion:
 
-I'm assuming that a similar problem could happen on the error path of
-bind(), so uninstall the IRQ handler there as well.
+	https://patchwork.kernel.org/patch/10734933/
 
-Fixes: bbbe775ec5b5 ("drm: Add support for Amlogic Meson Graphic Controller")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190322152657.13752-2-jean-philippe.brucker@arm.com
+Instead of calling scsi_host_find_tag() API for each and every smid (smid
+is tag +1) from one to shost->can_queue, now driver will call this API (to
+obtain the outstanding scmd) only for those smid's which are outstanding at
+the driver level.
+
+Driver will determine whether this smid is outstanding at driver level by
+looking into it's corresponding MPI request frame, if its MPI request frame
+is empty, then it means that this smid is free and does not need to call
+scsi_host_find_tag() for it.  By doing this, driver will invoke
+scsi_host_find_tag() for only those tags which are outstanding at the
+driver level.
+
+Driver will check whether particular MPI request frame is empty or not by
+looking into the "DevHandle" field. If this field is zero then it means
+that this MPI request is empty. For active MPI request DevHandle must be
+non-zero.
+
+Also driver will memset the MPI request frame once the corresponding scmd
+is processed (i.e. just before calling
+scmd->done function).
+
+Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/gpu/drm/meson/meson_drv.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/scsi/mpt3sas/mpt3sas_base.c  |  6 ++++++
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c | 12 ++++++++++++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
-index 4a72fa53a1d5..588b3b0c8315 100644
---- a/drivers/gpu/drm/meson/meson_drv.c
-+++ b/drivers/gpu/drm/meson/meson_drv.c
-@@ -300,10 +300,12 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+index b59bba3e6516..8776330175e3 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -3280,12 +3280,18 @@ mpt3sas_base_free_smid(struct MPT3SAS_ADAPTER *ioc, u16 smid)
  
- 	ret = drm_dev_register(drm, 0);
- 	if (ret)
--		goto free_drm;
-+		goto uninstall_irq;
+ 	if (smid < ioc->hi_priority_smid) {
+ 		struct scsiio_tracker *st;
++		void *request;
  
- 	return 0;
+ 		st = _get_st_from_smid(ioc, smid);
+ 		if (!st) {
+ 			_base_recovery_check(ioc);
+ 			return;
+ 		}
++
++		/* Clear MPI request frame */
++		request = mpt3sas_base_get_msg_frame(ioc, smid);
++		memset(request, 0, ioc->request_sz);
++
+ 		mpt3sas_base_clear_st(ioc, st);
+ 		_base_recovery_check(ioc);
+ 		return;
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+index 622832e55211..73d661a0ecbb 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -1474,11 +1474,23 @@ mpt3sas_scsih_scsi_lookup_get(struct MPT3SAS_ADAPTER *ioc, u16 smid)
+ {
+ 	struct scsi_cmnd *scmd = NULL;
+ 	struct scsiio_tracker *st;
++	Mpi25SCSIIORequest_t *mpi_request;
  
-+uninstall_irq:
-+	drm_irq_uninstall(drm);
- free_drm:
- 	drm_dev_put(drm);
+ 	if (smid > 0  &&
+ 	    smid <= ioc->scsiio_depth - INTERNAL_SCSIIO_CMDS_COUNT) {
+ 		u32 unique_tag = smid - 1;
  
-@@ -321,6 +323,7 @@ static void meson_drv_unbind(struct device *dev)
- 	struct drm_device *drm = priv->drm;
- 
- 	drm_dev_unregister(drm);
-+	drm_irq_uninstall(drm);
- 	drm_kms_helper_poll_fini(drm);
- 	drm_fbdev_cma_fini(priv->fbdev);
- 	drm_mode_config_cleanup(drm);
++		mpi_request = mpt3sas_base_get_msg_frame(ioc, smid);
++
++		/*
++		 * If SCSI IO request is outstanding at driver level then
++		 * DevHandle filed must be non-zero. If DevHandle is zero
++		 * then it means that this smid is free at driver level,
++		 * so return NULL.
++		 */
++		if (!mpi_request->DevHandle)
++			return scmd;
++
+ 		scmd = scsi_host_find_tag(ioc->shost, unique_tag);
+ 		if (scmd) {
+ 			st = scsi_cmd_priv(scmd);
 -- 
 2.19.1
 
