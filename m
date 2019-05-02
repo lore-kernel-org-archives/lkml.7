@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62665C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF534C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34BE22085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B4720675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556810640;
-	bh=WXyegsyKEmqZpDPXlLMlEes5aVGl9UTln7Gj+Pu2KWE=;
+	s=default; t=1556810643;
+	bh=LWbf59hWOGa48MXU4u1gRBfv7NgBBEpEqdzsjS+HTGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kd7/eIe9779Ur5Qmsg4Wgq72OvyKBC3RWrBaUFT+K3HHReKW7if70hgvDOtFAT/6f
-	 MZJdiOTGVdpj/h8kCQkkPTljUmgMfR0nsCsSz2AKpBY0py4J8jSr3gKVdRUOhh7Nhb
-	 jSnb4chu1dl5A5/cIftBwRkhTqSxBumavWSpb7Ko=
+	b=Sti0dV0P4eQD4GhQ9bgVCubBaXDs+sXcBdmxOU4ZqBMCPJ7GUOyhSWhKzD2J2uHXx
+	 h2MJKoCEJkR178tVNQ2WfIy6DD/NHFQ/WKKw1qieIN/pvvJeek1DftUEZGsBVlAYEf
+	 DZfm9XLsXAPlzZpMRKiHMSfVvIYdzlPH1krWNvDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfEBPX6 (ORCPT
+        id S1727188AbfEBPYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:23:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39624 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 11:24:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbfEBPXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:23:54 -0400
+        id S1726521AbfEBPX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:23:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D15BA20675;
-        Thu,  2 May 2019 15:23:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45B3620675;
+        Thu,  2 May 2019 15:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556810633;
-        bh=WXyegsyKEmqZpDPXlLMlEes5aVGl9UTln7Gj+Pu2KWE=;
+        s=default; t=1556810638;
+        bh=LWbf59hWOGa48MXU4u1gRBfv7NgBBEpEqdzsjS+HTGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ieXa+GfPkcu/UHwyPDlIV+V/W5SN8/2oFVgyDEIcALBQLlVspAbh1QphC+afoqmtt
-         TXhqk42zMKrLMv6+t6OnfSIcKcygptEarOaVCmMJMjbWbHiq3Cr9+svBaFCqChTMBF
-         DZ6yRPb9mJubATTyiOu4CiDGFA2imnP8SPpgCNg4=
+        b=XCFgEg9gIBgd1Ha8Z4hBjNF3xFQESeEB1WmQb5nxhGBhoPizFgqEdUEo/n3OOqB/y
+         9lAzwE9/PWzigj7H8lIGXi11iH1v4zcxpuvPdU4onv9T/3IuzFeVfGcV7a1eAyBS8r
+         FVu5+CJKZq5l+nvFjqHBpkd9Y3XiGM14N+xyiTLQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Christ <s.christ@phytec.de>,
-        Christian Hemp <c.hemp@phytec.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Frank Pavlic <f.pavlic@kunbus.de>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Nishanth Menon <nm@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.14 20/49] ARM: dts: pfla02: increase phy reset duration
-Date:   Thu,  2 May 2019 17:20:57 +0200
-Message-Id: <20190502143326.527704630@linuxfoundation.org>
+Subject: [PATCH 4.14 22/49] net: ks8851: Reassert reset pin if chip ID check fails
+Date:   Thu,  2 May 2019 17:20:59 +0200
+Message-Id: <20190502143326.769493558@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
 References: <20190502143323.397051088@linuxfoundation.org>
@@ -62,46 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 032f85c9360fb1a08385c584c2c4ed114b33c260 ]
+[ Upstream commit 761cfa979a0c177d6c2d93ef5585cd79ae49a7d5 ]
 
-Increase the reset duration to ensure correct phy functionality. The
-reset duration is taken from barebox commit 52fdd510de ("ARM: dts:
-pfla02: use long enough reset for ethernet phy"):
+Commit 73fdeb82e963 ("net: ks8851: Add optional vdd_io regulator and
+reset gpio") amended the ks8851 driver to briefly assert the chip's
+reset pin on probe. It also amended the probe routine's error path to
+reassert the reset pin if a subsequent initialization step fails.
 
-  Use a longer reset time for ethernet phy Micrel KSZ9031RNX. Otherwise a
-  small percentage of modules have 'transmission timeouts' errors like
+However the commit misplaced reassertion of the reset pin in the error
+path such that it is not performed if the check of the Chip ID and
+Enable Register (CIDER) fails. The error path is therefore slightly
+asymmetrical to the probe routine's body. Fix it.
 
-  barebox@Phytec phyFLEX-i.MX6 Quad Carrier-Board:/ ifup eth0
-  warning: No MAC address set. Using random address 7e:94:4d:02:f8:f3
-  eth0: 1000Mbps full duplex link detected
-  eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-
-Cc: Stefan Christ <s.christ@phytec.de>
-Cc: Christian Hemp <c.hemp@phytec.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Fixes: 3180f956668e ("ARM: dts: Phytec imx6q pfla02 and pbab01 support")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Nishanth Menon <nm@ti.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/micrel/ks8851.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-index d81b0078a100..25b0704c6054 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-@@ -89,6 +89,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
-+	phy-reset-duration = <10>; /* in msecs */
- 	phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
- 	phy-supply = <&vdd_eth_io_reg>;
- 	status = "disabled";
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index 556666b0d756..546a79b9cb15 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -1545,9 +1545,9 @@ static int ks8851_probe(struct spi_device *spi)
+ 	free_irq(ndev->irq, ks);
+ 
+ err_irq:
++err_id:
+ 	if (gpio_is_valid(gpio))
+ 		gpio_set_value(gpio, 0);
+-err_id:
+ 	regulator_disable(ks->vdd_reg);
+ err_reg:
+ 	regulator_disable(ks->vdd_io);
 -- 
 2.19.1
 
