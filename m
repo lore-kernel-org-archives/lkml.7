@@ -2,89 +2,169 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D82C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915B3C04AAA
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D07620675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5916A20675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:13:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="j1pLWpAD"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="au183SU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbfEBPMl (ORCPT
+        id S1726506AbfEBPNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:12:41 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:32990 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726203AbfEBPMl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:12:41 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1DF77C01F1;
-        Thu,  2 May 2019 15:12:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1556809962; bh=nbxnvC5IsjfFaLonIOAbwjN79asF92ckV1yrBYSaHus=;
-        h=From:To:Cc:Subject:Date:From;
-        b=j1pLWpADLhsfNTWATom9WObhnk570vMXr7kPhUx+D390jR7MkcziBiqgQx7mSPLZj
-         dl5F0VQIBjCaMZG3EZPtDykg4PQ8P9/q3ps53NVvB13xOJKHw6dLXVO7TPoaOkYe5Q
-         7XtYLmsvMIW3Wm8l871apSCNuXZaPWQbJiJpKQZbdOSxIicrZpQlIVWRDDAb45yvB7
-         pnFHdOr8ns4MtCc2nfapPZTmQbt892/ggvK/9uC8GzU+vsOXcayuMgJBC88cfth8mw
-         7iGHzdhGdAEHrH31y2tM134FTIF300YpmR3HO9hwpqJ49ctTOHChZHTcnH6UL+sYyG
-         yI6JmLg+cEtQA==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id CB4D0A0256;
-        Thu,  2 May 2019 15:12:34 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id D9C103F475;
-        Thu,  2 May 2019 17:12:33 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC node
-Date:   Thu,  2 May 2019 17:12:32 +0200
-Message-Id: <7f36bbadc0df4c93c396690dab59f34775de3874.1556788240.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 2 May 2019 11:13:02 -0400
+Received: from mail-eopbgr710078.outbound.protection.outlook.com ([40.107.71.78]:54784
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726370AbfEBPNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 11:13:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jBSjZC2wxTuWVNV36/ryoUBIhXFbwmAJOS7ExayD94A=;
+ b=au183SU2eryBBNioxJxkkhYHaRR3DxUXh69X0sKVn0OFOUVe0OKMxlGjWovjTKFuMfhqXulcAZQPvYroa/cu457l7/fmu6UL7fQupQ6wcXw5iwF48bGFsS3p+RetdAWT08vVE69ZwTdmE1iSFAnTW1wjaH2QG9OY1dX1R6M+VM8=
+Received: from BN7PR02MB5124.namprd02.prod.outlook.com (20.176.26.153) by
+ BN7PR02MB4099.namprd02.prod.outlook.com (52.132.223.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.14; Thu, 2 May 2019 15:12:56 +0000
+Received: from BN7PR02MB5124.namprd02.prod.outlook.com
+ ([fe80::4155:72d9:c5a:70ef]) by BN7PR02MB5124.namprd02.prod.outlook.com
+ ([fe80::4155:72d9:c5a:70ef%7]) with mapi id 15.20.1856.008; Thu, 2 May 2019
+ 15:12:55 +0000
+From:   Kalyani Akula <kalyania@xilinx.com>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+CC:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pombredanne@nexb.com" <pombredanne@nexb.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Sarat Chand Savitala <saratcha@xilinx.com>
+Subject: RE: [RFC PATCH V3 0/4] Add Xilinx's ZynqMP SHA3 driver support
+Thread-Topic: [RFC PATCH V3 0/4] Add Xilinx's ZynqMP SHA3 driver support
+Thread-Index: AQHVANLEhtzBTB57XkuBybCTxm8h4qZXu4sAgAAyTOA=
+Date:   Thu, 2 May 2019 15:12:55 +0000
+Message-ID: <BN7PR02MB512413C534A8EFA925105441AF340@BN7PR02MB5124.namprd02.prod.outlook.com>
+References: <1556793282-17346-1-git-send-email-kalyani.akula@xilinx.com>
+ <20190502120012.GA19008@Red>
+In-Reply-To: <20190502120012.GA19008@Red>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=kalyania@xilinx.com; 
+x-originating-ip: [123.201.77.56]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 41c7f480-5f35-4302-928b-08d6cf10a7a9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BN7PR02MB4099;
+x-ms-traffictypediagnostic: BN7PR02MB4099:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BN7PR02MB4099B436E6AE1A8A88D6DB57AF340@BN7PR02MB4099.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0025434D2D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(346002)(396003)(376002)(39860400002)(13464003)(189003)(199004)(68736007)(81166006)(14444005)(6436002)(186003)(476003)(7696005)(81156014)(8676002)(53936002)(107886003)(76116006)(966005)(71190400001)(71200400001)(486006)(316002)(2906002)(14454004)(8936002)(54906003)(55016002)(6916009)(9686003)(74316002)(305945005)(76176011)(11346002)(3846002)(99286004)(73956011)(478600001)(6116002)(52536014)(256004)(229853002)(6306002)(102836004)(26005)(5660300002)(86362001)(25786009)(6506007)(33656002)(4326008)(66556008)(64756008)(66446008)(66476007)(446003)(53546011)(7736002)(66946007)(6246003)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4099;H:BN7PR02MB5124.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: G/dumqUMbhxOu2A1WpzKE2A9u254WhClmjfJ/iS+lK8W8uWZ1x/UNiANqLHbFbF6wwlJ3vouqkFpjL8LK828JylmOX7hdRtRlqFPJk8GbSjZRhA6sGoxFpAKjN+CQxYgSumfTIOmXv9Cvm5AolGX0BmbhvawReW5O+eqDHS2RlhmDh/IQPjcGiasKyxvv8+wQxefZh5IMio1bmksj/Skv1oe01NbkixgB5umvXHjQ63MQ/rQNesdECT5X8lGSQz1XeZeLgor/li75uYIej4Tzw4LL/0+TR+RinzSSNAMpoOaIIkOKVPsi0Z6g/AZ+W0MdZjLQ9w2NgVOoBIh77/N6n39rGw5pJlyXUVa/PEgL0kGQvL0QVd5tYuDX0tEvwMEONfq8vtI/ORf1Wd4dNf7Yba9oUhD7/z5t+9RkWAAS5U=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41c7f480-5f35-4302-928b-08d6cf10a7a9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2019 15:12:55.5740
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GMAC controller on HSDK boards supports 256 Hash Table size so we need to
-add the multicast filter bins property. This allows for the Hash filter
-to work properly using stmmac driver.
+Hi Corentin,
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Vineet Gupta <vgupta@synopsys.com>
----
- arch/arc/boot/dts/hsdk.dts | 1 +
- 1 file changed, 1 insertion(+)
+Please find my response inline.
 
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 69bc1c9e8e50..b0f059377ab0 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -187,6 +187,7 @@
- 			interrupt-names = "macirq";
- 			phy-mode = "rgmii";
- 			snps,pbl = <32>;
-+			snps,multicast-filter-bins = <256>;
- 			clocks = <&gmacclk>;
- 			clock-names = "stmmaceth";
- 			phy-handle = <&phy0>;
--- 
-2.7.4
+> -----Original Message-----
+> From: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Sent: Thursday, May 2, 2019 5:30 PM
+> To: Kalyani Akula <kalyania@xilinx.com>
+> Cc: herbert@gondor.apana.org.au; kstewart@linuxfoundation.org;
+> gregkh@linuxfoundation.org; tglx@linutronix.de; pombredanne@nexb.com;
+> linux-crypto@vger.kernel.org; linux-kernel@vger.kernel.org;
+> netdev@vger.kernel.org; Sarat Chand Savitala <saratcha@xilinx.com>; Kalya=
+ni
+> Akula <kalyania@xilinx.com>
+> Subject: Re: [RFC PATCH V3 0/4] Add Xilinx's ZynqMP SHA3 driver support
+>=20
+> On Thu, May 02, 2019 at 04:04:38PM +0530, Kalyani Akula wrote:
+> > This patch set adds support for
+> > - dt-binding docs for Xilinx ZynqMP SHA3 driver
+> > - Adds communication layer support for sha_hash in zynqmp.c
+> > - Adds Xilinx ZynqMP driver for SHA3 Algorithm
+> > - Adds device tree node for ZynqMP SHA3 driver
+> >
+> > V3 Changes :
+> > - Removed zynqmp_sha_import and export APIs.The reason as follows The
+> > user space code does an accept on an already accepted FD when we
+> > create AF_ALG socket and call accept on it, it calls af_alg_accept and
+> > not hash_accept.
+> > import and export APIs are called from hash_accept.
+> > The flow is as below
+> > accept--> af_alg_accept-->hash_accept_parent-->hash_accept_parent_noke
+> > accept--> y
+> > for hash salg_type.
+> > - Resolved comments from
+> >         https://patchwork.kernel.org/patch/10753719/
+> >
+>=20
+>=20
+> Your driver still doesnt handle the case where two hash are done in paral=
+lel.
+>=20
 
+Our Firmware uses IPI protocol to send this SHA3 requests to SHA3 HW engine=
+, which doesn't support parallel processing of 2 hash requests.
+The flow is=20
+SHA3 request from App -> SHA3 driver-> ZynqMp driver-> Firmware (which does=
+n't support parallel processing of 2 requests) -> SHA3 HW Engine
+
+
+> Furthermore, you miss the export/import functions.
+>=20
+
+When user space code does an accept on an already accepted FD as below
+sockfd =3D socket(AF_ALG, SOCK_SEQPACKET, 0);
+bind(sockfd, (struct sockaddr *)&sa, sizeof(sa));
+fd =3D accept(sockfd, NULL, 0);
+
+where my sockaddr is=20
+struct sockaddr_alg sa =3D {
+        .salg_family =3D AF_ALG,
+        .salg_type =3D "hash",
+        .salg_name =3D "xilinx-sha3-384"
+ };
+
+Upon calling accept the flow in the kernel is as mentioned
+accept--> af_alg_accept-->hash_accept_parent-->hash_accept_parent_nokey
+for hash salg_type.
+
+And where import and export functions are called from hash_accept. hence, t=
+hese functions never be called from the application.
+So, I removed those from the driver.
+
+Regards
+Kalyani.
+
+> Regards
