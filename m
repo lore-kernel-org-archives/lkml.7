@@ -2,154 +2,129 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDE4C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F74C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02DCB20675
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852A320675
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 15:13:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Q5+YixOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfEBPNX (ORCPT
+        id S1726531AbfEBPN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 11:13:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41638 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbfEBPNW (ORCPT
+        Thu, 2 May 2019 11:13:28 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44138 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbfEBPN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 11:13:22 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c12so3883897wrt.8
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 08:13:21 -0700 (PDT)
+        Thu, 2 May 2019 11:13:26 -0400
+Received: by mail-ed1-f65.google.com with SMTP id b8so2420465edm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 08:13:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5ttmCfNHKGzwxlnjGzyfTPAX1HPNHfiu4VdFi4O4DyQ=;
+        b=Q5+YixOwtcl+4zO8aokgXqzbO7ByEAkjAnbpMDQrK4aspKQdO1tAFLBz+ibAf4JtRP
+         MtMrpJw5pe0RFpGVfEop3W90oWWUwX5I0wk5pFmvmyJhFT+I7y4tFJinNoDX7kJTsAlm
+         fFqDhTB5HMnuI5k1jOoOv6rvphRB5LLIVVtaAk5LYH9W91mjFL1qq+AE/3j1kGPUh5WV
+         0jm4iC+W0StEUWkM1MCPma0j7kQCAWnicl5ebOnigmHSo9cj6Ci/HuMdpbN6nZXZZGdI
+         SiMtVGt2MPvc70vSMUouOo/mZ6CKZ8wcQ1cmBpm08QPkRsCmmRkYojOFbsGO5981F6Pc
+         7zng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3pLbw6omsWuPgSQnYCfN0GtkX9q9KvEVqwsUzq+USwk=;
-        b=m7ffLxVVMIWFWbyUledvFUxzr2ACg7jD5fi3xbWcVgSPuGbht0dgYN/T4OncButPh9
-         1eXz3BzJc4rfuo9PRknue9oXaZbyMHz4zu0Et+whSWivv9He+qT8XtXifGG4gX3BfZnA
-         V64AmC5NrnApboJ7Ah/vvnDOtb3mQq36BE2ZIozDHPoDHSR6Xq58XYSz4cgJQvtCWZ32
-         D4moBWf6Hm37d1E3Kz41AZZ19rW0yoZ/Kxjg8EWdDEukNofJq2P0e0UQkIB0Qz8w5FL0
-         Da+/54ogMp7Rou6L9Om+uezT/zE/GPnh3a0srkgDuKCU1+WfD0RD6CS8a3xn67mHfrCB
-         a3NQ==
-X-Gm-Message-State: APjAAAVtoIm7v/hZc9jZ/Q6Qp3CcdxT/Alr9ajVp9jrxb/c8FQODi3GA
-        TPYf00g7sUTGdQ86LD2XejEQNQ==
-X-Google-Smtp-Source: APXvYqwcDElKSu7Ll3TBTrQeIHFS+taBb8h9T8Er1GBYOMMnHim4Ip2e7PhnRkQqvRYX1CkcHdeQfw==
-X-Received: by 2002:adf:b696:: with SMTP id j22mr3233428wre.85.1556810000810;
-        Thu, 02 May 2019 08:13:20 -0700 (PDT)
-Received: from mcroce-redhat.mxp.redhat.com (nat-pool-mxp-t.redhat.com. [149.6.153.186])
-        by smtp.gmail.com with ESMTPSA id 195sm3166760wme.32.2019.05.02.08.13.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 08:13:19 -0700 (PDT)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vlad Buslov <vladbu@mellanox.com>
-Subject: [PATCH net] cls_cgroup: avoid panic when receiving a packet before filter set
-Date:   Thu,  2 May 2019 17:13:18 +0200
-Message-Id: <20190502151318.1884-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5ttmCfNHKGzwxlnjGzyfTPAX1HPNHfiu4VdFi4O4DyQ=;
+        b=eO3kRvBsIN4KJq2Aufoqz3oKt1za9WBCX4nDC07nPwRKtVoJq4jlcDWgINCkfVF2ia
+         13yVKd/t171mVVibiZZWRkk3BPohpMGcRYkfDVdZr0Cbz5/IqxiSC7/K9A7tXZ8CPWh9
+         e81ILrz+UpsvN/t2uI30ViUowr2sFN86VV9pevCfFKm4uJfGKvgLt6XG/WzXgh7u+1Ui
+         8RI8xCiLBenOj6KM+JuQTK31USuVW1NLV2su9XX+TnOgLrxVVFFL++PFGMPvAdcbkVlE
+         XxoShsuK0s0n5sAlKKkCPVTPI5aQAC4HQ/SeDW9KipIxI0QMASkst+PP8sN8Sh+y+JeM
+         11UA==
+X-Gm-Message-State: APjAAAXoppyMK2D8BvpoD9TByEvM1vX57XUUB26znrzEAGwLPcyJaCUI
+        dh4y2kfgUEq0fXFcj4bbzkBsJQ==
+X-Google-Smtp-Source: APXvYqzbZnPxesYqJUHH3LTOVolsqPtEh2mVGBACgK9pOLdw3TSBtApNqX1UDZ0UjivMgf6LtqPiAg==
+X-Received: by 2002:a50:a3dc:: with SMTP id t28mr2892874edb.256.1556810003605;
+        Thu, 02 May 2019 08:13:23 -0700 (PDT)
+Received: from brauner.io ([178.19.218.101])
+        by smtp.gmail.com with ESMTPSA id o47sm65156edc.37.2019.05.02.08.13.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 02 May 2019 08:13:22 -0700 (PDT)
+Date:   Thu, 2 May 2019 17:13:21 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Jonathan Kowalski <bl0pbl33p@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>, kernel-team@android.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        KJ Tsanaktsidis <ktsanaktsidis@zendesk.com>,
+        linux-kselftest@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>
+Subject: Re: [PATCH v2 1/2] Add polling support to pidfd
+Message-ID: <20190502151320.cvc6uc3b4bmww23k@brauner.io>
+References: <20190430162154.61314-1-joel@joelfernandes.org>
+ <20190501151312.GA30235@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190501151312.GA30235@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a cgroup classifier is added, there is a small time interval in
-which tp->root is NULL. If we receive a packet in this small time slice
-a NULL pointer dereference will happen, leading to a kernel panic:
+On Wed, May 01, 2019 at 05:13:12PM +0200, Oleg Nesterov wrote:
+> On 04/30, Joel Fernandes (Google) wrote:
+> >
+> > +static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
+> > +{
+> > +	struct task_struct *task;
+> > +	struct pid *pid = file->private_data;
+> > +	int poll_flags = 0;
+> > +
+> > +	poll_wait(file, &pid->wait_pidfd, pts);
+> > +
+> > +	rcu_read_lock();
+> > +	task = pid_task(pid, PIDTYPE_PID);
+> > +	WARN_ON_ONCE(task && !thread_group_leader(task));
+>                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> Ah, this is not right, we can race with de_thread() which changes the leader,
+> in particular it does leader->exit_signal = -1 to indicate that this thread is
+> no longer a group leader, but pid_task() can return the old leader.
+> 
+> We are going to check thread_group_empty() below, it won't be true in this case,
+> so this race should not make any harm.
+> 
+> Just remove this WARN_ON(). We can't use has_group_leader_pid(), it can return
+> false if pid_task() returns the new leader.
+> 
+> Otherwise I see no problems.
 
-    # mkdir /sys/fs/cgroup/net_cls/0
-    # echo 0x100001 >  /sys/fs/cgroup/net_cls/0/net_cls.classid
-    # echo $$ >/sys/fs/cgroup/net_cls/0/tasks
-    # ping -qfb 255.255.255.255 -I eth0 &>/dev/null &
-    # tc qdisc add dev eth0 root handle 10: htb
-    # while : ; do
-    > tc filter add dev eth0 parent 10: protocol ip prio 10 handle 1: cgroup
-    > tc filter delete dev eth0
-    > done
-    Unable to handle kernel NULL pointer dereference at virtual address 0000000000000028
-    Mem abort info:
-      ESR = 0x96000005
-      Exception class = DABT (current EL), IL = 32 bits
-      SET = 0, FnV = 0
-      EA = 0, S1PTW = 0
-    Data abort info:
-      ISV = 0, ISS = 0x00000005
-      CM = 0, WnR = 0
-    user pgtable: 4k pages, 39-bit VAs, pgdp = 0000000098a7ff91
-    [0000000000000028] pgd=0000000000000000, pud=0000000000000000
-    Internal error: Oops: 96000005 [#1] SMP
-    Modules linked in: sch_htb cls_cgroup algif_hash af_alg nls_iso8859_1 nls_cp437 vfat fat xhci_plat_hcd m25p80 spi_nor xhci_hcd mtd usbcore usb_common spi_orion sfp i2c_mv64xxx phy_generic mdio_i2c marvell10g i2c_core mvpp2 mvmdio phylink sbsa_gwdt ip_tables x_tables autofs4
-    Process ping (pid: 5421, stack limit = 0x00000000b20b1505)
-    CPU: 3 PID: 5421 Comm: ping Not tainted 5.1.0-rc6 #31
-    Hardware name: Marvell 8040 MACCHIATOBin Double-shot (DT)
-    pstate: 60000005 (nZCv daif -PAN -UAO)
-    pc : cls_cgroup_classify+0x80/0xec [cls_cgroup]
-    lr : cls_cgroup_classify+0x34/0xec [cls_cgroup]
-    sp : ffffff8012e6b850
-    x29: ffffff8012e6b850 x28: ffffffc423dd3c00
-    x27: ffffff801093ebc0 x26: ffffffc425a85b00
-    x25: 0000000020000000 x24: 0000000000000000
-    x23: ffffff8012e6b910 x22: ffffffc428db4900
-    x21: ffffff8012e6b910 x20: 0000000000100001
-    x19: 0000000000000000 x18: 0000000000000000
-    x17: 0000000000000000 x16: 0000000000000000
-    x15: 0000000000000000 x14: 0000000000000000
-    x13: 0000000000000000 x12: 000000000000001c
-    x11: 0000000000000018 x10: ffffff8012e6b840
-    x9 : 0000000000003580 x8 : 000000000000009d
-    x7 : 0000000000000002 x6 : ffffff8012e6b860
-    x5 : 000000007cd66ffe x4 : 000000009742a193
-    x3 : ffffff800865b4d8 x2 : ffffff8012e6b910
-    x1 : 0000000000000400 x0 : ffffffc42c38f300
-    Call trace:
-     cls_cgroup_classify+0x80/0xec [cls_cgroup]
-     tcf_classify+0x78/0x138
-     htb_enqueue+0x74/0x320 [sch_htb]
-     __dev_queue_xmit+0x3e4/0x9d0
-     dev_queue_xmit+0x24/0x30
-     ip_finish_output2+0x2e4/0x4d0
-     ip_finish_output+0x1d8/0x270
-     ip_mc_output+0xa8/0x240
-     ip_local_out+0x58/0x68
-     ip_send_skb+0x2c/0x88
-     ip_push_pending_frames+0x44/0x50
-     raw_sendmsg+0x458/0x830
-     inet_sendmsg+0x54/0xe8
-     sock_sendmsg+0x34/0x50
-     __sys_sendto+0xd0/0x120
-     __arm64_sys_sendto+0x30/0x40
-     el0_svc_common.constprop.0+0x88/0xf8
-     el0_svc_handler+0x2c/0x38
-     el0_svc+0x8/0xc
-    Code: 39496001 360002a1 b9425c14 34000274 (79405260)
+I'll remove the WARN_ON() check when applying this. Can I get your
+Acked/Review, Oleg?
 
-Suggested-by: Cong Wang <xiyou.wangcong@gmail.com>
-Fixes: ed76f5edccc9 ("net: sched: protect filter_chain list with filter_chain_lock mutex")
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- net/sched/cls_cgroup.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/sched/cls_cgroup.c b/net/sched/cls_cgroup.c
-index 4c1567854f95..706a160142ea 100644
---- a/net/sched/cls_cgroup.c
-+++ b/net/sched/cls_cgroup.c
-@@ -32,6 +32,8 @@ static int cls_cgroup_classify(struct sk_buff *skb, const struct tcf_proto *tp,
- 	struct cls_cgroup_head *head = rcu_dereference_bh(tp->root);
- 	u32 classid = task_get_classid(skb);
- 
-+	if (unlikely(!head))
-+		return -1;
- 	if (!classid)
- 		return -1;
- 	if (!tcf_em_tree_match(skb, &head->ematches, NULL))
--- 
-2.21.0
-
+Christian
