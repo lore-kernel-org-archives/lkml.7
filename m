@@ -2,129 +2,242 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E134C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D13C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B04320873
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556797725;
-	bh=NxECKS4hO+fvuuCrWF9YKIVWO4SJGdSkM8vdKG2zimY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e/jgzKZoSz/dnBxuVHiHiD1kmJby377VAXaz8Qhbd/HCfrBM2EwHnB6DYnFEMROz1
-	 71fOvvlFsxgMeXCrY8k2NRnOwSs5X/YDLiS+nZ+/DISBSKxUSK+4oiY+LSgmCEq8KN
-	 K00lJoeD+iQA1X1BSwOVUVhjOozedxwsBL0bVYSQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0054A2081C
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 11:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfEBLso (ORCPT
+        id S1726303AbfEBLst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 07:48:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33214 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 07:48:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56146 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbfEBLsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 07:48:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726473AbfEBLsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 07:48:47 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F972081C;
-        Thu,  2 May 2019 11:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556797721;
-        bh=NxECKS4hO+fvuuCrWF9YKIVWO4SJGdSkM8vdKG2zimY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ds5BuqKmOB7afrbcN0Xt+UHtJ8ipUSsJUzAyDjWk1qH1nzsBNaeQIfRIwDfKi1m2K
-         BTNO7v+q/sQLq5BPkz4ktdAm71+ks5/iTh6GtHvxLKz5bSrAnqFFSP+A1gLPEROOdz
-         rUh42R8UgAsbD26YA8QbjexKESx/pQc0k30YZH5s=
-Date:   Thu, 2 May 2019 13:48:39 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>, mh@mike.franken.de,
-        Lukas Wunner <lukas@wunner.de>, Takashi Iwai <tiwai@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>, ckellner@redhat.com,
-        Jiri Slaby <jslaby@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Furquan Shaikh <furquan@google.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Robert Moore <robert.moore@intel.com>
-Subject: Re: [REGRESSION 5.0.8] Dell thunderbolt dock broken (xhci_hcd and
- thunderbolt)
-Message-ID: <20190502114839.GC24696@kroah.com>
-References: <s5hsgu0ihyg.wl-tiwai@suse.de>
- <EksOpJxc6GB@mike.franken.de>
- <20190430090021.GF26516@lahna.fi.intel.com>
- <CAJZ5v0j_fYqtMv07C-V_9fCJ6=1ec3GjvT2M7PXVNSbZpoM67Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0j_fYqtMv07C-V_9fCJ6=1ec3GjvT2M7PXVNSbZpoM67Q@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9112C3087925;
+        Thu,  2 May 2019 11:48:46 +0000 (UTC)
+Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9248D8AD86;
+        Thu,  2 May 2019 11:48:39 +0000 (UTC)
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     linux-nvme@lists.infradead.org
+Cc:     Maxim Levitsky <mlevitsk@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E . McKenney " <paulmck@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        Fam Zheng <fam@euphon.net>, Amnon Ilan <ailan@redhat.com>,
+        John Ferlan <jferlan@redhat.com>
+Subject: [PATCH v2 03/10] nvme/core: add some more values from the spec
+Date:   Thu,  2 May 2019 14:47:54 +0300
+Message-Id: <20190502114801.23116-4-mlevitsk@redhat.com>
+In-Reply-To: <20190502114801.23116-1-mlevitsk@redhat.com>
+References: <20190502114801.23116-1-mlevitsk@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 02 May 2019 11:48:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:37:48AM +0200, Rafael J. Wysocki wrote:
-> On Tue, Apr 30, 2019 at 11:00 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > +Rafael, Furquan and linux-acpi
-> >
-> > (The original thread is here https://lore.kernel.org/lkml/s5hy33siofw.wl-tiwai@suse.de/T/#u)
-> >
-> > On Tue, Apr 30, 2019 at 10:39:00AM +0200, Michael Hirmke wrote:
-> > > Hi Takashi,
-> > >
-> > > [...]
-> > > >>> I also have XPS 9370 but not that particular dock. I will check tomorrow
-> > > >>> if I can reproduce it as well.
-> > > >>
-> > > >> There aren't too many changes between 5.0.7 and 5.0.8 that touch
-> > > >> PCI/ACPI. This is just a shot in the dark but could you try to revert:
-> > > >>
-> > > >>   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.gi
-> > > >>   t/commit/?h=linux-5.0.y&id=da6a87fb0ad43ae811519d2e0aa325c7f792b13a
-> > > >>
-> > > >> and see if it makes any difference?
-> > >
-> > > >OK, I'm building a test kernel package with the revert in OBS
-> > > >home:tiwai:bsc1133486 repo.  A new kernel will be
-> > > >kernel-default-5.0.10-*g8edeab8:
-> > > >  http://download.opensuse.org/repositories/home:/tiwai:/bsc1133486/standard/
-> > >
-> > > >Michael, once when the new kernel is ready, please give it a try.
-> > >
-> > > as far as I can see, state is back to normal with this kernel.
-> > > No more error messages or crashing modules and all devices seem to work
-> > > as expected.
-> > > Only thing is, that the external devices connected to the Thunderbolt
-> > > dock are coming up a little bit slower than with 5.0.7 - but this is
-> > > nothing, I'd worry about.
-> >
-> > Thanks for testing.
-> >
-> > Rafael, it seems that commit c8b1917c8987 ("ACPICA: Clear status of GPEs
-> > before enabling them") causes problem with Thunderbolt controllers if
-> > you boot with device (dock) connected.
-> >
-> > I think the reason is the same that got fixed in v4.14 with commit
-> > ecc1165b8b74 ("ACPICA: Dispatch active GPEs at init time") which the
-> > above commit essentially undoes if I understand it correctly.
-> 
-> OK, I'll queue up a revert of that one then, thanks!
-> 
-> Erik, I think that commit c8b1917c8987 has been picked up by the
-> upstream ACPICA already.  If I'm not mistaken, it needs to be reverted
-> from there as well.
+This adds few defines from the spec,
+that will be used in the nvme-mdev driver
 
-I've queued the revert up in the stable trees as it has hit Linus's tree
-now, and will push out a new round of stable kernels soon.
+Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+---
+ include/linux/nvme.h | 88 ++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 68 insertions(+), 20 deletions(-)
 
-thanks,
+diff --git a/include/linux/nvme.h b/include/linux/nvme.h
+index c40720cb59ac..653c22baedb1 100644
+--- a/include/linux/nvme.h
++++ b/include/linux/nvme.h
+@@ -144,32 +144,42 @@ enum {
+ #define NVME_NVM_IOCQES		4
+ 
+ enum {
+-	NVME_CC_ENABLE		= 1 << 0,
+-	NVME_CC_CSS_NVM		= 0 << 4,
+ 	NVME_CC_EN_SHIFT	= 0,
++	NVME_CC_ENABLE		= 1 << NVME_CC_EN_SHIFT,
++
+ 	NVME_CC_CSS_SHIFT	= 4,
++	NVME_CC_CSS_NVM		= 0 << NVME_CC_CSS_SHIFT,
++
+ 	NVME_CC_MPS_SHIFT	= 7,
++	NVME_CC_MPS_MASK	= 0xF << NVME_CC_MPS_SHIFT,
++
+ 	NVME_CC_AMS_SHIFT	= 11,
+-	NVME_CC_SHN_SHIFT	= 14,
+-	NVME_CC_IOSQES_SHIFT	= 16,
+-	NVME_CC_IOCQES_SHIFT	= 20,
+ 	NVME_CC_AMS_RR		= 0 << NVME_CC_AMS_SHIFT,
+ 	NVME_CC_AMS_WRRU	= 1 << NVME_CC_AMS_SHIFT,
+ 	NVME_CC_AMS_VS		= 7 << NVME_CC_AMS_SHIFT,
++	NVME_CC_AMS_MASK	= 0x7 << NVME_CC_AMS_SHIFT,
++
++	NVME_CC_SHN_SHIFT	= 14,
+ 	NVME_CC_SHN_NONE	= 0 << NVME_CC_SHN_SHIFT,
+ 	NVME_CC_SHN_NORMAL	= 1 << NVME_CC_SHN_SHIFT,
+ 	NVME_CC_SHN_ABRUPT	= 2 << NVME_CC_SHN_SHIFT,
+ 	NVME_CC_SHN_MASK	= 3 << NVME_CC_SHN_SHIFT,
++
++	NVME_CC_IOSQES_SHIFT	= 16,
++	NVME_CC_IOCQES_SHIFT	= 20,
+ 	NVME_CC_IOSQES		= NVME_NVM_IOSQES << NVME_CC_IOSQES_SHIFT,
+ 	NVME_CC_IOCQES		= NVME_NVM_IOCQES << NVME_CC_IOCQES_SHIFT,
++
+ 	NVME_CSTS_RDY		= 1 << 0,
+ 	NVME_CSTS_CFS		= 1 << 1,
+ 	NVME_CSTS_NSSRO		= 1 << 4,
+ 	NVME_CSTS_PP		= 1 << 5,
+-	NVME_CSTS_SHST_NORMAL	= 0 << 2,
+-	NVME_CSTS_SHST_OCCUR	= 1 << 2,
+-	NVME_CSTS_SHST_CMPLT	= 2 << 2,
+-	NVME_CSTS_SHST_MASK	= 3 << 2,
++
++	NVME_CSTS_SHST_SHIFT	= 2,
++	NVME_CSTS_SHST_NORMAL	= 0 << NVME_CSTS_SHST_SHIFT,
++	NVME_CSTS_SHST_OCCUR	= 1 << NVME_CSTS_SHST_SHIFT,
++	NVME_CSTS_SHST_CMPLT	= 2 << NVME_CSTS_SHST_SHIFT,
++	NVME_CSTS_SHST_MASK	= 3 << NVME_CSTS_SHST_SHIFT,
+ };
+ 
+ struct nvme_id_power_state {
+@@ -396,6 +406,20 @@ enum {
+ 	NVME_NIDT_UUID		= 0x03,
+ };
+ 
++struct nvme_err_log_entry {
++	__u8			err_count[8];
++	__le16			sqid;
++	__le16			cid;
++	__le16			status;
++	__le16			location;
++	__u8			lba[8];
++	__le32			ns;
++	__u8			vnd;
++	__u8			rsvd1[3];
++	__u8			cmd_specific[8];
++	__u8			rsvd2[24];
++};
++
+ struct nvme_smart_log {
+ 	__u8			critical_warning;
+ 	__u8			temperature[2];
+@@ -483,13 +507,30 @@ enum {
+ 	NVME_AER_VS			= 7,
+ };
+ 
+-enum {
+-	NVME_AER_NOTICE_NS_CHANGED	= 0x00,
+-	NVME_AER_NOTICE_FW_ACT_STARTING = 0x01,
+-	NVME_AER_NOTICE_ANA		= 0x03,
+-	NVME_AER_NOTICE_DISC_CHANGED	= 0xf0,
++enum nvme_async_event_type {
++	NVME_AER_TYPE_ERROR	= 0,
++	NVME_AER_TYPE_SMART	= 1,
++	NVME_AER_TYPE_NOTICE	= 2,
++	NVME_AER_TYPE_MAX	= 7,
+ };
+ 
++enum nvme_async_event {
++	NVME_AER_ERROR_INVALID_DB_REG = 0,
++	NVME_AER_ERROR_INVALID_DB_VALUE = 1,
++	NVME_AER_ERROR_DIAG_FAILURE = 2,
++	NVME_AER_ERROR_PERSISTENT_INT_ERR = 3,
++	NVME_AER_ERROR_TRANSIENT_INT_ERR = 4,
++	NVME_AER_ERROR_FW_IMAGE_LOAD_ERR = 5,
++
++	NVME_AER_SMART_SUBSYS_RELIABILITY = 0,
++	NVME_AER_SMART_TEMP_THRESH = 1,
++	NVME_AER_SMART_SPARE_BELOW_THRESH = 2,
++
++	NVME_AER_NOTICE_NS_CHANGED	= 0,
++	NVME_AER_NOTICE_FW_ACT_STARTING = 1,
++	NVME_AER_NOTICE_ANA		= 3,
++	NVME_AER_NOTICE_DISC_CHANGED	= 0xf0,
++};
+ enum {
+ 	NVME_AEN_BIT_NS_ATTR		= 8,
+ 	NVME_AEN_BIT_FW_ACT		= 9,
+@@ -540,12 +581,6 @@ struct nvme_reservation_status {
+ 	} regctl_ds[];
+ };
+ 
+-enum nvme_async_event_type {
+-	NVME_AER_TYPE_ERROR	= 0,
+-	NVME_AER_TYPE_SMART	= 1,
+-	NVME_AER_TYPE_NOTICE	= 2,
+-};
+-
+ /* I/O commands */
+ 
+ enum nvme_opcode {
+@@ -697,10 +732,19 @@ enum {
+ 	NVME_RW_DSM_LATENCY_LOW		= 3 << 4,
+ 	NVME_RW_DSM_SEQ_REQ		= 1 << 6,
+ 	NVME_RW_DSM_COMPRESSED		= 1 << 7,
++
++	NVME_WZ_DEAC			= 1 << 9,
+ 	NVME_RW_PRINFO_PRCHK_REF	= 1 << 10,
+ 	NVME_RW_PRINFO_PRCHK_APP	= 1 << 11,
+ 	NVME_RW_PRINFO_PRCHK_GUARD	= 1 << 12,
+ 	NVME_RW_PRINFO_PRACT		= 1 << 13,
++
++	NVME_RW_PRINFO			=
++			NVME_RW_PRINFO_PRCHK_REF |
++			NVME_RW_PRINFO_PRCHK_APP |
++			NVME_RW_PRINFO_PRCHK_GUARD |
++			NVME_RW_PRINFO_PRACT,
++
+ 	NVME_RW_DTYPE_STREAMS		= 1 << 4,
+ };
+ 
+@@ -801,6 +845,7 @@ enum {
+ 	NVME_SQ_PRIO_HIGH	= (1 << 1),
+ 	NVME_SQ_PRIO_MEDIUM	= (2 << 1),
+ 	NVME_SQ_PRIO_LOW	= (3 << 1),
++	NVME_SQ_PRIO_MASK	= (3 << 1),
+ 	NVME_FEAT_ARBITRATION	= 0x01,
+ 	NVME_FEAT_POWER_MGMT	= 0x02,
+ 	NVME_FEAT_LBA_RANGE	= 0x03,
+@@ -1143,6 +1188,7 @@ struct streams_directive_params {
+ 
+ struct nvme_command {
+ 	union {
++		__le32 dwords[16];
+ 		struct nvme_common_command common;
+ 		struct nvme_rw_command rw;
+ 		struct nvme_identify identify;
+@@ -1214,6 +1260,8 @@ enum {
+ 	NVME_SC_SGL_INVALID_METADATA	= 0x10,
+ 	NVME_SC_SGL_INVALID_TYPE	= 0x11,
+ 
++	NVME_SC_PRP_OFFSET_INVALID	= 0x13,
++
+ 	NVME_SC_SGL_INVALID_OFFSET	= 0x16,
+ 	NVME_SC_SGL_INVALID_SUBTYPE	= 0x17,
+ 
+-- 
+2.17.2
 
-greg k-h
