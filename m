@@ -2,87 +2,205 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1246EC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36B7C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2A9E2133F
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556779225;
-	bh=VKRnFzqwCQEQEJ4Whj1x0Xu91tlu8JsLCBySle3yAbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WGfDvfvYpg4Ku9GbmaVg0gkxX8+PATAOoEyg0Nqqm9btY65OoRVGo3sE+kWUWKNWs
-	 QTjlQcxjBQA+RWoTXM5PgTE1AHlKdht5UpD0/5eak4o0i2CfQc2houMUdlAXS2GB4G
-	 OEH+d1jt1/3asixBQnnpULCfUCoTR5b0izJYwPPc=
+	by mail.kernel.org (Postfix) with ESMTP id A7211208C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 06:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6sC+Alj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfEBGkY (ORCPT
+        id S1726291AbfEBGnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 02:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725764AbfEBGkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 02:40:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ABF1208C4;
-        Thu,  2 May 2019 06:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556779223;
-        bh=VKRnFzqwCQEQEJ4Whj1x0Xu91tlu8JsLCBySle3yAbM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T8p1ZpJppNoJp7O4j75gUhtvC7VqfqcrSud4+QxpZ5Av0V6CcEwfq2CqR/sfp+a5r
-         UXy7GLtsv0jhdmm0qAE/Kasgsaz4tTh4ayHBl14I4g9WPIPEk6IOBap7JOL2RH1Y1L
-         l+05oYWOcBVWK9MorrgwN1u+pGDHMuSXGRmIncRg=
-Date:   Thu, 2 May 2019 08:40:21 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Vijay Khemka <vijaykhemka@fb.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        sdasari@fb.com
-Subject: Re: [PATCH] misc: aspeed-lpc-ctrl: Correct return values
-Message-ID: <20190502064021.GA14911@kroah.com>
-References: <20190501223836.1670096-1-vijaykhemka@fb.com>
+        Thu, 2 May 2019 02:43:12 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:53910 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbfEBGnM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 02:43:12 -0400
+Received: by mail-it1-f194.google.com with SMTP id l10so1468985iti.3;
+        Wed, 01 May 2019 23:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HSGbpAsjrEz+LSOl9dCHcdRZTgcOh3tw9dUTjuJ5J7c=;
+        b=Z6sC+AljjqID+DmQtvIw7IEWj6jrkr+b/pA8gIJjXBCIYJGNT9O9mhXeLlW/Hvwdd7
+         pgxjueuiS/4sbp6UXofiy9XKouVG97oq8Sfp9EEO4KBlLYwQjE+tDYyXLlj6AhOh+sB9
+         UTHWDE2gCylbElM7ok5XrOCXFmZ6arFtKmanSTv1PzYbs+4+iwLFz0RZIokI+8bCk8aX
+         w3tIsnE93BdPxqMuogGb1h2VZI8xMSrxtJfWHfy//lTbVgMo3jGf7bvAl7KFSFAGecD8
+         Gerl7Vf0BzPRJl1DvBZ0gs3q20z9l1uwqpHsZVjX6kZunc2T98nGJukn2442QwlMRJZD
+         i9SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HSGbpAsjrEz+LSOl9dCHcdRZTgcOh3tw9dUTjuJ5J7c=;
+        b=e2eenXrfnzXTb4jNtqNd/oOf77Fc5LOwQcs0nOTZz2/jB7h/rrshM2dni92HSgxfTD
+         dHb/jxrTZvWK8rjopkn+yudbczkhLfNfYbwnQVQa9pYCPutnotArL4jvYUrWcpzvl/jL
+         cczWlGXrL1Ek0y8FkLXpFmgY/TQIk1tx0upZCPlCnkSQahQKfCQgo12goKc4WBFZahwR
+         xkjh7gU9jwmXEr1KKVQw/Id5TVLmb9xtln/DcEHKvbvCFt1TgLGWbSbS8UL39CkrnVeZ
+         5PZZ0CV4DbEb05MLZNT1yNoeeuZYQLgPJSGcf0NhFV44wXupQPoE8/vBsE+NUlyviA6w
+         2lEw==
+X-Gm-Message-State: APjAAAWxhyT2qum/c8qEN1NS7X/ZnrDxTnvNxgyOckAejwDagma1EgVS
+        Pl04BCc9NjYRIbE7fC47D0L7QWxHcxf+HBKsbmk=
+X-Google-Smtp-Source: APXvYqzi4GjfCDD9m9k7bQbKF/7Y7zsn5hRA1XyrDMnGvfWAh7HOdO1UigTDRAyv6gqZWN7xir9YmAFC87lMnrHHyAo=
+X-Received: by 2002:a05:6638:209:: with SMTP id e9mr1374960jaq.22.1556779390573;
+ Wed, 01 May 2019 23:43:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501223836.1670096-1-vijaykhemka@fb.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190426164224.11327-1-pawel.mikolaj.chmiel@gmail.com>
+ <20190426164224.11327-5-pawel.mikolaj.chmiel@gmail.com> <20190502015408.GA11612@bogus>
+ <CA+Ln22HLqnbbY37FG6CwjZvZH7G35Z+0kNq7XFU4WtZyk_EqZQ@mail.gmail.com> <20190502083632.0ec0fb4e@collabora.com>
+In-Reply-To: <20190502083632.0ec0fb4e@collabora.com>
+From:   Tomasz Figa <tomasz.figa@gmail.com>
+Date:   Thu, 2 May 2019 15:42:59 +0900
+Message-ID: <CA+Ln22H4ua9Zuh4eKaWfHtqh8DieyiS=5s7wS6-TbmA5Dsop4A@mail.gmail.com>
+Subject: Re: [PATCH 4/5] dt-binding: mtd: onenand/samsung: Add device tree support
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        bbrezillon@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
+        David Woodhouse <dwmw2@infradead.org>,
+        computersforpeace@gmail.com, marek.vasut@gmail.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-mtd@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 03:38:36PM -0700, Vijay Khemka wrote:
-> Corrected some of return values with appropriate meanings.
-> 
-> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
-> ---
->  drivers/misc/aspeed-lpc-ctrl.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/misc/aspeed-lpc-ctrl.c b/drivers/misc/aspeed-lpc-ctrl.c
-> index 332210e06e98..97ae341109d5 100644
-> --- a/drivers/misc/aspeed-lpc-ctrl.c
-> +++ b/drivers/misc/aspeed-lpc-ctrl.c
-> @@ -68,7 +68,6 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
->  		unsigned long param)
->  {
->  	struct aspeed_lpc_ctrl *lpc_ctrl = file_aspeed_lpc_ctrl(file);
-> -	struct device *dev = file->private_data;
->  	void __user *p = (void __user *)param;
->  	struct aspeed_lpc_ctrl_mapping map;
->  	u32 addr;
+2019=E5=B9=B45=E6=9C=882=E6=97=A5(=E6=9C=A8) 15:36 Boris Brezillon <boris.b=
+rezillon@collabora.com>:
+>
+> Hi Tomasz,
+>
+> On Thu, 2 May 2019 15:23:33 +0900
+> Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>
+> > 2019=E5=B9=B45=E6=9C=882=E6=97=A5(=E6=9C=A8) 10:54 Rob Herring <robh@ke=
+rnel.org>:
+> > >
+> > > On Fri, Apr 26, 2019 at 06:42:23PM +0200, Pawe=C5=82 Chmiel wrote:
+> > > > From: Tomasz Figa <tomasz.figa@gmail.com>
+> > > >
+> > > > This patch adds dt-bindings for Samsung OneNAND driver.
+> > > >
+> > > > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> > > > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > > > ---
+> > > >  .../bindings/mtd/samsung-onenand.txt          | 46 +++++++++++++++=
+++++
+> > > >  1 file changed, 46 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/mtd/samsung-o=
+nenand.txt
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/mtd/samsung-onenand.=
+txt b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+> > > > new file mode 100644
+> > > > index 000000000000..341d97cc1513
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/mtd/samsung-onenand.txt
+> > > > @@ -0,0 +1,46 @@
+> > > > +Device tree bindings for Samsung SoC OneNAND controller
+> > > > +
+> > > > +Required properties:
+> > > > + - compatible : value should be either of the following.
+> > > > +   (a) "samsung,s3c6400-onenand" - for onenand controller compatib=
+le with
+> > > > +       S3C6400 SoC,
+> > > > +   (b) "samsung,s3c6410-onenand" - for onenand controller compatib=
+le with
+> > > > +       S3C6410 SoC,
+> > > > +   (c) "samsung,s5pc100-onenand" - for onenand controller compatib=
+le with
+> > > > +       S5PC100 SoC,
+> > > > +   (d) "samsung,s5pv210-onenand" - for onenand controller compatib=
+le with
+> > > > +       S5PC110/S5PV210 SoCs.
+> > > > +
+> > > > + - reg : two memory mapped register regions:
+> > > > +   - first entry: control registers.
+> > > > +   - second and next entries: memory windows of particular OneNAND=
+ chips;
+> > > > +     for variants a), b) and c) only one is allowed, in case of d)=
+ up to
+> > > > +     two chips can be supported.
+> > > > +
+> > > > + - interrupt-parent : phandle of interrupt controller to which the=
+ OneNAND
+> > > > +   controller is wired,
+> > >
+> > > This is implied and can be removed.
+> > >
+> > > > + - interrupts : specifier of interrupt signal to which the OneNAND=
+ controller
+> > > > +   is wired; should contain just one entry.
+> > > > + - clock-names : should contain two entries:
+> > > > +   - "bus" - bus clock of the controller,
+> > > > +   - "onenand" - clock supplied to OneNAND memory.
+> > >
+> > > If the clock just goes to the OneNAND device, then it should be in th=
+e
+> > > nand device node rather than the controller node.
+> > >
+> >
+> > (Trying hard to recall the details about this hardware.)
+> > AFAIR the clock goes to the controller and the controller then feeds
+> > it to the memory chips.
+> >
+> > Also I don't think we should have any nand device nodes here, since
+> > the memory itself is only exposed via the controller, which offers
+> > various queries to probe the memory at runtime, so there is no need to
+> > describe it in DT.
+>
+> It's probably true, though not providing this controller/device
+> separation for NAND controller/devices has proven to be a mistake for
+> raw NAND controllers (some props apply to the controllers and others to
+> the NAND device, not to mention that some controllers support
+> interacting with several chips), so, if that's a new binding, I'd
+> recommend having this separation even if it's not strictly required.
+>
 
-This change is not reflected in your changelog text :(
+Note that OneNAND is a totally different thing than the typical NAND
+memory with NAND interface. OneNAND chips have a NOR-like interface,
+with internal controller and buffers inside, so technically they can
+be even used without any special controller on the SoC, via a generic
+parallel host interface and possibly some regular DMA engine for CPU
+offload.
 
-Please fix up, or break this up into multiple patches.
+The controller design of the SoCs in question further abstracts the
+OneNAND's programming interface into a number of high level operations
+and attempts to hide the details of the underlying memory, so I don't
+see the point of describing the memory in DT here, it would actually
+defeat the purpose of this controller.
 
-greg k-h
+> >
+> > > > + - clock: should contain list of phandles and specifiers for all c=
+locks listed
+> > > > +   in clock-names property.
+> > > > + - #address-cells : must be 1,
+> > > > + - #size-cells : must be 1.
+> > >
+> > > This implies some child nodes. What are the child nodes?
+> > >
+> >
+> > I can't recall the reason for this unfortunately.
+>
+> Defining partitions I guess, but we ask people to use the new
+> representation with a 'partitions' sub-node now, so this should
+> probably be dropped.
+
+Ah, that could be it indeed. Thanks!
+
+Best regards,
+Tomasz
