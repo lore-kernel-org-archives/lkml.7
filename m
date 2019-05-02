@@ -2,203 +2,186 @@ Return-Path: <SRS0=c+yg=TC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C401C43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17067C43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4933205C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D29205C9
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 14:24:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pxlqr/ea"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hCeMdYfq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfEBOXL (ORCPT
+        id S1726356AbfEBOYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 10:23:11 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:48526 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfEBOXK (ORCPT
+        Thu, 2 May 2019 10:24:44 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39927 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfEBOYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 10:23:10 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190502142308euoutp01b5aba6440a3cf010c3e5e4dce7ceb900~a47UXhOM51472614726euoutp01b
-        for <linux-kernel@vger.kernel.org>; Thu,  2 May 2019 14:23:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190502142308euoutp01b5aba6440a3cf010c3e5e4dce7ceb900~a47UXhOM51472614726euoutp01b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1556806988;
-        bh=zbCRIGD19ZlsyDoT0AKDehhi/Wr3SiotaHEs37U/hi4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=pxlqr/eayAkL3DFBVNm7Eu6kVJ1x8suad/kFq94PQaIqvMyykl/xSh9pr2NuMsP1/
-         SX41QxPaB/L7KB/Q3wlbdxNQS6TS/6KvJpiLfpXF3+0x85CgYGlCkIqwyP3Zu1btIU
-         0eyHqLZ1k0ouw6ZSfST5p0L4AAGzZ2neIvOVCUdQ=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190502142307eucas1p220f5c18851319ebded0db97e40cf96fe~a47TqdRt_0832308323eucas1p29;
-        Thu,  2 May 2019 14:23:07 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 4D.14.04377.B4DFACC5; Thu,  2
-        May 2019 15:23:07 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190502142306eucas1p2c83555417d2dd37e99be73214c89d46c~a47S3b_3V0982609826eucas1p2O;
-        Thu,  2 May 2019 14:23:06 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190502142306eusmtrp19fba09dedcf9fd9fcc251b0687b2734f~a47SpOs9e1828518285eusmtrp1B;
-        Thu,  2 May 2019 14:23:06 +0000 (GMT)
-X-AuditID: cbfec7f4-113ff70000001119-f9-5ccafd4ba11c
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id AF.F3.04146.A4DFACC5; Thu,  2
-        May 2019 15:23:06 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190502142305eusmtip20d0ef38e186a88ee355fa6941290bb73~a47R9fk-41443114431eusmtip2k;
-        Thu,  2 May 2019 14:23:05 +0000 (GMT)
-Subject: Re: [PATCH v6 03/10] clk: samsung: add BPLL rate table for Exynos
- 5422 SoC
-To:     Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <e280645a-3a7a-5bec-6372-5b46996a7a47@partner.samsung.com>
-Date:   Thu, 2 May 2019 16:23:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Thu, 2 May 2019 10:24:43 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q10so2363321ljc.6;
+        Thu, 02 May 2019 07:24:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RxZ5w9mWQKJNicrHyEV1DSUmteddrLY464RPQLI5MEw=;
+        b=hCeMdYfq8rOLM1fPJDEANp7JijVwFFF7eK76vdoE0+hzxMbf6UE8fU2RRfmfy6FzZD
+         TdfGBos5hC1U2RoJgGavfJ3Hqzit/Zt186ZDcbqowdE/2EqgSV6Hcy3QxxDUAXPajR26
+         zR1wb6ldMFeSb3fx4LufOumYRlh1C/aB/Oo7tauTLshk75feE1Ejc7auv77R6reoPQTZ
+         jPBDjYlE5/kGYQyWuuoE0+RMBiP5UA4UVdXrAL1t7vTAHbhandPY9h/zraOueXpR+efX
+         2HYtG4Blvlg+ercZCnOhZw4zA06iMw2OF+1lTZ6O1SnZJYQzkCzH9P7cnL2ZWUQY1+vH
+         wVVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RxZ5w9mWQKJNicrHyEV1DSUmteddrLY464RPQLI5MEw=;
+        b=YLo/8PJXjDd72splfPZZaKHNNWNm5sf9FEqbqRoAn+8MEao1XeN9oWk2RrkFTMENt5
+         O6Rs+/IRO2TwMR7ghftNWeMF19LegG794uaCxiypJxqsZIXWfMRY9b3mTIRZDlKaIcOO
+         yFqJJSyN48nut6EVWOcEOqYbMT35tz3zt4RoAXKxx7/LBT4DKTtNsqtNrvh8ErODaVbn
+         2/Hh+nzGAZqdcU4v6PUZ03SkWFbNI/Tbq9TKQMDNKNE/iqEDbqV3OSnceNIgLE0FSJu6
+         TBilOvMJnQ/BdAr+CgrOizw+iZmJ9qcJ8Q5CgBVvdnPitUwCf6IQkhAgKwS5SxaoY17Z
+         miCA==
+X-Gm-Message-State: APjAAAVyDNi3igMEEd8g3G/7G9vyjLVZflzDKwbGXXfnS05rd6rdM/KA
+        9zsCt/lFLGvRj0Kck80ol7g=
+X-Google-Smtp-Source: APXvYqwqxkWHiw/74PjhWAN0MCl9FCHovc+9nVoWV2viac5S/CXNYVd9ONZL+YfQO2W8eXXVal11WA==
+X-Received: by 2002:a2e:4ca:: with SMTP id a71mr1886791ljf.39.1556807080821;
+        Thu, 02 May 2019 07:24:40 -0700 (PDT)
+Received: from mobilestation ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id o17sm1985785ljj.39.2019.05.02.07.24.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 02 May 2019 07:24:40 -0700 (PDT)
+Date:   Thu, 2 May 2019 17:24:37 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/12] mips: Reserve memory for the kernel image resources
+Message-ID: <20190502142434.mpoyu4hhbunur5xe@mobilestation>
+References: <20190423224748.3765-1-fancer.lancer@gmail.com>
+ <20190423224748.3765-5-fancer.lancer@gmail.com>
+ <20190424224343.4skr727fszycwksq@pburton-laptop>
+ <20190426000035.yfonfvrapmm4j3fg@mobilestation>
+ <20190430225832.cjk7mj6dotw3cib6@pburton-laptop>
 MIME-Version: 1.0
-In-Reply-To: <62f85c18-d3ac-3425-8ee3-538f8c677603@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUhTYRTGfXfv7q7S7HWanuwLVkQWmZbQW0YfFDUqpH+CUKlWXrVyU3e1
-        MkOWy8zKVUamUzOJmC4tMy2/yFDJ1NRWitKyJNenGYTTCk1yu5P87/c85znvOQdelpINiX3Z
-        I+oETqNWxsgZN/rRsz+dK3f9bQsPKHvKkAc598Wk1/ZZTAqbO8Xk7s9BRK61FYjIi4sqcnlw
-        iCJdXeUS0pH6XUJe1+YzZCSzGZGcriciUtbcLyGWM8UMafqeLiYN3TuJZdydjD3/gDbLFGOj
-        WbQiT2umFTWGfomiwpTBKDJ1PxiFvtKEFA/bkxUjFQv3sKFuGyK4mCPHOc2qjQfdoruzfzNx
-        +vkns4w1lBaZvS8gVxZwENRczaYuIDdWhosRDL9tpAVhQ5BdP+QUIwhaLXpquuXrx2GJUDAi
-        6C06LxbEMAJbzy+xPeWJ90JaQYvIXvDCtxFcLxl3CArfFcHEaNlUimUZ7A/Vpng7SvF2sAyE
-        2ntpvASKrUWOaXPwPnj/rNzxphR7QGuulbazK94EZRetjgyFfeCNtVAk8CLQVeU5N81l4WqT
-        n8DboCq9CAnsCd9aKiUCz4f2a5dogXnQZk5nTsPg5QJnJhiaWsyOjSnsB/drVwn2FrhXV0rZ
-        bcDu0DfsIWzgDlmPbjhtKZw/JxPSy6Dy0kuRwN5gLM2WXEFyw4y7DDNuMcy4xfB/7i1Em5AP
-        l8irojh+tZo74c8rVXyiOsr/cKyqAk19wfbJFls1qp041Igwi+SzpPCuLVwmVh7nk1SNCFhK
-        7iXd/3PKkkYok05xmtgDmsQYjm9E81ha7iNNdhkIk+EoZQJ3jOPiOM10VcS6+mrRjZ6t+pL9
-        o5KjtZ87dIaG+E9PV5TXqxbvTu0PZ6J2LggLqq+wtj42zmUm16T3j/cEWX8Fr62LDrEFl/hG
-        9nYZO/xdDPms+WzSl74BHBGUFnLlRcomrAvwjaVL7yTodmToMwKq/V6ljFS5zIt8bvr9Z+nN
-        2fHbi9b3BCYnqNd9cY2U03y0MnA5peGV/wDNIQgDfgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHIsWRmVeSWpSXmKPExsVy+t/xe7pef0/FGMz9xm+xccZ6VovrX56z
-        Wsw/co7VYvXHx4wWk0/NZbI4051r0f/4NbPF+fMb2C3ONr1ht7i8aw6bxefeI4wWM87vY7JY
-        e+Quu8XtxhVsFofftLNa7L/iZXH7N5/FtxOPGB2EPL59ncTiMbvhIovHzll32T02repk8+ht
-        fsfm0bdlFaPH5tPVHp83yQVwROnZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq
-        6dvZpKTmZJalFunbJehlXJn2g62gT6Zi0vKdzA2MF8W6GDk5JARMJF4+fcvexcjFISSwlFFi
-        8r5pzBAJMYlJ+7azQ9jCEn+udbGB2EICrxklFjZWg9jCAqESrXOPM4HYIgKLGSW+tlaDDGIW
-        WM0kMenjFjaIqVOYJG4+esDSxcjBwSagJ7FjVSGIySvgJnH7QRRIL4uAisSKJwvB9ooKREic
-        eb+CBcTmFRCUODnzCZjNKWAvsbb7CVgNs4CZxLzND6FscYlbT+YzQdjyEs1bZzNPYBSahaR9
-        FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hQrzgxt7g0L10vOT93EyMw7rcd+7l5B+OljcGHGAU4
-        GJV4eCXunYoRYk0sK67MPcQowcGsJMIb9xEoxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnA
-        lJRXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoFRYaHTza7+UK7d
-        G2aYF+qkWNY9rCn/OPee0ORfFgmbD14VcU6Z8Cs/Um7G3dXVrAxJkbuOVb09G7AvRKefYbrn
-        8crpR9hXNUr8dhB6dEvBsZWFgfeHX5T/9+TXFWdzGpZ/rspa070i+UlYxM176tEnJ2jsviS/
-        qz2W1zm0cdkvpfnb2CbV/RBWYinOSDTUYi4qTgQArQP2YxEDAAA=
-X-CMS-MailID: 20190502142306eucas1p2c83555417d2dd37e99be73214c89d46c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190419141943eucas1p220d77bacfc4fcba8ec6a10f540e1a27d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190419141943eucas1p220d77bacfc4fcba8ec6a10f540e1a27d
-References: <1555683568-20882-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419141943eucas1p220d77bacfc4fcba8ec6a10f540e1a27d@eucas1p2.samsung.com>
-        <1555683568-20882-4-git-send-email-l.luba@partner.samsung.com>
-        <62f85c18-d3ac-3425-8ee3-538f8c677603@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430225832.cjk7mj6dotw3cib6@pburton-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chanwoo,
+On Tue, Apr 30, 2019 at 10:58:33PM +0000, Paul Burton wrote:
 
-On 5/2/19 7:15 AM, Chanwoo Choi wrote:
-> Hi Lukasz,
-> 
-> On 19. 4. 19. 오후 11:19, Lukasz Luba wrote:
->> Add new table rate for BPLL for Exynos5422 SoC supporting Dynamic Memory
->> Controller frequencies for driver's DRAM timings.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   drivers/clk/samsung/clk-exynos5420.c | 13 ++++++++++++-
->>   1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
->> index d9e6653..ddee8bd 100644
->> --- a/drivers/clk/samsung/clk-exynos5420.c
->> +++ b/drivers/clk/samsung/clk-exynos5420.c
->> @@ -1323,6 +1323,17 @@ static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __ini
->>   	PLL_35XX_RATE(24 * MHZ, 200000000,  200, 3, 3),
->>   };
->>   
->> +static const struct samsung_pll_rate_table exynos5422_bpll_rate_table[] = {
->> +	PLL_35XX_RATE(24 * MHZ, 825000000, 275, 4, 1),
->> +	PLL_35XX_RATE(24 * MHZ, 728000000, 182, 3, 1),
->> +	PLL_35XX_RATE(24 * MHZ, 633000000, 211, 4, 1),
->> +	PLL_35XX_RATE(24 * MHZ, 543000000, 181, 2, 2),
->> +	PLL_35XX_RATE(24 * MHZ, 413000000, 413, 6, 2),
->> +	PLL_35XX_RATE(24 * MHZ, 275000000, 275, 3, 3),
->> +	PLL_35XX_RATE(24 * MHZ, 206000000, 206, 3, 3),
->> +	PLL_35XX_RATE(24 * MHZ, 165000000, 110, 2, 3),
->> +};
->> +
->>   static const struct samsung_pll_rate_table exynos5420_epll_24mhz_tbl[] = {
->>   	PLL_36XX_RATE(24 * MHZ, 600000000U, 100, 2, 1, 0),
->>   	PLL_36XX_RATE(24 * MHZ, 400000000U, 200, 3, 2, 0),
->> @@ -1465,7 +1476,7 @@ static void __init exynos5x_clk_init(struct device_node *np,
->>   		exynos5x_plls[apll].rate_table = exynos5420_pll2550x_24mhz_tbl;
->>   		exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
->>   		exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
->> -		exynos5x_plls[bpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
->> +		exynos5x_plls[bpll].rate_table = exynos5422_bpll_rate_table;
-> 
-> According to your previous reply, the released odroid-xu3 board by hardkernel
-> might be only CONFIG_SOC_EXYNOS5422_REV_0. Because the kernel configurattion
-> from hardkernel has 'CONFIG_SOC_EXYNOS5422_REV_0=y'. I'm ok about adding bpll rate_table.
-> 
-> But, just I have one question. I think that this bpll rate_table is for
-> only Exynos5422 series. Because the kernel of hardkernel used
-> driver/clk/samsung/clk-exynos5422.c instead of clk-exynos5420.c commonn driver.
-> It means that the clk-exynos5422.c of hardkernel's kernel support only Exynos5422
-> without any considering the Exynos5420 series.
-> 
-> I think that it might need to check the soc version to use
-> bpll rate_table as following:
-Fair enough.
-> 
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -1438,7 +1438,10 @@ static void __init exynos5x_clk_init(struct device_node *np,
->                  exynos5x_plls[apll].rate_table = exynos5420_pll2550x_24mhz_tbl;
->                  exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
->                  exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
-> -               exynos5x_plls[bpll].rate_table = exynos5422_bpll_rate_table;
-> +
-> +               if (soc == EXYNOS5800)
-> +                       exynos5x_plls[bpll].rate_table
-> +                               = exynos5422_bpll_rate_table;
->          }
-> 
-I will add this check. Thank you.
+Hello Paul
 
-Regards,
-Lukasz
+> Hi Serge,
 > 
->>   	}
->>   
->>   	samsung_clk_register_pll(ctx, exynos5x_plls, ARRAY_SIZE(exynos5x_plls),
->>
+> On Fri, Apr 26, 2019 at 03:00:36AM +0300, Serge Semin wrote:
+> > >  1) Older systems generally had something like an ISA bus which used
+> > >     addresses below the kernel, and bootloaders like YAMON left behind
+> > >     functions that could be called right at the start of RAM. This sort
+> > >     of thing should be accounted for by /memreserve/ in DT or similar
+> > >     platform-specific reservations though rather than generically, and
+> > >     at least Malta & SEAD-3 DTs already have /memreserve/ entries for
+> > >     it. So this part I think is OK. Some other older platforms might
+> > >     need updating, but that's fine.
+> > > 
+> > 
+> > Regarding ISA. As far as I remember devices on that bus can DMA only to the
+> > lowest 16MB. So in case if kernel is too big or placed pretty much high,
+> > they may be left even without reachable memory at all in current
+> > implementation.
 > 
+> Sure - I'm not too worried about these old buses, platforms can continue
+> to reserve the memory through DT or otherwise if they need to.
 > 
+> > >  2) trap_init() only allocates memory for the exception vector if using
+> > >     a vectored interrupt mode. In other cases it just uses CAC_BASE
+> > >     which currently gets reserved as part of this region between
+> > >     PHYS_OFFSET & _text.
+> > > 
+> > >     I think this behavior is bogus, and we should instead:
+> > > 
+> > >     - Allocate the exception vector memory using memblock_alloc() for
+> > >       CPUs implementing MIPSr2 or higher (ie. CPUs with a programmable
+> > >       EBase register). If we're not using vectored interrupts then
+> > >       allocating one page will do, and we already have the size
+> > >       calculation for if we are.
+> > > 
+> > >     - Otherwise use CAC_BASE but call memblock_reserve() on the first
+> > >       page.
+> > > 
+> > >     I think we should make that change before this one goes in. I can
+> > >     try to get to it tomorrow, but feel free to beat me to it.
+> > > 
+> > 
+> > As far as I understood you and the code this should be enough to fix
+> > the problem:
+> > diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
+> > index 98ca55d62201..f680253e2617 100644
+> > --- a/arch/mips/kernel/traps.c
+> > +++ b/arch/mips/kernel/traps.c
+> > @@ -2326,6 +2326,8 @@ void __init trap_init(void)
+> >  				ebase += (read_c0_ebase() & 0x3ffff000);
+> >  			}
+> >  		}
+> > +
+> > +		memblock_reserve(ebase, PAGE_SIZE);
+> >  	}
+> >  
+> >  	if (cpu_has_mmips) {
+> > ---
+> > 
+> > Allocation has already been implemented in the if-branch under the
+> > (cpu_has_veic || cpu_has_vint) condition. So we don't need to change
+> > there anything.
+> > In case if vectored interrupts aren't supported the else-clause is
+> > taken and we need to reserve whatever is set in the exception base
+> > address variable.
+> > 
+> > I'll add this patch between 3d and 4th ones if you are ok with it.
+> 
+> I think that would work, but I have other motivations to allocate the
+> memory in non-vectored cases anyway. I just sent a series that does that
+> & cleans up a little [1]. If you could take a look that would be great.
+> With that change made I think this patch will be good to apply.
+> 
+
+Just reviewed and tested your series on my machine. I tagged the whole series
+in a response to the cover-letter of [1].
+
+Could you please proceed with this patchset review procedure? There are
+also eight more patches left without your tag or comment.  This patch
+is also left with no explicit tag.
+
+BTW I see you already applied patches 1-3 to the mips-next, so what shall I
+do when sending a v2 patchset with fixes asked to be provided for patch 12
+and possibly for others in future? Shall I just resend the series without that
+applied patches or send them over with your acked-by tagges?
+
+-Sergey
+
+> Thanks,
+>     Paul
+> 
+> [1] https://lore.kernel.org/linux-mips/20190430225216.7164-1-paul.burton@mips.com/T/#t
