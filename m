@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7427BC43219
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D4BC43219
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425E520652
-	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3C02075E
+	for <linux-kernel@archiver.kernel.org>; Thu,  2 May 2019 17:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556817622;
-	bh=DNZEf28z285Xq5SbA4zrCjNHhVWVAuEwgjHxbQTOb+g=;
+	s=default; t=1556817788;
+	bh=t2QvyURycKIiTirpOYn/f0cP4QvJwYDjk22RYCF4a+w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=odwLaM9kBEE/fBwV+hOYnCkaISn5nIt2jVsr8VpUUJuC8hXEUYyX4g9720C+dpf04
-	 5nLVbJfxJpEAJMQ1MYqVabIEjwaNF0uGIEbZryJgJsk4lz6E5XigvH1NpVmiUabAEH
-	 PXiSP7Gyiw3XXVZ8Kl8eaDIhQ/0Pb22WaVj/a2v0=
+	b=nE3vgEIpSYZo9W5LNkLxYjYX06rp+/PLBvknsRqJqFiU4Wg145V24cW9WSOdF6ZeG
+	 nW/gTVxW9eH5uUX9PB8T0kdu129u8ywaqVpflAumW/V8Hyrw/JENoU8HWj5EXNVo6C
+	 GjGNUvusrtuyh2vkTwKSoujjSKk7ibcOblIemjic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbfEBRUR (ORCPT
+        id S1726316AbfEBRXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 13:20:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35208 "EHLO mail.kernel.org"
+        Thu, 2 May 2019 13:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfEBRUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 13:20:16 -0400
+        id S1726175AbfEBRXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 13:23:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A27620652;
-        Thu,  2 May 2019 17:20:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D7AF20651;
+        Thu,  2 May 2019 17:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556817612;
-        bh=DNZEf28z285Xq5SbA4zrCjNHhVWVAuEwgjHxbQTOb+g=;
+        s=default; t=1556817786;
+        bh=t2QvyURycKIiTirpOYn/f0cP4QvJwYDjk22RYCF4a+w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Iian5KzlS2pBwfqDAikYfYBebvSvWKxBKu8BJubTVMZLohGeorJoJD9VUpwCSrZ9D
-         Nx0Mf5EhWuNsAAal7Rauj7ASlRTzo/vNxYB0OS2eSFsUePaTK6HcItGZ8pcduauqAj
-         fViH4iah220qpQmoh5q8iWy7/5cVYk37cnVz4CLk=
-Date:   Thu, 2 May 2019 19:20:07 +0200
+        b=0lNIcEHEVT9rbk92gU+FW0N3Qz5n3G1kCyITcS1sJnzAGBVSQuP5hWVsC1PfATO32
+         Heunaeq15bx7iceyRMN+Lt13IeCgeNjZbcTF0HwBaRq6MLYek0Vo3tDTx25aDESnlP
+         z3FGoKjHRArhzb8Ir2amvCJJBoxSNgA63ocOiPYs=
+Date:   Thu, 2 May 2019 19:23:04 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Dragan Cvetic <dragan.cvetic@xilinx.com>
 Cc:     arnd@arndb.de, michal.simek@xilinx.com,
@@ -46,79 +46,95 @@ Cc:     arnd@arndb.de, michal.simek@xilinx.com,
         mark.rutland@arm.com, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Derek Kiernan <derek.kiernan@xilinx.com>
-Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-Message-ID: <20190502172007.GA1874@kroah.com>
+Subject: Re: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioctl
+Message-ID: <20190502172304.GB1874@kroah.com>
 References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
+ <1556402706-176271-5-git-send-email-dragan.cvetic@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
+In-Reply-To: <1556402706-176271-5-git-send-email-dragan.cvetic@xilinx.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
-> +#define DRIVER_NAME "xilinx_sdfec"
-> +#define DRIVER_VERSION "0.3"
-
-Version means nothing with the driver in the kernel tree, please remove
-it.
-
-> +#define DRIVER_MAX_DEV BIT(MINORBITS)
-
-Why this number?  Why limit yourself to any number?
-
+On Sat, Apr 27, 2019 at 11:04:58PM +0100, Dragan Cvetic wrote:
+> +static int xsdfec_dev_open(struct inode *iptr, struct file *fptr)
+> +{
+> +	struct xsdfec_dev *xsdfec;
 > +
-> +static struct class *xsdfec_class;
-
-Do you really need your own class?
-
-> +static atomic_t xsdfec_ndevs = ATOMIC_INIT(0);
-
-Why?
-
-> +static dev_t xsdfec_devt;
-
-Why?
-
-Why not use misc_device for this?  Why do you need your own major with a
-bunch of minor devices reserved ahead of time?  Why not just create a
-new misc device for every individual device that happens to be found in
-the system?  That will make the code a lot simpler and smaller and
-easier.
-
-
-
+> +	xsdfec = container_of(iptr->i_cdev, struct xsdfec_dev, xsdfec_cdev);
 > +
-> +/**
-> + * struct xsdfec_dev - Driver data for SDFEC
-> + * @regs: device physical base address
-> + * @dev: pointer to device struct
-> + * @config: Configuration of the SDFEC device
-> + * @open_count: Count of char device being opened
-> + * @xsdfec_cdev: Character device handle
-> + * @irq_lock: Driver spinlock
-> + *
-> + * This structure contains necessary state for SDFEC driver to operate
-> + */
-> +struct xsdfec_dev {
-> +	void __iomem *regs;
-> +	struct device *dev;
-> +	struct xsdfec_config config;
-> +	atomic_t open_count;
-> +	struct cdev xsdfec_cdev;
-> +	/* Spinlock to protect state_updated and stats_updated */
-> +	spinlock_t irq_lock;
-> +};
-> +
-> +static const struct file_operations xsdfec_fops = {
-> +	.owner = THIS_MODULE,
-> +};
+> +	if (!atomic_dec_and_test(&xsdfec->open_count)) {
 
-No operations at all?  That's an easy driver :)
+Why do you care about this?
+
+And do you really think it matters?  What are you trying to protect from
+here?
+
+> +		atomic_inc(&xsdfec->open_count);
+> +		return -EBUSY;
+> +	}
+> +
+> +	fptr->private_data = xsdfec;
+> +	return 0;
+> +}
+> +
+> +static int xsdfec_dev_release(struct inode *iptr, struct file *fptr)
+> +{
+> +	struct xsdfec_dev *xsdfec;
+> +
+> +	xsdfec = container_of(iptr->i_cdev, struct xsdfec_dev, xsdfec_cdev);
+> +
+> +	atomic_inc(&xsdfec->open_count);
+
+You increment a number when the device is closed?
+
+You are trying to make it hard to maintain this code over time :)
+
+
+> +	return 0;
+> +}
+> +
+> +static long xsdfec_dev_ioctl(struct file *fptr, unsigned int cmd,
+> +			     unsigned long data)
+> +{
+> +	struct xsdfec_dev *xsdfec = fptr->private_data;
+> +	void __user *arg = NULL;
+> +	int rval = -EINVAL;
+> +	int err = 0;
+> +
+> +	if (!xsdfec)
+> +		return rval;
+> +
+> +	if (_IOC_TYPE(cmd) != XSDFEC_MAGIC)
+> +		return -ENOTTY;
+> +
+> +	/* check if ioctl argument is present and valid */
+> +	if (_IOC_DIR(cmd) != _IOC_NONE) {
+> +		arg = (void __user *)data;
+> +		if (!arg) {
+> +			dev_err(xsdfec->dev,
+> +				"xilinx sdfec ioctl argument is NULL Pointer");
+
+You just created a way for userspace to spam the kernel log, please do
+not do that :(
+
+
+
+> +			return rval;
+> +		}
+> +	}
+> +
+> +	if (err) {
+> +		dev_err(xsdfec->dev, "Invalid xilinx sdfec ioctl argument");
+> +		return -EFAULT;
+
+Wrong error, you did not have a memory fault.
+
+Again, you just created a way to spam the kernel log by a user :(
 
 thanks,
 
