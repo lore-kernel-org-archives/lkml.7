@@ -2,58 +2,110 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B5EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED049C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696AD2075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB992075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:39:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="IgC/WSM6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfECGeg (ORCPT
+        id S1726621AbfECGjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:34:36 -0400
-Received: from dcvr.yhbt.net ([64.71.152.64]:49428 "EHLO dcvr.yhbt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfECGef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:34:35 -0400
-Received: from localhost (dcvr.yhbt.net [127.0.0.1])
-        by dcvr.yhbt.net (Postfix) with ESMTP id 74E411F453;
-        Fri,  3 May 2019 06:34:35 +0000 (UTC)
-Date:   Fri, 3 May 2019 06:34:35 +0000
-From:   Eric Wong <e@80x24.org>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        omar.kilani@gmail.com, jbaron@akamai.com, arnd@arndb.de,
-        linux-fsdevel@vger.kernel.org, dave@stgolabs.net
-Subject: Re: [PATCH] signal: Adjust error codes according to
- restore_user_sigmask()
-Message-ID: <20190503063435.446aqcckbc6ri7xx@dcvr>
-References: <20190503033440.cow6xm4p4hezgkxv@linux-r8p5>
- <20190503034205.12121-1-deepa.kernel@gmail.com>
+        Fri, 3 May 2019 02:39:03 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33376 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfECGjC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 02:39:02 -0400
+Received: by mail-qt1-f194.google.com with SMTP id m32so2454535qtf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 23:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=DZ2IHyxIY3tc20Fav7PGg8oi4DI7SoA47YJWJXbH2tE=;
+        b=IgC/WSM6QdvA97J9Eradk1OkSe2topjqiObiWYIbZdyx/kL61mmr2oXQehbtGj/T+1
+         IZIXz2OMO5RgtUp2K9jrVtD6UPycSwS5ujp38wnBHdq4aoLNN9gqWzPm11o1FMYq28qF
+         r7WOPZ3u6QEA8zGkp9qgzNwDICHurIJ/ik3OnJOFyIB8t2vXHUr9ylAxEEmjxoa1/EYM
+         r6a0I0aeeI36BxPDFIp1RUwLhjzkxaAjeo2n2JY8Tmq1xSKALC3eZIsSnqIp7pJY79Dz
+         keoJra/8M3YhAoPs6SG4NtVkCAtFVj2riHFbKnf3LDSYk5JoZQtcIEgc3dplfqUwsIC1
+         lTRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=DZ2IHyxIY3tc20Fav7PGg8oi4DI7SoA47YJWJXbH2tE=;
+        b=DQvxltEF0rBSSTS9c4mh48uGTnxJk1svpBUFH/LDv1nLZ1L4MguBntPmQyg3rjeCqm
+         OrPTVnr6sW2O1e3N2a+6iclBGuH2xxOzv+RW63KJr+mzevlqu6nkplak5YD8QdHzd16B
+         QAWAvcW73w/QRdxxJ2fIn9JHsz75pkrHP46wo0ZN2bQBZyz/M0Hki6xQ9sdl2WnU59/P
+         aPKpglLMEmQL7YtZk/aEUj+ROqDUKK8uqAon3xbhSti9EjzOEvUXoGgbbJuPj8+l7ShO
+         2NATbrDQzrdgElo9OTMbLj5d1ztzKEUZPNQ4gOLvWpXCAO3WJwdH0XW7TsVyRrO+DvEZ
+         5WNw==
+X-Gm-Message-State: APjAAAX6PDAx1nml9c+trl863L8VXFFEWNLmBB1yLwizfQ2Cy7oExpjg
+        KKYVm14q6HwAKTmK/kLiiigX08aToY5duytnbWOTHg==
+X-Google-Smtp-Source: APXvYqyZbCWh74vb5VdL2cKae7QJoxTTDldS1TH5WTdKneC0Qmwikj8WKkbQ5N8esX/KXeusHW2I5RkliSFeEJQOg8g=
+X-Received: by 2002:ac8:182e:: with SMTP id q43mr3816249qtj.128.1556865541833;
+ Thu, 02 May 2019 23:39:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190503034205.12121-1-deepa.kernel@gmail.com>
+From:   Chris Chiu <chiu@endlessm.com>
+Date:   Fri, 3 May 2019 14:38:50 +0800
+Message-ID: <CAB4CAwdHPfi3rhQofxbH+yWJZnLJCFK+r901HZ6HLxmHPjkU4w@mail.gmail.com>
+Subject: Improve TX performance of RTL8723BU on rtl8xxxu driver
+To:     Jes Sorensen <jes.sorensen@gmail.com>, kvalo@codeaurora.org,
+        davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deepa Dinamani <deepa.kernel@gmail.com> wrote:
-> Sorry, I was trying a new setup at work. I should have tested it.
-> My bad, I've checked this one.
+We have 3 laptops which connect the wifi by the same RTL8723BU.
+The PCI VID/PID of the wifi chip is 10EC:B720 which is supported.
+They have the same problem with the in-kernel rtl8xxxu driver, the
+iperf (as a client to an ethernet-connected server) gets ~1Mbps.
+Nevertheless, the signal strength is reported as around -40dBm,
+which is quite good. From the wireshark capture, the tx rate for each
+data and qos data packet is only 1Mbps. Compare to the driver from
+https://github.com/lwfinger/rtl8723bu, the same iperf test gets ~12
+Mbps or more. The signal strength is reported similarly around
+-40dBm. That's why we want to find out the cause and improve.
 
-Thanks.  This is good w.r.t. epoll_pwait and ppoll when applied
-to 5.0.11 (no fs/io_uring.c).
+After reading the source code of the rtl8xxxu driver and Larry's, the
+major difference is that Larry's driver has a watchdog which will keep
+monitoring the signal quality and updating the rate mask just like the
+rtl8xxxu_gen2_update_rate_mask() does if signal quality changes.
+And this kind of watchdog also exists in rtlwifi driver of some specific
+chips, ex rtl8192ee, rtl8188ee, rtl8723ae, rtl8821ae...etc. They have
+the same member function named dm_watchdog and will invoke the
+corresponding dm_refresh_rate_adaptive_mask to adjust the tx rate
+mask.
 
-Can't think of anything which uses pselect or aio on my system;
-but it looks right to me.
+Thus I created 2 commits and try to do the same thing on rtl8xxxu.
+https://github.com/endlessm/linux/commit/503d0b6eb61f25984042b1f00e6293776ae722c7
+https://github.com/endlessm/linux/commit/5b06665766d6c3e25cbf649022989a8f3abc83d6
+The 1st commit brings a data structure for rate adaptive which will be
+useful for determining higher or lower the tx rate. The second commit
+adds a watchdog to monitor and update the tx rate mask and tell the
+firmware. After applying these commits, the tx rate of each data and
+qos data packet will be 39Mbps (MCS4) with the 0xf00000 as its tx
+rate mask. The 20th bit ~ 23th bit means MCS4 to MCS7. It means
+that the firmware still picks the lowest rate from the rate mask and
+explains why the tx rate of data and qos data is always lowest 1Mbps
+because the default rate mask passed is almost 0xFFFFFFF ranges
+from the basic CCK rate, OFDM rate, and MCS rate. However, with
+Larry's driver, the tx rate observed from wireshark under the same
+condition is almost 65Mbps or 72Mbps.
 
-> I've removed the questionable reported-by, since we're not sure if
-> it is actually the same issue.
+I believe the firmware of RTL8723BU may need fix. And I think we
+can still bring in the dm_watchdog as rtlwifi to improve from the
+driver side. Please leave precious comments for my commits and
+suggest what I can do better to get them upstream. Or suggest if
+there's any better idea to fix this. Thanks.
 
-Yes, I hope Omar can test this, too.
-
-Thanks again, all!
+Chris
