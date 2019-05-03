@@ -6,131 +6,117 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24FEC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7D5C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFF1206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C926206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbfECQzl (ORCPT
+        id S1728660AbfECQ45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 12:55:41 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48971 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfECQzl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 12:55:41 -0400
-Received: from mail-wr1-f71.google.com ([209.85.221.71])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1hMbTG-0007oH-Gq
-        for linux-kernel@vger.kernel.org; Fri, 03 May 2019 16:55:38 +0000
-Received: by mail-wr1-f71.google.com with SMTP id z7so5263888wrh.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 09:55:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=v4PB/KtJcj+jKsWtMsEZdsEqYpm/3dtqF+jc9qu4DtM=;
-        b=eQF2timhhyfSdORa82UuYTS131sVUbrlJgPH+kLMzKe5hghmNQVJKjcU0CQi/Vpsp2
-         L4v+kGxL4alPJ+rRokthIHfO7epYR4EEfv+68A/OHS3Z87jEeGGoPaNzugczqYIW6fr/
-         cxxnptbdL+2dbOXf/P6a5/9PcaJvhv0iyYuJs4/XDZBiPsGaVnvsw3lmFIP2bxxjlOAm
-         3KHtID1ppS69Ogn20Ndnme9KhmsUgeLUFMzgTncdze2KQ1zYc3JlBEslljAS5PSGhHU9
-         xt00iBTWccbQLeHjc7WbyUDjl/gBZDGHy5yWvkfs3aRMPZSi2j1F/wAa6b40DlyW83Dl
-         K7Uw==
-X-Gm-Message-State: APjAAAUiYRghfJUsx3cQOcCWODjFl5f4xdSl4El3lQTmSEW/70m3hJNf
-        4Sjl263rYKVVqiz46mr4mV1wMALUyJT70QiQr4fR9fb2d3NLL4QgFdheduJ2u/+bWFozAkOwQgg
-        6LbcvACkeyPzjU51GTJPo0830KWIKZA1CIZ+3/Z9AgA==
-X-Received: by 2002:a7b:cc91:: with SMTP id p17mr7038471wma.147.1556902537637;
-        Fri, 03 May 2019 09:55:37 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx1hZPUfBF839e9/ajKvR7uUiiGy0H+zfXnNTReDtbv/nwRnFlaRLq+sseA7vIDfEU3Jz+7Tw==
-X-Received: by 2002:a7b:cc91:: with SMTP id p17mr7038460wma.147.1556902537442;
-        Fri, 03 May 2019 09:55:37 -0700 (PDT)
-Received: from localhost (host28-131-dynamic.22-79-r.retail.telecomitalia.it. [79.22.131.28])
-        by smtp.gmail.com with ESMTPSA id h131sm4571434wmh.44.2019.05.03.09.55.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 09:55:36 -0700 (PDT)
-Date:   Fri, 3 May 2019 18:55:35 +0200
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>
-Cc:     Rex Zhu <rex.zhu@amd.com>, hersen wu <hersenxs.wu@amd.com>,
-        Evan Quan <evan.quan@amd.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd/powerplay: remove spurious semicolon
-Message-ID: <20190503165535.GA30964@xps-13>
+        Fri, 3 May 2019 12:56:57 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37192 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728637AbfECQ45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 12:56:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 091DE15A2;
+        Fri,  3 May 2019 09:56:56 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F2813F557;
+        Fri,  3 May 2019 09:56:49 -0700 (PDT)
+Date:   Fri, 3 May 2019 17:56:46 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>, Kuehling@google.com,
+        Felix <Felix.Kuehling@amd.com>, Deucher@google.com,
+        Alexander <Alexander.Deucher@amd.com>, Koenig@google.com,
+        Christian <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v14 10/17] fs, arm64: untag user pointers in
+ fs/userfaultfd.c
+Message-ID: <20190503165646.GK55449@arrakis.emea.arm.com>
+References: <cover.1556630205.git.andreyknvl@google.com>
+ <7d3b28689d47c0fa1b80628f248dbf78548da25f.1556630205.git.andreyknvl@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <7d3b28689d47c0fa1b80628f248dbf78548da25f.1556630205.git.andreyknvl@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary semicolons at the end of line.
+On Tue, Apr 30, 2019 at 03:25:06PM +0200, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
+> 
+> userfaultfd_register() and userfaultfd_unregister() use provided user
+> pointers for vma lookups, which can only by done with untagged pointers.
+> 
+> Untag user pointers in these functions.
+> 
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>  fs/userfaultfd.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index f5de1e726356..fdee0db0e847 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -1325,6 +1325,9 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+>  		goto out;
+>  	}
+>  
+> +	uffdio_register.range.start =
+> +		untagged_addr(uffdio_register.range.start);
+> +
+>  	ret = validate_range(mm, uffdio_register.range.start,
+>  			     uffdio_register.range.len);
+>  	if (ret)
+> @@ -1514,6 +1517,8 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+>  	if (copy_from_user(&uffdio_unregister, buf, sizeof(uffdio_unregister)))
+>  		goto out;
+>  
+> +	uffdio_unregister.start = untagged_addr(uffdio_unregister.start);
+> +
+>  	ret = validate_range(mm, uffdio_unregister.start,
+>  			     uffdio_unregister.len);
+>  	if (ret)
 
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
----
- drivers/gpu/drm/amd/powerplay/amd_powerplay.c         | 8 ++++----
- drivers/gpu/drm/amd/powerplay/hwmgr/hardwaremanager.c | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+Wouldn't it be easier to do this in validate_range()? There are a few
+more calls in this file, though I didn't check whether a tagged address
+would cause issues.
 
-diff --git a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-index 3f73f7cd18b9..1052f5119087 100644
---- a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-+++ b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-@@ -1304,7 +1304,7 @@ static int pp_notify_smu_enable_pwe(void *handle)
- 
- 	if (hwmgr->hwmgr_func->smus_notify_pwe == NULL) {
- 		pr_info_ratelimited("%s was not implemented.\n", __func__);
--		return -EINVAL;;
-+		return -EINVAL;
- 	}
- 
- 	mutex_lock(&hwmgr->smu_lock);
-@@ -1341,7 +1341,7 @@ static int pp_set_min_deep_sleep_dcefclk(void *handle, uint32_t clock)
- 
- 	if (hwmgr->hwmgr_func->set_min_deep_sleep_dcefclk == NULL) {
- 		pr_debug("%s was not implemented.\n", __func__);
--		return -EINVAL;;
-+		return -EINVAL;
- 	}
- 
- 	mutex_lock(&hwmgr->smu_lock);
-@@ -1360,7 +1360,7 @@ static int pp_set_hard_min_dcefclk_by_freq(void *handle, uint32_t clock)
- 
- 	if (hwmgr->hwmgr_func->set_hard_min_dcefclk_by_freq == NULL) {
- 		pr_debug("%s was not implemented.\n", __func__);
--		return -EINVAL;;
-+		return -EINVAL;
- 	}
- 
- 	mutex_lock(&hwmgr->smu_lock);
-@@ -1379,7 +1379,7 @@ static int pp_set_hard_min_fclk_by_freq(void *handle, uint32_t clock)
- 
- 	if (hwmgr->hwmgr_func->set_hard_min_fclk_by_freq == NULL) {
- 		pr_debug("%s was not implemented.\n", __func__);
--		return -EINVAL;;
-+		return -EINVAL;
- 	}
- 
- 	mutex_lock(&hwmgr->smu_lock);
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/hardwaremanager.c b/drivers/gpu/drm/amd/powerplay/hwmgr/hardwaremanager.c
-index c1c51c115e57..70f7f47a2fcf 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/hardwaremanager.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/hardwaremanager.c
-@@ -76,7 +76,7 @@ int phm_set_power_state(struct pp_hwmgr *hwmgr,
- int phm_enable_dynamic_state_management(struct pp_hwmgr *hwmgr)
- {
- 	struct amdgpu_device *adev = NULL;
--	int ret = -EINVAL;;
-+	int ret = -EINVAL;
- 	PHM_FUNC_CHECK(hwmgr);
- 	adev = hwmgr->adev;
- 
 -- 
-2.20.1
-
+Catalin
