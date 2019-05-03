@@ -2,348 +2,278 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C03C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C8DC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51CC52087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997EF205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:25:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="dCEEATTn";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="STTkZKmC"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RFVPOzXP";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="Ji7DFkIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfECIUR (ORCPT
+        id S1726402AbfECIZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 04:20:17 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:44434 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725793AbfECIUQ (ORCPT
+        Fri, 3 May 2019 04:25:57 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:37590 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725777AbfECIZ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 04:20:16 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        Fri, 3 May 2019 04:25:57 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4ACE4C0159;
-        Fri,  3 May 2019 08:20:09 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 27DF5C00D4;
+        Fri,  3 May 2019 08:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1556871612; bh=ev67Stj8Ed6IH7ye+6gIzDKkiT6vgQ7ftgweF+BDnNc=;
+        t=1556871958; bh=TDDiLYFs1Tz29Y569eCVx9eKZJ50zXOYAYMtGl6RwPI=;
         h=From:To:CC:Subject:Date:References:From;
-        b=dCEEATTn3JgBqd9Sf4DNufaAaejA5dqOb3lRFq2AtplazchpExGQy/pOdKNxj41n0
-         72WIjyIwpatbOM8A0LVfv9YRQ1rLtgQC8crwBiV/fdSS3V2uAcZQVgsY/T36+6oq5y
-         BOI5N/aY4ctAcjcVVUKd9UVu3YaK3VNG2ulO+6M4yLJMkelLknUAQE5gacGjJs5p2R
-         fOhDHgON/4hi5wk2l6HfkMrBs6AHqV/8JuK5xLO7TrRX13g98+gsMCGv0GMiwxxaoG
-         a9A2DPy6CGYat2jyPUP1StPu8sukW4VKzGlbd4GIBhOEc4wDgC1osX1BvW6p9QCbTa
-         /QLDLSvIE7vBQ==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        b=RFVPOzXP4WCYRGY4caMK5fLv2J575zH2zKt2fB+L1DJsEcJpaAFEaFOvlHhKnwxhe
+         ckerIIv+Syl8zNvawQXW9lNPX65+8QHLIyfBgOgtNXZkHkfXpQBMwUhw07gpJaaqqU
+         xgWmx5g9IrLKPC3zTG8JSYXIvxlUmP1wywsgQSVU1/5hkTE6yRleOXVG8z7cEJD4FI
+         pGs59cBkLcmjh1akeVVzk2ZDmvd8Z9jHlHhnz+ISypAO3BNU557c4eUObr6NYyr+34
+         nR+bdUzvxof3qkrWykdgN6sV8LafIGBltFyLwqLC60gkMSlg4cWlK6LJdQzetn20qT
+         URLECllwWXyNA==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 28813A005D;
-        Fri,  3 May 2019 08:20:11 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 97D9DA0068;
+        Fri,  3 May 2019 08:25:50 +0000 (UTC)
 Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 3 May 2019 01:20:11 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (10.13.134.195)
+ us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 3 May 2019 01:25:50 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.13.134.195)
  by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 3 May 2019 01:20:10 -0700
+ 14.3.408.0; Fri, 3 May 2019 01:25:49 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=synopsys.onmicrosoft.com; s=selector1-synopsys-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SzOqCEoi/RMSfvrSTXJ0eRwO8LREf+nR0SENYAUxBVw=;
- b=STTkZKmC2EaUwtk2LnupenYQ1y8juDrEzji1glMkzFiqMwSUh4ppPQJ19cTznbbYclRAnLto75MWeCr02O5ZeEO10vxQk18zGhTZifzC+NWHioe+h6EPdhcqATuXcxBuilvRTawaWN/Nrh5A22XvZDzU0inlURc27NXXnWxrHcY=
+ bh=YaXa2Joky9+Rybuhy2LSVpHEWORiNzbGDbbXpwgJmk4=;
+ b=Ji7DFkIsOZECVY/Y0gj8nXzPQMTnrFsuq+Y5geZZvmhTlaRfzoRtPLdWOEXXPOyVr1ajHqd76Wg3z5T1c/qu3l9O68eZM6SBBu7q8nii/vQuUv2gJrwDnr5UOMlRgSjjA91dicg66lmE0AYe0Q10I9jXnNglsq2AdbK/m//YzR8=
 Received: from SN1PR12MB2431.namprd12.prod.outlook.com (52.132.195.146) by
- SN1PR12MB2509.namprd12.prod.outlook.com (52.132.196.152) with Microsoft SMTP
+ SN1PR12MB2384.namprd12.prod.outlook.com (52.132.194.153) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Fri, 3 May 2019 08:20:09 +0000
+ 15.20.1856.10; Fri, 3 May 2019 08:25:48 +0000
 Received: from SN1PR12MB2431.namprd12.prod.outlook.com
  ([fe80::1982:4b45:2adf:9a1f]) by SN1PR12MB2431.namprd12.prod.outlook.com
  ([fe80::1982:4b45:2adf:9a1f%4]) with mapi id 15.20.1856.012; Fri, 3 May 2019
- 08:20:09 +0000
+ 08:25:48 +0000
 From:   Artur Petrosyan <Arthur.Petrosyan@synopsys.com>
-To:     Doug Anderson <dianders@chromium.org>
-CC:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
+To:     Doug Anderson <dianders@chromium.org>,
+        Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "amstan@chromium.org" <amstan@chromium.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
+        =?iso-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+CC:     Alan Stern <stern@rowland.harvard.edu>,
+        Alexandru M Stan <amstan@chromium.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
         William Wu <william.wu@rock-chips.com>,
         "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
         Stefan Wahren <stefan.wahren@i2se.com>,
-        Randy Li <ayaka@soulik.info>,
-        "zyw@rock-chips.com" <zyw@rock-chips.com>,
-        "mka@chromium.org" <mka@chromium.org>,
-        "ryandcase@chromium.org" <ryandcase@chromium.org>,
+        Randy Li <ayaka@soulik.info>, Chris <zyw@rock-chips.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
         Amelie Delaunay <amelie.delaunay@st.com>,
-        "jwerner@chromium.org" <jwerner@chromium.org>,
-        "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>,
-        "Elaine Zhang" <zhangqing@rock-chips.com>,
+        "Julius Werner" <jwerner@chromium.org>,
+        Dinh Nguyen <dinguyen@opensource.altera.com>,
+        Elaine Zhang <zhangqing@rock-chips.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH v2 1/5] usb: dwc2: bus suspend/resume for hosts with
  DWC2_POWER_DOWN_PARAM_NONE
 Thread-Topic: [PATCH v2 1/5] usb: dwc2: bus suspend/resume for hosts with
  DWC2_POWER_DOWN_PARAM_NONE
 Thread-Index: AQHU9XvT/eL2bASAskajIQu3Y3ICkw==
-Date:   Fri, 3 May 2019 08:20:09 +0000
-Message-ID: <SN1PR12MB243156982D5BD74F11680597A7350@SN1PR12MB2431.namprd12.prod.outlook.com>
+Date:   Fri, 3 May 2019 08:25:48 +0000
+Message-ID: <SN1PR12MB243136608514210F3E3E536EA7350@SN1PR12MB2431.namprd12.prod.outlook.com>
 References: <20190418001356.124334-1-dianders@chromium.org>
  <20190418001356.124334-2-dianders@chromium.org>
- <SN1PR12MB243108D1EF3239EC4F730ACDA7390@SN1PR12MB2431.namprd12.prod.outlook.com>
- <CAD=FV=UOmfNeuZPrDcZRdwAkF4yRifCpBGUuZTsmmz0UVEZ+yA@mail.gmail.com>
- <SN1PR12MB24317F315C5A4DFE70F9CB0DA73A0@SN1PR12MB2431.namprd12.prod.outlook.com>
- <CAD=FV=UWGOWiCpy5qUY8oFHPyxdYJe7OsdWBDuCNcXBu5BJoGA@mail.gmail.com>
+ <CAD=FV=UGjQz9Di=NL_r_g1Hofqv-FWBywfSm9Vu6gGr22wzPrA@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=arturp@synopsys.com; 
-x-originating-ip: [84.53.141.186]
+x-originating-ip: [84.53.141.185]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7cb46ea9-9584-441e-b4cb-08d6cfa02804
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:SN1PR12MB2509;
-x-ms-traffictypediagnostic: SN1PR12MB2509:
+x-ms-office365-filtering-correlation-id: db7b71c4-b286-4f76-57c9-08d6cfa0f21b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:SN1PR12MB2384;
+x-ms-traffictypediagnostic: SN1PR12MB2384:
 x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <SN1PR12MB25097AEF3FF18589CEF1D033A7350@SN1PR12MB2509.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:849;
+x-microsoft-antispam-prvs: <SN1PR12MB23843A4F89B4E9FD6F5C6C18A7350@SN1PR12MB2384.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1824;
 x-forefront-prvs: 0026334A56
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(136003)(39850400004)(366004)(376002)(55674003)(199004)(189003)(102836004)(26005)(55016002)(9686003)(53546011)(6436002)(229853002)(6306002)(68736007)(966005)(476003)(6506007)(81156014)(81166006)(4326008)(446003)(8676002)(74316002)(7416002)(7736002)(305945005)(6916009)(486006)(25786009)(86362001)(99286004)(186003)(53936002)(8936002)(73956011)(66066001)(6116002)(3846002)(6246003)(478600001)(5660300002)(66556008)(256004)(14444005)(316002)(33656002)(66476007)(66446008)(14454004)(66946007)(76116006)(91956017)(71190400001)(2906002)(15650500001)(71200400001)(52536014)(54906003)(7696005)(64756008)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:SN1PR12MB2509;H:SN1PR12MB2431.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39850400004)(396003)(346002)(136003)(376002)(199004)(189003)(55674003)(14454004)(316002)(966005)(110136005)(54906003)(74316002)(305945005)(7416002)(7736002)(478600001)(25786009)(66946007)(86362001)(5660300002)(52536014)(99286004)(7696005)(64756008)(66476007)(66556008)(66446008)(256004)(14444005)(66066001)(73956011)(76116006)(91956017)(3846002)(6116002)(4326008)(2906002)(68736007)(186003)(102836004)(6246003)(26005)(6436002)(6306002)(53936002)(55016002)(9686003)(53546011)(6506007)(81156014)(229853002)(8936002)(33656002)(446003)(81166006)(8676002)(476003)(15650500001)(486006)(71190400001)(71200400001)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:SN1PR12MB2384;H:SN1PR12MB2431.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: synopsys.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: pRi0aiEbfO5wqX2cwvLLp/ax4KrsZ2HypcXfe8VVnzHrBJrjRiFmCu5lJjz1RqFinGurabwHfrkZP1cj7LUjcIGNI3eT3waYMu5Awp8oFw87j4b5B05xyyuKTPjvn/lf+FaVQmPr2EhUILzP8BGK8NY8B7oGFkse/viA0ZVtt8V1TeMXVbTJ3MQXq+jJarIv5KYuDrFL7fMMEnYhhcNqFo5Pw1rUU+Rofk4f0CuxJSd/Jtw+29yMf85BabaFRKrTKq9pimXqD/t6rDovZn7P+qfZsIsag0mbAnlcgkMtimjZUg6H1cDacxZ55998OgMUwzxOsVJL0vBghYziUKXpnu9oHwIcEqL3F82ti9gBToPbVgLMIs/KbVjSk9wpFjgiCDahQZTzZPOyC4/14h/py0G4mnWo+DJve7GREqynuqc=
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: LjIFubHGOY6KJhsRBmBHCuyioyU7bQcdzKVPy2pzETPr8inP+scRjGGlhsqwtFxiG8fZcMeBhrJScUgzbEX4RCPPQradpc3Aa2LqqUIApS8cZ2QNwPeZ37YCpJXjIXdk9A98lfJKhM+OMC2Wy7eIB93LeWP8nfKTDNjUyxmoCfHmAsSlaUJm5UN2izdHKAkhfm5TTFWcso/FYUH5BMU8OqoBZQuLwJ9o5UMp/hWK0tXojVk3/upDRAIJiPNDocJnkykCC3E7M8NYIZfkXbSDPchozsSpCgLPCHTfiKvzNmfOeNnA1t+JCrv+FnZveOXuylzir69Hpx5TaZio07Wv5OSd7dYk0kDV8lwQtKY8axSDf7Esp2UThIkx/b3+DgViBQISbdfrFlVEm+OUzeKwpVcSylkBMkpm7x2lt4Wuwgk=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7cb46ea9-9584-441e-b4cb-08d6cfa02804
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2019 08:20:09.0886
+X-MS-Exchange-CrossTenant-Network-Message-Id: db7b71c4-b286-4f76-57c9-08d6cfa0f21b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2019 08:25:48.1117
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2509
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2384
 X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/2019 05:57, Doug Anderson wrote:=0A=
+On 5/2/2019 03:58, Doug Anderson wrote:=0A=
 > Hi,=0A=
 > =0A=
-> On Mon, Apr 29, 2019 at 11:06 PM Artur Petrosyan=0A=
-> <Arthur.Petrosyan@synopsys.com> wrote:=0A=
+> =0A=
+> On Wed, Apr 17, 2019 at 5:15 PM Douglas Anderson <dianders@chromium.org> =
+wrote:=0A=
 >>=0A=
->> Hi,=0A=
+>> This is an attempt to rehash commit 0cf884e819e0 ("usb: dwc2: add bus=0A=
+>> suspend/resume for dwc2") on ToT.  That commit was reverted in commit=0A=
+>> b0bb9bb6ce01 ("Revert "usb: dwc2: add bus suspend/resume for dwc2"")=0A=
+>> because apparently it broke the Altera SOCFPGA.=0A=
 >>=0A=
->> On 4/29/2019 21:34, Doug Anderson wrote:=0A=
->>> Hi,=0A=
->>>=0A=
->>> On Mon, Apr 29, 2019 at 1:43 AM Artur Petrosyan=0A=
->>> <Arthur.Petrosyan@synopsys.com> wrote:=0A=
->>>>=0A=
->>>> Hi,=0A=
->>>>=0A=
->>>> On 4/18/2019 04:15, Douglas Anderson wrote:=0A=
->>>>> This is an attempt to rehash commit 0cf884e819e0 ("usb: dwc2: add bus=
-=0A=
->>>>> suspend/resume for dwc2") on ToT.  That commit was reverted in commit=
-=0A=
->>>>> b0bb9bb6ce01 ("Revert "usb: dwc2: add bus suspend/resume for dwc2"")=
-=0A=
->>>>> because apparently it broke the Altera SOCFPGA.=0A=
->>>>>=0A=
->>>>> With all the changes that have happened to dwc2 in the meantime, it's=
-=0A=
->>>>> possible that the Altera SOCFPGA will just magically work with this=
-=0A=
->>>>> change now.  ...and it would be good to get bus suspend/resume=0A=
->>>>> implemented.=0A=
->>>>>=0A=
->>>>> This change is a forward port of one that's been living in the Chrome=
-=0A=
->>>>> OS 3.14 kernel tree.=0A=
->>>>>=0A=
->>>>> Signed-off-by: Douglas Anderson <dianders@chromium.org>=0A=
->>>>> ---=0A=
->>>>> This patch was last posted at:=0A=
->>>>>=0A=
->>>>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.kernel.or=
-g_r_1446237173-2D15263-2D1-2Dgit-2Dsend-2Demail-2Ddianders-40chromium.org&d=
-=3DDwIDAg&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=3D9hPBFKCJ_nBjJhGVrrlYOeOQjP_HlVzYqr=
-C_D7niMJI&m=3DMMfe-4lZePyty6F5zfQ54kiYGuJWNulyRat944LkOsc&s=3DnExFpAPP_0plZ=
-fO5LMG1B-mqt1vyCvE35elVcyVgs8Y&e=3D=0A=
->>>>>=0A=
->>>>> ...and appears to have died the death of silence.  Maybe it could get=
-=0A=
->>>>> some bake time in linuxnext if we can't find any proactive testing?=
-=0A=
->>>>>=0A=
->>>>> I will also freely admit that I don't know tons about the theory=0A=
->>>>> behind this patch.  I'm mostly just re-hashing the original commit=0A=
->>>>> from Kever that was reverted since:=0A=
->>>>> * Turning on partial power down on rk3288 doesn't "just work".  I=0A=
->>>>>      don't get hotplug events.  This is despite dwc2 auto-detecting t=
-hat=0A=
->>>>>      we are power optimized.=0A=
->>>> What do you mean by doesn't "just work" ? It seem to me that even afte=
-r=0A=
->>>> adding this patch you don't get issues fixed.=0A=
->>>> You mention that you don't get the hotplug events. Please provide dwc2=
-=0A=
->>>> debug logs and register dumps on this issue.=0A=
->>>=0A=
->>> I mean that partial power down in the currently upstream driver=0A=
->>> doesn't work.  AKA: if I turn on partial power down in the upstream=0A=
->>> driver then hotplug events break.  I can try to provide some logs.  On=
-=0A=
->>> what exact version of the code do you want logs?  Just your series?=0A=
->>> Just my series?  Mainline?  Some attempt at combining both series?  As=
-=0A=
->>> I said things seem to sorta work with the combined series.  I can try=
-=0A=
->>> to clarify if that's the series you want me to test with.  ...or I can=
-=0A=
->>> wait for your next version?=0A=
->> As I said this patch doesn't fix the issue with hotplug. With this patch=
-=0A=
->> or without the hotplug behaves as it was. I have tested it on our setup.=
-=0A=
+>> With all the changes that have happened to dwc2 in the meantime, it's=0A=
+>> possible that the Altera SOCFPGA will just magically work with this=0A=
+>> change now.  ...and it would be good to get bus suspend/resume=0A=
+>> implemented.=0A=
 >>=0A=
->> Have you debugged your patch? Does it make any difference on your setup=
-=0A=
->> ? Does it fix the issue with hotplug?=0A=
-> =0A=
-> I think we're still not taking on the same page.=0A=
-> =0A=
-> My patch makes no attempt to make partial power down mode work.  My=0A=
-> patch attempts to make things work a little better when using=0A=
-> DWC2_POWER_DOWN_PARAM_NONE.  There is no use testing my patch with=0A=
-> partial power down as it shouldn't have any impact there.=0A=
-> =0A=
-> =0A=
->>> I am by no means an expert on dwc2, but an assumption made in my patch=
-=0A=
->>> is that even cores that can't support partial power down can still=0A=
->>> save some amount of power when hcd_suspend is called.=0A=
->> Have you tried to debug dwc2 with power_down =3D=3D DWC2_POWER_DOWN_PARA=
-M_NONE ?=0A=
->>>=0A=
->>> Some evidence that this should be possible: looking at mainline Linux=
-=0A=
->>> and at dwc2_port_suspend(), I see:=0A=
->>>=0A=
->>> * It is currently called even when we have DWC2_POWER_DOWN_PARAM_NONE=
-=0A=
->> Currently (without your and my patches) (looking at mainline Linux) the=
-=0A=
->> function dwc2_port_suspend() is called anyway because its call is issued=
-=0A=
->> by the system. But it performs entering to suspend only in case of=0A=
->> DWC2_POWER_DOWN_PARAM_PARTIAL.=0A=
+>> This change is a forward port of one that's been living in the Chrome=0A=
+>> OS 3.14 kernel tree.=0A=
 >>=0A=
->> This is not an assumption. What I am pointing out is based on debugging=
-=0A=
->> and before making assumptions without debugging for me seems not ok.=0A=
+>> Signed-off-by: Douglas Anderson <dianders@chromium.org>=0A=
+>> ---=0A=
+>> This patch was last posted at:=0A=
 >>=0A=
->> Currently without your patch and without my patches. In the=0A=
->> dwc2_port_suspend() it will enter to suspend only in case that=0A=
->> power_down =3D=3D DWC2_POWER_DOWN_PARAM_PARTIAL. Because if you look at =
-the=0A=
->> code more carefully you will see=0A=
+>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.kernel.org_r=
+_1446237173-2D15263-2D1-2Dgit-2Dsend-2Demail-2Ddianders-40chromium.org&d=3D=
+DwIBaQ&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=3D9hPBFKCJ_nBjJhGVrrlYOeOQjP_HlVzYqrC_D=
+7niMJI&m=3D7rxT8EFX9mqUDtTL4P7iuzYNsYROe9rxHGCresSKPTg&s=3DlTaNUA2XIYPat417=
+fkd1A4Zpvb5eyYtTc1H_NIfW8Vw&e=3D=0A=
 >>=0A=
->>          if (hsotg->params.power_down !=3D DWC2_POWER_DOWN_PARAM_PARTIAL=
-)=0A=
->>                  goto skip_power_saving;=0A=
+>> ...and appears to have died the death of silence.  Maybe it could get=0A=
+>> some bake time in linuxnext if we can't find any proactive testing?=0A=
 >>=0A=
->> This says if power_down is not DWC2_POWER_DOWN_PARAM_PARTIAL then skip=
+>> I will also freely admit that I don't know tons about the theory=0A=
+>> behind this patch.  I'm mostly just re-hashing the original commit=0A=
+>> from Kever that was reverted since:=0A=
+>> * Turning on partial power down on rk3288 doesn't "just work".  I=0A=
+>>    don't get hotplug events.  This is despite dwc2 auto-detecting that=
 =0A=
->> power saving.=0A=
->>=0A=
->> So but after your patch. If power_down is DWC2_POWER_DOWN_PARAM_NONE it=
-=0A=
->> tries to suspend.=0A=
+>>    we are power optimized.=0A=
+>> * If we don't do something like this commit we don't get into as low=0A=
+>>    of a power mode.=0A=
 > =0A=
-> We must be looking at different code.  I'm looking at Linux's tree, AKA:=
-=0A=
+> OK, I spent the day digging more into this patch to confirm that it's=0A=
+> really the right thing to do.  ...and it still seems to be.=0A=
 > =0A=
-> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__git.kernel.org_pub=
-_scm_linux_kernel_git_torvalds_linux.git_tree_drivers_usb_dwc2_hcd.c-23n348=
-8&d=3DDwIFaQ&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=3D9hPBFKCJ_nBjJhGVrrlYOeOQjP_HlVz=
-YqrC_D7niMJI&m=3DIWkDOOGTr0q-H1piDv2KOZe_Hnrz18g6rXFx-DsTuv4&s=3DAHu2iOKkyb=
-liRGtIfN7cF5p070UdvUKTYJsyAKYojis&e=3D=0A=
-Here you are looking at the old code. After that there are several of =0A=
-changes related to suspend/resume functions.=0A=
-=0A=
-This is the link to the code with changes. Latest version of those =0A=
-functions.=0A=
-=0A=
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dri=
-vers/usb/dwc2/hcd.c#n4489=0A=
-=0A=
-Your changes are sitting on that latest version of code. Not the old =0A=
-version of it.=0A=
-=0A=
+> First off: I'm pretty sure the above sentence "If we don't do=0A=
+> something like this commit we don't get into as low of a power mode."=0A=
+> is totally wrong.  Luckily it's "after the cut" and not part of the=0A=
+> commit message.  Specifically I did a bunch of power testing and I=0A=
+> couldn't find any instance saving power after this patch.=0A=
 > =0A=
-> I took a mainline kernel ("v5.1-rc7-5-g83a50840e72a") and added=0A=
-> printouts in dwc2_port_suspend() next to where it set HPRT0_SUSP and=0A=
-> PCGCTL_STOPPCLK in dwc2_port_suspend().=0A=
-I think you did this tests on the old version of the code=0A=
-=0A=
-I have tested the flow myself with the mainline Kernel on =0A=
-"torvalds/master" and not HPRT0_SUSP nor PCGCTL_STOPPCLK are not being set.=
-=0A=
-=0A=
-So here you need to review those things again.=0A=
+> ...but, then I looked more carefully at all the history of this=0A=
+> commit.  I ended up at:=0A=
+> =0A=
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__chromium-2Dreview.=
+googlesource.com_c_chromiumos_third-5Fparty_kernel_-2B_306265_&d=3DDwIBaQ&c=
+=3DDPL6_X_6JkXFx7AXWqB0tg&r=3D9hPBFKCJ_nBjJhGVrrlYOeOQjP_HlVzYqrC_D7niMJI&m=
+=3D7rxT8EFX9mqUDtTL4P7iuzYNsYROe9rxHGCresSKPTg&s=3DLiyyIyaCPmr88nJeI7TCGtoJ=
+BFLRWir_reikYtAHHDw&e=3D=0A=
+Looking at this code review I see that this patch fixes whatever issues =0A=
+you have on Chrome OS 3.14. But your patch has landed on the top of =0A=
+latest Kernel version. With the latest version I think you would not =0A=
+have the regression issue.=0A=
+So you are fixing Chrome OS 3.14.=0A=
 =0A=
 > =0A=
-> [  454.906364] dwc2 ff540000.usb: I'm setting HPRT0_SUSP=0A=
-> [  454.906367] dwc2 ff540000.usb: I'm setting PCGCTL_STOPPCLK=0A=
+> ...where I said that this fixes a resume speed regression.  More=0A=
+> details could be found at the linked bug, AKA:=0A=
 > =0A=
-> ...and just to confirm:=0A=
-> =0A=
-> # grep '^power' /sys/kernel/debug/*.usb/params=0A=
-> /sys/kernel/debug/ff540000.usb/params:power_down                    : 0=
-=0A=
-> /sys/kernel/debug/ff580000.usb/params:power_down                    : 0=
+> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__bugs.chromium.org_=
+p_chromium_issues_detail-3Fid-3D548336&d=3DDwIBaQ&c=3DDPL6_X_6JkXFx7AXWqB0t=
+g&r=3D9hPBFKCJ_nBjJhGVrrlYOeOQjP_HlVzYqrC_D7niMJI&m=3D7rxT8EFX9mqUDtTL4P7iu=
+zYNsYROe9rxHGCresSKPTg&s=3D7gK8ZGX2zZPqC98CDMhqxEY3Acm_TbYa3fpQjWtvexM&e=3D=
 =0A=
 > =0A=
-> So I'm really quite convinced that on mainline Linux with=0A=
-> DWC2_POWER_DOWN_PARAM_NONE that dwc2_port_suspend() sets HPRT0_SUSP=0A=
-> and PCGCTL_STOPPCLK.=0A=
+> ...but, sadly, I wasn't as verbose as I usually am and didn't describe=0A=
+> my exact testing setup.  So I tried to reproduce.  ...and I was able=0A=
+> to.  I tested on an rk3288-veyron-jerry with an empty USB hub plugged=0A=
+> into the left port (the host port) and my "servo 2" debug board hooked=0A=
+> up to the right port.  The "power_Resume" test in Chrome OS certainly=0A=
+> showed a regression in 3.14 when doing a suspend/resume cycle.=0A=
 > =0A=
 > =0A=
->>> ...I believe that the net effect of my patch ends up doing both those=
+> Digging into the logs in 3.14, before this patch I saw this in the logs:=
 =0A=
->>> same two things in hcd_suspend.  That is: when power_down is=0A=
->>> DWC2_POWER_DOWN_PARAM_NONE I believe my patch is really just doing the=
+> =0A=
+> usb 3-1: reset high-speed USB device number 2 using dwc2=0A=
+> usb 3-1.7: reset high-speed USB device number 3 using dwc2=0A=
+> =0A=
+> ...after this patch:=0A=
+> =0A=
+> usb 3-1: USB disconnect, device number 2=0A=
+> usb 3-1.7: USB disconnect, device number 3=0A=
+> usb 3-1: new high-speed USB device number 4 using dwc2=0A=
+> usb 3-1: New USB device found, idVendor=3D1a40, idProduct=3D0201, bcdDevi=
+ce=3D 1.00=0A=
+> usb 3-1: New USB device strings: Mfr=3D0, Product=3D1, SerialNumber=3D0=
 =0A=
->>> same thing that dwc2_port_suspend() would do in the same case.  Is=0A=
->>> that not OK?=0A=
->> No if your patch is doing the same thing as it was doing before what is=
+> usb 3-1: Product: USB 2.0 Hub [MTT]=0A=
+> usb 3-1.7: new high-speed USB device number 5 using dwc2=0A=
+> usb 3-1.7: New USB device found, idVendor=3D1a40, idProduct=3D0101, bcdDe=
+vice=3D 1.11=0A=
+> usb 3-1.7: New USB device strings: Mfr=3D0, Product=3D1, SerialNumber=3D0=
 =0A=
->> the purpose of the patch ?=0A=
+> usb 3-1.7: Product: USB 2.0 Hub=0A=
 > =0A=
-> The purpose is to make _dwc2_hcd_suspend() work more correctly in the=0A=
-> case where power_down is DWC2_POWER_DOWN_PARAM_NONE >=0A=
+> ...so basically my belief is that without this patch we're just sorta=0A=
+> leaving the device hanging and it get confused on resume.  After this=0A=
+> patch we behave slightly better.=0A=
 > =0A=
->> My testes show that your patch doesn't fix the issue related partial=0A=
->> power down.=0A=
+> I tested on 4.19 and found much the same.  There:=0A=
 > =0A=
-> Right.  I have been trying to say that my patch doesn't do anything at=0A=
-> all for partial power down.  I am simply trying to make=0A=
-> DWC2_POWER_DOWN_PARAM_NONE work more correctly.=0A=
+> usb 2-1: reset high-speed USB device number 2 using dwc2=0A=
+> usb 2-1.7: reset high-speed USB device number 3 using dwc2=0A=
 > =0A=
-> I haven't run all the power consumption tests in quite a long time and=0A=
-> I'll try to get it hooked up tomorrow to confirm that my patch really=0A=
-> truly is still needed to help with power consumption.  I did confirm=0A=
-> that at least there are cases where _dwc2_hcd_suspend() is called and=0A=
-> my patch is what sets the important bits.=0A=
+> vs.=0A=
+> =0A=
+> usb 2-1.7: USB disconnect, device number 3=0A=
+> usb 2-1: USB disconnect, device number 2=0A=
+> usb 2-1: new high-speed USB device number 4 using dwc2=0A=
+> usb 2-1: New USB device found, idVendor=3D1a40, idProduct=3D0201, bcdDevi=
+ce=3D 1.00=0A=
+> usb 2-1: New USB device strings: Mfr=3D0, Product=3D1, SerialNumber=3D0=
+=0A=
+> usb 2-1: Product: USB 2.0 Hub [MTT]=0A=
+> usb 2-1.7: new high-speed USB device number 5 using dwc2=0A=
+> usb 2-1.7: New USB device found, idVendor=3D1a40, idProduct=3D0101, bcdDe=
+vice=3D 1.11=0A=
+> usb 2-1.7: New USB device strings: Mfr=3D0, Product=3D1, SerialNumber=3D0=
+=0A=
+> usb 2-1.7: Product: USB 2.0 Hub=0A=
+> =0A=
+> =0A=
+> On 4.19 I didn't actually notice a the same resume time regression,=0A=
+> presumably because things are happening more asynchronously there (I=0A=
+> didn't confirm this).  ...but in any case it seems like the right=0A=
+> thing to do to actually do the suspend.=0A=
+> =0A=
+> =0A=
+> I'll also re-iterate once more that I'm not claiming that my patch=0A=
+> helps with "partial power down".  It merely makes the "power savings=0A=
+> disabled" case work more properly.=0A=
+> =0A=
+> =0A=
+> I'll also note that my patch is already in Felipe's "testing/next"=0A=
+> branch which I continue to believe is correct and good.=0A=
 > =0A=
 > -Doug=0A=
 > =0A=
