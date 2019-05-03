@@ -2,181 +2,157 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551FDC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC96C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2654B2087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFEC32133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:36:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="m7r8+vcX"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="bS3Q7c6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfECSZe (ORCPT
+        id S1726323AbfECSgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 14:25:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34524 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbfECSZd (ORCPT
+        Fri, 3 May 2019 14:36:05 -0400
+Received: from mail.efficios.com ([167.114.142.138]:46420 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfECSgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 14:25:33 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c13so3110028pgt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 11:25:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i/bmY+EZ6xV0W0SpIYyFyIDSPu4iDN/leFZKV35/9Vc=;
-        b=m7r8+vcXgU2Jzs3FITtKSxn3MZ0/Ui0kiBxk1JUrg+f9GJCZqLzVOs28Xuo7YABkcp
-         HkZI4irETyZws53pUubSxSy2M0164P9FJYKzN3EKqiuCufrWsFAhpnuhF8CGmvuEEFdo
-         RYdVxSMizwoP6PdkcyTua4mYxoeSqRh/dtQfA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i/bmY+EZ6xV0W0SpIYyFyIDSPu4iDN/leFZKV35/9Vc=;
-        b=QHujNjDFFjEssDMKo6kv8Ij7q4JRde4z1DfYzMzD77P8yIXBX3TabJ9xS3ynGui5pl
-         TrvNbz9ynqin8ndkc2zeotUIOL48IZP3t6GaCzt6rLpEXfWBMX0WaI0PaTpPjAzZWbmg
-         Z9bPmWzvrE5P+QcWoMz+cUhn+tU3wST2SesZ8n+RhJ6iJsxNF1LgIB8RZcstRQlv0aW7
-         oEQgdPvEw5sdkVkZkMLChZ4cDWg/N2E0XdcP1SSwkXocEvuSTxfGplCPxZfq+evIBiyM
-         lQTQ0/gygoTahtOtz0k45K4tqVLmKiosUpoUP5lRkVmBIWqmQVL11oGFLHOihcGlGByl
-         /xWQ==
-X-Gm-Message-State: APjAAAXs0CUb3RjzVxNTMsw24mVABUKUlcMcUDlc9x4T06EpzvQEGSuq
-        T9RZ3KwL1/xEgSk7ZKTTgsfauURMulI=
-X-Google-Smtp-Source: APXvYqxXomx3NaQybucA9CD70Lvpm4yE4KqrBRott1+Bcq0msUt/U7YHgaagq201nzW7ilNHNeShKw==
-X-Received: by 2002:a63:5110:: with SMTP id f16mr12391491pgb.107.1556907932139;
-        Fri, 03 May 2019 11:25:32 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id n188sm4110093pfn.64.2019.05.03.11.25.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 03 May 2019 11:25:30 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, atishp04@gmail.com,
-        bpf@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, dancol@google.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dietmar.eggemann@arm.com, duyuchao <yuchao.du@unisoc.com>,
-        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?UTF-8?q?Micha=C5=82=20Gregorczyk?= <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Olof Johansson <olof@lixom.net>, qais.yousef@arm.com,
-        rdunlap@infradead.org, Shuah Khan <shuah@kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>, yhs@fb.com
-Subject: [PATCH] kheaders: Move from proc to sysfs
-Date:   Fri,  3 May 2019 14:24:59 -0400
-Message-Id: <20190503182459.159121-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+        Fri, 3 May 2019 14:36:05 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 641C71DD78A;
+        Fri,  3 May 2019 14:36:03 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id JJEe9UUBIbrN; Fri,  3 May 2019 14:36:02 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id B88B11DD779;
+        Fri,  3 May 2019 14:36:02 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B88B11DD779
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1556908562;
+        bh=lCKVxMU3qGBGUPt68WuIIx9ADpMi0+hIh0FPjZb4IXg=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=bS3Q7c6yNlPv4L7OQgGylnEROtWVTOidXlR3RIgdSE/xJH57jNPcY7/aGaihqaO5k
+         NI3B2YZzMpWOpnlqVXx9fng3Qh9GrbfLXoElln6emRbQxLF1yb+hOw1a6YM0EVv2HK
+         CGSqoG3TTGF6hWn01bCjTDslNR5Ukjsvi8hGYtsIu/NzbxvZfJnfNy6MS0pt0Z5Eyj
+         LhhYBJXcA+PeKZ/gIxi5RgJmwRz3MAZzI0JR0/bgqAE/oFbkfGv34ypz2RJEHzTulj
+         xfaeOQmBqFt12h4W0vcc1GlvwKb5wDEjRtTanDqvrZiENFIjAF+ZFw1Af5AQeGOpbO
+         Y6Nu8QjizJx4g==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id Dvbx8kLUtBVk; Fri,  3 May 2019 14:36:02 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 966701DD771;
+        Fri,  3 May 2019 14:36:02 -0400 (EDT)
+Date:   Fri, 3 May 2019 14:36:02 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>
+Message-ID: <678952111.699.1556908562445.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
+References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH for 5.2 00/12] Restartable Sequences selftests updates
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: Restartable Sequences selftests updates
+Thread-Index: 0ENCky/Ret7tFVO1wxVX5kIhz+XlIw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kheaders archive consisting of the kernel headers used for compiling
-bpf programs is in /proc. However there is concern that moving it here
-will make it permanent. Let us move it to /sys/kernel as discussed [1].
+----- On Apr 29, 2019, at 11:27 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-[1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
+> Those rseq selftests updates are hereby submitted to Shuah Khan,
+> maintainer of kernel selftests, for the next merge window (5.2).
+> 
+> They change the per-architecture pre-abort signatures to ensure those
+> are valid trap instructions.
+> 
+> The way exit points are presented to debuggers is enhanced, ensuring
+> all exit points are present, so debuggers don't have to disassemble
+> rseq critical section to properly skip over them.
+> 
+> Discussions with the glibc community is reaching a concensus of exposing
+> a __rseq_handled symbol from glibc to coexist with rseq early adopters.
+> Update the rseq selftest code to expose and use this symbol.
+> 
+> Support for compiling asm goto with clang is added with the
+> "-no-integrated-as" compiler switch, similarly to the toplevel kernel
+> Makefile.
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
-This patch applies on top of the previous patch that was applied to the
-driver tree:
-https://lore.kernel.org/patchwork/patch/1067310/
+Hi Shuah,
 
- kernel/kheaders.c | 40 ++++++++++++++++------------------------
- 1 file changed, 16 insertions(+), 24 deletions(-)
+Is there anything else you need before you can pick up those patches ?
 
-diff --git a/kernel/kheaders.c b/kernel/kheaders.c
-index 70ae6052920d..6a16f8f6898d 100644
---- a/kernel/kheaders.c
-+++ b/kernel/kheaders.c
-@@ -8,9 +8,8 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/proc_fs.h>
-+#include <linux/kobject.h>
- #include <linux/init.h>
--#include <linux/uaccess.h>
- 
- /*
-  * Define kernel_headers_data and kernel_headers_data_end, within which the
-@@ -31,39 +30,32 @@ extern char kernel_headers_data;
- extern char kernel_headers_data_end;
- 
- static ssize_t
--ikheaders_read_current(struct file *file, char __user *buf,
--		      size_t len, loff_t *offset)
-+ikheaders_read(struct file *file,  struct kobject *kobj,
-+	       struct bin_attribute *bin_attr,
-+	       char *buf, loff_t off, size_t len)
- {
--	return simple_read_from_buffer(buf, len, offset,
--				       &kernel_headers_data,
--				       &kernel_headers_data_end -
--				       &kernel_headers_data);
-+	memcpy(buf, &kernel_headers_data + off, len);
-+	return len;
- }
- 
--static const struct file_operations ikheaders_file_ops = {
--	.read = ikheaders_read_current,
--	.llseek = default_llseek,
-+static struct bin_attribute kheaders_attr __ro_after_init = {
-+	.attr = {
-+		.name = "kheaders.tar.xz",
-+		.mode = S_IRUGO,
-+	},
-+	.read = &ikheaders_read,
- };
- 
- static int __init ikheaders_init(void)
- {
--	struct proc_dir_entry *entry;
--
--	/* create the current headers file */
--	entry = proc_create("kheaders.tar.xz", S_IRUGO, NULL,
--			    &ikheaders_file_ops);
--	if (!entry)
--		return -ENOMEM;
--
--	proc_set_size(entry,
--		      &kernel_headers_data_end -
--		      &kernel_headers_data);
--	return 0;
-+	kheaders_attr.size = (&kernel_headers_data_end -
-+			      &kernel_headers_data);
-+	return sysfs_create_bin_file(kernel_kobj, &kheaders_attr);
- }
- 
- static void __exit ikheaders_cleanup(void)
- {
--	remove_proc_entry("kheaders.tar.xz", NULL);
-+	sysfs_remove_bin_file(kernel_kobj, &kheaders_attr);
- }
- 
- module_init(ikheaders_init);
+Thanks,
+
+Mathieu
+
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+> Martin Schwidefsky (1):
+>  rseq/selftests: s390: use trap4 for RSEQ_SIG
+> 
+> Mathieu Desnoyers (11):
+>  rseq/selftests: x86: Work-around bogus gcc-8 optimisation
+>  rseq/selftests: Add __rseq_exit_point_array section for debuggers
+>  rseq/selftests: Introduce __rseq_cs_ptr_array, rename __rseq_table to
+>    __rseq_cs
+>  rseq/selftests: Use __rseq_handled symbol to coexist with glibc
+>  rseq/selftests: s390: use jg instruction for jumps outside of the asm
+>  rseq/selftests: x86: use ud1 instruction as RSEQ_SIG opcode
+>  rseq/selftests: arm: use udf instruction for RSEQ_SIG
+>  rseq/selftests: aarch64 code signature: handle big-endian environment
+>  rseq/selftests: powerpc code signature: generate valid instructions
+>  rseq/selftests: mips: use break instruction for RSEQ_SIG
+>  rseq/selftests: add -no-integrated-as for clang
+> 
+> tools/testing/selftests/rseq/Makefile     |   8 +-
+> tools/testing/selftests/rseq/rseq-arm.h   | 132 +++++++++++++--
+> tools/testing/selftests/rseq/rseq-arm64.h |  74 ++++++++-
+> tools/testing/selftests/rseq/rseq-mips.h  | 115 +++++++++++--
+> tools/testing/selftests/rseq/rseq-ppc.h   |  90 +++++++++-
+> tools/testing/selftests/rseq/rseq-s390.h  |  78 ++++++++-
+> tools/testing/selftests/rseq/rseq-x86.h   | 264 +++++++++++++++++++++---------
+> tools/testing/selftests/rseq/rseq.c       |  55 ++++++-
+> tools/testing/selftests/rseq/rseq.h       |   1 +
+> 9 files changed, 688 insertions(+), 129 deletions(-)
+> 
+> --
+> 2.11.0
+
 -- 
-2.21.0.1020.gf2820cf01a-goog
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
