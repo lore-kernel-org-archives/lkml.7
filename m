@@ -2,194 +2,321 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7808C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69963C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE942070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182292070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:06:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ccHpnw/R"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="WMuMjmBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfECOGO (ORCPT
+        id S1728072AbfECOGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:06:14 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39945 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728037AbfECOGO (ORCPT
+        Fri, 3 May 2019 10:06:40 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:34873 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbfECOGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:06:14 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e56so6140332ede.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 07:06:13 -0700 (PDT)
+        Fri, 3 May 2019 10:06:40 -0400
+Received: by mail-it1-f194.google.com with SMTP id l140so9191908itb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 07:06:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=r4u5O1ZVpfa/NoghF2cTBMxxDl8TKg0sIE8liHJFO9Q=;
-        b=ccHpnw/RpgY9kfcH8RVxE+1twK6DE6BPB8HepDw/YqeUPaWmmuQTQ4r/xZPcJ/HS2V
-         yXYeLA69ocApJMHE1Lo10gkLx3ejJJ/TPlFxpB0OKRuiXQiNxttte3sdqbpsugKPw1Mp
-         jG8eBraDllvceAFhJZ8smmSPHz+e8XhEVxMWw=
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NEBK+itDqLpaQzIiXTglWmxEFdhux7VlnZizVOQVIVc=;
+        b=WMuMjmBx3lj6x38iGJVNcwBasFWkyxZY/OqpxZe09YEBiIPfqGr/S5o8pymnTbx6D4
+         bgmmYDVAbZTDfXHZkLaOGm36AopBmxEg9ccL2L41NSw1NKiOHxkG+fwKpS+reUcYE1lz
+         8s/QZWs3SHuBOvxuSArQcApKc+W687e0QOzsk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=r4u5O1ZVpfa/NoghF2cTBMxxDl8TKg0sIE8liHJFO9Q=;
-        b=q4OgeFt9sAE+1bBay6eEkxsqQOYALbFZgGAbqk3JWdj9UKIiJLaFRiEmo4aafjAePQ
-         GSQ2eoYyfgGtmd9OtcCN9uYD4wHbAOCmWPdVYd9YU0PtjURPab0FMTu0E/I8t1TAFyHa
-         xMkbq7w9YkR1uzH6rSwfvZyZmGa+oIfMxGLMxIdLA3KADvw9zO2HykY/qp4wg65de6GO
-         tFIWvQcYoAZz0V6W1tzBfB/0Ly1IK7erAsUgx8l5m7UX65TmciPe2rXoM2eeIvTqM7Dy
-         vb7UKeKw6JSz2CLfaRqgbYCKDwQEZW992lVkIXZBPo27cspLnU2LRw6ZYFt9Dm415Bla
-         btUA==
-X-Gm-Message-State: APjAAAUaOo6rarqgl1A/bVLoYjctvrwkGUlbfbzQQ7Uw2l4IJnwT5mi3
-        F38TACnvr6EAchBKt4xAM3+HdA==
-X-Google-Smtp-Source: APXvYqxyH2lm/fogXtpK3bsS+Au0kvjIwuk8eQfhakM9r2dOKPKR+UFhrZ/qW0kZyOaxJakoZDInag==
-X-Received: by 2002:a17:906:2282:: with SMTP id p2mr6344456eja.283.1556892372220;
-        Fri, 03 May 2019 07:06:12 -0700 (PDT)
-Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id s53sm605472edb.20.2019.05.03.07.06.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 03 May 2019 07:06:11 -0700 (PDT)
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Eric Auger <eric.auger@redhat.com>, poza@codeaurora.org,
-        Ray Jui <rjui@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v6 3/3] PCI: iproc: Add sorted dma ranges resource entries to host bridge
-Date:   Fri,  3 May 2019 19:35:34 +0530
-Message-Id: <1556892334-16270-4-git-send-email-srinath.mannam@broadcom.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556892334-16270-1-git-send-email-srinath.mannam@broadcom.com>
-References: <1556892334-16270-1-git-send-email-srinath.mannam@broadcom.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NEBK+itDqLpaQzIiXTglWmxEFdhux7VlnZizVOQVIVc=;
+        b=lFWy3NGXYUjLQDmu2MEqebOKvL18mUIIVJQmJVNshNYs0rfw+eoyKhI1NAZttH1nZA
+         YAZDSE6AFQ26C2StmYXconIIFLXXLuMoRNYBQRZoihlOerfZL7qgaf34Ix8crPRVV7P1
+         IyPsgvh8r8NNz5QEIhGodJIImV1gl79W0qXH3rilj5ZHNikAQ8/+PiadzLe0t/KU5+tD
+         X91rd20z6+fwEU2ipXaa2QJLIwvgTJXOazqM6DlYVdJHnQRB0hUedydayjBvT7V+yia3
+         GimVGSEQy1ra7Rhk++Y4h2VYZTAS2ZTyXAIXKkZHUoEPrqL6IDFFGRpjTnPPsj9WVclQ
+         zLcw==
+X-Gm-Message-State: APjAAAXPIj4S9xNElEKbRwBWs6QLUk7mD8WmfHzGmF2DVTPJiawj56ZK
+        w1oeDyUSg40qrpKIEnjYK/AgshEr3lmv79Gw5M6ELg==
+X-Google-Smtp-Source: APXvYqzH4Ia8Df5BIyy/IJAAdZ7fahWpKTdOWq9tGBOK0qtZumiXSF1VYx81MR/m53eJ4VxgYzFudJh3oq1nwY+FHUk=
+X-Received: by 2002:a24:6f48:: with SMTP id x69mr6921488itb.117.1556892399225;
+ Fri, 03 May 2019 07:06:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190502194956.218441-1-sean@poorly.run> <20190502194956.218441-3-sean@poorly.run>
+ <20190503081851.GI3271@phenom.ffwll.local> <20190503124737.GH17077@art_vandelay>
+In-Reply-To: <20190503124737.GH17077@art_vandelay>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 3 May 2019 16:06:28 +0200
+Message-ID: <CAKMK7uGcpFJdXF1xmyMfToT+Vdhe2Q5hQWCNc-grFnq+cMVg5A@mail.gmail.com>
+Subject: Re: [PATCH v3 02/10] drm: Add drm_atomic_crtc_state_for_encoder helper
+To:     Sean Paul <sean@poorly.run>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The IPROC host controller allows only a subset of physical address space
-as target of inbound PCI memory transactions addresses.
+On Fri, May 3, 2019 at 2:47 PM Sean Paul <sean@poorly.run> wrote:
+> On Fri, May 03, 2019 at 10:18:51AM +0200, Daniel Vetter wrote:
+> > On Thu, May 02, 2019 at 03:49:44PM -0400, Sean Paul wrote:
+> > > From: Sean Paul <seanpaul@chromium.org>
+> > >
+> > > This patch adds a helper to tease out the currently connected crtc fo=
+r
+> > > an encoder, along with its state. This follows the same pattern as th=
+e
+> > > drm_atomic_crtc_*_for_* macros in the atomic helpers. Since the
+> > > relationship of crtc:encoder is 1:n, we don't need a loop since there=
+ is
+> > > only one crtc per encoder.
+> >
+> > No idea which macros you mean, couldn't find them.
+>
+> No longer relevant with the changes below, but for completeness, I was tr=
+ying to
+> refer to drm_atomic_crtc_state_for_each_plane and friends. I see now that=
+ I
+> wasn't terribly clear :)
+>
+>
+> > >
+> > > Instead of splitting this into 3 functions which all do the same thin=
+g,
+> > > this is presented as one function. Perhaps that's too ugly and it sho=
+uld
+> > > be split to:
+> > > struct drm_crtc *drm_atomic_crtc_for_encoder(state, encoder);
+> > > struct drm_crtc_state *drm_atomic_new_crtc_state_for_encoder(state, e=
+ncoder);
+> > > struct drm_crtc_state *drm_atomic_old_crtc_state_for_encoder(state, e=
+ncoder);
+> > >
+> > > Suggestions welcome.
+> > >
+> > > Changes in v3:
+> > > - Added to the set
+> > >
+> > > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > > Cc: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
+> > > Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> > > ---
+> > >  drivers/gpu/drm/drm_atomic_helper.c | 48 +++++++++++++++++++++++++++=
+++
+> > >  include/drm/drm_atomic_helper.h     |  6 ++++
+> > >  2 files changed, 54 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/dr=
+m_atomic_helper.c
+> > > index 71cc7d6b0644..1f81ca8daad7 100644
+> > > --- a/drivers/gpu/drm/drm_atomic_helper.c
+> > > +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> > > @@ -3591,3 +3591,51 @@ int drm_atomic_helper_legacy_gamma_set(struct =
+drm_crtc *crtc,
+> > >     return ret;
+> > >  }
+> > >  EXPORT_SYMBOL(drm_atomic_helper_legacy_gamma_set);
+> > > +
+> > > +/**
+> > > + * drm_atomic_crtc_state_for_encoder - Get crtc and new/old state fo=
+r an encoder
+> > > + * @state: Atomic state
+> > > + * @encoder: The encoder to fetch the crtc information for
+> > > + * @crtc: If not NULL, receives the currently connected crtc
+> > > + * @old_crtc_state: If not NULL, receives the crtc's old state
+> > > + * @new_crtc_state: If not NULL, receives the crtc's new state
+> > > + *
+> > > + * This function finds the crtc which is currently connected to @enc=
+oder and
+> > > + * returns it as well as its old and new state. If there is no crtc =
+currently
+> > > + * connected, the function will clear @crtc, @old_crtc_state, @new_c=
+rtc_state.
+> > > + *
+> > > + * All of @crtc, @old_crtc_state, and @new_crtc_state are optional.
+> > > + */
+> > > +void drm_atomic_crtc_state_for_encoder(struct drm_atomic_state *stat=
+e,
+> > > +                                  struct drm_encoder *encoder,
+> > > +                                  struct drm_crtc **crtc,
+> > > +                                  struct drm_crtc_state **old_crtc_s=
+tate,
+> > > +                                  struct drm_crtc_state **new_crtc_s=
+tate)
+> > > +{
+> > > +   struct drm_crtc *tmp_crtc;
+> > > +   struct drm_crtc_state *tmp_new_crtc_state, *tmp_old_crtc_state;
+> > > +   u32 enc_mask =3D drm_encoder_mask(encoder);
+> > > +   int i;
+> > > +
+> > > +   for_each_oldnew_crtc_in_state(state, tmp_crtc, tmp_old_crtc_state=
+,
+> > > +                                 tmp_new_crtc_state, i) {
+> >
+> > So there's two ways to do this:
+> >
+> > - Using encoder_mask, which is a helper thing. In that case I'd rename
+> >   this to drm_atomic_helper_crtc_for_encoder.
+> >
+> > - By looping over the connectors, and looking at ->best_encoder and
+> >   ->crtc, see drm_encoder_get_crtc in drm_encoder.c. That's the core wa=
+y
+> >   of doing things. In that case call it drm_atomic_crtc_for_encoder, an=
+d
+> >   put it into drm_atomic.c.
+> >
+> > There's two ways of doing the 2nd one: looping over connectors in a
+> > drm_atomic_state, or the connector list overall. First requires that th=
+e
+> > encoder is already in drm_atomic_state (which I think makes sense).
+>
+> Yeah, I wasn't particularly interested in encoders not in state. I had
+> considered going the connector route, but since you can have multiple con=
+nectors
+> per encoder, going through crtc seemed a bit more direct.
 
-PCIe devices memory transactions targeting memory regions that
-are not allowed for inbound transactions in the host controller
-are rejected by the host controller and cannot reach the upstream
-buses.
+You can have multiple possible connectors for a given encoder, and
+multiple possible encoders for a given connector. In both cases the
+driver picks for you. But for active encoders and connectors the
+relationship is 1:1. That's what the helpers exploit by looping over
+connectors to get at encoders.
 
-Firmware device tree description defines the DMA ranges that are
-addressable by devices DMA transactions; parse the device tree
-dma-ranges property and add its ranges to the PCI host bridge dma_ranges
-list; the iova_reserve_pci_windows() call in the driver will reserve the
-IOVA address ranges that are not addressable (ie memory holes in the
-dma-ranges set) so that they are not allocated to PCI devices for DMA
-transfers.
+> > Even more complications on old/new_crtc_state: Is that the old state fo=
+r
+> > the old crtc, or the old state for the new crtc (that can switch too).
+> > Same for the new crtc state ...
+> >
+> > tldr; I'd create 2 functions:
+> >
+> > drm_crtc *drm_atomic_encoder_get_new_crtc(drm_atomic_state *state, enco=
+der)
+> > drm_crtc *drm_atomic_encoder_get_old_crtc(drm_atomic_state *state, enco=
+der)
+> >
+> > With the requirement that they'll return NULL if the encder isn't in in
+> > @state, and implemented using looping over connectors in @state.
+>
+> It seems like we could just tweak this function a bit to get the new or o=
+ld crtc
+> for an encoder. Any particular reason for going through connector instead=
+? Is it
+> to avoid the encoder_mask which is a helper thing? In that case, perhaps =
+this
+> should use connector links and live in drm_atomic.c?
 
-All allowed address ranges are listed in dma-ranges DT parameter.
+Well as explained, there's 3 ways you can achieve the same really. I
+do think the "loop over connectors in drm_atomic_state, WARN() if we
+haven't found the encoder you want the crtc for" is probably the most
+solid aproach since it picks up a core atomic concept. But the others
+(looping the connector list, or looping encoder_mask) all work too.
 
-Example:
+Aside: plane/encoder_mask was added to go from crtc to
+planes/encoders, not really to go the other way round.
 
-dma-ranges = < \
-  0x43000000 0x00 0x80000000 0x00 0x80000000 0x00 0x80000000 \
-  0x43000000 0x08 0x00000000 0x08 0x00000000 0x08 0x00000000 \
-  0x43000000 0x80 0x00000000 0x80 0x00000000 0x40 0x00000000>
+Another solution would be to pass the connector_state to all atomic
+encoder hooks, then you could just look at connector_state->crtc. Plus
+you can get at all the other interesting bits and pieces of
+information. In a way this is fallout from us keeping encoders as a
+meaningful concept for easier transition of legacy drivers, while
+still keeping them entirely irrelevant for the actual userspace api
+semantics.
 
-In the above example of dma-ranges, memory address from
+So maybe we want drm_atomic_encoder_get_old/new_connector here. Or
+maybe we even want the full set of functions, i.e.
+drm_atomic_encoder_get_old/new_connector/crtc.
 
-0x0 - 0x80000000,
-0x100000000 - 0x800000000,
-0x1000000000 - 0x8000000000 and
-0x10000000000 - 0xffffffffffffffff.
+In all cases I think only returning the object, not it's state is
+simplest, since then you avoid the confusion of old/new state for
+old/new obj.
+-Daniel
 
-are not allowed to be used as inbound addresses.
 
-Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-[lorenzo.pieralisi@arm.com: updated commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
----
- drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
+> Thanks for the review!
+>
+> Sean
+>
+> >
+> > tldr; this is a lot more tricky than it looks like ...
+> > -Daniel
+> >
+> >
+> > > +           if (!(tmp_new_crtc_state->encoder_mask & enc_mask))
+> > > +                   continue;
+> > > +
+> > > +           if (new_crtc_state)
+> > > +                   *new_crtc_state =3D tmp_new_crtc_state;
+> > > +           if (old_crtc_state)
+> > > +                   *old_crtc_state =3D tmp_old_crtc_state;
+> > > +           if (crtc)
+> > > +                   *crtc =3D tmp_crtc;
+> > > +           return;
+> > > +   }
+> > > +
+> > > +   if (new_crtc_state)
+> > > +           *new_crtc_state =3D NULL;
+> > > +   if (old_crtc_state)
+> > > +           *old_crtc_state =3D NULL;
+> > > +   if (crtc)
+> > > +           *crtc =3D NULL;
+> > > +}
+> > > +EXPORT_SYMBOL(drm_atomic_crtc_state_for_encoder);
+> > > diff --git a/include/drm/drm_atomic_helper.h b/include/drm/drm_atomic=
+_helper.h
+> > > index 58214be3bf3d..2383550a0cc8 100644
+> > > --- a/include/drm/drm_atomic_helper.h
+> > > +++ b/include/drm/drm_atomic_helper.h
+> > > @@ -153,6 +153,12 @@ int drm_atomic_helper_legacy_gamma_set(struct dr=
+m_crtc *crtc,
+> > >                                    uint32_t size,
+> > >                                    struct drm_modeset_acquire_ctx *ct=
+x);
+> > >
+> > > +void drm_atomic_crtc_state_for_encoder(struct drm_atomic_state *stat=
+e,
+> > > +                                  struct drm_encoder *encoder,
+> > > +                                  struct drm_crtc **crtc,
+> > > +                                  struct drm_crtc_state **old_crtc_s=
+tate,
+> > > +                                  struct drm_crtc_state **new_crtc_s=
+tate);
+> > > +
+> > >  /**
+> > >   * drm_atomic_crtc_for_each_plane - iterate over planes currently at=
+tached to CRTC
+> > >   * @plane: the loop cursor
+> > > --
+> > > Sean Paul, Software Engineer, Google / Chromium OS
+> > >
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+>
+> --
+> Sean Paul, Software Engineer, Google / Chromium OS
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index c20fd6b..94ba5c0 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -1146,11 +1146,43 @@ static int iproc_pcie_setup_ib(struct iproc_pcie *pcie,
- 	return ret;
- }
- 
-+static int
-+iproc_pcie_add_dma_range(struct device *dev, struct list_head *resources,
-+			 struct of_pci_range *range)
-+{
-+	struct resource *res;
-+	struct resource_entry *entry, *tmp;
-+	struct list_head *head = resources;
-+
-+	res = devm_kzalloc(dev, sizeof(struct resource), GFP_KERNEL);
-+	if (!res)
-+		return -ENOMEM;
-+
-+	resource_list_for_each_entry(tmp, resources) {
-+		if (tmp->res->start < range->cpu_addr)
-+			head = &tmp->node;
-+	}
-+
-+	res->start = range->cpu_addr;
-+	res->end = res->start + range->size - 1;
-+
-+	entry = resource_list_create_entry(res, 0);
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	entry->offset = res->start - range->cpu_addr;
-+	resource_list_add(entry, head);
-+
-+	return 0;
-+}
-+
- static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
- {
-+	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
- 	struct of_pci_range range;
- 	struct of_pci_range_parser parser;
- 	int ret;
-+	LIST_HEAD(resources);
- 
- 	/* Get the dma-ranges from DT */
- 	ret = of_pci_dma_range_parser_init(&parser, pcie->dev->of_node);
-@@ -1158,13 +1190,23 @@ static int iproc_pcie_map_dma_ranges(struct iproc_pcie *pcie)
- 		return ret;
- 
- 	for_each_of_pci_range(&parser, &range) {
-+		ret = iproc_pcie_add_dma_range(pcie->dev,
-+					       &resources,
-+					       &range);
-+		if (ret)
-+			goto out;
- 		/* Each range entry corresponds to an inbound mapping region */
- 		ret = iproc_pcie_setup_ib(pcie, &range, IPROC_PCIE_IB_MAP_MEM);
- 		if (ret)
--			return ret;
-+			goto out;
- 	}
- 
-+	list_splice_init(&resources, &host->dma_ranges);
-+
- 	return 0;
-+out:
-+	pci_free_resource_list(&resources);
-+	return ret;
- }
- 
- static int iproce_pcie_get_msi(struct iproc_pcie *pcie,
--- 
-2.7.4
 
+
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
