@@ -2,52 +2,52 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FEDC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8295BC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208332070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5394A2081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:14:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfECVOo (ORCPT
+        id S1727346AbfECVOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 17:14:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50092 "EHLO
+        Fri, 3 May 2019 17:14:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50168 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727220AbfECVOo (ORCPT
+        by vger.kernel.org with ESMTP id S1726150AbfECVOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 May 2019 17:14:44 -0400
 Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43LC4KC089936
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43LC29q089818
         for <linux-kernel@vger.kernel.org>; Fri, 3 May 2019 17:14:43 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s8w7agc9a-1
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s8w7agc9n-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 17:14:43 -0400
 Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Fri, 3 May 2019 22:14:41 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Fri, 3 May 2019 22:14:42 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 May 2019 22:14:39 +0100
+        Fri, 3 May 2019 22:14:40 +0100
 Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x43LEaYs35848258
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x43LEbca34078898
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 May 2019 21:14:36 GMT
+        Fri, 3 May 2019 21:14:37 GMT
 Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8752B124053;
-        Fri,  3 May 2019 21:14:36 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C370F124053;
+        Fri,  3 May 2019 21:14:37 +0000 (GMT)
 Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 01C04124052;
-        Fri,  3 May 2019 21:14:35 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 38896124052;
+        Fri,  3 May 2019 21:14:37 +0000 (GMT)
 Received: from akrowiak-ThinkPad-P50.ibm.com (unknown [9.85.193.92])
         by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Fri,  3 May 2019 21:14:35 +0000 (GMT)
+        Fri,  3 May 2019 21:14:37 +0000 (GMT)
 From:   Tony Krowiak <akrowiak@linux.ibm.com>
 To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -56,18 +56,20 @@ Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
         heiko.carstens@de.ibm.com, pmorel@linux.ibm.com,
         pasic@linux.ibm.com, alex.williamson@redhat.com,
         kwankhede@nvidia.com, Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v2 0/7] s390: vfio-ap: dynamic configuration support
-Date:   Fri,  3 May 2019 17:14:26 -0400
+Subject: [PATCH v2 2/7] s390: vfio-ap: maintain a shadow of the guest's CRYCB
+Date:   Fri,  3 May 2019 17:14:28 -0400
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19050321-0060-0000-0000-00000338269D
+x-cbid: 19050321-0064-0000-0000-000003D62BA5
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011043; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01198143; UDB=6.00628477; IPR=6.00979005;
- MB=3.00026720; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-03 21:14:40
+ PH=3.00000004; SC=3.00000285; SDB=6.01198143; UDB=6.00628477; IPR=6.00979004;
+ MB=3.00026720; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-03 21:14:42
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050321-0061-0000-0000-00004931914F
-Message-Id: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+x-cbparentid: 19050321-0065-0000-0000-00003D4FC952
+Message-Id: <1556918073-13171-3-git-send-email-akrowiak@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_13:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -80,44 +82,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series extends the crypto adapter pass-through support to 
-provide safeguards against inadvertent sharing of AP resources between
-guests and/or the host, and to implement more of the s390 AP
-architecture related to provisioning and dynamic configuration of
-AP resources.
+This patch introduces a shadow of the CRYCB being used by a guest. This
+will enable to more effectively manage dynamic changes to the AP
+resources installed on the host that may be assigned to an mdev device
+and being used by a guest. For example:
 
-Change log v2->v3:
------------------
-* Allow guest access to an AP queue only if the queue is bound to
-  the vfio_ap device driver.
+* AP adapter cards can be dynamically added to and removed from the AP
+  configuration via the SE or an SCLP command.
 
-* Removed the patch to test CRYCB masks before taking the vCPUs
-  out of SIE. Now checking the shadow CRYCB in the vfio_ap driver.
+* AP resources that disappear and reappear due to hardware malfunctions.
 
-Change log v1->v2:
------------------
-* Removed patches preventing root user from unbinding AP queues from 
-  the vfio_ap device driver
-* Introduced a shadow CRYCB in the vfio_ap driver to manage dynamic 
-  changes to the AP guest configuration due to root user interventions
-  or hardware anomalies.
+* AP queues bound to and unbound from the vfio_ap device driver by a
+  root user.
 
-Tony Krowiak (7):
-  s390: vfio-ap: wait for queue empty on queue reset
-  s390: vfio-ap: maintain a shadow of the guest's CRYCB
-  s390: vfio-ap: sysfs interface to display guest CRYCB
-  s390: vfio-ap: allow assignment of unavailable AP resources to mdev
-    device
-  s390: vfio-ap: allow hot plug/unplug of AP resources using mdev device
-  s390: vfio-ap: handle bind and unbind of AP queue device
-  s390: vfio-ap: update documentation
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c     | 91 ++++++++++++++++++++++++++++++++---
+ drivers/s390/crypto/vfio_ap_private.h |  2 +
+ 2 files changed, 87 insertions(+), 6 deletions(-)
 
- Documentation/s390/vfio-ap.txt        | 191 +++++++----
- drivers/s390/crypto/vfio_ap_drv.c     |  12 +-
- drivers/s390/crypto/vfio_ap_ops.c     | 612 ++++++++++++++++++++++------------
- drivers/s390/crypto/vfio_ap_private.h |   4 +
- 4 files changed, 536 insertions(+), 283 deletions(-)
-
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index b88a2a2ba075..44a04b4aa9ae 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -297,6 +297,45 @@ static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned long apqi)
+ 	} while (--retry);
+ }
+ 
++/*
++ * vfio_ap_mdev_update_crycb
++ *
++ * @matrix_mdev: the mediated matrix device
++ *
++ * Updates the AP matrix in the guest's CRYCB from it's shadow masks.
++ *
++ * Returns zero if the guest's CRYCB is successfully updated; otherwise,
++ * returns -ENODEV if a guest is not running or does not have a CRYCB.
++ */
++static int vfio_ap_mdev_update_crycb(struct ap_matrix_mdev *matrix_mdev)
++{
++	if (!matrix_mdev->kvm || !matrix_mdev->kvm->arch.crypto.crycbd)
++		return -ENODEV;
++
++	kvm_arch_crypto_set_masks(matrix_mdev->kvm,
++				  matrix_mdev->shadow_crycb->apm,
++				  matrix_mdev->shadow_crycb->aqm,
++				  matrix_mdev->shadow_crycb->adm);
++
++	return 0;
++}
++
++static int match_apqn(struct device *dev, void *data)
++{
++	struct ap_queue *apq = to_ap_queue(dev);
++
++	return (apq->qid == *(unsigned long *)(data)) ? 1 : 0;
++}
++
++static struct device *vfio_ap_get_queue_dev(unsigned long apid,
++					     unsigned long apqi)
++{
++	unsigned long apqn = AP_MKQID(apid, apqi);
++
++	return driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
++				  &apqn, match_apqn);
++}
++
+ /**
+  * assign_adapter_store
+  *
+@@ -805,14 +844,9 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+ 	if (ret)
+ 		return NOTIFY_DONE;
+ 
+-	/* If there is no CRYCB pointer, then we can't copy the masks */
+-	if (!matrix_mdev->kvm->arch.crypto.crycbd)
++	if (vfio_ap_mdev_update_crycb(matrix_mdev))
+ 		return NOTIFY_DONE;
+ 
+-	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
+-				  matrix_mdev->matrix.aqm,
+-				  matrix_mdev->matrix.adm);
+-
+ 	return NOTIFY_OK;
+ }
+ 
+@@ -867,12 +901,55 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+ 	return rc;
+ }
+ 
++static int vfio_ap_mdev_create_shadow_crycb(struct ap_matrix_mdev *matrix_mdev)
++{
++	unsigned long apid, apqi, domid;
++	struct device *dev;
++
++	matrix_mdev->shadow_crycb = kzalloc(sizeof(*matrix_mdev->shadow_crycb),
++					    GFP_KERNEL);
++	if (!matrix_mdev->shadow_crycb)
++		return -ENOMEM;
++
++	vfio_ap_matrix_init(&matrix_dev->info, matrix_mdev->shadow_crycb);
++
++	/*
++	 * Examine each APQN assigned to the mdev device. Set the APID and APQI
++	 * in the shadow CRYCB if and only if the queue device identified by
++	 * the APQN is in the configuration.
++	 */
++	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
++			     matrix_mdev->matrix.apm_max + 1) {
++		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
++				     matrix_mdev->matrix.aqm_max + 1) {
++			dev = vfio_ap_get_queue_dev(apid, apqi);
++			if (dev) {
++				set_bit_inv(apid,
++					    matrix_mdev->shadow_crycb->apm);
++				set_bit_inv(apqi,
++					    matrix_mdev->shadow_crycb->aqm);
++				put_device(dev);
++			}
++		}
++	}
++
++	/* Set all control domains assigned to the mdev in the shadow CRYCB */
++	for_each_set_bit_inv(domid, matrix_mdev->matrix.adm,
++			     matrix_mdev->matrix.adm_max + 1)
++		set_bit_inv(domid, matrix_mdev->shadow_crycb->adm);
++
++	return 0;
++}
++
+ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+ {
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 	unsigned long events;
+ 	int ret;
+ 
++	ret = vfio_ap_mdev_create_shadow_crycb(matrix_mdev);
++	if (ret)
++		return ret;
+ 
+ 	if (!try_module_get(THIS_MODULE))
+ 		return -ENODEV;
+@@ -902,6 +979,8 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
+ 				 &matrix_mdev->group_notifier);
+ 	matrix_mdev->kvm = NULL;
+ 	module_put(THIS_MODULE);
++	kfree(matrix_mdev->shadow_crycb);
++	matrix_mdev->shadow_crycb = NULL;
+ }
+ 
+ static int vfio_ap_mdev_get_device_info(unsigned long arg)
+diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+index 76b7f98e47e9..e8457aa61976 100644
+--- a/drivers/s390/crypto/vfio_ap_private.h
++++ b/drivers/s390/crypto/vfio_ap_private.h
+@@ -72,6 +72,7 @@ struct ap_matrix {
+  * @list:	allows the ap_matrix_mdev struct to be added to a list
+  * @matrix:	the adapters, usage domains and control domains assigned to the
+  *		mediated matrix device.
++ * @shadow_crycb: a shadow copy of the crycb in use by a guest
+  * @group_notifier: notifier block used for specifying callback function for
+  *		    handling the VFIO_GROUP_NOTIFY_SET_KVM event
+  * @kvm:	the struct holding guest's state
+@@ -79,6 +80,7 @@ struct ap_matrix {
+ struct ap_matrix_mdev {
+ 	struct list_head node;
+ 	struct ap_matrix matrix;
++	struct ap_matrix *shadow_crycb;
+ 	struct notifier_block group_notifier;
+ 	struct kvm *kvm;
+ };
 -- 
 2.7.4
 
