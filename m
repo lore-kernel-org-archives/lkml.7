@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF24C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BBDC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7912075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE902075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:54:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SfobSS6O"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ye5+CNEd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfECFxs (ORCPT
+        id S1726699AbfECFy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 01:53:48 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50171 "EHLO
+        Fri, 3 May 2019 01:54:56 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:47303 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfECFxs (ORCPT
+        with ESMTP id S1725775AbfECFy4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 01:53:48 -0400
+        Fri, 3 May 2019 01:54:56 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x435rbWt2618031
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x435sJR12618335
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 2 May 2019 22:53:37 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x435rbWt2618031
+        Thu, 2 May 2019 22:54:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x435sJR12618335
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556862818;
-        bh=Z018EsgS5L+Qa0YLaWNCVYQ6IYJaDKtfJSGSpJmmsFw=;
+        s=2019041745; t=1556862860;
+        bh=VN9xXD1VcpiQpbfSlDRzNBzvMhmcj0N6KBYlV5zfyV4=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=SfobSS6OAogH1FB/KApIXJFDAn8FKAAFUoI7/hQJHJn9vXnC1Ampphl6UvIwTSdx/
-         o6gwJq9ykTJ8yKtODBlKK9iuwstwPvE3nYfM6I1DR9ycPhFD+PnjIzbTW45BBghXEf
-         NpKnLQ41vB8LK5pjRPNt6/f7X/FQ6lec3imX1x93IE9QXcNlrGFW1Vh2vBWlLoUBgZ
-         Ew4fa5uoADxCEGvzZImdXWHAfNeRPqkX/UjbQZY4jeiZJd43jUVIz7u5ZAaQlcIf3G
-         aw81vTdre0EzYOiQbsk/fiMRyjkEoVnWSZMEzYde0Yj0hh+bbKr3oFrJnCaQ5sE7Fl
-         /bz0tRgQSeKMw==
+        b=Ye5+CNEdOL2mU59L7ZVYuYTUWTWQZ75lKUzLDhcHAJou4XLMgDSc6N+NRQ5ZmdOls
+         exT8zsqdHjh7Nlc38vvzKKYoTyCc2V1EgUe8Pl7HIpXbvl5N/QpBYjzJvTbim9rPev
+         IJcVhQHRlw6nvilcq7hqLMaffTFMUEh9VcgT8BUCK/Wnp6x2dnT3hyt1q8lpayWFf/
+         35SnkV9VDvy+UByvj0ayOeX+WgGVmPU3jf5nprqC/DEEBMkFRmS0D6Bk4KvK9Opuf6
+         KQoUWa+h8CHd5MC3msmh1V7pyP5+A6/s71sg1l2B62+kxauldhZjAGesRXxLfYldeX
+         Bktt3+xVI1hTA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x435rbK62618028;
-        Thu, 2 May 2019 22:53:37 -0700
-Date:   Thu, 2 May 2019 22:53:37 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x435sIZh2618332;
+        Thu, 2 May 2019 22:54:18 -0700
+Date:   Thu, 2 May 2019 22:54:18 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thadeu Lima de Souza Cascardo <tipbot@zytor.com>
-Message-ID: <tip-01e985e900d3e602e9b1a55372a8e5274012a417@git.kernel.org>
-Cc:     hpa@zytor.com, mingo@kernel.org, acme@redhat.com,
-        linux-kernel@vger.kernel.org, songliubraving@fb.com,
-        cascardo@canonical.com, tglx@linutronix.de
-Reply-To: tglx@linutronix.de, cascardo@canonical.com, mingo@kernel.org,
-          songliubraving@fb.com, linux-kernel@vger.kernel.org,
-          hpa@zytor.com, acme@redhat.com
-In-Reply-To: <20190403194452.10845-1-cascardo@canonical.com>
-References: <20190403194452.10845-1-cascardo@canonical.com>
+From:   tip-bot for Leo Yan <tipbot@zytor.com>
+Message-ID: <tip-5f05182fab9a29fea6c4ab8113be45adf0c11bf0@git.kernel.org>
+Cc:     mingo@kernel.org, rostedt@goodmis.org, hpa@zytor.com,
+        tglx@linutronix.de, leo.yan@linaro.org,
+        linux-kernel@vger.kernel.org, acme@redhat.com
+Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          leo.yan@linaro.org, acme@redhat.com, hpa@zytor.com,
+          mingo@kernel.org, rostedt@goodmis.org
+In-Reply-To: <20190424013802.27569-1-leo.yan@linaro.org>
+References: <20190424013802.27569-1-leo.yan@linaro.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf annotate: Fix build on 32 bit for BPF
- annotation
-Git-Commit-ID: 01e985e900d3e602e9b1a55372a8e5274012a417
+Subject: [tip:perf/urgent] tools lib traceevent: Change tag string for error
+Git-Commit-ID: 5f05182fab9a29fea6c4ab8113be45adf0c11bf0
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,57 +69,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  01e985e900d3e602e9b1a55372a8e5274012a417
-Gitweb:     https://git.kernel.org/tip/01e985e900d3e602e9b1a55372a8e5274012a417
-Author:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-AuthorDate: Wed, 3 Apr 2019 16:44:52 -0300
+Commit-ID:  5f05182fab9a29fea6c4ab8113be45adf0c11bf0
+Gitweb:     https://git.kernel.org/tip/5f05182fab9a29fea6c4ab8113be45adf0c11bf0
+Author:     Leo Yan <leo.yan@linaro.org>
+AuthorDate: Wed, 24 Apr 2019 09:38:02 +0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Thu, 2 May 2019 16:00:19 -0400
 
-perf annotate: Fix build on 32 bit for BPF annotation
+tools lib traceevent: Change tag string for error
 
-Commit 6987561c9e86 ("perf annotate: Enable annotation of BPF programs") adds
-support for BPF programs annotations but the new code does not build on 32-bit.
+The traceevent lib is used by the perf tool, and when executing
 
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Fixes: 6987561c9e86 ("perf annotate: Enable annotation of BPF programs")
-Link: http://lkml.kernel.org/r/20190403194452.10845-1-cascardo@canonical.com
+  perf test -v 6
+
+it outputs error log on the ARM64 platform:
+
+  running test 33 '*:*'trace-cmd: No such file or directory
+
+  [...]
+
+  trace-cmd: Invalid argument
+
+The trace event parsing code originally came from trace-cmd so it keeps
+the tag string "trace-cmd" for errors, this easily introduces the
+impression that the perf tool launches trace-cmd command for trace event
+parsing, but in fact the related parsing is accomplished by the
+traceevent lib.
+
+This patch changes the tag string to "libtraceevent" so that we can
+avoid confusion and let users to more easily connect the error with
+traceevent lib.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20190424013802.27569-1-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/lib/traceevent/parse-utils.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index c8b01176c9e1..09762985c713 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1714,8 +1714,8 @@ static int symbol__disassemble_bpf(struct symbol *sym,
- 	if (dso->binary_type != DSO_BINARY_TYPE__BPF_PROG_INFO)
- 		return -1;
+diff --git a/tools/lib/traceevent/parse-utils.c b/tools/lib/traceevent/parse-utils.c
+index 77e4ec6402dd..e99867111387 100644
+--- a/tools/lib/traceevent/parse-utils.c
++++ b/tools/lib/traceevent/parse-utils.c
+@@ -14,7 +14,7 @@
+ void __vwarning(const char *fmt, va_list ap)
+ {
+ 	if (errno)
+-		perror("trace-cmd");
++		perror("libtraceevent");
+ 	errno = 0;
  
--	pr_debug("%s: handling sym %s addr %lx len %lx\n", __func__,
--		 sym->name, sym->start, sym->end - sym->start);
-+	pr_debug("%s: handling sym %s addr %" PRIx64 " len %" PRIx64 "\n", __func__,
-+		  sym->name, sym->start, sym->end - sym->start);
- 
- 	memset(tpath, 0, sizeof(tpath));
- 	perf_exe(tpath, sizeof(tpath));
-@@ -1740,7 +1740,7 @@ static int symbol__disassemble_bpf(struct symbol *sym,
- 	info_linear = info_node->info_linear;
- 	sub_id = dso->bpf_prog.sub_id;
- 
--	info.buffer = (void *)(info_linear->info.jited_prog_insns);
-+	info.buffer = (void *)(uintptr_t)(info_linear->info.jited_prog_insns);
- 	info.buffer_length = info_linear->info.jited_prog_len;
- 
- 	if (info_linear->info.nr_line_info)
-@@ -1776,7 +1776,7 @@ static int symbol__disassemble_bpf(struct symbol *sym,
- 		const char *srcline;
- 		u64 addr;
- 
--		addr = pc + ((u64 *)(info_linear->info.jited_ksyms))[sub_id];
-+		addr = pc + ((u64 *)(uintptr_t)(info_linear->info.jited_ksyms))[sub_id];
- 		count = disassemble(pc, &info);
- 
- 		if (prog_linfo)
+ 	fprintf(stderr, "  ");
