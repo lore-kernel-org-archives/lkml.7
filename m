@@ -2,124 +2,139 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAB9C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1EBC004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E831F206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C529206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:03:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jf6G9yGK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbfECRDV (ORCPT
+        id S1728764AbfECRDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:03:21 -0400
-Received: from foss.arm.com ([217.140.101.70]:37368 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726720AbfECRDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:03:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B389915A2;
-        Fri,  3 May 2019 10:03:19 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A5D43F557;
-        Fri,  3 May 2019 10:03:13 -0700 (PDT)
-Date:   Fri, 3 May 2019 18:03:10 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>, Kuehling@google.com,
-        Felix <Felix.Kuehling@amd.com>, Deucher@google.com,
-        Alexander <Alexander.Deucher@amd.com>, Koenig@google.com,
-        Christian <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: Re: [PATCH v14 13/17] IB/mlx4, arm64: untag user pointers in
- mlx4_get_umem_mr
-Message-ID: <20190503170310.GL55449@arrakis.emea.arm.com>
-References: <cover.1556630205.git.andreyknvl@google.com>
- <05c0c078b8b5984af4cc3b105a58c711dcd83342.1556630205.git.andreyknvl@google.com>
+        Fri, 3 May 2019 13:03:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:32881 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbfECRD3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 13:03:29 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z28so3189087pfk.0;
+        Fri, 03 May 2019 10:03:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zFUNV+6rErv9SNLZ0jEAtycql+KYTWK7jUCuIeGUSuQ=;
+        b=Jf6G9yGKlK6WIV3+2cNCmDHbbK6SEnHDZJXSxkq3G3aL6YC0mJhQhUpc4jDe6ez8iP
+         3Cfs/M1f7Y1AJOYaeaVq/ItniYNAA+4rNJhBJ/OJzekEQxn82TZvUs6H4LJMZuv6JnbU
+         QaiJnYPSFG47H9yWce2ysNsuse1H/opXJTMdgwAHIyAWO0/v4OzrddtmE0hxPa96KLQD
+         EwPMjX/K8Em22e5GOGXolIxGK+9XDdgCWdwKWI2dIj+KNkjlltxi+ya/6pxzgIm2jN+g
+         qYGVjBfqdrqzE4WpUR4T9jqgYPmZSdsvTsKAd4GaaowRKhjkH9r2LA+wzws64uZDDDQv
+         7oFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zFUNV+6rErv9SNLZ0jEAtycql+KYTWK7jUCuIeGUSuQ=;
+        b=Ea02StMT3eEFCcmh4neyoGNu4+yPUcxNpTHQlz+MsMv7LOi554ZZnRWrs5KJjwmTS+
+         mTF/ZxAeFC2S/k/NBBBQwYCrX7GJbN4uONY3B3M+2ObWBttch1iJLVZJ2fjvR/UTcoPA
+         apzs8TaLIW78Nvbj9n7CYsA7GKuz2761HDFaIl2uIG/hWnPR00TmhE3P0Epho37AuytF
+         9pvaw8HY3wrPQ9jDQa9GJSnaAQl4qZ78SOXfeqL299gUSM2QzLP9IOjrukopup9qt5Ys
+         0iL1nHFmPBS8bqRTV/TCEom2XdaqpyhkVXzuC/U7UotBLIqoNdX/OtOmx++iPydgkREI
+         kgQQ==
+X-Gm-Message-State: APjAAAU7mD5e6G9L1vJaMaq2KbXp6ACTgKft5Nmdo9axtjIiRelHQv7G
+        i/W9e00ZardziCmNEOAcVUk=
+X-Google-Smtp-Source: APXvYqwRBpm/v5Rtg+7z/fBbBBm+bfY4ZHO6oWCnoPgfxqk4GFQgCOhxavDyGIOurpZ0Jeg7UAYrZA==
+X-Received: by 2002:a63:1701:: with SMTP id x1mr11706802pgl.153.1556903008631;
+        Fri, 03 May 2019 10:03:28 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z9sm3185923pgi.74.2019.05.03.10.03.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 10:03:27 -0700 (PDT)
+Date:   Fri, 3 May 2019 10:03:26 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] dt-bindings: power: supply: Add bindings for
+ Microchip UCS1002
+Message-ID: <20190503170326.GB32529@roeck-us.net>
+References: <20190503170042.19334-1-andrew.smirnov@gmail.com>
+ <20190503170042.19334-4-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <05c0c078b8b5984af4cc3b105a58c711dcd83342.1556630205.git.andreyknvl@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190503170042.19334-4-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 03:25:09PM +0200, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow to
-> pass tagged user pointers (with the top byte set to something else other
-> than 0x00) as syscall arguments.
+On Fri, May 03, 2019 at 10:00:42AM -0700, Andrey Smirnov wrote:
+> Add bindings for Microchip UCS1002 Programmable USB Port Power
+> Controller with Charger Emulation.
 > 
-> mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
-> only by done with untagged pointers.
-> 
-> Untag user pointers in this function.
-> 
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Reviewed-by: Rob Herring <robh+dt@kernel.org>
+> Cc: Enric Balletbo Serra <enric.balletbo@collabora.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
 > ---
->  drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+>  .../power/supply/microchip,ucs1002.txt        | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
 > 
-> diff --git a/drivers/infiniband/hw/mlx4/mr.c b/drivers/infiniband/hw/mlx4/mr.c
-> index 395379a480cb..9a35ed2c6a6f 100644
-> --- a/drivers/infiniband/hw/mlx4/mr.c
-> +++ b/drivers/infiniband/hw/mlx4/mr.c
-> @@ -378,6 +378,7 @@ static struct ib_umem *mlx4_get_umem_mr(struct ib_udata *udata, u64 start,
->  	 * again
->  	 */
->  	if (!ib_access_writable(access_flags)) {
-> +		unsigned long untagged_start = untagged_addr(start);
->  		struct vm_area_struct *vma;
->  
->  		down_read(&current->mm->mmap_sem);
-> @@ -386,9 +387,9 @@ static struct ib_umem *mlx4_get_umem_mr(struct ib_udata *udata, u64 start,
->  		 * cover the memory, but for now it requires a single vma to
->  		 * entirely cover the MR to support RO mappings.
->  		 */
-> -		vma = find_vma(current->mm, start);
-> -		if (vma && vma->vm_end >= start + length &&
-> -		    vma->vm_start <= start) {
-> +		vma = find_vma(current->mm, untagged_start);
-> +		if (vma && vma->vm_end >= untagged_start + length &&
-> +		    vma->vm_start <= untagged_start) {
->  			if (vma->vm_flags & VM_WRITE)
->  				access_flags |= IB_ACCESS_LOCAL_WRITE;
->  		} else {
+> diff --git a/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+> new file mode 100644
+> index 000000000000..1d284ad816bf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+> @@ -0,0 +1,27 @@
+> +Microchip UCS1002 USB Port Power Controller
+> +
+> +Required properties:
+> +- compatible		: Should be "microchip,ucs1002";
+> +- reg			: I2C slave address
+> +
+> +Optional properties:
+> +- interrupts		: A list of interrupts lines present (could be either
+> +			  corresponding to A_DET# pin, ALERT# pin, or both)
+> +- interrupt-names	: A list of interrupt names. Should contain (if
+> +			  present):
+> +			  - "a_det" for line connected to A_DET# pin
+> +			  - "alert" for line connected to ALERT# pin
+> +			  Both are expected to be IRQ_TYPE_EDGE_BOTH
+> +Example:
+> +
+> +&i2c3 {
+> +	charger@32 {
+> +		compatible = "microchip,ucs1002";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_ucs1002_pins>;
+> +		reg = <0x32>;
+> +		interrupts-extended = <&gpio5 2 IRQ_TYPE_EDGE_BOTH>,
+> +				      <&gpio3 21 IRQ_TYPE_EDGE_BOTH>;
 
-Discussion ongoing on the previous version of the patch but I'm more
-inclined to do this in ib_uverbs_(re)reg_mr() on cmd.start.
+interrupts ?
 
--- 
-Catalin
+> +		interrupt-names = "a_det", "alert";
+> +	};
+> +};
+> -- 
+> 2.21.0
+> 
