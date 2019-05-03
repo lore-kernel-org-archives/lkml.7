@@ -2,101 +2,153 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86CBC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C740C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46212081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A89D2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbfECNvT (ORCPT
+        id S1727726AbfECNxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 09:51:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39866 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726047AbfECNvT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 09:51:19 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43Dnl4Z094490
-        for <linux-kernel@vger.kernel.org>; Fri, 3 May 2019 09:51:17 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s8m6cptb9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 09:50:45 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Fri, 3 May 2019 14:47:26 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 May 2019 14:47:22 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x43DlLHG23330858
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 May 2019 13:47:21 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27CA642045;
-        Fri,  3 May 2019 13:47:21 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9B8E742041;
-        Fri,  3 May 2019 13:47:20 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  3 May 2019 13:47:20 +0000 (GMT)
-Date:   Fri, 3 May 2019 15:47:19 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] s390: remove ARCH_SELECT_MEMORY_MODEL
-References: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
- <1556740577-4140-3-git-send-email-rppt@linux.ibm.com>
+        Fri, 3 May 2019 09:53:18 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:43502 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726047AbfECNxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 09:53:18 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 8FDABFB03;
+        Fri,  3 May 2019 15:53:14 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ooGTtBqEb89p; Fri,  3 May 2019 15:53:13 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id A480547CED; Fri,  3 May 2019 15:53:12 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] soc: imx: Get iMX8MQ revision for B0 from ATF
+Date:   Fri,  3 May 2019 15:53:12 +0200
+Message-Id: <d85c6cfe79f9fc1e7761c952e29dfb2f71cff2c1.1556891520.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556740577-4140-3-git-send-email-rppt@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19050313-0012-0000-0000-00000317F2E3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050313-0013-0000-0000-0000215065E1
-Message-Id: <20190503134719.GB5602@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=858 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905030087
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 10:56:16PM +0300, Mike Rapoport wrote:
-> The only reason s390 has ARCH_SELECT_MEMORY_MODEL option in
-> arch/s390/Kconfig is an ancient compile error with allnoconfig which was
-> fixed by commit 97195d6b411f ("[S390] fix sparsemem related compile error
-> with allnoconfig on s390") by adding the ARCH_SELECT_MEMORY_MODEL option.
-> 
-> Since then a lot have changed and now allnoconfig builds just fine without
-> ARCH_SELECT_MEMORY_MODEL, so it can be removed.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/s390/Kconfig | 3 ---
->  1 file changed, 3 deletions(-)
+This is similar to what the BSP does and needed to e.g. determine
+necessary quirks for MIPI DSI.
 
-Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+
+---
+From the list discussion and changelog it's not clear to me why a
+different method was chosen for the B1 silicon so I left that in place
+as is and only trigger on the B0 silicon I have here.
+---
+ drivers/soc/imx/soc-imx8.c | 49 ++++++++++++++++++++++++++++----------
+ 1 file changed, 37 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8.c
+index fc6429f9170a..363acd1151ee 100644
+--- a/drivers/soc/imx/soc-imx8.c
++++ b/drivers/soc/imx/soc-imx8.c
+@@ -3,6 +3,7 @@
+  * Copyright 2019 NXP.
+  */
+ 
++#include <linux/arm-smccc.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/of_address.h>
+@@ -11,16 +12,37 @@
+ #include <linux/platform_device.h>
+ #include <linux/of.h>
+ 
++#define REV_B0				0x20
+ #define REV_B1				0x21
+ 
++#define IMX8MQ_ATF_GET_SOC_INFO		0xc2000006
+ #define IMX8MQ_SW_INFO_B1		0x40
+ #define IMX8MQ_SW_MAGIC_B1		0xff0055aa
+ 
++
+ struct imx8_soc_data {
+ 	char *name;
+ 	u32 (*soc_revision)(void);
+ };
+ 
++
++static u32 __init imx8mq_soc_revision_from_atf(void)
++{
++	struct arm_smccc_res res;
++	u32 digprog;
++
++	arm_smccc_smc(IMX8MQ_ATF_GET_SOC_INFO, 0, 0, 0, 0, 0, 0, 0, &res);
++	digprog = res.a0;
++	/*
++	 * Bit [23:16] is the silicon ID
++	 * Bit[7:4] is the base layer revision,
++	 * Bit[3:0] is the metal layer revision
++	 * e.g. 0x10 stands for Tapeout 1.0
++	 */
++	return digprog & 0xff;
++}
++
++
+ static u32 __init imx8mq_soc_revision(void)
+ {
+ 	struct device_node *np;
+@@ -29,20 +51,23 @@ static u32 __init imx8mq_soc_revision(void)
+ 	u32 rev = 0;
+ 
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mq-ocotp");
+-	if (!np)
+-		goto out;
+-
+-	ocotp_base = of_iomap(np, 0);
+-	WARN_ON(!ocotp_base);
+-
+-	magic = readl_relaxed(ocotp_base + IMX8MQ_SW_INFO_B1);
+-	if (magic == IMX8MQ_SW_MAGIC_B1)
+-		rev = REV_B1;
+-
+-	iounmap(ocotp_base);
++	if (np) {
++		ocotp_base = of_iomap(np, 0);
++		WARN_ON(!ocotp_base);
++
++		magic = readl_relaxed(ocotp_base + IMX8MQ_SW_INFO_B1);
++		iounmap(ocotp_base);
++		of_node_put(np);
++		if (magic == IMX8MQ_SW_MAGIC_B1)
++			rev = REV_B1;
++	}
+ 
++	if (!rev) {
++		magic = imx8mq_soc_revision_from_atf();
++		if (magic == REV_B0)
++			rev = REV_B0;
++	}
+ out:
+-	of_node_put(np);
+ 	return rev;
+ }
+ 
+-- 
+2.20.1
 
