@@ -2,99 +2,166 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED20C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD23C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03DF2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556858079;
-	bh=QCfXfubCMfeo2q0G4NW7ThnenR9u6oxAhdQWBG9Sspg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Db0NZjLgk2PP+sEg9q9oG34tPmgTdN+qyjSOBvaHfEx/lrFSrQC6Xr6r2ZYyJn1Md
-	 cSMeJP+oDKbRNX3rAsX9B+Rr0afco83b01uM4Fp4cnoK453bsQLan7UMhHKH8XZVbZ
-	 8AcbV6k+aSkkDnLcLYonkXwgEfN5LpkbdVcZIOpg=
+	by mail.kernel.org (Postfix) with ESMTP id 930AB2081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:37:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nX2mqnQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbfECEei (ORCPT
+        id S1726370AbfECEhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 00:34:38 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46952 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfECEei (ORCPT
+        Fri, 3 May 2019 00:37:39 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46948 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfECEhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 00:34:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ajr35B0OPmYp0uksnhPeXTb1xq5aJvRQAQZCo3Hnvqc=; b=GjpsXnCfliyL5USC5eNrbk0+o
-        z8VfBbhpBwFeU5JNq1JkwWuTcjA15f+9GN5XbnPHOIPoWD2vwiwWC/Lv0+pfScgiYDMQKOdNAaDn/
-        qTFSnDQ1yfsf3DoVw1VCHIOOhFnKs+PY8XxE8wTlki+9B15LVGE14dO+C7BKcqELpQRy4=;
-Received: from [42.29.24.106] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hMPts-0000MQ-Io; Fri, 03 May 2019 04:34:21 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id EAA20441D3C; Fri,  3 May 2019 05:34:06 +0100 (BST)
-Date:   Fri, 3 May 2019 13:34:06 +0900
-From:   Mark Brown <broonie@kernel.org>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: Intel: avoid Oops if DMA setup fails
-Message-ID: <20190503043406.GZ14916@sirena.org.uk>
-References: <0b030b85-00c8-2e35-3064-bb764aaff0f6@linux.intel.com>
- <20190429182517.210909-1-zwisler@google.com>
+        Fri, 3 May 2019 00:37:38 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 77so4174255otu.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 21:37:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MP+BYohbe5InwRfSzvg57aXOQ3N16hg/j/194MGpAY0=;
+        b=nX2mqnQH8G7lAq/7boHjf6fgeLW4OhXc8dycc5+By6G9miBNlXzrVPV09oM01sBY2z
+         1PY2T/XYJRHqtEONNgq9PADGf03W5G4sziQ4uRTMnqAEoh6iNM5a9Ezoiyo1ndCy7ojW
+         tk5gH9WgN5g9NpRotxrQseR6tWEmch2vzDn0sL0k1iRMx7bM8e8KuZGIwI0PZSgcFr3+
+         TlFU9bnfKzaF/HkPoJxOnNiQ3CLrmM6khM79ImW9xBb83Molxw1NMYQ6x9BlXbS1s9zs
+         S9Wn0BBJ13BpxlnQuKJTgsk8nHAZ3z9hw5P/B+YZkt20RKzyQ4WKZ9zq8VVw1rVYepe+
+         8Lqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MP+BYohbe5InwRfSzvg57aXOQ3N16hg/j/194MGpAY0=;
+        b=o3TDXZQ8ymUJNEypGSDNbaVgGT6erGeNiT4FmTDTEIuyzB6rchEYvfUCq7hgI2Iw3+
+         M2D3Aa/3+n6Ynd2tVBf9meeu5KMPl6KrhWA8ovApyLl+adPRvoamkJQU2ex06mPgCmgq
+         e2MJgYXlNGZLb00tD+s6wmjPXPVBvt58UNoSpWJi/JYo8HknDQ6AjuUycx7MEr0CeCUK
+         duz0VST+h4JGsfPtfO3T0EHoUpeRqC+QTw1KSYaDf6UD1wTqM1qvd85xAKNHEEIqAGdU
+         PtfUOGSeFHcHeR3Q59gz5TQdtZ25wMxuyDEh0oHnXYVW1/FM5D+7AaGx8UV57Kx6xd5f
+         JBEQ==
+X-Gm-Message-State: APjAAAUWhyG3hvzviS1+Xh033ovYrgdkJtdEHIZRxC+BaTPdRu9aZZP4
+        i2I4xr1zBrZyKc8ECJWmDI06rb8uWeE1fRuxvA/65g==
+X-Google-Smtp-Source: APXvYqzr00vtpNCRa2QqJZ42KJSToZ1wauw/4VV+vzP4c9tKhQXBp7ukXjW5JZyxz7qF7iSRxd8GRh/4dSu03CZLLfk=
+X-Received: by 2002:a9d:7f19:: with SMTP id j25mr5018212otq.25.1556858257579;
+ Thu, 02 May 2019 21:37:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="p+/4B2pcxE3X6xU6"
-Content-Disposition: inline
-In-Reply-To: <20190429182517.210909-1-zwisler@google.com>
-X-Cookie: -- I have seen the FUN --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-4-brendanhiggins@google.com> <1befe456-d981-d726-44f9-ebe3702ee51d@kernel.org>
+In-Reply-To: <1befe456-d981-d726-44f9-ebe3702ee51d@kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 2 May 2019 21:37:26 -0700
+Message-ID: <CAFd5g46Ok5rtXUyeHdyoujsdYPq4qwaZwdu3CxY50Gq_iq7B6A@mail.gmail.com>
+Subject: Re: [PATCH v2 03/17] kunit: test: add string_stream a std::stream
+ like string builder
+To:     shuah <shuah@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        skhan@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 2, 2019 at 6:26 PM shuah <shuah@kernel.org> wrote:
+>
+> On 5/1/19 5:01 PM, Brendan Higgins wrote:
+< snip >
+> > diff --git a/kunit/Makefile b/kunit/Makefile
+> > index 5efdc4dea2c08..275b565a0e81f 100644
+> > --- a/kunit/Makefile
+> > +++ b/kunit/Makefile
+> > @@ -1 +1,2 @@
+> > -obj-$(CONFIG_KUNIT) +=                       test.o
+> > +obj-$(CONFIG_KUNIT) +=                       test.o \
+> > +                                     string-stream.o
+> > diff --git a/kunit/string-stream.c b/kunit/string-stream.c
+> > new file mode 100644
+> > index 0000000000000..7018194ecf2fa
+> > --- /dev/null
+> > +++ b/kunit/string-stream.c
+> > @@ -0,0 +1,144 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * C++ stream style string builder used in KUnit for building messages.
+> > + *
+> > + * Copyright (C) 2019, Google LLC.
+> > + * Author: Brendan Higgins <brendanhiggins@google.com>
+> > + */
+> > +
+> > +#include <linux/list.h>
+> > +#include <linux/slab.h>
+> > +#include <kunit/string-stream.h>
+> > +
+> > +int string_stream_vadd(struct string_stream *this,
+> > +                    const char *fmt,
+> > +                    va_list args)
+> > +{
+> > +     struct string_stream_fragment *fragment;
+>
+> Since there is field with the same name, please use a different
+> name. Using the same name for the struct which contains a field
+> of the same name get very confusing and will hard to maintain
+> the code.
+>
+> > +     int len;
+> > +     va_list args_for_counting;
+> > +     unsigned long flags;
+> > +
+> > +     /* Make a copy because `vsnprintf` could change it */
+> > +     va_copy(args_for_counting, args);
+> > +
+> > +     /* Need space for null byte. */
+> > +     len = vsnprintf(NULL, 0, fmt, args_for_counting) + 1;
+> > +
+> > +     va_end(args_for_counting);
+> > +
+> > +     fragment = kmalloc(sizeof(*fragment), GFP_KERNEL);
+> > +     if (!fragment)
+> > +             return -ENOMEM;
+> > +
+> > +     fragment->fragment = kmalloc(len, GFP_KERNEL);
+>
+> This is confusing. See above comment.
 
---p+/4B2pcxE3X6xU6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Good point. Will fix in the next revision.
 
-On Mon, Apr 29, 2019 at 12:25:17PM -0600, Ross Zwisler wrote:
-> Currently in sst_dsp_new() if we get an error return from sst_dma_new()
-> we just print an error message and then still complete the function
-> successfully.  This means that we are trying to run without sst->dma
+< snip >
 
-Please don't bury patches in the replies to existing threads, it makes
-it harder to spot them.
-
---p+/4B2pcxE3X6xU6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzLxL4ACgkQJNaLcl1U
-h9Bf5gf/b4Rd4TJAVsVpVmu3GoujrMqNu/jOVgDjPKDNLE70Cj/x4nvuVMvV6YAA
-1W93C0kngsJWKhAgw3gvDsW2iIBGRLOCxB0JaHXntb5bO1ruAMKvyDfy1E09038c
-RvoJg8367XfDLvnJKgoaktPKu+d4yPf73shGOVgEpSEvT5vs4bl5/zV1tB3NNHMG
-U5QkmT8AoRhkDRWOrIETSfPaZJwk01VI7qjp9UxSqszBvbcxhwMbuDPyCcr5reXn
-Q5aYlCH8a1mZoW4Az6NHsykSi8NyqPt1rvKYStPQn4WsasuXkV406EddfJL98bI1
-I/gMNH5m5xTM4wPel4/Bi8jxQQ+V5w==
-=A4ke
------END PGP SIGNATURE-----
-
---p+/4B2pcxE3X6xU6--
+Thanks!
