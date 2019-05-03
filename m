@@ -2,88 +2,166 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D30C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F192C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36132075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:29:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WaxjY/Wo"
+	by mail.kernel.org (Postfix) with ESMTP id 2A2B42075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfECN3e (ORCPT
+        id S1727753AbfECN3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 09:29:34 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:35348 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfECN3e (ORCPT
+        Fri, 3 May 2019 09:29:38 -0400
+Received: from ivanoab6.miniserver.com ([5.153.251.140]:48050 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfECN3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 09:29:34 -0400
-Received: by mail-ua1-f68.google.com with SMTP id g16so2012945uad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 06:29:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EtQarfjvBVELqAYN+Ba2dtNFq+u9qtxgeg7ns1Ue40Y=;
-        b=WaxjY/WoDhL7nGbSX7lFGJ71jz4K7qOKbL3imHr9auDwTMLOQMSV75mOHf/Igr2G9f
-         Zsa5W7OHaDLyXkHoPAN2Xk6cSZ97mvLHxfPtqDDrTDM3mJY5LF+V9cxKj7BBE8bgGuZ6
-         ighhVpC0VpwHAdNGcRo4ludLrz+jyeP+mujh9jaKf1S6ndI+RLgMhdQyDOV8THcrdVcK
-         McHsHze3OBzsuMbSJ7Rw/3u9QVwIwFo/fDkZJZMJNOY98P9uKvsrN+Wa1sxtDS16IcTt
-         44LwwYm8nq2f1BtmrkYVvR9YUPGCgyaWXKuMDNtszOnv2QR0fJXcgXXnajJR/lU2fyRK
-         BlMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EtQarfjvBVELqAYN+Ba2dtNFq+u9qtxgeg7ns1Ue40Y=;
-        b=l6LLozJhCJY6MgQax3JEbE7ZI5xhBAxGyPkYulzRS63dFm1Zdh9lho5eCwMUhEXlXX
-         H9p04splHkbSaKIj+w1ODlUTSzffUXqnOou5bVtrZaRLQycvtTBRQZksMFC7T65fPyAM
-         bx8K+n3dkJjoK5t6PqGtcWJaE+2gE5/iE2O6SruQA9o4K4c5bv2DalgJ72rce8tz6ZcY
-         X6frtIiy7vqvazSeDxM0NXMSyTTg/KGqfcosg0oCfnxas5P4QuU/Y2N1joaVu0s6QoWn
-         i5R1A2sscXXCKZjPgIIzI2lUDIa6hqTEA+HW4ArFxxp0MjvSXOGvbTR36o79aSbvsig8
-         FJ8g==
-X-Gm-Message-State: APjAAAWukba5os4MJhv2uFnHdTOkDoJgx6iAzn0+QjuNrbT4pXG/UL4E
-        5yLx9bpfC3C54Edp0YTWGPufrEVJ4UKV37wn0mbeaQ==
-X-Google-Smtp-Source: APXvYqwnmdGyKdfMPiSIuwt2e0HNuMqoxfqgddY3iC09i4sLQrrpLWQU83CoFwPzamWtIIajUnTeAeKS42MMJHYU/dg=
-X-Received: by 2002:ab0:2b13:: with SMTP id e19mr5169793uar.15.1556890173163;
- Fri, 03 May 2019 06:29:33 -0700 (PDT)
+        Fri, 3 May 2019 09:29:36 -0400
+Received: from [192.168.17.6] (helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1hMYFM-00074d-Bk; Fri, 03 May 2019 13:29:04 +0000
+Received: from jain.kot-begemot.co.uk ([192.168.3.3])
+        by jain.kot-begemot.co.uk with esmtp (Exim 4.89)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1hMYFF-0001a5-CV; Fri, 03 May 2019 14:29:03 +0100
+Subject: Re: [PATCH 14/15] um: switch to generic version of pte allocation
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>, linux-mips@vger.kernel.org,
+        Guo Ren <guoren@kernel.org>, linux-hexagon@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Helge Deller <deller@gmx.de>, x86@kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Sam Creasey <sammy@sammy.net>, Arnd Bergmann <arnd@arndb.de>,
+        linux-um@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+        linux-m68k@lists.linux-m68k.org, Greentime Hu <green.hu@gmail.com>,
+        nios2-dev@lists.rocketboards.org, Guan Xuetao <gxt@pku.edu.cn>,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Richard Kuo <rkuo@codeaurora.org>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-alpha@vger.kernel.org, Ley Foon Tan <lftan@altera.com>,
+        linuxppc-dev@lists.ozlabs.org
+References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
+ <1556810922-20248-15-git-send-email-rppt@linux.ibm.com>
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Message-ID: <3fddc076-1843-ee84-febb-44c8d317489f@cambridgegreys.com>
+Date:   Fri, 3 May 2019 14:28:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190423090235.17244-1-jbrunet@baylibre.com> <CAPDyKFoQyPKERckAdU+kkw3go=161PWc+5GAkz7y=xWMGbq+SQ@mail.gmail.com>
-In-Reply-To: <CAPDyKFoQyPKERckAdU+kkw3go=161PWc+5GAkz7y=xWMGbq+SQ@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 3 May 2019 15:28:56 +0200
-Message-ID: <CAPDyKFqvkn0x6+AWKwa1xxj1adj+Ehy6jmoqPfh=0Dhm8AxzCw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] mmc: meson-gx: clean up and tuning update
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1556810922-20248-15-git-send-email-rppt@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019 at 12:44, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Tue, 23 Apr 2019 at 11:02, Jerome Brunet <jbrunet@baylibre.com> wrote:
-> >
-> > The purpose of this series is too improve reliability of the amlogic mmc
-> > driver on new (g12a) and old ones (axg, gxl, gxbb, etc...)
-> >
-> > * The 3 first patches are just harmless clean ups.
->
-> Applied these first three, postponing the the rest until Martin are
-> happy with all of them. Thanks!
 
-Applied the rest of the series for next and by adding also Kevin's tags, thanks!
 
-[...]
+On 02/05/2019 16:28, Mike Rapoport wrote:
+> um allocates PTE pages with __get_free_page() and uses
+> GFP_KERNEL | __GFP_ZERO for the allocations.
+> 
+> Switch it to the generic version that does exactly the same thing for the
+> kernel page tables and adds __GFP_ACCOUNT for the user PTEs.
+> 
+> The pte_free() and pte_free_kernel() versions are identical to the generic
+> ones and can be simply dropped.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>   arch/um/include/asm/pgalloc.h | 16 ++--------------
+>   arch/um/kernel/mem.c          | 22 ----------------------
+>   2 files changed, 2 insertions(+), 36 deletions(-)
+> 
+> diff --git a/arch/um/include/asm/pgalloc.h b/arch/um/include/asm/pgalloc.h
+> index 99eb568..d7b282e 100644
+> --- a/arch/um/include/asm/pgalloc.h
+> +++ b/arch/um/include/asm/pgalloc.h
+> @@ -10,6 +10,8 @@
+>   
+>   #include <linux/mm.h>
+>   
+> +#include <asm-generic/pgalloc.h>	/* for pte_{alloc,free}_one */
+> +
+>   #define pmd_populate_kernel(mm, pmd, pte) \
+>   	set_pmd(pmd, __pmd(_PAGE_TABLE + (unsigned long) __pa(pte)))
+>   
+> @@ -25,20 +27,6 @@
+>   extern pgd_t *pgd_alloc(struct mm_struct *);
+>   extern void pgd_free(struct mm_struct *mm, pgd_t *pgd);
+>   
+> -extern pte_t *pte_alloc_one_kernel(struct mm_struct *);
+> -extern pgtable_t pte_alloc_one(struct mm_struct *);
+> -
+> -static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+> -{
+> -	free_page((unsigned long) pte);
+> -}
+> -
+> -static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
+> -{
+> -	pgtable_page_dtor(pte);
+> -	__free_page(pte);
+> -}
+> -
+>   #define __pte_free_tlb(tlb,pte, address)		\
+>   do {							\
+>   	pgtable_page_dtor(pte);				\
+> diff --git a/arch/um/kernel/mem.c b/arch/um/kernel/mem.c
+> index 99aa11b..2280374 100644
+> --- a/arch/um/kernel/mem.c
+> +++ b/arch/um/kernel/mem.c
+> @@ -215,28 +215,6 @@ void pgd_free(struct mm_struct *mm, pgd_t *pgd)
+>   	free_page((unsigned long) pgd);
+>   }
+>   
+> -pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+> -{
+> -	pte_t *pte;
+> -
+> -	pte = (pte_t *)__get_free_page(GFP_KERNEL|__GFP_ZERO);
+> -	return pte;
+> -}
+> -
+> -pgtable_t pte_alloc_one(struct mm_struct *mm)
+> -{
+> -	struct page *pte;
+> -
+> -	pte = alloc_page(GFP_KERNEL|__GFP_ZERO);
+> -	if (!pte)
+> -		return NULL;
+> -	if (!pgtable_page_ctor(pte)) {
+> -		__free_page(pte);
+> -		return NULL;
+> -	}
+> -	return pte;
+> -}
+> -
+>   #ifdef CONFIG_3_LEVEL_PGTABLES
+>   pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address)
+>   {
+> 
 
-Kind regards
-Uffe
+
+Reviewed-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+
+-- 
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
