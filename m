@@ -2,107 +2,204 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E20C004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA98C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 359C9206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:19:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556882364;
-	bh=UYFh2fznuaQspBCzomd2OghwGe6Z9MYbCrTWM3XoNG0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tKS49ken4SvF5wGUhafUo9I1RqvcfwURFZqf0OCoV3TDKUhUJPMyrifQyIRArUS2e
-	 S0ZAnuqYGwzQNpljNKHZkkrgadoIAsdekzXMJA78MrS0ZiypatDrZcwzR/qZv6gojR
-	 5sgNUfyRwYbV7rbMRzeZZTiHwTFSi/krLlSSmqOU=
+	by mail.kernel.org (Postfix) with ESMTP id 40658206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:19:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FU+THmY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfECLTX (ORCPT
+        id S1727666AbfECLT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:19:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbfECLTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:19:22 -0400
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83CED206C3;
-        Fri,  3 May 2019 11:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556882361;
-        bh=UYFh2fznuaQspBCzomd2OghwGe6Z9MYbCrTWM3XoNG0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HG+Oy2VpgrIi1Cch6D4HchqpzLMZ46CRPTgAIZvUE1G6AQZFfMITgO02NydGVgooA
-         CWnK+/SQ2OfdlS0TKVCLaFSSRwd/cR/y8LnOWA9aPJhO/KZyL0R5Z9/72GjL0p9bir
-         RRERQz44i313wNP6/8Ze7BH7//smOtdYqEovLNB0=
-Received: by mail-lf1-f46.google.com with SMTP id h126so4151783lfh.4;
-        Fri, 03 May 2019 04:19:21 -0700 (PDT)
-X-Gm-Message-State: APjAAAW1Cf+Q66nlACvDIJzjSZAHZ8jFbl87J6ZP2tiFhwA0KRxIUReD
-        PKJyTKeoHY1XrdGHy2YW143WDEX+3XrGFbOciQs=
-X-Google-Smtp-Source: APXvYqxjSiIsSkOWkFFKQc0VvX9PMx8wSsDNflixMMiDXvGvhtL+PIknt+H/jFFWa/8RyhTFVN8QLdwyEWRmisP8Bto=
-X-Received: by 2002:a19:189:: with SMTP id 131mr3170741lfb.74.1556882359840;
- Fri, 03 May 2019 04:19:19 -0700 (PDT)
+        Fri, 3 May 2019 07:19:28 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35626 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfECLT2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 07:19:28 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h15so1689209wrb.2;
+        Fri, 03 May 2019 04:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kznYLKi373KSnxJXDEYDyqZTWv2DWOlCYoAQA1dKIN4=;
+        b=FU+THmY/gcswXh6kfdRTql4G69DBYAoMINIRi9/isJM3rQT42NHCyGWxBOFB7XPOil
+         PQQA3NgsBdaDERC8fw/2t1Q40vBV8SsxjOW47eKwhfCG4G0DyOnpmC3jDKyiHMUFTWPl
+         y/RS+rURUlziaMzPVf+478gxzmAy7/Y0+tu79je1cyE5DYC2TaGJsI1HlgWf7ur01Srr
+         tb4TcHZJygypX5g8GHCiUWlq2CVxcgq2grDLC6HPFlauh1pWCjoZTMlrP1UCa9qgO9l8
+         yP3ZShn4FRYzvpUu3WwVThp5XbXBDiNRBUzyoH9KOnu4CQlBO3PZm0Z6vHl/0scv0Gu0
+         E3yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kznYLKi373KSnxJXDEYDyqZTWv2DWOlCYoAQA1dKIN4=;
+        b=ecHXq0JTUU7zm45K9MqCpAlNFdBzY8EMUjb23GFLKfc1E1ZFRX5Pq+sfHPnqHox1FW
+         pC+vNRHAUDQAzTKPbvn9deJUM6QsT9rpmm42YI0yG1DhzOfBwopMOHlmuJhjT2nPL7z8
+         u1bt35B5ZUgyhH8mpxP1c3f2HPAos2aQ3B2erX5A02/r8Zz1x7rwtPa17QGehApSPnlR
+         aRKjpUh1IhmPSEbUrMtfKS1D/ndpth3nkfhsWds9OrUIE3Zblf46qV2nI0x+lMSO948s
+         oQsDi+ZuowmwMqJ4nbZ3aOXAvuGxs7BqxXm0wjhMwPy2RKq8jlLnEHC63YHK8sopCoCO
+         lmsg==
+X-Gm-Message-State: APjAAAX/0YkJNdKrbx+04VgGro15yHJ0dyDlLtFRiRtgd8zh1LyjLW20
+        MMDnlSCUacIwECpXYVZ5zZk=
+X-Google-Smtp-Source: APXvYqxFMF7YNkHtXxqIFuqEy8MLdwT3LvZrCohDAJJRUH1Z2se9pof/X+KXX22J76siKQpKpsS8QQ==
+X-Received: by 2002:a5d:52ce:: with SMTP id r14mr6909008wrv.224.1556882365330;
+        Fri, 03 May 2019 04:19:25 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id s7sm1895613wrn.84.2019.05.03.04.19.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 04:19:24 -0700 (PDT)
+Date:   Fri, 3 May 2019 13:19:23 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V5 10/16] dt-bindings: PCI: tegra: Add device tree
+ support for T194
+Message-ID: <20190503111923.GE32400@ulmo>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-11-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <20190313193408.23740-1-abailon@baylibre.com>
-In-Reply-To: <20190313193408.23740-1-abailon@baylibre.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 3 May 2019 13:19:08 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPeOnrgnX=onMeX1izS2kYKAkD8TvFVykYTyW-v4NOv3vA@mail.gmail.com>
-Message-ID: <CAJKOXPeOnrgnX=onMeX1izS2kYKAkD8TvFVykYTyW-v4NOv3vA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] Add support of busfreq
-To:     Alexandre Bailon <abailon@baylibre.com>
-Cc:     linux-pm@vger.kernel.org, georgi.djakov@linaro.org,
-        mturquette@baylibre.com, ptitiano@baylibre.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        zening.wang@nxp.com, aisheng.dong@nxp.com, khilman@baylibre.com,
-        ccaione@baylibre.com, Viresh Kumar <viresh.kumar@linaro.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gMR3gsNFwZpnI/Ts"
+Content-Disposition: inline
+In-Reply-To: <20190424052004.6270-11-vidyas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019 at 20:35, Alexandre Bailon <abailon@baylibre.com> wrote:
->
-> This series implements busfreq, a framework used in MXP's
-> tree to scale the interconnect and dram frequencies.
-> In the vendor tree, device's driver request for a
-> performance level, which is used to scale the frequencies.
-> This series implements it using the interconnect framework.
-> Devices' driver request for bandwidth which is use by busfreq
-> to determine a performance level, and then scale the frequency.
->
-> Busfreq is quite generic. It could be used for any i.MX SoC.
-> A busfreq platform driver just have to define a list of
-> interconnect nodes, and some OPPs.
->
-> This series is sent as RFC mostly because the current support
-> of i.MX SoC won't benefit of busfreq framework, because the
-> clocks' driver don't support interconnect / dram frequency
-> scaling.
-> As exemple, this series implements busfreq for i.MX8MM whose
-> upstreaming is in progress. Because this relies on ATF to
-> do the frequency scaling, it won't be hard make it work.
->
-> As exemple, this series implements busfreq for
-> Alexandre Bailon (3):
->   drivers: interconnect: Add a driver for i.MX SoC
->   drivers: interconnect: imx: Add support of i.MX8MM
->   dt-bindings: interconnect: Document fsl,busfreq-imx8mm bindings
 
-Hi Alexandre,
+--gMR3gsNFwZpnI/Ts
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I am quite late but I just found your email.
+On Wed, Apr 24, 2019 at 10:49:58AM +0530, Vidya Sagar wrote:
+> Add support for Tegra194 PCIe controllers. These controllers are based
+> on Synopsys DesignWare core IP.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v4]:
+> * None
+>=20
+> Changes since [v3]:
+> * None
+>=20
+> Changes since [v2]:
+> * Using only 'Cx' (x-being controller number) format to represent a contr=
+oller
+> * Changed to 'value: description' format where applicable
+> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
+> * Provided more documentation for 'nvidia,init-link-speed' property
+> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
+>=20
+> Changes since [v1]:
+> * Added documentation for 'power-domains' property
+> * Removed 'window1' and 'window2' properties
+> * Removed '_clk' and '_rst' from clock and reset names
+> * Dropped 'pcie' from phy-names
+> * Added entry for BPMP-FW handle
+> * Removed offsets for some of the registers and added them in code and wo=
+uld be pickedup based on
+>   controller ID
+> * Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an option=
+al
+> * Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with invert=
+ed operation
+> * Added more documentation for 'nvidia,update-fc-fixup' property
+> * Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
+> * Added '-us' to all properties that represent time in microseconds
+> * Moved P2U documentation to a separate file
+>=20
+>  .../bindings/pci/nvidia,tegra194-pcie.txt     | 187 ++++++++++++++++++
+>  1 file changed, 187 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194=
+-pcie.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.t=
+xt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> new file mode 100644
+> index 000000000000..208dff126108
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> @@ -0,0 +1,187 @@
+> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
+> +
+> +This PCIe host controller is based on the Synopsis Designware PCIe IP
+> +and thus inherits all the common properties defined in designware-pcie.t=
+xt.
+> +
+> +Required properties:
+> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
+> +- device_type: Must be "pci"
+> +- power-domains: A phandle to the node that controls power to the respec=
+tive
+> +  PCIe controller and a specifier name for the PCIe controller. Followin=
+g are
+> +  the specifiers for the different PCIe controllers
+> +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C1
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C2
+> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C3
+> +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
+> +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
+> +  these specifiers are defined in
+> +  "include/dt-bindings/power/tegra194-powergate.h" file.
+> +- reg: A list of physical base address and length for each set of contro=
+ller
 
-This looks very similar to existing framework - devfreq, which purpose
-is to scale the system busses based on performance counters/events. It
-would be nice if we could avoid duplication of existing subsystems.
+Perhaps "list of physical base address and length pairs".
 
-Best regards,
-Krzysztof
+> +  registers. Must contain an entry for each entry in the reg-names prope=
+rty.
+> +- reg-names: Must include the following entries:
+> +  "appl": Controller's application logic registers
+> +  "config": As per the definition in designware-pcie.txt
+> +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Ad=
+dress
+> +             Translation Unit) registers of the PCIe core are made avail=
+able
+> +             fow SW access.
+
+s/fow/for/
+
+Thierry
+
+--gMR3gsNFwZpnI/Ts
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzMI7sACgkQ3SOs138+
+s6EIIQ/+JneyIE1QInUy25Ht9TxH6uK1NfNwHzcE3w7WQOHSFZ6cCm60usW9tX7y
+5bVqKGD/Qk/van6DX4OJbVWqUXSU4kKpCvL6e9ImuJn50qtt+SZCvzn2ITB1RrMY
+cx9g/qtQjrRgv9lnezcEBGFGFk0Mr828WkPfzZSIIT2xqJ7Hn+Irp5gvU+6LoDhv
+7J3FiCWf08MsSP/GmoTROtgkEl72UkltbhPUNb+YtL/AZd858eXm7ao/zP3mUIO2
+f67wTlzzqC1kYJYLERm4DOVlrpPehlz+fp+4QXbKsBovY4qkkRJCW4FM9F9d7Qe9
+z5wGlqk7SRZQPNDAVGhZ4XWRjpyiMss72Mqv4FjHU+FQiuney9b/NVu60XtJ0JqA
+LMo+JVI8w+5Pqq/n5+5mN9aM/dmmumTyaPZiQ/AASYX7iU8dXe6aKIcgZo+a10LW
+X4fezVQ/BlzdHQ72ADFg66g1UkONCAYFaLemAf60OYJQQPKLTy4dAaemtleMoLsF
+hbKQng3PJSkG8L33JiMlvGg4N0cIaWx+1ugkMLrjbgrx8z8qceHyc3nrGvBPUyTU
+X9srLQMC7WsiahwlWUZPqMewXYPPXFKDg1+ExlLkQi/vSt88iJcu4X+ljt693WmR
+GOIY4OkOtmYrcJZEdJLmxCjqTNMkxCRrKjSpv3OEHCigvugwYeo=
+=pPtB
+-----END PGP SIGNATURE-----
+
+--gMR3gsNFwZpnI/Ts--
