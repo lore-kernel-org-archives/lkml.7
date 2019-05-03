@@ -2,96 +2,106 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E11C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE0AC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A377D206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86FAE206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:02:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Laftfx5A"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hrUWYPl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbfECRCi (ORCPT
+        id S1728722AbfECRCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:02:38 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56318 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726724AbfECRCh (ORCPT
+        Fri, 3 May 2019 13:02:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46900 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726724AbfECRCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:02:37 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43GxPbM141123;
-        Fri, 3 May 2019 17:02:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=BncSkmKFfSjgngfBN0eKIEFvp3WAo4qj1izyOTi5oSU=;
- b=Laftfx5AdthWx83pArbwSNaQCp2334pSq8Nd3V+Lf4APplC9cbaTIUg0gREZxZKNfIzt
- xbHhLDOisBrHOFg+HrjZG1jjrScs+5RF2go67GY1u2odxUp4LF83/0LcyAFD62qDvVDn
- SJx57SB5qA0vXf3la01p3Hqx/xygF05KacrwvMo4qqLsr0qkd2Xd7htbwst8ER4NzOn4
- 4zkbYsAa0wja5JzjTMTIv3cx/dv8AWQFQxYIGfKNwqI6JTF58bBfHg+61e+jnYcWcQIn
- fqS1V5AnE0lz6R5t2nE39ct+/5UR4Hshk6mh8khKM/UmG+f6g/M5sa2kLAManHrq3pEL RA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2s6xhyr3ts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 17:02:26 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43H18eQ143976;
-        Fri, 3 May 2019 17:02:25 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 2s6xhhqx69-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 03 May 2019 17:02:25 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x43H2PZq147775;
-        Fri, 3 May 2019 17:02:25 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2s6xhhqx61-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 17:02:25 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x43H2OEZ010679;
-        Fri, 3 May 2019 17:02:24 GMT
-Received: from [10.209.243.127] (/10.209.243.127)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 May 2019 10:02:24 -0700
-Subject: Re: [PATCH] net: rds: fix spelling mistake "syctl" -> "sysctl"
-To:     Colin King <colin.king@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190503121017.5227-1-colin.king@canonical.com>
-From:   Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <0fc4a8a5-d275-ef2c-3cbc-5cfa97fe6881@oracle.com>
-Date:   Fri, 3 May 2019 10:05:12 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 3 May 2019 13:02:50 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j11so3154072pff.13
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 10:02:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=e71LeW3j52z02CfoTglw12Lmjisq73YxcosFVCbh53o=;
+        b=hrUWYPl6ix6lmEUT+7gmZcFzhb63MdRST9wYPDOIVDmC/LzaxdIO5YqMR9VHPo0Bm0
+         82stpci7nJLYQd5BJl4soh4Z123TLPBWd09ZiRFMLpvEXvCMb061QG9scqw6rKtpjh1E
+         kkX/N5wtLrWsHL4J8i87lISK1gdR2s5yYRrwWyERLEcyPvXTU/sq2szATYe2giWY1Voi
+         xegRCJX/tNYrsRrlMBUOoE/lSVvaj9xedR/ofO78sPnsVcn8prsnDB5Yr6LyCqUE5WTv
+         mbWGCLv9qzSIZdmyGpriTFfAh+bRHrqHP2qnfunh3CTdkyZihHHjTUToVuOGOkc6JjZe
+         6jDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e71LeW3j52z02CfoTglw12Lmjisq73YxcosFVCbh53o=;
+        b=DEfy5oIsk0Tv2YYShWMafHDOA8bedjXSv/6UvNqdxvZZUvC/xRiVZdY04CeEc1WKBO
+         V4iJO/SmtHNJulqEKRgb8k5RqrjjFwrcD5gcrwA2DEqX4a6hO7ti6rjKNVoj/nmJAhMi
+         b40gYf8LVWeocqNYWGrdIDy89h1SOVpHpnWQoa727nd/aJUUPJusRzya1Vs5w67WtY7G
+         UY70LTb7nZydq6/L8gKFNLqCjmMLMagoflujBQNx/syOfbPy/HSsMJ0usJNkK9qih8aE
+         z93NgnXXbVX7O1c1V7X68Imv5iMto3etfU1z/TcNBWBd823IQphgov5mQtdBD+0NMtzI
+         /8sA==
+X-Gm-Message-State: APjAAAVExfsPmPaB3y4CAzOnEs97lPBg2ofAryxdYSqxpo81Gw9uSP/3
+        cNFgD4j6vn0gejXeitlZ0A9jDA==
+X-Google-Smtp-Source: APXvYqyTK6cg0M1/C2OXTAJ465eNh4Ogi4rZP6tl1I9CMzK8OhQ3QscAC72wbWMwk3C+thhafvr1Sg==
+X-Received: by 2002:a62:5fc7:: with SMTP id t190mr12168728pfb.191.1556902968531;
+        Fri, 03 May 2019 10:02:48 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
+        by smtp.gmail.com with ESMTPSA id j7sm3380683pfh.62.2019.05.03.10.02.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 03 May 2019 10:02:47 -0700 (PDT)
+Date:   Fri, 3 May 2019 10:02:42 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: use the correct function type in
+ SYSCALL_DEFINE0
+Message-ID: <20190503170242.GA211922@google.com>
+References: <20190501200451.255615-1-samitolvanen@google.com>
+ <20190501200451.255615-3-samitolvanen@google.com>
+ <20190503102128.GD47811@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190503121017.5227-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=802 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905030109
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190503102128.GD47811@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/2019 5:10 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+Hi Mark,
+
+On Fri, May 03, 2019 at 11:21:28AM +0100, Mark Rutland wrote:
+> Generally, this makes sense, but I'm not sure that this is complete.
 > 
-> There is a spelling mistake in a pr_warn warning. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+> IIUC this introduces a new type mismatch with sys_ni_syscall() in some
+> cases.
+
+Thanks for the review. You're correct, sys_ni_syscall needs to be fixed
+too. I'll include this in v2.
+
+> We probably need that to use SYSCALL_DEFINE0(), and maybe have a
+> ksys_ni_syscall() for in-kernel wrappers.
+
+Why would we need ksys_ni_syscall? It seems something like this should
+be sufficient:
+
+  asmlinkage long sys_ni_syscall(void);
+
+  SYSCALL_DEFINE0(ni_syscall)
+  {
+          return sys_ni_syscall();
+  }
+
+Sami
