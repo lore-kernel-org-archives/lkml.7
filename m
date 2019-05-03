@@ -2,117 +2,92 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B17C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EEEC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0913E2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB3B206BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:12:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="grk3ComR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hx23H1DM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfECTIA (ORCPT
+        id S1727059AbfECTMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 15:08:00 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53526 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbfECTH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 15:07:59 -0400
-Received: from zn.tnic (p200300EC2F0CA900690D0772EBB26CCB.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:a900:690d:772:ebb2:6ccb])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9E1451EC0229;
-        Fri,  3 May 2019 21:07:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1556910477;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XutbePJmEyY+rMx/pqoWxifl49Lqa5PJBKT9Bib1YJQ=;
-        b=grk3ComRhG06ysNX2boEsej/IIRU/G5eipWbS5KucHxukGY4bGeH4C6uSedqZzbiTB/SZ1
-        HcId82fWyDgKEATRDkt2WGHQJ+RJXsgHXm12JCTUlLhQ5fTu4dXEm+9MP+rYhbHrq5rkKV
-        YBRqK1FmEWC85tyrILCuwHafLHVX1Ls=
-Date:   Fri, 3 May 2019 21:07:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
- export
-Message-ID: <20190503190751.GG5020@zn.tnic>
-References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
- <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
- <CALCETrWTCB9xLVdKCODghpeQpJ_3Rz3OwE8FB+5hjYXMYwYPLg@mail.gmail.com>
- <20190502165520.GC6565@zn.tnic>
- <bcb6c893-61e6-4b08-5b40-b1b2e24f495b@redhat.com>
- <20190503180739.GF5020@zn.tnic>
- <5BD87ACE-1200-4612-AA83-1590DA9E45E5@amacapital.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5BD87ACE-1200-4612-AA83-1590DA9E45E5@amacapital.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 3 May 2019 15:12:30 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:50706 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfECTM3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 15:12:29 -0400
+Received: by mail-pf1-f202.google.com with SMTP id q73so3608482pfi.17
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 12:12:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=O2Vxsbw2zu+jyE40NtPtRm30b2ngTXxWqx+K4kLTmWE=;
+        b=Hx23H1DMpzXrHfaM/QpifQPXcTEhJhckBh6ao3h1amBiE+2XYEMYapBwlYSjVB+teN
+         OnUjs9WfrkDDyoXtKzMvz0m8/UMwuPu2YzysOWVEyvOz2FJMdbfyAr6+BxXMOdgkxyP4
+         hgez0RKWV7cmUXF3NyYb49ErucoSds3mGFaHKpUCg7SZAqukFzga2DsCWeI48XGxZF5f
+         o8lE2Z0PVAATcxT8+puCu5WEB8sHtyfWthy5Hs6ojxP0L3JFg7hyPh9G3CsDq4GluOpo
+         6mdrmymd0+mw/rGnIInKxlS0khRfKIFBv0OaEMxXmIBpd5PdMC8OuzR3QXB1HZLs9jD5
+         QJrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=O2Vxsbw2zu+jyE40NtPtRm30b2ngTXxWqx+K4kLTmWE=;
+        b=IGs9QCgfW4mNpqOpoKkgu4LZBQ4i6UL4KaxdumpKeHykmc5CSRvCni+IXlcvMeerHt
+         ygDgplbLomGoWxZrHvCTxtNdscwcL4LsPZ2z9RdFHxxs+5sMddLPSF08XLK/Qhub9D5r
+         KFe99SF/V7zMECVPuolNnIdOkhb0AV8ZBYSHBX2MdoLtvBI0uVCq0+VZYJulZCH9I0tJ
+         5nCMl0U42ay/i0PI5jowFLqqAiUl/6w96Lk97WFdXppK8pUSvgqRaEptbq49WXH01uAA
+         G2pId2sU2iVpNBqsn3YDKFrmwDxTq7XOmlxxE4CTVKDtpqzQzT6nGimrXX6tf6b4aFAO
+         LaJA==
+X-Gm-Message-State: APjAAAUCsv4NiWemmIOM34wM1cuM7BZwc6OJR0dn/MOHSNx8VbMM+7mv
+        75ztZLpUfYYsoMnuABUQMp7klD/jLErAGDVGb68=
+X-Google-Smtp-Source: APXvYqxsZAjO/Cr5QAMyVh+5vxGrimquZNEx1GMyBOtaek+vtybfj/5fHjagTf3nr2/qNevhxA41G7Kzkp4FzygW7uc=
+X-Received: by 2002:a65:5c8c:: with SMTP id a12mr12635106pgt.452.1556910748545;
+ Fri, 03 May 2019 12:12:28 -0700 (PDT)
+Date:   Fri,  3 May 2019 12:12:22 -0700
+Message-Id: <20190503191225.6684-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH v2 0/3] fix function type mismatches in syscall wrappers
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 11:54:54AM -0700, Andy Lutomirski wrote:
-> I don’t think I or has said we should try to make these interfaces
-> immutable.
+These patches fix type mismatches in arm64 syscall wrapper
+definitions, which trip indirect call checks with Control-Flow
+Integrity.
 
-How else would you have a stable interface for OOT modules? If at all,
-that is.
+Changes in v2:
+- more informative commit message for the syscall_fn_t change
+- added a patch for fixing sys_ni_syscall
 
-> What I’m saying is that, since we’re exporting the symbol anyway
-> and it’s not particularly Linuxy, that we shouldn’t say that only
-> *GPL* out-of-tree modules may use it. It seems like anyone who wants
-> to put the effort into tracking which kernel has which symbols and is
-> willing to accept the utter instability of the interface may use it.
+Sami Tolvanen (3):
+  arm64: fix syscall_fn_t type
+  arm64: use the correct function type in SYSCALL_DEFINE0
+  arm64: use the correct function type for __arm64_sys_ni_syscall
 
-This is just silly: when we change it next time, it'll be the same
-crying again. No, we don't want to do that. This keeps happening with
-all kinds of symbols being exported and unexported.
-
-> So if we ever unexport the symbol entirely, I won’t object.
-
-Yah, and you'll break them again. That's just unnecesary pain each time.
-
-> I object to what I consider to be the inappropriate claim that it’s
-> a *GPL* export.
-
-Yes, that is the problem. Jiri alluded to it too - I don't think it is
-clear to people involved - me included - what exports should be done and
-how. And what assurances - if any - we're giving.
-
-> (I actually hope we unexport it once simd_get() and friends land —
-> they’re a much better API, and we should migrate over to it.)
-
-Same problem as above with those.
-
-That's why we need some sort of an explicit ruling all sides will adhere
-to.
+ arch/arm64/include/asm/syscall.h         |  2 +-
+ arch/arm64/include/asm/syscall_wrapper.h | 18 +++++++++---------
+ arch/arm64/kernel/sys.c                  | 14 +++++++++-----
+ arch/arm64/kernel/sys32.c                | 12 ++++++++----
+ 4 files changed, 27 insertions(+), 19 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.21.0.1020.gf2820cf01a-goog
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
