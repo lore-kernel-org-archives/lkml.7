@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CFAC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4861CC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A3B2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BCC2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="h8R+sR4+"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="TfoRqS75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfECLaA (ORCPT
+        id S1727608AbfECLam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:30:00 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38983 "EHLO
+        Fri, 3 May 2019 07:30:42 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39741 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbfECL37 (ORCPT
+        with ESMTP id S1726468AbfECLam (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:29:59 -0400
+        Fri, 3 May 2019 07:30:42 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x43BTlDV2724932
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x43BUTju2725205
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 3 May 2019 04:29:47 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x43BTlDV2724932
+        Fri, 3 May 2019 04:30:29 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x43BUTju2725205
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556882988;
-        bh=p33axFz/g0tO2dEmSW+qNe29wmtkKeoDlU+OadAlmaE=;
+        s=2019041745; t=1556883030;
+        bh=3BfSVPAM+qx8rQp0PB3FlMCmi5oGxDl3bMgwe05o2mo=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=h8R+sR4+Bxk0j0BOUtrwuoCpyS03vWYfpVTSbG6rLrNgLMu+4vnKxIyc+yMyjIsxA
-         8H+izrC2IoxrO3fB158+xfHjxHRkl5iPQlO6PXzPHFsJGQS9kgyGVJNAowBRcWjQpr
-         vj8jQmLBz/Ah9IjMpjKFFVxLeGBfIe60rmiI2a7uG3TvLHEgd+NO3FUrl+L/N+rAiy
-         vdreOH1N07AvoCYj82ykNkoO6ADGZqxlNSyuwwAPW83dR/jBZXwUqt/D0xvHklLGWp
-         aPgpUIYff/nwMvlc0pThwXvJO3iRlX3iF/6ShH1LLY057AvyyEkFp6kE+2ej+3zwNc
-         Ej079VesJsb7A==
+        b=TfoRqS75ibJUkFr1j6xx75cGO0YrnWVHKJriZDES41Oo5LIWe7Jn9aHbRa3Bnhnmj
+         FJG86X7kURLwaa4JrFzA4GwWFqCq7RY9ivr9hMBZevgS0VqYO0E87U1e1E/f5V82uU
+         mglhDphxm6s619Behtaj5jA5zL6dEZFvLLkdxJn83lsb334ilT3TJLUGsaJX/ugqH0
+         TATyLE0q0+6ZtDe6EBcvCEOUsLpvVaUlAZfG3w3DoMDlwC3rQShc9iv64R5rhxx5Yl
+         WrbmV9U0CTdcaIJF4bjkvghXdUe8Ve5kxNSYEkNMC5887+wojxkyAd5obw1EuUa/k0
+         wKs/K3bUHp3tQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x43BTkFR2724929;
-        Fri, 3 May 2019 04:29:46 -0700
-Date:   Fri, 3 May 2019 04:29:46 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x43BUTv02725202;
+        Fri, 3 May 2019 04:30:29 -0700
+Date:   Fri, 3 May 2019 04:30:29 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Nicholas Piggin <tipbot@zytor.com>
-Message-ID: <tip-9bcd2cd91816020b0600a2078bab51641b1341df@git.kernel.org>
-Cc:     hpa@zytor.com, fweisbec@gmail.com, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        peterz@infradead.org, mingo@kernel.org, npiggin@gmail.com,
+Message-ID: <tip-e9a140c6d20ee29951a193342ebaccf07ebc63eb@git.kernel.org>
+Cc:     npiggin@gmail.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, hpa@zytor.com, torvalds@linux-foundation.org,
+        fweisbec@gmail.com, mingo@kernel.org, peterz@infradead.org,
         rafael.j.wysocki@intel.com
-Reply-To: npiggin@gmail.com, mingo@kernel.org, peterz@infradead.org,
-          rafael.j.wysocki@intel.com, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, fweisbec@gmail.com,
-          torvalds@linux-foundation.org, hpa@zytor.com
-In-Reply-To: <20190411033448.20842-4-npiggin@gmail.com>
-References: <20190411033448.20842-4-npiggin@gmail.com>
+Reply-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, hpa@zytor.com,
+          npiggin@gmail.com, torvalds@linux-foundation.org,
+          fweisbec@gmail.com, peterz@infradead.org,
+          rafael.j.wysocki@intel.com, mingo@kernel.org
+In-Reply-To: <20190411033448.20842-5-npiggin@gmail.com>
+References: <20190411033448.20842-5-npiggin@gmail.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] kernel/cpu: Allow non-zero CPU to be primary for
- suspend / kexec freeze
-Git-Commit-ID: 9bcd2cd91816020b0600a2078bab51641b1341df
+Subject: [tip:sched/core] sched/isolation: Require a present CPU in
+ housekeeping mask
+Git-Commit-ID: e9a140c6d20ee29951a193342ebaccf07ebc63eb
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,26 +72,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9bcd2cd91816020b0600a2078bab51641b1341df
-Gitweb:     https://git.kernel.org/tip/9bcd2cd91816020b0600a2078bab51641b1341df
+Commit-ID:  e9a140c6d20ee29951a193342ebaccf07ebc63eb
+Gitweb:     https://git.kernel.org/tip/e9a140c6d20ee29951a193342ebaccf07ebc63eb
 Author:     Nicholas Piggin <npiggin@gmail.com>
-AuthorDate: Thu, 11 Apr 2019 13:34:46 +1000
+AuthorDate: Thu, 11 Apr 2019 13:34:47 +1000
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Fri, 3 May 2019 12:53:14 +0200
 
-kernel/cpu: Allow non-zero CPU to be primary for suspend / kexec freeze
+sched/isolation: Require a present CPU in housekeeping mask
 
-This patch provides an arch option, ARCH_SUSPEND_NONZERO_CPU, to
-opt-in to allowing suspend to occur on one of the housekeeping CPUs
-rather than hardcoded CPU0.
-
-This will allow CPU0 to be a nohz_full CPU with a later change.
-
-It may be possible for platforms with hardware/firmware restrictions
-on suspend/wake effectively support this by handing off the final
-stage to CPU0 when kernel housekeeping is no longer required. Another
-option is to make housekeeping / nohz_full mask dynamic at runtime,
-but the complexity could not be justified at this time.
+During housekeeping mask setup, currently a possible CPU is required.
+That does not guarantee the CPU would be available at boot time, so
+check to ensure that at least one present CPU is in the mask.
 
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -101,94 +93,59 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: linuxppc-dev@lists.ozlabs.org
-Link: https://lkml.kernel.org/r/20190411033448.20842-4-npiggin@gmail.com
+Link: https://lkml.kernel.org/r/20190411033448.20842-5-npiggin@gmail.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/powerpc/Kconfig |  4 ++++
- include/linux/cpu.h  |  7 ++++++-
- kernel/cpu.c         | 10 +++++++++-
- kernel/power/Kconfig |  9 +++++++++
- 4 files changed, 28 insertions(+), 2 deletions(-)
+ kernel/sched/isolation.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 2d0be82c3061..bc98b0e37a10 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -318,6 +318,10 @@ config ARCH_SUSPEND_POSSIBLE
- 		   (PPC_85xx && !PPC_E500MC) || PPC_86xx || PPC_PSERIES \
- 		   || 44x || 40x
- 
-+config ARCH_SUSPEND_NONZERO_CPU
-+	def_bool y
-+	depends on PPC_POWERNV || PPC_PSERIES
-+
- config PPC_DCR_NATIVE
- 	bool
- 
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index 563e697e7779..dd3813959d62 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -140,7 +140,12 @@ extern void enable_nonboot_cpus(void);
- 
- static inline int suspend_disable_secondary_cpus(void)
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index b02d148e7672..687302051a27 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -65,6 +65,7 @@ void __init housekeeping_init(void)
+ static int __init housekeeping_setup(char *str, enum hk_flags flags)
  {
--	return freeze_secondary_cpus(0);
-+	int cpu = 0;
-+
-+	if (IS_ENABLED(CONFIG_PM_SLEEP_SMP_NONZERO_CPU))
-+		cpu = -1;
-+
-+	return freeze_secondary_cpus(cpu);
- }
- static inline void suspend_enable_secondary_cpus(void)
- {
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 6754f3ecfd94..d1bf6e2b4752 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -9,6 +9,7 @@
- #include <linux/notifier.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/hotplug.h>
-+#include <linux/sched/isolation.h>
- #include <linux/sched/task.h>
- #include <linux/sched/smt.h>
- #include <linux/unistd.h>
-@@ -1199,8 +1200,15 @@ int freeze_secondary_cpus(int primary)
- 	int cpu, error = 0;
+ 	cpumask_var_t non_housekeeping_mask;
++	cpumask_var_t tmp;
+ 	int err;
  
- 	cpu_maps_update_begin();
--	if (!cpu_online(primary))
-+	if (primary == -1) {
- 		primary = cpumask_first(cpu_online_mask);
-+		if (!housekeeping_cpu(primary, HK_FLAG_TIMER))
-+			primary = housekeeping_any_cpu(HK_FLAG_TIMER);
-+	} else {
-+		if (!cpu_online(primary))
-+			primary = cpumask_first(cpu_online_mask);
-+	}
-+
- 	/*
- 	 * We take down all of the non-boot CPUs in one shot to avoid races
- 	 * with the userspace trying to use the CPU hotplug at the same time
-diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
-index f8fe57d1022e..9bbaaab14b36 100644
---- a/kernel/power/Kconfig
-+++ b/kernel/power/Kconfig
-@@ -114,6 +114,15 @@ config PM_SLEEP_SMP
- 	depends on PM_SLEEP
- 	select HOTPLUG_CPU
+ 	alloc_bootmem_cpumask_var(&non_housekeeping_mask);
+@@ -75,16 +76,23 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
+ 		return 0;
+ 	}
  
-+config PM_SLEEP_SMP_NONZERO_CPU
-+	def_bool y
-+	depends on PM_SLEEP_SMP
-+	depends on ARCH_SUSPEND_NONZERO_CPU
-+	---help---
-+	If an arch can suspend (for suspend, hibernate, kexec, etc) on a
-+	non-zero numbered CPU, it may define ARCH_SUSPEND_NONZERO_CPU. This
-+	will allow nohz_full mask to include CPU0.
++	alloc_bootmem_cpumask_var(&tmp);
+ 	if (!housekeeping_flags) {
+ 		alloc_bootmem_cpumask_var(&housekeeping_mask);
+ 		cpumask_andnot(housekeeping_mask,
+ 			       cpu_possible_mask, non_housekeeping_mask);
+-		if (cpumask_empty(housekeeping_mask))
 +
- config PM_AUTOSLEEP
- 	bool "Opportunistic sleep"
- 	depends on PM_SLEEP
++		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
++		if (cpumask_empty(tmp)) {
++			pr_warn("Housekeeping: must include one present CPU, "
++				"using boot CPU:%d\n", smp_processor_id());
+ 			__cpumask_set_cpu(smp_processor_id(), housekeeping_mask);
++			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
++		}
+ 	} else {
+-		cpumask_var_t tmp;
+-
+-		alloc_bootmem_cpumask_var(&tmp);
++		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
++		if (cpumask_empty(tmp))
++			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
+ 		cpumask_andnot(tmp, cpu_possible_mask, non_housekeeping_mask);
+ 		if (!cpumask_equal(tmp, housekeeping_mask)) {
+ 			pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
+@@ -92,8 +100,8 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
+ 			free_bootmem_cpumask_var(non_housekeeping_mask);
+ 			return 0;
+ 		}
+-		free_bootmem_cpumask_var(tmp);
+ 	}
++	free_bootmem_cpumask_var(tmp);
+ 
+ 	if ((flags & HK_FLAG_TICK) && !(housekeeping_flags & HK_FLAG_TICK)) {
+ 		if (IS_ENABLED(CONFIG_NO_HZ_FULL)) {
