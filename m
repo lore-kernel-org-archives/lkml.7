@@ -2,567 +2,242 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3564C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52061C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8606D206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:44:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RkXRmbQr"
+	by mail.kernel.org (Postfix) with ESMTP id 222CF2075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfECWoJ (ORCPT
+        id S1726447AbfECWtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 18:44:09 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41925 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727173AbfECWns (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 18:43:48 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d9so3356127pls.8;
-        Fri, 03 May 2019 15:43:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Mt/4C8J2+WuIzsUr+8UIaSGs3lgDJztc9MhMFE4AkHQ=;
-        b=RkXRmbQrcWc3B+vgPZzTnIO0Jouwc4fYQPLiR6no7TwhLpafRmjW9lRIfLbf/0Mif6
-         acbHmgSfU/NtaTgnU48Iprj5ylI7/WQVJcUkDtshmTJmB1m/DiIFEHKOaaCT7iP89V5N
-         DDHOIh01hfpbv2YM7ubnYrL9NHQjtnSFpLNcOhG/PAgklfmQe2tLSj60oUA9BJAQY/Mo
-         ntBk2CUCYNWY19WJrbHXJ4RK5SlxKZOxkV5RHpD/VjeBW/1j1ENSxCnwZd8dV2H+wjmL
-         60YQ2WRh51w0TNfAzLoDILl9SBIGH4u3oD9HFhgkFDIKdDstpwTLT9dL7ot9SY9bvDpV
-         VfiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Mt/4C8J2+WuIzsUr+8UIaSGs3lgDJztc9MhMFE4AkHQ=;
-        b=cRE78bZpTMJR/oDFznj+rYm9TTozPqTuJ+XDVC94zYs4EclHU8qw5FjzxooTyV4zn4
-         ufVTXCFMN78FSs5qkxS8sZbYT2n8QS5IcMfqubVzy9ehc+1ULU4gkMmEZn8h+2vUmmYM
-         xFvneZAA94q0hKyA9r4oYW+YfSOiKAoKJv1cV47us+ySnur0xsYGSZ+3qC1VucN0NuZB
-         sWcbN6cC3SbE8j4KQvH9RH3qysJ/Fh7/QyZVTx65HSK0YxzwrnDYZ04qXbN159ap9Eu3
-         FffXiqtpRUvTCPA65YwAuYKbsJ6+IWdfir5we9BKaIJNJv7bw2QIs5y0j1EVCDIxhOc3
-         rczw==
-X-Gm-Message-State: APjAAAUMbfdB68ugCTW9nbvB3oxl6kxPuIZFrw1u9kMYAF/8uYvgp6Ct
-        6u+ljNadhws3apLDVUVTD7IkvJfv
-X-Google-Smtp-Source: APXvYqwVswn2T8jTrGO+oXL00GgIVhjAVxrJOCZ59fvXJqUJUbvCKwKwOnU3p8in3ny+T//2+81qLw==
-X-Received: by 2002:a17:902:b410:: with SMTP id x16mr2571131plr.174.1556923427263;
-        Fri, 03 May 2019 15:43:47 -0700 (PDT)
-Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id e62sm4793871pfa.50.2019.05.03.15.43.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 15:43:46 -0700 (PDT)
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Rui Miguel Silva <rmfrfs@gmail.com>,
-        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
-        / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v4 7/8] media: staging/imx: Improve pipeline searching
-Date:   Fri,  3 May 2019 15:43:25 -0700
-Message-Id: <20190503224326.21039-8-slongerbeam@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190503224326.21039-1-slongerbeam@gmail.com>
-References: <20190503224326.21039-1-slongerbeam@gmail.com>
+        Fri, 3 May 2019 18:49:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726041AbfECWtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 18:49:24 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94391206DF;
+        Fri,  3 May 2019 22:49:20 +0000 (UTC)
+Date:   Fri, 3 May 2019 18:49:19 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Message-ID: <20190503184919.2b7ef242@gandalf.local.home>
+In-Reply-To: <CAHk-=wiA-WbrFrDs-kOfJZMXy4zMo9-SZfk=7B-GfmBJ866naw@mail.gmail.com>
+References: <20190501202830.347656894@goodmis.org>
+        <20190501203152.397154664@goodmis.org>
+        <20190501232412.1196ef18@oasis.local.home>
+        <20190502162133.GX2623@hirez.programming.kicks-ass.net>
+        <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
+        <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+        <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
+        <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
+        <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com>
+        <20190503152405.2d741af8@gandalf.local.home>
+        <CAHk-=wiA-WbrFrDs-kOfJZMXy4zMo9-SZfk=7B-GfmBJ866naw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export find_pipeline_pad(), renaming to imx_media_pipeline_pad(), and
-extend its functionality to allow searching for video devices in the
-enabled pipeline in addition to sub-devices.
+On Fri, 3 May 2019 14:46:11 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-As part of this:
+> On Fri, May 3, 2019 at 12:24 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > The problem with this approach is that it would require doing the same
+> > for x86_64, as the int3 C code is the same for both. And that may be a
+> > bit more difficult on the x86_64 side because it's all done with a
+> > simple flag in the idtentry macro to add the gap.  
+> 
+> That argument is weakened by the fact that we have to do _other_
+> things differently on 32-bit and 64-bit anyway.
+> 
+> So we might as well have a "on 32-bit, the call emulation needs to
+> move the pt_regs to make space" special case in the call emulation
+> code. It's very easy to explain why.
 
-- Rename imx_media_find_mipi_csi2_channel() to
-  imx_media_pipeline_csi2_channel().
+So if I understand correctly what you are implying, is to have the int3
+code be different for 32 bit and 64 bit? This would require handling
+text_poke, ftrace and kprobes differently for the two. Or perhaps we
+can build hacks on top.
 
-- Remove imx_media_find_upstream_pad(), it is redundant now.
+> 
+> And then we'd limit the special case to where it matters (with a big
+> comment about what's going on), rather than adding random special case
+> handling to random _other_ places.
+> 
+> Having to add s magic special case to "kernel_stack_pointer() is
+> certainly not obvious. Neither is adding magic special cases to system
+> call exit paths etc.
 
-- Rename imx_media_find_upstream_subdev() to imx_media_pipeline_subdev()
-  with an additional boolean argument for searching upstream or downstream.
+Honestly, this sounds more of an argument for doing the buffered space
+for all exceptions on 32 bit, because it removes one of the special
+cases. If we were to move the frame and give it a full frame like
+x86_64, then we can remove kernel_stack_pointer() altogether. I've hated
+that function for some time, as I tripped over it in the past too, and
+it keeps coming up. It's sad that regs->sp is unreliable as is.
 
-- Add imx_media_pipeline_video_device() which is analogous to
-  imx_media_pipeline_subdev() but searches for video devices.
+> 
+> This has been why I've been arguing against the entry code changes.
+> Exactly because they tend to have these kind of odd cascading effects.
+> The entry code is fragile not just because it's a complex hardware
+> interface, but also because we know about those complex hardware
+> interfaces in random other places.
 
-- Remove imxmd pointer arg from all of the functions above, it was
-  never used in those functions. With that change the i.MX5/6 CSI,
-  VDIC, and IC sub-devices no longer require the media_device.
+IMO, getting rid of the kernel_stack_pointer() function is a positive
+side effect of these changes.
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
----
- drivers/staging/media/imx/imx-ic-common.c     |   4 +-
- drivers/staging/media/imx/imx-ic-prp.c        |   4 +-
- drivers/staging/media/imx/imx-ic.h            |   1 -
- drivers/staging/media/imx/imx-media-csi.c     |  13 +-
- drivers/staging/media/imx/imx-media-fim.c     |   4 -
- .../staging/media/imx/imx-media-internal-sd.c |   5 +-
- drivers/staging/media/imx/imx-media-utils.c   | 128 ++++++++++--------
- drivers/staging/media/imx/imx-media-vdic.c    |   5 +-
- drivers/staging/media/imx/imx-media.h         |  20 +--
- drivers/staging/media/imx/imx7-media-csi.c    |   2 +-
- 10 files changed, 93 insertions(+), 93 deletions(-)
+> 
+> I'd much rather have the code that does special things be in one
+> place, and be the place that *needs* to do the special thing. If we
+> copy the pt_regs around when we do the "call" emulation, it's *really*
+> easy to explain *exactly* what we're doing and why in *exactly* that
+> one context where we are doing it. And it won't affect anything else,
+> and our existing code that looks at pt_regs will work both before and
+> after.
+> 
+> Would it need a #ifdef CONFIG_X86_32 around it because it's not needed
+> on x86-64? Sure. But that #ifdef would be right there, and the comment
+> that explains why the pt_regs need to be moved would also make it very
+> obvious why it is only needed for x86-32.
+> 
+> There's a lot of advantages to keeping your problems localized,
+> instead of letting your random hacks escape and become problems for
+> other, entirely unrelated, code.
 
-diff --git a/drivers/staging/media/imx/imx-ic-common.c b/drivers/staging/media/imx/imx-ic-common.c
-index ad0c291db03c..37734984beb4 100644
---- a/drivers/staging/media/imx/imx-ic-common.c
-+++ b/drivers/staging/media/imx/imx-ic-common.c
-@@ -22,12 +22,11 @@ static struct imx_ic_ops *ic_ops[IC_NUM_OPS] = {
- 	[IC_TASK_VIEWFINDER]     = &imx_ic_prpencvf_ops,
- };
- 
--struct v4l2_subdev *imx_media_ic_register(struct imx_media_dev *imxmd,
-+struct v4l2_subdev *imx_media_ic_register(struct v4l2_device *v4l2_dev,
- 					  struct device *ipu_dev,
- 					  struct ipu_soc *ipu,
- 					  u32 grp_id)
- {
--	struct v4l2_device *v4l2_dev = &imxmd->v4l2_dev;
- 	struct imx_ic_priv *priv;
- 	int ret;
- 
-@@ -37,7 +36,6 @@ struct v4l2_subdev *imx_media_ic_register(struct imx_media_dev *imxmd,
- 
- 	priv->ipu_dev = ipu_dev;
- 	priv->ipu = ipu;
--	priv->md = imxmd;
- 
- 	/* get our IC task id */
- 	switch (grp_id) {
-diff --git a/drivers/staging/media/imx/imx-ic-prp.c b/drivers/staging/media/imx/imx-ic-prp.c
-index 663db200e594..1432776a33f9 100644
---- a/drivers/staging/media/imx/imx-ic-prp.c
-+++ b/drivers/staging/media/imx/imx-ic-prp.c
-@@ -302,8 +302,8 @@ static int prp_link_validate(struct v4l2_subdev *sd,
- 	if (ret)
- 		return ret;
- 
--	csi = imx_media_find_upstream_subdev(ic_priv->md, &ic_priv->sd.entity,
--					     IMX_MEDIA_GRP_ID_IPU_CSI);
-+	csi = imx_media_pipeline_subdev(&ic_priv->sd.entity,
-+					IMX_MEDIA_GRP_ID_IPU_CSI, true);
- 	if (IS_ERR(csi))
- 		csi = NULL;
- 
-diff --git a/drivers/staging/media/imx/imx-ic.h b/drivers/staging/media/imx/imx-ic.h
-index 1dcbb37aeada..ff2f66f11982 100644
---- a/drivers/staging/media/imx/imx-ic.h
-+++ b/drivers/staging/media/imx/imx-ic.h
-@@ -16,7 +16,6 @@
- struct imx_ic_priv {
- 	struct device *ipu_dev;
- 	struct ipu_soc *ipu;
--	struct imx_media_dev *md;
- 	struct v4l2_subdev sd;
- 	int    task_id;
- 	void   *task_priv;
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index 68c2b1a3066a..555904759078 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -60,7 +60,6 @@ struct csi_skip_desc {
- struct csi_priv {
- 	struct device *dev;
- 	struct ipu_soc *ipu;
--	struct imx_media_dev *md;
- 	struct v4l2_subdev sd;
- 	struct media_pad pad[CSI_NUM_PADS];
- 	/* the video device at IDMAC output pad */
-@@ -182,8 +181,8 @@ static int csi_get_upstream_endpoint(struct csi_priv *priv,
- 		 * CSI-2 receiver if it is in the path, otherwise stay
- 		 * with video mux.
- 		 */
--		sd = imx_media_find_upstream_subdev(priv->md, src,
--						    IMX_MEDIA_GRP_ID_CSI2);
-+		sd = imx_media_pipeline_subdev(src, IMX_MEDIA_GRP_ID_CSI2,
-+					       true);
- 		if (!IS_ERR(sd))
- 			src = &sd->entity;
- 	}
-@@ -197,7 +196,7 @@ static int csi_get_upstream_endpoint(struct csi_priv *priv,
- 		src = &priv->sd.entity;
- 
- 	/* get source pad of entity directly upstream from src */
--	pad = imx_media_find_upstream_pad(priv->md, src, 0);
-+	pad = imx_media_pipeline_pad(src, 0, 0, true);
- 	if (IS_ERR(pad))
- 		return PTR_ERR(pad);
- 
-@@ -1138,8 +1137,7 @@ static int csi_link_validate(struct v4l2_subdev *sd,
- 		 */
- #if 0
- 		mutex_unlock(&priv->lock);
--		vc_num = imx_media_find_mipi_csi2_channel(priv->md,
--							  &priv->sd.entity);
-+		vc_num = imx_media_find_mipi_csi2_channel(&priv->sd.entity);
- 		if (vc_num < 0)
- 			return vc_num;
- 		mutex_lock(&priv->lock);
-@@ -1753,9 +1751,6 @@ static int csi_registered(struct v4l2_subdev *sd)
- 	int i, ret;
- 	u32 code;
- 
--	/* get media device */
--	priv->md = dev_get_drvdata(sd->v4l2_dev->dev);
--
- 	/* get handle to IPU CSI */
- 	csi = ipu_csi_get(priv->ipu, priv->csi_id);
- 	if (IS_ERR(csi)) {
-diff --git a/drivers/staging/media/imx/imx-media-fim.c b/drivers/staging/media/imx/imx-media-fim.c
-index 6d283f4ea4d1..750682fcd48d 100644
---- a/drivers/staging/media/imx/imx-media-fim.c
-+++ b/drivers/staging/media/imx/imx-media-fim.c
-@@ -41,8 +41,6 @@ enum {
- #define FIM_CL_TOLERANCE_MAX_DEF   0 /* no max tolerance (unbounded) */
- 
- struct imx_media_fim {
--	struct imx_media_dev *md;
--
- 	/* the owning subdev of this fim instance */
- 	struct v4l2_subdev *sd;
- 
-@@ -474,8 +472,6 @@ struct imx_media_fim *imx_media_fim_init(struct v4l2_subdev *sd)
- 	if (!fim)
- 		return ERR_PTR(-ENOMEM);
- 
--	/* get media device */
--	fim->md = dev_get_drvdata(sd->v4l2_dev->dev);
- 	fim->sd = sd;
- 
- 	spin_lock_init(&fim->lock);
-diff --git a/drivers/staging/media/imx/imx-media-internal-sd.c b/drivers/staging/media/imx/imx-media-internal-sd.c
-index 618a930da37c..f74e2ab4f37f 100644
---- a/drivers/staging/media/imx/imx-media-internal-sd.c
-+++ b/drivers/staging/media/imx/imx-media-internal-sd.c
-@@ -35,7 +35,7 @@ struct internal_subdev {
- 	u32 grp_id;
- 	struct internal_pad pad[MAX_INTERNAL_PADS];
- 
--	struct v4l2_subdev * (*sync_register)(struct imx_media_dev *imxmd,
-+	struct v4l2_subdev * (*sync_register)(struct v4l2_device *v4l2_dev,
- 					      struct device *ipu_dev,
- 					      struct ipu_soc *ipu,
- 					      u32 grp_id);
-@@ -228,7 +228,8 @@ int imx_media_register_ipu_internal_subdevs(struct imx_media_dev *imxmd,
- 			continue;
- 
- 		mutex_unlock(&imxmd->mutex);
--		sd = intsd->sync_register(imxmd, ipu_dev, ipu, intsd->grp_id);
-+		sd = intsd->sync_register(&imxmd->v4l2_dev, ipu_dev, ipu,
-+					  intsd->grp_id);
- 		mutex_lock(&imxmd->mutex);
- 		if (IS_ERR(sd)) {
- 			ret = PTR_ERR(sd);
-diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
-index a80ef0b087ad..862508d5d30c 100644
---- a/drivers/staging/media/imx/imx-media-utils.c
-+++ b/drivers/staging/media/imx/imx-media-utils.c
-@@ -772,19 +772,22 @@ void imx_media_add_video_device(struct imx_media_dev *imxmd,
- EXPORT_SYMBOL_GPL(imx_media_add_video_device);
- 
- /*
-- * Search upstream/downstream for a subdevice in the current pipeline
-- * with given grp_id, starting from start_entity. Returns the subdev's
-- * source/sink pad that it was reached from. If grp_id is zero, just
-- * returns the nearest source/sink pad to start_entity. Must be called
-- * with mdev->graph_mutex held.
-+ * Search upstream/downstream for a subdevice or video device pad in the
-+ * current pipeline, starting from start_entity. Returns the device's
-+ * source/sink pad that it was reached from. Must be called with
-+ * mdev->graph_mutex held.
-+ *
-+ * If grp_id != 0, finds a subdevice's pad of given grp_id.
-+ * Else If buftype != 0, finds a video device's pad of given buffer type.
-+ * Else, returns the nearest source/sink pad to start_entity.
-  */
--static struct media_pad *
--find_pipeline_pad(struct imx_media_dev *imxmd,
--		  struct media_entity *start_entity,
--		  u32 grp_id, bool upstream)
-+struct media_pad *
-+imx_media_pipeline_pad(struct media_entity *start_entity, u32 grp_id,
-+		       enum v4l2_buf_type buftype, bool upstream)
- {
- 	struct media_entity *me = start_entity;
- 	struct media_pad *pad = NULL;
-+	struct video_device *vfd;
- 	struct v4l2_subdev *sd;
- 	int i;
- 
-@@ -796,16 +799,27 @@ find_pipeline_pad(struct imx_media_dev *imxmd,
- 			continue;
- 
- 		pad = media_entity_remote_pad(spad);
--		if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
-+		if (!pad)
- 			continue;
- 
--		if (grp_id != 0) {
--			sd = media_entity_to_v4l2_subdev(pad->entity);
--			if (sd->grp_id & grp_id)
--				return pad;
-+		if (grp_id) {
-+			if (is_media_entity_v4l2_subdev(pad->entity)) {
-+				sd = media_entity_to_v4l2_subdev(pad->entity);
-+				if (sd->grp_id & grp_id)
-+					return pad;
-+			}
-+
-+			return imx_media_pipeline_pad(pad->entity, grp_id,
-+						      buftype, upstream);
-+		} else if (buftype) {
-+			if (is_media_entity_v4l2_video_device(pad->entity)) {
-+				vfd = media_entity_to_video_device(pad->entity);
-+				if (buftype == vfd->queue->type)
-+					return pad;
-+			}
- 
--			return find_pipeline_pad(imxmd, pad->entity,
--						 grp_id, upstream);
-+			return imx_media_pipeline_pad(pad->entity, grp_id,
-+						      buftype, upstream);
- 		} else {
- 			return pad;
- 		}
-@@ -813,28 +827,33 @@ find_pipeline_pad(struct imx_media_dev *imxmd,
- 
- 	return NULL;
- }
-+EXPORT_SYMBOL_GPL(imx_media_pipeline_pad);
- 
- /*
-- * Search upstream for a subdev in the current pipeline with
-- * given grp_id. Must be called with mdev->graph_mutex held.
-+ * Search upstream/downstream for a subdev or video device in the current
-+ * pipeline. Must be called with mdev->graph_mutex held.
-  */
--static struct v4l2_subdev *
--find_upstream_subdev(struct imx_media_dev *imxmd,
--		     struct media_entity *start_entity,
--		     u32 grp_id)
-+static struct media_entity *
-+find_pipeline_entity(struct media_entity *start, u32 grp_id,
-+		     enum v4l2_buf_type buftype, bool upstream)
- {
-+	struct media_pad *pad = NULL;
-+	struct video_device *vfd;
- 	struct v4l2_subdev *sd;
--	struct media_pad *pad;
- 
--	if (is_media_entity_v4l2_subdev(start_entity)) {
--		sd = media_entity_to_v4l2_subdev(start_entity);
-+	if (grp_id && is_media_entity_v4l2_subdev(start)) {
-+		sd = media_entity_to_v4l2_subdev(start);
- 		if (sd->grp_id & grp_id)
--			return sd;
-+			return &sd->entity;
-+	} else if (buftype && is_media_entity_v4l2_video_device(start)) {
-+		vfd = media_entity_to_video_device(pad->entity);
-+		if (buftype == vfd->queue->type)
-+			return &vfd->entity;
- 	}
- 
--	pad = find_pipeline_pad(imxmd, start_entity, grp_id, true);
-+	pad = imx_media_pipeline_pad(start, grp_id, buftype, upstream);
- 
--	return pad ? media_entity_to_v4l2_subdev(pad->entity) : NULL;
-+	return pad ? pad->entity : NULL;
- }
- 
- /*
-@@ -842,62 +861,57 @@ find_upstream_subdev(struct imx_media_dev *imxmd,
-  * start entity in the current pipeline.
-  * Must be called with mdev->graph_mutex held.
-  */
--int imx_media_find_mipi_csi2_channel(struct imx_media_dev *imxmd,
--				     struct media_entity *start_entity)
-+int imx_media_pipeline_csi2_channel(struct media_entity *start_entity)
- {
- 	struct media_pad *pad;
- 	int ret = -EPIPE;
- 
--	pad = find_pipeline_pad(imxmd, start_entity, IMX_MEDIA_GRP_ID_CSI2,
--				true);
--	if (pad) {
-+	pad = imx_media_pipeline_pad(start_entity, IMX_MEDIA_GRP_ID_CSI2,
-+				     0, true);
-+	if (pad)
- 		ret = pad->index - 1;
--		dev_dbg(imxmd->md.dev, "found vc%d from %s\n",
--			ret, start_entity->name);
--	}
- 
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(imx_media_find_mipi_csi2_channel);
-+EXPORT_SYMBOL_GPL(imx_media_pipeline_csi2_channel);
- 
- /*
-- * Find a source pad reached upstream from the given start entity in
-- * the current pipeline. Must be called with mdev->graph_mutex held.
-+ * Find a subdev reached upstream from the given start entity in
-+ * the current pipeline.
-+ * Must be called with mdev->graph_mutex held.
-  */
--struct media_pad *
--imx_media_find_upstream_pad(struct imx_media_dev *imxmd,
--			    struct media_entity *start_entity,
--			    u32 grp_id)
-+struct v4l2_subdev *
-+imx_media_pipeline_subdev(struct media_entity *start_entity, u32 grp_id,
-+			  bool upstream)
- {
--	struct media_pad *pad;
-+	struct media_entity *me;
- 
--	pad = find_pipeline_pad(imxmd, start_entity, grp_id, true);
--	if (!pad)
-+	me = find_pipeline_entity(start_entity, grp_id, 0, upstream);
-+	if (!me)
- 		return ERR_PTR(-ENODEV);
- 
--	return pad;
-+	return media_entity_to_v4l2_subdev(me);
- }
--EXPORT_SYMBOL_GPL(imx_media_find_upstream_pad);
-+EXPORT_SYMBOL_GPL(imx_media_pipeline_subdev);
- 
- /*
-  * Find a subdev reached upstream from the given start entity in
-  * the current pipeline.
-  * Must be called with mdev->graph_mutex held.
-  */
--struct v4l2_subdev *
--imx_media_find_upstream_subdev(struct imx_media_dev *imxmd,
--			       struct media_entity *start_entity,
--			       u32 grp_id)
-+struct video_device *
-+imx_media_pipeline_video_device(struct media_entity *start_entity,
-+				enum v4l2_buf_type buftype, bool upstream)
- {
--	struct v4l2_subdev *sd;
-+	struct media_entity *me;
- 
--	sd = find_upstream_subdev(imxmd, start_entity, grp_id);
--	if (!sd)
-+	me = find_pipeline_entity(start_entity, 0, buftype, upstream);
-+	if (!me)
- 		return ERR_PTR(-ENODEV);
- 
--	return sd;
-+	return media_entity_to_video_device(me);
- }
--EXPORT_SYMBOL_GPL(imx_media_find_upstream_subdev);
-+EXPORT_SYMBOL_GPL(imx_media_pipeline_video_device);
- 
- /*
-  * Turn current pipeline streaming on/off starting from entity.
-diff --git a/drivers/staging/media/imx/imx-media-vdic.c b/drivers/staging/media/imx/imx-media-vdic.c
-index 5dd4c733de97..5f6a1d5853f3 100644
---- a/drivers/staging/media/imx/imx-media-vdic.c
-+++ b/drivers/staging/media/imx/imx-media-vdic.c
-@@ -65,7 +65,6 @@ struct vdic_priv {
- 	struct device *ipu_dev;
- 	struct ipu_soc *ipu;
- 
--	struct imx_media_dev *md;
- 	struct v4l2_subdev   sd;
- 	struct media_pad pad[VDIC_NUM_PADS];
- 
-@@ -927,12 +926,11 @@ static const struct v4l2_subdev_internal_ops vdic_internal_ops = {
- 	.unregistered = vdic_unregistered,
- };
- 
--struct v4l2_subdev *imx_media_vdic_register(struct imx_media_dev *imxmd,
-+struct v4l2_subdev *imx_media_vdic_register(struct v4l2_device *v4l2_dev,
- 					    struct device *ipu_dev,
- 					    struct ipu_soc *ipu,
- 					    u32 grp_id)
- {
--	struct v4l2_device *v4l2_dev = &imxmd->v4l2_dev;
- 	struct vdic_priv *priv;
- 	int ret;
- 
-@@ -942,7 +940,6 @@ struct v4l2_subdev *imx_media_vdic_register(struct imx_media_dev *imxmd,
- 
- 	priv->ipu_dev = ipu_dev;
- 	priv->ipu = ipu;
--	priv->md = imxmd;
- 
- 	v4l2_subdev_init(&priv->sd, &vdic_subdev_ops);
- 	v4l2_set_subdevdata(&priv->sd, priv);
-diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
-index c0e58d4f2dfb..a3b60f99a7d8 100644
---- a/drivers/staging/media/imx/imx-media.h
-+++ b/drivers/staging/media/imx/imx-media.h
-@@ -190,16 +190,16 @@ imx_media_find_subdev_by_devname(struct imx_media_dev *imxmd,
- 				 const char *devname);
- void imx_media_add_video_device(struct imx_media_dev *imxmd,
- 				struct imx_media_video_dev *vdev);
--int imx_media_find_mipi_csi2_channel(struct imx_media_dev *imxmd,
--				     struct media_entity *start_entity);
-+int imx_media_pipeline_csi2_channel(struct media_entity *start_entity);
- struct media_pad *
--imx_media_find_upstream_pad(struct imx_media_dev *imxmd,
--			    struct media_entity *start_entity,
--			    u32 grp_id);
-+imx_media_pipeline_pad(struct media_entity *start_entity, u32 grp_id,
-+		       enum v4l2_buf_type buftype, bool upstream);
- struct v4l2_subdev *
--imx_media_find_upstream_subdev(struct imx_media_dev *imxmd,
--			       struct media_entity *start_entity,
--			       u32 grp_id);
-+imx_media_pipeline_subdev(struct media_entity *start_entity, u32 grp_id,
-+			  bool upstream);
-+struct video_device *
-+imx_media_pipeline_video_device(struct media_entity *start_entity,
-+				enum v4l2_buf_type buftype, bool upstream);
- 
- struct imx_media_dma_buf {
- 	void          *virt;
-@@ -250,14 +250,14 @@ int imx_media_of_add_csi(struct imx_media_dev *imxmd,
- 			 struct device_node *csi_np);
- 
- /* imx-media-vdic.c */
--struct v4l2_subdev *imx_media_vdic_register(struct imx_media_dev *imxmd,
-+struct v4l2_subdev *imx_media_vdic_register(struct v4l2_device *v4l2_dev,
- 					    struct device *ipu_dev,
- 					    struct ipu_soc *ipu,
- 					    u32 grp_id);
- int imx_media_vdic_unregister(struct v4l2_subdev *sd);
- 
- /* imx-ic-common.c */
--struct v4l2_subdev *imx_media_ic_register(struct imx_media_dev *imxmd,
-+struct v4l2_subdev *imx_media_ic_register(struct v4l2_device *v4l2_dev,
- 					  struct device *ipu_dev,
- 					  struct ipu_soc *ipu,
- 					  u32 grp_id);
-diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-index 75514618d021..7eda67ed1bd7 100644
---- a/drivers/staging/media/imx/imx7-media-csi.c
-+++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -450,7 +450,7 @@ static int imx7_csi_get_upstream_endpoint(struct imx7_csi *csi,
- 
- skip_video_mux:
- 	/* get source pad of entity directly upstream from src */
--	pad = imx_media_find_upstream_pad(csi->imxmd, src, 0);
-+	pad = imx_media_pipeline_pad(src, 0, 0, true);
- 	if (IS_ERR(pad))
- 		return PTR_ERR(pad);
- 
--- 
-2.17.1
+But is it localize? It would definitely affect do_int3().
 
+You are saying that we have a do_int3() for user space int3, and
+do_kernel_int3() for kernel space. That would need to be done in asm
+for both, because having x86_64 call do_int3() for kernel and
+user would be interesting. Looking at the do_int3() code, I'm not sure
+how to safely separate kernel and user int3 handlers if 64bit doesn't
+call do_kernel_int3() directly. It may end up looking something like
+this:
+
+dotraplinkage void notrace do_int3(struct pt_regs *regs, long error_code)
+{
+#ifdef CONFIG_X86_64
+	do_kernel_int3(&regs);
+#endif
+	/*
+	 * Use ist_enter despite the fact that we don't use an IST stack.
+	 * We can be called from a kprobe in non-CONTEXT_KERNEL kernel
+	 * mode or even during context tracking state changes.
+	 *
+	 * This means that we can't schedule.  That's okay.
+	 */
+	ist_enter(regs);
+	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+
+#ifdef CONFIG_X86_64
+#ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
+	if (kgdb_ll_trap(DIE_INT3, "int3", regs, error_code, X86_TRAP_BP,
+				SIGTRAP) == NOTIFY_STOP)
+		goto exit;
+#endif /* CONFIG_KGDB_LOW_LEVEL_TRAP */
+
+#ifdef CONFIG_KPROBES
+	if (kprobe_int3_handler(&regs))
+		goto exit;
+#endif
+#endif
+
+	if (notify_die(DIE_INT3, "int3", regs, error_code, X86_TRAP_BP,
+			SIGTRAP) == NOTIFY_STOP)
+		goto exit;
+
+	cond_local_irq_enable(regs);
+	do_trap(X86_TRAP_BP, SIGTRAP, "int3", regs, error_code, 0, NULL);
+	cond_local_irq_disable(regs);
+
+exit:
+	ist_exit(regs);
+}
+
+dotraplinkage void notrace do_kernel_int3(struct pt_regs **regs)
+{
+#ifdef CONFIG_DYNAMIC_FTRACE
+	/*
+	 * ftrace must be first, everything else may cause a recursive crash.
+	 * See note by declaration of modifying_ftrace_code in ftrace.c
+	 */
+	if (unlikely(atomic_read(&modifying_ftrace_code)) &&
+	    ftrace_int3_handler(regs))
+		return;
+#endif
+	if (poke_int3_handler(regs))
+		return;
+
+#ifdef CONFIG_X86_64
+	return;
+#endif
+
+	/*
+	 * Use ist_enter despite the fact that we don't use an IST stack.
+	 * We can be called from a kprobe in non-CONTEXT_KERNEL kernel
+	 * mode or even during context tracking state changes.
+	 *
+	 * This means that we can't schedule.  That's okay.
+	 */
+	ist_enter(*regs);
+	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+
+#ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
+	if (kgdb_ll_trap(DIE_INT3, "int3", *regs, error_code, X86_TRAP_BP,
+				SIGTRAP) == NOTIFY_STOP)
+		goto exit;
+#endif /* CONFIG_KGDB_LOW_LEVEL_TRAP */
+
+#ifdef CONFIG_KPROBES
+	if (kprobe_int3_handler(regs))
+		goto exit;
+#endif
+
+	notify_die(DIE_INT3, "int3", *regs, error_code, X86_TRAP_BP,
+			SIGTRAP);
+	ist_exit(*regs);
+}
+
+Or maybe I misunderstood what you envision :-/
+
+-- Steve
