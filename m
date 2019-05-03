@@ -2,218 +2,181 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D1AC004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A97CC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45BC205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBD6205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:04:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LGpe7H9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfECHCb (ORCPT
+        id S1726505AbfECHEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:02:31 -0400
-Received: from icp-osb-irony-out6.external.iinet.net.au ([203.59.1.106]:40741
-        "EHLO icp-osb-irony-out6.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725806AbfECHCb (ORCPT
+        Fri, 3 May 2019 03:04:20 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34144 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfECHET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 03:02:31 -0400
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AHAABU5stc/zXSMGcNWBkBAQEBAQE?=
- =?us-ascii?q?BAQEBAQEHAQEBAQEBgVMCAQEBAQELAYQlhBCTYwEBAQEBAQaBNYNehW6PBoF?=
- =?us-ascii?q?7hH0Chlc2Bw4BAwEBAQQBAQEBAoZfAQEBAQIBIwQRQQULCw0LAgImAgJXBg0?=
- =?us-ascii?q?GAgEBgx6BdwWtGXF8MxqFLYMqgUWBCycBgV2KBXiBB4E4gms+h06CWASLE4c?=
- =?us-ascii?q?mUJQkCYILkj4hjCcDiRyifwqBfTMaCCgIgyeCGxeOMWCTCQEB?=
-X-IPAS-Result: =?us-ascii?q?A2AHAABU5stc/zXSMGcNWBkBAQEBAQEBAQEBAQEHAQEBA?=
- =?us-ascii?q?QEBgVMCAQEBAQELAYQlhBCTYwEBAQEBAQaBNYNehW6PBoF7hH0Chlc2Bw4BA?=
- =?us-ascii?q?wEBAQQBAQEBAoZfAQEBAQIBIwQRQQULCw0LAgImAgJXBg0GAgEBgx6BdwWtG?=
- =?us-ascii?q?XF8MxqFLYMqgUWBCycBgV2KBXiBB4E4gms+h06CWASLE4cmUJQkCYILkj4hj?=
- =?us-ascii?q?CcDiRyifwqBfTMaCCgIgyeCGxeOMWCTCQEB?=
-X-IronPort-AV: E=Sophos;i="5.60,424,1549900800"; 
-   d="scan'208";a="157783043"
-Received: from unknown (HELO [10.44.0.22]) ([103.48.210.53])
-  by icp-osb-irony-out6.iinet.net.au with ESMTP; 03 May 2019 15:02:26 +0800
-Subject: Re: [PATCH 1/6] ARM: ks8695: watchdog: stop using mach/*.h
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, arm@kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-References: <20190415202501.941196-1-arnd@arndb.de>
-From:   Greg Ungerer <gerg@uclinux.org>
-Message-ID: <2424c672-e3fb-4c32-4c24-fafc59d03a96@uclinux.org>
-Date:   Fri, 3 May 2019 17:02:23 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 3 May 2019 03:04:19 -0400
+Received: by mail-lj1-f196.google.com with SMTP id s7so4390451ljh.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 00:04:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EG+yERdoJo9BLN7VabMPjS/nhRf3hDC8H2zgWdVktco=;
+        b=LGpe7H9N9gdqKsRij55UyDvK5Rz+ixPQVDW1H/qYkdHeHuY3jhh09f0gQQ195p9wkb
+         pX8613oVMrUuuZMY4JMkArMfBaKJpqxlM0I8tccr81pWlgQDCi8DQ2H39cToPGeKXst1
+         IpP+QfbmXoxFUetvnqHMHvKv5HcPqul6pZ9aD801QMD957aJ6+OsSJTslsN3GQkoRX7S
+         MdNbIkcoU3Ahy6RBN7wUxx8506d2FpsuGwNu7ds2szkresDza3tCfSdGTplM+sxKXFpL
+         0acmupA4eBxXOVA4Hnd/ExVduePWSJgprEHM6PRvouaqUuGJ1hbCmNwovDo4PMJXWO5J
+         klyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EG+yERdoJo9BLN7VabMPjS/nhRf3hDC8H2zgWdVktco=;
+        b=oebq6asvzcy4ljUMySBrejPgunW0P3jjmqA/Ld8G+xZalTLkhHvFPS0d1UlVakHTTx
+         OJBogdcVlVnlSmtg6iMQ1G5yVd1f7z1UkOApBY4CIWawhc3fyx1tJgwP58+T3UXR3ncf
+         WZ+miiMzajo2+WDk4L7oFuPrL/uEYyENtQduJd70jw9fTZ+6TB5h76YzO2uWQx49B59X
+         DTLc1ekHG3ReQg1n2xYsdCAn1Vrei0v/vxGpyo6WzGO4hecv4YP9BpdYALtMKdLpmokP
+         fZ/YU3HGfms2glTjPcNZRiceOGhtsnrNM5R/H8CI1+vC47yeEAIyQTdYWiwnDUCWb/yG
+         7pOw==
+X-Gm-Message-State: APjAAAV63TmIpVgsF96jGDIvQOSDcB0nMoxaaDlKPSr6gZJ6KmJJGpWH
+        1+eIePKvK45OVmx4Q/icM9hhYWnqVOtumagVx8ROoA==
+X-Google-Smtp-Source: APXvYqw2h0hfR6f/SutSl8UZyA/nX5xNrB5MvVv2JMKYKFlUPlT8FlMO7B40W8tltBw/xkLvewH1ZBVuO0ndV4skS7Y=
+X-Received: by 2002:a2e:8186:: with SMTP id e6mr4405169ljg.136.1556867057291;
+ Fri, 03 May 2019 00:04:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190415202501.941196-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190502143314.649935114@linuxfoundation.org>
+In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 3 May 2019 12:34:06 +0530
+Message-ID: <CA+G9fYsQdQRoC9d-eV90=09eY_ZHc06cByoDbgmi_WoxHUL05Q@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/32] 4.9.173-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On Thu, 2 May 2019 at 20:52, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.173 release.
+> There are 32 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 04 May 2019 02:32:02 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.173-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-On 16/4/19 6:24 am, Arnd Bergmann wrote:
-> drivers should not rely on machine specific headers but
-> get their information from the platform device.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-I dug out some old ks8695 based hardware to try this out.
-I had a lot of trouble getting anything modern working on it.
-In the end I still don't have a reliable test bed to test this properly.
+NOTE:
+v4l2-compliance test kernel crash fixed by,
 
-Your patch series works as well as the kernel before the changes,
-so I am happy enough to ack them as they are.
+Hans Verkuil <hverkuil@xs4all.nl>
+    media: vivid: check if the cec_adapter is valid
 
-Acked-by: Greg Ungerer <gerg@kernel.org>
+Summary
+------------------------------------------------------------------------
 
-Ultimately though I am left wondering if the ks8695 support in the
-kernel is useful to anyone the way it is at the moment. With a minimal
-kernel configuration I can boot up to a shell - but the system is
-really unreliable if you try to interactively use it. I don't think
-it is the hardware - it seems to run reliably with the old code
-it has running from flash on it. I am only testing the new kernel,
-running with the existing user space root filesystem on it (which
-dates from 2004 :-)
-
-Regards
-Greg
+kernel: 4.9.173-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: d35bcd0923041bd98c18947041f8929b2fb12674
+git describe: v4.9.172-33-gd35bcd092304
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.172-33-gd35bcd092304
 
 
+No regressions (compared to build v4.9.172)
 
->   arch/arm/mach-ks8695/devices.c | 13 ++++++++++++-
->   drivers/watchdog/Kconfig       |  2 +-
->   drivers/watchdog/ks8695_wdt.c  | 30 +++++++++++++++++-------------
->   3 files changed, 30 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/arm/mach-ks8695/devices.c b/arch/arm/mach-ks8695/devices.c
-> index 61cf20beb45f..57766817d86f 100644
-> --- a/arch/arm/mach-ks8695/devices.c
-> +++ b/arch/arm/mach-ks8695/devices.c
-> @@ -169,11 +169,22 @@ void __init ks8696_add_device_hpna(void)
->   /* --------------------------------------------------------------------
->    *  Watchdog
->    * -------------------------------------------------------------------- */
-> +#define KS8695_TMR_OFFSET      (0xF0000 + 0xE400)
-> +#define KS8695_TMR_PA          (KS8695_IO_PA + KS8695_TMR_OFFSET)
-> +static struct resource ks8695_wdt_resources[] = {
-> +	[0] = {
-> +		.name	= "tmr",
-> +		.start	= KS8695_TMR_PA,
-> +		.end	= KS8695_TMR_PA + 0xf,
-> +		.flags	= IORESOURCE_MEM,
-> +	},
-> +};
->   
->   static struct platform_device ks8695_wdt_device = {
->   	.name		= "ks8695_wdt",
->   	.id		= -1,
-> -	.num_resources	= 0,
-> +	.resource	= ks8695_wdt_resources,
-> +	.num_resources	= ARRAY_SIZE(ks8695_wdt_resources),
->   };
->   
->   static void __init ks8695_add_device_watchdog(void)
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 242eea859637..046e01daef57 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -397,7 +397,7 @@ config IXP4XX_WATCHDOG
->   
->   config KS8695_WATCHDOG
->   	tristate "KS8695 watchdog"
-> -	depends on ARCH_KS8695
-> +	depends on ARCH_KS8695 || COMPILE_TEST
->   	help
->   	  Watchdog timer embedded into KS8695 processor. This will reboot your
->   	  system when the timeout is reached.
-> diff --git a/drivers/watchdog/ks8695_wdt.c b/drivers/watchdog/ks8695_wdt.c
-> index 1e41818a44bc..87c542c2f912 100644
-> --- a/drivers/watchdog/ks8695_wdt.c
-> +++ b/drivers/watchdog/ks8695_wdt.c
-> @@ -23,10 +23,8 @@
->   #include <linux/watchdog.h>
->   #include <linux/io.h>
->   #include <linux/uaccess.h>
-> -#include <mach/hardware.h>
->   
-> -#define KS8695_TMR_OFFSET	(0xF0000 + 0xE400)
-> -#define KS8695_TMR_VA		(KS8695_IO_VA + KS8695_TMR_OFFSET)
-> +#define KS8695_CLOCK_RATE  25000000
->   
->   /*
->    * Timer registers
-> @@ -57,6 +55,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
->   
->   static unsigned long ks8695wdt_busy;
->   static DEFINE_SPINLOCK(ks8695_lock);
-> +static void __iomem *tmr_reg;
->   
->   /* ......................................................................... */
->   
-> @@ -69,8 +68,8 @@ static inline void ks8695_wdt_stop(void)
->   
->   	spin_lock(&ks8695_lock);
->   	/* disable timer0 */
-> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
-> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
->   	spin_unlock(&ks8695_lock);
->   }
->   
-> @@ -84,15 +83,15 @@ static inline void ks8695_wdt_start(void)
->   
->   	spin_lock(&ks8695_lock);
->   	/* disable timer0 */
-> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
-> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
->   
->   	/* program timer0 */
-> -	__raw_writel(tval | T0TC_WATCHDOG, KS8695_TMR_VA + KS8695_T0TC);
-> +	__raw_writel(tval | T0TC_WATCHDOG, tmr_reg + KS8695_T0TC);
->   
->   	/* re-enable timer0 */
-> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
-> -	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-> +	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
->   	spin_unlock(&ks8695_lock);
->   }
->   
-> @@ -105,9 +104,9 @@ static inline void ks8695_wdt_reload(void)
->   
->   	spin_lock(&ks8695_lock);
->   	/* disable, then re-enable timer0 */
-> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
-> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-> -	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
-> +	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
->   	spin_unlock(&ks8695_lock);
->   }
->   
-> @@ -238,6 +237,11 @@ static struct miscdevice ks8695wdt_miscdev = {
->   static int ks8695wdt_probe(struct platform_device *pdev)
->   {
->   	int res;
-> +	struct resource *resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +	tmr_reg = devm_ioremap_resource(&pdev->dev, resource);
-> +	if (!tmr_reg)
-> +		return -ENXIO;
->   
->   	if (ks8695wdt_miscdev.parent)
->   		return -EBUSY;
-> 
+No fixes (compared to build v4.9.172)
+
+Ran 18302 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
