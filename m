@@ -2,80 +2,133 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231CFC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF295C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB4A2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF0E2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556917705;
+	bh=aqcL29qHJsAYLqk55Q2wpnp7s9uGAqVZLA5M+CR6604=;
+	h=In-Reply-To:References:To:Cc:From:Subject:Date:List-ID:From;
+	b=tahU+ZGFrnvJFMeZKGworuVE7UnyiGBuF3jcH7GWBA5osHUITOmHHk91u1CxkhO4u
+	 oiQ7En7VnVsVA5pRWC+78oR/BZM0S+BBPdofrVZZNNp6eKaUuLpPA5dCMNnqMFBfxU
+	 zS8VqYzKBIGz04dlizS3W1lsufWohPLWMZvgoBG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727157AbfECU7i (ORCPT
+        id S1727180AbfECVIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 16:59:38 -0400
-Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:42067 "EHLO
-        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726022AbfECU7i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 16:59:38 -0400
-Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
-        id 12999461D3A; Fri,  3 May 2019 16:59:36 -0400 (EDT)
-Date:   Fri, 3 May 2019 16:59:35 -0400
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
-Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
- packets
-Message-ID: <20190503205935.bg45rsso5jjj3gnx@csclub.uwaterloo.ca>
-References: <CAKgT0UczVvREiXwde6yJ8_i9RT2z7FhenEutXJKW8AmDypn_0g@mail.gmail.com>
- <20190502151140.gf5ugodqamtdd5tz@csclub.uwaterloo.ca>
- <CAKgT0Uc_OUAcPfRe6yCSwpYXCXomOXKG2Yvy9c1_1RJn-7Cb5g@mail.gmail.com>
- <20190502171636.3yquioe3gcwsxlus@csclub.uwaterloo.ca>
- <CAKgT0Ufk8LXMb9vVWfvgbjbQFKAuenncf95pfkA0P1t-3+Ni_g@mail.gmail.com>
- <20190502175513.ei7kjug3az6fe753@csclub.uwaterloo.ca>
- <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
- <CAKgT0Uc_YVzns+26-TL+hhmErqG4_w4evRqLCaa=7nME7Zq+Vg@mail.gmail.com>
- <20190503151421.akvmu77lghxcouni@csclub.uwaterloo.ca>
- <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
+        Fri, 3 May 2019 17:08:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726022AbfECVIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 17:08:22 -0400
+Received: from localhost (unknown [104.132.0.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D2522070B;
+        Fri,  3 May 2019 21:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556917701;
+        bh=aqcL29qHJsAYLqk55Q2wpnp7s9uGAqVZLA5M+CR6604=;
+        h=In-Reply-To:References:To:Cc:From:Subject:Date:From;
+        b=Dso9UErmUzkJ3ZamrjDEdNv4u7/1wbneeAfHXvB0+lZJsZyTrHTNLtHb+hfLwvKHW
+         ywwvXyRhWET2LFDkF3ssEpv/9pyHMhRN5kW7vZAi+ps7oH3L3AnvaRqmaCjQ+sseat
+         TAcev7toef6D8yexAqbmooLK868VgmlWzGanEY8w=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1556777971.12123.35.camel@mtksdaap41>
+References: <20190430112012.4514-1-roger.lu@mediatek.com> <20190430112012.4514-2-roger.lu@mediatek.com> <155665629219.168659.8221738507474891604@swboyd.mtv.corp.google.com> <1556777971.12123.35.camel@mtksdaap41>
+To:     Roger Lu <roger.lu@mediatek.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org,
+        linux-pm@vger.kernel.org, Kevin Hilman <khilman@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, Angus.Lin@mediatek.com,
+        Andy-YT.Liu@mediatek.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [RFC v1 1/3] dt-bindings: soc: add mtk svs dt-bindings
+Message-ID: <155691770027.200842.16164651681407381397@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Fri, 03 May 2019 14:08:20 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 10:19:47AM -0700, Alexander Duyck wrote:
-> The TCP flow could be bypassing RSS and may be using ATR to decide
-> where the Rx packets are processed. Now that I think about it there is
-> a possibility that ATR could be interfering with the queue selection.
-> You might try disabling it by running:
->     ethtool --set-priv-flags <iface> flow-director-atr off
+Quoting Roger Lu (2019-05-01 23:19:31)
+> On Tue, 2019-04-30 at 13:31 -0700, Stephen Boyd wrote:
+> > Quoting Roger Lu (2019-04-30 04:20:10)
+> > > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Do=
+cumentation/devicetree/bindings/power/mtk-svs.txt
+> > > new file mode 100644
+> > > index 000000000000..355329db74ba
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+[..]
+> > > +
+> > > +               svs_gpu: svs_gpu {
+> > > +                       compatible =3D "mediatek,mt8183-svs-gpu";
+> > > +                       power-domains =3D <&scpsys MT8183_POWER_DOMAI=
+N_MFG_2D>;
+> > > +                       operating-points-v2 =3D <&gpu_opp_table>;
+> > > +               };
+> >=20
+> > It looks like you need multiple OPPs for a single device, because it has
+> > different independent power supplies it wants to associate the OPP
+> > tables with?
+> Yes. SVS has different controllers inside the hardware in order to
+> calculate and optimize different OPP table voltage part.
 
-Hmm, I thought I had killed ATR (I certainly meant to), but it appears
-I had not.  I will experiment to see if that makes a difference.
+So is there more than one SVS register region that needs certain devices
+to be powered on or at least have their power domain enabled so that the
+SVS hardware can read the voltage and adjust accordingly? I should read
+the driver I suppose.
 
-> The problem is RSS can be bypassed for queue selection by things like
-> ATR which I called out above. One possibility is that if the
-> encryption you were using was leaving the skb->encapsulation flag set,
-> and the NIC might have misidentified the packets as something it could
-> parse and set up a bunch of rules that were rerouting incoming traffic
-> based on outgoing traffic. Disabling the feature should switch off
-> that behavior if that is in fact the case.
-> 
-> You are probably fine using 40 queues. That isn't an even power of two
-> so it would actually improve the entropy a bit since the lower bits
-> don't have a many:1 mapping to queues.
+>=20
+> > Why can't these OPP tables be attached to the devices that
+> > use them, i.e. CPU, GPU, CCI, etc.? Seems odd that those devices don't
+> > have OPP tables that this hardware block can look up somehow.
+> Those OPP tables are attached by our DVFS node (please refers below
+> patch). SVS just shares with their OPP table and help optimize these OPP
+> tables' voltage part.
+>=20
+> Add cpufreq DTS node to the mt8183 and mt8183-evb
+> https://patchwork.kernel.org/patch/10921675/
 
-I will let you know Monday how my tests go with atr off.  I really
-thought that was off already since it was supposed to be.  We always
-try to turn that off because it does not work well.
+Cool thanks for the pointer.
 
--- 
-Len Sorensen
+>=20
+>=20
+> > Similarly,
+> > the power domains should probably be part of the devices that are using
+> > them and not these sub-nodes that are mirroring the other hardware
+> > blocks in the system?
+> Oh. There is a svs controller in GPU power-domain. We need to turn on
+> GPU power so that svs controller can work functionally. Therefore, we
+> add GPU power-domains in our svs_gpu sub-node.
+>=20
+>=20
+
+Sorry, I'm not really following what you're saying too closely. I think
+I get it but it sounds complicated.
+
+I'm mostly wondering if having properties like svs-gpu =3D <&gpu_node>,
+and svs-cci =3D <&cci_node> would work for you. The idea would be to link
+this hardware block to the nodes that it's going to adjust the OPPs of.
+Once you have the node, use some sort of OPP API to get the OPP table
+for a device_node and adjust it at runtime for the current OPP. It
+sounds like it might be a little more complicated if the hardware goes
+haywire when the device like GPU is powered down and the power domain is
+shut off. Hopefully it isn't though, so that the driver can mostly sit
+on top of the SVS hardware and poke OPP every once and a while when the
+voltage needs to change, regardless of the power state of the device.
+
