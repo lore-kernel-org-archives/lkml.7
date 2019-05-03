@@ -2,158 +2,222 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B013C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04454C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D521206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91DD206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:45:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IzHws9IN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfECBo5 (ORCPT
+        id S1726596AbfECBpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 21:44:57 -0400
-Received: from spam01.hygon.cn ([110.188.70.11]:59422 "EHLO spam1.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726220AbfECBo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 21:44:57 -0400
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam1.hygon.cn with ESMTP id x431i68L087561;
-        Fri, 3 May 2019 09:44:06 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id x431haaI096935;
-        Fri, 3 May 2019 09:43:36 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from localhost.localdomain (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Fri, 3 May 2019
- 09:44:04 +0800
-From:   Pu Wen <puwen@hygon.cn>
-To:     <jdelvare@suse.com>, <wsa@the-dreams.de>
-CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Pu Wen <puwen@hygon.cn>
-Subject: [PATCH v2 RESEND] i2c-piix4: Add Hygon Dhyana SMBus support
-Date:   Tue, 30 Apr 2019 00:08:43 +0800
-Message-ID: <1556554123-5894-1-git-send-email-puwen@hygon.cn>
-X-Mailer: git-send-email 2.7.4
+        Thu, 2 May 2019 21:45:49 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32988 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfECBpt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 21:45:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z28so2066537pfk.0;
+        Thu, 02 May 2019 18:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZI6V/3n9+pa4S0kSap/rsqYeZseF3YXwwsnTTpOXHxI=;
+        b=IzHws9INfv0Wab3PqWryc8nXLCUGl4Ak0ErN4UWGz/oa5Q3bx6Ym7vUbFg2Dqx16VW
+         oWE14P70+9bC1kEcyxNogt4I3P4HndkNs5RErp+blOBqwXOoN+sRvrDOyunNPFAxApZ5
+         GWxjJ458WsmG94/7XtkxgO5qMOVf/y0XY4UKG2ctayvfs5F5tkmBrAfFfxXWLQNmhozQ
+         FgGdqQvM57obG+wUH3nrNRoNeYxwOGWCGFCKwlnl1UPR6OSjdtuSR+1SF1yttamHwiuF
+         tHVqZdYB3J/J9HrwSMl4npzfzK/jusV2Hy+t88avqIGeQLvbQa2sXZZ+CQyhzOUMI8Al
+         H3bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZI6V/3n9+pa4S0kSap/rsqYeZseF3YXwwsnTTpOXHxI=;
+        b=NZgFkNN/0Dw3XAaRCr1kJHWDWC+wr4iJs4h0obwFbmOVzcYJOBCpouUA4vVzfIXrYC
+         arKrMj46McVL86VbbVSPpTyCBnbQv+jwRCIw3lQTIrLvfML4GpPEixOy3QmpbCNUe3f9
+         ZKmZjxAphEK4mh7lpPbW9JU6reT6lphY3uWhsEV8gCVPbGp+YwyGJT1v3Lciaar5sXCY
+         SvEvPRDrDUx9emY5fSIviO+fw3gaI6Z/o3sUL+q/hA44JjITu6srhvYCEfkvdeBKE+0x
+         LSVb0zKWEnQCZnvAJKoKjbLI9iX2DyGf3nVcgN5fTc6tljExV8BG3yI/kEUJsDUvFdz+
+         XqCA==
+X-Gm-Message-State: APjAAAXKHgHLPA8cZXZIkXA3XASSASKIiqTjOPWs5ldqr5tsTWTAkT3z
+        XAKNswy4KufAzA2ClZak+Gs=
+X-Google-Smtp-Source: APXvYqwLxZ+uFuQZMF4YJqc7fAzpwsWGuH9RLKcLO+fHr/MYoaYjH8+9zszylWu8LEhaolJS2L6VrQ==
+X-Received: by 2002:a63:5907:: with SMTP id n7mr7320611pgb.416.1556847948068;
+        Thu, 02 May 2019 18:45:48 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id n7sm553500pff.45.2019.05.02.18.45.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 18:45:47 -0700 (PDT)
+Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
+ KUnit tests
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah@kernel.org, devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Felix Guo <felixguoxiuping@gmail.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-13-brendanhiggins@google.com>
+ <20190502110220.GD12416@kroah.com>
+ <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
+ <a49c5088-a821-210c-66de-f422536f5b01@gmail.com>
+ <CAFd5g44iWRchQKdJYtjRtPY6e-6e0eXpKXXsx5Ooi6sWE474KA@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <1a5f3c44-9fa9-d423-66bf-45255a90c468@gmail.com>
+Date:   Thu, 2 May 2019 18:45:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam1.hygon.cn x431i68L087561
-X-DNSRBL: 
+In-Reply-To: <CAFd5g44iWRchQKdJYtjRtPY6e-6e0eXpKXXsx5Ooi6sWE474KA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Hygon Dhyana CPU has the SMBus device with PCI device ID 0x790b,
-which is the same as AMD CZ SMBus device. So add Hygon Dhyana support
-to the i2c-piix4 driver by using the code path of AMD.
+On 5/2/19 4:45 PM, Brendan Higgins wrote:
+> On Thu, May 2, 2019 at 2:16 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> On 5/2/19 11:07 AM, Brendan Higgins wrote:
+>>> On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>>>>
+>>>> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
+>>>>> From: Felix Guo <felixguoxiuping@gmail.com>
+>>>>>
+>>>>> The ultimate goal is to create minimal isolated test binaries; in the
+>>>>> meantime we are using UML to provide the infrastructure to run tests, so
+>>>>> define an abstract way to configure and run tests that allow us to
+>>>>> change the context in which tests are built without affecting the user.
+>>>>> This also makes pretty and dynamic error reporting, and a lot of other
+>>>>> nice features easier.
+>>>>>
+>>>>> kunit_config.py:
+>>>>>   - parse .config and Kconfig files.
+>>>>>
+>>>>> kunit_kernel.py: provides helper functions to:
+>>>>>   - configure the kernel using kunitconfig.
+>>>>>   - build the kernel with the appropriate configuration.
+>>>>>   - provide function to invoke the kernel and stream the output back.
+>>>>>
+>>>>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
+>>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>>>>
+>>>> Ah, here's probably my answer to my previous logging format question,
+>>>> right?  What's the chance that these wrappers output stuff in a standard
+>>>> format that test-framework-tools can already parse?  :)
+> 
+> To be clear, the test-framework-tools format we are talking about is
+> TAP13[1], correct?
 
-Signed-off-by: Pu Wen <puwen@hygon.cn>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
----
-v2 RESEND:
-  - Add 'Reviewed-by' tag from Jean Delvare.
+I'm not sure what the test community prefers for a format.  I'll let them
+jump in and debate that question.
 
-v1->v2:
-  - Remove the revision number checking for Hygon SMBus device.
-  - Document the new supported chipset in drivers/i2c/busses/Kconfig
-    and Documentation/i2c/busses/i2c-piix4 as well as in the header
-	comment of i2c-piix4.c.
 
- Documentation/i2c/busses/i2c-piix4 |  2 ++
- drivers/i2c/busses/Kconfig         |  1 +
- drivers/i2c/busses/i2c-piix4.c     | 15 +++++++++++----
- 3 files changed, 14 insertions(+), 4 deletions(-)
+> 
+> My understanding is that is what kselftest is being converted to use.
+> 
+>>>
+>>> It should be pretty easy to do. I had some patches that pack up the
+>>> results into a serialized format for a presubmit service; it should be
+>>> pretty straightforward to take the same logic and just change the
+>>> output format.
+>>
+>> When examining and trying out the previous versions of the patch I found
+>> the wrappers useful to provide information about how to control and use
+>> the tests, but I had no interest in using the scripts as they do not
+>> fit in with my personal environment and workflow.
+>>
+>> In the previous versions of the patch, these helper scripts are optional,
+>> which is good for my use case.  If the helper scripts are required to
+> 
+> They are still optional.
+> 
+>> get the data into the proper format then the scripts are not quite so
+>> optional, they become the expected environment.  I think the proper
+>> format should exist without the helper scripts.
+> 
+> That's a good point. A couple things,
+> 
+> First off, supporting TAP13, either in the kernel or the wrapper
+> script is not hard, but I don't think that is the real issue that you
+> raise.
+> 
+> If your only concern is that you will always be able to have human
+> readable KUnit results printed to the kernel log, that is a guarantee
+> I feel comfortable making. Beyond that, I think it is going to take a
+> long while before I would feel comfortable guaranteeing anything about
+> how will KUnit work, what kind of data it will want to expose, and how
+> it will be organized. I think the wrapper script provides a nice
+> facade that I can maintain, can mediate between the implementation
+> details and the user, and can mediate between the implementation
+> details and other pieces of software that might want to consume
+> results.
+> 
+> [1] https://testanything.org/tap-version-13-specification.html
 
-diff --git a/Documentation/i2c/busses/i2c-piix4 b/Documentation/i2c/busses/i2c-piix4
-index aa959fd..2703bc3 100644
---- a/Documentation/i2c/busses/i2c-piix4
-+++ b/Documentation/i2c/busses/i2c-piix4
-@@ -15,6 +15,8 @@ Supported adapters:
-     http://support.amd.com/us/Embedded_TechDocs/44413.pdf
-   * AMD Hudson-2, ML, CZ
-     Datasheet: Not publicly available
-+  * Hygon CZ
-+    Datasheet: Not publicly available
-   * Standard Microsystems (SMSC) SLC90E66 (Victory66) southbridge
-     Datasheet: Publicly available at the SMSC website http://www.smsc.com
- 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index f8979ab..50ec2e4 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -176,6 +176,7 @@ config I2C_PIIX4
- 	    AMD Hudson-2
- 	    AMD ML
- 	    AMD CZ
-+	    Hygon CZ
- 	    Serverworks OSB4
- 	    Serverworks CSB5
- 	    Serverworks CSB6
-diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
-index 90946a8..e9a0514 100644
---- a/drivers/i2c/busses/i2c-piix4.c
-+++ b/drivers/i2c/busses/i2c-piix4.c
-@@ -19,6 +19,7 @@
- 	Serverworks OSB4, CSB5, CSB6, HT-1000, HT-1100
- 	ATI IXP200, IXP300, IXP400, SB600, SB700/SP5100, SB800
- 	AMD Hudson-2, ML, CZ
-+	Hygon CZ
- 	SMSC Victory66
- 
-    Note: we assume there can only be one device, with one or more
-@@ -289,7 +290,9 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
- 	     PIIX4_dev->revision >= 0x41) ||
- 	    (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD &&
- 	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS &&
--	     PIIX4_dev->revision >= 0x49))
-+	     PIIX4_dev->revision >= 0x49) ||
-+	    (PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON &&
-+	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS))
- 		smb_en = 0x00;
- 	else
- 		smb_en = (aux) ? 0x28 : 0x2c;
-@@ -361,7 +364,8 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
- 		 piix4_smba, i2ccfg >> 4);
- 
- 	/* Find which register is used for port selection */
--	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD) {
-+	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD ||
-+	    PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON) {
- 		switch (PIIX4_dev->device) {
- 		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
- 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
-@@ -794,6 +798,7 @@ static const struct pci_device_id piix4_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_SBX00_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_HYGON, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
- 		     PCI_DEVICE_ID_SERVERWORKS_OSB4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
-@@ -904,11 +909,13 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if ((dev->vendor == PCI_VENDOR_ID_ATI &&
- 	     dev->device == PCI_DEVICE_ID_ATI_SBX00_SMBUS &&
- 	     dev->revision >= 0x40) ||
--	    dev->vendor == PCI_VENDOR_ID_AMD) {
-+	    dev->vendor == PCI_VENDOR_ID_AMD ||
-+	    dev->vendor == PCI_VENDOR_ID_HYGON) {
- 		bool notify_imc = false;
- 		is_sb800 = true;
- 
--		if (dev->vendor == PCI_VENDOR_ID_AMD &&
-+		if ((dev->vendor == PCI_VENDOR_ID_AMD ||
-+		     dev->vendor == PCI_VENDOR_ID_HYGON) &&
- 		    dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) {
- 			u8 imc;
- 
--- 
-2.7.4
+My concern is based on a focus on my little part of the world
+(which in _previous_ versions of the patch series was the devicetree
+unittest.c tests being converted to use the kunit infrastructure).
+If I step back and think of the entire kernel globally I may end
+up with a different conclusion - but I'm going to remain myopic
+for this email.
 
+I want the test results to be usable by me and my fellow
+developers.  I prefer that the test results be easily accessible
+(current printk() implementation means that kunit messages are
+just as accessible as the current unittest.c printk() output).
+If the printk() output needs to be filtered through a script
+to generate the actual test results then that is sub-optimal
+to me.  It is one more step added to my workflow.  And
+potentially with an embedded target a major pain to get a
+data file (the kernel log file) transferred from a target
+to my development host.
+
+I want a reported test failure to be easy to trace back to the
+point in the source where the failure is reported.  With printk()
+the search is a simple grep for the failure message.  If the
+failure message has been processed by a script, and then the
+failure reported to me in an email, then I may have to look
+at the script to reverse engineer how the original failure
+message was transformed into the message that was reported
+to me in the email.  Then I search for the point in the
+source where the failure is reported.  So a basic task has
+just become more difficult and time consuming.
+
+-Frank
