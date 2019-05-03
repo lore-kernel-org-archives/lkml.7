@@ -2,143 +2,147 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA60AC04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F67C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2332063F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:55:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="OCtteQBY"
+	by mail.kernel.org (Postfix) with ESMTP id B50932075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:59:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556924356;
+	bh=c5BabGzNJmVs5Eqq6k6wAV9zIaA+Vxh6BthoEQ0ElZM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=hd8XFrw3Za9+rG/pLmm+72QB4IGV7TH9nXDRkXkCecLeivgycxhNTvLSnbJiZk1Ul
+	 BhV0eng1rKN4mSOQP78dtdcTcipCd/p76qZt+3I3HDO6Gv4FbneGGtVEHvN9ucJwte
+	 oN7u/K9qa2XMaBbInDC+xhXZjr8ihk/wLjBE8YDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfECWzR (ORCPT
+        id S1726779AbfECW7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 18:55:17 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40472 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbfECWzQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 18:55:16 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b3so3363144plr.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 15:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Jh8aRs6M204wQzik6wivrIiSI13IXCdNHX7pPqq9CBI=;
-        b=OCtteQBYyMIkBq9cEO5w0dUfflKGQ9tjo/sN0ogG8gF6bMVn3+Ow1X7rjho8n1A3fq
-         a4RWG8yh5WKNJhTiolQN9daJ2OM4WkQ3MTpo9IZ3+1ngvaZRtSui3RbXHdxJRHJkDoRg
-         XB9cuBpEiuqbTfot6T0Z8qoLrCn8MtzLorIz7xiF8HMwfzZklsv9dI+LvEXJoA4tfUvq
-         P2WdHZhY00dni3VupTFKa4VN8vMPM4m3G7z9hQ7viHoCN051/T1tsNszD7akvGflqq80
-         YFGMze56lazv1nqPymHG3ho/LCC0KZ9Yt1JRVkExWD9JY7k/u4Kew+ntpabxyfHfd259
-         cspg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Jh8aRs6M204wQzik6wivrIiSI13IXCdNHX7pPqq9CBI=;
-        b=U7rx9Q8bpMYN1AjQR7G3YT5tnUXlu909MtBI3ZJZGr0PBWtbo1wr832NT05pey3Juc
-         Vmp9Ps2dm6djmRSdbSdZ92XZJRu4tkdFHMnzwQ7fomHpXnzjQ4RPTrO0W11JhS5ML4vi
-         DC55YxTWK7b7Bs3klfCLinPAlchba30LwsytaAZ8IrKHDqLCb4+c/tOh1jaJzUlUwvcu
-         ctBQvkTLnGXEADF+5MHy8VbT0CCFgDIoVGUzpt2sJaDcAN3Kcg9baAAiDj7i2nJF3MSH
-         r4snnEwjE5ms0m5MHcyHTBbqrBRbOHB7MCSXdSpsqvKeePrE8r/p7U6d5dD8HwM4XS8M
-         UWwg==
-X-Gm-Message-State: APjAAAUn8r2YPSbtJW4aPRIRkYD5opSFuH1+FoHttXiysIO33JO1kIRC
-        NaRRbcb74yLWOe/l2JP2vNWTYQ==
-X-Google-Smtp-Source: APXvYqxOMrve5vMLWGbWTyUTBFUkDVaaOUrfEcD9ZTOc7JwEAkevEiH30M1gMq/yEyB1KC6PAi2S2g==
-X-Received: by 2002:a17:902:9a48:: with SMTP id x8mr14226141plv.133.1556924115416;
-        Fri, 03 May 2019 15:55:15 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b02a:6215:98ef:57cc:ac0d:e82b? ([2600:1010:b02a:6215:98ef:57cc:ac0d:e82b])
-        by smtp.gmail.com with ESMTPSA id d3sm4094108pfn.113.2019.05.03.15.55.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 15:55:14 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <CAHk-=wiA-WbrFrDs-kOfJZMXy4zMo9-SZfk=7B-GfmBJ866naw@mail.gmail.com>
-Date:   Fri, 3 May 2019 15:55:12 -0700
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
+        Fri, 3 May 2019 18:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbfECW7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 18:59:15 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F17582063F;
+        Fri,  3 May 2019 22:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556924354;
+        bh=c5BabGzNJmVs5Eqq6k6wAV9zIaA+Vxh6BthoEQ0ElZM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VoyRCsmrqpJYoF4RrkGGDv5/nxCkqf5nTa1ptWmSW8aUXnqqDGYB/uMi/ENac3z/E
+         PwZQc2TaBfND+hC08Qh4ZLxlE7KyjzcvgVrRg58XoXAfeCHn8V+WZzuM8vBlO00H13
+         9hHLdJp5jy69Yol1Nf6eqcfsKuLT2p7/hO+tyd5Q=
+Subject: Re: [PATCH for 5.2 00/12] Restartable Sequences selftests updates
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2962A4E4-3B9F-4195-9C6D-9932809D98F9@amacapital.net>
-References: <20190501202830.347656894@goodmis.org> <20190501203152.397154664@goodmis.org> <20190501232412.1196ef18@oasis.local.home> <20190502162133.GX2623@hirez.programming.kicks-ass.net> <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com> <20190502181811.GY2623@hirez.programming.kicks-ass.net> <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com> <20190502202146.GZ2623@hirez.programming.kicks-ass.net> <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com> <20190503152405.2d741af8@gandalf.local.home> <CAHk-=wiA-WbrFrDs-kOfJZMXy4zMo9-SZfk=7B-GfmBJ866naw@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>, shuah <shuah@kernel.org>
+References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
+ <678952111.699.1556908562445.JavaMail.zimbra@efficios.com>
+ <68a135d7-7b30-71c7-c570-c7608d6f75d5@kernel.org>
+ <1137649333.995.1556911352713.JavaMail.zimbra@efficios.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <9aa2d6ca-5b42-5c4d-788d-d82dc0389eff@kernel.org>
+Date:   Fri, 3 May 2019 16:59:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1137649333.995.1556911352713.JavaMail.zimbra@efficios.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/3/19 1:22 PM, Mathieu Desnoyers wrote:
+> ----- On May 3, 2019, at 2:53 PM, shuah shuah@kernel.org wrote:
+> 
+>> On 5/3/19 12:36 PM, Mathieu Desnoyers wrote:
+>>> ----- On Apr 29, 2019, at 11:27 AM, Mathieu Desnoyers
+>>> mathieu.desnoyers@efficios.com wrote:
+>>>
+>>>> Those rseq selftests updates are hereby submitted to Shuah Khan,
+>>>> maintainer of kernel selftests, for the next merge window (5.2).
+>>>>
+>>>> They change the per-architecture pre-abort signatures to ensure those
+>>>> are valid trap instructions.
+>>>>
+>>>> The way exit points are presented to debuggers is enhanced, ensuring
+>>>> all exit points are present, so debuggers don't have to disassemble
+>>>> rseq critical section to properly skip over them.
+>>>>
+>>>> Discussions with the glibc community is reaching a concensus of exposing
+>>>> a __rseq_handled symbol from glibc to coexist with rseq early adopters.
+>>>> Update the rseq selftest code to expose and use this symbol.
+>>>>
+>>>> Support for compiling asm goto with clang is added with the
+>>>> "-no-integrated-as" compiler switch, similarly to the toplevel kernel
+>>>> Makefile.
+>>>
+>>> Hi Shuah,
+>>>
+>>> Is there anything else you need before you can pick up those patches ?
+>>>
+>>
+>> I was going to say "no more work needed" and noticed that the series has
+>> checkpatch errors and warns as I was running the series through
+>> pre-commit tests.
+>>
+>> Patches 1,2,3,8 have errors/warns based
+>> on quick look at the log.
+>>
+>>
+>> ERROR: need consistent spacing around '%' (ctx:WxV)
+>> #227: FILE: tools/testing/selftests/rseq/rseq-x86.h:104:
+>> +		RSEQ_ASM_CMP_CPU_ID(cpu_id, RSEQ_CPU_ID_OFFSET(%[rseq_abi]), %l[error1])
+>>
+>>
+>> Will you be able to fix them and resend?
+> 
+> (CCing the che checkpatch maintainers)
+> 
+> checkpatch appears to be wrong for these errors. I suspect it thinks those are
+> '%' modulo operators (for which the style requires space before/after),
+> but those are actually part of the asm input and goto target operands.
+> 
+> Most warnings are about some lines over 80 cols. However, the areas where
+> this happens is due to following the style of already upstream code which
+> has the final "\" at the end of line sometimes beyond 80 col to accommodate
+> macros that take a bit of horizontal real estate.
+> 
+> For patch 8, the warning about "availble" being a typo is right. The
+> style error about space after "asm (" is right as well. Should I send only
+> this updated patch to you or should I send the whole patchset again ?
+> 
 
+No need to send all patches. This is good.
 
-> On May 3, 2019, at 2:46 PM, Linus Torvalds <torvalds@linux-foundation.org>=
- wrote:
->=20
->> On Fri, May 3, 2019 at 12:24 PM Steven Rostedt <rostedt@goodmis.org> wrot=
-e:
->>=20
->> The problem with this approach is that it would require doing the same
->> for x86_64, as the int3 C code is the same for both. And that may be a
->> bit more difficult on the x86_64 side because it's all done with a
->> simple flag in the idtentry macro to add the gap.
->=20
-> That argument is weakened by the fact that we have to do _other_
-> things differently on 32-bit and 64-bit anyway.
->=20
-> So we might as well have a "on 32-bit, the call emulation needs to
-> move the pt_regs to make space" special case in the call emulation
-> code. It's very easy to explain why.
->=20
-> And then we'd limit the special case to where it matters (with a big
-> comment about what's going on), rather than adding random special case
-> handling to random _other_ places.
-
-If we do this, it should IMO look like this:
-
-struct pt_regs *change_kernel_stack_pointer(struct pt_regs *, unsigned long n=
-ew_sp);
-
-And that helper should be used on both variants.
-
-But I think this will end up worse than the version where the entry code fix=
-es it up.  This is because, if the C code moves pt_regs, then we need some w=
-ay to pass the new pointer back to the asm.  We will also have a much harder=
- time with runtime sanity checks.  In the model where the C code merely upda=
-tes regs->sp, it=E2=80=99s very easy to compare sp and &regs to check for ov=
-erlap, but it=E2=80=99s much harder to tell whether memmoveing it is going t=
-o overwrite something important.  And we have to worry about whether there=E2=
-=80=99s some other code that assumes that pt_regs stays put.
-
-So my intuition is that the pure asm fixup will result is more maintainable c=
-ode.
+thanks,
+-- Shuah
