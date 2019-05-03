@@ -2,87 +2,57 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85994C43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37DDC04AAA
 	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 02:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9802070B
+	by mail.kernel.org (Postfix) with ESMTP id 79EF72087F
 	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 02:34:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="eZXn/viY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfECCen (ORCPT
+        id S1726372AbfECCeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 22:34:43 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:32867 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfECCen (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 22:34:43 -0400
-Received: by mail-qt1-f195.google.com with SMTP id m32so2044119qtf.0;
-        Thu, 02 May 2019 19:34:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IHmi9Ibu7jtHY7PtCBhSSAF4IhbreLBAN5F0ptEmt0Q=;
-        b=eZXn/viYgV0Bz0GiIC+p6VL57OA23zgu6ajWkL4MIXc6CGKKxuWsVv2tkoMcoJEnk/
-         bI3SezCbRAg29i67UKQt63yrFF6E74Or+ROiiYT7CrJGt3hjIgLYM2T6EPQ1VvtYXmwU
-         9Ll5yXUEoT/l8TvD7BhV6ur7X+1Ob0/QEA9wI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IHmi9Ibu7jtHY7PtCBhSSAF4IhbreLBAN5F0ptEmt0Q=;
-        b=dCgDLiI1uMzZBIgyaEZQEmO/0nmU2l0/E9yJ5pLx7iBxfK5P0JvO2Kgyeoyjakambv
-         0ueZu5MB/XuuVB2wMiNNwcRORZXkOz1qlAnN29ARQlTp4pukc9axlh06YsRs8yWDyRoM
-         QNh8Tb5ZeG4oF14FYXUXqsECgcTin+P4WvAtBjCXhDOZSHEhJ4fsFhXXlDR3H88WdnoU
-         gUzTGosEtjfgmV0+mRBJMIytbUxCR/buqWXwOu3CwCQNxx5zk7jUfbceY9eC/gsCQJNP
-         oGtzxlBDRzgrSdxnHYv8sxR8uhRnwS8EpKLSO67LR7MRX4ceGIsRw73UbYW7YIfUcsvX
-         /djg==
-X-Gm-Message-State: APjAAAVJKJFLprchI4nPws9OXDMH73K/jeFf0rbXatvHfaUTHH7ePXb8
-        DSFb8tCx5yP6n7gba15fGyh5X3FnwEJc4n5Ai24=
-X-Google-Smtp-Source: APXvYqx5RxdF0dkmKrVJcM/FX5Hqq2lsUx2dPvDQpPCS0RCqtHLyQnKALRutFusuZJt3AyuF6JXPG1iWfe+c2Vj2JzM=
-X-Received: by 2002:a0c:ac83:: with SMTP id m3mr6157405qvc.85.1556850881888;
- Thu, 02 May 2019 19:34:41 -0700 (PDT)
+        Thu, 2 May 2019 22:34:46 -0400
+Received: from dcvr.yhbt.net ([64.71.152.64]:35772 "EHLO dcvr.yhbt.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725995AbfECCep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 22:34:45 -0400
+Received: from localhost (dcvr.yhbt.net [127.0.0.1])
+        by dcvr.yhbt.net (Postfix) with ESMTP id 24CCA1F453;
+        Fri,  3 May 2019 02:34:45 +0000 (UTC)
+Date:   Fri, 3 May 2019 02:34:44 +0000
+From:   Eric Wong <e@80x24.org>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>, Arnd Bergmann <arnd@arndb.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jason Baron <jbaron@akamai.com>, linux-kernel@vger.kernel.org,
+        Omar Kilani <omar.kilani@gmail.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: Strange issues with epoll since 5.0
+Message-ID: <20190503023444.m6hvyb7sqtjzub62@dcvr>
+References: <20190428004858.el3yk6hljloeoxza@dcvr>
+ <20190429204754.hkz7z736tdk4ucum@linux-r8p5>
+ <20190429210427.dmfemfft2t2gdwko@dcvr>
+ <CABeXuvqpAjk8ocRUabVU4Yviv7kgRkMneLE1Xy-jAtHdXAHBVw@mail.gmail.com>
+ <20190501021405.hfvd7ps623liu25i@dcvr>
+ <20190501073906.ekqr7xbw3qkfgv56@dcvr>
+ <CABeXuvq7gCV2qPOo+Q8jvNyRaTvhkRLRbnL_oJ-AuK7Sp=P3QQ@mail.gmail.com>
+ <20190501204826.umekxc7oynslakes@dcvr>
+ <CABeXuvqbCDhp+67SpGLAO7dYiWzWufewQBn+MTxY5NYsaQVrPg@mail.gmail.com>
+ <CABeXuvrJrdGFUsv7_cAwtyGpc2LpG21+90=jMR4a+CcUPvysRw@mail.gmail.com>
 MIME-Version: 1.0
-References: <1556721787-28500-1-git-send-email-eajames@linux.ibm.com>
-In-Reply-To: <1556721787-28500-1-git-send-email-eajames@linux.ibm.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 3 May 2019 02:34:30 +0000
-Message-ID: <CACPK8Xc2uwPwouto4Xg8fA0OAMJ3eP6kYjKcp9Bf4R90t1NdBg@mail.gmail.com>
-Subject: Re: [PATCH] iio: dps310: Add pressure sensing capability
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CABeXuvrJrdGFUsv7_cAwtyGpc2LpG21+90=jMR4a+CcUPvysRw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eddie,
+Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> Eric,
+> Can you please help test this?
 
-On Wed, 1 May 2019 at 14:43, Eddie James <eajames@linux.ibm.com> wrote:
->
-> The DPS310 supports measurement of pressure, so support that in the
-> driver. Use background measurement like the temperature sensing and
-> default to lowest precision and lowest measurement rate.
-
-Upstream didn't accept my patch as they wanted it to support pressure
-in addition to temperature first. I didn't ever get around to doing
-that.
-
-I suggest you send my original patch and device tree binding along
-with this one as a series.
-
-Cheers,
-
-Joel
+Nope, that was _really_ badly whitespace-damaged.
+(C'mon, it's not like you're new to this)
