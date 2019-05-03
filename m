@@ -2,97 +2,181 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C29EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551FDC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 414872087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2654B2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6k1uHlj"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="m7r8+vcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfECSWC (ORCPT
+        id S1726642AbfECSZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 14:22:02 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38584 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbfECSWC (ORCPT
+        Fri, 3 May 2019 14:25:34 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34524 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbfECSZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 14:22:02 -0400
-Received: by mail-io1-f68.google.com with SMTP id y6so5990415ior.5;
-        Fri, 03 May 2019 11:22:01 -0700 (PDT)
+        Fri, 3 May 2019 14:25:33 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c13so3110028pgt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 11:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KZlTHogcw3KVs5ezkA2HfvmM7+WIz+rn1RRu7f/yTLM=;
-        b=f6k1uHljZs07eZhXKFGQV6w98Iz0Wj1FniGxObqMqW1AtTH6CIF5gbVZ4BT00adoBs
-         b0xZlZ49T6AwfR4hl571yx4Hv5IlGlhjUGKXOkg8azD6Zed2EbsoNJ4RUSXUwYl/Y1tb
-         cktneFJ/yX7TtcxyNYNw9CLsqy6aOQm0u4j6WxuIg/Q9S/La5/JOYl1l29ejdMzs93YA
-         CxO+xL31l0H5Fc+64Sbqa3rlpq5/jDgQgOAceFDxf63zYIDVKBTJ4PXBfxuu1dJpW6g/
-         cTCMn1gXrKZtYnCS4YIBmJ0/TzcNGbw+HaMf2IHnEU/SixkMPv7BbqlaDoRhIf/Icqfl
-         4rGQ==
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i/bmY+EZ6xV0W0SpIYyFyIDSPu4iDN/leFZKV35/9Vc=;
+        b=m7r8+vcXgU2Jzs3FITtKSxn3MZ0/Ui0kiBxk1JUrg+f9GJCZqLzVOs28Xuo7YABkcp
+         HkZI4irETyZws53pUubSxSy2M0164P9FJYKzN3EKqiuCufrWsFAhpnuhF8CGmvuEEFdo
+         RYdVxSMizwoP6PdkcyTua4mYxoeSqRh/dtQfA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KZlTHogcw3KVs5ezkA2HfvmM7+WIz+rn1RRu7f/yTLM=;
-        b=c+pv0npgxyyk6Qpa+/kqm6X+gBcFTTWbdY2q238edPCwkaM4NBKVDqOhHnZtdj1wlV
-         LzUofcdxSXQCQwE1KgquSqs2CO+GifJ6UvdqKjSIN9hee/4jJuJf/+RsRkAFx558CAXb
-         QhYK79c2KKP8Nxy1NAWroJSH+9zmeerGMvZ0juV36gDRLdZnqKk7nX0aIKI3/Pzvsbvk
-         +OlMKxTR28IezScPpSSWCBXtYQ9RcrWtRvDetpITzLQVSOjrdHvxBBgIyIQn02cNRJQk
-         ItBxmRMP7pNVMdWy9isFO7+hhnJvY6j7FbwVXYmESEELzZ0ZqzrGiVc/epjUC0RmCwiT
-         tQ7w==
-X-Gm-Message-State: APjAAAWlQF5UTFlMamIzVzmEqZzsSacjWp+E0RRciow7ARIS2o9n+rS3
-        1UABDNNFqt+Kdzs9BRZbxjNgaGTWnjFE3btMujs=
-X-Google-Smtp-Source: APXvYqyUsl1h5FgNtwD0YXSW86kllAPBQCoUKFVBx24yK9p7xaOUXnLQNgLk8G8jbdCVY9TU0/BI4xbenWu9CrlpcZ4=
-X-Received: by 2002:a5e:c20c:: with SMTP id v12mr1824375iop.184.1556907721138;
- Fri, 03 May 2019 11:22:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i/bmY+EZ6xV0W0SpIYyFyIDSPu4iDN/leFZKV35/9Vc=;
+        b=QHujNjDFFjEssDMKo6kv8Ij7q4JRde4z1DfYzMzD77P8yIXBX3TabJ9xS3ynGui5pl
+         TrvNbz9ynqin8ndkc2zeotUIOL48IZP3t6GaCzt6rLpEXfWBMX0WaI0PaTpPjAzZWbmg
+         Z9bPmWzvrE5P+QcWoMz+cUhn+tU3wST2SesZ8n+RhJ6iJsxNF1LgIB8RZcstRQlv0aW7
+         oEQgdPvEw5sdkVkZkMLChZ4cDWg/N2E0XdcP1SSwkXocEvuSTxfGplCPxZfq+evIBiyM
+         lQTQ0/gygoTahtOtz0k45K4tqVLmKiosUpoUP5lRkVmBIWqmQVL11oGFLHOihcGlGByl
+         /xWQ==
+X-Gm-Message-State: APjAAAXs0CUb3RjzVxNTMsw24mVABUKUlcMcUDlc9x4T06EpzvQEGSuq
+        T9RZ3KwL1/xEgSk7ZKTTgsfauURMulI=
+X-Google-Smtp-Source: APXvYqxXomx3NaQybucA9CD70Lvpm4yE4KqrBRott1+Bcq0msUt/U7YHgaagq201nzW7ilNHNeShKw==
+X-Received: by 2002:a63:5110:: with SMTP id f16mr12391491pgb.107.1556907932139;
+        Fri, 03 May 2019 11:25:32 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id n188sm4110093pfn.64.2019.05.03.11.25.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 03 May 2019 11:25:30 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, atishp04@gmail.com,
+        bpf@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>, dancol@google.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dietmar.eggemann@arm.com, duyuchao <yuchao.du@unisoc.com>,
+        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        =?UTF-8?q?Micha=C5=82=20Gregorczyk?= <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Olof Johansson <olof@lixom.net>, qais.yousef@arm.com,
+        rdunlap@infradead.org, Shuah Khan <shuah@kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>, yhs@fb.com
+Subject: [PATCH] kheaders: Move from proc to sysfs
+Date:   Fri,  3 May 2019 14:24:59 -0400
+Message-Id: <20190503182459.159121-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-References: <20190503033440.cow6xm4p4hezgkxv@linux-r8p5> <20190503034205.12121-1-deepa.kernel@gmail.com>
- <20190503063435.446aqcckbc6ri7xx@dcvr>
-In-Reply-To: <20190503063435.446aqcckbc6ri7xx@dcvr>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Fri, 3 May 2019 11:21:50 -0700
-Message-ID: <CABeXuvqRSO_0pkU2i0eNK2JtRZcPquF0X0h_GJANiQvEuisQHw@mail.gmail.com>
-Subject: Re: [PATCH] signal: Adjust error codes according to restore_user_sigmask()
-To:     Eric Wong <e@80x24.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Kilani <omar.kilani@gmail.com>,
-        Jason Baron <jbaron@akamai.com>, Arnd Bergmann <arnd@arndb.de>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 11:34 PM Eric Wong <e@80x24.org> wrote:
->
-> Deepa Dinamani <deepa.kernel@gmail.com> wrote:
-> > Sorry, I was trying a new setup at work. I should have tested it.
-> > My bad, I've checked this one.
->
-> Thanks.  This is good w.r.t. epoll_pwait and ppoll when applied
-> to 5.0.11 (no fs/io_uring.c).
+The kheaders archive consisting of the kernel headers used for compiling
+bpf programs is in /proc. However there is concern that moving it here
+will make it permanent. Let us move it to /sys/kernel as discussed [1].
 
-Thanks. Al, would you be picking up this patch? I can resend it.
+[1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
 
-> Can't think of anything which uses pselect or aio on my system;
-> but it looks right to me.
->
-> > I've removed the questionable reported-by, since we're not sure if
-> > it is actually the same issue.
->
-> Yes, I hope Omar can test this, too.
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+This patch applies on top of the previous patch that was applied to the
+driver tree:
+https://lore.kernel.org/patchwork/patch/1067310/
 
-Omar, would you be able to test this?
+ kernel/kheaders.c | 40 ++++++++++++++++------------------------
+ 1 file changed, 16 insertions(+), 24 deletions(-)
 
-Thanks,
-Deepa
+diff --git a/kernel/kheaders.c b/kernel/kheaders.c
+index 70ae6052920d..6a16f8f6898d 100644
+--- a/kernel/kheaders.c
++++ b/kernel/kheaders.c
+@@ -8,9 +8,8 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/proc_fs.h>
++#include <linux/kobject.h>
+ #include <linux/init.h>
+-#include <linux/uaccess.h>
+ 
+ /*
+  * Define kernel_headers_data and kernel_headers_data_end, within which the
+@@ -31,39 +30,32 @@ extern char kernel_headers_data;
+ extern char kernel_headers_data_end;
+ 
+ static ssize_t
+-ikheaders_read_current(struct file *file, char __user *buf,
+-		      size_t len, loff_t *offset)
++ikheaders_read(struct file *file,  struct kobject *kobj,
++	       struct bin_attribute *bin_attr,
++	       char *buf, loff_t off, size_t len)
+ {
+-	return simple_read_from_buffer(buf, len, offset,
+-				       &kernel_headers_data,
+-				       &kernel_headers_data_end -
+-				       &kernel_headers_data);
++	memcpy(buf, &kernel_headers_data + off, len);
++	return len;
+ }
+ 
+-static const struct file_operations ikheaders_file_ops = {
+-	.read = ikheaders_read_current,
+-	.llseek = default_llseek,
++static struct bin_attribute kheaders_attr __ro_after_init = {
++	.attr = {
++		.name = "kheaders.tar.xz",
++		.mode = S_IRUGO,
++	},
++	.read = &ikheaders_read,
+ };
+ 
+ static int __init ikheaders_init(void)
+ {
+-	struct proc_dir_entry *entry;
+-
+-	/* create the current headers file */
+-	entry = proc_create("kheaders.tar.xz", S_IRUGO, NULL,
+-			    &ikheaders_file_ops);
+-	if (!entry)
+-		return -ENOMEM;
+-
+-	proc_set_size(entry,
+-		      &kernel_headers_data_end -
+-		      &kernel_headers_data);
+-	return 0;
++	kheaders_attr.size = (&kernel_headers_data_end -
++			      &kernel_headers_data);
++	return sysfs_create_bin_file(kernel_kobj, &kheaders_attr);
+ }
+ 
+ static void __exit ikheaders_cleanup(void)
+ {
+-	remove_proc_entry("kheaders.tar.xz", NULL);
++	sysfs_remove_bin_file(kernel_kobj, &kheaders_attr);
+ }
+ 
+ module_init(ikheaders_init);
+-- 
+2.21.0.1020.gf2820cf01a-goog
