@@ -2,175 +2,141 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CE5C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF0CC04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34AD82075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="QYIb4xuk"
+	by mail.kernel.org (Postfix) with ESMTP id E27472087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:41:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556865716;
+	bh=qAxjj5uiF5zEnzRbrg8NBWm/r/MITYyDqVpA7K94d04=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AyO9ujvsdd2tFTc0+BeAHHo5uYLScYCvyBs4B+0FhS5kXcXD1zjnl1++enU7uZdrX
+	 xv50Y7bWzaH6mO65aIPRcLiLN7NvLfPjh8CuilgQCsi0SJoHeWiJxNaWFc9DI5dvWx
+	 H3M5oOE4N3D4ysNrwZl8lDzRgMoUTbXZzG1+LWvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbfECGkY (ORCPT
+        id S1726836AbfECGly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:40:24 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:56561 "EHLO pegase1.c-s.fr"
+        Fri, 3 May 2019 02:41:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbfECGkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:40:20 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44wMvP2gb7z9tyt1;
-        Fri,  3 May 2019 08:40:17 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=QYIb4xuk; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id kDtKsYuNxSjv; Fri,  3 May 2019 08:40:17 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44wMvP1TTkz9tysx;
-        Fri,  3 May 2019 08:40:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556865617; bh=zJpKbWhCowhTRHfZ53KmsRJ1mIVebZ+JchC1KFAjbKo=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=QYIb4xukOtwgDVLs+pJZPTGbpVBeVlabgsshGCExJ05l3rCUJQAAdKDyTiwI800K9
-         4t4Ir0LGSIe9PyJlxTAlo1N3gL/9UbFUlIRAY78PmbyumTS5YzhJg9pkADSCuFkOuG
-         FiPKc2bhdxPJgNsujo92s2hlRkj+WmSFALMgeAsk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1E22C8B7F9;
-        Fri,  3 May 2019 08:40:18 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id daFoRVdbv_D7; Fri,  3 May 2019 08:40:18 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.6])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EFBF78B75A;
-        Fri,  3 May 2019 08:40:17 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E78DB66204; Fri,  3 May 2019 06:40:17 +0000 (UTC)
-Message-Id: <6fb61d1c9104b0324d4a9c445f431c0928c7ea25.1556865423.git.christophe.leroy@c-s.fr>
-In-Reply-To: <298f344bdb21ab566271f5d18c6782ed20f072b7.1556865423.git.christophe.leroy@c-s.fr>
-References: <298f344bdb21ab566271f5d18c6782ed20f072b7.1556865423.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 3/3] powerpc/module64: Use symbolic instructions names.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri,  3 May 2019 06:40:17 +0000 (UTC)
+        id S1725804AbfECGlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 02:41:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CC3D2075E;
+        Fri,  3 May 2019 06:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556865712;
+        bh=qAxjj5uiF5zEnzRbrg8NBWm/r/MITYyDqVpA7K94d04=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T/xHj6l6GTULrzqty/QE9n+V3E7brgc1EE3YPacTpehUKVBEwYEB8Kjpj6eaNywET
+         vOVTIu5pClz9D1ixUfyq2wi+fG23/JAt0fEXA4iWbz4fYGFM70dWGs3kIuIpiDPLE5
+         z1ZErmGEyIuJkJ4kZlIVEyXnanSfyuAg225XdKNg=
+Date:   Fri, 3 May 2019 08:41:49 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah@kernel.org, devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Felix Guo <felixguoxiuping@gmail.com>
+Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
+ KUnit tests
+Message-ID: <20190503064149.GB20723@kroah.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-13-brendanhiggins@google.com>
+ <20190502110220.GD12416@kroah.com>
+ <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
+ <a49c5088-a821-210c-66de-f422536f5b01@gmail.com>
+ <CAFd5g44iWRchQKdJYtjRtPY6e-6e0eXpKXXsx5Ooi6sWE474KA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFd5g44iWRchQKdJYtjRtPY6e-6e0eXpKXXsx5Ooi6sWE474KA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To increase readability/maintainability, replace hard coded
-instructions values by symbolic names.
+On Thu, May 02, 2019 at 04:45:29PM -0700, Brendan Higgins wrote:
+> On Thu, May 2, 2019 at 2:16 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >
+> > On 5/2/19 11:07 AM, Brendan Higgins wrote:
+> > > On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >>
+> > >> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
+> > >>> From: Felix Guo <felixguoxiuping@gmail.com>
+> > >>>
+> > >>> The ultimate goal is to create minimal isolated test binaries; in the
+> > >>> meantime we are using UML to provide the infrastructure to run tests, so
+> > >>> define an abstract way to configure and run tests that allow us to
+> > >>> change the context in which tests are built without affecting the user.
+> > >>> This also makes pretty and dynamic error reporting, and a lot of other
+> > >>> nice features easier.
+> > >>>
+> > >>> kunit_config.py:
+> > >>>   - parse .config and Kconfig files.
+> > >>>
+> > >>> kunit_kernel.py: provides helper functions to:
+> > >>>   - configure the kernel using kunitconfig.
+> > >>>   - build the kernel with the appropriate configuration.
+> > >>>   - provide function to invoke the kernel and stream the output back.
+> > >>>
+> > >>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
+> > >>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > >>
+> > >> Ah, here's probably my answer to my previous logging format question,
+> > >> right?  What's the chance that these wrappers output stuff in a standard
+> > >> format that test-framework-tools can already parse?  :)
+> 
+> To be clear, the test-framework-tools format we are talking about is
+> TAP13[1], correct?
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
-v3: fixed warning by adding () in an 'if' around X | Y (unlike said in v2 history, this change was forgotten in v2)
-v2: rearranged comments
+Yes.
 
- arch/powerpc/kernel/module_64.c | 53 +++++++++++++++++++++++++++--------------
- 1 file changed, 35 insertions(+), 18 deletions(-)
+> My understanding is that is what kselftest is being converted to use.
 
-diff --git a/arch/powerpc/kernel/module_64.c b/arch/powerpc/kernel/module_64.c
-index c2e1b06253b8..b33a5d5e2d35 100644
---- a/arch/powerpc/kernel/module_64.c
-+++ b/arch/powerpc/kernel/module_64.c
-@@ -133,20 +133,27 @@ struct ppc64_stub_entry
-  * the stub, but it's significantly shorter to put these values at the
-  * end of the stub code, and patch the stub address (32-bits relative
-  * to the TOC ptr, r2) into the stub.
-+ *
-+ * addis   r11,r2, <high>
-+ * addi    r11,r11, <low>
-+ * std     r2,R2_STACK_OFFSET(r1)
-+ * ld      r12,32(r11)
-+ * ld      r2,40(r11)
-+ * mtctr   r12
-+ * bctr
-  */
--
- static u32 ppc64_stub_insns[] = {
--	0x3d620000,			/* addis   r11,r2, <high> */
--	0x396b0000,			/* addi    r11,r11, <low> */
-+	PPC_INST_ADDIS | __PPC_RT(R11) | __PPC_RA(R2),
-+	PPC_INST_ADDI | __PPC_RT(R11) | __PPC_RA(R11),
- 	/* Save current r2 value in magic place on the stack. */
--	0xf8410000|R2_STACK_OFFSET,	/* std     r2,R2_STACK_OFFSET(r1) */
--	0xe98b0020,			/* ld      r12,32(r11) */
-+	PPC_INST_STD | __PPC_RS(R2) | __PPC_RA(R1) | R2_STACK_OFFSET,
-+	PPC_INST_LD | __PPC_RT(R12) | __PPC_RA(R11) | 32,
- #ifdef PPC64_ELF_ABI_v1
- 	/* Set up new r2 from function descriptor */
--	0xe84b0028,			/* ld      r2,40(r11) */
-+	PPC_INST_LD | __PPC_RT(R2) | __PPC_RA(R11) | 40,
- #endif
--	0x7d8903a6,			/* mtctr   r12 */
--	0x4e800420			/* bctr */
-+	PPC_INST_MTCTR | __PPC_RS(R12),
-+	PPC_INST_BCTR,
- };
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
-@@ -704,18 +711,21 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
- 		         *	ld r2, ...(r12)
- 			 *	add r2, r2, r12
- 			 */
--			if ((((uint32_t *)location)[0] & ~0xfffc)
--			    != 0xe84c0000)
-+			if ((((uint32_t *)location)[0] & ~0xfffc) !=
-+			    (PPC_INST_LD | __PPC_RT(R2) | __PPC_RA(R12)))
- 				break;
--			if (((uint32_t *)location)[1] != 0x7c426214)
-+			if (((uint32_t *)location)[1] !=
-+			    (PPC_INST_ADD | __PPC_RT(R2) | __PPC_RA(R2) | __PPC_RB(R12)))
- 				break;
- 			/*
- 			 * If found, replace it with:
- 			 *	addis r2, r12, (.TOC.-func)@ha
- 			 *	addi r2, r12, (.TOC.-func)@l
- 			 */
--			((uint32_t *)location)[0] = 0x3c4c0000 + PPC_HA(value);
--			((uint32_t *)location)[1] = 0x38420000 + PPC_LO(value);
-+			((uint32_t *)location)[0] = PPC_INST_ADDIS | __PPC_RT(R2) |
-+						    __PPC_RA(R12) | PPC_HA(value);
-+			((uint32_t *)location)[1] = PPC_INST_ADDI | __PPC_RT(R2) |
-+						    __PPC_RA(R12) | PPC_LO(value);
- 			break;
- 
- 		case R_PPC64_REL16_HA:
-@@ -769,12 +779,19 @@ static unsigned long create_ftrace_stub(const Elf64_Shdr *sechdrs,
- {
- 	struct ppc64_stub_entry *entry;
- 	unsigned int i, num_stubs;
-+	/*
-+	 * ld      r12,PACATOC(r13)
-+	 * addis   r12,r12,<high>
-+	 * addi    r12,r12,<low>
-+	 * mtctr   r12
-+	 * bctr
-+	 */
- 	static u32 stub_insns[] = {
--		0xe98d0000 | PACATOC, 	/* ld      r12,PACATOC(r13)	*/
--		0x3d8c0000,		/* addis   r12,r12,<high>	*/
--		0x398c0000, 		/* addi    r12,r12,<low>	*/
--		0x7d8903a6, 		/* mtctr   r12			*/
--		0x4e800420, 		/* bctr				*/
-+		PPC_INST_LD | __PPC_RT(R12) | __PPC_RA(R13) | PACATOC,
-+		PPC_INST_ADDIS | __PPC_RT(R12) | __PPC_RA(R12),
-+		PPC_INST_ADDI | __PPC_RT(R12) | __PPC_RA(R12),
-+		PPC_INST_MTCTR | __PPC_RS(R12),
-+		PPC_INST_BCTR,
- 	};
- 	long reladdr;
- 
--- 
-2.13.3
+Yes, and I think it's almost done.  The core of kselftest provides
+functions that all tests can use to log messages in the correct format.
 
+The core of kunit should also log the messages in this format as well,
+and not rely on the helper scripts as Frank points out, not everyone
+will use/want them.  Might as well make it easy for everyone to always
+do the right thing and not force it to always be added in later.
+
+thanks,
+
+greg k-h
