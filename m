@@ -7,58 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA11C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E736C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6117E2087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6DA205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556864374;
-	bh=UqQQOPlU2INJkBjAjHVp4nB5LyICa6M1lsSmQYb3YWo=;
+	s=default; t=1556864376;
+	bh=DtRkhsRTEVGy/5JNaQdHrxuwwPT2DKwxYrFqi/4DC/k=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=PFBtPDgFwnrXaH89RBWF0QQNIJgjoWYvkSMvVXREV8Uy8JZK8e3damu82yOR4dj7k
-	 rcgeCv89Qisyn3SwDrDWUuJAM5tbq9GCyNXVWoXXAEhuq9R3i/i8qv10DPHdnOUBgn
-	 zfSEV5xa5px1n+K9yX0cWBrV5QUT3Wsxr2XnH3zk=
+	b=mhIXm8OnrN5Et40RRF+Nq04SSoNxy1leREjIneXTh6sYZ8jjaux8h74BpulDt+aso
+	 2CWIHWFrx8Jfy/cAijX+cAmgFVB4EuL0a7z0rZI1BTG1tfgyCLJmbWe2LroxOuna3+
+	 Kf1FTtPb9XnwWJmaEIkKBxdzw32ak/B5GBhs2OmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfECGS7 (ORCPT
+        id S1726943AbfECGTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:18:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53074 "EHLO
+        Fri, 3 May 2019 02:19:35 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53150 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbfECGS5 (ORCPT
+        with ESMTP id S1725794AbfECGS7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:18:57 -0400
+        Fri, 3 May 2019 02:18:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ZQwUU+J/MQcrEGIy0MJ+HGRMeveOuqWSbA/IkAltfgs=; b=dBcYRvUe1aCP
-        YZGZsViJliQgDvfMwTe4+d113vEp7lkGUS7j9+9b0hacgeOKj4nV6j9rfXymYydE48ER93PKLjne8
-        5qNi67Fq6TvXnRW3RgKVYGbLeTHwwcLOrvQLTtKF6W3JccRjWJHGdmelTC9HnbavV/QJf5lKY4KJE
-        icsyw=;
+        List-Archive; bh=RUsRVfQr6MguLInMJKL39V77To+2NWYQGfs+Cy74AZc=; b=HUfBrwsys3c9
+        9Dt1PQxIotdyW3CYO8aiuYRs1N/l2NZ+uP28FmjaJ0M1mZU5L73PNJ74utkuLQF20c0583X4a3aHl
+        M4JGTFpWoJAU+nbanufqoumNNbHPcE3wjSNLF7KHwME2v26POHeLR3DY+Csd5QptBtCbFjtnCkuy3
+        9ZY/Y=;
 Received: from [42.29.24.106] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hMRWw-0000Wg-Oi; Fri, 03 May 2019 06:18:47 +0000
+        id 1hMRX4-0000Yb-J8; Fri, 03 May 2019 06:18:55 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 6D839441D58; Fri,  3 May 2019 07:18:42 +0100 (BST)
+        id D75A2441D57; Fri,  3 May 2019 07:18:48 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Ross Zwisler <zwisler@google.com>, stable@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: Intel: avoid Oops if DMA setup fails" to the asoc tree
-In-Reply-To: <20190429182517.210909-1-zwisler@google.com>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: ab3100: Set fixed_uV instead of min_uV for fixed regulators" to the regulator tree
+In-Reply-To: <20190502142233.24730-2-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190503061842.6D839441D58@finisterre.ee.mobilebroadband>
-Date:   Fri,  3 May 2019 07:18:42 +0100 (BST)
+Message-Id: <20190503061848.D75A2441D57@finisterre.ee.mobilebroadband>
+Date:   Fri,  3 May 2019 07:18:48 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: Intel: avoid Oops if DMA setup fails
+   regulator: ab3100: Set fixed_uV instead of min_uV for fixed regulators
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,64 +87,59 @@ to this mail.
 Thanks,
 Mark
 
-From 0efa3334d65b7f421ba12382dfa58f6ff5bf83c4 Mon Sep 17 00:00:00 2001
-From: Ross Zwisler <zwisler@chromium.org>
-Date: Mon, 29 Apr 2019 12:25:17 -0600
-Subject: [PATCH] ASoC: Intel: avoid Oops if DMA setup fails
+From e219c2b3dc773a5a78f88ada9e07e281a9dad06b Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Thu, 2 May 2019 22:22:33 +0800
+Subject: [PATCH] regulator: ab3100: Set fixed_uV instead of min_uV for fixed
+ regulators
 
-Currently in sst_dsp_new() if we get an error return from sst_dma_new()
-we just print an error message and then still complete the function
-successfully.  This means that we are trying to run without sst->dma
-properly set up, which will result in NULL pointer dereference when
-sst->dma is later used.  This was happening for me in
-sst_dsp_dma_get_channel():
+Slightly better readability by setting fixed_uV instead of min_uV.
 
-        struct sst_dma *dma = dsp->dma;
-	...
-        dma->ch = dma_request_channel(mask, dma_chan_filter, dsp);
-
-This resulted in:
-
-   BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
-   IP: sst_dsp_dma_get_channel+0x4f/0x125 [snd_soc_sst_firmware]
-
-Fix this by adding proper error handling for the case where we fail to
-set up DMA.
-
-This change only affects Haswell and Broadwell systems.  Baytrail
-systems explicilty opt-out of DMA via sst->pdata->resindex_dma_base
-being set to -1.
-
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Cc: stable@vger.kernel.org
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/intel/common/sst-firmware.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/regulator/ab3100.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/intel/common/sst-firmware.c b/sound/soc/intel/common/sst-firmware.c
-index 1e067504b604..f830e59f93ea 100644
---- a/sound/soc/intel/common/sst-firmware.c
-+++ b/sound/soc/intel/common/sst-firmware.c
-@@ -1251,11 +1251,15 @@ struct sst_dsp *sst_dsp_new(struct device *dev,
- 		goto irq_err;
+diff --git a/drivers/regulator/ab3100.c b/drivers/regulator/ab3100.c
+index edde907a7062..438509f55f05 100644
+--- a/drivers/regulator/ab3100.c
++++ b/drivers/regulator/ab3100.c
+@@ -354,7 +354,6 @@ static int ab3100_get_voltage_regulator_external(struct regulator_dev *reg)
+ }
  
- 	err = sst_dma_new(sst);
--	if (err)
--		dev_warn(dev, "sst_dma_new failed %d\n", err);
-+	if (err)  {
-+		dev_err(dev, "sst_dma_new failed %d\n", err);
-+		goto dma_err;
-+	}
- 
- 	return sst;
- 
-+dma_err:
-+	free_irq(sst->irq, sst);
- irq_err:
- 	if (sst->ops->free)
- 		sst->ops->free(sst);
+ static const struct regulator_ops regulator_ops_fixed = {
+-	.list_voltage = regulator_list_voltage_linear,
+ 	.enable      = ab3100_enable_regulator,
+ 	.disable     = ab3100_disable_regulator,
+ 	.is_enabled  = ab3100_is_enabled_regulator,
+@@ -401,7 +400,7 @@ ab3100_regulator_desc[AB3100_NUM_REGULATORS] = {
+ 		.n_voltages = 1,
+ 		.type = REGULATOR_VOLTAGE,
+ 		.owner = THIS_MODULE,
+-		.min_uV = LDO_A_VOLTAGE,
++		.fixed_uV = LDO_A_VOLTAGE,
+ 		.enable_time = 200,
+ 	},
+ 	{
+@@ -411,7 +410,7 @@ ab3100_regulator_desc[AB3100_NUM_REGULATORS] = {
+ 		.n_voltages = 1,
+ 		.type = REGULATOR_VOLTAGE,
+ 		.owner = THIS_MODULE,
+-		.min_uV = LDO_C_VOLTAGE,
++		.fixed_uV = LDO_C_VOLTAGE,
+ 		.enable_time = 200,
+ 	},
+ 	{
+@@ -421,7 +420,7 @@ ab3100_regulator_desc[AB3100_NUM_REGULATORS] = {
+ 		.n_voltages = 1,
+ 		.type = REGULATOR_VOLTAGE,
+ 		.owner = THIS_MODULE,
+-		.min_uV = LDO_D_VOLTAGE,
++		.fixed_uV = LDO_D_VOLTAGE,
+ 		.enable_time = 200,
+ 	},
+ 	{
 -- 
 2.20.1
 
