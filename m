@@ -2,124 +2,173 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB81C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F74C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E71F2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96E02075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:46:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="fAazJZIj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CyQ4K5S6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfECQqP (ORCPT
+        id S1728560AbfECQqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 12:46:15 -0400
-Received: from mail-eopbgr750083.outbound.protection.outlook.com ([40.107.75.83]:46613
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726468AbfECQqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 12:46:15 -0400
+        Fri, 3 May 2019 12:46:55 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41248 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728433AbfECQqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 12:46:54 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d9so2954740pls.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 09:46:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZyeKXjuLVx4N3byCKRmz6/xpeVmn9stm0hlwtFtwJ38=;
- b=fAazJZIjQnYDfWZ0OVyUF0MZ8bUu3ni6qCeF2wB6JNuQLDfYts8MnvCA2P+x1nw8W43Tf+0Uv2owYZ85K5yHrlJ0akmPMMeLkVRrFswa0lvifQgd6uyYasK1bQguWkQXvTcBJTjO8T6qu94XF2P2W7l/uIVVE/TERYhTne7MwyA=
-Received: from BL0PR02MB5681.namprd02.prod.outlook.com (20.177.241.92) by
- BL0PR02MB5554.namprd02.prod.outlook.com (20.177.241.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.15; Fri, 3 May 2019 16:46:12 +0000
-Received: from BL0PR02MB5681.namprd02.prod.outlook.com
- ([fe80::6cde:f726:b36e:752d]) by BL0PR02MB5681.namprd02.prod.outlook.com
- ([fe80::6cde:f726:b36e:752d%5]) with mapi id 15.20.1856.012; Fri, 3 May 2019
- 16:46:12 +0000
-From:   Dragan Cvetic <draganc@xilinx.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Derek Kiernan <dkiernan@xilinx.com>
-Subject: RE: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioctl
-Thread-Topic: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioctl
-Thread-Index: AQHU/UVLGOE4w/2X+U+k4o4ho4ebiKZYHQyAgAGHpkA=
-Date:   Fri, 3 May 2019 16:46:12 +0000
-Message-ID: <BL0PR02MB568178214B7789431977E91BCB350@BL0PR02MB5681.namprd02.prod.outlook.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-5-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172345.GC1874@kroah.com>
-In-Reply-To: <20190502172345.GC1874@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=draganc@xilinx.com; 
-x-originating-ip: [149.199.80.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8b40228e-8ec4-4a49-2613-08d6cfe6da03
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BL0PR02MB5554;
-x-ms-traffictypediagnostic: BL0PR02MB5554:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <BL0PR02MB55545B0DEE28FC221B76E5D8CB350@BL0PR02MB5554.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
-x-forefront-prvs: 0026334A56
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(39860400002)(136003)(346002)(396003)(189003)(199004)(13464003)(6916009)(7736002)(6506007)(53546011)(316002)(4744005)(9686003)(76116006)(76176011)(66946007)(186003)(6246003)(66066001)(73956011)(102836004)(26005)(256004)(7696005)(14444005)(55016002)(4326008)(99286004)(6306002)(66476007)(5660300002)(305945005)(478600001)(8936002)(71190400001)(54906003)(476003)(74316002)(486006)(33656002)(53936002)(8676002)(68736007)(11346002)(86362001)(71200400001)(107886003)(229853002)(52536014)(14454004)(81156014)(6436002)(81166006)(66556008)(2906002)(3846002)(6116002)(64756008)(966005)(25786009)(66446008)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB5554;H:BL0PR02MB5681.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: kDgpFwzbaFdpn54ECrAxppV6QyF54Rk/HpcCdlGrSd6I4Run4EalxQLK43hj1hRVRUjhYWxpBZ/y9YDN77izkxzls5GKhlMYRQvvmkwhWRQ1OY5VBlXQW9R9iSKGHaCxqoMiUyGehnrTaC6pmNxLenBZwQwlub9EO6JTgYwQzSEM0n4lILmv/NKOKx+MgQmzHBaxRE9nV86wcfdf5MX39empKw5d2kaHUrej2KhadxJK9biL5MWIeYkfN8SYB6/oSDS1uBaZxOO74faAkQfKqNXiMRhRcdRObnoSmP9QngtBnDuGfLUvFA69gbrKCo/eZCdJEshs1OlMsWtS+frGi7t7V+EW3y8/+cBkGOPomtuSPbGk8na0dwd4DGscsx+1E7SlTynydEoGgv4tIt0yLDM8S0VCcYd0+cYv7QMbObs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I6Kj7J5O6mOYwdObKv7gUJ8XCyM1RwJ3zMEkMb1FKIA=;
+        b=CyQ4K5S6LZCPez3P3h4Yxxkjx5MBxsP5BHCmBIL6WSY0qUlz3mMC4lIpY2Vhriry6a
+         oXx9z7VzntcU6eC6xQcsSIzOqmACQmL8DeTBYaE8HymEL4qWrTlVSAmi/F6yKSegpaUY
+         yzTiLzZgcSRyaY8DoLKKDvUdX+If3vo60mwTg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I6Kj7J5O6mOYwdObKv7gUJ8XCyM1RwJ3zMEkMb1FKIA=;
+        b=bzTKxfPedBMBILoKoO+IrHIE8g+RhmUr+//U2lYf5UwReAN5k8/GpEnNv9nWWUd71z
+         FaJp1q8jDJ/NBPolmg4azyfD7oGndKkmUM18Ec4LPjfwj73XBB/WinmHe9yODbzhP/Tw
+         lrp71+TdWcMkhcZpVRVDxG+5sswaONGyA0rYz1ZcljV72KJlaQuYsBotbPgDH5zDf+Mc
+         B2LHXLh+C4L34xm9X/LsWJJpDN/kEIb4zcmj0Df7N525kRuCawBkbxHj1C0aBvQovUxI
+         z+VwjFmzzdoCzNNZ3FEz67xBQPsQsCf+wGbuYx/vtnMYM+072Ej6DjAfu1pXWWnoVEsa
+         ay5w==
+X-Gm-Message-State: APjAAAUsoogG9wwg0Fqkzg7PkN+AcJON1Zy/efAavzKwGo6OaHA06xjA
+        yvIdBbfvpvBpNu3h0mnJu6OV6Q==
+X-Google-Smtp-Source: APXvYqxWg5BvQCMW5sbTPT2MdGAVLNcxxY3llDZ9nW22Kb9AR5oS4k2LVUS2tXpLJVTQ1tgp8Uwwrg==
+X-Received: by 2002:a17:902:1c1:: with SMTP id b59mr11866780plb.182.1556902013175;
+        Fri, 03 May 2019 09:46:53 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id f21sm3394538pfn.30.2019.05.03.09.46.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 09:46:52 -0700 (PDT)
+Date:   Fri, 3 May 2019 09:46:51 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     "michael.kao" <michael.kao@mediatek.com>, fan.chen@mediatek.com,
+        jamesjj.liao@mediatek.com, dawei.chien@mediatek.com,
+        louis.yu@mediatek.com, roger.lu@mediatek.com,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/8] arm64: dts: mt8183: add thermal zone node
+Message-ID: <20190503164651.GB40515@google.com>
+References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
+ <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
+ <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b40228e-8ec4-4a49-2613-08d6cfe6da03
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2019 16:46:12.5121
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB5554
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On Fri, May 03, 2019 at 04:03:58PM +0800, Hsin-Yi Wang wrote:
+> On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
+> >
+> > Add thermal zone node to Mediatek MT8183 dts file.
+> >
+> > Signed-off-by: Michael Kao <michael.kao@mediatek.com>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 64 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 64 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > index 926df75..b92116f 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > @@ -334,6 +334,67 @@
+> >                         status = "disabled";
+> >                 };
+> >
+> > +               thermal: thermal@1100b000 {
+> > +                       #thermal-sensor-cells = <1>;
+> > +                       compatible = "mediatek,mt8183-thermal";
+> > +                       reg = <0 0x1100b000 0 0x1000>;
+> > +                       interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_THERM>,
+> > +                                <&infracfg CLK_INFRA_AUXADC>;
+> > +                       clock-names = "therm", "auxadc";
+> > +                       resets = <&infracfg  MT8183_INFRACFG_AO_THERM_SW_RST>;
+> > +                       mediatek,auxadc = <&auxadc>;
+> > +                       mediatek,apmixedsys = <&apmixedsys>;
+> > +                       mediatek,hw-reset-temp = <117000>;
+> > +                       nvmem-cells = <&thermal_calibration>;
+> > +                       nvmem-cell-names = "calibration-data";
+> > +               };
+> > +
+> > +               thermal-zones {
+> > +                       cpu_thermal: cpu_thermal {
+> > +                               polling-delay-passive = <1000>;
+> > +                               polling-delay = <1000>;
+> > +
+> > +                               thermal-sensors = <&thermal 0>;
+> > +                               sustainable-power = <1500>;
+> > +                       };
+> > +
+> > +                       tzts1: tzts1 {
+> > +                               polling-delay-passive = <1000>;
+> > +                               polling-delay = <1000>;
+> > +                               thermal-sensors = <&thermal 1>;
+> Is sustainable-power required for tzts? Though it's an optional
+> property, kernel would have warning:
+> [    0.631556] thermal thermal_zone1: power_allocator:
+> sustainable_power will be estimated
+> [    0.639586] thermal thermal_zone2: power_allocator:
+> sustainable_power will be estimated
+> [    0.647611] thermal thermal_zone3: power_allocator:
+> sustainable_power will be estimated
+> [    0.655635] thermal thermal_zone4: power_allocator:
+> sustainable_power will be estimated
+> [    0.663658] thermal thermal_zone5: power_allocator:
+> sustainable_power will be estimated
+> if no sustainable-power assigned.
 
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Thursday 2 May 2019 18:24
-> To: Dragan Cvetic <draganc@xilinx.com>
-> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
-sts.infradead.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
-l.org; Derek Kiernan <dkiernan@xilinx.com>
-> Subject: Re: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioc=
-tl
->=20
-> On Sat, Apr 27, 2019 at 11:04:58PM +0100, Dragan Cvetic wrote:
-> > Add char device interface per DT node present and support
-> > file operations:
-> > - open(),
-> > - close(),
-> > - unlocked_ioctl(),
-> > - compat_ioctl().
->=20
-> Why do you need compat_ioctl() at all?  Any "new" driver should never
-> need it.  Just create your structures properly.
+The property is indeed optional, if it isn't specified IPA will use
+the sum of the minimum power of all 'power actors' of the zone as
+estimate (see estimate_sustainable_power()). This may lead to overly
+agressive throttling, since the nominal sustainable power will always
+be <= the requested power.
 
-This was a comment from Arnd, see https://lkml.org/lkml/2019/3/19/377.
-Please advise.
+In my understanding the sustainable power may varies between devices,
+even for the same SoC. One could have all the hardware crammed into a
+tiny plastic enclosure (e.g. ASUS Chromebit), another might have a
+laptop form factor and a metal enclosure (e.g. ASUS C201). Both
+examples are based on an Rockchip rk3288, but they have completely
+different thermal behavior, and would likely have different values for
+'sustainable-power'.
 
->=20
-> thanks,
->=20
-> greg k-h
+In this sense I tend to consider 'sustainable-power' more a device,
+than a SoC property. You could specify a 'reasonable' value as a
+starting point, but it will likely not be optimal for all or even most
+devices. The warning might even be useful for device makers by
+indicating them that there is room for tweaking.
+
+I'm not an expert in the matter though, just happend to look into this
+recently :)
+
+Cheers
+
+Matthias
