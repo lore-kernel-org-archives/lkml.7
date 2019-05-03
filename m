@@ -2,149 +2,114 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5224AC004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01079C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC7E2081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45DF2081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:31:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lnij2FPq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbfECFaD (ORCPT
+        id S1726405AbfECFbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 01:30:03 -0400
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:58930 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfECFaC (ORCPT
+        Fri, 3 May 2019 01:31:38 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39428 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfECFbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 01:30:02 -0400
-X-AuditID: c0a8fbf4-501ff700000014c1-38-5ccbd1d6c247
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 00.CF.05313.6D1DBCC5; Fri,  3 May 2019 07:29:58 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Fri, 3 May 2019 07:29:54 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "sebastian.reichel@collabora.com" <sebastian.reichel@collabora.com>
-CC:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "Haikola, Heikki" <Heikki.Haikola@fi.rohmeurope.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v14 7/8] power: supply: Initial support for ROHM BD70528
- PMIC charger block
-Thread-Topic: [PATCH v14 7/8] power: supply: Initial support for ROHM
- BD70528 PMIC charger block
-Thread-Index: AQHVAMfZHKgWTJ2VgUSUAlV6mCtylaZYHZeAgAChyIA=
-Date:   Fri, 3 May 2019 05:29:53 +0000
-Message-ID: <322fa765ddd72972aba931c706657661ca685afa.camel@fi.rohmeurope.com>
-References: <cover.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
-         <eece016c86483d55befab1a06fb299c9d6d17134.1556787930.git.matti.vaittinen@fi.rohmeurope.com>
-         <20190502195049.brysexbyyq7khtr4@earth.universe>
-In-Reply-To: <20190502195049.brysexbyyq7khtr4@earth.universe>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EECE8E2DA13B254A9D94FC7DADE8ADED@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Fri, 3 May 2019 01:31:37 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w22so858304pgi.6
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 22:31:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vbA+h1SWOeC+A9lxbgQ9nyiTDR7RZSnCD5SEiXc6Chc=;
+        b=Lnij2FPqvmSvFcPoNxUkNY/JS83WNPIYA/lZMituG08241YitIDNyfyYAsIOyD2Vh7
+         mPJcAWqwUWvDcuiJDnes/xhUyrREUUDjtGk72y8FQISb0WqkF/rLk2Y5TsKzoEM1vnpc
+         t78JV1qjKZGg6Bg4HyO2Q+i76zrgSDWvXioq5M5V33GczeXpvgZQjQFnqx3Mlct7t1Tn
+         CpexQ+3yESDh8pR647ZS71i1ozQR7ZdPGPXXXGF6WoreVf5pNozrPzsHYgBwzR9Vd17M
+         e4+0EOPKodzzCLmTEltxUcckAVPtISrrtbLDxDNUCw3BTjZTOFiqLj7nJUFHyOeL/Ezt
+         xztg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vbA+h1SWOeC+A9lxbgQ9nyiTDR7RZSnCD5SEiXc6Chc=;
+        b=c4/+9qSKmnlHoPlsbjanbNveU7dKU35Ez2amzAd9Lx9hvgM/dllPA8tFhmPngHUKoF
+         TQ8FtwtbN+3ep+xwxlZQNSi4AAa+KThdJy7oa7Byqj4u9Y5E9XdZckP4GuKUO0kQcQus
+         1aMYd0wPx9y3LQeRvHvnOI7KTLzKLpO7aMnx+QO6TwMumz8XxtPR63hVeqUsDnSvV8fK
+         XSiUBa7+HVi5NSFLU5/skiz0kr4QFTETNxC3jHcyFKe/0DaCFRpif1zyQw5ibSDb5Hte
+         3l6KazL68hSBxoknebmH762GxkqaBc+m7A8ZntmzJ1T6X4Ih+8ypVk1/XFpMk0vknW0w
+         EkDg==
+X-Gm-Message-State: APjAAAXT8oy8cfS8LSGdGwIhr7dem5ZeVTidRDl20o2OXCqVCKnf5RK/
+        aDRbGNuCm/KZLtGwj057dubP
+X-Google-Smtp-Source: APXvYqwdnJ1wGysGVAJNxsji+b4A9Fu8qkeqQd4DxFfJGQBIFlAwwOQZoni5fRsBgxCIpFPuLIDZLg==
+X-Received: by 2002:a65:5246:: with SMTP id q6mr8137656pgp.296.1556861496796;
+        Thu, 02 May 2019 22:31:36 -0700 (PDT)
+Received: from localhost.localdomain ([2405:204:72c7:3835:31df:f367:f70b:ed86])
+        by smtp.gmail.com with ESMTPSA id l15sm1152226pgb.71.2019.05.02.22.31.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 22:31:36 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        robh+dt@kernel.org
+Cc:     linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loic.pallardy@st.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/3] Add Avenger96 board support
+Date:   Fri,  3 May 2019 11:01:20 +0530
+Message-Id: <20190503053123.6828-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUwURxjO7MftHrDNcJ7eFHuNXk0bTUFNjE5a25p+2KVNTWNb0jbEYykr
-        S+Q+snugtH+IH7FHa6QWUznhtAbU2ivGM02BaMNdqSgQlJSiKCclXDGgQC9QkEjO7rhV+DPz
-        zPvM8zzvJO/wtGUvl8EXuX2y6paKHaYUpuX0g3Bmb3dH7pqje1fiuu4/Obx//CSHp2rbGXx4
-        MG7Cx1q7WDzw7+8AT/d8SeGquVMUTnx9m8Xnj80B/EdzjQlPHmgF+NKPPSZ8o+FXDse/76Rw
-        /fVuCtfUX2Zwd/tbeN/FVg4ne88xOHZ3Cx4aSdKbloihYAiIEzf2cWIw9IXYGKsDYlMgxonh
-        M36T2N97wST+EAqxYtNMOSd+F5ylxMnws++nfpq6MV/ylX5QVOhe/WpeqnL/1k+MN7lsV0fX
-        N1Q5qFxWAcw8guvQpf09oAKk8BbYC1Db2d2UcWgDqK9zVD/wvAluRBV9HIFW+DaqrhLJFRr+
-        bUaRgw9ZYrQISujoWBAQbIX56K+2ZsbAL6Gb/lM0wQxcgfZEJh7dEeAWdO/+bdrIug5Q6B//
-        IyMzfAX5+/dwBANoR/7ycYpgGtpQeHiGNbqGqO7CVdrAi9HIUPL/ugNdnB1kSKM0XInONq82
-        pJvQt/2jrIGXo6qvBjmjh3R0pTrOVIIlgQUJgXl1YIE6sEAdWKA+DtgzALmkouJCySevzVLl
-        kizVo7j07TOPKwyM2ZlqBA+j2VEAeeBIE6avdORaWKlUK3NFwdM85VgsBFv00lP5noIyRdIU
-        p1pSLGtRgHjaYRW2JdpzLUKBVPa5rHoeU0t5xmETHjRHci2QJO+QZa+sPmaf4XkHEt69ppum
-        q3KhvGt7UbFvnqZ4MzFPybBqsrtAVqUSn+Ik0+LU9HEhVJqe20DkguaVXHrVkLaDDXzLicFa
-        mo/MkPXIwLC+jkXu1NIWxu1xyxk2IXZVl0EiU0rcT0JHgU1/+yIhStg0/Ws98RzV4yg97s4h
-        8kzNJ81TGeXg/MEEzsr0rnntk4k8i/+NxvHp+pz0ypwx+0f5xzf/fDf7N5BuX7Vz247nl77Y
-        8MuhF9YvX8fW2GvfUxo+vndY6Tkyt2Jr11xwQ5Kunr25e+CdDw9kTpvj4bwTwzbrc/amKW+2
-        7Jw0Nzm7fHTpwLnXc+KJ2LVEJ35zZGbny6c3e7W+IQejKdLaVbSqSf8BrLZD8xcEAAA=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gU2ViYXN0aWFuLA0KDQpPbiBUaHUsIDIwMTktMDUtMDIgYXQgMjE6NTAgKzAyMDAsIFNl
-YmFzdGlhbiBSZWljaGVsIHdyb3RlOg0KPiBIaSwNCj4gDQo+IE9uIFRodSwgTWF5IDAyLCAyMDE5
-IGF0IDEyOjE3OjEyUE0gKzAzMDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90ZToNCj4gPiBST0hNIEJE
-NzA1MjggUE1JQyBpbmNsdWRlcyBiYXR0ZXJ5IGNoYXJnZXIgYmxvY2suIFN1cHBvcnQgY2hhcmdl
-cg0KPiA+IHN0YXVzIHF1ZXJpZXMgYW5kIGRvaW5nIGZldyBiYXNpYyBzZXR0aW5ncyBsaWtlIGlu
-cHV0IGN1cnJlbnQgbGltaXQNCj4gPiBhbmQgY2hhcmdpbmcgY3VycmVudC4NCj4gPiANCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVy
-b3BlLmNvbT4NCj4gPiBBY2tlZC1ieTogU2ViYXN0aWFuIFJlaWNoZWwgPHNlYmFzdGlhbi5yZWlj
-aGVsQGNvbGxhYm9yYS5jb20+DQo+IA0KPiBQbGVhc2Ugb25seSBhZGQgQWNrZWQtYnkgd2hlbiB5
-b3UgcmVjZWl2ZSBvbmUsIGVzcGVjaWFsbHkgd2hlbiB5b3UNCj4gZG8gbm90IGltcGxlbWVudCBh
-bGwgcmVxdWVzdGVkIGNoYW5nZXMgOikNCg0KU29ycnkuIFRoaXMgaXMgbXkgYmFkLiBJIHRyYW5z
-bGF0ZWQgeW91cjogIk90aGVyd2lzZSBsb29rcyBvayB0byBtZS4iDQotIHRvIGFuIGFjay4gQW5k
-IEkgd2FzIHByZXR0eSBzdXJlIHlvdSBkaWRuJ3Qgd2FudCB0byBzdGF0aWNpemUgdGhlDQpsb2Nh
-bCBhcnJheS4gSSBzaG91bGQndmUga25vd24gYmV0dGVyLiBJIHNob3VsZCBoYXZlIHdhaXRlZCBm
-b3IgeW91ciBPaw0KdG8gbGVhdmluZyB0aGUgc3RhdGljIG91dCBiZWZvcmUgYWRkaW5nIGFuIGFj
-ay4NCg0KPiANCj4gPiArc3RhdGljIGludCBiZDcwNTI4X2dldF9pcnFzKHN0cnVjdCBwbGF0Zm9y
-bV9kZXZpY2UgKnBkZXYsDQo+ID4gKwkJCSAgICBzdHJ1Y3QgYmQ3MDUyOF9wc3kgKmJkcHN5KQ0K
-PiA+ICt7DQo+ID4gKwlpbnQgaXJxLCBpLCByZXQ7DQo+ID4gKwl1bnNpZ25lZCBpbnQgbWFzazsN
-Cj4gPiArCWNvbnN0IHN0cnVjdCBpcnFfbmFtZV9wYWlyIGJkNzA1MjhfY2hnX2lycXNbXSA9IHsN
-Cj4gPiArCQl7IC5uID0gImJkNzA1MjgtYmF0LW92LXJlcyIsIC5oID0NCj4gPiBCRF9JUlFfSE5E
-KEJBVF9PVl9SRVMpIH0sDQo+ID4gKwkJeyAubiA9ICJiZDcwNTI4LWJhdC1vdi1kZXQiLCAuaCA9
-DQo+ID4gQkRfSVJRX0hORChCQVRfT1ZfREVUKSB9LA0KPiA+ICsJCXsgLm4gPSAiYmQ3MDUyOC1i
-YXQtZGVhZCIsIC5oID0gQkRfSVJRX0hORChEQkFUX0RFVCkgfSwNCj4gPiArCQl7IC5uID0gImJk
-NzA1MjgtYmF0LXdhcm1lZCIsIC5oID0gQkRfSVJRX0hORChDT0xEX1JFUykNCj4gPiB9LA0KPiA+
-ICsJCXsgLm4gPSAiYmQ3MDUyOC1iYXQtY29sZCIsIC5oID0gQkRfSVJRX0hORChDT0xEX0RFVCkg
-fSwNCj4gPiArCQl7IC5uID0gImJkNzA1MjgtYmF0LWNvb2xlZCIsIC5oID0gQkRfSVJRX0hORChI
-T1RfUkVTKQ0KPiA+IH0sDQo+ID4gKwkJeyAubiA9ICJiZDcwNTI4LWJhdC1ob3QiLCAuaCA9IEJE
-X0lSUV9ITkQoSE9UX0RFVCkgfSwNCj4gPiArCQl7IC5uID0gImJkNzA1MjgtY2hnLXRzaGQiLCAu
-aCA9IEJEX0lSUV9ITkQoQ0hHX1RTRCkgfSwNCj4gPiArCQl7IC5uID0gImJkNzA1MjgtYmF0LXJl
-bW92ZWQiLCAuaCA9IEJEX0lSUV9ITkQoQkFUX1JNVikNCj4gPiB9LA0KPiA+ICsJCXsgLm4gPSAi
-YmQ3MDUyOC1iYXQtZGV0ZWN0ZWQiLCAuaCA9IEJEX0lSUV9ITkQoQkFUX0RFVCkNCj4gPiB9LA0K
-PiA+ICsJCXsgLm4gPSAiYmQ3MDUyOC1kY2luMi1vdi1yZXMiLCAuaCA9DQo+ID4gQkRfSVJRX0hO
-RChEQ0lOMl9PVl9SRVMpIH0sDQo+ID4gKwkJeyAubiA9ICJiZDcwNTI4LWRjaW4yLW92LWRldCIs
-IC5oID0NCj4gPiBCRF9JUlFfSE5EKERDSU4yX09WX0RFVCkgfSwNCj4gPiArCQl7IC5uID0gImJk
-NzA1MjgtZGNpbjItcmVtb3ZlZCIsIC5oID0NCj4gPiBCRF9JUlFfSE5EKERDSU4yX1JNVikgfSwN
-Cj4gPiArCQl7IC5uID0gImJkNzA1MjgtZGNpbjItZGV0ZWN0ZWQiLCAuaCA9DQo+ID4gQkRfSVJR
-X0hORChEQ0lOMl9ERVQpIH0sDQo+ID4gKwkJeyAubiA9ICJiZDcwNTI4LWRjaW4xLXJlbW92ZWQi
-LCAuaCA9DQo+ID4gQkRfSVJRX0hORChEQ0lOMV9STVYpIH0sDQo+ID4gKwkJeyAubiA9ICJiZDcw
-NTI4LWRjaW4xLWRldGVjdGVkIiwgLmggPQ0KPiA+IEJEX0lSUV9ITkQoRENJTjFfREVUKSB9LA0K
-PiA+ICsJfTsNCj4gDQo+IFBsZWFzZSBhbHNvIG1ha2UgaXQgc3RhdGljLiBUaGF0IHdpbGwgbW92
-ZSB0aGUgd2hvbGUgdGhpbmcgdG8NCj4gcmVhZC1vbmx5IChiZWNhdXNlIG9mIGNvbnN0KSBkYXRh
-IHNlY3Rpb24uIFRoaXMgaW1wcm92ZXMgdGhlDQo+IHNlY3VyaXR5IGFuZCB0aGUgcmVxdWlyZWQg
-Y3B1IHRpbWUgYXQgdGhlIHNhbWUgdGltZSAobm8gbmVlZA0KPiB0byBjb3B5IHZhbHVlcyB0byB0
-aGUgc3RhY2spLg0KDQpPay4gSSBzZWUgeW91ciBwb2ludCBhbmQgaXQgc291bmRzIHJlYXNvbmFi
-bGUuDQoNCj4gQnV0IHRoaXMgY2FuIGJlIGNoYW5nZWQgbGF0ZXIsIHNvIG5vIG5lZWQgdG8gYmxv
-Y2sgdGhlIHdob2xlDQo+IHBhdGNoc2V0IGp1c3QgYmVjYXVzZSBvZiB0aGlzLiBJZiBMZWUgd2Fu
-dHMgdG8gbWVyZ2UgdGhpcyBmb3INCj4gNS4yLCB0aGF0IHdvdWxkIGJlIGZpbmUgd2l0aCBtZS4g
-QnV0IHBsZWFzZSBhZGQgaXQgZGlyZWN0bHkgaW4NCj4gYSBuZXcgcGF0Y2ggcmV2aXNpb24gaWYg
-dGhlIHBhdGNoIGRvZXMgbm90IG1ha2UgaXQgaW50byA1LjIuDQoNCkl0IHdvdWxkIGJlIGdyZWF0
-IHRvIGdldCB0aGlzIGluLCBpdCBoYXMgYmVlbiByZXNwaW5uZWQgcXVpdGUgYSBmZXcNCnRpbWVz
-IGFscmVhZHkuLi4gSSBob3BlIExlZSB0YWtlcyB0aGUgc2VyaWVzIGluIHdoZW4gaGUncyBiYWNr
-IGZyb20gaGlzDQpsZWF2ZSAtIGJ1dCBpdCBpcyBub3QgYSBwcm9ibGVtIGZvciBtZSB0byBjaGFu
-Z2UgdGhpcyB3aXRoIGxhdGVyIHBhdGNoDQoob3IgY2hhbmdlIHRoaXMgaW4gdGhlIHNlcmllcyBp
-ZiBpdCBzdGlsbCBuZWVkcyB0byBiZSByZXdvcmtlZCkuDQoNCg0KQnIsDQoJTWF0dGkgVmFpdHRp
-bmVuDQo=
+Hello,
+
+This patchset adds Avenger96 board support. This board is one of the
+Consumer Edition boards of the 96Boards family from Arrow Electronics
+featuring STM32MP157A MPU and has the following features:
+    
+SoC: STM32MP157AAC
+PMIC: STPMIC1A
+RAM: 1024 Mbyte @ 533MHz
+Storage: eMMC v4.51: 8 Gbyte
+         microSD Socket: UHS-1 v3.01
+Ethernet Port: 10/100/1000 Mbit/s, IEEE 802.3 Compliant
+Wireless: WiFi 5 GHz & 2.4GHz IEEE 802.11a/b/g/n/ac
+          Bluetooth®v4.2 (BR/EDR/BLE)
+USB: 2x Type A (USB 2.0) Host and 1x Micro B (USB 2.0) OTG
+Display: HDMI: WXGA (1366x768)@ 60 fps, HDMI 1.4
+LED: 4x User LED, 1x WiFi LED, 1x BT LED
+
+More information about this board can be found in 96Boards website:
+https://www.96boards.org/product/avenger96/
+
+Thanks,
+Mani
+
+Manivannan Sadhasivam (3):
+  dt-bindings: arm: stm32: Document Avenger96 devicetree binding
+  ARM: dts: stm32mp157: Add missing pinctrl definitions
+  ARM: dts: Add Avenger96 devicetree support based on STM32MP157A
+
+ .../devicetree/bindings/arm/stm32/stm32.txt   |   6 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi     |  62 ++++
+ arch/arm/boot/dts/stm32mp157a-avenger96.dts   | 320 ++++++++++++++++++
+ 4 files changed, 389 insertions(+)
+ create mode 100644 arch/arm/boot/dts/stm32mp157a-avenger96.dts
+
+-- 
+2.17.1
+
