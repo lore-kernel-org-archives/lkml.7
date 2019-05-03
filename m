@@ -6,40 +6,39 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FD4C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A0DC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A25C2075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2392E20C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfECH4i (ORCPT
+        id S1727194AbfECH4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:56:38 -0400
-Received: from smtp-out.xnet.cz ([178.217.244.18]:44222 "EHLO smtp-out.xnet.cz"
+        Fri, 3 May 2019 03:56:41 -0400
+Received: from smtp-out.xnet.cz ([178.217.244.18]:44348 "EHLO smtp-out.xnet.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725777AbfECH4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 03:56:34 -0400
+        id S1727166AbfECH4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 03:56:39 -0400
 Received: from meh.true.cz (meh.true.cz [108.61.167.218])
         (Authenticated sender: petr@true.cz)
-        by smtp-out.xnet.cz (Postfix) with ESMTPSA id D7AEE357A;
-        Fri,  3 May 2019 09:56:31 +0200 (CEST)
-Received: by meh.true.cz (OpenSMTPD) with ESMTP id f3cd58c2;
-        Fri, 3 May 2019 09:56:30 +0200 (CEST)
+        by smtp-out.xnet.cz (Postfix) with ESMTPSA id EB492357C;
+        Fri,  3 May 2019 09:56:36 +0200 (CEST)
+Received: by meh.true.cz (OpenSMTPD) with ESMTP id bfb4ad22;
+        Fri, 3 May 2019 09:56:35 +0200 (CEST)
 From:   =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
 To:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>,
-        John Crispin <john@phrozen.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 01/10] of_net: add NVMEM support to of_get_mac_address
-Date:   Fri,  3 May 2019 09:55:58 +0200
-Message-Id: <1556870168-26864-2-git-send-email-ynezz@true.cz>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 03/10] net: macb: support of_get_mac_address new ERR_PTR error
+Date:   Fri,  3 May 2019 09:56:00 +0200
+Message-Id: <1556870168-26864-4-git-send-email-ynezz@true.cz>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556870168-26864-1-git-send-email-ynezz@true.cz>
 References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
@@ -51,143 +50,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many embedded devices have information such as MAC addresses stored
-inside NVMEMs like EEPROMs and so on. Currently there are only two
-drivers in the tree which benefit from NVMEM bindings.
+There was NVMEM support added directly to of_get_mac_address, and it
+uses nvmem_get_mac_address under the hood, so we can remove it. As
+of_get_mac_address can now return NULL and ERR_PTR encoded error values,
+adjust to that as well.
 
-Adding support for NVMEM into every other driver would mean adding a lot
-of repetitive code. This patch allows us to configure MAC addresses in
-various devices like ethernet and wireless adapters directly from
-of_get_mac_address, which is already used by almost every driver in the
-tree.
-
-Predecessor of this patch which used directly MTD layer has originated
-in OpenWrt some time ago and supports already about 497 use cases in 357
-device tree files.
-
-Cc: Alban Bedel <albeu@free.fr>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: John Crispin <john@phrozen.org>
 Signed-off-by: Petr Štetiar <ynezz@true.cz>
 ---
 
- Changes since v1:
-
-  * moved handling of nvmem after mac-address and local-mac-address properties
-
  Changes since v2:
 
-  * moved of_get_mac_addr_nvmem after of_get_mac_addr(np, "address") call
-  * replaced kzalloc, kmemdup and kfree with it's devm variants
-  * introduced of_has_nvmem_mac_addr helper which checks if DT node has nvmem
-    cell with `mac-address`
-  * of_get_mac_address now returns ERR_PTR encoded error value
+ * ERR_PTR and EPROBE_DEFER handling
 
- drivers/of/of_net.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 62 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-index d820f3e..258ceb8 100644
---- a/drivers/of/of_net.c
-+++ b/drivers/of/of_net.c
-@@ -8,8 +8,10 @@
- #include <linux/etherdevice.h>
- #include <linux/kernel.h>
- #include <linux/of_net.h>
-+#include <linux/of_platform.h>
- #include <linux/phy.h>
- #include <linux/export.h>
-+#include <linux/device.h>
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 3da2795..964911a 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4172,15 +4172,13 @@ static int macb_probe(struct platform_device *pdev)
+ 		bp->rx_intr_mask |= MACB_BIT(RXUBR);
  
- /**
-  * of_get_phy_mode - Get phy mode for given device_node
-@@ -47,12 +49,59 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
- 	return NULL;
- }
+ 	mac = of_get_mac_address(np);
+-	if (mac) {
++	if (PTR_ERR(mac) == -EPROBE_DEFER) {
++		err = -EPROBE_DEFER;
++		goto err_out_free_netdev;
++	} else if (!IS_ERR_OR_NULL(mac)) {
+ 		ether_addr_copy(bp->dev->dev_addr, mac);
+ 	} else {
+-		err = nvmem_get_mac_address(&pdev->dev, bp->dev->dev_addr);
+-		if (err) {
+-			if (err == -EPROBE_DEFER)
+-				goto err_out_free_netdev;
+-			macb_get_hwaddr(bp);
+-		}
++		macb_get_hwaddr(bp);
+ 	}
  
-+static const void *of_get_mac_addr_nvmem(struct device_node *np)
-+{
-+	int ret;
-+	u8 mac[ETH_ALEN];
-+	struct property *pp;
-+	struct platform_device *pdev = of_find_device_by_node(np);
-+
-+	if (!pdev)
-+		return ERR_PTR(-ENODEV);
-+
-+	ret = nvmem_get_mac_address(&pdev->dev, &mac);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	pp = devm_kzalloc(&pdev->dev, sizeof(*pp), GFP_KERNEL);
-+	if (!pp)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pp->name = "nvmem-mac-address";
-+	pp->length = ETH_ALEN;
-+	pp->value = devm_kmemdup(&pdev->dev, mac, ETH_ALEN, GFP_KERNEL);
-+	if (!pp->value) {
-+		ret = -ENOMEM;
-+		goto free;
-+	}
-+
-+	ret = of_add_property(np, pp);
-+	if (ret)
-+		goto free;
-+
-+	return pp->value;
-+free:
-+	devm_kfree(&pdev->dev, pp->value);
-+	devm_kfree(&pdev->dev, pp);
-+
-+	return ERR_PTR(ret);
-+}
-+
-+static inline bool of_has_nvmem_mac_addr(struct device_node *np)
-+{
-+	int index = of_property_match_string(np, "nvmem-cell-names",
-+					     "mac-address");
-+	return of_parse_phandle(np, "nvmem-cells", index) != NULL;
-+}
-+
- /**
-  * Search the device tree for the best MAC address to use.  'mac-address' is
-  * checked first, because that is supposed to contain to "most recent" MAC
-  * address. If that isn't set, then 'local-mac-address' is checked next,
-- * because that is the default address.  If that isn't set, then the obsolete
-- * 'address' is checked, just in case we're using an old device tree.
-+ * because that is the default address. If that isn't set, then the obsolete
-+ * 'address' is checked, just in case we're using an old device tree. If any
-+ * of the above isn't set, then try to get MAC address from nvmem cell named
-+ * 'mac-address'.
-  *
-  * Note that the 'address' property is supposed to contain a virtual address of
-  * the register set, but some DTS files have redefined that property to be the
-@@ -64,6 +113,9 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
-  * addresses.  Some older U-Boots only initialized 'local-mac-address'.  In
-  * this case, the real MAC is in 'local-mac-address', and 'mac-address' exists
-  * but is all zeros.
-+ *
-+ * Return: Will be a valid pointer on success, NULL in case there wasn't
-+ *         'mac-address' nvmem cell node found, and ERR_PTR in case of error.
- */
- const void *of_get_mac_address(struct device_node *np)
- {
-@@ -77,6 +129,13 @@ const void *of_get_mac_address(struct device_node *np)
- 	if (addr)
- 		return addr;
- 
--	return of_get_mac_addr(np, "address");
-+	addr = of_get_mac_addr(np, "address");
-+	if (addr)
-+		return addr;
-+
-+	if (!of_has_nvmem_mac_addr(np))
-+		return NULL;
-+
-+	return of_get_mac_addr_nvmem(np);
- }
- EXPORT_SYMBOL(of_get_mac_address);
+ 	err = of_get_phy_mode(np);
 -- 
 1.9.1
 
