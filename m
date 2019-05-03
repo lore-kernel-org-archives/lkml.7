@@ -7,54 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19496C43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AF1C04AAA
 	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD2AE2075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAA32075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556864653;
-	bh=RC1DNti1NMiEre8qjNGRqYDMkXZG/x2c2KWL9kQ7siI=;
+	s=default; t=1556864654;
+	bh=ADDKQJG5H3eYE/KcBeEOhA2qZ7l3VFolzxbFAjLYkmE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Nykm6N0e5t0FyAZlqCZKsCNB49qfsQLIT7FwWkMI9p8sfHLYhtjvfv9w+k//mgtcN
-	 Bqw/Wykaqh+o3g7H6AG6XyEPBnkn+Ly0XtdPp1kvec+KflzSJf0mjpm6xrSt6S9dIG
-	 dJ6DkBdRty+iLmhCS4RoYnZoYt6L9mxqxKXzubaA=
+	b=s20rz2aYWQp60vid9We1puQexIfGS4B7Bk3aMUEKTNG3BcShjtAUMXL6X5251T2t8
+	 y1NLMp9190+400CigR3R4iSNRtcygHDVGu7jDKkADtdAMy41OSr2FW7wnaQlDLYxdM
+	 3vWHQfooey2cFhZKcKz5Cdei9VWHUF6PyO1hq/LA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbfECGYM (ORCPT
+        id S1727132AbfECGYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:24:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33808 "EHLO
+        Fri, 3 May 2019 02:24:13 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34418 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727042AbfECGXu (ORCPT
+        with ESMTP id S1726894AbfECGYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:23:50 -0400
+        Fri, 3 May 2019 02:24:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Gkp2AltP4W1gkJLI9fh3u2b0qzsdnHwlasfeXfRpDcw=; b=jYjeS82pd8Mp
-        F5A9px8eGs40NFiTwq0OmPffyo1Sr2ddjiGy4xleOeHZClwIyP7RSgSELlqcjojAeSvMOiXehqtA6
-        gGvLvSQzjx79aHUMK83zxk6l3GOspmHjD3hlpe+xIq0RacRZICZxat+7u2hgZwYUYSAAzsoLjjMwm
-        oXhHQ=;
+        List-Archive; bh=tdXXDwJac7tPdkzlB2OnCMedUY3PiqwtJOnXJSCSNbo=; b=MJCYK76TFQRN
+        bROxm8/b36YneilQH4Fhfp4z4vt4oZXxSUReHSf+6CpsvzJzd7w495RHlE/K2/dmZTti7GnyYAutq
+        1VnAxHGuUU5o8jbQkJvSHwO70nomI+r9Xafg7H2Q2oaXOmoBGKYsSk41MLmvxApmZ/h61ncHVb4dU
+        vHcGE=;
 Received: from [42.29.24.106] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hMRbh-0000lU-Iv; Fri, 03 May 2019 06:23:41 +0000
+        id 1hMRbd-0000k1-1r; Fri, 03 May 2019 06:23:37 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id D06EA441D56; Fri,  3 May 2019 07:23:37 +0100 (BST)
+        id 68D31441D59; Fri,  3 May 2019 07:23:33 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Pascal Paillet <p.paillet@st.com>
-Subject: Applied "regulator: stm32-pwr: Remove unneeded *desc from struct stm32_pwr_reg" to the regulator tree
-In-Reply-To: <20190430111346.23427-1-axel.lin@ingics.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: SOF: remove redundant null checks of dai" to the asoc tree
+In-Reply-To: <20190502113340.8688-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190503062337.D06EA441D56@finisterre.ee.mobilebroadband>
-Date:   Fri,  3 May 2019 07:23:37 +0100 (BST)
+Message-Id: <20190503062333.68D31441D59@finisterre.ee.mobilebroadband>
+Date:   Fri,  3 May 2019 07:23:33 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: stm32-pwr: Remove unneeded *desc from struct stm32_pwr_reg
+   ASoC: SOF: remove redundant null checks of dai
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -87,67 +90,48 @@ to this mail.
 Thanks,
 Mark
 
-From 7bcbdbe01fa82712f8fece2a07ea30758b76403d Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 30 Apr 2019 19:13:45 +0800
-Subject: [PATCH] regulator: stm32-pwr: Remove unneeded *desc from struct
- stm32_pwr_reg
+From c437ba0300cec1ca8758fdd71a3b2f8cd02c6e2a Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Thu, 2 May 2019 12:33:40 +0100
+Subject: [PATCH] ASoC: SOF: remove redundant null checks of dai
 
-Just use rdev->desc instead.
+Currently there are two null checks of pointer dai in function
+sof_connect_dai_widget and yet there is no null check of dai
+at the end of the function when checking !dai->name.  The latter
+would be a null pointer deference if dai is null (as picked up
+by static analysis), however the function is only ever called
+when dai is successfully allocated, so the null checks are
+redundant. Clean up the code by removing the null checks.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Addresses-Coverity: ("Dereference after null check")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/stm32-pwr.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ sound/soc/sof/topology.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
-index 7b39a41530d4..8bd15e4d2cea 100644
---- a/drivers/regulator/stm32-pwr.c
-+++ b/drivers/regulator/stm32-pwr.c
-@@ -40,7 +40,6 @@ static u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
- 
- struct stm32_pwr_reg {
- 	void __iomem *base;
--	const struct regulator_desc *desc;
- 	u32 ready_mask;
- };
- 
-@@ -61,7 +60,7 @@ static int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
- 
- 	val = readl_relaxed(priv->base + REG_PWR_CR3);
- 
--	return (val & priv->desc->enable_mask);
-+	return (val & rdev->desc->enable_mask);
- }
- 
- static int stm32_pwr_reg_enable(struct regulator_dev *rdev)
-@@ -71,7 +70,7 @@ static int stm32_pwr_reg_enable(struct regulator_dev *rdev)
- 	u32 val;
- 
- 	val = readl_relaxed(priv->base + REG_PWR_CR3);
--	val |= priv->desc->enable_mask;
-+	val |= rdev->desc->enable_mask;
- 	writel_relaxed(val, priv->base + REG_PWR_CR3);
- 
- 	/* use an arbitrary timeout of 20ms */
-@@ -90,7 +89,7 @@ static int stm32_pwr_reg_disable(struct regulator_dev *rdev)
- 	u32 val;
- 
- 	val = readl_relaxed(priv->base + REG_PWR_CR3);
--	val &= ~priv->desc->enable_mask;
-+	val &= ~rdev->desc->enable_mask;
- 	writel_relaxed(val, priv->base + REG_PWR_CR3);
- 
- 	/* use an arbitrary timeout of 20ms */
-@@ -153,7 +152,6 @@ static int stm32_pwr_regulator_probe(struct platform_device *pdev)
- 		if (!priv)
- 			return -ENOMEM;
- 		priv->base = base;
--		priv->desc = &stm32_pwr_desc[i];
- 		priv->ready_mask = ready_mask_table[i];
- 		config.driver_data = priv;
- 
+diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
+index 2b9de1b97447..1f71857298a9 100644
+--- a/sound/soc/sof/topology.c
++++ b/sound/soc/sof/topology.c
+@@ -1127,15 +1127,13 @@ static int sof_connect_dai_widget(struct snd_soc_component *scomp,
+ 		switch (w->id) {
+ 		case snd_soc_dapm_dai_out:
+ 			rtd->cpu_dai->capture_widget = w;
+-			if (dai)
+-				dai->name = rtd->dai_link->name;
++			dai->name = rtd->dai_link->name;
+ 			dev_dbg(sdev->dev, "tplg: connected widget %s -> DAI link %s\n",
+ 				w->name, rtd->dai_link->name);
+ 			break;
+ 		case snd_soc_dapm_dai_in:
+ 			rtd->cpu_dai->playback_widget = w;
+-			if (dai)
+-				dai->name = rtd->dai_link->name;
++			dai->name = rtd->dai_link->name;
+ 			dev_dbg(sdev->dev, "tplg: connected widget %s -> DAI link %s\n",
+ 				w->name, rtd->dai_link->name);
+ 			break;
 -- 
 2.20.1
 
