@@ -2,173 +2,102 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F74C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9778FC04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96E02075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:46:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CyQ4K5S6"
+	by mail.kernel.org (Postfix) with ESMTP id 722272075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbfECQqz (ORCPT
+        id S1728569AbfECQtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 12:46:55 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41248 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728433AbfECQqy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 12:46:54 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d9so2954740pls.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 09:46:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I6Kj7J5O6mOYwdObKv7gUJ8XCyM1RwJ3zMEkMb1FKIA=;
-        b=CyQ4K5S6LZCPez3P3h4Yxxkjx5MBxsP5BHCmBIL6WSY0qUlz3mMC4lIpY2Vhriry6a
-         oXx9z7VzntcU6eC6xQcsSIzOqmACQmL8DeTBYaE8HymEL4qWrTlVSAmi/F6yKSegpaUY
-         yzTiLzZgcSRyaY8DoLKKDvUdX+If3vo60mwTg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I6Kj7J5O6mOYwdObKv7gUJ8XCyM1RwJ3zMEkMb1FKIA=;
-        b=bzTKxfPedBMBILoKoO+IrHIE8g+RhmUr+//U2lYf5UwReAN5k8/GpEnNv9nWWUd71z
-         FaJp1q8jDJ/NBPolmg4azyfD7oGndKkmUM18Ec4LPjfwj73XBB/WinmHe9yODbzhP/Tw
-         lrp71+TdWcMkhcZpVRVDxG+5sswaONGyA0rYz1ZcljV72KJlaQuYsBotbPgDH5zDf+Mc
-         B2LHXLh+C4L34xm9X/LsWJJpDN/kEIb4zcmj0Df7N525kRuCawBkbxHj1C0aBvQovUxI
-         z+VwjFmzzdoCzNNZ3FEz67xBQPsQsCf+wGbuYx/vtnMYM+072Ej6DjAfu1pXWWnoVEsa
-         ay5w==
-X-Gm-Message-State: APjAAAUsoogG9wwg0Fqkzg7PkN+AcJON1Zy/efAavzKwGo6OaHA06xjA
-        yvIdBbfvpvBpNu3h0mnJu6OV6Q==
-X-Google-Smtp-Source: APXvYqxWg5BvQCMW5sbTPT2MdGAVLNcxxY3llDZ9nW22Kb9AR5oS4k2LVUS2tXpLJVTQ1tgp8Uwwrg==
-X-Received: by 2002:a17:902:1c1:: with SMTP id b59mr11866780plb.182.1556902013175;
-        Fri, 03 May 2019 09:46:53 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id f21sm3394538pfn.30.2019.05.03.09.46.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 09:46:52 -0700 (PDT)
-Date:   Fri, 3 May 2019 09:46:51 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     "michael.kao" <michael.kao@mediatek.com>, fan.chen@mediatek.com,
-        jamesjj.liao@mediatek.com, dawei.chien@mediatek.com,
-        louis.yu@mediatek.com, roger.lu@mediatek.com,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH 1/8] arm64: dts: mt8183: add thermal zone node
-Message-ID: <20190503164651.GB40515@google.com>
-References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
- <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
- <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
+        Fri, 3 May 2019 12:49:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728056AbfECQtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 12:49:11 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C20B2075C;
+        Fri,  3 May 2019 16:49:07 +0000 (UTC)
+Date:   Fri, 3 May 2019 12:49:06 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Message-ID: <20190503124906.576c21f7@gandalf.local.home>
+In-Reply-To: <CALCETrUcEH8kswYGNkoupVVP+3hEsTA4BWTfLk-RY_RfkDsHGw@mail.gmail.com>
+References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+        <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
+        <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
+        <20190502185225.0cdfc8bc@gandalf.local.home>
+        <20190502193129.664c5b2e@gandalf.local.home>
+        <20190502195052.0af473cf@gandalf.local.home>
+        <20190503092959.GB2623@hirez.programming.kicks-ass.net>
+        <20190503092247.20cc1ff0@gandalf.local.home>
+        <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+        <20190503123126.3a2801be@gandalf.local.home>
+        <20190503163527.GI2606@hirez.programming.kicks-ass.net>
+        <CALCETrUcEH8kswYGNkoupVVP+3hEsTA4BWTfLk-RY_RfkDsHGw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, 3 May 2019 09:44:35 -0700
+Andy Lutomirski <luto@kernel.org> wrote:
 
-On Fri, May 03, 2019 at 04:03:58PM +0800, Hsin-Yi Wang wrote:
-> On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
+> On Fri, May 3, 2019 at 9:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
 > >
-> > Add thermal zone node to Mediatek MT8183 dts file.
+> > On Fri, May 03, 2019 at 12:31:26PM -0400, Steven Rostedt wrote:  
+> > > I guess the real question is, what's the performance impact of doing
+> > > that?  
 > >
-> > Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 64 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 64 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > index 926df75..b92116f 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > @@ -334,6 +334,67 @@
-> >                         status = "disabled";
-> >                 };
-> >
-> > +               thermal: thermal@1100b000 {
-> > +                       #thermal-sensor-cells = <1>;
-> > +                       compatible = "mediatek,mt8183-thermal";
-> > +                       reg = <0 0x1100b000 0 0x1000>;
-> > +                       interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>;
-> > +                       clocks = <&infracfg CLK_INFRA_THERM>,
-> > +                                <&infracfg CLK_INFRA_AUXADC>;
-> > +                       clock-names = "therm", "auxadc";
-> > +                       resets = <&infracfg  MT8183_INFRACFG_AO_THERM_SW_RST>;
-> > +                       mediatek,auxadc = <&auxadc>;
-> > +                       mediatek,apmixedsys = <&apmixedsys>;
-> > +                       mediatek,hw-reset-temp = <117000>;
-> > +                       nvmem-cells = <&thermal_calibration>;
-> > +                       nvmem-cell-names = "calibration-data";
-> > +               };
-> > +
-> > +               thermal-zones {
-> > +                       cpu_thermal: cpu_thermal {
-> > +                               polling-delay-passive = <1000>;
-> > +                               polling-delay = <1000>;
-> > +
-> > +                               thermal-sensors = <&thermal 0>;
-> > +                               sustainable-power = <1500>;
-> > +                       };
-> > +
-> > +                       tzts1: tzts1 {
-> > +                               polling-delay-passive = <1000>;
-> > +                               polling-delay = <1000>;
-> > +                               thermal-sensors = <&thermal 1>;
-> Is sustainable-power required for tzts? Though it's an optional
-> property, kernel would have warning:
-> [    0.631556] thermal thermal_zone1: power_allocator:
-> sustainable_power will be estimated
-> [    0.639586] thermal thermal_zone2: power_allocator:
-> sustainable_power will be estimated
-> [    0.647611] thermal thermal_zone3: power_allocator:
-> sustainable_power will be estimated
-> [    0.655635] thermal thermal_zone4: power_allocator:
-> sustainable_power will be estimated
-> [    0.663658] thermal thermal_zone5: power_allocator:
-> sustainable_power will be estimated
-> if no sustainable-power assigned.
+> > Is there anyone that considers i386 a performance platform?  
+> 
+> Not me.  As far as I'm concerned, I will basically always gladly trade
+> several cycles for simplicity on 32-bit.
+>
 
-The property is indeed optional, if it isn't specified IPA will use
-the sum of the minimum power of all 'power actors' of the zone as
-estimate (see estimate_sustainable_power()). This may lead to overly
-agressive throttling, since the nominal sustainable power will always
-be <= the requested power.
+So should I wait for a new PATCH 1 from Peter to implement it this way?
+I'd like to get this into the next merge window (although, I am marking
+it for stable since it fixes a bug for live kernel patching).
 
-In my understanding the sustainable power may varies between devices,
-even for the same SoC. One could have all the hardware crammed into a
-tiny plastic enclosure (e.g. ASUS Chromebit), another might have a
-laptop form factor and a metal enclosure (e.g. ASUS C201). Both
-examples are based on an Rockchip rk3288, but they have completely
-different thermal behavior, and would likely have different values for
-'sustainable-power'.
+Linus, what's your thoughts?
 
-In this sense I tend to consider 'sustainable-power' more a device,
-than a SoC property. You could specify a 'reasonable' value as a
-starting point, but it will likely not be optimal for all or even most
-devices. The warning might even be useful for device makers by
-indicating them that there is room for tweaking.
-
-I'm not an expert in the matter though, just happend to look into this
-recently :)
-
-Cheers
-
-Matthias
+-- Steve
