@@ -2,176 +2,93 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97961C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAB9C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB822075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96ECF2075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:27:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0EVyFqE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jVKOra8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbfECR0P (ORCPT
+        id S1728540AbfECR1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:26:15 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:34355 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfECR0O (ORCPT
+        Fri, 3 May 2019 13:27:54 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45919 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbfECR1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:26:14 -0400
-Received: by mail-yw1-f68.google.com with SMTP id u14so4901288ywe.1;
-        Fri, 03 May 2019 10:26:13 -0700 (PDT)
+        Fri, 3 May 2019 13:27:54 -0400
+Received: by mail-lf1-f66.google.com with SMTP id q23so1199855lfc.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 10:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DocVtyuDeHQRG32pg5UwnwTFNToS8yf9UPgc4/qdeYU=;
-        b=e0EVyFqETr57jizVPCvWUQZE7uxN6M2tTc+6UdysEiRdPcr1cUNisT47b8063Pc99g
-         UOzOrmQa122NOXaPegyqwwhWpRsgnY4VhirbDLzS218imz+LgrEM5hQtIDAsBfl0BC3m
-         OGmovcqBiT9YF2y4+QPlnfZhicVEvytgX5iu5ClPNMrbSYh/7TsFDq2/u62EJ2D1lBwv
-         RrUBkzMqGsG+usGlzaJSsSYmubj2awu1HoPbW/2IiVdYlh6oRdW0qKj7vyj/RQs87ZUL
-         fStnyKsmIJi+HGwogJQtm+woSVwvgBeC5/TWuNpjwt++JQMNG9NpAZZdtp+hrVt9rLwL
-         2Pyw==
+         :cc;
+        bh=JD/+KRFZYiJzz1j6lF2eo7yI0q7TdGtFXXsyT5+MfK4=;
+        b=jVKOra8vfuCU5mccq/lFKnIzApNW6ra6COBEgkuUKz+2BZ18QfAWGfZ/diR/dKxPPZ
+         Ja1RG0Kis4sKSE3iDE2HFsJ4v9jobsh4vfXEAZ1kltpc14mLw0HRxkMzxStlD+Y8CEYA
+         lP+t9NeY6JM9acjIeD2wpS3to5Up7n1WGezxw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DocVtyuDeHQRG32pg5UwnwTFNToS8yf9UPgc4/qdeYU=;
-        b=nSxqj+VRlnu2s41a7q7JhuDSjSDrfiHZYZ1Opk3A5A3PC2RAhRe7IhCxzzBsPH2Qys
-         jN4/Nm4O8iUDo4mY/Tb3oAcRdst8vhYyEqvLYjxTmCD+wX10JPoBHEpcmvmq8FZNspp1
-         hGGVTaPLhpMA7N9eNYDRgyW9uzZ2ZTs9d4WP0ZyQ+GihULJnl3xxJmsw+UlOi50eawSE
-         OSBNsZ8hKudxWjP6t5rcitRlpJYJipS1NEvTrdVCG5jEKQzeWVU1/YxvqzrPCpwFH4q/
-         r6egOcGfXaBGqOLJnHzt+EUdJOz6A1Q5chXEmgtG3K6dq8R1XDyT9riM1aFr/piMnjwS
-         RkJw==
-X-Gm-Message-State: APjAAAVJfRzOjf7u/v/+eb6QHjUsM/lwjttrMoel0nAkRbdUZ2lc9hun
-        qkUNzGFLp/YE8CurusfdrxCDTsDwxz0EMWXSWiFVSkJQkik=
-X-Google-Smtp-Source: APXvYqxPOL5lm9yxwUgbMIR/AwgPkpjd6Je1pA7eUdFjFpMljhdACsq//C9CApPakzISWWiJLvydO7To7D6ERb3dsHs=
-X-Received: by 2002:a25:74c9:: with SMTP id p192mr8777605ybc.507.1556904373293;
- Fri, 03 May 2019 10:26:13 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=JD/+KRFZYiJzz1j6lF2eo7yI0q7TdGtFXXsyT5+MfK4=;
+        b=Uep7B1irYHDimX1uFK3tQ8Q+6VKpSZcSHf2Sm8SuKHYPx8CyJDTL1fsepdZ9BgoJl2
+         OqoLWTbvH5Qza4nhpcZZ7lV/zqdHaZrkVZUHn0gIz3fWRJa8h6K4rHK0CJ/NKOy5d+Mm
+         iCl3R/JEc8UfZnPi+2dZ0h3o3JstILDkh+7fqiXvS+DUpxFw/GUvqU7dCfneXPG1lq1e
+         YXYEUFGZnB7oN8r6CCsorfWo0XpTc51tG/efdra2L6BCZYs1coEjzUnBOwie4wzatjMI
+         MTS7UCZ9FAnRuzYF83kEN7i+pugZbFWDtwPIHoGpWb3KHPIOTJXoUy5ALVfXQEybJSY7
+         iduA==
+X-Gm-Message-State: APjAAAXokTtMskrU36FgQ0Ax+7Bq1YiLQuO7tU9DiE4HuBbucT1ybvlN
+        txd73YVqWAP/oGehIposB+dE/CA6TaE=
+X-Google-Smtp-Source: APXvYqx4BsrW1AoDrmO1sa5sSlDESyQzuLpwbyGd56xC/VhqvH9/lcsduZpuGweTkE/EBbcI1DK6Hg==
+X-Received: by 2002:a19:550d:: with SMTP id n13mr5621818lfe.127.1556904472245;
+        Fri, 03 May 2019 10:27:52 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id b2sm501530ljk.75.2019.05.03.10.27.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 10:27:52 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id b12so5882416lji.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 10:27:51 -0700 (PDT)
+X-Received: by 2002:a2e:834d:: with SMTP id l13mr5938995ljh.97.1556904470714;
+ Fri, 03 May 2019 10:27:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
- <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
- <20190503153531.GJ12608@fieldses.org>
-In-Reply-To: <20190503153531.GJ12608@fieldses.org>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 3 May 2019 13:26:01 -0400
-Message-ID: <CAOQ4uxi6MRT=1nFqPD3cfEfBxHsGdUm=FgTjv3ts2bb4zSYwsw@mail.gmail.com>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     NeilBrown <neilb@suse.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190430165626.31639-1-andriy.shevchenko@linux.intel.com> <6f789244-64b9-bd1f-6a9e-e5aeacbf2407@linux.intel.com>
+In-Reply-To: <6f789244-64b9-bd1f-6a9e-e5aeacbf2407@linux.intel.com>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Fri, 3 May 2019 10:27:14 -0700
+X-Gmail-Original-Message-ID: <CAE=gft5vUoMpabMyw8u5W65FNiKiNdVSoNgwprwaE+E=K+y-0Q@mail.gmail.com>
+Message-ID: <CAE=gft5vUoMpabMyw8u5W65FNiKiNdVSoNgwprwaE+E=K+y-0Q@mail.gmail.com>
+Subject: Re: [PATCH v2] mfd: intel-lpss: Add Intel Comet Lake PCI IDs
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 12:03 PM J. Bruce Fields <bfields@fieldses.org> wrot=
-e:
+On Thu, May 2, 2019 at 12:14 AM Jarkko Nikula
+<jarkko.nikula@linux.intel.com> wrote:
 >
-> On Thu, May 02, 2019 at 12:02:33PM +1000, NeilBrown wrote:
-> > On Tue, Dec 06 2016, J. Bruce Fields wrote:
+> On 4/30/19 7:56 PM, Andy Shevchenko wrote:
+> > Intel Comet Lake has the same LPSS than Intel Cannon Lake.
+> > Add the new IDs to the list of supported devices.
 > >
-> > > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrote:
-> > >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.hu> =
-wrote:
-> > >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
-> > >> > <andreas.gruenbacher@gmail.com> wrote:
-> > >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.gruenb=
-acher@gmail.com>:
-> > >> >
-> > >> >>> It's not hard to come up with a heuristic that determines if a
-> > >> >>> system.nfs4_acl value is equivalent to a file mode, and to ignor=
-e the
-> > >> >>> attribute in that case. (The file mode is transmitted in its own
-> > >> >>> attribute already, so actually converting .) That way, overlayfs=
- could
-> > >> >>> still fail copying up files that have an actual ACL. It's still =
-an
-> > >> >>> ugly hack ...
-> > >> >>
-> > >> >> Actually, that kind of heuristic would make sense in the NFS clie=
-nt
-> > >> >> which could then hide the "system.nfs4_acl" attribute.
-> > >> >
-> > >> > Even simpler would be if knfsd didn't send the attribute if not
-> > >> > necessary.  Looks like there's code actively creating the nfs4_acl=
- on
-> > >> > the wire even if the filesystem had none:
-> > >> >
-> > >> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
-> > >> >     if (!pacl)
-> > >> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
-> > >> >
-> > >> > What's the point?
-> > >>
-> > >> That's how the protocol is specified.
-> > >
-> > > Yep, even if we could make that change to nfsd it wouldn't help the
-> > > client with the large number of other servers that are out there
-> > > (including older knfsd's).
-> > >
-> > > --b.
-> > >
-> > >> (I'm not saying that that's very helpful.)
-> > >>
-> > >> Andreas
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> > - update i2c info
+> >   drivers/mfd/intel-lpss-pci.c | 13 +++++++++++++
+> >   1 file changed, 13 insertions(+)
 > >
-> > Hi everyone.....
-> >  I have a customer facing this problem, and so stumbled onto the email
-> >  thread.
-> >  Unfortunately it didn't resolve anything.  Maybe I can help kick thing=
-s
-> >  along???
-> >
-> >  The core problem here is that NFSv4 and ext4 use different and largely
-> >  incompatible ACL implementations.  There is no way to accurately
-> >  translate from one to the other in general (common specific examples
-> >  can be converted).
-> >
-> >  This means that either:
-> >    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
-> >       versa) or
-> >    2/ overlayfs need to accept that sometimes it cannot copy ACLs, and
-> >       that is OK.
-> >
-> >  Silently not copying the ACLs is probably not a good idea as it might
-> >  result in inappropriate permissions being given away.  So if the
-> >  sysadmin wants this (and some clearly do), they need a way to
-> >  explicitly say "I accept the risk".
->
-> So, I feel like silently copying ACLs up *also* carries a risk, if that
-> means switching from server-enforcement to client-enforcement of those
-> permissions.
->
-> Sorry, I know we had another thread recently about permissions in this
-> situation, and I've forgotten the conclusion.
->
-> Out of curiosity, what's done with selinux labels?
->
+> Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 
-overlayfs calls security_inode_copy_up_xattr(name) which
-can fail (<0) allow (0) or skip(1).
-
-selinux_inode_copy_up_xattr() as well as smack_inode_copy_up_xattr()
-skip their own xattr on copy up and fail any other xattr copy up.
-
-Thanks,
-Amir.
+Tested-by: Evan Green <evgreen@chromium.org>
