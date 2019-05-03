@@ -2,86 +2,115 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D806C004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC39EC004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2CFE2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556918502;
-	bh=YAZxWrsiRX3Ld34/nINOdZ//GV5Wgyxn0ODfF6feze8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=s76iGSaJkpF+bAET2GYRrzLyXSe8MJ29u8bbDKrKc9yV+er1qlPrvRA8s+WzTJa4L
-	 Z4leCRNYGAZFEiQLVdZiiK3hSqPPUqTcKVwoo7q9c1K0zYbZtb+qEAwNqsfKb1bFaC
-	 I0WHpmC7Rno1i6ly+eoEVe08bwMGub7cVsM/Jeuc=
+	by mail.kernel.org (Postfix) with ESMTP id 7203F20645
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:22:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ywbl7kJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfECVVm (ORCPT
+        id S1726654AbfECVWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 17:21:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfECVVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 17:21:41 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84AF22070B;
-        Fri,  3 May 2019 21:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556918501;
-        bh=YAZxWrsiRX3Ld34/nINOdZ//GV5Wgyxn0ODfF6feze8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FPGA1Pv5RUKSVn9vhDrlFvpykfNJmbmdcd1WkL7N6hX96mYYYOOjcUBEkMlD83sMs
-         zVnQY5i8/3MjBqicOyV5GoCV0J0sGGf48NCz7dV9tGzv5mhZtG7emoD3z22kk909d+
-         LSCjpfN6yGPzgiphmDh5FxKbtO/oSY3YXUE2ksts=
-Subject: Re: [PATCH 4.9 00/32] 4.9.173-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190502143314.649935114@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <99f18213-b361-7a59-7e13-d287655b4bc3@kernel.org>
-Date:   Fri, 3 May 2019 15:21:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 3 May 2019 17:22:23 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44040 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfECVWX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 17:22:23 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y13so3477614pfm.11
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 14:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AZfe6Xnlp8VFcttQXUP5Y4s8do4K2Dab61b+eO+6utA=;
+        b=Ywbl7kJHsqNmfa+P0RIOnALkQVqOBZ3rOjAKRARApKe6qorHXO9plEnJ/E6KwmYq9p
+         zZLP1ryFyIwSpDYvxAgWBdgSVsDbm8/Y40/VsTq7CjRlcbtLl6TmN18VUjgl0m4+nbGn
+         Y+IoChQEJB/RlVWi/5OUaY6N6KwVRUrqKLgH4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AZfe6Xnlp8VFcttQXUP5Y4s8do4K2Dab61b+eO+6utA=;
+        b=lRmkSpya5oqpsEp7+IALXA8PusPpNEfKj/aVoY9aPvjJZzPcTvq4ukpnOcJplGinQN
+         D9/JZ99m5ygc3gVj8ZKq0JLcE1Z4qahRfD5KlvB4TjsLpCXZ1d8Q/w9+TB1JK+U0Q2pv
+         BVKN+ybmUPAABNjUlpymTgTy1sWFzGQ91/0za6clmzMch37+uMJbIqux8DGLPPuVPcmG
+         2R6zE/6tk9OakWzcvNMFXldJR5Svkw3mH7kkZ/0LpWxoW1Fyxkk4Hcc9IfOKd5zcJq2q
+         eoOzXvryFcXbZfOt9G3JjCQ1WDMgytK+l7pqzwlcqx+RZR213fvjzYlPsa/ukDHe5SsW
+         bPuA==
+X-Gm-Message-State: APjAAAVbveYVuIFlcuIbvKCYdE3u/XCv5EDnxbg9QvSgRqoY1+Q7WVcU
+        tHpzsxtq/U+qnWScXCPUAmQasw==
+X-Google-Smtp-Source: APXvYqxHbkpyVU3AFiwBC4zYibpjEWUdOnTxjcv/gquMISFOa13IJ3gYibHW3sbdWh1EyzOUBzcDlA==
+X-Received: by 2002:a62:3501:: with SMTP id c1mr14483708pfa.184.1556918542223;
+        Fri, 03 May 2019 14:22:22 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id b77sm9206722pfj.99.2019.05.03.14.22.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 14:22:21 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Cc:     hal@halemmerich.com, linux-rockchip@lists.infradead.org,
+        mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] clk: rockchip: Don't yell about bad mmc phases when getting
+Date:   Fri,  3 May 2019 14:22:08 -0700
+Message-Id: <20190503212208.223232-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-In-Reply-To: <20190502143314.649935114@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/2/19 9:20 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.173 release.
-> There are 32 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 04 May 2019 02:32:02 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.173-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+At boot time, my rk3288-veyron devices yell with 8 lines that look
+like this:
+  [    0.000000] rockchip_mmc_get_phase: invalid clk rate
 
-Compiled and booted on my test system. No dmesg regressions.
+This is because the clock framework at clk_register() time tries to
+get the phase but we don't have a parent yet.
 
-thanks,
--- Shuah
+While the errors appear to be harmless they are still ugly and, in
+general, we don't want yells like this in the log unless they are
+important.
+
+There's no real reason to be yelling here.  We can still return
+-EINVAL to indicate that the phase makes no sense without a parent.
+If someone really tries to do tuning and the clock is reported as 0
+then we'll see the yells in rockchip_mmc_set_phase().
+
+Fixes: 4bf59902b500 ("clk: rockchip: Prevent calculating mmc phase if clock rate is zero")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/clk/rockchip/clk-mmc-phase.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/clk/rockchip/clk-mmc-phase.c b/drivers/clk/rockchip/clk-mmc-phase.c
+index 026a26bb702d..dbec84238ecd 100644
+--- a/drivers/clk/rockchip/clk-mmc-phase.c
++++ b/drivers/clk/rockchip/clk-mmc-phase.c
+@@ -61,10 +61,8 @@ static int rockchip_mmc_get_phase(struct clk_hw *hw)
+ 	u32 delay_num = 0;
+ 
+ 	/* See the comment for rockchip_mmc_set_phase below */
+-	if (!rate) {
+-		pr_err("%s: invalid clk rate\n", __func__);
++	if (!rate)
+ 		return -EINVAL;
+-	}
+ 
+ 	raw_value = readl(mmc_clock->reg) >> (mmc_clock->shift);
+ 
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
