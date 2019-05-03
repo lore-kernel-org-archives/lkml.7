@@ -2,152 +2,128 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5E0C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1FBC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1295A206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:46:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z5B4A8IJ"
+	by mail.kernel.org (Postfix) with ESMTP id 71B84206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfECBqX (ORCPT
+        id S1726592AbfECBuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 21:46:23 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60340 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfECBqW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 21:46:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YJQaUOy07zWYs8zVSTxJU7bh0o5le6pfH8RqO6AY0VI=; b=Z5B4A8IJMzU3eUUJU6fm12bf+j
-        0iIQZOhqBc8aToHebYQcsHdIs/42x3dJGQNmFB6QNBUb5RmJRBoU14y0E/DvXyrdnlsO+5nf5sj6i
-        NsYhxLQGrTq1XgVBAN8run654mgz8duAunnY5EvDuCqJHaNl8Me27BTFd8+zikrPPmcVjjAM/0zjw
-        H1Xd85N/Q9W/1OmNEFUoWi9gbwz5lCfoAi4u1QyPmi14boPR7HbNEc1Cr8L86lphEYU9oYDno3s/p
-        3uhrhvGCzl07dMS4ZG89yAe48+aobUZq/qfFSGznEpXIXfdfrMcDlPuYSQDKIyCm4KEKeV9WVs4yP
-        4iEEPozw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hMNHG-0006oZ-Ew; Fri, 03 May 2019 01:46:18 +0000
-Subject: Re: [RFC PATCH 3/5] kobject: Fix kernel-doc comment first line
-To:     "Tobin C. Harding" <me@tobin.cc>, Johan Hovold <johan@kernel.org>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190502023142.20139-1-tobin@kernel.org>
- <20190502023142.20139-4-tobin@kernel.org> <20190502073823.GQ26546@localhost>
- <20190502082539.GB18363@eros.localdomain> <20190502083922.GR26546@localhost>
- <20190503014015.GC7416@eros.localdomain>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <8e237ab7-681b-dccf-792f-264e3f6fcd2d@infradead.org>
-Date:   Thu, 2 May 2019 18:46:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 21:50:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60832 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfECBuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 21:50:04 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EE5FB59450;
+        Fri,  3 May 2019 01:50:02 +0000 (UTC)
+Received: from x230.aquini.net (ovpn-120-12.rdu2.redhat.com [10.10.120.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CFBF32B9D0;
+        Fri,  3 May 2019 01:49:57 +0000 (UTC)
+Date:   Thu, 2 May 2019 21:49:56 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Yury Norov <norov.maillist@gmail.com>
+Cc:     Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Jann Horn <jannh@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>, yury.norov@gmail.com
+Subject: Re: [PATCH v2 2/2] prctl.2: Document the new PR_GET_TASK_SIZE option
+Message-ID: <20190503014955.GB15494@x230.aquini.net>
+References: <1556830342-32307-1-git-send-email-jsavitz@redhat.com>
+ <1556830342-32307-3-git-send-email-jsavitz@redhat.com>
+ <CAJu-Uz5xVQGVirjJXpC4Nyg8HZ=pUXEq7rN1kZz2Zg3hnUf=AQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190503014015.GC7416@eros.localdomain>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJu-Uz5xVQGVirjJXpC4Nyg8HZ=pUXEq7rN1kZz2Zg3hnUf=AQ@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 03 May 2019 01:50:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/2/19 6:40 PM, Tobin C. Harding wrote:
-> On Thu, May 02, 2019 at 10:39:22AM +0200, Johan Hovold wrote:
->> On Thu, May 02, 2019 at 06:25:39PM +1000, Tobin C. Harding wrote: > Adding Jon to CC
->>>
->>> On Thu, May 02, 2019 at 09:38:23AM +0200, Johan Hovold wrote:
->>>> On Thu, May 02, 2019 at 12:31:40PM +1000, Tobin C. Harding wrote:
->>>>> kernel-doc comments have a prescribed format.  This includes parenthesis
->>>>> on the function name.  To be _particularly_ correct we should also
->>>>> capitalise the brief description and terminate it with a period.
->>>>
->>>> Why do think capitalisation and full stop is required for the function
->>>> description?
->>>>
->>>> Sure, the example in the current doc happen to use that, but I'm not
->>>> sure that's intended as a prescription.
->>>>
->>>> The old kernel-doc nano-HOWTO specifically did not use this:
->>>>
->>>> 	https://www.kernel.org/doc/Documentation/kernel-doc-nano-HOWTO.txt
->>>>
->>>
->>> Oh?  I was basing this on Documentation/doc-guide/kernel-doc.rst
->>>
->>> 	Function documentation
->>> 	----------------------
->>>
->>> 	The general format of a function and function-like macro kernel-doc comment is::
->>>
->>> 	  /**
->>> 	   * function_name() - Brief description of function.
->>> 	   * @arg1: Describe the first argument.
->>> 	   * @arg2: Describe the second argument.
->>> 	   *        One can provide multiple line descriptions
->>> 	   *        for arguments.
->>>
->>> I figured that was the canonical way to do kernel-doc function
->>> comments.  I have however refrained from capitalising and adding the
->>> period to argument strings to reduce code churn.  I figured if I'm
->>> touching the line to add parenthesis then I might as well make it
->>> perfect (if such a thing exists).
->>
->> I think you may have read too much into that example. Many of the
->> current function and parameter descriptions aren't even full sentences,
->> so sentence case and full stop doesn't really make any sense.
->>
->> Looks like we discussed this last fall as well:
+On Thu, May 02, 2019 at 03:23:12PM -0700, Yury Norov wrote:
+> чт, 2 мая 2019 г. в 13:52, Joel Savitz <jsavitz@redhat.com>:
+> >
+> > Add a short explanation of the new PR_GET_TASK_SIZE option for the benefit
+> > of future generations.
+> >
+> > Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> > ---
+> >  man2/prctl.2 | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/man2/prctl.2 b/man2/prctl.2
+> > index 06d8e13c7..35a6a3919 100644
+> > --- a/man2/prctl.2
+> > +++ b/man2/prctl.2
+> > @@ -49,6 +49,7 @@
+> >  .\" 2013-01-10 Kees Cook, document PR_SET_PTRACER
+> >  .\" 2012-02-04 Michael Kerrisk, document PR_{SET,GET}_CHILD_SUBREAPER
+> >  .\" 2014-11-10 Dave Hansen, document PR_MPX_{EN,DIS}ABLE_MANAGEMENT
+> > +.\" 2019-05-02 Joel Savitz, document PR_GET_TASK_SIZE
+> >  .\"
+> >  .\"
+> >  .TH PRCTL 2 2019-03-06 "Linux" "Linux Programmer's Manual"
+> > @@ -1375,6 +1376,14 @@ system call on Tru64).
+> >  for information on versions and architectures)
+> >  Return unaligned access control bits, in the location pointed to by
+> >  .IR "(unsigned int\ *) arg2" .
+> > +.TP
+> > +.B PR_GET_TASK_SIZE
+> > +Copy the value of TASK_SIZE to the userspace address in
+> > +.IR "(unsigned long\ *) arg2" .
 > 
-> Ha, this was funny.  By 'we' at first I thought you meant 'we the kernel
-> community' but you actually meant we as in 'me and you'.  Clearly you
-> failed to convince me last time :)
-> 
->> 	https://lkml.kernel.org/r/20180912093116.GC1089@localhost
-> 
-> I am totally aware this is close to code churn and any discussion is
-> bikeshedding ... for me just because loads of places don't do this it
-> still looks nicer to my eyes
-> 
-> /**
-> * sfn() - Super awesome function.
-> 
-> than
-> 
-> /**
-> */ sfn() - super awesome function
-> 
-> I most likely will keep doing these changes if I am touching the
-> kernel-doc comments for other reasons and then drop the changes if the
-> subsystem maintainer thinks its code churn.
-> 
-> I defiantly won't do theses changes in GNSS, GREYBUS, or USB SERIAL.
-> 
-> Oh, and I'm totally going to CC you know every time I flick one of these
-> patches, prepare to get spammed :)
+> This is a bad idea to use pointers to size-undefined types in interface because
+> that way you have to introduce compat versions of interface functions.
+> I'd recommend you to use u64 or unsigned long long here.
+>
+unsigned long long seems to make little sense too as prctl(2) extra arguments 
+are of unsigned long type (good for passing the pointer address, in this case).
 
-I have seen this discussion before also.  And sometimes it is not even
-a discussion -- it's more of an edict.  To which I object/disagree.
-The current (or past) comment style is perfectly fine IMO.
-No caps needed.  No ending '.' needed.
+a pointer to an unsigned long var is OK for native builds, and for the
+compat mode issue you correctly pointed out, the storage size needs to be 
+dealt with at the kernel side, by checking test_thread_flag(TIF_ADDR32), 
+before proceeding with copy_to_user().
 
-
-
--- 
-~Randy
+ 
+> The comment not clear for reader not familiar with kernel internals.
+> Can you rephrase
+> TASK_SIZE like 'the (next after) highest possible userspace address',
+> or similar?
+> 
+> For the updated version could you please CC to yury.norov@gmail.com?
+> 
+> > +Return
+> > +.B EFAULT
+> > +if this operation fails.
+> > +
+> >  .SH RETURN VALUE
+> >  On success,
+> >  .BR PR_GET_DUMPABLE ,
+> > --
+> > 2.18.1
+> >
