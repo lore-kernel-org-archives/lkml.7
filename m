@@ -2,107 +2,156 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB65DC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB0CC004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A942070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:17:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FrqgKEcB"
+	by mail.kernel.org (Postfix) with ESMTP id EBF162087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfECNRK (ORCPT
+        id S1727678AbfECNWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 09:17:10 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:54828 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfECNRK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 09:17:10 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43DEGPk139327;
-        Fri, 3 May 2019 13:17:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=vlCSxJN8BUUTjnqBqXalyKb7GIxVl2UFBGtLovvlGgA=;
- b=FrqgKEcBjOG8a0turrqKK8tO+u885/fjydv2g31iW1+b54WQ7K1XwLOeXrfclnWN7AQ9
- mcXw9mB+V3F1THJlucHga4lxZDBdxI1Dckk/eEv+6rK/tMaz3i19+ol/nYsm+4ifjESj
- WIZZcmMuFgLb+jpvD2932PGAUxzCOmhq5E7bO1SJyLZCwZmbtEfZASWKqg1hs6D0QfUS
- ++IBBX6ln5t585HLIHsae/JQo1gJCVqWsGmMwfapPEboMi7J8NiRscVOYm2KR+7NlbKO
- euhdRAOCCiMiQk8rsxh6gaVxkBoCjAIMimtADLeWUqpM6muTuf5t28e4txdiYsuMuLbO Xw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2s6xhypn95-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 13:17:02 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43DGowD177600;
-        Fri, 3 May 2019 13:17:02 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2s7rtc9eu4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 13:17:01 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x43DGxOO007680;
-        Fri, 3 May 2019 13:17:00 GMT
-Received: from mwanda (/196.104.111.181)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 May 2019 06:16:58 -0700
-Date:   Fri, 3 May 2019 16:16:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Krzysztof Halasa <khalasa@piap.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] soc: ixp4xx: qmgr: Fix an NULL vs IS_ERR() check in probe
-Message-ID: <20190503131651.GC1236@mwanda>
+        Fri, 3 May 2019 09:22:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726289AbfECNWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 09:22:52 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A51BC2075E;
+        Fri,  3 May 2019 13:22:48 +0000 (UTC)
+Date:   Fri, 3 May 2019 09:22:47 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
+ functions
+Message-ID: <20190503092247.20cc1ff0@gandalf.local.home>
+In-Reply-To: <20190503092959.GB2623@hirez.programming.kicks-ass.net>
+References: <20190501203152.397154664@goodmis.org>
+        <20190501232412.1196ef18@oasis.local.home>
+        <20190502162133.GX2623@hirez.programming.kicks-ass.net>
+        <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
+        <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+        <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
+        <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
+        <20190502185225.0cdfc8bc@gandalf.local.home>
+        <20190502193129.664c5b2e@gandalf.local.home>
+        <20190502195052.0af473cf@gandalf.local.home>
+        <20190503092959.GB2623@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905030083
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905030083
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The devm_ioremap_resource() function doesn't retunr NULL, it returns
-error pointers.
+On Fri, 3 May 2019 11:29:59 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Fixes: ecc133c6da60 ("soc: ixp4xx: qmgr: Pass resources")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/soc/ixp4xx/ixp4xx-qmgr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/soc/ixp4xx/ixp4xx-qmgr.c b/drivers/soc/ixp4xx/ixp4xx-qmgr.c
-index 13a8a13c9b01..bb90670ec160 100644
---- a/drivers/soc/ixp4xx/ixp4xx-qmgr.c
-+++ b/drivers/soc/ixp4xx/ixp4xx-qmgr.c
-@@ -385,8 +385,8 @@ static int ixp4xx_qmgr_probe(struct platform_device *pdev)
- 	if (!res)
- 		return -ENODEV;
- 	qmgr_regs = devm_ioremap_resource(dev, res);
--	if (!qmgr_regs)
--		return -ENOMEM;
-+	if (IS_ERR(qmgr_regs))
-+		return PTR_ERR(qmgr_regs);
- 
- 	irq1 = platform_get_irq(pdev, 0);
- 	if (irq1 <= 0)
--- 
-2.18.0
+> OMG, WTF, ARGH... That code is fsck'ing horrible. I'd almost argue to
+> always do the INT3 thing, just to avoid games like that.
+
+Hehe, that's almost the exact same thoughts I had when seeing this
+code ;-)
+
+> 
+> That said; for normal traps &regs->sp is indeed the previous context --
+> if it doesn't fall off the stack. Your hack detects the regular INT3
+> frame. Howver if regs->sp has been modified (int3_emulate_push, for
+> example) your detectoring comes unstuck.
+
+Yep. I realized the issue as well. But wanted to make sure this did
+work when sp wasn't changed.
+
+> 
+> Now, it is rather unlikely these two code paths interact, but just to be
+> safe, something like so might be more reliable:
+> 
+> 
+> diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+> index 4b8ee05dd6ad..aceaad0cc9a9 100644
+> --- a/arch/x86/kernel/ptrace.c
+> +++ b/arch/x86/kernel/ptrace.c
+> @@ -163,6 +163,9 @@ static inline bool invalid_selector(u16 value)
+>   * stack pointer we fall back to regs as stack if no previous stack
+>   * exists.
+>   *
+> + * There is a special case for INT3, there we construct a full pt_regs
+> + * environment. We can detect this case by a high bit in regs->cs
+> + *
+>   * This is valid only for kernel mode traps.
+>   */
+>  unsigned long kernel_stack_pointer(struct pt_regs *regs)
+> @@ -171,6 +174,9 @@ unsigned long kernel_stack_pointer(struct pt_regs *regs)
+>  	unsigned long sp = (unsigned long)&regs->sp;
+>  	u32 *prev_esp;
+>  
+> +	if (regs->__csh & (1 << 13)) /* test CS_FROM_INT3 */
+> +		return regs->sp;
+> +
+
+Thanks, I was looking into doing something like this (setting a flag in
+the int3 code), but didn't have the time to see the best way to do this.
+
+I'll add this version of the code and run it through my tests.
+
+-- Steve
+
+>  	if (context == (sp & ~(THREAD_SIZE - 1)))
+>  		return sp;
+>  
+> --- a/arch/x86/entry/entry_32.S
+> +++ b/arch/x86/entry/entry_32.S
+> @@ -388,6 +388,7 @@
+>  
+>  #define CS_FROM_ENTRY_STACK	(1 << 31)
+>  #define CS_FROM_USER_CR3	(1 << 30)
+> +#define CS_FROM_INT3		(1 << 29)
+>  
+>  .macro SWITCH_TO_KERNEL_STACK
+>  
+> @@ -1515,6 +1516,9 @@ ENTRY(int3)
+>  
+>  	add	$16, 12(%esp) # point sp back at the previous context
+>  
+> +	andl	$0x0000ffff, 4(%esp)
+> +	orl	$CS_FROM_INT3, 4(%esp)
+> +
+>  	pushl	$-1				# orig_eax; mark as interrupt
+>  
+>  	SAVE_ALL
 
