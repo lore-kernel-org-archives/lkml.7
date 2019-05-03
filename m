@@ -2,130 +2,324 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57A9C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F45C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD642075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:26:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="e3nVxBov";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KnDdNtxq"
+	by mail.kernel.org (Postfix) with ESMTP id 1BA2C2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:26:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556846802;
+	bh=ezIzjSzXH0XYlnG8MDnPY/5HL3hONlOSfYSFuod7JP4=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=lsSlWBsS4co6s7SdnUKdCW4VsjJHUCUb5FDp+ZUwxiD5Hza25+FA7kqCh0bEGEKLl
+	 HkRLl0i1NrDNDORGa6Kb6zV15geb+o4/Mxcgdncwo6j4ri0+e8lgzbpXdRx6rOzpfQ
+	 bO/zQgao3Xj9XdAeVYb2+IfFYd8yD4Ylv0FH32VE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfECB0M (ORCPT
+        id S1726633AbfECB0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 21:26:12 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:40971 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726327AbfECB0M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 21:26:12 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id D91A121E92;
-        Thu,  2 May 2019 21:26:10 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Thu, 02 May 2019 21:26:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=D2oLVdQYiql0cUyr/54+TM5XSJv
-        4u98j3rVtHpPPqXs=; b=e3nVxBovcJhMTPbEmnf9VUK8pydq4McsVaOjVV+shbm
-        6uRVU5cQBQHlSBvJpmccfgFREkmIPZjZZP2GidVQBcwsYNrDzZkLdsX2UKlAwCEo
-        bpK/Zoqy6UzZHPJxIDGGQA1VA5AejmzHXHzGw59mD/8HueYyN6D8Q8IyMWi7Bnfs
-        EZLrVZCut12+RzE8CTQ+0gKTdRDb09T3JecE5UZ6lzTXqJ0uLKZzjncWEQrYBkB+
-        ZFyFThMAjvvDvA7fx41HP08NWyr5atPHYNjjPiwEDASNLAvpy0DbPuttiQyKnlE3
-        tkIXzBooZOIyyEyJp4450MiBXHKOiaHTA5oshRH1dag==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=D2oLVd
-        QYiql0cUyr/54+TM5XSJv4u98j3rVtHpPPqXs=; b=KnDdNtxqGRpTEw0hmPecEr
-        eKvhJNu1ck4EPpyV/VkGrPcd+rb+/lf3RbSh6d8kqaBmq9F9+IIr+4XRfV6jCN5G
-        jzZlvhUyfqhe83is+g/fbEADbxLtjonAjf6D+rOk1kHLACERfjMCLsbQSGJBg0IO
-        qlmDqOajGFmONbK1SrItl+Zi3jBf6TrrpXo0d8BxLheEOCvnHP0pArRSoK2RXJOX
-        /xWWhqmp3j3matstpktdWv4TIcQjC/z474FmUti+6VkdeKtlqu7N3hxphEBwmlwv
-        isUbEPq02d54sCJt7eVTyL2l1/P57vPQ9t6reHK90Mx49eCbyBP+0/WzZ75RGXng
-        ==
-X-ME-Sender: <xms:spjLXJY8BrrjDLXpKguwRGY5U3ft1RrZk0IAyM2VM6TuosxjVPH6ig>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrjedtgdegjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
-    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
-    hinhdrtggtqeenucfkphepuddvuddrgeegrddvtdegrddvfeehnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:spjLXEqFg1591WsQ6fw-4A3DwI40MmOoCakG80wAkL6xttBkraFTRQ>
-    <xmx:spjLXG8pozUPTwbSWjsa0YItVmM6dS5x6ZCWoS9QU5_mSEjUdSzSzA>
-    <xmx:spjLXL9nBfFdG-Yv8_5fHHiQs8xdrnw5y9Ra23iY-f47EA7BMEfF9A>
-    <xmx:spjLXJ76OWolid_OFTKaBTXmY8bkThUqpP5k04QVN1_QMD49G179TA>
-Received: from localhost (ppp121-44-204-235.bras1.syd2.internode.on.net [121.44.204.235])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7224510369;
-        Thu,  2 May 2019 21:26:09 -0400 (EDT)
-Date:   Fri, 3 May 2019 11:25:29 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, cl@linux.com,
-        tycho@tycho.ws, willy@infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kobject: clean up the kobject add documentation a bit
- more
-Message-ID: <20190503012529.GB7416@eros.localdomain>
-References: <20190427081330.GA26788@eros.localdomain>
- <20190427192809.GA8454@kroah.com>
- <20190501215616.GD18827@eros.localdomain>
- <20190502071742.GC16247@kroah.com>
- <20190502072808.GA14064@kroah.com>
- <20190502081918.GA18363@eros.localdomain>
- <20190502102224.GA15012@kroah.com>
+        Thu, 2 May 2019 21:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37554 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbfECB0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 21:26:40 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD7F22075E;
+        Fri,  3 May 2019 01:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556846798;
+        bh=ezIzjSzXH0XYlnG8MDnPY/5HL3hONlOSfYSFuod7JP4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dSKrZ0M3+KMtPQkDdumpJNz+AO6E8QIThgPYAO13XHWWwflaoRbIz/oNqlv7qoGTe
+         VXl92EIa/rUgQudCogxHlCVDc61J3iy5Cvqxwo79kJh2ROhBpjJ7BSMqTUevaRDp6y
+         lAlz7wW77WAmzYXCoP5yBl+76exX90pmOHxKFBS8=
+Subject: Re: [PATCH v2 03/17] kunit: test: add string_stream a std::stream
+ like string builder
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com, skhan@linuxfoundation.org
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-4-brendanhiggins@google.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <1befe456-d981-d726-44f9-ebe3702ee51d@kernel.org>
+Date:   Thu, 2 May 2019 19:26:35 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502102224.GA15012@kroah.com>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190501230126.229218-4-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 12:22:24PM +0200, Greg Kroah-Hartman wrote:
-> Commit 1fd7c3b438a2 ("kobject: Improve doc clarity kobject_init_and_add()")
-> tried to provide more clarity, but the reference to kobject_del() was
-> incorrect.  Fix that up by removing that line, and hopefully be more explicit
-> as to exactly what needs to happen here once you register a kobject with the
-> kobject core.
+On 5/1/19 5:01 PM, Brendan Higgins wrote:
+> A number of test features need to do pretty complicated string printing
+> where it may not be possible to rely on a single preallocated string
+> with parameters.
 > 
-> Cc: Tobin C. Harding <tobin@kernel.org>
-> Fixes: 1fd7c3b438a2 ("kobject: Improve doc clarity kobject_init_and_add()")
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> So provide a library for constructing the string as you go similar to
+> C++'s std::string.
 > 
-> diff --git a/lib/kobject.c b/lib/kobject.c
-> index 3f4b7e95b0c2..f2ccdbac8ed9 100644
-> --- a/lib/kobject.c
-> +++ b/lib/kobject.c
-> @@ -416,8 +416,12 @@ static __printf(3, 0) int kobject_add_varg(struct kobject *kobj,
->   *         to this function be directly freed with a call to kfree(),
->   *         that can leak memory.
->   *
-> - *         If this call returns successfully and you later need to unwind
-> - *         kobject_add() for the error path you should call kobject_del().
-> + *         If this function returns success, kobject_put() must also be called
-> + *         in order to properly clean up the memory associated with the object.
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+>   include/kunit/string-stream.h |  51 ++++++++++++
+>   kunit/Makefile                |   3 +-
+>   kunit/string-stream.c         | 144 ++++++++++++++++++++++++++++++++++
+>   3 files changed, 197 insertions(+), 1 deletion(-)
+>   create mode 100644 include/kunit/string-stream.h
+>   create mode 100644 kunit/string-stream.c
+> 
+> diff --git a/include/kunit/string-stream.h b/include/kunit/string-stream.h
+> new file mode 100644
+> index 0000000000000..567a4629406da
+> --- /dev/null
+> +++ b/include/kunit/string-stream.h
+> @@ -0,0 +1,51 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * C++ stream style string builder used in KUnit for building messages.
 > + *
-> + *         In short, once this function is called, kobject_put() MUST be called
-> + *         when the use of the object is finished in order to properly free
-> + *         everything.
->   */
->  int kobject_add(struct kobject *kobj, struct kobject *parent,
->  		const char *fmt, ...)
+> + * Copyright (C) 2019, Google LLC.
+> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> + */
+> +
+> +#ifndef _KUNIT_STRING_STREAM_H
+> +#define _KUNIT_STRING_STREAM_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/kref.h>
+> +#include <stdarg.h>
+> +
+> +struct string_stream_fragment {
+> +	struct list_head node;
+> +	char *fragment;
+> +};
+> +
+> +struct string_stream {
+> +	size_t length;
+> +	struct list_head fragments;
+> +
+> +	/* length and fragments are protected by this lock */
+> +	spinlock_t lock;
+> +	struct kref refcount;
+> +};
+> +
+> +struct string_stream *new_string_stream(void);
+> +
+> +void destroy_string_stream(struct string_stream *stream);
+> +
+> +void string_stream_get(struct string_stream *stream);
+> +
+> +int string_stream_put(struct string_stream *stream);
+> +
+> +int string_stream_add(struct string_stream *this, const char *fmt, ...);
+> +
+> +int string_stream_vadd(struct string_stream *this,
+> +		       const char *fmt,
+> +		       va_list args);
+> +
+> +char *string_stream_get_string(struct string_stream *this);
+> +
+> +void string_stream_clear(struct string_stream *this);
+> +
+> +bool string_stream_is_empty(struct string_stream *this);
+> +
+> +#endif /* _KUNIT_STRING_STREAM_H */
+> diff --git a/kunit/Makefile b/kunit/Makefile
+> index 5efdc4dea2c08..275b565a0e81f 100644
+> --- a/kunit/Makefile
+> +++ b/kunit/Makefile
+> @@ -1 +1,2 @@
+> -obj-$(CONFIG_KUNIT) +=			test.o
+> +obj-$(CONFIG_KUNIT) +=			test.o \
+> +					string-stream.o
+> diff --git a/kunit/string-stream.c b/kunit/string-stream.c
+> new file mode 100644
+> index 0000000000000..7018194ecf2fa
+> --- /dev/null
+> +++ b/kunit/string-stream.c
+> @@ -0,0 +1,144 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * C++ stream style string builder used in KUnit for building messages.
+> + *
+> + * Copyright (C) 2019, Google LLC.
+> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> + */
+> +
+> +#include <linux/list.h>
+> +#include <linux/slab.h>
+> +#include <kunit/string-stream.h>
+> +
+> +int string_stream_vadd(struct string_stream *this,
+> +		       const char *fmt,
+> +		       va_list args)
+> +{
+> +	struct string_stream_fragment *fragment;
 
-Ack! (Do I get to do those :)
+Since there is field with the same name, please use a different
+name. Using the same name for the struct which contains a field
+of the same name get very confusing and will hard to maintain
+the code.
 
-I'm not convinced we have the docs for kobject clear enough for a
-kobject noob to read but this patch defiantly fixes the error I
-introduced.
+> +	int len;
+> +	va_list args_for_counting;
+> +	unsigned long flags;
+> +
+> +	/* Make a copy because `vsnprintf` could change it */
+> +	va_copy(args_for_counting, args);
+> +
+> +	/* Need space for null byte. */
+> +	len = vsnprintf(NULL, 0, fmt, args_for_counting) + 1;
+> +
+> +	va_end(args_for_counting);
+> +
+> +	fragment = kmalloc(sizeof(*fragment), GFP_KERNEL);
+> +	if (!fragment)
+> +		return -ENOMEM;
+> +
+> +	fragment->fragment = kmalloc(len, GFP_KERNEL);
+
+This is confusing. See above comment.
+
+
+> +	if (!fragment->fragment) {
+> +		kfree(fragment);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	len = vsnprintf(fragment->fragment, len, fmt, args);
+> +	spin_lock_irqsave(&this->lock, flags);
+> +	this->length += len;
+> +	list_add_tail(&fragment->node, &this->fragments);
+> +	spin_unlock_irqrestore(&this->lock, flags);
+> +	return 0;
+> +}
+> +
+> +int string_stream_add(struct string_stream *this, const char *fmt, ...)
+> +{
+> +	va_list args;
+> +	int result;
+> +
+> +	va_start(args, fmt);
+> +	result = string_stream_vadd(this, fmt, args);
+> +	va_end(args);
+> +	return result;
+> +}
+> +
+> +void string_stream_clear(struct string_stream *this)
+> +{
+> +	struct string_stream_fragment *fragment, *fragment_safe;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&this->lock, flags);
+> +	list_for_each_entry_safe(fragment,
+> +				 fragment_safe,
+> +				 &this->fragments,
+> +				 node) {
+> +		list_del(&fragment->node);
+> +		kfree(fragment->fragment);
+> +		kfree(fragment);
+
+This is what git me down the road of checking the structure
+name to begin with. :)
+
+> +	}
+> +	this->length = 0;
+> +	spin_unlock_irqrestore(&this->lock, flags);
+> +}
+> +
+> +char *string_stream_get_string(struct string_stream *this)
+> +{
+> +	struct string_stream_fragment *fragment;
+> +	size_t buf_len = this->length + 1; /* +1 for null byte. */
+> +	char *buf;
+> +	unsigned long flags;
+> +
+> +	buf = kzalloc(buf_len, GFP_KERNEL);
+> +	if (!buf)
+> +		return NULL;
+> +
+> +	spin_lock_irqsave(&this->lock, flags);
+> +	list_for_each_entry(fragment, &this->fragments, node)
+> +		strlcat(buf, fragment->fragment, buf_len);
+> +	spin_unlock_irqrestore(&this->lock, flags);
+> +
+> +	return buf;
+> +}
+> +
+> +bool string_stream_is_empty(struct string_stream *this)
+> +{
+> +	bool is_empty;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&this->lock, flags);
+> +	is_empty = list_empty(&this->fragments);
+> +	spin_unlock_irqrestore(&this->lock, flags);
+> +
+> +	return is_empty;
+> +}
+> +
+> +void destroy_string_stream(struct string_stream *stream)
+> +{
+> +	string_stream_clear(stream);
+> +	kfree(stream);
+> +}
+> +
+> +static void string_stream_destroy(struct kref *kref)
+> +{
+> +	struct string_stream *stream = container_of(kref,
+> +						    struct string_stream,
+> +						    refcount);
+> +	destroy_string_stream(stream);
+> +}
+> +
+> +struct string_stream *new_string_stream(void)
+> +{
+> +	struct string_stream *stream = kzalloc(sizeof(*stream), GFP_KERNEL);
+> +
+> +	if (!stream)
+> +		return NULL;
+> +
+> +	INIT_LIST_HEAD(&stream->fragments);
+> +	spin_lock_init(&stream->lock);
+> +	kref_init(&stream->refcount);
+> +	return stream;
+> +}
+> +
+> +void string_stream_get(struct string_stream *stream)
+> +{
+> +	kref_get(&stream->refcount);
+> +}
+> +
+> +int string_stream_put(struct string_stream *stream)
+> +{
+> +	return kref_put(&stream->refcount, &string_stream_destroy);
+> +}
+> +
+> 
 
 thanks,
-Tobin.
+-- Shuah
