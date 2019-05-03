@@ -2,140 +2,102 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B2EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215B0C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5DEC2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1BD2081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:38:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="utdjWpxm"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uiafQAY1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbfECMiV (ORCPT
+        id S1727885AbfECMi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 08:38:21 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:35957 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbfECMiV (ORCPT
+        Fri, 3 May 2019 08:38:29 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54126 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726897AbfECMi2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 08:38:21 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x43CbuW9020722;
-        Fri, 3 May 2019 21:37:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x43CbuW9020722
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1556887077;
-        bh=N7oCkXQfepu6l+UAHVtt5vfxPNB5K7tbRYmyelOMNYM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=utdjWpxmGnVSZlPDbdmUSctuhbvdk/+xastR2qAA9SFYQC9pF8dDKTe07nQv3bnSK
-         n1IsL8kt+BBPcpKV/aAJcexyRpu0CLMhflaktEF8LVR2EvMfCV5VwBPILgeeNlOpPB
-         FoAtf3f1tLGfqy1tjdIohPQfR6JbVfEENM6gAUrmEBCwvP0dbte8eJGU+BfTIcCuzz
-         397zHtom+oyAWBXgbje71WSOWgaEm9YDrt/wQU9eShTtElu32YlQ1BvkXDd+98ik0f
-         gnBEede0sb/LLcyjg6eMdWYMh0IgHCv+GYNZjq/vS0LKZBRUG1mXHPeJ9bSxKA7mV6
-         b6qQX/b1d8ERA==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     x86@kernel.org, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] x86,sh: use __builtin_constant_p() directly instead of IS_IMMEDIATE()
-Date:   Fri,  3 May 2019 21:37:44 +0900
-Message-Id: <1556887064-12882-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 3 May 2019 08:38:28 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43CVS2i019686;
+        Fri, 3 May 2019 14:38:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=t5B/k6DcvEiPCvE4nzBubHjNwGreSV6jE6kdibWLQUo=;
+ b=uiafQAY1KcThaMm27J4dDuyLkuUsVLptk6S6tMQ6hFqFGDMjDXFJzLMB2eY25MtOQjOt
+ AJY4SGIk36CXejwafcW2uJD7eSMdqxiuMxrVprFunZIZTE7FL8CDvCcPq8me04jZEcwB
+ WW8yj8wXuaYX6TEKr6/0MjUm97JFQyJgfQjVGcLCwjz8PHbkAUeDXTSFQdugHG6Q4YtW
+ 05vqr7XUDvZCBzAMX4VZXunUFXO8IT1ewu6bl0eGz/j7efKideweDyE+TyG6/V7eLPhH
+ KDCPYgLs3onIr2Lx6MWrBtM+QMOuiED3qYT4xKOMS18m07PeHy7l/hOZH0TSF0czHLmG Cg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2s6xgcxagj-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 03 May 2019 14:38:20 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6AD9231;
+        Fri,  3 May 2019 12:38:19 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4D6FB2694;
+        Fri,  3 May 2019 12:38:19 +0000 (GMT)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 3 May
+ 2019 14:38:19 +0200
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1347.000; Fri, 3 May 2019 14:38:19 +0200
+From:   Fabien DESSENNE <fabien.dessenne@st.com>
+To:     Jiri Kosina <jikos@kernel.org>
+CC:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] HID: rmi: fix devm_add_action_or_reset() parameter
+Thread-Topic: [PATCH] HID: rmi: fix devm_add_action_or_reset() parameter
+Thread-Index: AQHU8S7fRB6FaRWwPkiJMQUZLJpqJqZZUPiAgAAFTYA=
+Date:   Fri, 3 May 2019 12:38:18 +0000
+Message-ID: <9628edde-5270-d5a5-7db6-c9ec3f47c742@st.com>
+References: <1555073657-24386-1-git-send-email-fabien.dessenne@st.com>
+ <nycvar.YFH.7.76.1905031418510.10635@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.1905031418510.10635@cbobk.fhfr.pm>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8C93354F4F1B5C4394EE04057F7F1250@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__builtin_constant_p(nr) is used everywhere now. It does not make
-much sense to define IS_IMMEDIATE() as its alias.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- arch/sh/include/asm/bitops-op32.h | 8 +++-----
- arch/x86/include/asm/bitops.h     | 7 +++----
- 2 files changed, 6 insertions(+), 9 deletions(-)
-
-diff --git a/arch/sh/include/asm/bitops-op32.h b/arch/sh/include/asm/bitops-op32.h
-index 4668803..cfe5465 100644
---- a/arch/sh/include/asm/bitops-op32.h
-+++ b/arch/sh/include/asm/bitops-op32.h
-@@ -16,11 +16,9 @@
- #define BYTE_OFFSET(nr)		((nr) % BITS_PER_BYTE)
- #endif
- 
--#define IS_IMMEDIATE(nr)	(__builtin_constant_p(nr))
--
- static inline void __set_bit(int nr, volatile unsigned long *addr)
- {
--	if (IS_IMMEDIATE(nr)) {
-+	if (__builtin_constant_p(nr)) {
- 		__asm__ __volatile__ (
- 			"bset.b %1, @(%O2,%0)		! __set_bit\n\t"
- 			: "+r" (addr)
-@@ -37,7 +35,7 @@ static inline void __set_bit(int nr, volatile unsigned long *addr)
- 
- static inline void __clear_bit(int nr, volatile unsigned long *addr)
- {
--	if (IS_IMMEDIATE(nr)) {
-+	if (__builtin_constant_p(nr)) {
- 		__asm__ __volatile__ (
- 			"bclr.b %1, @(%O2,%0)		! __clear_bit\n\t"
- 			: "+r" (addr)
-@@ -64,7 +62,7 @@ static inline void __clear_bit(int nr, volatile unsigned long *addr)
-  */
- static inline void __change_bit(int nr, volatile unsigned long *addr)
- {
--	if (IS_IMMEDIATE(nr)) {
-+	if (__builtin_constant_p(nr)) {
- 		__asm__ __volatile__ (
- 			"bxor.b %1, @(%O2,%0)		! __change_bit\n\t"
- 			: "+r" (addr)
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index 8e790ec..2621438 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -45,7 +45,6 @@
-  * We do the locked ops that don't return the old value as
-  * a mask operation on a byte.
-  */
--#define IS_IMMEDIATE(nr)		(__builtin_constant_p(nr))
- #define CONST_MASK_ADDR(nr, addr)	WBYTE_ADDR((void *)(addr) + ((nr)>>3))
- #define CONST_MASK(nr)			(1 << ((nr) & 7))
- 
-@@ -67,7 +66,7 @@
- static __always_inline void
- set_bit(long nr, volatile unsigned long *addr)
- {
--	if (IS_IMMEDIATE(nr)) {
-+	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "orb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
- 			: "iq" ((u8)CONST_MASK(nr))
-@@ -105,7 +104,7 @@ static __always_inline void __set_bit(long nr, volatile unsigned long *addr)
- static __always_inline void
- clear_bit(long nr, volatile unsigned long *addr)
- {
--	if (IS_IMMEDIATE(nr)) {
-+	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "andb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
- 			: "iq" ((u8)~CONST_MASK(nr)));
-@@ -186,7 +185,7 @@ static __always_inline void __change_bit(long nr, volatile unsigned long *addr)
-  */
- static __always_inline void change_bit(long nr, volatile unsigned long *addr)
- {
--	if (IS_IMMEDIATE(nr)) {
-+	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "xorb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
- 			: "iq" ((u8)CONST_MASK(nr)));
--- 
-2.7.4
-
+DQpPbiAwMy8wNS8yMDE5IDI6MTkgUE0sIEppcmkgS29zaW5hIHdyb3RlOg0KPiBPbiBGcmksIDEy
+IEFwciAyMDE5LCBGYWJpZW4gRGVzc2VubmUgd3JvdGU6DQo+DQo+PiBUaGUgc2Vjb25kIHBhcmFt
+ZXRlciBvZiBkZXZtX2FkZF9hY3Rpb25fb3JfcmVzZXQoKSBzaGFsbCBiZSBhIGZ1bmN0aW9uLA0K
+Pj4gbm90IGEgZnVuY3Rpb24gYWRkcmVzcy4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBGYWJpZW4g
+RGVzc2VubmUgPGZhYmllbi5kZXNzZW5uZUBzdC5jb20+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy9o
+aWQvaGlkLXJtaS5jIHwgMiArLQ0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
+IDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9oaWQvaGlkLXJtaS5j
+IGIvZHJpdmVycy9oaWQvaGlkLXJtaS5jDQo+PiBpbmRleCA5ZTMzMTY1Li44NzQ4ZDRkIDEwMDY0
+NA0KPj4gLS0tIGEvZHJpdmVycy9oaWQvaGlkLXJtaS5jDQo+PiArKysgYi9kcml2ZXJzL2hpZC9o
+aWQtcm1pLmMNCj4+IEBAIC02MjMsNyArNjIzLDcgQEAgc3RhdGljIGludCBybWlfc2V0dXBfaXJx
+X2RvbWFpbihzdHJ1Y3QgaGlkX2RldmljZSAqaGRldikNCj4+ICAgCWlmICghaGRhdGEtPmRvbWFp
+bikNCj4+ICAgCQlyZXR1cm4gLUVOT01FTTsNCj4+ICAgDQo+PiAtCXJldCA9IGRldm1fYWRkX2Fj
+dGlvbl9vcl9yZXNldCgmaGRldi0+ZGV2LCAmcm1pX2lycV90ZWFyZG93biwgaGRhdGEpOw0KPj4g
+KwlyZXQgPSBkZXZtX2FkZF9hY3Rpb25fb3JfcmVzZXQoJmhkZXYtPmRldiwgcm1pX2lycV90ZWFy
+ZG93biwgaGRhdGEpOw0KPiBXaHkgZG8geW91IHRoaW5rIHRoaXMgaXMgd3JvbmcgQz8NCg0KDQpC
+ZWNhdXNlIEkgd2FzIG5vdCBhd2FyZSB0aGF0IGJvdGggZnVuYyBhbmQgJmZ1bmMgcmVmZXIgdG8g
+dGhlIHNhbWUgDQpmdW5jdGlvbiBwb2ludGVyLg0KDQpOb3cgSSBrbm93IDopDQoNCg0KPg==
