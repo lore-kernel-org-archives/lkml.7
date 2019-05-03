@@ -6,86 +6,103 @@ X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CBDC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 799F4C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC40A2087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508E7205ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfECPOY (ORCPT
+        id S1728267AbfECPOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 11:14:24 -0400
-Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:55861 "EHLO
-        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726468AbfECPOY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 11:14:24 -0400
-Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
-        id 60E64461D3A; Fri,  3 May 2019 11:14:21 -0400 (EDT)
-Date:   Fri, 3 May 2019 11:14:21 -0400
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
-Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
- packets
-Message-ID: <20190503151421.akvmu77lghxcouni@csclub.uwaterloo.ca>
-References: <20190501205215.ptoi2czhklte5jbm@csclub.uwaterloo.ca>
- <CAKgT0UczVvREiXwde6yJ8_i9RT2z7FhenEutXJKW8AmDypn_0g@mail.gmail.com>
- <20190502151140.gf5ugodqamtdd5tz@csclub.uwaterloo.ca>
- <CAKgT0Uc_OUAcPfRe6yCSwpYXCXomOXKG2Yvy9c1_1RJn-7Cb5g@mail.gmail.com>
- <20190502171636.3yquioe3gcwsxlus@csclub.uwaterloo.ca>
- <CAKgT0Ufk8LXMb9vVWfvgbjbQFKAuenncf95pfkA0P1t-3+Ni_g@mail.gmail.com>
- <20190502175513.ei7kjug3az6fe753@csclub.uwaterloo.ca>
- <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
- <CAKgT0Uc_YVzns+26-TL+hhmErqG4_w4evRqLCaa=7nME7Zq+Vg@mail.gmail.com>
+        Fri, 3 May 2019 11:14:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51814 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726267AbfECPOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 11:14:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 71469ACFA;
+        Fri,  3 May 2019 15:14:38 +0000 (UTC)
+Date:   Fri, 3 May 2019 17:14:37 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RFC: console: hack up console_trylock more
+Message-ID: <20190503151437.dc2ty2mnddabrz4r@pathway.suse.cz>
+References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKgT0Uc_YVzns+26-TL+hhmErqG4_w4evRqLCaa=7nME7Zq+Vg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
+In-Reply-To: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 01:59:46PM -0700, Alexander Duyck wrote:
-> If I recall correctly RSS is only using something like the lower 9
-> bits (indirection table size of 512) of the resultant hash on the
-> X722, even fewer if you have fewer queues that are a power of 2 and
-> happen to program the indirection table in a round robin fashion. So
-> for example on my system setup with 32 queues it is technically only
-> using the lower 5 bits of the hash.
+On Thu 2019-05-02 16:16:43, Daniel Vetter wrote:
+> console_trylock, called from within printk, can be called from pretty
+> much anywhere. Including try_to_wake_up. Note that this isn't common,
+> usually the box is in pretty bad shape at that point already. But it
+> really doesn't help when then lockdep jumps in and spams the logs,
+> potentially obscuring the real backtrace we're really interested in.
+> One case I've seen (slightly simplified backtrace):
 > 
-> One issue as a result of that is that you can end up with swaths of
-> bits that don't really seem to impact the hash all that much since it
-> will never actually change those bits of the resultant hash. In order
-> to guarantee that every bit in the input impacts the hash you have to
-> make certain you have to gaps in the key wider than the bits you
-> examine in the final hash.
+>  Call Trace:
+>   <IRQ>
+>   console_trylock+0xe/0x60
+>   vprintk_emit+0xf1/0x320
+>   printk+0x4d/0x69
+>   __warn_printk+0x46/0x90
+>   native_smp_send_reschedule+0x2f/0x40
+>   check_preempt_curr+0x81/0xa0
+>   ttwu_do_wakeup+0x14/0x220
+>   try_to_wake_up+0x218/0x5f0
+>   pollwake+0x6f/0x90
+>   credit_entropy_bits+0x204/0x310
+>   add_interrupt_randomness+0x18f/0x210
+>   handle_irq+0x67/0x160
+>   do_IRQ+0x5e/0x130
+>   common_interrupt+0xf/0xf
+>   </IRQ>
 > 
-> A quick and dirty way to verify that the hash key is part of the issue
-> would be to use something like a simple repeating value such as AA:55
-> as your hash key. With something like that every bit you change in the
-> UDP port number should result in a change in the final RSS hash for
-> queue counts of 3 or greater. The downside is the upper 16 bits of the
-> hash are identical to the lower 16 so the actual hash value itself
-> isn't as useful.
+> This alone isn't a problem, but the spinlock in the semaphore is also
+> still held while waking up waiters (up() -> __up() -> try_to_wake_up()
+> callchain), which then closes the runqueue vs. semaphore.lock loop,
+> and upsets lockdep, which issues a circular locking splat to dmesg.
+> Worse it upsets developers, since we don't want to spam dmesg with
+> clutter when the machine is dying already.
+>
+> Fix this by creating a __down_trylock which only trylocks the
+> semaphore.lock. This isn't correct in full generality, but good enough
+> for console_lock:
+> 
+> - there's only ever one console_lock holder, we won't fail spuriously
+>   because someone is doing a down() or up() while there's still room
+>   (unlike other semaphores with count > 1).
+>
+> - console_unlock() has one massive retry loop, which will catch anyone
+>   who races the trylock against the up(). This makes sure that no
+>   printk lines will get lost. Making the trylock more racy therefore
+>   has no further impact.
 
-OK I set the hkey to
-aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55
-and still only see queue 0 and 2 getting hit with a couple of dozen
-different UDP port numbers I picked.  Changing the hash with ethtool to
-that didn't even move where the tcp packets for my ssh connection are
-going (they are always on queue 2 it seems).
+To be honest, I do not see how this could solve the problem.
 
-Does it just not hash UDP packets correctly?  Is it even doing RSS?
-(the register I checked claimed it is).
+The circular dependency is still there. If the new __down_trylock()
+succeeds then console_unlock() will get called in the same context
+and it will still need to call up() -> try_to_wake_up().
 
-This system has 40 queues assigned by default since that is how many
-CPUs there are.  Changing it to a lower number didn't make a difference
-(I tried 32 and 8).
+Note that there are many other console_lock() callers that might
+happen in parallel and might appear in the wait queue.
 
--- 
-Len Sorensen
+Best Regards,
+Petr
