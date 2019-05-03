@@ -6,45 +6,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F315C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB67C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB972087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD702087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfECG7x (ORCPT
+        id S1727356AbfECG76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:59:53 -0400
+        Fri, 3 May 2019 02:59:58 -0400
 Received: from ozlabs.org ([203.11.71.1]:40339 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbfECG7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:59:30 -0400
+        id S1725793AbfECG7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 02:59:25 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 44wNKY110Nz9sPY; Fri,  3 May 2019 16:59:28 +1000 (AEST)
+        id 44wNKR4m2Pz9sNC; Fri,  3 May 2019 16:59:23 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: c9e0fc33b8be52a7134ed0ee79b6a1e332e1b9d0
+X-powerpc-patch-commit: 5ba666d56c4ff9b011c1b029dcc689cff8b176fb
 X-Patchwork-Hint: ignore
-In-Reply-To: <20190430182739.21961-1-hch@lst.de>
-To:     Christoph Hellwig <hch@lst.de>, aneesh.kumar@linux.ibm.com
+In-Reply-To: <3814377306ac3acdd404e2f23ff05dcf7e6bee26.1556202029.git.christophe.leroy@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, aneesh.kumar@linux.ibm.com
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] powerpc: remove the __kernel_io_end export
-Message-Id: <44wNKY110Nz9sPY@ozlabs.org>
-Date:   Fri,  3 May 2019 16:59:28 +1000 (AEST)
+Subject: Re: [PATCH v2 01/11] powerpc/mm: fix erroneous duplicate slb_addr_limit init
+Message-Id: <44wNKR4m2Pz9sNC@ozlabs.org>
+Date:   Fri,  3 May 2019 16:59:23 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-04-30 at 18:27:39 UTC, Christoph Hellwig wrote:
-> This export was added in this merge window, but without any actual
-> user, or justification for a modular user.
+On Thu, 2019-04-25 at 14:29:27 UTC, Christophe Leroy wrote:
+> Commit 67fda38f0d68 ("powerpc/mm: Move slb_addr_linit to
+> early_init_mmu") moved slb_addr_limit init out of setup_arch().
 > 
-> Fixes: a35a3c6f6065 ("powerpc/mm/hash64: Add a variable to track the end of IO mapping")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Commit 701101865f5d ("powerpc/mm: Reduce memory usage for mm_context_t
+> for radix") brought it back into setup_arch() by error.
+> 
+> This patch reverts that erroneous regress.
+> 
+> Fixes: 701101865f5d ("powerpc/mm: Reduce memory usage for mm_context_t for radix")
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-Applied to powerpc next, thanks.
+Patches 1-10 applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/c9e0fc33b8be52a7134ed0ee79b6a1e3
+https://git.kernel.org/powerpc/c/5ba666d56c4ff9b011c1b029dcc689cf
 
 cheers
