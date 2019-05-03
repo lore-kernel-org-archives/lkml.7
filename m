@@ -2,106 +2,91 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E64C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57696C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0C02081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556915932;
-	bh=2cFfZAGH7jWOQFIl2RwEvszjulNdiSDlwL0zYZb0C3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eCHnuTct98cdyjIZ7BPSITO4fVzJW1NfqVtcbqjj2gsOO203TT+sJ616uLyvLdJGz
-	 aipoSJSZK66BhaWCqsPFVCO/2+fj0eDleXo6WsZpZKYMKm3w9Wq13yRzLumzuydRHt
-	 aj6CwbY/3i8q/tHpgyckhXecVyX32hvMKgeAGZnU=
+	by mail.kernel.org (Postfix) with ESMTP id 1A7702081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:39:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="a3XgxIYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfECUiu (ORCPT
+        id S1726731AbfECUiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 16:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726304AbfECUit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 16:38:49 -0400
-Received: from earth.universe (unknown [185.62.205.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1B89206BB;
-        Fri,  3 May 2019 20:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556915928;
-        bh=2cFfZAGH7jWOQFIl2RwEvszjulNdiSDlwL0zYZb0C3w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xhehueaScZrXhamAhg3qXNToIr0s7PxtUYTIv8Y14eEbLvX0AE7LZZKTDhLpKMCLQ
-         mLA3AsQ99MXwxC4VqY4DOhH5ZNXLDqq7A1RmyDLPi9zvsBR/LgqtFMUn9auSnRB9V/
-         M3+14aNyhoLcGhQwXMLw/4i0eYjLmwMDmDBu0yPI=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 6A5623C0DDB; Fri,  3 May 2019 22:38:46 +0200 (CEST)
-Date:   Fri, 3 May 2019 22:38:46 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Enric Balletbo Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/3] Driver for UCS1002
-Message-ID: <20190503203846.b2zux6cvtkjkrbco@earth.universe>
-References: <20190503170042.19334-1-andrew.smirnov@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u5o4vj3mu6vvwt2c"
-Content-Disposition: inline
-In-Reply-To: <20190503170042.19334-1-andrew.smirnov@gmail.com>
-User-Agent: NeoMutt/20180716
+        Fri, 3 May 2019 16:38:54 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]:36240 "EHLO
+        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfECUix (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 16:38:53 -0400
+Received: by mail-qt1-f174.google.com with SMTP id c35so8290623qtk.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 13:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8tPVzyCxevz7vaRRVLlXkojOrnYFDky2SPWQCyXh6gU=;
+        b=a3XgxIYysWPc+FKMoGx5n77e17z5A4FMicm3QGWq3xjBavCSL1JHFd85wIDXzfLuBH
+         O7nQ7tq/1uXTTssayyLdOS5GOHmlmlYZdRPmbNeFfYuSLB+8Welisfdrj8HiKryNWj7B
+         3qjreLTmdkndMxaau6B/9GcSyphKYdAU79ibyUDM/Kpm6pmU80ygIvAN1t5axlToP3OJ
+         35LYp/Njg8r36vpKiFdM7JfJlSObpM5E8Q+/satWf+ax2HcSTWoRfGUcb7M7TUdD8Bwe
+         /jPqO6FI/K4Ei5jEZtKnGNzskiMWoozXIEGukaxZpEjS9Wi5FLqFKfMzX60jCk3PpfMU
+         2qTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8tPVzyCxevz7vaRRVLlXkojOrnYFDky2SPWQCyXh6gU=;
+        b=N1Xx9c9AXkN0r0sbsKlmMbCGBvUXEKdtbsYlaBPHVs0PsNAm1iDMzX6X/89ODVl6pd
+         jUcF7APKA/JexhjmYpivwDLTOnAsU2gs35c1DgiTE2wamdt+UhF2eYBz23Cg30tRmLbw
+         3UOt4iK884q+uPsseWyveqPTHcg20E6QRwSnU/Tq2sg+2ZPFUZmaos6BfjHS6CMZI15p
+         SjkltbDRBl0NSw7euOhs6KbAolASGm49chxzM7PBPcv6UR6QWJomdtk8+3XEkiPRv0bk
+         yOy5y9oKEk6yR2PSMUDq3oG7D03N7ka1dO5fQ5VJNaHPU5mPbhXpdhaotRp/Ycu1eCTE
+         Yz7A==
+X-Gm-Message-State: APjAAAUWmZlKqgjG0rgz9HRcbzfPdTb01cscocDAKiWhHt2+F/vSXr+1
+        iA2jMT8TpM6fFLKJIBhxcY3e2w==
+X-Google-Smtp-Source: APXvYqygYpFaSjaM6wxI+nnmZguKF7zaKCDNH9I92+y5gfIS3DPW0JLU1WkfEzNGOFrd46iUbfkPLQ==
+X-Received: by 2002:a0c:994a:: with SMTP id i10mr8618712qvd.48.1556915932314;
+        Fri, 03 May 2019 13:38:52 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 46sm2028708qto.57.2019.05.03.13.38.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 13:38:51 -0700 (PDT)
+Message-ID: <1556915930.6132.16.camel@lca.pw>
+Subject: Re: "iommu/amd: Set exclusion range correctly" causes smartpqi
+ offline
+From:   Qian Cai <cai@lca.pw>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     iommu@lists.linux-foundation.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Fri, 03 May 2019 16:38:50 -0400
+In-Reply-To: <20190429142326.GA4678@suse.de>
+References: <1556290348.6132.6.camel@lca.pw> <20190426152632.GC3173@suse.de>
+         <1556294112.6132.7.camel@lca.pw> <20190429142326.GA4678@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2019-04-29 at 16:23 +0200, Joerg Roedel wrote:
+> On Fri, Apr 26, 2019 at 11:55:12AM -0400, Qian Cai wrote:
+> > https://git.sr.ht/~cai/linux-debug/blob/master/dmesg
+> 
+> Thanks, I can't see any definitions for unity ranges or exclusion ranges
+> in the IVRS table dump, which makes it even more weird.
+> 
+> Can you please send me the output of
+> 
+> 	for f in `ls -1 /sys/kernel/iommu_groups/*/reserved_regions`; do echo "-
+> --$f"; cat $f;done
+> 
+> to double-check?
 
---u5o4vj3mu6vvwt2c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Fri, May 03, 2019 at 12:00:39PM -0500, Andrey Smirnov wrote:
-> This small series adds a driver for UCS1002 Programmable USB Port
-> Power Controller with Charger Emulation. See [page] for product page
-> and [datasheet] for device dataseet. Hopefully each individual patch
-> is self explanatory.
->=20
-> Note that this series is a revival of the upstreaming effort by Enric
-> Balletbo Serra last version of which can be found at [original-effort]
-
-Thanks, queued (whole series).
-
--- Sebastian
-
---u5o4vj3mu6vvwt2c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzMptMACgkQ2O7X88g7
-+poQRxAAp9+Y711kaPHlNkdyeJWm2AYbOrE+13EZKJu4y1raee9aAnee4IT+Zunz
-i5l3uyL4mmeood3UMwxg/NYM1XAev9ak66glNG/7Ue9z/RIUnfck4/hG9cMLeXk9
-3atE1yX5ZT1Cq8LyHyWhu4sUj080A+ynPkqgjWj493tHhBJyc+5MbmDPrcgWoYUf
-EGIn3szz/AKe7PwvDZnj7dQv0js87rKExXRwuJOjTLgw2tGdRlP+PjT2a5+Ya+sY
-L3/ICu3izAADNo4zRdrdDHzE1CkLs4cCupymDTW7R58DdzzViIGAp5On5RTfb9Cc
-rUltoZgyLCqfNkDbSWdtoouuMpJn7wZgnf1sKOTXDopz5L6Sh8YJbTrXTs++bkSg
-AnKZHzIQrPxarue/HJoQEnoLvIm2kvaToHUSclmsB0ApYYbrpnprtxcSFXat9nZe
-q5Fgwm7Ba0Z0EEQVEL7Q/lcxebmhy+A6CLQgW1ERqNWtP5do9AeTIhKfrSB/a5BL
-RFvjZuoRtYb1xcTt4txqHHIc1+zaKFgh417ltuRo6cp8dYXvwasIV8tjstziQLCD
-+xCp/JMq5oJ0gUZ9HHiobTvRjY+mlUUhj718CtVzJHrhBON+TBhuQsbSf0e4MKx1
-t+hsd+3LxnkYb2wEM1OMwca7MqaWmky+jUfzA/KQyqX8faqcDuk=
-=Hklu
------END PGP SIGNATURE-----
-
---u5o4vj3mu6vvwt2c--
+https://git.sr.ht/~cai/linux-debug/blob/master/iommu
