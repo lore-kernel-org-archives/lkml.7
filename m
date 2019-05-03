@@ -2,133 +2,181 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF295C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27393C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF0E2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:08:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556917705;
-	bh=aqcL29qHJsAYLqk55Q2wpnp7s9uGAqVZLA5M+CR6604=;
-	h=In-Reply-To:References:To:Cc:From:Subject:Date:List-ID:From;
-	b=tahU+ZGFrnvJFMeZKGworuVE7UnyiGBuF3jcH7GWBA5osHUITOmHHk91u1CxkhO4u
-	 oiQ7En7VnVsVA5pRWC+78oR/BZM0S+BBPdofrVZZNNp6eKaUuLpPA5dCMNnqMFBfxU
-	 zS8VqYzKBIGz04dlizS3W1lsufWohPLWMZvgoBG4=
+	by mail.kernel.org (Postfix) with ESMTP id DF35C2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:09:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kMqxNGkt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfECVIX (ORCPT
+        id S1727208AbfECVIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 17:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726022AbfECVIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 17:08:22 -0400
-Received: from localhost (unknown [104.132.0.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D2522070B;
-        Fri,  3 May 2019 21:08:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556917701;
-        bh=aqcL29qHJsAYLqk55Q2wpnp7s9uGAqVZLA5M+CR6604=;
-        h=In-Reply-To:References:To:Cc:From:Subject:Date:From;
-        b=Dso9UErmUzkJ3ZamrjDEdNv4u7/1wbneeAfHXvB0+lZJsZyTrHTNLtHb+hfLwvKHW
-         ywwvXyRhWET2LFDkF3ssEpv/9pyHMhRN5kW7vZAi+ps7oH3L3AnvaRqmaCjQ+sseat
-         TAcev7toef6D8yexAqbmooLK868VgmlWzGanEY8w=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 3 May 2019 17:08:35 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34681 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfECVIe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 17:08:34 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c13so3296567pgt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 14:08:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Hkcd8BIELveqcx9zYf9kxHBBlus+ent2nCS3r3QjzQI=;
+        b=kMqxNGktXx21zOAK3MY0c+Pp38CX/Agrku2MgGsjRK0Tgasr5jg+ugyZ+UZ9ljJ9SQ
+         ObF7pyzTtJ3/AqVl7Q4sGJeXN5IO4ZIHqTh0YNshH20MJHuGlK+pRltKQTn0QKDr6s74
+         YAaDydb1Sd1CIqicyWFrjxwnpsHfE44x63ZX6gL+HwoQbXRQtX79Z5VavW1gE2D2CesN
+         7q2nG77q8Y/UI92ZKL/LY0LyVI4eUukYnXv4aZyvTj7d8R95QMoG++A10e64pqondCEh
+         I9HS6MHckRxfauIuD4Ar5dV07R06ZampDSttcms1DhHsfgrIcWRKuIvICVAWQsve5o/f
+         C8oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Hkcd8BIELveqcx9zYf9kxHBBlus+ent2nCS3r3QjzQI=;
+        b=UXmBN7cvEHUfvoJDv2WRirQaq1L9AfH8En47S2paeaR/u6xdJ8zebHOnQ9MrVmK64w
+         4bBrRGcqa2cWBy5RkV83PqOXAvqXmM12RpiEXXV1GH2kJAtPb6UengiETZIn2+YUGqha
+         GTquVZCYLo/O04mNH3gHKJJ+cHWi5SZpf2mNoCgVnTod7edtW7B+f314srWRYGLIiKP/
+         hwkCs5guUHTPH+aefh08//SoxkwdnN9mLmdkue2gT17KyeMCGNftvFkI2yFEk5ZQ65MT
+         qae1hUh5OPo7ZdlPKuNlB4jn/Sies9uVkOh0tolbufhjnV/slB7od+Wh58gWinyqY+1a
+         UQoQ==
+X-Gm-Message-State: APjAAAX7UQM5jIat+OO7IDF1r0HP9yIOMVRhgRjfnb6fbHUXlHh8v92z
+        Euxj8VQh8j49VUzTvhbuOCE=
+X-Google-Smtp-Source: APXvYqyE6RBZ+qsnc03uzbuc/KxwH4q06iDk9aYXZfGE0tmEAhDISzUwqwz3sbCHaXR+ZdRJzzVCPQ==
+X-Received: by 2002:a63:8f49:: with SMTP id r9mr13359168pgn.306.1556917713160;
+        Fri, 03 May 2019 14:08:33 -0700 (PDT)
+Received: from localhost ([208.54.5.135])
+        by smtp.gmail.com with ESMTPSA id d129sm4696466pfa.142.2019.05.03.14.08.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 14:08:32 -0700 (PDT)
+Date:   Fri, 3 May 2019 14:08:31 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Joel Savitz <jsavitz@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Jann Horn <jannh@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH v3 1/2] kernel/sys: add PR_GET_TASK_SIZE option to
+ prctl(2)
+Message-ID: <20190503210831.GB5887@yury-thinkpad>
+References: <1556907021-29730-1-git-send-email-jsavitz@redhat.com>
+ <1556907021-29730-2-git-send-email-jsavitz@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1556777971.12123.35.camel@mtksdaap41>
-References: <20190430112012.4514-1-roger.lu@mediatek.com> <20190430112012.4514-2-roger.lu@mediatek.com> <155665629219.168659.8221738507474891604@swboyd.mtv.corp.google.com> <1556777971.12123.35.camel@mtksdaap41>
-To:     Roger Lu <roger.lu@mediatek.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, Kevin Hilman <khilman@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, Angus.Lin@mediatek.com,
-        Andy-YT.Liu@mediatek.com
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [RFC v1 1/3] dt-bindings: soc: add mtk svs dt-bindings
-Message-ID: <155691770027.200842.16164651681407381397@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Fri, 03 May 2019 14:08:20 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556907021-29730-2-git-send-email-jsavitz@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Roger Lu (2019-05-01 23:19:31)
-> On Tue, 2019-04-30 at 13:31 -0700, Stephen Boyd wrote:
-> > Quoting Roger Lu (2019-04-30 04:20:10)
-> > > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Do=
-cumentation/devicetree/bindings/power/mtk-svs.txt
-> > > new file mode 100644
-> > > index 000000000000..355329db74ba
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
-[..]
-> > > +
-> > > +               svs_gpu: svs_gpu {
-> > > +                       compatible =3D "mediatek,mt8183-svs-gpu";
-> > > +                       power-domains =3D <&scpsys MT8183_POWER_DOMAI=
-N_MFG_2D>;
-> > > +                       operating-points-v2 =3D <&gpu_opp_table>;
-> > > +               };
-> >=20
-> > It looks like you need multiple OPPs for a single device, because it has
-> > different independent power supplies it wants to associate the OPP
-> > tables with?
-> Yes. SVS has different controllers inside the hardware in order to
-> calculate and optimize different OPP table voltage part.
+On Fri, May 03, 2019 at 02:10:20PM -0400, Joel Savitz wrote:
+> When PR_GET_TASK_SIZE is passed to prctl, the kernel will attempt to
+> copy the value of TASK_SIZE to the userspace address in arg2.
+> 
+> It is important that we account for the case of the userspace task
+> running in 32-bit compat mode on a 64-bit kernel. As such, we must be
+> careful to copy the correct number of bytes to userspace to avoid stack
+> corruption.
+> 
+> Suggested-by: Yuri Norov <yury.norov@gmail.com>
 
-So is there more than one SVS register region that needs certain devices
-to be powered on or at least have their power domain enabled so that the
-SVS hardware can read the voltage and adjust accordingly? I should read
-the driver I suppose.
+I actually didn't suggest that. If you _really_ need TASK_SIZE to
+be exposed, I would suggest to expose it in kernel headers. TASK_SIZE
+is a compile-time information, and it may available for userspace at
+compile time as well.
 
->=20
-> > Why can't these OPP tables be attached to the devices that
-> > use them, i.e. CPU, GPU, CCI, etc.? Seems odd that those devices don't
-> > have OPP tables that this hardware block can look up somehow.
-> Those OPP tables are attached by our DVFS node (please refers below
-> patch). SVS just shares with their OPP table and help optimize these OPP
-> tables' voltage part.
->=20
-> Add cpufreq DTS node to the mt8183 and mt8183-evb
-> https://patchwork.kernel.org/patch/10921675/
+> Suggested-by: Alexey Dobriyan <adobriyan@gmail.com>
+> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> ---
+>  include/uapi/linux/prctl.h |  3 +++
+>  kernel/sys.c               | 23 +++++++++++++++++++++++
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> index 094bb03b9cc2..2c261c461952 100644
+> --- a/include/uapi/linux/prctl.h
+> +++ b/include/uapi/linux/prctl.h
+> @@ -229,4 +229,7 @@ struct prctl_mm_map {
+>  # define PR_PAC_APDBKEY                        (1UL << 3)
+>  # define PR_PAC_APGAKEY                        (1UL << 4)
+> 
+> +/* Get the process virtual memory size (i.e. the highest usable VM address) */
+> +#define PR_GET_TASK_SIZE               55
+> +
+>  #endif /* _LINUX_PRCTL_H */
+> diff --git a/kernel/sys.c b/kernel/sys.c
+> index 12df0e5434b8..709584400070 100644
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -2252,6 +2252,26 @@ static int propagate_has_child_subreaper(struct task_struct *p, void *data)
+>         return 1;
+>  }
+> 
+> +static int prctl_get_tasksize(void __user *uaddr)
+> +{
+> +	unsigned long current_task_size, current_word_size;
+> +
+> +	current_task_size = TASK_SIZE;
+> +	current_word_size = sizeof(unsigned long);
+> +
+> +#ifdef CONFIG_64BIT
+> +	/* On 64-bit architecture, we must check whether the current thread
+> +	 * is running in 32-bit compat mode. If it is, we can simply cut
+> +	 * the size in half. This avoids corruption of the userspace stack.
+> +	 */
+> +	if (test_thread_flag(TIF_ADDR32))
 
-Cool thanks for the pointer.
+It breaks build for all architectures except x86 since TIF_ADDR32 is
+defined for x86 only.
 
->=20
->=20
-> > Similarly,
-> > the power domains should probably be part of the devices that are using
-> > them and not these sub-nodes that are mirroring the other hardware
-> > blocks in the system?
-> Oh. There is a svs controller in GPU power-domain. We need to turn on
-> GPU power so that svs controller can work functionally. Therefore, we
-> add GPU power-domains in our svs_gpu sub-node.
->=20
->=20
+In comment to v2 I suggested you to stick to fixed-size data type to
+avoid exactly this problem.
 
-Sorry, I'm not really following what you're saying too closely. I think
-I get it but it sounds complicated.
+NACK
 
-I'm mostly wondering if having properties like svs-gpu =3D <&gpu_node>,
-and svs-cci =3D <&cci_node> would work for you. The idea would be to link
-this hardware block to the nodes that it's going to adjust the OPPs of.
-Once you have the node, use some sort of OPP API to get the OPP table
-for a device_node and adjust it at runtime for the current OPP. It
-sounds like it might be a little more complicated if the hardware goes
-haywire when the device like GPU is powered down and the power domain is
-shut off. Hopefully it isn't though, so that the driver can mostly sit
-on top of the SVS hardware and poke OPP every once and a while when the
-voltage needs to change, regardless of the power state of the device.
+Yury
 
+> +		current_word_size >>= 1;
+> +#endif
+> +
+> +	return copy_to_user(uaddr, &current_task_size, current_word_size) ? -EFAULT : 0;
+> +}
+> +
+>  int __weak arch_prctl_spec_ctrl_get(struct task_struct *t, unsigned long which)
+>  {
+>         return -EINVAL;
+> @@ -2486,6 +2506,9 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+>                         return -EINVAL;
+>                 error = PAC_RESET_KEYS(me, arg2);
+>                 break;
+> +	case PR_GET_TASK_SIZE:
+> +		error = prctl_get_tasksize((void *)arg2);
+> +		break;
+>         default:
+>                 error = -EINVAL;
+>                 break;
+> --
+> 2.18.1
