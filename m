@@ -2,82 +2,82 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5F8C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB9DC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08D52087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:49:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MpJw0NrV";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YSIjN9a8"
+	by mail.kernel.org (Postfix) with ESMTP id BE3B1205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:51:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556869896;
+	bh=sODAXR90bmNzUtNhBl2o3bkfs0Tpl/J2+I8eRtN37CM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H6rmlcLBs9FaepafQ8Q24K8Jx4rt+sS1cX9r6cy/VKbmIU2xtQ8axhGYdSADpTCEF
+	 V72gIYl8St/OxZSg6aY+rY9gYmsRukwjy2/8s5fXYi7z3TA/KuMkEFYMsfBHaaeA0W
+	 QWIXyoNryc1A9tbIAuXYxFqF0BqIJkl6KoZv+cqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfECHt1 (ORCPT
+        id S1726970AbfECHvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:49:27 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60034 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfECHt1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 03:49:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7559861132; Fri,  3 May 2019 07:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556869766;
-        bh=FR4AcNxKg1NOcAXJFdFeJqXyuj3S0d0qMINeLGaMFdo=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=MpJw0NrVx87e9I8YeA7QSfECP8iYm70cRic1YX8ilfwy8F5cFMtPnLr5Cb6E6II5B
-         HAr/4ct+DJVw+kqpc8n/o1xlN0ZncQId2I/GUNZvuoiDdm1c0xmKoJViWVJnbLHAz8
-         aCqnE1beFWVEcUe7+6MPkjvDFou6XMnewjEXlgPg=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 3 May 2019 03:51:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725813AbfECHvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 03:51:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 50D376119F;
-        Fri,  3 May 2019 07:49:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556869765;
-        bh=FR4AcNxKg1NOcAXJFdFeJqXyuj3S0d0qMINeLGaMFdo=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=YSIjN9a8ZFcwL4dIOC7/OFAnwFzYWU6br3JI3RdqAiFz107iS+aADHj9FPSJXOicd
-         57AlXNvNsfMJVTAPqeJB7uz1PQJwHHG5X0pwCez+ejWGRfpU9CCKu76MqAudzOos/6
-         CH9dr9o4FSdDWrwPL8/sHu3OKYIB1JfFP6M6EUqA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 50D376119F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     jes.sorensen@gmail.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com
-Subject: Re: [RFC PATCH 1/2] rtl8xxxu: Add rate adaptive related data
-References: <20190503072146.49999-1-chiu@endlessm.com>
-        <20190503072146.49999-2-chiu@endlessm.com>
-Date:   Fri, 03 May 2019 10:49:22 +0300
-In-Reply-To: <20190503072146.49999-2-chiu@endlessm.com> (Chris Chiu's message
-        of "Fri, 3 May 2019 15:21:45 +0800")
-Message-ID: <874l6ckmf1.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6916E205F4;
+        Fri,  3 May 2019 07:51:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556869894;
+        bh=sODAXR90bmNzUtNhBl2o3bkfs0Tpl/J2+I8eRtN37CM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zafgWLi96DaS3JjLCtYbmCWBcwJb84jp8uchpms88BF5SGicL6HAWj9wREngYyknu
+         WtemRsZgQoqHkeWEUtfuOMIqwCPzo9sbwJ4OcQS7w5SQHGAy3v/+hzPagN5VTACPOJ
+         A4gjc+CPEvigrejso/x1ylrVFBBxa5VRuSWH4DkA=
+Date:   Fri, 3 May 2019 09:51:31 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [git pull] habanalabs next second pull for 5.2
+Message-ID: <20190503075131.GA9785@kroah.com>
+References: <20190503073621.GA6992@ogabbay-VM>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190503073621.GA6992@ogabbay-VM>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Chiu <chiu@endlessm.com> writes:
+On Fri, May 03, 2019 at 10:36:21AM +0300, Oded Gabbay wrote:
+> Hi Greg,
+> 
+> This is the second pull request of habanalabs driver for kernel 5.2.
+> 
+> As the tag describes, all of the changes are either bug fixes or simple
+> re-factoring of existing code, so they should all be relatively low-risk.
+> 
+> Thanks,
+> Oded
+> 
+> The following changes since commit 78e6427b4e7b017951785982f7f97cf64e2d624b:
+> 
+>   coresight: funnel: Support static funnel (2019-05-02 19:12:21 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2019-05-03
 
-> Add wireless mode, signal strength level, and rate table index
-> to tell the firmware that we need to adjust the tx rate bitmap
-> accordingly.
+Pulled and pushed out, thanks.  My tree is now closed for 5.2-rc1 stuff,
+but feel free to queue up bugfixes for me if you want.
 
-Please read Developer's Certificate of Origin and add Signed-off-by to
-the commit logs:
+thanks,
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#signed-off-by_missing
-
--- 
-Kalle Valo
+greg k-h
