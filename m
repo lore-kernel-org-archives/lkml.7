@@ -2,104 +2,231 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01AAC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE5AC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9239E20675
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556905502;
-	bh=egFQTKMYZPhfVPNwf7JHu5iByyXuwNSifAVN0WcPun4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Im9bi9qt7VvPFqHzIMnX5+dk9rmY3ueKMyrZsEgCKiz2fwVeI1kZi9c1c2iaaOYBe
-	 NtudqBA+aBNexfeBmntpQVZaUckDrNr2o49CRLpQz7u36kEMh+RRLAlYRVLRxnrwFS
-	 nxHLNJKW/p3RFIrZUOKISWcf4UC860ieIrejUsyU=
+	by mail.kernel.org (Postfix) with ESMTP id 3788220675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:46:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MDIj1hMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfECRpB (ORCPT
+        id S1728351AbfECRqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:45:01 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39678 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfECRpA (ORCPT
+        Fri, 3 May 2019 13:46:45 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37933 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfECRqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:45:00 -0400
-Received: by mail-wm1-f68.google.com with SMTP id n25so7625043wmk.4;
-        Fri, 03 May 2019 10:44:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t4cyN7e/E+3KAl7sbPpgTsGbsxg6GONbg48fXIFY76o=;
-        b=smqsaY2ywLCfyclbZ+5qDfOP6UVYS+/rtIHjag/XRu1E8e74lgG0xBKlB096D9p/Sv
-         yYSwo94H8qW7fQDzJbvf7/AfQav5mSud7Cu+RuwDj7MCQsOn+8VYRyqu6y6xcRWQb+hH
-         94Nq1ElyUz5A1Pelm17w67FVkBt5tx44IgGVg3Q6T37ZvZa+AUdDIenKtO3q6RW185OE
-         E1/zhca+fgFqb/rEpj92xPrzDaWUhq1yXG1z/DASdgtKP4k69zEc2rutle7CqRwAs/4A
-         5mzknstcA3GK0Qf2rLBxASNsiVdcAOiLBE21Dp8ofXD6hJAO/lkLcqx1jMlFrAdyB7sc
-         uOvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t4cyN7e/E+3KAl7sbPpgTsGbsxg6GONbg48fXIFY76o=;
-        b=n81WzB5pnKWfjG+kvNc4duTzdkWEVxP9QepBnLqIWg1qrSoE30UDL8ccOOxqnJeVxW
-         0otqxCEweai0WTn+m5WFDw7/B294CC1YHiIaXKkIg7G+QebVdry9EBxhix0Zlt80C+qL
-         JRH7VhsT5kzV7bs3ycYG6pSwH2gJKX4ns9BwkX8af54zuulDL0ifpDmRbLi8GtqLFZHk
-         S82sK10RGCxdEqWq8y2yxIsQBsjDR+yLzwt0V2tUj89hGhNdFyCRaLG4gmeJQD21hQJj
-         0X+fuQY41OqigyLNcuDeUJYlGLVqU3fG6pBa+Lry4c5nAhybqIWEMQp8loCmHTzqzadl
-         Us/A==
-X-Gm-Message-State: APjAAAUL4DwZfiPQZE/iWDHBu/LV82vFufOCD+EDxD1Bwa1qxADpT8F6
-        Vh7TaGQ5aZm2DDZw6GIVNao=
-X-Google-Smtp-Source: APXvYqzBWf8fKDF6Kp9Ud0HFoTG2rxkjduJGSvdXpNA83cq6Nuv2dkbLXqYgqTlo46CAGzYmfb+xJw==
-X-Received: by 2002:a1c:eb12:: with SMTP id j18mr7692987wmh.48.1556905498724;
-        Fri, 03 May 2019 10:44:58 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id c204sm16769255wmd.0.2019.05.03.10.44.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 10:44:58 -0700 (PDT)
-Date:   Fri, 3 May 2019 19:44:55 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Changbin Du <changbin.du@gmail.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/27] Include linux x86 docs into Sphinx TOC tree
-Message-ID: <20190503174455.GA69353@gmail.com>
-References: <20190502070633.9809-1-changbin.du@gmail.com>
- <20190503064347.1d027e87@lwn.net>
+        Fri, 3 May 2019 13:46:44 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x43HkH6R2844885
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 3 May 2019 10:46:17 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x43HkH6R2844885
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1556905578;
+        bh=qFQVdOve9Ugu+uNMTVAHb21CONJySGuQ4ojCLhQGwrQ=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=MDIj1hMNgtnErkG5bKx3OXT06VRMViKoWRnDC4lfcxGpEXgRx1hEHNNh2J25n7a0G
+         znk/3yxuRoNN0xqTG3FCEELDc+aVy0x+OWdhUxuCHPZ9DCH1r9RaRyL1dtdl2r2MDS
+         AjrRVPKyb8JpAbUfPDlgFu/U3u46RBTLMEvsHj91hrSGvmBGre3JOlBP1/GOMQ3zWl
+         Mc/zkBoKlvZ/RecrHaftUuuKkS7kRydGC1rxWloCbU5Me/hrD3ovwCPi+v2T7mj5r2
+         mn/Ysa5AK57DSWAxpAy6TA99fAr/nkwCKRVpvIfvKR23/55DQueWMNtCm3nJjAFNEH
+         X95O8duJa6Xkg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x43HkGJQ2844882;
+        Fri, 3 May 2019 10:46:16 -0700
+Date:   Fri, 3 May 2019 10:46:16 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Nicholas Piggin <tipbot@zytor.com>
+Message-ID: <tip-2f1a6fbbef7781382850c3104ecb658f21b5d460@git.kernel.org>
+Cc:     tglx@linutronix.de, hpa@zytor.com, peterz@infradead.org,
+        fweisbec@gmail.com, npiggin@gmail.com,
+        torvalds@linux-foundation.org, rafael.j.wysocki@intel.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org
+Reply-To: linux-kernel@vger.kernel.org, mingo@kernel.org,
+          rafael.j.wysocki@intel.com, torvalds@linux-foundation.org,
+          peterz@infradead.org, fweisbec@gmail.com, npiggin@gmail.com,
+          tglx@linutronix.de, hpa@zytor.com
+In-Reply-To: <20190411033448.20842-3-npiggin@gmail.com>
+References: <20190411033448.20842-3-npiggin@gmail.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] power/suspend: Add function to disable secondaries
+ for suspend
+Git-Commit-ID: 2f1a6fbbef7781382850c3104ecb658f21b5d460
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190503064347.1d027e87@lwn.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  2f1a6fbbef7781382850c3104ecb658f21b5d460
+Gitweb:     https://git.kernel.org/tip/2f1a6fbbef7781382850c3104ecb658f21b5d460
+Author:     Nicholas Piggin <npiggin@gmail.com>
+AuthorDate: Thu, 11 Apr 2019 13:34:45 +1000
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Fri, 3 May 2019 19:42:41 +0200
 
-* Jonathan Corbet <corbet@lwn.net> wrote:
+power/suspend: Add function to disable secondaries for suspend
 
-> On Thu,  2 May 2019 15:06:06 +0800
-> Changbin Du <changbin.du@gmail.com> wrote:
-> 
-> > The kernel now uses Sphinx to generate intelligent and beautiful documentation
-> > from reStructuredText files. I converted all of the Linux x86 docs to rst
-> > format in this serias.
-> > 
-> > For you to preview, please visit below url:
-> > http://www.bytemem.com:8080/kernel-doc/index.html
-> 
-> x86 folks: how would you like to handle this set?  Take it yourselves,
-> have me take it, print it out and set it on fire, ...?
+This adds a function to disable secondary CPUs for suspend that are
+not necessarily non-zero / non-boot CPUs. Platforms will be able to
+use this to suspend using non-zero CPUs.
 
-If you are otherwise happy with it:
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linuxppc-dev@lists.ozlabs.org
+Link: https://lkml.kernel.org/r/20190411033448.20842-3-npiggin@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/cpu.h      | 12 ++++++++++++
+ kernel/kexec_core.c      |  4 ++--
+ kernel/power/hibernate.c | 12 ++++++------
+ kernel/power/suspend.c   |  4 ++--
+ 4 files changed, 22 insertions(+), 10 deletions(-)
 
-Acked-by: Ingo Molnar <mingo@kernel.org>
-
-Thanks,
-
-	Ingo
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 5041357d0297..7ab2f09c0a14 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -137,9 +137,21 @@ static inline int disable_nonboot_cpus(void)
+ 	return freeze_secondary_cpus(0);
+ }
+ extern void enable_nonboot_cpus(void);
++
++static inline int suspend_disable_secondary_cpus(void)
++{
++	return freeze_secondary_cpus(0);
++}
++static inline void suspend_enable_secondary_cpus(void)
++{
++	return enable_nonboot_cpus();
++}
++
+ #else /* !CONFIG_PM_SLEEP_SMP */
+ static inline int disable_nonboot_cpus(void) { return 0; }
+ static inline void enable_nonboot_cpus(void) {}
++static inline int suspend_disable_secondary_cpus(void) { return 0; }
++static inline void suspend_enable_secondary_cpus(void) { }
+ #endif /* !CONFIG_PM_SLEEP_SMP */
+ 
+ void cpu_startup_entry(enum cpuhp_state state);
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index d7140447be75..fd5c95ff9251 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1150,7 +1150,7 @@ int kernel_kexec(void)
+ 		error = dpm_suspend_end(PMSG_FREEZE);
+ 		if (error)
+ 			goto Resume_devices;
+-		error = disable_nonboot_cpus();
++		error = suspend_disable_secondary_cpus();
+ 		if (error)
+ 			goto Enable_cpus;
+ 		local_irq_disable();
+@@ -1183,7 +1183,7 @@ int kernel_kexec(void)
+  Enable_irqs:
+ 		local_irq_enable();
+  Enable_cpus:
+-		enable_nonboot_cpus();
++		suspend_enable_secondary_cpus();
+ 		dpm_resume_start(PMSG_RESTORE);
+  Resume_devices:
+ 		dpm_resume_end(PMSG_RESTORE);
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index abef759de7c8..cfc7a57049e4 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -281,7 +281,7 @@ static int create_image(int platform_mode)
+ 	if (error || hibernation_test(TEST_PLATFORM))
+ 		goto Platform_finish;
+ 
+-	error = disable_nonboot_cpus();
++	error = suspend_disable_secondary_cpus();
+ 	if (error || hibernation_test(TEST_CPUS))
+ 		goto Enable_cpus;
+ 
+@@ -323,7 +323,7 @@ static int create_image(int platform_mode)
+ 	local_irq_enable();
+ 
+  Enable_cpus:
+-	enable_nonboot_cpus();
++	suspend_enable_secondary_cpus();
+ 
+  Platform_finish:
+ 	platform_finish(platform_mode);
+@@ -417,7 +417,7 @@ int hibernation_snapshot(int platform_mode)
+ 
+ int __weak hibernate_resume_nonboot_cpu_disable(void)
+ {
+-	return disable_nonboot_cpus();
++	return suspend_disable_secondary_cpus();
+ }
+ 
+ /**
+@@ -486,7 +486,7 @@ static int resume_target_kernel(bool platform_mode)
+ 	local_irq_enable();
+ 
+  Enable_cpus:
+-	enable_nonboot_cpus();
++	suspend_enable_secondary_cpus();
+ 
+  Cleanup:
+ 	platform_restore_cleanup(platform_mode);
+@@ -564,7 +564,7 @@ int hibernation_platform_enter(void)
+ 	if (error)
+ 		goto Platform_finish;
+ 
+-	error = disable_nonboot_cpus();
++	error = suspend_disable_secondary_cpus();
+ 	if (error)
+ 		goto Enable_cpus;
+ 
+@@ -586,7 +586,7 @@ int hibernation_platform_enter(void)
+ 	local_irq_enable();
+ 
+  Enable_cpus:
+-	enable_nonboot_cpus();
++	suspend_enable_secondary_cpus();
+ 
+  Platform_finish:
+ 	hibernation_ops->finish();
+diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+index 0bd595a0b610..59b6def23046 100644
+--- a/kernel/power/suspend.c
++++ b/kernel/power/suspend.c
+@@ -428,7 +428,7 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
+ 	if (suspend_test(TEST_PLATFORM))
+ 		goto Platform_wake;
+ 
+-	error = disable_nonboot_cpus();
++	error = suspend_disable_secondary_cpus();
+ 	if (error || suspend_test(TEST_CPUS))
+ 		goto Enable_cpus;
+ 
+@@ -458,7 +458,7 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
+ 	BUG_ON(irqs_disabled());
+ 
+  Enable_cpus:
+-	enable_nonboot_cpus();
++	suspend_enable_secondary_cpus();
+ 
+  Platform_wake:
+ 	platform_resume_noirq(state);
