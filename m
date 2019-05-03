@@ -2,102 +2,130 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6B2C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AF9C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABA92075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0044520B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:13:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="MjbnO6Ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfECSMX (ORCPT
+        id S1728686AbfECSN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 14:12:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:19665 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728619AbfECSMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 14:12:19 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ED9636147C;
-        Fri,  3 May 2019 18:12:18 +0000 (UTC)
-Received: from jsavitz.bos.com (dhcp-17-237.bos.redhat.com [10.18.17.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0DE6B60BFC;
-        Fri,  3 May 2019 18:12:16 +0000 (UTC)
-From:   Joel Savitz <jsavitz@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Joel Savitz <jsavitz@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Micah Morton <mortonm@chromium.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Jann Horn <jannh@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        David Laight <David.Laight@aculab.com>
-Subject: [PATCH v3 2/2] prctl.2: Document the new PR_GET_TASK_SIZE option
-Date:   Fri,  3 May 2019 14:10:21 -0400
-Message-Id: <1556907021-29730-3-git-send-email-jsavitz@redhat.com>
-In-Reply-To: <1556907021-29730-1-git-send-email-jsavitz@redhat.com>
-References: <1556907021-29730-1-git-send-email-jsavitz@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 03 May 2019 18:12:19 +0000 (UTC)
+        Fri, 3 May 2019 14:13:57 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:35944 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727819AbfECSN5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 14:13:57 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43I4t2R023988
+        for <linux-kernel@vger.kernel.org>; Fri, 3 May 2019 11:13:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=883wCebAN1KM2oekjLpbnb88YeeO9l8mZlAi2lYfxLU=;
+ b=MjbnO6Ez7XPNNhUZqp2S309sB4RiGFOdNfsdxcyc1Am6gQk6Vg+D40RUXeD2+W2sIezl
+ Yqfx3FuHKfQN9tsUbotv915Suc1+FamF5n2s4vmXVDAm5yegPPG0CZjhmWt8VRUEsshe
+ 0c9mVqrnkSLAPdfye+iNUZwmLTGsh+Ff4B4= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2s86r1kc2g-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 11:13:55 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 3 May 2019 11:13:53 -0700
+Received: by devvm4117.prn2.facebook.com (Postfix, from userid 167582)
+        id E48EFD713BB5; Fri,  3 May 2019 11:13:51 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Vijay Khemka <vijaykhemka@fb.com>
+Smtp-Origin-Hostname: devvm4117.prn2.facebook.com
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     <vijaykhemka@fb.com>, <sdasari@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v2] misc: aspeed-lpc-ctrl: Correct return values
+Date:   Fri, 3 May 2019 11:13:36 -0700
+Message-ID: <20190503181336.579877-1-vijaykhemka@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905030118
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a short explanation of the new PR_GET_TASK_SIZE option for the benefit
-of future generations.
+Corrected some of return values with appropriate meanings and reported
+relevant messages as debug information.
 
-Suggested-by: David Laight <David.Laight@aculab.com>
-Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 ---
- man2/prctl.2 | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/misc/aspeed-lpc-ctrl.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/man2/prctl.2 b/man2/prctl.2
-index 06d8e13c7..cae582726 100644
---- a/man2/prctl.2
-+++ b/man2/prctl.2
-@@ -49,6 +49,7 @@
- .\" 2013-01-10 Kees Cook, document PR_SET_PTRACER
- .\" 2012-02-04 Michael Kerrisk, document PR_{SET,GET}_CHILD_SUBREAPER
- .\" 2014-11-10 Dave Hansen, document PR_MPX_{EN,DIS}ABLE_MANAGEMENT
-+.\" 2019-05-03 Joel Savitz, document PR_GET_TASK_SIZE
- .\"
- .\"
- .TH PRCTL 2 2019-03-06 "Linux" "Linux Programmer's Manual"
-@@ -1375,6 +1376,15 @@ system call on Tru64).
- for information on versions and architectures)
- Return unaligned access control bits, in the location pointed to by
- .IR "(unsigned int\ *) arg2" .
-+.TP
-+.B PR_GET_TASK_SIZE
-+Copy the value of TASK_SIZE to the userspace address in
-+.IR "(unsigned long\ *) arg2" .
-+This value represents the highest virtual address available
-+to the current process. Return
-+.B EFAULT
-+if this operation fails.
-+
- .SH RETURN VALUE
- On success,
- .BR PR_GET_DUMPABLE ,
---
-2.18.1
+diff --git a/drivers/misc/aspeed-lpc-ctrl.c b/drivers/misc/aspeed-lpc-ctrl.c
+index 332210e06e98..aca13779764a 100644
+--- a/drivers/misc/aspeed-lpc-ctrl.c
++++ b/drivers/misc/aspeed-lpc-ctrl.c
+@@ -93,8 +93,8 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
+ 
+ 		/* If memory-region is not described in device tree */
+ 		if (!lpc_ctrl->mem_size) {
+-			dev_err(dev, "Didn't find reserved memory\n");
+-			return -EINVAL;
++			dev_dbg(dev, "Didn't find reserved memory\n");
++			return -ENXIO;
+ 		}
+ 
+ 		map.size = lpc_ctrl->mem_size;
+@@ -134,16 +134,16 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
+ 
+ 		if (map.window_type == ASPEED_LPC_CTRL_WINDOW_FLASH) {
+ 			if (!lpc_ctrl->pnor_size) {
+-				dev_err(dev, "Didn't find host pnor flash\n");
+-				return -EINVAL;
++				dev_dbg(dev, "Didn't find host pnor flash\n");
++				return -ENXIO;
+ 			}
+ 			addr = lpc_ctrl->pnor_base;
+ 			size = lpc_ctrl->pnor_size;
+ 		} else if (map.window_type == ASPEED_LPC_CTRL_WINDOW_MEMORY) {
+ 			/* If memory-region is not described in device tree */
+ 			if (!lpc_ctrl->mem_size) {
+-				dev_err(dev, "Didn't find reserved memory\n");
+-				return -EINVAL;
++				dev_dbg(dev, "Didn't find reserved memory\n");
++				return -ENXIO;
+ 			}
+ 			addr = lpc_ctrl->mem_base;
+ 			size = lpc_ctrl->mem_size;
+@@ -239,7 +239,7 @@ static int aspeed_lpc_ctrl_probe(struct platform_device *pdev)
+ 		of_node_put(node);
+ 		if (rc) {
+ 			dev_err(dev, "Couldn't address to resource for reserved memory\n");
+-			return -ENOMEM;
++			return -ENXIO;
+ 		}
+ 
+ 		lpc_ctrl->mem_size = resource_size(&resm);
+-- 
+2.17.1
 
