@@ -2,204 +2,110 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA98C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BF4C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40658206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77C592089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:19:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FU+THmY/"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="I8LbVOy2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfECLT2 (ORCPT
+        id S1727681AbfECLTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:19:28 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35626 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfECLT2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:19:28 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h15so1689209wrb.2;
-        Fri, 03 May 2019 04:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kznYLKi373KSnxJXDEYDyqZTWv2DWOlCYoAQA1dKIN4=;
-        b=FU+THmY/gcswXh6kfdRTql4G69DBYAoMINIRi9/isJM3rQT42NHCyGWxBOFB7XPOil
-         PQQA3NgsBdaDERC8fw/2t1Q40vBV8SsxjOW47eKwhfCG4G0DyOnpmC3jDKyiHMUFTWPl
-         y/RS+rURUlziaMzPVf+478gxzmAy7/Y0+tu79je1cyE5DYC2TaGJsI1HlgWf7ur01Srr
-         tb4TcHZJygypX5g8GHCiUWlq2CVxcgq2grDLC6HPFlauh1pWCjoZTMlrP1UCa9qgO9l8
-         yP3ZShn4FRYzvpUu3WwVThp5XbXBDiNRBUzyoH9KOnu4CQlBO3PZm0Z6vHl/0scv0Gu0
-         E3yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kznYLKi373KSnxJXDEYDyqZTWv2DWOlCYoAQA1dKIN4=;
-        b=ecHXq0JTUU7zm45K9MqCpAlNFdBzY8EMUjb23GFLKfc1E1ZFRX5Pq+sfHPnqHox1FW
-         pC+vNRHAUDQAzTKPbvn9deJUM6QsT9rpmm42YI0yG1DhzOfBwopMOHlmuJhjT2nPL7z8
-         u1bt35B5ZUgyhH8mpxP1c3f2HPAos2aQ3B2erX5A02/r8Zz1x7rwtPa17QGehApSPnlR
-         aRKjpUh1IhmPSEbUrMtfKS1D/ndpth3nkfhsWds9OrUIE3Zblf46qV2nI0x+lMSO948s
-         oQsDi+ZuowmwMqJ4nbZ3aOXAvuGxs7BqxXm0wjhMwPy2RKq8jlLnEHC63YHK8sopCoCO
-         lmsg==
-X-Gm-Message-State: APjAAAX/0YkJNdKrbx+04VgGro15yHJ0dyDlLtFRiRtgd8zh1LyjLW20
-        MMDnlSCUacIwECpXYVZ5zZk=
-X-Google-Smtp-Source: APXvYqxFMF7YNkHtXxqIFuqEy8MLdwT3LvZrCohDAJJRUH1Z2se9pof/X+KXX22J76siKQpKpsS8QQ==
-X-Received: by 2002:a5d:52ce:: with SMTP id r14mr6909008wrv.224.1556882365330;
-        Fri, 03 May 2019 04:19:25 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id s7sm1895613wrn.84.2019.05.03.04.19.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 04:19:24 -0700 (PDT)
-Date:   Fri, 3 May 2019 13:19:23 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 10/16] dt-bindings: PCI: tegra: Add device tree
- support for T194
-Message-ID: <20190503111923.GE32400@ulmo>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-11-vidyas@nvidia.com>
+        Fri, 3 May 2019 07:19:35 -0400
+Received: from mail-eopbgr00082.outbound.protection.outlook.com ([40.107.0.82]:40769
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726396AbfECLTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 07:19:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+TmTahHCBNWFPCJExfqYFjyX7VBn88No3244GdyV/vM=;
+ b=I8LbVOy2i7C2r+19dXpQgrMJi2romUcH3UzilzpfHukf11JciV7kqHBOy8UvoJX0lRJ9OYGXkgbH1wrAXGXrTz9R03dkMD0WBovsJaxqo5COQZ9wVIYtUXvuoo7cjZz80szootl0Qy4ErWitrSY1GK/XDTKMHfV1mVH8vcH31Z4=
+Received: from AM0PR04MB6434.eurprd04.prod.outlook.com (20.179.252.215) by
+ AM0PR04MB5859.eurprd04.prod.outlook.com (20.178.202.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Fri, 3 May 2019 11:19:30 +0000
+Received: from AM0PR04MB6434.eurprd04.prod.outlook.com
+ ([fe80::19be:75a:9fe:7cec]) by AM0PR04MB6434.eurprd04.prod.outlook.com
+ ([fe80::19be:75a:9fe:7cec%7]) with mapi id 15.20.1856.008; Fri, 3 May 2019
+ 11:19:30 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/2] gdb/scripts: Improve lx-clk-summary
+Thread-Topic: [PATCH 0/2] gdb/scripts: Improve lx-clk-summary
+Thread-Index: AQHVAaITaVxkbZFe1kuCtvvT+0qG3Q==
+Date:   Fri, 3 May 2019 11:19:30 +0000
+Message-ID: <cover.1556881728.git.leonard.crestez@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [89.37.124.34]
+x-mailer: git-send-email 2.17.1
+x-clientproxiedby: VE1PR08CA0027.eurprd08.prod.outlook.com
+ (2603:10a6:803:104::40) To AM0PR04MB6434.eurprd04.prod.outlook.com
+ (2603:10a6:208:16c::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2ac0f060-6232-4c4c-2551-08d6cfb93621
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5859;
+x-ms-traffictypediagnostic: AM0PR04MB5859:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM0PR04MB585956A3F5DD0939258C3FB7EE350@AM0PR04MB5859.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0026334A56
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(366004)(346002)(39860400002)(396003)(189003)(199004)(478600001)(256004)(66066001)(966005)(14454004)(6306002)(6436002)(386003)(66946007)(6512007)(2616005)(110136005)(316002)(476003)(6486002)(8676002)(66476007)(66556008)(64756008)(66446008)(99286004)(53936002)(3846002)(81156014)(81166006)(54906003)(36756003)(6116002)(68736007)(8936002)(50226002)(44832011)(73956011)(2906002)(486006)(305945005)(52116002)(4326008)(102836004)(6506007)(25786009)(5660300002)(186003)(26005)(7736002)(86362001)(71200400001)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5859;H:AM0PR04MB6434.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5YzIV5TdvP9RDWtj+/pFCW8PQ14PQYUvURPgPhaOY5ErwdqhXCodMjZ5PVXztfvQfNar0fnp8HMMmqXpvjhcoW9BDxGsItTEpqlS95i3+nAhiVWplXVTORCagjShIx72z/8/CLsaDIzBQsLW5E4mGznVYG/DMHRfR5rBoZF9MoY47cM0/jXRt7QL+kbeZZzo4bMqJyB70vqj3T3UI96zMOY1Ts3zhGkwN148MdU7Lkt0RqiVFV+HB8vDQjmdp6RL8t3pMwwQwpGLlmiyLwWjsUEMkHVOpSM0IazG7NaIZvNxFdSgT3YGdUr3oNlXyVswSrg/bdvYJcUij3edR+33QgTOo5IfRsyNfVaLqp1sGMxN2bn+5JwQb5kdN15NVoL/MpCoPrz3mjakmhXO6NqI8TxYWYFzs5dFjwL0tXfyXTE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gMR3gsNFwZpnI/Ts"
-Content-Disposition: inline
-In-Reply-To: <20190424052004.6270-11-vidyas@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ac0f060-6232-4c4c-2551-08d6cfb93621
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2019 11:19:30.8172
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5859
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---gMR3gsNFwZpnI/Ts
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Apr 24, 2019 at 10:49:58AM +0530, Vidya Sagar wrote:
-> Add support for Tegra194 PCIe controllers. These controllers are based
-> on Synopsys DesignWare core IP.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v4]:
-> * None
->=20
-> Changes since [v3]:
-> * None
->=20
-> Changes since [v2]:
-> * Using only 'Cx' (x-being controller number) format to represent a contr=
-oller
-> * Changed to 'value: description' format where applicable
-> * Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
-> * Provided more documentation for 'nvidia,init-link-speed' property
-> * Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
->=20
-> Changes since [v1]:
-> * Added documentation for 'power-domains' property
-> * Removed 'window1' and 'window2' properties
-> * Removed '_clk' and '_rst' from clock and reset names
-> * Dropped 'pcie' from phy-names
-> * Added entry for BPMP-FW handle
-> * Removed offsets for some of the registers and added them in code and wo=
-uld be pickedup based on
->   controller ID
-> * Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an option=
-al
-> * Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with invert=
-ed operation
-> * Added more documentation for 'nvidia,update-fc-fixup' property
-> * Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
-> * Added '-us' to all properties that represent time in microseconds
-> * Moved P2U documentation to a separate file
->=20
->  .../bindings/pci/nvidia,tegra194-pcie.txt     | 187 ++++++++++++++++++
->  1 file changed, 187 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194=
--pcie.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.t=
-xt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> new file mode 100644
-> index 000000000000..208dff126108
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> @@ -0,0 +1,187 @@
-> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
-> +
-> +This PCIe host controller is based on the Synopsis Designware PCIe IP
-> +and thus inherits all the common properties defined in designware-pcie.t=
-xt.
-> +
-> +Required properties:
-> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
-> +- device_type: Must be "pci"
-> +- power-domains: A phandle to the node that controls power to the respec=
-tive
-> +  PCIe controller and a specifier name for the PCIe controller. Followin=
-g are
-> +  the specifiers for the different PCIe controllers
-> +    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
-> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C1
-> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C2
-> +    TEGRA194_POWER_DOMAIN_PCIEX1A: C3
-> +    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
-> +    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
-> +  these specifiers are defined in
-> +  "include/dt-bindings/power/tegra194-powergate.h" file.
-> +- reg: A list of physical base address and length for each set of contro=
-ller
-
-Perhaps "list of physical base address and length pairs".
-
-> +  registers. Must contain an entry for each entry in the reg-names prope=
-rty.
-> +- reg-names: Must include the following entries:
-> +  "appl": Controller's application logic registers
-> +  "config": As per the definition in designware-pcie.txt
-> +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Ad=
-dress
-> +             Translation Unit) registers of the PCIe core are made avail=
-able
-> +             fow SW access.
-
-s/fow/for/
-
-Thierry
-
---gMR3gsNFwZpnI/Ts
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzMI7sACgkQ3SOs138+
-s6EIIQ/+JneyIE1QInUy25Ht9TxH6uK1NfNwHzcE3w7WQOHSFZ6cCm60usW9tX7y
-5bVqKGD/Qk/van6DX4OJbVWqUXSU4kKpCvL6e9ImuJn50qtt+SZCvzn2ITB1RrMY
-cx9g/qtQjrRgv9lnezcEBGFGFk0Mr828WkPfzZSIIT2xqJ7Hn+Irp5gvU+6LoDhv
-7J3FiCWf08MsSP/GmoTROtgkEl72UkltbhPUNb+YtL/AZd858eXm7ao/zP3mUIO2
-f67wTlzzqC1kYJYLERm4DOVlrpPehlz+fp+4QXbKsBovY4qkkRJCW4FM9F9d7Qe9
-z5wGlqk7SRZQPNDAVGhZ4XWRjpyiMss72Mqv4FjHU+FQiuney9b/NVu60XtJ0JqA
-LMo+JVI8w+5Pqq/n5+5mN9aM/dmmumTyaPZiQ/AASYX7iU8dXe6aKIcgZo+a10LW
-X4fezVQ/BlzdHQ72ADFg66g1UkONCAYFaLemAf60OYJQQPKLTy4dAaemtleMoLsF
-hbKQng3PJSkG8L33JiMlvGg4N0cIaWx+1ugkMLrjbgrx8z8qceHyc3nrGvBPUyTU
-X9srLQMC7WsiahwlWUZPqMewXYPPXFKDg1+ExlLkQi/vSt88iJcu4X+ljt693WmR
-GOIY4OkOtmYrcJZEdJLmxCjqTNMkxCRrKjSpv3OEHCigvugwYeo=
-=pPtB
------END PGP SIGNATURE-----
-
---gMR3gsNFwZpnI/Ts--
+VGhlIGVhcmxpZXIgc2VyaWVzIGFkZGluZyBjbGsgc3VwcG9ydCB0byBnZGIvc2NyaXB0cyB3YXMg
+cXVpY2tseQ0KYWNjZXB0ZWQgYnV0IHNvbWUgY29uY2VybnMgd2VyZSByYWlzZWQgYnkgU3RlcGhl
+biBCb3lkIHNvIHRoaXMgc2VyaWVzDQphdHRlbXB0cyB0byBhZGRyZXNzIHRoZW0uDQoNCkxpbmsg
+dG8gcHJldmlvdXMgc2VyaWVzOiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS80LzIyLzU1DQoN
+ClRoaXMgaXMgbm90IGEgdjIgYW5kIHNxdWFzaGluZyBpcyBub3QgZXhwZWN0ZWQuDQoNCkZpZWxk
+cyBvdGhlciB0aGFuIGNsayByYXRlIG5vdCBjb3ZlcmVkIGJlY2F1c2UgdGhleSdyZSBtdWNoIG1v
+cmUgcmFyZWx5DQp1c2VkIGFuZCBjYWNoZSBsb2dpYyBjYW4gZ2V0IG1vcmUgY29tcGxpY2F0ZWQg
+YW5kIGJyaXR0bGUuDQoNCkxYX0dEQlBBUlNFRCBpcyB1c2VkIGluIGNvbnN0YW50cy5weS5pbiBi
+ZWNhdXNlIHB5dGhvbiBkb2VzIG5vdA0KdW5kZXJzdGFuZCBDIGludGVnZXIgbGl0ZXJhbCBzdWZm
+aXhlcyBsaWtlIHRoZSAiMVVMIiBmcm9tIHRoZSBkZWZpbml0aW9uDQpvZiBCSVQoKSB1c2VkIGJ5
+IENMS19HRVRfUkFURV9OT0NBQ0hFLiBBbHRlcm5hdGl2ZSB3b3JrYXJvdW5kcyB3b3VsZCBiZQ0K
+aGFja2luZyBhd2F5IFVMIHN1ZmZpeGVzIHdpdGggc2VkIG9yIHJlZGVmaW5pbmcgQklUJmNvIGJ1
+dCByZWx5aW5nIG9uDQpnZGIgZXZhbHVhdGlvbiBpcyBlYXNpZXIgYW5kIG11Y2ggbW9yZSBmbGV4
+aWJsZS4NCg0KTGVvbmFyZCBDcmVzdGV6ICgyKToNCiAgc2NyaXB0cy9nZGI6IENsZWFudXAgZXJy
+b3IgaGFuZGxpbmcgaW4gbGlzdCBoZWxwZXJzDQogIHNjcmlwdHMvZ2RiOiBQcmludCBjYWNoZWQg
+cmF0ZSBpbiBseC1jbGstc3VtbWFyeQ0KDQogc2NyaXB0cy9nZGIvbGludXgvY2xrLnB5ICAgICAg
+ICAgIHwgMjEgKysrKysrKysrKysrKystLS0tLS0tDQogc2NyaXB0cy9nZGIvbGludXgvY29uc3Rh
+bnRzLnB5LmluIHwgIDQgKysrKw0KIHNjcmlwdHMvZ2RiL2xpbnV4L2xpc3RzLnB5ICAgICAgICB8
+IDEwICsrLS0tLS0tLS0NCiAzIGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDE1IGRl
+bGV0aW9ucygtKQ0KDQotLSANCjIuMTcuMQ0KDQo=
