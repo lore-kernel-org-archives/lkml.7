@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AB4C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0C1C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A35D52087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2732087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:47:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfECIqz (ORCPT
+        id S1727451AbfECIrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 04:46:55 -0400
-Received: from mga01.intel.com ([192.55.52.88]:5536 "EHLO mga01.intel.com"
+        Fri, 3 May 2019 04:47:02 -0400
+Received: from mga01.intel.com ([192.55.52.88]:5532 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727119AbfECIpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 04:45:33 -0400
+        id S1726996AbfECIpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 04:45:30 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 May 2019 01:45:33 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 May 2019 01:45:29 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,425,1549958400"; 
-   d="scan'208";a="147811556"
+   d="scan'208";a="147811548"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 03 May 2019 01:45:31 -0700
+  by orsmga003.jf.intel.com with ESMTP; 03 May 2019 01:45:28 -0700
 From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-kernel@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [GIT PULL 08/22] intel_th: msu: Start handling IRQs
-Date:   Fri,  3 May 2019 11:44:41 +0300
-Message-Id: <20190503084455.23436-9-alexander.shishkin@linux.intel.com>
+Subject: [GIT PULL 06/22] intel_th: Communicate IRQ via resource
+Date:   Fri,  3 May 2019 11:44:39 +0300
+Message-Id: <20190503084455.23436-7-alexander.shishkin@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190503084455.23436-1-alexander.shishkin@linux.intel.com>
 References: <20190503084455.23436-1-alexander.shishkin@linux.intel.com>
@@ -45,253 +45,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We intend to use the interrupt to detect Last Block condition in the MSU
-driver, which we can use for double-buffering software-managed data
-transfers.
+Currently, the IRQ is passed between the glue layers and the core as a
+separate argument, while the MMIO resources are passed as resources.
+This also limits the number of IRQs thus used to one, while the current
+versions of Intel TH use a different MSI vector for each interrupt
+triggering event, of which there are 7.
 
-Add an interrupt handler to the MSU driver.
+Change this to pass IRQ in the resources array.
 
 Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 ---
- drivers/hwtracing/intel_th/core.c     | 32 ++++++++++++++
- drivers/hwtracing/intel_th/intel_th.h |  4 +-
- drivers/hwtracing/intel_th/msu.c      | 64 ++++++++++++++++++++++++++-
- drivers/hwtracing/intel_th/msu.h      |  8 ++++
- 4 files changed, 106 insertions(+), 2 deletions(-)
+ drivers/hwtracing/intel_th/acpi.c     | 10 ++++------
+ drivers/hwtracing/intel_th/core.c     | 23 ++++++++++++++++++-----
+ drivers/hwtracing/intel_th/intel_th.h |  2 +-
+ drivers/hwtracing/intel_th/pci.c      |  9 +++++++--
+ 4 files changed, 30 insertions(+), 14 deletions(-)
 
+diff --git a/drivers/hwtracing/intel_th/acpi.c b/drivers/hwtracing/intel_th/acpi.c
+index b528e5b113ff..87f9024e4bbb 100644
+--- a/drivers/hwtracing/intel_th/acpi.c
++++ b/drivers/hwtracing/intel_th/acpi.c
+@@ -40,20 +40,18 @@ static int intel_th_acpi_probe(struct platform_device *pdev)
+ 	struct resource resource[TH_MMIO_END];
+ 	const struct acpi_device_id *id;
+ 	struct intel_th *th;
+-	int i, r, irq = -1;
++	int i, r;
+ 
+ 	id = acpi_match_device(intel_th_acpi_ids, &pdev->dev);
+ 	if (!id)
+ 		return -ENODEV;
+ 
+ 	for (i = 0, r = 0; i < pdev->num_resources && r < TH_MMIO_END; i++)
+-		if (pdev->resource[i].flags & IORESOURCE_IRQ)
+-			irq = pdev->resource[i].start;
+-		else if (pdev->resource[i].flags & IORESOURCE_MEM)
++		if (pdev->resource[i].flags &
++		    (IORESOURCE_IRQ | IORESOURCE_MEM))
+ 			resource[r++] = pdev->resource[i];
+ 
+-	th = intel_th_alloc(&pdev->dev, (void *)id->driver_data, resource, r,
+-			    irq);
++	th = intel_th_alloc(&pdev->dev, (void *)id->driver_data, resource, r);
+ 	if (IS_ERR(th))
+ 		return PTR_ERR(th);
+ 
 diff --git a/drivers/hwtracing/intel_th/core.c b/drivers/hwtracing/intel_th/core.c
-index 0205fca4c606..750aa9d6f849 100644
+index a0b8b0182daa..0205fca4c606 100644
 --- a/drivers/hwtracing/intel_th/core.c
 +++ b/drivers/hwtracing/intel_th/core.c
-@@ -826,6 +826,28 @@ static const struct file_operations intel_th_output_fops = {
- 	.llseek	= noop_llseek,
- };
+@@ -834,10 +834,10 @@ static const struct file_operations intel_th_output_fops = {
+  */
+ struct intel_th *
+ intel_th_alloc(struct device *dev, struct intel_th_drvdata *drvdata,
+-	       struct resource *devres, unsigned int ndevres, int irq)
++	       struct resource *devres, unsigned int ndevres)
+ {
++	int err, r, nr_mmios = 0;
+ 	struct intel_th *th;
+-	int err, r;
  
-+static irqreturn_t intel_th_irq(int irq, void *data)
-+{
-+	struct intel_th *th = data;
-+	irqreturn_t ret = IRQ_NONE;
-+	struct intel_th_driver *d;
-+	int i;
-+
-+	for (i = 0; i < th->num_thdevs; i++) {
-+		if (th->thdev[i]->type != INTEL_TH_OUTPUT)
-+			continue;
-+
-+		d = to_intel_th_driver(th->thdev[i]->dev.driver);
-+		if (d && d->irq)
-+			ret |= d->irq(th->thdev[i]);
-+	}
-+
-+	if (ret == IRQ_NONE)
-+		pr_warn_ratelimited("nobody cared for irq\n");
-+
-+	return ret;
-+}
-+
- /**
-  * intel_th_alloc() - allocate a new Intel TH device and its subdevices
-  * @dev:	parent device
-@@ -865,6 +887,12 @@ intel_th_alloc(struct device *dev, struct intel_th_drvdata *drvdata,
- 			th->resource[nr_mmios++] = devres[r];
- 			break;
- 		case IORESOURCE_IRQ:
-+			err = devm_request_irq(dev, devres[r].start,
-+					       intel_th_irq, IRQF_SHARED,
-+					       dev_name(dev), th);
-+			if (err)
-+				goto err_chrdev;
-+
- 			if (th->irq == -1)
- 				th->irq = devres[r].start;
- 			break;
-@@ -891,6 +919,10 @@ intel_th_alloc(struct device *dev, struct intel_th_drvdata *drvdata,
+ 	th = kzalloc(sizeof(*th), GFP_KERNEL);
+ 	if (!th)
+@@ -855,13 +855,26 @@ intel_th_alloc(struct device *dev, struct intel_th_drvdata *drvdata,
+ 		err = th->major;
+ 		goto err_ida;
+ 	}
++	th->irq = -1;
+ 	th->dev = dev;
+ 	th->drvdata = drvdata;
  
- 	return th;
- 
-+err_chrdev:
-+	__unregister_chrdev(th->major, 0, TH_POSSIBLE_OUTPUTS,
-+			    "intel_th/output");
+ 	for (r = 0; r < ndevres; r++)
+-		th->resource[r] = devres[r];
+-	th->num_resources = ndevres;
+-	th->irq = irq;
++		switch (devres[r].flags & IORESOURCE_TYPE_BITS) {
++		case IORESOURCE_MEM:
++			th->resource[nr_mmios++] = devres[r];
++			break;
++		case IORESOURCE_IRQ:
++			if (th->irq == -1)
++				th->irq = devres[r].start;
++			break;
++		default:
++			dev_warn(dev, "Unknown resource type %lx\n",
++				 devres[r].flags);
++			break;
++		}
 +
- err_ida:
- 	ida_simple_remove(&intel_th_ida, th->id);
++	th->num_resources = nr_mmios;
+ 
+ 	dev_set_drvdata(dev, th);
  
 diff --git a/drivers/hwtracing/intel_th/intel_th.h b/drivers/hwtracing/intel_th/intel_th.h
-index db3ad8ca1c48..59038215489a 100644
+index 3fca86d78fdd..6c6eb87e48a0 100644
 --- a/drivers/hwtracing/intel_th/intel_th.h
 +++ b/drivers/hwtracing/intel_th/intel_th.h
-@@ -8,6 +8,8 @@
- #ifndef __INTEL_TH_H__
- #define __INTEL_TH_H__
+@@ -213,7 +213,7 @@ static inline struct intel_th *to_intel_th(struct intel_th_device *thdev)
  
-+#include <linux/irqreturn.h>
-+
- /* intel_th_device device types */
- enum {
- 	/* Devices that generate trace data */
-@@ -160,7 +162,7 @@ struct intel_th_driver {
- 	void			(*disable)(struct intel_th_device *thdev,
- 					   struct intel_th_output *output);
- 	/* output ops */
--	void			(*irq)(struct intel_th_device *thdev);
-+	irqreturn_t		(*irq)(struct intel_th_device *thdev);
- 	int			(*activate)(struct intel_th_device *thdev);
- 	void			(*deactivate)(struct intel_th_device *thdev);
- 	/* file_operations for those who want a device node */
-diff --git a/drivers/hwtracing/intel_th/msu.c b/drivers/hwtracing/intel_th/msu.c
-index 8ff326c0c406..3716d312a4ee 100644
---- a/drivers/hwtracing/intel_th/msu.c
-+++ b/drivers/hwtracing/intel_th/msu.c
-@@ -102,6 +102,7 @@ struct msc_iter {
-  */
- struct msc {
- 	void __iomem		*reg_base;
-+	void __iomem		*msu_base;
- 	struct intel_th_device	*thdev;
+ struct intel_th *
+ intel_th_alloc(struct device *dev, struct intel_th_drvdata *drvdata,
+-	       struct resource *devres, unsigned int ndevres, int irq);
++	       struct resource *devres, unsigned int ndevres);
+ void intel_th_free(struct intel_th *th);
  
- 	struct list_head	win_list;
-@@ -122,7 +123,8 @@ struct msc {
- 
- 	/* config */
- 	unsigned int		enabled : 1,
--				wrap	: 1;
-+				wrap	: 1,
-+				do_irq	: 1;
- 	unsigned int		mode;
- 	unsigned int		burst_len;
- 	unsigned int		index;
-@@ -476,6 +478,40 @@ static void msc_buffer_clear_hw_header(struct msc *msc)
+ int intel_th_driver_register(struct intel_th_driver *thdrv);
+diff --git a/drivers/hwtracing/intel_th/pci.c b/drivers/hwtracing/intel_th/pci.c
+index fd8267bbaf2c..03d6894cd9c9 100644
+--- a/drivers/hwtracing/intel_th/pci.c
++++ b/drivers/hwtracing/intel_th/pci.c
+@@ -72,7 +72,7 @@ static int intel_th_pci_probe(struct pci_dev *pdev,
+ 			      const struct pci_device_id *id)
+ {
+ 	struct intel_th_drvdata *drvdata = (void *)id->driver_data;
+-	struct resource resource[TH_MMIO_END] = {
++	struct resource resource[TH_MMIO_END + 1] = {
+ 		[TH_MMIO_CONFIG]	= pdev->resource[TH_PCI_CONFIG_BAR],
+ 		[TH_MMIO_SW]		= pdev->resource[TH_PCI_STH_SW_BAR],
+ 	};
+@@ -92,7 +92,12 @@ static int intel_th_pci_probe(struct pci_dev *pdev,
+ 		r++;
  	}
- }
  
-+static int intel_th_msu_init(struct msc *msc)
-+{
-+	u32 mintctl, msusts;
-+
-+	if (!msc->do_irq)
-+		return 0;
-+
-+	mintctl = ioread32(msc->msu_base + REG_MSU_MINTCTL);
-+	mintctl |= msc->index ? M1BLIE : M0BLIE;
-+	iowrite32(mintctl, msc->msu_base + REG_MSU_MINTCTL);
-+	if (mintctl != ioread32(msc->msu_base + REG_MSU_MINTCTL)) {
-+		dev_info(msc_dev(msc), "MINTCTL ignores writes: no usable interrupts\n");
-+		msc->do_irq = 0;
-+		return 0;
+-	th = intel_th_alloc(&pdev->dev, drvdata, resource, r, pdev->irq);
++	if (pdev->irq > 0) {
++		resource[r].flags   = IORESOURCE_IRQ;
++		resource[r++].start = pdev->irq;
 +	}
 +
-+	msusts = ioread32(msc->msu_base + REG_MSU_MSUSTS);
-+	iowrite32(msusts, msc->msu_base + REG_MSU_MSUSTS);
-+
-+	return 0;
-+}
-+
-+static void intel_th_msu_deinit(struct msc *msc)
-+{
-+	u32 mintctl;
-+
-+	if (!msc->do_irq)
-+		return;
-+
-+	mintctl = ioread32(msc->msu_base + REG_MSU_MINTCTL);
-+	mintctl &= msc->index ? ~M1BLIE : ~M0BLIE;
-+	iowrite32(mintctl, msc->msu_base + REG_MSU_MINTCTL);
-+}
-+
- /**
-  * msc_configure() - set up MSC hardware
-  * @msc:	the MSC device to configure
-@@ -1295,6 +1331,21 @@ static int intel_th_msc_init(struct msc *msc)
- 	return 0;
- }
++	th = intel_th_alloc(&pdev->dev, drvdata, resource, r);
+ 	if (IS_ERR(th))
+ 		return PTR_ERR(th);
  
-+static irqreturn_t intel_th_msc_interrupt(struct intel_th_device *thdev)
-+{
-+	struct msc *msc = dev_get_drvdata(&thdev->dev);
-+	u32 msusts = ioread32(msc->msu_base + REG_MSU_MSUSTS);
-+	u32 mask = msc->index ? MSUSTS_MSC1BLAST : MSUSTS_MSC0BLAST;
-+
-+	if (!(msusts & mask)) {
-+		if (msc->enabled)
-+			return IRQ_HANDLED;
-+		return IRQ_NONE;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
- static const char * const msc_mode[] = {
- 	[MSC_MODE_SINGLE]	= "single",
- 	[MSC_MODE_MULTI]	= "multi",
-@@ -1500,10 +1551,19 @@ static int intel_th_msc_probe(struct intel_th_device *thdev)
- 	if (!msc)
- 		return -ENOMEM;
- 
-+	res = intel_th_device_get_resource(thdev, IORESOURCE_IRQ, 1);
-+	if (!res)
-+		msc->do_irq = 1;
-+
- 	msc->index = thdev->id;
- 
- 	msc->thdev = thdev;
- 	msc->reg_base = base + msc->index * 0x100;
-+	msc->msu_base = base;
-+
-+	err = intel_th_msu_init(msc);
-+	if (err)
-+		return err;
- 
- 	err = intel_th_msc_init(msc);
- 	if (err)
-@@ -1520,6 +1580,7 @@ static void intel_th_msc_remove(struct intel_th_device *thdev)
- 	int ret;
- 
- 	intel_th_msc_deactivate(thdev);
-+	intel_th_msu_deinit(msc);
- 
- 	/*
- 	 * Buffers should not be used at this point except if the
-@@ -1533,6 +1594,7 @@ static void intel_th_msc_remove(struct intel_th_device *thdev)
- static struct intel_th_driver intel_th_msc_driver = {
- 	.probe	= intel_th_msc_probe,
- 	.remove	= intel_th_msc_remove,
-+	.irq		= intel_th_msc_interrupt,
- 	.activate	= intel_th_msc_activate,
- 	.deactivate	= intel_th_msc_deactivate,
- 	.fops	= &intel_th_msc_fops,
-diff --git a/drivers/hwtracing/intel_th/msu.h b/drivers/hwtracing/intel_th/msu.h
-index 9cc8aced6116..e8cb819a3804 100644
---- a/drivers/hwtracing/intel_th/msu.h
-+++ b/drivers/hwtracing/intel_th/msu.h
-@@ -11,6 +11,7 @@
- enum {
- 	REG_MSU_MSUPARAMS	= 0x0000,
- 	REG_MSU_MSUSTS		= 0x0008,
-+	REG_MSU_MINTCTL		= 0x0004, /* MSU-global interrupt control */
- 	REG_MSU_MSC0CTL		= 0x0100, /* MSC0 control */
- 	REG_MSU_MSC0STS		= 0x0104, /* MSC0 status */
- 	REG_MSU_MSC0BAR		= 0x0108, /* MSC0 output base address */
-@@ -28,6 +29,8 @@ enum {
- 
- /* MSUSTS bits */
- #define MSUSTS_MSU_INT	BIT(0)
-+#define MSUSTS_MSC0BLAST	BIT(16)
-+#define MSUSTS_MSC1BLAST	BIT(24)
- 
- /* MSCnCTL bits */
- #define MSC_EN		BIT(0)
-@@ -36,6 +39,11 @@ enum {
- #define MSC_MODE	(BIT(4) | BIT(5))
- #define MSC_LEN		(BIT(8) | BIT(9) | BIT(10))
- 
-+/* MINTCTL bits */
-+#define MICDE		BIT(0)
-+#define M0BLIE		BIT(16)
-+#define M1BLIE		BIT(24)
-+
- /* MSC operating modes (MSC_MODE) */
- enum {
- 	MSC_MODE_SINGLE	= 0,
 -- 
 2.20.1
 
