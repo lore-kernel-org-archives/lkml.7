@@ -2,176 +2,96 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4109C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E064C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77CE22075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 115BC20C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:28:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fLL9islu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUDYAZth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbfECH0W (ORCPT
+        id S1726965AbfECH2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:26:22 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41664 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbfECH0V (ORCPT
+        Fri, 3 May 2019 03:28:21 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38521 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbfECH2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 03:26:21 -0400
-Received: by mail-lf1-f65.google.com with SMTP id d8so3699075lfb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 00:26:20 -0700 (PDT)
+        Fri, 3 May 2019 03:28:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 10so2468885pfo.5;
+        Fri, 03 May 2019 00:28:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Dsx2nXK+/+DVPRawdRuGNY4tbTYcOzkd9mRb77NUkhc=;
-        b=fLL9islumkeJwquqsV3AdztTa9UUhx1CJKwMbsNVK9OO+1EwAtB32SOYwN8vs95wj9
-         IpS8pZoRPR8XTQ5oIQV2bu2sG25Y7vVHBx6wqJiH/FaFQrRqzi26+o3PVrcNeCOBzHh2
-         88RmLANWQER0iphjz4xHyMxz2BGYwB2//UBRP0nMle+WvWSJV6T9AzmFsI90x42fBmk1
-         rtOp5i++qLQyuwkTvmUlXRkhe5yZ9ptpPvDtLQOcHHW+AZA3Nuj00gR/aRifhw+OxTqC
-         R8t9uXF0K4dO7rjZcaMP3JhoWmXUsJcMe8JtkWGA27lUcebVQUyP9i32/stOyLpkpCsA
-         ZCKg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xG3BXzoSNSy7tAxX5sR0WHhb5RCNXLJmoOdev9tDivc=;
+        b=pUDYAZth1/cN7IFBdUvzoPxGI7x2IfzE1oP4oWYaHFPAgsXF/UEur45b310L3vBqnA
+         qbaTAce2XBZqHM8z7Vx+3Ej0UGZxnllvyiua0VvQJ5c9eyV3NurumZFJ6EIIaOtQCHuf
+         1ttWNOkwk1OATCzTt2tHIAdWr33QR05MIjiEQ3DAFlbdyFUyGC5ln0N2JiEPclqTIdm3
+         hSgkY+B4edwSmhQM4E4/63tRN+YPkchz1k63n1Xwe0dIEh3m/zxhCHWlC3mmLll5Z9vG
+         tRZhLnT0El0UuGckeZBJx1O1k5RO4A5z1CSjJVLrwR/bmHZuQnRWCbgSLNFS+my+4tUV
+         6KMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Dsx2nXK+/+DVPRawdRuGNY4tbTYcOzkd9mRb77NUkhc=;
-        b=j0pO59UVcAA3OzoRLd4A7d3NXQbQif4uiZT/H5kDk1J3k+5fXq9jWpPBvlO13hfltv
-         dZzBPiKTLCbrvkzQqB3CGZJErvq5K5GUU5rkU2zMauJvRZovMMGpdMsRovNHdiikx8RI
-         ztB+y6pUy2Mk+Smbh1fK1TyZRmqFGRP2yokEqRQp/rMAXht9Kd0LhDE2lB/sB/UtnDDx
-         1V6wPh7mvmG2GKo73DOfwNUc3k6EqZinu0OIXIT/DHcPGOz2AX9mXyKivn60wLS4Md6u
-         iU0pmm63xk8qSRj4gp1ZIS9FjPcUG179Rqdr4/9kHmF2e2uyD+36MT++bBWWCROu3UtF
-         ZxHg==
-X-Gm-Message-State: APjAAAUA6v+T1gcdkHOuNmACFM+A3CL+WJXTFmvb/MeULrbwo5lIzdkd
-        MeLbqvWWfS96IRBCUKmDbYSDw5xUoZ7eOBsLdyOyOuYMYl4=
-X-Google-Smtp-Source: APXvYqwWLW9DwsPqwigRfqef/inQX/vsQrqYzz9NOhx4A4hUCtjln4I6wv88+OD37fuI8tCCb228uIu1fOsGRh9Zd3c=
-X-Received: by 2002:ac2:4246:: with SMTP id m6mr1659473lfl.0.1556868379684;
- Fri, 03 May 2019 00:26:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190502143333.437607839@linuxfoundation.org>
-In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 3 May 2019 12:56:08 +0530
-Message-ID: <CA+G9fYtv_aPXHZ7JtA1HzfQ-j2nzRabnA1tWWG-_Xwkf8UK4_g@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/72] 4.19.39-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xG3BXzoSNSy7tAxX5sR0WHhb5RCNXLJmoOdev9tDivc=;
+        b=jeQoV7QK65jh8LRk/3xjAwshMa5flq+hnfnCKE3wXrB6+aFV/S/lCvDrRl+LiXE/BM
+         tyZIgEK3EOAwIFAfGiulvNoiq2HzhuLiPLRrJq9qfsXUsMmEfbJUmYRaSeuukYNIHmMP
+         Rr+ZbnHjwY5ZWyNUPzQpjWHef/e1xKQE3A4xrSsr1BpVZdEPfS3egzo/6sGVwKFyJ+Vr
+         qqunPBivbz/TxrraDi4kOXJHLFsytEGErLsT7vMZDtsfYxX1Gvga5ftJZu2KPQUGs/JS
+         cMMas5mqAZ/fRSCbHfV2EfmuSdqQ1E/sIYAph7fNOOsSwHoQEiaXPgEozndWdncU9k60
+         lFbg==
+X-Gm-Message-State: APjAAAVSFDRnKGpkFWvbiC0RRsHB8OuVGYOVXu1ingCputP0hYdOXuzo
+        kVtjwXEJdcCdhi/+cKlYolA=
+X-Google-Smtp-Source: APXvYqwkix/U4Pl8qw1a/oiCfdrTNq3/mjtlSb174nAEyztOcuN7A4BP+EWtep/RCQWpK8mbpBmvDg==
+X-Received: by 2002:a62:5ec4:: with SMTP id s187mr4998560pfb.185.1556868499995;
+        Fri, 03 May 2019 00:28:19 -0700 (PDT)
+Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
+        by smtp.gmail.com with ESMTPSA id g10sm2944183pfg.153.2019.05.03.00.28.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 00:28:19 -0700 (PDT)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        maxime.ripard@bootlin.com, wens@csie.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Yangtao Li <tiny.windzz@gmail.com>
+Subject: [PATCH 0/7] Add support for H6 thermal sensor
+Date:   Fri,  3 May 2019 03:28:06 -0400
+Message-Id: <20190503072813.2719-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 May 2019 at 20:55, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.39 release.
-> There are 72 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 04 May 2019 02:32:17 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.39-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+This patchset adds support for the H6 ths sensor.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Based on IIO-based thermal sensor driver for Allwinner H3 and A83T SoC,
+thx to Philipp Rossak's work.
 
-Summary
-------------------------------------------------------------------------
+TODO: calibrate thermal sensor by using information from sid.
 
-kernel: 4.19.39-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: db2d00a74567be6e93472fcc4bfa8ada96cc6397
-git describe: v4.19.38-73-gdb2d00a74567
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.38-73-gdb2d00a74567
+Yangtao Li (7):
+  iio: adc: sun4i-gpadc: rework for support multiple thermal sensor
+  iio: adc: sun4i-gpadc: introduce temp_data in gpadc_data
+  iio: adc: sun4i-gpadc: introduce gpadc_enable and gpadc_disable in
+    gpadc_data
+  iio: adc: sun4i-gpadc-iio: support clocks and reset
+  dt-bindings: mfd: Add H6 GPADC binding
+  iio: adc: sun4i-gpadc-iio: add support for H6 thermal sensor
+  iio: adc: sun4i-gpadc-iio convert to SPDX license tags
 
-No regressions (compared to build v4.19.38)
+ .../devicetree/bindings/mfd/sun4i-gpadc.txt   |  27 ++-
+ drivers/iio/adc/sun4i-gpadc-iio.c             | 208 +++++++++++++++---
+ include/linux/mfd/sun4i-gpadc.h               |   9 +
+ 3 files changed, 213 insertions(+), 31 deletions(-)
 
-No fixes (compared to build v4.19.38)
+-- 
+2.17.1
 
-
-Ran 21232 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
