@@ -2,104 +2,156 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2796C004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84202C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D71206C1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4FF206C1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556920301;
+	bh=NAIkmAT9eE98rU1m9HK2YukzOq92vC5Ur5VfyyLHRNc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x9vK8oIWJqDfE8qd/VTsk8CkVhb6M38LdlTAj0nVmFkArH/P3DHSAQoomFuBldeXH
+	 fQGxBF75TWYconTbYa0AAqehKZdPLRpACO+Uib8rIXRuFc0eeX0vBna+jRZigYuDZP
+	 ifowP3TDbaYvI8kvrpGSA5i1F6J/okmJY+sRdQsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfECVvI (ORCPT
+        id S1726776AbfECVvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 17:51:08 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:36590 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbfECVvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 17:51:07 -0400
-Received: from p508fd516.dip0.t-ipconnect.de ([80.143.213.22] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hMg58-0007vr-4r; Fri, 03 May 2019 23:51:02 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Shawn Lin <shawn.lin@rock-chips.com>, hal@halemmerich.com,
-        linux-rockchip@lists.infradead.org, mka@chromium.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] clk: rockchip: Don't yell about bad mmc phases when getting
-Date:   Fri, 03 May 2019 23:51:01 +0200
-Message-ID: <1783321.PXM97fLzLk@phil>
-In-Reply-To: <20190503212208.223232-1-dianders@chromium.org>
-References: <20190503212208.223232-1-dianders@chromium.org>
+        Fri, 3 May 2019 17:51:40 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43880 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfECVvj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 17:51:39 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u27so5118633lfg.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 14:51:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OHPmorpbDxR0+1cD6Wtpm6wssS7c1TjAnKQ3VKbd0q0=;
+        b=GaGzUULhqjMmt9UB2McFPzy2KoE/vIFjOEPyZeAs9LRhzauYSNsf4aU/gnQ5NxPU7J
+         78zVHJUH87faGstKDBEUoXudrE+Qtbp+EbYiXzb8OH5UHhhrvTdjAblZfz0SoEfmZTLA
+         matHI53RRosv8whVcU1MDV9SaOQjdTK4xIaJU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OHPmorpbDxR0+1cD6Wtpm6wssS7c1TjAnKQ3VKbd0q0=;
+        b=Y/ddUWq/fRC0TSpq9RP9DOeL59BxPWpKy5qDheU8qDeiS2MioBiY9wIDSkyZCuSgOn
+         RiYeI6grza19IJb60XVHDB468AO4LjUQr6qpjvL5T85Jg8QzY5D521K9TyBe9pZT1PKP
+         sf2Nd7KjnEK5lg+ROloBtSn5A/nqK87xuraEhmnh5qQeeJd2MXiplLAO54wDoXPk9/fp
+         yygsgmd2ATLmM15/7WBJOYy3Be/PPtdmMZos5ajNX9ZKLCwkIXVHBpnc4rYivOhhMyqt
+         okblbsWXGjQA5j8JP4GynrYdLV+z7nBDqyKsLUe76aEomv6geBE5V8ff/68HiQLlIo1e
+         p7zA==
+X-Gm-Message-State: APjAAAVUF7xTnnUYyKntf5OSuYh5mysjjAoG2E3fycYUoLcRCNrpuCQW
+        2EXW5oPAtKzIL73XvmL2qiKvzN++hTU=
+X-Google-Smtp-Source: APXvYqxb4yd7t8urzNEMNOzTgL8h9fB8PWCgCTFX3zSt59lmdZpMc1iyN85E/gYc3Y/nk3XHBdSvqA==
+X-Received: by 2002:ac2:5501:: with SMTP id j1mr6202061lfk.89.1556920296907;
+        Fri, 03 May 2019 14:51:36 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id u11sm95702lfb.60.2019.05.03.14.51.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 14:51:36 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id h126so5391604lfh.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 14:51:36 -0700 (PDT)
+X-Received: by 2002:a19:ca02:: with SMTP id a2mr6303975lfg.88.1556919987963;
+ Fri, 03 May 2019 14:46:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190501202830.347656894@goodmis.org> <20190501203152.397154664@goodmis.org>
+ <20190501232412.1196ef18@oasis.local.home> <20190502162133.GX2623@hirez.programming.kicks-ass.net>
+ <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
+ <20190502181811.GY2623@hirez.programming.kicks-ass.net> <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
+ <20190502202146.GZ2623@hirez.programming.kicks-ass.net> <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com>
+ <20190503152405.2d741af8@gandalf.local.home>
+In-Reply-To: <20190503152405.2d741af8@gandalf.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 3 May 2019 14:46:11 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiA-WbrFrDs-kOfJZMXy4zMo9-SZfk=7B-GfmBJ866naw@mail.gmail.com>
+Message-ID: <CAHk-=wiA-WbrFrDs-kOfJZMXy4zMo9-SZfk=7B-GfmBJ866naw@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 3. Mai 2019, 23:22:08 CEST schrieb Douglas Anderson:
-> At boot time, my rk3288-veyron devices yell with 8 lines that look
-> like this:
->   [    0.000000] rockchip_mmc_get_phase: invalid clk rate
-> 
-> This is because the clock framework at clk_register() time tries to
-> get the phase but we don't have a parent yet.
-> 
-> While the errors appear to be harmless they are still ugly and, in
-> general, we don't want yells like this in the log unless they are
-> important.
-> 
-> There's no real reason to be yelling here.  We can still return
-> -EINVAL to indicate that the phase makes no sense without a parent.
-> If someone really tries to do tuning and the clock is reported as 0
-> then we'll see the yells in rockchip_mmc_set_phase().
-> 
-> Fixes: 4bf59902b500 ("clk: rockchip: Prevent calculating mmc phase if clock rate is zero")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On Fri, May 3, 2019 at 12:24 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> The problem with this approach is that it would require doing the same
+> for x86_64, as the int3 C code is the same for both. And that may be a
+> bit more difficult on the x86_64 side because it's all done with a
+> simple flag in the idtentry macro to add the gap.
 
-Thanks for fixing that. I always meant to handle that yell, but hadn't
-found the time yet.
+That argument is weakened by the fact that we have to do _other_
+things differently on 32-bit and 64-bit anyway.
 
-@Stephen, Mike: if you want to just apply this atop the other Rockchip
-clock patches for 5.2, here is a
+So we might as well have a "on 32-bit, the call emulation needs to
+move the pt_regs to make space" special case in the call emulation
+code. It's very easy to explain why.
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+And then we'd limit the special case to where it matters (with a big
+comment about what's going on), rather than adding random special case
+handling to random _other_ places.
 
-Otherwise I'l queue that up for 5.3 later on.
+Having to add s magic special case to "kernel_stack_pointer() is
+certainly not obvious. Neither is adding magic special cases to system
+call exit paths etc.
 
-Thanks
-Heiko
+This has been why I've been arguing against the entry code changes.
+Exactly because they tend to have these kind of odd cascading effects.
+The entry code is fragile not just because it's a complex hardware
+interface, but also because we know about those complex hardware
+interfaces in random other places.
 
-> ---
-> 
->  drivers/clk/rockchip/clk-mmc-phase.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clk/rockchip/clk-mmc-phase.c b/drivers/clk/rockchip/clk-mmc-phase.c
-> index 026a26bb702d..dbec84238ecd 100644
-> --- a/drivers/clk/rockchip/clk-mmc-phase.c
-> +++ b/drivers/clk/rockchip/clk-mmc-phase.c
-> @@ -61,10 +61,8 @@ static int rockchip_mmc_get_phase(struct clk_hw *hw)
->  	u32 delay_num = 0;
->  
->  	/* See the comment for rockchip_mmc_set_phase below */
-> -	if (!rate) {
-> -		pr_err("%s: invalid clk rate\n", __func__);
-> +	if (!rate)
->  		return -EINVAL;
-> -	}
->  
->  	raw_value = readl(mmc_clock->reg) >> (mmc_clock->shift);
->  
-> 
+I'd much rather have the code that does special things be in one
+place, and be the place that *needs* to do the special thing. If we
+copy the pt_regs around when we do the "call" emulation, it's *really*
+easy to explain *exactly* what we're doing and why in *exactly* that
+one context where we are doing it. And it won't affect anything else,
+and our existing code that looks at pt_regs will work both before and
+after.
 
+Would it need a #ifdef CONFIG_X86_32 around it because it's not needed
+on x86-64? Sure. But that #ifdef would be right there, and the comment
+that explains why the pt_regs need to be moved would also make it very
+obvious why it is only needed for x86-32.
 
+There's a lot of advantages to keeping your problems localized,
+instead of letting your random hacks escape and become problems for
+other, entirely unrelated, code.
 
-
+                Linus
