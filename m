@@ -2,106 +2,167 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD246C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F3AC004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFD920B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:52:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Y2+mqpv1"
+	by mail.kernel.org (Postfix) with ESMTP id 24CE0206BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfECTwL (ORCPT
+        id S1726928AbfECTy7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 15:52:11 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45323 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfECTwL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 15:52:11 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d5so99834qko.12
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 12:52:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ivgmrdOFqYbX906OA4N9N8K+zP87FPliWqhK06GaWhc=;
-        b=Y2+mqpv1ToBfZomGR0KiG0kJTC7Pd0/kQpdMHTLgCyV+gSUCOY8qdd9UCYmiwv8VrP
-         a0P2nQSotvfAV+CN79oMGzR3siWxg++Ro/Nh7074im6lvktjpD8hIg0qMeLNeViPAb5p
-         Ak6AnFNXIYyOEpaZmHFL4DjYbaTMMsJPHWbtlDryeNYlH9CMipo59Z5bwqt6LnH+866y
-         no7ekuTp5m99+xYSlNrDLBL8TWLAbgPMf3WhIiwOO3hmFCWHFVznd4vHpEhYyKrruUob
-         /WctC1Yd5I8cShP8X4p/ZyVtrGhsfMRHJnAiQwD7vi7EwWffIOwvaHGiK0CMeMDge/gC
-         3dTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ivgmrdOFqYbX906OA4N9N8K+zP87FPliWqhK06GaWhc=;
-        b=tlfos08UnIQJExkH4a/UcFy66DDJ91Skmyl5S5WP1W/YwutM7+q4VToZGy9IzWVvD9
-         RXlV98XsOWuJjVyRa5SjoeB8K5BGbO1UMKeN6/VGw7U2Ph6KKHJuIyOcbrcB2RIzqDYw
-         xAwZLz/MXxL34s51wr8VU0D4c27Kl/SccQlw1f1es9UtGBTvIkeFHNeL/LHqcTFwTU8J
-         UrsrJdGetO+InqwuQhni2iuzsbvqtRv/EtSDt8XzTqR/U/xzuxtDmy1xlozGVFWXL0XW
-         Gad0SGeAI2e/RmDdikWx95RFpbv+v4uCZn/by43RKQYVx3fMJxDBMTzte4KdXz6SjQNz
-         SuOg==
-X-Gm-Message-State: APjAAAX2uAetlGXqsxCyBuIkf9G0t3CdPu16rbRdBaQihZHPTEBFddBA
-        TO/qF34sKcmF55qop39zr8GPIw==
-X-Google-Smtp-Source: APXvYqwhEb3DduJH9sxXZb04NbmAIe9orgplVqZkdluZyv5W3gUxH6ho/Vp1ktRhA9nOhgZWzjVhcQ==
-X-Received: by 2002:a37:b802:: with SMTP id i2mr8702107qkf.343.1556913130058;
-        Fri, 03 May 2019 12:52:10 -0700 (PDT)
-Received: from soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net ([40.117.208.181])
-        by smtp.gmail.com with ESMTPSA id g55sm3082470qtk.76.2019.05.03.12.52.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 03 May 2019 12:52:09 -0700 (PDT)
-Date:   Fri, 3 May 2019 19:52:07 +0000
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jane Chu <jane.chu@oracle.com>, linux-nvdimm@lists.01.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org, osalvador@suse.de
-Subject: Re: [PATCH v7 03/12] mm/sparsemem: Add helpers track active portions
- of a section at boot
-Message-ID: <20190503195207.l7jrr3z4halukycm@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
-References: <155677652226.2336373.8700273400832001094.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155677653785.2336373.11131100812252340469.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Fri, 3 May 2019 15:54:59 -0400
+Received: from mga14.intel.com ([192.55.52.115]:63162 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725793AbfECTy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 15:54:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 May 2019 12:54:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,427,1549958400"; 
+   d="scan'208";a="343204990"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by fmsmga005.fm.intel.com with ESMTP; 03 May 2019 12:54:58 -0700
+Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
+ ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 3 May 2019 12:54:58 -0700
+Received: from orsmsx110.amr.corp.intel.com ([169.254.10.28]) by
+ ORSMSX122.amr.corp.intel.com ([169.254.11.68]) with mapi id 14.03.0415.000;
+ Fri, 3 May 2019 12:54:58 -0700
+From:   "Moore, Robert" <robert.moore@intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>,
+        "jank@cadence.com" <jank@cadence.com>,
+        "joe@perches.com" <joe@perches.com>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
+Subject: RE: [PATCH v2] ACPI / device_sysfs: change _ADR representation to
+ 64 bits
+Thread-Topic: [PATCH v2] ACPI / device_sysfs: change _ADR representation to
+ 64 bits
+Thread-Index: AQHVABzpPFu1CoIi4kGbA9d0A2PiXaZZ03bg
+Date:   Fri, 3 May 2019 19:54:57 +0000
+Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B958C7AE@ORSMSX110.amr.corp.intel.com>
+References: <20190501125322.23791-1-pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20190501125322.23791-1-pierre-louis.bossart@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMzI4NDBhMDUtN2FiMC00Y2Q1LTljZGItY2VmYTE0MDQ1Yjg3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTWNnRytaTnE2b3A3b2pvMEVmQWlmWUgwVWtZbVE0MzEwc3MxSEpZVWNqVTQ0eGx5U0I2Rm1BS0ZmQjBtNEtoeCJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155677653785.2336373.11131100812252340469.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-05-01 22:55:37, Dan Williams wrote:
-> Prepare for hot{plug,remove} of sub-ranges of a section by tracking a
-> section active bitmask, each bit representing 2MB (SECTION_SIZE (128M) /
-> map_active bitmask length (64)). If it turns out that 2MB is too large
-> of an active tracking granularity it is trivial to increase the size of
-> the map_active bitmap.
+
+
+> -----Original Message-----
+> From: Pierre-Louis Bossart [mailto:pierre-louis.bossart@linux.intel.com]
+> Sent: Wednesday, May 1, 2019 5:53 AM
+> To: alsa-devel@alsa-project.org
+> Cc: linux-kernel@vger.kernel.org; tiwai@suse.de; broonie@kernel.org;
+> vkoul@kernel.org; gregkh@linuxfoundation.org;
+> liam.r.girdwood@linux.intel.com; jank@cadence.com; joe@perches.com;
+> srinivas.kandagatla@linaro.org; Pierre-Louis Bossart <pierre-
+> louis.bossart@linux.intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>;
+> Len Brown <lenb@kernel.org>; Moore, Robert <robert.moore@intel.com>;
+> Schmauss, Erik <erik.schmauss@intel.com>; open list:ACPI <linux-
+> acpi@vger.kernel.org>; open list:ACPI COMPONENT ARCHITECTURE (ACPICA)
+> <devel@acpica.org>
+> Subject: [PATCH v2] ACPI / device_sysfs: change _ADR representation to
+> 64 bits
 > 
-> The implications of a partially populated section is that pfn_valid()
-> needs to go beyond a valid_section() check and read the sub-section
-> active ranges from the bitmask.
+> Standards such as the MIPI DisCo for SoundWire 1.0 specification assume
+> the _ADR field is 64 bits.
 > 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Tested-by: Jane Chu <jane.chu@oracle.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> _ADR is defined as an "Integer" represented as 64 bits since ACPI 2.0
+> released in 2002. The low levels already use _ADR as 64 bits, e.g. in
+> struct acpi_device_info.
+> 
+[Moore, Robert] 
 
-Hi Dan,
+Just to be precise: since acpi 2.0 the integer width is either 32 bits or 64 bits, depending on the version number of the DSDT (1-->32, 2 or greater --> 64).
 
-I have sent comments to the previous version of this patch:
-https://lore.kernel.org/lkml/CA+CK2bAfnCVYz956jPTNQ+AqHJs7uY1ZqWfL8fSUFWQOdKxHcg@mail.gmail.com/
 
-I think they still apply to this one.
+> This patch bumps the representation used for sysfs to 64 bits. To avoid
+> any compatibility/ABI issues, the printf format is only extended to 16
+> characters when the actual _ADR value exceeds the 32 bit maximum.
+> 
+> Example with a SoundWire device, the results show the complete vendorID
+> and linkID which were omitted before:
+> 
+> Before:
+> $ more /sys/bus/acpi/devices/device\:38/adr
+> 0x5d070000
+> After:
+> $ more /sys/bus/acpi/devices/device\:38/adr
+> 0x000010025d070000
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-
+> louis.bossart@linux.intel.com>
+> ---
+> v2: only use 64 bits when required to avoid compatibility issues
+> (feedback from Vinod and Rafael)
+> 
+>  drivers/acpi/device_sysfs.c | 6 ++++--
+>  include/acpi/acpi_bus.h     | 2 +-
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
+> index 8940054d6250..7dda0ee05cd1 100644
+> --- a/drivers/acpi/device_sysfs.c
+> +++ b/drivers/acpi/device_sysfs.c
+> @@ -428,8 +428,10 @@ static ssize_t acpi_device_adr_show(struct device
+> *dev,  {
+>  	struct acpi_device *acpi_dev = to_acpi_device(dev);
+> 
+> -	return sprintf(buf, "0x%08x\n",
+> -		       (unsigned int)(acpi_dev->pnp.bus_address));
+> +	if (acpi_dev->pnp.bus_address > 0xFFFFFFFF)
+> +		return sprintf(buf, "0x%016llx\n", acpi_dev-
+> >pnp.bus_address);
+> +	else
+> +		return sprintf(buf, "0x%08llx\n", acpi_dev->pnp.bus_address);
+>  }
+>  static DEVICE_ATTR(adr, 0444, acpi_device_adr_show, NULL);
+> 
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h index
+> f7981751ac77..9075e28ea60a 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -230,7 +230,7 @@ struct acpi_device_dir {
+>  /* Plug and Play */
+> 
+>  typedef char acpi_bus_id[8];
+> -typedef unsigned long acpi_bus_address;
+> +typedef u64 acpi_bus_address;
+>  typedef char acpi_device_name[40];
+>  typedef char acpi_device_class[20];
+> 
+> --
+> 2.17.1
 
-Thank you,
-Pasha
