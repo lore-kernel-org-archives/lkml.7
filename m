@@ -2,99 +2,132 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2129BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04292C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5F62089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B862081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:22:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="svEcGncO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfECJSl (ORCPT
+        id S1727217AbfECJWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 05:18:41 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:50717 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfECJSk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 05:18:40 -0400
-X-Originating-IP: 90.88.149.145
-Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id A592060014;
-        Fri,  3 May 2019 09:18:35 +0000 (UTC)
-Date:   Fri, 3 May 2019 11:18:35 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        wens@csie.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH 7/7] iio: adc: sun4i-gpadc-iio convert to SPDX license
- tags
-Message-ID: <20190503091835.jx2fosyygkhy67aw@flea>
-References: <20190503072813.2719-1-tiny.windzz@gmail.com>
- <20190503072813.2719-8-tiny.windzz@gmail.com>
+        Fri, 3 May 2019 05:22:16 -0400
+Received: from mx4.wp.pl ([212.77.101.11]:23790 "EHLO mx4.wp.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726391AbfECJWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 05:22:16 -0400
+Received: (wp-smtpd smtp.wp.pl 15166 invoked from network); 3 May 2019 11:22:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1556875332; bh=GEshtnqIYYZFrwLt+PDrblczKzunXgnIFfS/61z3xfg=;
+          h=Subject:To:Cc:From;
+          b=svEcGncOWG5uDdAea3/4X3uky+g7bwmKsU0JiMFqBtVVf6/+JVcrvO69JTbUBhc1L
+           ujcKpzJ04etI0lVcWuz0upOjwBzg7D8lDgL8FoEHZpk898wZe9exFymHPfMtVPaDPl
+           tiueAjM47kbjOynN1EW9r5FBSxvAZdBW+1fksseg=
+Received: from pc-201-108-240-185-static.strong-pc.com (HELO [192.168.0.9]) (spaz16@wp.pl@[185.240.108.201])
+          (envelope-sender <spaz16@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <linux-kernel@vger.kernel.org>; 3 May 2019 11:22:12 +0200
+Subject: Re: [PATCH] HID: fix A4Tech horizontal scrolling
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     igorkuo@gmail.com, Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <20190502213639.7632-1-spaz16@wp.pl>
+ <CAO-hwJLbFv3S9M5N+BKBuafj8H-vToy=2VQd=cvohmaTHLMC3A@mail.gmail.com>
+From:   =?UTF-8?B?QsWCYcW8ZWogU3pjenlnaWXFgg==?= <spaz16@wp.pl>
+Message-ID: <70982912-b172-b5dd-a875-fd0e7b378430@wp.pl>
+Date:   Fri, 3 May 2019 11:22:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ddeoccdv6vp3wp6d"
-Content-Disposition: inline
-In-Reply-To: <20190503072813.2719-8-tiny.windzz@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAO-hwJLbFv3S9M5N+BKBuafj8H-vToy=2VQd=cvohmaTHLMC3A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GH
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: 47bc0eb0d8531d3a9a08b3616fce268f
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 000000A [QdMk]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---ddeoccdv6vp3wp6d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I used the hid-record tool and my results are here:
+https://gitlab.com/snippets/1853568
 
-On Fri, May 03, 2019 at 03:28:13AM -0400, Yangtao Li wrote:
-> Updates license to use SPDX-License-Identifier.
->
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/iio/adc/sun4i-gpadc-iio.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-> index 9b6fc592f54c..cf2bf3ab3342 100644
-> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -1,11 +1,8 @@
-> +// SPDX-License-Identifier: GPL-2.0+
->  /* ADC driver for sunxi platforms' (A10, A13 and A31) GPADC
->   *
->   * Copyright (c) 2016 Quentin Schulz <quentin.schulz@free-electrons.com>
->   *
-> - * This program is free software; you can redistribute it and/or modify it under
-> - * the terms of the GNU General Public License version 2 as published by the
-> - * Free Software Foundation.
-> - *
+Cheers,
+Błażej
 
-The license here is GPL2 only, not GPL2 or later.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ddeoccdv6vp3wp6d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMwHawAKCRDj7w1vZxhR
-xR/3AP9LxurFTEoLfKKf5UUVWYtYBc+a5fX72/5UF72Jinp4/gEAjdVi2+M2F4Tw
-jC8P95k9Tn48jKQZ3GKADIypTMkcMQ8=
-=LsGW
------END PGP SIGNATURE-----
-
---ddeoccdv6vp3wp6d--
+> Hi,
+> 
+> On Thu, May 2, 2019 at 11:37 PM Błażej Szczygieł <spaz16@wp.pl> wrote:
+>>
+>> Since recent high resolution scrolling changes the A4Tech driver must
+>> check for the "REL_WHEEL_HI_RES" usage code.
+>>
+>> Fixes: 2dc702c991e3774af9d7ce410eef410ca9e2357e (HID: input: use the
+>> Resolution Multiplier for high-resolution scrolling)
+>>
+>> Signed-off-by: Błażej Szczygieł <spaz16@wp.pl>
+> 
+> Thanks for the patch. I do not doubt this fixes the issues, but I
+> still wonder if we should not export REL_HWHEEL_HI_RES instead of
+> REL_HWHEEL events.
+> 
+> Also, I can not figure out how the events are processed by the kernel.
+> Could you attach a hid-recorder dump of the mouse wheels with
+> hid-recorder from https://gitlab.freedesktop.org/libevdev/hid-tools ?
+> 
+> This should give me a better view of the mouse, and I could also add
+> it to the regression tests I am running for each commit.
+> 
+> Cheers,
+> Benjamin
+> 
+>> ---
+>>   drivers/hid/hid-a4tech.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
+>> index 9428ea7cdf8a..fafb9fa558e7 100644
+>> --- a/drivers/hid/hid-a4tech.c
+>> +++ b/drivers/hid/hid-a4tech.c
+>> @@ -38,7 +38,7 @@ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+>>   {
+>>          struct a4tech_sc *a4 = hid_get_drvdata(hdev);
+>>
+>> -       if (usage->type == EV_REL && usage->code == REL_WHEEL)
+>> +       if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES)
+>>                  set_bit(REL_HWHEEL, *bit);
+>>
+>>          if ((a4->quirks & A4_2WHEEL_MOUSE_HACK_7) && usage->hid == 0x00090007)
+>> @@ -60,7 +60,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+>>          input = field->hidinput->input;
+>>
+>>          if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8) {
+>> -               if (usage->type == EV_REL && usage->code == REL_WHEEL) {
+>> +               if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
+>>                          a4->delayed_value = value;
+>>                          return 1;
+>>                  }
+>> @@ -77,7 +77,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+>>                  return 1;
+>>          }
+>>
+>> -       if (usage->code == REL_WHEEL && a4->hw_wheel) {
+>> +       if (usage->code == REL_WHEEL_HI_RES && a4->hw_wheel) {
+>>                  input_event(input, usage->type, REL_HWHEEL, value);
+>>                  return 1;
+>>          }
+>> --
+>> 2.21.0
+>>
