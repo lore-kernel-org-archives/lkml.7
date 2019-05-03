@@ -6,52 +6,45 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD75C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F315C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A08F205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB972087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727271AbfECG7a (ORCPT
+        id S1727346AbfECG7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:59:30 -0400
+        Fri, 3 May 2019 02:59:53 -0400
 Received: from ozlabs.org ([203.11.71.1]:40339 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727254AbfECG73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:59:29 -0400
+        id S1727257AbfECG7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 02:59:30 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 44wNKW0jBxz9sPT; Fri,  3 May 2019 16:59:26 +1000 (AEST)
+        id 44wNKY110Nz9sPY; Fri,  3 May 2019 16:59:28 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 7e8039795a80bdf1418964b9cabef6168bc5d9a4
+X-powerpc-patch-commit: c9e0fc33b8be52a7134ed0ee79b6a1e332e1b9d0
 X-Patchwork-Hint: ignore
-In-Reply-To: <20190430010923.17092-1-tobin@kernel.org>
-To:     "Tobin C. Harding" <tobin@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
+In-Reply-To: <20190430182739.21961-1-hch@lst.de>
+To:     Christoph Hellwig <hch@lst.de>, aneesh.kumar@linux.ibm.com
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "Tobin C. Harding" <tobin@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc: Fix kobject memleak
-Message-Id: <44wNKW0jBxz9sPT@ozlabs.org>
-Date:   Fri,  3 May 2019 16:59:26 +1000 (AEST)
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc: remove the __kernel_io_end export
+Message-Id: <44wNKY110Nz9sPY@ozlabs.org>
+Date:   Fri,  3 May 2019 16:59:28 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-04-30 at 01:09:23 UTC, "Tobin C. Harding" wrote:
-> Currently error return from kobject_init_and_add() is not followed by a
-> call to kobject_put().  This means there is a memory leak.
+On Tue, 2019-04-30 at 18:27:39 UTC, Christoph Hellwig wrote:
+> This export was added in this merge window, but without any actual
+> user, or justification for a modular user.
 > 
-> Add call to kobject_put() in error path of kobject_init_and_add().
-> 
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+> Fixes: a35a3c6f6065 ("powerpc/mm/hash64: Add a variable to track the end of IO mapping")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/7e8039795a80bdf1418964b9cabef616
+https://git.kernel.org/powerpc/c/c9e0fc33b8be52a7134ed0ee79b6a1e3
 
 cheers
