@@ -2,98 +2,88 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F88C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D30C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2B82075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A36132075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:29:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T9s51+W+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WaxjY/Wo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfECN1p (ORCPT
+        id S1727507AbfECN3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 09:27:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53688 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbfECN1p (ORCPT
+        Fri, 3 May 2019 09:29:34 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:35348 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfECN3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 09:27:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mkGg1i+EI0XU//yFAO+gJW+bQDnnQU83x/RNkUevVAw=; b=T9s51+W+nABH6PVAvlfgP+ohw
-        RCDyHolxbxOczp+Cg0V5Q3SXBf36YHMOis1fkWWpWSE0zZx6A65FVoDithh+5zNBA/L+/pInK3O58
-        PPdp9B6gb5Mj1aHlTOwgYd7feLRBi467iD6vPhfKK/abUZfZCHY1041K3TtWkrj1V0TUQ8aWIVhLI
-        +/1YzsyjItpsKuqA6JsKXlZeS7WEi7325sCVTFrE7teQKa5lOodL28eu5Nt6D+miXBGjogCaXg8yc
-        VVRuwIZrSBtfheGOujAaXemlnM9xeF/eEeaLHQrjpzSd4fVzD5UcaEhjqq1fDcHkpcop11b8UYehV
-        hXvd6JaeQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hMYDu-0006ZD-4h; Fri, 03 May 2019 13:27:34 +0000
-Date:   Fri, 3 May 2019 06:27:33 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Michal Hocko <mhocko@suse.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>, jglisse@redhat.com,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>, x86@kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] mm/pgtable: Drop pgtable_t variable from pte_fn_t
- functions
-Message-ID: <20190503132733.GA5201@bombadil.infradead.org>
-References: <1556803126-26596-1-git-send-email-anshuman.khandual@arm.com>
- <20190502134623.GA18948@bombadil.infradead.org>
- <20190502161457.1c9dbd94@mschwideX1>
+        Fri, 3 May 2019 09:29:34 -0400
+Received: by mail-ua1-f68.google.com with SMTP id g16so2012945uad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 06:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EtQarfjvBVELqAYN+Ba2dtNFq+u9qtxgeg7ns1Ue40Y=;
+        b=WaxjY/WoDhL7nGbSX7lFGJ71jz4K7qOKbL3imHr9auDwTMLOQMSV75mOHf/Igr2G9f
+         Zsa5W7OHaDLyXkHoPAN2Xk6cSZ97mvLHxfPtqDDrTDM3mJY5LF+V9cxKj7BBE8bgGuZ6
+         ighhVpC0VpwHAdNGcRo4ludLrz+jyeP+mujh9jaKf1S6ndI+RLgMhdQyDOV8THcrdVcK
+         McHsHze3OBzsuMbSJ7Rw/3u9QVwIwFo/fDkZJZMJNOY98P9uKvsrN+Wa1sxtDS16IcTt
+         44LwwYm8nq2f1BtmrkYVvR9YUPGCgyaWXKuMDNtszOnv2QR0fJXcgXXnajJR/lU2fyRK
+         BlMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EtQarfjvBVELqAYN+Ba2dtNFq+u9qtxgeg7ns1Ue40Y=;
+        b=l6LLozJhCJY6MgQax3JEbE7ZI5xhBAxGyPkYulzRS63dFm1Zdh9lho5eCwMUhEXlXX
+         H9p04splHkbSaKIj+w1ODlUTSzffUXqnOou5bVtrZaRLQycvtTBRQZksMFC7T65fPyAM
+         bx8K+n3dkJjoK5t6PqGtcWJaE+2gE5/iE2O6SruQA9o4K4c5bv2DalgJ72rce8tz6ZcY
+         X6frtIiy7vqvazSeDxM0NXMSyTTg/KGqfcosg0oCfnxas5P4QuU/Y2N1joaVu0s6QoWn
+         i5R1A2sscXXCKZjPgIIzI2lUDIa6hqTEA+HW4ArFxxp0MjvSXOGvbTR36o79aSbvsig8
+         FJ8g==
+X-Gm-Message-State: APjAAAWukba5os4MJhv2uFnHdTOkDoJgx6iAzn0+QjuNrbT4pXG/UL4E
+        5yLx9bpfC3C54Edp0YTWGPufrEVJ4UKV37wn0mbeaQ==
+X-Google-Smtp-Source: APXvYqwnmdGyKdfMPiSIuwt2e0HNuMqoxfqgddY3iC09i4sLQrrpLWQU83CoFwPzamWtIIajUnTeAeKS42MMJHYU/dg=
+X-Received: by 2002:ab0:2b13:: with SMTP id e19mr5169793uar.15.1556890173163;
+ Fri, 03 May 2019 06:29:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502161457.1c9dbd94@mschwideX1>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+References: <20190423090235.17244-1-jbrunet@baylibre.com> <CAPDyKFoQyPKERckAdU+kkw3go=161PWc+5GAkz7y=xWMGbq+SQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFoQyPKERckAdU+kkw3go=161PWc+5GAkz7y=xWMGbq+SQ@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 3 May 2019 15:28:56 +0200
+Message-ID: <CAPDyKFqvkn0x6+AWKwa1xxj1adj+Ehy6jmoqPfh=0Dhm8AxzCw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] mmc: meson-gx: clean up and tuning update
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 04:14:57PM +0200, Martin Schwidefsky wrote:
-> On Thu, 2 May 2019 06:46:23 -0700
-> Matthew Wilcox <willy@infradead.org> wrote:
-> 
-> > On Thu, May 02, 2019 at 06:48:46PM +0530, Anshuman Khandual wrote:
-> > > Drop the pgtable_t variable from all implementation for pte_fn_t as none of
-> > > them use it. apply_to_pte_range() should stop computing it as well. Should
-> > > help us save some cycles.  
-> > 
-> > You didn't add Martin Schwidefsky for some reason.  He introduced
-> > it originally for s390 for sub-page page tables back in 2008 (commit
-> > 2f569afd9c).  I think he should confirm that he no longer needs it.
-> 
-> With its 2K pte tables s390 can not deal with a (struct page *) as a reference
-> to a page table. But if there are no user of the apply_to_page_range() API
-> left which actually make use of the token argument we can safely drop it.
+On Mon, 29 Apr 2019 at 12:44, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Tue, 23 Apr 2019 at 11:02, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> >
+> > The purpose of this series is too improve reliability of the amlogic mmc
+> > driver on new (g12a) and old ones (axg, gxl, gxbb, etc...)
+> >
+> > * The 3 first patches are just harmless clean ups.
+>
+> Applied these first three, postponing the the rest until Martin are
+> happy with all of them. Thanks!
 
-Interestingly, I don't think there ever was a user which used that
-argument.  Looking at your 2f56 patch, you only converted one function
-(presumably there was only one caller of apply_to_page_range() at the
-time), and it didn't u se any of the arguments.  Xen was the initial user,
-and the two other functions they added also didn't use that argument.
+Applied the rest of the series for next and by adding also Kevin's tags, thanks!
 
-Looking at a quick sample of users added since, none of them appear to
-have ever used that argument.  So removing it seems best.
+[...]
 
-Acked-by: Matthew Wilcox <willy@infradead.org>
+Kind regards
+Uffe
