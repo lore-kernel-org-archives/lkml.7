@@ -2,101 +2,133 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658C8C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7964C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431952070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BF42089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbfECN5q (ORCPT
+        id S1728075AbfECN5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 3 May 2019 09:57:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35291 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728057AbfECN5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 May 2019 09:57:46 -0400
-Received: from mxout012.mail.hostpoint.ch ([217.26.49.172]:33494 "EHLO
-        mxout012.mail.hostpoint.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727974AbfECN5m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 09:57:42 -0400
-Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
-        by mxout012.mail.hostpoint.ch with esmtp (Exim 4.91 (FreeBSD))
-        (envelope-from <dev@pschenker.ch>)
-        id 1hMYh1-000K4m-UA; Fri, 03 May 2019 15:57:39 +0200
-Received: from [46.140.72.82] (helo=philippe-pc.toradex.int)
-        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.91 (FreeBSD))
-        (envelope-from <dev@pschenker.ch>)
-        id 1hMYh1-0003ks-Oj; Fri, 03 May 2019 15:57:39 +0200
-X-Authenticated-Sender-Id: dev@pschenker.ch
-From:   Philippe Schenker <dev@pschenker.ch>
-To:     linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     dev@pschenker.ch,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/3] iio: stmpe-adc: Enable all stmpe-adc interrupts just once
-Date:   Fri,  3 May 2019 15:57:25 +0200
-Message-Id: <20190503135725.9959-3-dev@pschenker.ch>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190503135725.9959-1-dev@pschenker.ch>
-References: <20190503135725.9959-1-dev@pschenker.ch>
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AC6C48F295;
+        Fri,  3 May 2019 13:57:45 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8FDB05F9B8;
+        Fri,  3 May 2019 13:57:44 +0000 (UTC)
+Subject: Re: [PATCH-tip v7 08/20] locking/rwsem: Implement lock handoff to
+ prevent lock starvation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190428212557.13482-1-longman@redhat.com>
+ <20190428212557.13482-9-longman@redhat.com>
+ <20190503131054.GE2623@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <a2582814-cdd0-e5a9-1dd7-f426127ea462@redhat.com>
+Date:   Fri, 3 May 2019 09:57:44 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190503131054.GE2623@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 03 May 2019 13:57:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philippe Schenker <philippe.schenker@toradex.com>
+On 5/3/19 9:10 AM, Peter Zijlstra wrote:
+> On Sun, Apr 28, 2019 at 05:25:45PM -0400, Waiman Long wrote:
+>> +static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem,
+>> +					enum writer_wait_state wstate)
+>>  {
+>>  	long new;
+>>  
+>> +	lockdep_assert_held(&sem->wait_lock);
+>> +	do {
+>> +		bool has_handoff = !!(count & RWSEM_FLAG_HANDOFF);
+>>  
+>> +		if (has_handoff && wstate == WRITER_NOT_FIRST)
+>> +			return false;
+>>  
+>> +		if (count & RWSEM_LOCK_MASK) {
+>> +			if (has_handoff || (wstate != WRITER_HANDOFF))
+>> +				return false;
+>> +			new = count | RWSEM_FLAG_HANDOFF;
+>> +		} else {
+>> +			new = (count | RWSEM_WRITER_LOCKED) &
+>> +				~RWSEM_FLAG_HANDOFF;
+>>  
+>> +			if (list_is_singular(&sem->wait_list))
+>> +				new &= ~RWSEM_FLAG_WAITERS;
+>> +		}
+>> +	} while (!atomic_long_try_cmpxchg_acquire(&sem->count, &count, new));
+>> +
+>> +	/*
+>> +	 * We have either acquired the lock with handoff bit cleared or
+>> +	 * set the handoff bit.
+>> +	 */
+>> +	if (new & RWSEM_FLAG_HANDOFF)
+>> +		return false;
+>> +
+>> +	rwsem_set_owner(sem);
+>> +	return true;
+>>  }
+> I've changed that like so.
+>
+> --- a/kernel/locking/rwsem.c
+> +++ b/kernel/locking/rwsem.c
+> @@ -406,19 +406,23 @@ static inline bool rwsem_try_write_lock(
+>  	long new;
+>  
+>  	lockdep_assert_held(&sem->wait_lock);
+> +
+>  	do {
+>  		bool has_handoff = !!(count & RWSEM_FLAG_HANDOFF);
+>  
+>  		if (has_handoff && wstate == WRITER_NOT_FIRST)
+>  			return false;
+>  
+> +		new = count;
+> +
+>  		if (count & RWSEM_LOCK_MASK) {
+>  			if (has_handoff || (wstate != WRITER_HANDOFF))
+>  				return false;
+> -			new = count | RWSEM_FLAG_HANDOFF;
+> +
+> +			new |= RWSEM_FLAG_HANDOFF;
+>  		} else {
+> -			new = (count | RWSEM_WRITER_LOCKED) &
+> -				~RWSEM_FLAG_HANDOFF;
+> +			new |= RWSEM_WRITER_LOCKED;
+> +			new &= ~RWSEM_FLAG_HANDOFF;
+>  
+>  			if (list_is_singular(&sem->wait_list))
+>  				new &= ~RWSEM_FLAG_WAITERS;
 
-This commit will enable the interrupts of all channels handled by this
-driver only once in the probe function.
+Will the apply the changes in the next version.
 
-This will improve performance because one byte less has to be written over
-i2c on each read out of the adc. On the fastest ADC mode this will improve
-read out speed by 15%.
-
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-
----
-
- drivers/iio/adc/stmpe-adc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
-index baa41ffc0d76..427c890c6e7d 100644
---- a/drivers/iio/adc/stmpe-adc.c
-+++ b/drivers/iio/adc/stmpe-adc.c
-@@ -72,9 +72,6 @@ static int stmpe_read_voltage(struct stmpe_adc *info,
- 		return -EINVAL;
- 	}
- 
--	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_EN,
--			STMPE_ADC_CH(info->channel));
--
- 	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_CAPT,
- 			STMPE_ADC_CH(info->channel));
- 
-@@ -328,6 +325,9 @@ static int stmpe_adc_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_EN,
-+			~(norequest_mask & 0xFF));
-+
- 	return devm_iio_device_register(&pdev->dev, indio_dev);
- }
- 
--- 
-2.21.0
+Thanks,
+Longman
 
