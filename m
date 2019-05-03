@@ -2,78 +2,120 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1982C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A12C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F5220651
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:34:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nPlN06eY"
+	by mail.kernel.org (Postfix) with ESMTP id BA72F2075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbfECQeO (ORCPT
+        id S1728463AbfECQfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 12:34:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52528 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbfECQeO (ORCPT
+        Fri, 3 May 2019 12:35:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35514 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725809AbfECQfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 12:34:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=f8wSjJ87f85s5sybHGpZ4OlS7anrKlXCSX6wnmocWaQ=; b=nPlN06eYiVMd4BhKWEoEltJe1
-        vjzyN8kpvtiCH1EQrdhcogrwESSz+S8qU6Sn7tOEPrXod1jpE7u95MMYWKCD726B8WC6/PMoQwhV1
-        AnNhHauYZVDaDpoXzfOL0V1iVW9iZ5Iq6/NHI2tGzPvQMZsRbhM6KEL5A/9XylkKdDOzLs7B0Xz5y
-        Khvu9nxVpLFEuyjDQGIaQobcabArOPrtMt9NJBYUd+iXI1g512MiCD4RDfNxsevt2IT749vge3Xgb
-        isvwpO7MAG1dqOdncnaBP0JBZQNDOpnzhAx5jerNuy4Vl/fT4GlJUdkTAl3AtJtIIagrsP3mRME2G
-        qY6UkwKcQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hMb8X-00068T-3j; Fri, 03 May 2019 16:34:13 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 98487286B6529; Fri,  3 May 2019 18:34:11 +0200 (CEST)
-Date:   Fri, 3 May 2019 18:34:11 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: f68f031d ("Documentation: atomic_t.txt: Explain ordering
- provided by smp_mb__{before,after}_atomic()")
-Message-ID: <20190503163411.GH2606@hirez.programming.kicks-ass.net>
-References: <20190503151915.GD2606@hirez.programming.kicks-ass.net>
- <Pine.LNX.4.44L0.1905031216310.1437-100000@iolanthe.rowland.org>
+        Fri, 3 May 2019 12:35:15 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43GXV6r139528
+        for <linux-kernel@vger.kernel.org>; Fri, 3 May 2019 12:35:13 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s8q3wwkqg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 12:35:13 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Fri, 3 May 2019 17:35:11 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 May 2019 17:35:07 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x43GZ62q42008720
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 May 2019 16:35:06 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03B2152050;
+        Fri,  3 May 2019 16:35:06 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.85.86.157])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id AF2475204E;
+        Fri,  3 May 2019 16:35:03 +0000 (GMT)
+Date:   Fri, 3 May 2019 22:05:00 +0530
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] livepatch: Remove custom kobject state handling
+References: <20190503132625.23442-1-pmladek@suse.com>
+ <20190503132625.23442-2-pmladek@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1905031216310.1437-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190503132625.23442-2-pmladek@suse.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-TM-AS-GCONF: 00
+x-cbid: 19050316-0016-0000-0000-00000278039C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050316-0017-0000-0000-000032D4A186
+Message-Id: <20190503163500.GC14216@JAVRIS.in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905030106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 12:19:21PM -0400, Alan Stern wrote:
-> On Fri, 3 May 2019, Peter Zijlstra wrote:
+On Fri, May 03, 2019 at 03:26:24PM +0200, Petr Mladek wrote:
+> kobject_init() always succeeds and sets the reference count to 1.
+> It allows to always free the structures via kobject_put() and
+> the related release callback.
 > 
-> > On Fri, May 03, 2019 at 07:53:26AM -0700, Paul E. McKenney wrote:
-> > > Hello, Alan,
-> > > 
-> > > Just following up on the -rcu commit below.  I believe that it needs
-> > > some adjustment given Peter Zijlstra's addition of "memory" to the x86
-> > > non-value-returning atomics, but thought I should double-check.
-> > 
-> > Right; I should get back to that thread...
+> Note that the custom kobject state handling was used only
+> because we did not know that kobject_put() can and actually
+> should get called even when kobject_init_and_add() fails.
 > 
-> The real question, still outstanding, is whether smp_mb__before_atomic 
-> orders anything following the RMW instruction (and similarly, whether 
-> smp_mb__after_atomic orders anything preceding the RMW instruction).
+> The patch should not change the existing behavior.
+> 
+> Suggested-by: "Tobin C. Harding" <tobin@kernel.org>
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  include/linux/livepatch.h |  3 ---
+>  kernel/livepatch/core.c   | 56 ++++++++++++++---------------------------------
+>  2 files changed, 17 insertions(+), 42 deletions(-)
+> 
+> diff --git a/include/linux/livepatch.h b/include/linux/livepatch.h
+> index 53551f470722..a14bab1a0a3e 100644
+> --- a/include/linux/livepatch.h
+> +++ b/include/linux/livepatch.h
+> @@ -86,7 +86,6 @@ struct klp_func {
+>  	struct list_head node;
+>  	struct list_head stack_node;
+>  	unsigned long old_size, new_size;
+> -	bool kobj_added;
+>  	bool nop;
+>  	bool patched;
+>  	bool transition;
 
-Yes -- that was very much the intent, and only (some) x86 ops and (some)
-MIPS config have issues with that.
+Minor nitpick, the description of kobj_added needs to be removed from
+structure descriptions. 
+
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+
+-- 
+Kamalesh
+
