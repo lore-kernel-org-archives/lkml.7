@@ -2,242 +2,150 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52061C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1FCC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222CF2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBD52075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:54:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WniCcG2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfECWtY (ORCPT
+        id S1726584AbfECWyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 18:49:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbfECWtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 18:49:24 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94391206DF;
-        Fri,  3 May 2019 22:49:20 +0000 (UTC)
-Date:   Fri, 3 May 2019 18:49:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Message-ID: <20190503184919.2b7ef242@gandalf.local.home>
-In-Reply-To: <CAHk-=wiA-WbrFrDs-kOfJZMXy4zMo9-SZfk=7B-GfmBJ866naw@mail.gmail.com>
-References: <20190501202830.347656894@goodmis.org>
-        <20190501203152.397154664@goodmis.org>
-        <20190501232412.1196ef18@oasis.local.home>
-        <20190502162133.GX2623@hirez.programming.kicks-ass.net>
-        <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
-        <20190502181811.GY2623@hirez.programming.kicks-ass.net>
-        <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
-        <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
-        <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com>
-        <20190503152405.2d741af8@gandalf.local.home>
-        <CAHk-=wiA-WbrFrDs-kOfJZMXy4zMo9-SZfk=7B-GfmBJ866naw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 3 May 2019 18:54:08 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46729 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfECWyH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 18:54:07 -0400
+Received: by mail-io1-f68.google.com with SMTP id m14so6499814ion.13;
+        Fri, 03 May 2019 15:54:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QpmsefFkKENLhwDrCpj25TPAnORDkEylQ4qkeca+hkQ=;
+        b=WniCcG2iJ9enM4hYM+5hQyzBCu07Qqs6sOBsDQG4m51/PHvGW8OGhFgCrAvItUNIcu
+         1mKpcAPc59g+Etix2JDZsL+siLgOXFYVPhBPll/ctjIX6BsIx/15NHo7F7Xqna11BD/Q
+         rR/SvzKuXmKNRkDegy3m0TZh66MkGWQzJ+cfOIwzmQL8qQ7zkL+kYhPKuSGveGOUBevU
+         qkwe5EmxZEJm3POkcoXntoSiNnxjGCzodEsCAxK6TDVzfxWy9xec1xx+FuIjStoK1OXz
+         QAW7WpEAIHdjLBN68BgQ49nTVeLvVClfBT2gtD4GVZxZPK2HVHtfYEsgwEH0hkuNUopV
+         gnlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QpmsefFkKENLhwDrCpj25TPAnORDkEylQ4qkeca+hkQ=;
+        b=nuMwKry3l0hiHg76Od5s0pQhVdQNlYAyEoD4jllcafMlhiZkIt7ucM2Ly/1kKyOP5q
+         Hm3CIjfdTuEDFWTYmUS3KYWwyKpkKrfXEsxs+lZSh8Gcef4Ul0YWiqxuNmC6BnP1M8u8
+         StevGri7RCkB8xK6SJWWlVs8p3HcNKRJ8ef5xQ/lR+t6lEB7yMQSxyXX9VGZNKuqCu5t
+         rEyCMMW0Q+var+ZiL0lZV9LszSTtC1Qd84at2vMLtrZcX2h1hh26CWxpSgSKLiyDvp7H
+         j4IpmHt71/hcsQQ8WILL5oZpVh2w/Pz12kQQ/zuRRt6a1yWmqrolFhuR4HNxVBa4AQj5
+         S6Tw==
+X-Gm-Message-State: APjAAAVFxTI44kG0eXbXBH4kpJsqbqRqO14yaZXhyffTAvAUOeATSI58
+        VzcRQ9A5NA8RYVaqGzksB463uXABPWr3Cr7y3xo=
+X-Google-Smtp-Source: APXvYqw8e2TieTfJcCZsv0/c8t+mpDpYPEo9G9zrWgipNP35rHCY92tvfGmdgc/GcEU/NxvR6rgtxcCVOmuxe0JA8Vc=
+X-Received: by 2002:a6b:7a09:: with SMTP id h9mr1900505iom.266.1556924046853;
+ Fri, 03 May 2019 15:54:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190503033440.cow6xm4p4hezgkxv@linux-r8p5> <20190503034205.12121-1-deepa.kernel@gmail.com>
+ <20190503195148.t6hj4ly3axqosse3@linux-r8p5>
+In-Reply-To: <20190503195148.t6hj4ly3axqosse3@linux-r8p5>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Fri, 3 May 2019 15:53:42 -0700
+Message-ID: <CABeXuvquQoBTWb3sx0DCkpeSjphF9w6W-dMh0v85N7qrjQJCSg@mail.gmail.com>
+Subject: Re: [PATCH] signal: Adjust error codes according to restore_user_sigmask()
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Wong <e@80x24.org>, Omar Kilani <omar.kilani@gmail.com>,
+        Jason Baron <jbaron@akamai.com>, Arnd Bergmann <arnd@arndb.de>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 May 2019 14:46:11 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+The original patch was merged through the tip tree. Adding tglx just in case.
 
-> On Fri, May 3, 2019 at 12:24 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+I will post the revised patch to everyone on this thread.
+
+> >For all the syscalls that receive a sigmask from the userland,
+> >the user sigmask is to be in effect through the syscall execution.
+> >At the end of syscall, sigmask of the current process is restored
+> >to what it was before the switch over to user sigmask.
+> >But, for this to be true in practice, the sigmask should be restored
+> >only at the the point we change the saved_sigmask. Anything before
+> >that loses signals. And, anything after is just pointless as the
+> >signal is already lost by restoring the sigmask.
 > >
-> > The problem with this approach is that it would require doing the same
-> > for x86_64, as the int3 C code is the same for both. And that may be a
-> > bit more difficult on the x86_64 side because it's all done with a
-> > simple flag in the idtentry macro to add the gap.  
-> 
-> That argument is weakened by the fact that we have to do _other_
-> things differently on 32-bit and 64-bit anyway.
-> 
-> So we might as well have a "on 32-bit, the call emulation needs to
-> move the pt_regs to make space" special case in the call emulation
-> code. It's very easy to explain why.
+> >The issue was detected because of a regression caused by 854a6ed56839a.
+> >The patch moved the signal_pending() check closer to restoring of the
+> >user sigmask. But, it failed to update the error code accordingly.
+> >
+> >Detailed issue discussion permalink:
+> >https://lore.kernel.org/linux-fsdevel/20190427093319.sgicqik2oqkez3wk@dcvr/
+> >
+> >Note that the patch returns interrupted errors (EINTR, ERESTARTNOHAND,
+> >etc) only when there is no other error. If there is a signal and an error
+> >like EINVAL, the syscalls return -EINVAL rather than the interrupted
+> >error codes.
+>
+> Thanks for doing this; I've reviewed the epoll bits (along with the overall
+> idea) and it seems like a sane alternative to reverting the offending patch.
 
-So if I understand correctly what you are implying, is to have the int3
-code be different for 32 bit and 64 bit? This would require handling
-text_poke, ftrace and kprobes differently for the two. Or perhaps we
-can build hacks on top.
+Sorry maybe the description wasn't clear. What I actually am saying is
+that all these syscalls were dropping signals before and
+854a6ed56839a4 actually did things right by making sure they did not
+do so.
+But, there was a bug in that it did not communicate to userspace when
+the error code was not already set.
+However, we could still argue that the check and flipping of the mask
+isn't atomic and there is still a way this can theoretically happen.
+But, this will also mean that these syscalls will slow down further.
+But, they are already expected to be slow so maybe it doesn't matter.
+I will note this down in the commit text.
+I don't think reverting was an alternative. 854a6ed56839a4 exposed a
+bug that was already there.
 
-> 
-> And then we'd limit the special case to where it matters (with a big
-> comment about what's going on), rather than adding random special case
-> handling to random _other_ places.
-> 
-> Having to add s magic special case to "kernel_stack_pointer() is
-> certainly not obvious. Neither is adding magic special cases to system
-> call exit paths etc.
+> Feel free to add:
+>
+> Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
+>
+> A small nit, I think we should be a bit more verbose about the return semantics
+> of restore_user_sigmask()... see at the end.
+>
+> >
+> >Reported-by: Eric Wong <e@80x24.org>
+> >Fixes: 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add restore_user_sigmask()")
+> >Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> >--- a/kernel/signal.c
+> >+++ b/kernel/signal.c
+> >@@ -2845,15 +2845,16 @@ EXPORT_SYMBOL(set_compat_user_sigmask);
+> >  * usigmask: sigmask passed in from userland.
+> >  * sigsaved: saved sigmask when the syscall started and changed the sigmask to
+> >  *           usigmask.
+> >+ * returns 1 in case a pending signal is detected.
+>
+> How about:
+>
+> "
+> Callers must carefully coordinate between signal_pending() checks between the
+> actual system call and restore_user_sigmask() - for which a new pending signal
+> may come in between calls and therefore must consider this for returning a proper
+> error code.
+>
+> Returns 1 in case a signal pending is detected, otherwise 0.
 
-Honestly, this sounds more of an argument for doing the buffered space
-for all exceptions on 32 bit, because it removes one of the special
-cases. If we were to move the frame and give it a full frame like
-x86_64, then we can remove kernel_stack_pointer() altogether. I've hated
-that function for some time, as I tripped over it in the past too, and
-it keeps coming up. It's sad that regs->sp is unreliable as is.
+Ok, I will add more verbiage here.
 
-> 
-> This has been why I've been arguing against the entry code changes.
-> Exactly because they tend to have these kind of odd cascading effects.
-> The entry code is fragile not just because it's a complex hardware
-> interface, but also because we know about those complex hardware
-> interfaces in random other places.
-
-IMO, getting rid of the kernel_stack_pointer() function is a positive
-side effect of these changes.
-
-> 
-> I'd much rather have the code that does special things be in one
-> place, and be the place that *needs* to do the special thing. If we
-> copy the pt_regs around when we do the "call" emulation, it's *really*
-> easy to explain *exactly* what we're doing and why in *exactly* that
-> one context where we are doing it. And it won't affect anything else,
-> and our existing code that looks at pt_regs will work both before and
-> after.
-> 
-> Would it need a #ifdef CONFIG_X86_32 around it because it's not needed
-> on x86-64? Sure. But that #ifdef would be right there, and the comment
-> that explains why the pt_regs need to be moved would also make it very
-> obvious why it is only needed for x86-32.
-> 
-> There's a lot of advantages to keeping your problems localized,
-> instead of letting your random hacks escape and become problems for
-> other, entirely unrelated, code.
-
-But is it localize? It would definitely affect do_int3().
-
-You are saying that we have a do_int3() for user space int3, and
-do_kernel_int3() for kernel space. That would need to be done in asm
-for both, because having x86_64 call do_int3() for kernel and
-user would be interesting. Looking at the do_int3() code, I'm not sure
-how to safely separate kernel and user int3 handlers if 64bit doesn't
-call do_kernel_int3() directly. It may end up looking something like
-this:
-
-dotraplinkage void notrace do_int3(struct pt_regs *regs, long error_code)
-{
-#ifdef CONFIG_X86_64
-	do_kernel_int3(&regs);
-#endif
-	/*
-	 * Use ist_enter despite the fact that we don't use an IST stack.
-	 * We can be called from a kprobe in non-CONTEXT_KERNEL kernel
-	 * mode or even during context tracking state changes.
-	 *
-	 * This means that we can't schedule.  That's okay.
-	 */
-	ist_enter(regs);
-	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-
-#ifdef CONFIG_X86_64
-#ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
-	if (kgdb_ll_trap(DIE_INT3, "int3", regs, error_code, X86_TRAP_BP,
-				SIGTRAP) == NOTIFY_STOP)
-		goto exit;
-#endif /* CONFIG_KGDB_LOW_LEVEL_TRAP */
-
-#ifdef CONFIG_KPROBES
-	if (kprobe_int3_handler(&regs))
-		goto exit;
-#endif
-#endif
-
-	if (notify_die(DIE_INT3, "int3", regs, error_code, X86_TRAP_BP,
-			SIGTRAP) == NOTIFY_STOP)
-		goto exit;
-
-	cond_local_irq_enable(regs);
-	do_trap(X86_TRAP_BP, SIGTRAP, "int3", regs, error_code, 0, NULL);
-	cond_local_irq_disable(regs);
-
-exit:
-	ist_exit(regs);
-}
-
-dotraplinkage void notrace do_kernel_int3(struct pt_regs **regs)
-{
-#ifdef CONFIG_DYNAMIC_FTRACE
-	/*
-	 * ftrace must be first, everything else may cause a recursive crash.
-	 * See note by declaration of modifying_ftrace_code in ftrace.c
-	 */
-	if (unlikely(atomic_read(&modifying_ftrace_code)) &&
-	    ftrace_int3_handler(regs))
-		return;
-#endif
-	if (poke_int3_handler(regs))
-		return;
-
-#ifdef CONFIG_X86_64
-	return;
-#endif
-
-	/*
-	 * Use ist_enter despite the fact that we don't use an IST stack.
-	 * We can be called from a kprobe in non-CONTEXT_KERNEL kernel
-	 * mode or even during context tracking state changes.
-	 *
-	 * This means that we can't schedule.  That's okay.
-	 */
-	ist_enter(*regs);
-	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-
-#ifdef CONFIG_KGDB_LOW_LEVEL_TRAP
-	if (kgdb_ll_trap(DIE_INT3, "int3", *regs, error_code, X86_TRAP_BP,
-				SIGTRAP) == NOTIFY_STOP)
-		goto exit;
-#endif /* CONFIG_KGDB_LOW_LEVEL_TRAP */
-
-#ifdef CONFIG_KPROBES
-	if (kprobe_int3_handler(regs))
-		goto exit;
-#endif
-
-	notify_die(DIE_INT3, "int3", *regs, error_code, X86_TRAP_BP,
-			SIGTRAP);
-	ist_exit(*regs);
-}
-
-Or maybe I misunderstood what you envision :-/
-
--- Steve
+Thanks,
+Deepa
