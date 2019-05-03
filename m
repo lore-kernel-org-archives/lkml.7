@@ -2,54 +2,56 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D9FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE70FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 725572070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918C32070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XGauRLD7"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eGhXmoc8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbfECOFz (ORCPT
+        id S1727996AbfECOGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:05:55 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42498 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbfECOFz (ORCPT
+        Fri, 3 May 2019 10:06:02 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36726 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbfECOGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:05:55 -0400
-Received: by mail-ed1-f68.google.com with SMTP id l25so6142451eda.9
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 07:05:54 -0700 (PDT)
+        Fri, 3 May 2019 10:06:01 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a8so6163317edx.3
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 07:06:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=aSsQUXFyMzhd3pF3o0br4GImJGSsL3GlveRwHz9b304=;
-        b=XGauRLD7je12LIZeipZdHxet383aKHam8Uhf20D3C35uie66+ON4yoVOBUAHb0kvYg
-         ZMfqOIZgd/3FltlG9+MpXPWJMneXgFV0VkLGix9soq6yseinjMnyou90w8geicAnioT3
-         G8FzZM5uogBdyWA85z8X1BFuCuwbpHWls5O70=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=D/CH4GqGr+z8YvNiyoDqREVHjChbqZqJjYmwX1HGL8k=;
+        b=eGhXmoc8I9oK5S07+Cf/+NBpgznArjYFwNdzPDBoc5oNv6WpfFrICkvkWudLf8UoXM
+         oURzLmKVEFVRQxZXxb+XXHRTJNlkjfG1iBgT1ph5n5gPYfsTtOVyyG6Rty6Z+jReH9cq
+         R71Ey5B+kPUXrCZdmq4MraXrTUzvKbiMIgtaE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=aSsQUXFyMzhd3pF3o0br4GImJGSsL3GlveRwHz9b304=;
-        b=LuB/rajlYbWPDkBE3vV6N8mrlqkV3mpDFqAWrd81IliYf0dlZcElaLtjaoeS31pTcL
-         5q1sXg6iwIeEyVTi0STG4SC7Guu09/E6xDykiw1cHLmruVANi2INo77GY5/MSB52MkB8
-         5dvxDcIh3hv3IdED9uYlwMb3EyKEaBok0YM2+8aS8g01h0qwDmaWeDh+CH8eMk4J+id3
-         +CskLpb00qj+MPnPyza+PkV96AVEw5Qf6HlbjyvOATe4jq27m7zO5m0qstrV2uwBNKw8
-         YULwV6q4Cb60vovegph4ovHg1cSBKkNTim9+HxNoW5nTjH0ThjjxGYP0TpBPkCmLFdF6
-         uC9A==
-X-Gm-Message-State: APjAAAX9sUWyhJofscFHJKCvA2bhfsFaMWImhkfmctrL7m6of1c6Usnw
-        i7AZDYprgXv7y9qpxCSya4i6Cg==
-X-Google-Smtp-Source: APXvYqys1pc2WFq9pcZ+VYTFcRlepbG+istVel36Sx0zs1npV/SpDnsDpQV65SePP6q7OCX1GtSS+g==
-X-Received: by 2002:a17:906:1e0f:: with SMTP id g15mr6369446ejj.241.1556892353345;
-        Fri, 03 May 2019 07:05:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=D/CH4GqGr+z8YvNiyoDqREVHjChbqZqJjYmwX1HGL8k=;
+        b=Tvcaxv3k658liJJoxIFzXIodzZVvgFQbJ/zfReSR9sXxMZ5X82FfTl3fi6f6dZ8V/J
+         b/ePqEo9A9IjBzE3JXDuaHgqkkEwi096mPnMSnV3mJ/SQb/vUswNV+guS5Wd5MU5FA2e
+         zW8HVpeZvFRzQ5wpVdEgOiXdirNqamxk2FE4LPrynWhs7josQv+PSiQ4PyvelpN+QaSf
+         /xs1gZX40PwpXgoRyQLZby1FhbvbTxXwu9eLdqBHHrz2i/tjkWlTXCdI7ZN6/lHr+Y8W
+         igXJYCnqg0l12707uxWw67NPqYJFhHneJo/G2ptoEj6J41n8SmUx5jIFKLJMuK3jSEmT
+         hCAg==
+X-Gm-Message-State: APjAAAXpy1RsvDdXsXazTOELtw6s35ixI6+PZ7+ifvXaabLjKMv4sAAL
+        7JBx7oPq/XydOQh9xG2zNbqhMg==
+X-Google-Smtp-Source: APXvYqzGIjNck5fcKtNGAmKeDcxVbNQcwMe9+Ow76Mtcv1tHZaSwqBqwtaKclkMR03PmKdn3UxvlPA==
+X-Received: by 2002:a17:906:6a1a:: with SMTP id o26mr6433401ejr.170.1556892359682;
+        Fri, 03 May 2019 07:05:59 -0700 (PDT)
 Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id s53sm605472edb.20.2019.05.03.07.05.46
+        by smtp.gmail.com with ESMTPSA id s53sm605472edb.20.2019.05.03.07.05.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 03 May 2019 07:05:51 -0700 (PDT)
+        Fri, 03 May 2019 07:05:58 -0700 (PDT)
 From:   Srinath Mannam <srinath.mannam@broadcom.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -60,60 +62,72 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v6 0/3] PCIe Host request to reserve IOVA
-Date:   Fri,  3 May 2019 19:35:31 +0530
-Message-Id: <1556892334-16270-1-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH v6 1/3] PCI: Add dma_ranges window list
+Date:   Fri,  3 May 2019 19:35:32 +0530
+Message-Id: <1556892334-16270-2-git-send-email-srinath.mannam@broadcom.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556892334-16270-1-git-send-email-srinath.mannam@broadcom.com>
+References: <1556892334-16270-1-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set will reserve IOVA addresses for DMA memory holes.
+Add a dma_ranges field in PCI host bridge structure to hold resource
+entries list of memory regions in sorted order representing memory
+ranges that can be accessed through DMA transactions.
 
-The IPROC host controller allows only a few ranges of physical address
-as inbound PCI addresses which are listed through dma-ranges DT property.
-Added dma_ranges list field of PCI host bridge structure to hold these
-allowed inbound address ranges in sorted order.
+Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
+Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+[lorenzo.pieralisi@arm.com: updated commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/probe.c | 3 +++
+ include/linux/pci.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-Process this list and reserve IOVA addresses that are not present in its
-resource entries (ie DMA memory holes) to prevent allocating IOVA
-addresses that cannot be allocated as inbound addresses.
-
-This patch set is based on Linux-5.1-rc3.
-
-Changes from v5:
-  - Addressed Robin Murphy, Lorenzo review comments.
-    - Error handling in dma ranges list processing.
-    - Used commit messages given by Lorenzo to all patches.
-
-Changes from v4:
-  - Addressed Bjorn, Robin Murphy and Auger Eric review comments.
-    - Commit message modification.
-    - Change DMA_BIT_MASK to "~(dma_addr_t)0".
-
-Changes from v3:
-  - Addressed Robin Murphy review comments.
-    - pcie-iproc: parse dma-ranges and make sorted resource list.
-    - dma-iommu: process list and reserve gaps between entries
-
-Changes from v2:
-  - Patch set rebased to Linux-5.0-rc2
-
-Changes from v1:
-  - Addressed Oza review comments.
-
-Srinath Mannam (3):
-  PCI: Add dma_ranges window list
-  iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
-  PCI: iproc: Add sorted dma ranges resource entries to host bridge
-
- drivers/iommu/dma-iommu.c           | 35 ++++++++++++++++++++++++++---
- drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
- drivers/pci/probe.c                 |  3 +++
- include/linux/pci.h                 |  1 +
- 4 files changed, 79 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 7e12d01..72563c1 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -595,6 +595,7 @@ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
+ 		return NULL;
+ 
+ 	INIT_LIST_HEAD(&bridge->windows);
++	INIT_LIST_HEAD(&bridge->dma_ranges);
+ 	bridge->dev.release = pci_release_host_bridge_dev;
+ 
+ 	/*
+@@ -623,6 +624,7 @@ struct pci_host_bridge *devm_pci_alloc_host_bridge(struct device *dev,
+ 		return NULL;
+ 
+ 	INIT_LIST_HEAD(&bridge->windows);
++	INIT_LIST_HEAD(&bridge->dma_ranges);
+ 	bridge->dev.release = devm_pci_release_host_bridge_dev;
+ 
+ 	return bridge;
+@@ -632,6 +634,7 @@ EXPORT_SYMBOL(devm_pci_alloc_host_bridge);
+ void pci_free_host_bridge(struct pci_host_bridge *bridge)
+ {
+ 	pci_free_resource_list(&bridge->windows);
++	pci_free_resource_list(&bridge->dma_ranges);
+ 
+ 	kfree(bridge);
+ }
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 7744821..bba0a29 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -490,6 +490,7 @@ struct pci_host_bridge {
+ 	void		*sysdata;
+ 	int		busnr;
+ 	struct list_head windows;	/* resource_entry */
++	struct list_head dma_ranges;	/* dma ranges resource list */
+ 	u8 (*swizzle_irq)(struct pci_dev *, u8 *); /* Platform IRQ swizzler */
+ 	int (*map_irq)(const struct pci_dev *, u8, u8);
+ 	void (*release_fn)(struct pci_host_bridge *);
 -- 
 2.7.4
 
