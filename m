@@ -2,212 +2,118 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B73C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EA9C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC2920B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED5820C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:40:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="DNaLuimx"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DpzPTdix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfECTjJ (ORCPT
+        id S1727229AbfECTky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 15:39:09 -0400
-Received: from mail.efficios.com ([167.114.142.138]:34698 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfECTjJ (ORCPT
+        Fri, 3 May 2019 15:40:54 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49652 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfECTkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 15:39:09 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id DFB931831BF;
-        Fri,  3 May 2019 15:39:06 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id MWCyrBIOlpm2; Fri,  3 May 2019 15:39:05 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id AB2931831AF;
-        Fri,  3 May 2019 15:39:05 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com AB2931831AF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556912345;
-        bh=rIdjeP9dOunM2tC/0N/byMbrGcuAXBACBHAmVs+B6pg=;
-        h=From:To:Date:Message-Id;
-        b=DNaLuimxdIPOaeydsZ9AttC0tGcbmsi2dsp0IdP2pD4Pr2ufEUwZSpkS7EJmgncno
-         gGnbXO0rVklXpi8F+3Glu1OKWkX7/RRJm6EwSRLCzmnNybVH3p3xpaJp7+FphQz0sT
-         2K7Oy9jVP8tQbGROKzj7ZtdCc/Kl8kTf4FqxqX+Onmp355+1XFTspVtDbTEePqEilq
-         DrRTUyQmP7ETZR7JwcMihYziWdn5/A3QxAcuh4iUjd1l8TAuhxB9TLpITLsB10xzLQ
-         VSoQ2koEqXKYfLcfzoDlUR2N8AY96dNPIa+e1hAe9j7HHmlw41aBmHmdUCLaC1d0uh
-         c8jrSizqZolgA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id xzKHk0_xTFq7; Fri,  3 May 2019 15:39:05 -0400 (EDT)
-Received: from thinkos.internal.efficios.com (192-222-157-41.qc.cable.ebox.net [192.222.157.41])
-        by mail.efficios.com (Postfix) with ESMTPSA id 399601831A7;
-        Fri,  3 May 2019 15:39:05 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andi Kleen <andi@firstfloor.org>, Chris Lameter <cl@linux.com>,
-        Ben Maurer <bmaurer@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 for 5.2 08/12] rseq/selftests: arm: use udf instruction for RSEQ_SIG
-Date:   Fri,  3 May 2019 15:38:58 -0400
-Message-Id: <20190503193858.9676-1-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190429152803.7719-9-mathieu.desnoyers@efficios.com>
-References: <20190429152803.7719-9-mathieu.desnoyers@efficios.com>
+        Fri, 3 May 2019 15:40:53 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43JYGAQ072123;
+        Fri, 3 May 2019 19:40:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
+ bh=zFFPkeKwSl9qs1Gf/nl1E27H+7M/jhvO857WLR2q3z8=;
+ b=DpzPTdixPg6Pvz4oxVTvXpjKc9fMHYkTYdnN/3EvhgQl9oc7m7+7zwpvacbG2Pvt9Gqp
+ wbsiOQFJ+dGnW2iAlZkAmnr/SnJCy47E0fG3+koASSJTXJb1tecoiA7Q8qHVebMExiAV
+ 01GSQyjKN1QVJSSeiZj7gDWDmuyNOPVMnJfLmwpr1sr2B9YxHhq8ewd/pMvtzfxngigL
+ EWvJ5huXM/tztCh99qYfnZNGjDi6jS0lmrnwY/We66Jn4+wGsF8kEsbAQSPu5rUt1Ak3
+ DeHo0E1e3j6KAvOlB8hxyW2IfNGW8hV9h2JDOUhOLNRCyDMFdDYXokdP1JQ1oXMQbYrw RQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2s6xhyrv9g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 19:40:25 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43JcoHT142847;
+        Fri, 3 May 2019 19:40:25 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2s7rtcfb6c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 19:40:24 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x43JeCdp003869;
+        Fri, 3 May 2019 19:40:14 GMT
+Received: from kadam (/196.104.111.181)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 May 2019 12:40:12 -0700
+Date:   Fri, 3 May 2019 22:40:01 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v3 08/10] staging: octeon-ethernet: support
+ of_get_mac_address new ERR_PTR error
+Message-ID: <20190503194001.GP2239@kadam>
+References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
+ <1556870168-26864-9-git-send-email-ynezz@true.cz>
+ <20190503103456.GF2269@kadam>
+ <20190503190730.GH71477@meh.true.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190503190730.GH71477@meh.true.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905030128
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905030128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use udf as the guard instruction for the restartable sequence abort
-handler.
+On Fri, May 03, 2019 at 09:07:30PM +0200, Petr Štetiar wrote:
+> Dan Carpenter <dan.carpenter@oracle.com> [2019-05-03 13:34:56]:
+> 
+> Hi,
+> 
+> > On Fri, May 03, 2019 at 09:56:05AM +0200, Petr Štetiar wrote:
+> > > There was NVMEM support added to of_get_mac_address, so it could now
+> > > return NULL and ERR_PTR encoded error values, so we need to adjust all
+> > > current users of of_get_mac_address to this new fact.
+> > 
+> > Which commit added NVMEM support?  It hasn't hit net-next or linux-next
+> > yet...  Very strange.
+> 
+> this patch is a part of the patch series[1], where the 1st patch[2] adds this
+> NVMEM support to of_get_mac_address and follow-up patches are adjusting
+> current of_get_mac_address users to the new ERR_PTR return value.
 
-Previously, the chosen signature was not a valid instruction, based
-on the assumption that it could always sit in a literal pool. However,
-there are compilation environments in which literal pools are not
-available, for instance execute-only code. Therefore, we need to
-choose a signature value that is also a valid instruction.
+Basically all the patches need to be folded together otherwise you're
+breaking git bisectibility.  Imagine that we just apply patch #1 right?
+Then all the callers will be broken.  It's not allowed.
 
-Handle compiling with -mbig-endian on ARMv6+, which generates binaries
-with mixed code vs data endianness (little endian code, big endian
-data).
-
-Else mismatch between code endianness for the generated signatures and
-data endianness for the RSEQ_SIG parameter passed to the rseq
-registration will trigger application segmentation faults when the
-kernel try to abort rseq critical sections.
-
-Prior to ARMv6, -mbig-endian generates big-endian code and data, so
-endianness should not be reversed in that case.
-
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Joel Fernandes <joelaf@google.com>
-CC: Catalin Marinas <catalin.marinas@arm.com>
-CC: Dave Watson <davejwatson@fb.com>
-CC: Will Deacon <will.deacon@arm.com>
-CC: Shuah Khan <shuah@kernel.org>
-CC: Andi Kleen <andi@firstfloor.org>
-CC: linux-kselftest@vger.kernel.org
-CC: "H . Peter Anvin" <hpa@zytor.com>
-CC: Chris Lameter <cl@linux.com>
-CC: Russell King <linux@arm.linux.org.uk>
-CC: Michael Kerrisk <mtk.manpages@gmail.com>
-CC: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
-CC: Paul Turner <pjt@google.com>
-CC: Boqun Feng <boqun.feng@gmail.com>
-CC: Josh Triplett <josh@joshtriplett.org>
-CC: Steven Rostedt <rostedt@goodmis.org>
-CC: Ben Maurer <bmaurer@fb.com>
-CC: linux-api@vger.kernel.org
-CC: Andy Lutomirski <luto@amacapital.net>
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Linus Torvalds <torvalds@linux-foundation.org>
----
-Changes since v1:
-- Fix checkpatch error and warning.
-
----
- tools/testing/selftests/rseq/rseq-arm.h | 52 +++++++++++++++++++++++++++++++--
- 1 file changed, 50 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/rseq/rseq-arm.h b/tools/testing/selftests/rseq/rseq-arm.h
-index 5f262c54364f..84f28f147fb6 100644
---- a/tools/testing/selftests/rseq/rseq-arm.h
-+++ b/tools/testing/selftests/rseq/rseq-arm.h
-@@ -5,7 +5,54 @@
-  * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-  */
- 
--#define RSEQ_SIG	0x53053053
-+/*
-+ * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
-+ * value 0x5de3. This traps if user-space reaches this instruction by mistake,
-+ * and the uncommon operand ensures the kernel does not move the instruction
-+ * pointer to attacker-controlled code on rseq abort.
-+ *
-+ * The instruction pattern in the A32 instruction set is:
-+ *
-+ * e7f5def3    udf    #24035    ; 0x5de3
-+ *
-+ * This translates to the following instruction pattern in the T16 instruction
-+ * set:
-+ *
-+ * little endian:
-+ * def3        udf    #243      ; 0xf3
-+ * e7f5        b.n    <7f5>
-+ *
-+ * pre-ARMv6 big endian code:
-+ * e7f5        b.n    <7f5>
-+ * def3        udf    #243      ; 0xf3
-+ *
-+ * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
-+ * code and big-endian data. Ensure the RSEQ_SIG data signature matches code
-+ * endianness. Prior to ARMv6, -mbig-endian generates big-endian code and data
-+ * (which match), so there is no need to reverse the endianness of the data
-+ * representation of the signature. However, the choice between BE32 and BE8
-+ * is done by the linker, so we cannot know whether code and data endianness
-+ * will be mixed before the linker is invoked.
-+ */
-+
-+#define RSEQ_SIG_CODE	0xe7f5def3
-+
-+#ifndef __ASSEMBLER__
-+
-+#define RSEQ_SIG_DATA							\
-+	({								\
-+		int sig;						\
-+		asm volatile ("b 2f\n\t"				\
-+			      "1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
-+			      "2:\n\t"					\
-+			      "ldr %[sig], 1b\n\t"			\
-+			      : [sig] "=r" (sig));			\
-+		sig;							\
-+	})
-+
-+#define RSEQ_SIG	RSEQ_SIG_DATA
-+
-+#endif
- 
- #define rseq_smp_mb()	__asm__ __volatile__ ("dmb" ::: "memory", "cc")
- #define rseq_smp_rmb()	__asm__ __volatile__ ("dmb" ::: "memory", "cc")
-@@ -78,7 +125,8 @@ do {									\
- 		__rseq_str(table_label) ":\n\t"				\
- 		".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
- 		".word " __rseq_str(start_ip) ", 0x0, " __rseq_str(post_commit_offset) ", 0x0, " __rseq_str(abort_ip) ", 0x0\n\t" \
--		".word " __rseq_str(RSEQ_SIG) "\n\t"			\
-+		".arm\n\t"						\
-+		".inst " __rseq_str(RSEQ_SIG_CODE) "\n\t"		\
- 		__rseq_str(label) ":\n\t"				\
- 		teardown						\
- 		"b %l[" __rseq_str(abort_label) "]\n\t"
--- 
-2.11.0
+regards,
+dan carpenter
 
