@@ -2,167 +2,96 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CD4C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB439C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D97432133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:04:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556899451;
-	bh=9K26hWqGMesApQFdaAhFuNyta2kJgrhs2hDdmQ00qcY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DgciMQp8xBa1zGqbO0EJdFs1iZl7if84h0NCR4ehCJJJ0sI+YRoZmIhsojB0Wa+/Y
-	 MZ+NxCJ8tSSbaS0wlGFeGobWfqqc208e+22gho3I2M7VnsCILE9xI6vXiSBtPBqndq
-	 ROn88tPzzFAf6eorE1s2TRs34/gDWDLQZMOo0z7k=
+	by mail.kernel.org (Postfix) with ESMTP id 799462087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbfECQEL (ORCPT
+        id S1728424AbfECQEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 12:04:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39464 "EHLO mail.kernel.org"
+        Fri, 3 May 2019 12:04:36 -0400
+Received: from foss.arm.com ([217.140.101.70]:36362 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbfECQEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 12:04:10 -0400
-Received: from guoren-Inspiron-7460 (23.83.240.247.16clouds.com [23.83.240.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B79282075C;
-        Fri,  3 May 2019 16:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556899448;
-        bh=9K26hWqGMesApQFdaAhFuNyta2kJgrhs2hDdmQ00qcY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HpZWwg5gL0lVYH9xXr2lFjIs4Hr4EFxgLMU0fvIEmuLFdJqilQ6jQYN4Ocb6SStWw
-         iJWfiG66zAQYSvJeB8l3sHAhW93+kPdDD0sZUeypbCGK/KXfyMm98BkvfNuimDaaPM
-         OT2y75fIlpEILXIObpyUg29WsNXovSO+5g+0/f6w=
-Date:   Sat, 4 May 2019 00:03:48 +0800
-From:   Guo Ren <guoren@kernel.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, Helge Deller <deller@gmx.de>,
-        Ley Foon Tan <lftan@altera.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Richard Kuo <rkuo@codeaurora.org>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        nios2-dev@lists.rocketboards.org
-Subject: Re: [PATCH 05/15] csky: switch to generic version of pte allocation
-Message-ID: <20190503160348.GA9526@guoren-Inspiron-7460>
-References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
- <1556810922-20248-6-git-send-email-rppt@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556810922-20248-6-git-send-email-rppt@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1725809AbfECQEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 12:04:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5619B374;
+        Fri,  3 May 2019 09:04:35 -0700 (PDT)
+Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3AB533F557;
+        Fri,  3 May 2019 09:04:34 -0700 (PDT)
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        mathieu.poirier@linaro.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 1/2] coresight: Do not call smp_processor_id() from preemptible
+Date:   Fri,  3 May 2019 17:04:18 +0100
+Message-Id: <1556899459-27785-1-git-send-email-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+Instead of using smp_processor_id() to figure out the node,
+use the numa_node_id() for the current CPU node to avoid
+splats like :
 
-Acked-by: Guo Ren <ren_guo@c-sky.com>
+ BUG: using smp_processor_id() in preemptible [00000000] code: perf/1743
+ caller is alloc_etr_buf.isra.6+0x80/0xa0
+ CPU: 1 PID: 1743 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
+ Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
+  Call trace:
+   dump_backtrace+0x0/0x150
+   show_stack+0x14/0x20
+   dump_stack+0x9c/0xc4
+   debug_smp_processor_id+0x10c/0x110
+   alloc_etr_buf.isra.6+0x80/0xa0
+   tmc_alloc_etr_buffer+0x12c/0x1f0
+   etm_setup_aux+0x1c4/0x230
+   rb_alloc_aux+0x1b8/0x2b8
+   perf_mmap+0x35c/0x478
+   mmap_region+0x34c/0x4f0
+   do_mmap+0x2d8/0x418
+   vm_mmap_pgoff+0xd0/0xf8
+   ksys_mmap_pgoff+0x88/0xf8
+   __arm64_sys_mmap+0x28/0x38
+   el0_svc_handler+0xd8/0x138
+   el0_svc+0x8/0xc
 
-On Thu, May 02, 2019 at 06:28:32PM +0300, Mike Rapoport wrote:
-> The csky implementation pte_alloc_one(), pte_free_kernel() and pte_free()
-> is identical to the generic except of lack of __GFP_ACCOUNT for the user
-> PTEs allocation.
-> 
-> Switch csky to use generic version of these functions.
-Ok.
+Fixes: 855ab61c16bf70b646 ("coresight: tmc-etr: Refactor function tmc_etr_setup_perf_buf()")
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-> 
-> The csky implementation of pte_alloc_one_kernel() is not replaced because
-> it does not clear the allocated page but rather sets each PTE in it to a
-> non-zero value.
-Yes, we must set each PTE to _PAGE_GLOBAL because hardware refill the
-MMU TLB entry with two PTEs and it use the result of pte0.global | pte1.global.
-If pte0 is valid and pte1 is invalid, we must set _PAGE_GLOBAL in
-invalid pte entry. Fortunately, there is no performance issue.
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index 793639f..74578bd 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -1323,13 +1323,11 @@ static struct etr_perf_buffer *
+ tmc_etr_setup_perf_buf(struct tmc_drvdata *drvdata, struct perf_event *event,
+ 		       int nr_pages, void **pages, bool snapshot)
+ {
+-	int node, cpu = event->cpu;
++	int node;
+ 	struct etr_buf *etr_buf;
+ 	struct etr_perf_buffer *etr_perf;
+ 
+-	if (cpu == -1)
+-		cpu = smp_processor_id();
+-	node = cpu_to_node(cpu);
++	node = (event->cpu == -1)? numa_node_id() : cpu_to_node(event->cpu);
+ 
+ 	etr_perf = kzalloc_node(sizeof(*etr_perf), GFP_KERNEL, node);
+ 	if (!etr_perf)
+-- 
+2.7.4
 
-> 
-> The pte_free_kernel() and pte_free() versions on csky are identical to the
-> generic ones and can be simply dropped.
-Ok.
-
-Best Regards
- Guo Ren
-
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/csky/include/asm/pgalloc.h | 30 +++---------------------------
->  1 file changed, 3 insertions(+), 27 deletions(-)
-> 
-> diff --git a/arch/csky/include/asm/pgalloc.h b/arch/csky/include/asm/pgalloc.h
-> index d213bb4..98c571670 100644
-> --- a/arch/csky/include/asm/pgalloc.h
-> +++ b/arch/csky/include/asm/pgalloc.h
-> @@ -8,6 +8,9 @@
->  #include <linux/mm.h>
->  #include <linux/sched.h>
->  
-> +#define __HAVE_ARCH_PTE_ALLOC_ONE_KERNEL
-> +#include <asm-generic/pgalloc.h>	/* for pte_{alloc,free}_one */
-> +
->  static inline void pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmd,
->  					pte_t *pte)
->  {
-> @@ -39,33 +42,6 @@ static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
->  	return pte;
->  }
->  
-> -static inline struct page *pte_alloc_one(struct mm_struct *mm)
-> -{
-> -	struct page *pte;
-> -
-> -	pte = alloc_pages(GFP_KERNEL | __GFP_ZERO, 0);
-> -	if (!pte)
-> -		return NULL;
-> -
-> -	if (!pgtable_page_ctor(pte)) {
-> -		__free_page(pte);
-> -		return NULL;
-> -	}
-> -
-> -	return pte;
-> -}
-> -
-> -static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
-> -{
-> -	free_pages((unsigned long)pte, PTE_ORDER);
-> -}
-> -
-> -static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
-> -{
-> -	pgtable_page_dtor(pte);
-> -	__free_pages(pte, PTE_ORDER);
-> -}
-> -
->  static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
->  {
->  	free_pages((unsigned long)pgd, PGD_ORDER);
-> -- 
-> 2.7.4
-> 
