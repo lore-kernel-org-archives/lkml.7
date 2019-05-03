@@ -2,106 +2,124 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE0AC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAB9C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86FAE206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:02:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hrUWYPl6"
+	by mail.kernel.org (Postfix) with ESMTP id E831F206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbfECRCu (ORCPT
+        id S1728749AbfECRDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:02:50 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46900 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726724AbfECRCu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:02:50 -0400
-Received: by mail-pf1-f193.google.com with SMTP id j11so3154072pff.13
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 10:02:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e71LeW3j52z02CfoTglw12Lmjisq73YxcosFVCbh53o=;
-        b=hrUWYPl6ix6lmEUT+7gmZcFzhb63MdRST9wYPDOIVDmC/LzaxdIO5YqMR9VHPo0Bm0
-         82stpci7nJLYQd5BJl4soh4Z123TLPBWd09ZiRFMLpvEXvCMb061QG9scqw6rKtpjh1E
-         kkX/N5wtLrWsHL4J8i87lISK1gdR2s5yYRrwWyERLEcyPvXTU/sq2szATYe2giWY1Voi
-         xegRCJX/tNYrsRrlMBUOoE/lSVvaj9xedR/ofO78sPnsVcn8prsnDB5Yr6LyCqUE5WTv
-         mbWGCLv9qzSIZdmyGpriTFfAh+bRHrqHP2qnfunh3CTdkyZihHHjTUToVuOGOkc6JjZe
-         6jDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e71LeW3j52z02CfoTglw12Lmjisq73YxcosFVCbh53o=;
-        b=DEfy5oIsk0Tv2YYShWMafHDOA8bedjXSv/6UvNqdxvZZUvC/xRiVZdY04CeEc1WKBO
-         V4iJO/SmtHNJulqEKRgb8k5RqrjjFwrcD5gcrwA2DEqX4a6hO7ti6rjKNVoj/nmJAhMi
-         b40gYf8LVWeocqNYWGrdIDy89h1SOVpHpnWQoa727nd/aJUUPJusRzya1Vs5w67WtY7G
-         UY70LTb7nZydq6/L8gKFNLqCjmMLMagoflujBQNx/syOfbPy/HSsMJ0usJNkK9qih8aE
-         z93NgnXXbVX7O1c1V7X68Imv5iMto3etfU1z/TcNBWBd823IQphgov5mQtdBD+0NMtzI
-         /8sA==
-X-Gm-Message-State: APjAAAVExfsPmPaB3y4CAzOnEs97lPBg2ofAryxdYSqxpo81Gw9uSP/3
-        cNFgD4j6vn0gejXeitlZ0A9jDA==
-X-Google-Smtp-Source: APXvYqyTK6cg0M1/C2OXTAJ465eNh4Ogi4rZP6tl1I9CMzK8OhQ3QscAC72wbWMwk3C+thhafvr1Sg==
-X-Received: by 2002:a62:5fc7:: with SMTP id t190mr12168728pfb.191.1556902968531;
-        Fri, 03 May 2019 10:02:48 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:ce90:ab18:83b0:619])
-        by smtp.gmail.com with ESMTPSA id j7sm3380683pfh.62.2019.05.03.10.02.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 03 May 2019 10:02:47 -0700 (PDT)
-Date:   Fri, 3 May 2019 10:02:42 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Fri, 3 May 2019 13:03:21 -0400
+Received: from foss.arm.com ([217.140.101.70]:37368 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726720AbfECRDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 13:03:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B389915A2;
+        Fri,  3 May 2019 10:03:19 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A5D43F557;
+        Fri,  3 May 2019 10:03:13 -0700 (PDT)
+Date:   Fri, 3 May 2019 18:03:10 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: use the correct function type in
- SYSCALL_DEFINE0
-Message-ID: <20190503170242.GA211922@google.com>
-References: <20190501200451.255615-1-samitolvanen@google.com>
- <20190501200451.255615-3-samitolvanen@google.com>
- <20190503102128.GD47811@lakrids.cambridge.arm.com>
+        Yishai Hadas <yishaih@mellanox.com>, Kuehling@google.com,
+        Felix <Felix.Kuehling@amd.com>, Deucher@google.com,
+        Alexander <Alexander.Deucher@amd.com>, Koenig@google.com,
+        Christian <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: Re: [PATCH v14 13/17] IB/mlx4, arm64: untag user pointers in
+ mlx4_get_umem_mr
+Message-ID: <20190503170310.GL55449@arrakis.emea.arm.com>
+References: <cover.1556630205.git.andreyknvl@google.com>
+ <05c0c078b8b5984af4cc3b105a58c711dcd83342.1556630205.git.andreyknvl@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190503102128.GD47811@lakrids.cambridge.arm.com>
+In-Reply-To: <05c0c078b8b5984af4cc3b105a58c711dcd83342.1556630205.git.andreyknvl@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
-
-On Fri, May 03, 2019 at 11:21:28AM +0100, Mark Rutland wrote:
-> Generally, this makes sense, but I'm not sure that this is complete.
+On Tue, Apr 30, 2019 at 03:25:09PM +0200, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
 > 
-> IIUC this introduces a new type mismatch with sys_ni_syscall() in some
-> cases.
+> mlx4_get_umem_mr() uses provided user pointers for vma lookups, which can
+> only by done with untagged pointers.
+> 
+> Untag user pointers in this function.
+> 
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+> ---
+>  drivers/infiniband/hw/mlx4/mr.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/infiniband/hw/mlx4/mr.c b/drivers/infiniband/hw/mlx4/mr.c
+> index 395379a480cb..9a35ed2c6a6f 100644
+> --- a/drivers/infiniband/hw/mlx4/mr.c
+> +++ b/drivers/infiniband/hw/mlx4/mr.c
+> @@ -378,6 +378,7 @@ static struct ib_umem *mlx4_get_umem_mr(struct ib_udata *udata, u64 start,
+>  	 * again
+>  	 */
+>  	if (!ib_access_writable(access_flags)) {
+> +		unsigned long untagged_start = untagged_addr(start);
+>  		struct vm_area_struct *vma;
+>  
+>  		down_read(&current->mm->mmap_sem);
+> @@ -386,9 +387,9 @@ static struct ib_umem *mlx4_get_umem_mr(struct ib_udata *udata, u64 start,
+>  		 * cover the memory, but for now it requires a single vma to
+>  		 * entirely cover the MR to support RO mappings.
+>  		 */
+> -		vma = find_vma(current->mm, start);
+> -		if (vma && vma->vm_end >= start + length &&
+> -		    vma->vm_start <= start) {
+> +		vma = find_vma(current->mm, untagged_start);
+> +		if (vma && vma->vm_end >= untagged_start + length &&
+> +		    vma->vm_start <= untagged_start) {
+>  			if (vma->vm_flags & VM_WRITE)
+>  				access_flags |= IB_ACCESS_LOCAL_WRITE;
+>  		} else {
 
-Thanks for the review. You're correct, sys_ni_syscall needs to be fixed
-too. I'll include this in v2.
+Discussion ongoing on the previous version of the patch but I'm more
+inclined to do this in ib_uverbs_(re)reg_mr() on cmd.start.
 
-> We probably need that to use SYSCALL_DEFINE0(), and maybe have a
-> ksys_ni_syscall() for in-kernel wrappers.
-
-Why would we need ksys_ni_syscall? It seems something like this should
-be sufficient:
-
-  asmlinkage long sys_ni_syscall(void);
-
-  SYSCALL_DEFINE0(ni_syscall)
-  {
-          return sys_ni_syscall();
-  }
-
-Sami
+-- 
+Catalin
