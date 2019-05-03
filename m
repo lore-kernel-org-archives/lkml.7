@@ -2,187 +2,92 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A32C004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94197C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7208C20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E56205ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfECO3F (ORCPT
+        id S1727743AbfECOdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:29:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37518 "EHLO mx1.redhat.com"
+        Fri, 3 May 2019 10:33:03 -0400
+Received: from mga11.intel.com ([192.55.52.93]:8535 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbfECO3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:29:05 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5063258599;
-        Fri,  3 May 2019 14:29:04 +0000 (UTC)
-Received: from redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 80E697BA09;
-        Fri,  3 May 2019 14:29:02 +0000 (UTC)
-Date:   Fri, 3 May 2019 10:29:00 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Joao Moreira <jmoreira@suse.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Matz <matz@suse.de>, Nicolai Stange <nstange@suse.de>,
-        Petr Mladek <pmladek@suse.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>
-Subject: Re: [PATCH v3 0/9] klp-convert livepatch build tooling
-Message-ID: <20190503142900.GB24094@redhat.com>
-References: <20190412212654.GA21627@redhat.com>
- <alpine.LSU.2.21.1904161323230.17836@pobox.suse.cz>
+        id S1726377AbfECOdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 10:33:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 May 2019 07:32:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,426,1549958400"; 
+   d="scan'208";a="145734214"
+Received: from nzussbla-mobl.amr.corp.intel.com (HELO [10.254.111.239]) ([10.254.111.239])
+  by fmsmga008.fm.intel.com with ESMTP; 03 May 2019 07:32:53 -0700
+Subject: Re: [PATCH v2 2/2] regmap: soundwire: fix Kconfig select/depend issue
+To:     Mark Brown <broonie@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, vkoul@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20190419194649.18467-1-pierre-louis.bossart@linux.intel.com>
+ <20190419194649.18467-3-pierre-louis.bossart@linux.intel.com>
+ <20190503043957.GA14916@sirena.org.uk>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <535dfeac-77d8-1307-0329-33b8f2675bbd@linux.intel.com>
+Date:   Fri, 3 May 2019 09:32:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.1904161323230.17836@pobox.suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 03 May 2019 14:29:04 +0000 (UTC)
+In-Reply-To: <20190503043957.GA14916@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 01:37:13PM +0200, Miroslav Benes wrote:
->
-> [ ... snip ... ]
->
-> Quick look, but it seems quite similar to the problem we had with
-> apply_alternatives(). See arch/x86/kernel/livepatch.c and the commit which
-> introduced it.
 
-That was an interesting diversion :)  I think I grok the idea as:
 
-The kernel supports a few different code-patching methods:
+On 5/2/19 11:39 PM, Mark Brown wrote:
+> On Fri, Apr 19, 2019 at 02:46:49PM -0500, Pierre-Louis Bossart wrote:
+> 
+>>   config REGMAP_SOUNDWIRE
+>>   	tristate
+>> -	depends on SOUNDWIRE_BUS
+>> +	select SOUNDWIRE_BUS
+> 
+> This now makes _SOUNDWIRE different to all the other bus types; if this
+> is a good change then surely the same thing should be done for all the
+> other bus types.  It's also not clear to me that this actually does
+> anything, do selects from symbols that are themselves selected actually
+> do anything?
 
-  - SMP locks
-  - alternatives
-  - paravirt
-  - jump labels
+yes, this works, but if you prefer alignment I can follow the SLIMBUS model
 
-and we need to ensure that they do not prematurely operate on unresolved
-klp-relocations.  The solution that led to arch/x86/kernel/livepatch.c
-introduces "klp.arch" sections that rename such klp-relocations *and*
-their associated special section data structures.  Processing is then
-deferred until after a relevant klp_object is loaded.
+config SND_SOC_WCD9335
+	tristate "WCD9335 Codec"
+	depends on SLIMBUS
+	select REGMAP_SLIMBUS
+	select REGMAP_IRQ
 
-> I think, we should do the same for jump labels. Add
-> jump_label_apply_nops() from module_finalize() to
-> arch_klp_init_object_loaded() and convert jump_table ELF section so its
-> processing is delayed.
+config REGMAP_SLIMBUS
+	tristate
+	depends on SLIMBUS
 
-Nod.  Tthat sounds about right.  There may be some more work yet in the
-static keys API as well, but I'm not 100%.
+menuconfig SLIMBUS
+	tristate "SLIMbus support"
+	
+if SLIMBUS
 
-> Which leads me another TODO... klp-convert does not convert even
-> .altinstructions and .parainstructions sections, so it has that problem as
-> well. If I remember, it was on Josh's TODO list when he first introduced
-> klp-convert. See cover.1477578530.git.jpoimboe@redhat.com.
+# SLIMbus controllers
+config SLIM_QCOM_CTRL
+...
 
-In the RFC, Josh highlights a somewhat difficult problem regarding these
-special sections -- how to associate these special section data
-structures and their relocations to a specific klp_object.
-
-If I understand his suggestion, he proposed annotating livepatch module
-replacement functions as to stuff them into specially named ELF sections
-(which would include the klp_object name) and then bypass the existing
-livepatch registration API.  No minor change.
-
-With that in mind, I'm starting to think of a game plan for klp-convert
-like:
-
-  - phase 1: detect /abort unsupported sections
-
-  - phase 2: manual annotations in livepatch modules (like
-             KLP_MODULE_RELOC / SYMPOS, but for special sections) so
-             that klp-convert can start building "klp.arch" sections
-
-  - phase 3: livepatch API change above to support somewhat more
-             automatic generation of phase 2 annotations
-
-> The selftest for the alternatives would be appreciated too. One day.
-
-In the course of understanding the background behind
-arch/x86/kernel/livepatch.c, I wrote a bunch of livepatch selftests that
-try out simple examples of those special sections.
-
-For alternatives, I did something like:
-
-  /* TODO: find reliably true/false features */
-  #define TRUE_FEATURE	(X86_FEATURE_FPU)
-  #define FALSE_FEATURE	(X86_FEATURE_VME)
-
-  ...
-
-  klp_function1()
-  klp_function2()
-  klp_new_function()
-
-  	asm (ALTERNATIVE("call klp_function1", "call klp_function2", TRUE_FEATURE));
-  	asm (ALTERNATIVE("call klp_function1", "call klp_function2", FALSE_FEATURE));
-
-  	asm (ALTERNATIVE("call mod_function1", "call mod_function2", TRUE_FEATURE));
-  	asm (ALTERNATIVE("call mod_function1", "call mod_function2", FALSE_FEATURE));
-  	asm (ALTERNATIVE("call mod_function2", "call mod_function1", TRUE_FEATURE));
-  	asm (ALTERNATIVE("call mod_function2", "call mod_function1", FALSE_FEATURE));
-
-so that I could see what kind of relocations were generated for default
-and non-default instructions as well as module-local and then
-unexported-extern functions.
-
-Once we have klp-convert supporting these conversions, I think something
-like that would suffice.  In the meantime, I'm not sure how to create
-"klp.arch" sectioned ELFs without something like kpatch-build.
-
-> And of course we should look at the other supported architectures and
-> their module_finalize() functions. I have it on my TODO list somewhere,
-> but you know how it works with those :/. I am sure there are more hidden
-> surprises there.
-
-Hmm, well powerpc and s390 do appear to have processing for special
-sections as well ... but for the moment, I'm going to focus on x86 as
-that seems like enough work for now :)
-
-> > Detection
-> > ---------
-> >
-> > I can post ("livepatch/klp-convert: abort on static key conversion")
-> > here as a follow commit if it looks reasonable and folks wish to review
-> > it... or we can try and tackle static keys before merging klp-convert.
->
-> Good idea. I'd rather fix it, but I think it could be a lot of work, so
-> something like this patch seems to be a good idea.
-
-I'm thinking of adding this in a commit so klp-convert can intercept
-these sections:
-
-  static bool is_section_supported(char *sname)
-  {
-          if (strcmp(sname, ".rela.altinstructions") == 0)
-                  return false;
-          if (strcmp(sname, ".rela.parainstructions") == 0)
-                  return false;
-          if (strcmp(sname, ".rela__jump_table") == 0)
-                  return false;
-          return true;
-  }
-
-Right now my v4 collection has a bunch of small fixups and nitpick
-corrections.  It feels like a good resting place for now before
-embarking on special section support, what do you think?
-
--- Joe
+As I mentioned it'll compile the bus even if there is no user for it, 
+but it's your call: alignment or optimization.
