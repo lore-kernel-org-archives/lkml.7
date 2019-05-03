@@ -3,108 +3,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887F5C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1982C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D45620651
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F5220651
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ukMFMm5h"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nPlN06eY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfECQdd (ORCPT
+        id S1728460AbfECQeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 12:33:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52484 "EHLO
+        Fri, 3 May 2019 12:34:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52528 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728429AbfECQdc (ORCPT
+        with ESMTP id S1725809AbfECQeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 12:33:32 -0400
+        Fri, 3 May 2019 12:34:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7bDJVEAFBygjACU1RaANjjdiCUPrX9ag+EiTnO6DWPM=; b=ukMFMm5h9lQf5WvEOBr+T3kfZM
-        r8r0CfSRKhD1HcNUjEmSwY8nkSDOrw/qrvpP5IUeaPWn0uqu+H8ujJnZijEzYL50HrovRcbh1KCPi
-        Xi7YFpfcaHQCeyAOkmZqoJsDycMEA+JowfpGogZ7WT9RnZTuTBhhbvw6Unjh2xepqHmXA8ke/XDPd
-        2xluE4/HuIxcpEFNYoD8YMxvijgtfi8qb8wAkbgt2HmaiX2lMWoToHWt5nDMRuBiEmm+Fq+UnVyKY
-        K7ysWZkcvWc8B11IHi5aHLYqcb16V8SSEPWf5W2vVXvX4KoNIZm8WziBlgUbZfv1FZ3vHiwdVed+K
-        QryDkasA==;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=f8wSjJ87f85s5sybHGpZ4OlS7anrKlXCSX6wnmocWaQ=; b=nPlN06eYiVMd4BhKWEoEltJe1
+        vjzyN8kpvtiCH1EQrdhcogrwESSz+S8qU6Sn7tOEPrXod1jpE7u95MMYWKCD726B8WC6/PMoQwhV1
+        AnNhHauYZVDaDpoXzfOL0V1iVW9iZ5Iq6/NHI2tGzPvQMZsRbhM6KEL5A/9XylkKdDOzLs7B0Xz5y
+        Khvu9nxVpLFEuyjDQGIaQobcabArOPrtMt9NJBYUd+iXI1g512MiCD4RDfNxsevt2IT749vge3Xgb
+        isvwpO7MAG1dqOdncnaBP0JBZQNDOpnzhAx5jerNuy4Vl/fT4GlJUdkTAl3AtJtIIagrsP3mRME2G
+        qY6UkwKcQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hMb7J-0005mB-Gk; Fri, 03 May 2019 16:32:57 +0000
+        id 1hMb8X-00068T-3j; Fri, 03 May 2019 16:34:13 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B51CA286B6527; Fri,  3 May 2019 18:32:55 +0200 (CEST)
-Date:   Fri, 3 May 2019 18:32:55 +0200
+        id 98487286B6529; Fri,  3 May 2019 18:34:11 +0200 (CEST)
+Date:   Fri, 3 May 2019 18:34:11 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-Message-ID: <20190503163255.GG2606@hirez.programming.kicks-ass.net>
-References: <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
- <20190502181811.GY2623@hirez.programming.kicks-ass.net>
- <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
- <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
- <20190502185225.0cdfc8bc@gandalf.local.home>
- <20190502193129.664c5b2e@gandalf.local.home>
- <20190502195052.0af473cf@gandalf.local.home>
- <20190503092959.GB2623@hirez.programming.kicks-ass.net>
- <20190503092247.20cc1ff0@gandalf.local.home>
- <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: f68f031d ("Documentation: atomic_t.txt: Explain ordering
+ provided by smp_mb__{before,after}_atomic()")
+Message-ID: <20190503163411.GH2606@hirez.programming.kicks-ass.net>
+References: <20190503151915.GD2606@hirez.programming.kicks-ass.net>
+ <Pine.LNX.4.44L0.1905031216310.1437-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+In-Reply-To: <Pine.LNX.4.44L0.1905031216310.1437-100000@iolanthe.rowland.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 09:20:55AM -0700, Andy Lutomirski wrote:
-> > On May 3, 2019, at 6:22 AM, Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, May 03, 2019 at 12:19:21PM -0400, Alan Stern wrote:
+> On Fri, 3 May 2019, Peter Zijlstra wrote:
+> 
+> > On Fri, May 03, 2019 at 07:53:26AM -0700, Paul E. McKenney wrote:
+> > > Hello, Alan,
+> > > 
+> > > Just following up on the -rcu commit below.  I believe that it needs
+> > > some adjustment given Peter Zijlstra's addition of "memory" to the x86
+> > > non-value-returning atomics, but thought I should double-check.
 > > 
-> > On Fri, 3 May 2019 11:29:59 +0200
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > 
-> >> OMG, WTF, ARGH... That code is fsck'ing horrible. I'd almost argue to
-> >> always do the INT3 thing, just to avoid games like that.
+> > Right; I should get back to that thread...
+> 
+> The real question, still outstanding, is whether smp_mb__before_atomic 
+> orders anything following the RMW instruction (and similarly, whether 
+> smp_mb__after_atomic orders anything preceding the RMW instruction).
 
-> So here’s a somewhat nutty suggestion: how about we tweak the 32-bit
-> entry code to emulate the sane 64-bit frame, not just for int3 but
-> always? 
-
-Basically what I wrote above, right? I'd be fine with that... Linus?
+Yes -- that was very much the intent, and only (some) x86 ops and (some)
+MIPS config have issues with that.
