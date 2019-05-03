@@ -2,140 +2,111 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E891CC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F11FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E012089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09EC2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SZr1HNFt"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="hEkSDOdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbfECNh0 (ORCPT
+        id S1727893AbfECNhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 09:37:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49872 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfECNhZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 09:37:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Jr7I/fSX0tEk3rSwsCDMjnJycCAgKZn0ribRjxnDjz4=; b=SZr1HNFtCdwLsMUKiHBimEMzh
-        wM8XlxiZ2AWfWEixT4HbCXGbjVeqmk0sTS741OozMXx2gH9rp1ekJY63Zw/PQhJBSR9XCQN9hUFD0
-        ocIlCiU2Npna3SrUEGqs/gX+LHZ8BfJIeIKsy+3PyG2Lo7X3CPzfHl0orj2U/d1oS7yS086ssl/Zp
-        RMNc/mOHKgsEXu5VsxRicBPwr3mUi0hFksfntWsxd0GrR43CthZWo7Mb5RPUp8P6OtVcx92NczHSb
-        jeStg9nyH3FkqvqRAD1XbrqqAKX90HVtM2AzRdGWp7vNAb9tsykyN5+HArT8fHHuyG1imJwMTOSby
-        Wsx4DYy1g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hMYNL-0005Oq-5A; Fri, 03 May 2019 13:37:19 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9EDDD214242ED; Fri,  3 May 2019 15:37:17 +0200 (CEST)
-Date:   Fri, 3 May 2019 15:37:17 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH-tip v7 09/20] locking/rwsem: Always release wait_lock
- before waking up tasks
-Message-ID: <20190503133717.GG2623@hirez.programming.kicks-ass.net>
-References: <20190428212557.13482-1-longman@redhat.com>
- <20190428212557.13482-10-longman@redhat.com>
+        Fri, 3 May 2019 09:37:31 -0400
+Received: from mail-eopbgr760074.outbound.protection.outlook.com ([40.107.76.74]:33601
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726377AbfECNhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 09:37:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5c8hWceaDcibDPAXCrTKB0OMZEq7b6N268RW0RHpjFY=;
+ b=hEkSDOdpCT8XvAeY/iGDEyAooUhdCVp9I+KLjN9GvFXyzAc49Ig3FlBHRgRgc+/wNkPx2dmN41XTbPAat+ZrE9OnPZgmL4YD0JtIb/v4JueYOeMUMAKmma9GHHJRaYBRV04jFxnUzVBcgZIursTcvBiPSFsxDSRkRLM9vUY4qoo=
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
+ DM6PR12MB3212.namprd12.prod.outlook.com (20.179.105.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Fri, 3 May 2019 13:37:27 +0000
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::d119:23e5:be33:4ac6]) by DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::d119:23e5:be33:4ac6%2]) with mapi id 15.20.1856.008; Fri, 3 May 2019
+ 13:37:27 +0000
+From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH] svm/avic: Allow avic_vcpu_load logic to support host APIC ID
+ 255
+Thread-Topic: [PATCH] svm/avic: Allow avic_vcpu_load logic to support host
+ APIC ID 255
+Thread-Index: AQHVAbVYshI13bVJeUaA1Du2DOEuSw==
+Date:   Fri, 3 May 2019 13:37:27 +0000
+Message-ID: <1556890631-9561-1-git-send-email-suravee.suthikulpanit@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.78.1]
+x-clientproxiedby: SN2PR01CA0038.prod.exchangelabs.com (2603:10b6:804:2::48)
+ To DM6PR12MB2844.namprd12.prod.outlook.com (2603:10b6:5:45::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 83a348eb-59db-4362-798a-08d6cfcc7b3c
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3212;
+x-ms-traffictypediagnostic: DM6PR12MB3212:
+x-microsoft-antispam-prvs: <DM6PR12MB3212427936D539899F37B034F3350@DM6PR12MB3212.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0026334A56
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(136003)(376002)(346002)(396003)(189003)(199004)(8936002)(386003)(4720700003)(3846002)(6116002)(66066001)(6512007)(14454004)(25786009)(66556008)(68736007)(71200400001)(71190400001)(64756008)(6506007)(316002)(52116002)(66476007)(2501003)(36756003)(8676002)(50226002)(4744005)(7736002)(54906003)(81156014)(81166006)(99286004)(305945005)(66946007)(73956011)(256004)(66446008)(4326008)(486006)(5660300002)(478600001)(186003)(110136005)(2906002)(72206003)(6436002)(26005)(53936002)(476003)(6486002)(2616005)(102836004)(86362001)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3212;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jvW7uBW8VvlcRXMqdV2oKiPIq3wBSOcEFm0jYeZO0UVyBJEVMHdmv79/nqLbDY36SJ2CDAhoFpZ1/Xf3ZqG3F2Ry/2+7ZU1fIercHkEQaMI+pjPeYRktsOoiDsXCP0nwhg64/sNrwdySzc5I+jyh17rMWcOTyrGegcPARaVzvUdv41nfh4KiNpzEMnoIfDd1mXptTuLE0LLIa+v2cmpWlm4fjo0gHhNAUb6jL2AvFEbjrCAO7Ge7O6PvsQI8uk+/FZi9TgcO7MBiuoAptTTW+LY36WZYipaxQnHFmUDW3VRQ3Ick9+rQsTAbs1eZlvjXSD28LAk94EOOtqDzJIzGV/kJNLccsoL3a//xTTzwaDugDA1asfrBRLIARKtXBUt/qNryFIavGc67zwYYREGt69WfjZjkA1G7yXmjivb7IxM=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190428212557.13482-10-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83a348eb-59db-4362-798a-08d6cfcc7b3c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2019 13:37:27.1445
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3212
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 28, 2019 at 05:25:46PM -0400, Waiman Long wrote:
-
-> +			/*
-> +			 * This waiter may have become first in the wait
-> +			 * list after re-acquring the wait_lock. The
-> +			 * rwsem_first_waiter() test in the main while
-> +			 * loop below will correctly detect that. We do
-> +			 * need to reload count to perform proper trylock
-> +			 * and avoid missed wakeup.
-> +			 */
-> +			count = atomic_long_read(&sem->count);
-> +		}
->  	} else {
->  		count = atomic_long_add_return(RWSEM_FLAG_WAITERS, &sem->count);
->  	}
-
-I've been eyeing that count usage for the past few patches, and this
-here makes me think we should get rid of it.
-
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -400,13 +400,14 @@ static void __rwsem_mark_wake(struct rw_
-  * If wstate is WRITER_HANDOFF, it will make sure that either the handoff
-  * bit is set or the lock is acquired with handoff bit cleared.
-  */
--static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem,
-+static inline bool rwsem_try_write_lock(struct rw_semaphore *sem,
- 					enum writer_wait_state wstate)
- {
--	long new;
-+	long count, new;
- 
- 	lockdep_assert_held(&sem->wait_lock);
- 
-+	count = atomic_long_read(&sem->count);
- 	do {
- 		bool has_handoff = !!(count & RWSEM_FLAG_HANDOFF);
- 
-@@ -760,25 +761,16 @@ rwsem_down_write_slowpath(struct rw_sema
- 			wake_up_q(&wake_q);
- 			wake_q_init(&wake_q);	/* Used again, reinit */
- 			raw_spin_lock_irq(&sem->wait_lock);
--			/*
--			 * This waiter may have become first in the wait
--			 * list after re-acquring the wait_lock. The
--			 * rwsem_first_waiter() test in the main while
--			 * loop below will correctly detect that. We do
--			 * need to reload count to perform proper trylock
--			 * and avoid missed wakeup.
--			 */
--			count = atomic_long_read(&sem->count);
- 		}
- 	} else {
--		count = atomic_long_add_return(RWSEM_FLAG_WAITERS, &sem->count);
-+		atomic_long_or(RWSEM_FLAG_WAITERS, &sem->count);
- 	}
- 
- wait:
- 	/* wait until we successfully acquire the lock */
- 	set_current_state(state);
- 	for (;;) {
--		if (rwsem_try_write_lock(count, sem, wstate))
-+		if (rwsem_try_write_lock(sem, wstate))
- 			break;
- 
- 		raw_spin_unlock_irq(&sem->wait_lock);
-@@ -819,7 +811,6 @@ rwsem_down_write_slowpath(struct rw_sema
- 		}
- 
- 		raw_spin_lock_irq(&sem->wait_lock);
--		count = atomic_long_read(&sem->count);
- 	}
- 	__set_current_state(TASK_RUNNING);
- 	list_del(&waiter.list);
+Q3VycmVudCBsb2dpYyBkb2VzIG5vdCBhbGxvdyBWQ1BVIHRvIGJlIGxvYWRlZCBvbnRvIENQVSB3
+aXRoDQpBUElDIElEIDI1NS4gVGhpcyBzaG91bGQgYmUgYWxsb3dlZCBzaW5jZSB0aGUgaG9zdCBw
+aHlzaWNhbCBBUElDIElEDQpmaWVsZCBpbiB0aGUgQVZJQyBQaHlzaWNhbCBBUElDIHRhYmxlIGVu
+dHJ5IGlzIGFuIDgtYml0IHZhbHVlLA0KYW5kIEFQSUMgSUQgMjU1IGlzIHZhbGlkIGluIHN5c3Rl
+bSB3aXRoIHgyQVBJQyBlbmFibGVkLg0KDQpJbnN0ZWFkLCBkbyBub3QgYWxsb3cgVkNQVSBsb2Fk
+IGlmIHRoZSBob3N0IEFQSUMgSUQgY2Fubm90IGJlDQpyZXByZXNlbnRlZCBieSBhbiA4LWJpdCB2
+YWx1ZS4NCg0KU2lnbmVkLW9mZi1ieTogU3VyYXZlZSBTdXRoaWt1bHBhbml0IDxzdXJhdmVlLnN1
+dGhpa3VscGFuaXRAYW1kLmNvbT4NCi0tLQ0KIGFyY2gveDg2L2t2bS9zdm0uYyB8IDYgKysrKyst
+DQogMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZm
+IC0tZ2l0IGEvYXJjaC94ODYva3ZtL3N2bS5jIGIvYXJjaC94ODYva3ZtL3N2bS5jDQppbmRleCAy
+OTQ0NDhlLi4xMjI3ODhmIDEwMDY0NA0KLS0tIGEvYXJjaC94ODYva3ZtL3N2bS5jDQorKysgYi9h
+cmNoL3g4Ni9rdm0vc3ZtLmMNCkBAIC0yMDcxLDcgKzIwNzEsMTEgQEAgc3RhdGljIHZvaWQgYXZp
+Y192Y3B1X2xvYWQoc3RydWN0IGt2bV92Y3B1ICp2Y3B1LCBpbnQgY3B1KQ0KIAlpZiAoIWt2bV92
+Y3B1X2FwaWN2X2FjdGl2ZSh2Y3B1KSkNCiAJCXJldHVybjsNCiANCi0JaWYgKFdBUk5fT04oaF9w
+aHlzaWNhbF9pZCA+PSBBVklDX01BWF9QSFlTSUNBTF9JRF9DT1VOVCkpDQorCS8qDQorCSAqIFNp
+bmNlIHRoZSBob3N0IHBoeXNpY2FsIEFQSUMgaWQgaXMgOCBiaXRzLA0KKwkgKiB3ZSBjYW4gc3Vw
+cG9ydCBob3N0IEFQSUMgSUQgdXB0byAyNTUuDQorCSAqLw0KKwlpZiAoV0FSTl9PTihoX3BoeXNp
+Y2FsX2lkID4gQVZJQ19NQVhfUEhZU0lDQUxfSURfQ09VTlQpKQ0KIAkJcmV0dXJuOw0KIA0KIAll
+bnRyeSA9IFJFQURfT05DRSgqKHN2bS0+YXZpY19waHlzaWNhbF9pZF9jYWNoZSkpOw0KLS0gDQox
+LjguMy4xDQoNCg==
