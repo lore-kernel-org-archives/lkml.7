@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9099C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36C7C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE272075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9581B2075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556864646;
-	bh=bjCfOxNAkvhf2D0t5nz8hSTbvooFd0JRo0iksvchE70=;
+	s=default; t=1556864651;
+	bh=0yshlF8Z5qQ/sFPepAZa00zh0E4/P64I5ypoqsqUDOg=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Af+r8uSz4XiyZYg4+V5kBe3F2ZIyh+Xmh+/DtzAmONPKAn7PK8f60Id9zghTKh36I
-	 F+2eiQ7eAqAc4cBurG4iPdFLNWBdm+1OHL9RcId0K8lpYinbG4ZcM1owZGeLjNvmP2
-	 hScpxM7CduPn0itvYyHgraohsIdyFcmjoA3pmfGY=
+	b=CxM1lZOr0WGEOWo887/idAeogQUmNOi14xLNwwkVf73DrPhHByLO29wmFXCODBEvf
+	 quE3cWLSeRzdv2teu3ND5c1TQ3CyBPt0Q8P18xhh/Rjl8Gpj7U2xUsG8xfOL7PM94u
+	 +M/VoxlIOlAAZNnIte5EQ7dbFnAvSpXazttRzIO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfECGYF (ORCPT
+        id S1727048AbfECGXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:24:05 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33878 "EHLO
+        Fri, 3 May 2019 02:23:50 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33728 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727055AbfECGXv (ORCPT
+        with ESMTP id S1727018AbfECGXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:23:51 -0400
+        Fri, 3 May 2019 02:23:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=rZq5sizDQmDuNZ2W+O82havtkELQLuBDvFjiM74WSfM=; b=UpEJLzjtujOG
-        4uY45EIku3WztyXAkwzOiPPOYOLtNM9o8zmWByZRjA3TCTIfLiu5AwBOmrgmvLHztNFf3W+S8ZprP
-        sRzz8RO64N1MBQ+r/IqbjJ/U6UWjRsJ4cHO1b/GWVXrOIyRjFA/EiBRO+ZdVqTukn3PL+bZgdFR7C
-        o8ODQ=;
+        List-Archive; bh=tres0fURWXC1XDXgXF6x0O0qXSFQefHm7ghMswbgYJk=; b=ZaMWMnbmUq88
+        Oi0jWH/uUwKYJJidU0WDJbT6p9xKWskdhZiA+f56iYgvOUorQtI/NJo4f5J+GHwQtMetpGmVVwMuA
+        yWq2Per6rhtXe/hS2n0Gylf3cqgty9VoZbYSzek5Xi9MqFTt50PVhcJcHwLC4nO4W3f3aM5CugGvq
+        0ASfw=;
 Received: from [42.29.24.106] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hMRbj-0000kF-6Y; Fri, 03 May 2019 06:23:43 +0000
+        id 1hMRbk-0000kh-1s; Fri, 03 May 2019 06:23:44 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 9B15D441D41; Fri,  3 May 2019 07:23:34 +0100 (BST)
+        id 40FE3441D3C; Fri,  3 May 2019 07:23:35 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Jerome Brunet <jbrunet@baylibre.com>
 Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         patchwork-bot+notify@kernel.org
-Subject: Applied "ASoC: fix valid stream condition" to the asoc tree
-In-Reply-To: <20190429094750.1857-2-jbrunet@baylibre.com>
+Subject: Applied "ASoC: hdmi-codec: unlock the device on startup errors" to the asoc tree
+In-Reply-To: <20190429132943.16269-3-jbrunet@baylibre.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190503062334.9B15D441D41@finisterre.ee.mobilebroadband>
-Date:   Fri,  3 May 2019 07:23:34 +0100 (BST)
+Message-Id: <20190503062335.40FE3441D3C@finisterre.ee.mobilebroadband>
+Date:   Fri,  3 May 2019 07:23:35 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: fix valid stream condition
+   ASoC: hdmi-codec: unlock the device on startup errors
 
 has been applied to the asoc tree at
 
@@ -87,38 +87,41 @@ to this mail.
 Thanks,
 Mark
 
-From 6a7c59c6d9f3b280e81d7a04bbe4e55e90152dce Mon Sep 17 00:00:00 2001
+From 30180e8436046344b12813dc954b2e01dfdcd22d Mon Sep 17 00:00:00 2001
 From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Mon, 29 Apr 2019 11:47:49 +0200
-Subject: [PATCH] ASoC: fix valid stream condition
+Date: Mon, 29 Apr 2019 15:29:39 +0200
+Subject: [PATCH] ASoC: hdmi-codec: unlock the device on startup errors
 
-A stream may specify a rate range using 'rate_min' and 'rate_max', so a
-stream may be valid and not specify any rates. However, as stream cannot
-be valid and not have any channel. Let's use this condition instead to
-determine if a stream is valid or not.
+If the hdmi codec startup fails, it should clear the current_substream
+pointer to free the device. This is properly done for the audio_startup()
+callback but for snd_pcm_hw_constraint_eld().
 
-Fixes: cde79035c6cf ("ASoC: Handle multiple codecs with split playback / capture")
+Make sure the pointer cleared if an error is reported.
+
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/soc-pcm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/hdmi-codec.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index d21247546f7f..57088bd69e5d 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -43,8 +43,8 @@ static bool snd_soc_dai_stream_valid(struct snd_soc_dai *dai, int stream)
- 	else
- 		codec_stream = &dai->driver->capture;
- 
--	/* If the codec specifies any rate at all, it supports the stream. */
--	return codec_stream->rates;
-+	/* If the codec specifies any channels at all, it supports the stream */
-+	return codec_stream->channels_min;
- }
- 
- /**
+diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
+index 35df73e42cbc..fb2f0ac1f16f 100644
+--- a/sound/soc/codecs/hdmi-codec.c
++++ b/sound/soc/codecs/hdmi-codec.c
+@@ -439,8 +439,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
+ 		if (!ret) {
+ 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
+ 							hcp->eld);
+-			if (ret)
++			if (ret) {
++				mutex_lock(&hcp->current_stream_lock);
++				hcp->current_stream = NULL;
++				mutex_unlock(&hcp->current_stream_lock);
+ 				return ret;
++			}
+ 		}
+ 		/* Select chmap supported */
+ 		hdmi_codec_eld_chmap(hcp);
 -- 
 2.20.1
 
