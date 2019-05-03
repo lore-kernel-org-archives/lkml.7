@@ -2,107 +2,166 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7A3C46470
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D3BC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043A1206E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99BE8206C1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:46:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXmPRn8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfECVcj (ORCPT
+        id S1726597AbfECVqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 17:32:39 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:43717 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfECVci (ORCPT
+        Fri, 3 May 2019 17:46:18 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36037 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfECVqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 17:32:38 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id A4A3C8029B; Fri,  3 May 2019 23:32:25 +0200 (CEST)
-Date:   Fri, 3 May 2019 23:32:35 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Aditya Pakki <pakki001@umn.edu>,
-        Richard Leitner <richard.leitner@skidata.com>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 57/72] usb: usb251xb: fix to avoid potential NULL
- pointer dereference
-Message-ID: <20190503213235.GA9080@amd>
-References: <20190502143333.437607839@linuxfoundation.org>
- <20190502143337.920245890@linuxfoundation.org>
+        Fri, 3 May 2019 17:46:18 -0400
+Received: by mail-oi1-f195.google.com with SMTP id l203so5576959oia.3;
+        Fri, 03 May 2019 14:46:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Bo6sBLi3JhZAeEGfciYpjSPPKO3J0vi9Fr74oujyIxM=;
+        b=dXmPRn8cGAUoI3psj7jsrfYRmNyQlr9nugok5pw67O96fswh4EZKHlSCd5l2t3mxDW
+         GIIx+NsacBXQIHSvOv6nxChU2gnE/1xuLI9a4I031+0/oRmeeKVHDBuCG1kfa+7ll8/i
+         1fMYG1RnaJ64ONwWeSYfIzWW3W7q6ld6WIAtpwp01wiu9T+UDLOyrEBr53EE1ZEUhVS4
+         Pp70k443jj/lsuDKVWoIrakwT9QDzsBYZZpg0HQulVUPNrajWD/iv2ES7027bn2wTG/B
+         lQub0R0n7U/z7jtsUnq//ie8qptebqLLlF3mL6PDNVPSWiAiHTagNulxB7bIEPnI71Ga
+         ah2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Bo6sBLi3JhZAeEGfciYpjSPPKO3J0vi9Fr74oujyIxM=;
+        b=a+TAy9TwEqQOTKbo4JYoNcSp7OVuRf/Is3tjrbj8uDoobFNJrBiGuMCfCE/mS8DnbR
+         h0jFiHGj2rrpRk6VaWOVDSYDikeO7vrngBDQlAcWknTdi7zEx/0GDbyJCZ9V+eMsF3WZ
+         WNX1OxoFVtOdfDnRaSi4RWivdVGDxPCUNsCSUCbE86woQeKDGB6mfTKbdzEHnuuCLwO8
+         xEbBBlJz9cc3Y/Hjc/p19GH/JXS7CXjAegxIiXunZ1FW1Cbva+VR/R4HTGAR6fm4DxBH
+         JIUEF3Q4PKGaN1IfHTbt7YKpiFSPp8EYJ4FA/eC4Ge9AGOl3h1SQsaEvFN0vohELtbOF
+         WoKg==
+X-Gm-Message-State: APjAAAVHT9gQBGhI8eujUEvOCdbcxP3Zr0XhrcsMGEIy0OXs1HW84g3y
+        mu2pobXxlkxqPw+HK2TYHLc=
+X-Google-Smtp-Source: APXvYqzovcMs75Fs3FQhGnu/IWyqyV5NiI8nTjwqxe3xd3H8UcGq6HBR7Ex64AkJiwwIBnIG4cdwzg==
+X-Received: by 2002:aca:5046:: with SMTP id e67mr600074oib.115.1556919976896;
+        Fri, 03 May 2019 14:46:16 -0700 (PDT)
+Received: from localhost.localdomain ([23.92.204.198])
+        by smtp.gmail.com with ESMTPSA id h129sm1388633oia.12.2019.05.03.14.46.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 14:46:16 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, rkrcmar@kernel.org,
+        kvm@vger.kernel.org
+Subject: [GIT PULL] KVM fixes for 5.1-rc8 or final
+Date:   Fri,  3 May 2019 15:46:14 -0600
+Message-Id: <20190503214614.21250-1-pbonzini@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
-Content-Disposition: inline
-In-Reply-To: <20190502143337.920245890@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The following changes since commit 7a223e06b1a411cef6c4cd7a9b9a33c8d225b10e:
 
-On Thu 2019-05-02 17:21:19, Greg Kroah-Hartman wrote:
-> [ Upstream commit 41f00e6e9e55546390031996b773e7f3c1d95928 ]
->=20
-> of_match_device in usb251xb_probe can fail and returns a NULL pointer.
-> The patch avoids a potential NULL pointer dereference in this scenario.
->=20
-> Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-> Reviewed-by: Richard Leitner <richard.leitner@skidata.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
-> ---
->  drivers/usb/misc/usb251xb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-> index a6efb9a72939..5f7734c729b1 100644
-> --- a/drivers/usb/misc/usb251xb.c
-> +++ b/drivers/usb/misc/usb251xb.c
-> @@ -601,7 +601,7 @@ static int usb251xb_probe(struct usb251xb *hub)
->  							   dev);
->  	int err;
-> =20
-> -	if (np) {
-> +	if (np && of_id) {
->  		err =3D usb251xb_get_ofdata(hub,
->  					  (struct usb251xb_data *)of_id->data);
->  		if (err) {
+  KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing (2019-04-16 15:38:08 +0200)
 
-Are you sure this si correct?
+are available in the Git repository at:
 
-If of_id is NULL, this will proceed without setting up hub->conf_data
-etc.
+  git://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-I'd expect it to just return error from probe...?
+for you to fetch changes up to e8ab8d24b488632d07ce5ddb261f1d454114415b:
 
-Was this tested?
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+  KVM: nVMX: Fix size checks in vmx_set_nested_state (2019-05-01 00:43:44 +0200)
 
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+----------------------------------------------------------------
+* PPC and ARM bugfixes from submaintainers
+* Fix old Windows versions on AMD (recent regression)
+* Fix old Linux versions on processors without EPT
+* Fixes for LAPIC timer optimizations
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+----------------------------------------------------------------
+Alexey Kardashevskiy (1):
+      KVM: PPC: Book3S: Protect memslots while validating user address
 
-iEYEARECAAYFAlzMs3MACgkQMOfwapXb+vLeUwCffAQl097l+ldIHRzD82ZPEins
-9EkAnij+KD3rJiHxpmfiMFZgqIix6iU/
-=E/gX
------END PGP SIGNATURE-----
+Andrew Jones (2):
+      KVM: arm/arm64: Ensure vcpu target is unset on reset failure
+      Documentation: kvm: fix dirty log ioctl arch lists
 
---yrj/dFKFPuw6o+aM--
+Christoffer Dall (1):
+      KVM: arm/arm64: Don't emulate virtual timers on userspace ioctls
+
+Jim Mattson (1):
+      KVM: nVMX: Fix size checks in vmx_set_nested_state
+
+Liran Alon (1):
+      KVM: x86: Consider LAPIC TSC-Deadline timer expired if deadline too short
+
+Marc Zyngier (1):
+      KVM: arm/arm64: vgic-v3: Retire pending interrupts on disabling LPIs
+
+Paolo Bonzini (3):
+      Merge tag 'kvm-ppc-fixes-5.1-1' of git://git.kernel.org/.../paulus/powerpc into HEAD
+      KVM: fix KVM_CLEAR_DIRTY_LOG for memory slots of unaligned size
+      Merge tag 'kvmarm-fixes-for-5.1-2' of git://git.kernel.org/.../kvmarm/kvmarm into kvm-master
+
+Rick Edgecombe (1):
+      KVM: VMX: Move RSB stuffing to before the first RET after VM-Exit
+
+Sean Christopherson (6):
+      KVM: lapic: Disable timer advancement if adaptive tuning goes haywire
+      KVM: lapic: Track lapic timer advance per vCPU
+      KVM: lapic: Allow user to disable adaptive tuning of timer advancement
+      KVM: lapic: Convert guest TSC to host time domain if necessary
+      KVM: x86: Whitelist port 0x7e for pre-incrementing %rip
+      KVM: lapic: Check for in-kernel LAPIC before deferencing apic pointer
+
+Suraj Jitindar Singh (1):
+      KVM: PPC: Book3S HV: Perserve PSSCR FAKE_SUSPEND bit on guest exit
+
+Suzuki K Poulose (1):
+      kvm: arm: Skip stage2 huge mappings for unaligned ipa backed by THP
+
+Vitaly Kuznetsov (3):
+      x86: kvm: hyper-v: deal with buggy TLB flush requests from WS2012
+      x86/kvm/mmu: reset MMU context when 32-bit guest switches PAE
+      KVM: selftests: make hyperv_cpuid test pass on AMD
+
+Wei Huang (1):
+      KVM: arm/arm64: arch_timer: Fix CNTP_TVAL calculation
+
+ Documentation/virtual/kvm/api.txt                 | 11 ++--
+ arch/powerpc/kvm/book3s_64_vio.c                  |  6 +-
+ arch/powerpc/kvm/book3s_hv.c                      |  4 +-
+ arch/x86/include/asm/kvm_host.h                   |  1 +
+ arch/x86/include/uapi/asm/kvm.h                   |  1 +
+ arch/x86/kvm/hyperv.c                             | 11 +++-
+ arch/x86/kvm/lapic.c                              | 73 ++++++++++++++++-------
+ arch/x86/kvm/lapic.h                              |  4 +-
+ arch/x86/kvm/mmu.c                                |  1 +
+ arch/x86/kvm/vmx/nested.c                         |  4 +-
+ arch/x86/kvm/vmx/vmenter.S                        | 12 ++++
+ arch/x86/kvm/vmx/vmx.c                            |  7 +--
+ arch/x86/kvm/x86.c                                | 36 ++++++++---
+ arch/x86/kvm/x86.h                                |  2 -
+ tools/testing/selftests/kvm/dirty_log_test.c      |  9 ++-
+ tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c |  9 ++-
+ virt/kvm/arm/arch_timer.c                         | 17 +++---
+ virt/kvm/arm/arm.c                                | 11 +++-
+ virt/kvm/arm/mmu.c                                |  6 +-
+ virt/kvm/arm/vgic/vgic-mmio-v3.c                  |  3 +
+ virt/kvm/arm/vgic/vgic.c                          | 21 +++++++
+ virt/kvm/arm/vgic/vgic.h                          |  1 +
+ virt/kvm/kvm_main.c                               |  7 ++-
+ 23 files changed, 192 insertions(+), 65 deletions(-)
