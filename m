@@ -2,196 +2,107 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2654EC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D6EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E10B52075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:41:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="4oGpEXFe"
+	by mail.kernel.org (Postfix) with ESMTP id 201A02075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:44:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556901891;
+	bh=8cw3huy9JgI135+NqQSe0fA379tB3gSlEfIQFk7nPPI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iyNqHReUcgqN4hO5WVMKzBJiFbpiSdMeJcZNdblrJJC2NVTc+wjtSg92iR7oOLLfy
+	 u6ElS/yMTkurrPx+9zYKDt/pUpH3GbfmGYLZ6pyq1SWgiduDWfRE+ml3g1Wy60P4SB
+	 xNkdzA8qFSCEIz+8WLTaEHeGiw+F4ajLS5lyK1vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbfECQl0 (ORCPT
+        id S1728518AbfECQou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 12:41:26 -0400
-Received: from mail-eopbgr730048.outbound.protection.outlook.com ([40.107.73.48]:59104
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726719AbfECQl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 12:41:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/FFXXP1GaK1ON9h27xOe8RrwNYt8sjfSvo1Mwn/29ME=;
- b=4oGpEXFef2G8MaR36iL4WPPuM3Q3AudgFfsfCkfL7cx+rP8Pm02AKAtwJg4EWvWDExv3K1/ZXNiHLdGSmG4FHImR215EgQvd2tRRnduPdP6vo4VdI1XFBvC+CExJ07mq+CQplTb2XTH5Kjs9tniNXAsW1FS47XKN8ixbZdb+xIQ=
-Received: from BL0PR02MB5681.namprd02.prod.outlook.com (20.177.241.92) by
- BL0PR02MB3764.namprd02.prod.outlook.com (52.132.8.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Fri, 3 May 2019 16:41:22 +0000
-Received: from BL0PR02MB5681.namprd02.prod.outlook.com
- ([fe80::6cde:f726:b36e:752d]) by BL0PR02MB5681.namprd02.prod.outlook.com
- ([fe80::6cde:f726:b36e:752d%5]) with mapi id 15.20.1856.012; Fri, 3 May 2019
- 16:41:22 +0000
-From:   Dragan Cvetic <draganc@xilinx.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Derek Kiernan <dkiernan@xilinx.com>
-Subject: RE: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-Thread-Topic: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
-Thread-Index: AQHU/UVOyBvhwX5Hf0mi9G9IHzQgRKZYHAiAgAGBAEA=
-Date:   Fri, 3 May 2019 16:41:21 +0000
-Message-ID: <BL0PR02MB5681B0F2BC0D74D8604D4289CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-3-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172007.GA1874@kroah.com>
-In-Reply-To: <20190502172007.GA1874@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=draganc@xilinx.com; 
-x-originating-ip: [149.199.80.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 20ecc15a-232a-480b-d330-08d6cfe62cc5
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BL0PR02MB3764;
-x-ms-traffictypediagnostic: BL0PR02MB3764:
-x-microsoft-antispam-prvs: <BL0PR02MB376404865825B146C29A02E5CB350@BL0PR02MB3764.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0026334A56
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(376002)(366004)(346002)(199004)(189003)(13464003)(54906003)(107886003)(4326008)(25786009)(66556008)(66446008)(316002)(7736002)(52536014)(76116006)(73956011)(6246003)(66946007)(186003)(6436002)(9686003)(71200400001)(71190400001)(26005)(3846002)(6116002)(55016002)(53936002)(14454004)(68736007)(478600001)(14444005)(256004)(229853002)(5660300002)(11346002)(2906002)(305945005)(66476007)(86362001)(6506007)(53546011)(64756008)(446003)(486006)(99286004)(74316002)(102836004)(6916009)(8936002)(8676002)(476003)(33656002)(7696005)(76176011)(81166006)(81156014)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB3764;H:BL0PR02MB5681.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: V4esCaVumuYM+hZPb1IuVRCBY7Ao+W9KKk+9xuXJnw4KnbNgaBYLF3IzdthqP0VOTgjtaY0LKQsxZihVasBlbn3oOSVhnXUVAY1rlZONgskikrlhgMdr5cucfJ042g0T/8rGSfFLCFgv7bl163T7gpMArgAP23YILwCjc6WuOUYGATXXfUdRXK9xZuZu3tZ1jSAqwmvcOowxXk62LJfyW0pWXfn7whihitZgYkhMrCah/OJ9GcjVz6qQ991w4JsfDISW2K/30dd03k/Q9kwkum37M/sd2xuY7vXmoGoWUYOXBjt8HQqNz7ezGu6jQlIY4EAWyJNYM1l+MpGeb77QXFhhhfV6JCpQA1tKMRCfy/KqsM5Dow3JLZTPuG6FM/jgnAm7fcNUYgL1DDubjXVrfbQ3w1427ffKestg055HitU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 3 May 2019 12:44:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727899AbfECQot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 12:44:49 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CBCC214DA
+        for <linux-kernel@vger.kernel.org>; Fri,  3 May 2019 16:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556901888;
+        bh=8cw3huy9JgI135+NqQSe0fA379tB3gSlEfIQFk7nPPI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=a9tcXeVU+XVrv+XaQ98EQO+7o9VnoEC7qSeG5XSuDT3JZciuL59Dzppqzc87hwVPY
+         d1bcbxf1pRtY3i6X0cXOTdUWyCZUgF+YFk2nFiABIc3rYcvNfN9mf9Qns0ClUKCaWC
+         NgsTgylYZrf5x8w+imb6NLWJzPx1d9C9hZXqJ0KA=
+Received: by mail-wr1-f50.google.com with SMTP id l2so8665263wrb.9
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 09:44:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAUOGdZGu4Y9Ru8vI4H/asnI5pvvd8EJa/p8PtoqXXVRCyBNOLZw
+        kzKM/gu2yxG5NlAdERXf+eKAHYdPX+y5TBEUOKJbtA==
+X-Google-Smtp-Source: APXvYqwdh0bncv2mEhNhDzUjkAso7jUC2TqrfVvEwRSxKalPbLqYKMBf8BsmaQA/bDkxZZthnfNip2uVK/Cx8DvGL2Q=
+X-Received: by 2002:adf:ec42:: with SMTP id w2mr5212912wrn.77.1556901887167;
+ Fri, 03 May 2019 09:44:47 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20ecc15a-232a-480b-d330-08d6cfe62cc5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2019 16:41:21.8774
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB3764
+References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+ <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
+ <20190502202146.GZ2623@hirez.programming.kicks-ass.net> <20190502185225.0cdfc8bc@gandalf.local.home>
+ <20190502193129.664c5b2e@gandalf.local.home> <20190502195052.0af473cf@gandalf.local.home>
+ <20190503092959.GB2623@hirez.programming.kicks-ass.net> <20190503092247.20cc1ff0@gandalf.local.home>
+ <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net> <20190503123126.3a2801be@gandalf.local.home>
+ <20190503163527.GI2606@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190503163527.GI2606@hirez.programming.kicks-ass.net>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 3 May 2019 09:44:35 -0700
+X-Gmail-Original-Message-ID: <CALCETrUcEH8kswYGNkoupVVP+3hEsTA4BWTfLk-RY_RfkDsHGw@mail.gmail.com>
+Message-ID: <CALCETrUcEH8kswYGNkoupVVP+3hEsTA4BWTfLk-RY_RfkDsHGw@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-Please find my inline comments below,
-
-Regards
-Dragan
-
-> -----Original Message-----
-> From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> Sent: Thursday 2 May 2019 18:20
-> To: Dragan Cvetic <draganc@xilinx.com>
-> Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@li=
-sts.infradead.org; robh+dt@kernel.org;
-> mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kerne=
-l.org; Derek Kiernan <dkiernan@xilinx.com>
-> Subject: Re: [PATCH V3 02/12] misc: xilinx-sdfec: add core driver
->=20
-> On Sat, Apr 27, 2019 at 11:04:56PM +0100, Dragan Cvetic wrote:
-> > +#define DRIVER_NAME "xilinx_sdfec"
-> > +#define DRIVER_VERSION "0.3"
->=20
-> Version means nothing with the driver in the kernel tree, please remove
-> it.
-
-Will be removed. Thank you.
-
->=20
-> > +#define DRIVER_MAX_DEV BIT(MINORBITS)
->=20
-> Why this number?  Why limit yourself to any number?
->=20
-
-There can be max 8 devices for this driver. I'll change to 8.
-
-> > +
-> > +static struct class *xsdfec_class;
->=20
-> Do you really need your own class?
-
-When writing a character device driver, my goal is to create and register a=
-n instance
-of that structure associated with a struct file_operations, exposing a set =
-of operations
-to the user-space. One of the steps to make this goal is Create a class for=
- a devices,
-visible in /sys/class/.
-
->=20
-> > +static atomic_t xsdfec_ndevs =3D ATOMIC_INIT(0);
->=20
-> Why?
-
-At the end this become a minor number.=20
-It is not needed, will be removed. Thanks.
-
->=20
-> > +static dev_t xsdfec_devt;
->=20
-> Why?
->=20
-> Why not use misc_device for this?  Why do you need your own major with a
-> bunch of minor devices reserved ahead of time?  Why not just create a
-> new misc device for every individual device that happens to be found in
-> the system?  That will make the code a lot simpler and smaller and
-> easier.
+On Fri, May 3, 2019 at 9:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
->=20
->=20
-> > +
-> > +/**
-> > + * struct xsdfec_dev - Driver data for SDFEC
-> > + * @regs: device physical base address
-> > + * @dev: pointer to device struct
-> > + * @config: Configuration of the SDFEC device
-> > + * @open_count: Count of char device being opened
-> > + * @xsdfec_cdev: Character device handle
-> > + * @irq_lock: Driver spinlock
-> > + *
-> > + * This structure contains necessary state for SDFEC driver to operate
-> > + */
-> > +struct xsdfec_dev {
-> > +	void __iomem *regs;
-> > +	struct device *dev;
-> > +	struct xsdfec_config config;
-> > +	atomic_t open_count;
-> > +	struct cdev xsdfec_cdev;
-> > +	/* Spinlock to protect state_updated and stats_updated */
-> > +	spinlock_t irq_lock;
-> > +};
-> > +
-> > +static const struct file_operations xsdfec_fops =3D {
-> > +	.owner =3D THIS_MODULE,
-> > +};
->=20
-> No operations at all?  That's an easy driver :)
+> On Fri, May 03, 2019 at 12:31:26PM -0400, Steven Rostedt wrote:
+> > I guess the real question is, what's the performance impact of doing
+> > that?
+>
+> Is there anyone that considers i386 a performance platform?
 
+Not me.  As far as I'm concerned, I will basically always gladly trade
+several cycles for simplicity on 32-bit.
 
-The operations are implemented in the later patches.
-
-
->=20
-> thanks,
->=20
-> greg k-h
+--Andy
