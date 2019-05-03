@@ -2,76 +2,107 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE77C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74114C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA41D2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437202070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:52:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJs4rm3x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfECArp (ORCPT
+        id S1726446AbfECAwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 20:47:45 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:51933 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbfECArp (ORCPT
+        Thu, 2 May 2019 20:52:55 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39426 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfECAwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 20:47:45 -0400
-Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x430l87H085453;
-        Fri, 3 May 2019 09:47:09 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp);
- Fri, 03 May 2019 09:47:08 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x430l3WU085429
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 3 May 2019 09:47:08 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] RFC: hung_task: taint kernel
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Liu, Chuansheng" <chuansheng.liu@intel.com>
-References: <20190502194208.3535-1-daniel.vetter@ffwll.ch>
- <20190502204648.5537-1-daniel.vetter@ffwll.ch>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <7e4ef8c8-2def-5af9-f80e-b276fea8696a@i-love.sakura.ne.jp>
-Date:   Fri, 3 May 2019 09:47:03 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+        Thu, 2 May 2019 20:52:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q10so3869441ljc.6;
+        Thu, 02 May 2019 17:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XFxxk88jKn9mWRNss+JVJf8tkKfLz3t0cGCY2rC5qdc=;
+        b=OJs4rm3x3N51G50s/x0aoiLB+8fHtRv9NlRyq8fVExBdiEEYD+8LQaCT+UvG0vmTIX
+         b6v8aA5qHAyKqsIOtohmEnW/3mMX1JxCP4K+KvnN6jlroPSIN3lVQfUZOBe8pefUxcOZ
+         co8KG9bXdgRIbqEvDqot2Rwd/4SdQBEnsmifo7CgMpyRXq90AMU8u0qMouWDKWbLndqb
+         IrHfyS7Inj/8569gubTfX0bLAIwqIlsZnJxUplGDM1oupO0+LBpMagxiFMrsAaYRX7Ix
+         +2k6TE9AU/tPRJKZ+MlAHevQmSFA5YruMve4cSQ8B+uqFiFchJlf+w1HoBqPibESYwUf
+         ns2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XFxxk88jKn9mWRNss+JVJf8tkKfLz3t0cGCY2rC5qdc=;
+        b=MwxCtp+WXpr7HF25AvTt7XG0ZsfV1fjquUaCF3WSB9TN9KJUvE66xMR+fHlTf/XZjH
+         jPwAH9R19daWep78FbUIkfYR4X0t0MyF4134ZQRM3Di06LAq4FVRpU6dd/coV59arNzC
+         8wXYLUGa1MkUbSNiS53s7DcO3ZyCNKQ30G9Fixfib7FJP/TEqSde8DYXGlWVor7P8NDx
+         T/G3155u5Czw5z3iSaR57pC/YLQR7j19Q0/UBtbdBwcALHv18fyIq8T0HTolo6G7RKMM
+         gSWeu4OnGKXfGbP+hCxEQc9mYhVE17E50IekPuFYXR8e4xjq6LG4b7v21s+I+ByAy7mo
+         +q+A==
+X-Gm-Message-State: APjAAAUIV9gDANubOjCpzbHV5oWllkyyeetoYtDh2uYunk2uuOmYFG9u
+        qAw6ddjEM61IOEWzk80XNyYodNWd
+X-Google-Smtp-Source: APXvYqwUSY91QLyNmUPo+ija5NlVYVtyqUZqwosyNnND3zu8T7MSNFSM67fFJNrN8TIEzDGU2R119w==
+X-Received: by 2002:a2e:9993:: with SMTP id w19mr3554713lji.111.1556844772675;
+        Thu, 02 May 2019 17:52:52 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.googlemail.com with ESMTPSA id u1sm98805lje.29.2019.05.02.17.52.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 May 2019 17:52:51 -0700 (PDT)
+Subject: Re: [PATCH v4 00/16] NVIDIA Tegra devfreq improvements and Tegra20/30
+ support
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <CGME20190501234148epcas5p1cc9a8dafa9ee6d8d046d1292b8270727@epcas5p1.samsung.com>
+ <20190501233815.32643-1-digetx@gmail.com>
+ <60ef6e47-e61b-3a92-e90d-90debedfcfc4@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <fa061a65-f108-6c5e-1f87-950a9a8caafc@gmail.com>
+Date:   Fri, 3 May 2019 03:52:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190502204648.5537-1-daniel.vetter@ffwll.ch>
+In-Reply-To: <60ef6e47-e61b-3a92-e90d-90debedfcfc4@samsung.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/05/03 5:46, Daniel Vetter wrote:
-> There's the hung_task_panic sysctl, but that's a bit an extreme measure.
-> As a fallback taint at least the machine.
+03.05.2019 3:31, Chanwoo Choi пишет:
+> Hi Dmitry,
 > 
-> Our CI uses this to decide when a reboot is necessary, plus to figure
-> out whether the kernel is still happy.
+> On 19. 5. 2. 오전 8:37, Dmitry Osipenko wrote:
+>> Changelog:
+>>
+>> v4: Addressed all review comments that were made by Chanwoo Choi to v3:
+>>
+>>     - changed the driver removal order to match the probe exactly
+>>     - added clarifying comment for 1/8 ratio to the Tegra20 driver
+>>
+>>     Chanwoo, please also note that the clk patch that should fix
+>>     compilation problem that was reported the kbuild-test-robot is already
+>>     applied and available in the recent linux-next.
+> 
+> I knew that Stephen picked up your path about clock.
 
-Why your CI can't watch for "blocked for more than" message instead of
-setting the taint flag? How does your CI decide a reboot is necessary?
+Hi Chanwoo,
 
-There is no need to set the tainted flag when some task was just blocked
-for a while. It might be due to memory pressure, it might be due to setting
-very short timeout (e.g. a few seconds), it might be due to busy CPUs doing
-something else...
+Okay, good. Thank you very much for reviewing this series! I assume it's
+too late now for v5.2, but it should be good to go for v5.3.
