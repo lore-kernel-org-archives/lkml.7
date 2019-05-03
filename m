@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347E7C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1FAC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034912087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E124D2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556864365;
-	bh=0yshlF8Z5qQ/sFPepAZa00zh0E4/P64I5ypoqsqUDOg=;
+	s=default; t=1556864369;
+	bh=2y9HV1V/2dCrj3ppmfOIU8x+Zse9u+Gokj3DE+K1V5c=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=aq+01HEk/D//ZuECAIB5AUpfhsEPHIu4V50/cAJn2h3QCCnP1fSq9yIV8bls8Dgqn
-	 exjGOFxuDVx1CxWBwMIsyxgvBNuTykVZGR2C7HGDfhV8xYrNX/VIJxliXsKXftWeDa
-	 rWNKJvlfc8KvurUQf9fLaGlsGBL1N8o9GGioJqyM=
+	b=auczW0C8SDAgb0q5LVt7vyuev6eHuFCht7SQQ73z9LQad5MSvese+wJOgLqpTkWPz
+	 LN0GLRQaG4mQthQCM13YQPbsnPZWOndjl4J0J5ecZfq/KEDAabiRvQxb7LutJVJk/h
+	 Cpc6Jvc0Qw6l0ejCbZRLgUckbIrTl1yHrpZKwJH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbfECGTF (ORCPT
+        id S1726862AbfECGTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:19:05 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53076 "EHLO
+        Fri, 3 May 2019 02:19:03 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53080 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfECGS6 (ORCPT
+        with ESMTP id S1726755AbfECGS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 May 2019 02:18:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,27 +34,27 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=tres0fURWXC1XDXgXF6x0O0qXSFQefHm7ghMswbgYJk=; b=Hq7QKC17vMar
-        ubPzqevZWdt9UQoxchDsnE4mBE370MtdtV5vjNwbenZDGyTvjVTyGE88NYgYmY579ASTpZ/PcisH7
-        fWKcnH3cCLx0ViKeR9bv5RYVat+RPUdC7m1d9PmoScENHEEmB4fSdZPGx1zSe0NnqTWBAPa4XU0HF
-        +ouGY=;
+        List-Archive; bh=cdKCKYPz4QxPklp/Dp5dG8XAK9Cs+SYYmACxxeonNLE=; b=VXCPJqHliUUh
+        ikTVQ1GkhMvtYGuF+IIfSF7OrOufE2cBgBd/l/HUzlvLveQjeQmaxl0+KcZESNjEq//Y+9LDJAagh
+        uV8xZZ7heafMUTTh+ZU6qMETWb1FOmeC8wyiq8LANE6SQ+73Dxbfoyv/bgxSbeObsrjk0gyDNgwc/
+        Oa0ao=;
 Received: from [42.29.24.106] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hMRX4-0000XK-3l; Fri, 03 May 2019 06:18:54 +0000
+        id 1hMRX2-0000Y1-I7; Fri, 03 May 2019 06:18:53 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 8BD02441D3F; Fri,  3 May 2019 07:18:45 +0100 (BST)
+        id BBF66441D58; Fri,  3 May 2019 07:18:47 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        patchwork-bot+notify@kernel.org
-Subject: Applied "ASoC: hdmi-codec: unlock the device on startup errors" to the asoc tree
-In-Reply-To: <20190429132943.16269-3-jbrunet@baylibre.com>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Pascal Paillet <p.paillet@st.com>
+Subject: Applied "regulator: stm32-pwr: Remove unneeded .min_uV and .list_volage" to the regulator tree
+In-Reply-To: <20190430111346.23427-2-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190503061845.8BD02441D3F@finisterre.ee.mobilebroadband>
-Date:   Fri,  3 May 2019 07:18:45 +0100 (BST)
+Message-Id: <20190503061847.BBF66441D58@finisterre.ee.mobilebroadband>
+Date:   Fri,  3 May 2019 07:18:47 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: hdmi-codec: unlock the device on startup errors
+   regulator: stm32-pwr: Remove unneeded .min_uV and .list_volage
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -87,41 +87,41 @@ to this mail.
 Thanks,
 Mark
 
-From 30180e8436046344b12813dc954b2e01dfdcd22d Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Mon, 29 Apr 2019 15:29:39 +0200
-Subject: [PATCH] ASoC: hdmi-codec: unlock the device on startup errors
+From 311a68a51a58bfdead971080d41a34ca565b47a0 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Tue, 30 Apr 2019 19:13:46 +0800
+Subject: [PATCH] regulator: stm32-pwr: Remove unneeded .min_uV and
+ .list_volage
 
-If the hdmi codec startup fails, it should clear the current_substream
-pointer to free the device. This is properly done for the audio_startup()
-callback but for snd_pcm_hw_constraint_eld().
+For fixed regulator, setting .n_voltages = 1 and .fixed_uV is enough,
+no need to set .min_uV and .list_volage.
 
-Make sure the pointer cleared if an error is reported.
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/hdmi-codec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/regulator/stm32-pwr.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index 35df73e42cbc..fb2f0ac1f16f 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -439,8 +439,12 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 		if (!ret) {
- 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
- 							hcp->eld);
--			if (ret)
-+			if (ret) {
-+				mutex_lock(&hcp->current_stream_lock);
-+				hcp->current_stream = NULL;
-+				mutex_unlock(&hcp->current_stream_lock);
- 				return ret;
-+			}
- 		}
- 		/* Select chmap supported */
- 		hdmi_codec_eld_chmap(hcp);
+diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
+index 8bd15e4d2cea..e0e627b0106e 100644
+--- a/drivers/regulator/stm32-pwr.c
++++ b/drivers/regulator/stm32-pwr.c
+@@ -102,7 +102,6 @@ static int stm32_pwr_reg_disable(struct regulator_dev *rdev)
+ }
+ 
+ static const struct regulator_ops stm32_pwr_reg_ops = {
+-	.list_voltage	= regulator_list_voltage_linear,
+ 	.enable		= stm32_pwr_reg_enable,
+ 	.disable	= stm32_pwr_reg_disable,
+ 	.is_enabled	= stm32_pwr_reg_is_enabled,
+@@ -115,7 +114,6 @@ static const struct regulator_ops stm32_pwr_reg_ops = {
+ 		.of_match = of_match_ptr(_name), \
+ 		.n_voltages = 1, \
+ 		.type = REGULATOR_VOLTAGE, \
+-		.min_uV = _volt, \
+ 		.fixed_uV = _volt, \
+ 		.ops = &stm32_pwr_reg_ops, \
+ 		.enable_mask = _en, \
 -- 
 2.20.1
 
