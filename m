@@ -2,124 +2,123 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DA2C004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25E9C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE6C2081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AA520C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UXRQHQnp"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Cu4XJd4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfECR6r (ORCPT
+        id S1728496AbfECSHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:58:47 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45334 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfECR6r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:58:47 -0400
-Received: by mail-pf1-f195.google.com with SMTP id e24so3227222pfi.12;
-        Fri, 03 May 2019 10:58:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ooXXaTjW3PGU+EmYpvlg4whjJfgEkcywCH6vUZA4h/w=;
-        b=UXRQHQnpge6zu7lkrvOLU/fef+EsvPdq+ZsTPefd47hyCMMjQKxVVQoz5x9INsCiUC
-         cex6+hfa798VKtERv8ixv9vUVWfXkumVMxX0XDT+twT+ztLSRfbPiROXswHAeAKi8Sez
-         erFhtAedMXclfQttXvIxPwHbdbb+0sfO2jc+By54JzDJTdZYBjSWAEFtv5cOAbIFVMdE
-         2M1hSgz7Qs5RHKaV6i5JJR9vTPi0tItrBng8xOVWBmAyotpHGzd348cyMoq9l2sL+hQc
-         a/R5alkElgraFZ10WPkV9h1rJGM3elfoSXGzo/HyzNsonno1Ebhv2GTfk7wS/gH3Dye7
-         88LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ooXXaTjW3PGU+EmYpvlg4whjJfgEkcywCH6vUZA4h/w=;
-        b=CnEf2OdXCxULnmesI0nNFG6kgblNEc2+5RoRu/SE+CIL52YZt6RfojDlRIg9Kz8bTT
-         Sl9k/JM+IwCWqXNWT3D7J1TEIhY2X/TNglvLkf9tV8Xhp3GTfYAxoS6uQAB5HP43H/q8
-         9/hJVVQh3POzvI0XECEcFSYYYg4A9nkUFEf4YMAWo9PLGzyUZiO6kemAX1GYbi9RWNd/
-         IXbu8xLlww9+/JUTY+6ogMBNvYbLlKzWLcqTDqEQ6lprkKJm/TtNploMYyJ+lZx4VY/B
-         5j6p/pwiuVkAEh7vtb6xDEa8mWsDSgEW6Aqw6O7vkLlsB7VIhk0JG3lqO9xeAvx/rHlG
-         UgmQ==
-X-Gm-Message-State: APjAAAUU1JTEym3XoF2sSRrnW9FLkVtAWU+VbW8rwPL2wkXbBudB/ow/
-        rSIdreQhRbL3MR31nhonh/M=
-X-Google-Smtp-Source: APXvYqyXJ7yo91DLg3trGKRJzPJZkZarUay0Mj4BFJGWi6q84c8u3OAlKaaNzmKHZkCV8GEJ2jkH9w==
-X-Received: by 2002:aa7:83d1:: with SMTP id j17mr12854399pfn.78.1556906325799;
-        Fri, 03 May 2019 10:58:45 -0700 (PDT)
-Received: from CentOS76.localdomain.localdomain ([183.82.21.188])
-        by smtp.gmail.com with ESMTPSA id n18sm7019262pfi.48.2019.05.03.10.58.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 10:58:44 -0700 (PDT)
-From:   jagdsh.linux@gmail.com
-To:     robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, bskeggs@redhat.com, hierry.reding@gmail.com,
-        jcrouse@codeaurora.org, jsanka@codeaurora.org,
-        skolluku@codeaurora.org, paul.burton@mips.com, jrdr.linux@gmail.com
-Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        nouveau@lists.freedesktop.org,
-        Jagadeesh Pagadala <jagdsh.linux@gmail.com>
-Subject: [PATCH] gpu/drm: Remove duplicate headers
-Date:   Fri,  3 May 2019 23:28:13 +0530
-Message-Id: <1556906293-128921-1-git-send-email-jagdsh.linux@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 3 May 2019 14:07:46 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:45632 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727221AbfECSHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 14:07:46 -0400
+Received: from zn.tnic (p200300EC2F0CA900ED4C00FAF1DC8C17.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:a900:ed4c:fa:f1dc:8c17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 92EBC1EC021C;
+        Fri,  3 May 2019 20:07:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1556906864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=FwwKpD3uSNoOFlcgjRaZh20WCk4wqtxh0zC+plzB4pw=;
+        b=Cu4XJd4jGrp29+kEqnr+REiJv1Qd2B9YZMGQL2UaFxWfI5ulSgsbHfRtch5FWltjic14iM
+        R1Aqhme6bHXuDEYP8AfIF2vhjUwFB6QII+qppOmUF8cnxd8Hu7CHr4jVy1M3jyIdIfNKpK
+        HCMtvVT2Bgvrj+idGuaMF3C0kVTpAIA=
+Date:   Fri, 3 May 2019 20:07:39 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
+ export
+Message-ID: <20190503180739.GF5020@zn.tnic>
+References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
+ <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
+ <CALCETrWTCB9xLVdKCODghpeQpJ_3Rz3OwE8FB+5hjYXMYwYPLg@mail.gmail.com>
+ <20190502165520.GC6565@zn.tnic>
+ <bcb6c893-61e6-4b08-5b40-b1b2e24f495b@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bcb6c893-61e6-4b08-5b40-b1b2e24f495b@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
+On Fri, May 03, 2019 at 11:21:15AM -0600, Paolo Bonzini wrote:
+> Your observation that the API only exists on x86 and s390 has no bearing
+> to whether the functions should be EXPORT_SYMBOL_GPL or EXPORT_SYMBOL.
+> ARM has kernel_neon_begin/end, PPC has enable/disable_kernel_altivec.
+> It's just that SIMD code is so arch-specific that nobody has bothered
+> unifying the namings (or, nobody considers the different names a problem
+> at all).
 
-Remove duplicate headers which are included twice.
+This is actually proving my point: there wasn't any real agreement on
+what interfaces should be immutable so that out-of-tree code can use
+them and us guaranteeing they won't change. Instead, it was a random
+thing that just happened.
 
-Signed-off-by: Jagadeesh Pagadala <jagdsh.linux@gmail.com>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c             | 1 -
- drivers/gpu/drm/nouveau/nvkm/subdev/bus/nv04.c        | 2 --
- drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c | 1 -
- 3 files changed, 4 deletions(-)
+So if you have to use them in some out-of-tree module, you'd have to
+do arch-specific hackery, obviously, because each arch does different
+things.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c
-index 018df2c..45a5bc6 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c
-@@ -15,7 +15,6 @@
- #include "dpu_hwio.h"
- #include "dpu_hw_lm.h"
- #include "dpu_hw_mdss.h"
--#include "dpu_kms.h"
- 
- #define LM_OP_MODE                        0x00
- #define LM_OUT_SIZE                       0x04
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bus/nv04.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bus/nv04.c
-index c80b967..2b44ba5 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/bus/nv04.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bus/nv04.c
-@@ -26,8 +26,6 @@
- 
- #include <subdev/gpio.h>
- 
--#include <subdev/gpio.h>
--
- static void
- nv04_bus_intr(struct nvkm_bus *bus)
- {
-diff --git a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-index 2c9c972..cacf2e0 100644
---- a/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-+++ b/drivers/gpu/drm/panel/panel-raspberrypi-touchscreen.c
-@@ -53,7 +53,6 @@
- #include <linux/of_graph.h>
- #include <linux/pm.h>
- 
--#include <drm/drm_panel.h>
- #include <drm/drmP.h>
- #include <drm/drm_crtc.h>
- #include <drm/drm_mipi_dsi.h>
+So what happened is that out-of-tree module simply grabbed them and now
+when we change our implementation, we broke it. And I care about this
+why exactly?
+
+So let me cut to the chase: you and Andy are arguing about what exactly?
+
+* We should support out-of-tree code in general?
+
+* We should support out-of-tree code if/when <fill in the specifics which
+out-of-tree code should be supported by Linux and which not>?
+
+* We should be free to change kernel interfaces and implementation as
+we see fit, without paying attention to some out-of-tree, probably
+license-incompatible, maybe even proprietary code? (I don't think it is
+that, though).
+
+* Something else I've missed.
+
+So before we waste any more time with this, let's agree on the rules
+first: do we support out-of-tree code and if so, how much and to what
+degree?
+
+This keeps happening so I think we should write it all down so that it
+is crystal clear to all parties involved what can and cannot be done.
+And then when we all agree, we can enforce those rules and then act
+accordingly when changing implementations.
+
+Maybe it is written down somewhere but I haven't found it yet so if you
+do, pls point me to it.
+
 -- 
-1.8.3.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
