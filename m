@@ -2,92 +2,132 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB4FC04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C3BC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC2720651
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D702081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vOh/egGE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBYVOpja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfECRQd (ORCPT
+        id S1728366AbfECRT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:16:33 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41475 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728417AbfECRQd (ORCPT
+        Fri, 3 May 2019 13:19:59 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36800 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726724AbfECRT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:16:33 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d9so2990312pls.8;
-        Fri, 03 May 2019 10:16:33 -0700 (PDT)
+        Fri, 3 May 2019 13:19:59 -0400
+Received: by mail-io1-f66.google.com with SMTP id d19so5842390ioc.3;
+        Fri, 03 May 2019 10:19:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GNlMdZfsQqjoS9c+9HGOtApMgl/OXNfonaWmiMWHe4c=;
-        b=vOh/egGEiwhzR0nKnRnku35WuWdJ44qZoBPU8Su711pkumi7OjLA8LLfMR8VK1sotK
-         LraeeEHp476INHqkBBK6noMgwboKbM0xpic7pDp9EpyXa9ytMxgbO7bQyqo/Nf6japH3
-         EpJ76qs8Rn/2/ekpxot8t6xvs3r/xrBPsJv212KuC8LMWlyr6ItG5v2ZsEL7mohtHx5y
-         PMuWLBQ3n5SvqjHyt0+v2B+IYPGqTgxvOQoSdDw0EaAkNVz5a57WeRLVuc8ZKukA34bZ
-         /teDjBU4ZV+wIN8avKgMUSBUvkz6eLjwbk0xdcaalP/csJySwE6U7Wo7nipNCcwaTTnv
-         ywfw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r2uAQt0Bvsy/cuLm6VMoad/e7q1topheHEBvBpUuRTg=;
+        b=mBYVOpjae9uWiS11YJRP6uDNbxA54vBO40AZQnIJ6BjfKqgtLdVSnFyKVON0RN502M
+         rgJG7BHUMCdm5baqBBvha2CmKhJZfXjuM9xLth/DxLe5QCnSWDbt3AWJOj/ajj8kFS9H
+         tzJ/nqHQ6yic3sEfMTmZBYE/k+uDxLojsxt4i20B4+px8RfnXq5uYRnlRPrKx0QjoDXM
+         lp3rOxaxu+sF8lHxDe8xbjB3dqI4RuJQFT59pVfqQQaRGYJ24M1GUmolrMjPvgKEe4N/
+         ahH1IlJ29twLFBSitOhrN2TtzE6d9ilWXI1Ats4jxc8XDhTwR2Mkxm1QziGLtleoj+QN
+         kArg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GNlMdZfsQqjoS9c+9HGOtApMgl/OXNfonaWmiMWHe4c=;
-        b=fxmbUxsndUcNOA/4BV0c6CvjMEwHM6Wcx38O92iO1/lvGPu8wdQehlZYKFFTuxOiyL
-         utMzdwPkhwOd+9ybhR5rkW0yDx+5qsuKKYx0vwprrsvO9dl4bTrseVSTyT08402HxmZ5
-         nOnY9i+lThG95OUpUC4HAiNh7QZAbktAWNmJiKqE9IPg5gRbnIz99L98w6z8Ap7MOd0O
-         TJ8P3yvHKYi9udhXovBfqmJqQPjFehRNSs5Cc0nRp0WEapKHVinAffeNiPBA67oz4Wiu
-         CoQoRGsAiDnFFx/kVNzOBu7ac5/2kj1mNgeCaHVJFAG5RaiOJFC6G0rcm1ECdx+hFTni
-         IrGw==
-X-Gm-Message-State: APjAAAU8TzzG2o9WAkVm22FH3jgeS+rGC+XExEvd3k7d960hpEq9/kJJ
-        097sNR0bI9Sq19ABtpssQUk=
-X-Google-Smtp-Source: APXvYqynhvofAcRbw/HNFSl/R1QfW/iLjTwzlBLzxqKmzFrbNtFmB+AjXgIJPQKv0aUcT+NE+MWzOw==
-X-Received: by 2002:a17:902:6bc2:: with SMTP id m2mr11962621plt.194.1556903792824;
-        Fri, 03 May 2019 10:16:32 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y17sm3575206pfb.161.2019.05.03.10.16.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 10:16:31 -0700 (PDT)
-Date:   Fri, 3 May 2019 10:16:30 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.0 000/101] 5.0.12-stable review
-Message-ID: <20190503171630.GD2359@roeck-us.net>
-References: <20190502143339.434882399@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r2uAQt0Bvsy/cuLm6VMoad/e7q1topheHEBvBpUuRTg=;
+        b=gGpWirZMUePE/X7Y9c9ri65FUjvnhJDn/Um5HEdz1of3zIOmRET0WQJjKnDURqm9Yb
+         642/Pk+0hxNFVQ+st/8TVnWX4LE2h5RGPtjdrXBNJ1/x9ET77ShPGFyeO7/jgh4zAauy
+         1X9HXMhdL97mqbbRBCcqPAQnnNoKPXqEkf2lPEfFUXA7gA9UAUDUdT4yA95pcXnx4r+X
+         t81g6T5zhT1Hj3+AaK5orPVm790ktqD8VLX4SxkjTL6JNxw3lM6Nr1SUFWGbZWjHDKVg
+         0G0l6pH3QLDSSp0p9akEx5wgtipvwLEp6cLqtJkroGmN2z8BeJF+YOVNsYLWNVRn8L+N
+         m8Nw==
+X-Gm-Message-State: APjAAAWOeraQ/DzDa0oVeX7xQA2ld9BUgw+y98ChAT7Uypn5Fj6vjqN3
+        SdinuP+YO3rTrlxsHOkqVGD/1COR7qP00gDAL0w=
+X-Google-Smtp-Source: APXvYqxiF5PHNQiqJ0GHkKA8Wdz9mUC9o+Y3s6oZnGSYoKgvZ0APeckWE+zdGD+8yVenAIDzUudQV2J1cMo5WlyQrik=
+X-Received: by 2002:a5e:890f:: with SMTP id k15mr6271446ioj.68.1556903998468;
+ Fri, 03 May 2019 10:19:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190501205215.ptoi2czhklte5jbm@csclub.uwaterloo.ca>
+ <CAKgT0UczVvREiXwde6yJ8_i9RT2z7FhenEutXJKW8AmDypn_0g@mail.gmail.com>
+ <20190502151140.gf5ugodqamtdd5tz@csclub.uwaterloo.ca> <CAKgT0Uc_OUAcPfRe6yCSwpYXCXomOXKG2Yvy9c1_1RJn-7Cb5g@mail.gmail.com>
+ <20190502171636.3yquioe3gcwsxlus@csclub.uwaterloo.ca> <CAKgT0Ufk8LXMb9vVWfvgbjbQFKAuenncf95pfkA0P1t-3+Ni_g@mail.gmail.com>
+ <20190502175513.ei7kjug3az6fe753@csclub.uwaterloo.ca> <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
+ <CAKgT0Uc_YVzns+26-TL+hhmErqG4_w4evRqLCaa=7nME7Zq+Vg@mail.gmail.com> <20190503151421.akvmu77lghxcouni@csclub.uwaterloo.ca>
+In-Reply-To: <20190503151421.akvmu77lghxcouni@csclub.uwaterloo.ca>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 3 May 2019 10:19:47 -0700
+Message-ID: <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
+To:     Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 05:20:02PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.12 release.
-> There are 101 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 04 May 2019 02:32:10 PM UTC.
-> Anything received after that time might be too late.
-> 
+On Fri, May 3, 2019 at 8:14 AM Lennart Sorensen
+<lsorense@csclub.uwaterloo.ca> wrote:
+>
+> On Thu, May 02, 2019 at 01:59:46PM -0700, Alexander Duyck wrote:
+> > If I recall correctly RSS is only using something like the lower 9
+> > bits (indirection table size of 512) of the resultant hash on the
+> > X722, even fewer if you have fewer queues that are a power of 2 and
+> > happen to program the indirection table in a round robin fashion. So
+> > for example on my system setup with 32 queues it is technically only
+> > using the lower 5 bits of the hash.
+> >
+> > One issue as a result of that is that you can end up with swaths of
+> > bits that don't really seem to impact the hash all that much since it
+> > will never actually change those bits of the resultant hash. In order
+> > to guarantee that every bit in the input impacts the hash you have to
+> > make certain you have to gaps in the key wider than the bits you
+> > examine in the final hash.
+> >
+> > A quick and dirty way to verify that the hash key is part of the issue
+> > would be to use something like a simple repeating value such as AA:55
+> > as your hash key. With something like that every bit you change in the
+> > UDP port number should result in a change in the final RSS hash for
+> > queue counts of 3 or greater. The downside is the upper 16 bits of the
+> > hash are identical to the lower 16 so the actual hash value itself
+> > isn't as useful.
+>
+> OK I set the hkey to
+> aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55
+> and still only see queue 0 and 2 getting hit with a couple of dozen
+> different UDP port numbers I picked.  Changing the hash with ethtool to
+> that didn't even move where the tcp packets for my ssh connection are
+> going (they are always on queue 2 it seems).
 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 349 pass: 349 fail: 0
+The TCP flow could be bypassing RSS and may be using ATR to decide
+where the Rx packets are processed. Now that I think about it there is
+a possibility that ATR could be interfering with the queue selection.
+You might try disabling it by running:
+    ethtool --set-priv-flags <iface> flow-director-atr off
 
-Guenter
+> Does it just not hash UDP packets correctly?  Is it even doing RSS?
+> (the register I checked claimed it is).
+
+The problem is RSS can be bypassed for queue selection by things like
+ATR which I called out above. One possibility is that if the
+encryption you were using was leaving the skb->encapsulation flag set,
+and the NIC might have misidentified the packets as something it could
+parse and set up a bunch of rules that were rerouting incoming traffic
+based on outgoing traffic. Disabling the feature should switch off
+that behavior if that is in fact the case.
+
+> This system has 40 queues assigned by default since that is how many
+> CPUs there are.  Changing it to a lower number didn't make a difference
+> (I tried 32 and 8).
+
+You are probably fine using 40 queues. That isn't an even power of two
+so it would actually improve the entropy a bit since the lower bits
+don't have a many:1 mapping to queues.
