@@ -2,146 +2,70 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68425C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9686EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3C52075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:01:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="VRpg/Yqh"
+	by mail.kernel.org (Postfix) with ESMTP id 62F3220B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556910305;
+	bh=Gsh8RpP3mlGpu7c9JmVJW1HXfhaCc8nkocADJKtHlWw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=rhe1d44mLBBag5kyB0J/mHDnTUzJL7X8dT3XdYERF5Z+kZsB52o/nmscvayCF1a44
+	 ltJVzIxXec2ppKTcGxSc5GWsUs4XD3QCzsAuXGhtigFJBCZhaSVVL7e4RwYqPgmYqN
+	 XYdHzkujuDLpwH9hUstyy6sQ3cXYz4IkZpwTcs00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfECTBY (ORCPT
+        id S1726912AbfECTFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 15:01:24 -0400
-Received: from mail-eopbgr30049.outbound.protection.outlook.com ([40.107.3.49]:12494
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726776AbfECTBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 15:01:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G5rmKY/ryyqvCzcofiGq32JWwfZXN1f8sSMf9ymEfmQ=;
- b=VRpg/Yqh0hd9jbFvpjeuTHFZufDbSnOGTlAloIDMqI5ZLBH9lFqgQ52ZqrHREBMR0otCUlK6Iv0+9cFk47KChyXKdwPPhnNuQ/549GcFxaZ8JMBLNJeNK86ereqXm4d8QyN1p4kPiLSggtgrYadcRTaVHtNJqRfzp2LwOcHZjOc=
-Received: from VI1PR0501CA0016.eurprd05.prod.outlook.com
- (2603:10a6:800:92::26) by VI1PR0502MB4061.eurprd05.prod.outlook.com
- (2603:10a6:803:25::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1856.11; Fri, 3 May
- 2019 19:01:16 +0000
-Received: from VE1EUR03FT023.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e09::201) by VI1PR0501CA0016.outlook.office365.com
- (2603:10a6:800:92::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1856.11 via Frontend
- Transport; Fri, 3 May 2019 19:01:16 +0000
-Authentication-Results: spf=pass (sender IP is 193.47.165.134)
- smtp.mailfrom=mellanox.com; davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=pass action=none header.from=mellanox.com;
-Received-SPF: Pass (protection.outlook.com: domain of mellanox.com designates
- 193.47.165.134 as permitted sender) receiver=protection.outlook.com;
- client-ip=193.47.165.134; helo=mtlcas13.mtl.com;
-Received: from mtlcas13.mtl.com (193.47.165.134) by
- VE1EUR03FT023.mail.protection.outlook.com (10.152.18.133) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1856.11 via Frontend Transport; Fri, 3 May 2019 19:01:14 +0000
-Received: from MTLCAS13.mtl.com (10.0.8.78) by mtlcas13.mtl.com (10.0.8.78)
- with Microsoft SMTP Server (TLS) id 15.0.1178.4; Fri, 3 May 2019 22:01:13
- +0300
-Received: from MTLCAS01.mtl.com (10.0.8.71) by MTLCAS13.mtl.com (10.0.8.78)
- with Microsoft SMTP Server (TLS) id 15.0.1178.4 via Frontend Transport; Fri,
- 3 May 2019 22:01:13 +0300
-Received: from [172.16.0.54] (172.16.0.54) by MTLCAS01.mtl.com (10.0.8.71)
- with Microsoft SMTP Server (TLS) id 14.3.301.0; Fri, 3 May 2019 22:00:59
- +0300
-Subject: Re: [PATCH v2 06/10] nvme/core: add mdev interfaces
-To:     Christoph Hellwig <hch@infradead.org>,
-        Maxim Levitsky <mlevitsk@redhat.com>
-CC:     Fam Zheng <fam@euphon.net>, <kvm@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        "Kirti Wankhede" <kwankhede@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "Liang Cunming" <cunming.liang@intel.com>,
-        Jens Axboe <axboe@fb.com>,
-        "Alex Williamson" <alex.williamson@redhat.com>,
-        John Ferlan <jferlan@redhat.com>,
-        Liu Changpeng <changpeng.liu@intel.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Amnon Ilan" <ailan@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-References: <20190502114801.23116-1-mlevitsk@redhat.com>
- <20190502114801.23116-7-mlevitsk@redhat.com>
- <20190503122902.GA5081@infradead.org>
-From:   Max Gurtovoy <maxg@mellanox.com>
-Message-ID: <d1c0c7ae-1a7d-06e5-d8bb-765a7fd5e41d@mellanox.com>
-Date:   Fri, 3 May 2019 22:00:54 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190503122902.GA5081@infradead.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [172.16.0.54]
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:193.47.165.134;IPV:NLI;CTRY:IL;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(396003)(376002)(2980300002)(199004)(189003)(31686004)(26005)(77096007)(230700001)(6246003)(229853002)(67846002)(53546011)(2906002)(186003)(305945005)(16526019)(6306002)(50466002)(64126003)(70586007)(966005)(7736002)(478600001)(70206006)(11346002)(446003)(110136005)(58126008)(486006)(2616005)(54906003)(476003)(126002)(316002)(16576012)(336012)(6116002)(4326008)(86362001)(81166006)(5660300002)(76176011)(106002)(31696002)(81156014)(356004)(6666004)(2486003)(23676004)(65956001)(47776003)(7416002)(8676002)(4744005)(8936002)(65826007)(3846002)(36756003)(65806001)(3940600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0502MB4061;H:mtlcas13.mtl.com;FPR:;SPF:Pass;LANG:en;PTR:mail13.mellanox.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ff93b9a1-2b4e-495b-0884-08d6cff9b7b8
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328)(7193020);SRVR:VI1PR0502MB4061;
-X-MS-TrafficTypeDiagnostic: VI1PR0502MB4061:
-X-MS-Exchange-PUrlCount: 1
-X-Microsoft-Antispam-PRVS: <VI1PR0502MB4061D957FC2EB182C173BF90B6350@VI1PR0502MB4061.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0026334A56
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: DGddPswefKoHsVgWtC7pnM5lSpWMOv75Oc/NluAwqS56HkPDM/c2drjGZroZ6m91Z7v5SRzJ7rt+UflzPbm3hHC9sgrdGgH1KJAddQ1cP/QLwBogeN947+AA3opIcmlLuvwvU1DHlEdBNmtvXtQ6FT/+q6vDC5QjFm0KtykIPVlomZEloPWrfaktmYBsqJq8VIA1iYmdTaBD9PxZ4Otr6fk/WoHefeaJaaIRPOfbTjrPIkmcYAZEprdxaPRdhm0I5rw5MqaDqLJuYKM+uFlqA7niMIv+Pmo65jGy3ebUDrAT/CIvwYmrjNIpzg5tIHUiv+jGygEVhGcWaSVh/zSuG/t7ruG03SONQnBGb5Lgx8DelSixm/MJGnAvcQ9rEz+PBBlm/nBXGvQctY6glxtT4hRuovmcYcVtHTDAUzTP5VM=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2019 19:01:14.9096
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff93b9a1-2b4e-495b-0884-08d6cff9b7b8
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a652971c-7d2e-4d9b-a6a4-d149256f461b;Ip=[193.47.165.134];Helo=[mtlcas13.mtl.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB4061
+        Fri, 3 May 2019 15:05:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbfECTFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 15:05:04 -0400
+Subject: Re: [PULL REQUEST] i2c for 5.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556910303;
+        bh=Gsh8RpP3mlGpu7c9JmVJW1HXfhaCc8nkocADJKtHlWw=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=jOXyhfPzHsJV/OqMRxln53js/5XiXtwad9fMm3zCq2OJLJprtz7o9aZg3rviyPVHj
+         /qMVU+RUD7mSJBH2WBn90T8MdGvHnNVzOdQRIYpegWspMs6DVMSRW70hevBjBSDfLF
+         uzzeP9gPeLxq5ltJDbe0u1zSNUd5qd9bAs2A2g4M=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190503162138.GA7676@kunai>
+References: <20190503162138.GA7676@kunai>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190503162138.GA7676@kunai>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git
+ i2c/for-current-fixed
+X-PR-Tracked-Commit-Id: 72bfcee11cf89509795c56b0e40a3785ab00bbdd
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 82463436a7fa40345c6febf0baa4c954af506ca6
+Message-Id: <155691030371.24034.10570742928000347312.pr-tracker-bot@kernel.org>
+Date:   Fri, 03 May 2019 19:05:03 +0000
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The pull request you sent on Fri, 3 May 2019 18:21:42 +0200:
 
-On 5/3/2019 3:29 PM, Christoph Hellwig wrote:
-> On Thu, May 02, 2019 at 02:47:57PM +0300, Maxim Levitsky wrote:
->> If the mdev device driver also sets the
->> NVME_F_MDEV_DMA_SUPPORTED, the mdev core will
->> dma map all the guest memory into the nvme device,
->> so that nvme device driver can use dma addresses as passed
->> from the mdev core driver
-> We really need a proper block layer interface for that so that
-> uring or the nvme target can use pre-mapping as well.
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current-fixed
 
-I think we can also find a way to use nvme-mdev for the target offload 
-p2p feature.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/82463436a7fa40345c6febf0baa4c954af506ca6
 
-Don't see a big difference of taking NVMe queue and namespace/partition 
-to guest OS or to P2P since IO is issued by external entity and pooled 
-outside the pci driver.
+Thank you!
 
-thoughts ?
-
-
->
-> _______________________________________________
-> Linux-nvme mailing list
-> Linux-nvme@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-nvme
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
