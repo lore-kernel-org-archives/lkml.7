@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F91C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E8AC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B202081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789542087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="RJK/xJPi"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="mk7OvXbb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfECKsM (ORCPT
+        id S1727127AbfECKsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 06:48:12 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35726 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfECKsL (ORCPT
+        Fri, 3 May 2019 06:48:17 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36891 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726997AbfECKsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 06:48:11 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t87so2136413pfa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 03:48:11 -0700 (PDT)
+        Fri, 3 May 2019 06:48:16 -0400
+Received: by mail-pl1-f196.google.com with SMTP id z8so2545191pln.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 03:48:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CtRnF3C3SrPtDzWYrijbevMMvebx7nVoCcCzEGjiz+k=;
-        b=RJK/xJPim39XkImo/YtK9AQ7+Ap5N0NWwMJuNR+mnh6nqrfOjeUmbe8qd9c+Uszfrd
-         v3AVl5w3xsN/5dcG9t9s0uD1h99zCtpA3wo1MMF3NvzQrStGK8jqpQiLPyZApEgouPwZ
-         qIFFRAxY779YlEPdHOSUybfiJ/cD8QJ94tQQQ=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=flSGHj+m/Po54A3Jce083UtgM5nOT0MXPFx0OmO6SII=;
+        b=mk7OvXbbGeUyH1WZq1/qThCy74/8Yv5d77I2f0XPsCx2ixEpJoQHgWdflcsIBWrL7x
+         lBoYeWtcgGcN7Q1y5s9StOO688lTeBcW6zNlQRJI6DFbXfK7Qyp+IwHlCqp1BOgdrTar
+         /sFRsnWDltDB8yucgBEb9DQYppUgV/D3205T8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CtRnF3C3SrPtDzWYrijbevMMvebx7nVoCcCzEGjiz+k=;
-        b=mHTP9055Bj/O3tLHPS/IZRQ+fKX9AC4wc4etGnf1+z7c/iD/bcuFUM3kBUOWAYIS8q
-         vRhYvTDyoePQMiMerhfh91P1ZHDMk3Ve56b/g978B/Cg9Avhi5qRD+1AjIqdof1OYY+b
-         OxZnWHkEsxcOmbKeHG/kyqlaB5Xq7beclmNTxYk2JQnKVwMyTfXLff+KhSQN9KqdgtB2
-         GUwid87PsDuSLZlAH9HcJua1ftD9pVrtSHo1y7Mctb1fbDJp8OqSkTicX5+G7yd161oN
-         2lLIcILaENcYCqTrXPh6t+teH0+nHG8WuqXtC/dAZ3Y97C2XCNkxrO5k8hxjBbVNQISB
-         scMA==
-X-Gm-Message-State: APjAAAX0cmnx3DBspWlND5VeL4g14THbxmPqczFqNLKwpgtNLx1swdwW
-        XJVRZ58wnXtKKxMjTO6Pc/VgWQ==
-X-Google-Smtp-Source: APXvYqyIOUbBzj8SnfhhfLgP9Y7Ulu74W17b22tiSiG84nQI3rr/jZ4wles58cXdQHvH5gwgrOph3Q==
-X-Received: by 2002:a63:8f4b:: with SMTP id r11mr9441799pgn.271.1556880490220;
-        Fri, 03 May 2019 03:48:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=flSGHj+m/Po54A3Jce083UtgM5nOT0MXPFx0OmO6SII=;
+        b=QmX1MprgfaikwxuoNk0m6MUZnNeSALh/xr+Mjp5LrIVhARz60fN1+OU7rvyezAM7Tq
+         QodmgT2T7yWd2jaHbQobFWv54ghhPfFi79CoYIVIyWq9JWZwZpiPT0jT+08AkB0ceHh8
+         9MWd3YXWCQX8yzN0szrAF8Rl46RXokSfn5ktI505RQVX8nxH0B3mosuaWSRlqCuhxavc
+         ntrethm9YiUUgZLSc2J8VpgXpP5LurW0ysT+e1OHmsMc8m7eb6RDEFDmM4qm7qsqxtO4
+         qNg7SYptN9O/MLbe9/gPN4l4W1pBv9aiGoaO+KCRzvu8Ue7GvWGIrSig9mZ1KofCsqvP
+         1iRQ==
+X-Gm-Message-State: APjAAAXyYPMjWAZ8dfXxq9TBv25xQ7WpPDzgJE4MFIGeFqiDMwhQpt0E
+        2WrTI+E8pgEnDbjEYArj4KEAqQ==
+X-Google-Smtp-Source: APXvYqwsEO5di+FruExa3qzMpSy+Ts+JTNBFka/GPxR6G61ZTiT2ZDzTv73v6LBbLEX9l+AaHs/1ZA==
+X-Received: by 2002:a17:902:22f:: with SMTP id 44mr9254610plc.175.1556880496050;
+        Fri, 03 May 2019 03:48:16 -0700 (PDT)
 Received: from localhost.localdomain ([49.206.203.165])
-        by smtp.gmail.com with ESMTPSA id k9sm1965479pga.22.2019.05.03.03.48.01
+        by smtp.gmail.com with ESMTPSA id k9sm1965479pga.22.2019.05.03.03.48.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 03:48:09 -0700 (PDT)
+        Fri, 03 May 2019 03:48:15 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
@@ -62,10 +62,12 @@ Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
         linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
         linux-sunxi@googlegroups.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v5 1/3] arm64: dts: allwinner: a64: move I2C pinctrl to dtsi
-Date:   Fri,  3 May 2019 16:17:51 +0530
-Message-Id: <20190503104753.27562-1-jagan@amarulasolutions.com>
+Subject: [PATCH v5 2/3] arm64: dts: allwinner: a64-amarula-relic: Add GT5663 CTP node
+Date:   Fri,  3 May 2019 16:17:52 +0530
+Message-Id: <20190503104753.27562-2-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+In-Reply-To: <20190503104753.27562-1-jagan@amarulasolutions.com>
+References: <20190503104753.27562-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,119 +75,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is only one pinmuxing available for each I2C controller.
+Add Goodix GT5663 capacitive touch controller node on
+Amarula A64-Relic board.
 
-So, move pinctrl for i2c0, i2c1 from board dts files into SoC dtsi.
-
-By moving these pinctrls the i2c1 node from Nanopi A64 just have a
-status, which is disabled already so remove the entire node from it.
+The CTP connected to board with,
+- SDA, SCK from i2c1
+- GPIO-LD0 as AVDD28 supply
+- PH4 gpio as interrupt pin
+- PH8 gpio as reset pin
+- X axis is inverted
+- Y axis is inverted
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v5:
-- drop the i2c1 node from nanopi-a64 
+- none
 Changes for v4:
-- new patch
+- drop i2c1 pinctrl
+Changes for v3:
+- Use 2.8v for reg_ldo_io0
+Changes for v2:
+- drop i2c1, bias-pull-up
 
- arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts | 2 --
- arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts  | 2 --
- arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts    | 6 ------
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts        | 2 --
- arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts       | 2 --
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi              | 4 ++++
- 6 files changed, 4 insertions(+), 14 deletions(-)
+ .../allwinner/sun50i-a64-amarula-relic.dts    | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index 019ae09ea0fd..c41131c03231 100644
+index c41131c03231..5634245d11db 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -85,8 +85,6 @@
- };
- 
- &i2c0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c0_pins>;
- 	status = "okay";
- 
- 	sensor@48 {
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 0a56c0c23ba1..c2a6b73b17cf 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -145,8 +145,6 @@
- };
- 
- &i2c1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c1_pins>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-index f4e78531f639..9b9d9157128c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -120,12 +120,6 @@
- };
- 
- /* i2c1 connected with gpio headers like pine64, bananapi */
--&i2c1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c1_pins>;
--	status = "disabled";
--};
--
- &i2c1_pins {
+@@ -97,6 +97,22 @@
  	bias-pull-up;
  };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index b7ac6374b178..409523cb0950 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -122,8 +122,6 @@
+ 
++&i2c1 {
++	status = "okay";
++
++	touchscreen@5d {
++		compatible = "goodix,gt5663";
++		reg = <0x5d>;
++		AVDD28-supply = <&reg_ldo_io0>;			/* VCC-CTP: GPIO0-LDO */
++		interrupt-parent = <&pio>;
++		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
++		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
++		reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH8 */
++		touchscreen-inverted-x;
++		touchscreen-inverted-y;
++	};
++};
++
+ &mmc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+@@ -260,6 +276,13 @@
+ 	regulator-name = "vdd-cpus";
  };
  
- &i2c1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c1_pins>;
- 	status = "okay";
++&reg_ldo_io0 {
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "vcc-ctp";
++	status = "okay";
++};
++
+ &reg_rtc_ldo {
+ 	regulator-name = "vcc-rtc";
  };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index 0ec46b969a75..12afc52e169e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -92,8 +92,6 @@
-  */
- &i2c0 {
- 	clock-frequency = <100000>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c0_pins>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 8c5b521e6389..b275c6d35420 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -842,6 +842,8 @@
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C0>;
- 			resets = <&ccu RST_BUS_I2C0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pins>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -853,6 +855,8 @@
- 			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C1>;
- 			resets = <&ccu RST_BUS_I2C1>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c1_pins>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
 -- 
 2.18.0.321.gffc6fa0e3
 
