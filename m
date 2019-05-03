@@ -6,46 +6,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF12C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC69C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCFA2205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA97205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfECHA0 (ORCPT
+        id S1727387AbfECHAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:00:26 -0400
+        Fri, 3 May 2019 03:00:31 -0400
 Received: from ozlabs.org ([203.11.71.1]:36331 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726601AbfECG7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:59:14 -0400
+        id S1726445AbfECG7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 02:59:12 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 44wNKF2n5tz9sBr; Fri,  3 May 2019 16:59:12 +1000 (AEST)
+        id 44wNKB4Ngbz9sNq; Fri,  3 May 2019 16:59:10 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 9d9f2cccde952126185e3336af0d4dc62eb254ad
+X-powerpc-patch-commit: 9c4ae0645682b97437072693f0edbee17214225b
 X-Patchwork-Hint: ignore
-In-Reply-To: <1c8eb7526ed327c3317053d57ac34e8c652b5449.1553853405.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
+In-Reply-To: <20190325053456.14599-2-alastair@au1.ibm.com>
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] powerpc/mm: change #include "mmu_decl.h" to <mm/mmu_decl.h>
-Message-Id: <44wNKF2n5tz9sBr@ozlabs.org>
-Date:   Fri,  3 May 2019 16:59:13 +1000 (AEST)
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Greg Kurz <groug@kaod.org>, linux-kernel@vger.kernel.org,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 1/4] ocxl: Rename struct link to ocxl_link
+Message-Id: <44wNKB4Ngbz9sNq@ozlabs.org>
+Date:   Fri,  3 May 2019 16:59:10 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-29 at 09:59:59 UTC, Christophe Leroy wrote:
-> This patch make inclusion of mmu_decl.h independant of the location
-> of the file including it.
+On Mon, 2019-03-25 at 05:34:52 UTC, "Alastair D'Silva" wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> The term 'link' is ambiguous (especially when the struct is used for a
+> list), so rename it for clarity.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Reviewed-by: Greg Kurz <groug@kaod.org>
+> Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
 
 Series applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/9d9f2cccde952126185e3336af0d4dc6
+https://git.kernel.org/powerpc/c/9c4ae0645682b97437072693f0edbee1
 
 cheers
