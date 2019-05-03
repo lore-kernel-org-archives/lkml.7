@@ -2,95 +2,234 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44840C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC42C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1584D2081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA9E2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:36:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="an5BuE+M"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N7EFpotF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfECFb4 (ORCPT
+        id S1726512AbfECFgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 01:31:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:47535 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbfECFbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 01:31:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44wLNS4Sxyz9s5c;
-        Fri,  3 May 2019 15:31:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556861513;
-        bh=nZ6ciuS4/944fQQaG3TEj4mmYUnn442vpa7a9hmomog=;
-        h=Date:From:To:Cc:Subject:From;
-        b=an5BuE+MjtakgAg9QUr8BTe46A/F9l8ZHjuinRIRE+kzqsRzI1c2saV6JwJN2YKY7
-         NlCGU40emAlIIdJAH/mcL/0USjRrDz4RrXNprSxv5Jn+6HfsxI6+bZmDzWpetqBM0Y
-         eWLnP4spSDui+G5CY3OP8/YbMKXbUm4qdg7Ob58g8jYI3l1V/xNeu0eEiLZSAHRObb
-         rK+I4xl6IjgTeb2KjjbvGsYKogyTBxN3Q89AFkyrZIf8Cjtr9z/c9RfjpvM8aub6si
-         6DGZJYgt6ReXgJqxv4zMKnDYNh9pKAmm5NVGtrfVJjZSNfUidHbOg1hZ037dUzKpdZ
-         BHtH2uHrge8Jg==
-Date:   Fri, 3 May 2019 15:31:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Subject: linux-next: Fixes tag needs some work in the usb-gadget tree
-Message-ID: <20190503153144.06eaae7a@canb.auug.org.au>
+        Fri, 3 May 2019 01:36:16 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45192 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfECFgQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 01:36:16 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t189so3495395oih.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 22:36:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kZWOLSmvOPvmN0LeT+tozEpaTTHy3QTyz4qZIAIbmM0=;
+        b=N7EFpotFYGg4C2sBd5zzI2avRwh3PPTx3fD4+H7oEJe8ZfsOy0kgGpfPxkA4zmoBx2
+         jJNqMAkUJ8FNDn54/se4qXPA6zQHWWw/V/DPcF5SExi470sZ3c8qBLiDASkBwv7VdzOj
+         SIqPwQSNWmticSh9jNC2HhIJfL5ALhPh6L2T+GBBW/bRLFZagZUXqj/PNkxkLIxfW03w
+         8JzD9/K8cjzuKxhXhpNfz0za/Y8NKzXa71tNWqgRxrVxR+QCApC61zPI5B6tTTYCJtpa
+         TLr3KchoBTwIZnnrkZI2Ja4yZyY/3yr3UmYGVA3EV+h8Wvpgczoumb123yy7Tncadwh5
+         ZKZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kZWOLSmvOPvmN0LeT+tozEpaTTHy3QTyz4qZIAIbmM0=;
+        b=RHORqK8RI53n+4vvbGwTRO9fp+xH9F08XxicN/pVHoGroYu+h1c3EEidjmthqUQAyK
+         1FeV4alVuvQLjx9e/rORz0ERo9H8PFwHqZs6dSVEy3EjyfcKv9O41k03swFfTlWayL5N
+         eKtW6NK1M2ngo5H8kdAnu8J8aDDrDg+uRWJsg7+tKsgAbfPKCCwbGCrv1Dp6KLuvlIeE
+         8sukQL6GJvTb5oMTKErQuSA/YZ9ngfJObocOzZoWjm6yl21tIkdTbCx3RD75tkELru+p
+         Vo431+s2xNgkMQDi6YtD20uKGbbfjxY9g4pr5LknWtvZlPDSjq+uI+jv8NicI3OXZgVJ
+         qHVw==
+X-Gm-Message-State: APjAAAVsQVwIfR/kOdsgdISCrqK+lyetHdpvrK8VnrQSr+OjSnTrUfx1
+        bYn/BQpXX3Dqa5FMtuqUoHFGXSPRezdQ3DO1PpnYTQ==
+X-Google-Smtp-Source: APXvYqzgI0MWh9qumhQ+Pt83byN9EbBZESn1gMYXecxqoFA0hw4aqXCw172gMFrw0qdID+M5pziE3w/mJY/ioNSsiHk=
+X-Received: by 2002:aca:4586:: with SMTP id s128mr4643568oia.148.1556861774441;
+ Thu, 02 May 2019 22:36:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/FdUO02xCRC3zY.1zL.XTFS3"; protocol="application/pgp-signature"
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-13-brendanhiggins@google.com> <20190502110220.GD12416@kroah.com>
+ <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
+ <a49c5088-a821-210c-66de-f422536f5b01@gmail.com> <CAFd5g44iWRchQKdJYtjRtPY6e-6e0eXpKXXsx5Ooi6sWE474KA@mail.gmail.com>
+ <1a5f3c44-9fa9-d423-66bf-45255a90c468@gmail.com>
+In-Reply-To: <1a5f3c44-9fa9-d423-66bf-45255a90c468@gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 2 May 2019 22:36:03 -0700
+Message-ID: <CAFd5g45RYm+zfdJXnyp2KZZH5ojfOzy++aq+4zBeE5VDu6WgEw@mail.gmail.com>
+Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
+ KUnit tests
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah@kernel.org, devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Felix Guo <felixguoxiuping@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/FdUO02xCRC3zY.1zL.XTFS3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 2, 2019 at 6:45 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 5/2/19 4:45 PM, Brendan Higgins wrote:
+> > On Thu, May 2, 2019 at 2:16 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>
+> >> On 5/2/19 11:07 AM, Brendan Higgins wrote:
+> >>> On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >>>>
+> >>>> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
+> >>>>> From: Felix Guo <felixguoxiuping@gmail.com>
+> >>>>>
+> >>>>> The ultimate goal is to create minimal isolated test binaries; in the
+> >>>>> meantime we are using UML to provide the infrastructure to run tests, so
+> >>>>> define an abstract way to configure and run tests that allow us to
+> >>>>> change the context in which tests are built without affecting the user.
+> >>>>> This also makes pretty and dynamic error reporting, and a lot of other
+> >>>>> nice features easier.
+> >>>>>
+> >>>>> kunit_config.py:
+> >>>>>   - parse .config and Kconfig files.
+> >>>>>
+> >>>>> kunit_kernel.py: provides helper functions to:
+> >>>>>   - configure the kernel using kunitconfig.
+> >>>>>   - build the kernel with the appropriate configuration.
+> >>>>>   - provide function to invoke the kernel and stream the output back.
+> >>>>>
+> >>>>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
+> >>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> >>>>
+> >>>> Ah, here's probably my answer to my previous logging format question,
+> >>>> right?  What's the chance that these wrappers output stuff in a standard
+> >>>> format that test-framework-tools can already parse?  :)
+> >
+> > To be clear, the test-framework-tools format we are talking about is
+> > TAP13[1], correct?
+>
+> I'm not sure what the test community prefers for a format.  I'll let them
+> jump in and debate that question.
+>
+>
+> >
+> > My understanding is that is what kselftest is being converted to use.
+> >
+> >>>
+> >>> It should be pretty easy to do. I had some patches that pack up the
+> >>> results into a serialized format for a presubmit service; it should be
+> >>> pretty straightforward to take the same logic and just change the
+> >>> output format.
+> >>
+> >> When examining and trying out the previous versions of the patch I found
+> >> the wrappers useful to provide information about how to control and use
+> >> the tests, but I had no interest in using the scripts as they do not
+> >> fit in with my personal environment and workflow.
+> >>
+> >> In the previous versions of the patch, these helper scripts are optional,
+> >> which is good for my use case.  If the helper scripts are required to
+> >
+> > They are still optional.
+> >
+> >> get the data into the proper format then the scripts are not quite so
+> >> optional, they become the expected environment.  I think the proper
+> >> format should exist without the helper scripts.
+> >
+> > That's a good point. A couple things,
+> >
+> > First off, supporting TAP13, either in the kernel or the wrapper
+> > script is not hard, but I don't think that is the real issue that you
+> > raise.
+> >
+> > If your only concern is that you will always be able to have human
+> > readable KUnit results printed to the kernel log, that is a guarantee
+> > I feel comfortable making. Beyond that, I think it is going to take a
+> > long while before I would feel comfortable guaranteeing anything about
+> > how will KUnit work, what kind of data it will want to expose, and how
+> > it will be organized. I think the wrapper script provides a nice
+> > facade that I can maintain, can mediate between the implementation
+> > details and the user, and can mediate between the implementation
+> > details and other pieces of software that might want to consume
+> > results.
+> >
+> > [1] https://testanything.org/tap-version-13-specification.html
+>
+> My concern is based on a focus on my little part of the world
+> (which in _previous_ versions of the patch series was the devicetree
+> unittest.c tests being converted to use the kunit infrastructure).
+> If I step back and think of the entire kernel globally I may end
+> up with a different conclusion - but I'm going to remain myopic
+> for this email.
+>
+> I want the test results to be usable by me and my fellow
+> developers.  I prefer that the test results be easily accessible
+> (current printk() implementation means that kunit messages are
+> just as accessible as the current unittest.c printk() output).
+> If the printk() output needs to be filtered through a script
+> to generate the actual test results then that is sub-optimal
+> to me.  It is one more step added to my workflow.  And
+> potentially with an embedded target a major pain to get a
+> data file (the kernel log file) transferred from a target
+> to my development host.
 
-Hi Felipe,
+That's fair. If that is indeed your only concern, then I don't think
+the wrapper script will ever be an issue for you. You will always be
+able to execute a given test the old fashioned/manual way, and the
+wrapper script only summarizes results, it does not change the
+contents.
 
-In commit
+>
+> I want a reported test failure to be easy to trace back to the
+> point in the source where the failure is reported.  With printk()
+> the search is a simple grep for the failure message.  If the
+> failure message has been processed by a script, and then the
+> failure reported to me in an email, then I may have to look
+> at the script to reverse engineer how the original failure
+> message was transformed into the message that was reported
+> to me in the email.  Then I search for the point in the
+> source where the failure is reported.  So a basic task has
+> just become more difficult and time consuming.
 
-  9f8dc24f7f5d ("usb: gadget: f_fs: don't free buffer prematurely")
+That seems to be a valid concern. I would reiterate that you shouldn't
+be concerned by any processing done by the wrapper script itself, but
+the reality is that depending on what happens with automated
+testing/presubmit/CI other people might end up parsing and
+transforming test results - it might happen, it might not. I currently
+have a CI system set up for KUnit on my public repo that I don't think
+you would be offended by, but I don't know what we are going to do
+when it comes time to integrate with existing upstream CI systems.
 
-Fixes tag
+In anycase, I don't think that either sticking with or doing away with
+the wrapper script is going to have any long term bearing on what
+happens in this regard.
 
-  Fixes: 772a7a724f6 ("usb: gadget: f_fs: Allow scatter-gather buffers")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/FdUO02xCRC3zY.1zL.XTFS3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzL0kEACgkQAVBC80lX
-0Gw7qQf+JwVEjPgY7PgCB6VQzYYqo3fCcOw+UwpCdtrUNY0PuQdBE9O1nJTAROvg
-My2DFkDW+nB8xTBMRrOy5pkeK/AitCkaFLv4nEaI1E6UsylnLHiVLwGBqW34cJDS
-lKAUcxNnb0rbSabeomIKM9BR5BVAjCY/EQ2k9HHh9zupFYz2n82M/DpFG67HDlRX
-HcB2m9ZQI6ugxOmz4Mku0KsEGAjIxOAky9HlxUuC4sNlnOwIm02rGWHeBKUTZ13A
-UfK7FvBJf8W2GAi13iXorioXCNMtVD5x0pNSzuTWc4F3SBwbvVTPsU6MLAo4fQrv
-NprjJ8nuNsxb+E2MtFwHiUwl1uuArw==
-=REs9
------END PGP SIGNATURE-----
-
---Sig_/FdUO02xCRC3zY.1zL.XTFS3--
+Cheers
