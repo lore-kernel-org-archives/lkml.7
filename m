@@ -2,123 +2,106 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7104BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E64C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410772075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:32:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bwsPLUjE"
+	by mail.kernel.org (Postfix) with ESMTP id 1A0C02081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556915932;
+	bh=2cFfZAGH7jWOQFIl2RwEvszjulNdiSDlwL0zYZb0C3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eCHnuTct98cdyjIZ7BPSITO4fVzJW1NfqVtcbqjj2gsOO203TT+sJ616uLyvLdJGz
+	 aipoSJSZK66BhaWCqsPFVCO/2+fj0eDleXo6WsZpZKYMKm3w9Wq13yRzLumzuydRHt
+	 aj6CwbY/3i8q/tHpgyckhXecVyX32hvMKgeAGZnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfECUcb (ORCPT
+        id S1726654AbfECUiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 16:32:31 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36591 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfECUc2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 16:32:28 -0400
-Received: by mail-wr1-f65.google.com with SMTP id o4so9366020wra.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 13:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yFWs26NyTQBBHnTLimY9fErMEAAd/wEGYGdh8uiAhr0=;
-        b=bwsPLUjEVmFYODhU+c2MOxzIKK3emyjBG6iCWkMYBqFtQoZdtIYr6hP52/jRNoLJo3
-         eWFwTsZ2fupPL6Yoij/cbTqbcsRY+MzOnQEEKtNsW53PcpsKck2s4WkmtNdIqAiaXUAy
-         E3mzAvJqLybY/fO/hL8AAASs3qDmwPdkVMzVPx2N1Y41P4Mbq+zvb+n2nkupMjvO1YqX
-         0kDWD4Vcls4ZVIQ5kCgjh7EeAMPRqNNgVglP9OP3zyMjI8L2apKkMVzj7JNQKHSmwlun
-         gj4oDbVZVohDucTN1kUJOHCyBXUxoVk1ncVAOn3CjBu//3/hgcrBaoVvgGOLCygDOHzl
-         nQrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yFWs26NyTQBBHnTLimY9fErMEAAd/wEGYGdh8uiAhr0=;
-        b=BcOe0B8u01Oez2E7sNX5JuKkSM7QRtrxNVsM4CcvknqY9hH/klRevYfTlMx7uJZdCz
-         VB0q9l44xhvBevBbpth6M32ncmnqJ2/TRhdPk0YhCHqNvspUZzZSb2NUU/W0XodLSEYz
-         l3fURG29wENLF3nqF1nBLhxvjrylUwN4uWQMp0DK7RGt90RhoO0WhuuNs8K63Ma6+l8E
-         mLDjZWKSMhrTnQ/vnFklNJNu4xX6JNTe5WAOcN53Jqdh4mtuZ49JVjO5apVzbt2ssLh5
-         3pBD4MjxEtyv8Neo8pm60/WcwvIuvwG1TaG2S+sVrQ4L/biAWXDmbiNCod4GUOdzJWAp
-         ITaQ==
-X-Gm-Message-State: APjAAAUf5/lmdEEDe+Dl1WyWtx7tINdm52ygqRAWU2PWwOp4eKaUzxoR
-        elCG3X3pNJIvBapQ9XtJYw1r+T0FL78=
-X-Google-Smtp-Source: APXvYqydkBhECIudeVFVl1XOv4VNXeL9LFJR4eBdis9OQQ3nSkYQIomuAj4y2ShR8eFhfGxf0ZXcjA==
-X-Received: by 2002:adf:fd04:: with SMTP id e4mr8683562wrr.145.1556915546193;
-        Fri, 03 May 2019 13:32:26 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id e8sm4779602wrc.96.2019.05.03.13.32.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 13:32:25 -0700 (PDT)
-Subject: Re: [PATCH 7/7] clocksource/arm_arch_timer: Use
- arch_timer_read_counter to access stable counters
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Russell King <linux@arm.linux.org.uk>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-References: <20190408154907.223536-1-marc.zyngier@arm.com>
- <20190408154907.223536-8-marc.zyngier@arm.com>
- <2a60a031-1eab-2d5e-89ff-b5d516545eeb@linaro.org>
- <bbe9b8c1-132f-bbfa-e3d0-ad10c4165ad7@arm.com>
- <cef220b8-f46d-0653-8249-a9d48b2efc48@arm.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <c8449908-1f8a-a10e-bfce-95bd7415e523@linaro.org>
-Date:   Fri, 3 May 2019 22:32:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 3 May 2019 16:38:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726304AbfECUit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 16:38:49 -0400
+Received: from earth.universe (unknown [185.62.205.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1B89206BB;
+        Fri,  3 May 2019 20:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556915928;
+        bh=2cFfZAGH7jWOQFIl2RwEvszjulNdiSDlwL0zYZb0C3w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xhehueaScZrXhamAhg3qXNToIr0s7PxtUYTIv8Y14eEbLvX0AE7LZZKTDhLpKMCLQ
+         mLA3AsQ99MXwxC4VqY4DOhH5ZNXLDqq7A1RmyDLPi9zvsBR/LgqtFMUn9auSnRB9V/
+         M3+14aNyhoLcGhQwXMLw/4i0eYjLmwMDmDBu0yPI=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 6A5623C0DDB; Fri,  3 May 2019 22:38:46 +0200 (CEST)
+Date:   Fri, 3 May 2019 22:38:46 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/3] Driver for UCS1002
+Message-ID: <20190503203846.b2zux6cvtkjkrbco@earth.universe>
+References: <20190503170042.19334-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <cef220b8-f46d-0653-8249-a9d48b2efc48@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="u5o4vj3mu6vvwt2c"
+Content-Disposition: inline
+In-Reply-To: <20190503170042.19334-1-andrew.smirnov@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Valentin,
+--u5o4vj3mu6vvwt2c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 30/04/2019 17:39, Valentin Schneider wrote:
-> Hi,
-> 
-> On 30/04/2019 16:27, Marc Zyngier wrote:
-> [...]
->>>> @@ -372,6 +392,7 @@ static u32 notrace sun50i_a64_read_cntv_tval_el0(void)
->>>>  DEFINE_PER_CPU(const struct arch_timer_erratum_workaround *, timer_unstable_counter_workaround);
->>>>  EXPORT_SYMBOL_GPL(timer_unstable_counter_workaround);
->>>>  
->>>> +static atomic_t timer_unstable_counter_workaround_in_use = ATOMIC_INIT(0);
->>>
->>> Wouldn't make sense to READ_ONCE / WRITE_ONCE instead of using an atomic?
->>
->> I don't think *_ONCE says anything about the atomicity of the access. It
->> only instruct the compiler that this should only be accessed once, and
->> not reloaded/rewritten.
-> 
-> FWIW 7bd3e239d6c6 ("locking: Remove atomicy checks from {READ,WRITE}_ONCE")
-> points this out.
+Hi,
 
-Interesting, thanks for the pointer.
+On Fri, May 03, 2019 at 12:00:39PM -0500, Andrey Smirnov wrote:
+> This small series adds a driver for UCS1002 Programmable USB Port
+> Power Controller with Charger Emulation. See [page] for product page
+> and [datasheet] for device dataseet. Hopefully each individual patch
+> is self explanatory.
+>=20
+> Note that this series is a revival of the upstreaming effort by Enric
+> Balletbo Serra last version of which can be found at [original-effort]
 
-  -- Daniel
+Thanks, queued (whole series).
 
+-- Sebastian
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+--u5o4vj3mu6vvwt2c
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzMptMACgkQ2O7X88g7
++poQRxAAp9+Y711kaPHlNkdyeJWm2AYbOrE+13EZKJu4y1raee9aAnee4IT+Zunz
+i5l3uyL4mmeood3UMwxg/NYM1XAev9ak66glNG/7Ue9z/RIUnfck4/hG9cMLeXk9
+3atE1yX5ZT1Cq8LyHyWhu4sUj080A+ynPkqgjWj493tHhBJyc+5MbmDPrcgWoYUf
+EGIn3szz/AKe7PwvDZnj7dQv0js87rKExXRwuJOjTLgw2tGdRlP+PjT2a5+Ya+sY
+L3/ICu3izAADNo4zRdrdDHzE1CkLs4cCupymDTW7R58DdzzViIGAp5On5RTfb9Cc
+rUltoZgyLCqfNkDbSWdtoouuMpJn7wZgnf1sKOTXDopz5L6Sh8YJbTrXTs++bkSg
+AnKZHzIQrPxarue/HJoQEnoLvIm2kvaToHUSclmsB0ApYYbrpnprtxcSFXat9nZe
+q5Fgwm7Ba0Z0EEQVEL7Q/lcxebmhy+A6CLQgW1ERqNWtP5do9AeTIhKfrSB/a5BL
+RFvjZuoRtYb1xcTt4txqHHIc1+zaKFgh417ltuRo6cp8dYXvwasIV8tjstziQLCD
++xCp/JMq5oJ0gUZ9HHiobTvRjY+mlUUhj718CtVzJHrhBON+TBhuQsbSf0e4MKx1
+t+hsd+3LxnkYb2wEM1OMwca7MqaWmky+jUfzA/KQyqX8faqcDuk=
+=Hklu
+-----END PGP SIGNATURE-----
+
+--u5o4vj3mu6vvwt2c--
