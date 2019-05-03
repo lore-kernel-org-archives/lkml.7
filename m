@@ -7,58 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1FEC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C798C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D82A3217D8
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20357206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556864663;
-	bh=Rc2UCDU/MwtylOmchGmWzCO0+URS9A0hhGwiqM2Ay1w=;
+	s=default; t=1556864674;
+	bh=0c6Jh9sp14Lq4lNe2LNf826gtJ4onGQ0WuWN1zlFr50=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=vpU7yAjfG8j1FgujlQ0ESOABwmmmBR6E39iUxvJCktt/46BXl8f43HJ1VI1ZUsNcl
-	 ayLNKkuKNteKnbAVEAJjIvZ8H+mbaaMjMvIpSTn82RBwERsu1GftPUsejpz4ZusBQ4
-	 UnmJVaEmvXnCPRTX5SkwroY58gLali+8DNoyQfTk=
+	b=a0psYUqNydbZ1UrdNrJhq8w0v6IKJMl00wd8PTF9/5Jm+OehZo25sLxSbUp03ZEez
+	 v+ZFYJ698wz5ja7zyXfiuxEzfldCfJqXv3hTvceyt7FjXecEYJNwQ/WEJPLQBWLYP4
+	 7AIdalD4L3S21w2blHoZXH+9HuDD6vQFibOvFksc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfECGYW (ORCPT
+        id S1727145AbfECGYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:24:22 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33758 "EHLO
+        Fri, 3 May 2019 02:24:32 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33682 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727027AbfECGXt (ORCPT
+        with ESMTP id S1727005AbfECGXr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:23:49 -0400
+        Fri, 3 May 2019 02:23:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=3bsml9YeoZKGo1dmtXGCstB1yb3sdtjA3lXsRc1JIak=; b=cly01ZobB/dZ
-        zEy2925lzcFpbTWj7xuJ0Y3VYKO9eKYYuDRFqD0tABJkiRzKJDg/rUBZvMd+UNhMfuuD8oH45ST8U
-        uo6q+ycfgI81BgS85jWiwuUJG+U7Yezt2GU0pz7H0Y1m3VA1DfG+9wylN8CgESnSOZqbjfyMJumJd
-        RTaDI=;
+        List-Archive; bh=uJRhtLsdNNAJveJ+s2NSgBPxfvfgbqKbRQ8fG+F4ZtQ=; b=XDeKA8O/mXDD
+        poy7k9HJsdMD6ZH+MN1OBFLG43JK9jBxpeqTsshJV+76KpCXAtDneNsuVCsWIyXOTUGqYVE2/vj59
+        dyGkATwd/j0unMm3wqZ+wTn33sWbms3FTpqB5vFOydpaxnskgQJ9zu6DgKj4zN2VPAkSaSXf4sJkJ
+        kljwQ=;
 Received: from [42.29.24.106] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hMRbf-0000kr-Nj; Fri, 03 May 2019 06:23:40 +0000
+        id 1hMRbi-0000ly-Ti; Fri, 03 May 2019 06:23:43 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id E0B4D441D3D; Fri,  3 May 2019 07:23:35 +0100 (BST)
+        id E7B94441D58; Fri,  3 May 2019 07:23:38 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        alsa-devel@alsa-project.org, dgreid@chromium.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: da7219: Update the support rate list" to the asoc tree
-In-Reply-To: <20190502040743.184310-1-yuhsuan@chromium.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: ab3100: Constify regulator_ops and ab3100_regulator_desc" to the regulator tree
+In-Reply-To: <20190502142233.24730-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190503062335.E0B4D441D3D@finisterre.ee.mobilebroadband>
-Date:   Fri,  3 May 2019 07:23:35 +0100 (BST)
+Message-Id: <20190503062338.E7B94441D58@finisterre.ee.mobilebroadband>
+Date:   Fri,  3 May 2019 07:23:38 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: da7219: Update the support rate list
+   regulator: ab3100: Constify regulator_ops and ab3100_regulator_desc
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,56 +87,86 @@ to this mail.
 Thanks,
 Mark
 
-From cd8926e38e8cc53413a2a4ed2f705db7437a55fb Mon Sep 17 00:00:00 2001
-From: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Date: Thu, 2 May 2019 12:07:43 +0800
-Subject: [PATCH] ASoC: da7219: Update the support rate list
+From 95602d7d77f502d656e648ab38f8e0586364e7dc Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Thu, 2 May 2019 22:22:32 +0800
+Subject: [PATCH] regulator: ab3100: Constify regulator_ops and
+ ab3100_regulator_desc
 
-If we want to set rate to 64000 on da7219, it fails and returns
-"snd_pcm_hw_params: Invalid argument".
-We should remove 64000 from support rate list because it is not
-available.
+These regulator_ops variables and ab3100_regulator_desc array never need
+to be modified, make them const so compiler can put them to .rodata.
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/da7219.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/regulator/ab3100.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
-index 121a8190f93e..9f6970eed6f6 100644
---- a/sound/soc/codecs/da7219.c
-+++ b/sound/soc/codecs/da7219.c
-@@ -1583,20 +1583,26 @@ static const struct snd_soc_dai_ops da7219_dai_ops = {
- #define DA7219_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |\
- 			SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE)
+diff --git a/drivers/regulator/ab3100.c b/drivers/regulator/ab3100.c
+index c92966a79a7e..edde907a7062 100644
+--- a/drivers/regulator/ab3100.c
++++ b/drivers/regulator/ab3100.c
+@@ -353,14 +353,14 @@ static int ab3100_get_voltage_regulator_external(struct regulator_dev *reg)
+ 		return 0;
+ }
  
-+#define DA7219_RATES (SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_11025 |\
-+		      SNDRV_PCM_RATE_16000 | SNDRV_PCM_RATE_22050 |\
-+		      SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 |\
-+		      SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_88200 |\
-+		      SNDRV_PCM_RATE_96000)
-+
- static struct snd_soc_dai_driver da7219_dai = {
- 	.name = "da7219-hifi",
- 	.playback = {
- 		.stream_name = "Playback",
- 		.channels_min = 1,
- 		.channels_max = DA7219_DAI_CH_NUM_MAX,
--		.rates = SNDRV_PCM_RATE_8000_96000,
-+		.rates = DA7219_RATES,
- 		.formats = DA7219_FORMATS,
- 	},
- 	.capture = {
- 		.stream_name = "Capture",
- 		.channels_min = 1,
- 		.channels_max = DA7219_DAI_CH_NUM_MAX,
--		.rates = SNDRV_PCM_RATE_8000_96000,
-+		.rates = DA7219_RATES,
- 		.formats = DA7219_FORMATS,
- 	},
- 	.ops = &da7219_dai_ops,
+-static struct regulator_ops regulator_ops_fixed = {
++static const struct regulator_ops regulator_ops_fixed = {
+ 	.list_voltage = regulator_list_voltage_linear,
+ 	.enable      = ab3100_enable_regulator,
+ 	.disable     = ab3100_disable_regulator,
+ 	.is_enabled  = ab3100_is_enabled_regulator,
+ };
+ 
+-static struct regulator_ops regulator_ops_variable = {
++static const struct regulator_ops regulator_ops_variable = {
+ 	.enable      = ab3100_enable_regulator,
+ 	.disable     = ab3100_disable_regulator,
+ 	.is_enabled  = ab3100_is_enabled_regulator,
+@@ -369,7 +369,7 @@ static struct regulator_ops regulator_ops_variable = {
+ 	.list_voltage = regulator_list_voltage_table,
+ };
+ 
+-static struct regulator_ops regulator_ops_variable_sleepable = {
++static const struct regulator_ops regulator_ops_variable_sleepable = {
+ 	.enable      = ab3100_enable_regulator,
+ 	.disable     = ab3100_disable_regulator,
+ 	.is_enabled  = ab3100_is_enabled_regulator,
+@@ -385,14 +385,14 @@ static struct regulator_ops regulator_ops_variable_sleepable = {
+  * is an on/off switch plain an simple. The external
+  * voltage is defined in the board set-up if any.
+  */
+-static struct regulator_ops regulator_ops_external = {
++static const struct regulator_ops regulator_ops_external = {
+ 	.enable      = ab3100_enable_regulator,
+ 	.disable     = ab3100_disable_regulator,
+ 	.is_enabled  = ab3100_is_enabled_regulator,
+ 	.get_voltage = ab3100_get_voltage_regulator_external,
+ };
+ 
+-static struct regulator_desc
++static const struct regulator_desc
+ ab3100_regulator_desc[AB3100_NUM_REGULATORS] = {
+ 	{
+ 		.name = "LDO_A",
+@@ -499,7 +499,7 @@ static int ab3100_regulator_register(struct platform_device *pdev,
+ 				     struct device_node *np,
+ 				     unsigned long id)
+ {
+-	struct regulator_desc *desc;
++	const struct regulator_desc *desc;
+ 	struct ab3100_regulator *reg;
+ 	struct regulator_dev *rdev;
+ 	struct regulator_config config = { };
+@@ -688,7 +688,7 @@ static int ab3100_regulators_probe(struct platform_device *pdev)
+ 
+ 	/* Register the regulators */
+ 	for (i = 0; i < AB3100_NUM_REGULATORS; i++) {
+-		struct regulator_desc *desc = &ab3100_regulator_desc[i];
++		const struct regulator_desc *desc = &ab3100_regulator_desc[i];
+ 
+ 		err = ab3100_regulator_register(pdev, plfdata, NULL, NULL,
+ 						desc->id);
 -- 
 2.20.1
 
