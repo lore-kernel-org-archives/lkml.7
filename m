@@ -2,95 +2,99 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5571BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2129BC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31587206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5F62089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfECJPs (ORCPT
+        id S1727178AbfECJSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 05:15:48 -0400
-Received: from smtp-out.xnet.cz ([178.217.244.18]:51917 "EHLO smtp-out.xnet.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725777AbfECJPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 05:15:47 -0400
-Received: from meh.true.cz (meh.true.cz [108.61.167.218])
-        (Authenticated sender: petr@true.cz)
-        by smtp-out.xnet.cz (Postfix) with ESMTPSA id 423283970;
-        Fri,  3 May 2019 11:15:44 +0200 (CEST)
-Received: from localhost (meh.true.cz [local])
-        by meh.true.cz (OpenSMTPD) with ESMTPA id 3fe29465;
-        Fri, 3 May 2019 11:15:42 +0200 (CEST)
-Date:   Fri, 3 May 2019 11:15:42 +0200
-From:   Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>,
-        John Crispin <john@phrozen.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 01/10] of_net: add NVMEM support to of_get_mac_address
-Message-ID: <20190503091542.GE346@meh.true.cz>
-Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
- <1556870168-26864-2-git-send-email-ynezz@true.cz>
- <2a5fcdec-c661-6dc5-6741-7d6675457b9b@cogentembedded.com>
+        Fri, 3 May 2019 05:18:41 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:50717 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfECJSk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 05:18:40 -0400
+X-Originating-IP: 90.88.149.145
+Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id A592060014;
+        Fri,  3 May 2019 09:18:35 +0000 (UTC)
+Date:   Fri, 3 May 2019 11:18:35 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        wens@csie.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH 7/7] iio: adc: sun4i-gpadc-iio convert to SPDX license
+ tags
+Message-ID: <20190503091835.jx2fosyygkhy67aw@flea>
+References: <20190503072813.2719-1-tiny.windzz@gmail.com>
+ <20190503072813.2719-8-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ddeoccdv6vp3wp6d"
 Content-Disposition: inline
-In-Reply-To: <2a5fcdec-c661-6dc5-6741-7d6675457b9b@cogentembedded.com>
+In-Reply-To: <20190503072813.2719-8-tiny.windzz@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sergei Shtylyov <sergei.shtylyov@cogentembedded.com> [2019-05-03 11:44:54]:
 
-Hi Sergei,
+--ddeoccdv6vp3wp6d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-> > index d820f3e..258ceb8 100644
-> > --- a/drivers/of/of_net.c
-> > +++ b/drivers/of/of_net.c
-> [...]
-> > @@ -64,6 +113,9 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
-> >    * addresses.  Some older U-Boots only initialized 'local-mac-address'.  In
-> >    * this case, the real MAC is in 'local-mac-address', and 'mac-address' exists
-> >    * but is all zeros.
-> > + *
-> > + * Return: Will be a valid pointer on success, NULL in case there wasn't
-> > + *         'mac-address' nvmem cell node found, and ERR_PTR in case of error.
-> 
->    Returning both NULL and error codes on failure is usually a sign of a
-> misdesigned API. 
+On Fri, May 03, 2019 at 03:28:13AM -0400, Yangtao Li wrote:
+> Updates license to use SPDX-License-Identifier.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  drivers/iio/adc/sun4i-gpadc-iio.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>
+> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
+> index 9b6fc592f54c..cf2bf3ab3342 100644
+> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
+> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+> @@ -1,11 +1,8 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+>  /* ADC driver for sunxi platforms' (A10, A13 and A31) GPADC
+>   *
+>   * Copyright (c) 2016 Quentin Schulz <quentin.schulz@free-electrons.com>
+>   *
+> - * This program is free software; you can redistribute it and/or modify it under
+> - * the terms of the GNU General Public License version 2 as published by the
+> - * Free Software Foundation.
+> - *
 
-well, then there's a lot of misdesigned APIs in the tree already, as I've just
-grepped for IS_ERR_OR_NULL usage and found this pointer/NULL/ERR_PTR usage
-pretty legit.
+The license here is GPL2 only, not GPL2 or later.
 
-> Why not always return an error code?
+Maxime
 
-I've received following comment[1] from Andrew:
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
- "What you have to be careful of, is the return value from your new code
-  looking in NVMEM. It should only return EPROBE_DEFER, or another error
-  if there really is expected to be a value in NVMEM, or getting it from
-  NVMEM resulted in an error."
+--ddeoccdv6vp3wp6d
+Content-Type: application/pgp-signature; name="signature.asc"
 
-So in order to fullfil this remark, I can't simply use ENOENT instead of
-current NULL, as the caller couldn't distinguish between ENOENT from
-of_get_mac_address or ENOENT from NVMEM subsystem.
+-----BEGIN PGP SIGNATURE-----
 
-1. https://patchwork.ozlabs.org/patch/1092243/#2161764
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMwHawAKCRDj7w1vZxhR
+xR/3AP9LxurFTEoLfKKf5UUVWYtYBc+a5fX72/5UF72Jinp4/gEAjdVi2+M2F4Tw
+jC8P95k9Tn48jKQZ3GKADIypTMkcMQ8=
+=LsGW
+-----END PGP SIGNATURE-----
 
--- ynezz
+--ddeoccdv6vp3wp6d--
