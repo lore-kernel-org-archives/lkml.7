@@ -2,112 +2,88 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994A6C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EA8C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1CA2087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCA72081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:38:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SNWtejo0"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qTiSEkhr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727623AbfECKht (ORCPT
+        id S1727634AbfECKiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 06:37:49 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:35240 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfECKhs (ORCPT
+        Fri, 3 May 2019 06:38:11 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:65306 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfECKiK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 06:37:48 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43AXxGJ011376;
-        Fri, 3 May 2019 10:37:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
- bh=kNlNIR9Fo8ESlQnZzVfciYR2PSzGbl848JM9YPcBKYo=;
- b=SNWtejo0Pn5WyY8kfzS5pBy0rXnkeaePknhO5TudvQjauk3QuFK79+iawq49XVppmJmF
- V9pPPx4oabYneoc/h9ZFYqxQqj2kgpMXJaFPZUeFSQqW7pg/3w7deTYhjhL7K0GMPIfi
- xGCnFsiOhWSbwtNawnamBh628dYflZsP7q7CYZI9cy7NvoZud4lvNSAZ2g2AtcnDKFBO
- mY+VkeronehCITjGqFoPBiiw+qH9656hGKKcEmeklLaZ0yUd4pp0V4BfMQiTP7wQ+ueQ
- gcqD+0snD0LZD2zX1TNSvC1dQtIWwDhk4m1NHHJPUrNZbab50vBrSH2XaudOzaLGy8qq vg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2s6xhynw4b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 10:37:20 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43AXhUc024411;
-        Fri, 3 May 2019 10:35:19 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2s7p8a8va6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 10:35:19 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x43AZ9n3014091;
-        Fri, 3 May 2019 10:35:10 GMT
-Received: from kadam (/196.104.111.181)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 May 2019 03:35:09 -0700
-Date:   Fri, 3 May 2019 13:34:56 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v3 08/10] staging: octeon-ethernet: support
- of_get_mac_address new ERR_PTR error
-Message-ID: <20190503103456.GF2269@kadam>
-References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
- <1556870168-26864-9-git-send-email-ynezz@true.cz>
+        Fri, 3 May 2019 06:38:10 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x43Ac1Qc000661;
+        Fri, 3 May 2019 19:38:02 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x43Ac1Qc000661
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556879882;
+        bh=z7qWPYt54zXPnY1EHO1cINwnW/JOhWqqFZK66vlin2o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qTiSEkhrKRNzxyDZ6OyGXLFW0WKpoTZOlYF/wcAHv3aXafw5Mpgq+L+pAMkc/78rJ
+         3BWurpHpT7b2FBoPBK+jkg3r1Zyv5DLJNrMu9g6tWKFOekKnq+QVWbllf23r/qXAAy
+         ZADcg9mJ6Qc5Zhegs/CLMoukkNVea4QdNJYWjcx2XDZT6AYqnK43kumeu5QTdEK/eL
+         QcEVWn6fl8qDBN8TTLlr3SXLWjHbTF74gK9cqKTeQxeq9rk3pnVzH7zyIBNPF37txb
+         Zmo35si3C4VJfkM+Af/HZk+PxGMavoY3O8JPq6+PbUHe4fcmAdOrDGpVQElCvrsZ1G
+         zcSW6UxT3GBkg==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id p13so1817057uaa.11;
+        Fri, 03 May 2019 03:38:02 -0700 (PDT)
+X-Gm-Message-State: APjAAAX6gEXlYaEXGgprzFxLP96IYFOAyk6R9RiAHghPFWr5OWmQeFcg
+        Z2iM/mEo5E+iOiLku9a6RLOfgsZ7fyBykHyruMw=
+X-Google-Smtp-Source: APXvYqzCdsz3KhcSYohvrcVFpo5/mdG5kB41e90KjS/S/j/YeN38wNo4yGewST3tmzRw0ZSncJyz61Uqws6KXQbsQzI=
+X-Received: by 2002:ab0:3058:: with SMTP id x24mr4656573ual.95.1556879881034;
+ Fri, 03 May 2019 03:38:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1556870168-26864-9-git-send-email-ynezz@true.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=933
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905030067
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=955 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905030067
+References: <20190502074207.01ae28ba@canb.auug.org.au>
+In-Reply-To: <20190502074207.01ae28ba@canb.auug.org.au>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 3 May 2019 19:37:25 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATR7X0zTjp6ny_qdfxeJg0nBtixpPawW-3MUwjipCzz-w@mail.gmail.com>
+Message-ID: <CAK7LNATR7X0zTjp6ny_qdfxeJg0nBtixpPawW-3MUwjipCzz-w@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the kbuild tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 09:56:05AM +0200, Petr Štetiar wrote:
-> There was NVMEM support added to of_get_mac_address, so it could now
-> return NULL and ERR_PTR encoded error values, so we need to adjust all
-> current users of of_get_mac_address to this new fact.
+Hi Stephen,
 
-Which commit added NVMEM support?  It hasn't hit net-next or linux-next
-yet...  Very strange.
 
-Why would of_get_mac_address() return a mix of NULL and error pointers?
-In that situation, then NULL is a special kind of success like when you
-request feature and the feature works but it's disabled by the user.  We
-don't want to treat it as an error but we still can't return a pointer
-to a feature we don't have...  It's hard for me to imagine how that
-makes sense for getting a mac address.
+On Thu, May 2, 2019 at 6:43 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Masahiro,
+>
+> Commit
+>
+>   7b6954a982e7 ("scripts: override locale from environment when running recordmcount.pl")
+>
+> is missing a Signed-off-by from its committer.
 
-At the very least, this patch needs a Fixes tag.
+Fixed it now.
+Thanks.
 
-regards,
-dan carpenter
 
+> --
+> Cheers,
+> Stephen Rothwell
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
