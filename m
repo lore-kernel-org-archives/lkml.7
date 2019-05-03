@@ -2,326 +2,457 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBC9C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7F9C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3582075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:51:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GljJZ9N7"
+	by mail.kernel.org (Postfix) with ESMTP id E3E082075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfECTva (ORCPT
+        id S1726831AbfECTwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 15:51:30 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39319 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfECTva (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 15:51:30 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e92so3171245plb.6
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 12:51:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=oURhlb5Aq9SaUVoif2dSxrv9s2KPP5nkbzDOYxcW5t4=;
-        b=GljJZ9N7mNb0c6pode6JDkzgqypvgh7E2eWq7t+RiAmxBkikwIJwsGSF6C8yvK59qr
-         DE8eoootNALUUCkGC+eQU11sUUgoNBlDOJmLJsncOhpaDDAJBTQofjbIirbBw4VDm1SQ
-         gb2R+LGDzDqfmdq5i1TDW3KzL9JgGonAinjXqG+3VYmeHODFNxExO/c5WREVeCD3eFFj
-         3HMo8xnKvV1owAymU15EzY4XLBsVPQJ3xVMkBOtBxZ8P6VdhQ7zei1RNFikwY2GcpuWU
-         tIQHXIhSvwTgQXOr9dFSYMrSsQ3FVUM7yNHVvwKp65DdpHLNHaGT/WhnGGWmoRNnb7gP
-         QJ9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oURhlb5Aq9SaUVoif2dSxrv9s2KPP5nkbzDOYxcW5t4=;
-        b=V5bQZZqTlUu9OEVLtnSd8dl93Sgk+LUVjePyNI7g7xcJAYExp1c84B4IOEei2wQM4Q
-         a2+OgGRU5DYrxBQ06Xw205ZtXeVPjb3ytQbcVonsPL84VkLAVyp0vNznM+7FbeqVVtLD
-         biVMpP1e+WApIVM+otdgRWvILg69OtwzV1AddZlWlpXDQaOqeBdFPqCfWp68zFZ1juhf
-         NUNMp5bqRcIoHgP9/BVnJ5LJCP9ByKuR+3fh8p+T0OOwWomcAKCCFEPb4bhuqN2OQTeF
-         52EZzgyjfyc1Ma9LiYNNvNg0zGRuScVN+cmRx2NBMoON80hEJ/2osnIIUhTUj4bhMaKh
-         +Icg==
-X-Gm-Message-State: APjAAAX9RwlvFEQ2fczMWEwWj4iG1knAbG7c8LBQ6njQVOt4XN4r/ptx
-        FNFDkodKHSgXqQi1VIR0LQQ=
-X-Google-Smtp-Source: APXvYqwBxUSMKP2ysln1UGkYugPUj1P2Ive1cWLW6Xlf/e/kJ7WE0YBP+jPmBn4UBUEgjvAVosqoHQ==
-X-Received: by 2002:a17:902:bf44:: with SMTP id u4mr12895446pls.171.1556913089078;
-        Fri, 03 May 2019 12:51:29 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id g24sm4911590pfi.126.2019.05.03.12.51.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 12:51:28 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     broonie@kernel.org, shengjiu.wang@nxp.com
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5] ASoC: fsl_esai: Add pm runtime function
-Date:   Fri,  3 May 2019 12:49:44 -0700
-Message-Id: <20190503194944.30167-1-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 3 May 2019 15:52:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34626 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725793AbfECTwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 15:52:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 501A2AD36;
+        Fri,  3 May 2019 19:52:01 +0000 (UTC)
+Date:   Fri, 3 May 2019 12:51:48 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk, e@80x24.org,
+        omar.kilani@gmail.com, jbaron@akamai.com, arnd@arndb.de,
+        linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org
+Subject: Re: [PATCH] signal: Adjust error codes according to
+ restore_user_sigmask()
+Message-ID: <20190503195148.t6hj4ly3axqosse3@linux-r8p5>
+References: <20190503033440.cow6xm4p4hezgkxv@linux-r8p5>
+ <20190503034205.12121-1-deepa.kernel@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190503034205.12121-1-deepa.kernel@gmail.com>
+User-Agent: NeoMutt/20180323
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "S.j. Wang" <shengjiu.wang@nxp.com>
+This patch could also be routed via akpm, adding him.
 
-Add pm runtime support and move clock handling there.
-Close the clocks at suspend to reduce the power consumption.
+On Thu, 02 May 2019, Deepa Dinamani wrote:
 
-fsl_esai_suspend is replaced by pm_runtime_force_suspend.
-fsl_esai_resume is replaced by pm_runtime_force_resume.
+>For all the syscalls that receive a sigmask from the userland,
+>the user sigmask is to be in effect through the syscall execution.
+>At the end of syscall, sigmask of the current process is restored
+>to what it was before the switch over to user sigmask.
+>But, for this to be true in practice, the sigmask should be restored
+>only at the the point we change the saved_sigmask. Anything before
+>that loses signals. And, anything after is just pointless as the
+>signal is already lost by restoring the sigmask.
+>
+>The issue was detected because of a regression caused by 854a6ed56839a.
+>The patch moved the signal_pending() check closer to restoring of the
+>user sigmask. But, it failed to update the error code accordingly.
+>
+>Detailed issue discussion permalink:
+>https://lore.kernel.org/linux-fsdevel/20190427093319.sgicqik2oqkez3wk@dcvr/
+>
+>Note that the patch returns interrupted errors (EINTR, ERESTARTNOHAND,
+>etc) only when there is no other error. If there is a signal and an error
+>like EINVAL, the syscalls return -EINVAL rather than the interrupted
+>error codes.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
-Changes in v5
--Replaced my Acked-by with Signed-off-by as a resend.
+Thanks for doing this; I've reviewed the epoll bits (along with the overall
+idea) and it seems like a sane alternative to reverting the offending patch.
 
-Changes in v4
--resend base on for-5.2
+Feel free to add:
 
-Changes in v3
--refine the commit comments.
--add acked-by
+Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
 
-Changes in v2
--refine the commit comments.
--move regcache_mark_dirty to runtime suspend.
+A small nit, I think we should be a bit more verbose about the return semantics
+of restore_user_sigmask()... see at the end.
 
- sound/soc/fsl/fsl_esai.c | 141 +++++++++++++++++++++------------------
- 1 file changed, 77 insertions(+), 64 deletions(-)
+>
+>Reported-by: Eric Wong <e@80x24.org>
+>Fixes: 854a6ed56839a40f6b5d02a2962f48841482eec4 ("signal: Add restore_user_sigmask()")
+>Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
 
-diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
-index c7410bbfd2af..022368c8a074 100644
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -9,6 +9,7 @@
- #include <linux/module.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-+#include <linux/pm_runtime.h>
- #include <sound/dmaengine_pcm.h>
- #include <sound/pcm_params.h>
- 
-@@ -466,30 +467,6 @@ static int fsl_esai_startup(struct snd_pcm_substream *substream,
- 			    struct snd_soc_dai *dai)
- {
- 	struct fsl_esai *esai_priv = snd_soc_dai_get_drvdata(dai);
--	int ret;
--
--	/*
--	 * Some platforms might use the same bit to gate all three or two of
--	 * clocks, so keep all clocks open/close at the same time for safety
--	 */
--	ret = clk_prepare_enable(esai_priv->coreclk);
--	if (ret)
--		return ret;
--	if (!IS_ERR(esai_priv->spbaclk)) {
--		ret = clk_prepare_enable(esai_priv->spbaclk);
--		if (ret)
--			goto err_spbaclk;
--	}
--	if (!IS_ERR(esai_priv->extalclk)) {
--		ret = clk_prepare_enable(esai_priv->extalclk);
--		if (ret)
--			goto err_extalck;
--	}
--	if (!IS_ERR(esai_priv->fsysclk)) {
--		ret = clk_prepare_enable(esai_priv->fsysclk);
--		if (ret)
--			goto err_fsysclk;
--	}
- 
- 	if (!dai->active) {
- 		/* Set synchronous mode */
-@@ -506,16 +483,6 @@ static int fsl_esai_startup(struct snd_pcm_substream *substream,
- 
- 	return 0;
- 
--err_fsysclk:
--	if (!IS_ERR(esai_priv->extalclk))
--		clk_disable_unprepare(esai_priv->extalclk);
--err_extalck:
--	if (!IS_ERR(esai_priv->spbaclk))
--		clk_disable_unprepare(esai_priv->spbaclk);
--err_spbaclk:
--	clk_disable_unprepare(esai_priv->coreclk);
--
--	return ret;
- }
- 
- static int fsl_esai_hw_params(struct snd_pcm_substream *substream,
-@@ -576,20 +543,6 @@ static int fsl_esai_hw_params(struct snd_pcm_substream *substream,
- 	return 0;
- }
- 
--static void fsl_esai_shutdown(struct snd_pcm_substream *substream,
--			      struct snd_soc_dai *dai)
--{
--	struct fsl_esai *esai_priv = snd_soc_dai_get_drvdata(dai);
--
--	if (!IS_ERR(esai_priv->fsysclk))
--		clk_disable_unprepare(esai_priv->fsysclk);
--	if (!IS_ERR(esai_priv->extalclk))
--		clk_disable_unprepare(esai_priv->extalclk);
--	if (!IS_ERR(esai_priv->spbaclk))
--		clk_disable_unprepare(esai_priv->spbaclk);
--	clk_disable_unprepare(esai_priv->coreclk);
--}
--
- static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
- 			    struct snd_soc_dai *dai)
- {
-@@ -658,7 +611,6 @@ static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
- 
- static const struct snd_soc_dai_ops fsl_esai_dai_ops = {
- 	.startup = fsl_esai_startup,
--	.shutdown = fsl_esai_shutdown,
- 	.trigger = fsl_esai_trigger,
- 	.hw_params = fsl_esai_hw_params,
- 	.set_sysclk = fsl_esai_set_dai_sysclk,
-@@ -947,6 +899,10 @@ static int fsl_esai_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	pm_runtime_enable(&pdev->dev);
-+
-+	regcache_cache_only(esai_priv->regmap, true);
-+
- 	ret = imx_pcm_dma_init(pdev, IMX_ESAI_DMABUF_SIZE);
- 	if (ret)
- 		dev_err(&pdev->dev, "failed to init imx pcm dma: %d\n", ret);
-@@ -954,6 +910,13 @@ static int fsl_esai_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int fsl_esai_remove(struct platform_device *pdev)
-+{
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
-+}
-+
- static const struct of_device_id fsl_esai_dt_ids[] = {
- 	{ .compatible = "fsl,imx35-esai", },
- 	{ .compatible = "fsl,vf610-esai", },
-@@ -961,22 +924,35 @@ static const struct of_device_id fsl_esai_dt_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, fsl_esai_dt_ids);
- 
--#ifdef CONFIG_PM_SLEEP
--static int fsl_esai_suspend(struct device *dev)
--{
--	struct fsl_esai *esai = dev_get_drvdata(dev);
--
--	regcache_cache_only(esai->regmap, true);
--	regcache_mark_dirty(esai->regmap);
--
--	return 0;
--}
--
--static int fsl_esai_resume(struct device *dev)
-+#ifdef CONFIG_PM
-+static int fsl_esai_runtime_resume(struct device *dev)
- {
- 	struct fsl_esai *esai = dev_get_drvdata(dev);
- 	int ret;
- 
-+	/*
-+	 * Some platforms might use the same bit to gate all three or two of
-+	 * clocks, so keep all clocks open/close at the same time for safety
-+	 */
-+	ret = clk_prepare_enable(esai->coreclk);
-+	if (ret)
-+		return ret;
-+	if (!IS_ERR(esai->spbaclk)) {
-+		ret = clk_prepare_enable(esai->spbaclk);
-+		if (ret)
-+			goto err_spbaclk;
-+	}
-+	if (!IS_ERR(esai->extalclk)) {
-+		ret = clk_prepare_enable(esai->extalclk);
-+		if (ret)
-+			goto err_extalclk;
-+	}
-+	if (!IS_ERR(esai->fsysclk)) {
-+		ret = clk_prepare_enable(esai->fsysclk);
-+		if (ret)
-+			goto err_fsysclk;
-+	}
-+
- 	regcache_cache_only(esai->regmap, false);
- 
- 	/* FIFO reset for safety */
-@@ -987,22 +963,59 @@ static int fsl_esai_resume(struct device *dev)
- 
- 	ret = regcache_sync(esai->regmap);
- 	if (ret)
--		return ret;
-+		goto err_regcache_sync;
- 
- 	/* FIFO reset done */
- 	regmap_update_bits(esai->regmap, REG_ESAI_TFCR, ESAI_xFCR_xFR, 0);
- 	regmap_update_bits(esai->regmap, REG_ESAI_RFCR, ESAI_xFCR_xFR, 0);
- 
-+	return 0;
-+
-+err_regcache_sync:
-+	if (!IS_ERR(esai->fsysclk))
-+		clk_disable_unprepare(esai->fsysclk);
-+err_fsysclk:
-+	if (!IS_ERR(esai->extalclk))
-+		clk_disable_unprepare(esai->extalclk);
-+err_extalclk:
-+	if (!IS_ERR(esai->spbaclk))
-+		clk_disable_unprepare(esai->spbaclk);
-+err_spbaclk:
-+	clk_disable_unprepare(esai->coreclk);
-+
-+	return ret;
-+}
-+
-+static int fsl_esai_runtime_suspend(struct device *dev)
-+{
-+	struct fsl_esai *esai = dev_get_drvdata(dev);
-+
-+	regcache_cache_only(esai->regmap, true);
-+	regcache_mark_dirty(esai->regmap);
-+
-+	if (!IS_ERR(esai->fsysclk))
-+		clk_disable_unprepare(esai->fsysclk);
-+	if (!IS_ERR(esai->extalclk))
-+		clk_disable_unprepare(esai->extalclk);
-+	if (!IS_ERR(esai->spbaclk))
-+		clk_disable_unprepare(esai->spbaclk);
-+	clk_disable_unprepare(esai->coreclk);
-+
- 	return 0;
- }
--#endif /* CONFIG_PM_SLEEP */
-+#endif /* CONFIG_PM */
- 
- static const struct dev_pm_ops fsl_esai_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(fsl_esai_suspend, fsl_esai_resume)
-+	SET_RUNTIME_PM_OPS(fsl_esai_runtime_suspend,
-+			   fsl_esai_runtime_resume,
-+			   NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
- 
- static struct platform_driver fsl_esai_driver = {
- 	.probe = fsl_esai_probe,
-+	.remove = fsl_esai_remove,
- 	.driver = {
- 		.name = "fsl-esai-dai",
- 		.pm = &fsl_esai_pm_ops,
--- 
-2.17.1
+>---
+>Sorry, I was trying a new setup at work. I should have tested it.
+>My bad, I've checked this one.
+>I've removed the questionable reported-by, since we're not sure if
+>it is actually the same issue.
+>
+> fs/aio.c               | 24 ++++++++++++------------
+> fs/eventpoll.c         | 14 ++++++++++----
+> fs/io_uring.c          |  9 ++++++---
+> fs/select.c            | 37 +++++++++++++++++++++----------------
+> include/linux/signal.h |  2 +-
+> kernel/signal.c        |  8 +++++---
+> 6 files changed, 55 insertions(+), 39 deletions(-)
+>
+>diff --git a/fs/aio.c b/fs/aio.c
+>index 38b741aef0bf..7de2f7573d55 100644
+>--- a/fs/aio.c
+>+++ b/fs/aio.c
+>@@ -2133,7 +2133,7 @@ SYSCALL_DEFINE6(io_pgetevents,
+> 	struct __aio_sigset	ksig = { NULL, };
+> 	sigset_t		ksigmask, sigsaved;
+> 	struct timespec64	ts;
+>-	int ret;
+>+	int ret, signal_detected;
+>
+> 	if (timeout && unlikely(get_timespec64(&ts, timeout)))
+> 		return -EFAULT;
+>@@ -2146,8 +2146,8 @@ SYSCALL_DEFINE6(io_pgetevents,
+> 		return ret;
+>
+> 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
+>-	restore_user_sigmask(ksig.sigmask, &sigsaved);
+>-	if (signal_pending(current) && !ret)
+>+	signal_detected = restore_user_sigmask(ksig.sigmask, &sigsaved);
+>+	if (signal_detected && !ret)
+> 		ret = -ERESTARTNOHAND;
+>
+> 	return ret;
+>@@ -2166,7 +2166,7 @@ SYSCALL_DEFINE6(io_pgetevents_time32,
+> 	struct __aio_sigset	ksig = { NULL, };
+> 	sigset_t		ksigmask, sigsaved;
+> 	struct timespec64	ts;
+>-	int ret;
+>+	int ret, signal_detected;
+>
+> 	if (timeout && unlikely(get_old_timespec32(&ts, timeout)))
+> 		return -EFAULT;
+>@@ -2180,8 +2180,8 @@ SYSCALL_DEFINE6(io_pgetevents_time32,
+> 		return ret;
+>
+> 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &ts : NULL);
+>-	restore_user_sigmask(ksig.sigmask, &sigsaved);
+>-	if (signal_pending(current) && !ret)
+>+	signal_detected = restore_user_sigmask(ksig.sigmask, &sigsaved);
+>+	if (signal_detected && !ret)
+> 		ret = -ERESTARTNOHAND;
+>
+> 	return ret;
+>@@ -2231,7 +2231,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
+> 	struct __compat_aio_sigset ksig = { NULL, };
+> 	sigset_t ksigmask, sigsaved;
+> 	struct timespec64 t;
+>-	int ret;
+>+	int ret, signal_detected;
+>
+> 	if (timeout && get_old_timespec32(&t, timeout))
+> 		return -EFAULT;
+>@@ -2244,8 +2244,8 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
+> 		return ret;
+>
+> 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &t : NULL);
+>-	restore_user_sigmask(ksig.sigmask, &sigsaved);
+>-	if (signal_pending(current) && !ret)
+>+	signal_detected = restore_user_sigmask(ksig.sigmask, &sigsaved);
+>+	if (signal_detected && !ret)
+> 		ret = -ERESTARTNOHAND;
+>
+> 	return ret;
+>@@ -2264,7 +2264,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
+> 	struct __compat_aio_sigset ksig = { NULL, };
+> 	sigset_t ksigmask, sigsaved;
+> 	struct timespec64 t;
+>-	int ret;
+>+	int ret, signal_detected;
+>
+> 	if (timeout && get_timespec64(&t, timeout))
+> 		return -EFAULT;
+>@@ -2277,8 +2277,8 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
+> 		return ret;
+>
+> 	ret = do_io_getevents(ctx_id, min_nr, nr, events, timeout ? &t : NULL);
+>-	restore_user_sigmask(ksig.sigmask, &sigsaved);
+>-	if (signal_pending(current) && !ret)
+>+	signal_detected = restore_user_sigmask(ksig.sigmask, &sigsaved);
+>+	if (signal_detected && !ret)
+> 		ret = -ERESTARTNOHAND;
+>
+> 	return ret;
+>diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+>index 4a0e98d87fcc..fe5a0724b417 100644
+>--- a/fs/eventpoll.c
+>+++ b/fs/eventpoll.c
+>@@ -2317,7 +2317,7 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct epoll_event __user *, events,
+> 		int, maxevents, int, timeout, const sigset_t __user *, sigmask,
+> 		size_t, sigsetsize)
+> {
+>-	int error;
+>+	int error, signal_detected;
+> 	sigset_t ksigmask, sigsaved;
+>
+> 	/*
+>@@ -2330,7 +2330,10 @@ SYSCALL_DEFINE6(epoll_pwait, int, epfd, struct epoll_event __user *, events,
+>
+> 	error = do_epoll_wait(epfd, events, maxevents, timeout);
+>
+>-	restore_user_sigmask(sigmask, &sigsaved);
+>+	signal_detected = restore_user_sigmask(sigmask, &sigsaved);
+>+
+>+	if (signal_detected && !error)
+>+		error = -EINTR;
+>
+> 	return error;
+> }
+>@@ -2342,7 +2345,7 @@ COMPAT_SYSCALL_DEFINE6(epoll_pwait, int, epfd,
+> 			const compat_sigset_t __user *, sigmask,
+> 			compat_size_t, sigsetsize)
+> {
+>-	long err;
+>+	long err, signal_detected;
+> 	sigset_t ksigmask, sigsaved;
+>
+> 	/*
+>@@ -2355,7 +2358,10 @@ COMPAT_SYSCALL_DEFINE6(epoll_pwait, int, epfd,
+>
+> 	err = do_epoll_wait(epfd, events, maxevents, timeout);
+>
+>-	restore_user_sigmask(sigmask, &sigsaved);
+>+	signal_detected = restore_user_sigmask(sigmask, &sigsaved);
+>+
+>+	if (signal_detected && !err)
+>+		err = -EINTR;
+>
+> 	return err;
+> }
+>diff --git a/fs/io_uring.c b/fs/io_uring.c
+>index e2bd77da5e21..e107e299c3f3 100644
+>--- a/fs/io_uring.c
+>+++ b/fs/io_uring.c
+>@@ -1965,7 +1965,7 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+> 	struct io_cq_ring *ring = ctx->cq_ring;
+> 	sigset_t ksigmask, sigsaved;
+> 	DEFINE_WAIT(wait);
+>-	int ret;
+>+	int ret, signal_detected;
+>
+> 	/* See comment at the top of this file */
+> 	smp_rmb();
+>@@ -1996,8 +1996,11 @@ static int io_cqring_wait(struct io_ring_ctx *ctx, int min_events,
+>
+> 	finish_wait(&ctx->wait, &wait);
+>
+>-	if (sig)
+>-		restore_user_sigmask(sig, &sigsaved);
+>+	if (sig) {
+>+		signal_detected = restore_user_sigmask(sig, &sigsaved);
+>+		if (signal_detected && !ret)
+>+			ret  = -EINTR;
+>+	}
+>
+> 	return READ_ONCE(ring->r.head) == READ_ONCE(ring->r.tail) ? ret : 0;
+> }
+>diff --git a/fs/select.c b/fs/select.c
+>index 6cbc9ff56ba0..348dbe5e6dd0 100644
+>--- a/fs/select.c
+>+++ b/fs/select.c
+>@@ -732,7 +732,7 @@ static long do_pselect(int n, fd_set __user *inp, fd_set __user *outp,
+> {
+> 	sigset_t ksigmask, sigsaved;
+> 	struct timespec64 ts, end_time, *to = NULL;
+>-	int ret;
+>+	int ret, signal_detected;
+>
+> 	if (tsp) {
+> 		switch (type) {
+>@@ -760,7 +760,9 @@ static long do_pselect(int n, fd_set __user *inp, fd_set __user *outp,
+> 	ret = core_sys_select(n, inp, outp, exp, to);
+> 	ret = poll_select_copy_remaining(&end_time, tsp, type, ret);
+>
+>-	restore_user_sigmask(sigmask, &sigsaved);
+>+	signal_detected = restore_user_sigmask(sigmask, &sigsaved);
+>+	if (signal_detected && !ret)
+>+		ret = -EINTR;
+>
+> 	return ret;
+> }
+>@@ -1089,7 +1091,7 @@ SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
+> {
+> 	sigset_t ksigmask, sigsaved;
+> 	struct timespec64 ts, end_time, *to = NULL;
+>-	int ret;
+>+	int ret, signal_detected;
+>
+> 	if (tsp) {
+> 		if (get_timespec64(&ts, tsp))
+>@@ -1106,10 +1108,10 @@ SYSCALL_DEFINE5(ppoll, struct pollfd __user *, ufds, unsigned int, nfds,
+>
+> 	ret = do_sys_poll(ufds, nfds, to);
+>
+>-	restore_user_sigmask(sigmask, &sigsaved);
+>+	signal_detected = restore_user_sigmask(sigmask, &sigsaved);
+>
+> 	/* We can restart this syscall, usually */
+>-	if (ret == -EINTR)
+>+	if (ret == -EINTR || (signal_detected && !ret))
+> 		ret = -ERESTARTNOHAND;
+>
+> 	ret = poll_select_copy_remaining(&end_time, tsp, PT_TIMESPEC, ret);
+>@@ -1125,7 +1127,7 @@ SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds, unsigned int, nfds,
+> {
+> 	sigset_t ksigmask, sigsaved;
+> 	struct timespec64 ts, end_time, *to = NULL;
+>-	int ret;
+>+	int ret, signal_detected;
+>
+> 	if (tsp) {
+> 		if (get_old_timespec32(&ts, tsp))
+>@@ -1142,10 +1144,10 @@ SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds, unsigned int, nfds,
+>
+> 	ret = do_sys_poll(ufds, nfds, to);
+>
+>-	restore_user_sigmask(sigmask, &sigsaved);
+>+	signal_detected = restore_user_sigmask(sigmask, &sigsaved);
+>
+> 	/* We can restart this syscall, usually */
+>-	if (ret == -EINTR)
+>+	if (ret == -EINTR || (signal_detected && !ret))
+> 		ret = -ERESTARTNOHAND;
+>
+> 	ret = poll_select_copy_remaining(&end_time, tsp, PT_OLD_TIMESPEC, ret);
+>@@ -1324,7 +1326,7 @@ static long do_compat_pselect(int n, compat_ulong_t __user *inp,
+> {
+> 	sigset_t ksigmask, sigsaved;
+> 	struct timespec64 ts, end_time, *to = NULL;
+>-	int ret;
+>+	int ret, signal_detected;
+>
+> 	if (tsp) {
+> 		switch (type) {
+>@@ -1352,7 +1354,10 @@ static long do_compat_pselect(int n, compat_ulong_t __user *inp,
+> 	ret = compat_core_sys_select(n, inp, outp, exp, to);
+> 	ret = poll_select_copy_remaining(&end_time, tsp, type, ret);
+>
+>-	restore_user_sigmask(sigmask, &sigsaved);
+>+	signal_detected = restore_user_sigmask(sigmask, &sigsaved);
+>+
+>+	if (signal_detected && !ret)
+>+		ret = -EINTR;
+>
+> 	return ret;
+> }
+>@@ -1408,7 +1413,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds,
+> {
+> 	sigset_t ksigmask, sigsaved;
+> 	struct timespec64 ts, end_time, *to = NULL;
+>-	int ret;
+>+	int ret, signal_detected;
+>
+> 	if (tsp) {
+> 		if (get_old_timespec32(&ts, tsp))
+>@@ -1425,10 +1430,10 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time32, struct pollfd __user *, ufds,
+>
+> 	ret = do_sys_poll(ufds, nfds, to);
+>
+>-	restore_user_sigmask(sigmask, &sigsaved);
+>+	signal_detected = restore_user_sigmask(sigmask, &sigsaved);
+>
+> 	/* We can restart this syscall, usually */
+>-	if (ret == -EINTR)
+>+	if (ret == -EINTR || (signal_detected && !ret))
+> 		ret = -ERESTARTNOHAND;
+>
+> 	ret = poll_select_copy_remaining(&end_time, tsp, PT_OLD_TIMESPEC, ret);
+>@@ -1444,7 +1449,7 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time64, struct pollfd __user *, ufds,
+> {
+> 	sigset_t ksigmask, sigsaved;
+> 	struct timespec64 ts, end_time, *to = NULL;
+>-	int ret;
+>+	int ret, signal_detected;
+>
+> 	if (tsp) {
+> 		if (get_timespec64(&ts, tsp))
+>@@ -1461,10 +1466,10 @@ COMPAT_SYSCALL_DEFINE5(ppoll_time64, struct pollfd __user *, ufds,
+>
+> 	ret = do_sys_poll(ufds, nfds, to);
+>
+>-	restore_user_sigmask(sigmask, &sigsaved);
+>+	signal_detected = restore_user_sigmask(sigmask, &sigsaved);
+>
+> 	/* We can restart this syscall, usually */
+>-	if (ret == -EINTR)
+>+	if (ret == -EINTR || (signal_detected && !ret))
+> 		ret = -ERESTARTNOHAND;
+>
+> 	ret = poll_select_copy_remaining(&end_time, tsp, PT_TIMESPEC, ret);
+>diff --git a/include/linux/signal.h b/include/linux/signal.h
+>index 9702016734b1..1d36e8629edf 100644
+>--- a/include/linux/signal.h
+>+++ b/include/linux/signal.h
+>@@ -275,7 +275,7 @@ extern int __group_send_sig_info(int, struct kernel_siginfo *, struct task_struc
+> extern int sigprocmask(int, sigset_t *, sigset_t *);
+> extern int set_user_sigmask(const sigset_t __user *usigmask, sigset_t *set,
+> 	sigset_t *oldset, size_t sigsetsize);
+>-extern void restore_user_sigmask(const void __user *usigmask,
+>+extern int restore_user_sigmask(const void __user *usigmask,
+> 				 sigset_t *sigsaved);
+> extern void set_current_blocked(sigset_t *);
+> extern void __set_current_blocked(const sigset_t *);
+>diff --git a/kernel/signal.c b/kernel/signal.c
+>index 3a9e41197d46..4f8b49a7b058 100644
+>--- a/kernel/signal.c
+>+++ b/kernel/signal.c
+>@@ -2845,15 +2845,16 @@ EXPORT_SYMBOL(set_compat_user_sigmask);
+>  * usigmask: sigmask passed in from userland.
+>  * sigsaved: saved sigmask when the syscall started and changed the sigmask to
+>  *           usigmask.
+>+ * returns 1 in case a pending signal is detected.
 
+How about:
+
+"
+Callers must carefully coordinate between signal_pending() checks between the
+actual system call and restore_user_sigmask() - for which a new pending signal
+may come in between calls and therefore must consider this for returning a proper
+error code.
+
+Returns 1 in case a signal pending is detected, otherwise 0.
+"
+
+>  *
+>  * This is useful for syscalls such as ppoll, pselect, io_pgetevents and
+>  * epoll_pwait where a new sigmask is passed in from userland for the syscalls.
+>  */
+>-void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
+>+int restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
+> {
+>
+> 	if (!usigmask)
+>-		return;
+>+		return 0;
+> 	/*
+> 	 * When signals are pending, do not restore them here.
+> 	 * Restoring sigmask here can lead to delivering signals that the above
+>@@ -2862,7 +2863,7 @@ void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
+> 	if (signal_pending(current)) {
+> 		current->saved_sigmask = *sigsaved;
+> 		set_restore_sigmask();
+>-		return;
+>+		return 1;
+> 	}
+>
+> 	/*
+>@@ -2870,6 +2871,7 @@ void restore_user_sigmask(const void __user *usigmask, sigset_t *sigsaved)
+> 	 * saved_sigmask when signals are not pending.
+> 	 */
+> 	set_current_blocked(sigsaved);
+>+	return 0;
+> }
+> EXPORT_SYMBOL(restore_user_sigmask);
+>
+>-- 
+>2.21.0.593.g511ec345e18-goog
+>
