@@ -2,109 +2,173 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2E7C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B482C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 792D220652
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58602087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HtW8rkXO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hn0+ae2R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfECL1n (ORCPT
+        id S1727515AbfECL14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:27:43 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34834 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfECL1n (ORCPT
+        Fri, 3 May 2019 07:27:56 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54109 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfECL1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:27:43 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y197so6319987wmd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 04:27:41 -0700 (PDT)
+        Fri, 3 May 2019 07:27:55 -0400
+Received: by mail-wm1-f68.google.com with SMTP id q15so6684382wmf.3;
+        Fri, 03 May 2019 04:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qT8fctyh/NTtgLpBOVz/YqcyXidYhaHzijOB2ar/c2Y=;
-        b=HtW8rkXO6GVnxXCxg9W+TehfpHqgFJ4BDrZWs1UpshGfMMBH1Hp7Sb2G5AupRSuOtO
-         9gsCEo/dUNF5WwRryKFg5rQifBtBv8IMx6mg5yfbXdETsXOzH6UGEFgfs8oGxnAM2f0d
-         dJliHrIRRP5r1jrPfvgeKQKmlBRA0NXNqmZi1Gkp0aqeZsufMMHbLobNLpsAewm1vaSg
-         TEqQPmEydFQ4oU9Nhaf5qq1Jjg/fVH3VIAZJ83mlx0Od4+kWZsdnbKgnINlL/C5TUhBB
-         coNkicnUrD9SRF1F+vLTVGdoGkPTJl7VR+0PKuGYG8v3SwFNnnMbf3qugIhae8yLffil
-         czbQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+STCk8lkhn2EMGrmWWOJnwKAHaye6MrOKuwobW7Ffyw=;
+        b=Hn0+ae2RVQUkEg8KJ9vqDa6wvcfoucf5Bkh5dCex2giBknGyExKhLscPZNBMctQyiS
+         vj6IW8k8OlAIBqGtXyRbl65EWeEvHqIoP5rp6wiPXbc2r6QRxJq85R8u/Igdl5HMqlZQ
+         cAq8UTqF/s9oxgnxWWu1SgPGbVqjEdGMOvfrkyqVArd+HmG3iB29yeXCBMLZrzB7otxl
+         Dnm4kKrJAT1OQ9wFZqxhdfTHbkjWXCbo3SAPF5zuUx4Xf9Z6lwuAbv7Ja1FZIytgyUrt
+         fohOb8XJFrdeTs+ExhyQaLW+fkXkmexL/lbI88wn3lgeN67vP85wx/bhtPT2rDUiQ8zw
+         3zMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qT8fctyh/NTtgLpBOVz/YqcyXidYhaHzijOB2ar/c2Y=;
-        b=L13kzh0RUSvquO+mg5HW53WbtnOkH4OUIDhvRi7U/RwsYc7GyXeT4yLGLyLNjBbLbq
-         iS8lWU6dGMA8viR8YoK0wyJwq8qbNvtKgD8LObP/Mn6fQ9spP/+xh+qvjiz9McxQTIBl
-         2c0IZLTkpFZlSEXOf+7wGidZLoOUSiMHr7uR794YrkexKC8dpAaPbZ+pCqaFkUk0YRR1
-         9vfINhIcjcJBeY7WR+sjLQ2z/nz1bwUNIJEa5hxxhvECAIUDhMYfYz435ztEfQ7pfptr
-         eD4uAhwk2OJEhKAgGi4n3fTFHIIbg4DnzT4cxwMBcWd8F1jJmeOBbkAf2I0Ceh4CW9ek
-         21vA==
-X-Gm-Message-State: APjAAAWtFibts6EVZphCdrkIdpuY6AiQlhx+XmvgUOHWihBiUq7RGmgC
-        9E/Bi2EuRFHavtvvBukRV6Q=
-X-Google-Smtp-Source: APXvYqw62T5hIXnX6MLwYBTQsAQFn3c0zBFxcl9l5uMqqjVkvyOiVR7Ixq62QGnGKXTaeDyvYXHmaA==
-X-Received: by 2002:a05:600c:28c:: with SMTP id 12mr5640674wmk.65.1556882861274;
-        Fri, 03 May 2019 04:27:41 -0700 (PDT)
-Received: from [192.168.1.4] (ip-86-49-110-70.net.upcbroadband.cz. [86.49.110.70])
-        by smtp.gmail.com with ESMTPSA id r9sm1931240wrv.82.2019.05.03.04.27.40
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 04:27:40 -0700 (PDT)
-Subject: Re: [PATCH] mtd: spi-nor: enable 4B opcodes for n25q256a
-To:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Cc:     linux-mtd@lists.infradead.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-References: <20190503085327.5180-1-simon.k.r.goldschmidt@gmail.com>
- <8161008c-fafd-a89f-d2d8-413224844cd2@gmail.com>
- <CAAh8qsyBHCD9o_wyk6cHxyxagpQvX0dtXxy_P4KqZgoeU8VrEg@mail.gmail.com>
-From:   Marek Vasut <marek.vasut@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <4ff197be-6ede-6644-d135-b13aab590bb6@gmail.com>
-Date:   Fri, 3 May 2019 13:27:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+STCk8lkhn2EMGrmWWOJnwKAHaye6MrOKuwobW7Ffyw=;
+        b=EoWxNFfk9146MKZ7Qg0l7gMSagqRE93vhY4+wd1+4WL9kFAMV9u1D7kbaK1S8P/eDh
+         BnEzqd5u+DkAv/8b6BTsGVfpUPkS+PvpUTCIDZWF/YeWQ+v+kJ1H/r9PwFg+dL3R4bcD
+         Lq2sqhl9fejTeeRi+Uw59nit1iX8ghrrnAVB36kyV/h89nUgGKfheCGJ/+F0n95S37aa
+         f6mR4qxtJlzHZhq0O1P7QLX0IjsTvuFVibj0ZEmxGo4hTCh2W8wmkCUrV0+poyrfGTyO
+         GgDHnrYihd8AMJxt5ux99c//HrB5G6LIuDVNGW7WI6RNLx7viCigf/slJphdj37/9nDP
+         6frA==
+X-Gm-Message-State: APjAAAVOA7kySUR4kdgPw5n5mvtaqSzyCGSJkt5X6ZGVM5Xr0rx+SvWa
+        gvj2DStxhO0TkeReoq5XQYA=
+X-Google-Smtp-Source: APXvYqwQrxKNaLICLGkYq38/wgnqvaPrZNOSheS067NT8/BmmHPNXUeg9NSyFiuVMn7NIkQ0UQJzGg==
+X-Received: by 2002:a7b:c053:: with SMTP id u19mr5695704wmc.63.1556882873012;
+        Fri, 03 May 2019 04:27:53 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id d29sm1413751wrb.61.2019.05.03.04.27.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 04:27:52 -0700 (PDT)
+Date:   Fri, 3 May 2019 13:27:51 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V5 13/16] arm64: tegra: Enable PCIe slots in P2972-0000
+ board
+Message-ID: <20190503112751.GG32400@ulmo>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-14-vidyas@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAh8qsyBHCD9o_wyk6cHxyxagpQvX0dtXxy_P4KqZgoeU8VrEg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jt0yj30bxbg11sci"
+Content-Disposition: inline
+In-Reply-To: <20190424052004.6270-14-vidyas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/19 12:37 PM, Simon Goldschmidt wrote:
-> On Fri, May 3, 2019 at 12:00 PM Marek Vasut <marek.vasut@gmail.com> wrote:
->>
->> On 5/3/19 10:53 AM, Simon Goldschmidt wrote:
->>> Tested on socfpga cyclone5 where this is required to ensure that the
->>> boot rom can access this flash after warm reboot.
->>
->> Are you sure _all_ variants of the N25Q256 support 4NB opcodes ?
->> I think there were some which didn't, but I might be wrong.
-> 
-> Oh, damn, you're right. The documentation [1] statest that 4-byte erase and
-> program opcodes are only supported for part numbers N25Q256A83ESF40x,
-> N25Q256A83E1240x and N25QA83ESFA0F.
 
-;-)
+--jt0yj30bxbg11sci
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Any idea of how I can still enable 4-byte opcodes for my chip?
-Maybe SFDP tables contains some information whether the chip supports
-the 4B opcodes ?
+On Wed, Apr 24, 2019 at 10:50:01AM +0530, Vidya Sagar wrote:
+> Enable PCIe controller nodes to enable respective PCIe slots on
+> P2972-0000 board. Following is the ownership of slots by different
+> PCIe controllers.
+> Controller-0 : M.2 Key-M slot
+> Controller-1 : On-board Marvell eSATA controller
+> Controller-3 : M.2 Key-E slot
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v4]:
+> * None
+>=20
+> Changes since [v3]:
+> * None
+>=20
+> Changes since [v2]:
+> * Changed P2U label names to reflect new format that includes 'hsio'/'nvh=
+s'
+>   strings to reflect UPHY brick they belong to
+>=20
+> Changes since [v1]:
+> * Dropped 'pcie-' from phy-names property strings
+>=20
+>  .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |  2 +-
+>  .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 41 +++++++++++++++++++
+>  2 files changed, 42 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/=
+boot/dts/nvidia/tegra194-p2888.dtsi
+> index 0fd5bd29fbf9..30a83d4c5b69 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+> @@ -191,7 +191,7 @@
+>  						regulator-boot-on;
+>  					};
+> =20
+> -					sd3 {
+> +					vdd_1v8ao: sd3 {
+>  						regulator-name =3D "VDD_1V8AO";
+>  						regulator-min-microvolt =3D <1800000>;
+>  						regulator-max-microvolt =3D <1800000>;
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/ar=
+m64/boot/dts/nvidia/tegra194-p2972-0000.dts
+> index b62e96945846..7411c64e24a6 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+> @@ -169,4 +169,45 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	pcie@14180000 {
+[...]
+> +	pcie@14100000 {
+[...]
 
--- 
-Best regards,
-Marek Vasut
+Again, these should be sorted by unit-address.
+
+Thierry
+
+--jt0yj30bxbg11sci
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzMJbcACgkQ3SOs138+
+s6HqvA/+M9cG4kk4zwslByULuSa3GW5lU3VrIoR10dZx2JrclNuFl6eQDq7V4k+j
+deUegnpbG0goInypfsnJjE1+hIea6yuNBfNdJjSlZFh5rQHkUMTQjn3S+N50UHEL
+otKt7xqpY963RRujKLQg+E+SUNi9unfKWy3hK2UhaZHVO77bP7hcsV7ViukhPwD3
+mPKyhbC5JEFjj4rPCGbLYfc2JhE0Gn7/f6Y9AZtIjIOm6MWSJwQyfcPMRkhlnnxn
+J++oHYUprmbOtJ91v8Wm3RFj19UmDDgac2cqxivu+p4JlH3FgJc7LRZsBr46OQcm
+hBwpLOQWcyDYx9hHOBbZZl7XuYb1wQQMhQMZzKapkcgNnRGKnN/Yhbm+Ac4ekopZ
+UKN/v4MEmHM9DpTgzVG+A3i6iTIvLJsQt3/vwgTfO65FwYUo8wUigUQJIPiSvtOJ
+OGtM18DBINzIJVGuPzcAMLiVNJb1p1mECu7fyS+/tgHT2xS55D3Q5QIpFiqvhqAG
+Vd81Jim/e2dBO0kJ17wSWbSM77AN0ETMkngiB7Jc3A98R5bNVQvwtGBq0xfRE1Yp
+R8KHqW7TP2/Iin6yJywqg6OyK7SBMlP+Mh1pU6rfz94JQ1CKCl6w/9zG0/tzMapP
+SQckzgvfGXJrSbBq7K/RQKbNdrC5f9cNKoPCXaqwze6sx5qw7L8=
+=/a8a
+-----END PGP SIGNATURE-----
+
+--jt0yj30bxbg11sci--
