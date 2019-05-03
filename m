@@ -2,453 +2,131 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEC3C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A3BC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D492075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3239A2075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:03:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QctHJ7Yx"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="mNCFc8wN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfECJBU (ORCPT
+        id S1727006AbfECJDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 05:01:20 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11260 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725885AbfECJBU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 05:01:20 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x438s4Bo024751;
-        Fri, 3 May 2019 11:01:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=NJcBfDIXc6aq0TUQaHd3aj5WEWDAnTUBKckNqR/0Asc=;
- b=QctHJ7Yxj6KjskcUX1gU22VDKHjRXWpUI2QH8biFHaUN1tdXm0NCeKEv2iRTuisjgzzE
- JPy6ShpzSN2I/DSwqVfaj1QH7A3TOv0UijRJe5ykENgc7GZheX/ZmUJ7aP7jBtSu4eMm
- p8xT98pwukB9PtxINZbYYBjHMbNtGWpH5LP6Tk7aUbuIcCtyNQdgQjkjJsMujT/awbd6
- QJQImbii0ktPw9IANXiKUM8Iq6vZI7ZDFHui4LDax1mGzYR1zbMKze8aqx4eR70VLO+C
- RwlsNfmcrMfwnKKRa3dzQAKN+CY8YLVKWM4p0gI0OqJAp4uoGZQY3aUhhkgANDJ+rsP0 VA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2s6xhbnas9-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 03 May 2019 11:01:03 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6AAD638;
-        Fri,  3 May 2019 09:01:02 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1C721159E;
-        Fri,  3 May 2019 09:01:02 +0000 (GMT)
-Received: from [10.48.0.204] (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 3 May
- 2019 11:01:01 +0200
-Subject: Re: [PATCH 3/3] ARM: dts: Add Avenger96 devicetree support based on
- STM32MP157A
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        <mcoquelin.stm32@gmail.com>, <robh+dt@kernel.org>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <loic.pallardy@st.com>
-References: <20190503053123.6828-1-manivannan.sadhasivam@linaro.org>
- <20190503053123.6828-4-manivannan.sadhasivam@linaro.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <7e693155-d1d4-b12d-74fd-0236d9d52257@st.com>
-Date:   Fri, 3 May 2019 11:01:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190503053123.6828-4-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Fri, 3 May 2019 05:03:22 -0400
+Received: from mail-eopbgr80084.outbound.protection.outlook.com ([40.107.8.84]:30689
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726138AbfECJDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 05:03:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yrEDpZWVwMd225XqkRd/JdqC5eDCN7BYEhBawF9UxaA=;
+ b=mNCFc8wNwElb6cvRVh9IGe04U8DyUkia7UeBNnOIGhWkuzakU2tGdFAHGjWhpWyPh2w5Hwod2Bu2UsT5cvuZbZGAicW/wkx23lLYPzvucOk214UmdDpbDx7Pz4h65A732h6nEJaIfLVfquY3uYf+z5WStzUey2zmprmDlafi7kU=
+Received: from HE1PR0502MB3641.eurprd05.prod.outlook.com (10.167.127.11) by
+ HE1PR0502MB3817.eurprd05.prod.outlook.com (10.167.127.159) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.12; Fri, 3 May 2019 09:03:12 +0000
+Received: from HE1PR0502MB3641.eurprd05.prod.outlook.com
+ ([fe80::8a6:f9c8:9a75:8948]) by HE1PR0502MB3641.eurprd05.prod.outlook.com
+ ([fe80::8a6:f9c8:9a75:8948%2]) with mapi id 15.20.1856.008; Fri, 3 May 2019
+ 09:03:12 +0000
+From:   Vlad Buslov <vladbu@mellanox.com>
+To:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Matteo Croce <mcroce@redhat.com>
+CC:     Vlad Buslov <vladbu@mellanox.com>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net] cls_matchall: avoid panic when receiving a packet
+ before filter set
+Thread-Topic: [PATCH net] cls_matchall: avoid panic when receiving a packet
+ before filter set
+Thread-Index: AQHU/rJZyWdv7dUO60+kMc0WWWwiZaZVOOWAgADJ0wCAAQFbgIACHJGA
+Date:   Fri, 3 May 2019 09:03:11 +0000
+Message-ID: <vbf8svnq59y.fsf@mellanox.com>
+References: <20190429173805.4455-1-mcroce@redhat.com>
+ <CAM_iQpXB83o+Nnbef8-h_8cg6rTVZn194uZvP1-VKPcJ+xMEjA@mail.gmail.com>
+ <CAGnkfhzPZjqnemq+Sh=pAQPsoadYD2UYfdVf8UHt-Dd7gqhVOg@mail.gmail.com>
+ <CAM_iQpXNdZPAWiGuwRGhgX4WdRGEwVnax5VyMrXZ+hM9xhhzCQ@mail.gmail.com>
+In-Reply-To: <CAM_iQpXNdZPAWiGuwRGhgX4WdRGEwVnax5VyMrXZ+hM9xhhzCQ@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_03:,,
- signatures=0
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0261.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:8a::33) To HE1PR0502MB3641.eurprd05.prod.outlook.com
+ (2603:10a6:7:85::11)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vladbu@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [37.142.13.130]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0b5882c5-1c4f-494a-bf41-08d6cfa62b03
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:HE1PR0502MB3817;
+x-ms-traffictypediagnostic: HE1PR0502MB3817:
+x-microsoft-antispam-prvs: <HE1PR0502MB38171F06D32C09FB31393A98AD350@HE1PR0502MB3817.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0026334A56
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(396003)(366004)(376002)(136003)(51444003)(199004)(189003)(102836004)(81166006)(186003)(81156014)(68736007)(256004)(66446008)(64756008)(66556008)(66476007)(66946007)(73956011)(14444005)(26005)(54906003)(52116002)(86362001)(4326008)(229853002)(2906002)(478600001)(110136005)(316002)(25786009)(36756003)(76176011)(71200400001)(6486002)(486006)(99286004)(8676002)(2616005)(446003)(11346002)(305945005)(7736002)(14454004)(8936002)(6246003)(5660300002)(6436002)(53546011)(53936002)(6116002)(6506007)(386003)(3846002)(476003)(66066001)(6512007)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0502MB3817;H:HE1PR0502MB3641.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:3;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: P/BSrS8/eVmgpemDN7YDt70i8oXqEQw7mQE+aYD+1EgqafX84tOL1TjqT7NUrRJziawXyh2dQ4qawIbP8E4KeZDjO6SGYcQANsmo+5YTTXTIuiuN2Hp04tC9F3yq8mWoJTFXTmhztASbxg6SbU5vVl3556OVCW0R6CdHknAkgQB7dFnnfQakkMEY4ROMln9ab+5Lz+jY9iR7+RI3qsy7B90XEEm7kkxjoubYyozUNFX+qIuvqCk80ElRms8Kx2as8p+jjQpvmA/WKYcmfEA89zMjpsSyQhrr732y3qvkT4JNuvoq+tU8i1lGeP71xkNodKWeYUWdr5g035LTopq+TXntWvkB/KNfp9brRkOCt/Ue1ZMtX3xHF4n0HE2xjezQW89voc2N+1UdkVRJi2dZI+INJ6OF0ZcsCjD6d4ExkPY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b5882c5-1c4f-494a-bf41-08d6cfa62b03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2019 09:03:11.9105
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0502MB3817
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mani
-
-On 5/3/19 7:31 AM, Manivannan Sadhasivam wrote:
-> Add devicetree support for Avenger96 board based on STM32MP157A MPU
-> from ST Micro. This board is one of the 96Boards Consumer Edition board
-> from Arrow Electronics and has the following features:
-> 
-> SoC: STM32MP157AAC
-> PMIC: STPMIC1A
-> RAM: 1024 Mbyte @ 533MHz
-> Storage: eMMC v4.51: 8 Gbyte
->           microSD Socket: UHS-1 v3.01
-> Ethernet Port: 10/100/1000 Mbit/s, IEEE 802.3 Compliant
-> Wireless: WiFi 5 GHz & 2.4GHz IEEE 802.11a/b/g/n/ac
->            Bluetooth®v4.2 (BR/EDR/BLE)
-> USB: 2x Type A (USB 2.0) Host and 1x Micro B (USB 2.0) OTG
-> Display: HDMI: WXGA (1366x768)@ 60 fps, HDMI 1.4
-> LED: 4x User LED, 1x WiFi LED, 1x BT LED
-> 
-> More information about this board can be found in 96Boards website:
-> https://www.96boards.org/product/avenger96/
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->   arch/arm/boot/dts/Makefile                  |   1 +
->   arch/arm/boot/dts/stm32mp157a-avenger96.dts | 320 ++++++++++++++++++++
->   2 files changed, 321 insertions(+)
->   create mode 100644 arch/arm/boot/dts/stm32mp157a-avenger96.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 8a1d0b3f55dd..f1d2f0bfa7c2 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -965,6 +965,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
->   	stm32h743i-eval.dtb \
->   	stm32h743i-disco.dtb \
->   	stm32mp157a-dk1.dtb \
-> +	stm32mp157a-avenger96.dtb \
-
-follow alphabetic order please.
-
->   	stm32mp157c-dk2.dtb \
->   	stm32mp157c-ed1.dtb \
->   	stm32mp157c-ev1.dtb
-> diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-> new file mode 100644
-> index 000000000000..a3b8af82ac70
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-> @@ -0,0 +1,320 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) Linaro Ltd 2019 - All Rights Reserved
-> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "stm32mp157c.dtsi"
-> +#include "stm32mp157-pinctrl.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/mfd/st,stpmic1.h>
-> +
-> +/ {
-> +	model = "Arrow Electronics STM32MP157A Avenger96 board";
-> +	compatible = "arrow,stm32mp157a-avenger96", "st,stm32mp157";
-> +
-> +	aliases {
-> +		ethernet0 = &ethernet0;
-> +		mmc0 = &sdmmc1;
-> +		serial0 = &uart4;
-> +		serial1 = &uart7;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory@c0000000 {
-> +		reg = <0xc0000000 0x40000000>;
-
-you could add device_type = "memory";
-
-> +	};
-> +
-> +	led {
-> +		compatible = "gpio-leds";
-> +		led1 {
-> +			label = "green:user1";
-> +			gpios = <&gpioz 7 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +			default-state = "off";
-> +		};
-> +
-> +		led2 {
-> +			label = "green:user2";
-> +			gpios = <&gpiof 3 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "mmc0";
-> +			default-state = "off";
-> +		};
-> +
-> +		led3 {
-> +			label = "green:user3";
-> +			gpios = <&gpiog 0 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "mmc1";
-> +			default-state = "off";
-> +		};
-> +
-> +		led4 {
-> +			label = "green:user3";
-> +			gpios = <&gpiog 1 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "none";
-> +			default-state = "off";
-> +			panic-indicator;
-> +		};
-> +
-> +		led5 {
-> +			label = "yellow:wifi";
-> +			gpios = <&gpioz 3 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "phy0tx";
-> +			default-state = "off";
-> +		};
-> +
-> +		led6 {
-> +			label = "blue:bt";
-> +			gpios = <&gpioz 6 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "bluetooth-power";
-> +			default-state = "off";
-> +		};
-> +	};
-> +};
-> +
-> +&ethernet0 {
-> +	status = "okay";
-> +	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
-> +	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
-> +	pinctrl-names = "default", "sleep";
-> +	phy-mode = "rgmii";
-> +	max-speed = <1000>;
-> +	phy-handle = <&phy0>;
-> +
-> +	mdio0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "snps,dwmac-mdio";
-> +		phy0: ethernet-phy@7 {
-> +			reg = <7>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins_b>;
-> +	i2c-scl-rising-time-ns = <185>;
-> +	i2c-scl-falling-time-ns = <20>;
-> +	status = "okay";
-> +	/delete-property/dmas;
-> +	/delete-property/dma-names;
-> +};
-> +
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c2_pins_b>;
-> +	i2c-scl-rising-time-ns = <185>;
-> +	i2c-scl-falling-time-ns = <20>;
-> +	status = "okay";
-> +	/delete-property/dmas;
-> +	/delete-property/dma-names;
-> +};
-> +
-> +&i2c4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c4_pins_a>;
-> +	i2c-scl-rising-time-ns = <185>;
-> +	i2c-scl-falling-time-ns = <20>;
-> +	status = "okay";
-> +	/delete-property/dmas;
-> +	/delete-property/dma-names;
-> +
-> +	pmic: stpmic@33 {
-> +		compatible = "st,stpmic1";
-> +		reg = <0x33>;
-> +		interrupts-extended = <&exti 55 IRQ_TYPE_EDGE_FALLING>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		status = "okay";
-> +
-> +		st,main-control-register = <0x04>;
-> +		st,vin-control-register = <0xc0>;
-> +		st,usb-control-register = <0x30>;
-> +
-> +		regulators {
-> +			compatible = "st,stpmic1-regulators";
-> +
-> +			ldo1-supply = <&v3v3>;
-> +			ldo2-supply = <&v3v3>;
-> +			ldo3-supply = <&vdd_ddr>;
-> +			ldo5-supply = <&v3v3>;
-> +			ldo6-supply = <&v3v3>;
-> +			pwr_sw1-supply = <&bst_out>;
-> +			pwr_sw2-supply = <&bst_out>;
-> +
-> +			vddcore: buck1 {
-> +				regulator-name = "vddcore";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-always-on;
-> +				regulator-initial-mode = <0>;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			vdd_ddr: buck2 {
-> +				regulator-name = "vdd_ddr";
-> +				regulator-min-microvolt = <1350000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-always-on;
-> +				regulator-initial-mode = <0>;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			vdd: buck3 {
-> +				regulator-name = "vdd";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +				st,mask_reset;
-> +				regulator-initial-mode = <0>;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			v3v3: buck4 {
-> +				regulator-name = "v3v3";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +				regulator-over-current-protection;
-> +				regulator-initial-mode = <0>;
-> +			};
-> +
-> +			vdda: ldo1 {
-> +				regulator-name = "vdda";
-> +				regulator-min-microvolt = <2900000>;
-> +				regulator-max-microvolt = <2900000>;
-> +				interrupts = <IT_CURLIM_LDO1 0>;
-> +				interrupt-parent = <&pmic>;
-> +			};
-> +
-> +			v2v8: ldo2 {
-> +				regulator-name = "v2v8";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				interrupts = <IT_CURLIM_LDO2 0>;
-> +				interrupt-parent = <&pmic>;
-> +			};
-> +
-> +			vtt_ddr: ldo3 {
-> +				regulator-name = "vtt_ddr";
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <750000>;
-> +				regulator-always-on;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			vdd_usb: ldo4 {
-> +				regulator-name = "vdd_usb";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				interrupts = <IT_CURLIM_LDO4 0>;
-> +				interrupt-parent = <&pmic>;
-> +			};
-> +
-> +			vdd_sd: ldo5 {
-> +				regulator-name = "vdd_sd";
-> +				regulator-min-microvolt = <2900000>;
-> +				regulator-max-microvolt = <2900000>;
-> +				interrupts = <IT_CURLIM_LDO5 0>;
-> +				interrupt-parent = <&pmic>;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			v1v8: ldo6 {
-> +				regulator-name = "v1v8";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				interrupts = <IT_CURLIM_LDO6 0>;
-> +				interrupt-parent = <&pmic>;
-> +				regulator-enable-ramp-delay = <300000>;
-> +			};
-> +
-> +			vref_ddr: vref_ddr {
-> +				regulator-name = "vref_ddr";
-> +				regulator-always-on;
-> +				regulator-over-current-protection;
-> +			};
-> +
-> +			bst_out: boost {
-> +				regulator-name = "bst_out";
-> +				interrupts = <IT_OCP_BOOST 0>;
-> +				interrupt-parent = <&pmic>;
-> +			};
-> +
-> +			vbus_otg: pwr_sw1 {
-> +				regulator-name = "vbus_otg";
-> +				interrupts = <IT_OCP_OTG 0>;
-> +				interrupt-parent = <&pmic>;
-> +				regulator-active-discharge;
-> +			};
-> +
-> +			vbus_sw: pwr_sw2 {
-> +				regulator-name = "vbus_sw";
-> +				interrupts = <IT_OCP_SWOUT 0>;
-> +				interrupt-parent = <&pmic>;
-> +				regulator-active-discharge;
-> +			};
-> +		};
-> +
-> +		onkey {
-> +			compatible = "st,stpmic1-onkey";
-> +			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 1>;
-> +			interrupt-names = "onkey-falling", "onkey-rising";
-> +			status = "okay";
-> +		};
-> +
-> +		watchdog {
-> +			compatible = "st,stpmic1-wdt";
-> +			status = "disabled";
-> +		};
-> +	};
-> +};
-> +
-> +&iwdg2 {
-> +	timeout-sec = <32>;
-> +	status = "okay";
-> +};
-> +
-> +&rng1 {
-> +	status = "okay";
-> +};
-> +
-> +&rtc {
-> +	status = "okay";
-> +};
-> +
-> +&sdmmc1 {
-> +	pinctrl-names = "default", "opendrain", "sleep";
-> +	pinctrl-0 = <&sdmmc1_b4_pins_a &sdmmc1_dir_pins_a>;
-> +	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
-> +	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
-> +	broken-cd;
-> +	st,sig-dir;
-> +	st,neg-edge;
-> +	st,use-ckin;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&vdd_sd>;
-> +	status = "okay";
-> +};
-> +
-> +&uart4 {
-> +	/* On Low speed expansion header */
-> +	label = "LS-UART1";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart4_pins_b>;
-> +	status = "okay";
-> +};
-> +
-> +&uart7 {
-> +	/* On Low speed expansion header */
-> +	label = "LS-UART0";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart7_pins_a>;
-> +	status = "okay";
-> +};
-> 
+T24gVGh1IDAyIE1heSAyMDE5IGF0IDAzOjQ4LCBDb25nIFdhbmcgPHhpeW91Lndhbmdjb25nQGdt
+YWlsLmNvbT4gd3JvdGU6DQo+IE9uIFdlZCwgTWF5IDEsIDIwMTkgYXQgMjoyNyBBTSBNYXR0ZW8g
+Q3JvY2UgPG1jcm9jZUByZWRoYXQuY29tPiB3cm90ZToNCj4+DQo+PiBPbiBUdWUsIEFwciAzMCwg
+MjAxOSBhdCAxMToyNSBQTSBDb25nIFdhbmcgPHhpeW91Lndhbmdjb25nQGdtYWlsLmNvbT4gd3Jv
+dGU6DQo+PiA+DQo+PiA+IE9uIE1vbiwgQXByIDI5LCAyMDE5IGF0IDEwOjM4IEFNIE1hdHRlbyBD
+cm9jZSA8bWNyb2NlQHJlZGhhdC5jb20+IHdyb3RlOg0KPj4gPiA+DQo+PiA+ID4gV2hlbiBhIG1h
+dGNoYWxsIGNsYXNzaWZpZXIgaXMgYWRkZWQsIHRoZXJlIGlzIGEgc21hbGwgdGltZSBpbnRlcnZh
+bCBpbg0KPj4gPiA+IHdoaWNoIHRwLT5yb290IGlzIE5VTEwuIElmIHdlIHJlY2VpdmUgYSBwYWNr
+ZXQgaW4gdGhpcyBzbWFsbCB0aW1lIHNsaWNlDQo+PiA+ID4gYSBOVUxMIHBvaW50ZXIgZGVyZWZl
+cmVuY2Ugd2lsbCBoYXBwZW4sIGxlYWRpbmcgdG8gYSBrZXJuZWwgcGFuaWM6DQo+PiA+DQo+PiA+
+IEhtbSwgd2h5IG5vdCBqdXN0IGNoZWNrIHRwLT5yb290IGFnYWluc3QgTlVMTCBpbiBtYWxsX2Ns
+YXNzaWZ5KCk/DQo+PiA+DQo+PiA+IEFsc28sIHdoaWNoIGlzIHRoZSBvZmZlbmRpbmcgY29tbWl0
+IGhlcmU/IFBsZWFzZSBhZGQgYSBGaXhlczogdGFnLg0KPj4gPg0KPj4gPiBUaGFua3MuDQo+Pg0K
+Pj4gSGksDQo+Pg0KPj4gSSBqdXN0IHdhbnQgdG8gYXZvaWQgYW4gZXh0cmEgY2hlY2sgd2hpY2gg
+d291bGQgYmUgbWFkZSBmb3IgZXZlcnkgcGFja2V0Lg0KPj4gUHJvYmFibHkgdGhlIGJlbmVmaXQg
+b3ZlciBhIGNoZWNrIGlzIG5lZ2xpZ2libGUsIGJ1dCBpdCdzIHN0aWxsIGENCj4+IHBlci1wYWNr
+ZXQgdGhpbmcuDQo+PiBJZiB5b3UgcHJlZmVyIGEgc2ltcGxlIGNoZWNrLCBJIGNhbiBtYWtlIGEg
+djIgdGhhdCB3YXkuDQo+DQo+IFllYWgsIEkgdGhpbmsgdGhhdCBpcyBiZXR0ZXIsIHlvdSBjYW4g
+YWRkIGFuIHVubGlrZWx5KCkgZm9yIHBlcmZvcm1hbmNlDQo+IGNvbmNlcm4sIGFzIE5VTEwgaXMg
+YSByYXJlIGNhc2UuDQo+DQo+DQo+Pg0KPj4gRm9yIHRoZSBmaXhlcyB0YWcsIEkgZGlkbid0IHB1
+dCBpdCBhcyBJJ20gbm90IHJlYWxseSBzdXJlIGFib3V0IHRoZQ0KPj4gb2ZmZW5kaW5nIGNvbW1p
+dC4gSSBndWVzcyBpdCdzIHRoZSBmb2xsb3dpbmcsIHdoYXQgZG8geW91IHRoaW5rPw0KPj4NCj4+
+IGNvbW1pdCBlZDc2ZjVlZGNjYzk4ZmE2NmYyMzM3ZjBiM2IyNTVkNmUxYTU2OGI3DQo+PiBBdXRo
+b3I6IFZsYWQgQnVzbG92IDx2bGFkYnVAbWVsbGFub3guY29tPg0KPj4gRGF0ZTogICBNb24gRmVi
+IDExIDEwOjU1OjM4IDIwMTkgKzAyMDANCj4+DQo+PiAgICAgbmV0OiBzY2hlZDogcHJvdGVjdCBm
+aWx0ZXJfY2hhaW4gbGlzdCB3aXRoIGZpbHRlcl9jaGFpbl9sb2NrIG11dGV4DQo+DQo+IEkgdGhp
+bmsgeW91IGFyZSByaWdodCwgdGhpcyBpcyB0aGUgY29tbWl0IGludHJvZHVjZWQgdGhlIGNvZGUN
+Cj4gdGhhdCBpbnNlcnRzIHRoZSB0cCBiZWZvcmUgZnVsbHkgaW5pdGlhbGl6aW5nIGl0LiBQbGVh
+c2UgQ2MgVmxhZA0KPiBmb3IgeW91ciB2MiwgaW4gY2FzZSB3ZSBibGFtZSBhIHdyb25nIGNvbW1p
+dCBoZXJlLg0KPg0KPg0KPiBCVFcsIGl0IGxvb2tzIGxpa2UgY2xzX2Nncm91cCBuZWVkcyBhIHNh
+bWUgZml4LiBQbGVhc2UgYXVkaXQNCj4gb3RoZXIgdGMgZmlsdGVycyBhcyB3ZWxsLg0KPg0KPiBU
+aGFua3MhDQoNClNvcnJ5IGZvciBsYXRlIHJlc3BvbnNlLiBUaGlzIGlzIGluZGVlZCB0aGUgb2Zm
+ZW5kaW5nIGNvbW1pdCB0aGF0IHNob3VsZA0KYmUgcmVmZXJlbmNlZCBieSBmaXhlcyB0YWcuDQoN
+ClRoYW5rcyBmb3IgZml4aW5nIHRoaXMsIE1hdHRlbyENCg==
