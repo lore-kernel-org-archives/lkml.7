@@ -2,180 +2,113 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2706FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 515EAC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDDEF205ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E9C2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbfECOgt (ORCPT
+        id S1727107AbfECOh2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:36:49 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:51423 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfECOgs (ORCPT
+        Fri, 3 May 2019 10:37:28 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:40224 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725809AbfECOh1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:36:48 -0400
-Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 563FE200020;
-        Fri,  3 May 2019 14:36:44 +0000 (UTC)
-Date:   Fri, 3 May 2019 16:36:43 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>,
-        John Crispin <john@phrozen.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 01/10] of_net: add NVMEM support to of_get_mac_address
-Message-ID: <20190503143643.hhfamnptcuriav4k@flea>
-References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
- <1556893635-18549-2-git-send-email-ynezz@true.cz>
+        Fri, 3 May 2019 10:37:27 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-111-sL2PkElbOGaMQnzoKPsUGw-1; Fri, 03 May 2019 15:37:22 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri,
+ 3 May 2019 15:37:21 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 3 May 2019 15:37:21 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Peter Zijlstra' <peterz@infradead.org>,
+        Waiman Long <longman@redhat.com>
+CC:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Davidlohr Bueso" <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: RE: [PATCH-tip v7 08/20] locking/rwsem: Implement lock handoff to
+ prevent lock starvation
+Thread-Topic: [PATCH-tip v7 08/20] locking/rwsem: Implement lock handoff to
+ prevent lock starvation
+Thread-Index: AQHVAbGwED1ZCDfWWEWG7oek7uUiCKZZd8Ew
+Date:   Fri, 3 May 2019 14:37:21 +0000
+Message-ID: <62d8f603dc654d74b98cf2a5d4cf8c61@AcuMS.aculab.com>
+References: <20190428212557.13482-1-longman@redhat.com>
+ <20190428212557.13482-9-longman@redhat.com>
+ <20190503131054.GE2623@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190503131054.GE2623@hirez.programming.kicks-ass.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="w5grxr2nn7x6p3l6"
-Content-Disposition: inline
-In-Reply-To: <1556893635-18549-2-git-send-email-ynezz@true.cz>
-User-Agent: NeoMutt/20180716
+X-MC-Unique: sL2PkElbOGaMQnzoKPsUGw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---w5grxr2nn7x6p3l6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 03, 2019 at 04:27:06PM +0200, Petr =C5=A0tetiar wrote:
-> Many embedded devices have information such as MAC addresses stored
-> inside NVMEMs like EEPROMs and so on. Currently there are only two
-> drivers in the tree which benefit from NVMEM bindings.
->
-> Adding support for NVMEM into every other driver would mean adding a lot
-> of repetitive code. This patch allows us to configure MAC addresses in
-> various devices like ethernet and wireless adapters directly from
-> of_get_mac_address, which is already used by almost every driver in the
-> tree.
->
-> Predecessor of this patch which used directly MTD layer has originated
-> in OpenWrt some time ago and supports already about 497 use cases in 357
-> device tree files.
->
-> Cc: Alban Bedel <albeu@free.fr>
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Petr =C5=A0tetiar <ynezz@true.cz>
-> ---
->
->  Changes since v1:
->
->   * moved handling of nvmem after mac-address and local-mac-address prope=
-rties
->
->  Changes since v2:
->
->   * moved of_get_mac_addr_nvmem after of_get_mac_addr(np, "address") call
->   * replaced kzalloc, kmemdup and kfree with it's devm variants
->   * introduced of_has_nvmem_mac_addr helper which checks if DT node has n=
-vmem
->     cell with `mac-address`
->   * of_get_mac_address now returns ERR_PTR encoded error value
->
->  Changes since v3:
->
->   * removed of_has_nvmem_mac_addr helper as it's not needed now
->   * of_get_mac_address now returns only valid pointer or ERR_PTR encoded =
-error value
->
->  drivers/of/of_net.c | 54 +++++++++++++++++++++++++++++++++++++++++++++++=
-+++---
->  1 file changed, 51 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-> index d820f3e..9649cd5 100644
-> --- a/drivers/of/of_net.c
-> +++ b/drivers/of/of_net.c
-> @@ -8,8 +8,10 @@
->  #include <linux/etherdevice.h>
->  #include <linux/kernel.h>
->  #include <linux/of_net.h>
-> +#include <linux/of_platform.h>
->  #include <linux/phy.h>
->  #include <linux/export.h>
-> +#include <linux/device.h>
->
->  /**
->   * of_get_phy_mode - Get phy mode for given device_node
-> @@ -47,12 +49,52 @@ static const void *of_get_mac_addr(struct device_node=
- *np, const char *name)
->  	return NULL;
->  }
->
-> +static const void *of_get_mac_addr_nvmem(struct device_node *np)
-> +{
-> +	int ret;
-> +	u8 mac[ETH_ALEN];
-> +	struct property *pp;
-> +	struct platform_device *pdev =3D of_find_device_by_node(np);
+From: Peter Zijlstra
+> Sent: 03 May 2019 14:11
+> To: Waiman Long
+...
+> I've changed that like so.
+> 
+> --- a/kernel/locking/rwsem.c
+> +++ b/kernel/locking/rwsem.c
+> @@ -406,19 +406,23 @@ static inline bool rwsem_try_write_lock(
+>  	long new;
+> 
+>  	lockdep_assert_held(&sem->wait_lock);
 > +
-> +	if (!pdev)
-> +		return ERR_PTR(-ENODEV);
+>  	do {
+>  		bool has_handoff = !!(count & RWSEM_FLAG_HANDOFF);
+> 
+>  		if (has_handoff && wstate == WRITER_NOT_FIRST)
+>  			return false;
+> 
+> +		new = count;
 > +
-> +	ret =3D nvmem_get_mac_address(&pdev->dev, &mac);
-> +	if (ret)
-> +		return ERR_PTR(ret);
+>  		if (count & RWSEM_LOCK_MASK) {
+>  			if (has_handoff || (wstate != WRITER_HANDOFF))
+>  				return false;
+> -			new = count | RWSEM_FLAG_HANDOFF;
 > +
-> +	pp =3D devm_kzalloc(&pdev->dev, sizeof(*pp), GFP_KERNEL);
-> +	if (!pp)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	pp->name =3D "nvmem-mac-address";
-> +	pp->length =3D ETH_ALEN;
-> +	pp->value =3D devm_kmemdup(&pdev->dev, mac, ETH_ALEN, GFP_KERNEL);
-> +	if (!pp->value) {
-> +		ret =3D -ENOMEM;
-> +		goto free;
-> +	}
-> +
-> +	ret =3D of_add_property(np, pp);
-> +	if (ret)
-> +		goto free;
-> +
-> +	return pp->value;
+> +			new |= RWSEM_FLAG_HANDOFF;
+>  		} else {
+> -			new = (count | RWSEM_WRITER_LOCKED) &
+> -				~RWSEM_FLAG_HANDOFF;
+> +			new |= RWSEM_WRITER_LOCKED;
+> +			new &= ~RWSEM_FLAG_HANDOFF;
+> 
+>  			if (list_is_singular(&sem->wait_list))
+>  				new &= ~RWSEM_FLAG_WAITERS;
 
-I'm not sure why you need to do that allocation here, and why you need
-to modify the DT?
+The compiler will probably convert it back :-)
 
-can't you just return the mac address directly since it's what the
-of_get_mac_address caller will expect anyway?
+	David
 
-maxime
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---w5grxr2nn7x6p3l6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMxR8gAKCRDj7w1vZxhR
-xbqcAP49YjJI7V+9AD9J0n1SEWgqSDf1RN9dCqV6WDaspNX5cAEA4l11UjhuTwp3
-bsOoNNlu5yGF+MU5kr8sKmJYaWx7cAg=
-=mHTC
------END PGP SIGNATURE-----
-
---w5grxr2nn7x6p3l6--
