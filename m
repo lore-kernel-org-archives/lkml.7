@@ -2,265 +2,90 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114E1C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25068C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7190206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:30:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GmbDZQnY"
+	by mail.kernel.org (Postfix) with ESMTP id D9FBE206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:35:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfECKay (ORCPT
+        id S1726993AbfECKfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 06:30:54 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40392 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727240AbfECKax (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 06:30:53 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h4so7198593wre.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 03:30:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5Zb69raiwquVqA7b+h9rr/HvkOLhohvYFruSLqccMD8=;
-        b=GmbDZQnYssCy1L9J0iPQreRaTHGcKtf4LGocIOgmlXEo/w7uu4IzDpZRXCmNNj0/11
-         PdadyQi9oZaNnj6njMBY7VSnuqZyACsqO80wgBmUcUiAccb5SQxcLVmt/mu1vlfQXSPr
-         pS1DZUt6hN3SH5LIXjZGWsKz+s/2Z9DwoPpFo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5Zb69raiwquVqA7b+h9rr/HvkOLhohvYFruSLqccMD8=;
-        b=BZp6IMMhY47/sldbnMD3axGNPKgYIxGhdWP8PhbwEX8eUpv1R5RCsEDTA4YOUDbCNv
-         W8Z0sD/DZWOdzMzP3jAYREHI9DFiBu0Nqw/65M0RKCJph39E9BOucIRiYs7En5Iwcyun
-         oi9I2ObUBJwo0ndJafMacwbFB8YaOuwlBUmH79z89/98wsTlQEH1j17czRlcm5zUxtdS
-         rd8A65tA5sY/DKBbSnYPIVYkCoNFfGj2gs9THlGjDLChMGAn7O6YwDa3KluWm/9dg9q8
-         PRIK3e6RCt0wmsQBcEYAa1U/W/ILN/IV6WpxZ0BOQuxuzjodMF3TQfFTPa/vxvPzT/2k
-         NFjA==
-X-Gm-Message-State: APjAAAUDzixTG+MZJY91/mZpmFmPAvYj9GDzLHAWl/rgGLNGXagMpJmM
-        Zo6HqtgrtrL+0m+/yY2bZyTkYq/ncgOJsjeuFE5nyg==
-X-Google-Smtp-Source: APXvYqzAjs6RzDesBMoQ0b7QqkjHoszjU4WMwET3QD93wCh8P0ek/i1piGMUVKhkfMKR3MTBJVuXLarBWRLaO5gzFUI=
-X-Received: by 2002:a5d:5092:: with SMTP id a18mr6832736wrt.112.1556879451254;
- Fri, 03 May 2019 03:30:51 -0700 (PDT)
+        Fri, 3 May 2019 06:35:08 -0400
+Received: from foss.arm.com ([217.140.101.70]:58090 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbfECKfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 06:35:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 934EF374;
+        Fri,  3 May 2019 03:35:07 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0F653F557;
+        Fri,  3 May 2019 03:35:05 -0700 (PDT)
+Subject: Re: [PATCH v6 02/12] mm/sparsemem: Introduce common definitions for
+ the size and mask of a section
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155552634586.2015392.2662168839054356692.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CA+CK2bCkqLc82G2MW+rYrKTi4KafC+tLCASkaT8zRfVJCCe8HQ@mail.gmail.com>
+ <CAPcyv4g+KNu=upejy7Xm=jWR0cdhygPAdSRbkfFGpJeHFGc4+w@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <bd76cb2f-7cdc-f11b-11ec-285862db66f3@arm.com>
+Date:   Fri, 3 May 2019 11:35:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
- <1556732186-21630-3-git-send-email-srinath.mannam@broadcom.com>
- <20190502110152.GA7313@e121166-lin.cambridge.arm.com> <2f4b9492-0caf-d6e3-e727-e3c869eefb58@arm.com>
- <20190502130624.GA10470@e121166-lin.cambridge.arm.com> <b4420901-60d4-69ab-6ed0-5d2fa9449595@arm.com>
- <CABe79T7CgtLG=DZTFy8efVocPMLi-MDtyUT5rToy7xj8GHkBSA@mail.gmail.com> <0b58c031-28c4-b577-ef0f-dbb111cc991b@arm.com>
-In-Reply-To: <0b58c031-28c4-b577-ef0f-dbb111cc991b@arm.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Fri, 3 May 2019 16:00:39 +0530
-Message-ID: <CABe79T7hrv+MXJq+0hpEBXqbm4XBajOLTa4q0h-o9Tw0aXOg1w@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, poza@codeaurora.org,
-        Ray Jui <rjui@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPcyv4g+KNu=upejy7Xm=jWR0cdhygPAdSRbkfFGpJeHFGc4+w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+On 03/05/2019 01:41, Dan Williams wrote:
+> On Thu, May 2, 2019 at 7:53 AM Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
+>>
+>> On Wed, Apr 17, 2019 at 2:52 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>>>
+>>> Up-level the local section size and mask from kernel/memremap.c to
+>>> global definitions.  These will be used by the new sub-section hotplug
+>>> support.
+>>>
+>>> Cc: Michal Hocko <mhocko@suse.com>
+>>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>>> Cc: Jérôme Glisse <jglisse@redhat.com>
+>>> Cc: Logan Gunthorpe <logang@deltatee.com>
+>>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>>
+>> Should be dropped from this series as it has been replaced by a very
+>> similar patch in the mainline:
+>>
+>> 7c697d7fb5cb14ef60e2b687333ba3efb74f73da
+>>   mm/memremap: Rename and consolidate SECTION_SIZE
+> 
+> I saw that patch fly by and acked it, but I have not seen it picked up
+> anywhere. I grabbed latest -linus and -next, but don't see that
+> commit.
+> 
+> $ git show 7c697d7fb5cb14ef60e2b687333ba3efb74f73da
+> fatal: bad object 7c697d7fb5cb14ef60e2b687333ba3efb74f73da
 
+Yeah, I don't recognise that ID either, nor have I had any notifications 
+that Andrew's picked up anything of mine yet :/
 
-On Fri, May 3, 2019 at 3:58 PM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 03/05/2019 06:23, Srinath Mannam wrote:
-> > Hi Robin, Lorenzo,
-> >
-> > Thanks for review and guidance.
-> > AFAIU, conclusion of discussion is, to return error if dma-ranges list
-> > is not sorted.
-> >
-> > So that, Can I send a new patch with below change to return error if
-> > dma-ranges list is not sorted?
-> >
-> > -static void iova_reserve_pci_windows(struct pci_dev *dev,
-> > +static int iova_reserve_pci_windows(struct pci_dev *dev,
-> >                  struct iova_domain *iovad)
-> >   {
-> >          struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
-> > @@ -227,11 +227,15 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
-> >          resource_list_for_each_entry(window, &bridge->dma_ranges) {
-> >                  end = window->res->start - window->offset;
-> >   resv_iova:
-> > -               if (end - start) {
-> > +               if (end > start) {
-> >                          lo = iova_pfn(iovad, start);
-> >                          hi = iova_pfn(iovad, end);
-> >                          reserve_iova(iovad, lo, hi);
-> > +               } else {
-> > +                       dev_err(&dev->dev, "Unsorted dma_ranges list\n");
-> > +                       return -EINVAL;
-> >                  }
-> > +
-> >
-> > Please provide your inputs if any more changes required. Thank you,
->
-> You also need to handle and return this error where
-> iova_reserve_pci_windows() is called from iova_reserve_iommu_regions().
-Thank you. I am doing this.
-
-Regards,
-Srinath.
->
-> Robin.
->
-> > Regards,
-> > Srinath.
-> >
-> > On Thu, May 2, 2019 at 7:45 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> >>
-> >> On 02/05/2019 14:06, Lorenzo Pieralisi wrote:
-> >>> On Thu, May 02, 2019 at 12:27:02PM +0100, Robin Murphy wrote:
-> >>>> Hi Lorenzo,
-> >>>>
-> >>>> On 02/05/2019 12:01, Lorenzo Pieralisi wrote:
-> >>>>> On Wed, May 01, 2019 at 11:06:25PM +0530, Srinath Mannam wrote:
-> >>>>>> dma_ranges field of PCI host bridge structure has resource entries in
-> >>>>>> sorted order of address range given through dma-ranges DT property. This
-> >>>>>> list is the accessible DMA address range. So that this resource list will
-> >>>>>> be processed and reserve IOVA address to the inaccessible address holes in
-> >>>>>> the list.
-> >>>>>>
-> >>>>>> This method is similar to PCI IO resources address ranges reserving in
-> >>>>>> IOMMU for each EP connected to host bridge.
-> >>>>>>
-> >>>>>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> >>>>>> Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
-> >>>>>> Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
-> >>>>>> Acked-by: Robin Murphy <robin.murphy@arm.com>
-> >>>>>> ---
-> >>>>>>     drivers/iommu/dma-iommu.c | 19 +++++++++++++++++++
-> >>>>>>     1 file changed, 19 insertions(+)
-> >>>>>>
-> >>>>>> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> >>>>>> index 77aabe6..da94844 100644
-> >>>>>> --- a/drivers/iommu/dma-iommu.c
-> >>>>>> +++ b/drivers/iommu/dma-iommu.c
-> >>>>>> @@ -212,6 +212,7 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
-> >>>>>>             struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
-> >>>>>>             struct resource_entry *window;
-> >>>>>>             unsigned long lo, hi;
-> >>>>>> +  phys_addr_t start = 0, end;
-> >>>>>>             resource_list_for_each_entry(window, &bridge->windows) {
-> >>>>>>                     if (resource_type(window->res) != IORESOURCE_MEM)
-> >>>>>> @@ -221,6 +222,24 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
-> >>>>>>                     hi = iova_pfn(iovad, window->res->end - window->offset);
-> >>>>>>                     reserve_iova(iovad, lo, hi);
-> >>>>>>             }
-> >>>>>> +
-> >>>>>> +  /* Get reserved DMA windows from host bridge */
-> >>>>>> +  resource_list_for_each_entry(window, &bridge->dma_ranges) {
-> >>>>>
-> >>>>> If this list is not sorted it seems to me the logic in this loop is
-> >>>>> broken and you can't rely on callers to sort it because it is not a
-> >>>>> written requirement and it is not enforced (you know because you
-> >>>>> wrote the code but any other developer is not supposed to guess
-> >>>>> it).
-> >>>>>
-> >>>>> Can't we rewrite this loop so that it does not rely on list
-> >>>>> entries order ?
-> >>>>
-> >>>> The original idea was that callers should be required to provide a sorted
-> >>>> list, since it keeps things nice and simple...
-> >>>
-> >>> I understand, if it was self-contained in driver code that would be fine
-> >>> but in core code with possible multiple consumers this must be
-> >>> documented/enforced, somehow.
-> >>>
-> >>>>> I won't merge this series unless you sort it, no pun intended.
-> >>>>>
-> >>>>> Lorenzo
-> >>>>>
-> >>>>>> +          end = window->res->start - window->offset;
-> >>>>
-> >>>> ...so would you consider it sufficient to add
-> >>>>
-> >>>>               if (end < start)
-> >>>>                       dev_err(...);
-> >>>
-> >>> We should also revert any IOVA reservation we did prior to this
-> >>> error, right ?
-> >>
-> >> I think it would be enough to propagate an error code back out through
-> >> iommu_dma_init_domain(), which should then end up aborting the whole
-> >> IOMMU setup - reserve_iova() isn't really designed to be undoable, but
-> >> since this is the kind of error that should only ever be hit during
-> >> driver or DT development, as long as we continue booting such that the
-> >> developer can clearly see what's gone wrong, I don't think we need
-> >> bother spending too much effort tidying up inside the unused domain.
-> >>
-> >>> Anyway, I think it is best to ensure it *is* sorted.
-> >>>
-> >>>> here, plus commenting the definition of pci_host_bridge::dma_ranges
-> >>>> that it must be sorted in ascending order?
-> >>>
-> >>> I don't think that commenting dma_ranges would help much, I am more
-> >>> keen on making it work by construction.
-> >>>
-> >>>> [ I guess it might even make sense to factor out the parsing and list
-> >>>> construction from patch #3 into an of_pci core helper from the beginning, so
-> >>>> that there's even less chance of another driver reimplementing it
-> >>>> incorrectly in future. ]
-> >>>
-> >>> This makes sense IMO and I would like to take this approach if you
-> >>> don't mind.
-> >>
-> >> Sure - at some point it would be nice to wire this up to
-> >> pci-host-generic for Juno as well (with a parallel version for ACPI
-> >> _DMA), so from that viewpoint, the more groundwork in place the better :)
-> >>
-> >> Thanks,
-> >> Robin.
-> >>
-> >>>
-> >>> Either this or we move the whole IOVA reservation and dma-ranges
-> >>> parsing into PCI IProc.
-> >>>
-> >>>> Failing that, although I do prefer the "simple by construction"
-> >>>> approach, I'd have no objection to just sticking a list_sort() call in
-> >>>> here instead, if you'd rather it be entirely bulletproof.
-> >>>
-> >>> I think what you outline above is a sensible way forward - if we
-> >>> miss the merge window so be it.
-> >>>
-> >>> Thanks,
-> >>> Lorenzo
-> >>>
-> >>>> Robin.
-> >>>>
-> >>>>>> +resv_iova:
-> >>>>>> +          if (end - start) {
-> >>>>>> +                  lo = iova_pfn(iovad, start);
-> >>>>>> +                  hi = iova_pfn(iovad, end);
-> >>>>>> +                  reserve_iova(iovad, lo, hi);
-> >>>>>> +          }
-> >>>>>> +          start = window->res->end - window->offset + 1;
-> >>>>>> +          /* If window is last entry */
-> >>>>>> +          if (window->node.next == &bridge->dma_ranges &&
-> >>>>>> +              end != ~(dma_addr_t)0) {
-> >>>>>> +                  end = ~(dma_addr_t)0;
-> >>>>>> +                  goto resv_iova;
-> >>>>>> +          }
-> >>>>>> +  }
-> >>>>>>     }
-> >>>>>>     static int iova_reserve_iommu_regions(struct device *dev,
-> >>>>>> --
-> >>>>>> 2.7.4
-> >>>>>>
+Robin.
