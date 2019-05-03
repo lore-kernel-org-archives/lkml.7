@@ -2,153 +2,101 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A662C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86CBC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E547C2081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:49:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="H5yn1xC3"
+	by mail.kernel.org (Postfix) with ESMTP id C46212081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfECNtn (ORCPT
+        id S1727806AbfECNvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 09:49:43 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42487 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbfECNtj (ORCPT
+        Fri, 3 May 2019 09:51:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39866 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726047AbfECNvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 09:49:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id x15so2738278pln.9
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 06:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YbV5zA2MeNWo1HH53CUwXHZxLjGUUubpf5kENAQ1Fww=;
-        b=H5yn1xC39sPwBsUQ5J0XTmkSV9bjL93S9mGPkFTB/vh0detwjvTV64fXThu4RUOqC0
-         HhZAG5qZEtWdCBJJ50pexgIWqFvy7pyo1qlpyaSLNMvkf4gCRSX4BcpyVytSD/im5iZ1
-         eCQk23OM+5y5ILdVE+GKyBh0UgOSqK60kQZh8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YbV5zA2MeNWo1HH53CUwXHZxLjGUUubpf5kENAQ1Fww=;
-        b=GqDiIOt7/GhKPaEp0J19GIn0uqze0tme80KNFPASk5xZVemYPPjlis+gse95+e0uaV
-         tlqT1U6jK7cUZWFzIv157fnedegBh+CWDb2DXqh6c6xd+lzS2KTzvGwEEB6aClxgbJcS
-         ERFcLr0cvirQyfXmMcHVdtrfhsULQZbAsAxyj145QBDMUY5dOtxiU0+KMXOuwB1RLKJe
-         HPO+JQLF5edqvDjFsPnRdAzynnyETkSMIzDrL47DWSkUoE+BoZhEEPu9+uDVWJdmGqx4
-         IIIRbgAkksqg+SCnZhXJ8H0eZjRi5or7++Z66rigZDPI8Glwbdt+EjbrutXgJkS1S9MH
-         BsTg==
-X-Gm-Message-State: APjAAAU8eq3vzwYGyv+WDYF1+cIJQMZbTaVfuXIbrmOhXBVlYnb/nikv
-        6L2Pg9Ygky04ceY/i2M48OeQRQ==
-X-Google-Smtp-Source: APXvYqxQsBZWi9tsT/JvmLNRNM33IIB1VC3PH1gufecOj+UUiec8QQGJW1P3EWJqeqotfRxBUidUUA==
-X-Received: by 2002:a17:902:784d:: with SMTP id e13mr10589818pln.152.1556891378169;
-        Fri, 03 May 2019 06:49:38 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id z9sm2717911pga.92.2019.05.03.06.49.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 06:49:37 -0700 (PDT)
-Date:   Fri, 3 May 2019 09:49:35 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Michal Gregorczyk <michalgr@live.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
-Message-ID: <20190503134935.GA253329@google.com>
-References: <20190502204958.7868-1-joel@joelfernandes.org>
- <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
+        Fri, 3 May 2019 09:51:19 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43Dnl4Z094490
+        for <linux-kernel@vger.kernel.org>; Fri, 3 May 2019 09:51:17 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s8m6cptb9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 09:50:45 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Fri, 3 May 2019 14:47:26 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 May 2019 14:47:22 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x43DlLHG23330858
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 May 2019 13:47:21 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27CA642045;
+        Fri,  3 May 2019 13:47:21 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B8E742041;
+        Fri,  3 May 2019 13:47:20 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  3 May 2019 13:47:20 +0000 (GMT)
+Date:   Fri, 3 May 2019 15:47:19 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] s390: remove ARCH_SELECT_MEMORY_MODEL
+References: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
+ <1556740577-4140-3-git-send-email-rppt@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1556740577-4140-3-git-send-email-rppt@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19050313-0012-0000-0000-00000317F2E3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050313-0013-0000-0000-0000215065E1
+Message-Id: <20190503134719.GB5602@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=858 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905030087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 01:12:34PM +0100, Qais Yousef wrote:
-> Hi Joel
+On Wed, May 01, 2019 at 10:56:16PM +0300, Mike Rapoport wrote:
+> The only reason s390 has ARCH_SELECT_MEMORY_MODEL option in
+> arch/s390/Kconfig is an ancient compile error with allnoconfig which was
+> fixed by commit 97195d6b411f ("[S390] fix sparsemem related compile error
+> with allnoconfig on s390") by adding the ARCH_SELECT_MEMORY_MODEL option.
 > 
-> On 05/02/19 16:49, Joel Fernandes (Google) wrote:
-> > The eBPF based opensnoop tool fails to read the file path string passed
-> > to the do_sys_open function. This is because it is a pointer to
-> > userspace address and causes an -EFAULT when read with
-> > probe_kernel_read. This is not an issue when running the tool on x86 but
-> > is an issue on arm64. This patch adds a new bpf function call based
+> Since then a lot have changed and now allnoconfig builds just fine without
+> ARCH_SELECT_MEMORY_MODEL, so it can be removed.
 > 
-> I just did an experiment and if I use Android 4.9 kernel I indeed fail to see
-> PATH info when running opensnoop. But if I run on 5.1-rc7 opensnoop behaves
-> correctly on arm64.
-> 
-> My guess either a limitation that was fixed on later kernel versions or Android
-> kernel has some strict option/modifications that make this fail?
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/s390/Kconfig | 3 ---
+>  1 file changed, 3 deletions(-)
 
-Thanks a lot for checking, yes I was testing 4.9 kernel with this patch (pixel 3).
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-I am not sure what has changed since then, but I still think it is a good
-idea to make the code more robust against such future issues anyway. In
-particular, we learnt with extensive discussions that user/kernel pointers
-are not necessarily distinguishable purely based on their address.
-
-I hope agree this is an issue we need to fix.
-
-See these discussions:
-
-https://lkml.kernel.org/r/20190220171019.5e81a4946b56982f324f7c45@kernel.org
-https://lore.kernel.org/lkml/20190220171019.5e81a4946b56982f324f7c45@kernel.org/T/#mf81816dbfe25ac5d0e96fbab029050e892f73af2
-
-thanks,
-
- - Joel
-
-> root@buildroot:/# uname -a
-> Linux buildroot 5.1.0-rc7-00164-ga00214620959-dirty #41 SMP PREEMPT Thu May 2 16:33:00 BST 2019 aarch64 GNU/Linux
-> root@buildroot:/# opensnoop
-> PID    COMM               FD ERR PATH
-> 5180   default.script     -1   2 /etc/ld.so.cache
-> 5180   default.script     -1   2 /lib/tls/v8l/neon/vfp/libresolv.so.2
-> 5180   default.script     -1   2 /lib/tls/v8l/neon/libresolv.so.2
-> 5180   default.script     -1   2 /lib/tls/v8l/vfp/libresolv.so.2
-> 5180   default.script     -1   2 /lib/tls/v8l/libresolv.so.2
-> 5180   default.script     -1   2 /lib/tls/neon/vfp/libresolv.so.2
-> 5180   default.script     -1   2 /lib/tls/neon/libresolv.so.2
-> 5180   default.script     -1   2 /lib/tls/vfp/libresolv.so.2
-> 5180   default.script     -1   2 /lib/tls/libresolv.so.2
-> 5180   default.script     -1   2 /lib/v8l/neon/vfp/libresolv.so.2
-> 5180   default.script     -1   2 /lib/v8l/neon/libresolv.so.2
-> 5180   default.script     -1   2 /lib/v8l/vfp/libresolv.so.2
-> 5180   default.script     -1   2 /lib/v8l/libresolv.so.2
-> 5180   default.script     -1   2 /lib/neon/vfp/libresolv.so.2
-> 5180   default.script     -1   2 /lib/neon/libresolv.so.2
-> 5180   default.script     -1   2 /lib/vfp/libresolv.so.2
-> 5180   default.script      3   0 /lib/libresolv.so.2
-> 5180   default.script      3   0 /lib/libc.so.6
-> 5180   default.script      3   0 /usr/share/udhcpc/default.script
-> 5180   default.script      3   0 /usr/share/udhcpc/default.script.d/
-> 
-> 
-> 
-> 
-> --
-> Qais Yousef
