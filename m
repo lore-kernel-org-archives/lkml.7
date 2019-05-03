@@ -2,156 +2,188 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1D8C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D56AC004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD1662087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DRWkNWGA";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ap9zuQAH"
+	by mail.kernel.org (Postfix) with ESMTP id DDA382075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfECH40 (ORCPT
+        id S1727129AbfECH4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:56:26 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35232 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfECH40 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 03:56:26 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4D0A7611FA; Fri,  3 May 2019 07:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556870184;
-        bh=aDusQfMCjBF3dgdzRMthBxZkCv+AeRrwz8Z7d1VTjKo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DRWkNWGAu7exQ3h4FFMC4HoxLk3WlgQ/prXDPdGrKGq5XEuvhLMmnMIPJ1UONp8JC
-         IdJpXD8luIkdRlg7tK31E6NdUm18rXc2veqcjehjof7wFxNnycWsn374j87pL4PYKx
-         S5ZJI5UEoCvkrtHRpSkMAyzXyE5mlDnEnPQ304r4=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 27FBB61112;
-        Fri,  3 May 2019 07:56:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556870183;
-        bh=aDusQfMCjBF3dgdzRMthBxZkCv+AeRrwz8Z7d1VTjKo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ap9zuQAHsDHkRvSiCgmkJ2xd96WFTtPhOLcWJKSupjL2AXB/QnOa3Uiscn8bktcLW
-         O97hFHWI9+1QUfaKMxREaqDRACQuVHq+3rgFBBnFdhz14nHSTQ/AhQDpBq1Qa/92Lo
-         lzvQm+MogmNpc7fsLW72XQ3a/D8ky3sau1reA4Zk=
+        Fri, 3 May 2019 03:56:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55794 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725777AbfECH4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 03:56:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E9BFAAEE3;
+        Fri,  3 May 2019 07:56:28 +0000 (UTC)
+Date:   Fri, 3 May 2019 09:56:28 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     "Tobin C. Harding" <me@tobin.cc>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: kobject_init_and_add() confusion
+Message-ID: <20190503075628.kw6h2coyoft2w6o5@pathway.suse.cz>
+References: <20190430233803.GB10777@eros.localdomain>
+ <20190502083412.dhqw35juhm42wgmk@pathway.suse.cz>
+ <20190503011626.GA7416@eros.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 03 May 2019 15:56:23 +0800
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Thierry Escande <thierry.escande@linaro.org>,
-        netdev <netdev@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        linux-bluetooth-owner@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device property
- firmware-name for QCA6174
-In-Reply-To: <60C7AC89-37B6-441C-9349-BCB15717EB2C@holtmann.org>
-References: <1554368908-22017-2-git-send-email-rjliao@codeaurora.org>
- <1554888476-17560-1-git-send-email-rjliao@codeaurora.org>
- <A85D7982-E000-4A5F-9927-CA36E0BA60F2@holtmann.org>
- <7e0cf9ba98260309c43d9d6e63dead6c@codeaurora.org>
- <CAL_JsqLnM4XqQTCT7VTUSmukujz0VHJoCbXMF2--RmTEx_LZww@mail.gmail.com>
- <60C7AC89-37B6-441C-9349-BCB15717EB2C@holtmann.org>
-Message-ID: <17221139821fb6ee35f3119df7405401@codeaurora.org>
-X-Sender: rjliao@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190503011626.GA7416@eros.localdomain>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marcel,
+On Fri 2019-05-03 11:16:26, Tobin C. Harding wrote:
+> On Thu, May 02, 2019 at 10:34:12AM +0200, Petr Mladek wrote:
+> > On Wed 2019-05-01 09:38:03, Tobin C. Harding wrote:
+> > I guess that we need two examples. I currently understand
+> > it the following way:
+> > 
+> > 1. sysfs interface and the structure can be freed anytime:
+> > 
+> >    	struct A
+> > 	{
+> > 		struct kobject kobj;
+> > 		...
+> > 	};
+> > 
+> > 	void fn(void)
+> > 	{
+> > 		struct A *a;
+> > 		int ret;
+> > 
+> > 		a = kzalloc(sizeof(*a), GFP_KERNEL);
+> > 		if (!a)
+> > 			return;
+> > 
+> > 		/*
+> > 		 * Initialize structure before we make it accessible via
+> > 		 * sysfs.
+> > 		 */
+> > 		ret = some_init_fn();
+> > 		if (ret) {
+> > 			goto init_err;
+> > 		}
+> > 
+> > 		ret = kobject_init_and_add(&a->kobj, ktype, NULL, "foo");
+> > 		if (ret)
+> > 			goto kobj_err;
+> > 
+> > 		return 0;
+> > 
+> > 	kobj_err:
+> > 		/* kobject_init() always succeds and take reference. */
+> > 		kobject_put(kobj);
+> > 		return ret;
+> > 
+> > 	init_err:
+> > 		/* kobject was not initialized, simple free is enough */
+> > 		kfree(a);
+> > 		return ret;
+> > 	}
+> > 
+> > 
+> > 2. Structure must be registered into the subsystem before
+> >    it can be made visible via sysfs:
+> > 
+> >    	struct A
+> > 	{
+> > 		struct kobject kobj;
+> > 		...
+> > 	};
+> > 
+> > 	void fn(void)
+> > 	{
+> > 		struct A *a;
+> > 		int ret;
+> > 
+> > 		a = kzalloc(sizeof(*a), GFP_KERNEL);
+> > 		if (!a)
+> > 			return;
+> > 
+> > 		ret = some_init_fn();
+> > 		if (ret) {
+> > 			goto init_err;
+> > 		}
+> > 
+> > 		/*
+> > 		 * Structure is in a reasonable state and can be freed
+> > 		 * via the kobject release callback.
+> > 		 */
+> > 		kobject_init(&a->kobj);
+> > 
+> > 		/*
+> > 		 * Register the structure so that it can cooperate
+> > 		 * with the rest of the system.
+> > 		 */
+> > 		ret = register_fn(a);
+> > `		if (ret)
+> > 			goto register_err;
+> > 
+> > 
+> > 		/* Make it visible via sysfs */
+> > 		ret = kobject_add(&a->kobj, ktype, NULL, "foo");
+> > 		if (ret) {
+> > 			goto kobj_add_err;
+> > 		}
+> > 
+> > 		/* Manipulate the structure somehow */
+> > 		ret = action_fn(a);
+> > 		if (ret)
+> > 			goto action_err;
+> > 
+> > 		mutex_unlock(&my_mutex);
+> > 		return 0;
+> > 
+> > 	action_err:
+> > 		/*
+> > 		 * Destroy sysfs interface but the structure
+> > 		 * is still needed.
+> > 		 */
+> > 		kobject_del(&a->kboject);
+> > 	kobject_add_err:
+> > 		/* Make it invisible to the system. */
+> > 		unregister_fn(a);
+> > 	register_err:
+> > 		/* Release the structure unsing the kobject callback */
+> > 		kobject_put(&a->kobj);
+> > 		return;
+> > 
+> > 	init_err:
+> > 		/*
+> > 		 * Custom init failed. Kobject release callback would do
+> > 		 * a double free or so. Simple free is enough.
+> > 		 */
+> > 		 kfree(a);
+> > 	}
+> > 
+> > I would really prefer if we clearly understand where each variant makes
+> > sense before we start modifying the code and documentation.
+> 
+> Hi Petr,
+> 
+> Shall we work these two examples into samples/kobject/.  I'm AFK now for
+> the rest of the week but I can do it on Monday if you don't mind me
+> doing it?
 
-On 2019-04-27 13:59, Marcel Holtmann wrote:
-> Hi Rob,
-> 
->>>>> This patch adds an optional device property "firmware-name" to 
->>>>> allow
->>>>> the
->>>>> driver to load customized nvm firmware file based on this property.
->>>>> 
->>>>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
->>>>> ---
->>>>> Changes in v3:
->>>>> * added firmware-name instead of nvm-postfix to specify full 
->>>>> firmware
->>>>> name
->>>>> ---
->>>>> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 ++
->>>>> 1 file changed, 2 insertions(+)
->>>>> 
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->>>>> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->>>>> index 824c0e2..2bcea50 100644
->>>>> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->>>>> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->>>>> @@ -16,6 +16,7 @@ Optional properties for compatible string
->>>>> qcom,qca6174-bt:
->>>>> 
->>>>> - enable-gpios: gpio specifier used to enable chip
->>>>> - clocks: clock provided to the controller (SUSCLK_32KHZ)
->>>>> + - firmware-name: specify the name of nvm firmware to load
->>>>> 
->>>>> Required properties for compatible string qcom,wcn3990-bt:
->>>>> 
->>>>> @@ -39,6 +40,7 @@ serial@7570000 {
->>>>> 
->>>>>             enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
->>>>>             clocks = <&divclk4>;
->>>>> +            firmware-name = "nvm_00440302.bin";
->>>>>     };
->>>> 
->>>> and how is this a firmware-name property. Wouldn’t this be more like
->>>> nvm-file or something along these lines. This really needs to be
->>>> cleared with Rob to pick the right property name.
->>>> 
->>>> Regards
->>>> 
->>>> Marcel
->>> 
->>> Hi Rob,
->>> 
->>> Are you OK to use a property name "nvm-file" or "firmware-nvm-file"?
->>> Actually we have two firmware files, one is the patch file which is
->>> common to all of the products, the other is the nvm file which is
->>> customized. Using a "nvm-file" or "firmware-nvm-file" property name
->>> would be more clear.
->> 
->> 'firmware-name' is the standard name for specifying firmware file 
->> names.
-> 
-> but it is not a firmware file, it is a NVM file. What happens if in
-> the future they need a firmware file and a NVM file?
-> 
-> Regards
-> 
-> Marcel
+Sounds good to me. The current samples/kobject/kobject-example shows
+the most simple case when the kobject is standalone. While the
+above samples shows how to have it bundled in a bigger structure.
 
-We won't need to specify a rampatch firmware file in future as it's a 
-same file for all the boards with same chip, only the NVM firmware file 
-may have board differences. NVM file is also one of the firmware files 
-so I think it should be OK to use "firmware-name" property to specify 
-it.
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum,
-a Linux Foundation Collaborative Project
+Thanks,
+Petr
