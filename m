@@ -2,189 +2,79 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A66C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6EBC46460
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163FA2075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:46:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLYsTAEQ"
+	by mail.kernel.org (Postfix) with ESMTP id E17D52075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfECLqw (ORCPT
+        id S1727750AbfECLrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:46:52 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38818 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfECLqv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:46:51 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w11so5654656edl.5;
-        Fri, 03 May 2019 04:46:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=SUzz8Pj0c+WsqXtdVpJDOr7+714Bl6dV3H6hlHSl0LM=;
-        b=BLYsTAEQbWzcmkgKtrINtG//3ZRMga0gWmXJLigpWRHQ4USXwWTqw1l8wD0qzh20hD
-         JUWYn3ZkWjxkO3haBqi9UEgZM/jGJ4aL284bYTv3yHTW05lXjfANyUaMCCxUVghy2eCL
-         iLpfJWRFUZM9wKRYuBwNlEK80YYvdiwcK1atJ47vspLKa6HLVWE+n19owJq/CiSWA5v6
-         WjH9Qa/LnMokZmyzka7CrERdr2lXN4c1Q4ItUKc7ttZeUTAAhycVcuzp9EbPny+52X/m
-         doMI6moqWm6T+8oSWhSHB6c30bMPctIaTjxqwmV1OyJ/2EaXDWhrEZxBNGVxCfCePzCn
-         whIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=SUzz8Pj0c+WsqXtdVpJDOr7+714Bl6dV3H6hlHSl0LM=;
-        b=bql5bwZvQqeWh7673VRmM4U2mTVgvfDK5kSkoXiG32I0QQrtMhhZBpnw7CKem7owQv
-         1U9FHOpyj/FXkwbLr0vyEfSW+iEm1CNFZ1vj/Icc07XgaSWfja8WAQVtVDAvAqLGXw4n
-         2ncPyKM3uESdj52zCQzz3uv83Nc3kG93kEgjRRAR5X8RqrBCX/iEtqIUCQZE+LEshVP7
-         08UPelbS3F1RBy9oit6D5jOs8OFuOf45Qh5PFlNau8WLL8b57XA5es8JNCTYpC4b8Pa0
-         f4XBy76kFk743mlLXqER4lr5KtCcDkBZ9Felf4f3lMiaFoxQPeaAkh6hB1nsUvsTg2MA
-         7psg==
-X-Gm-Message-State: APjAAAVFXiYpRPlcHLwMh4AeUaDJm3SGzSe6NF6hUQpysd2x2IfAoJiH
-        ueZovU70rq5Z3+BldCrHtYLHk8n93Xm4nVavLxs4skT4A8aorg==
-X-Google-Smtp-Source: APXvYqzI2yRSX1xo2ruyfnRuglypC4T2+7PoJVl/qekpcw1bEuTrwQXLJp0KS8WKs2z1Ktr2lHiCBJTu5Koglbaa7kc=
-X-Received: by 2002:a50:9785:: with SMTP id e5mr7740641edb.94.1556884009023;
- Fri, 03 May 2019 04:46:49 -0700 (PDT)
+        Fri, 3 May 2019 07:47:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41892 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727425AbfECLrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 07:47:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A8EBDAD69;
+        Fri,  3 May 2019 11:47:17 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id C5707E0117; Fri,  3 May 2019 13:47:16 +0200 (CEST)
+Date:   Fri, 3 May 2019 13:47:16 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: Re: [PATCH 5.0 25/89] RDMA/ucontext: Fix regression with disassociate
+Message-ID: <20190503114716.GA15275@unicorn.suse.cz>
+References: <20190430113609.741196396@linuxfoundation.org>
+ <20190430113611.189238783@linuxfoundation.org>
 MIME-Version: 1.0
-From:   Elena Reshetova <elena.reshetova@gmail.com>
-Date:   Fri, 3 May 2019 14:46:38 +0300
-Message-ID: <CALrft9-KhB8WZpZHoyd3uDN-ryX=pnSV6=5QEvZAe2YCV9aBYA@mail.gmail.com>
-Subject: [ANNOUNCE][CFP] Linux Security Summit Europe 2019
-To:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430113611.189238783@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-                            ANNOUNCEMENT AND CALL FOR PARTICIPATION
-                                LINUX SECURITY SUMMIT EUROPE 2019
+On Tue, Apr 30, 2019 at 01:38:16PM +0200, Greg Kroah-Hartman wrote:
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> 
+> commit 67f269b37f9b4d52c5e7f97acea26c0852e9b8a1 upstream.
+> 
+> When this code was consolidated the intention was that the VMA would
+> become backed by anonymous zero pages after the zap_vma_pte - however this
+> very subtly relied on setting the vm_ops = NULL and clearing the VM_SHARED
+> bits to transform the VMA into an anonymous VMA. Since the vm_ops was
+> removed this broke.
+> 
+> Now userspace gets a SIGBUS if it touches the vma after disassociation.
+> 
+> Instead of converting the VMA to anonymous provide a fault handler that
+> puts a zero'd page into the VMA when user-space touches it after
+> disassociation.
+> 
+> Cc: stable@vger.kernel.org
+> Suggested-by: Andrea Arcangeli <aarcange@redhat.com>
+> Fixes: 5f9794dc94f5 ("RDMA/ucontext: Add a core API for mmaping driver IO memory")
+> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
 
-                                        31 October =E2=80=93 1 November
-                                                Lyon, France
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
+This commit breaks build on s390 and mips, please pick also commit
+6a5c5d26c4c6 ("rdma: fix build errors on s390 and MIPS due to bad
+ZERO_PAGE use").
 
-DESCRIPTION
-
-The Linux Security Summit (LSS) is a technical forum for collaboration
-between Linux developers, researchers, and end users. Its primary aim is to
-foster community efforts in analyzing and solving Linux security challenges=
-.
-
-This year, for the second time, the Linux Security Summit is going to
-be also held in Europe (LSS-EU) in order to facilitate broader participatio=
-n
-in Linux security development.
-Similar to LSS-North America, LSS-EU provides a unique opportunity for to h=
-ave
-discussions and networking opportunities with key people in the Linux kerne=
-l
-security community, present your work and ideas and affect the future direc=
-tion
-of Linux security.
-
-The program committee currently seeks proposals for:
-
-    * Refereed Presentations:
-        45 minutes in length.
-
-    * Panel Discussion Topics:
-        45 minutes in length.
-
-    * Short Topics:
-        30 minutes in total, including at least 10 minutes discussion.
-
-    * BoF Sessions.
-
-    * Tutorials *NEW for 2019*:
-        90 minutes in length.
-        Tutorial sessions should be focused on advanced Linux security defe=
-nse
-        topics within areas such as the kernel, compiler, and security-rela=
-ted
-        libraries. Priority will be given to tutorials created for
-this conference.
-
-Topic areas include, but are not limited to:
-
-    * Kernel self-protection
-    * Access control
-    * Cryptography and key management
-    * Integrity control
-    * Hardware Security
-    * Iot and embedded security
-    * Virtualization and containers
-    * System-specific system hardening
-    * Case studies
-    * Security tools
-    * Security UX
-    * Emerging technologies, threats & techniques
-
-Proposals should be submitted via:
- https://linuxfoundation.smapply.io/prog/lss_eu_2019/
-
-DATES
-
- * CFP Close: Wednesday , July 31, 2019
- * CFP Notifications: Friday, August 9, 2019
- * Schedule Announced: Monday, August 19, 2019
- * Event: October 31 =E2=80=93 November 1, 2019
-
-
-WHO SHOULD ATTEND
-
- We're seeking a diverse range of attendees, and welcome participation by
- people involved in Linux security development, operations, and research.
-
- The LSS is a unique global event which provides the opportunity to present
- and discuss your work or research with key Linux security community member=
-s
- and maintainers. It?s also useful for those who wish to keep up with the
- latest in Linux security development, and to provide input to the
- development process.
-
-WEB SITE
-
- https://events.linuxfoundation.org/events/linux-security-summit-europe-201=
-9/
-
-TWITTER
-
- For event updates and announcements, follow:
-
- https://twitter.com/LinuxSecSummit
-
-PROGRAM COMMITTEE
-
- The program committee for LSS-EU 2019 is:
-
-    * Elena Reshetova, Intel
-    * James Morris, Microsoft
-    * Serge Hallyn, Cisco
-    * Paul Moore, Cisco
-    * Stephen Smalley, NSA
-    * John Johansen, Canonical
-    * Kees Cook, Google
-    * Casey Schaufler, Intel
-    * Mimi Zohar, IBM
-    * David A. Wheeler, Institute for Defense Analyses
-
-The program committee may be contacted as a group via email:
- lss-pc () lists.linuxfoundation.org
+Michal Kubecek
