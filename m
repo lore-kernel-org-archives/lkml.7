@@ -2,167 +2,159 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4000AC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73319C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D8721783
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7682081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:51:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tOOk4CJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbfECRvO (ORCPT
+        id S1728800AbfECRv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:51:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46512 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726468AbfECRvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:51:13 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 01CD381E0F;
-        Fri,  3 May 2019 17:51:13 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A001C7BA12;
-        Fri,  3 May 2019 17:51:12 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 3819E220CB9; Fri,  3 May 2019 13:51:12 -0400 (EDT)
-Date:   Fri, 3 May 2019 13:51:12 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        NeilBrown <neilb@suse.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas =?iso-8859-1?Q?Gr=FCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-Message-ID: <20190503175112.GB8014@redhat.com>
-References: <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org>
- <87bm0l4nra.fsf@notabene.neil.brown.name>
- <20190503153531.GJ12608@fieldses.org>
- <CAOQ4uxi6MRT=1nFqPD3cfEfBxHsGdUm=FgTjv3ts2bb4zSYwsw@mail.gmail.com>
- <20190503173133.GB14954@fieldses.org>
- <CAOQ4uxjztNzH7EbK7o2vkhzzjULkEVKnnedep9GbTSyOhRV-3g@mail.gmail.com>
+        Fri, 3 May 2019 13:51:28 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41688 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726468AbfECRv2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 13:51:28 -0400
+Received: by mail-lf1-f67.google.com with SMTP id d8so4977684lfb.8;
+        Fri, 03 May 2019 10:51:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5Xc1lqPauDIMFD0MNs8y4CED4Y5I1IvQmZCShIC6+vg=;
+        b=tOOk4CJEzqsHAYS1GBsQ9bxO9PSAJ21SbOAhwY6MFE35Fvp1w8mxmqS1EpT1QzXsH2
+         FEBO1WWd24MsC4phRG0M5wKRlfTXD8i6IxzK9FGlOL3ZQZnHw1eQyh9li9ydvrKctViQ
+         44dWV+G9I99wyMrwNztAyJJhNM0XILqnUOgxM4uiq0Vdm+k6O/duseAJ5hK0e7dax/P2
+         YGSkdI2U0nXf7G7GX8q+Ivtcp2wL/Gw4kn1DRP+AuPdnrnF9Dp9c797XTRNSHoGoCJJR
+         M/NRtm34SICHsbqCCWAGU3xE1vvuaIPLsEZR3MR7O+moAuNsQMPHI8gdepnMtn6kF8fu
+         Ey7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5Xc1lqPauDIMFD0MNs8y4CED4Y5I1IvQmZCShIC6+vg=;
+        b=MF3LqDlgJwwwqwDVI8mH/Q6lA/VG9arGzYnA1waxqzlFuEmuSDjaDaka2MT92y9ZPM
+         qR6Zopqub6LQZND2DaTv0mecmTutL/BIero6DuhYhZSa41Gk94Dec0ijuwYqh/gaQcaI
+         JUhh8U6h0t46wM3wW6zTRenA+h2Zk2J8LfhauCFKI6c7qjAtGvlpsDc6D+N9wxm30t4+
+         AZVq+g0N3IlJ3tEKacMMKyf7OJPj4jiq+Q13VUdM52kupcDCY+iKiZ8AXXSD/vHUige9
+         XVxDcPbSBDA9K/GIssPA1AWaidxDvZNVW9Wz2q2qbbRBpXIubQl7kpdNdW0OJEgL5EN7
+         Rgtg==
+X-Gm-Message-State: APjAAAWMZhSzN55tQgwdBm8UKViudor/hQX9jkbuVXZRA+Hiypc80mXL
+        5h7WcCVeqJfozBarW5uPj1c=
+X-Google-Smtp-Source: APXvYqwTEFuECUK/vfFD44jwHjjLqYMcsk+LwbhDKZ2KmRXaRkh1HK+pQY1gFbaFfTv34x4GE1XWrg==
+X-Received: by 2002:a19:9f01:: with SMTP id i1mr5632630lfe.98.1556905885055;
+        Fri, 03 May 2019 10:51:25 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id z30sm533435lfb.87.2019.05.03.10.51.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 10:51:24 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] mips: Post-bootmem-memblock transition fixes
+Date:   Fri,  3 May 2019 20:50:36 +0300
+Message-Id: <20190503175041.7949-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: 20190423224748.3765-1-fancer.lancer@gmail.com
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxjztNzH7EbK7o2vkhzzjULkEVKnnedep9GbTSyOhRV-3g@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 03 May 2019 17:51:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 01:41:25PM -0400, Amir Goldstein wrote:
-> On Fri, May 3, 2019 at 1:31 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > On Fri, May 03, 2019 at 01:26:01PM -0400, Amir Goldstein wrote:
-> > > On Fri, May 3, 2019 at 12:03 PM J. Bruce Fields <bfields@fieldses.org> wrote:
-> > > >
-> > > > On Thu, May 02, 2019 at 12:02:33PM +1000, NeilBrown wrote:
-> > > > > On Tue, Dec 06 2016, J. Bruce Fields wrote:
-> > > > >
-> > > > > > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrote:
-> > > > > >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > > > > >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Grünbacher
-> > > > > >> > <andreas.gruenbacher@gmail.com> wrote:
-> > > > > >> >> 2016-12-06 0:19 GMT+01:00 Andreas Grünbacher <andreas.gruenbacher@gmail.com>:
-> > > > > >> >
-> > > > > >> >>> It's not hard to come up with a heuristic that determines if a
-> > > > > >> >>> system.nfs4_acl value is equivalent to a file mode, and to ignore the
-> > > > > >> >>> attribute in that case. (The file mode is transmitted in its own
-> > > > > >> >>> attribute already, so actually converting .) That way, overlayfs could
-> > > > > >> >>> still fail copying up files that have an actual ACL. It's still an
-> > > > > >> >>> ugly hack ...
-> > > > > >> >>
-> > > > > >> >> Actually, that kind of heuristic would make sense in the NFS client
-> > > > > >> >> which could then hide the "system.nfs4_acl" attribute.
-> > > > > >> >
-> > > > > >> > Even simpler would be if knfsd didn't send the attribute if not
-> > > > > >> > necessary.  Looks like there's code actively creating the nfs4_acl on
-> > > > > >> > the wire even if the filesystem had none:
-> > > > > >> >
-> > > > > >> >     pacl = get_acl(inode, ACL_TYPE_ACCESS);
-> > > > > >> >     if (!pacl)
-> > > > > >> >         pacl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
-> > > > > >> >
-> > > > > >> > What's the point?
-> > > > > >>
-> > > > > >> That's how the protocol is specified.
-> > > > > >
-> > > > > > Yep, even if we could make that change to nfsd it wouldn't help the
-> > > > > > client with the large number of other servers that are out there
-> > > > > > (including older knfsd's).
-> > > > > >
-> > > > > > --b.
-> > > > > >
-> > > > > >> (I'm not saying that that's very helpful.)
-> > > > > >>
-> > > > > >> Andreas
-> > > > >
-> > > > > Hi everyone.....
-> > > > >  I have a customer facing this problem, and so stumbled onto the email
-> > > > >  thread.
-> > > > >  Unfortunately it didn't resolve anything.  Maybe I can help kick things
-> > > > >  along???
-> > > > >
-> > > > >  The core problem here is that NFSv4 and ext4 use different and largely
-> > > > >  incompatible ACL implementations.  There is no way to accurately
-> > > > >  translate from one to the other in general (common specific examples
-> > > > >  can be converted).
-> > > > >
-> > > > >  This means that either:
-> > > > >    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
-> > > > >       versa) or
-> > > > >    2/ overlayfs need to accept that sometimes it cannot copy ACLs, and
-> > > > >       that is OK.
-> > > > >
-> > > > >  Silently not copying the ACLs is probably not a good idea as it might
-> > > > >  result in inappropriate permissions being given away.  So if the
-> > > > >  sysadmin wants this (and some clearly do), they need a way to
-> > > > >  explicitly say "I accept the risk".
-> > > >
-> > > > So, I feel like silently copying ACLs up *also* carries a risk, if that
-> > > > means switching from server-enforcement to client-enforcement of those
-> > > > permissions.
-> > > >
-> > > > Sorry, I know we had another thread recently about permissions in this
-> > > > situation, and I've forgotten the conclusion.
-> > > >
-> > > > Out of curiosity, what's done with selinux labels?
-> > > >
-> > >
-> > > overlayfs calls security_inode_copy_up_xattr(name) which
-> > > can fail (<0) allow (0) or skip(1).
-> > >
-> > > selinux_inode_copy_up_xattr() as well as smack_inode_copy_up_xattr()
-> > > skip their own xattr on copy up and fail any other xattr copy up.
-> >
-> > If it's OK to silently skip copying up security labels, maybe it's OK to
-> > silently skip NFSv4 ACLs too?
-> >
-> 
-> I think overlayfs inode security context is taken from overlayfs
-> mount parameters (i.e. per container context) and therefore
-> the lower security. xattr are ignored (CC Vivek).
+First attempt of making the MIPS subsystem utilizing the memblock early memory
+allocator was done by me a few years ago. I created a patchset with
+21 patches [1]. It turned out to be too complicated and I decided to resend a
+reworked patchset with smaller number of changes [2]. I did this and after a
+small review process a v2 patchset was also posted. Then my spare
+time was over and I couldn't proceed with the patchset support and
+resubmission.
 
-If mount was done with "context=" option, then it is used otherwise
-selinux security context comes from real inode xattr (lower/upper).
+In a year Mike Rapoport took charge in this task and posted a small
+patch which essentially did the bootmem allocator removal from MIPS
+subsystem [3]. A single small patch did in general the whole thing my huge
+patchsetes were intended for in the first place (though it lacked a few fixes).
+Mike even went further and completely removed the bootmem allocator from
+kernel code, so all the subsystems would need to use the only one early
+memory allocator. This significantly simplified the platforms code as well
+as removed a deprecated subsystem with duplicated functionality. Million
+credits to Mike for this.
 
-Thanks
-Vivek
+Getting back to the MIPS subsystem and it memblock allocator usage. Even
+though the patch suggested by Mike [3] fixed most of the problems caused
+by enabling the memblock allocator usage, some of them have been left
+uncovered by it. First of all the PFNs calculation algorithm hasn't been
+fully refactored. A reserved memory declaration loop has been left
+untouched though it was clearly over-complicated for the new initialization
+procedure. Secondly the MIPS platform code reserved the whole space below
+kernel start address, which doesn't seem right since kernel can be
+located much higher than memory space really starts. Thirdly CMA if it
+is enabled reserves memory regions by means of memblock in the first place.
+So the bootmem-init code doesn't need to do it again. Fifthly at early
+platform initialization stage non of bootmem-left methods can be called
+since there is no memory pages mapping at that moment, so __nosave* region
+must be reserved by means of memblock allocator. Finally aside from memblock
+allocator introduction my early patchsets included a series of useful
+alterations like "nomap" property implementation for "reserved-memory"
+dts-nodes, memblock_dump_all() method call after early memory allocator
+initialization for debugging, low-memory test procedure, kernel memory
+mapping printout at boot-time, and so on. So all of these fixes and
+alterations are introduced in this new patchset. Please review. Hope
+this time I'll be more responsive and finish this series up until it
+is merged.
+
+[1] https://lkml.org/lkml/2016/12/18/195
+[2] https://lkml.org/lkml/2018/1/17/1201
+[3] https://lkml.org/lkml/2018/9/10/302
+
+NOTE I added a few "Reviewed-by:  Matt Redfearn <matt.redfearn@mips.com>"
+since some patches of this series have been picked up from my earlier
+patchsets, which Matt's already reviewed. I didn't add the tag for patches,
+which were either new or partially ported.
+
+Changelog v2
+- Discard forcible selection of OF_RESERVED_MEM config
+- Reword 'mips: Dump memblock regions for debugging' commit message since
+  memblock debug printout is activated by memblock=debug kernel parameter
+- Rebase onto mips-next
+- Keep patches from 8 to 12 as the rest of them have already been merged
+
+
+Serge Semin (5):
+  mips: Dump memblock regions for debugging
+  mips: Perform early low memory test
+  mips: Print the kernel virtual mem layout on debugging
+  mips: Make sure dt memory regions are valid
+  mips: Manually call fdt_init_reserved_mem() method
+
+ arch/mips/kernel/prom.c  | 14 +++++++++++-
+ arch/mips/kernel/setup.c |  7 ++++++
+ arch/mips/mm/init.c      | 49 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 69 insertions(+), 1 deletion(-)
+
+-- 
+2.21.0
+
