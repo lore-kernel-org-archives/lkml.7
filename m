@@ -6,46 +6,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF94BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E16C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB352087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC6E2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfECG7U (ORCPT
+        id S1727225AbfECG7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:59:20 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40269 "EHLO ozlabs.org"
+        Fri, 3 May 2019 02:59:23 -0400
+Received: from ozlabs.org ([203.11.71.1]:50095 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfECG7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:59:18 -0400
+        id S1725793AbfECG7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 02:59:22 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 44wNKJ1fXYz9sPJ; Fri,  3 May 2019 16:59:15 +1000 (AEST)
+        id 44wNKN5qYbz9sPT; Fri,  3 May 2019 16:59:20 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: d7fbe2a0439ce6f20917a65990a78c9e747aad34
+X-powerpc-patch-commit: 5266e58d6cd90ac85c187d673093ad9cb649e16d
 X-Patchwork-Hint: ignore
-In-Reply-To: <5ad9ed13155f55e1715274561354aa7ab57973fc.1554195798.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, danielwa@cisco.com
+In-Reply-To: <20190415115211.16374-1-laurentiu.tudor@nxp.com>
+To:     laurentiu.tudor@nxp.com, linuxppc-dev@lists.ozlabs.org,
+        oss@buserror.net
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/9] powerpc/prom_init: get rid of PROM_SCRATCH_SIZE
-Message-Id: <44wNKJ1fXYz9sPJ@ozlabs.org>
-Date:   Fri,  3 May 2019 16:59:15 +1000 (AEST)
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH v2] powerpc/booke64: set RI in default MSR
+Message-Id: <44wNKN5qYbz9sPT@ozlabs.org>
+Date:   Fri,  3 May 2019 16:59:20 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-04-02 at 09:08:38 UTC, Christophe Leroy wrote:
-> PROM_SCRATCH_SIZE is same as sizeof(prom_scratch)
+On Mon, 2019-04-15 at 11:52:11 UTC, laurentiu.tudor@nxp.com wrote:
+> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Set RI in the default kernel's MSR so that the architected way of
+> detecting unrecoverable machine check interrupts has a chance to work.
+> This is inline with the MSR setup of the rest of booke powerpc
+> architectures configured here.
+> 
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> Cc: stable@vger.kernel.org
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/d7fbe2a0439ce6f20917a65990a78c9e
+https://git.kernel.org/powerpc/c/5266e58d6cd90ac85c187d673093ad9c
 
 cheers
