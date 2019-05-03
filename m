@@ -2,65 +2,66 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C327C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F01C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64F112075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27CE20C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfECNZ5 (ORCPT
+        id S1727795AbfECN0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 09:25:57 -0400
-Received: from [5.180.42.13] ([5.180.42.13]:38092 "EHLO deadmen.hmeau.com"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727920AbfECNZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 09:25:56 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hMRNr-0005mF-Ha; Fri, 03 May 2019 14:09:23 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hMRNn-0003DW-W8; Fri, 03 May 2019 14:09:20 +0800
-Date:   Fri, 3 May 2019 14:09:19 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Lionel Debieve <lionel.debieve@st.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 1/3] crypto: stm32/cryp - add weak key check for DES
-Message-ID: <20190503060919.xkh4c4dupbz6tok6@gondor.apana.org.au>
-References: <1556112893-13116-1-git-send-email-lionel.debieve@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556112893-13116-1-git-send-email-lionel.debieve@st.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Fri, 3 May 2019 09:26:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59760 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726679AbfECN0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 09:26:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ED350AE84;
+        Fri,  3 May 2019 13:26:36 +0000 (UTC)
+From:   Petr Mladek <pmladek@suse.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH 0/2] livepatch: Remove custom kobject state handling and duplicated code
+Date:   Fri,  3 May 2019 15:26:23 +0200
+Message-Id: <20190503132625.23442-1-pmladek@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 03:34:51PM +0200, Lionel Debieve wrote:
-> Add weak key test for des functions calling the generic
-> des_ekey.
-> 
-> Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
-> ---
->  drivers/crypto/stm32/Kconfig      |  1 +
->  drivers/crypto/stm32/stm32-cryp.c | 13 +++++++++++--
->  2 files changed, 12 insertions(+), 2 deletions(-)
+Tobin's patch[1] uncovered that the livepatching code handles kobjects
+a too complicated way.
 
-All applied.  Thanks.
+The first patch removes the unnecessary custom kobject state handling.
+
+The second patch is an optional code deduplication. I did something
+similar already when introducing the atomic replace. But it was
+not considered worth it. There are more duplicated things now...
+
+[1] https://lkml.kernel.org/r/20190430001534.26246-1-tobin@kernel.org
+
+
+Petr Mladek (2):
+  livepatch: Remove custom kobject state handling
+  livepatch: Remove duplicated code for early initialization
+
+ include/linux/livepatch.h |  3 --
+ kernel/livepatch/core.c   | 86 ++++++++++++++++++++---------------------------
+ 2 files changed, 37 insertions(+), 52 deletions(-)
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.16.4
+
