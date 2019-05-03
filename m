@@ -2,129 +2,193 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F94CC46460
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71165C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3602087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0FF2075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:02:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgWOxyzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfECLAZ (ORCPT
+        id S1727375AbfECLCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:00:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34228 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726396AbfECLAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:00:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 973F9AEDB;
-        Fri,  3 May 2019 11:00:22 +0000 (UTC)
-Date:   Fri, 3 May 2019 13:00:19 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 08/12] mm/sparsemem: Prepare for sub-section ranges
-Message-ID: <20190503110019.GG15740@linux>
-References: <155677652226.2336373.8700273400832001094.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155677656509.2336373.4432941742094481750.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Fri, 3 May 2019 07:02:04 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34203 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfECLCD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 07:02:03 -0400
+Received: by mail-wr1-f67.google.com with SMTP id e9so7360022wrc.1;
+        Fri, 03 May 2019 04:02:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nGfgCQXG08efjjx2XWvqXdQV7y9Ll65hvnLfZn3O1ag=;
+        b=bgWOxyzuPG//QO2JUiLSKloKw++xzOzO4bBxyiHmHbyJIK1PggjN3UQ+TaymK810Pu
+         Ancw4z6IABPZColxV3nbSsFbOyh5GLhSpSSw3CcxpiFmLREAr0XkGyTwp2aZgpSXUISA
+         zfX9l/hrJ76Yfj8mqDKmpiKkuCkPyBGZ+HwABA/fWnKh1fjMML4dburNQSZqC/HrmEnI
+         nMxegD0LT1/WjgLYeT64jzkKSvOGBSwr0Ph2m7wQW57c7eQf3VpYUyuGzUnN2/NI/2V8
+         jCn3gLgzIZFg1KsovV8Xb5h8ciQI159W0G/hsmnIV5aroqKatBfhcuqDIrlK1RV72dMH
+         k7qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nGfgCQXG08efjjx2XWvqXdQV7y9Ll65hvnLfZn3O1ag=;
+        b=LBJujmcLeO6/jEOmLcZMiNBwLI7F96ZmgvHAqxbn8WszH9lCgCEdK8oSG+wDnp7pe2
+         A8OxbfTZo5Fk4IaDmydDP9sOxHEV86KPmrXhG08Ur5XZgk6OQvJ6D/jlBl1xvdA/3N+V
+         Ox6YAAE+2jM4Dk3okKWf04kdt1c123/nMICI7l5UNevZrIcX14oQrD7WDRDGlAsZy/ne
+         XL/piQRBZVjmqgPN9XM4kjgarV8MZ3LbljvfuLyVQGW/05eg0jykEdtmUwAhiQPLavn/
+         6ehIPMtbpLEk5ZtRe25CgRPbpV6cnWCvYNTcTW2fWIPOWUTlfYiTZ4G0mTZgHAYIxUTt
+         56yg==
+X-Gm-Message-State: APjAAAXECwt3BUKdzSNszVz/gMJmrSbxnL6W+XF1/iM/Y9OWp8CWLymz
+        q9aGCOZEmVpcv1yzMDoH1XE=
+X-Google-Smtp-Source: APXvYqyZrCi9BgSuSGPoKfa+sfrnKJfwljqkgF9FkpEdGOxfOe/jX4Ra5F+4c3H7nv9LPTNjKbL2ZQ==
+X-Received: by 2002:a05:6000:9:: with SMTP id h9mr6692149wrx.194.1556881321143;
+        Fri, 03 May 2019 04:02:01 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id x18sm1635766wrw.14.2019.05.03.04.01.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 04:02:00 -0700 (PDT)
+Date:   Fri, 3 May 2019 13:01:59 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V5 02/16] PCI/PME: Export pcie_pme_disable_msi() &
+ pcie_pme_no_msi() APIs
+Message-ID: <20190503110159.GB32400@ulmo>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-3-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZfOjI3PrQbgiZnxM"
 Content-Disposition: inline
-In-Reply-To: <155677656509.2336373.4432941742094481750.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190424052004.6270-3-vidyas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 10:56:05PM -0700, Dan Williams wrote:
-> Prepare the memory hot-{add,remove} paths for handling sub-section
-> ranges by plumbing the starting page frame and number of pages being
-> handled through arch_{add,remove}_memory() to
-> sparse_{add,remove}_one_section().
-> 
-> This is simply plumbing, small cleanups, and some identifier renames. No
-> intended functional changes.
-> 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+--ZfOjI3PrQbgiZnxM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Apr 24, 2019 at 10:49:50AM +0530, Vidya Sagar wrote:
+> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
+> using this API be able to build as loadable modules.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
->  include/linux/memory_hotplug.h |    7 +-
->  mm/memory_hotplug.c            |  118 +++++++++++++++++++++++++---------------
->  mm/sparse.c                    |    7 +-
->  3 files changed, 83 insertions(+), 49 deletions(-)
-> 
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index ae892eef8b82..835a94650ee3 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -354,9 +354,10 @@ extern int add_memory_resource(int nid, struct resource *resource);
->  extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
->  		unsigned long nr_pages, struct vmem_altmap *altmap);
->  extern bool is_memblock_offlined(struct memory_block *mem);
-> -extern int sparse_add_one_section(int nid, unsigned long start_pfn,
-> -				  struct vmem_altmap *altmap);
-> -extern void sparse_remove_one_section(struct zone *zone, struct mem_section *ms,
-> +extern int sparse_add_section(int nid, unsigned long pfn,
-> +		unsigned long nr_pages, struct vmem_altmap *altmap);
-> +extern void sparse_remove_section(struct zone *zone, struct mem_section *ms,
-> +		unsigned long pfn, unsigned long nr_pages,
->  		unsigned long map_offset, struct vmem_altmap *altmap);
->  extern struct page *sparse_decode_mem_map(unsigned long coded_mem_map,
->  					  unsigned long pnum);
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 108380e20d8f..9f73332af910 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -251,22 +251,44 @@ void __init register_page_bootmem_info_node(struct pglist_data *pgdat)
->  }
->  #endif /* CONFIG_HAVE_BOOTMEM_INFO_NODE */
->  
-> -static int __meminit __add_section(int nid, unsigned long phys_start_pfn,
-> -		struct vmem_altmap *altmap, bool want_memblock)
-> +static int __meminit __add_section(int nid, unsigned long pfn,
-> +		unsigned long nr_pages,	struct vmem_altmap *altmap,
-> +		bool want_memblock)
->  {
->  	int ret;
->  
-> -	if (pfn_valid(phys_start_pfn))
-> +	if (pfn_valid(pfn))
->  		return -EEXIST;
->  
-> -	ret = sparse_add_one_section(nid, phys_start_pfn, altmap);
-> +	ret = sparse_add_section(nid, pfn, nr_pages, altmap);
->  	if (ret < 0)
->  		return ret;
->  
->  	if (!want_memblock)
->  		return 0;
->  
-> -	return hotplug_memory_register(nid, __pfn_to_section(phys_start_pfn));
-> +	return hotplug_memory_register(nid, __pfn_to_section(pfn));
-> +}
+> Changes from [v4]:
+> * None
+>=20
+> Changes from [v3]:
+> * None
+>=20
+> Changes from [v2]:
+> * Exported pcie_pme_no_msi() API after making pcie_pme_msi_disabled a sta=
+tic
+>=20
+> Changes from [v1]:
+> * This is a new patch in v2 series
+>=20
+>  drivers/pci/pcie/pme.c     | 14 +++++++++++++-
+>  drivers/pci/pcie/portdrv.h | 16 +++-------------
+>  2 files changed, 16 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+> index 54d593d10396..d5e0ea4a62fc 100644
+> --- a/drivers/pci/pcie/pme.c
+> +++ b/drivers/pci/pcie/pme.c
+> @@ -25,7 +25,19 @@
+>   * that using MSI for PCIe PME signaling doesn't play well with PCIe PME=
+-based
+>   * wake-up from system sleep states.
+>   */
+> -bool pcie_pme_msi_disabled;
+> +static bool pcie_pme_msi_disabled;
 > +
-> +static int subsection_check(unsigned long pfn, unsigned long nr_pages,
-> +		unsigned long flags, const char *reason)
+> +void pcie_pme_disable_msi(void)
 > +{
-> +	/*
-> +	 * Only allow partial section hotplug for !memblock ranges,
-> +	 * since register_new_memory() requires section alignment, and
+> +	pcie_pme_msi_disabled =3D true;
+> +}
+> +EXPORT_SYMBOL_GPL(pcie_pme_disable_msi);
+> +
+> +bool pcie_pme_no_msi(void)
+> +{
+> +	return pcie_pme_msi_disabled;
+> +}
+> +EXPORT_SYMBOL_GPL(pcie_pme_no_msi);
+> =20
+>  static int __init pcie_pme_setup(char *str)
+>  {
+> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+> index 1d50dc58ac40..7c8c3da4bd58 100644
+> --- a/drivers/pci/pcie/portdrv.h
+> +++ b/drivers/pci/pcie/portdrv.h
+> @@ -125,22 +125,12 @@ void pcie_port_bus_unregister(void);
+>  struct pci_dev;
+> =20
+>  #ifdef CONFIG_PCIE_PME
+> -extern bool pcie_pme_msi_disabled;
+> -
+> -static inline void pcie_pme_disable_msi(void)
+> -{
+> -	pcie_pme_msi_disabled =3D true;
+> -}
+> -
+> -static inline bool pcie_pme_no_msi(void)
+> -{
+> -	return pcie_pme_msi_disabled;
+> -}
+> -
+> +void pcie_pme_disable_msi(void);
+> +bool pcie_pme_no_msi(void);
+>  void pcie_pme_interrupt_enable(struct pci_dev *dev, bool enable);
+>  #else /* !CONFIG_PCIE_PME */
+>  static inline void pcie_pme_disable_msi(void) {}
+> -static inline bool pcie_pme_no_msi(void) { return false; }
+> +static inline bool pcie_pme_no_msi(void) {}
 
-What is register_new_memory?
+This looks wrong.
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Thierry
 
--- 
-Oscar Salvador
-SUSE L3
+--ZfOjI3PrQbgiZnxM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzMH6YACgkQ3SOs138+
+s6E4xw//dFTo8a4I8XRjFuw8mmRxoi0ZrVcgaoQ/hqpIqu/cew7PXc9XaqiB0JIK
+KJjArrSz8XHoez/vrmk4CBNk5ECEAeVV6Eyrm3R99fPoBuBihH+B3QYkeMALa6hh
+l2WUQRuDIYbRF71GjZlcgslAqZ8Bde19bxdwPg1T9kyOZmQrAiFq/PsRUPGscz1T
+b5EVJMR+GiKQ/dceyluUz1bqp0JFpdX6Ae6IgCKrw2Z1plVvGi39Pzix1Za1Q3pY
+EAlwOo6cebEhx0D7j/W/PLQM8+nQhBBAZiUWlwCOq/lsaL8Gt3r0RoLZchbX11Fp
+hOmz1535bjHaUx/NT6zz2QgKvJ8tErCCooq+RUlubv6QLdOTIegaLDVpCAa4CsTv
+wByyM7+oWwCvmIkWmv+nfllINKUiRFZOWASJ7aXAQh/1GGpx6wU/eaI+fbGMI/XJ
+c0n031xH/GPAL5fx9BnX5M0mYBUkxTEWWvMuAwrodEtJEqc++RIs9CHGXNICSqPs
+39NNzOS3tlhFDdR/KMe86vNYl8vfhjbM7m5v+8hmLwi4tOFO2KYY4KUXHNSgfnIi
+tMbUOjs3ojI3E3vvLqiYYPQ1F0xLCuY1KshgaZ/V7tdqn/pzPQtYaEedA3jh7XVd
+FVqPM1w7coRP7ty0PfJtfkUjOiV16jmSZdeMbzIJUqd7+9u5h74=
+=+xfr
+-----END PGP SIGNATURE-----
+
+--ZfOjI3PrQbgiZnxM--
