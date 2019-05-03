@@ -2,109 +2,108 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70709C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8700AC46460
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435E62075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F6E2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:00:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="WDVpnGuT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbfECDuK (ORCPT
+        id S1725809AbfECEAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 23:50:10 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49674 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726209AbfECDuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 23:50:10 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 82DAF3FC22A4FC0A21D6;
-        Fri,  3 May 2019 11:50:07 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.188.190) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 3 May 2019 11:49:56 +0800
-From:   ChenGang <cg.chen@huawei.com>
-To:     <mark@fasheh.com>, <jlbec@evilplan.org>, <jiangqi903@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        <ocfs2-devel@oss.oracle.com>, <joseph.qi@linux.alibaba.com>,
-        ChenGang <cg.chen@huawei.com>
-Subject: [PATCH v2] fs: ocfs: fix spelling mistake "hearbeating" -> "heartbeat"
-Date:   Fri, 3 May 2019 11:53:56 +0800
-Message-ID: <1556855636-121101-1-git-send-email-cg.chen@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.188.190]
-X-CFilter-Loop: Reflected
+        Fri, 3 May 2019 00:00:14 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36786 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbfECEAO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 00:00:14 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b18so4159953otq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 21:00:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=/2oLZth3d6lTSmqXK+KRn/EC/hEppxx8Q8bFkHJjpTE=;
+        b=WDVpnGuTVdySlDsEVyhzBl2rxPdcjs3XN9sraMUpmlplzCmj3J+EusECWEvhcsmp/k
+         +A64ByZoElP+f61GqB/9RE+huGrRkev74OPtK5G9Msj21CEh52kgp3WZtry6apol2h8Q
+         LzDNnrn5uWmee8YDjAv7GfMdYpx/MtmNdv9CH2Is9gOFVTV3z9I4WOYTZARWMeNQ5D1R
+         AIgq66XCg8oMIWW5S1YXRVzdG6BZsYIPJ1WYNxzuxM0dpCHrg4756Bwit/39G+4lXGgj
+         L71fFpAa/mhFOIBJs0s2s15X5S43/+gzhB2enBI2l0/I76p+QHs982rvlaT4sMLYJkXS
+         wOpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/2oLZth3d6lTSmqXK+KRn/EC/hEppxx8Q8bFkHJjpTE=;
+        b=LHV9nFehW2bFpbxtw/GxorL3ACaY8XorY5TDGaf3S9YlB6CIEuVBVQ1vcOOmepx8QK
+         1LE4m/cMTFxf2qQ/a/KzuEKdfWmdSw8GZfJP0G2GFIXHASYE/E5MMfRnCS3BrVnOWrcy
+         BLi4slBmvrENLiSdOoC0y/bsW6RMiSpl3KKdajkrMocjjpZr3E7zZxHlsYI8BCkM4LDk
+         Ya5sbjI68EBKMFHAlvQSPzuEqVI7vLmF7hbr3XY0OR9bGzdN3IqnpGoAqMpHxnZKl8Go
+         7seVeBsES13sUul5+11zHfir1sd/cF25cSBcFBCn27hPGmvI7oHwQxj51f7UfSfhDyuR
+         52+w==
+X-Gm-Message-State: APjAAAWuieF6HyIlQbycyrSlyhH5lFHffz5/XlFyf9vtu2fmiOm/X5uJ
+        l5iS3gYrmqcF+pqSpzOlzqOPjQ==
+X-Google-Smtp-Source: APXvYqy6KWNuHyZ4bmVPl7AtwCnrtgW7crNSpZilsNWCfKP1jSwTNkBNznOucbDkWdYYfSbymCBWLA==
+X-Received: by 2002:a05:6830:1602:: with SMTP id g2mr4767166otr.329.1556856013208;
+        Thu, 02 May 2019 21:00:13 -0700 (PDT)
+Received: from linux.fredlawl.com ([2600:1700:18a0:11d0:5518:38b8:ef25:393a])
+        by smtp.gmail.com with ESMTPSA id h62sm392191otb.79.2019.05.02.21.00.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 02 May 2019 21:00:12 -0700 (PDT)
+From:   Frederick Lawler <fred@fredlawl.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mika.westerberg@linux.intel.com, lukas@wunner.de,
+        andriy.shevchenko@linux.intel.com, keith.busch@intel.com,
+        mr.nuke.me@gmail.com, liudongdong3@huawei.com, thesven73@gmail.com,
+        Frederick Lawler <fred@fredlawl.com>
+Subject: [PATCH v2 0/9] PCI: Use PCIe service name in dmesg logs
+Date:   Thu,  2 May 2019 22:59:37 -0500
+Message-Id: <20190503035946.23608-1-fred@fredlawl.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some spelling mistakes in ocfs, fix it.
+In referrence to [1], PCIe services did not have uniform logging via pci_*()
+printk wrappers. Add dev_fmt() to each service, clean up dmesg logs,
+use pci_dbg() for hotplug debug messages, and lastly, uniformally
+add Slot(%s) prefixes to hotplug ctrl_*() wrappers.
 
-Signed-off-by: ChenGang <cg.chen@huawei.com>
----
- fs/ocfs2/cluster/heartbeat.c | 2 +-
- fs/ocfs2/cluster/quorum.c    | 2 +-
- fs/ocfs2/cluster/tcp.c       | 2 +-
- fs/ocfs2/dlm/dlmmaster.c     | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+1. https://lore.kernel.org/linux-pci/20190308180149.GD214730@google.com/
 
-diff --git a/fs/ocfs2/cluster/heartbeat.c b/fs/ocfs2/cluster/heartbeat.c
-index f3c20b2..e4e7df1 100644
---- a/fs/ocfs2/cluster/heartbeat.c
-+++ b/fs/ocfs2/cluster/heartbeat.c
-@@ -1198,7 +1198,7 @@ static int o2hb_do_disk_heartbeat(struct o2hb_region *reg)
- 	if (atomic_read(&reg->hr_steady_iterations) != 0) {
- 		if (atomic_dec_and_test(&reg->hr_unsteady_iterations)) {
- 			printk(KERN_NOTICE "o2hb: Unable to stabilize "
--			       "heartbeart on region %s (%s)\n",
-+			       "heartbeat on region %s (%s)\n",
- 			       config_item_name(&reg->hr_item),
- 			       reg->hr_dev_name);
- 			atomic_set(&reg->hr_steady_iterations, 0);
-diff --git a/fs/ocfs2/cluster/quorum.c b/fs/ocfs2/cluster/quorum.c
-index af2e747..792132f 100644
---- a/fs/ocfs2/cluster/quorum.c
-+++ b/fs/ocfs2/cluster/quorum.c
-@@ -89,7 +89,7 @@ static void o2quo_fence_self(void)
- 	};
- }
- 
--/* Indicate that a timeout occurred on a hearbeat region write. The
-+/* Indicate that a timeout occurred on a heartbeat region write. The
-  * other nodes in the cluster may consider us dead at that time so we
-  * want to "fence" ourselves so that we don't scribble on the disk
-  * after they think they've recovered us. This can't solve all
-diff --git a/fs/ocfs2/cluster/tcp.c b/fs/ocfs2/cluster/tcp.c
-index e9f236a..7a43c04 100644
---- a/fs/ocfs2/cluster/tcp.c
-+++ b/fs/ocfs2/cluster/tcp.c
-@@ -1776,7 +1776,7 @@ static void o2net_hb_node_up_cb(struct o2nm_node *node, int node_num,
- 		(msecs_to_jiffies(o2net_reconnect_delay()) + 1);
- 
- 	if (node_num != o2nm_this_node()) {
--		/* believe it or not, accept and node hearbeating testing
-+		/* believe it or not, accept and node heartbeating testing
- 		 * can succeed for this node before we got here.. so
- 		 * only use set_nn_state to clear the persistent error
- 		 * if that hasn't already happened */
-diff --git a/fs/ocfs2/dlm/dlmmaster.c b/fs/ocfs2/dlm/dlmmaster.c
-index 826f056..41b80d5 100644
---- a/fs/ocfs2/dlm/dlmmaster.c
-+++ b/fs/ocfs2/dlm/dlmmaster.c
-@@ -2176,7 +2176,7 @@ static void dlm_assert_master_worker(struct dlm_work_item *item, void *data)
-  * think that $RECOVERY is currently mastered by a dead node.  If so,
-  * we wait a short time to allow that node to get notified by its own
-  * heartbeat stack, then check again.  All $RECOVERY lock resources
-- * mastered by dead nodes are purged when the hearbeat callback is
-+ * mastered by dead nodes are purged when the heartbeat callback is
-  * fired, so we can know for sure that it is safe to continue once
-  * the node returns a live node or no node.  */
- static int dlm_pre_master_reco_lockres(struct dlm_ctxt *dlm,
--- 
-1.8.5.6
+Changes from v1:
+ - Split dev_fmt() additions into own patches per service
+ - Kept ctrl_*() wrappers and applied "Slot(%s)" prefix to messages
+ - Attempted to leave no log gaps between patches
+
+Frederick Lawler (9):
+  PCI/AER: Cleanup dmesg logs
+  PCI/DPC: Prefix dmesg logs with PCIe service name
+  PCI/PME: Prefix dmesg logs with PCIe service name
+  PCI/LINK: Prefix dmesg logs with PCIe service name
+  PCI/AER: Prefix dmesg logs with PCIe service name
+  PCI: hotplug: Prefix dmesg logs with PCIe service name
+  PCI: hotplug: Prefer CONFIG_DYNAMIC_DEBUG/DEBUG for dmesg logs
+  PCI: hotplug: Remove unnecessary dbg/err/info/warn() printk() wrappers
+  PCI: hotplug: Prefix ctrl_*() dmesg logs with pciehp slot name
+
+ drivers/pci/hotplug/pciehp.h       | 28 ++++----------
+ drivers/pci/hotplug/pciehp_core.c  | 20 ++++++----
+ drivers/pci/hotplug/pciehp_ctrl.c  | 60 ++++++++++++------------------
+ drivers/pci/hotplug/pciehp_hpc.c   |  9 +++--
+ drivers/pci/hotplug/pciehp_pci.c   |  2 +
+ drivers/pci/pcie/aer.c             | 19 ++++++----
+ drivers/pci/pcie/aer_inject.c      |  6 ++-
+ drivers/pci/pcie/bw_notification.c |  2 +
+ drivers/pci/pcie/dpc.c             | 37 +++++++++---------
+ drivers/pci/pcie/pme.c             |  2 +
+ 10 files changed, 89 insertions(+), 96 deletions(-)
+
+--
+2.17.1
 
