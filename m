@@ -2,88 +2,125 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211FAC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B1FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7692075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683CE2075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:53:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="A/aR6m6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfECFva (ORCPT
+        id S1726652AbfECFxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 01:51:30 -0400
-Received: from mga05.intel.com ([192.55.52.43]:61367 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfECFva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 01:51:30 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 22:51:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,424,1549958400"; 
-   d="scan'208";a="167149467"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by fmsmga002.fm.intel.com with ESMTP; 02 May 2019 22:51:26 -0700
-Date:   Fri, 3 May 2019 08:51:26 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Matthew Garrett <mjg59@google.com>, Ingo Molnar <mingo@kernel.org>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Thi=E9baud?= Weksteen <tweek@google.com>
-Subject: Re: [PATCH V5 2/4] tpm: Reserve the TPM final events table
-Message-ID: <20190503055126.GD3728@linux.intel.com>
-References: <20190227202658.197113-1-matthewgarrett@google.com>
- <20190227202658.197113-3-matthewgarrett@google.com>
- <CAJzaN5pUJoOCz5-ZDSnTb6dbVPuy0QwmFD0CeofAGK+bRQx0og@mail.gmail.com>
- <CACdnJutpBPAX6TOGgs3Ng2v_cC5hAf-3pHThESvjQ9vbvQeVkA@mail.gmail.com>
- <CAKv+Gu9PF4u=-7QL4e36Q3S5kC4+5Z=yLYHLT9jE+eNY7YUV7A@mail.gmail.com>
+        Fri, 3 May 2019 01:53:02 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45841 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbfECFxC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 01:53:02 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x435qDj32617936
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 2 May 2019 22:52:13 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x435qDj32617936
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1556862734;
+        bh=TNXXM/ioTOLJPNbitD6CbEOnSI/AUw78a5A10EIXNU0=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=A/aR6m6YDcX3NKPIdim9AqzP2XEZgjqQAPjLn6UE86R3JGiPHYRGEOMGEdpbQeDlR
+         lJAIcnoqhBJe9S3AluiNuAKlftuURxiGZCF8etqQ+fAVvcjCdI7hlvzzPTwDJr1QQ/
+         YPZnVHR6+YzcH1t7PW2iH9eYTL83OGr6IzZ5nl2bRtM4w6nFG2CJDLlmNG2YIWengs
+         GDR0/SHkqQnuuwVMEaJtZysd620hVhCDz6eArjSomAW5zBehzhQPZj7meu12DyVX7A
+         iXWGojLsm+Vhhv13n0+Cu9ViIcnOzxwyMjs9+5Z0CY7HN2TcPg3dR8G1Uu0ShWSVgJ
+         Yp+xzAE1yj68g==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x435qB2m2617933;
+        Thu, 2 May 2019 22:52:11 -0700
+Date:   Thu, 2 May 2019 22:52:11 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Bo YU <tipbot@zytor.com>
+Message-ID: <tip-2e712675ffd1331bb527dfc851b0e98cd684c2f1@git.kernel.org>
+Cc:     kafai@fb.com, tglx@linutronix.de, acme@redhat.com,
+        tsu.yubo@gmail.com, daniel@iogearbox.net, yhs@fb.com,
+        peterz@infradead.org, linux-kernel@vger.kernel.org,
+        songliubraving@fb.com, adrian.hunter@intel.com,
+        namhyung@kernel.org, jolsa@kernel.org, mingo@kernel.org,
+        ast@kernel.org, hpa@zytor.com, alexander.shishkin@linux.intel.com
+Reply-To: hpa@zytor.com, alexander.shishkin@linux.intel.com,
+          mingo@kernel.org, ast@kernel.org, adrian.hunter@intel.com,
+          namhyung@kernel.org, songliubraving@fb.com, jolsa@kernel.org,
+          daniel@iogearbox.net, tsu.yubo@gmail.com, yhs@fb.com,
+          acme@redhat.com, kafai@fb.com, tglx@linutronix.de,
+          peterz@infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190422080138.10088-1-tsu.yubo@gmail.com>
+References: <20190422080138.10088-1-tsu.yubo@gmail.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf bpf: Return value with unlocking in
+ perf_env__find_btf()
+Git-Commit-ID: 2e712675ffd1331bb527dfc851b0e98cd684c2f1
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu9PF4u=-7QL4e36Q3S5kC4+5Z=yLYHLT9jE+eNY7YUV7A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 09:14:49AM +0200, Ard Biesheuvel wrote:
-> (+ Ingo)
-> 
-> On Tue, 30 Apr 2019 at 21:52, Matthew Garrett <mjg59@google.com> wrote:
-> >
-> > On Tue, Apr 30, 2019 at 6:07 AM Bartosz Szczepanek <bsz@semihalf.com> wrote:
-> > >
-> > > I may be a little late with this comment, but I've just tested these
-> > > patches on aarch64 platform (from the top of jjs/master) and got
-> > > kernel panic ("Unable to handle kernel read", full log at the end of
-> > > mail). I think there's problem with below call to
-> > > tpm2_calc_event_log_size(), where physical address of efi.tpm_log is
-> > > passed as (void *) and never remapped:
-> >
-> > Yes, it looks like this is just broken. Can you try with the attached patch?
-> 
-> I'm a bit uncomfortable with EFI code that is obviously broken and
-> untested being queued for the next merge window in another tree.
-> 
-> What is currently queued there? Can we revert this change for the time
-> being, and resubmit it via the EFI tree for v5.3?
+Commit-ID:  2e712675ffd1331bb527dfc851b0e98cd684c2f1
+Gitweb:     https://git.kernel.org/tip/2e712675ffd1331bb527dfc851b0e98cd684c2f1
+Author:     Bo YU <tsu.yubo@gmail.com>
+AuthorDate: Mon, 22 Apr 2019 04:01:38 -0400
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Thu, 2 May 2019 16:00:19 -0400
 
-Nothing ATM. The broken code is in my master branch ATM. Nothing
-in my next branch nor have I included anything to my PRs. Should
-be nothing to worry about in that sense :-)
+perf bpf: Return value with unlocking in perf_env__find_btf()
 
-/Jarkko
+In perf_env__find_btf(), we're returning without unlocking
+"env->bpf_progs.lock". There may be cause lockdep issue.
+
+Detected by CoversityScan, CID# 1444762:(program hangs(LOCK))
+
+Signed-off-by: Bo YU <tsu.yubo@gmail.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Fixes: 2db7b1e0bd49d: (perf bpf: Return NULL when RB tree lookup fails in perf_env__find_btf())
+Link: http://lkml.kernel.org/r/20190422080138.10088-1-tsu.yubo@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/env.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 9494f9dc61ec..6a3eaf7d9353 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -115,8 +115,8 @@ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+ 	}
+ 	node = NULL;
+ 
+-	up_read(&env->bpf_progs.lock);
+ out:
++	up_read(&env->bpf_progs.lock);
+ 	return node;
+ }
+ 
