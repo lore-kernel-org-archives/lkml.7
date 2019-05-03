@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8858C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6B2C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85523204FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BABA92075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbfECSMT (ORCPT
+        id S1728679AbfECSMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 14:12:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47294 "EHLO mx1.redhat.com"
+        Fri, 3 May 2019 14:12:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:19665 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726992AbfECSMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 14:12:17 -0400
+        id S1728619AbfECSMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 14:12:19 -0400
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DFCDC58E3E;
-        Fri,  3 May 2019 18:12:16 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id ED9636147C;
+        Fri,  3 May 2019 18:12:18 +0000 (UTC)
 Received: from jsavitz.bos.com (dhcp-17-237.bos.redhat.com [10.18.17.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA7AB60BFB;
-        Fri,  3 May 2019 18:12:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0DE6B60BFC;
+        Fri,  3 May 2019 18:12:16 +0000 (UTC)
 From:   Joel Savitz <jsavitz@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Joel Savitz <jsavitz@redhat.com>,
@@ -49,86 +49,55 @@ Cc:     Joel Savitz <jsavitz@redhat.com>,
         Michael Kerrisk <mtk.manpages@gmail.com>,
         Yury Norov <yury.norov@gmail.com>,
         David Laight <David.Laight@aculab.com>
-Subject: [PATCH v3 1/2] kernel/sys: add PR_GET_TASK_SIZE option to prctl(2)
-Date:   Fri,  3 May 2019 14:10:20 -0400
-Message-Id: <1556907021-29730-2-git-send-email-jsavitz@redhat.com>
+Subject: [PATCH v3 2/2] prctl.2: Document the new PR_GET_TASK_SIZE option
+Date:   Fri,  3 May 2019 14:10:21 -0400
+Message-Id: <1556907021-29730-3-git-send-email-jsavitz@redhat.com>
 In-Reply-To: <1556907021-29730-1-git-send-email-jsavitz@redhat.com>
 References: <1556907021-29730-1-git-send-email-jsavitz@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 03 May 2019 18:12:17 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 03 May 2019 18:12:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When PR_GET_TASK_SIZE is passed to prctl, the kernel will attempt to
-copy the value of TASK_SIZE to the userspace address in arg2.
+Add a short explanation of the new PR_GET_TASK_SIZE option for the benefit
+of future generations.
 
-It is important that we account for the case of the userspace task
-running in 32-bit compat mode on a 64-bit kernel. As such, we must be
-careful to copy the correct number of bytes to userspace to avoid stack
-corruption.
-
-Suggested-by: Yuri Norov <yury.norov@gmail.com>
-Suggested-by: Alexey Dobriyan <adobriyan@gmail.com>
+Suggested-by: David Laight <David.Laight@aculab.com>
 Signed-off-by: Joel Savitz <jsavitz@redhat.com>
 ---
- include/uapi/linux/prctl.h |  3 +++
- kernel/sys.c               | 23 +++++++++++++++++++++++
- 2 files changed, 26 insertions(+)
+ man2/prctl.2 | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-index 094bb03b9cc2..2c261c461952 100644
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -229,4 +229,7 @@ struct prctl_mm_map {
- # define PR_PAC_APDBKEY                        (1UL << 3)
- # define PR_PAC_APGAKEY                        (1UL << 4)
-
-+/* Get the process virtual memory size (i.e. the highest usable VM address) */
-+#define PR_GET_TASK_SIZE               55
+diff --git a/man2/prctl.2 b/man2/prctl.2
+index 06d8e13c7..cae582726 100644
+--- a/man2/prctl.2
++++ b/man2/prctl.2
+@@ -49,6 +49,7 @@
+ .\" 2013-01-10 Kees Cook, document PR_SET_PTRACER
+ .\" 2012-02-04 Michael Kerrisk, document PR_{SET,GET}_CHILD_SUBREAPER
+ .\" 2014-11-10 Dave Hansen, document PR_MPX_{EN,DIS}ABLE_MANAGEMENT
++.\" 2019-05-03 Joel Savitz, document PR_GET_TASK_SIZE
+ .\"
+ .\"
+ .TH PRCTL 2 2019-03-06 "Linux" "Linux Programmer's Manual"
+@@ -1375,6 +1376,15 @@ system call on Tru64).
+ for information on versions and architectures)
+ Return unaligned access control bits, in the location pointed to by
+ .IR "(unsigned int\ *) arg2" .
++.TP
++.B PR_GET_TASK_SIZE
++Copy the value of TASK_SIZE to the userspace address in
++.IR "(unsigned long\ *) arg2" .
++This value represents the highest virtual address available
++to the current process. Return
++.B EFAULT
++if this operation fails.
 +
- #endif /* _LINUX_PRCTL_H */
-diff --git a/kernel/sys.c b/kernel/sys.c
-index 12df0e5434b8..709584400070 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -2252,6 +2252,26 @@ static int propagate_has_child_subreaper(struct task_struct *p, void *data)
-        return 1;
- }
-
-+static int prctl_get_tasksize(void __user *uaddr)
-+{
-+	unsigned long current_task_size, current_word_size;
-+
-+	current_task_size = TASK_SIZE;
-+	current_word_size = sizeof(unsigned long);
-+
-+#ifdef CONFIG_64BIT
-+	/* On 64-bit architecture, we must check whether the current thread
-+	 * is running in 32-bit compat mode. If it is, we can simply cut
-+	 * the size in half. This avoids corruption of the userspace stack.
-+	 */
-+	if (test_thread_flag(TIF_ADDR32))
-+		current_word_size >>= 1;
-+#endif
-+
-+	return copy_to_user(uaddr, &current_task_size, current_word_size) ? -EFAULT : 0;
-+}
-+
- int __weak arch_prctl_spec_ctrl_get(struct task_struct *t, unsigned long which)
- {
-        return -EINVAL;
-@@ -2486,6 +2506,9 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
-                        return -EINVAL;
-                error = PAC_RESET_KEYS(me, arg2);
-                break;
-+	case PR_GET_TASK_SIZE:
-+		error = prctl_get_tasksize((void *)arg2);
-+		break;
-        default:
-                error = -EINVAL;
-                break;
+ .SH RETURN VALUE
+ On success,
+ .BR PR_GET_DUMPABLE ,
 --
 2.18.1
 
