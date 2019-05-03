@@ -2,150 +2,146 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D709C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A77C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517F320675
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07AAC2089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eDv1zcwI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F6lrwkUO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbfECRrv (ORCPT
+        id S1728753AbfECRsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:47:51 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60615 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfECRrt (ORCPT
+        Fri, 3 May 2019 13:48:03 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45212 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728487AbfECRsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:47:49 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x43Hlbvb2844992
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 3 May 2019 10:47:38 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x43Hlbvb2844992
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556905658;
-        bh=JNo7t5Uv50o2X7kmD2OglHHDaoL7onANSklhJ6xEYWk=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=eDv1zcwILyT5vUARtKE/8oFWR2mxKSTKwpsxli7FsEvP99Szav5K4rGyViJE/9One
-         6nNBOfptYAGNo5mbPW7Bs/Tva1mFMpk2BagIqQWKyuJhP6dPFOeP0SQRG+C/jeJ/SJ
-         tN1i1xd9rMhZEHhi0jjk9CdDbR/7pSNj5Zs0Eff8mcLXsxJU9PcA4EIwFe/+nAsNDp
-         9rsZJ8nyfYyC4TOBzrYK+45/JbbfxqnhRCc4gnfbhH9QGnDXYzUzERuikARdDYgC9n
-         YcWaNoyxxuNGGLeHX2is8tfpH49guAeceTzgHENOFSaBJjc+W4P4Cve/vnkzxMLcau
-         cxmmcgFNSr8Aw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x43HlbU72844989;
-        Fri, 3 May 2019 10:47:37 -0700
-Date:   Fri, 3 May 2019 10:47:37 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nicholas Piggin <tipbot@zytor.com>
-Message-ID: <tip-9219565aa89033a9cfdae788c1940473a1253d6c@git.kernel.org>
-Cc:     peterz@infradead.org, torvalds@linux-foundation.org, hpa@zytor.com,
-        rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org,
-        mingo@kernel.org, tglx@linutronix.de, fweisbec@gmail.com,
-        npiggin@gmail.com
-Reply-To: hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
-          npiggin@gmail.com, fweisbec@gmail.com, peterz@infradead.org,
-          torvalds@linux-foundation.org
-In-Reply-To: <20190411033448.20842-5-npiggin@gmail.com>
-References: <20190411033448.20842-5-npiggin@gmail.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/isolation: Require a present CPU in
- housekeeping mask
-Git-Commit-ID: 9219565aa89033a9cfdae788c1940473a1253d6c
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 3 May 2019 13:48:03 -0400
+Received: by mail-pl1-f194.google.com with SMTP id o5so3012867pls.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 10:48:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hcu8K+zWlIGVcO7HslnrIVULTnaD0CZgK/YRsSv5h7E=;
+        b=F6lrwkUObP5QsxdWxxiNyUKTwB/nEyF4/2ZuY81qbcsiroixxS1vfHPuhgJCG74vnG
+         ZpQu2+yRS0RB44jtMo71Bq3M3BbxP6cxxmSZI8bQ/c/OgD/1tMxXKzfjUhB2JqKaAn/l
+         NG8WILFO9GWdfOIoO5C2INyNQwVBGc70wO/D0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hcu8K+zWlIGVcO7HslnrIVULTnaD0CZgK/YRsSv5h7E=;
+        b=PMHzIjfZT/1DPOR7HnaM4nqX35J/HWymjdm2v5+uZOlNVMSC7yMaFHXKtRTmsbp65+
+         p+FBRyoMObR/IKNVhw2r4JJInApUoXKuE1HaEV93Imq1Er1lNY1GnkL8Qtr6/wDQacIm
+         K5oL9SuV6vQ6VnE/JBrlX/qTlXD5ifL5h9UFIn1kML6OWAOFynvgpk6UKM1Vk9nrFE/e
+         oD0ccEhrruE+bKNYUPMzJGtQDyJSHgPJESO1tO5Q5jKcK5joW6Pq6zvptXUZQn2qEG8u
+         CZ5MQxOCgR0XUuOY+FTuAE87JC7fV2qdiRMGtn2DfyIYCwTUpOxLmY6OoInrYogCn4uZ
+         ShtA==
+X-Gm-Message-State: APjAAAVSEFwp3KzwCYO3NuvHqe9NBDCKzPYLHX9AImFhJjiWMC8Wa52y
+        FO+0GTSW4nbVafLTIaRzVZkPYw==
+X-Google-Smtp-Source: APXvYqwUHs8vMvaru9Cwe1tZkDsvr7dVSbNkuW/Q+VhSh7UtsmWhvEG5ztlrguWI+8XxxHBhnHpwGA==
+X-Received: by 2002:a17:902:7085:: with SMTP id z5mr12285610plk.78.1556905682002;
+        Fri, 03 May 2019 10:48:02 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id v15sm3588446pff.105.2019.05.03.10.48.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 10:48:01 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>
+Cc:     linux-rockchip@lists.infradead.org, jwerner@chromium.org,
+        groeck@chromium.org, mka@chromium.org, briannorris@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] pstore/ram: Improve backward compatibility with older Chromebooks
+Date:   Fri,  3 May 2019 10:47:30 -0700
+Message-Id: <20190503174730.245762-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9219565aa89033a9cfdae788c1940473a1253d6c
-Gitweb:     https://git.kernel.org/tip/9219565aa89033a9cfdae788c1940473a1253d6c
-Author:     Nicholas Piggin <npiggin@gmail.com>
-AuthorDate: Thu, 11 Apr 2019 13:34:47 +1000
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 3 May 2019 19:42:58 +0200
+When you try to run an upstream kernel on an old ARM-based Chromebook
+you'll find that console-ramoops doesn't work.
 
-sched/isolation: Require a present CPU in housekeeping mask
+Old ARM-based Chromebooks, before <https://crrev.com/c/439792>
+("ramoops: support upstream {console,pmsg,ftrace}-size properties")
+used to create a "ramoops" node at the top level that looked like:
 
-During housekeeping mask setup, currently a possible CPU is required.
-That does not guarantee the CPU would be available at boot time, so
-check to ensure that at least one present CPU is in the mask.
+/ {
+  ramoops {
+    compatible = "ramoops";
+    reg = <...>;
+    record-size = <...>;
+    dump-oops;
+  };
+};
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linuxppc-dev@lists.ozlabs.org
-Link: https://lkml.kernel.org/r/20190411033448.20842-5-npiggin@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+...and these Chromebooks assumed that the downstream kernel would make
+console_size / pmsg_size match the record size.  The above ramoops
+node was added by the firmware so it's not easy to make any changes.
+
+Let's match the expected behavior, but only for those using the old
+backward-compatible way of working where ramoops is right under the
+root node.
+
+NOTE: if there are some out-of-tree devices that had ramoops at the
+top level, left everything but the record size as 0, and somehow
+doesn't want this behavior, we can try to add more conditions here.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- kernel/sched/isolation.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index b02d148e7672..687302051a27 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -65,6 +65,7 @@ void __init housekeeping_init(void)
- static int __init housekeeping_setup(char *str, enum hk_flags flags)
+ fs/pstore/ram.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index c5c685589e36..8df3bfa2837f 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -669,6 +669,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+ 			    struct ramoops_platform_data *pdata)
  {
- 	cpumask_var_t non_housekeeping_mask;
-+	cpumask_var_t tmp;
- 	int err;
+ 	struct device_node *of_node = pdev->dev.of_node;
++	struct device_node *parent_node;
+ 	struct resource *res;
+ 	u32 value;
+ 	int ret;
+@@ -703,6 +704,23 @@ static int ramoops_parse_dt(struct platform_device *pdev,
  
- 	alloc_bootmem_cpumask_var(&non_housekeeping_mask);
-@@ -75,16 +76,23 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
- 		return 0;
- 	}
+ #undef parse_size
  
-+	alloc_bootmem_cpumask_var(&tmp);
- 	if (!housekeeping_flags) {
- 		alloc_bootmem_cpumask_var(&housekeeping_mask);
- 		cpumask_andnot(housekeeping_mask,
- 			       cpu_possible_mask, non_housekeeping_mask);
--		if (cpumask_empty(housekeeping_mask))
++	/*
++	 * Some old Chromebooks relied on the kernel setting the console_size
++	 * and pmsg_size to the record size since that's what the downstream
++	 * kernel did.  These same Chromebooks had "ramoops" straight under
++	 * the root node which isn't according to the upstream bindings.  Let's
++	 * make those old Chromebooks work by detecting this and mimicing the
++	 * expected behavior.
++	 */
++	parent_node = of_get_parent(of_node);
++	if (of_node_is_root(parent_node) &&
++	    !pdata->console_size && !pdata->ftrace_size &&
++	    !pdata->pmsg_size && !pdata->ecc_info.ecc_size) {
++		pdata->console_size = pdata->record_size;
++		pdata->pmsg_size = pdata->record_size;
++	}
++	of_node_put(parent_node);
 +
-+		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
-+		if (cpumask_empty(tmp)) {
-+			pr_warn("Housekeeping: must include one present CPU, "
-+				"using boot CPU:%d\n", smp_processor_id());
- 			__cpumask_set_cpu(smp_processor_id(), housekeeping_mask);
-+			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
-+		}
- 	} else {
--		cpumask_var_t tmp;
--
--		alloc_bootmem_cpumask_var(&tmp);
-+		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
-+		if (cpumask_empty(tmp))
-+			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
- 		cpumask_andnot(tmp, cpu_possible_mask, non_housekeeping_mask);
- 		if (!cpumask_equal(tmp, housekeeping_mask)) {
- 			pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
-@@ -92,8 +100,8 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
- 			free_bootmem_cpumask_var(non_housekeeping_mask);
- 			return 0;
- 		}
--		free_bootmem_cpumask_var(tmp);
- 	}
-+	free_bootmem_cpumask_var(tmp);
+ 	return 0;
+ }
  
- 	if ((flags & HK_FLAG_TICK) && !(housekeeping_flags & HK_FLAG_TICK)) {
- 		if (IS_ENABLED(CONFIG_NO_HZ_FULL)) {
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
