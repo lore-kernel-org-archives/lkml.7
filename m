@@ -2,106 +2,63 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E35D9C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEA3C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A00DB2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:13:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=crashcourse.ca header.i=@crashcourse.ca header.b="UPdLSeju"
+	by mail.kernel.org (Postfix) with ESMTP id 5D7532087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:16:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfECKNC (ORCPT
+        id S1727459AbfECKQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 06:13:02 -0400
-Received: from cpanel4.indieserve.net ([199.212.143.9]:34004 "EHLO
-        somersetfoodbank.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727460AbfECKNC (ORCPT
+        Fri, 3 May 2019 06:16:06 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:35341 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfECKQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 06:13:02 -0400
-X-Greylist: delayed 1515 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 May 2019 06:13:01 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=crashcourse.ca; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=alUy8Jq4vitcVcXsUaRK97EQ2xv6e/+wFnS0LwHJgDM=; b=UPdLSejucmigWYuYGE/iKHFiAD
-        /y1lWeGuEROSJ9ownVais5uWdB1pMD+Ixp1CPg/CtsYTle2+wUBvLhP/PKTRQYUc3md86i0S4AYUz
-        YzoeBBJqaYwVVEPeWC+lAs5hIUOXziOlgLiGK43ITNZre5zJQrrqv037mnSgiClqEwEzSJV1Q5FA4
-        N7RYAmwKf8TffVHO1vz6Q1UjHa1OT05pVYAmJRx3SEfUI5ewJ2QVPs7NsI/PxRFn0RejQNj/oxHQx
-        P5RVVdvsnZiGPhUF/j/bSkKzTcXLVZUdbQtWiP6AM4qEtjJ8PyWXXgl1SEg4VWHjN5sCdCgD1EU1n
-        e/kkZWAQ==;
-Received: from [72.142.126.219] (port=58096 helo=localhost.localdomain)
-        by cpanel4.indieserve.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.91)
-        (envelope-from <rpjday@crashcourse.ca>)
-        id 1hMUn9-0001C2-5w; Fri, 03 May 2019 05:47:44 -0400
-Date:   Fri, 3 May 2019 05:47:42 -0400 (EDT)
-From:   "Robert P. J. Day" <rpjday@crashcourse.ca>
-X-X-Sender: rpjday@localhost.localdomain
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-cc:     mporter@kernel.crashing.org, alex.bou9@gmail.com
-Subject: [PATCH] MAINTAINERS: RAPIDIO: include more rapidio-related content
-Message-ID: <alpine.LFD.2.21.1905030545110.5476@localhost.localdomain>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Fri, 3 May 2019 06:16:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id h10so4118298iob.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 03:16:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=ksZiUycHQUU5gaMM+swJiiJAczcg7RX7RdnQSdhRCek=;
+        b=j9D5+oOk4RlYpk0T4TsE2KH8aOO4IoMtLLwfdaZmmRT3M65NAsvyClBybcFtxLWeds
+         Re8Cbx6oSeubjpCdxemz29LSPxyXJoK79JHUF0+9DvugqCs4vZIPOGPCG+e2hHJryCP+
+         WlzErpELzvm+7DYrLg9jenVDI54R4SFWibwmFsWC9qMSeA/UnjZ8fSdgNCRdDyChSC44
+         DWIBcpccGanXs8KRArnMZ5RF6DGL5TftWZJVHiK7ms9n0RM0NmtKZgl04S1P9qC7QYHv
+         6mHnU+s3gwybRBVkMb0VWN/bU+3sRQPQ4rVL6jBHJW8jQMwLC3LLPgBy7mgyBCtHk2GN
+         Nsfw==
+X-Gm-Message-State: APjAAAVlE25DmBedbHI9VOaUgtgTU3je43m+bY8RL5MCsYybrTIEYXHa
+        NuNVw4l32xcsW4nbLZDB8sweIR2elahYFBy21Rud1aoovi92
+X-Google-Smtp-Source: APXvYqy4HCDetetZ/MKz0/4sqoObInvZQcLO6v7qu4qICZHOauUnCv5FVa1RLnzhrK6Gc6y3A1FXGqK6CQ75w+SjuILMJV2PZ0AW
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-OutGoing-Spam-Status: No, score=-0.2
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel4.indieserve.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - crashcourse.ca
-X-Get-Message-Sender-Via: cpanel4.indieserve.net: authenticated_id: rpjday+crashcourse.ca/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: cpanel4.indieserve.net: rpjday@crashcourse.ca
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-Received: by 2002:a02:a402:: with SMTP id c2mr6320642jal.13.1556878565206;
+ Fri, 03 May 2019 03:16:05 -0700 (PDT)
+Date:   Fri, 03 May 2019 03:16:05 -0700
+In-Reply-To: <00000000000014285d05765bf72a@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d6796c0587f9097c@google.com>
+Subject: Re: BUG: unable to handle kernel paging request in do_mount
+From:   syzbot <syzbot+73c7fe4f77776505299b@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sabin.rapan@gmail.com, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Add missing RAPIDIO-related files and directories to MAINTAINERS
-entry.
-
-Signed-off-by: Robert P. J. Day <rpjday@crashcourse.ca>
-
----
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5c38f21aee78..1bd2f95c0df6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13020,6 +13020,16 @@ M:	Matt Porter <mporter@kernel.crashing.org>
- M:	Alexandre Bounine <alex.bou9@gmail.com>
- S:	Maintained
- F:	drivers/rapidio/
-+F:	include/linux/rio.h
-+F:	include/linux/rio_drv.h
-+F:	include/linux/rio_ids.h
-+F:	include/linux/rio_regs.h
-+F:	include/uapi/linux/rio_cm_cdev.h
-+F:	include/uapi/linux/rio_mport_cdev.h
-+F:	Documentation/rapidio/
-+F:	Documentation/ABI/testing/sysfs-bus-rapidio
-+F:	Documentation/ABI/testing/sysfs-class-rapidio
-+F:	Documentation/driver-api/rapidio.rst
-
- RAS INFRASTRUCTURE
- M:	Tony Luck <tony.luck@intel.com>
-
--- 
-
-========================================================================
-Robert P. J. Day                                 Ottawa, Ontario, CANADA
-                         http://crashcourse.ca
-
-Twitter:                                       http://twitter.com/rpjday
-LinkedIn:                               http://ca.linkedin.com/in/rpjday
-========================================================================
+This bug is marked as fixed by commit:
+vfs: namespace: error pointer dereference in do_remount()
+But I can't find it in any tested tree for more than 90 days.
+Is it a correct commit? Please update it by replying:
+#syz fix: exact-commit-title
+Until then the bug is still considered open and
+new crashes with the same signature are ignored.
