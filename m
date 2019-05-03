@@ -2,117 +2,146 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCB9C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F17C004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E492075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE30120B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:17:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUSJRB3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbfECSPg (ORCPT
+        id S1728713AbfECSRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 14:15:36 -0400
-Received: from gate.crashing.org ([63.228.1.57]:44738 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbfECSPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 14:15:36 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x43IF9Dv008894;
-        Fri, 3 May 2019 13:15:09 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x43IF8rU008889;
-        Fri, 3 May 2019 13:15:08 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Fri, 3 May 2019 13:15:08 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linux-kernel@vger.kernel.org, Scott Wood <oss@buserror.net>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] powerpc/32: Remove memory clobber asm constraint on dcbX() functions
-Message-ID: <20190503181508.GQ8599@gate.crashing.org>
-References: <20180109065759.4E54B6C73D@localhost.localdomain> <e482662f-254c-4ab7-b0a8-966a3159d705@c-s.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+        Fri, 3 May 2019 14:17:07 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42362 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726468AbfECSRH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 14:17:07 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p6so3081534pgh.9;
+        Fri, 03 May 2019 11:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ebeybqPyoYxIU9IJ9ueOCrDBH6yBD5+m4rUusA3XFTo=;
+        b=aUSJRB3WCAHVAVdM0oGRtjvAIyZDtDgH5Do3XuKHITJnXeDfJEdr9EqKCORhmMZJNO
+         9hS2Rq6UJkRLei94Lz2iuSJoLGbseX4xO65gRro1fqS1/JCHG2Go/XcVcxavuI0hsHKj
+         1ZeoyrUsS4Ul55o0G88ro5D4wXbQ+OI58EoIG/iIYmK1//Rd0pPaR24CCPqXwQPJ3zjs
+         HUBlkCNw/fqSiMKk3yb5WwDJzK+klXCFbZ623H8FzDinpMGj16QJQulCAUoPdgrl0aKU
+         4pUXWMfBkED8LBiUtH1cjd4yBiyyqfxmNY+DEiNVuNCZYdumac7xIU3mdkHJJ6k8eEoT
+         SSyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ebeybqPyoYxIU9IJ9ueOCrDBH6yBD5+m4rUusA3XFTo=;
+        b=ZwSySVmVkrsfuzKhFAuitZET91nVPHBng3VSFBiMe3V+1AJ10EYfug9poYVf7QoQtf
+         UNqYlnyHV/mdviE3v/xkQ3Ihv/uVGMCfAkJYM5N9MroeKtkE65bu5yK5FdSJOY8ozfIE
+         htYRyD2tWwDkoZKubx1F0/UivWxYq4ZjZNDN//irsxBz9V3TXZblRyPiB+BAvHTUZVad
+         azzKqw8e0bNI+E0PSAceMfnAR8qQFG3iSF9TnNr5KIzLLXFjXXD5tlqUayGpfvMYIQm+
+         JpJfEVDgyf3ZFyyIrzZrS9rNNkiT6p9qNkJIcI50/0qN+6zMRWJtMfOd1R/qISCM30L0
+         n6Dw==
+X-Gm-Message-State: APjAAAUyAVz9wq2Dv2GBkiHukUy6HWnPS4OixkBFFLIHjoofOLy06tOX
+        QZjAkwktHPszoCw2mmCI2Vw=
+X-Google-Smtp-Source: APXvYqxtziP5ATxi5cED6S8cnZK8oJZlDjzIpGwHS6yYOkJom4XxEYqlUAszNkOYSGX3GdfEnU1osg==
+X-Received: by 2002:a63:10c:: with SMTP id 12mr12613470pgb.276.1556907426365;
+        Fri, 03 May 2019 11:17:06 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k63sm15326pfb.108.2019.05.03.11.17.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 11:17:04 -0700 (PDT)
+Date:   Fri, 3 May 2019 11:17:03 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 3/3] dt-bindings: power: supply: Add bindings for
+ Microchip UCS1002
+Message-ID: <20190503181703.GA5088@roeck-us.net>
+References: <20190503170042.19334-1-andrew.smirnov@gmail.com>
+ <20190503170042.19334-4-andrew.smirnov@gmail.com>
+ <20190503170326.GB32529@roeck-us.net>
+ <CAHQ1cqGkcOHnW1S8QGGcgY3qV6ErCq5gbYgGwspVeoEt_ce6tg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e482662f-254c-4ab7-b0a8-966a3159d705@c-s.fr>
-User-Agent: Mutt/1.4.2.3i
+In-Reply-To: <CAHQ1cqGkcOHnW1S8QGGcgY3qV6ErCq5gbYgGwspVeoEt_ce6tg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
+On Fri, May 03, 2019 at 12:33:40PM -0500, Andrey Smirnov wrote:
+> On Fri, May 3, 2019 at 12:03 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> >
+> > On Fri, May 03, 2019 at 10:00:42AM -0700, Andrey Smirnov wrote:
+> > > Add bindings for Microchip UCS1002 Programmable USB Port Power
+> > > Controller with Charger Emulation.
+> > >
+> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > > Reviewed-by: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Enric Balletbo Serra <enric.balletbo@collabora.com>
+> > > Cc: Chris Healy <cphealy@gmail.com>
+> > > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > > Cc: Fabio Estevam <festevam@gmail.com>
+> > > Cc: Guenter Roeck <linux@roeck-us.net>
+> > > Cc: Sebastian Reichel <sre@kernel.org>
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Cc: linux-pm@vger.kernel.org
+> > > ---
+> > >  .../power/supply/microchip,ucs1002.txt        | 27 +++++++++++++++++++
+> > >  1 file changed, 27 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+> > > new file mode 100644
+> > > index 000000000000..1d284ad816bf
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+> > > @@ -0,0 +1,27 @@
+> > > +Microchip UCS1002 USB Port Power Controller
+> > > +
+> > > +Required properties:
+> > > +- compatible         : Should be "microchip,ucs1002";
+> > > +- reg                        : I2C slave address
+> > > +
+> > > +Optional properties:
+> > > +- interrupts         : A list of interrupts lines present (could be either
+> > > +                       corresponding to A_DET# pin, ALERT# pin, or both)
+> > > +- interrupt-names    : A list of interrupt names. Should contain (if
+> > > +                       present):
+> > > +                       - "a_det" for line connected to A_DET# pin
+> > > +                       - "alert" for line connected to ALERT# pin
+> > > +                       Both are expected to be IRQ_TYPE_EDGE_BOTH
+> > > +Example:
+> > > +
+> > > +&i2c3 {
+> > > +     charger@32 {
+> > > +             compatible = "microchip,ucs1002";
+> > > +             pinctrl-names = "default";
+> > > +             pinctrl-0 = <&pinctrl_ucs1002_pins>;
+> > > +             reg = <0x32>;
+> > > +             interrupts-extended = <&gpio5 2 IRQ_TYPE_EDGE_BOTH>,
+> > > +                                   <&gpio3 21 IRQ_TYPE_EDGE_BOTH>;
+> >
+> > interrupts ?
+> 
+> Can't really use it here since it assumes single "interrupt-parent"
+> (we have gpio5 and gpio3 as parents above)
+> 
+Ah, ok. Thanks for the clarification.
 
-On Fri, May 03, 2019 at 04:14:13PM +0200, Christophe Leroy wrote:
-> A while ago I proposed the following patch, and didn't get any comment 
-> back on it.
-
-I didn't see it.  Maybe because of holiday :-)
-
-> Do you have any opinion on it ? Is it good and worth it ?
-
-> Le 09/01/2018 à 07:57, Christophe Leroy a écrit :
-> >Instead of just telling GCC that dcbz(), dcbi(), dcbf() and dcbst()
-> >clobber memory, tell it what it clobbers:
-> >* dcbz(), dcbi() and dcbf() clobbers one cacheline as output
-> >* dcbf() and dcbst() clobbers one cacheline as input
-
-You cannot "clobber input".
-
-Seen another way, only dcbi clobbers anything; dcbz zeroes it instead,
-and dcbf and dcbst only change in what caches the data hangs out.
-
-> >--- a/arch/powerpc/include/asm/cache.h
-> >+++ b/arch/powerpc/include/asm/cache.h
-> >@@ -82,22 +82,31 @@ extern void _set_L3CR(unsigned long);
-> >  
-> >  static inline void dcbz(void *addr)
-> >  {
-> >-	__asm__ __volatile__ ("dcbz 0, %0" : : "r"(addr) : "memory");
-> >+	__asm__ __volatile__ ("dcbz 0, %1" :
-> >+			      "=m"(*(char (*)[L1_CACHE_BYTES])addr) :
-> >+			      "r"(addr) :);
-> >  }
-
-The instruction does *not* work on the memory pointed to by addr.  It
-works on the cache line containing the address addr.
-
-If you want to have addr always aligned, you need to document this, and
-check all callers, etc.
-
-> >  static inline void dcbf(void *addr)
-> >  {
-> >-	__asm__ __volatile__ ("dcbf 0, %0" : : "r"(addr) : "memory");
-> >+	__asm__ __volatile__ ("dcbf 0, %1" :
-> >+			      "=m"(*(char (*)[L1_CACHE_BYTES])addr) :
-> >+			      "r"(addr), "m"(*(char 
-> >(*)[L1_CACHE_BYTES])addr) :
-> >+			     );
-> >  }
-
-Newline damage...  Was that your mailer?
-
-
-Also, you may want a "memory" clobber anyway, to get ordering correct
-for the synchronisation instructions.
-
-I think your changes make things less robust than they were before.
-
-
-[ Btw.  Instead of
-
-	__asm__ __volatile__ ("dcbf 0, %0" : : "r"(addr) : "memory");
-
-you can do
-
-	__asm__ __volatile__ ("dcbf %0" : : "Z"(addr) : "memory");
-
-to save some insns here and there. ]
-
-
-Segher
+Guenter
