@@ -3,135 +3,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F82C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A372AC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25022075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5D22075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfECMKQ (ORCPT
+        id S1727896AbfECMKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 08:10:16 -0400
-Received: from mga06.intel.com ([134.134.136.31]:1063 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727827AbfECMKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 08:10:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 May 2019 05:10:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,425,1549958400"; 
-   d="scan'208";a="343043111"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.198])
-  by fmsmga005.fm.intel.com with ESMTP; 03 May 2019 05:10:00 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] perf scripts python: exported-sql-viewer.py: Add context menu
-Date:   Fri,  3 May 2019 15:08:27 +0300
-Message-Id: <20190503120828.25326-6-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190503120828.25326-1-adrian.hunter@intel.com>
-References: <20190503120828.25326-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Fri, 3 May 2019 08:10:23 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43030 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727827AbfECMKW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 08:10:22 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hMX18-00078T-Ax; Fri, 03 May 2019 12:10:18 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: rds: fix spelling mistake "syctl" -> "sysctl"
+Date:   Fri,  3 May 2019 13:10:17 +0100
+Message-Id: <20190503121017.5227-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a context menu (right-click) that provides options for copying to
-clipboard, including, for trees, the ability to copy only the cell under
-the mouse pointer.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+There is a spelling mistake in a pr_warn warning. Fix it.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- .../scripts/python/exported-sql-viewer.py     | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ net/rds/tcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 5804d9705ab7..421f3828ea43 100755
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -901,6 +901,8 @@ class TreeWindowBase(QMdiSubWindow):
- 		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
- 		self.view.CopyCellsToClipboard = CopyTreeCellsToClipboard
- 
-+		self.context_menu = TreeContextMenu(self.view)
-+
- 	def DisplayFound(self, ids):
- 		if not len(ids):
- 			return False
-@@ -1674,6 +1676,8 @@ class BranchWindow(QMdiSubWindow):
- 
- 		self.ResizeColumnsToContents()
- 
-+		self.context_menu = TreeContextMenu(self.view)
-+
- 		self.find_bar = FindBar(self, self, True)
- 
- 		self.finder = ChildDataItemFinder(self.model.root)
-@@ -2483,6 +2487,39 @@ def CopyCellsToClipboardHdr(view):
- def CopyCellsToClipboardCSV(view):
- 	CopyCellsToClipboard(view, True, True)
- 
-+# Context menu
-+
-+class ContextMenu(object):
-+
-+	def __init__(self, view):
-+		self.view = view
-+		self.view.setContextMenuPolicy(Qt.CustomContextMenu)
-+		self.view.customContextMenuRequested.connect(self.ShowContextMenu)
-+
-+	def ShowContextMenu(self, pos):
-+		menu = QMenu(self.view)
-+		self.AddActions(menu)
-+		menu.exec_(self.view.mapToGlobal(pos))
-+
-+	def AddCopy(self, menu):
-+		menu.addAction(CreateAction("&Copy selection", "Copy to clipboard", lambda: CopyCellsToClipboardHdr(self.view), self.view))
-+		menu.addAction(CreateAction("Copy selection as CS&V", "Copy to clipboard as CSV", lambda: CopyCellsToClipboardCSV(self.view), self.view))
-+
-+	def AddActions(self, menu):
-+		self.AddCopy(menu)
-+
-+class TreeContextMenu(ContextMenu):
-+
-+	def __init__(self, view):
-+		super(TreeContextMenu, self).__init__(view)
-+
-+	def AddActions(self, menu):
-+		i = self.view.currentIndex()
-+		text = str(i.data()).strip()
-+		if len(text):
-+			menu.addAction(CreateAction('Copy "' + text + '"', "Copy to clipboard", lambda: QApplication.clipboard().setText(text), self.view))
-+		self.AddCopy(menu)
-+
- # Table window
- 
- class TableWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
-@@ -2506,6 +2543,8 @@ class TableWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
- 
- 		self.ResizeColumnsToContents()
- 
-+		self.context_menu = ContextMenu(self.view)
-+
- 		self.find_bar = FindBar(self, self, True)
- 
- 		self.finder = ChildDataItemFinder(self.data_model)
-@@ -2622,6 +2661,8 @@ class TopCallsWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
- 		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
- 		self.view.CopyCellsToClipboard = CopyTableCellsToClipboard
- 
-+		self.context_menu = ContextMenu(self.view)
-+
- 		self.ResizeColumnsToContents()
- 
- 		self.find_bar = FindBar(self, self, True)
+diff --git a/net/rds/tcp.c b/net/rds/tcp.c
+index faf726e00e27..66121bc6f34e 100644
+--- a/net/rds/tcp.c
++++ b/net/rds/tcp.c
+@@ -551,7 +551,7 @@ static __net_init int rds_tcp_init_net(struct net *net)
+ 		tbl = kmemdup(rds_tcp_sysctl_table,
+ 			      sizeof(rds_tcp_sysctl_table), GFP_KERNEL);
+ 		if (!tbl) {
+-			pr_warn("could not set allocate syctl table\n");
++			pr_warn("could not set allocate sysctl table\n");
+ 			return -ENOMEM;
+ 		}
+ 		rtn->ctl_table = tbl;
 -- 
-2.17.1
+2.20.1
 
