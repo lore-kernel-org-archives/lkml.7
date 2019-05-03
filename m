@@ -3,79 +3,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E64EC04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F39C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06BB2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFACF2081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbfECNDQ (ORCPT
+        id S1727915AbfECND4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 09:03:16 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:57718 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfECNDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 09:03:15 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F24EA1A00C7;
-        Fri,  3 May 2019 15:03:13 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E565C1A0029;
-        Fri,  3 May 2019 15:03:13 +0200 (CEST)
-Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 5949A205F4;
-        Fri,  3 May 2019 15:03:13 +0200 (CEST)
-From:   laurentiu.tudor@nxp.com
-To:     netdev@vger.kernel.org, madalin.bucur@nxp.com,
-        camelia.groza@nxp.com, leoyang.li@nxp.com
-Cc:     Joakim.Tjernlund@infinera.com, davem@davemloft.net,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v3] dpaa_eth: fix SG frame cleanup
-Date:   Fri,  3 May 2019 16:03:11 +0300
-Message-Id: <20190503130311.9914-1-laurentiu.tudor@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 3 May 2019 09:03:56 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46972 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfECND4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 09:03:56 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gportay)
+        with ESMTPSA id 909AA263ADE
+From:   =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?utf-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@savoirfairelinux.com>
+Subject: [PATCH] uapi libc compat: fix spelling typo
+Date:   Fri,  3 May 2019 09:04:01 -0400
+Message-Id: <20190503130401.27294-1-gael.portay@collabora.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+From: Gaël PORTAY <gael.portay@savoirfairelinux.com>
 
-Fix issue with the entry indexing in the sg frame cleanup code being
-off-by-1. This problem showed up when doing some basic iperf tests and
-manifested in traffic coming to a halt.
+Replace 'm' with 'n' in "comflicting".
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
-Cc: <stable@vger.kernel.org>
+Signed-off-by: Gaël PORTAY <gael.portay@savoirfairelinux.com>
 ---
-v3:
- - added cc:stable tag (Joakim)
- - pulled from the original patch series and send individually
-
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 2 +-
+ include/uapi/linux/libc-compat.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index daede7272768..40420edc9ce6 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -1663,7 +1663,7 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 				 qm_sg_entry_get_len(&sgt[0]), dma_dir);
- 
- 		/* remaining pages were mapped with skb_frag_dma_map() */
--		for (i = 1; i < nr_frags; i++) {
-+		for (i = 1; i <= nr_frags; i++) {
- 			WARN_ON(qm_sg_entry_is_ext(&sgt[i]));
- 
- 			dma_unmap_page(dev, qm_sg_addr(&sgt[i]),
+diff --git a/include/uapi/linux/libc-compat.h b/include/uapi/linux/libc-compat.h
+index 8254c937c9f4..50ec41c4b660 100644
+--- a/include/uapi/linux/libc-compat.h
++++ b/include/uapi/linux/libc-compat.h
+@@ -21,7 +21,7 @@
+  *      e.g. #include <linux/libc-compat.h>
+  *     This include must be as early as possible.
+  *
+- * (b) In libc-compat.h add enough code to detect that the comflicting
++ * (b) In libc-compat.h add enough code to detect that the conflicting
+  *     userspace libc header has been included first.
+  *
+  * (c) If the userspace libc header has been included first define a set of
 -- 
-2.17.1
+2.21.0
 
