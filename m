@@ -3,83 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E24C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83159C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB7A52087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5E82087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556898950;
-	bh=D/XvJumUDNMV2xTwtOxmC4nWMEvGO3oJYlWKxAScgsQ=;
+	s=default; t=1556899063;
+	bh=AUKU07ZUFBcme7h7KpoCXxRbhp++Lt8tHdh+MTSYDRU=;
 	h=In-Reply-To:References:To:Cc:From:Subject:Date:List-ID:From;
-	b=XIomHNButBqi5qu2tYYcY1aynsL++8am7x7sOKYSFJ0XFH9V4Hk+WQezdIZ+YoemH
-	 odVmKfztkB6I4JNHul+jFhnFZ01iLgYPvFZZQrFMO+cs/6VRIe7YcNIf84Ao+qu5RL
-	 n8TKu0Z+o4JsK9tVwSA3T7L1Etx3CPUusEox68/E=
+	b=JRPzXELTW0Ng/Lv1+zJYQq2JetBNrx2nFcECUtwJHnjDH023ST8TB+u5gB5kN7JJD
+	 R3jUIsG9eysubp0QRIaA1PBEJkKIFAUXFBXnZmagCaA6oIrsTvp5mrdFAGaNbwAocd
+	 272AmTM+/8TSpGfMtEXpCvKfSQYwNcKgJz1IoVY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbfECPzt (ORCPT
+        id S1728389AbfECP5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 11:55:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33782 "EHLO mail.kernel.org"
+        Fri, 3 May 2019 11:57:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbfECPzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 11:55:49 -0400
+        id S1728282AbfECP5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 11:57:41 -0400
 Received: from localhost (unknown [104.132.0.70])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9CA22075C;
-        Fri,  3 May 2019 15:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E136A2075C;
+        Fri,  3 May 2019 15:57:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556898948;
-        bh=D/XvJumUDNMV2xTwtOxmC4nWMEvGO3oJYlWKxAScgsQ=;
+        s=default; t=1556899061;
+        bh=AUKU07ZUFBcme7h7KpoCXxRbhp++Lt8tHdh+MTSYDRU=;
         h=In-Reply-To:References:To:Cc:From:Subject:Date:From;
-        b=Vl1yP0w7dkC2K37JUCwcR6gWlrZnKjz8vWidBKP1ahFZ2dWxMzeypvHL6jmBeCQrn
-         4m7KCqWqiV6hoincYcaKEjnnUviLXouGsx+6XclvGS+8X7nA1LD0mvSNRxeY9arV4J
-         HptkoOzjePOhJKv2k+fg9Y1Ocx/fFlGSoIAKeX3g=
+        b=iI/v3AxYZ3PJnJf9fEElJ2Nayg2jbyzgtTKyeB6wlFN+K94YWkHAx/BRhkDtU21h9
+         PgnpcxZOLaP0pqK/8Zixe3GJVBZwSih16RDfnV+iabXZLPjyUNmtVPxruD55BWUB3d
+         BuTjUxT025pMKA56mDZaoNKJObKLJYbIfOkqv0rw=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190503092511.0054911e@canb.auug.org.au>
-References: <20190503092511.0054911e@canb.auug.org.au>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+In-Reply-To: <AM0PR04MB4211B63333AB7C50497AE17680350@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1556585557-28795-1-git-send-email-Anson.Huang@nxp.com> <155674445915.200842.2835083854881674143@swboyd.mtv.corp.google.com> <AM0PR04MB4211B63333AB7C50497AE17680350@AM0PR04MB4211.eurprd04.prod.outlook.com>
+To:     "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
 From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: linux-next: build failure after merge of the clk tree
-Message-ID: <155689894782.200842.4115245530077819749@swboyd.mtv.corp.google.com>
+Subject: RE: [PATCH V2] clk: imx: pllv4: add fractional-N pll support
+Message-ID: <155689906009.200842.4702575036187120025@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.8
-Date:   Fri, 03 May 2019 08:55:47 -0700
+Date:   Fri, 03 May 2019 08:57:40 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Rothwell (2019-05-02 16:25:11)
-> Hi all,
+Quoting Aisheng Dong (2019-05-02 19:38:34)
+> > From: Stephen Boyd [mailto:sboyd@kernel.org]
+> > Sent: Thursday, May 2, 2019 5:01 AM
+> >=20
+> > The Content-transfer-encoding header is still base64. I guess it can't =
+be fixed.
+> >=20
 >=20
-> After merging the clk tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
+> How can we know it's base64?
+> As I saw from the 'Headers' in patchwork, it's:
+> "Content-Type: text/plain; charset=3D"us-ascii"
+> Content-Transfer-Encoding: 7bit"
+> https://patchwork.kernel.org/patch/10922657/
 >=20
-> arch/arm/mach-omap2/omap_hwmod.c: In function '_get_clkdm':
-> arch/arm/mach-omap2/omap_hwmod.c:669:35: error: 'CLK_IS_BASIC' undeclared=
- (first use in this function); did you mean 'CLOCKS_MASK'?
->    if (__clk_get_flags(oh->_clk) & CLK_IS_BASIC)
->                                    ^~~~~~~~~~~~
->                                    CLOCKS_MASK
-> arch/arm/mach-omap2/omap_hwmod.c:669:35: note: each undeclared identifier=
- is reported only once for each function it appears in
->=20
-> Caused by commit
->=20
->   7c36ec8a90a8 ("clk: Remove CLK_IS_BASIC clk flag")
->=20
-> I have used the clk tree from next-20190502 for today.  (The above commit
-> does not revert cleanly.)
+> We'd like to fix it this.
 >=20
 
-Sorry, I got confused and merged the wrong branch over. Should be fixed
-up now.
+I see:
+
+Content-Type                                      text/plain; charset=3D"ut=
+f-8"                                                                       =
+                                =20
+Content-Transfer-Encoding                         base64              =20
+
+Maybe that's because I'm getting the mail directly instead of from the
+mailing list?
 
