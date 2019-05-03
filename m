@@ -2,103 +2,149 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D150C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55459C004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FF520675
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C4CC20675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:59:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DVHzpus3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfECH5n (ORCPT
+        id S1726300AbfECH7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:57:43 -0400
-Received: from smtp-out.xnet.cz ([178.217.244.18]:44389 "EHLO smtp-out.xnet.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725777AbfECH4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 03:56:41 -0400
-Received: from meh.true.cz (meh.true.cz [108.61.167.218])
-        (Authenticated sender: petr@true.cz)
-        by smtp-out.xnet.cz (Postfix) with ESMTPSA id 4B92B357E;
-        Fri,  3 May 2019 09:56:38 +0200 (CEST)
-Received: by meh.true.cz (OpenSMTPD) with ESMTP id 605aa6b0;
-        Fri, 3 May 2019 09:56:36 +0200 (CEST)
-From:   =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-To:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 04/10] net: davinci: support of_get_mac_address new ERR_PTR error
-Date:   Fri,  3 May 2019 09:56:01 +0200
-Message-Id: <1556870168-26864-5-git-send-email-ynezz@true.cz>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556870168-26864-1-git-send-email-ynezz@true.cz>
-References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
+        Fri, 3 May 2019 03:59:04 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:31868 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725775AbfECH7D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 03:59:03 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x437wN7I012786;
+        Fri, 3 May 2019 09:58:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=t609rofuUjW2NaRBXFT3b4myx0XAd7PIRxpvzFY38QQ=;
+ b=DVHzpus37rY9JnLDJSXa/PljnopKkvOOCeWw6Quita8INxNmef1CzUgFEqXWnlT3uiis
+ CB93ldPnYWNUARNN5GQnw8QEwTHKUcpR7HEqpx2jbC9W8VR7WddSEVW8ogweLzgqxu5F
+ KKM7sAlBEvByGX0cJz2fRssR7ydbq+iPz1hvCzbRrsk4Bj7fv7gpk6FOJjMdZS5CxW4c
+ dLxVQOxaSCo+5kbKP0J0g9NUXDN4IZCT3oqiAU4RDATlsSinClsIravJHEi6kNShKnHt
+ Q8rZ9p7FrN95/uEdTSbnyu+DjIv/x6e7dufFvkRupdP4TumB5nNXoEoairloIAV6OhXi Ng== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2s6xhbn0v7-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 03 May 2019 09:58:34 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3810231;
+        Fri,  3 May 2019 07:58:33 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0BD3D142E;
+        Fri,  3 May 2019 07:58:33 +0000 (GMT)
+Received: from [10.48.0.237] (10.75.127.47) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 3 May
+ 2019 09:58:32 +0200
+Subject: Re: [PATCH V2 1/3] watchdog: stm32: update to
+ devm_watchdog_register_device
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-watchdog@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1556806126-15890-1-git-send-email-ludovic.Barre@st.com>
+ <1556806126-15890-2-git-send-email-ludovic.Barre@st.com>
+ <20190502202122.GA27894@roeck-us.net>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <f649441e-b3fe-134d-9dea-ac7140fb2d9d@st.com>
+Date:   Fri, 3 May 2019 09:58:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190502202122.GA27894@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_03:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There was NVMEM support added directly to of_get_mac_address, and it
-uses nvmem_get_mac_address under the hood, so we can remove it. As
-of_get_mac_address can now return NULL and ERR_PTR encoded error values,
-adjust to that as well.
+hi Guenter
 
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
----
+On 5/2/19 10:21 PM, Guenter Roeck wrote:
+> On Thu, May 02, 2019 at 04:08:44PM +0200, Ludovic Barre wrote:
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch updates to devm_watchdog_register_device interface
+>>
+> Not that easy. See below.
+> 
+> A more complete solution is at
+> https://patchwork.kernel.org/patch/10894355
+> 
+> I have a total of three patches for this driver pending for
+> the next kernel release. Maybe it would make sense to (re-)
+> start this series from there after the next commit window
+> closes.
+> 
 
- Changes since v2:
+I used the repository defined in MAINTAINERS file
+git://www.linux-watchdog.org/linux-watchdog.git
+but there is no next branch.
 
- * ERR_PTR handling
+Today, I see your kernel.org repository
+https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git/
 
- drivers/net/ethernet/ti/davinci_emac.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+And I see your next branch, so I will use it.
 
-diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
-index 57450b1..4229ef0 100644
---- a/drivers/net/ethernet/ti/davinci_emac.c
-+++ b/drivers/net/ethernet/ti/davinci_emac.c
-@@ -1714,7 +1714,7 @@ static struct net_device_stats *emac_dev_getnetstats(struct net_device *ndev)
- 
- 	if (!is_valid_ether_addr(pdata->mac_addr)) {
- 		mac_addr = of_get_mac_address(np);
--		if (mac_addr)
-+		if (!IS_ERR_OR_NULL(mac_addr))
- 			ether_addr_copy(pdata->mac_addr, mac_addr);
- 	}
- 
-@@ -1912,15 +1912,11 @@ static int davinci_emac_probe(struct platform_device *pdev)
- 		ether_addr_copy(ndev->dev_addr, priv->mac_addr);
- 
- 	if (!is_valid_ether_addr(priv->mac_addr)) {
--		/* Try nvmem if MAC wasn't passed over pdata or DT. */
--		rc = nvmem_get_mac_address(&pdev->dev, priv->mac_addr);
--		if (rc) {
--			/* Use random MAC if still none obtained. */
--			eth_hw_addr_random(ndev);
--			memcpy(priv->mac_addr, ndev->dev_addr, ndev->addr_len);
--			dev_warn(&pdev->dev, "using random MAC addr: %pM\n",
--				 priv->mac_addr);
--		}
-+		/* Use random MAC if still none obtained. */
-+		eth_hw_addr_random(ndev);
-+		memcpy(priv->mac_addr, ndev->dev_addr, ndev->addr_len);
-+		dev_warn(&pdev->dev, "using random MAC addr: %pM\n",
-+			 priv->mac_addr);
- 	}
- 
- 	ndev->netdev_ops = &emac_netdev_ops;
--- 
-1.9.1
+Regards,
+Ludo
 
+> Guenter
+> 
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   drivers/watchdog/stm32_iwdg.c | 3 +--
+>>   1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+>> index e00e3b3..e191bd8 100644
+>> --- a/drivers/watchdog/stm32_iwdg.c
+>> +++ b/drivers/watchdog/stm32_iwdg.c
+>> @@ -243,7 +243,7 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+>>   		dev_warn(&pdev->dev,
+>>   			 "unable to set timeout value, using default\n");
+>>   
+>> -	ret = watchdog_register_device(wdd);
+>> +	ret = devm_watchdog_register_device(&pdev->dev, wdd);
+>>   	if (ret) {
+>>   		dev_err(&pdev->dev, "failed to register watchdog device\n");
+>>   		goto err;
+>> @@ -263,7 +263,6 @@ static int stm32_iwdg_remove(struct platform_device *pdev)
+>>   {
+>>   	struct stm32_iwdg *wdt = platform_get_drvdata(pdev);
+>>   
+>> -	watchdog_unregister_device(&wdt->wdd);
+>>   	clk_disable_unprepare(wdt->clk_lsi);
+>>   	clk_disable_unprepare(wdt->clk_pclk);
+> 
+> This disables the clock while the watchdog is still registered
+> and running. That is not a good idea.
+> 
+>>   
+>> -- 
+>> 2.7.4
+>>
