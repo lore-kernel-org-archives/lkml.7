@@ -2,90 +2,88 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC14C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AE3C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F4120675
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E41220675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbfECIFm (ORCPT
+        id S1726620AbfECIG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 04:05:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57366 "EHLO mx1.suse.de"
+        Fri, 3 May 2019 04:06:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57470 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfECIFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 04:05:42 -0400
+        id S1725775AbfECIG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 04:06:27 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CFD26AC4F;
-        Fri,  3 May 2019 08:05:40 +0000 (UTC)
-Date:   Fri, 3 May 2019 10:05:40 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     "Tobin C. Harding" <me@tobin.cc>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/5] kobject: Fix kernel-doc comment first line
-Message-ID: <20190503080540.4ar5adqmo2c5yh5n@pathway.suse.cz>
-References: <20190502023142.20139-1-tobin@kernel.org>
- <20190502023142.20139-4-tobin@kernel.org>
- <20190502073823.GQ26546@localhost>
- <20190502082539.GB18363@eros.localdomain>
- <20190502083922.GR26546@localhost>
- <20190503014015.GC7416@eros.localdomain>
- <20190503075607.GC26546@localhost>
+        by mx1.suse.de (Postfix) with ESMTP id 690BDAC4F;
+        Fri,  3 May 2019 08:06:26 +0000 (UTC)
+Date:   Fri, 3 May 2019 10:06:23 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 02/12] mm/sparsemem: Introduce common definitions for
+ the size and mask of a section
+Message-ID: <20190503080622.GD15740@linux>
+References: <155677652226.2336373.8700273400832001094.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155677653274.2336373.11220321059915670288.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190503075607.GC26546@localhost>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <155677653274.2336373.11220321059915670288.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2019-05-03 09:56:07, Johan Hovold wrote:
-> On Fri, May 03, 2019 at 11:40:15AM +1000, Tobin C. Harding wrote:
-> > On Thu, May 02, 2019 at 10:39:22AM +0200, Johan Hovold wrote:
-> > I am totally aware this is close to code churn and any discussion is
-> > bikeshedding ... for me just because loads of places don't do this it
-> > still looks nicer to my eyes
-> > 
-> > /**
-> > * sfn() - Super awesome function.
-> > 
-> > than
-> > 
-> > /**
-> > */ sfn() - super awesome function
-> > 
-> > I most likely will keep doing these changes if I am touching the
-> > kernel-doc comments for other reasons and then drop the changes if the
-> > subsystem maintainer thinks its code churn.
-> > 
-> > I defiantly won't do theses changes in GNSS, GREYBUS, or USB SERIAL.
+On Wed, May 01, 2019 at 10:55:32PM -0700, Dan Williams wrote:
+> Up-level the local section size and mask from kernel/memremap.c to
+> global definitions.  These will be used by the new sub-section hotplug
+> support.
 > 
-> This isn't about any particular subsystem, but more the tendency of
-> people to make up random rules and try to to force it on others. It's
-> churn, and also makes things like code forensics and backports harder
-> for no good reason.
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Jérôme Glisse <jglisse@redhat.com>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  include/linux/mmzone.h |    2 ++
+>  kernel/memremap.c      |   10 ++++------
+>  mm/hmm.c               |    2 --
+>  3 files changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index f0bbd85dc19a..6726fc175b51 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -1134,6 +1134,8 @@ static inline unsigned long early_pfn_to_nid(unsigned long pfn)
+>   * PFN_SECTION_SHIFT		pfn to/from section number
+>   */
+>  #define PA_SECTION_SHIFT	(SECTION_SIZE_BITS)
+> +#define PA_SECTION_SIZE		(1UL << PA_SECTION_SHIFT)
+> +#define PA_SECTION_MASK		(~(PA_SECTION_SIZE-1))
 
-+1
+As discussed here [1], we do not need the new PA_SECTION_MASK if we work with
+pfns/pages directly, so I'd drop it if you go that way.
 
-But I could understand that it is hard to keep it as is when it bothers
-ones eyes. I tend to change these things as well and have to activelly
-stop myself again and again ;-)
+Besides that:
 
-Best Regards,
-Petr
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
+[1] https://patchwork.kernel.org/patch/10926047/
+
+-- 
+Oscar Salvador
+SUSE L3
