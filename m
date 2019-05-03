@@ -4,79 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD46C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7936EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214FA20675
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B22F20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:44:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kFuDZSBW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBoQMI8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbfECRlj (ORCPT
+        id S1728601AbfECRow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:41:39 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:37922 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfECRli (ORCPT
+        Fri, 3 May 2019 13:44:52 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:40987 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfECRov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:41:38 -0400
-Received: by mail-yw1-f68.google.com with SMTP id b74so4797204ywe.5;
-        Fri, 03 May 2019 10:41:37 -0700 (PDT)
+        Fri, 3 May 2019 13:44:51 -0400
+Received: by mail-ua1-f65.google.com with SMTP id s30so2296940uas.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 10:44:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=p5M/unB0351EktCmdlsfTYqv7wEGQrmXxJ+Scs6yVQc=;
-        b=kFuDZSBWEO8l1xntay2cfVEMTDQa1wvYAE1OQwdwbDXRNs0fMP1U0cXxiH7LIpcTUv
-         jNCaiX94xhfp/Y69DiOejHn8716trG86YKnhQWH1SVwvrr1vqDHxfm0LAwJS10137egx
-         3eIJLGZAbvZmIP1OjDxSFgs5fq4EYaAgj4WK6uwIP/Lo5EnfiTVTpKzcEvDlglPk3cMf
-         p9axbDEf4E6UbouMJ048GZz0F3fulolXT4SGRq4/ErH5LqSIqqwY+XL5QozamFOjawCe
-         ClTP6v6aA5vLbZ+MoUFEA8D0uFdEpWYLcB+fIWyC/bOdfRTOajuaPChKqI4GLgZLuh+d
-         +k3A==
+        bh=Eb7/4hKFWccQPeYAcQ+tBEeG3Xuv86Wr0G2bXfLTgYY=;
+        b=WBoQMI8n76XRNG937wz4b3Y8tGCUDWk2dMzx/uAgPRb0VxD4EkI6s8+lIG09Cmi8x5
+         31LHkXnacwbV63sA7h5+G8JK5I8Fn4svA6MdYZ34m7zomopY7XVsdLc96dS9/v45yxG+
+         14gmaZ2fg8VkuB92sSIVGHMBYNQ4ofDqYMOuOjidm69R75p/p8LvuzzG44CZPI3UXlH4
+         YlCoYtK+sYv1VYJAhwoZccPemh4yrM7ZxGYhPkAG1ClhzgiFhC4RL/TneekPWF4rAJ8H
+         yXFikcjd36zXS2vUzWqltmwSSG7pjzOI9XrnCjkxK3Devm7LCw6X7ZKroc7M5rKjwASm
+         DUHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=p5M/unB0351EktCmdlsfTYqv7wEGQrmXxJ+Scs6yVQc=;
-        b=Gfy1nis42n2y1Ly+hwIodqcwSZ4xfsedDdsDnjbkqyxtJj1De4yEV96SWuyP21A1Pc
-         Xp9bzNhPICCSVqRXf3GP7KaNdFOKyyYoVpBnhHUxa7gdLl1peiON6gb0uToqkO54wigM
-         lQC6ktLA1SqCTnRN6I2xFFCt1oLnhNJYe2mBmxpykxKVmfNHCg+QzXH8gl3FNtV60utH
-         ZG2z40+hdTHlPJC/dPJppsM8oBPNOzvhVuSQFWfCKbtck5SgpboZG1aIIteZWQEEzIJ3
-         Hex80BdMvs3aJaz8u9opn1Y2/2dSQf0BOVTDaFK65W9Si2DPfBWi3/xmi3UyzSK4If4p
-         7eAg==
-X-Gm-Message-State: APjAAAV5zFPbyTCxr6xDbxV43LMB8vlOXXAYBxs6XD1bH1OU4NkkVG2H
-        MRYRx1lvFG9MGlNR9cPhj0s+iPYa9zL/vyNuobJgeOaB
-X-Google-Smtp-Source: APXvYqyDS9/1YJsbmFIpR5rHO/6h2SdQLqegzeSXpg9gzj7byMyu4kTfBGVddEHqp0M+yBjnYwECLVtURmYABWaC29o=
-X-Received: by 2002:a81:7c4:: with SMTP id 187mr8665382ywh.176.1556905297030;
- Fri, 03 May 2019 10:41:37 -0700 (PDT)
+        bh=Eb7/4hKFWccQPeYAcQ+tBEeG3Xuv86Wr0G2bXfLTgYY=;
+        b=uaChI6fhk9yZFCoQU+YFbMjuo8HYncQvX4HMujBLHMhThwPdoGZYwrq9HmEa02w9Zv
+         nMG32Q+sGOCNnzB2zHTxFT5Qa/CKHtjmUPceE0tMEyu4ovNyKhrFd6wk2Vg0z9YYiFCu
+         UQjlWgNKBxG5p0QwUcePdREL5YiHqlP4h4UtFl+0z5ALSoSaEd5wj/iH/WeOQK8AY8Ja
+         Rp4iQZ6KAlbdiBoMDImbd3jT/retjqvIu0HbhEo+Rs5OO9XsTVgBNFOMEZl1BSWnZ6kF
+         HImLl8FzGvRdKkKcceDzH/Ic+A9K09Lmbh0GZX8FXg4P8u/LgY2su5Xa+WSGmNSaNX5D
+         grcQ==
+X-Gm-Message-State: APjAAAVJ3ZPQrS4nBI+IwoNRetCrepNhkCoHFqke7wQdYZVmRFXEVJp/
+        iOGSE12RE4ZYBZuy0VG3HkuxbTGa2PA6pMbnzcA=
+X-Google-Smtp-Source: APXvYqy6Umi3GZnui/w256oSDLamokEgeN1ctBgmNjhN0Q/krHayWTf4sb9TeI7LGBIrQklVFLC6neUM0d06yZ+xXtI=
+X-Received: by 2002:ab0:1410:: with SMTP id b16mr5072449uae.1.1556905490552;
+ Fri, 03 May 2019 10:44:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
- <20190503153531.GJ12608@fieldses.org> <CAOQ4uxi6MRT=1nFqPD3cfEfBxHsGdUm=FgTjv3ts2bb4zSYwsw@mail.gmail.com>
- <20190503173133.GB14954@fieldses.org>
-In-Reply-To: <20190503173133.GB14954@fieldses.org>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 3 May 2019 13:41:25 -0400
-Message-ID: <CAOQ4uxjztNzH7EbK7o2vkhzzjULkEVKnnedep9GbTSyOhRV-3g@mail.gmail.com>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     NeilBrown <neilb@suse.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vivek Goyal <vgoyal@redhat.com>
+References: <CACDBo57s_ZxmxjmRrCSwaqQzzO5r0SadzMhseeb9X0t0mOwJZA@mail.gmail.com>
+ <11029.1556774479@turing-police>
+In-Reply-To: <11029.1556774479@turing-police>
+From:   Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>
+Date:   Fri, 3 May 2019 23:14:39 +0530
+Message-ID: <CACDBo54xXk-68MTsxw2K12gD0eGO0Xpq0rw60E3AX+2OEi3igw@mail.gmail.com>
+Subject: Re: Page Allocation Failure and Page allocation stalls
+To:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kernelnewbies@kernelnewbies.org, Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>, minchan@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,122 +71,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 1:31 PM J. Bruce Fields <bfields@fieldses.org> wrote=
-:
+On Thu, May 2, 2019 at 10:51 AM Valdis Kl=C4=93tnieks
+<valdis.kletnieks@vt.edu> wrote:
 >
-> On Fri, May 03, 2019 at 01:26:01PM -0400, Amir Goldstein wrote:
-> > On Fri, May 3, 2019 at 12:03 PM J. Bruce Fields <bfields@fieldses.org> =
-wrote:
-> > >
-> > > On Thu, May 02, 2019 at 12:02:33PM +1000, NeilBrown wrote:
-> > > > On Tue, Dec 06 2016, J. Bruce Fields wrote:
-> > > >
-> > > > > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wro=
-te:
-> > > > >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.=
-hu> wrote:
-> > > > >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
-> > > > >> > <andreas.gruenbacher@gmail.com> wrote:
-> > > > >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.gr=
-uenbacher@gmail.com>:
-> > > > >> >
-> > > > >> >>> It's not hard to come up with a heuristic that determines if=
- a
-> > > > >> >>> system.nfs4_acl value is equivalent to a file mode, and to i=
-gnore the
-> > > > >> >>> attribute in that case. (The file mode is transmitted in its=
- own
-> > > > >> >>> attribute already, so actually converting .) That way, overl=
-ayfs could
-> > > > >> >>> still fail copying up files that have an actual ACL. It's st=
-ill an
-> > > > >> >>> ugly hack ...
-> > > > >> >>
-> > > > >> >> Actually, that kind of heuristic would make sense in the NFS =
-client
-> > > > >> >> which could then hide the "system.nfs4_acl" attribute.
-> > > > >> >
-> > > > >> > Even simpler would be if knfsd didn't send the attribute if no=
-t
-> > > > >> > necessary.  Looks like there's code actively creating the nfs4=
-_acl on
-> > > > >> > the wire even if the filesystem had none:
-> > > > >> >
-> > > > >> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
-> > > > >> >     if (!pacl)
-> > > > >> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL=
-);
-> > > > >> >
-> > > > >> > What's the point?
-> > > > >>
-> > > > >> That's how the protocol is specified.
-> > > > >
-> > > > > Yep, even if we could make that change to nfsd it wouldn't help t=
-he
-> > > > > client with the large number of other servers that are out there
-> > > > > (including older knfsd's).
-> > > > >
-> > > > > --b.
-> > > > >
-> > > > >> (I'm not saying that that's very helpful.)
-> > > > >>
-> > > > >> Andreas
-> > > >
-> > > > Hi everyone.....
-> > > >  I have a customer facing this problem, and so stumbled onto the em=
-ail
-> > > >  thread.
-> > > >  Unfortunately it didn't resolve anything.  Maybe I can help kick t=
-hings
-> > > >  along???
-> > > >
-> > > >  The core problem here is that NFSv4 and ext4 use different and lar=
-gely
-> > > >  incompatible ACL implementations.  There is no way to accurately
-> > > >  translate from one to the other in general (common specific exampl=
-es
-> > > >  can be converted).
-> > > >
-> > > >  This means that either:
-> > > >    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vic=
-e
-> > > >       versa) or
-> > > >    2/ overlayfs need to accept that sometimes it cannot copy ACLs, =
-and
-> > > >       that is OK.
-> > > >
-> > > >  Silently not copying the ACLs is probably not a good idea as it mi=
-ght
-> > > >  result in inappropriate permissions being given away.  So if the
-> > > >  sysadmin wants this (and some clearly do), they need a way to
-> > > >  explicitly say "I accept the risk".
-> > >
-> > > So, I feel like silently copying ACLs up *also* carries a risk, if th=
-at
-> > > means switching from server-enforcement to client-enforcement of thos=
-e
-> > > permissions.
-> > >
-> > > Sorry, I know we had another thread recently about permissions in thi=
-s
-> > > situation, and I've forgotten the conclusion.
-> > >
-> > > Out of curiosity, what's done with selinux labels?
-> > >
-> >
-> > overlayfs calls security_inode_copy_up_xattr(name) which
-> > can fail (<0) allow (0) or skip(1).
-> >
-> > selinux_inode_copy_up_xattr() as well as smack_inode_copy_up_xattr()
-> > skip their own xattr on copy up and fail any other xattr copy up.
+> On Thu, 02 May 2019 04:56:05 +0530, Pankaj Suryawanshi said:
 >
-> If it's OK to silently skip copying up security labels, maybe it's OK to
-> silently skip NFSv4 ACLs too?
+> > Please help me to decode the error messages and reason for this errors.
 >
+> > [ 3205.818891] HwBinder:1894_6: page allocation failure: order:7, mode:=
+0x14040c0(GFP_KERNEL|__GFP_COMP), nodemask=3D(null)
+>
+> Order 7 - so it wants 2**7 contiguous pages.  128 4K pages.
+>
+kmalloc fails to allocate 2**7
 
-I think overlayfs inode security context is taken from overlayfs
-mount parameters (i.e. per container context) and therefore
-the lower security. xattr are ignored (CC Vivek).
+> > [ 3205.967748] [<802186cc>] (__alloc_from_contiguous) from [<80218854>]=
+ (cma_allocator_alloc+0x44/0x4c)
+>
+> And that 3205.nnn tells me the system has been running for almost an hour=
+. Going
+> to be hard finding that much contiguous free memory.
+>
+> Usually CMA is called right at boot to avoid this problem - why is this
+> triggering so late?
+>
+The use case for late triggering is someone try to play video after an
+hour, and video memory from CMA area, maybe its due to fragmentation.
+> > [  671.925663] kworker/u8:13: page allocation stalls for 10090ms, order=
+:1, mode:0x15080c0(GFP_KERNEL_ACCOUNT|__GFP_ZERO), nodemask=3D(null)
+>
+> That's.... a *really* long stall.
+>
+Yes very long any pointers to block this warnings/errors.
 
-Thanks,
-Amir.
+> > [  672.031702] [<8021e800>] (copy_process.part.5) from [<802203b0>] (_d=
+o_fork+0xd0/0x464)
+> > [  672.039617]  r10:00000000 r9:00000000 r8:9d008400 r7:00000000 r6:812=
+16588 r5:9b62f840
+> > [  672.047441]  r4:00808111
+> > [  672.049972] [<802202e0>] (_do_fork) from [<802207a4>] (kernel_thread=
++0x38/0x40)
+> > [  672.057281]  r10:00000000 r9:81422554 r8:9d008400 r7:00000000 r6:9d0=
+04500 r5:9b62f840
+> > [  672.065105]  r4:81216588
+> > [  672.067642] [<8022076c>] (kernel_thread) from [<802399b4>] (call_use=
+rmodehelper_exec_work+0x44/0xe0)
+>
+> First possibility that comes to mind is that a usermodehelper got launche=
+d, and
+> it then tried to fork with a very large active process image.  Do we have=
+ any
+> clues what was going on?  Did a device get hotplugged?
+
+Yes,The system is android and it tries to allocate memory for video
+player from CMA reserved memory using custom octl call for dma apis.
+
+Please let me know how to overcome this issues, or how to reduce
+fragmentation of memory so that higher order allocation get suuceed ?
+
+Thanks
