@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD82FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72855C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1D3206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CB420B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556864685;
-	bh=2y9HV1V/2dCrj3ppmfOIU8x+Zse9u+Gokj3DE+K1V5c=;
+	s=default; t=1556864693;
+	bh=oM2IlqH7/UF6m9zFg0I3difBjdcLX7dz2uC+4E4GNaM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Qy2Rv06sRKKYJNt98U/EPRkJiin5Ch7UHRei5UyXC3Tv0X4NrcV1YQXrJEvlASC6C
-	 9ixWZiFAtYPIsTnjtVe9vtGr+2djppkWtwNVWJ4fLGovqU3LVAuKUL7N8x9KK2SQYb
-	 p/vmB6eSMxWUCSs56uNf0niS+XOS7g37rESock7w=
+	b=i7R9y1h+q4JR6PHS+5iy1ScTifZ3woE3K+OsEvVcN+oren1F8BnV7wmDSpcskh9OK
+	 /BEuwidJZ+nPwctKCCxkw7Q5dkd1bdrv2VBaA3Y7zyZIWqp2DNJ7YBZ4rI7jxP09TF
+	 /fORPliha+vvrTt9EXwgUcJGqrJVgT3kMpPeEa7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfECGYo (ORCPT
+        id S1727167AbfECGYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:24:44 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33602 "EHLO
+        Fri, 3 May 2019 02:24:52 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33454 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbfECGXp (ORCPT
+        with ESMTP id S1726789AbfECGXm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:23:45 -0400
+        Fri, 3 May 2019 02:23:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=cdKCKYPz4QxPklp/Dp5dG8XAK9Cs+SYYmACxxeonNLE=; b=Gc15AAEFxkux
-        Xzlsx/7itlk0ZHtoQauiLxZnKDyQ/s4O5Yt4K6XGqlRGJl82l+T+bLT42IRs3eElSHBgWOyWZjQpw
-        Ys707ng270mCcSna+u/KXmiXtQNnZpDYrzFmGnlodbOaAhYZsSN1BJXEPOyTMzHk2eFJY5S153O8h
-        Kk9lU=;
+        List-Archive; bh=Fg9QrCpRCad16f0H55V9run4nG3IvYsKIRymL8V7ppI=; b=xSf0HZa2IIvm
+        qZkVs49z+hJ+W1y3YsuqBhQ8WOmqcptdLyL30vnc/pIhoey6cM4NT7b6ypLWCwC36Gm9Tb+lCdnDY
+        vC/BttHUC2ehigauUp/RqVGyic+OeT9WbTYBD8bF4aUjMP3V1zhIQb72lObEGEqJibAgw3TZvGwmg
+        6HGf4=;
 Received: from [42.29.24.106] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hMRbh-0000lJ-0C; Fri, 03 May 2019 06:23:41 +0000
+        id 1hMRbe-0000k8-0W; Fri, 03 May 2019 06:23:38 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 4BA3D441D3F; Fri,  3 May 2019 07:23:37 +0100 (BST)
+        id 095A2441D5B; Fri,  3 May 2019 07:23:34 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Pascal Paillet <p.paillet@st.com>
-Subject: Applied "regulator: stm32-pwr: Remove unneeded .min_uV and .list_volage" to the regulator tree
-In-Reply-To: <20190430111346.23427-2-axel.lin@ingics.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        patchwork-bot+notify@kernel.org
+Subject: Applied "ASoC: skip hw_free on codec dai for which the stream is invalid" to the asoc tree
+In-Reply-To: <20190429094750.1857-3-jbrunet@baylibre.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190503062337.4BA3D441D3F@finisterre.ee.mobilebroadband>
-Date:   Fri,  3 May 2019 07:23:37 +0100 (BST)
+Message-Id: <20190503062334.095A2441D5B@finisterre.ee.mobilebroadband>
+Date:   Fri,  3 May 2019 07:23:33 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: stm32-pwr: Remove unneeded .min_uV and .list_volage
+   ASoC: skip hw_free on codec dai for which the stream is invalid
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.1
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -87,41 +87,46 @@ to this mail.
 Thanks,
 Mark
 
-From 311a68a51a58bfdead971080d41a34ca565b47a0 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 30 Apr 2019 19:13:46 +0800
-Subject: [PATCH] regulator: stm32-pwr: Remove unneeded .min_uV and
- .list_volage
+From f47b9ad927c6370b80922af434dda98764a43804 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Mon, 29 Apr 2019 11:47:50 +0200
+Subject: [PATCH] ASoC: skip hw_free on codec dai for which the stream is
+ invalid
 
-For fixed regulator, setting .n_voltages = 1 and .fixed_uV is enough,
-no need to set .min_uV and .list_volage.
+Like for hw_params, hw_free should not be called on codec dai for
+which the current stream is invalid.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Fixes: cde79035c6cf ("ASoC: Handle multiple codecs with split playback / capture")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/stm32-pwr.c | 2 --
- 1 file changed, 2 deletions(-)
+ sound/soc/soc-pcm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
-index 8bd15e4d2cea..e0e627b0106e 100644
---- a/drivers/regulator/stm32-pwr.c
-+++ b/drivers/regulator/stm32-pwr.c
-@@ -102,7 +102,6 @@ static int stm32_pwr_reg_disable(struct regulator_dev *rdev)
- }
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 57088bd69e5d..a810f6eeffee 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -1031,6 +1031,9 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
  
- static const struct regulator_ops stm32_pwr_reg_ops = {
--	.list_voltage	= regulator_list_voltage_linear,
- 	.enable		= stm32_pwr_reg_enable,
- 	.disable	= stm32_pwr_reg_disable,
- 	.is_enabled	= stm32_pwr_reg_is_enabled,
-@@ -115,7 +114,6 @@ static const struct regulator_ops stm32_pwr_reg_ops = {
- 		.of_match = of_match_ptr(_name), \
- 		.n_voltages = 1, \
- 		.type = REGULATOR_VOLTAGE, \
--		.min_uV = _volt, \
- 		.fixed_uV = _volt, \
- 		.ops = &stm32_pwr_reg_ops, \
- 		.enable_mask = _en, \
+ codec_err:
+ 	for_each_rtd_codec_dai_rollback(rtd, i, codec_dai) {
++		if (!snd_soc_dai_stream_valid(codec_dai, substream->stream))
++			continue;
++
+ 		if (codec_dai->driver->ops->hw_free)
+ 			codec_dai->driver->ops->hw_free(substream, codec_dai);
+ 		codec_dai->rate = 0;
+@@ -1088,6 +1091,9 @@ static int soc_pcm_hw_free(struct snd_pcm_substream *substream)
+ 
+ 	/* now free hw params for the DAIs  */
+ 	for_each_rtd_codec_dai(rtd, i, codec_dai) {
++		if (!snd_soc_dai_stream_valid(codec_dai, substream->stream))
++			continue;
++
+ 		if (codec_dai->driver->ops->hw_free)
+ 			codec_dai->driver->ops->hw_free(substream, codec_dai);
+ 	}
 -- 
 2.20.1
 
