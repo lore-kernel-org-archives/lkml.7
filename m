@@ -2,90 +2,108 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE3BC004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01133C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C772089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556894085;
-	bh=/MHif5okGldV0zJQO9uwxXPuEkzcX3tjHeme2xBr56I=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=RgBFJ46MPld1AtlWkKdXrVIKbwCUdZ+1D2Hn9df53eTiHa6st20HN+UULxqKMwaAz
-	 1oR1M4A1GoeAbkjaPk5Crb+koTi/tj/IdBiMted6LzaqgrSuUcMETXu8C4Y2S7vnVV
-	 +zY52IsVLGeIBmeuTzigck5dOG+fIvYB39BLp+w0=
+	by mail.kernel.org (Postfix) with ESMTP id C6F042087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:35:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="shNY8wGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbfECOeo (ORCPT
+        id S1728014AbfECOfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:34:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbfECOen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:34:43 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25143205ED;
-        Fri,  3 May 2019 14:34:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556894083;
-        bh=/MHif5okGldV0zJQO9uwxXPuEkzcX3tjHeme2xBr56I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NQY37OjiDkyluGn7wp+DEOQ/rusC2ZYGlS4OkQ7N+lGvPlx4i/cOygGh1BvxNcmx4
-         rY1AGyNGOTnMTv1qPj+ls8/RXFBM4ovpE9ABphx0LXCOgriZ0pfU6jiokQXi8WZYPY
-         1sBgomiACkkAoeaTjbiQILVPV80zL82ux9sv8C8Q=
-Subject: Re: [PATCH v2 11/17] kunit: test: add test managed resource tests
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com,
-        Avinash Kondareddy <akndr41@gmail.com>,
-        shuah <shuah@kernel.org>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-12-brendanhiggins@google.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <8c37fd20-859c-9c34-4465-8adfcfdaab09@kernel.org>
-Date:   Fri, 3 May 2019 08:34:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190501230126.229218-12-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 3 May 2019 10:35:08 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46602 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfECOfI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 10:35:08 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bi2so2778848plb.13;
+        Fri, 03 May 2019 07:35:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kMGLnhggc8cifwRrjEK9HALOorMf0mLsznAzU3ByQJ4=;
+        b=shNY8wGsdG7K1gn0sScFEu/UG87+cKxU8rBCXtb8tyo+rAKekJK+7uISp4XTWWgBA4
+         mMR6f1lRqLExLgSCD47O08vLxUrzx+Aa7MtEwDM1fYTizYyGG991dxO+1rGubS8CeqGL
+         fuH0M46aEiOtlQIEybjoTs34L1vO9NcvFKaJCb2f7xoKFeK2vROY6owPj1Y4VdRET597
+         yXFSgXFQfIIaA0gouVJTOTy0z/eoMMxy5g+gNiK7bm0B/v3ylUmrwBMUtJZGJKxh2owY
+         9r45sdCvSgKdqpkckoiMVZ/5UPCn26BqC/8kYXBAKiZXhrY+0dj4HX8W3Z4OJFLiRSYl
+         +Mqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kMGLnhggc8cifwRrjEK9HALOorMf0mLsznAzU3ByQJ4=;
+        b=THODU3yHnS6lIzCyLc7fLHCvaSx4wHo7PvB6T49dntdaiNT7/fKDjxF/LkLbg/R5WE
+         tdpok1VV5QXs+ICr18LB47m/jbDrY4a4qdibk2LYh4XEmM+wo1/lKABrLJQZ6lHIhPgM
+         TVJGbbjhiQ29eCd/ouM4ab6aveRpC9T02Zm19mO8T4A2QSktLtGn/Oi5xBsE8bkNFdnD
+         AZdwiO4lsYR62g4XxpZ6aKV+78WwSwBdUQ4NESKYE9Ksy+aP9mFEDkCtVZtDosUYhBjW
+         dO3sC5L2g/nc95lyMIINgPuWpVfyZwG4HYH3qMMIQYxgVz7huQnkgv7oj2+eIGBOGdx7
+         xi+g==
+X-Gm-Message-State: APjAAAXVnd5TddQHcRq7xplxLVZaFw7QoXDTAaHANQv/HkfOe7P0z01v
+        btCgJ/I0+thB1GsUriWQG2g=
+X-Google-Smtp-Source: APXvYqzLw5RFP+moTLdaj7O6UqQIbnzuJQcywkHNCxDgZyn604CU0+GbY7CVtCWF8KqN+EQLh/fuSQ==
+X-Received: by 2002:a17:902:8c81:: with SMTP id t1mr2372272plo.333.1556893714461;
+        Fri, 03 May 2019 07:28:34 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id s19sm2789351pgj.62.2019.05.03.07.28.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 07:28:33 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] net: e1000: Fix some bugs in error handling code of e1000_probe()
+Date:   Fri,  3 May 2019 22:28:23 +0800
+Message-Id: <20190503142823.15319-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/19 5:01 PM, Brendan Higgins wrote:
-> From: Avinash Kondareddy <akndr41@gmail.com>
-> 
-> Tests how tests interact with test managed resources in their lifetime.
-> 
-> Signed-off-by: Avinash Kondareddy <akndr41@gmail.com>
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
+When "hw->ce4100_gbe_mdio_base_virt = ioremap(...)" fails, the driver
+does not free the memory allocated in e1000_sw_init(), and also calls
+"iounmap(hw->ce4100_gbe_mido_base_virt)" that is unnecessary.
 
-I think this change log could use more details. It is vague on what it
-does.
+Besides, when e1000_sw_init() fails, the driver also calls 
+"iounmap(hw->ce4100_gbe_mido_base_virt)" but 
+hw->ce4100_gbe_mido_base_virt has not been assigned.
 
-thanks,
--- Shuah
+These bugs are found by a runtime fuzzing tool named FIZZER written by us.
+
+To fix these bugs, the error handling code of e1000_probe() is adjusted.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/net/ethernet/intel/e1000/e1000_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+index 8fe9af0e2ab7..7743c4d9723f 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_main.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+@@ -1227,12 +1227,12 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	if (hw->flash_address)
+ 		iounmap(hw->flash_address);
++	iounmap(hw->ce4100_gbe_mdio_base_virt);
++err_mdio_ioremap:
+ 	kfree(adapter->tx_ring);
+ 	kfree(adapter->rx_ring);
+-err_dma:
+ err_sw_init:
+-err_mdio_ioremap:
+-	iounmap(hw->ce4100_gbe_mdio_base_virt);
++err_dma:
+ 	iounmap(hw->hw_addr);
+ err_ioremap:
+ 	disable_dev = !test_and_set_bit(__E1000_DISABLED, &adapter->flags);
+-- 
+2.17.0
 
