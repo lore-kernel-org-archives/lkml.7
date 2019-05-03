@@ -2,116 +2,123 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95734C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CEAC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 614E6206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:00:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EFan4mjW"
+	by mail.kernel.org (Postfix) with ESMTP id 309F320675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfECKA0 (ORCPT
+        id S1727378AbfECKFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 06:00:26 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42177 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfECKAZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 06:00:25 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l2so7071965wrb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 03:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PRAopPWeL4S3euytRS1nMzqnSButv4IeRogp1ulwv8s=;
-        b=EFan4mjWaWCv92gpX1vXUlcT4OVZK7FEiDH7p/3bnOqtYHSqenlLxRJQ0wQ0VS2UPY
-         NMwFVBJKpK5VE+BWn4wRJGQAFir4CwFKF/+O6Rz/ZDbrdRvHBaONs2NqNkm1aYBiDyNl
-         YYQcqzaV/t1hHeRtX5ChguzIoEBRumgA5ga/3XMv/+zl2ifMe2Y+nvP/NmSbnJQRAGcB
-         IG6BDtOKCulTUjP4/pPTHXXUot2OAivVAwIhMZHSuHgASaKEXhyO7RS1P5y2ZqVTQT05
-         3JlHhydeWGlj2PGITsJeupQtE0sTWcAGQWT2h1Hx5lnjPn9wNnWWJmAxNJ9/tNyGshUd
-         uwyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PRAopPWeL4S3euytRS1nMzqnSButv4IeRogp1ulwv8s=;
-        b=kilRnz1DCowqKcy5n8Swi7qHPihC/TV91fWqdX61I6QK67a9nyy2CvDXe7PbAoEw12
-         +bZe/+Ll7aDex4Y+u5XROfZfVGFxR8LMUOGQCyluUGEUyG5UXC/J/uISNOAOecuoNlRC
-         0oxzAXqrou1FfDEuPQEnbVkNK5bk+1ZfZzqcNj9+klG/QbHLkltI9hKyfhUCez/cp/5+
-         N1NqtbGhqxzwKYGZVGvKBi0lgSLQ9x40YpcQOp1jyKNA6rNlnOCtJbf3W4LQWW8wDHBY
-         1hwhFyq2m3fowF5UVIZ+KC+nz6658IsCe1kwW/gUhKMckYBECZs6t+UxsbQi9SZj8+PO
-         zdTQ==
-X-Gm-Message-State: APjAAAVmMoABroAgfyBEFtZa3rMhkELJ6wOlENbpqcdQZspbv+6KAL4F
-        SW41j+pVa01Q3l2j+nMEhIA=
-X-Google-Smtp-Source: APXvYqyjM73brLAKJq6+yXJVB6DnX6DD1BkXcftrX1JvKTH4WCPo9+xV+HWlboKWD30jUJfk7WS3Bg==
-X-Received: by 2002:a5d:54c7:: with SMTP id x7mr155345wrv.253.1556877623545;
-        Fri, 03 May 2019 03:00:23 -0700 (PDT)
-Received: from [192.168.1.4] (ip-86-49-110-70.net.upcbroadband.cz. [86.49.110.70])
-        by smtp.gmail.com with ESMTPSA id u11sm2033029wrg.35.2019.05.03.03.00.22
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 03:00:22 -0700 (PDT)
-Subject: Re: [PATCH] mtd: spi-nor: enable 4B opcodes for n25q256a
-To:     Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>,
-        linux-mtd@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org,
-        Brian Norris <computersforpeace@gmail.com>,
+        Fri, 3 May 2019 06:05:18 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57752 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725777AbfECKFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 06:05:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3CB1374;
+        Fri,  3 May 2019 03:05:16 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CC463F557;
+        Fri,  3 May 2019 03:05:11 -0700 (PDT)
+Date:   Fri, 3 May 2019 11:05:09 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
+        Helge Deller <deller@gmx.de>, Ley Foon Tan <lftan@altera.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Richard Kuo <rkuo@codeaurora.org>,
         Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-References: <20190503085327.5180-1-simon.k.r.goldschmidt@gmail.com>
-From:   Marek Vasut <marek.vasut@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <8161008c-fafd-a89f-d2d8-413224844cd2@gmail.com>
-Date:   Fri, 3 May 2019 12:00:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
+        nios2-dev@lists.rocketboards.org
+Subject: Re: [PATCH 04/15] arm64: switch to generic version of pte allocation
+Message-ID: <20190503100508.GB47811@lakrids.cambridge.arm.com>
+References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
+ <1556810922-20248-5-git-send-email-rppt@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190503085327.5180-1-simon.k.r.goldschmidt@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556810922-20248-5-git-send-email-rppt@linux.ibm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/19 10:53 AM, Simon Goldschmidt wrote:
-> Tested on socfpga cyclone5 where this is required to ensure that the
-> boot rom can access this flash after warm reboot.
+Hi,
 
-Are you sure _all_ variants of the N25Q256 support 4NB opcodes ?
-I think there were some which didn't, but I might be wrong.
-
-> Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+On Thu, May 02, 2019 at 06:28:31PM +0300, Mike Rapoport wrote:
+> The PTE allocations in arm64 are identical to the generic ones modulo the
+> GFP flags.
+> 
+> Using the generic pte_alloc_one() functions ensures that the user page
+> tables are allocated with __GFP_ACCOUNT set.
+> 
+> The arm64 definition of PGALLOC_GFP is removed and replaced with
+> GFP_PGTABLE_USER for p[gum]d_alloc_one() and for KVM memory cache.
+> 
+> The mappings created with create_pgd_mapping() are now using
+> GFP_PGTABLE_KERNEL.
+> 
+> The conversion to the generic version of pte_free_kernel() removes the NULL
+> check for pte.
+> 
+> The pte_free() version on arm64 is identical to the generic one and
+> can be simply dropped.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 > ---
-> 
->  drivers/mtd/spi-nor/spi-nor.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index fae147452..4cdec2cc2 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -1874,7 +1874,7 @@ static const struct flash_info spi_nor_ids[] = {
->  	{ "n25q064a",    INFO(0x20bb17, 0, 64 * 1024,  128, SECT_4K | SPI_NOR_QUAD_READ) },
->  	{ "n25q128a11",  INFO(0x20bb18, 0, 64 * 1024,  256, SECT_4K | SPI_NOR_QUAD_READ) },
->  	{ "n25q128a13",  INFO(0x20ba18, 0, 64 * 1024,  256, SECT_4K | SPI_NOR_QUAD_READ) },
-> -	{ "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> +	{ "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
->  	{ "n25q256ax1",  INFO(0x20bb19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_QUAD_READ) },
->  	{ "n25q512a",    INFO(0x20bb20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
->  	{ "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
-> 
+>  arch/arm64/include/asm/pgalloc.h | 43 ++++------------------------------------
+>  arch/arm64/mm/mmu.c              |  2 +-
+>  arch/arm64/mm/pgd.c              |  4 ++--
+>  virt/kvm/arm/mmu.c               |  2 +-
+>  4 files changed, 8 insertions(+), 43 deletions(-)
 
+[...]
 
--- 
-Best regards,
-Marek Vasut
+> diff --git a/arch/arm64/mm/pgd.c b/arch/arm64/mm/pgd.c
+> index 289f911..2ef1a53 100644
+> --- a/arch/arm64/mm/pgd.c
+> +++ b/arch/arm64/mm/pgd.c
+> @@ -31,9 +31,9 @@ static struct kmem_cache *pgd_cache __ro_after_init;
+>  pgd_t *pgd_alloc(struct mm_struct *mm)
+>  {
+>  	if (PGD_SIZE == PAGE_SIZE)
+> -		return (pgd_t *)__get_free_page(PGALLOC_GFP);
+> +		return (pgd_t *)__get_free_page(GFP_PGTABLE_USER);
+>  	else
+> -		return kmem_cache_alloc(pgd_cache, PGALLOC_GFP);
+> +		return kmem_cache_alloc(pgd_cache, GFP_PGTABLE_USER);
+>  }
+
+In efi_virtmap_init() we use pgd_alloc() to allocate a pgd for EFI
+runtime services, which we map with a special kernel page table.
+
+I'm not sure if accounting that is problematic, as it's allocated in a
+kernel thread off the back of an early_initcall.
+
+Just to check, Is that sound, or do we need a pgd_alloc_kernel()?
+
+Thanks,
+Mark.
