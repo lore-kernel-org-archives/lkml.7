@@ -2,128 +2,133 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687C5C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52856C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C39B20645
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228A220645
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:45:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4ls73du"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hRT6Lt40"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfECXpU (ORCPT
+        id S1726914AbfECXpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 19:45:20 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44254 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbfECXpU (ORCPT
+        Fri, 3 May 2019 19:45:51 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36889 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfECXpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 19:45:20 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z16so3439083pgv.11;
-        Fri, 03 May 2019 16:45:20 -0700 (PDT)
+        Fri, 3 May 2019 19:45:50 -0400
+Received: by mail-pl1-f195.google.com with SMTP id z8so3431782pln.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 16:45:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YwU0rEAoU3W17Opegh7mF+iV9cwzVugNkEFNcWTlMS4=;
-        b=N4ls73dujYNHFvMXFxBqEq7JfnVVj/+Nwi1F7ujWUhejmumxykj3wuGRHLGFReW99q
-         Z+wBbYIH3LGgGCTyGTzuz5CErGUB5Is4W1dPTGSsC5XD5Mm5istGcnCvCLHBO+LQag/J
-         BrMCZhqgwpAQvi7br01ycABkrY/lU6ZG8QuZ3GSDtYQeVEXg8DjrdYzG6kKR+ehc0PFE
-         7I8r643XSCYVZOxqzYJ7lKHdghnk86ExnwP2CGFs6qQryj7HT60ir9/lHGABH3i3Jxte
-         +jAxUHjnoh0SVLYLgXjHj3ILLXuip7qmogHqaX7ILhizUaKyWRTWw1VZ6KJfRxKU8Pfo
-         Tozg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XbIwRnpHasrOr38KG1gDBykd/s7vNBHOqXcN+WuSbls=;
+        b=hRT6Lt40DTjB+SAfX7dTiYCmgcS0xVV4LOZGxF1nNO1rE6hTxBbwg0EOCg90s634u1
+         RAmh5pNALXGX4G8EPiTonOV0il0j4303l80tCXD0rNbGUOUcwN7zZ9qvSXsYdKqHM6zL
+         ME3uD6VSGCzZb29q39EjXHNlWjKzINHiqmMl4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YwU0rEAoU3W17Opegh7mF+iV9cwzVugNkEFNcWTlMS4=;
-        b=kYZBDV6oy80hfqlsDFvqxViftxoNI58RlVA1X6qKhpI6xEXO7PhZHV4v/f0qQN2RtJ
-         AROJ0bhFdN0qMRCIC7qEriFkalAk/rAbaObKwB0UVn5bbluorJaepyQmCMNdaREWvy1a
-         K+PyXZ/RJ73qhUIPpvQrrBlADf/JR808czj81uoMTdXauRMpPwaaQAtXe9GprMOngIWC
-         i0Cw1tlhXt4x9/fck3FD+TSGiF/pGnsLb989yrrekgKmwhpUG5cHZu6yJKDJFYKZJFKQ
-         KB7k4q7DNW77sN5aIJyUebYgyMcImCi6VQ9aD5MBtlBd7eX/VWD4IDmpB7bPCo6KjgNB
-         w9Ow==
-X-Gm-Message-State: APjAAAUfPCvIP6La7LhkR1fSC6Bshh+AcseCeRNnLuv/wacoK4im96fv
-        D1vT4YdVJvDCzxRNLMmEx6UH4fRa
-X-Google-Smtp-Source: APXvYqxrXFp43Iis9R2K9Ny+WO/pkUJ5leYbrRI3UnraGRuqllaEvG0ru5TSKh2jIdtNSHP7WnA48Q==
-X-Received: by 2002:a63:5f42:: with SMTP id t63mr14176377pgb.275.1556927118425;
-        Fri, 03 May 2019 16:45:18 -0700 (PDT)
-Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id z9sm3861582pga.92.2019.05.03.16.45.16
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XbIwRnpHasrOr38KG1gDBykd/s7vNBHOqXcN+WuSbls=;
+        b=Zp+LaKVivXBgjnBnVpW/nLwazWzNYo6FSYx/SvlXOMEwnxHBgE++gFZy/ue+AiE74I
+         o+eQ5VvOHhOQYIEGi1/JuMeBmftfYVAMqf30BqbN460ZczMBBAiOPpthsenwKE1fITu/
+         dq/RCmuLImlU23lPzacYLwWdIeuvvsxL3C6GxMxoeulBKvRUD51QOK3DHjbMc0UZVjl2
+         0+UOl/40ClLxXYukbG0VwNhmdayOZp+SQomwz8WGbYsSO4MNeyl9WyPOTZ7oGpI6pnY1
+         5KNDYecuZMmoTubydfSPKseShzkv145DR5Oh34x4Oc7GjEMpRHO37IFixUlkO4L7DGRB
+         4iaA==
+X-Gm-Message-State: APjAAAVOFaaGfsGk1LNTyZor5qNX8zXvaSNRj+4cD2PqtmKFV5HNJpf4
+        /DAynrsvJewIzqjSwbOgiEf9HQ==
+X-Google-Smtp-Source: APXvYqywi/Agi0SinrIsRvR8a9BzPcCCDDx1uoFGnmEtsaMSQWa+m9ZHFlINHMkxcDC/VFmBjbEvQA==
+X-Received: by 2002:a17:902:6b01:: with SMTP id o1mr14464517plk.318.1556927149935;
+        Fri, 03 May 2019 16:45:49 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id f22sm4019071pgv.45.2019.05.03.16.45.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 16:45:17 -0700 (PDT)
-From:   Steve Longerbeam <slongerbeam@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] [media] docs-rst: Clarify older field vs. first transmitted field
-Date:   Fri,  3 May 2019 16:45:07 -0700
-Message-Id: <20190503234508.23183-1-slongerbeam@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 03 May 2019 16:45:49 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-rockchip@lists.infradead.org, briannorris@chromium.org,
+        mka@chromium.org, amstan@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: dts: rockchip: Make rk3288-veyron-mickey's emmc work again
+Date:   Fri,  3 May 2019 16:45:37 -0700
+Message-Id: <20190503234537.230177-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a paragraph to make it more clear that video equipment will transmit
-fields in the same order the fields were captured, and replace some of
-the "is transmitted first" language with "is the older field", since the
-latter is the important info for motion compensation applications.
+When I try to boot rk3288-veyron-mickey I totally fail to make the
+eMMC work.  Specifically my logs (on Chrome OS 4.19):
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+  mmc_host mmc1: card is non-removable.
+  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
+  mmc1: switch to bus width 8 failed
+  mmc1: switch to bus width 4 failed
+  mmc1: new high speed MMC card at address 0001
+  mmcblk1: mmc1:0001 HAG2e 14.7 GiB
+  mmcblk1boot0: mmc1:0001 HAG2e partition 1 4.00 MiB
+  mmcblk1boot1: mmc1:0001 HAG2e partition 2 4.00 MiB
+  mmcblk1rpmb: mmc1:0001 HAG2e partition 3 4.00 MiB, chardev (243:0)
+  mmc_host mmc1: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+  mmc_host mmc1: Bus speed (slot 0) = 50000000Hz (slot req 52000000Hz, actual 50000000HZ div = 0)
+  mmc1: switch to bus width 8 failed
+  mmc1: switch to bus width 4 failed
+  mmc1: tried to HW reset card, got error -110
+  mmcblk1: error -110 requesting status
+  mmcblk1: recovery failed!
+  print_req_error: I/O error, dev mmcblk1, sector 0
+  ...
+
+When I remove the '/delete-property/mmc-hs200-1_8v' then everything is
+hunky dory.
+
+That line comes from the original submission of the mickey dts
+upstream, so presumably at the time the HS200 was failing and just
+enumerating things as a high speed device was fine.  ...or maybe it's
+just that some mickey devices work when enumerating at "high speed",
+just not mine?
+
+In any case, hs200 seems good now.  Let's turn it on.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- Documentation/media/uapi/v4l/field-order.rst | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/media/uapi/v4l/field-order.rst b/Documentation/media/uapi/v4l/field-order.rst
-index 3fb473e3b8e2..19d13ecde1d7 100644
---- a/Documentation/media/uapi/v4l/field-order.rst
-+++ b/Documentation/media/uapi/v4l/field-order.rst
-@@ -51,6 +51,11 @@ determined by the video standard. Hence the distinction between temporal
- and spatial order of fields. The diagrams below should make this
- clearer.
+ arch/arm/boot/dts/rk3288-veyron-mickey.dts | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+index e852594417b5..b13f87792e9f 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
+@@ -128,10 +128,6 @@
+ 	};
+ };
  
-+In V4L it is assumed that all video cameras transmit fields on the media
-+bus in the same order they were captured, so if the top field was
-+captured first (is the older field), the top field is also transmitted
-+first on the bus.
-+
- All video capture and output devices must report the current field
- order. Some drivers may permit the selection of a different order, to
- this end applications initialize the ``field`` field of struct
-@@ -103,10 +108,10 @@ enum v4l2_field
-     * - ``V4L2_FIELD_INTERLACED``
-       - 4
-       - Images contain both fields, interleaved line by line. The temporal
--	order of the fields (whether the top or bottom field is first
--	transmitted) depends on the current video standard. M/NTSC
--	transmits the bottom field first, all other standards the top
--	field first.
-+	order of the fields (whether the top or bottom field is older)
-+	depends on the current video standard. In M/NTSC the bottom
-+	field is the older field. In all other standards the top field
-+	is the older field.
-     * - ``V4L2_FIELD_SEQ_TB``
-       - 5
-       - Images contain both fields, the top field lines are stored first
-@@ -137,11 +142,11 @@ enum v4l2_field
-     * - ``V4L2_FIELD_INTERLACED_TB``
-       - 8
-       - Images contain both fields, interleaved line by line, top field
--	first. The top field is transmitted first.
-+	first. The top field is the older field.
-     * - ``V4L2_FIELD_INTERLACED_BT``
-       - 9
-       - Images contain both fields, interleaved line by line, top field
--	first. The bottom field is transmitted first.
-+	first. The bottom field is the older field.
- 
- 
- 
+-&emmc {
+-	/delete-property/mmc-hs200-1_8v;
+-};
+-
+ &i2c2 {
+ 	status = "disabled";
+ };
 -- 
-2.17.1
+2.21.0.1020.gf2820cf01a-goog
 
