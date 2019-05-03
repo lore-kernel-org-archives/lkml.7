@@ -2,164 +2,133 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB21C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B133C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2512075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BF5206E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDskn1YS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E1kHCtY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfECXfR (ORCPT
+        id S1726765AbfECXfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 19:35:17 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41230 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfECXfQ (ORCPT
+        Fri, 3 May 2019 19:35:42 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40080 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfECXfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 19:35:16 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v23so5696830oif.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 16:35:16 -0700 (PDT)
+        Fri, 3 May 2019 19:35:41 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u17so3633965pfn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 16:35:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MLniKeyCZOpahcUdSYJAe+ot7SuFR+G7B9LsqPznig0=;
-        b=HDskn1YS7k1QYZ+dsJLnQNeCPcK16/2pTj9ez8EsQ+gInQ3GZ0BR0iMYwxt27t5Q08
-         hqpBaeBjwOKtVQgCsUJvamW67feFI3qlTGT1KcmHb1GNFq6dCzpwgWTQP/JzQUPCoh2n
-         gh9O0YLeaKKrsmhKadRh0K76x6bY8P9sjfUVyINU6ITXamAF6EGiGsKDgBzi64vXN4ct
-         bI3LFVghfyoCDK7Dz4t2VyfzUyc9GObLwk+M40fnSIHaNJsKpyVb0A/uTNBX6Qn6G0yU
-         J5rd391xjjIx53CQ+uUMu0rkwlGPR4eJbG8SVKyh/iDNDWmPx94d8aD8Aa44bL92YFsJ
-         CikQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SHEjHfO9A5bRiMAqWYWHqc/8OGhvcUxNJFwk8XrvHsE=;
+        b=E1kHCtY3StjY2jL6mVYyFBDOHkYOyxkDZHKrjgcQsUNJy8dDwNhCXMPstgxWlAWDVu
+         N6/tKl0/5fSaSVUZeI/AswN2edBTfVnN7rBh5z5LP395vsJXAlfWtuvsqNrYQVbSP7/9
+         hwBMR6j63Xx/mEajgFYbn6QXfKqogcl8pxheQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MLniKeyCZOpahcUdSYJAe+ot7SuFR+G7B9LsqPznig0=;
-        b=IGNZeKHNaXf6jhlLZSscPKMGrDfRV50u4QFAE5VrG9Xf9g5eLhVXVTLAxMU1Qx5WaL
-         wuF7qfjwmHi4Ie46A75F33w9zdFIn6LfzlZxgue1Tb3B1JgCWC/BylLBskXntS5p0Cr/
-         fap9H5sZ54tLSBeqCAJJkgpMf//DyV09EIV/pNnBNnj5ASG11CQk17Akud/4MGY3lFMs
-         K3IfTnabv24LeCLpT9S9iu5Gmx/W16fbrq0jfFHRfmMIkAdCno1TNFV6zwrA2OHGIlMM
-         6SHcojs4q3k9BX2zYSIiPAehzQjv7D4LM8zRCyi5nbdSRFA17Pm5Iqxz6M00VHXhKTHb
-         kcZg==
-X-Gm-Message-State: APjAAAVViCsV64EEYVScDbOt0tOcjWRqWgKh4fGbQ7vO5STMtLShw8cE
-        ojyLgzVotUfc5HHiPp/TbV6Uh7s86bl2CkYL2Eh7jg==
-X-Google-Smtp-Source: APXvYqy2Lu0/rrQmCa8ADPuIDsyZVIbwSsApFiDq4fylfiz6mfnP/sccRR8UgWJBV8TXH5UUr/Z/vBw+6dAjjeorUoo=
-X-Received: by 2002:aca:4f10:: with SMTP id d16mr875911oib.17.1556926515368;
- Fri, 03 May 2019 16:35:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SHEjHfO9A5bRiMAqWYWHqc/8OGhvcUxNJFwk8XrvHsE=;
+        b=DwWl7Kr5aUZlsXFWOUCWcCPlxE0wcJQk+7eIwiPWEovnFhxO9TRbXXVeaj/WXSKQp0
+         eiq+caAWnYyXPA2sDRpEB0hDkt9rt+oHezb74oCWYvRWLYYrrUM6IH43b+9jPFqTBycP
+         eRohTIYYO8zqkj421gRiNrT7pw8POuEo+Hb9KEZpVi+fo1ixkbQ+Z3+zJo0aUrOW6L+7
+         afTeMQIYdw/zUbnSpYYya+8TGeFFTZ/pACMUcK7gDHL23zoPF4JX+X8CiS0zJydqeQEQ
+         TeVHYmg14V7AhqxVNu1a0IJpc+4FKeJVmk4swd36pJ6oxBYb3GwWabNG1zXDewEH4SWi
+         nK0w==
+X-Gm-Message-State: APjAAAVpgAhxbMxTwAwOdkz6E8sekqUQNL4yL2fSiQ0OPFVb294IzIQi
+        kJeY7CFaRbmaDPkHUOizv8EW3w==
+X-Google-Smtp-Source: APXvYqxSl2kbX2wBpR+4fMn6q0ci7jtMz8uiaw/Pxs3UtU6+iNJMRtgXKO7o7X0k+XZwbkDsvK4mwA==
+X-Received: by 2002:a65:62d2:: with SMTP id m18mr14209583pgv.122.1556926540856;
+        Fri, 03 May 2019 16:35:40 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id l184sm7763304pfc.98.2019.05.03.16.35.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 16:35:39 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-rockchip@lists.infradead.org, groeck@chromium.org,
+        mka@chromium.org, drinkcat@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Ming Lei <ming.lei@redhat.com>, linux-mmc@vger.kernel.org,
+        Hannes Reinecke <hare@suse.com>, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@fb.com>
+Subject: [PATCH] mmc: block: Fix memory leak in blk-mq when cleaning up
+Date:   Fri,  3 May 2019 16:35:26 -0700
+Message-Id: <20190503233526.226272-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-References: <s5hsgu0ihyg.wl-tiwai@suse.de> <EksOpJxc6GB@mike.franken.de>
- <20190430090021.GF26516@lahna.fi.intel.com> <CAJZ5v0j_fYqtMv07C-V_9fCJ6=1ec3GjvT2M7PXVNSbZpoM67Q@mail.gmail.com>
- <20190502114839.GC24696@kroah.com>
-In-Reply-To: <20190502114839.GC24696@kroah.com>
-From:   Furquan Shaikh <furquan@google.com>
-Date:   Fri, 3 May 2019 16:35:02 -0700
-Message-ID: <CAEGmHFFGpUmK1VitkUxqXL29dBrKwbceT0pEOeR_7+_4+eLzvA@mail.gmail.com>
-Subject: Re: [REGRESSION 5.0.8] Dell thunderbolt dock broken (xhci_hcd and thunderbolt)
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>, mh@mike.franken.de,
-        Lukas Wunner <lukas@wunner.de>, Takashi Iwai <tiwai@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>, ckellner@redhat.com,
-        Jiri Slaby <jslaby@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Robert Moore <robert.moore@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 4:48 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Apr 30, 2019 at 11:37:48AM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Apr 30, 2019 at 11:00 AM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > >
-> > > +Rafael, Furquan and linux-acpi
-> > >
-> > > (The original thread is here https://lore.kernel.org/lkml/s5hy33siofw.wl-tiwai@suse.de/T/#u)
-> > >
-> > > On Tue, Apr 30, 2019 at 10:39:00AM +0200, Michael Hirmke wrote:
-> > > > Hi Takashi,
-> > > >
-> > > > [...]
-> > > > >>> I also have XPS 9370 but not that particular dock. I will check tomorrow
-> > > > >>> if I can reproduce it as well.
-> > > > >>
-> > > > >> There aren't too many changes between 5.0.7 and 5.0.8 that touch
-> > > > >> PCI/ACPI. This is just a shot in the dark but could you try to revert:
-> > > > >>
-> > > > >>   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.gi
-> > > > >>   t/commit/?h=linux-5.0.y&id=da6a87fb0ad43ae811519d2e0aa325c7f792b13a
-> > > > >>
-> > > > >> and see if it makes any difference?
-> > > >
-> > > > >OK, I'm building a test kernel package with the revert in OBS
-> > > > >home:tiwai:bsc1133486 repo.  A new kernel will be
-> > > > >kernel-default-5.0.10-*g8edeab8:
-> > > > >  http://download.opensuse.org/repositories/home:/tiwai:/bsc1133486/standard/
-> > > >
-> > > > >Michael, once when the new kernel is ready, please give it a try.
-> > > >
-> > > > as far as I can see, state is back to normal with this kernel.
-> > > > No more error messages or crashing modules and all devices seem to work
-> > > > as expected.
-> > > > Only thing is, that the external devices connected to the Thunderbolt
-> > > > dock are coming up a little bit slower than with 5.0.7 - but this is
-> > > > nothing, I'd worry about.
-> > >
-> > > Thanks for testing.
-> > >
-> > > Rafael, it seems that commit c8b1917c8987 ("ACPICA: Clear status of GPEs
-> > > before enabling them") causes problem with Thunderbolt controllers if
-> > > you boot with device (dock) connected.
-> > >
-> > > I think the reason is the same that got fixed in v4.14 with commit
-> > > ecc1165b8b74 ("ACPICA: Dispatch active GPEs at init time") which the
-> > > above commit essentially undoes if I understand it correctly.
-> >
-> > OK, I'll queue up a revert of that one then, thanks!
-> >
-> > Erik, I think that commit c8b1917c8987 has been picked up by the
-> > upstream ACPICA already.  If I'm not mistaken, it needs to be reverted
-> > from there as well.
->
-> I've queued the revert up in the stable trees as it has hit Linus's tree
-> now, and will push out a new round of stable kernels soon.
->
-> thanks,
->
-> greg k-h
+If I run the following on rk3288-veyron-minnie (a 2GB machine)
 
-Thanks for reporting the issue and apologize for the breakage. When I
-pushed the patch, my understanding was that the device drivers do not
-depend on stale GPE events to take any action.
+  cd /sys/bus/platform/drivers/dwmmc_rockchip
+  for i in $(seq 1 3000); do
+    echo "========================" $i
+    echo ff0f0000.dwmmc > unbind
+    sleep .5
+    echo ff0f0000.dwmmc > bind
+    while true; do
+      if [ -e /dev/mmcblk2 ]; then
+        break;
+      fi
+      sleep .1
+    done
+  done
 
-I am curious to understand the behavior for the thunderbolt device
-since I do not have one to test with. The failure seems to be a result
-of either having a edge-triggered interrupt or a pulse interrupt which
-indicates some kind of ready condition to the kernel driver. All the
-runtime GPEs seem to be initialized as part of acpi_init before ACPI
-bus is scanned. So, is this some special kind of requirement for
-thunderbolt that requires GPE enabled before the device can actually
-be probed. And so the GPEs going active before being enabled are then
-used as a way to call into ACPI Method to enable something which is
-essential for probing of device?
+Then I start OOMing somewhere between iteration 200 and 250.  Using
+kmemleak, I see reports like:
 
-The other question I have is given that handling of GPE events that
-were active before being enabled is required at least for some set of
-devices (e.g. thunderbolt), what is a good way to solve the original
-problem that was being addressed by the patch being reverted i.e.
-stale events resulting in spurious wakes on wakeup GPEs. One way I can
-think of is clearing the status of GPEs when they are setup for
-wake(acpi_setup_gpe_for_wake). What do you think?
+unreferenced object 0xe39c5580 (size 64):
+  comm "kworker/1:0", pid 17, jiffies 4294821091 (age 96.952s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<ad19d10a>] __kmalloc+0x1ec/0x2dc
+    [<a28614c3>] blk_mq_alloc_tag_set+0x27c/0x2bc
+    [<0955ae01>] mmc_init_queue+0xa8/0x2a8
+    [<5102b986>] mmc_blk_alloc_req+0xf8/0x2d4
+    [<f1c2214f>] mmc_blk_probe+0x4a8/0x6c0
+    [<0dfdd9d5>] mmc_bus_probe+0x24/0x28
+
+It's pretty clear that we're missing a call to blk_mq_free_tag_set().
+Let's add it.
+
+Fixes: 81196976ed94 ("mmc: block: Add blk-mq support")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+
+ drivers/mmc/core/queue.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+index 7c364a9c4eeb..09071e13282e 100644
+--- a/drivers/mmc/core/queue.c
++++ b/drivers/mmc/core/queue.c
+@@ -480,6 +480,8 @@ void mmc_cleanup_queue(struct mmc_queue *mq)
+ 	 */
+ 	flush_work(&mq->complete_work);
+ 
++	blk_mq_free_tag_set(&mq->tag_set);
++
+ 	mq->card = NULL;
+ }
+ 
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
