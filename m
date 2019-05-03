@@ -3,169 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B24C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4F3C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277552081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9B22063F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Z9DJFCMs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loJhy4XJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfECKhQ (ORCPT
+        id S1727609AbfECKhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 06:37:16 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:53170 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbfECKhP (ORCPT
+        Fri, 3 May 2019 06:37:20 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44000 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727436AbfECKhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 06:37:15 -0400
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x43AbBq2016654;
-        Fri, 3 May 2019 19:37:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x43AbBq2016654
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1556879832;
-        bh=nx8pRpSymsndYyxiLURa2CmLp1S0V3DIvOeXzS6J2dI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Z9DJFCMs9SiG0ydN+PixilbR52yYIyY2zfsPB4K9H9YDIZeaiO0+73EV37BI4dbKT
-         RIwY8tmNwZeXEt9//bhIvkYWIhfW2IkzzH771aRBvscTu9GEHoQzcpjJ2/mceswuyA
-         UoYtEVm+7rpwbX9TsIqHs2aB8WSYzGo289mkk2MluGxo+kQWlVOI55hY8Uc1/aDk5X
-         VYekSVunoIfpqxu37gsIlPVBJYa9z5MOVA54gyFomljDwfKI1uhys53T6nwrTJ2nVq
-         QylcF8PTyIHK9LgKR9vf+WBxHVRuogdZ50YluV2ZhEOzEo2Cd+9/7v8nhX6EqBk386
-         v5ePSyPvmuTQQ==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id z145so3291977vsc.0;
-        Fri, 03 May 2019 03:37:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAUcb1r14WV2VMX5meLM6hz5ZlDcxSX13qDP/jbuq8f9E19kt8PS
-        6+vaO35sWVd8P44+AacBfclE9BU2bj5eVDYJjBs=
-X-Google-Smtp-Source: APXvYqwW2Xu7GuqfKtmc5UNaxfQ7dLxglJaqeji2MUglK/C6WjCbAXsTf0Y6inBC5zIGxhOWML+vIGWkcTtVvMWlajs=
-X-Received: by 2002:a67:ee98:: with SMTP id n24mr4943708vsp.155.1556879831230;
- Fri, 03 May 2019 03:37:11 -0700 (PDT)
+        Fri, 3 May 2019 06:37:18 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u27so3803589lfg.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 03:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y49iuZlGEFRKXGMhL/FW153snu1fMi8v/es25880oE8=;
+        b=loJhy4XJ97xuNf+RrpSA+jCJMImzpJ6++PjvZ3i+MfQK3dS1nWqOJbjKYB4QcVeQHU
+         18pp/eByTT443pvkHn8G3n8oY/EpCXnMMlJjlVjJSKM34iB8HzqJ74dogtIAyYQx5wwi
+         SDDuxo4bNGGgSoNkV6ngd2ulv2Lg1eveOEwULJvBt2juAmdWqOkMr4c7zcC1VqIChbNt
+         yk+HgI4/yiG/SlUDJj8aDQdNTdAwUN1L+dhvQZGkQImNLMC+deS5j3/304qUhcQyNB7r
+         LsUARKemMOAfqft34Qg6d3Epi1ObP6uDY3/xsEy08J8YFfp1qBEgGjayFLOCLOISgr6O
+         d2Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y49iuZlGEFRKXGMhL/FW153snu1fMi8v/es25880oE8=;
+        b=SqQU9hLIcGmcXcatXYcR65Gy4ZW29TDQ3ZguTE3GXZ/X9bSWCXzW/kntm257vONw0s
+         5yBf/TMzmVd/q51t+K+abj8ApPyWX4+l/gCWZQuBbqtLomM6zWTiakCLUghbhE9aO5TJ
+         04N+RH8DwxPehgb9mxz09cC+qb55DIq6TzDiU+hbBHBRpsndTOjShPy8B9QhdEI/Y6Aj
+         Q6B56efic5Ps20VROKjEf6KjYzzOVSg22ug3SOdjbNUvK06bCc7zasKqqOiFQdF2ak8a
+         CiCPljy9l97a5Ki1HJ7yffVxYVI0HDS16jxiL3nd/olQm1pP1NRTNZ3kV//WbJY3Y+iL
+         JZyA==
+X-Gm-Message-State: APjAAAWEewW2YdhzagN0q/4UqQ4Oa25ZXALMTgrKLhENq3VW0l7bD/YG
+        IGfgf27C5q/V8itLYAS8KczQV5u7cdq7NwSRGQ4=
+X-Google-Smtp-Source: APXvYqxU+UuYktvsztEvJ9/ariHXzb6Ot8TO3Mjaxpfia5I1sJ6/SrkkV2s5OAkU7J7gMftr/G2qyyQxowiQWzM4eiA=
+X-Received: by 2002:a19:ec12:: with SMTP id b18mr4411872lfa.149.1556879836632;
+ Fri, 03 May 2019 03:37:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
- <20190423034959.13525-6-yamada.masahiro@socionext.com> <20190502161346.07c15187@xps13>
-In-Reply-To: <20190502161346.07c15187@xps13>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 3 May 2019 19:36:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQH8v8_HG6-cytT4qe05W9iiYwEP1mud4zG2NxxYcFptQ@mail.gmail.com>
-Message-ID: <CAK7LNAQH8v8_HG6-cytT4qe05W9iiYwEP1mud4zG2NxxYcFptQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v3 05/11] mtd: rawnand: vf610_nfc: add initializer
- to avoid -Wmaybe-uninitialized
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Mathieu Malaterre <malat@debian.org>, X86 ML <x86@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20190503085327.5180-1-simon.k.r.goldschmidt@gmail.com> <8161008c-fafd-a89f-d2d8-413224844cd2@gmail.com>
+In-Reply-To: <8161008c-fafd-a89f-d2d8-413224844cd2@gmail.com>
+From:   Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Date:   Fri, 3 May 2019 12:37:05 +0200
+Message-ID: <CAAh8qsyBHCD9o_wyk6cHxyxagpQvX0dtXxy_P4KqZgoeU8VrEg@mail.gmail.com>
+Subject: Re: [PATCH] mtd: spi-nor: enable 4B opcodes for n25q256a
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     linux-mtd@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
-
-On Thu, May 2, 2019 at 11:14 PM Miquel Raynal <miquel.raynal@bootlin.com> w=
-rote:
+On Fri, May 3, 2019 at 12:00 PM Marek Vasut <marek.vasut@gmail.com> wrote:
 >
-> Hi Masahiro,
+> On 5/3/19 10:53 AM, Simon Goldschmidt wrote:
+> > Tested on socfpga cyclone5 where this is required to ensure that the
+> > boot rom can access this flash after warm reboot.
 >
-> Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 23 Apr
-> 2019 12:49:53 +0900:
->
-> > This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
-> > place. We need to eliminate potential issues beforehand.
-> >
-> > Kbuild test robot has never reported -Wmaybe-uninitialized warning
-> > for this probably because vf610_nfc_run() is inlined by the x86
-> > compiler's inlining heuristic.
-> >
-> > If CONFIG_OPTIMIZE_INLINING is enabled for a different architecture
-> > and vf610_nfc_run() is not inlined, the following warning is reported:
-> >
-> > drivers/mtd/nand/raw/vf610_nfc.c: In function =E2=80=98vf610_nfc_cmd=E2=
-=80=99:
-> > drivers/mtd/nand/raw/vf610_nfc.c:455:3: warning: =E2=80=98offset=E2=80=
-=99 may be used uninitialized in this function [-Wmaybe-uninitialized]
-> >    vf610_nfc_rd_from_sram(instr->ctx.data.buf.in + offset,
-> >    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >             nfc->regs + NFC_MAIN_AREA(0) + offset,
-> >             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >             trfr_sz, !nfc->data_access);
-> >             ~~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> IMHO this patch has no dependencies with this series.
+> Are you sure _all_ variants of the N25Q256 support 4NB opcodes ?
+> I think there were some which didn't, but I might be wrong.
 
+Oh, damn, you're right. The documentation [1] statest that 4-byte erase and
+program opcodes are only supported for part numbers N25Q256A83ESF40x,
+N25Q256A83E1240x and N25QA83ESFA0F.
 
-This patch is the prerequisite for 11/11.
-https://lore.kernel.org/patchwork/patch/1064959/
+Any idea of how I can still enable 4-byte opcodes for my chip?
 
-
-Without the correct patch order,
-the kbuild test robot reports the warning.
-
-
-> Would you mind sending it alone with the proper Fixes tag?
-
-
-I do not think Fixes is necessary.
-
-Nobody has noticed this potential issue before.
-Without 11/11, probably we cannot reproduce this warning.
-
-
-BTW, this series has been for a while in linux-next.
-
+Regards,
+Simon
 
 >
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
 > > ---
 > >
-> > Changes in v3: None
-> > Changes in v2:
-> >   - split into a separate patch
-> >
-> >  drivers/mtd/nand/raw/vf610_nfc.c | 2 +-
+> >  drivers/mtd/spi-nor/spi-nor.c | 2 +-
 > >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > diff --git a/drivers/mtd/nand/raw/vf610_nfc.c b/drivers/mtd/nand/raw/vf=
-610_nfc.c
-> > index a662ca1970e5..19792d725ec2 100644
-> > --- a/drivers/mtd/nand/raw/vf610_nfc.c
-> > +++ b/drivers/mtd/nand/raw/vf610_nfc.c
-> > @@ -364,7 +364,7 @@ static int vf610_nfc_cmd(struct nand_chip *chip,
-> >  {
-> >       const struct nand_op_instr *instr;
-> >       struct vf610_nfc *nfc =3D chip_to_nfc(chip);
-> > -     int op_id =3D -1, trfr_sz =3D 0, offset;
-> > +     int op_id =3D -1, trfr_sz =3D 0, offset =3D 0;
-> >       u32 col =3D 0, row =3D 0, cmd1 =3D 0, cmd2 =3D 0, code =3D 0;
-> >       bool force8bit =3D false;
+> > diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> > index fae147452..4cdec2cc2 100644
+> > --- a/drivers/mtd/spi-nor/spi-nor.c
+> > +++ b/drivers/mtd/spi-nor/spi-nor.c
+> > @@ -1874,7 +1874,7 @@ static const struct flash_info spi_nor_ids[] = {
+> >       { "n25q064a",    INFO(0x20bb17, 0, 64 * 1024,  128, SECT_4K | SPI_NOR_QUAD_READ) },
+> >       { "n25q128a11",  INFO(0x20bb18, 0, 64 * 1024,  256, SECT_4K | SPI_NOR_QUAD_READ) },
+> >       { "n25q128a13",  INFO(0x20ba18, 0, 64 * 1024,  256, SECT_4K | SPI_NOR_QUAD_READ) },
+> > -     { "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+> > +     { "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
+> >       { "n25q256ax1",  INFO(0x20bb19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_QUAD_READ) },
+> >       { "n25q512a",    INFO(0x20bb20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
+> >       { "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
 > >
 >
-> Thanks,
-> Miqu=C3=A8l
 >
-> ______________________________________________________
-> Linux MTD discussion mailing list
-> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
-
-
---
-Best Regards
-
-Masahiro Yamada
