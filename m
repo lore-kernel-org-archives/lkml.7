@@ -2,203 +2,326 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357C3C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EAEC04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9F32075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20FDA2075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:15:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BLgK4l8S"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SXAm3yjC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfECXJF (ORCPT
+        id S1726751AbfECXPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 19:09:05 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:34077 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfECXJF (ORCPT
+        Fri, 3 May 2019 19:15:03 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41403 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfECXPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 19:09:05 -0400
-Received: by mail-it1-f195.google.com with SMTP id p18so9351850itm.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 16:09:04 -0700 (PDT)
+        Fri, 3 May 2019 19:15:02 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v23so5673745oif.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 16:15:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=n/nmHK1VkQE9pFpVfvhGPufZyGjT+bYRqh+BLBRKYLE=;
-        b=BLgK4l8SdUGPBQCFA4Jzo4taTvE26RARpOHwQKz1Q3fxznb11WxumD5L4EWil4o8G9
-         yHeUTC4Dec3gCWtAwywskb/ifuUi59BXyu/ykNsSYtSOWB+1a7L6RZTEg/qtvntKZHZQ
-         zL4dML/2N5VUDADVtl3GJzhxhPj/FM7mKNIOU=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YiBKDqzegd04O+PzAcr7R/FeGobNFYgVSfswMBcZCZU=;
+        b=SXAm3yjCa0nibHXK4ceAAGFs6uCwaUpLsdyCU1o2lKOvlI3rqheWTpKnj2wyShZ7lu
+         TPJifTqWsstn9qWG7fCugTMkSy8sDN1Wk1HhrgYmZcpapX1zR4GB6osSwq4oYO68ERug
+         m0zSS0SWlzMDnDTsEAVvAyt86c9z8vzc3wqoXGPWKAEB7EiOd+Kh78da/TO1uS4+hvXu
+         KHDx+3hb12TUOvvVeISvhVNnosdHc8Tl78soob4D9ge86intpqwkzZ5hweRv3v6ENiSu
+         1rA6a30tpPPT6VjU3M1ZMvAEXkExGqUONafw5xmmYaV8aTHBJJADG16CXD8P/IByq2ER
+         s7rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=n/nmHK1VkQE9pFpVfvhGPufZyGjT+bYRqh+BLBRKYLE=;
-        b=rEDQjnLPAdWIdfjE2reTDV99NQE9JgviRvu9Jfl8bCzaN2Jr6AMjfGC/eJ7fWvki7s
-         js+gWlj7Vo/9NTYyUbTD6Dy//FcLDoR5MouRd55hwLBuq2slyiNZ2CQ4bbLZCg/GBrBL
-         2PEzT6e488yc/7VspPLuuhZcaEqs/d8tSt5ACoznl7d30PSos0gdjmhRqlPHKiPaRRZZ
-         /jCSA6VBRSHu6LdIXyzI8RbWUDu4k/zaX/WStUHW5qeCrYBiohrd2PQe21SOOLntAhVV
-         ceLg6P8dn7bmq6DRtjBpypCI5R/VoVqfrTZQgB1SYD3+7N73jadVRipoyk5EMp9ngCBM
-         HjHw==
-X-Gm-Message-State: APjAAAUYr23qCUuqVLrj8f29oJNtRsA1THRMJV/NHgln84zXDGwcHPQU
-        iiXsDRvuN5snR57MjS+c2aVb9Rvi+1w=
-X-Google-Smtp-Source: APXvYqzexUvR6AEKqEApODH83Gm5RZzbtjyT5OOTDFigNMJdePDj6wuTSFohkvpfg4kKrwxOmkRIsQ==
-X-Received: by 2002:a24:9103:: with SMTP id i3mr9360258ite.7.1556924943769;
-        Fri, 03 May 2019 16:09:03 -0700 (PDT)
-Received: from localhost ([2620:15c:183:200:33ce:f5cf:f863:d3a6])
-        by smtp.gmail.com with ESMTPSA id 12sm5549243itm.2.2019.05.03.16.09.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 16:09:03 -0700 (PDT)
-From:   Fletcher Woodruff <fletcherw@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Fletcher Woodruff <fletcherw@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
-Subject: [PATCH v4 3/3] ASoC: rt5677: fall back to DT prop names on error
-Date:   Fri,  3 May 2019 17:07:51 -0600
-Message-Id: <20190503230751.168403-4-fletcherw@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-In-Reply-To: <20190503230751.168403-1-fletcherw@chromium.org>
-References: <20190503230751.168403-1-fletcherw@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YiBKDqzegd04O+PzAcr7R/FeGobNFYgVSfswMBcZCZU=;
+        b=VieeBkcmlLjMa0DJzQoOj92pSlSotMt/ZeA8ZjYgxGKPzDkvj7XURINHQHy14BCQmg
+         nWh27ApNLIHC/5Tmlv+9e+ZRJdRQFVyJ/UTtbSw7Zdkg0/e+NHFXb5AdiESCO1TUXZ1H
+         RlYrPPHKtBqgXNoHFrkw8bjF4VRpkMGDJExb+MiJwq4SUo3ILKnulkNqCLwUoVxF6W94
+         53pmpKlgn9v8/jLIKkrv0o4EzEU5mJ3g1hPb5OqT5Fb/nSerH6+KoKTbYcXZ50kATIBD
+         ANtC92OnRU6vYCWmGsUqSNiZw9DhjlQned3OR0/YrXeLxtgHM4LM0h191aEYlMoMwiWC
+         O57Q==
+X-Gm-Message-State: APjAAAXscUMubZJ1q7zvLG7jJrpNpIMahhJE+eJerUeBMA/GnrELHqeQ
+        938kueNkg6JFtrKatYyFjg/rmFXyS5uvx7cM+6f66g==
+X-Google-Smtp-Source: APXvYqy8jY7gfDI7WH+mEtQuPQSGdDFLmcOn9yaaI5FbZz82XQ12EIWD3sphcpnXXnG85dXFQdhExQpRbCPKPfTjxbk=
+X-Received: by 2002:aca:43d5:: with SMTP id q204mr880835oia.100.1556925301033;
+ Fri, 03 May 2019 16:15:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-13-brendanhiggins@google.com> <20190502110220.GD12416@kroah.com>
+ <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
+ <a49c5088-a821-210c-66de-f422536f5b01@gmail.com> <CAFd5g44iWRchQKdJYtjRtPY6e-6e0eXpKXXsx5Ooi6sWE474KA@mail.gmail.com>
+ <1a5f3c44-9fa9-d423-66bf-45255a90c468@gmail.com> <CAFd5g45RYm+zfdJXnyp2KZZH5ojfOzy++aq+4zBeE5VDu6WgEw@mail.gmail.com>
+ <052fa196-4ea9-8384-79b7-fe6bacc0ee82@gmail.com>
+In-Reply-To: <052fa196-4ea9-8384-79b7-fe6bacc0ee82@gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 3 May 2019 16:14:49 -0700
+Message-ID: <CAFd5g47aY-CL+d7DfiyTidY4aAVY+eg1TM1UJ4nYqKSfHOi-0w@mail.gmail.com>
+Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
+ KUnit tests
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Felix Guo <felixguoxiuping@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rt5677 driver uses ACPI-style property names to read from the
-device API. However, these do not match the property names in _DSD
-used on the Chromebook Pixel 2015, which are closer to the Device Tree
-style.  Unify the two functions for reading from the device API so that
-they try ACPI-style names first and fall back to the DT names on error.
+> On 5/2/19 10:36 PM, Brendan Higgins wrote:
+> > On Thu, May 2, 2019 at 6:45 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>
+> >> On 5/2/19 4:45 PM, Brendan Higgins wrote:
+> >>> On Thu, May 2, 2019 at 2:16 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>>>
+> >>>> On 5/2/19 11:07 AM, Brendan Higgins wrote:
+> >>>>> On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >>>>>>
+> >>>>>> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
+> >>>>>>> From: Felix Guo <felixguoxiuping@gmail.com>
+> >>>>>>>
+> >>>>>>> The ultimate goal is to create minimal isolated test binaries; in the
+> >>>>>>> meantime we are using UML to provide the infrastructure to run tests, so
+> >>>>>>> define an abstract way to configure and run tests that allow us to
+> >>>>>>> change the context in which tests are built without affecting the user.
+> >>>>>>> This also makes pretty and dynamic error reporting, and a lot of other
+> >>>>>>> nice features easier.
+> >>>>>>>
+> >>>>>>> kunit_config.py:
+> >>>>>>>   - parse .config and Kconfig files.
+> >>>>>>>
+> >>>>>>> kunit_kernel.py: provides helper functions to:
+> >>>>>>>   - configure the kernel using kunitconfig.
+> >>>>>>>   - build the kernel with the appropriate configuration.
+> >>>>>>>   - provide function to invoke the kernel and stream the output back.
+> >>>>>>>
+> >>>>>>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
+> >>>>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> >>>>>>
+> >>>>>> Ah, here's probably my answer to my previous logging format question,
+> >>>>>> right?  What's the chance that these wrappers output stuff in a standard
+> >>>>>> format that test-framework-tools can already parse?  :)
+> >>>
+> >>> To be clear, the test-framework-tools format we are talking about is
+> >>> TAP13[1], correct?
+> >>
+> >> I'm not sure what the test community prefers for a format.  I'll let them
+> >> jump in and debate that question.
+> >>
+> >>
+> >>>
+> >>> My understanding is that is what kselftest is being converted to use.
+> >>>
+> >>>>>
+> >>>>> It should be pretty easy to do. I had some patches that pack up the
+> >>>>> results into a serialized format for a presubmit service; it should be
+> >>>>> pretty straightforward to take the same logic and just change the
+> >>>>> output format.
+> >>>>
+> >>>> When examining and trying out the previous versions of the patch I found
+> >>>> the wrappers useful to provide information about how to control and use
+> >>>> the tests, but I had no interest in using the scripts as they do not
+> >>>> fit in with my personal environment and workflow.
+> >>>>
+> >>>> In the previous versions of the patch, these helper scripts are optional,
+> >>>> which is good for my use case.  If the helper scripts are required to
+> >>>
+> >>> They are still optional.
+> >>>
+> >>>> get the data into the proper format then the scripts are not quite so
+> >>>> optional, they become the expected environment.  I think the proper
+> >>>> format should exist without the helper scripts.
+> >>>
+> >>> That's a good point. A couple things,
+> >>>
+> >>> First off, supporting TAP13, either in the kernel or the wrapper
+> >>> script is not hard, but I don't think that is the real issue that you
+> >>> raise.
+> >>>
+> >>> If your only concern is that you will always be able to have human
+> >>> readable KUnit results printed to the kernel log, that is a guarantee
+> >>> I feel comfortable making. Beyond that, I think it is going to take a
+> >>> long while before I would feel comfortable guaranteeing anything about
+> >>> how will KUnit work, what kind of data it will want to expose, and how
+> >>> it will be organized. I think the wrapper script provides a nice
+> >>> facade that I can maintain, can mediate between the implementation
+> >>> details and the user, and can mediate between the implementation
+> >>> details and other pieces of software that might want to consume
+> >>> results.
+> >>>
+> >>> [1] https://testanything.org/tap-version-13-specification.html
+> >>
+> >> My concern is based on a focus on my little part of the world
+> >> (which in _previous_ versions of the patch series was the devicetree
+> >> unittest.c tests being converted to use the kunit infrastructure).
+> >> If I step back and think of the entire kernel globally I may end
+> >> up with a different conclusion - but I'm going to remain myopic
+> >> for this email.
+> >>
+> >> I want the test results to be usable by me and my fellow
+> >> developers.  I prefer that the test results be easily accessible
+> >> (current printk() implementation means that kunit messages are
+> >> just as accessible as the current unittest.c printk() output).
+> >> If the printk() output needs to be filtered through a script
+> >> to generate the actual test results then that is sub-optimal
+> >> to me.  It is one more step added to my workflow.  And
+> >> potentially with an embedded target a major pain to get a
+> >> data file (the kernel log file) transferred from a target
+> >> to my development host.
+> >
+> > That's fair. If that is indeed your only concern, then I don't think
+> > the wrapper script will ever be an issue for you. You will always be
+> > able to execute a given test the old fashioned/manual way, and the
+> > wrapper script only summarizes results, it does not change the
+> > contents.
+> >
+> >>
+> >> I want a reported test failure to be easy to trace back to the
+> >> point in the source where the failure is reported.  With printk()
+> >> the search is a simple grep for the failure message.  If the
+> >> failure message has been processed by a script, and then the
+> >> failure reported to me in an email, then I may have to look
+> >> at the script to reverse engineer how the original failure
+> >> message was transformed into the message that was reported
+> >> to me in the email.  Then I search for the point in the
+> >> source where the failure is reported.  So a basic task has
+> >> just become more difficult and time consuming.
+> >
+> > That seems to be a valid concern. I would reiterate that you shouldn't
+> > be concerned by any processing done by the wrapper script itself, but
+> > the reality is that depending on what happens with automated
+> > testing/presubmit/CI other people might end up parsing and
+> > transforming test results - it might happen, it might not.
+>
+> You seem to be missing my point.
+>
+> Greg asked that the output be in a standard format.
+>
+> You replied that the standard format could be created by the wrapper script.
 
-With this patch, plugging and unplugging the headphone jack switches
-between headphones and speakers automatically.
+I thought Greg originally meant that that is how it could be done when
+he first commented on this patch, so I was agreeing and elaborating.
+Nevertheless, it seems you and Greg are now in agreement on this
+point, so I won't argue it further.
 
-Signed-off-by: Fletcher Woodruff <fletcherw@chromium.org>
----
- sound/soc/codecs/rt5677.c | 74 +++++++++++++++++++--------------------
- 1 file changed, 37 insertions(+), 37 deletions(-)
+>
+> Now you say that "it might happen, it might not".  In other words the output
+> may or may not end up in the standard format.
 
-diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index da27cbfaec2b74..e6b75f52d4a433 100644
---- a/sound/soc/codecs/rt5677.c
-+++ b/sound/soc/codecs/rt5677.c
-@@ -4998,48 +4998,50 @@ static const struct acpi_device_id rt5677_acpi_match[] = {
- };
- MODULE_DEVICE_TABLE(acpi, rt5677_acpi_match);
- 
--static void rt5677_read_acpi_properties(struct rt5677_priv *rt5677,
-+static void rt5677_read_device_properties(struct rt5677_priv *rt5677,
- 		struct device *dev)
- {
- 	u32 val;
- 
--	if (!device_property_read_u32(dev, "DCLK", &val))
--		rt5677->pdata.dmic2_clk_pin = val;
-+	rt5677->pdata.in1_diff =
-+		device_property_read_bool(dev, "IN1") ||
-+		device_property_read_bool(dev, "realtek,in1-differential");
- 
--	rt5677->pdata.in1_diff = device_property_read_bool(dev, "IN1");
--	rt5677->pdata.in2_diff = device_property_read_bool(dev, "IN2");
--	rt5677->pdata.lout1_diff = device_property_read_bool(dev, "OUT1");
--	rt5677->pdata.lout2_diff = device_property_read_bool(dev, "OUT2");
--	rt5677->pdata.lout3_diff = device_property_read_bool(dev, "OUT3");
-+	rt5677->pdata.in2_diff =
-+		device_property_read_bool(dev, "IN2") ||
-+		device_property_read_bool(dev, "realtek,in2-differential");
- 
--	device_property_read_u32(dev, "JD1", &rt5677->pdata.jd1_gpio);
--	device_property_read_u32(dev, "JD2", &rt5677->pdata.jd2_gpio);
--	device_property_read_u32(dev, "JD3", &rt5677->pdata.jd3_gpio);
--}
-+	rt5677->pdata.lout1_diff =
-+		device_property_read_bool(dev, "OUT1") ||
-+		device_property_read_bool(dev, "realtek,lout1-differential");
- 
--static void rt5677_read_device_properties(struct rt5677_priv *rt5677,
--		struct device *dev)
--{
--	rt5677->pdata.in1_diff = device_property_read_bool(dev,
--			"realtek,in1-differential");
--	rt5677->pdata.in2_diff = device_property_read_bool(dev,
--			"realtek,in2-differential");
--	rt5677->pdata.lout1_diff = device_property_read_bool(dev,
--			"realtek,lout1-differential");
--	rt5677->pdata.lout2_diff = device_property_read_bool(dev,
--			"realtek,lout2-differential");
--	rt5677->pdata.lout3_diff = device_property_read_bool(dev,
--			"realtek,lout3-differential");
-+	rt5677->pdata.lout2_diff =
-+		device_property_read_bool(dev, "OUT2") ||
-+		device_property_read_bool(dev, "realtek,lout2-differential");
-+
-+	rt5677->pdata.lout3_diff =
-+		device_property_read_bool(dev, "OUT3") ||
-+		device_property_read_bool(dev, "realtek,lout3-differential");
- 
- 	device_property_read_u8_array(dev, "realtek,gpio-config",
--			rt5677->pdata.gpio_config, RT5677_GPIO_NUM);
--
--	device_property_read_u32(dev, "realtek,jd1-gpio",
--			&rt5677->pdata.jd1_gpio);
--	device_property_read_u32(dev, "realtek,jd2-gpio",
--			&rt5677->pdata.jd2_gpio);
--	device_property_read_u32(dev, "realtek,jd3-gpio",
--			&rt5677->pdata.jd3_gpio);
-+				      rt5677->pdata.gpio_config,
-+				      RT5677_GPIO_NUM);
-+
-+	if (!device_property_read_u32(dev, "DCLK", &val) ||
-+	    !device_property_read_u32(dev, "realtek,dmic2_clk_pin", &val))
-+		rt5677->pdata.dmic2_clk_pin = val;
-+
-+	if (!device_property_read_u32(dev, "JD1", &val) ||
-+	    !device_property_read_u32(dev, "realtek,jd1-gpio", &val))
-+		rt5677->pdata.jd1_gpio = val;
-+
-+	if (!device_property_read_u32(dev, "JD2", &val) ||
-+	    !device_property_read_u32(dev, "realtek,jd2-gpio", &val))
-+		rt5677->pdata.jd2_gpio = val;
-+
-+	if (!device_property_read_u32(dev, "JD3", &val) ||
-+	    !device_property_read_u32(dev, "realtek,jd3-gpio", &val))
-+		rt5677->pdata.jd3_gpio = val;
- }
- 
- struct rt5677_irq_desc {
-@@ -5283,20 +5285,18 @@ static int rt5677_i2c_probe(struct i2c_client *i2c)
- 		match_id = of_match_device(rt5677_of_match, &i2c->dev);
- 		if (match_id)
- 			rt5677->type = (enum rt5677_type)match_id->data;
--
--		rt5677_read_device_properties(rt5677, &i2c->dev);
- 	} else if (ACPI_HANDLE(&i2c->dev)) {
- 		const struct acpi_device_id *acpi_id;
- 
- 		acpi_id = acpi_match_device(rt5677_acpi_match, &i2c->dev);
- 		if (acpi_id)
- 			rt5677->type = (enum rt5677_type)acpi_id->driver_data;
--
--		rt5677_read_acpi_properties(rt5677, &i2c->dev);
- 	} else {
- 		return -EINVAL;
- 	}
- 
-+	rt5677_read_device_properties(rt5677, &i2c->dev);
-+
- 	/* pow-ldo2 and reset are optional. The codec pins may be statically
- 	 * connected on the board without gpios. If the gpio device property
- 	 * isn't specified, devm_gpiod_get_optional returns NULL.
--- 
-2.21.0.1020.gf2820cf01a-goog
+Sorry, that was in reference to your concern about getting an email in
+a different format than what the tool that you use generates. It
+wasn't a statement about what I was or wasn't going to do in regards
+to supporting a standard format.
 
+>
+> As Greg points out in comments to patch 12:
+>
+>   "The core of kunit should also log the messages in this format as well,
+>   and not rely on the helper scripts as Frank points out, not everyone
+>   will use/want them.  Might as well make it easy for everyone to always
+>   do the right thing and not force it to always be added in later."
+>
+> I am requesting that the original message be in the standard format.  Of
+> course anyone is free to transform the messages in later processing, no
+> big deal.
+
+My mistake, I thought that was a concern of yours.
+
+In any case, it sounds like you and Greg are in agreement on the core
+libraries generating the output in TAP13, so I won't argue that point
+further.
+
+## Analysis of using TAP13
+
+One of my earlier concerns was that TAP13 is a bit over constrained
+for what I would like to output from the KUnit core. It only allows
+data to be output as either:
+ - test number
+ - ok/not ok with single line description
+ - directive
+ - diagnostics
+ - YAML block
+
+The test number must become before a set of ok/not ok lines, and does
+not contain any additional information. One annoying thing about this
+is it doesn't provide any kind of nesting or grouping.
+
+There is one ok/not ok line per test and it may have a short
+description of the test immediately after 'ok' or 'not ok'; this is
+problematic because it wants the first thing you say about a test to
+be after you know whether it passes or not.
+
+Directives are just a way to specify skipped tests and TODOs.
+
+Diagnostics seem useful, it looks like you can put whatever
+information in them and print them out at anytime. It looks like a lot
+of kselftests emit a lot of data this way.
+
+The YAML block seems to be the way that they prefer users to emit data
+beyond number of tests run and whether a test passed or failed. I
+could express most things I want to express in terms of YAML, but it
+is not the nicest format for displaying a lot of data like
+expectations, missed function calls, and other things which have a
+natural concise representation. Nevertheless, YAML readability is
+mostly a problem who won't be using the wrapper scripts. My biggest
+problem with the YAML block is that you can only have one, and TAP
+specifies that it must come after the corresponding ok/not ok line,
+which again has the issue that you have to hold on to a lot of
+diagnostic data longer than you ideally would. Another downside is
+that I now have to write a YAML serializer for the kernel.
+
+## Here is what I propose for this patchset:
+
+ - Print out test number range at the beginning of each test suite.
+ - Print out log lines as soon as they happen as diagnostics.
+ - Print out the lines that state whether a test passes or fails as a
+ok/not ok line.
+
+This would be technically conforming with TAP13 and is consistent with
+what some kselftests have done.
+
+## To be done in a future patchset:
+
+Add a YAML serializer and print out some logs containing structured
+data (like expectation failures, unexpected function calls, etc) in
+YAML blocks.
+
+Does this sound reasonable? I will go ahead and start working on this,
+but feel free to give me feedback on the overall idea in the meantime.
+
+Cheers
