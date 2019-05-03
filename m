@@ -3,55 +3,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFAAC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9F7C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A06D2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E612070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:15:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbfECDNn (ORCPT
+        id S1726435AbfECDPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 23:13:43 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:56144 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726114AbfECDNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 23:13:43 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 673BBD8C518546284565;
-        Fri,  3 May 2019 11:13:40 +0800 (CST)
-Received: from dggeme757-chm.china.huawei.com (10.3.19.103) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 3 May 2019 11:13:39 +0800
-Received: from [127.0.0.1] (10.63.173.108) by dggeme757-chm.china.huawei.com
- (10.3.19.103) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Fri, 3
- May 2019 11:13:39 +0800
-Reply-To: <lipeng321@huawei.com>
-Subject: Re: [PATCH net-next 1/3] net: hns3: add support for multiple media
- type
-References: <1556679944-100941-1-git-send-email-lipeng321@huawei.com>
- <1556679944-100941-2-git-send-email-lipeng321@huawei.com>
- <20190501123750.GA9844@lunn.ch>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>
-From:   "lipeng (Y)" <lipeng321@huawei.com>
-Message-ID: <1d7faec8-22f7-0e8f-7e38-9ad600134a7c@huawei.com>
-Date:   Fri, 3 May 2019 11:13:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Thu, 2 May 2019 23:15:19 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:38140 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726114AbfECDPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 23:15:18 -0400
+Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=[172.20.29.49])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hMOef-0006md-Tg; Thu, 02 May 2019 21:14:35 -0600
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, mpe@ellerman.id.au, pmladek@suse.com,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-9-brendanhiggins@google.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <0a605543-477a-1854-eb35-6e586606889b@deltatee.com>
+Date:   Thu, 2 May 2019 21:14:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190501123750.GA9844@lunn.ch>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <20190501230126.229218-9-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.63.173.108]
-X-ClientProxiedBy: dggemx701-chm.china.huawei.com (10.1.199.48) To
- dggeme757-chm.china.huawei.com (10.3.19.103)
-X-CFilter-Loop: Reflected
+X-SA-Exim-Connect-IP: 173.228.226.134
+X-SA-Exim-Rcpt-To: wfg@linux.intel.com, rostedt@goodmis.org, rientjes@google.com, richard@nod.at, pmladek@suse.com, mpe@ellerman.id.au, knut.omang@oracle.com, khilman@baylibre.com, julia.lawall@lip6.fr, joel@jms.id.au, jdike@addtoit.com, daniel@ffwll.ch, dan.j.williams@intel.com, dan.carpenter@oracle.com, amir73il@gmail.com, Tim.Bird@sony.com, Alexander.Levin@microsoft.com, linux-um@lists.infradead.org, linux-nvdimm@lists.01.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, shuah@kernel.org, sboyd@kernel.org, robh@kernel.org, mcgrof@kernel.org, kieran.bingham@ideasonboard.com, keescook@google.com, gregkh@linuxfoundation.org, frowand.list@gmail.com, brendanhiggins@google.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v2 08/17] kunit: test: add support for test abort
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,81 +65,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2019/5/1 20:37, Andrew Lunn wrote:
-> On Wed, May 01, 2019 at 11:05:42AM +0800, Peng Li wrote:
->> From: Jian Shen <shenjian15@huawei.com>
->>
->> Previously, we can only identify copper and fiber type, the
->> supported link modes of port information are always showing
->> SR type. This patch adds support for multiple media types,
->> include SR, LR CR, KR. Driver needs to query the media type
->> from firmware periodicly, and updates the port information.
->>
->> The new port information looks like this:
->> Settings for eth0:
->>          Supported ports: [ FIBRE ]
->>          Supported link modes:   25000baseCR/Full
->>                                  25000baseSR/Full
->>                                  1000baseX/Full
->>                                  10000baseCR/Full
->>                                  10000baseSR/Full
->>                                  10000baseLR/Full
->>          Supported pause frame use: Symmetric
->>          Supports auto-negotiation: No
->>          Supported FEC modes: None BaseR
->>          Advertised link modes:  25000baseCR/Full
->>                                  25000baseSR/Full
->>                                  1000baseX/Full
->>                                  10000baseCR/Full
->>                                  10000baseSR/Full
->>                                  10000baseLR/Full
-> Hi Peng
->
-> If it does not support auto-negotiation, do these advertised link
-> modes make any sense? Does it really advertise, or is it all fixed
-> configured?
->
-> 	Andrew
->
-> .
-Hi Andrew:
+On 2019-05-01 5:01 p.m., Brendan Higgins wrote:
+> +/*
+> + * struct kunit_try_catch - provides a generic way to run code which might fail.
+> + * @context: used to pass user data to the try and catch functions.
+> + *
+> + * kunit_try_catch provides a generic, architecture independent way to execute
+> + * an arbitrary function of type kunit_try_catch_func_t which may bail out by
+> + * calling kunit_try_catch_throw(). If kunit_try_catch_throw() is called, @try
+> + * is stopped at the site of invocation and @catch is catch is called.
 
-it makes no sense when auto-negotiation is not supported.
-I should handle it differently with the case supports auto-negotiation
-and not supports auto-negotiation.
+I found some of the C++ comparisons in this series a bit distasteful but
+wasn't going to say anything until I saw the try catch.... But looking
+into the implementation it's just a thread that can exit early which
+seems fine to me. Just a poor choice of name I guess...
 
-I will fix it in next version, result like below:
-Settings for eth0:
-         Supported ports: [ FIBRE ]
-         Supported link modes:   25000baseCR/Full
-                                 25000baseSR/Full
-                                 1000baseX/Full
-                                 10000baseCR/Full
-                                 10000baseSR/Full
-                                 10000baseLR/Full
-         Supported pause frame use: Symmetric
-         Supports auto-negotiation: No
-         Supported FEC modes: None BaseR
-         Advertised link modes:  Not reported
-         Advertised pause frame use: No
-         Advertised auto-negotiation: No
-         Advertised FEC modes: Not reported
-         Speed: 10000Mb/s
-         Duplex: Full
-         Port: FIBRE
-         PHYAD: 0
-         Transceiver: internal
-         Auto-negotiation: off
-         Current message level: 0x00000036 (54)
-                                probe link ifdown ifup
-         Link detected: yes
+[snip]
 
-         Wish I have understood your comments correctly.
+> +static void __noreturn kunit_abort(struct kunit *test)
+> +{
+> +	kunit_set_death_test(test, true);
+> +
+> +	kunit_try_catch_throw(&test->try_catch);
+> +
+> +	/*
+> +	 * Throw could not abort from test.
+> +	 *
+> +	 * XXX: we should never reach this line! As kunit_try_catch_throw is
+> +	 * marked __noreturn.
+> +	 */
+> +	WARN_ONCE(true, "Throw could not abort from test!\n");
+> +}
+> +
+>  int kunit_init_test(struct kunit *test, const char *name)
+>  {
+>  	spin_lock_init(&test->lock);
+> @@ -77,6 +103,7 @@ int kunit_init_test(struct kunit *test, const char *name)
+>  	test->name = name;
+>  	test->vprintk = kunit_vprintk;
+>  	test->fail = kunit_fail;
+> +	test->abort = kunit_abort;
 
+There are a number of these function pointers which seem to be pointless
+to me as you only ever set them to one function. Just call the function
+directly. As it is, it is an unnecessary indirection for someone reading
+the code. If and when you have multiple implementations of the function
+then add the pointer. Don't assume you're going to need it later on and
+add all this maintenance burden if you never use it..
 
-Thanks!
+[snip]
 
+> +void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch)
+> +{
+> +	try_catch->run = kunit_generic_run_try_catch;
+> +	try_catch->throw = kunit_generic_throw;
+> +}
 
->
+Same here. There's only one implementation of try_catch and I can't
+really see any sensible justification for another implementation. Even
+if there is, add the indirection when the second implementation is
+added. This isn't C++ and we don't need to make everything a "method".
 
+Thanks,
 
+Logan
