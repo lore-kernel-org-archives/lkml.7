@@ -2,93 +2,219 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAB9C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1BEC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96ECF2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 067342075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jVKOra8v"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HUKXNtEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbfECR1y (ORCPT
+        id S1728583AbfECR3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:27:54 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45919 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfECR1y (ORCPT
+        Fri, 3 May 2019 13:29:35 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40000 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfECR3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:27:54 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q23so1199855lfc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 10:27:53 -0700 (PDT)
+        Fri, 3 May 2019 13:29:35 -0400
+Received: by mail-ot1-f66.google.com with SMTP id w6so5992908otl.7;
+        Fri, 03 May 2019 10:29:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JD/+KRFZYiJzz1j6lF2eo7yI0q7TdGtFXXsyT5+MfK4=;
-        b=jVKOra8vfuCU5mccq/lFKnIzApNW6ra6COBEgkuUKz+2BZ18QfAWGfZ/diR/dKxPPZ
-         Ja1RG0Kis4sKSE3iDE2HFsJ4v9jobsh4vfXEAZ1kltpc14mLw0HRxkMzxStlD+Y8CEYA
-         lP+t9NeY6JM9acjIeD2wpS3to5Up7n1WGezxw=
+        bh=Fs+EFpB44vl9L8MXB9GUsGanJ/o9Rm0lulJHNWYqDtU=;
+        b=HUKXNtEmS7fH2FT5jOqZEgXGt/0Ba/6lnmBjYrDU0cT+AynIB29qyBuGpwiKTB95AN
+         Ft3wXWo/A50RiNAZXTohtaFQtCDqYv0NGe9Vp2bVD/Sd9UTMF28m/NfHe9cqwypS+dCK
+         s8UFeJMP8fTdxbXDJK4RE+VxeRY9mSQrDYG6gM739tX3rzQPmG11cauuQzW5/73vZHfM
+         km+FtoeAxFFPA0nmVUhDgjTvcyNTQwECT6FJ+2HuVd661+46BCrPnKQTEmf+TEwPRvkS
+         /MruVOIvi2ko8Ja2TN3fLi8o4J/Mwef/4ZIQcTeEwTz8l2Zg2HQna2nfJIjXuXyv4/vy
+         JM3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JD/+KRFZYiJzz1j6lF2eo7yI0q7TdGtFXXsyT5+MfK4=;
-        b=Uep7B1irYHDimX1uFK3tQ8Q+6VKpSZcSHf2Sm8SuKHYPx8CyJDTL1fsepdZ9BgoJl2
-         OqoLWTbvH5Qza4nhpcZZ7lV/zqdHaZrkVZUHn0gIz3fWRJa8h6K4rHK0CJ/NKOy5d+Mm
-         iCl3R/JEc8UfZnPi+2dZ0h3o3JstILDkh+7fqiXvS+DUpxFw/GUvqU7dCfneXPG1lq1e
-         YXYEUFGZnB7oN8r6CCsorfWo0XpTc51tG/efdra2L6BCZYs1coEjzUnBOwie4wzatjMI
-         MTS7UCZ9FAnRuzYF83kEN7i+pugZbFWDtwPIHoGpWb3KHPIOTJXoUy5ALVfXQEybJSY7
-         iduA==
-X-Gm-Message-State: APjAAAXokTtMskrU36FgQ0Ax+7Bq1YiLQuO7tU9DiE4HuBbucT1ybvlN
-        txd73YVqWAP/oGehIposB+dE/CA6TaE=
-X-Google-Smtp-Source: APXvYqx4BsrW1AoDrmO1sa5sSlDESyQzuLpwbyGd56xC/VhqvH9/lcsduZpuGweTkE/EBbcI1DK6Hg==
-X-Received: by 2002:a19:550d:: with SMTP id n13mr5621818lfe.127.1556904472245;
-        Fri, 03 May 2019 10:27:52 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id b2sm501530ljk.75.2019.05.03.10.27.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 10:27:52 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id b12so5882416lji.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 10:27:51 -0700 (PDT)
-X-Received: by 2002:a2e:834d:: with SMTP id l13mr5938995ljh.97.1556904470714;
- Fri, 03 May 2019 10:27:50 -0700 (PDT)
+        bh=Fs+EFpB44vl9L8MXB9GUsGanJ/o9Rm0lulJHNWYqDtU=;
+        b=j38DBGJoZcxenP5Tybt/RobTQ6favlkbiuyM0qgAkCcGIBReg1VNwZkDoxE+4kfYEh
+         n4a+Tnr52N1L34icEhwYW5tTvSMPwPYCYhcdilCVOurojkYkk18Q+5Yvb4N0YOSBKut1
+         PKs1NYIC1vtnQe+bN650PEdXAY/sg7HLKhNBQgQ1Smnw9l7FLWu2ZwG6Rf2CyDNucu+h
+         +fi6ZPpt8MGp7UIVRKzPrYbxPAJ1E0Q6esPA1zM3o0ddRvQs8Ob0gIyj2ZIlo6TJRP8F
+         c6decJz9pJeOt6YMvsQWjbJ0P7swsItfNASy5KsnyFdrU6R9lY1LLTIxGj9p/LqW259/
+         8whA==
+X-Gm-Message-State: APjAAAWlBSaGqk2KRwFpuvxSfUhayjQW2q1IpW7JlvldQuZz/b47OCDX
+        828EYyb2EB0ZdruWUVDQpKJFgqb7PawB8p6KsLE=
+X-Google-Smtp-Source: APXvYqzr/dqPjv2/To1QgLY8WQlGgA+UlEyvtPnIkSRX7nV25j8R07+SmzU14kDO+mQzarAgMawaXfYFV/aSKAKcnjA=
+X-Received: by 2002:a9d:5504:: with SMTP id l4mr7523118oth.131.1556904573987;
+ Fri, 03 May 2019 10:29:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190430165626.31639-1-andriy.shevchenko@linux.intel.com> <6f789244-64b9-bd1f-6a9e-e5aeacbf2407@linux.intel.com>
-In-Reply-To: <6f789244-64b9-bd1f-6a9e-e5aeacbf2407@linux.intel.com>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 3 May 2019 10:27:14 -0700
-X-Gmail-Original-Message-ID: <CAE=gft5vUoMpabMyw8u5W65FNiKiNdVSoNgwprwaE+E=K+y-0Q@mail.gmail.com>
-Message-ID: <CAE=gft5vUoMpabMyw8u5W65FNiKiNdVSoNgwprwaE+E=K+y-0Q@mail.gmail.com>
-Subject: Re: [PATCH v2] mfd: intel-lpss: Add Intel Comet Lake PCI IDs
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190426212112.5624-1-fancer.lancer@gmail.com>
+ <20190426212112.5624-2-fancer.lancer@gmail.com> <20190426214631.GV4041@lunn.ch>
+ <20190426233511.qnkgz75ag7axt5lp@mobilestation> <f27df721-47aa-a708-aaee-69be53def814@gmail.com>
+ <CA+h21hpTRCrD=FxDr=ihDPr+Pdhu6hXT3xcKs47-NZZZ3D9zyg@mail.gmail.com>
+ <20190429211225.ce7cspqwvlhwdxv6@mobilestation> <CAFBinCBxgMr6ZkOSGfXZ9VwJML=GnzrL+FSo5jMpN27L2o5+JA@mail.gmail.com>
+ <CA+h21hq_4rMXaOgr4ZQjiwwvpKSZmRoTg__PZisWZCz3pzCPOA@mail.gmail.com>
+In-Reply-To: <CA+h21hq_4rMXaOgr4ZQjiwwvpKSZmRoTg__PZisWZCz3pzCPOA@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 3 May 2019 19:29:22 +0200
+Message-ID: <CAFBinCAzK7KqprjUTK9hMxPVHu3ZYWg1AX=1jp+dwKLh02sr_g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] net: phy: realtek: Change TX-delay setting for
+ RGMII modes only
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 12:14 AM Jarkko Nikula
-<jarkko.nikula@linux.intel.com> wrote:
->
-> On 4/30/19 7:56 PM, Andy Shevchenko wrote:
-> > Intel Comet Lake has the same LPSS than Intel Cannon Lake.
-> > Add the new IDs to the list of supported devices.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> > - update i2c info
-> >   drivers/mfd/intel-lpss-pci.c | 13 +++++++++++++
-> >   1 file changed, 13 insertions(+)
-> >
-> Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Hi Vladimir,
 
-Tested-by: Evan Green <evgreen@chromium.org>
+On Thu, May 2, 2019 at 1:03 AM Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> On Wed, 1 May 2019 at 00:16, Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> >
+> >  Hello Serge,
+> >
+> > On Mon, Apr 29, 2019 at 11:12 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > [...]
+> > > > > > Apparently the current config_init method doesn't support RXID setting.
+> > > > > > The patch introduced current function code was submitted by
+> > > > > > Martin Blumenstingl in 2016:
+> > > > > > https://patchwork.kernel.org/patch/9447581/
+> > > > > > and was reviewed by Florian. So we'd better ask him why it was ok to mark
+> > > > > > the RGMII_ID as supported while only TX-delay could be set.
+> > > > > > I also failed to find anything regarding programmatic rtl8211f delays setting
+> > > > > > in the Internet. So at this point we can set TX-delay only for f-model of the PHY.
+> > let me give you a bit of context on that patch:
+> > most boards (SBCs and TV boxes) with an Amlogic SoC and a Gigabit
+> > Ethernet PHY use a Realtek RTL8211F PHY. we were seeing high packet
+> > loss when transmitting from the board to another device.
+> > it took us very long to understand that a combination of different
+> > hardware and driver pieces lead to this issue:
+> > - in the MAC driver we enabled a 2ns TX delay by default, like Amlogic
+> > does it in their vendor (BSP) kernel
+> > - we used the upstream Realtek RTL8211F PHY driver which only enabled
+> > the TX delay if requested (it never disabled the TX delay)
+> > - hardware defaults or pin strapping of the Realtek RTL8211F PHY
+> > enabled the TX delay in the PHY
+> >
+> > This means that the TX delay was applied twice: once at the MAC and
+> > once at the PHY.
+> > That lead to high packet loss when transmitting data.
+> > To solve that I wrote the patch you mentioned, which has since been
+> > ported over to u-boot (for a non-Amlogic related board)
+> >
+> > > > > > Anyway lets clarify the situation before to proceed further. You are suggesting
+> > > > > > to return an error in case if either RGMII_ID or RGMII_RXID interface mode is
+> > > > > > requested to be enabled for the PHY. It's fair seeing the driver can't fully
+> > > > > > support either of them.
+> > I don't have any datasheet for the Realtek RTL8211F PHY and I'm not in
+> > the position to get one (company contracts seem to be required for
+> > this).
+> > Linux is not my main job, I do driver development in my spare time.
+> >
+> > there may or may not be a register or pin strapping to configure the RX delay.
+> > due to this I decided to leave the RX delay behavior "not defined"
+> > instead of rejecting RGMII_RXID and RGMII_ID.
+> >
+> > > > > That is how I read Andrew's suggestion and it is reasonable. WRT to the
+> > > > > original changes from Martin, he is probably the one you would want to
+> > > > > add to this conversation in case there are any RX delay control knobs
+> > > > > available, I certainly don't have the datasheet, and Martin's change
+> > > > > looks and looked reasonable, seemingly independent of the direction of
+> > > > > this very conversation we are having.
+> > the changes in patch 1 are looking good to me (except that I would use
+> > phy_modify_paged instead of open-coding it, functionally it's
+> > identical with what you have already)
+> >
+> > I'm not sure about patch 2:
+> > personally I would wait for someone to come up with the requirement to
+> > use RGMII_RXID with a RTL8211F PHY.
+> > that person will then a board to test the changes and (hopefully) a
+> > datasheet to explain the RX delay situation with that PHY.
+> > that way we only change the RGMII_RXID behavior once (when someone
+> > requests support for it) instead of twice (now with your change, later
+> > on when someone needs RGMII_RXID support in the RTL8211F driver)
+> >
+> > that said, the change in patch 2 itself looks fine on Amlogic boards
+> > (because all upstream .dts let the MAC generate the TX delay). I
+> > haven't runtime-tested your patch there yet.
+> > but there seem to be other boards (than the Amlogic ones, the RTL8211F
+> > PHY driver discussion in u-boot was not related to an Amlogic board)
+> > out there with a RTL8211F PHY (these may or may not be supported in
+> > mainline Linux or u-boot and may or may not use RGMII_RXID where you
+> > are now changing the behavior). that's not a problem by itself, but
+> > you should be aware of this.
+> >
+> > [...]
+> > > rtl8211(e|f) TX/RX delays can be configured either by external pins
+> > > strapping or via software registers. This is one of the clue to provide
+> > > a proper config_init method code. But not all rtl8211f phys provide
+> > > that software register, and if they do it only concerns TX-delay (as we
+> > > aware of). So we need to take this into account when creating the updated
+> > > versions of these functions.
+> > >
+> > > (Martin, I also Cc'ed you in this discussion, so if you have anything to
+> > > say in this matter, please don't hesitate to comment.)
+> > Amlogic boards, such as the Hardkernel Odroid-C1 and Odroid-C2 as well
+> > as the Khadas VIM2 use a "RTL8211F" RGMII PHY. I don't know whether
+> > there are multiple versions of this PHY. all RTL8211F I have seen so
+> > far did behave exactly the same.
+> >
+> > I also don't know whether the RX delay is configurable (by pin
+> > strapping or some register) on RTL8211F PHYs because I don't have
+> > access to the datasheet.
+> >
+> >
+> > Martin
+>
+> Hi Martin, Sergey,
+>
+> I had another look and it seems that Realtek has designated the same
+> PHY ID for the RTL8211F and RTL8211FS. However the F is a 40-pin
+> package and the FS is a 48-pin package. The datasheet for the F
+> doesn't mention about the MDIO bit for TXDLY being implemented,
+> whereas for FS it does. That can mean anything, really, but as I only
+> have access to a board with the FS chip, I can't easily check. Maybe
+> Martin can confirm that his chip's designation is really not FS.
+I just checked two of my boards:
+- the PHY on my Hardkernel Odroid-C1+ is marked as "RTL8211F"
+- the PHY on my Khadas VIM2 is marked as "RTL8211FDI"
+
+I have not heard of a RTL8211FS chip / package before.
+
+> But my point still remains, though. The F and FS share the same PHY
+> ID, and one supports only RGMII while the other can be configured for
+> SGMII as well. Good luck being ultra-correct in the phy-mode checking
+> when you can't distinguish the chip. But in general DT description is
+> chief and should not be contradicted. Perhaps an argument could be
+> made for the RGMII delays as they constitute an exception to the "HW
+> description" rule.
+PHY ID being shared across various PHY revisions and packages is also
+the case for some ICPlus IP101A / IP101G PHYs, see [0]
+The (32-pin QFN) IP101GR uses a register to switch a pin function
+between "interrupt" and "receive error".
+There's no rule in the driver to enforce that this only applies to
+IP101GR PHYs, it's only described in the documentation (I don't even
+know if we can enforce it in software because I'm not sure we can
+detect the different variants of the IP101A / IP101G PHYs)
+
+
+Martin
+
+
+[0] https://github.com/torvalds/linux/blob/fdc13a9effd5359ae00705708c8c846b1cb2b69c/Documentation/devicetree/bindings/net/icplus-ip101ag.txt
