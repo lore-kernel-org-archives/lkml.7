@@ -2,115 +2,267 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC39EC004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B6FC04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7203F20645
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1FE206E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ywbl7kJH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o48n/wxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbfECVWX (ORCPT
+        id S1726480AbfECVZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 17:22:23 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44040 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726376AbfECVWX (ORCPT
+        Fri, 3 May 2019 17:25:11 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35024 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbfECVZL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 17:22:23 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y13so3477614pfm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 14:22:22 -0700 (PDT)
+        Fri, 3 May 2019 17:25:11 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h1so3310854pgs.2;
+        Fri, 03 May 2019 14:25:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AZfe6Xnlp8VFcttQXUP5Y4s8do4K2Dab61b+eO+6utA=;
-        b=Ywbl7kJHsqNmfa+P0RIOnALkQVqOBZ3rOjAKRARApKe6qorHXO9plEnJ/E6KwmYq9p
-         zZLP1ryFyIwSpDYvxAgWBdgSVsDbm8/Y40/VsTq7CjRlcbtLl6TmN18VUjgl0m4+nbGn
-         Y+IoChQEJB/RlVWi/5OUaY6N6KwVRUrqKLgH4=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=QKhHiuaK+kBQQTG5PCdM043lhRH1lCekwSqh6wcid4A=;
+        b=o48n/wxTCnepoGRodr/8Eb3qKwR3zlFghMbFk716SdYdufewLoibz2dK1C1INXGmVx
+         x6KKswavML74FHMEomDFZuTILIUwUb6A59DoYIUTQmV2OY4qYVoVQ2VaTpw1oCfeT7ep
+         kffeC+Z1jdPhkQtY396CxXd0IZ3JxToUqnLL+XSGagThD9hhE489q/ZDUzUJvry/sytv
+         WC+FUh/mM7HTYcesxPYGbYda0o6aRPmMbDX6iSD74heRl6IFg9mRbyNKKS/w7sRF3hpw
+         2nEC2ojWa2mHUodrI6APlye57SRnWcQi4HnlE+sQbxE+ggn8B5vIdNq/YR+0oEkuwtFn
+         +0tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AZfe6Xnlp8VFcttQXUP5Y4s8do4K2Dab61b+eO+6utA=;
-        b=lRmkSpya5oqpsEp7+IALXA8PusPpNEfKj/aVoY9aPvjJZzPcTvq4ukpnOcJplGinQN
-         D9/JZ99m5ygc3gVj8ZKq0JLcE1Z4qahRfD5KlvB4TjsLpCXZ1d8Q/w9+TB1JK+U0Q2pv
-         BVKN+ybmUPAABNjUlpymTgTy1sWFzGQ91/0za6clmzMch37+uMJbIqux8DGLPPuVPcmG
-         2R6zE/6tk9OakWzcvNMFXldJR5Svkw3mH7kkZ/0LpWxoW1Fyxkk4Hcc9IfOKd5zcJq2q
-         eoOzXvryFcXbZfOt9G3JjCQ1WDMgytK+l7pqzwlcqx+RZR213fvjzYlPsa/ukDHe5SsW
-         bPuA==
-X-Gm-Message-State: APjAAAVbveYVuIFlcuIbvKCYdE3u/XCv5EDnxbg9QvSgRqoY1+Q7WVcU
-        tHpzsxtq/U+qnWScXCPUAmQasw==
-X-Google-Smtp-Source: APXvYqxHbkpyVU3AFiwBC4zYibpjEWUdOnTxjcv/gquMISFOa13IJ3gYibHW3sbdWh1EyzOUBzcDlA==
-X-Received: by 2002:a62:3501:: with SMTP id c1mr14483708pfa.184.1556918542223;
-        Fri, 03 May 2019 14:22:22 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id b77sm9206722pfj.99.2019.05.03.14.22.21
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=QKhHiuaK+kBQQTG5PCdM043lhRH1lCekwSqh6wcid4A=;
+        b=BNtRZGb0mS0and7TwbMO8mqFrm2cP5PtbPHqKcUMTboz0MmQipoJr5B6Cps/mB3niX
+         kfjKEUvWp1qd/gARkm4yT8SoUSA1wE/K6JTpV4hCT/ojNu5AyQPa3M150x8FYttslgqV
+         dEH2fTnJFAtedOT07CJRMKmjsKtmdeqH53SbEl/+REsu0FkWhcnLvbxbA5RByy49K6Iv
+         UyFbDQ4DilCEvfKmC9OYsAiDpegp54Q5s/rcnrDEhMYbABqxx4iKUuxj5gsZQJQDY5IB
+         yYQx+GQRHnlBRctrieAxyPW8ntOa00ZgpmPcFJmEwOJxvZ1VrlrWQatYgLx557r7yIRc
+         N7qQ==
+X-Gm-Message-State: APjAAAXoRB2oGFHuM/L+NWPu+PVuQCzad179MxMzGdLFf5xhfZQzF3eU
+        HmDJScevXg7RZg97e76ir07QD3aL
+X-Google-Smtp-Source: APXvYqzxcUeAkW8Q2/lOAH1+GXkwO8+7WheAPslGvAgkGTwR93orPw0ZTB+ZV3UzzaWvEKtPbBCuYg==
+X-Received: by 2002:a63:cc0a:: with SMTP id x10mr13684323pgf.179.1556918709597;
+        Fri, 03 May 2019 14:25:09 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l26sm4091175pfb.20.2019.05.03.14.25.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 14:22:21 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Cc:     hal@halemmerich.com, linux-rockchip@lists.infradead.org,
-        mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] clk: rockchip: Don't yell about bad mmc phases when getting
-Date:   Fri,  3 May 2019 14:22:08 -0700
-Message-Id: <20190503212208.223232-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+        Fri, 03 May 2019 14:25:07 -0700 (PDT)
+Date:   Fri, 3 May 2019 14:25:06 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ludovic Barre <ludovic.Barre@st.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH V3] watchdog: stm32: add dynamic prescaler support
+Message-ID: <20190503212506.GA14661@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At boot time, my rk3288-veyron devices yell with 8 lines that look
-like this:
-  [    0.000000] rockchip_mmc_get_phase: invalid clk rate
+On Fri, May 03, 2019 at 03:48:26PM +0200, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+> 
+> This patch allows to define the max prescaler by compatible.
+> To set a large range of timeout, the prescaler should be set
+> dynamically (from the timeout request) to improve the resolution
+> in order to have a timeout close to the expected value.
+> 
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 
-This is because the clock framework at clk_register() time tries to
-get the phase but we don't have a parent yet.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-While the errors appear to be harmless they are still ugly and, in
-general, we don't want yells like this in the log unless they are
-important.
-
-There's no real reason to be yelling here.  We can still return
--EINVAL to indicate that the phase makes no sense without a parent.
-If someone really tries to do tuning and the clock is reported as 0
-then we'll see the yells in rockchip_mmc_set_phase().
-
-Fixes: 4bf59902b500 ("clk: rockchip: Prevent calculating mmc phase if clock rate is zero")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- drivers/clk/rockchip/clk-mmc-phase.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/clk/rockchip/clk-mmc-phase.c b/drivers/clk/rockchip/clk-mmc-phase.c
-index 026a26bb702d..dbec84238ecd 100644
---- a/drivers/clk/rockchip/clk-mmc-phase.c
-+++ b/drivers/clk/rockchip/clk-mmc-phase.c
-@@ -61,10 +61,8 @@ static int rockchip_mmc_get_phase(struct clk_hw *hw)
- 	u32 delay_num = 0;
- 
- 	/* See the comment for rockchip_mmc_set_phase below */
--	if (!rate) {
--		pr_err("%s: invalid clk rate\n", __func__);
-+	if (!rate)
- 		return -EINVAL;
--	}
- 
- 	raw_value = readl(mmc_clock->reg) >> (mmc_clock->shift);
- 
--- 
-2.21.0.1020.gf2820cf01a-goog
-
+> ---
+>  drivers/watchdog/stm32_iwdg.c | 84 ++++++++++++++++++++++++-------------------
+>  1 file changed, 47 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+> index 6f7c2bc..d569a36 100644
+> --- a/drivers/watchdog/stm32_iwdg.c
+> +++ b/drivers/watchdog/stm32_iwdg.c
+> @@ -34,36 +34,44 @@
+>  #define KR_KEY_EWA	0x5555 /* write access enable */
+>  #define KR_KEY_DWA	0x0000 /* write access disable */
+>  
+> -/* IWDG_PR register bit values */
+> -#define PR_4		0x00 /* prescaler set to 4 */
+> -#define PR_8		0x01 /* prescaler set to 8 */
+> -#define PR_16		0x02 /* prescaler set to 16 */
+> -#define PR_32		0x03 /* prescaler set to 32 */
+> -#define PR_64		0x04 /* prescaler set to 64 */
+> -#define PR_128		0x05 /* prescaler set to 128 */
+> -#define PR_256		0x06 /* prescaler set to 256 */
+> +/* IWDG_PR register */
+> +#define PR_SHIFT	2
+> +#define PR_MIN		BIT(PR_SHIFT)
+>  
+>  /* IWDG_RLR register values */
+> -#define RLR_MIN		0x07C /* min value supported by reload register */
+> -#define RLR_MAX		0xFFF /* max value supported by reload register */
+> +#define RLR_MIN		0x2		/* min value recommended */
+> +#define RLR_MAX		GENMASK(11, 0)	/* max value of reload register */
+>  
+>  /* IWDG_SR register bit mask */
+> -#define FLAG_PVU	BIT(0) /* Watchdog prescaler value update */
+> -#define FLAG_RVU	BIT(1) /* Watchdog counter reload value update */
+> +#define SR_PVU	BIT(0) /* Watchdog prescaler value update */
+> +#define SR_RVU	BIT(1) /* Watchdog counter reload value update */
+>  
+>  /* set timeout to 100000 us */
+>  #define TIMEOUT_US	100000
+>  #define SLEEP_US	1000
+>  
+> -#define HAS_PCLK	true
+> +struct stm32_iwdg_data {
+> +	bool has_pclk;
+> +	u32 max_prescaler;
+> +};
+> +
+> +static const struct stm32_iwdg_data stm32_iwdg_data = {
+> +	.has_pclk = false,
+> +	.max_prescaler = 256,
+> +};
+> +
+> +static const struct stm32_iwdg_data stm32mp1_iwdg_data = {
+> +	.has_pclk = true,
+> +	.max_prescaler = 1024,
+> +};
+>  
+>  struct stm32_iwdg {
+>  	struct watchdog_device	wdd;
+> +	const struct stm32_iwdg_data *data;
+>  	void __iomem		*regs;
+>  	struct clk		*clk_lsi;
+>  	struct clk		*clk_pclk;
+>  	unsigned int		rate;
+> -	bool			has_pclk;
+>  };
+>  
+>  static inline u32 reg_read(void __iomem *base, u32 reg)
+> @@ -79,31 +87,35 @@ static inline void reg_write(void __iomem *base, u32 reg, u32 val)
+>  static int stm32_iwdg_start(struct watchdog_device *wdd)
+>  {
+>  	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
+> -	u32 val = FLAG_PVU | FLAG_RVU;
+> -	u32 reload;
+> +	u32 tout, presc, iwdg_rlr, iwdg_pr, iwdg_sr;
+>  	int ret;
+>  
+>  	dev_dbg(wdd->parent, "%s\n", __func__);
+>  
+> -	/* prescaler fixed to 256 */
+> -	reload = clamp_t(unsigned int, ((wdd->timeout * wdt->rate) / 256) - 1,
+> -			 RLR_MIN, RLR_MAX);
+> +	tout = clamp_t(unsigned int, wdd->timeout,
+> +		       wdd->min_timeout, wdd->max_hw_heartbeat_ms / 1000);
+> +
+> +	presc = DIV_ROUND_UP(tout * wdt->rate, RLR_MAX + 1);
+> +
+> +	/* The prescaler is align on power of 2 and start at 2 ^ PR_SHIFT. */
+> +	presc = roundup_pow_of_two(presc);
+> +	iwdg_pr = presc <= 1 << PR_SHIFT ? 0 : ilog2(presc) - PR_SHIFT;
+> +	iwdg_rlr = ((tout * wdt->rate) / presc) - 1;
+>  
+>  	/* enable write access */
+>  	reg_write(wdt->regs, IWDG_KR, KR_KEY_EWA);
+>  
+>  	/* set prescaler & reload registers */
+> -	reg_write(wdt->regs, IWDG_PR, PR_256); /* prescaler fix to 256 */
+> -	reg_write(wdt->regs, IWDG_RLR, reload);
+> +	reg_write(wdt->regs, IWDG_PR, iwdg_pr);
+> +	reg_write(wdt->regs, IWDG_RLR, iwdg_rlr);
+>  	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
+>  
+>  	/* wait for the registers to be updated (max 100ms) */
+> -	ret = readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, val,
+> -					 !(val & (FLAG_PVU | FLAG_RVU)),
+> +	ret = readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, iwdg_sr,
+> +					 !(iwdg_sr & (SR_PVU | SR_RVU)),
+>  					 SLEEP_US, TIMEOUT_US);
+>  	if (ret) {
+> -		dev_err(wdd->parent,
+> -			"Fail to set prescaler or reload registers\n");
+> +		dev_err(wdd->parent, "Fail to set prescaler, reload regs\n");
+>  		return ret;
+>  	}
+>  
+> @@ -156,7 +168,7 @@ static int stm32_iwdg_clk_init(struct platform_device *pdev,
+>  	}
+>  
+>  	/* optional peripheral clock */
+> -	if (wdt->has_pclk) {
+> +	if (wdt->data->has_pclk) {
+>  		wdt->clk_pclk = devm_clk_get(dev, "pclk");
+>  		if (IS_ERR(wdt->clk_pclk)) {
+>  			dev_err(dev, "Unable to get pclk clock\n");
+> @@ -205,8 +217,8 @@ static const struct watchdog_ops stm32_iwdg_ops = {
+>  };
+>  
+>  static const struct of_device_id stm32_iwdg_of_match[] = {
+> -	{ .compatible = "st,stm32-iwdg", .data = (void *)!HAS_PCLK },
+> -	{ .compatible = "st,stm32mp1-iwdg", .data = (void *)HAS_PCLK },
+> +	{ .compatible = "st,stm32-iwdg", .data = &stm32_iwdg_data },
+> +	{ .compatible = "st,stm32mp1-iwdg", .data = &stm32mp1_iwdg_data },
+>  	{ /* end node */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, stm32_iwdg_of_match);
+> @@ -215,19 +227,16 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct watchdog_device *wdd;
+> -	const struct of_device_id *match;
+>  	struct stm32_iwdg *wdt;
+>  	int ret;
+>  
+> -	match = of_match_device(stm32_iwdg_of_match, dev);
+> -	if (!match)
+> -		return -ENODEV;
+> -
+>  	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
+>  	if (!wdt)
+>  		return -ENOMEM;
+>  
+> -	wdt->has_pclk = match->data;
+> +	wdt->data = of_device_get_match_data(&pdev->dev);
+> +	if (!wdt->data)
+> +		return -ENODEV;
+>  
+>  	/* This is the timer base. */
+>  	wdt->regs = devm_platform_ioremap_resource(pdev, 0);
+> @@ -242,11 +251,12 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+>  
+>  	/* Initialize struct watchdog_device. */
+>  	wdd = &wdt->wdd;
+> +	wdd->parent = dev;
+>  	wdd->info = &stm32_iwdg_info;
+>  	wdd->ops = &stm32_iwdg_ops;
+> -	wdd->min_timeout = ((RLR_MIN + 1) * 256) / wdt->rate;
+> -	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * 256 * 1000) / wdt->rate;
+> -	wdd->parent = dev;
+> +	wdd->min_timeout = DIV_ROUND_UP((RLR_MIN + 1) * PR_MIN, wdt->rate);
+> +	wdd->max_hw_heartbeat_ms = ((RLR_MAX + 1) * wdt->data->max_prescaler *
+> +				    1000) / wdt->rate;
+>  
+>  	watchdog_set_drvdata(wdd, wdt);
+>  	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
+> -- 
+> 2.7.4
+> 
