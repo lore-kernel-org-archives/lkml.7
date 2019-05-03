@@ -2,79 +2,58 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6EBC46460
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CA6C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17D52075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49882063F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfECLrT (ORCPT
+        id S1727802AbfECLri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:47:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41892 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727425AbfECLrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:47:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A8EBDAD69;
-        Fri,  3 May 2019 11:47:17 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id C5707E0117; Fri,  3 May 2019 13:47:16 +0200 (CEST)
-Date:   Fri, 3 May 2019 13:47:16 +0200
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: Re: [PATCH 5.0 25/89] RDMA/ucontext: Fix regression with disassociate
-Message-ID: <20190503114716.GA15275@unicorn.suse.cz>
-References: <20190430113609.741196396@linuxfoundation.org>
- <20190430113611.189238783@linuxfoundation.org>
+        Fri, 3 May 2019 07:47:38 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59218 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727781AbfECLrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 07:47:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 769B6374;
+        Fri,  3 May 2019 04:47:35 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 124C23F220;
+        Fri,  3 May 2019 04:47:33 -0700 (PDT)
+Date:   Fri, 3 May 2019 12:47:31 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: implement generic dma_map_ops for IOMMUs v4
+Message-ID: <20190503114731.GH55449@arrakis.emea.arm.com>
+References: <20190430105214.24628-1-hch@lst.de>
+ <20190502132208.GA3069@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430113611.189238783@linuxfoundation.org>
+In-Reply-To: <20190502132208.GA3069@lst.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 01:38:16PM +0200, Greg Kroah-Hartman wrote:
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> 
-> commit 67f269b37f9b4d52c5e7f97acea26c0852e9b8a1 upstream.
-> 
-> When this code was consolidated the intention was that the VMA would
-> become backed by anonymous zero pages after the zap_vma_pte - however this
-> very subtly relied on setting the vm_ops = NULL and clearing the VM_SHARED
-> bits to transform the VMA into an anonymous VMA. Since the vm_ops was
-> removed this broke.
-> 
-> Now userspace gets a SIGBUS if it touches the vma after disassociation.
-> 
-> Instead of converting the VMA to anonymous provide a fault handler that
-> puts a zero'd page into the VMA when user-space touches it after
-> disassociation.
-> 
-> Cc: stable@vger.kernel.org
-> Suggested-by: Andrea Arcangeli <aarcange@redhat.com>
-> Fixes: 5f9794dc94f5 ("RDMA/ucontext: Add a core API for mmaping driver IO memory")
-> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
+On Thu, May 02, 2019 at 03:22:08PM +0200, Christoph Hellwig wrote:
+> can you quickly look over the arm64 parts?  I'd really like to still
+> get this series in for this merge window as it would conflict with
+> a lot of dma-mapping work for next merge window, and we also have
+> the amd and possibly intel iommu conversions to use it waiting.
 
-This commit breaks build on s390 and mips, please pick also commit
-6a5c5d26c4c6 ("rdma: fix build errors on s390 and MIPS due to bad
-ZERO_PAGE use").
+Done. They look fine to me.
 
-Michal Kubecek
+-- 
+Catalin
