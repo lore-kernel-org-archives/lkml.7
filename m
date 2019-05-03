@@ -2,202 +2,203 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FDEC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DD0C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B605D2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B1E2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:34:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="BkMRxbqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfECMdx (ORCPT
+        id S1727793AbfECMez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 08:33:53 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:45436 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfECMdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 08:33:53 -0400
-Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=[172.20.29.49])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hMXNQ-0007dH-Hy; Fri, 03 May 2019 06:33:22 -0600
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah@kernel.org, devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-9-brendanhiggins@google.com>
- <0a605543-477a-1854-eb35-6e586606889b@deltatee.com>
- <CAFd5g47hxAd=+72xbPJbWPdZCXRXmtLpsGhUh=zc7MSwfcaGJQ@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <b2379db6-634a-001e-6f67-37427d8a2666@deltatee.com>
-Date:   Fri, 3 May 2019 06:33:02 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 3 May 2019 08:34:55 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44847 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfECMey (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 08:34:54 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a26so4088269qtp.11
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 05:34:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=HQCWkD02UuJ46Q1rwovoVdgm8/GrwcbowVGD21eRLW0=;
+        b=BkMRxbqoB4Ni4opdWas0Co43y1fT7BzuU1+xfg8pUzVxtpn85ogmwVitP7RWC3sral
+         wcgcG1nrQ5+jkyBhpLQEL/LWwn0T+F+eRFAPqBnmdhqrR6qHJlbVc1ELnlBktsLAd6cZ
+         QI+yFqAVzi1JYFsln+VrXei9nD+uTQZ5s51jN/hMxw7Kq64G/r6dEsPu3IH0AL4+uyOF
+         xn44NOzwF78cpfn4WXegAfSgMcET48jV1ljNKxaT5U0624nDK8hNzPyllntlrBOTqV9B
+         J4kqdzmYh0sclpGwYrNMPASFh9z0k6q9VNax2WsjQab8aUjx4rC2Gff9BghBT0Fuk6fN
+         taYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=HQCWkD02UuJ46Q1rwovoVdgm8/GrwcbowVGD21eRLW0=;
+        b=BZnevkkp+rojOTsPj+IV9h2Xe/BcGA2XwjhAFyEOcMVrLV+qsoTmsnuSYC6KRRSxwG
+         8SMp7dJmaJ9vV/FqR3VAYZ8s8M5Au7targIpNnPUKMKmzpmbEgEhASyHC6ujtqLUe3+b
+         YQUst45G7/yZdnp4jfA48YMrG0tNvDR7+76VRPK7y/rq9Uao5JCDep3H/RxyRjOULSY5
+         9sMoI5xOUyPKts2W7wYp8BZUZFuaO5Ud2eoyrUfUipbVF4enAkpoB738Ns6rAzqR337+
+         LeTAIsOZajJHupE3245JNa/feFlinQUqGM0dKylLPVA8oOvqbZXnhdNvMUYJB6z1eF0E
+         6s+g==
+X-Gm-Message-State: APjAAAXVBNvffqcv+CLAMY6sLBaqgfSqnoScPyEpTEdoqjSzolXs+VTt
+        gqT/45Mgh3qhCexRlz0UA8RjzQ==
+X-Google-Smtp-Source: APXvYqxuibzfNraW5GGjbWPqValD3EhNqGQ1P0nM2BXoikIUeg4+U7viNsyi5y989BN/Ql0nOIcTVA==
+X-Received: by 2002:a0c:b758:: with SMTP id q24mr7595743qve.69.1556886893256;
+        Fri, 03 May 2019 05:34:53 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id o10sm1039729qtg.5.2019.05.03.05.34.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 05:34:52 -0700 (PDT)
+Date:   Fri, 3 May 2019 08:34:52 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
+        Sean Paul <seanpaul@chromium.org>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/10] drm: Add atomic variants of enable/disable to
+ encoder helper funcs
+Message-ID: <20190503123452.GG17077@art_vandelay>
+References: <20190502194956.218441-1-sean@poorly.run>
+ <20190502194956.218441-2-sean@poorly.run>
+ <20190503075130.GH3271@phenom.ffwll.local>
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g47hxAd=+72xbPJbWPdZCXRXmtLpsGhUh=zc7MSwfcaGJQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 173.228.226.134
-X-SA-Exim-Rcpt-To: wfg@linux.intel.com, rostedt@goodmis.org, rientjes@google.com, richard@nod.at, pmladek@suse.com, mpe@ellerman.id.au, knut.omang@oracle.com, khilman@baylibre.com, julia.lawall@lip6.fr, joel@jms.id.au, jdike@addtoit.com, daniel@ffwll.ch, dan.j.williams@intel.com, dan.carpenter@oracle.com, amir73il@gmail.com, Tim.Bird@sony.com, Alexander.Levin@microsoft.com, linux-um@lists.infradead.org, linux-nvdimm@lists.01.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, shuah@kernel.org, sboyd@kernel.org, robh@kernel.org, mcgrof@kernel.org, kieran.bingham@ideasonboard.com, keescook@google.com, gregkh@linuxfoundation.org, frowand.list@gmail.com, brendanhiggins@google.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2 08/17] kunit: test: add support for test abort
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190503075130.GH3271@phenom.ffwll.local>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 03, 2019 at 09:51:30AM +0200, Daniel Vetter wrote:
+> On Thu, May 02, 2019 at 03:49:43PM -0400, Sean Paul wrote:
+> > From: Sean Paul <seanpaul@chromium.org>
+> > 
+> > This patch adds atomic_enable and atomic_disable callbacks to the
+> > encoder helpers. This will allow encoders to make informed decisions in
+> > their start-up/shutdown based on the committed state.
+> > 
+> > Aside from the new hooks, this patch also introduces the new signature
+> > for .atomic_* functions going forward. Instead of passing object state
+> > (well, encoders don't have atomic state, but let's ignore that), we pass
+> > the entire atomic state so the driver can inspect more than what's
+> > happening locally.
+> > 
+> > This is particularly important for the upcoming self refresh helpers.
+> > 
+> > Changes in v3:
+> > - Added patch to the set
+> > 
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> > Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> > ---
+> >  drivers/gpu/drm/drm_atomic_helper.c      |  6 +++-
+> >  include/drm/drm_modeset_helper_vtables.h | 45 ++++++++++++++++++++++++
+> >  2 files changed, 50 insertions(+), 1 deletion(-)
 
+/snip
 
-On 2019-05-03 12:48 a.m., Brendan Higgins wrote:
-> On Thu, May 2, 2019 at 8:15 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->> On 2019-05-01 5:01 p.m., Brendan Higgins wrote:
->>> +/*
->>> + * struct kunit_try_catch - provides a generic way to run code which might fail.
->>> + * @context: used to pass user data to the try and catch functions.
->>> + *
->>> + * kunit_try_catch provides a generic, architecture independent way to execute
->>> + * an arbitrary function of type kunit_try_catch_func_t which may bail out by
->>> + * calling kunit_try_catch_throw(). If kunit_try_catch_throw() is called, @try
->>> + * is stopped at the site of invocation and @catch is catch is called.
->>
->> I found some of the C++ comparisons in this series a bit distasteful but
->> wasn't going to say anything until I saw the try catch.... But looking
->> into the implementation it's just a thread that can exit early which
->> seems fine to me. Just a poor choice of name I guess...
+> > diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
+> > index 8f3602811eb5..de57fb40cb6e 100644
+> > --- a/include/drm/drm_modeset_helper_vtables.h
+> > +++ b/include/drm/drm_modeset_helper_vtables.h
+> > @@ -675,6 +675,51 @@ struct drm_encoder_helper_funcs {
+> >  	enum drm_connector_status (*detect)(struct drm_encoder *encoder,
+> >  					    struct drm_connector *connector);
+> >  
+> > +	/**
+> > +	 * @atomic_disable:
+> > +	 *
+> > +	 * This callback should be used to disable the encoder. With the atomic
+> > +	 * drivers it is called before this encoder's CRTC has been shut off
+> > +	 * using their own &drm_crtc_helper_funcs.atomic_disable hook. If that
+> > +	 * sequence is too simple drivers can just add their own driver private
+> > +	 * encoder hooks and call them from CRTC's callback by looping over all
+> > +	 * encoders connected to it using for_each_encoder_on_crtc().
+> > +	 *
+> > +	 * This callback is a variant of @disable that provides the atomic state
+> > +	 * to the driver. It takes priority over @disable during atomic commits.
+> > +	 *
+> > +	 * This hook is used only by atomic helpers. Atomic drivers don't need
+> > +	 * to implement it if there's no need to disable anything at the encoder
+> > +	 * level. To ensure that runtime PM handling (using either DPMS or the
+> > +	 * new "ACTIVE" property) works @atomic_disable must be the inverse of
+> > +	 * @atomic_enable.
+> > +	 */
 > 
-> Guilty as charged (I have a long history with C++, sorry). Would you
-> prefer I changed the name? I just figured that try-catch is a commonly
-> understood pattern that describes exactly what I am doing.
-
-It is a commonly understood pattern, but I don't think it's what the
-code is doing. Try-catch cleans up an entire stack and allows each level
-of the stack to apply local cleanup. This implementation simply exits a
-thread and has none of that complexity. To me, it seems like an odd
-abstraction here as it's really just a test runner that can exit early
-(though I haven't seen the follow-up UML implementation).
-
-I would prefer to see this cleaned up such that the abstraction matches
-more what's going on but I don't feel that strongly about it so I'll
-leave it up to you to figure out what's best unless other reviewers have
-stronger opinions.
-
->>
->> [snip]
->>
->>> +static void __noreturn kunit_abort(struct kunit *test)
->>> +{
->>> +     kunit_set_death_test(test, true);
->>> +
->>> +     kunit_try_catch_throw(&test->try_catch);
->>> +
->>> +     /*
->>> +      * Throw could not abort from test.
->>> +      *
->>> +      * XXX: we should never reach this line! As kunit_try_catch_throw is
->>> +      * marked __noreturn.
->>> +      */
->>> +     WARN_ONCE(true, "Throw could not abort from test!\n");
->>> +}
->>> +
->>>  int kunit_init_test(struct kunit *test, const char *name)
->>>  {
->>>       spin_lock_init(&test->lock);
->>> @@ -77,6 +103,7 @@ int kunit_init_test(struct kunit *test, const char *name)
->>>       test->name = name;
->>>       test->vprintk = kunit_vprintk;
->>>       test->fail = kunit_fail;
->>> +     test->abort = kunit_abort;
->>
->> There are a number of these function pointers which seem to be pointless
->> to me as you only ever set them to one function. Just call the function
->> directly. As it is, it is an unnecessary indirection for someone reading
->> the code. If and when you have multiple implementations of the function
->> then add the pointer. Don't assume you're going to need it later on and
->> add all this maintenance burden if you never use it..
+> I'd add something like "For atomic drivers also consider @atomic_disable"
+> to the kerneldoc of @disable (before the NOTE: which is only relevant for
+> pre-atomic). Same for the enable side.
 > 
-> Ah, yes, Frank (and probably others) previously asked me to remove
-> unnecessary method pointers; I removed all the totally unused ones. As
-> for these, I don't use them in this patchset, but I use them in my
-> patchsets that will follow up this one. These in particular are
-> present so that they can be mocked out for testing.
-
-Adding indirection and function pointers solely for the purpose of
-mocking out while testing doesn't sit well with me and I don't think it
-should be a pattern that's encouraged. Adding extra complexity like this
-to a design to make it unit-testable doesn't seem like something that
-makes sense in kernel code. Especially given that indirect calls are
-more expensive in the age of spectre.
-
-Also, mocking these particular functions seems like it's an artifact of
-how you've designed the try/catch abstraction. If the abstraction was
-more around an abort-able test runner then it doesn't make sense to need
-to mock out the abort/fail functions as you will be testing overly
-generic features of something that don't seem necessary to the
-implementation.
-
->>
->> [snip]
->>
->>> +void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch)
->>> +{
->>> +     try_catch->run = kunit_generic_run_try_catch;
->>> +     try_catch->throw = kunit_generic_throw;
->>> +}
->>
->> Same here. There's only one implementation of try_catch and I can't
->> really see any sensible justification for another implementation. Even
->> if there is, add the indirection when the second implementation is
->> added. This isn't C++ and we don't need to make everything a "method".
+> > +	void (*atomic_disable)(struct drm_encoder *encoder,
+> > +			       struct drm_atomic_state *state);
+> > +
+> > +	/**
+> > +	 * @atomic_enable:
+> > +	 *
+> > +	 * This callback should be used to enable the encoder. It is called
+> > +	 * after this encoder's CRTC has been enabled using their own
+> > +	 * &drm_crtc_helper_funcs.atomic_enable hook. If that sequence is
+> > +	 * too simple drivers can just add their own driver private encoder
+> > +	 * hooks and call them from CRTC's callback by looping over all encoders
+> > +	 * connected to it using for_each_encoder_on_crtc().
+> > +	 *
+> > +	 * This callback is a variant of @enable that provides the atomic state
+> > +	 * to the driver. It is called in place of @enable during atomic
+> > +	 * commits.
 > 
-> These methods are for a UML specific implementation in a follow up
-> patchset, which is needed for some features like crash recovery, death
-> tests, and removes dependence on kthreads.
+> needs to be adjusted here for "takes priority".
+
+Can you clarify this comment? I'm a little fuzzy on what it means.
+
+
+
+> > +	 *
+> > +	 * This hook is used only by atomic helpers, for symmetry with @disable.
+> > +	 * Atomic drivers don't need to implement it if there's no need to
+> > +	 * enable anything at the encoder level. To ensure that runtime PM
+> > +	 * handling (using either DPMS or the new "ACTIVE" property) works
+> > +	 * @enable must be the inverse of @disable for atomic drivers.
+> > +	 */
+> > +	void (*atomic_enable)(struct drm_encoder *encoder,
+> > +			      struct drm_atomic_state *state);
+> > +
 > 
-> I know this probably sounds like premature complexity. Arguably it is
-> in hindsight, but I wrote those features before I pulled out these
-> interfaces (they were actually both originally in this patchset, but I
-> dropped them to make this patchset easier to review). I can remove
-> these methods and add them back in when I actually use them in the
-> follow up patchsets if you prefer.
+> With the nits:
+> 
+> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-Yes, remove them now and add them back when you use them in follow-up
-patches. If reviewers find problems with the follow-up patches or have a
-better suggestion on how to do what ever it is you are doing, then you
-just have this unnecessary code and there's wasted developer time and
-review bandwidth that will need to be spent cleaning it up.
+Thanks!
 
-Thanks,
+Sean
 
-Logan
+> 
+> >  	/**
+> >  	 * @disable:
+> >  	 *
+> > -- 
+> > Sean Paul, Software Engineer, Google / Chromium OS
+> > 
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
