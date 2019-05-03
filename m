@@ -2,80 +2,53 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D44C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C82C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D1A2075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A7952075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfECOsr (ORCPT
+        id S1727882AbfECOvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:48:47 -0400
-Received: from sauhun.de ([88.99.104.3]:34258 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727173AbfECOsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:48:47 -0400
-Received: from localhost (p54B33153.dip0.t-ipconnect.de [84.179.49.83])
-        by pokefinder.org (Postfix) with ESMTPSA id 3C2DB2C2868;
-        Fri,  3 May 2019 16:48:45 +0200 (CEST)
-Date:   Fri, 3 May 2019 16:48:44 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Pu Wen <puwen@hygon.cn>
-Cc:     jdelvare@suse.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 RESEND] i2c-piix4: Add Hygon Dhyana SMBus support
-Message-ID: <20190503144844.GD24385@kunai>
-References: <1556554123-5894-1-git-send-email-puwen@hygon.cn>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vni90+aGYgRvsTuO"
-Content-Disposition: inline
-In-Reply-To: <1556554123-5894-1-git-send-email-puwen@hygon.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 3 May 2019 10:51:08 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:44706 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbfECOvH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 10:51:07 -0400
+Received: from localhost (adsl-173-228-226-134.prtc.net [173.228.226.134])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id B319314B799EA;
+        Fri,  3 May 2019 07:51:05 -0700 (PDT)
+Date:   Fri, 03 May 2019 10:51:04 -0400 (EDT)
+Message-Id: <20190503.105104.932427839600881016.davem@davemloft.net>
+To:     olteanv@gmail.com
+Cc:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 net-next 00/12] NXP SJA1105 DSA driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190502202340.21054-1-olteanv@gmail.com>
+References: <20190502202340.21054-1-olteanv@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 03 May 2019 07:51:07 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vladimir Oltean <olteanv@gmail.com>
+Date: Thu,  2 May 2019 23:23:28 +0300
 
---vni90+aGYgRvsTuO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This patchset adds a DSA driver for the SPI-controlled NXP SJA1105
+> switch.
 
-On Tue, Apr 30, 2019 at 12:08:43AM +0800, Pu Wen wrote:
-> The Hygon Dhyana CPU has the SMBus device with PCI device ID 0x790b,
-> which is the same as AMD CZ SMBus device. So add Hygon Dhyana support
-> to the i2c-piix4 driver by using the code path of AMD.
->=20
-> Signed-off-by: Pu Wen <puwen@hygon.cn>
-> Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Series applied, thank you.
 
-Applied to for-next, thanks!
-
-
---vni90+aGYgRvsTuO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzMVMwACgkQFA3kzBSg
-KbZHEBAAm8xAjCbx/jdBVaWlBiuWE57fQzmTjQ8pLUH6e0SNl90RBbCHI+7ex0ik
-ugD8hcUKkLiF7OVEDmnCsyXFkp60ED/0lelHKRLIeeDHpkqmSrABfhnDr3CWoo+G
-kknkicjAVO+pvFlcYYmdL1j2h7jKbUjs1eWjBBpJm9wWTWyKfDUzN8mSG12Sma2b
-+N0DtNiefwTAicsM0DgSfsWyLImG9SUO+L/KVVkODfbIp/I2maHUDgoL36TXzR/8
-ppPFdpFqyku4siDO9LdvSCEdWkEoYWstOC/nWm3UNy4h0tEZEIV1/kKw/r6snDCe
-Ot+WG6ijg+2KcZY3E4pdNBza2tiTM/WvsJC8Dm6/LhaWilV4vavner/RjjFaiMHu
-h4bnmp1kApVscOpTfEB1C3/MZnTgXgYX3THreRaHsiMo8a1FO4TLQ43oDBt/CLgm
-hfscDMPOnQ5a+hyp4+5Wk+1TghM2+ejIN/U763csByKkPLRD2rwZ1MIOr9HPMMPf
-8U6MAF4yVGLxO7cgSoX1+0TqRqife9+OnQngm18xG4QGvx/pMZVg44idJcyrafEA
-85phXEX5+t73W8nRWw9gHdD6st/levRpqyT/Eu+VuFhKWnJ7uRKOgEt6kSKgKTUb
-JHxXN5Y7oRizL9QbohCFseNz6UDICK/cyJBDtvrqmWegkxgP1iQ=
-=LW73
------END PGP SIGNATURE-----
-
---vni90+aGYgRvsTuO--
