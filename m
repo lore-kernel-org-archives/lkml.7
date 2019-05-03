@@ -2,169 +2,103 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5676C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC3AC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8811E2075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556903345;
-	bh=B6/MSMYbkg+WTWBm94Gih3RB7d5QYsXpBeEAwOIv+D0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EGwM95GnLvqZJox4wAwQZMrNNqZtZlm/7JYiCN+CDnb1qi5iwUCbZwsQtr8zIDAXK
-	 poT1TcB5zsbSK/ZK6eu8hWV8NjxYphkLjguHYuOre/e15Qr1oL5sK9Czd27izeElRd
-	 ciVahf7lxDuD3Rzgvv+5/iTZ1xZbw2OQ98zYv7Ts=
+	by mail.kernel.org (Postfix) with ESMTP id D76D82075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:13:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbfECRJE (ORCPT
+        id S1728493AbfECRNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:09:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbfECRJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:09:04 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B71682087F;
-        Fri,  3 May 2019 17:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556903343;
-        bh=B6/MSMYbkg+WTWBm94Gih3RB7d5QYsXpBeEAwOIv+D0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DYiblBjocgSq/Lbl+6Cnzwlf09QeF+2q8IFuQwZX3/BLRsXP4Z+XvuCmgRoSCZwG9
-         BVB+hH7S5ve0VvNLT7q0V2uKB9P9eBCb9gUh6VoK6y9SGwxlWhn8KIvR1Nyr9X9fiW
-         3z73v9x5d5zBCOR6auE/dpxTltqebB2nIcLzY4XM=
-Received: by mail-wr1-f50.google.com with SMTP id h4so8746342wre.7;
-        Fri, 03 May 2019 10:09:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAXvJBnQYm2p1uINlFIzYdiQ8m3w8+1revBWEz93vuZld5kueCRC
-        sEi6/RD8qwRnxpUTUpQZ1MUndEEjenMjHOX68cg=
-X-Google-Smtp-Source: APXvYqxUYmAOLutHuKkaO6/H+LbNDlFI1Tlxl80gA9Hwuxr9ET8QCNLanMkTbxWvc59Wz2Wn8KG7Ghk5n2dYvn1pPYw=
-X-Received: by 2002:adf:f310:: with SMTP id i16mr7641713wro.291.1556903341329;
- Fri, 03 May 2019 10:09:01 -0700 (PDT)
+        Fri, 3 May 2019 13:13:40 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37594 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727628AbfECRNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 13:13:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93F5215A2;
+        Fri,  3 May 2019 10:13:39 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53B5F3F557;
+        Fri,  3 May 2019 10:13:38 -0700 (PDT)
+Subject: Re: [PATCH v2 08/36] coresight: tmc: Clean up device specific data
+To:     mathieu.poirier@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, mike.leach@linaro.org,
+        rjw@rjwysocki.net, robert.walker@arm.com
+References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
+ <1555344260-12375-9-git-send-email-suzuki.poulose@arm.com>
+ <20190417212325.GC14163@xps15>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <61ccfc44-c062-fa3e-6de9-825def4e9891@arm.com>
+Date:   Fri, 3 May 2019 18:13:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190429032551.65975-1-drinkcat@chromium.org> <20190429032551.65975-2-drinkcat@chromium.org>
- <1556804888.28808.6.camel@mtksdaap41> <CANMq1KAugRiL+-bAFijEM7NngLSoOUQtN=rNV5+YYdJ12u+jVQ@mail.gmail.com>
-In-Reply-To: <CANMq1KAugRiL+-bAFijEM7NngLSoOUQtN=rNV5+YYdJ12u+jVQ@mail.gmail.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Fri, 3 May 2019 10:08:50 -0700
-X-Gmail-Original-Message-ID: <CAGp9LzqdYapagHUH1uuuHRR+j5JcphN7hhM2SyZoXQFCP8_fSw@mail.gmail.com>
-Message-ID: <CAGp9LzqdYapagHUH1uuuHRR+j5JcphN7hhM2SyZoXQFCP8_fSw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: mediatek: Add mtk_eint_pm_ops to common-v2
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, linux-gpio@vger.kernel.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190417212325.GC14163@xps15>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Nicolas
+Hi Mathieu
 
-On Thu, May 2, 2019 at 5:53 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> On Thu, May 2, 2019 at 9:48 PM Yingjoe Chen <yingjoe.chen@mediatek.com> wrote:
-> >
-> > On Mon, 2019-04-29 at 11:25 +0800, Nicolas Boichat wrote:
-> > > pinctrl variants that include pinctrl-mtk-common-v2.h (and not
-> > > pinctrl-mtk-common.h) also need to use mtk_eint_pm_ops to setup
-> > > wake mask properly, so copy over the pm_ops to v2.
-> > >
-> > > It is not easy to merge the 2 copies (or move
-> > > mtk_eint_suspend/resume to mtk-eint.c), as we need to
-> > > dereference pctrl->eint, and struct mtk_pinctrl *pctl has a
-> > > different structure definition for v1 and v2.
-> > >
-> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > > Reviewed-by: Chuanjia Liu <Chuanjia.Liu@mediatek.com>
-> > > ---
-> > >  .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 19 +++++++++++++++++++
-> > >  .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  1 +
-> > >  2 files changed, 20 insertions(+)
-> > >
-> > > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > index 20e1c890e73b30c..7e19b5a4748eafe 100644
-> > > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > > @@ -723,3 +723,22 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
-> > >
-> > >       return 0;
-> > >  }
-> > > +
-> > > +static int mtk_eint_suspend(struct device *device)
-> > > +{
-> > > +     struct mtk_pinctrl *pctl = dev_get_drvdata(device);
-> > > +
-> > > +     return mtk_eint_do_suspend(pctl->eint);
-> > > +}
-> > > +
-> > > +static int mtk_eint_resume(struct device *device)
-> > > +{
-> > > +     struct mtk_pinctrl *pctl = dev_get_drvdata(device);
-> > > +
-> > > +     return mtk_eint_do_resume(pctl->eint);
-> > > +}
-> > > +
-> > > +const struct dev_pm_ops mtk_eint_pm_ops = {
-> > > +     .suspend_noirq = mtk_eint_suspend,
-> > > +     .resume_noirq = mtk_eint_resume,
-> > > +};
-> >
-> > This is identical to the one in pinctrl-mtk-common.c and will have name
-> > clash if both pinctrl-mtk-common.c and pinctrl-mtk-common-v2.c are
-> > built.
-> >
-> > It would be better if we try to merge both version into mtk-eint.c, this
-> > way we could also remove some global functions.
->
-> Argh, I didn't think about the name clash, you're right. I guess the
-> easy way is to rename this one mtk_eint_pm_ops_v2 ...
->
-> As highlighted in the commit message, it's tricky to merge the 2 sets
-> of functions, they look identical, but they actually work on struct
-> mtk_pinctrl that are defined differently (in
-> pinctrl-mtk-common[-v2].h), so the ->eint member is at different
-> addresses...
->
-> I don't really see a way around this... Unless we want to change
-> platform_set_drvdata(pdev, pctl); to pass another type of structure
-> that could be shared (but I think that'll make the code fairly
-> verbose, with another layer of indirection). Or just assign struct
-> mtk_eint to that, since that contains pctl so we could get back the
-> struct mtk_pinctrl from that, but that feels ugly as well...
->
+On 17/04/2019 22:23, Mathieu Poirier wrote:
+> On Mon, Apr 15, 2019 at 05:03:51PM +0100, Suzuki K Poulose wrote:
+>> In preparation to use a consistent device naming scheme,
+>> clean up the device link tracking in replicator driver.
+>> Use the "coresight" device instead of the "real" parent device
+>> for all internal purposes. All other requests (e.g, power management,
+>> DMA operations) must use the "real" device which is the parent device.
+>>
+>> Since the CATU driver also uses the TMC-SG infrastructure, update
+>> the callers to ensure they pass the appropriate device argument
+>> for the tables.
+>>
+>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-I agree on renaming would make the thing simple. but I wouldn't like
-to rename to mtk_eint_pm_ops_v2 since this would make people
-misunderstand that is mtk_eint_v2.
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> index f684283..0911f9c 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> @@ -153,10 +153,11 @@ static void tmc_pages_free(struct tmc_pages *tmc_pages,
+>>   			   struct device *dev, enum dma_data_direction dir)
+>>   {
+>>   	int i;
+>> +	struct device *real_dev = dev->parent;
+> 
+> I would have kept the 'dev' as it is quite obvious from the dev->parent that we
+> are getting a reference on the parent.  That is just my opinion and it is
+> entirely up to you.
 
-How about renaming to mtk_paris_pinctrl_pm_ops and then place related
-logic you added into pinctrl-paris.c? Because I prefer to keep pure
-pinctrl hardware operations in pinctrl-mtk-common-v2.c, and for
-relevant to other modules (mtk eint) or others subsystem (device tree
-binding, GPIO subsytem, PM something like that) they should be moved
-to pinctrl-paris.c or pinctrl-moore.c
+"dev" is already an argument to the function. Hence the "real_dev" choice.
 
-     Sean
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+>> index 487c537..3eeadcf 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc.h
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc.h
+>> @@ -175,7 +175,6 @@ struct etr_buf {
+>>    */
+>>   struct tmc_drvdata {
+>>   	void __iomem		*base;
+>> -	struct device		*dev;
+> 
+> Please clean up the structure documentation.
+> 
+> With that and regardless of what you decide to do about the 'real_dev':
 
-> >
-> > Joe.C
-> >
-> >
-> >
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Done.
+
+> 
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
+Cheers
+Suzuki
