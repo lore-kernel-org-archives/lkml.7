@@ -2,98 +2,190 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779C0C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E3CC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442A9206C1
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:26:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="haScTnaM"
+	by mail.kernel.org (Postfix) with ESMTP id A5BA32075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:29:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfECW0n (ORCPT
+        id S1726546AbfECW3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 18:26:43 -0400
-Received: from ozlabs.org ([203.11.71.1]:56713 "EHLO ozlabs.org"
+        Fri, 3 May 2019 18:29:32 -0400
+Received: from mga02.intel.com ([134.134.136.20]:7005 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfECW0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 18:26:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44wmvJ4Cbsz9sCJ;
-        Sat,  4 May 2019 08:26:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556922400;
-        bh=mvdC9PkuK3vAxC9I/LgUnG5QKbAod+fjoqmyqnpZHG8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=haScTnaMIIVCn8nEBD9R0watwu/zI8g0rvePKEfSkJ7FGW20lH4PY1kVXlKuo2V/o
-         f4okSgUAebCzegCEFLtOtfSG5Mn7y+4f1zDRN773PBy+kraMQr8stua6s1lZe4m4AT
-         JjrVVN+NitvUq6IUM57IfLqNt0WWdoX0gSfHIbgwexY9pX4pNDSm3udcwJMShPcsyO
-         /Q1UwIa5CI99B7x/akZNfPRqTFgxGt6LWoEYqjSZEcVqY+Iv35tLdslLlwrl07HHbX
-         nviIigWnhDix+K6dlYI/zKdRUgmQBnE8jwHTJQ0p/EFlqwUQmA4V9IF6si5c1wWmW1
-         fS5qPm75LJVLQ==
-Date:   Sat, 4 May 2019 08:26:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mike Marshall <hubcap@omnibond.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Martin Brandenburg <martin@omnibond.com>
-Subject: Re: linux-next: manual merge of the vfs tree with the orangefs tree
-Message-ID: <20190504082634.6f78a061@canb.auug.org.au>
-In-Reply-To: <CAOg9mSSGUiCoeecpdLs-8-TAMkVDubHK5jG87dGseV4gkGRiOQ@mail.gmail.com>
-References: <20190503111510.6e866e3b@canb.auug.org.au>
-        <CAOg9mSSGUiCoeecpdLs-8-TAMkVDubHK5jG87dGseV4gkGRiOQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/2IlGFZ=ogMBV774+e4=+kt8"; protocol="application/pgp-signature"
+        id S1726059AbfECW3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 18:29:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 May 2019 15:29:31 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga002.jf.intel.com with ESMTP; 03 May 2019 15:29:31 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     "Yi Liu" <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v3 00/16] Shared virtual address IOMMU and VT-d support
+Date:   Fri,  3 May 2019 15:32:01 -0700
+Message-Id: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2IlGFZ=ogMBV774+e4=+kt8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Shared virtual address (SVA), a.k.a, Shared virtual memory (SVM) on Intel
+platforms allow address space sharing between device DMA and applications.
+SVA can reduce programming complexity and enhance security.
+This series is intended to enable SVA virtualization, i.e. shared guest
+application address space and physical device DMA address. Only IOMMU portion
+of the changes are included in this series. Additional support is needed in
+VFIO and QEMU (will be submitted separately) to complete this functionality.
 
-Hi Mike,
+To make incremental changes and reduce the size of each patchset. This series
+does not inlcude support for page request services.
 
-On Fri, 3 May 2019 13:34:49 -0400 Mike Marshall <hubcap@omnibond.com> wrote:
->
-> I noticed the conflict too when I added Al's patch series to the orangefs
-> tree we have on next. I understood Linus to say he'd fix the conflict the
-> way you did during the merge window. I guess that means you'll have to
-> keep fixing it on next until then... I hate causing trouble, let me know =
-if
-> there's something different I should do to help...
+In VT-d implementation, PASID table is per device and maintained in the host.
+Guest PASID table is shadowed in VMM where virtual IOMMU is emulated.
 
-Its all good.  I use "git rerere" which remembers the conflicts I have
-fixed once and fixes them automatically the next time I do the same
-merge.
+    .-------------.  .---------------------------.
+    |   vIOMMU    |  | Guest process CR3, FL only|
+    |             |  '---------------------------'
+    .----------------/
+    | PASID Entry |--- PASID cache flush -
+    '-------------'                       |
+    |             |                       V
+    |             |                CR3 in GPA
+    '-------------'
+Guest
+------| Shadow |--------------------------|--------
+      v        v                          v
+Host
+    .-------------.  .----------------------.
+    |   pIOMMU    |  | Bind FL for GVA-GPA  |
+    |             |  '----------------------'
+    .----------------/  |
+    | PASID Entry |     V (Nested xlate)
+    '----------------\.------------------------------.
+    |             |   |SL for GPA-HPA, default domain|
+    |             |   '------------------------------'
+    '-------------'
+Where:
+ - FL = First level/stage one page tables
+ - SL = Second level/stage two page tables
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/2IlGFZ=ogMBV774+e4=+kt8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+This work is based on collaboration with other developers on the IOMMU
+mailing list. Notably,
 
------BEGIN PGP SIGNATURE-----
+[1] [PATCH v6 00/22] SMMUv3 Nested Stage Setup by Eric Auger
+https://lkml.org/lkml/2019/3/17/124
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzMwBoACgkQAVBC80lX
-0GztzAgAnZiH9dzA+04iUsXDwzAq2LEaP+Ssd4oLtGy7w2IiizC4jrg4/1F50ZxB
-52hW5YkohsJfHj0/aSLlifXztvTnT4yIHcNDxcIFNkV3ISw2eVcfolJQL88I8Wcf
-TEPf6jgUbcipodTfVK7kKVPweyMf0xCDxtZerivvs7BOzDgXlVVM774qmJAGeuJR
-zb53TvWHtvCaiHeCdRZ4go5fhJhdzu/Gel42o4/gqHCiGzKzabVK7JpMxGFmUEV3
-aAauzCc1QxZKe6V89AAr9YJYicKvHYc6KtKz7od9cym2aKIqTEMSwmrujsamNTVh
-oulnM6F/2593DFbTEIgpHs8Yo5utpA==
-=wZCW
------END PGP SIGNATURE-----
+[2] [RFC PATCH 2/6] drivers core: Add I/O ASID allocator by Jean-Philippe
+Brucker
+https://www.spinics.net/lists/iommu/msg30639.html
 
---Sig_/2IlGFZ=ogMBV774+e4=+kt8--
+[3] [RFC PATCH 0/5] iommu: APIs for paravirtual PASID allocation by Lu Baolu
+https://lkml.org/lkml/2018/11/12/1921
+
+[4] [PATCH v5 00/23] IOMMU and VT-d driver support for Shared Virtual
+    Address (SVA)
+    https://lwn.net/Articles/754331/
+
+There are roughly three parts:
+1. Generic PASID allocator [1] with extension to support custom allocator
+2. IOMMU cache invalidation passdown from guest to host
+3. Guest PASID bind for nested translation
+
+All generic IOMMU APIs are reused from [1], which has a v7 just published with
+no real impact to the patches used here. It is worth noting that unlike sMMU
+nested stage setup, where PASID table is owned by the guest, VT-d PASID table is
+owned by the host, individual PASIDs are bound instead of the PASID table.
+
+This series is based on the new VT-d 3.0 Specification (https://software.intel.com/sites/default/files/managed/c5/15/vt-directed-io-spec.pdf).
+This is different than the older series in [4] which was based on the older
+specification that does not have scalable mode.
+
+
+ChangeLog:
+	- V3
+	  - Addressed thorough review comments from Eric Auger (Thank you!)
+	  - Moved IOASID allocator from driver core to IOMMU code per
+	    suggestion by Christoph Hellwig
+	    (https://lkml.org/lkml/2019/4/26/462)
+	  - Rebased on top of Jean's SVA API branch and Eric's v7[1]
+	    (git://linux-arm.org/linux-jpb.git sva/api)
+	  - All IOMMU APIs are unmodified (except the new bind guest PASID
+	    call in patch 9/16)
+
+	- V2
+	  - Rebased on Joerg's IOMMU x86/vt-d branch v5.1-rc4
+	  - Integrated with Eric Auger's new v7 series for common APIs
+	  (https://github.com/eauger/linux/tree/v5.1-rc3-2stage-v7)
+	  - Addressed review comments from Andy Shevchenko and Alex Williamson on
+	    IOASID custom allocator.
+	  - Support multiple custom IOASID allocators (vIOMMUs) and dynamic
+	    registration.
+
+
+Jacob Pan (13):
+  iommu: Introduce attach/detach_pasid_table API
+  ioasid: Add custom IOASID allocator
+  iommu/vt-d: Add custom allocator for IOASID
+  iommu/vtd: Optimize tlb invalidation for vIOMMU
+  iommu/vt-d: Replace Intel specific PASID allocator with IOASID
+  iommu: Introduce guest PASID bind function
+  iommu/vt-d: Move domain helper to header
+  iommu/vt-d: Avoid duplicated code for PASID setup
+  iommu/vt-d: Add nested translation helper function
+  iommu/vt-d: Clean up for SVM device list
+  iommu/vt-d: Add bind guest PASID support
+  iommu/vt-d: Support flushing more translation cache types
+  iommu/vt-d: Add svm/sva invalidate function
+
+Jean-Philippe Brucker (1):
+  iommu: Add I/O ASID allocator
+
+Liu, Yi L (1):
+  iommu: Introduce cache_invalidate API
+
+Lu Baolu (1):
+  iommu/vt-d: Enlightened PASID allocation
+
+ drivers/iommu/Kconfig       |   7 ++
+ drivers/iommu/Makefile      |   1 +
+ drivers/iommu/dmar.c        |  50 ++++++++
+ drivers/iommu/intel-iommu.c | 241 ++++++++++++++++++++++++++++++++++--
+ drivers/iommu/intel-pasid.c | 223 +++++++++++++++++++++++++--------
+ drivers/iommu/intel-pasid.h |  24 +++-
+ drivers/iommu/intel-svm.c   | 293 +++++++++++++++++++++++++++++++++++---------
+ drivers/iommu/ioasid.c      | 265 +++++++++++++++++++++++++++++++++++++++
+ drivers/iommu/iommu.c       |  53 ++++++++
+ include/linux/intel-iommu.h |  41 ++++++-
+ include/linux/intel-svm.h   |   7 ++
+ include/linux/ioasid.h      |  67 ++++++++++
+ include/linux/iommu.h       |  43 ++++++-
+ include/uapi/linux/iommu.h  | 140 +++++++++++++++++++++
+ 14 files changed, 1328 insertions(+), 127 deletions(-)
+ create mode 100644 drivers/iommu/ioasid.c
+ create mode 100644 include/linux/ioasid.h
+
+-- 
+2.7.4
+
