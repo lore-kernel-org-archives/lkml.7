@@ -2,122 +2,154 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1203C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289E0C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A137C2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:11:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EY8Wl3cm"
+	by mail.kernel.org (Postfix) with ESMTP id 013332070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbfECVL2 (ORCPT
+        id S1727258AbfECVOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 17:11:28 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38544 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfECVL2 (ORCPT
+        Fri, 3 May 2019 17:14:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37184 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726150AbfECVOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 17:11:28 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k16so9454066wrn.5
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 14:11:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4wsRkkLLbJZmIvxgiyssDJeBv4EOkgSlgxV1aVYUQGg=;
-        b=EY8Wl3cmPCIHcC7tSICoTy7i1jTYAsNZQ00IkCRNDeUDGRCi84sp1wmDsp+y7Nm1bF
-         q4ilEa6paeqrhCFs9yybJoSO7xWZ34eMqyYuhj3Ykin+hdTWPWy2MDSAKRwltLMQjt9j
-         MVElim7mXFADIzxluh4ujiwpTSCJ9ou5596ZOvhCuwdCcM6Or2RDxspWMi9BBHQEUgkW
-         axYhFUeLIDcIRKthpNNvP370b6GiNYhCSIQDG13l4GnQL2o0q2dyRMRe7YdOBpxWHdwk
-         /1sNK56kKQl4uuAmVrgNO0wZY7SMMJ1H0XcRGhGlC3P1iDmCIgyY+mQyfOa5qJcDD++U
-         cbVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4wsRkkLLbJZmIvxgiyssDJeBv4EOkgSlgxV1aVYUQGg=;
-        b=KNWFp9yUKH97W8Fp/kf5gzy63gJl8bbruEUp6LMXirgrsREbA9gnZFSoZ23LyA632s
-         lbSQ97sAqSBSzq35EwXSUoByNmtNNs7VReaqkrnywNCiuoUFOD2niacQ64dCqtSYFSgr
-         NastNfhohOlCCutOKtjGMZgnHtRezn2f4yuPRPEnnxh/Y4+AzMwJgVgLea4fNGInI2W3
-         Y4RpVPlVC24XC7ckhzknxNuti+i7L8lZO5JI1b/vWioZ7oE9MZTP+m6IZk9hJ9efCWsn
-         PAcvltwAay6uFMavrZXQMzFddmr4anEpqLpfgYpmupHFooYSPDbDxOB5r5rZILintv3V
-         wwJw==
-X-Gm-Message-State: APjAAAWRYskKC982nADQ0NXU7X9887LZ65rhOXkMlQiYL5RBIE2zrK8K
-        0mhDqSjhbKMBBERezfLt2vycQQ==
-X-Google-Smtp-Source: APXvYqwX2tUgC0PUey+3pTZ86MgfL66WCy5mH6BpAhqy+lsTFiJoUry4MdTl6Om/dIUsOZniRNwwgg==
-X-Received: by 2002:a5d:6087:: with SMTP id w7mr2004398wrt.212.1556917886220;
-        Fri, 03 May 2019 14:11:26 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id u11sm5269768wmu.15.2019.05.03.14.11.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 14:11:25 -0700 (PDT)
-Subject: Re: [PATCH] thermal: cpu_cooling: Actually trace CPU load in
- thermal_power_cpu_get_power
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Javi Merino <javi.merino@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-References: <20190502183238.182058-1-mka@chromium.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <85246ec5-2dd7-f7fb-535f-0268af399480@linaro.org>
-Date:   Fri, 3 May 2019 23:11:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190502183238.182058-1-mka@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Fri, 3 May 2019 17:14:43 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43LBtV4099781;
+        Fri, 3 May 2019 17:14:41 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s8w79gc5r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 May 2019 17:14:40 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x43FI9gF009505;
+        Fri, 3 May 2019 15:18:39 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01dal.us.ibm.com with ESMTP id 2s4eq3yhbt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 03 May 2019 15:18:39 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x43LEbnT27000950
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 May 2019 21:14:37 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 266E8124055;
+        Fri,  3 May 2019 21:14:37 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96DF7124052;
+        Fri,  3 May 2019 21:14:36 +0000 (GMT)
+Received: from akrowiak-ThinkPad-P50.ibm.com (unknown [9.85.193.92])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Fri,  3 May 2019 21:14:36 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pmorel@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH v2 1/7] s390: vfio-ap: wait for queue empty on queue reset
+Date:   Fri,  3 May 2019 17:14:27 -0400
+Message-Id: <1556918073-13171-2-git-send-email-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905030137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/05/2019 20:32, Matthias Kaehlcke wrote:
-> The CPU load values passed to the thermal_power_cpu_get_power
-> tracepoint are zero for all CPUs, unless, unless the
-> thermal_power_cpu_limit tracepoint is enabled too:
-> 
->   irq/41-rockchip-98    [000] ....   290.972410: thermal_power_cpu_get_power:
->   cpus=0000000f freq=1800000 load={{0x0,0x0,0x0,0x0}} dynamic_power=4815
-> 
-> vs
-> 
->   irq/41-rockchip-96    [000] ....    95.773585: thermal_power_cpu_get_power:
->   cpus=0000000f freq=1800000 load={{0x56,0x64,0x64,0x5e}} dynamic_power=4959
->   irq/41-rockchip-96    [000] ....    95.773596: thermal_power_cpu_limit:
->   cpus=0000000f freq=408000 cdev_state=10 power=416
-> 
-> There seems to be no good reason for omitting the CPU load information
-> depending on another tracepoint. My guess is that the intention was to
-> check whether thermal_power_cpu_get_power is (still) enabled, however
-> 'load_cpu != NULL' already indicates that it was at least enabled when
-> cpufreq_get_requested_power() was entered, there seems little gain
-> from omitting the assignment if the tracepoint was just disabled, so
-> just remove the check.
-> 
-> Fixes: 6828a4711f99 ("thermal: add trace events to the power allocator governor")
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
+Refactors the AP queue reset function to wait until the queue is empty
+after the PQAP(ZAPQ) instruction is executed to zero out the queue as
+required by the AP architecture.
 
-Yes, load_cpu is needed in any case for both traces. The change makes sense.
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 35 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 900b9cf20ca5..b88a2a2ba075 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -271,6 +271,32 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+ 	return 0;
+ }
+ 
++static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned long apqi)
++{
++	struct ap_queue_status status;
++	ap_qid_t qid = AP_MKQID(apid, apqi);
++	int retry = 5;
++
++	do {
++		status = ap_tapq(qid, NULL);
++		switch (status.response_code) {
++		case AP_RESPONSE_NORMAL:
++			if (status.queue_empty)
++				return;
++			msleep(20);
++			break;
++		case AP_RESPONSE_RESET_IN_PROGRESS:
++		case AP_RESPONSE_BUSY:
++			msleep(20);
++			break;
++		default:
++			pr_warn("%s: tapq err %02x: %04lx.%02lx may not be empty\n",
++				__func__, status.response_code, apid, apqi);
++			return;
++		}
++	} while (--retry);
++}
++
+ /**
+  * assign_adapter_store
+  *
+@@ -790,15 +816,18 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+ 	return NOTIFY_OK;
+ }
+ 
+-static int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+-				    unsigned int retry)
++int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
+ {
+ 	struct ap_queue_status status;
++	int retry = 5;
+ 
+ 	do {
+ 		status = ap_zapq(AP_MKQID(apid, apqi));
+ 		switch (status.response_code) {
+ 		case AP_RESPONSE_NORMAL:
++			vfio_ap_mdev_wait_for_qempty(apid, apqi);
++			return 0;
++		case AP_RESPONSE_DECONFIGURED:
+ 			return 0;
+ 		case AP_RESPONSE_RESET_IN_PROGRESS:
+ 		case AP_RESPONSE_BUSY:
+@@ -824,7 +853,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+ 			     matrix_mdev->matrix.apm_max + 1) {
+ 		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+ 				     matrix_mdev->matrix.aqm_max + 1) {
+-			ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
++			ret = vfio_ap_mdev_reset_queue(apid, apqi);
+ 			/*
+ 			 * Regardless whether a queue turns out to be busy, or
+ 			 * is not operational, we need to continue resetting
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.7.4
 
