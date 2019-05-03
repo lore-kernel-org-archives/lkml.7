@@ -2,186 +2,86 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6D9C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DD4C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD3CB2075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DDAA2075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:49:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BWFlXcxd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jf69vmuw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbfECGsn (ORCPT
+        id S1726983AbfECGtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:48:43 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33529 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbfECGsn (ORCPT
+        Fri, 3 May 2019 02:49:47 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41196 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbfECGtr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:48:43 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s11so4428504otp.0
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 23:48:42 -0700 (PDT)
+        Fri, 3 May 2019 02:49:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k8so4331277lja.8
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 23:49:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=B/vgrL6mFJjbubEtdk9xy4dCVOTfDfNigFjtHMJz6Hg=;
-        b=BWFlXcxdKPCg7HeydPM9nymqdJaKu5v0FhgYXNSsx2wC9FgZ6BWl9owIL4tp34RHzV
-         0O2CI2x3Gf2dd6TLPVl+UCJIuR6ugbJgNiJ5ahKuIYIQ+IA6TXvM7s76WSfiT5u9UOjU
-         BAmfjJWmXXmLvLfanifCHtnmcT9eQgxYIv2/nMEQ/h+Jh7SQ4Wq8KAXXS2vmQSRvUjv3
-         lY5jQIBJ2XBRYHgExTQbP6djFMEjOYOf+5XNpdQj+/aplIkBZPZ/tX1ygb8a9ZyYzeEG
-         YiV5A2XgkK4p5mdxg0WTkGqiAuXfNRl77gHQcoJRclt/bqm0TtNUGFDJL3udF8SKeGs/
-         dUEg==
+        bh=CXAK1ulb/vcSgb2pd77d2EZm7UG82ynLQc1JZ6Vcu+0=;
+        b=jf69vmuwzCyDeTyzrpNf6Eu0pW34zkJvMy75KCm+8TajY01Zlp0oDtIpQvBxmIsA+4
+         4jFnJUSbERgFEavYDawKg4UaNQmbIsm9PzvhQ5rFt/EurU/g1PnaxRvdXlNEyFRL6ZqX
+         bfISG1dH3xJ3Kb4mxx7kkfsp+i4zU5cVtLLzSHfYODSlOnhtW2Doqdpu8a9dyDlNWbEs
+         Oqtaloi6J6dKJI+sJlUq2qqaFx5lAOLLkztcLcJ8Xdnk4Z8mhg6MJ5S6CgvJzVzfBBXy
+         iHsv894tXVMk/1nCzj3Oc/2gWguy9xornWA/xr8yoIapR4k79dgX0J0OajT4d7e1xA8R
+         E0mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=B/vgrL6mFJjbubEtdk9xy4dCVOTfDfNigFjtHMJz6Hg=;
-        b=e3bf3WTREKKvKbtDlVuwdA2E9ohecjExJjnOBY9qgZ4wOJf/BXW7OKdFnbT3N1Ahip
-         8DAJcSo/ybcaaxk2jxIijbqS/3eC0eTPUhYgI6hY/2OcsPUI2TA+t3h1KegXrGoaV+07
-         ctY2VWB+tkLvlQwwWzXGhJ86m8Y3GARsxpxQrGcl2czAuOJxMvgwB2zRe8ghxRPvEulh
-         zmC6atgqxK5fBTTGrfYRrFFIkOclFcilkNp3dHvtX5Ixz7apNnvnDjvc7Q1vaZwgGZuW
-         Y/glIQoKNa4NfKmXLKZyVemFO8Pcw102Kx8RDR+nTFpVd5UQppOdSpVSveNjSfF248KP
-         ZvxQ==
-X-Gm-Message-State: APjAAAVBrEvlV3vgQBhpxVzTo/M6e9lXq0229YRbv8TxZzS2//fKwlWh
-        J9T7RuOW/jkG1HoW+nxjGfufCQY02w2FjA57NcB/nQ==
-X-Google-Smtp-Source: APXvYqyPne+GcGg5xCp23Lwb83V334Sd3k9K4ces08vt/qj/xTxzgyMfUgwlwCqUT5AUGkcD/SfnjL8zKAwKDrfcpHY=
-X-Received: by 2002:a9d:5cc3:: with SMTP id r3mr5382470oti.338.1556866121691;
- Thu, 02 May 2019 23:48:41 -0700 (PDT)
+        bh=CXAK1ulb/vcSgb2pd77d2EZm7UG82ynLQc1JZ6Vcu+0=;
+        b=UesPgV8ASGyvWuQ7JG/FLIFXCsZ4zsx4bCiTAah4d73ZJPOciOEVbgHIsAa8JJtAXx
+         gvhPiKO6b9pAvilYgVn3cUwlle5KTb+XfFoPAjtk+jvbY8E455PZfMfkaKxdANTyLHvR
+         yrP6q3lGcpOx1U+FvFL59ReiN+LrAoLEvLBKb6vO3FPGJkJsyq+N5tDtKTLdJLtWzqeD
+         UJ4QQJDrXGwVXEtl2euGGzIrgA7B7mPTuBhJddDpwj7nfHm2x69pil5aqoVFdjhOFOCM
+         sK17WwLoCNps1BF/IjPohBGI7HkQBYO7uyDUSolZo3WFLigWD3GpEF7/aRhk0842L99K
+         oSaw==
+X-Gm-Message-State: APjAAAXYxPWYXZQRMxVCSMs/UBgD9qI0LJfDPDRiCNVDefPimrwK+ZIa
+        M9SDyx0Gr6mamIySWP7Jjb+MOyl7CHi215ahEhEd7Q==
+X-Google-Smtp-Source: APXvYqz08Q0LXJKUPd9rh/k89P1WML5/iS1DxcMbScMPKcbZEELiLJ/4k/1lYnAK2jfH2rxmZAFg3ZsnLAyoJGznflk=
+X-Received: by 2002:a2e:3a17:: with SMTP id h23mr4472998lja.105.1556866185213;
+ Thu, 02 May 2019 23:49:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-9-brendanhiggins@google.com> <0a605543-477a-1854-eb35-6e586606889b@deltatee.com>
-In-Reply-To: <0a605543-477a-1854-eb35-6e586606889b@deltatee.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 2 May 2019 23:48:30 -0700
-Message-ID: <CAFd5g47hxAd=+72xbPJbWPdZCXRXmtLpsGhUh=zc7MSwfcaGJQ@mail.gmail.com>
-Subject: Re: [PATCH v2 08/17] kunit: test: add support for test abort
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah@kernel.org, devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+References: <20190430092839.767e5bf8@canb.auug.org.au>
+In-Reply-To: <20190430092839.767e5bf8@canb.auug.org.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 3 May 2019 07:49:33 +0100
+Message-ID: <CACRpkdYBuBf7jA2nUitiZWRriXVTPWCyB93q2CzmP4tbVZXqHA@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the arm-soc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 8:15 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->
->
->
-> On 2019-05-01 5:01 p.m., Brendan Higgins wrote:
-> > +/*
-> > + * struct kunit_try_catch - provides a generic way to run code which might fail.
-> > + * @context: used to pass user data to the try and catch functions.
-> > + *
-> > + * kunit_try_catch provides a generic, architecture independent way to execute
-> > + * an arbitrary function of type kunit_try_catch_func_t which may bail out by
-> > + * calling kunit_try_catch_throw(). If kunit_try_catch_throw() is called, @try
-> > + * is stopped at the site of invocation and @catch is catch is called.
->
-> I found some of the C++ comparisons in this series a bit distasteful but
-> wasn't going to say anything until I saw the try catch.... But looking
-> into the implementation it's just a thread that can exit early which
-> seems fine to me. Just a poor choice of name I guess...
+On Tue, Apr 30, 2019 at 12:28 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Guilty as charged (I have a long history with C++, sorry). Would you
-prefer I changed the name? I just figured that try-catch is a commonly
-understood pattern that describes exactly what I am doing.
-
+> After merging the arm-soc tree, today's linux-next build
+> (x86_64 allmodconfig) produced this warning:
 >
-> [snip]
->
-> > +static void __noreturn kunit_abort(struct kunit *test)
-> > +{
-> > +     kunit_set_death_test(test, true);
-> > +
-> > +     kunit_try_catch_throw(&test->try_catch);
-> > +
-> > +     /*
-> > +      * Throw could not abort from test.
-> > +      *
-> > +      * XXX: we should never reach this line! As kunit_try_catch_throw is
-> > +      * marked __noreturn.
-> > +      */
-> > +     WARN_ONCE(true, "Throw could not abort from test!\n");
-> > +}
-> > +
-> >  int kunit_init_test(struct kunit *test, const char *name)
-> >  {
-> >       spin_lock_init(&test->lock);
-> > @@ -77,6 +103,7 @@ int kunit_init_test(struct kunit *test, const char *name)
-> >       test->name = name;
-> >       test->vprintk = kunit_vprintk;
-> >       test->fail = kunit_fail;
-> > +     test->abort = kunit_abort;
->
-> There are a number of these function pointers which seem to be pointless
-> to me as you only ever set them to one function. Just call the function
-> directly. As it is, it is an unnecessary indirection for someone reading
-> the code. If and when you have multiple implementations of the function
-> then add the pointer. Don't assume you're going to need it later on and
-> add all this maintenance burden if you never use it..
+> drivers/clocksource/timer-ixp4xx.c:78:20: warning: 'ixp4xx_read_sched_clock' defined but not used [-Wunused-function]
+>  static u64 notrace ixp4xx_read_sched_clock(void)
+>                     ^~~~~~~~~~~~~~~~~~~~~~~
 
-Ah, yes, Frank (and probably others) previously asked me to remove
-unnecessary method pointers; I removed all the totally unused ones. As
-for these, I don't use them in this patchset, but I use them in my
-patchsets that will follow up this one. These in particular are
-present so that they can be mocked out for testing.
+This is kind of normal for timer drivers, as the sched_clock() call is #ifdef:ed
+for CONFIG_ARM, it is not uniformly available on all archs. This appears
+as a side effect of COMPILE_TEST which I think is fair to produce
+things like this.
 
->
-> [snip]
->
-> > +void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch)
-> > +{
-> > +     try_catch->run = kunit_generic_run_try_catch;
-> > +     try_catch->throw = kunit_generic_throw;
-> > +}
->
-> Same here. There's only one implementation of try_catch and I can't
-> really see any sensible justification for another implementation. Even
-> if there is, add the indirection when the second implementation is
-> added. This isn't C++ and we don't need to make everything a "method".
-
-These methods are for a UML specific implementation in a follow up
-patchset, which is needed for some features like crash recovery, death
-tests, and removes dependence on kthreads.
-
-I know this probably sounds like premature complexity. Arguably it is
-in hindsight, but I wrote those features before I pulled out these
-interfaces (they were actually both originally in this patchset, but I
-dropped them to make this patchset easier to review). I can remove
-these methods and add them back in when I actually use them in the
-follow up patchsets if you prefer.
-
-Thanks!
+Yours,
+Linus Walleij
