@@ -2,112 +2,86 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D677C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB27C46460
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664E32070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:20:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=darbyshire-bryant.me.uk header.i=@darbyshire-bryant.me.uk header.b="LEzpZb1o"
+	by mail.kernel.org (Postfix) with ESMTP id 83C4F2075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556918418;
+	bh=4jpk1tM6xIu8iYw3jCvdYHbtEGQoc4ynlSzYKlyMLtk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=lxhZtILTgZpkDSM1x/kbmdHw3j0FU8lMv31e2NFs9vyTuXguBuR+yXRdHukERBKLQ
+	 ka8EHx2SMHKRrTzcRJzb6x6wQlqQveRyoqHxOTmJiydEa4cGrDX79tvxHwxwtFOFML
+	 lfi2wi74B36bczbJF9cLDFY5eif0WnD5IM+R3Jfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfECVUJ (ORCPT
+        id S1726552AbfECVUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 17:20:09 -0400
-Received: from mail-eopbgr60063.outbound.protection.outlook.com ([40.107.6.63]:58087
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726041AbfECVUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 17:20:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=darbyshire-bryant.me.uk; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LzgIR2H5bAz0qhx87Gf9fJTfXuc0cojdqQhjPMcK1CE=;
- b=LEzpZb1oqk1plI0gGBC0LiaAgyZI27FPRcxWTWs+jPhsdI13EbD5bsTKUMXIAQfOF4wSnV3GXGtKIWZIGQ+sj6bD7jqGnPdIO17Z6ozj+iGlqY1pCo8ZOs/vcdC/PXUotE0qSNh1qtSL7D6uQYL4wv3uutjNVczDBfQ+tWKpY8M=
-Received: from VI1PR0302MB2750.eurprd03.prod.outlook.com (10.171.105.143) by
- VI1PR0302MB3328.eurprd03.prod.outlook.com (52.134.13.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.14; Fri, 3 May 2019 21:20:03 +0000
-Received: from VI1PR0302MB2750.eurprd03.prod.outlook.com
- ([fe80::b584:8ced:9d52:d88e]) by VI1PR0302MB2750.eurprd03.prod.outlook.com
- ([fe80::b584:8ced:9d52:d88e%6]) with mapi id 15.20.1835.018; Fri, 3 May 2019
- 21:20:03 +0000
-From:   Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-CC:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shuah Khan <shuah@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: sched: Introduce act_ctinfo action
-Thread-Topic: [PATCH net-next] net: sched: Introduce act_ctinfo action
-Thread-Index: AQHU/PpFKlFqg3WFM0Ghoph4kvG8KqZVQqwAgASvTwA=
-Date:   Fri, 3 May 2019 21:20:03 +0000
-Message-ID: <9FB6B9CF-1767-4598-8859-C5D8A47DEC85@darbyshire-bryant.me.uk>
-References: <20190427130739.44614-1-ldir@darbyshire-bryant.me.uk>
- <CAM_iQpXnXyfLZ2+gjDufbdMrZLgtf9uKbzbUf50Xm-2Go7maVw@mail.gmail.com>
-In-Reply-To: <CAM_iQpXnXyfLZ2+gjDufbdMrZLgtf9uKbzbUf50Xm-2Go7maVw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ldir@darbyshire-bryant.me.uk; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.240.142.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d19309a2-092a-4f16-2b3a-08d6d00d1bbe
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR0302MB3328;
-x-ms-traffictypediagnostic: VI1PR0302MB3328:
-x-microsoft-antispam-prvs: <VI1PR0302MB3328708E2ACDF27131C8A2D1C9350@VI1PR0302MB3328.eurprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0026334A56
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39830400003)(366004)(376002)(396003)(346002)(136003)(51914003)(199004)(189003)(6512007)(82746002)(54906003)(229853002)(26005)(68736007)(186003)(33656002)(102836004)(14454004)(74482002)(53936002)(81156014)(66946007)(76116006)(446003)(508600001)(99286004)(316002)(91956017)(81166006)(11346002)(2616005)(64756008)(66446008)(66066001)(53546011)(305945005)(66556008)(7736002)(73956011)(8936002)(6506007)(3846002)(6116002)(66476007)(486006)(83716004)(476003)(5660300002)(2906002)(4326008)(71200400001)(71190400001)(8676002)(6916009)(86362001)(76176011)(25786009)(14444005)(256004)(36756003)(6436002)(6246003)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0302MB3328;H:VI1PR0302MB2750.eurprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: darbyshire-bryant.me.uk does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: OijpYnPO9kgYBx4tOH2MdmlC+m3k0GqyvEQc+sIQVnqFnGL/Q1HfHlRL+RyRdJ/3mx/Y49flevFcpQ5PAZXgWZVMJEJzCASpBj0EtzqBMn+WnLRnP3eI6w9OSW7qiW3nxiwGbiLcAk7s6kFIxM15u0qss5cngIZJiBdmdUzovyVZqp9h/jmU/kD3mjI87GmoBpIXdbAejbLh/+lC5iQoiaSnC7DA1C+sTUhOXpf7zInqGUiysBL7wdhEGE/9TR00QLfE+Ebe10j0R1PvMbiJeuNa2TIpRlQKH7ELO9PRDbPpF9qTeI7YNZMa0UG6LLpg4hdZH4YPuj4/rApRlnLLgY20GdV85ik2q0pWZHdVIcAYU8zjpQjdBrdhXARy2DMtHZv07ejt1lbnA+cl9OxJTiNn2qHd5/8zBJCNjxtF+co=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EF3125F0747CC64C86496FC152B1B705@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 3 May 2019 17:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbfECVUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 17:20:16 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F1C22070B;
+        Fri,  3 May 2019 21:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556918416;
+        bh=4jpk1tM6xIu8iYw3jCvdYHbtEGQoc4ynlSzYKlyMLtk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=W8O9m/jiLcE7RmhxSI2zssI/db5aGon/XkmnqHctb7k/rgEbQ71142qSvbqp41S28
+         oGEou8KRmGlqqQfZDNTXCAJq1Zhau1IU6Vbsq/2THGSDKt3Kb5wOyT8BooCllvoJ5f
+         URhSdLkfEooF6hYLwzGVRx88gpUl8TiGNer4p1sI=
+Subject: Re: [PATCH 4.19 00/72] 4.19.39-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190502143333.437607839@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <d44a5a4d-fe43-a103-b67d-1301cb807f2b@kernel.org>
+Date:   Fri, 3 May 2019 15:20:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: darbyshire-bryant.me.uk
-X-MS-Exchange-CrossTenant-Network-Message-Id: d19309a2-092a-4f16-2b3a-08d6d00d1bbe
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2019 21:20:03.6902
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9151708b-c553-406f-8e56-694f435154a4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0302MB3328
+In-Reply-To: <20190502143333.437607839@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gMzAgQXByIDIwMTksIGF0IDIyOjQ3LCBDb25nIFdhbmcgPHhpeW91Lndhbmdjb25n
-QGdtYWlsLmNvbT4gd3JvdGU6DQo+IA0KPiBPbiBTYXQsIEFwciAyNywgMjAxOSBhdCA2OjA4IEFN
-IEtldmluICdsZGlyJyBEYXJieXNoaXJlLUJyeWFudA0KPiA8bGRpckBkYXJieXNoaXJlLWJyeWFu
-dC5tZS51az4gd3JvdGU6DQo+PiANCj4+IGN0aW5mbyBpcyBhIG5ldyB0YyBmaWx0ZXIgYWN0aW9u
-IG1vZHVsZS4gIEl0IGlzIGRlc2lnbmVkIHRvIHJlc3RvcmUgRFNDUHMNCj4+IHN0b3JlZCBpbiBj
-b25udHJhY2sgbWFya3MgaW50byB0aGUgaXB2NC92NiBkaWZmc2VydiBmaWVsZC4NCj4gDQo+IEkg
-dGhpbmsgd2UgY2FuIHJldHJpZXZlIGFueSBpbmZvcm1hdGlvbiBmcm9tIGNvbm50cmFjayB3aXRo
-IHN1Y2gNCj4gYSBnZW5lcmFsIG5hbWUsIGluY2x1ZGluZyBza2IgbWFyay4gU28sIGFzIHlvdSBh
-bHJlYWR5IHBpY2sgdGhlDQo+IG5hbWUgY3RpbmZvLCBwbGVhc2UgbWFrZSBpdCBnZW5lcmFsIHJh
-dGhlciB0aGFuIGp1c3QgRFNDUC4NCj4gWW91IGNhbiBhZGQgc2tiIG1hcmsgaW50byB5b3VyIGN0
-aW5mbyB0b28gc28gdGhhdCBhY3RfY29ubm1hcmsNCj4gY2FuIGJlIGp1c3QgcmVwbGFjZWQuDQoN
-CkhpIENvbmcsDQoNClRoYW5rcyBmb3IgdGhlIHJldmlldywgSSBoYXZlIGEgdjIgaW4gcHJvZ3Jl
-c3MgYWRkcmVzc2luZyB0aGF0IGFsb25nDQp3aXRoIGFub3RoZXIgc2lsbHkgdGhhdCBnb3QgdGhy
-b3VnaC4gIEnigJltIGFsc28gcmUtd29ya2luZyB0aGUgc3RhdHMNCnJlcG9ydGluZyB0byByZXR1
-cm4gYWN0X2N0aW5mbyBzdGF0cyBpbnN0ZWFkIG9mIHVzdXJwaW5nIHRoZSBkcm9wcGVkLA0Kb3Zl
-cmxpbWl0cyAmIGRyb3BwZWQgZmlndXJlcy4NCg0KPiANCj4gWW91ciBwYXRjaCBsb29rcyBmaW5l
-IGZyb20gYSBxdWljayBnYWxhbmNlLCBwbGVhc2UgbWFrZSBzdXJlDQo+IHlvdSBydW4gY2hlY2tw
-YXRjaC5wbCB0byBrZWVwIHlvdXIgY29kaW5nIHN0eWxlIGFsaWduZWQgdG8gTGludXgNCj4ga2Vy
-bmVsJ3MsIGF0IGxlYXN0IEkgZG9uJ3QgdGhpbmsgd2UgYWNjZXB0IEMrKyBzdHlsZSBjb21tZW50
-cy4NCg0KVGhpcyB0aW1lIEnigJlsbCByZW1lbWJlciB0byBydW4gY2hlY2twYXRjaCBiZWZvcmUg
-SSBzdWJtaXQgaW5zdGVhZCBvZg0KYWZ0ZXIgOi0pDQoNCj4gDQo+IFRoYW5rcy4NCg0KDQpDaGVl
-cnMsDQoNCktldmluIEQtQg0KDQpncGc6IDAxMkMgQUNCMiAyOEM2IEM1M0UgOTc3NSAgOTEyMyBC
-M0EyIDM4OUIgOURFMiAzMzRBDQoNCg==
+On 5/2/19 9:20 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.39 release.
+> There are 72 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 04 May 2019 02:32:17 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.39-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+
+Compiled and booted on my test system. No dmesg regressions.
+
+thanks,
+SHuah
