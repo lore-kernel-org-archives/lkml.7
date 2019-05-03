@@ -4,57 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1FAC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA11C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E124D2087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6117E2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556864369;
-	bh=2y9HV1V/2dCrj3ppmfOIU8x+Zse9u+Gokj3DE+K1V5c=;
+	s=default; t=1556864374;
+	bh=UqQQOPlU2INJkBjAjHVp4nB5LyICa6M1lsSmQYb3YWo=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=auczW0C8SDAgb0q5LVt7vyuev6eHuFCht7SQQ73z9LQad5MSvese+wJOgLqpTkWPz
-	 LN0GLRQaG4mQthQCM13YQPbsnPZWOndjl4J0J5ecZfq/KEDAabiRvQxb7LutJVJk/h
-	 Cpc6Jvc0Qw6l0ejCbZRLgUckbIrTl1yHrpZKwJH0=
+	b=PFBtPDgFwnrXaH89RBWF0QQNIJgjoWYvkSMvVXREV8Uy8JZK8e3damu82yOR4dj7k
+	 rcgeCv89Qisyn3SwDrDWUuJAM5tbq9GCyNXVWoXXAEhuq9R3i/i8qv10DPHdnOUBgn
+	 zfSEV5xa5px1n+K9yX0cWBrV5QUT3Wsxr2XnH3zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfECGTD (ORCPT
+        id S1726823AbfECGS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:19:03 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53080 "EHLO
+        Fri, 3 May 2019 02:18:59 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53074 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfECGS6 (ORCPT
+        with ESMTP id S1726743AbfECGS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:18:58 -0400
+        Fri, 3 May 2019 02:18:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=cdKCKYPz4QxPklp/Dp5dG8XAK9Cs+SYYmACxxeonNLE=; b=VXCPJqHliUUh
-        ikTVQ1GkhMvtYGuF+IIfSF7OrOufE2cBgBd/l/HUzlvLveQjeQmaxl0+KcZESNjEq//Y+9LDJAagh
-        uV8xZZ7heafMUTTh+ZU6qMETWb1FOmeC8wyiq8LANE6SQ+73Dxbfoyv/bgxSbeObsrjk0gyDNgwc/
-        Oa0ao=;
+        List-Archive; bh=ZQwUU+J/MQcrEGIy0MJ+HGRMeveOuqWSbA/IkAltfgs=; b=dBcYRvUe1aCP
+        YZGZsViJliQgDvfMwTe4+d113vEp7lkGUS7j9+9b0hacgeOKj4nV6j9rfXymYydE48ER93PKLjne8
+        5qNi67Fq6TvXnRW3RgKVYGbLeTHwwcLOrvQLTtKF6W3JccRjWJHGdmelTC9HnbavV/QJf5lKY4KJE
+        icsyw=;
 Received: from [42.29.24.106] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hMRX2-0000Y1-I7; Fri, 03 May 2019 06:18:53 +0000
+        id 1hMRWw-0000Wg-Oi; Fri, 03 May 2019 06:18:47 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id BBF66441D58; Fri,  3 May 2019 07:18:47 +0100 (BST)
+        id 6D839441D58; Fri,  3 May 2019 07:18:42 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Pascal Paillet <p.paillet@st.com>
-Subject: Applied "regulator: stm32-pwr: Remove unneeded .min_uV and .list_volage" to the regulator tree
-In-Reply-To: <20190430111346.23427-2-axel.lin@ingics.com>
+To:     Ross Zwisler <zwisler@chromium.org>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Ross Zwisler <zwisler@google.com>, stable@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: Intel: avoid Oops if DMA setup fails" to the asoc tree
+In-Reply-To: <20190429182517.210909-1-zwisler@google.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190503061847.BBF66441D58@finisterre.ee.mobilebroadband>
-Date:   Fri,  3 May 2019 07:18:47 +0100 (BST)
+Message-Id: <20190503061842.6D839441D58@finisterre.ee.mobilebroadband>
+Date:   Fri,  3 May 2019 07:18:42 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,11 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: stm32-pwr: Remove unneeded .min_uV and .list_volage
+   ASoC: Intel: avoid Oops if DMA setup fails
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -87,41 +91,64 @@ to this mail.
 Thanks,
 Mark
 
-From 311a68a51a58bfdead971080d41a34ca565b47a0 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 30 Apr 2019 19:13:46 +0800
-Subject: [PATCH] regulator: stm32-pwr: Remove unneeded .min_uV and
- .list_volage
+From 0efa3334d65b7f421ba12382dfa58f6ff5bf83c4 Mon Sep 17 00:00:00 2001
+From: Ross Zwisler <zwisler@chromium.org>
+Date: Mon, 29 Apr 2019 12:25:17 -0600
+Subject: [PATCH] ASoC: Intel: avoid Oops if DMA setup fails
 
-For fixed regulator, setting .n_voltages = 1 and .fixed_uV is enough,
-no need to set .min_uV and .list_volage.
+Currently in sst_dsp_new() if we get an error return from sst_dma_new()
+we just print an error message and then still complete the function
+successfully.  This means that we are trying to run without sst->dma
+properly set up, which will result in NULL pointer dereference when
+sst->dma is later used.  This was happening for me in
+sst_dsp_dma_get_channel():
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+        struct sst_dma *dma = dsp->dma;
+	...
+        dma->ch = dma_request_channel(mask, dma_chan_filter, dsp);
+
+This resulted in:
+
+   BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
+   IP: sst_dsp_dma_get_channel+0x4f/0x125 [snd_soc_sst_firmware]
+
+Fix this by adding proper error handling for the case where we fail to
+set up DMA.
+
+This change only affects Haswell and Broadwell systems.  Baytrail
+systems explicilty opt-out of DMA via sst->pdata->resindex_dma_base
+being set to -1.
+
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+Cc: stable@vger.kernel.org
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/stm32-pwr.c | 2 --
- 1 file changed, 2 deletions(-)
+ sound/soc/intel/common/sst-firmware.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
-index 8bd15e4d2cea..e0e627b0106e 100644
---- a/drivers/regulator/stm32-pwr.c
-+++ b/drivers/regulator/stm32-pwr.c
-@@ -102,7 +102,6 @@ static int stm32_pwr_reg_disable(struct regulator_dev *rdev)
- }
+diff --git a/sound/soc/intel/common/sst-firmware.c b/sound/soc/intel/common/sst-firmware.c
+index 1e067504b604..f830e59f93ea 100644
+--- a/sound/soc/intel/common/sst-firmware.c
++++ b/sound/soc/intel/common/sst-firmware.c
+@@ -1251,11 +1251,15 @@ struct sst_dsp *sst_dsp_new(struct device *dev,
+ 		goto irq_err;
  
- static const struct regulator_ops stm32_pwr_reg_ops = {
--	.list_voltage	= regulator_list_voltage_linear,
- 	.enable		= stm32_pwr_reg_enable,
- 	.disable	= stm32_pwr_reg_disable,
- 	.is_enabled	= stm32_pwr_reg_is_enabled,
-@@ -115,7 +114,6 @@ static const struct regulator_ops stm32_pwr_reg_ops = {
- 		.of_match = of_match_ptr(_name), \
- 		.n_voltages = 1, \
- 		.type = REGULATOR_VOLTAGE, \
--		.min_uV = _volt, \
- 		.fixed_uV = _volt, \
- 		.ops = &stm32_pwr_reg_ops, \
- 		.enable_mask = _en, \
+ 	err = sst_dma_new(sst);
+-	if (err)
+-		dev_warn(dev, "sst_dma_new failed %d\n", err);
++	if (err)  {
++		dev_err(dev, "sst_dma_new failed %d\n", err);
++		goto dma_err;
++	}
+ 
+ 	return sst;
+ 
++dma_err:
++	free_irq(sst->irq, sst);
+ irq_err:
+ 	if (sst->ops->free)
+ 		sst->ops->free(sst);
 -- 
 2.20.1
 
