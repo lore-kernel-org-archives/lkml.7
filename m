@@ -2,202 +2,82 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450C9C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D92CC04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7ED2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052DA2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:29:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCsrwsTS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lS5qyt80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfECM2J (ORCPT
+        id S1727797AbfECM3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 08:28:09 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45306 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfECM2I (ORCPT
+        Fri, 3 May 2019 08:29:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33618 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfECM3O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 08:28:08 -0400
-Received: by mail-lj1-f193.google.com with SMTP id w12so5016374ljh.12;
-        Fri, 03 May 2019 05:28:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=GDiBzSj4s/zGBV/+MMNhWpQAi3gkIAYNBVktbdFKSgw=;
-        b=ZCsrwsTS2xpFfckVXsgcYwTbevaFBpmuAtPyYh/AlT7a064cvWcOGOMSm2JediMlzR
-         fLvxowlzmy3ahD4X0FVY62lr3IhpOK3Se/C3fnRq8gnQrA2t6MwbWBOVRh0zWraGBiaf
-         9m1yLzrM1MONeXbI3aJVuJdQ4MYtFIW4Lin9fiiR5cB/d3DguKEireYtvi8SryIXqQ3N
-         98sxP+P3WaBMzOsP98j0HtRmyY7sEXSTstSPyUvAk4tY620NebwV01nTriPR+fPW4TSu
-         rI+car/C+XaPozjD4BPgF4EzLpBYIgMDxsAzYK4SQbkOjZJZEUi8pR8r2nOtwh+uZQ8r
-         qlZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=GDiBzSj4s/zGBV/+MMNhWpQAi3gkIAYNBVktbdFKSgw=;
-        b=q0d8MgiO4e7jcRRzwUI8U49FFUpmef9p7GWH6JJutG8deRVJ17/L21jpgvtQ3/J27Z
-         jB2vbLR7PLfRwu+9VKFWTMf8XNNEl/Q6foGIEu+v4f9kANyNk/E/pfRQysSKzOdgUTxp
-         BtASqneDmjiXtbmHsHIxH7GOcbvvzoOpbXhgwaR/BkNlm/c999ZCO4hawzZ+oo3+FFeS
-         fD1bxuUyLrT9jUHLbNnig2IlFs9TUM1qPbzT2VYsSkD1nhNYkB2cXki+BQHGw3FT6LKg
-         apDzPKkXBS08hB+95EsESlHWaU1eLLYNKFBk/eHpLWh5DO6wtcPnX0VTUKbx0jAyQ/82
-         dsTg==
-X-Gm-Message-State: APjAAAWhgsKsuR78npV1ugwlAdJT+t3riBfokC2qWDIFDwoDy+XE6K1A
-        IKsv2UL2xanXR9pxPFNhhS0=
-X-Google-Smtp-Source: APXvYqzR7jfYzAEVsFVVdfQNIvT4vlFd7utbUxEe52N8l4f5W1LQIRmjltFlKKRaglrNuwdSMr7ukQ==
-X-Received: by 2002:a2e:8446:: with SMTP id u6mr5024354ljh.71.1556886485682;
-        Fri, 03 May 2019 05:28:05 -0700 (PDT)
-Received: from [10.17.182.120] (ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
-        by smtp.gmail.com with ESMTPSA id b29sm405382lfo.38.2019.05.03.05.28.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 05:28:04 -0700 (PDT)
-Subject: Re: [PATCH V2] ARM: mach-shmobile: Don't init CNTVOFF if PSCI is
- available
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Julien Grall <julien.grall@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-References: <1556882268-27451-1-git-send-email-olekstysh@gmail.com>
- <CAMuHMdVYff-YsGxJykT_p31iyw9f4yVY967_i166TSm__WRG9g@mail.gmail.com>
-From:   Oleksandr <olekstysh@gmail.com>
-Message-ID: <a7b82354-abce-4317-7495-d97ee2092bc4@gmail.com>
-Date:   Fri, 3 May 2019 15:28:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 3 May 2019 08:29:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=v4iIVCgbPpVINMcoD8zLnWlww4NXBXy4bT54BBiY754=; b=lS5qyt80Q7feOHrLTFeRIBJF8
+        3nonvZ5GZbuvDBcmHzEbEAybp2SCkM4KzraDjAUUKpz8yfgzbnqTEH/cAmoPTMeIwAGbIAomz71IB
+        3PXUmFbYyM/szp4FHMDwwyhoo0WJR48rL4a1y4ReS+JZRtoNCbwbjn3pHTOcCkg92FaNEcXXreuKQ
+        /QKhFgDupKtezZ6g4lkx+zPbE+ERO5ruf9xG44/DomFfXfpvrKSbCVKlNb491et2FCl+LRtIrp69G
+        zGxCdvFpNCLNYdaqlI5pddqw0itAIH4mqcNHzJYYySZWN9OEcgRmcss1yDMvWjO3MZIqRpnuA6q5C
+        Jvgabpcqw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hMXJG-0003b5-O2; Fri, 03 May 2019 12:29:02 +0000
+Date:   Fri, 3 May 2019 05:29:02 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     linux-nvme@lists.infradead.org, Fam Zheng <fam@euphon.net>,
+        Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>, kvm@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        John Ferlan <jferlan@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        "Paul E . McKenney " <paulmck@linux.ibm.com>,
+        Amnon Ilan <ailan@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v2 06/10] nvme/core: add mdev interfaces
+Message-ID: <20190503122902.GA5081@infradead.org>
+References: <20190502114801.23116-1-mlevitsk@redhat.com>
+ <20190502114801.23116-7-mlevitsk@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdVYff-YsGxJykT_p31iyw9f4yVY967_i166TSm__WRG9g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502114801.23116-7-mlevitsk@redhat.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 02, 2019 at 02:47:57PM +0300, Maxim Levitsky wrote:
+> If the mdev device driver also sets the
+> NVME_F_MDEV_DMA_SUPPORTED, the mdev core will
+> dma map all the guest memory into the nvme device,
+> so that nvme device driver can use dma addresses as passed
+> from the mdev core driver
 
-On 03.05.19 14:38, Geert Uytterhoeven wrote:
-> Hi Oleksandr,
-
-Hi Geert
-
-
->
-> On Fri, May 3, 2019 at 1:21 PM Oleksandr Tyshchenko <olekstysh@gmail.com> wrote:
->> From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
->>
->> If PSCI is available then most likely we are running on PSCI-enabled
->> U-Boot which, we assume, has already taken care of resetting CNTVOFF
->> before switching to non-secure mode and we don't need to.
->>
->> Also, don't init CNTVOFF if we are running on top of Xen hypervisor,
->> as CNTVOFF is controlled by hypervisor itself and shouldn't be touched
->> by Dom0 in such case.
->>
->> Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
->> CC: Julien Grall <julien.grall@arm.com>
-> Thanks for your patch!
-
-Thank you for review!
-
-
->
->> ---
->>     You can find previous discussion here:
->>     https://lkml.org/lkml/2019/4/17/810
->>
->>     Changes in v2:
->>        - Clarify patch subject/description
->>        - Don't use CONFIG_ARM_PSCI option, check whether the PSCI is available,
->>          by using psci_smp_available()
->>        - Check whether we are running on top of Xen, by using xen_domain()
->> ---
->>   arch/arm/mach-shmobile/setup-rcar-gen2.c | 13 ++++++++++++-
->>   1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
->> index eea60b2..bc8537b 100644
->> --- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
->> +++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
->> @@ -17,7 +17,9 @@
->>   #include <linux/of.h>
->>   #include <linux/of_fdt.h>
->>   #include <linux/of_platform.h>
->> +#include <xen/xen.h>
->>   #include <asm/mach/arch.h>
->> +#include <asm/psci.h>
->>   #include <asm/secure_cntvoff.h>
->>   #include "common.h"
->>   #include "rcar-gen2.h"
->> @@ -63,7 +65,16 @@ void __init rcar_gen2_timer_init(void)
->>          void __iomem *base;
->>          u32 freq;
->>
->> -       secure_cntvoff_init();
->> +       /*
->> +        * If PSCI is available then most likely we are running on PSCI-enabled
->> +        * U-Boot which, we assume, has already taken care of resetting CNTVOFF
->> +        * before switching to non-secure mode and we don't need to.
->> +        * Another check is to be sure that we are not running on top of Xen
->> +        * hypervisor, as CNTVOFF is controlled by hypervisor itself and
->> +        * shouldn't be touched by Dom0 in such case.
->> +        */
->> +       if (!psci_smp_available() && !xen_domain())
->> +               secure_cntvoff_init();
->>
->>          if (of_machine_is_compatible("renesas,r8a7745") ||
->>              of_machine_is_compatible("renesas,r8a77470") ||
-> How do you prevent secure_cntvoff_init() from being called for secondary
-> CPUs in arch/arm/mach-shmobile/headsmp-apmu.S?
-
-Good question.
-
-
->
-> With PSCI, it is not called if "enable-method" in DT is "psci"', so that case
-> is covered, I guess.
-
-Yes.
-
->
-> What about XEN? Do you override the "enable-method"?
-> If yes, perhaps a check for "renesas,apmu" is more appropriate?
-
-No, I don't override.
-
-
-The correct way to run Xen would be to use PSCI, so Linux shouldn't do 
-any platform low level operation with secondary CPU cores (on/off, 
-reset, etc) by itself when running on top of Xen hypervisor.
-
-As Xen brings available secondary cores up before starting first domain 
-(Dom0) using PSCI CPU_ON call to FW, and these cores are entered Xen in 
-Hyp mode, so any attempts from Dom0 to perform CPU power management 
-directly (using APMU, RST, etc) may result in something not good. I 
-think that in case when someone wants to run Xen on R-Car Gen2 system 
-(which is SMP) without PSCI enabled, we need to forbid even trying to 
-start secondary cores using APMU.
-
-What do you think?
-
-
->
-> Gr{oetje,eeting}s,
->
->                          Geert
->
--- 
-Regards,
-
-Oleksandr Tyshchenko
-
+We really need a proper block layer interface for that so that
+uring or the nvme target can use pre-mapping as well.
