@@ -2,145 +2,133 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8248C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD16C004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A3E2081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:48:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="JaYHuUbP"
+	by mail.kernel.org (Postfix) with ESMTP id D935B2081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:48:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfECKsX (ORCPT
+        id S1727367AbfECKsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 06:48:23 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36423 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726997AbfECKsW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 06:48:22 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v80so2719196pfa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 03:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bzeisKrbd3NVmsuHkycqQpZOOZrTkWkXq9WqgrEgfB0=;
-        b=JaYHuUbP9s75WQ/WiGrEuulQNNGYORAeMSOkH3HzsxPQrs/nzwS9L4hUoDT34F2xfn
-         9e99AfPrndhTYVchadnaUZeewH6jOAqvWEaqck/WTr5Gy6slmD3ZksNS5ZnOuE5P9Zli
-         TtpYK7WSP1/TBxYtukB9xjN9sh4up41WU7Siw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bzeisKrbd3NVmsuHkycqQpZOOZrTkWkXq9WqgrEgfB0=;
-        b=Vpd23uMy6ch04JPrCl44KzpHcEsEy6Ng4Szqp1yIwGErhMOE/Q7Kb3XFzJQwyCMuXp
-         S4TIwP/LVu3acr44v0oIu8dUhG++D0RVrrv7vd3wVohFc6UykY54GsF7gptU7zAvPxF9
-         zq0tfEdRvY6+i4Q7dTq/2FDyDa9UX2upYseykenU1an6uMJW45cT0URFTQfarnuII3lk
-         wsFey5dSTMjczjuw1g/7hM/MZuyQP6Mbg0blVI//FX9dpMWfeZ/6uPfc9vstC7dEF2Yn
-         ej8OTjXJ9xhiGmlwcknGaj0BVMJ6Y7nEa2aQ4SS3ssaUZEPiGsLgVzMONpZF7so6bFC5
-         sxwA==
-X-Gm-Message-State: APjAAAVm290ERI4Urdyu5z9Zy7MQZUgjyjO/tHaQ+VE8JrPSSU9t/ChW
-        2ky40cIfOMLmAhFCxwXbu8eAFw==
-X-Google-Smtp-Source: APXvYqxyS/Viee8AeBaGT8IO9dn1bdGJz/q7gyZVY+P0K1JdPh+FtA+JdVDYOCKK3s8CgrrCjEdZUQ==
-X-Received: by 2002:a62:b418:: with SMTP id h24mr9669983pfn.145.1556880502238;
-        Fri, 03 May 2019 03:48:22 -0700 (PDT)
-Received: from localhost.localdomain ([49.206.203.165])
-        by smtp.gmail.com with ESMTPSA id k9sm1965479pga.22.2019.05.03.03.48.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 03:48:21 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        linux-sunxi@googlegroups.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v5 3/3] arm64: dts: allwinner: a64-oceanic-5205-5inmfd: Enable GT911 CTP
-Date:   Fri,  3 May 2019 16:17:53 +0530
-Message-Id: <20190503104753.27562-3-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20190503104753.27562-1-jagan@amarulasolutions.com>
-References: <20190503104753.27562-1-jagan@amarulasolutions.com>
+        Fri, 3 May 2019 06:48:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60796 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726377AbfECKsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 06:48:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0A4E7AD89;
+        Fri,  3 May 2019 10:48:37 +0000 (UTC)
+Date:   Fri, 3 May 2019 12:48:32 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        stable <stable@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 00/12] mm: Sub-section memory hotplug support
+Message-ID: <20190503104831.GF15740@linux>
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CA+CK2bBT=goxf5KWLhca7uQutUj9670aL9r02_+BsJ+bLkjj=g@mail.gmail.com>
+ <CAPcyv4gWZxSepaACiyR43qytA1jR8fVaeLy1rv7dFJW-ZE63EA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4gWZxSepaACiyR43qytA1jR8fVaeLy1rv7dFJW-ZE63EA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Goodix GT911 CTP is bound with Oceanic 5205 5inMFD board.
+On Thu, May 02, 2019 at 04:20:03PM -0700, Dan Williams wrote:
+> On Thu, May 2, 2019 at 3:46 PM Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
+> >
+> > Hi Dan,
+> >
+> > How do you test these patches? Do you have any instructions?
+> 
+> Yes, I briefly mentioned this in the cover letter, but here is the
+> test I am using:
+> 
+> >
+> > I see for example that check_hotplug_memory_range() still enforces
+> > memory_block_size_bytes() alignment.
+> >
+> > Also, after removing check_hotplug_memory_range(), I tried to online
+> > 16M aligned DAX memory, and got the following panic:
+> 
+> Right, this functionality is currently strictly limited to the
+> devm_memremap_pages() case where there are guarantees that the memory
+> will never be onlined. This is due to the fact that the section size
+> is entangled with the memblock api. That said I would have expected
+> you to trigger the warning in subsection_check() before getting this
+> far into the hotplug process.
+> >
+> > # echo online > /sys/devices/system/memory/memory7/state
+> > [  202.193132] WARNING: CPU: 2 PID: 351 at drivers/base/memory.c:207
+> > memory_block_action+0x110/0x178
+> > [  202.193391] Modules linked in:
+> > [  202.193698] CPU: 2 PID: 351 Comm: sh Not tainted
+> > 5.1.0-rc7_pt_devdax-00038-g865af4385544-dirty #9
+> > [  202.193909] Hardware name: linux,dummy-virt (DT)
+> > [  202.194122] pstate: 60000005 (nZCv daif -PAN -UAO)
+> > [  202.194243] pc : memory_block_action+0x110/0x178
+> > [  202.194404] lr : memory_block_action+0x90/0x178
+> > [  202.194506] sp : ffff000016763ca0
+> > [  202.194592] x29: ffff000016763ca0 x28: ffff80016fd29b80
+> > [  202.194724] x27: 0000000000000000 x26: 0000000000000000
+> > [  202.194838] x25: ffff000015546000 x24: 00000000001c0000
+> > [  202.194949] x23: 0000000000000000 x22: 0000000000040000
+> > [  202.195058] x21: 00000000001c0000 x20: 0000000000000008
+> > [  202.195168] x19: 0000000000000007 x18: 0000000000000000
+> > [  202.195281] x17: 0000000000000000 x16: 0000000000000000
+> > [  202.195393] x15: 0000000000000000 x14: 0000000000000000
+> > [  202.195505] x13: 0000000000000000 x12: 0000000000000000
+> > [  202.195614] x11: 0000000000000000 x10: 0000000000000000
+> > [  202.195744] x9 : 0000000000000000 x8 : 0000000180000000
+> > [  202.195858] x7 : 0000000000000018 x6 : ffff000015541930
+> > [  202.195966] x5 : ffff000015541930 x4 : 0000000000000001
+> > [  202.196074] x3 : 0000000000000001 x2 : 0000000000000000
+> > [  202.196185] x1 : 0000000000000070 x0 : 0000000000000000
+> > [  202.196366] Call trace:
+> > [  202.196455]  memory_block_action+0x110/0x178
+> > [  202.196589]  memory_subsys_online+0x3c/0x80
+> > [  202.196681]  device_online+0x6c/0x90
+> > [  202.196761]  state_store+0x84/0x100
+> > [  202.196841]  dev_attr_store+0x18/0x28
+> > [  202.196927]  sysfs_kf_write+0x40/0x58
+> > [  202.197010]  kernfs_fop_write+0xcc/0x1d8
+> > [  202.197099]  __vfs_write+0x18/0x40
+> > [  202.197187]  vfs_write+0xa4/0x1b0
+> > [  202.197295]  ksys_write+0x64/0xd8
+> > [  202.197430]  __arm64_sys_write+0x18/0x20
+> > [  202.197521]  el0_svc_common.constprop.0+0x7c/0xe8
+> > [  202.197621]  el0_svc_handler+0x28/0x78
+> > [  202.197706]  el0_svc+0x8/0xc
+> > [  202.197828] ---[ end trace 57719823dda6d21e ]---
 
-The CTP connected to board with,
-- SDA, SCK from i2c0
-- GPIO-LD0 as AVDD28 supply
-- PH4 gpio as interrupt pin
-- PH11 gpio as reset pin
-- X axis is inverted
-- Y axis is inverted
+This warning relates to:
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v5:
-- none
-Changes for v4:
-- drop i2c1 pinctrl
-Changes for v3:
-- Use 2.8v for reg_ldo_io0
-Changes for v2:
-- drop i2c1, bias-pull-up
+        for (; section_nr < section_nr_end; section_nr++) {
+                if (WARN_ON_ONCE(!pfn_valid(pfn)))
+                        return false;
+
+from pages_correctly_probed().
+AFAICS, this is orthogonal to subsection_check().
 
 
- .../sun50i-a64-oceanic-5205-5inmfd.dts        | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-index 6a2154525d1e..787ebd805a3b 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-oceanic-5205-5inmfd.dts
-@@ -37,6 +37,22 @@
- 	status = "okay";
- };
- 
-+&i2c0 {
-+	status = "okay";
-+
-+	touchscreen@5d {
-+		compatible = "goodix,gt911";
-+		reg = <0x5d>;
-+		AVDD28-supply = <&reg_ldo_io0>;			/* VDD_CTP: GPIO0-LDO */
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
-+		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
-+		reset-gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH11 */
-+		touchscreen-inverted-x;
-+		touchscreen-inverted-y;
-+	};
-+};
-+
- &mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
-@@ -52,6 +68,13 @@
- 	regulator-name = "vcc-phy";
- };
- 
-+&reg_ldo_io0 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "vdd-ctp";
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
-2.18.0.321.gffc6fa0e3
-
+Oscar Salvador
+SUSE L3
