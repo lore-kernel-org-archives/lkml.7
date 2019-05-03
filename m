@@ -2,132 +2,131 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C3BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0435AC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D702081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA1D82075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBYVOpja"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUkN0NIg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbfECRT7 (ORCPT
+        id S1728581AbfECRVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:19:59 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36800 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726724AbfECRT7 (ORCPT
+        Fri, 3 May 2019 13:21:16 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:32952 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726724AbfECRVQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:19:59 -0400
-Received: by mail-io1-f66.google.com with SMTP id d19so5842390ioc.3;
-        Fri, 03 May 2019 10:19:59 -0700 (PDT)
+        Fri, 3 May 2019 13:21:16 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f23so5890372ljc.0;
+        Fri, 03 May 2019 10:21:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r2uAQt0Bvsy/cuLm6VMoad/e7q1topheHEBvBpUuRTg=;
-        b=mBYVOpjae9uWiS11YJRP6uDNbxA54vBO40AZQnIJ6BjfKqgtLdVSnFyKVON0RN502M
-         rgJG7BHUMCdm5baqBBvha2CmKhJZfXjuM9xLth/DxLe5QCnSWDbt3AWJOj/ajj8kFS9H
-         tzJ/nqHQ6yic3sEfMTmZBYE/k+uDxLojsxt4i20B4+px8RfnXq5uYRnlRPrKx0QjoDXM
-         lp3rOxaxu+sF8lHxDe8xbjB3dqI4RuJQFT59pVfqQQaRGYJ24M1GUmolrMjPvgKEe4N/
-         ahH1IlJ29twLFBSitOhrN2TtzE6d9ilWXI1Ats4jxc8XDhTwR2Mkxm1QziGLtleoj+QN
-         kArg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Y1z3Y8igEir/kIL8uEvgmKE9/Q/zi2rA9ZUq1wYqhIg=;
+        b=IUkN0NIgisTvaKsVmuyeExZheDNyy9eAme5kMeshXiTYCGl60epTwzzDO2GUJAreKu
+         pASeb9cMqEscZtpPkX9dfWnnxyD5qa0BY3zQvNLbNAf0ZMmAwjQVQzXgQl0b/cViF07X
+         9PW/Bqvsl5Pa/DfsPxC6XK5uGD+CPBkNonEwel1MT1X+bvu7q492pwaBvO8klMPCMoUP
+         fYFc9kdmg40Uq26MRiWF9EAKKKZelKEcxAkrJBsi4+epTTbdUA6VI2AKzYC442XPsPJK
+         H2ckO23FCQ6rgqxbDwst5T6Jfg65JvRnThLOcbYR0bTwOl11yzrcP6SoZ4c7ZZBgU+ZH
+         Biow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r2uAQt0Bvsy/cuLm6VMoad/e7q1topheHEBvBpUuRTg=;
-        b=gGpWirZMUePE/X7Y9c9ri65FUjvnhJDn/Um5HEdz1of3zIOmRET0WQJjKnDURqm9Yb
-         642/Pk+0hxNFVQ+st/8TVnWX4LE2h5RGPtjdrXBNJ1/x9ET77ShPGFyeO7/jgh4zAauy
-         1X9HXMhdL97mqbbRBCcqPAQnnNoKPXqEkf2lPEfFUXA7gA9UAUDUdT4yA95pcXnx4r+X
-         t81g6T5zhT1Hj3+AaK5orPVm790ktqD8VLX4SxkjTL6JNxw3lM6Nr1SUFWGbZWjHDKVg
-         0G0l6pH3QLDSSp0p9akEx5wgtipvwLEp6cLqtJkroGmN2z8BeJF+YOVNsYLWNVRn8L+N
-         m8Nw==
-X-Gm-Message-State: APjAAAWOeraQ/DzDa0oVeX7xQA2ld9BUgw+y98ChAT7Uypn5Fj6vjqN3
-        SdinuP+YO3rTrlxsHOkqVGD/1COR7qP00gDAL0w=
-X-Google-Smtp-Source: APXvYqxiF5PHNQiqJ0GHkKA8Wdz9mUC9o+Y3s6oZnGSYoKgvZ0APeckWE+zdGD+8yVenAIDzUudQV2J1cMo5WlyQrik=
-X-Received: by 2002:a5e:890f:: with SMTP id k15mr6271446ioj.68.1556903998468;
- Fri, 03 May 2019 10:19:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Y1z3Y8igEir/kIL8uEvgmKE9/Q/zi2rA9ZUq1wYqhIg=;
+        b=pNA35YP+B+TU5BS1Y0hVJy3T/8GGTX6TXCJqH8T46ifd8I8L1dbv0bPue/vGXy1RFb
+         EYgL+Yay75aw9afLyiRyArevMR/X3u21G0t6gqkN5BiOF9P5eIUVetY2qjlBTZfwXp3A
+         NCX1s6sS+dBIpH59SQnk3tsDH/hkA0bDuUOgJZ/xymxc2Oj2ziq0/84iOES9UpIzteZi
+         LTCfVq1DPZQuuVJHW2PjiaKoIin6NK/lvjM9Ji8N9XAj9o/d8N02Jwh2jwQQUOVPfm9R
+         7t+z1mupvqrgvCZw9pYaCegGFfr3xR1NcUW1aeBM4HDXeOdl/HGBJ4C2ca3npo7gSAtl
+         IoPg==
+X-Gm-Message-State: APjAAAWZmepAkG1tmp1dc8g6l8xRdf4ii0ok2mG9VhizyvEFAbCRUx8w
+        cNeWZ78LzPqlo7WTMsZxfe8=
+X-Google-Smtp-Source: APXvYqyY7GCw9gRa4awuSK/u0rzIVlew/Kl87d69O4sE/JGvwV8ZiNCQ9rZ/Y4MJzAPHLfUehCROkA==
+X-Received: by 2002:a2e:2a03:: with SMTP id q3mr5658596ljq.56.1556904073966;
+        Fri, 03 May 2019 10:21:13 -0700 (PDT)
+Received: from mobilestation ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id y10sm488084lja.71.2019.05.03.10.21.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 03 May 2019 10:21:12 -0700 (PDT)
+Date:   Fri, 3 May 2019 20:21:10 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/12] mips: Reserve memory for the kernel image resources
+Message-ID: <20190503172108.u7q7dpdo2ggbluar@mobilestation>
+References: <20190423224748.3765-1-fancer.lancer@gmail.com>
+ <20190423224748.3765-5-fancer.lancer@gmail.com>
+ <20190424224343.4skr727fszycwksq@pburton-laptop>
+ <20190426000035.yfonfvrapmm4j3fg@mobilestation>
+ <20190430225832.cjk7mj6dotw3cib6@pburton-laptop>
+ <20190502142434.mpoyu4hhbunur5xe@mobilestation>
+ <20190502184537.ccxnrh6x7vg55kly@pburton-laptop>
 MIME-Version: 1.0
-References: <20190501205215.ptoi2czhklte5jbm@csclub.uwaterloo.ca>
- <CAKgT0UczVvREiXwde6yJ8_i9RT2z7FhenEutXJKW8AmDypn_0g@mail.gmail.com>
- <20190502151140.gf5ugodqamtdd5tz@csclub.uwaterloo.ca> <CAKgT0Uc_OUAcPfRe6yCSwpYXCXomOXKG2Yvy9c1_1RJn-7Cb5g@mail.gmail.com>
- <20190502171636.3yquioe3gcwsxlus@csclub.uwaterloo.ca> <CAKgT0Ufk8LXMb9vVWfvgbjbQFKAuenncf95pfkA0P1t-3+Ni_g@mail.gmail.com>
- <20190502175513.ei7kjug3az6fe753@csclub.uwaterloo.ca> <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
- <CAKgT0Uc_YVzns+26-TL+hhmErqG4_w4evRqLCaa=7nME7Zq+Vg@mail.gmail.com> <20190503151421.akvmu77lghxcouni@csclub.uwaterloo.ca>
-In-Reply-To: <20190503151421.akvmu77lghxcouni@csclub.uwaterloo.ca>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 3 May 2019 10:19:47 -0700
-Message-ID: <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
-To:     Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502184537.ccxnrh6x7vg55kly@pburton-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 8:14 AM Lennart Sorensen
-<lsorense@csclub.uwaterloo.ca> wrote:
->
-> On Thu, May 02, 2019 at 01:59:46PM -0700, Alexander Duyck wrote:
-> > If I recall correctly RSS is only using something like the lower 9
-> > bits (indirection table size of 512) of the resultant hash on the
-> > X722, even fewer if you have fewer queues that are a power of 2 and
-> > happen to program the indirection table in a round robin fashion. So
-> > for example on my system setup with 32 queues it is technically only
-> > using the lower 5 bits of the hash.
-> >
-> > One issue as a result of that is that you can end up with swaths of
-> > bits that don't really seem to impact the hash all that much since it
-> > will never actually change those bits of the resultant hash. In order
-> > to guarantee that every bit in the input impacts the hash you have to
-> > make certain you have to gaps in the key wider than the bits you
-> > examine in the final hash.
-> >
-> > A quick and dirty way to verify that the hash key is part of the issue
-> > would be to use something like a simple repeating value such as AA:55
-> > as your hash key. With something like that every bit you change in the
-> > UDP port number should result in a change in the final RSS hash for
-> > queue counts of 3 or greater. The downside is the upper 16 bits of the
-> > hash are identical to the lower 16 so the actual hash value itself
-> > isn't as useful.
->
-> OK I set the hkey to
-> aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55:aa:55
-> and still only see queue 0 and 2 getting hit with a couple of dozen
-> different UDP port numbers I picked.  Changing the hash with ethtool to
-> that didn't even move where the tcp packets for my ssh connection are
-> going (they are always on queue 2 it seems).
+Hello Paul
 
-The TCP flow could be bypassing RSS and may be using ATR to decide
-where the Rx packets are processed. Now that I think about it there is
-a possibility that ATR could be interfering with the queue selection.
-You might try disabling it by running:
-    ethtool --set-priv-flags <iface> flow-director-atr off
+On Thu, May 02, 2019 at 06:45:39PM +0000, Paul Burton wrote:
+> Hi Serge,
+> 
+> On Thu, May 02, 2019 at 05:24:37PM +0300, Serge Semin wrote:
+> > Just reviewed and tested your series on my machine. I tagged the whole series
+> > in a response to the cover-letter of [1].
+> 
+> Thanks for the review & testing; that series is now in mips-next.
+> 
+> > Could you please proceed with this patchset review procedure? There are
+> > also eight more patches left without your tag or comment.  This patch
+> > is also left with no explicit tag.
+> > 
+> > BTW I see you already applied patches 1-3 to the mips-next, so what shall I
+> > do when sending a v2 patchset with fixes asked to be provided for patch 12
+> > and possibly for others in future? Shall I just resend the series without that
+> > applied patches or send them over with your acked-by tagges?
+> 
+> I've so far applied patches 1-7 of your series to mips-next, and stopped
+> at patch 8 which has a comment to address.
+> 
+> My preference would be if you could send a v2 which just contains the
+> remaining patches (ie. patches 8-12 become patches 1-5), ideally atop
+> the mips-next branch.
+> 
+> The series looks good to me once the review comments are addressed, but
+> no need to add an Acked-by - it'll be implicit when I apply them to
+> mips-next.
+> 
 
-> Does it just not hash UDP packets correctly?  Is it even doing RSS?
-> (the register I checked claimed it is).
+Agreed. I'll do it shortly.
 
-The problem is RSS can be bypassed for queue selection by things like
-ATR which I called out above. One possibility is that if the
-encryption you were using was leaving the skb->encapsulation flag set,
-and the NIC might have misidentified the packets as something it could
-parse and set up a bunch of rules that were rerouting incoming traffic
-based on outgoing traffic. Disabling the feature should switch off
-that behavior if that is in fact the case.
+-Sergey
 
-> This system has 40 queues assigned by default since that is how many
-> CPUs there are.  Changing it to a lower number didn't make a difference
-> (I tried 32 and 8).
-
-You are probably fine using 40 queues. That isn't an even power of two
-so it would actually improve the entropy a bit since the lower bits
-don't have a many:1 mapping to queues.
+> Thanks,
+>     Paul
