@@ -2,272 +2,146 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E270DC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68425C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF162075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3C52075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VrvZIthS"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="VRpg/Yqh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfECS7i (ORCPT
+        id S1726890AbfECTBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 14:59:38 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39673 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbfECS7h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 14:59:37 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e92so3110555plb.6;
-        Fri, 03 May 2019 11:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ADpdDwLHxFyfFWAX1if0+NpffCsUFbkjDEInr1QTSC4=;
-        b=VrvZIthSvvpLa9ofdi1TVHc0CvLr2VIODR9OjnFm+Up9we0zDAZUBWMLlTbOSItHKo
-         Pbam23b4EY+ccSifRG/ZxjMcIQVAiXiA3KyIi8wmckJ7RJLpCpUuffuKoF64akwkaZ+a
-         3QcFYyfiYX8VkGbLXp+59LQq0XggiQTSFvsoJX1JIXyAy+67nRdTPeZZes4fPGEw0SNJ
-         /9swLP5EtM7Jh7wPv9iAEyde8+QQDQGJVMKmJBfXFZRut96aOVsFH2VBxXFKDhAr7gl6
-         0FaZZo8MGkaVEpcuBTPxzyLi+qG9bWgEYJF7h83gR5avy0pM2sQoY06ujQlTV4yL6n8q
-         BstA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ADpdDwLHxFyfFWAX1if0+NpffCsUFbkjDEInr1QTSC4=;
-        b=nNO3Uy8nfTx7DcFJUhocsCye11Py6t+73V2kfxLXrNOiKjUCs47u/VaFUFCiKm19bv
-         rGwbXJQcOU6qtBuVG6QYdRIIjaZzwtASEMBxeuwCallv2FJMukmmM3lfieJ8fT9RvdXh
-         tgDA06s06sDhCiQFtgGHjBHXj5BY9c6NgI1C5DbP9og/37RsUUOPvT3cZvtsxbx2oFdh
-         ZRgxlfiOYTeLp5ufkZODr8aRBvSBjMO9WgaQkoNxbxd5zCZk4OOkkqPNOSUbAfHwzbFz
-         QnEEt1pQvizsFjqGra4/FS3vHFs5BsV2kzRvfwAPbELQKLe5IRS7cTZW9BkttxIbr7O5
-         UhPQ==
-X-Gm-Message-State: APjAAAVl8YIA4n/Q9++ZFkFjokvrluZmu6GGWoN6mciGnGl/vR9TfCVu
-        7LtL+isNyLbRPMkQyCp0LhA=
-X-Google-Smtp-Source: APXvYqxqbfGXr3FDXhDmUCd7JmX5osXVjgyq86nBDxgo3T0uzvTwYN2tw6/OWvrILTq7mQlibweAAw==
-X-Received: by 2002:a17:902:bf44:: with SMTP id u4mr12529409pls.171.1556909976558;
-        Fri, 03 May 2019 11:59:36 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id l2sm3517136pgl.2.2019.05.03.11.59.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 11:59:35 -0700 (PDT)
-Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
- KUnit tests
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah@kernel.org, devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Felix Guo <felixguoxiuping@gmail.com>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-13-brendanhiggins@google.com>
- <20190502110220.GD12416@kroah.com>
- <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
- <a49c5088-a821-210c-66de-f422536f5b01@gmail.com>
- <CAFd5g44iWRchQKdJYtjRtPY6e-6e0eXpKXXsx5Ooi6sWE474KA@mail.gmail.com>
- <1a5f3c44-9fa9-d423-66bf-45255a90c468@gmail.com>
- <CAFd5g45RYm+zfdJXnyp2KZZH5ojfOzy++aq+4zBeE5VDu6WgEw@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <052fa196-4ea9-8384-79b7-fe6bacc0ee82@gmail.com>
-Date:   Fri, 3 May 2019 11:59:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Fri, 3 May 2019 15:01:24 -0400
+Received: from mail-eopbgr30049.outbound.protection.outlook.com ([40.107.3.49]:12494
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726776AbfECTBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 15:01:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G5rmKY/ryyqvCzcofiGq32JWwfZXN1f8sSMf9ymEfmQ=;
+ b=VRpg/Yqh0hd9jbFvpjeuTHFZufDbSnOGTlAloIDMqI5ZLBH9lFqgQ52ZqrHREBMR0otCUlK6Iv0+9cFk47KChyXKdwPPhnNuQ/549GcFxaZ8JMBLNJeNK86ereqXm4d8QyN1p4kPiLSggtgrYadcRTaVHtNJqRfzp2LwOcHZjOc=
+Received: from VI1PR0501CA0016.eurprd05.prod.outlook.com
+ (2603:10a6:800:92::26) by VI1PR0502MB4061.eurprd05.prod.outlook.com
+ (2603:10a6:803:25::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1856.11; Fri, 3 May
+ 2019 19:01:16 +0000
+Received: from VE1EUR03FT023.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::201) by VI1PR0501CA0016.outlook.office365.com
+ (2603:10a6:800:92::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1856.11 via Frontend
+ Transport; Fri, 3 May 2019 19:01:16 +0000
+Authentication-Results: spf=pass (sender IP is 193.47.165.134)
+ smtp.mailfrom=mellanox.com; davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=pass action=none header.from=mellanox.com;
+Received-SPF: Pass (protection.outlook.com: domain of mellanox.com designates
+ 193.47.165.134 as permitted sender) receiver=protection.outlook.com;
+ client-ip=193.47.165.134; helo=mtlcas13.mtl.com;
+Received: from mtlcas13.mtl.com (193.47.165.134) by
+ VE1EUR03FT023.mail.protection.outlook.com (10.152.18.133) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1856.11 via Frontend Transport; Fri, 3 May 2019 19:01:14 +0000
+Received: from MTLCAS13.mtl.com (10.0.8.78) by mtlcas13.mtl.com (10.0.8.78)
+ with Microsoft SMTP Server (TLS) id 15.0.1178.4; Fri, 3 May 2019 22:01:13
+ +0300
+Received: from MTLCAS01.mtl.com (10.0.8.71) by MTLCAS13.mtl.com (10.0.8.78)
+ with Microsoft SMTP Server (TLS) id 15.0.1178.4 via Frontend Transport; Fri,
+ 3 May 2019 22:01:13 +0300
+Received: from [172.16.0.54] (172.16.0.54) by MTLCAS01.mtl.com (10.0.8.71)
+ with Microsoft SMTP Server (TLS) id 14.3.301.0; Fri, 3 May 2019 22:00:59
+ +0300
+Subject: Re: [PATCH v2 06/10] nvme/core: add mdev interfaces
+To:     Christoph Hellwig <hch@infradead.org>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+CC:     Fam Zheng <fam@euphon.net>, <kvm@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Keith Busch <keith.busch@intel.com>,
+        "Kirti Wankhede" <kwankhede@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "Liang Cunming" <cunming.liang@intel.com>,
+        Jens Axboe <axboe@fb.com>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        John Ferlan <jferlan@redhat.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Amnon Ilan" <ailan@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+References: <20190502114801.23116-1-mlevitsk@redhat.com>
+ <20190502114801.23116-7-mlevitsk@redhat.com>
+ <20190503122902.GA5081@infradead.org>
+From:   Max Gurtovoy <maxg@mellanox.com>
+Message-ID: <d1c0c7ae-1a7d-06e5-d8bb-765a7fd5e41d@mellanox.com>
+Date:   Fri, 3 May 2019 22:00:54 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g45RYm+zfdJXnyp2KZZH5ojfOzy++aq+4zBeE5VDu6WgEw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190503122902.GA5081@infradead.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.16.0.54]
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:193.47.165.134;IPV:NLI;CTRY:IL;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(396003)(376002)(2980300002)(199004)(189003)(31686004)(26005)(77096007)(230700001)(6246003)(229853002)(67846002)(53546011)(2906002)(186003)(305945005)(16526019)(6306002)(50466002)(64126003)(70586007)(966005)(7736002)(478600001)(70206006)(11346002)(446003)(110136005)(58126008)(486006)(2616005)(54906003)(476003)(126002)(316002)(16576012)(336012)(6116002)(4326008)(86362001)(81166006)(5660300002)(76176011)(106002)(31696002)(81156014)(356004)(6666004)(2486003)(23676004)(65956001)(47776003)(7416002)(8676002)(4744005)(8936002)(65826007)(3846002)(36756003)(65806001)(3940600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0502MB4061;H:mtlcas13.mtl.com;FPR:;SPF:Pass;LANG:en;PTR:mail13.mellanox.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ff93b9a1-2b4e-495b-0884-08d6cff9b7b8
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328)(7193020);SRVR:VI1PR0502MB4061;
+X-MS-TrafficTypeDiagnostic: VI1PR0502MB4061:
+X-MS-Exchange-PUrlCount: 1
+X-Microsoft-Antispam-PRVS: <VI1PR0502MB4061D957FC2EB182C173BF90B6350@VI1PR0502MB4061.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0026334A56
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: DGddPswefKoHsVgWtC7pnM5lSpWMOv75Oc/NluAwqS56HkPDM/c2drjGZroZ6m91Z7v5SRzJ7rt+UflzPbm3hHC9sgrdGgH1KJAddQ1cP/QLwBogeN947+AA3opIcmlLuvwvU1DHlEdBNmtvXtQ6FT/+q6vDC5QjFm0KtykIPVlomZEloPWrfaktmYBsqJq8VIA1iYmdTaBD9PxZ4Otr6fk/WoHefeaJaaIRPOfbTjrPIkmcYAZEprdxaPRdhm0I5rw5MqaDqLJuYKM+uFlqA7niMIv+Pmo65jGy3ebUDrAT/CIvwYmrjNIpzg5tIHUiv+jGygEVhGcWaSVh/zSuG/t7ruG03SONQnBGb5Lgx8DelSixm/MJGnAvcQ9rEz+PBBlm/nBXGvQctY6glxtT4hRuovmcYcVtHTDAUzTP5VM=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2019 19:01:14.9096
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff93b9a1-2b4e-495b-0884-08d6cff9b7b8
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a652971c-7d2e-4d9b-a6a4-d149256f461b;Ip=[193.47.165.134];Helo=[mtlcas13.mtl.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB4061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/2/19 10:36 PM, Brendan Higgins wrote:
-> On Thu, May 2, 2019 at 6:45 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 5/2/19 4:45 PM, Brendan Higgins wrote:
->>> On Thu, May 2, 2019 at 2:16 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>>>
->>>> On 5/2/19 11:07 AM, Brendan Higgins wrote:
->>>>> On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->>>>>>
->>>>>> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
->>>>>>> From: Felix Guo <felixguoxiuping@gmail.com>
->>>>>>>
->>>>>>> The ultimate goal is to create minimal isolated test binaries; in the
->>>>>>> meantime we are using UML to provide the infrastructure to run tests, so
->>>>>>> define an abstract way to configure and run tests that allow us to
->>>>>>> change the context in which tests are built without affecting the user.
->>>>>>> This also makes pretty and dynamic error reporting, and a lot of other
->>>>>>> nice features easier.
->>>>>>>
->>>>>>> kunit_config.py:
->>>>>>>   - parse .config and Kconfig files.
->>>>>>>
->>>>>>> kunit_kernel.py: provides helper functions to:
->>>>>>>   - configure the kernel using kunitconfig.
->>>>>>>   - build the kernel with the appropriate configuration.
->>>>>>>   - provide function to invoke the kernel and stream the output back.
->>>>>>>
->>>>>>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
->>>>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->>>>>>
->>>>>> Ah, here's probably my answer to my previous logging format question,
->>>>>> right?  What's the chance that these wrappers output stuff in a standard
->>>>>> format that test-framework-tools can already parse?  :)
->>>
->>> To be clear, the test-framework-tools format we are talking about is
->>> TAP13[1], correct?
->>
->> I'm not sure what the test community prefers for a format.  I'll let them
->> jump in and debate that question.
->>
->>
->>>
->>> My understanding is that is what kselftest is being converted to use.
->>>
->>>>>
->>>>> It should be pretty easy to do. I had some patches that pack up the
->>>>> results into a serialized format for a presubmit service; it should be
->>>>> pretty straightforward to take the same logic and just change the
->>>>> output format.
->>>>
->>>> When examining and trying out the previous versions of the patch I found
->>>> the wrappers useful to provide information about how to control and use
->>>> the tests, but I had no interest in using the scripts as they do not
->>>> fit in with my personal environment and workflow.
->>>>
->>>> In the previous versions of the patch, these helper scripts are optional,
->>>> which is good for my use case.  If the helper scripts are required to
->>>
->>> They are still optional.
->>>
->>>> get the data into the proper format then the scripts are not quite so
->>>> optional, they become the expected environment.  I think the proper
->>>> format should exist without the helper scripts.
->>>
->>> That's a good point. A couple things,
->>>
->>> First off, supporting TAP13, either in the kernel or the wrapper
->>> script is not hard, but I don't think that is the real issue that you
->>> raise.
->>>
->>> If your only concern is that you will always be able to have human
->>> readable KUnit results printed to the kernel log, that is a guarantee
->>> I feel comfortable making. Beyond that, I think it is going to take a
->>> long while before I would feel comfortable guaranteeing anything about
->>> how will KUnit work, what kind of data it will want to expose, and how
->>> it will be organized. I think the wrapper script provides a nice
->>> facade that I can maintain, can mediate between the implementation
->>> details and the user, and can mediate between the implementation
->>> details and other pieces of software that might want to consume
->>> results.
->>>
->>> [1] https://testanything.org/tap-version-13-specification.html
->>
->> My concern is based on a focus on my little part of the world
->> (which in _previous_ versions of the patch series was the devicetree
->> unittest.c tests being converted to use the kunit infrastructure).
->> If I step back and think of the entire kernel globally I may end
->> up with a different conclusion - but I'm going to remain myopic
->> for this email.
->>
->> I want the test results to be usable by me and my fellow
->> developers.  I prefer that the test results be easily accessible
->> (current printk() implementation means that kunit messages are
->> just as accessible as the current unittest.c printk() output).
->> If the printk() output needs to be filtered through a script
->> to generate the actual test results then that is sub-optimal
->> to me.  It is one more step added to my workflow.  And
->> potentially with an embedded target a major pain to get a
->> data file (the kernel log file) transferred from a target
->> to my development host.
-> 
-> That's fair. If that is indeed your only concern, then I don't think
-> the wrapper script will ever be an issue for you. You will always be
-> able to execute a given test the old fashioned/manual way, and the
-> wrapper script only summarizes results, it does not change the
-> contents.
-> 
->>
->> I want a reported test failure to be easy to trace back to the
->> point in the source where the failure is reported.  With printk()
->> the search is a simple grep for the failure message.  If the
->> failure message has been processed by a script, and then the
->> failure reported to me in an email, then I may have to look
->> at the script to reverse engineer how the original failure
->> message was transformed into the message that was reported
->> to me in the email.  Then I search for the point in the
->> source where the failure is reported.  So a basic task has
->> just become more difficult and time consuming.
-> 
-> That seems to be a valid concern. I would reiterate that you shouldn't
-> be concerned by any processing done by the wrapper script itself, but
-> the reality is that depending on what happens with automated
-> testing/presubmit/CI other people might end up parsing and
-> transforming test results - it might happen, it might not.
 
-You seem to be missing my point.
+On 5/3/2019 3:29 PM, Christoph Hellwig wrote:
+> On Thu, May 02, 2019 at 02:47:57PM +0300, Maxim Levitsky wrote:
+>> If the mdev device driver also sets the
+>> NVME_F_MDEV_DMA_SUPPORTED, the mdev core will
+>> dma map all the guest memory into the nvme device,
+>> so that nvme device driver can use dma addresses as passed
+>> from the mdev core driver
+> We really need a proper block layer interface for that so that
+> uring or the nvme target can use pre-mapping as well.
 
-Greg asked that the output be in a standard format.
+I think we can also find a way to use nvme-mdev for the target offload 
+p2p feature.
 
-You replied that the standard format could be created by the wrapper script.
+Don't see a big difference of taking NVMe queue and namespace/partition 
+to guest OS or to P2P since IO is issued by external entity and pooled 
+outside the pci driver.
 
-Now you say that "it might happen, it might not".  In other words the output
-may or may not end up in the standard format.
-
-As Greg points out in comments to patch 12:
-
-  "The core of kunit should also log the messages in this format as well,
-  and not rely on the helper scripts as Frank points out, not everyone
-  will use/want them.  Might as well make it easy for everyone to always
-  do the right thing and not force it to always be added in later."
-
-I am requesting that the original message be in the standard format.  Of
-course anyone is free to transform the messages in later processing, no
-big deal.
+thoughts ?
 
 
-> I currently
-> have a CI system set up for KUnit on my public repo that I don't think
-> you would be offended by, but I don't know what we are going to do
-> when it comes time to integrate with existing upstream CI systems.
-> 
-> In anycase, I don't think that either sticking with or doing away with
-> the wrapper script is going to have any long term bearing on what
-> happens in this regard.
-> 
-> Cheers
-> 
-
+>
+> _______________________________________________
+> Linux-nvme mailing list
+> Linux-nvme@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-nvme
