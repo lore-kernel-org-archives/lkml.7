@@ -2,131 +2,107 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA918C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E20C004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1AC2087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:18:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVpLdx+c"
+	by mail.kernel.org (Postfix) with ESMTP id 359C9206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556882364;
+	bh=UYFh2fznuaQspBCzomd2OghwGe6Z9MYbCrTWM3XoNG0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tKS49ken4SvF5wGUhafUo9I1RqvcfwURFZqf0OCoV3TDKUhUJPMyrifQyIRArUS2e
+	 S0ZAnuqYGwzQNpljNKHZkkrgadoIAsdekzXMJA78MrS0ZiypatDrZcwzR/qZv6gojR
+	 5sgNUfyRwYbV7rbMRzeZZTiHwTFSi/krLlSSmqOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfECLSQ (ORCPT
+        id S1727636AbfECLTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:18:16 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35942 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfECLSP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:18:15 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y8so4681359ljd.3;
-        Fri, 03 May 2019 04:18:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=eJXURNNvLCpeFBpRtJCIRPKpBboCkLnQxDdwM/tNb1U=;
-        b=KVpLdx+c0FazhIk9DysPEnyHpZz7UKLQjnFBYMUL3hpnH3EPaWzEAKirN/hvLCClVn
-         e4UaHC76lOeTmW7N+q5XgtjXchPKIU/zBJSpdzrDYHI7YfMFWs5kbTjoz1Wjl0+jamjk
-         Qga8yOqa3G/nIkLSAXu4t02rUsoyQHigekUIQfaCCy5sMhDOfAtP2h5/HNbiToW3aafw
-         QUGFht57y/Il9IW3807teHhXNZtD1l2oQUphIiGs1jVeJQ9JqylHFg6X4tBiQO5xKT7X
-         v4Zzue0kZfges4yO7xyzWYwJOk95Acv/CRvE++YZorIa4ociSuktQrODA0hR2YsrXt50
-         S6dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eJXURNNvLCpeFBpRtJCIRPKpBboCkLnQxDdwM/tNb1U=;
-        b=ZWsrZ89yBM86UseIoHiYB3JtZrRio7l6VUvByStmMOVYhp26GsphCPkankQ4RL1fJn
-         BuHHKpRBsvLS80zo98QixV3mnvumMI52tUUGDRvDp0l5/jXaVdrutxRPZ2HfRAgD27OM
-         HUbe401+wTI88HIis+MTLRo14upOMXla8lSlYRNoiKe4fj0v8/8LHaRnSueWDadP+wFY
-         RwlGBEcvn0C9hTBfhk1FhftjboeEcDT7ruRUtxIyqNzc+Kab/a6Zv1Kv01Mdv1+C1Fcn
-         zAaqk7wAR6XV0ZMvHcFeZIms2hLPe7IywdJjDNFL2W/Z/Iqwxr1CPkDWPdlSkLzcUXPR
-         /UBg==
-X-Gm-Message-State: APjAAAXLhB1BPTGMMDz2Iwfc3aM42SMzuWx0N2uwzT3y/BcEFghfxdQt
-        p1VXoISLvVGkzIE77HLZXhFw1qBRb+A=
-X-Google-Smtp-Source: APXvYqy0gS0PHe0iNMbFopADZzUG2RCrLQDmjIP6ZigtXC4HXB/4Stinp4Bt4AXyhGYTPAXaPNpB9Q==
-X-Received: by 2002:a2e:8794:: with SMTP id n20mr5097631lji.76.1556882293173;
-        Fri, 03 May 2019 04:18:13 -0700 (PDT)
-Received: from otyshchenko.kyiv.epam.com (ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
-        by smtp.gmail.com with ESMTPSA id p19sm370795lfc.48.2019.05.03.04.18.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 03 May 2019 04:18:12 -0700 (PDT)
-From:   Oleksandr Tyshchenko <olekstysh@gmail.com>
-To:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     julien.grall@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
-        linux@armlinux.org.uk, biju.das@bp.renesas.com,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: [PATCH V2] ARM: mach-shmobile: Don't init CNTVOFF if PSCI is available
-Date:   Fri,  3 May 2019 14:17:48 +0300
-Message-Id: <1556882268-27451-1-git-send-email-olekstysh@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 3 May 2019 07:19:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726396AbfECLTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 07:19:22 -0400
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83CED206C3;
+        Fri,  3 May 2019 11:19:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556882361;
+        bh=UYFh2fznuaQspBCzomd2OghwGe6Z9MYbCrTWM3XoNG0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HG+Oy2VpgrIi1Cch6D4HchqpzLMZ46CRPTgAIZvUE1G6AQZFfMITgO02NydGVgooA
+         CWnK+/SQ2OfdlS0TKVCLaFSSRwd/cR/y8LnOWA9aPJhO/KZyL0R5Z9/72GjL0p9bir
+         RRERQz44i313wNP6/8Ze7BH7//smOtdYqEovLNB0=
+Received: by mail-lf1-f46.google.com with SMTP id h126so4151783lfh.4;
+        Fri, 03 May 2019 04:19:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAW1Cf+Q66nlACvDIJzjSZAHZ8jFbl87J6ZP2tiFhwA0KRxIUReD
+        PKJyTKeoHY1XrdGHy2YW143WDEX+3XrGFbOciQs=
+X-Google-Smtp-Source: APXvYqxjSiIsSkOWkFFKQc0VvX9PMx8wSsDNflixMMiDXvGvhtL+PIknt+H/jFFWa/8RyhTFVN8QLdwyEWRmisP8Bto=
+X-Received: by 2002:a19:189:: with SMTP id 131mr3170741lfb.74.1556882359840;
+ Fri, 03 May 2019 04:19:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190313193408.23740-1-abailon@baylibre.com>
+In-Reply-To: <20190313193408.23740-1-abailon@baylibre.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 3 May 2019 13:19:08 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPeOnrgnX=onMeX1izS2kYKAkD8TvFVykYTyW-v4NOv3vA@mail.gmail.com>
+Message-ID: <CAJKOXPeOnrgnX=onMeX1izS2kYKAkD8TvFVykYTyW-v4NOv3vA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] Add support of busfreq
+To:     Alexandre Bailon <abailon@baylibre.com>
+Cc:     linux-pm@vger.kernel.org, georgi.djakov@linaro.org,
+        mturquette@baylibre.com, ptitiano@baylibre.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        zening.wang@nxp.com, aisheng.dong@nxp.com, khilman@baylibre.com,
+        ccaione@baylibre.com, Viresh Kumar <viresh.kumar@linaro.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+On Wed, 13 Mar 2019 at 20:35, Alexandre Bailon <abailon@baylibre.com> wrote:
+>
+> This series implements busfreq, a framework used in MXP's
+> tree to scale the interconnect and dram frequencies.
+> In the vendor tree, device's driver request for a
+> performance level, which is used to scale the frequencies.
+> This series implements it using the interconnect framework.
+> Devices' driver request for bandwidth which is use by busfreq
+> to determine a performance level, and then scale the frequency.
+>
+> Busfreq is quite generic. It could be used for any i.MX SoC.
+> A busfreq platform driver just have to define a list of
+> interconnect nodes, and some OPPs.
+>
+> This series is sent as RFC mostly because the current support
+> of i.MX SoC won't benefit of busfreq framework, because the
+> clocks' driver don't support interconnect / dram frequency
+> scaling.
+> As exemple, this series implements busfreq for i.MX8MM whose
+> upstreaming is in progress. Because this relies on ATF to
+> do the frequency scaling, it won't be hard make it work.
+>
+> As exemple, this series implements busfreq for
+> Alexandre Bailon (3):
+>   drivers: interconnect: Add a driver for i.MX SoC
+>   drivers: interconnect: imx: Add support of i.MX8MM
+>   dt-bindings: interconnect: Document fsl,busfreq-imx8mm bindings
 
-If PSCI is available then most likely we are running on PSCI-enabled
-U-Boot which, we assume, has already taken care of resetting CNTVOFF
-before switching to non-secure mode and we don't need to.
+Hi Alexandre,
 
-Also, don't init CNTVOFF if we are running on top of Xen hypervisor,
-as CNTVOFF is controlled by hypervisor itself and shouldn't be touched
-by Dom0 in such case.
+I am quite late but I just found your email.
 
-Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-CC: Julien Grall <julien.grall@arm.com>
+This looks very similar to existing framework - devfreq, which purpose
+is to scale the system busses based on performance counters/events. It
+would be nice if we could avoid duplication of existing subsystems.
 
----
-   You can find previous discussion here:
-   https://lkml.org/lkml/2019/4/17/810
-
-   Changes in v2:
-      - Clarify patch subject/description
-      - Don't use CONFIG_ARM_PSCI option, check whether the PSCI is available,
-        by using psci_smp_available()
-      - Check whether we are running on top of Xen, by using xen_domain()
----
- arch/arm/mach-shmobile/setup-rcar-gen2.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-index eea60b2..bc8537b 100644
---- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
-+++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-@@ -17,7 +17,9 @@
- #include <linux/of.h>
- #include <linux/of_fdt.h>
- #include <linux/of_platform.h>
-+#include <xen/xen.h>
- #include <asm/mach/arch.h>
-+#include <asm/psci.h>
- #include <asm/secure_cntvoff.h>
- #include "common.h"
- #include "rcar-gen2.h"
-@@ -63,7 +65,16 @@ void __init rcar_gen2_timer_init(void)
- 	void __iomem *base;
- 	u32 freq;
- 
--	secure_cntvoff_init();
-+	/*
-+	 * If PSCI is available then most likely we are running on PSCI-enabled
-+	 * U-Boot which, we assume, has already taken care of resetting CNTVOFF
-+	 * before switching to non-secure mode and we don't need to.
-+	 * Another check is to be sure that we are not running on top of Xen
-+	 * hypervisor, as CNTVOFF is controlled by hypervisor itself and
-+	 * shouldn't be touched by Dom0 in such case.
-+	 */
-+	if (!psci_smp_available() && !xen_domain())
-+		secure_cntvoff_init();
- 
- 	if (of_machine_is_compatible("renesas,r8a7745") ||
- 	    of_machine_is_compatible("renesas,r8a77470") ||
--- 
-2.7.4
-
+Best regards,
+Krzysztof
