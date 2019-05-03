@@ -2,130 +2,140 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5EEC04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251CBC04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7D32075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA291206C1
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cshVJY3S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYDJUrh0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfECWQ0 (ORCPT
+        id S1726580AbfECWZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 18:16:26 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45659 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfECWQZ (ORCPT
+        Fri, 3 May 2019 18:25:30 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46723 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfECWZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 18:16:25 -0400
-Received: by mail-qk1-f195.google.com with SMTP id d5so318007qko.12;
-        Fri, 03 May 2019 15:16:25 -0700 (PDT)
+        Fri, 3 May 2019 18:25:29 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n2so3348890pgg.13;
+        Fri, 03 May 2019 15:25:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HXos2jVvt23sEGQ2FQBQJsKRHBVFtxk8JTRDuuOZjhU=;
-        b=cshVJY3SgZerxIj0AHhggAibB5NZbPleKezdrPUdWojsti39ecMZQU/GdNIbxlhrYu
-         jkcn/oslpB1yTTpXF5+cBKLS3JTLfkGsWuWlqNRp8FnSXSGjdhUaoRcxaB1fiwkFL28O
-         L8H8TCMUJ64MaQZlHsePK5mBFq/OsUqCFBRpE3LwHv6ed7Eetpxhhrz7G1ipwt8RoLFN
-         2VxwMozP6w/7IccThhvPKf1UDFw5oTJ6FvZ0czG4U3APBy1gnCnlp56lNnluraNqwx5Y
-         coAUj0L4rf/TTiwYb+DdbQmjk/OcVSqM61xn4FvLzjJdUWlBncBeNs0UGumszChPweLZ
-         gS0w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U/tUiDqBf5AmMmz2flFiXm1GfWiuS6OV4yIyE7IsshQ=;
+        b=UYDJUrh0TE7xjcRG4i15j10P0GwRx6MerKJFAbvKLnvs4E5PnYWOxPeCGKXVuRm2Tp
+         /fmYBeWLAH3k1skmBHXpYebZWPE7VJ9no0yW3VVdq112ZV1G1bJSeKM7QENO+84Xzf4M
+         iJ4UuFbQ60B2HfoH/DbKqGQDZnfN160PEk5+WSBK5QWuC9vwruncxMhoOUDUa4ktLhYt
+         tjxCEn0Z+tbPicHWUVjeJlzwwr2xnD7o+K0JYOOSuukrXAMiNDczAJJt6b0Ow0//slZB
+         CBDh7aeoOXTqXoNdi3HtKKO1ZHXGnfY5cv56Ri5/N+v/K3hw3BVhKSrP6pH/joz2A78+
+         JvPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HXos2jVvt23sEGQ2FQBQJsKRHBVFtxk8JTRDuuOZjhU=;
-        b=Bw24jrWtsjDfnymean2rC2GD2JiQ6oLX04UKReZ4oIFHnlZcjqPMbl5V1X3KlMC7PG
-         ygVh7PhMTXvTqKTizDtbNEIP9wVWQx4wKCB1EZOltbX/GSQIXpDP7uwZBvXndcL2+8bI
-         iJW9aruRh5oDKDxEp7jYDdLaDijcSh1W5qAtnDftBrV9XaR5PLD7MWNmk7QeFlPWMFvJ
-         hwhORWl9nBYZk8wCNy84oFKHCtnDxGI7F3ueloZkFyFyzdVNAwvcHGWlNGOvr0tLLz4s
-         KmSezMPh7glblmIOcQdCA4N8/SRGmlyWsjXWnQo3MB2prtdlR/G/Qx3aR4nHoX+HMcbn
-         VJwA==
-X-Gm-Message-State: APjAAAWT2TUId3UPpWcbp6mlbs3Yy7nqJE5crQTdbkzuMnUQKLWL1mo7
-        Ru9AYBgUO/sFVKvZDa4Lzjg=
-X-Google-Smtp-Source: APXvYqwloUvPCdvnkCdnkj6YxY613wMJymZiRu4zYZ9KXa+nkanvvNwayrSaDiyLrWtFFgviThhyZA==
-X-Received: by 2002:a05:620a:1326:: with SMTP id p6mr8885799qkj.265.1556921784672;
-        Fri, 03 May 2019 15:16:24 -0700 (PDT)
-Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id j39sm2050285qtj.69.2019.05.03.15.16.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 03 May 2019 15:16:23 -0700 (PDT)
-Date:   Fri, 3 May 2019 19:16:13 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Barry Song <21cnbao@gmail.com>
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH 4/4] staging: iio: ad7150: clean up of comments
-Message-ID: <35ccb46902d0a9a79b5c481d3d3cb9256a390c99.1556919363.git.melissa.srw@gmail.com>
-References: <cover.1556919363.git.melissa.srw@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U/tUiDqBf5AmMmz2flFiXm1GfWiuS6OV4yIyE7IsshQ=;
+        b=JzRjwrQT/4zJjkdqSUjra4LjpA8BG2ZvUQiEfSKZUKJOyPvCEJInv7V2wYxvRPHQTl
+         eu5v6RuoM+4eXun0jyuOgToMVpHDl6prL/4Uh6nXGlaf0YvXfz/hoGI74N8Ch649h9B+
+         GKG5YyzpqUPzR7kUSOxQjbqeEQhnUO5AGK596Lf6KvxS1xLg/yJYU8pdFPkfITQeyUUn
+         g5nb9/3pGX3fFwhxVaGns/wktjxckKpj25B+FEO2LfDn5JWMDUMF/bXcK3XUL3HzWv+Q
+         opEEYhMOH7eKBeripA/2c6+06QCEiGtVhCtU5741C7p0kCGxXdtokGAWv0FbTXpOw3Cc
+         AFVw==
+X-Gm-Message-State: APjAAAWxA+PUADZKSOUXeyamLEg7oBf6lv1RoEN6Kfqa+20x4vmF8Liu
+        +zGJRaB6nqknSmpy2cK3H96q3xdWmTs=
+X-Google-Smtp-Source: APXvYqyAR8txpw3uBMAtZFHgbBeP+0KhhHXO2G0V/SUnhbzFWzo5RlFn9RAdVJ2bPqNJol0fATKB3g==
+X-Received: by 2002:a63:c243:: with SMTP id l3mr13774374pgg.448.1556922328437;
+        Fri, 03 May 2019 15:25:28 -0700 (PDT)
+Received: from prsriva-linux.corp.microsoft.com ([2001:4898:80e8:b:3170:1a6b:a13a:7ff])
+        by smtp.gmail.com with ESMTPSA id j22sm4314337pfi.139.2019.05.03.15.25.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 15:25:27 -0700 (PDT)
+From:   Prakhar Srivastava <prsriva02@gmail.com>
+X-Google-Original-From: Prakhar Srivastava
+To:     linux-integrity@vger.kernel.org,
+        linux-secuirty-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     zohar@linux.ibm.com, ebiederm@xmission.com, vgoyal@redhat.com,
+        nayna@linux.ibm.com, nramas@microsoft.com, prsriva@microsoft.com,
+        Prakhar Srivastava <prsriva02@gmail.com>
+Subject: [PATCH 0/5 v4] Kexec cmdline bufffer measure
+Date:   Fri,  3 May 2019 15:25:18 -0700
+Message-Id: <20190503222523.6294-1-prsriva02@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1556919363.git.melissa.srw@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-General cleaning of comments to remove useless information or improve
-description.
+From: Prakhar Srivastava <prsriva02@gmail.com>
 
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
----
- drivers/staging/iio/cdc/ad7150.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+For Kexec scenario(kexec_file_load) cmdline args are passed to the
+next kerenel. These cmldine args used to load the next kernel can 
+have undesired/unwanted configs. To guard against any unwanted cmdline
+args being passed to the next kernel. The current kernel should measure
+the cmdline args to the next kernel, the same takes place in the EFI
+bootloader. Thus on kexec the boot_aggregate does not change.
 
-diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
-index 3a4572a9e5ec..775818b0761e 100644
---- a/drivers/staging/iio/cdc/ad7150.c
-+++ b/drivers/staging/iio/cdc/ad7150.c
-@@ -162,7 +162,8 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
- 	return -EINVAL;
- }
- 
--/* lock should be held */
-+/* state_lock should be held to ensure consistent state*/
-+
- static int ad7150_write_event_params(struct iio_dev *indio_dev,
- 				     unsigned int chan,
- 				     enum iio_event_type type,
-@@ -484,10 +485,6 @@ static const struct iio_chan_spec ad7150_channels[] = {
- 	},
- };
- 
--/*
-- * threshold events
-- */
--
- static irqreturn_t ad7150_event_handler(int irq, void *private)
- {
- 	struct iio_dev *indio_dev = private;
-@@ -576,10 +573,6 @@ static const struct iio_info ad7150_info = {
- 	.write_event_value = &ad7150_write_event_value,
- };
- 
--/*
-- * device probe and remove
-- */
--
- static int ad7150_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
+Currently the cmdline args are not measured, this changeset adds a new
+ima and LSM hook for buffer measure and calls into the same to measure
+the cmdline args passed to the next kernel.The cdmline args meassured
+can then be used as an attestation criteria.
+
+The ima logs need to injected into the next kernel, which will be followed
+up by other patchsets.
+
+
+Changelog:
+v4:
+  - per feedback from LSM community, removed the LSM hook and renamed the
+    IMA policy to KEXEC_CMDLINE[Suggested by: Mimi Zohar]
+
+v3: (rebase changes to next-general)
+  - Add policy checks for buffer[suggested by Mimi Zohar]
+  - use the IMA_XATTR to add buffer
+  - Add kexec_cmdline used for kexec file load
+  - Add an LSM hook to allow usage by other LSM.[suggestd by Mimi Zohar]
+
+v2:
+  - Add policy checks for buffer[suggested by Mimi Zohar]
+  - Add an LSM hook to allow usage by other LSM.[suggestd by Mimi Zohar]
+  - use the IMA_XATTR to add buffer instead of sig template
+
+v1:
+  -Add kconfigs to control the ima_buffer_check
+  -measure the cmdline args suffixed with the kernel file name
+  -add the buffer to the template sig field.
+
+Prakhar Srivastava (5):
+  added a new ima policy func buffer_check, and ima hook to measure the
+    buffer hash into ima
+  add the buffer to the xattr
+  add kexec_cmdline used to ima
+  added LSM hook to call ima_buffer_check
+  removed the LSM hook made available, and renamed the ima_policy to be
+    KEXEC_CMDLINE
+
+ Documentation/ABI/testing/ima_policy      |   1 +
+ include/linux/ima.h                       |   3 +
+ include/linux/security.h                  |   2 +
+ kernel/kexec_core.c                       |   2 +-
+ kernel/kexec_file.c                       |   4 +
+ kernel/kexec_internal.h                   |   4 +-
+ security/integrity/ima/ima.h              |   1 +
+ security/integrity/ima/ima_api.c          |   1 +
+ security/integrity/ima/ima_main.c         | 115 ++++++++++++++++++++++
+ security/integrity/ima/ima_policy.c       |   8 ++
+ security/integrity/ima/ima_template_lib.c |   3 +-
+ security/integrity/integrity.h            |   1 +
+ 12 files changed, 142 insertions(+), 3 deletions(-)
+
 -- 
 2.20.1
 
