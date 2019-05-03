@@ -2,146 +2,97 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F17C004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C29EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE30120B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414872087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:22:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUSJRB3W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6k1uHlj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbfECSRH (ORCPT
+        id S1727533AbfECSWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 14:17:07 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42362 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbfECSRH (ORCPT
+        Fri, 3 May 2019 14:22:02 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38584 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbfECSWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 14:17:07 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p6so3081534pgh.9;
-        Fri, 03 May 2019 11:17:06 -0700 (PDT)
+        Fri, 3 May 2019 14:22:02 -0400
+Received: by mail-io1-f68.google.com with SMTP id y6so5990415ior.5;
+        Fri, 03 May 2019 11:22:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ebeybqPyoYxIU9IJ9ueOCrDBH6yBD5+m4rUusA3XFTo=;
-        b=aUSJRB3WCAHVAVdM0oGRtjvAIyZDtDgH5Do3XuKHITJnXeDfJEdr9EqKCORhmMZJNO
-         9hS2Rq6UJkRLei94Lz2iuSJoLGbseX4xO65gRro1fqS1/JCHG2Go/XcVcxavuI0hsHKj
-         1ZeoyrUsS4Ul55o0G88ro5D4wXbQ+OI58EoIG/iIYmK1//Rd0pPaR24CCPqXwQPJ3zjs
-         HUBlkCNw/fqSiMKk3yb5WwDJzK+klXCFbZ623H8FzDinpMGj16QJQulCAUoPdgrl0aKU
-         4pUXWMfBkED8LBiUtH1cjd4yBiyyqfxmNY+DEiNVuNCZYdumac7xIU3mdkHJJ6k8eEoT
-         SSyg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KZlTHogcw3KVs5ezkA2HfvmM7+WIz+rn1RRu7f/yTLM=;
+        b=f6k1uHljZs07eZhXKFGQV6w98Iz0Wj1FniGxObqMqW1AtTH6CIF5gbVZ4BT00adoBs
+         b0xZlZ49T6AwfR4hl571yx4Hv5IlGlhjUGKXOkg8azD6Zed2EbsoNJ4RUSXUwYl/Y1tb
+         cktneFJ/yX7TtcxyNYNw9CLsqy6aOQm0u4j6WxuIg/Q9S/La5/JOYl1l29ejdMzs93YA
+         CxO+xL31l0H5Fc+64Sbqa3rlpq5/jDgQgOAceFDxf63zYIDVKBTJ4PXBfxuu1dJpW6g/
+         cTCMn1gXrKZtYnCS4YIBmJ0/TzcNGbw+HaMf2IHnEU/SixkMPv7BbqlaDoRhIf/Icqfl
+         4rGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ebeybqPyoYxIU9IJ9ueOCrDBH6yBD5+m4rUusA3XFTo=;
-        b=ZwSySVmVkrsfuzKhFAuitZET91nVPHBng3VSFBiMe3V+1AJ10EYfug9poYVf7QoQtf
-         UNqYlnyHV/mdviE3v/xkQ3Ihv/uVGMCfAkJYM5N9MroeKtkE65bu5yK5FdSJOY8ozfIE
-         htYRyD2tWwDkoZKubx1F0/UivWxYq4ZjZNDN//irsxBz9V3TXZblRyPiB+BAvHTUZVad
-         azzKqw8e0bNI+E0PSAceMfnAR8qQFG3iSF9TnNr5KIzLLXFjXXD5tlqUayGpfvMYIQm+
-         JpJfEVDgyf3ZFyyIrzZrS9rNNkiT6p9qNkJIcI50/0qN+6zMRWJtMfOd1R/qISCM30L0
-         n6Dw==
-X-Gm-Message-State: APjAAAUyAVz9wq2Dv2GBkiHukUy6HWnPS4OixkBFFLIHjoofOLy06tOX
-        QZjAkwktHPszoCw2mmCI2Vw=
-X-Google-Smtp-Source: APXvYqxtziP5ATxi5cED6S8cnZK8oJZlDjzIpGwHS6yYOkJom4XxEYqlUAszNkOYSGX3GdfEnU1osg==
-X-Received: by 2002:a63:10c:: with SMTP id 12mr12613470pgb.276.1556907426365;
-        Fri, 03 May 2019 11:17:06 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k63sm15326pfb.108.2019.05.03.11.17.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 11:17:04 -0700 (PDT)
-Date:   Fri, 3 May 2019 11:17:03 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Enric Balletbo Serra <enric.balletbo@collabora.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 3/3] dt-bindings: power: supply: Add bindings for
- Microchip UCS1002
-Message-ID: <20190503181703.GA5088@roeck-us.net>
-References: <20190503170042.19334-1-andrew.smirnov@gmail.com>
- <20190503170042.19334-4-andrew.smirnov@gmail.com>
- <20190503170326.GB32529@roeck-us.net>
- <CAHQ1cqGkcOHnW1S8QGGcgY3qV6ErCq5gbYgGwspVeoEt_ce6tg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KZlTHogcw3KVs5ezkA2HfvmM7+WIz+rn1RRu7f/yTLM=;
+        b=c+pv0npgxyyk6Qpa+/kqm6X+gBcFTTWbdY2q238edPCwkaM4NBKVDqOhHnZtdj1wlV
+         LzUofcdxSXQCQwE1KgquSqs2CO+GifJ6UvdqKjSIN9hee/4jJuJf/+RsRkAFx558CAXb
+         QhYK79c2KKP8Nxy1NAWroJSH+9zmeerGMvZ0juV36gDRLdZnqKk7nX0aIKI3/Pzvsbvk
+         +OlMKxTR28IezScPpSSWCBXtYQ9RcrWtRvDetpITzLQVSOjrdHvxBBgIyIQn02cNRJQk
+         ItBxmRMP7pNVMdWy9isFO7+hhnJvY6j7FbwVXYmESEELzZ0ZqzrGiVc/epjUC0RmCwiT
+         tQ7w==
+X-Gm-Message-State: APjAAAWlQF5UTFlMamIzVzmEqZzsSacjWp+E0RRciow7ARIS2o9n+rS3
+        1UABDNNFqt+Kdzs9BRZbxjNgaGTWnjFE3btMujs=
+X-Google-Smtp-Source: APXvYqyUsl1h5FgNtwD0YXSW86kllAPBQCoUKFVBx24yK9p7xaOUXnLQNgLk8G8jbdCVY9TU0/BI4xbenWu9CrlpcZ4=
+X-Received: by 2002:a5e:c20c:: with SMTP id v12mr1824375iop.184.1556907721138;
+ Fri, 03 May 2019 11:22:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHQ1cqGkcOHnW1S8QGGcgY3qV6ErCq5gbYgGwspVeoEt_ce6tg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190503033440.cow6xm4p4hezgkxv@linux-r8p5> <20190503034205.12121-1-deepa.kernel@gmail.com>
+ <20190503063435.446aqcckbc6ri7xx@dcvr>
+In-Reply-To: <20190503063435.446aqcckbc6ri7xx@dcvr>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Fri, 3 May 2019 11:21:50 -0700
+Message-ID: <CABeXuvqRSO_0pkU2i0eNK2JtRZcPquF0X0h_GJANiQvEuisQHw@mail.gmail.com>
+Subject: Re: [PATCH] signal: Adjust error codes according to restore_user_sigmask()
+To:     Eric Wong <e@80x24.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Kilani <omar.kilani@gmail.com>,
+        Jason Baron <jbaron@akamai.com>, Arnd Bergmann <arnd@arndb.de>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 12:33:40PM -0500, Andrey Smirnov wrote:
-> On Fri, May 3, 2019 at 12:03 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> >
-> > On Fri, May 03, 2019 at 10:00:42AM -0700, Andrey Smirnov wrote:
-> > > Add bindings for Microchip UCS1002 Programmable USB Port Power
-> > > Controller with Charger Emulation.
-> > >
-> > > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > > Reviewed-by: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Enric Balletbo Serra <enric.balletbo@collabora.com>
-> > > Cc: Chris Healy <cphealy@gmail.com>
-> > > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > > Cc: Fabio Estevam <festevam@gmail.com>
-> > > Cc: Guenter Roeck <linux@roeck-us.net>
-> > > Cc: Sebastian Reichel <sre@kernel.org>
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: linux-pm@vger.kernel.org
-> > > ---
-> > >  .../power/supply/microchip,ucs1002.txt        | 27 +++++++++++++++++++
-> > >  1 file changed, 27 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
-> > > new file mode 100644
-> > > index 000000000000..1d284ad816bf
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
-> > > @@ -0,0 +1,27 @@
-> > > +Microchip UCS1002 USB Port Power Controller
-> > > +
-> > > +Required properties:
-> > > +- compatible         : Should be "microchip,ucs1002";
-> > > +- reg                        : I2C slave address
-> > > +
-> > > +Optional properties:
-> > > +- interrupts         : A list of interrupts lines present (could be either
-> > > +                       corresponding to A_DET# pin, ALERT# pin, or both)
-> > > +- interrupt-names    : A list of interrupt names. Should contain (if
-> > > +                       present):
-> > > +                       - "a_det" for line connected to A_DET# pin
-> > > +                       - "alert" for line connected to ALERT# pin
-> > > +                       Both are expected to be IRQ_TYPE_EDGE_BOTH
-> > > +Example:
-> > > +
-> > > +&i2c3 {
-> > > +     charger@32 {
-> > > +             compatible = "microchip,ucs1002";
-> > > +             pinctrl-names = "default";
-> > > +             pinctrl-0 = <&pinctrl_ucs1002_pins>;
-> > > +             reg = <0x32>;
-> > > +             interrupts-extended = <&gpio5 2 IRQ_TYPE_EDGE_BOTH>,
-> > > +                                   <&gpio3 21 IRQ_TYPE_EDGE_BOTH>;
-> >
-> > interrupts ?
-> 
-> Can't really use it here since it assumes single "interrupt-parent"
-> (we have gpio5 and gpio3 as parents above)
-> 
-Ah, ok. Thanks for the clarification.
+On Thu, May 2, 2019 at 11:34 PM Eric Wong <e@80x24.org> wrote:
+>
+> Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> > Sorry, I was trying a new setup at work. I should have tested it.
+> > My bad, I've checked this one.
+>
+> Thanks.  This is good w.r.t. epoll_pwait and ppoll when applied
+> to 5.0.11 (no fs/io_uring.c).
 
-Guenter
+Thanks. Al, would you be picking up this patch? I can resend it.
+
+> Can't think of anything which uses pselect or aio on my system;
+> but it looks right to me.
+>
+> > I've removed the questionable reported-by, since we're not sure if
+> > it is actually the same issue.
+>
+> Yes, I hope Omar can test this, too.
+
+Omar, would you be able to test this?
+
+Thanks,
+Deepa
