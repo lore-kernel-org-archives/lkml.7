@@ -2,122 +2,100 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B5AC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B939EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8DEE2081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849282081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:25:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="kiSSW7aS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfECTYK (ORCPT
+        id S1727179AbfECTZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 15:24:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfECTYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 15:24:10 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC5E02075C;
-        Fri,  3 May 2019 19:24:06 +0000 (UTC)
-Date:   Fri, 3 May 2019 15:24:05 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Message-ID: <20190503152405.2d741af8@gandalf.local.home>
-In-Reply-To: <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com>
-References: <20190501202830.347656894@goodmis.org>
-        <20190501203152.397154664@goodmis.org>
-        <20190501232412.1196ef18@oasis.local.home>
-        <20190502162133.GX2623@hirez.programming.kicks-ass.net>
-        <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com>
-        <20190502181811.GY2623@hirez.programming.kicks-ass.net>
-        <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
-        <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
-        <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 3 May 2019 15:25:55 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:36600 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfECTZz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 15:25:55 -0400
+Received: by mail-it1-f194.google.com with SMTP id v143so10766966itc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 12:25:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=rWmEMhzliXcvOCRw3oQALFdco9XMzYzIIL0waa/gPso=;
+        b=kiSSW7aSQ9bW2r5VTe/j9kH3X7KcjLczLQh7LQZXDPHzWSJ2bRleyY4/rcvXuGGtP8
+         h0Cyh08fdlQJAzSNhL1YqT2Kxlb/ota9cE18qbPPYJx7iiGOkRnakf0J0om8ImkSUOYF
+         UiaS8qsHn/tiKdxPqd/OkpsImAVBnwBKQ93x4A94EW7b2vqPuzVuY/orAVL0Nwxi4qjS
+         /OfVwDpBI0F6eq4eBLrJpZlttYqKhnPrAQs7DmJvWzdbTj/Uih6JMX6P50NbB8i3TRtn
+         QhggAYwBHI07vJ3JPo7Vf7CDi5UEsDs2p03KvzViTNWxL1wWURERsP9JeoF6XvCAJTQH
+         7s8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=rWmEMhzliXcvOCRw3oQALFdco9XMzYzIIL0waa/gPso=;
+        b=LtIjdu+bKq0Nv0i7nQNpgbqntdJymaXEEGGl55yea1XMBWlJR4vIuEaYn4XQcb6efU
+         obYbN/D3qkkM+6n/A1nTKJeYzgkEwXwhkC1Oun2N3hK+5hSWvDbEsdD5H7a/x5ywOYC6
+         edHnNEKywSKZngemO6LkWyGxUBS2mZCg04I7y0rYd7lEaqVz+gDIjlj8ZgN2Mm0Z8Jav
+         5bE84lDGH5DMKrffRTe4HNvRqzQZvV0UYgYqjD54P2wsmrAPVxIgivStBmSPJEBFjJZS
+         wjk6BCIzsq8I977Zq5fZ6dDRwvx7NJtoPAFoRSC143oJt/QEg2FHy4a7FUmoP1WTD2sl
+         gxNA==
+X-Gm-Message-State: APjAAAWi7uMDmwoNrSk4TlzBfHmupnk9/1SVgsjrtmdan1RMeW3ryqLs
+        +jd+X0e+37ZBPtvbaCu1fjvolw==
+X-Google-Smtp-Source: APXvYqxxG9koOb2FwS7bDsvoQXD5LW7BhJWcinIR8CpAmlMsv235RnRXDMhri4HVBO1mTbSuwEB++w==
+X-Received: by 2002:a24:6fc4:: with SMTP id x187mr8626527itb.122.1556911554423;
+        Fri, 03 May 2019 12:25:54 -0700 (PDT)
+Received: from localhost (74-95-18-198-Albuquerque.hfc.comcastbusiness.net. [74.95.18.198])
+        by smtp.gmail.com with ESMTPSA id o143sm1538223ito.18.2019.05.03.12.25.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 12:25:53 -0700 (PDT)
+Date:   Fri, 3 May 2019 12:25:52 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     James Morse <james.morse@arm.com>
+cc:     Yash Shah <yash.shah@sifive.com>, linux-edac@vger.kernel.org,
+        linux-riscv@lists.infradead.org, palmer@sifive.com, bp@alien8.de,
+        paul.walmsley@sifive.com, linux-kernel@vger.kernel.org,
+        aou@eecs.berkeley.edu, mchehab@kernel.org, sachin.ghadi@sifive.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com
+Subject: Re: [PATCH] edac: sifive: Add EDAC platform driver for SiFive SoCs
+In-Reply-To: <4072c812-d3bf-9ad5-2b30-6b2a5060bb55@arm.com>
+Message-ID: <alpine.DEB.2.21.9999.1905031206450.4777@viisi.sifive.com>
+References: <1556795761-21630-1-git-send-email-yash.shah@sifive.com> <1556795761-21630-2-git-send-email-yash.shah@sifive.com> <4072c812-d3bf-9ad5-2b30-6b2a5060bb55@arm.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 May 2019 13:49:29 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hi James,
 
-> On Thu, May 2, 2019 at 1:22 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > Something like so; it boots; but I could've made some horrible mistake
-> > (again).  
-> 
-> This actually looks much better to me.
-> 
-> Maybe it's more lines (I didn't check), but it's a lot simpler in that
-> now the magic of the int3 stack doesn't get exposed to anything else.
-> 
-> We *could* also make this kernel-mode-only do_int3() be a special
-> function, and do something like
-> 
->         # args: pt_regs pointer (no error code for int3)
->         movl %esp,%eax
->         # allocate a bit of extra room on the stack, so that
-> 'kernel_int3' can move the pt_regs
->         subl $8,%esp
->         call kernel_int3
->         movl %eax,%esp
-> 
-> and not do any stack switching magic in the asm code AT ALL. We'd do
-> 
->     struct pt_regs *kernel_int3(struct pt_regs *regs)
->     {
->         ..
->         return regs;
->     }
-> 
-> and now you the rule for call emulation ends up being that you need to
-> "memmove()" the ptregs up and down properly, and return the new
-> pt_regs pointer.
-> 
-> Hmm? That would simplify the asm code further, but some people might
-> find it objectionable?
-> 
+On Thu, 2 May 2019, James Morse wrote:
 
-The problem with this approach is that it would require doing the same
-for x86_64, as the int3 C code is the same for both. And that may be a
-bit more difficult on the x86_64 side because it's all done with a
-simple flag in the idtentry macro to add the gap.
+> Having an separately posted dependency like this is tricky, as this code can't be
+> used/tested until the other bits are merged.
 
--- Steve
+...
+
+> Looks good to me. I think this patch should go with its two dependencies, I'm not sure why
+> it got split off...
+
+The split was due to my suggestion to Yash, I think.  The motivation was 
+to decouple the L2 cache controller driver's journey upstream from the 
+EDAC driver's upstream path.  The patches will go up via separate trees, 
+so the idea was to avoid blocking the L2 cache controller driver on the 
+EDAC driver review path.
+
+Thanks for your review,
+
+
+- Paul
