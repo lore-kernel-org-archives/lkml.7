@@ -2,84 +2,81 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22A8C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1870C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCDA2087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837B52081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:40:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfECPjN (ORCPT
+        id S1727960AbfECPkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 11:39:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56996 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726476AbfECPjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 11:39:12 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 966AC3092649;
-        Fri,  3 May 2019 15:39:12 +0000 (UTC)
-Received: from redhat.com (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9FDB35C8BC;
-        Fri,  3 May 2019 15:39:11 +0000 (UTC)
-Date:   Fri, 3 May 2019 11:39:09 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] livepatch: Remove custom kobject state handling and
- duplicated code
-Message-ID: <20190503153909.GD24094@redhat.com>
-References: <20190503132625.23442-1-pmladek@suse.com>
+        Fri, 3 May 2019 11:40:53 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42417 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfECPkx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 11:40:53 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f23so5663250otl.9
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 08:40:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eFYEU9GgCBN7KdQ5dA8SVxpvDRzvxb6cnqoUyye2asw=;
+        b=Bj4FvsMjsIKHrttkhRGkZg81ACxgeEM1XCfA/kNWrpCtZNMvmeSvJoGJJUoPM0l/fU
+         4xJTSp4a62/ZRf2RIMDQN6j2mt/4Z37CjTUL6GbuGu/603v5OCWtM3Dqdq1onCbO2hwK
+         A4c2dN3aV/IfRSTSADVMbJxaE/wX8RTtk5p2n0Vu5645WR5+Rgedi8FHdnNbPBTJtI4j
+         crNkOq75w2kUGl31ksIoRx6DXhNDpD9FAtpRRYcaH3dOIJLyVaQJN9Iv5nW820XaXT2S
+         oOYsfZ6k9qKvjRk7d8V6KVZm461zRaTCyyOGYLAAXyHgyfSqHgmjYrSurknmYrfEuYRx
+         cOxQ==
+X-Gm-Message-State: APjAAAUvgaNyFAw8oDxvc3uG7j3zCUd4WKCOFnJ/HkUf5Km6W+N4eQQB
+        3M2hV1okmZowwgDTCgVm2/DQ/DzNVJPmKuE78RKEmw==
+X-Google-Smtp-Source: APXvYqwug75Har1bmPTcDzwSR3mUqYlYW1QvAU/CymzUAVxIora6jd/Tt6TDWV/xdpOBUWK0r1b4epSunToG1AZFWXY=
+X-Received: by 2002:a05:6830:1156:: with SMTP id x22mr356724otq.241.1556898052548;
+ Fri, 03 May 2019 08:40:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190503132625.23442-1-pmladek@suse.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 03 May 2019 15:39:12 +0000 (UTC)
+References: <1556824391-24060-1-git-send-email-jsavitz@redhat.com>
+ <1556824391-24060-3-git-send-email-jsavitz@redhat.com> <b32818a591a74efd88dd920fba530a8b@AcuMS.aculab.com>
+In-Reply-To: <b32818a591a74efd88dd920fba530a8b@AcuMS.aculab.com>
+From:   Joel Savitz <jsavitz@redhat.com>
+Date:   Fri, 3 May 2019 11:40:41 -0400
+Message-ID: <CAL1p7m4UAx7ShwuDUWBvVJkvGNKX5qsR4E+TOLyy9K=sNxY94A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] prctl.2: Document the new PR_GET_TASK_SIZE option
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Jann Horn <jannh@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 03:26:23PM +0200, Petr Mladek wrote:
-> Tobin's patch[1] uncovered that the livepatching code handles kobjects
-> a too complicated way.
-> 
-> The first patch removes the unnecessary custom kobject state handling.
-> 
-> The second patch is an optional code deduplication. I did something
-> similar already when introducing the atomic replace. But it was
-> not considered worth it. There are more duplicated things now...
-> 
-> [1] https://lkml.kernel.org/r/20190430001534.26246-1-tobin@kernel.org
-> 
-> 
-> Petr Mladek (2):
->   livepatch: Remove custom kobject state handling
->   livepatch: Remove duplicated code for early initialization
-> 
->  include/linux/livepatch.h |  3 --
->  kernel/livepatch/core.c   | 86 ++++++++++++++++++++---------------------------
->  2 files changed, 37 insertions(+), 52 deletions(-)
-> 
-> -- 
-> 2.16.4
-> 
+On Fri, May 3, 2019 at 7:20 AM David Laight <David.Laight@aculab.com> wrote:
+> Shouldn't this say what the value is?
+> ISTR a recent patch to change the was the 'used to be constant' TASK_SIZE is defined.
+> I think it might be 'The highest userspace virtual address the current
+> process can use.' But I might be wrong.
 
-For the series,
-
-Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-
--- Joe
+I believe you are correct David. I will add this information to the
+manpage in the upcoming v3.
+Best,
+Joel Savitz
