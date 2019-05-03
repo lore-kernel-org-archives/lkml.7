@@ -2,162 +2,164 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D380BC004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB21C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9914E206E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2512075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="kqskyXzr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDskn1YS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfECXcS (ORCPT
+        id S1726620AbfECXfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 19:32:18 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35674 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfECXcS (ORCPT
+        Fri, 3 May 2019 19:35:17 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41230 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfECXfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 19:32:18 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h1so3445184pgs.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 16:32:17 -0700 (PDT)
+        Fri, 3 May 2019 19:35:16 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v23so5696830oif.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 16:35:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=TtFvUcdRlwxjJeP9GJ9LZ/wpYtYluyY83Ajo3n2tLmk=;
-        b=kqskyXzrfDnxR77Tks5uSUi+a2XhUZmNpDID3r72qxt/NRxfhrjv0CokHNdtd+a6cl
-         m7alBdhtieul6RlJNw/MTLNWYFtHDYii/+BV2m5+g/sk4qcggR68NCRigyzZvZrhAFQ/
-         MnZmbfiAPykM13Tz0riPz34Eir1qlJuTrfUVeKGGZ+zsYPouJsaaPHyrhL0hyqHTzKd7
-         BUTkKCln6bRieJYk98qtx4OGov0CJzhFT/zakqd68j/M1z3BunVYca4gMFp7sx/JseJK
-         WP3tnvFsi89qihVYRc7m8QPwHNDjiD/+ifQkuvMSRrySXIr/5M/4Xqv5sTSAj0uMkVZM
-         Y/bA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MLniKeyCZOpahcUdSYJAe+ot7SuFR+G7B9LsqPznig0=;
+        b=HDskn1YS7k1QYZ+dsJLnQNeCPcK16/2pTj9ez8EsQ+gInQ3GZ0BR0iMYwxt27t5Q08
+         hqpBaeBjwOKtVQgCsUJvamW67feFI3qlTGT1KcmHb1GNFq6dCzpwgWTQP/JzQUPCoh2n
+         gh9O0YLeaKKrsmhKadRh0K76x6bY8P9sjfUVyINU6ITXamAF6EGiGsKDgBzi64vXN4ct
+         bI3LFVghfyoCDK7Dz4t2VyfzUyc9GObLwk+M40fnSIHaNJsKpyVb0A/uTNBX6Qn6G0yU
+         J5rd391xjjIx53CQ+uUMu0rkwlGPR4eJbG8SVKyh/iDNDWmPx94d8aD8Aa44bL92YFsJ
+         CikQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=TtFvUcdRlwxjJeP9GJ9LZ/wpYtYluyY83Ajo3n2tLmk=;
-        b=MNNwoQb49Nhg61JfUbuvZQOQtItUZ055UUcwTlYS1gR8ul8c4Z9g9z6nmgziL1BYbP
-         mXrmsRdRD/o2piF16NRlHfiYfFr5NRd3s5Ulj06V371SrgieKHCp0Y1DRv2R78sLJVMo
-         Y7snWV8ceXootGCQdluv1g/d6fRBuB+DYhmAD5iVHkfj+IxoZTW+x/ujNTSdqBZ0uLJE
-         UouA7Jst4tPhqN8TahpB9SJhzDDs4y6d08CedDN3cPvvzJQDHDu1ozF3HEeUv2Ua6CBJ
-         mF/BIG7ASjcyIFn+YVKfqQ+mvQURe9t8/3PeGvBbzlHx3yuMJUuqTfvIQcgs1Nos2t0B
-         I2AQ==
-X-Gm-Message-State: APjAAAUydso4onnFTeB4wnYgz8IVrqrcBye7gCR1zr4Lnkl070vIReAL
-        IGJN24yGzgO+3Aj4k6bYB+zSLQ==
-X-Google-Smtp-Source: APXvYqyt9qFX7ekjL0W2h6vNZaNPpMFfvQPEWar+kAfFHxSiKk+BiVATEsFBTIEGtB7ggV2iwT09kw==
-X-Received: by 2002:a63:ef04:: with SMTP id u4mr7647580pgh.96.1556926337031;
-        Fri, 03 May 2019 16:32:17 -0700 (PDT)
-Received: from [10.145.97.154] ([12.53.65.170])
-        by smtp.gmail.com with ESMTPSA id q17sm5403159pfi.185.2019.05.03.16.32.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 16:32:16 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <CAHk-=wjZDhwStWvioV7totCnZfp74bqH0y1UJxkmFfdLg48wDA@mail.gmail.com>
-Date:   Fri, 3 May 2019 16:32:15 -0700
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <93546F2D-0DF6-4E6A-98B0-BA49491C00CC@amacapital.net>
-References: <20190501202830.347656894@goodmis.org> <20190501203152.397154664@goodmis.org> <20190501232412.1196ef18@oasis.local.home> <20190502162133.GX2623@hirez.programming.kicks-ass.net> <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com> <20190502181811.GY2623@hirez.programming.kicks-ass.net> <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com> <20190502202146.GZ2623@hirez.programming.kicks-ass.net> <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com> <20190503152405.2d741af8@gandalf.local.home> <CAHk-=wiA-WbrFrDs-kOfJZMXy4zMo9-SZfk=7B-GfmBJ866naw@mail.gmail.com> <2962A4E4-3B9F-4195-9C6D-9932809D98F9@amacapital.net> <CAHk-=wjZDhwStWvioV7totCnZfp74bqH0y1UJxkmFfdLg48wDA@mail.gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MLniKeyCZOpahcUdSYJAe+ot7SuFR+G7B9LsqPznig0=;
+        b=IGNZeKHNaXf6jhlLZSscPKMGrDfRV50u4QFAE5VrG9Xf9g5eLhVXVTLAxMU1Qx5WaL
+         wuF7qfjwmHi4Ie46A75F33w9zdFIn6LfzlZxgue1Tb3B1JgCWC/BylLBskXntS5p0Cr/
+         fap9H5sZ54tLSBeqCAJJkgpMf//DyV09EIV/pNnBNnj5ASG11CQk17Akud/4MGY3lFMs
+         K3IfTnabv24LeCLpT9S9iu5Gmx/W16fbrq0jfFHRfmMIkAdCno1TNFV6zwrA2OHGIlMM
+         6SHcojs4q3k9BX2zYSIiPAehzQjv7D4LM8zRCyi5nbdSRFA17Pm5Iqxz6M00VHXhKTHb
+         kcZg==
+X-Gm-Message-State: APjAAAVViCsV64EEYVScDbOt0tOcjWRqWgKh4fGbQ7vO5STMtLShw8cE
+        ojyLgzVotUfc5HHiPp/TbV6Uh7s86bl2CkYL2Eh7jg==
+X-Google-Smtp-Source: APXvYqy2Lu0/rrQmCa8ADPuIDsyZVIbwSsApFiDq4fylfiz6mfnP/sccRR8UgWJBV8TXH5UUr/Z/vBw+6dAjjeorUoo=
+X-Received: by 2002:aca:4f10:: with SMTP id d16mr875911oib.17.1556926515368;
+ Fri, 03 May 2019 16:35:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <s5hsgu0ihyg.wl-tiwai@suse.de> <EksOpJxc6GB@mike.franken.de>
+ <20190430090021.GF26516@lahna.fi.intel.com> <CAJZ5v0j_fYqtMv07C-V_9fCJ6=1ec3GjvT2M7PXVNSbZpoM67Q@mail.gmail.com>
+ <20190502114839.GC24696@kroah.com>
+In-Reply-To: <20190502114839.GC24696@kroah.com>
+From:   Furquan Shaikh <furquan@google.com>
+Date:   Fri, 3 May 2019 16:35:02 -0700
+Message-ID: <CAEGmHFFGpUmK1VitkUxqXL29dBrKwbceT0pEOeR_7+_4+eLzvA@mail.gmail.com>
+Subject: Re: [REGRESSION 5.0.8] Dell thunderbolt dock broken (xhci_hcd and thunderbolt)
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>, mh@mike.franken.de,
+        Lukas Wunner <lukas@wunner.de>, Takashi Iwai <tiwai@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>, ckellner@redhat.com,
+        Jiri Slaby <jslaby@suse.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Robert Moore <robert.moore@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 2, 2019 at 4:48 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Apr 30, 2019 at 11:37:48AM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Apr 30, 2019 at 11:00 AM Mika Westerberg
+> > <mika.westerberg@linux.intel.com> wrote:
+> > >
+> > > +Rafael, Furquan and linux-acpi
+> > >
+> > > (The original thread is here https://lore.kernel.org/lkml/s5hy33siofw.wl-tiwai@suse.de/T/#u)
+> > >
+> > > On Tue, Apr 30, 2019 at 10:39:00AM +0200, Michael Hirmke wrote:
+> > > > Hi Takashi,
+> > > >
+> > > > [...]
+> > > > >>> I also have XPS 9370 but not that particular dock. I will check tomorrow
+> > > > >>> if I can reproduce it as well.
+> > > > >>
+> > > > >> There aren't too many changes between 5.0.7 and 5.0.8 that touch
+> > > > >> PCI/ACPI. This is just a shot in the dark but could you try to revert:
+> > > > >>
+> > > > >>   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.gi
+> > > > >>   t/commit/?h=linux-5.0.y&id=da6a87fb0ad43ae811519d2e0aa325c7f792b13a
+> > > > >>
+> > > > >> and see if it makes any difference?
+> > > >
+> > > > >OK, I'm building a test kernel package with the revert in OBS
+> > > > >home:tiwai:bsc1133486 repo.  A new kernel will be
+> > > > >kernel-default-5.0.10-*g8edeab8:
+> > > > >  http://download.opensuse.org/repositories/home:/tiwai:/bsc1133486/standard/
+> > > >
+> > > > >Michael, once when the new kernel is ready, please give it a try.
+> > > >
+> > > > as far as I can see, state is back to normal with this kernel.
+> > > > No more error messages or crashing modules and all devices seem to work
+> > > > as expected.
+> > > > Only thing is, that the external devices connected to the Thunderbolt
+> > > > dock are coming up a little bit slower than with 5.0.7 - but this is
+> > > > nothing, I'd worry about.
+> > >
+> > > Thanks for testing.
+> > >
+> > > Rafael, it seems that commit c8b1917c8987 ("ACPICA: Clear status of GPEs
+> > > before enabling them") causes problem with Thunderbolt controllers if
+> > > you boot with device (dock) connected.
+> > >
+> > > I think the reason is the same that got fixed in v4.14 with commit
+> > > ecc1165b8b74 ("ACPICA: Dispatch active GPEs at init time") which the
+> > > above commit essentially undoes if I understand it correctly.
+> >
+> > OK, I'll queue up a revert of that one then, thanks!
+> >
+> > Erik, I think that commit c8b1917c8987 has been picked up by the
+> > upstream ACPICA already.  If I'm not mistaken, it needs to be reverted
+> > from there as well.
+>
+> I've queued the revert up in the stable trees as it has hit Linus's tree
+> now, and will push out a new round of stable kernels soon.
+>
+> thanks,
+>
+> greg k-h
 
+Thanks for reporting the issue and apologize for the breakage. When I
+pushed the patch, my understanding was that the device drivers do not
+depend on stale GPE events to take any action.
 
-> On May 3, 2019, at 4:16 PM, Linus Torvalds <torvalds@linux-foundation.org>=
- wrote:
->=20
->> On Fri, May 3, 2019 at 3:55 PM Andy Lutomirski <luto@amacapital.net> wrot=
-e:
->>=20
->> But I think this will end up worse than the version where the entry code f=
-ixes it up.  This is because, if the C code moves pt_regs, then we need some=
- way to pass the new pointer back to the asm.
->=20
-> What? I already posted that code. Let me quote it again:
->=20
-> Message-ID: <CAHk-=3Dwh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gm=
-ail.com>
->=20
->        # args: pt_regs pointer (no error code for int3)
->        movl %esp,%eax
->        # allocate a bit of extra room on the stack, so that
->        # 'kernel_int3' can move the pt_regs
->        subl $8,%esp
->        call kernel_int3
->        movl %eax,%esp
->=20
-> It's that easy (this is with the assumption that we've already applied
-> the "standalone simple int3" case, but I think the above might work
-> even with the current code model, just the "call do_int3" needs to
-> have the kernel/not-kernel distinction and do the above for the kernel
-> case)
->=20
-> That's *MUCH* easier than your code to move entries around on the
-> stack just as you return, and has the advantage of not changing any
-> C-visible layout.
->=20
-> The C interface looks like this
->=20
->    /* Note: on x86-32, we can move 'regs' around for push/pop emulation */=
+I am curious to understand the behavior for the thunderbolt device
+since I do not have one to test with. The failure seems to be a result
+of either having a edge-triggered interrupt or a pulse interrupt which
+indicates some kind of ready condition to the kernel driver. All the
+runtime GPEs seem to be initialized as part of acpi_init before ACPI
+bus is scanned. So, is this some special kind of requirement for
+thunderbolt that requires GPE enabled before the device can actually
+be probed. And so the GPEs going active before being enabled are then
+used as a way to call into ACPI Method to enable something which is
+essential for probing of device?
 
->    struct pt_regs *kernel_int3(struct pt_regs *regs)
->    {
->        ..
->        .. need to pass regs to emulation functions
->        .. and call emulation needs to return it
->        ..
->        return regs;
->    }
->=20
-> and I just posted as a response to Stephen the *trivial* do_int3()
-> wrapper (so that x86-64 doesn't need to care), and the *trivial* code
-> to actually emulate a call instruction.
->=20
-> And when I say "trivial", I obviously mean "totally untested and
-> probably buggy", but it sure seems *simple*.,
->=20
-> Notice? Simple and minimal changes to entry code that only affect
-> int3, and nothing else.
->=20
-> =20
-
-I can get on board with this.=
+The other question I have is given that handling of GPE events that
+were active before being enabled is required at least for some set of
+devices (e.g. thunderbolt), what is a good way to solve the original
+problem that was being addressed by the patch being reverted i.e.
+stale events resulting in spurious wakes on wakeup GPEs. One way I can
+think of is clearing the status of GPEs when they are setup for
+wake(acpi_setup_gpe_for_wake). What do you think?
