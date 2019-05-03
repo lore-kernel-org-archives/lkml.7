@@ -2,79 +2,109 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A789BC04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871ADC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA58206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:50:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556902231;
-	bh=2+s0bTibuORYAqBiFfI2d9J94Yd6RcBiUb5f1ctTG3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vFD7PnXbvPQavee3VJSQJ+KEmhYRtGf3UgbDA8QyAmmEHDopZc7bNXUFysYlZQCqH
-	 m3SI3kvqIswmtRgqj9KSaNLdhJThm39dFwFbr1ivlUSXMSlYsFIhrbmMiRBIuiLAab
-	 8GtO6tn8Ajm3wXNgMHwPVepxXKvwKJ6REwYnELA4=
+	by mail.kernel.org (Postfix) with ESMTP id 56DF2206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:51:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbfECQua (ORCPT
+        id S1728616AbfECQvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 12:50:30 -0400
-Received: from mga09.intel.com ([134.134.136.24]:43658 "EHLO mga09.intel.com"
+        Fri, 3 May 2019 12:51:23 -0400
+Received: from foss.arm.com ([217.140.101.70]:37022 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbfECQua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 12:50:30 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 May 2019 09:50:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,426,1549958400"; 
-   d="scan'208";a="343151618"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga005.fm.intel.com with ESMTP; 03 May 2019 09:50:28 -0700
-Date:   Fri, 3 May 2019 10:44:46 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Frederick Lawler <fred@fredlawl.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "lukas@wunner.de" <lukas@wunner.de>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "mr.nuke.me@gmail.com" <mr.nuke.me@gmail.com>,
-        "liudongdong3@huawei.com" <liudongdong3@huawei.com>,
-        "thesven73@gmail.com" <thesven73@gmail.com>
-Subject: Re: [PATCH v2 2/9] PCI/DPC: Prefix dmesg logs with PCIe service name
-Message-ID: <20190503164446.GD30291@localhost.localdomain>
-References: <20190503035946.23608-1-fred@fredlawl.com>
- <20190503035946.23608-3-fred@fredlawl.com>
+        id S1727676AbfECQvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 12:51:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8229A15A2;
+        Fri,  3 May 2019 09:51:22 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C9913F557;
+        Fri,  3 May 2019 09:51:15 -0700 (PDT)
+Date:   Fri, 3 May 2019 17:51:13 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>, Kuehling@google.com,
+        Felix <Felix.Kuehling@amd.com>, Deucher@google.com,
+        Alexander <Alexander.Deucher@amd.com>, Koenig@google.com,
+        Christian <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v14 08/17] mm, arm64: untag user pointers in
+ get_vaddr_frames
+Message-ID: <20190503165113.GJ55449@arrakis.emea.arm.com>
+References: <cover.1556630205.git.andreyknvl@google.com>
+ <8e20df035de677029b3f970744ba2d35e2df1db3.1556630205.git.andreyknvl@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190503035946.23608-3-fred@fredlawl.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <8e20df035de677029b3f970744ba2d35e2df1db3.1556630205.git.andreyknvl@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 08:59:39PM -0700, Frederick Lawler wrote:
-> +#define dev_fmt(fmt) "DPC: " fmt
+On Tue, Apr 30, 2019 at 03:25:04PM +0200, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
+> 
+> get_vaddr_frames uses provided user pointers for vma lookups, which can
+> only by done with untagged pointers. Instead of locating and changing
+> all callers of this function, perform untagging in it.
+> 
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>  mm/frame_vector.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/frame_vector.c b/mm/frame_vector.c
+> index c64dca6e27c2..c431ca81dad5 100644
+> --- a/mm/frame_vector.c
+> +++ b/mm/frame_vector.c
+> @@ -46,6 +46,8 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
+>  	if (WARN_ON_ONCE(nr_frames > vec->nr_allocated))
+>  		nr_frames = vec->nr_allocated;
+>  
+> +	start = untagged_addr(start);
 > +
+>  	down_read(&mm->mmap_sem);
+>  	locked = 1;
+>  	vma = find_vma_intersection(mm, start, start + 1);
 
-> @@ -110,7 +111,7 @@ static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
-> +		pci_warn(pdev, "DPC root port still busy\n");
+Is this some buffer that the user may have malloc'ed? I got lost when
+trying to track down the provenience of this buffer.
 
-> @@ -229,18 +229,17 @@ static irqreturn_t dpc_handler(int irq, void *context)
-> +	pci_warn(pdev, "DPC %s detected\n",
-
-> @@ -328,11 +327,11 @@ static int dpc_probe(struct pcie_device *dev)
-> +	pci_info(pdev, "DPC error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
-
-Since you've already prefixed each print with "DPC: ", the extra "DPC"
-in the above prints is redundant.
+-- 
+Catalin
