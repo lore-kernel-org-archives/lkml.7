@@ -2,126 +2,170 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68848C004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 489FAC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36D68206E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:14:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eREjwxSw"
+	by mail.kernel.org (Postfix) with ESMTP id 23677206E0
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfECWOr (ORCPT
+        id S1727105AbfECWPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 18:14:47 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39999 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfECWOq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 18:14:46 -0400
-Received: by mail-qk1-f196.google.com with SMTP id w20so4584318qka.7;
-        Fri, 03 May 2019 15:14:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XY7o10BOh3Ussnn5GQ0UW2n/49hS/5+Ve7RxK2jXxNA=;
-        b=eREjwxSw2EQeXDa6ksr5nzPOyVNCTRHxcTWHOnVQB7xAzBXKbRlBz1u2a7CTKV3ahr
-         uwpsFRonSG8RzXz9Q++OMESMD0wEBw7K8bRAmbByfVG5IL3iqFWRzhC0NHM6HJKkuNBV
-         fNxyn4sVWRcJcKF54kGwRhha/HztOU80rQBKjaHKijtVABONs6jEpGBapMrtzmLjcSYA
-         3oABiLWxYY23G7oUSdA0GPDx0cOr//BkHKDp/vJyvLeAAbAwjDHJnt0ny4AhDsw6efqY
-         7Ug57FMsTz/xaNTWZIPBUlmtH8Q5sG88jy7XuSYFxJTbgQyORvCmiSn8pp9V5SmQ2zQ5
-         no1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XY7o10BOh3Ussnn5GQ0UW2n/49hS/5+Ve7RxK2jXxNA=;
-        b=Ntw/FqLiDez9IgIe43EjHbdgXFi7I4FOB2TEV4CTYWeHJmFsztoetIkvGg5P+YcalG
-         rv7J0cUcz+vwo2zJ+LBh+5PujijEX95UEOwWMng2X9KpteOaNc3/0PreTGjzn7NKRTLn
-         MfCUB4x2cQ09LuTXqbV17qpnbzg3WzCENaZNK+8BofQhC4iMV6NImaILGxRnT0ZsXBR5
-         4poXyde6tGoPHHQ8mofblLlkYf6n1s2oW1aKOH613/zunXbGwV2fV06kNWk062F52SXn
-         Ss2H3Z+GnyHO4jRR3Chdkq8O4OosEhDXeAFKS5FSX3QK1hNRXauGELX+GuzXNZWyg/bs
-         JCwQ==
-X-Gm-Message-State: APjAAAVpkXszw522e++ozdQ/dCF5fW4Rmy7Goo48JwZcnQRIZJf2bQRb
-        8/1u9HftBgQjO7I6oLJCyw0=
-X-Google-Smtp-Source: APXvYqy5/bIS6yRa4NkV4HaJxxsvNL19MtRuXYXfmxFxNLAlDYxjEuZ0SK3X0Ba3xKcP90ctdRWWIw==
-X-Received: by 2002:a37:2f05:: with SMTP id v5mr10123294qkh.157.1556921685702;
-        Fri, 03 May 2019 15:14:45 -0700 (PDT)
-Received: from smtp.gmail.com ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id 33sm1842035qtg.94.2019.05.03.15.14.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 03 May 2019 15:14:44 -0700 (PDT)
-Date:   Fri, 3 May 2019 19:14:33 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Barry Song <21cnbao@gmail.com>
-Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH 2/4] staging: iio: ad7150: use FIELD_GET and GENMASK
-Message-ID: <7f7d36348bca1de25bd70350b7c665be6441250f.1556919363.git.melissa.srw@gmail.com>
-References: <cover.1556919363.git.melissa.srw@gmail.com>
+        Fri, 3 May 2019 18:15:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48614 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726042AbfECWPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 18:15:07 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 527C4308425B;
+        Fri,  3 May 2019 22:15:06 +0000 (UTC)
+Received: from x230.aquini.net (ovpn-120-150.rdu2.redhat.com [10.10.120.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 10FD65C582;
+        Fri,  3 May 2019 22:15:00 +0000 (UTC)
+Date:   Fri, 3 May 2019 18:14:59 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Jann Horn <jannh@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH v3 1/2] kernel/sys: add PR_GET_TASK_SIZE option to
+ prctl(2)
+Message-ID: <20190503221458.GC10302@x230.aquini.net>
+References: <1556907021-29730-1-git-send-email-jsavitz@redhat.com>
+ <1556907021-29730-2-git-send-email-jsavitz@redhat.com>
+ <20190503210831.GB5887@yury-thinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1556919363.git.melissa.srw@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190503210831.GB5887@yury-thinkpad>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 03 May 2019 22:15:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the bitfield macro FIELD_GET, and GENMASK to do the shift and mask in
-one go. This makes the code more readable than explicit masking followed
-by a shift.
+On Fri, May 03, 2019 at 02:08:31PM -0700, Yury Norov wrote:
+> On Fri, May 03, 2019 at 02:10:20PM -0400, Joel Savitz wrote:
+> > When PR_GET_TASK_SIZE is passed to prctl, the kernel will attempt to
+> > copy the value of TASK_SIZE to the userspace address in arg2.
+> > 
+> > It is important that we account for the case of the userspace task
+> > running in 32-bit compat mode on a 64-bit kernel. As such, we must be
+> > careful to copy the correct number of bytes to userspace to avoid stack
+> > corruption.
+> > 
+> > Suggested-by: Yuri Norov <yury.norov@gmail.com>
+> 
+> I actually didn't suggest that. If you _really_ need TASK_SIZE to
+> be exposed, I would suggest to expose it in kernel headers. TASK_SIZE
+> is a compile-time information, and it may available for userspace at
+> compile time as well.
+> 
+> > Suggested-by: Alexey Dobriyan <adobriyan@gmail.com>
+> > Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> > ---
+> >  include/uapi/linux/prctl.h |  3 +++
+> >  kernel/sys.c               | 23 +++++++++++++++++++++++
+> >  2 files changed, 26 insertions(+)
+> > 
+> > diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> > index 094bb03b9cc2..2c261c461952 100644
+> > --- a/include/uapi/linux/prctl.h
+> > +++ b/include/uapi/linux/prctl.h
+> > @@ -229,4 +229,7 @@ struct prctl_mm_map {
+> >  # define PR_PAC_APDBKEY                        (1UL << 3)
+> >  # define PR_PAC_APGAKEY                        (1UL << 4)
+> > 
+> > +/* Get the process virtual memory size (i.e. the highest usable VM address) */
+> > +#define PR_GET_TASK_SIZE               55
+> > +
+> >  #endif /* _LINUX_PRCTL_H */
+> > diff --git a/kernel/sys.c b/kernel/sys.c
+> > index 12df0e5434b8..709584400070 100644
+> > --- a/kernel/sys.c
+> > +++ b/kernel/sys.c
+> > @@ -2252,6 +2252,26 @@ static int propagate_has_child_subreaper(struct task_struct *p, void *data)
+> >         return 1;
+> >  }
+> > 
+> > +static int prctl_get_tasksize(void __user *uaddr)
+> > +{
+> > +	unsigned long current_task_size, current_word_size;
+> > +
+> > +	current_task_size = TASK_SIZE;
+> > +	current_word_size = sizeof(unsigned long);
+> > +
+> > +#ifdef CONFIG_64BIT
+> > +	/* On 64-bit architecture, we must check whether the current thread
+> > +	 * is running in 32-bit compat mode. If it is, we can simply cut
+> > +	 * the size in half. This avoids corruption of the userspace stack.
+> > +	 */
+> > +	if (test_thread_flag(TIF_ADDR32))
+> 
+> It breaks build for all architectures except x86 since TIF_ADDR32 is
+> defined for x86 only.
 
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
----
- drivers/staging/iio/cdc/ad7150.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Or we could get TIF_32BIT also defined for x86 (same value of
+ TIF_ADDR32) and check for it instead. i.e.
 
-diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
-index 24601ba7db88..4ba46fb6ac02 100644
---- a/drivers/staging/iio/cdc/ad7150.c
-+++ b/drivers/staging/iio/cdc/ad7150.c
-@@ -5,6 +5,7 @@
-  * Copyright 2010-2011 Analog Devices Inc.
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/interrupt.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
-@@ -44,6 +45,9 @@
- #define AD7150_SN0_REG				0x16
- #define AD7150_ID_REG				0x17
- 
-+/* AD7150 masks */
-+#define AD7150_THRESHTYPE_MSK			GENMASK(6, 5)
-+
- /**
-  * struct ad7150_chip_info - instance specific chip data
-  * @client: i2c client for this device
-@@ -136,7 +140,7 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
- 	if (ret < 0)
- 		return ret;
- 
--	threshtype = (ret >> 5) & 0x03;
-+	threshtype = FIELD_GET(AD7150_THRESHTYPE_MSK, ret);
- 	adaptive = !!(ret & 0x80);
- 
- 	switch (type) {
--- 
-2.20.1
+...
+#if defined(CONFIG_64BIT) && defined(TIF_32BIT)
+	if (test_thread_flag(TIF_32BIT))
+... 
 
+which is also uglier and keeps adding unecessary complexity to a very
+simple task. At this point, I think we just should give up on trying
+this via prctl(2) and do it via /proc/<pid>/status instead. 
+
+
+> 
+> In comment to v2 I suggested you to stick to fixed-size data type to
+> avoid exactly this problem.
+> 
+> NACK
+> 
+> Yury
+> 
+> > +		current_word_size >>= 1;
+> > +#endif
+> > +
+> > +	return copy_to_user(uaddr, &current_task_size, current_word_size) ? -EFAULT : 0;
+> > +}
+> > +
+> >  int __weak arch_prctl_spec_ctrl_get(struct task_struct *t, unsigned long which)
+> >  {
+> >         return -EINVAL;
+> > @@ -2486,6 +2506,9 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+> >                         return -EINVAL;
+> >                 error = PAC_RESET_KEYS(me, arg2);
+> >                 break;
+> > +	case PR_GET_TASK_SIZE:
+> > +		error = prctl_get_tasksize((void *)arg2);
+> > +		break;
+> >         default:
+> >                 error = -EINVAL;
+> >                 break;
+> > --
+> > 2.18.1
