@@ -2,143 +2,220 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C4AC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D789C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35CA82089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:59:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Y6srGshK"
+	by mail.kernel.org (Postfix) with ESMTP id DFD62206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbfECL7F (ORCPT
+        id S1727756AbfECL7g convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:59:05 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:36864 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfECL7F (ORCPT
+        Fri, 3 May 2019 07:59:36 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44031 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbfECL7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:59:05 -0400
-Received: by mail-it1-f194.google.com with SMTP id r85so8588545itc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 04:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vDgYOPNAs5a7jn6rrh+mqlUAcW/QL6gqLTt3pqvnNY8=;
-        b=Y6srGshKU+8ofVAzr5oXPRlANIBEkdOrCHKBPiE3tUswNgNowbNADcWMckRUE5gkSL
-         9ukukehth9mBJJ/QJCpdkUMMW2+iAg10JbBAKpi7BjWy2OQ+HfalsNh4xdNDSsHWnKVY
-         6bANvGQZzE11Hw3Y7RiWx/Sk3RaGiUf3o+mJs=
+        Fri, 3 May 2019 07:59:36 -0400
+Received: by mail-qt1-f194.google.com with SMTP id g4so6276979qtq.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 04:59:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vDgYOPNAs5a7jn6rrh+mqlUAcW/QL6gqLTt3pqvnNY8=;
-        b=YLSDOIcbPQ1+VGrrcBiz0nyNrdsHRrJPpqh/GIPksLfUMS722oCVkklzwy0vOQ/ahf
-         VGPln1A6mWapnIw7cT5v7JDLh0UXn7zUpy93Kq3xghqvo7eCErNWyjDLCr9p0+OE1Prt
-         eVsrV8B768aa+9p8sN01WLP/UBzIWCNEMwQ7A3EJ+W2s9/gvqLJ8idMc8hpuCheRLaeH
-         i+8Ym4thsNVw2aZw/nreeACNtCw3xl5MLyD+m8N0dcp4eIXb9rzw9+Em2kVnMvZ7x1se
-         8GEGdoSjpqsVew7TlhAx+f7g7kNheo+W3dW1hNoCVR38upSp8BNxl/eWMLm2kFqExNHZ
-         kv3w==
-X-Gm-Message-State: APjAAAUD5ktpNG8qszDAt2czMgyKHWeeRaMIBrAz+TUHtbH1FE7nLRAw
-        h9KUf9wqSf01bBQsMwKnyT7zehmUcEbhMgHoCv1Ung==
-X-Google-Smtp-Source: APXvYqxogbylovsed3LC9Wji6QY3Bj1N0GsCs2SPDNY1RvVGOuqXHQj+rfQkbvVmWscSed3alM3kokBhRmxHN3Y8JlY=
-X-Received: by 2002:a24:70d5:: with SMTP id f204mr6307014itc.32.1556884744596;
- Fri, 03 May 2019 04:59:04 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BJ2Nma0ayITV/7zFNbju1tIRbVYaJofZ4T1/8somf/U=;
+        b=e3UngAGZWx4M/YS3NGgWHMP443ecqNqJ+DPJGqEiw824bPUEyZ0fSUSOGkXHRB1WbF
+         X//V/62lcnLV44rQ30egeY+bQkJD5wQbAuIsH7bcYqbInMIUHv/I4dtf1NgOPKl3AbOX
+         UCv+bXVmk6XTVh/vS8q82UVt84IrDIiu7Xi0fb+t/BZ7ao4pRQpg8pud7rfJReBfgViE
+         epWZ5OQEQKJQibKsFStlKxHXb2hdnqgsbY82wz9IZ14PrWnw9osKwDo5cuukhpaAzPnH
+         Sbxtsag7NPpcjrzlMVLwHgEGWF/UGrR0hacxFYeD39ruU2H8aVod5CN3l+cyOixiQbWD
+         HSOQ==
+X-Gm-Message-State: APjAAAUb1EZ2LKGreLxIolFj8NKts+ppyn67f4gPBwmknwJv/doLiVlp
+        MU9W7jWC7FO1v5l+JY1pkyj39f7Yq9sSpE8Yb+qttA==
+X-Google-Smtp-Source: APXvYqxMh+0PiGcGvjALmLEw6X/Eme68D81GXkdbFsI9kVxmRFSGj/l3mJakOVxQlxeKICSMOuSVBY8X92Rs3S06Nv4=
+X-Received: by 2002:a0c:be18:: with SMTP id k24mr5319347qvg.192.1556884774964;
+ Fri, 03 May 2019 04:59:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190413165418.27880-1-megous@megous.com> <20190413165418.27880-6-megous@megous.com>
-In-Reply-To: <20190413165418.27880-6-megous@megous.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Fri, 3 May 2019 17:28:53 +0530
-Message-ID: <CAMty3ZDx6NXyYhQehYT9geeGwAk2PZidiVMwVw1nnZJa3zwyOg@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v4 5/9] arm64: dts: allwinner: orange-pi-3:
- Enable ethernet
-To:     megous@megous.com
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-gpio@vger.kernel.org
+References: <20190502213639.7632-1-spaz16@wp.pl> <CAO-hwJLbFv3S9M5N+BKBuafj8H-vToy=2VQd=cvohmaTHLMC3A@mail.gmail.com>
+ <1a40ea07-368a-93f6-8335-dec7ae50bbf4@gmail.com>
+In-Reply-To: <1a40ea07-368a-93f6-8335-dec7ae50bbf4@gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Fri, 3 May 2019 13:59:23 +0200
+Message-ID: <CAO-hwJKNH7WoJV-X+egK5cJNNtxamh0L0e1er5dkiTt6KvrmSQ@mail.gmail.com>
+Subject: Re: [PATCH] HID: fix A4Tech horizontal scrolling
+To:     Igor Kushnir <igorkuo@gmail.com>,
+        Peter Hutterer <peter.hutterer@who-t.net>
+Cc:     =?UTF-8?B?QsWCYcW8ZWogU3pjenlnaWXFgg==?= <spaz16@wp.pl>,
+        Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 10:24 PM megous via linux-sunxi
-<linux-sunxi@googlegroups.com> wrote:
->
-> From: Ondrej Jirman <megous@megous.com>
->
-> Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
-> to the phy datasheet, both regulators need to be enabled at the same time,
-> but we can only specify a single phy-supply in the DT.
->
-> This can be achieved by making one regulator depedning on the other via
-> vin-supply. While it's not a technically correct description of the
-> hardware, it achieves the purpose.
->
-> All values of RX/TX delay were tested exhaustively and a middle one of the
-> working values was chosen.
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> index 17d496990108..6d6b1f66796d 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-> @@ -15,6 +15,7 @@
->
->         aliases {
->                 serial0 = &uart0;
-> +               ethernet0 = &emac;
->         };
->
->         chosen {
-> @@ -44,6 +45,27 @@
->                 regulator-max-microvolt = <5000000>;
->                 regulator-always-on;
->         };
-> +
-> +       /*
-> +        * The board uses 2.5V RGMII signalling. Power sequence to enable
-> +        * the phy is to enable GMAC-2V5 and GMAC-3V3 (aldo2) power rails
-> +        * at the same time and to wait 100ms.
-> +        */
-> +       reg_gmac_2v5: gmac-2v5 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "gmac-2v5";
-> +               regulator-min-microvolt = <2500000>;
-> +               regulator-max-microvolt = <2500000>;
-> +               startup-delay-us = <100000>;
-> +               enable-active-high;
-> +               gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
-> +
-> +               /* The real parent of gmac-2v5 is reg_vcc5v, but we need to
-> +                * enable two regulators to power the phy. This is one way
-> +                * to achieve that.
-> +                */
-> +               vin-supply = <&reg_aldo2>; /* GMAC-3V3 */
+Hi,
 
-The actual output supply pin name is GMAC-3V which has an input of
-VCC3V3-MAC (ie aldo2), if we compatible to schematics better to use
-the same, IMHO.
+On Fri, May 3, 2019 at 11:43 AM Igor Kushnir <igorkuo@gmail.com> wrote:
+>
+> Hi Benjamin,
+>
+> On 5/3/19 10:36 AM, Benjamin Tissoires wrote:
+> > Hi,
+> >
+> > On Thu, May 2, 2019 at 11:37 PM Błażej Szczygieł <spaz16@wp.pl> wrote:
+> >>
+> >> Since recent high resolution scrolling changes the A4Tech driver must
+> >> check for the "REL_WHEEL_HI_RES" usage code.
+> >>
+> >> Fixes: 2dc702c991e3774af9d7ce410eef410ca9e2357e (HID: input: use the
+> >> Resolution Multiplier for high-resolution scrolling)
+> >>
+> >> Signed-off-by: Błażej Szczygieł <spaz16@wp.pl>
+> >
+> > Thanks for the patch. I do not doubt this fixes the issues, but I
+> > still wonder if we should not export REL_HWHEEL_HI_RES instead of
+> > REL_HWHEEL events.
+>
+>
+> If you mean exporting REL_HWHEEL_HI_RES instead of REL_HWHEEL from
+> hid-a4tech.c, then it makes sense to me, though I do not know the code
+> well enough to be certain.
+
+Yep, that's what I meant. I am worried that userspace doesn't know
+well how to deal with a device that mixes the new and old REL_WHEEL
+events.
+
+>
+> Błażej and I have discussed the bug and the patch here:
+> https://bugzilla.kernel.org/show_bug.cgi?id=203369
+
+Oh cool.
+Then we should add: "Link:
+https://bugzilla.kernel.org/show_bug.cgi?id=203369" in the commit
+description.
+
+Also, given that the patch will likely see a v2, te format of the
+"Fixes" tag is not correct: see
+https://www.kernel.org/doc/html/v4.20/process/submitting-patches.html#describe-your-changes
+(I have been notified that I tend to not follow the rules here, so I
+am trying to do better here :-P )
+
+>
+> In summary: the patch fixes the bug for both our mice;
+> the documentation in input/event-codes.rst states that
+> REL_WHEEL, REL_HWHEEL "are legacy codes and REL_WHEEL_HI_RES and
+> REL_HWHEEL_HI_RES should be preferred where available."
+>
+> > Also, I can not figure out how the events are processed by the kernel.
+> > Could you attach a hid-recorder dump of the mouse wheels with
+> > hid-recorder from https://gitlab.freedesktop.org/libevdev/hid-tools ?
+> >
+> > This should give me a better view of the mouse, and I could also add
+> > it to the regression tests I am running for each commit.
+> >
+> > Cheers,
+> > Benjamin
+>
+> After launching hid-recorder for my A4Tech WOP-49Z mouse under kernel
+> 5.0.10 patched with Błażej's patch I:
+> * scrolled the vertical wheel down ("Wheel: -1");
+> * scrolled the vertical wheel up ("Wheel: 1");
+> * scrolled the horizontal wheel "left" ("Wheel: -1");
+> * scrolled the horizontal wheel "right" ("Wheel: 1").
+> Note that the horizontal wheel is physically scrolled just like the
+> vertical one in this mouse (forward/back), so "left" and "right" are the
+> effects these scrollings make in applications when the kernel supports
+> the mouse properly.
+>
+> $ sudo ./hid-recorder /dev/hidraw1
+> # A4Tech PS/2+USB Mouse
+> # 0x05, 0x01,                    // Usage Page (Generic Desktop)        0
+> # 0x09, 0x02,                    // Usage (Mouse)                       2
+> # 0xa1, 0x01,                    // Collection (Application)            4
+> # 0x09, 0x01,                    //  Usage (Pointer)                    6
+> # 0xa1, 0x00,                    //  Collection (Physical)              8
+> # 0x05, 0x09,                    //   Usage Page (Button)               10
+> # 0x19, 0x01,                    //   Usage Minimum (1)                 12
+> # 0x29, 0x07,                    //   Usage Maximum (7)                 14
+> # 0x15, 0x00,                    //   Logical Minimum (0)               16
+> # 0x25, 0x01,                    //   Logical Maximum (1)               18
+> # 0x75, 0x01,                    //   Report Size (1)                   20
+> # 0x95, 0x07,                    //   Report Count (7)                  22
+> # 0x81, 0x02,                    //   Input (Data,Var,Abs)              24
+> # 0x75, 0x01,                    //   Report Size (1)                   26
+> # 0x95, 0x01,                    //   Report Count (1)                  28
+> # 0x81, 0x01,                    //   Input (Cnst,Arr,Abs)              30
+> # 0x05, 0x01,                    //   Usage Page (Generic Desktop)      32
+> # 0x09, 0x30,                    //   Usage (X)                         34
+> # 0x09, 0x31,                    //   Usage (Y)                         36
+> # 0x09, 0x38,                    //   Usage (Wheel)                     38
+> # 0x15, 0x81,                    //   Logical Minimum (-127)            40
+> # 0x25, 0x7f,                    //   Logical Maximum (127)             42
+> # 0x75, 0x08,                    //   Report Size (8)                   44
+> # 0x95, 0x03,                    //   Report Count (3)                  46
+> # 0x81, 0x06,                    //   Input (Data,Var,Rel)              48
+> # 0xc0,                          //  End Collection                     50
+> # 0xc0,                          // End Collection                      51
+> #
+> R: 52 05 01 09 02 a1 01 09 01 a1 00 05 09 19 01 29 07 15 00 25 01 75 01
+> 95 07 81 02 75 01 95 01 81 01 05 01 09 30 09 31 09 38 15 81 25 7f 75 08
+> 95 03 81 06 c0 c0
+> N: A4Tech PS/2+USB Mouse
+> I: 3 09da 0006
+> #  Button: 0  0  0  0  0  0  0 | # | X:    0 | Y:    0 | Wheel:   -1
+> E: 000000.000000 4 00 00 00 ff
+> #  Button: 0  0  0  0  0  0  0 | # | X:    0 | Y:    0 | Wheel:   -1
+> E: 000000.071952 4 00 00 00 ff
+> #  Button: 0  0  0  0  0  0  0 | # | X:    0 | Y:    0 | Wheel:   -1
+> E: 000000.159957 4 00 00 00 ff
+> #  Button: 0  0  0  0  0  0  0 | # | X:    0 | Y:    0 | Wheel:    1
+> E: 000002.912232 4 00 00 00 01
+> #  Button: 0  0  0  0  0  0  0 | # | X:    0 | Y:    0 | Wheel:    1
+> E: 000002.952190 4 00 00 00 01
+> #  Button: 0  0  0  0  0  0  0 | # | X:    0 | Y:    0 | Wheel:    1
+> E: 000004.512359 4 00 00 00 01
+> #  Button: 0  0  0  0  0  0  0 | # | X:    0 | Y:    0 | Wheel:    1
+> E: 000004.584332 4 00 00 00 01
+> #  Button: 0  0  0  0  0  0  1 | # | X:    0 | Y:    0 | Wheel:   -1
+> E: 000007.528626 4 40 00 00 ff
+> #  Button: 0  0  0  0  0  0  1 | # | X:    0 | Y:    0 | Wheel:   -1
+> E: 000007.568577 4 40 00 00 ff
+> #  Button: 0  0  0  0  0  0  1 | # | X:    0 | Y:    0 | Wheel:   -1
+> E: 000008.256395 4 40 00 00 ff
+> #  Button: 0  0  0  0  0  0  1 | # | X:    0 | Y:    0 | Wheel:   -1
+> E: 000008.336669 4 40 00 00 ff
+> #  Button: 0  0  0  0  0  0  1 | # | X:    0 | Y:    0 | Wheel:   -1
+> E: 000008.400649 4 40 00 00 ff
+> #  Button: 0  0  0  0  0  0  1 | # | X:    0 | Y:    0 | Wheel:    1
+> E: 000010.936908 4 40 00 00 01
+> #  Button: 0  0  0  0  0  0  1 | # | X:    0 | Y:    0 | Wheel:    1
+> E: 000010.984864 4 40 00 00 01
+> #  Button: 0  0  0  0  0  0  1 | # | X:    0 | Y:    0 | Wheel:    1
+> E: 000011.056897 4 40 00 00 01
+> #  Button: 0  0  0  0  0  0  1 | # | X:    0 | Y:    0 | Wheel:    1
+> E: 000011.528936 4 40 00 00 01
+> #  Button: 0  0  0  0  0  0  1 | # | X:    0 | Y:    0 | Wheel:    1
+> E: 000011.616923 4 40 00 00 01
+>
+
+OK, thanks both of you for your logs, this is helpful.
+So just in case I need to come back later, the horizontal wheel is
+"just" the normal wheel plus a modifier in the report.
+
+Anyway, ideally, can we have a v2 of the patch with the 2 changes
+requested above in the commit message and the introduction of
+REL_HWHEEL_HI_RES events in addition to REL_HWHEEL?
+REL_HWHEEL_HI_RES should report `120*value` and we should also keep
+the reporting of REL_WHEEL as it is currently.
+
+Peter, I grepped in the hid code, and it seems hid-cypress.c is having
+the exact same issue. Sigh.
+
+Cheers,
+Benjamin
