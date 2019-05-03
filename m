@@ -2,258 +2,104 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FD7C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6521FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2AC2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:31:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="xeeC1yo1"
+	by mail.kernel.org (Postfix) with ESMTP id 3B1C12075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:31:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfECLbZ (ORCPT
+        id S1727635AbfECLbp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:31:25 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38423 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfECLbZ (ORCPT
+        Fri, 3 May 2019 07:31:45 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:23808 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726372AbfECLbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:31:25 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x43BVCJd2725244
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 3 May 2019 04:31:12 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x43BVCJd2725244
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556883073;
-        bh=cf74I/sWY6pLASeU5lOKvuvUosDetLt29NcqYLUt1BQ=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=xeeC1yo1PvZhVrU5is9W7tkwi7+3TeXNhzHLFb7EdxgCvVJUCGzlqTYinmBw5V3HW
-         vwrFtqtGZffQdkrmCn3L+dZSeHQGttTowUWi8SxXLAcq4+JK2uDtittOdMpauR9UfR
-         fPcd3YJoWvOfpdTQI+ezGaCEXo5GTXRRU17Ud2LYeMsYUXBlF3aBMLcLQ6cJ8NFMbJ
-         AKf/n9nRrpOkY6BUCiicNhUhT/Vu25ahXEHnPlduxfZSOo4UhmqhpQoPZA2qMx1k2I
-         DEOgONz5o6aVYtnp1DNikXf5B5DmxRJe6PcAoC4qw2l+7qVmrJYG+C0AgORxxy8F3T
-         8yRh6ANv0JmAg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x43BVCKN2725241;
-        Fri, 3 May 2019 04:31:12 -0700
-Date:   Fri, 3 May 2019 04:31:12 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nicholas Piggin <tipbot@zytor.com>
-Message-ID: <tip-65874bd36e6ae3028539e989bfb5c28ad457368e@git.kernel.org>
-Cc:     mingo@kernel.org, tglx@linutronix.de,
-        torvalds@linux-foundation.org, fweisbec@gmail.com,
-        peterz@infradead.org, npiggin@gmail.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com
-Reply-To: rafael.j.wysocki@intel.com, mingo@kernel.org, tglx@linutronix.de,
-          torvalds@linux-foundation.org, fweisbec@gmail.com,
-          peterz@infradead.org, linux-kernel@vger.kernel.org,
-          hpa@zytor.com, npiggin@gmail.com
-In-Reply-To: <20190411033448.20842-6-npiggin@gmail.com>
-References: <20190411033448.20842-6-npiggin@gmail.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] nohz_full: Allow the boot CPU to be nohz_full
-Git-Commit-ID: 65874bd36e6ae3028539e989bfb5c28ad457368e
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 3 May 2019 07:31:45 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-119-bsrUedipMsKCwape80AdzQ-1; Fri, 03 May 2019 12:31:41 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 3 May 2019 12:31:40 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 3 May 2019 12:31:40 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Cyrill Gorcunov' <gorcunov@gmail.com>,
+        Joel Savitz <jsavitz@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Jann Horn <jannh@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Yury Norov <norov.maillist@gmail.com>
+Subject: RE: [PATCH v2 1/2] kernel/sys: add PR_GET_TASK_SIZE option to
+ prctl(2)
+Thread-Topic: [PATCH v2 1/2] kernel/sys: add PR_GET_TASK_SIZE option to
+ prctl(2)
+Thread-Index: AQHVAYqqcxRhj7bMTkeIUrrm9JebiKZZRD3w
+Date:   Fri, 3 May 2019 11:31:40 +0000
+Message-ID: <6cf43408000149d98cc1683943c436cb@AcuMS.aculab.com>
+References: <1556830342-32307-1-git-send-email-jsavitz@redhat.com>
+ <1556830342-32307-2-git-send-email-jsavitz@redhat.com>
+ <20190502210922.GF2488@uranus.lan>
+ <CAL1p7m6eC3-99oFEyp0F1xn7qN4Vx+s-kHQXh14cMUWoVFqbWw@mail.gmail.com>
+ <20190503083149.GH2488@uranus.lan>
+In-Reply-To: <20190503083149.GH2488@uranus.lan>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: bsrUedipMsKCwape80AdzQ-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  65874bd36e6ae3028539e989bfb5c28ad457368e
-Gitweb:     https://git.kernel.org/tip/65874bd36e6ae3028539e989bfb5c28ad457368e
-Author:     Nicholas Piggin <npiggin@gmail.com>
-AuthorDate: Thu, 11 Apr 2019 13:34:48 +1000
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Fri, 3 May 2019 12:53:15 +0200
+From: Cyrill Gorcunov
+> Sent: 03 May 2019 09:32
+> On Thu, May 02, 2019 at 05:46:08PM -0400, Joel Savitz wrote:
+> > > Won't be possible to use put_user here? Something like
+> > >
+> > > static int prctl_get_tasksize(unsigned long __user *uaddr)
+> > > {
+> > >         return put_user(TASK_SIZE, uaddr) ? -EFAULT : 0;
+> > > }
+> >
+> > What would be the benefit of using put_user() over copy_to_user() in
+> > this context?
+> 
+> It is a common pattern to use put_user with native types, where
+> copy_to_user more biased for composed types transfer.
 
-nohz_full: Allow the boot CPU to be nohz_full
+It also removes all the crappy code that checks whether the
+kernel buffer is valid.
 
-Allow the boot CPU/CPU0 to be nohz_full. Have the boot CPU take the
-do_timer duty during boot until a housekeeping CPU can take over.
+	David
 
-This is supported when CONFIG_PM_SLEEP_SMP is not configured, or when
-it is configured and the arch allows suspend on non-zero CPUs.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-nohz_full has been trialed at a large supercomputer site and found to
-significantly reduce jitter. In order to deploy it in production, they
-need CPU0 to be nohz_full because their job control system requires
-the application CPUs to start from 0, and the housekeeping CPUs are
-placed higher. An equivalent job scheduling that uses CPU0 for
-housekeeping could be achieved by modifying their system, but it is
-preferable if nohz_full can support their environment without
-modification.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linuxppc-dev@lists.ozlabs.org
-Link: https://lkml.kernel.org/r/20190411033448.20842-6-npiggin@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/time/tick-common.c | 50 +++++++++++++++++++++++++++++++++++++++++++----
- kernel/time/tick-sched.c  | 34 ++++++++++++++++++++++----------
- 2 files changed, 70 insertions(+), 14 deletions(-)
-
-diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
-index df401463a191..e49e8091f9ac 100644
---- a/kernel/time/tick-common.c
-+++ b/kernel/time/tick-common.c
-@@ -46,6 +46,14 @@ ktime_t tick_period;
-  *    procedure also covers cpu hotplug.
-  */
- int tick_do_timer_cpu __read_mostly = TICK_DO_TIMER_BOOT;
-+#ifdef CONFIG_NO_HZ_FULL
-+/*
-+ * tick_do_timer_boot_cpu indicates the boot CPU temporarily owns
-+ * tick_do_timer_cpu and it should be taken over by an eligible secondary
-+ * when one comes online.
-+ */
-+static int tick_do_timer_boot_cpu __read_mostly = -1;
-+#endif
- 
- /*
-  * Debugging: see timer_list.c
-@@ -167,6 +175,26 @@ void tick_setup_periodic(struct clock_event_device *dev, int broadcast)
- 	}
- }
- 
-+#ifdef CONFIG_NO_HZ_FULL
-+static void giveup_do_timer(void *info)
-+{
-+	int cpu = *(unsigned int *)info;
-+
-+	WARN_ON(tick_do_timer_cpu != smp_processor_id());
-+
-+	tick_do_timer_cpu = cpu;
-+}
-+
-+static void tick_take_do_timer_from_boot(void)
-+{
-+	int cpu = smp_processor_id();
-+	int from = tick_do_timer_boot_cpu;
-+
-+	if (from >= 0 && from != cpu)
-+		smp_call_function_single(from, giveup_do_timer, &cpu, 1);
-+}
-+#endif
-+
- /*
-  * Setup the tick device
-  */
-@@ -186,12 +214,26 @@ static void tick_setup_device(struct tick_device *td,
- 		 * this cpu:
- 		 */
- 		if (tick_do_timer_cpu == TICK_DO_TIMER_BOOT) {
--			if (!tick_nohz_full_cpu(cpu))
--				tick_do_timer_cpu = cpu;
--			else
--				tick_do_timer_cpu = TICK_DO_TIMER_NONE;
-+			tick_do_timer_cpu = cpu;
-+
- 			tick_next_period = ktime_get();
- 			tick_period = NSEC_PER_SEC / HZ;
-+#ifdef CONFIG_NO_HZ_FULL
-+			/*
-+			 * The boot CPU may be nohz_full, in which case set
-+			 * tick_do_timer_boot_cpu so the first housekeeping
-+			 * secondary that comes up will take do_timer from
-+			 * us.
-+			 */
-+			if (tick_nohz_full_cpu(cpu))
-+				tick_do_timer_boot_cpu = cpu;
-+
-+		} else if (tick_do_timer_boot_cpu != -1 &&
-+						!tick_nohz_full_cpu(cpu)) {
-+			tick_take_do_timer_from_boot();
-+			tick_do_timer_boot_cpu = -1;
-+			WARN_ON(tick_do_timer_cpu != cpu);
-+#endif
- 		}
- 
- 		/*
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 6fa52cd6df0b..4aa917acbe1c 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -121,10 +121,16 @@ static void tick_sched_do_timer(struct tick_sched *ts, ktime_t now)
- 	 * into a long sleep. If two CPUs happen to assign themselves to
- 	 * this duty, then the jiffies update is still serialized by
- 	 * jiffies_lock.
-+	 *
-+	 * If nohz_full is enabled, this should not happen because the
-+	 * tick_do_timer_cpu never relinquishes.
- 	 */
--	if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)
--	    && !tick_nohz_full_cpu(cpu))
-+	if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)) {
-+#ifdef CONFIG_NO_HZ_FULL
-+		WARN_ON(tick_nohz_full_running);
-+#endif
- 		tick_do_timer_cpu = cpu;
-+	}
- #endif
- 
- 	/* Check, if the jiffies need an update */
-@@ -395,8 +401,8 @@ void __init tick_nohz_full_setup(cpumask_var_t cpumask)
- static int tick_nohz_cpu_down(unsigned int cpu)
- {
- 	/*
--	 * The boot CPU handles housekeeping duty (unbound timers,
--	 * workqueues, timekeeping, ...) on behalf of full dynticks
-+	 * The tick_do_timer_cpu CPU handles housekeeping duty (unbound
-+	 * timers, workqueues, timekeeping, ...) on behalf of full dynticks
- 	 * CPUs. It must remain online when nohz full is enabled.
- 	 */
- 	if (tick_nohz_full_running && tick_do_timer_cpu == cpu)
-@@ -423,12 +429,15 @@ void __init tick_nohz_init(void)
- 		return;
- 	}
- 
--	cpu = smp_processor_id();
-+	if (IS_ENABLED(CONFIG_PM_SLEEP_SMP) &&
-+			!IS_ENABLED(CONFIG_PM_SLEEP_SMP_NONZERO_CPU)) {
-+		cpu = smp_processor_id();
- 
--	if (cpumask_test_cpu(cpu, tick_nohz_full_mask)) {
--		pr_warn("NO_HZ: Clearing %d from nohz_full range for timekeeping\n",
--			cpu);
--		cpumask_clear_cpu(cpu, tick_nohz_full_mask);
-+		if (cpumask_test_cpu(cpu, tick_nohz_full_mask)) {
-+			pr_warn("NO_HZ: Clearing %d from nohz_full range "
-+				"for timekeeping\n", cpu);
-+			cpumask_clear_cpu(cpu, tick_nohz_full_mask);
-+		}
- 	}
- 
- 	for_each_cpu(cpu, tick_nohz_full_mask)
-@@ -904,8 +913,13 @@ static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
- 		/*
- 		 * Boot safety: make sure the timekeeping duty has been
- 		 * assigned before entering dyntick-idle mode,
-+		 * tick_do_timer_cpu is TICK_DO_TIMER_BOOT
- 		 */
--		if (tick_do_timer_cpu == TICK_DO_TIMER_NONE)
-+		if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_BOOT))
-+			return false;
-+
-+		/* Should not happen for nohz-full */
-+		if (WARN_ON_ONCE(tick_do_timer_cpu == TICK_DO_TIMER_NONE))
- 			return false;
- 	}
- 
