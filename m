@@ -3,89 +3,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3882C46470
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6482DC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA3C21479
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF7D20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556909352;
-	bh=KGeziaPtUPNmb1W4HZA4UsYcNlgAPR6LLCaYja2jOI0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cBIpLGSrxk0e5Ll4kUJAz/kdUqPnRJh8UeYqx2rMKLY9uz82yt0g/IB3YGQZUsOvr
-	 WMqno2i+XP8B0LkFUnlUgv/BE6hwoFCfQxfM4XKdd2wdHB/32bM4wRMbA0+T/tch4K
-	 n7NIGpBTN947SS2s9mRSkLBXcuryqq5m0DjkSNjM=
+	s=default; t=1556909607;
+	bh=TiML5h68eCpPCsuKHOOtspOVUAt7F/lUZRVTKNtdYKk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=kfGRyx0zqAJ558JwlmXXkVF1CvdZMzAPNoYHnwZtv1OYFng66IITlCjmlrBNbUNIX
+	 kB252LvqLI/iNVRD1mbKe/N8UzTYOX9y2PBc/XASI8gFmMh5BiPDMaAHs7sBVV8fCY
+	 DIiEZlOfCL0YPzxNLBQtDwCXf6Mn4pjT5nw8Fxvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfECStL (ORCPT
+        id S1726730AbfECSx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 14:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56562 "EHLO mail.kernel.org"
+        Fri, 3 May 2019 14:53:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbfECStL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 14:49:11 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725997AbfECSx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 14:53:26 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4B342075E;
-        Fri,  3 May 2019 18:49:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5B11205C9;
+        Fri,  3 May 2019 18:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556909350;
-        bh=KGeziaPtUPNmb1W4HZA4UsYcNlgAPR6LLCaYja2jOI0=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=a6WHutb8yyJeTowNbUA9CnGwkEfxZjeofA38FDIxS5Gg23KjOr4kO2SXW0CNomKEZ
-         M50naF6JDjC5LIgJZnEZE1+wjTwURLekRH/z/YigcLqD8HqQV7pKueBxH2rZqMUMUk
-         XFI83FcU348qcOtojOq6MG0+ML7p2H/cCB+EG8vo=
-Date:   Fri, 3 May 2019 20:49:05 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        s=default; t=1556909605;
+        bh=TiML5h68eCpPCsuKHOOtspOVUAt7F/lUZRVTKNtdYKk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=zTAqsvPBmAjJPKl2Twmxd/X3iXa1QxWtxdwjAdaqr5RZlorGkZfRQtR7AHJM9pa4l
+         x7IKH/SoqjFsFoqyOwyjImYs1tVVIoR2v+aum4ZKpC1pCYrZq5sM/GsLO0IfdUNjqL
+         XK/2UL18lmUgwuBMXZv7msMWms0ilOeWx+9I53/s=
+Subject: Re: [PATCH for 5.2 00/12] Restartable Sequences selftests updates
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
         Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        stable@vger.kernel.org, Jiri Kosina <jikos@jikos.cz>
-Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
- export
-In-Reply-To: <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
-Message-ID: <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>
-References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org> <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>, shuah <shuah@kernel.org>
+References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
+ <678952111.699.1556908562445.JavaMail.zimbra@efficios.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <68a135d7-7b30-71c7-c570-c7608d6f75d5@kernel.org>
+Date:   Fri, 3 May 2019 12:53:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <678952111.699.1556908562445.JavaMail.zimbra@efficios.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 May 2019, Sebastian Andrzej Siewior wrote:
+On 5/3/19 12:36 PM, Mathieu Desnoyers wrote:
+> ----- On Apr 29, 2019, at 11:27 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+> 
+>> Those rseq selftests updates are hereby submitted to Shuah Khan,
+>> maintainer of kernel selftests, for the next merge window (5.2).
+>>
+>> They change the per-architecture pre-abort signatures to ensure those
+>> are valid trap instructions.
+>>
+>> The way exit points are presented to debuggers is enhanced, ensuring
+>> all exit points are present, so debuggers don't have to disassemble
+>> rseq critical section to properly skip over them.
+>>
+>> Discussions with the glibc community is reaching a concensus of exposing
+>> a __rseq_handled symbol from glibc to coexist with rseq early adopters.
+>> Update the rseq selftest code to expose and use this symbol.
+>>
+>> Support for compiling asm goto with clang is added with the
+>> "-no-integrated-as" compiler switch, similarly to the toplevel kernel
+>> Makefile.
+> 
+> Hi Shuah,
+> 
+> Is there anything else you need before you can pick up those patches ?
+> 
 
-> Please don't start this. We have everything _GPL that is used for FPU
-> related code and only a few functions are exported because KVM needs it.
+I was going to say "no more work needed" and noticed that the series has
+checkpatch errors and warns as I was running the series through
+pre-commit tests.
 
-That's not completely true. There are a lot of static inlines out there, 
-which basically made it possible for external modules to use FPU (in some 
-way) when they had kernel_fpu_[begin|end]() available.
+Patches 1,2,3,8 have errors/warns based
+on quick look at the log.
 
-I personally don't care about ZFS a tiny little bit; but in general, the 
-current situation with _GPL and non-_GPL exports is simply not nice. It's 
-not really about licensing (despite the name), it's about 'internal vs 
-external', which noone is probably able to define properly.
 
-If it would be strictly about license compatibility, that'd at least make 
-us somewhat deterministic.
+ERROR: need consistent spacing around '%' (ctx:WxV)
+#227: FILE: tools/testing/selftests/rseq/rseq-x86.h:104:
++		RSEQ_ASM_CMP_CPU_ID(cpu_id, RSEQ_CPU_ID_OFFSET(%[rseq_abi]), %l[error1])
 
--- 
-Jiri Kosina
-SUSE Labs
 
+Will you be able to fix them and resend?
+
+thanks,
+-- Shuah
