@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE70FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4FAC04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918C32070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F492070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:06:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eGhXmoc8"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="feHZTD51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfECOGC (ORCPT
+        id S1728036AbfECOGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:06:02 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36726 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbfECOGB (ORCPT
+        Fri, 3 May 2019 10:06:08 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41670 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727997AbfECOGH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:06:01 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a8so6163317edx.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 07:06:00 -0700 (PDT)
+        Fri, 3 May 2019 10:06:07 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m4so6148232edd.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 07:06:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=D/CH4GqGr+z8YvNiyoDqREVHjChbqZqJjYmwX1HGL8k=;
-        b=eGhXmoc8I9oK5S07+Cf/+NBpgznArjYFwNdzPDBoc5oNv6WpfFrICkvkWudLf8UoXM
-         oURzLmKVEFVRQxZXxb+XXHRTJNlkjfG1iBgT1ph5n5gPYfsTtOVyyG6Rty6Z+jReH9cq
-         R71Ey5B+kPUXrCZdmq4MraXrTUzvKbiMIgtaE=
+        bh=dDG9A8vcxSWTc3lAhtot1/d3GbhCCecRqw2WbSyKudk=;
+        b=feHZTD51V3Kr5/f8uHGsEm9lvHVjGVHfGjgwWhBBXg8KQhQyWaTT5ocm2pxvOmaA/U
+         NHOymXRcp5B4BsHyh/B+1ypKS+hMZQKRMWS54BDSZVMwYYsObRy83TR+APQNE+A7fpTO
+         V42S20HGilmypBW2HZg6GJD9e9LMG8JhGKKGA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=D/CH4GqGr+z8YvNiyoDqREVHjChbqZqJjYmwX1HGL8k=;
-        b=Tvcaxv3k658liJJoxIFzXIodzZVvgFQbJ/zfReSR9sXxMZ5X82FfTl3fi6f6dZ8V/J
-         b/ePqEo9A9IjBzE3JXDuaHgqkkEwi096mPnMSnV3mJ/SQb/vUswNV+guS5Wd5MU5FA2e
-         zW8HVpeZvFRzQ5wpVdEgOiXdirNqamxk2FE4LPrynWhs7josQv+PSiQ4PyvelpN+QaSf
-         /xs1gZX40PwpXgoRyQLZby1FhbvbTxXwu9eLdqBHHrz2i/tjkWlTXCdI7ZN6/lHr+Y8W
-         igXJYCnqg0l12707uxWw67NPqYJFhHneJo/G2ptoEj6J41n8SmUx5jIFKLJMuK3jSEmT
-         hCAg==
-X-Gm-Message-State: APjAAAXpy1RsvDdXsXazTOELtw6s35ixI6+PZ7+ifvXaabLjKMv4sAAL
-        7JBx7oPq/XydOQh9xG2zNbqhMg==
-X-Google-Smtp-Source: APXvYqzGIjNck5fcKtNGAmKeDcxVbNQcwMe9+Ow76Mtcv1tHZaSwqBqwtaKclkMR03PmKdn3UxvlPA==
-X-Received: by 2002:a17:906:6a1a:: with SMTP id o26mr6433401ejr.170.1556892359682;
-        Fri, 03 May 2019 07:05:59 -0700 (PDT)
+        bh=dDG9A8vcxSWTc3lAhtot1/d3GbhCCecRqw2WbSyKudk=;
+        b=BQUbnGzzjNcOsrxkV1XQt29LNDgHXoD3tngdIa3mTHDWqUX4roKHtOcOJdXVDVBt83
+         4DZ92xjfHflBKpr7lKLa3GBPHDdr02lgfNOdgSKAUJUrUE3KfTXRQApELD/YU4xszeSF
+         W1D7Zd+AIhnyJA8eIuG3ddvj3qHAhl5/nJjj8UapC53kjgRCLcpkpqxl6w5v0za2hhnh
+         rQHU7Un6bQ5p4PeZLDOYCl7NwdwZgKBdFWrUF8XOKOMBFOCjDjby9tu6ZRsoSqNDjIUc
+         dNbl+QI4rRe90PfDQAtHAUx22XlptXJmNqWwcD7a0yVuYKzcXxnUI2KdQeOB7bxT2h5W
+         /iBw==
+X-Gm-Message-State: APjAAAVwdLc5I2eFEv3ATqSE3qMhbrd7oGHn7F/3rUBKRURhZXbaHyzB
+        AL3ul8cKbB0ToNF2HrNFUxv3HA==
+X-Google-Smtp-Source: APXvYqxdUNO4AAjiICo5DT6ucVOjhvprFFm/2BtoKIfgOXzHwJyKhWHar6DRBfmM7Rt0E3BQHIA7OQ==
+X-Received: by 2002:a50:b835:: with SMTP id j50mr8464031ede.63.1556892366022;
+        Fri, 03 May 2019 07:06:06 -0700 (PDT)
 Received: from mannams-OptiPlex-7010.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id s53sm605472edb.20.2019.05.03.07.05.53
+        by smtp.gmail.com with ESMTPSA id s53sm605472edb.20.2019.05.03.07.06.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 03 May 2019 07:05:58 -0700 (PDT)
+        Fri, 03 May 2019 07:06:05 -0700 (PDT)
 From:   Srinath Mannam <srinath.mannam@broadcom.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -62,9 +62,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v6 1/3] PCI: Add dma_ranges window list
-Date:   Fri,  3 May 2019 19:35:32 +0530
-Message-Id: <1556892334-16270-2-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH v6 2/3] iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
+Date:   Fri,  3 May 2019 19:35:33 +0530
+Message-Id: <1556892334-16270-3-git-send-email-srinath.mannam@broadcom.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556892334-16270-1-git-send-email-srinath.mannam@broadcom.com>
 References: <1556892334-16270-1-git-send-email-srinath.mannam@broadcom.com>
@@ -73,61 +73,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a dma_ranges field in PCI host bridge structure to hold resource
-entries list of memory regions in sorted order representing memory
-ranges that can be accessed through DMA transactions.
+The dma_ranges list field of PCI host bridge structure has resource
+entries in sorted order representing address ranges allowed for DMA
+transfers.
+
+Process the list and reserve IOVA addresses that are not present in its
+resource entries (ie DMA memory holes) to prevent allocating IOVA
+addresses that cannot be accessed by PCI devices.
 
 Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
 Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-[lorenzo.pieralisi@arm.com: updated commit log]
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/pci/probe.c | 3 +++
- include/linux/pci.h | 1 +
- 2 files changed, 4 insertions(+)
+ drivers/iommu/dma-iommu.c | 35 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 7e12d01..72563c1 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -595,6 +595,7 @@ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
- 		return NULL;
- 
- 	INIT_LIST_HEAD(&bridge->windows);
-+	INIT_LIST_HEAD(&bridge->dma_ranges);
- 	bridge->dev.release = pci_release_host_bridge_dev;
- 
- 	/*
-@@ -623,6 +624,7 @@ struct pci_host_bridge *devm_pci_alloc_host_bridge(struct device *dev,
- 		return NULL;
- 
- 	INIT_LIST_HEAD(&bridge->windows);
-+	INIT_LIST_HEAD(&bridge->dma_ranges);
- 	bridge->dev.release = devm_pci_release_host_bridge_dev;
- 
- 	return bridge;
-@@ -632,6 +634,7 @@ EXPORT_SYMBOL(devm_pci_alloc_host_bridge);
- void pci_free_host_bridge(struct pci_host_bridge *bridge)
- {
- 	pci_free_resource_list(&bridge->windows);
-+	pci_free_resource_list(&bridge->dma_ranges);
- 
- 	kfree(bridge);
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 77aabe6..954ae11 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -206,12 +206,13 @@ static int cookie_init_hw_msi_region(struct iommu_dma_cookie *cookie,
+ 	return 0;
  }
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 7744821..bba0a29 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -490,6 +490,7 @@ struct pci_host_bridge {
- 	void		*sysdata;
- 	int		busnr;
- 	struct list_head windows;	/* resource_entry */
-+	struct list_head dma_ranges;	/* dma ranges resource list */
- 	u8 (*swizzle_irq)(struct pci_dev *, u8 *); /* Platform IRQ swizzler */
- 	int (*map_irq)(const struct pci_dev *, u8, u8);
- 	void (*release_fn)(struct pci_host_bridge *);
+ 
+-static void iova_reserve_pci_windows(struct pci_dev *dev,
++static int iova_reserve_pci_windows(struct pci_dev *dev,
+ 		struct iova_domain *iovad)
+ {
+ 	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+ 	struct resource_entry *window;
+ 	unsigned long lo, hi;
++	phys_addr_t start = 0, end;
+ 
+ 	resource_list_for_each_entry(window, &bridge->windows) {
+ 		if (resource_type(window->res) != IORESOURCE_MEM)
+@@ -221,6 +222,31 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+ 		hi = iova_pfn(iovad, window->res->end - window->offset);
+ 		reserve_iova(iovad, lo, hi);
+ 	}
++
++	/* Get reserved DMA windows from host bridge */
++	resource_list_for_each_entry(window, &bridge->dma_ranges) {
++		end = window->res->start - window->offset;
++resv_iova:
++		if (end > start) {
++			lo = iova_pfn(iovad, start);
++			hi = iova_pfn(iovad, end);
++			reserve_iova(iovad, lo, hi);
++		} else {
++			/* dma_ranges list should be sorted */
++			dev_err(&dev->dev, "Failed to reserve IOVA\n");
++			return -EINVAL;
++		}
++
++		start = window->res->end - window->offset + 1;
++		/* If window is last entry */
++		if (window->node.next == &bridge->dma_ranges &&
++		    end != ~(dma_addr_t)0) {
++			end = ~(dma_addr_t)0;
++			goto resv_iova;
++		}
++	}
++
++	return 0;
+ }
+ 
+ static int iova_reserve_iommu_regions(struct device *dev,
+@@ -232,8 +258,11 @@ static int iova_reserve_iommu_regions(struct device *dev,
+ 	LIST_HEAD(resv_regions);
+ 	int ret = 0;
+ 
+-	if (dev_is_pci(dev))
+-		iova_reserve_pci_windows(to_pci_dev(dev), iovad);
++	if (dev_is_pci(dev)) {
++		ret = iova_reserve_pci_windows(to_pci_dev(dev), iovad);
++		if (ret)
++			return ret;
++	}
+ 
+ 	iommu_get_resv_regions(dev, &resv_regions);
+ 	list_for_each_entry(region, &resv_regions, list) {
 -- 
 2.7.4
 
