@@ -2,111 +2,150 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1428BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6CEC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E47312087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD4F2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbfECOwQ (ORCPT
+        id S1728116AbfECOxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:52:16 -0400
-Received: from foss.arm.com ([217.140.101.70]:35222 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbfECOwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:52:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E757E374;
-        Fri,  3 May 2019 07:52:14 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD2DE3F5C1;
-        Fri,  3 May 2019 07:52:12 -0700 (PDT)
-Subject: Re: [PATCH v3 6/7] irqchip/gic-v3-mbi: Don't map the MSI page in
- mbi_compose_m{b, s}i_msg()
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Julien Grall <julien.grall@arm.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc:     logang@deltatee.com, douliyangs@gmail.com,
-        miquel.raynal@bootlin.com, jason@lakedaemon.net,
-        tglx@linutronix.de, joro@8bytes.org, bigeasy@linutronix.de,
-        linux-rt-users@vger.kernel.org
-References: <20190501135824.25586-1-julien.grall@arm.com>
- <20190501135824.25586-7-julien.grall@arm.com>
- <ebe2cfc4-44df-2c25-02c8-96b6b6d6bab1@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <b339523b-4bab-02c8-7aea-56ac4c4f3023@arm.com>
-Date:   Fri, 3 May 2019 15:52:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 3 May 2019 10:53:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40772 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726376AbfECOxb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 10:53:31 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43EpYwE146776
+        for <linux-kernel@vger.kernel.org>; Fri, 3 May 2019 10:53:29 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s8pteaxta-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 10:53:29 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Fri, 3 May 2019 15:53:29 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 3 May 2019 15:53:27 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x43ErQx840108106
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 3 May 2019 14:53:26 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0F031B2065;
+        Fri,  3 May 2019 14:53:26 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E6139B2066;
+        Fri,  3 May 2019 14:53:25 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  3 May 2019 14:53:25 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 7C6D016C32BD; Fri,  3 May 2019 07:53:26 -0700 (PDT)
+Date:   Fri, 3 May 2019 07:53:26 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     stern@rowland.harvard.edu
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        peterz@infradead.org
+Subject: f68f031d ("Documentation: atomic_t.txt: Explain ordering provided by
+ smp_mb__{before,after}_atomic()")
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
-In-Reply-To: <ebe2cfc4-44df-2c25-02c8-96b6b6d6bab1@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19050314-0072-0000-0000-000004249A0F
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011041; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01198016; UDB=6.00628400; IPR=6.00978877;
+ MB=3.00026714; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-03 14:53:28
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050314-0073-0000-0000-00004C0FCEDD
+Message-Id: <20190503145326.GA21541@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=970 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905030095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/05/2019 15:27, Marc Zyngier wrote:
-> On 01/05/2019 14:58, Julien Grall wrote:
->> The functions mbi_compose_m{b, s}i_msg may be called from non-preemptible
->> context. However, on RT, iommu_dma_map_msi_msg() requires to be called
->> from a preemptible context.
->>
->> A recent patch split iommu_dma_map_msi_msg in two new functions:
->> one that should be called in preemptible context, the other does
->> not have any requirement.
->>
->> The GICv3 MSI driver is reworked to avoid executing preemptible code in
->> non-preemptible context. This can be achieved by preparing the two MSI
->> mappings when allocating the MSI interrupt.
->>
->> Signed-off-by: Julien Grall <julien.grall@arm.com>
->>
->> ---
->>      Changes in v2:
->>          - Rework the commit message to use imperative mood
->> ---
->>   drivers/irqchip/irq-gic-v3-mbi.c | 15 +++++++++++++--
->>   1 file changed, 13 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-gic-v3-mbi.c b/drivers/irqchip/irq-gic-v3-mbi.c
->> index fbfa7ff6deb1..d50f6cdf043c 100644
->> --- a/drivers/irqchip/irq-gic-v3-mbi.c
->> +++ b/drivers/irqchip/irq-gic-v3-mbi.c
->> @@ -84,6 +84,7 @@ static void mbi_free_msi(struct mbi_range *mbi, unsigned int hwirq,
->>   static int mbi_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->>   				   unsigned int nr_irqs, void *args)
->>   {
->> +	msi_alloc_info_t *info = args;
->>   	struct mbi_range *mbi = NULL;
->>   	int hwirq, offset, i, err = 0;
->>   
->> @@ -104,6 +105,16 @@ static int mbi_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->>   
->>   	hwirq = mbi->spi_start + offset;
->>   
->> +	err = iommu_dma_prepare_msi(info->desc,
->> +				    mbi_phys_base + GICD_CLRSPI_NSR);
->> +	if (err)
->> +		return err;
->> +
->> +	err = iommu_dma_prepare_msi(info->desc,
->> +				    mbi_phys_base + GICD_SETSPI_NSR);
->> +	if (err)
->> +		return err;
-> 
-> Nit here: The two registers are guaranteed to be in the same 4k page
-> (respectively offsets 0x48 and 0x40), so the second call is at best
-> useless. I'll fix it when applying it, no need to resend.
+Hello, Alan,
 
-Ack; the second call will simply find the existing page and overwrite 
-desc->iommu_cookie with the same value. And if the two calls *did* ever 
-come back with different pages, that logic would be quietly broken anyway.
+Just following up on the -rcu commit below.  I believe that it needs
+some adjustment given Peter Zijlstra's addition of "memory" to the x86
+non-value-returning atomics, but thought I should double-check.
 
-Robin.
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit f68f031d47f42f9fe07d9dee1ced48b2b0b8ae5e
+Author: Alan Stern <stern@rowland.harvard.edu>
+Date:   Fri Apr 19 13:21:45 2019 -0400
+
+    Documentation: atomic_t.txt: Explain ordering provided by smp_mb__{before,after}_atomic()
+    
+    The description of smp_mb__before_atomic() and smp_mb__after_atomic()
+    in Documentation/atomic_t.txt is slightly terse and misleading.  It
+    does not clearly state that these barriers only affect the ordering of
+    other instructions with respect to the atomic operation.
+    
+    This improves the text to make the actual ordering implications clear,
+    and also to explain how these barriers differ from a RELEASE or
+    ACQUIRE ordering.
+    
+    Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+    Cc: Jonathan Corbet <corbet@lwn.net>
+    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+
+diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+index dca3fb0554db..d6e42d8f66de 100644
+--- a/Documentation/atomic_t.txt
++++ b/Documentation/atomic_t.txt
+@@ -188,7 +188,10 @@ The barriers:
+   smp_mb__{before,after}_atomic()
+ 
+ only apply to the RMW ops and can be used to augment/upgrade the ordering
+-inherent to the used atomic op. These barriers provide a full smp_mb().
++inherent to the used atomic op. Unlike normal smp_mb() barriers, they order
++only the RMW op itself against the instructions preceding the
++smp_mb__before_atomic() or following the smp_mb__after_atomic(); they do
++not order instructions on the other side of the RMW op at all.
+ 
+ These helper barriers exist because architectures have varying implicit
+ ordering on their SMP atomic primitives. For example our TSO architectures
+@@ -212,7 +215,8 @@ Further, while something like:
+   atomic_dec(&X);
+ 
+ is a 'typical' RELEASE pattern, the barrier is strictly stronger than
+-a RELEASE. Similarly for something like:
++a RELEASE because it orders preceding instructions against both the read
++and write parts of the atomic_dec(). Similarly, something like:
+ 
+   atomic_inc(&X);
+   smp_mb__after_atomic();
+@@ -244,7 +248,8 @@ strictly stronger than ACQUIRE. As illustrated:
+ 
+ This should not happen; but a hypothetical atomic_inc_acquire() --
+ (void)atomic_fetch_inc_acquire() for instance -- would allow the outcome,
+-since then:
++because it would not order the W part of the RMW against the following
++WRITE_ONCE.  Thus:
+ 
+   P1			P2
+ 
+
