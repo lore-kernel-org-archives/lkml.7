@@ -2,121 +2,120 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6482DC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03840C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF7D20B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556909607;
-	bh=TiML5h68eCpPCsuKHOOtspOVUAt7F/lUZRVTKNtdYKk=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=kfGRyx0zqAJ558JwlmXXkVF1CvdZMzAPNoYHnwZtv1OYFng66IITlCjmlrBNbUNIX
-	 kB252LvqLI/iNVRD1mbKe/N8UzTYOX9y2PBc/XASI8gFmMh5BiPDMaAHs7sBVV8fCY
-	 DIiEZlOfCL0YPzxNLBQtDwCXf6Mn4pjT5nw8Fxvs=
+	by mail.kernel.org (Postfix) with ESMTP id CA3CB20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:55:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Ze7V2HJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfECSx0 (ORCPT
+        id S1726760AbfECSzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 14:53:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbfECSx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 14:53:26 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5B11205C9;
-        Fri,  3 May 2019 18:53:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556909605;
-        bh=TiML5h68eCpPCsuKHOOtspOVUAt7F/lUZRVTKNtdYKk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=zTAqsvPBmAjJPKl2Twmxd/X3iXa1QxWtxdwjAdaqr5RZlorGkZfRQtR7AHJM9pa4l
-         x7IKH/SoqjFsFoqyOwyjImYs1tVVIoR2v+aum4ZKpC1pCYrZq5sM/GsLO0IfdUNjqL
-         XK/2UL18lmUgwuBMXZv7msMWms0ilOeWx+9I53/s=
-Subject: Re: [PATCH for 5.2 00/12] Restartable Sequences selftests updates
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
+        Fri, 3 May 2019 14:55:00 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40438 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfECSy7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 14:54:59 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d31so3128419pgl.7
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 11:54:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jNpdn+5fsvrXYWS1t6q6BGlDjSLyaro1hz6w+Z7cVVc=;
+        b=Ze7V2HJIleQKSjHWj+M8QP+fsyogjvoif9Jv4VUtem6IBwfSqPNCJyVFNS20XYCvAG
+         XiSiR4FfiR7PHepl3n7MzONfPKL6x8eNJK/acB633DENM67QE2n0/ZXkJLw07kzUybk+
+         8kdjfjTk04bOmEI3V8gE/VRanycjWAJaY9U6Wt2lUgZkp9y3k45UTcrG/mMVasY2yJa/
+         EMclqm+L5FRQAeoGKA1ajR/gwJ/S8KScXoReh8pvIKw6ta+j6lxXVx7/hNFcLt5bvJHV
+         8tG0lvQIn0cr9hI0S69KAzETz2P7hsKN1/WCQUOS2+4Xsodv1Bo004jz2TEtsDGvrUxO
+         ej/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jNpdn+5fsvrXYWS1t6q6BGlDjSLyaro1hz6w+Z7cVVc=;
+        b=X47F1unfAbr+GlNdpX+Vc2xJL9tM9TDXE62Zuu5kn9iGA+2n5or+Ic9Nu+fA7tt+Nm
+         AAY8LPqE5/6qAzWvM103hLNeChUAoLLP2z7DTQiBrfMCbssNyi9y0E+NdE/hrGEMWpDh
+         ZkTUeOLOo3FprUfluX+wc005u9wJU+IBlL5uE73F7IR0sPnsDXcKYs/H+rZzIPyAvb9M
+         azy4/3m2nLe7lia/GrhwFYD2QbVGCLHUosIpRCltRx3YApBp6/VUmRX1IuaFsLvvvHnH
+         +r8e3YYTThLiQtf2Yhq47SEW6Py8z1eHv0Xo6wsgRqrCAfUyGM6XTO3j8aZA0qQtoXOo
+         cVXw==
+X-Gm-Message-State: APjAAAU6e/ncVdJv08Goh6cAkgIMzEzRWtTZMq+oN2awneSomM5HKxsh
+        REejE4GfEVafEC/pGsiYir3Pug==
+X-Google-Smtp-Source: APXvYqyOx4Yo9LyGCpB/b93ZM96vMHUoRHsvkvZjQ9woG0NDbEa22gAW2OzlNpE6diohJG8LJ5sk9Q==
+X-Received: by 2002:a62:164f:: with SMTP id 76mr13278829pfw.172.1556909698011;
+        Fri, 03 May 2019 11:54:58 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b051:5fe3:59e6:3e7a:27ff:af6f? ([2600:1010:b051:5fe3:59e6:3e7a:27ff:af6f])
+        by smtp.gmail.com with ESMTPSA id v15sm3711892pff.105.2019.05.03.11.54.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 11:54:56 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end() export
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <20190503180739.GF5020@zn.tnic>
+Date:   Fri, 3 May 2019 11:54:54 -0700
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
-        rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>, shuah <shuah@kernel.org>
-References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
- <678952111.699.1556908562445.JavaMail.zimbra@efficios.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <68a135d7-7b30-71c7-c570-c7608d6f75d5@kernel.org>
-Date:   Fri, 3 May 2019 12:53:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <678952111.699.1556908562445.JavaMail.zimbra@efficios.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Nicolai Stange <nstange@suse.de>,
+        =?utf-8?Q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5BD87ACE-1200-4612-AA83-1590DA9E45E5@amacapital.net>
+References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org> <20190502154043.gfv4iplcvzjz3mc6@linutronix.de> <CALCETrWTCB9xLVdKCODghpeQpJ_3Rz3OwE8FB+5hjYXMYwYPLg@mail.gmail.com> <20190502165520.GC6565@zn.tnic> <bcb6c893-61e6-4b08-5b40-b1b2e24f495b@redhat.com> <20190503180739.GF5020@zn.tnic>
+To:     Borislav Petkov <bp@alien8.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/19 12:36 PM, Mathieu Desnoyers wrote:
-> ----- On Apr 29, 2019, at 11:27 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
-> 
->> Those rseq selftests updates are hereby submitted to Shuah Khan,
->> maintainer of kernel selftests, for the next merge window (5.2).
->>
->> They change the per-architecture pre-abort signatures to ensure those
->> are valid trap instructions.
->>
->> The way exit points are presented to debuggers is enhanced, ensuring
->> all exit points are present, so debuggers don't have to disassemble
->> rseq critical section to properly skip over them.
->>
->> Discussions with the glibc community is reaching a concensus of exposing
->> a __rseq_handled symbol from glibc to coexist with rseq early adopters.
->> Update the rseq selftest code to expose and use this symbol.
->>
->> Support for compiling asm goto with clang is added with the
->> "-no-integrated-as" compiler switch, similarly to the toplevel kernel
->> Makefile.
-> 
-> Hi Shuah,
-> 
-> Is there anything else you need before you can pick up those patches ?
-> 
 
-I was going to say "no more work needed" and noticed that the series has
-checkpatch errors and warns as I was running the series through
-pre-commit tests.
+> On May 3, 2019, at 11:07 AM, Borislav Petkov <bp@alien8.de> wrote:
+>=20
+>> On Fri, May 03, 2019 at 11:21:15AM -0600, Paolo Bonzini wrote:
+>> Your observation that the API only exists on x86 and s390 has no bearing
+>> to whether the functions should be EXPORT_SYMBOL_GPL or EXPORT_SYMBOL.
+>> ARM has kernel_neon_begin/end, PPC has enable/disable_kernel_altivec.
+>> It's just that SIMD code is so arch-specific that nobody has bothered
+>> unifying the namings (or, nobody considers the different names a problem
+>> at all).
+>=20
+> This is actually proving my point: there wasn't any real agreement on
+> what interfaces should be immutable so that out-of-tree code can use
+> them and us guaranteeing they won't change. Instead, it was a random
+> thing that just happened.
+>=20
 
-Patches 1,2,3,8 have errors/warns based
-on quick look at the log.
+I don=E2=80=99t think I or has said we should try to make these interfaces i=
+mmutable. What I=E2=80=99m saying is that, since we=E2=80=99re exporting the=
+ symbol anyway and it=E2=80=99s not particularly Linuxy, that we shouldn=E2=80=
+=99t say that only *GPL* out-of-tree modules may use it.  It seems like anyo=
+ne who wants to put the effort into tracking which kernel has which symbols a=
+nd is willing to accept the utter instability of the interface may use it.
+
+So if we ever unexport the symbol entirely, I won=E2=80=99t object.  I objec=
+t to what I consider to be the inappropriate claim that it=E2=80=99s a *GPL*=
+ export.
+
+(I actually hope we unexport it once simd_get() and friends land =E2=80=94 t=
+hey=E2=80=99re a much better API, and we should migrate over to it.)
 
 
-ERROR: need consistent spacing around '%' (ctx:WxV)
-#227: FILE: tools/testing/selftests/rseq/rseq-x86.h:104:
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, RSEQ_CPU_ID_OFFSET(%[rseq_abi]), %l[error1])
-
-
-Will you be able to fix them and resend?
-
-thanks,
--- Shuah
