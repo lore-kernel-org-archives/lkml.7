@@ -6,77 +6,96 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 872BAC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B98FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63FF7205ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29830205ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfECOfn (ORCPT
+        id S1728283AbfECOfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:35:43 -0400
-Received: from smtp-out.xnet.cz ([178.217.244.18]:17190 "EHLO smtp-out.xnet.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfECOfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:35:19 -0400
-Received: from meh.true.cz (meh.true.cz [108.61.167.218])
-        (Authenticated sender: petr@true.cz)
-        by smtp-out.xnet.cz (Postfix) with ESMTPSA id EA69D4AD5;
-        Fri,  3 May 2019 16:27:47 +0200 (CEST)
-Received: by meh.true.cz (OpenSMTPD) with ESMTP id 27d916b3;
-        Fri, 3 May 2019 16:27:47 +0200 (CEST)
-From:   =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-To:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 08/10] staging: octeon-ethernet: support of_get_mac_address new ERR_PTR error
-Date:   Fri,  3 May 2019 16:27:13 +0200
-Message-Id: <1556893635-18549-9-git-send-email-ynezz@true.cz>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556893635-18549-1-git-send-email-ynezz@true.cz>
-References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+        Fri, 3 May 2019 10:35:44 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39601 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728110AbfECOfm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 10:35:42 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n25so6997481wmk.4;
+        Fri, 03 May 2019 07:35:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ag5YD56R8iiokalY4V0lLd6QHIYD8KrtwfvDQho44QQ=;
+        b=PyUYuZOfgS++DS4stzme8YOpP5O5YBApfAjUu78jJJuaIbfc2xwUbrDSP++8qcUY3V
+         LEw5vGL7ukjhfXc5NAjYOAl12E+0iZ7gMSSHbS5OIbHJeNiGvje/qzi1I03x/GdstKc1
+         8Ubrt4SLAkQZAM7H3aqE2s/qucpPA3Vx+/V+PN4oUdcGoGy08khvEpcp0Kcdh9ucjozw
+         CuKnX7k1UwDXmQKc8bIb6h+Yb+Avy2onbbH3MMGFK9DWZ/HgSOFIzblcG/nHciKsfiGv
+         xlNp4fMGoofrlbVVBwMkIWUd+gFTGgQeyE01PcUdN3bemy42zrtZ1h18P2pOLnJQmLnh
+         LvyA==
+X-Gm-Message-State: APjAAAXvF2i4CBGu3Li9DKleQlKjpsY/ESsnWJnrbCSNQiTarjM3aVDZ
+        PF407n5mRwFrj3zYU0D06Gg=
+X-Google-Smtp-Source: APXvYqzOroMEFBNSxsl/6EhyGicchl4mYuecrlQk1FXZjn6xNu5fsWIg+QcX0K8oFvR6BD9QoHhEmA==
+X-Received: by 2002:a05:600c:24f:: with SMTP id 15mr6232702wmj.48.1556894139828;
+        Fri, 03 May 2019 07:35:39 -0700 (PDT)
+Received: from oberon.eng.vmware.com ([146.247.46.5])
+        by smtp.gmail.com with ESMTPSA id h131sm3990676wmh.44.2019.05.03.07.35.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 07:35:38 -0700 (PDT)
+From:   Tzvetomir Stoyanov <tstoyanov@vmware.com>
+To:     rostedt@goodmis.org
+Cc:     linux-trace-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tom.zanussi@linux.intel.com
+Subject: [PATCH] Documentation/trace: Add clarification how histogram onmatch works
+Date:   Fri,  3 May 2019 17:35:37 +0300
+Message-Id: <20190503143537.19752-1-tstoyanov@vmware.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There was NVMEM support added to of_get_mac_address, so it could now return
-ERR_PTR encoded error values, so we need to adjust all current users of
-of_get_mac_address to this new fact.
+The current trace documentation, the section describing histogram's "onmatch"
+is not straightforward enough about how this action is applied. It is not
+clear what criteria are used to "match" both events. A short note is added,
+describing what exactly is compared in order to match the events.
 
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 ---
+ Documentation/trace/histogram.txt | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
- Changes since v3:
-
-  * IS_ERR_OR_NULL -> IS_ERR
-
- drivers/staging/octeon/ethernet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/staging/octeon/ethernet.c b/drivers/staging/octeon/ethernet.c
-index 986db76..2b03018 100644
---- a/drivers/staging/octeon/ethernet.c
-+++ b/drivers/staging/octeon/ethernet.c
-@@ -421,7 +421,7 @@ int cvm_oct_common_init(struct net_device *dev)
- 	if (priv->of_node)
- 		mac = of_get_mac_address(priv->of_node);
+diff --git a/Documentation/trace/histogram.txt b/Documentation/trace/histogram.txt
+index 7ffea6aa22e3..b75a75cfab8c 100644
+--- a/Documentation/trace/histogram.txt
++++ b/Documentation/trace/histogram.txt
+@@ -1863,7 +1863,10 @@ hist trigger specification.
  
--	if (mac)
-+	if (!IS_ERR(mac))
- 		ether_addr_copy(dev->dev_addr, mac);
- 	else
- 		eth_hw_addr_random(dev);
+     The 'matching.event' specification is simply the fully qualified
+     event name of the event that matches the target event for the
+-    onmatch() functionality, in the form 'system.event_name'.
++    onmatch() functionality, in the form 'system.event_name'. Histogram
++    keys of both events are compared to find if events match. In case
++    multiple histogram keys are used, they all must match in the specified
++    order.
+ 
+     Finally, the number and type of variables/fields in the 'param
+     list' must match the number and types of the fields in the
+@@ -1920,9 +1923,9 @@ hist trigger specification.
+ 	    /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+ 
+     Then, when the corresponding thread is actually scheduled onto the
+-    CPU by a sched_switch event, calculate the latency and use that
+-    along with another variable and an event field to generate a
+-    wakeup_latency synthetic event:
++    CPU by a sched_switch event (saved_pid matches next_pid), calculate
++    the latency and use that along with another variable and an event field
++    to generate a wakeup_latency synthetic event:
+ 
+     # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0:\
+             onmatch(sched.sched_waking).wakeup_latency($wakeup_lat,\
 -- 
-1.9.1
+2.20.1
 
