@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EA4C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D574EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85913206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3AFF2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:58:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Hwr8lpcE"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="EHkAhj55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbfECF56 (ORCPT
+        id S1726779AbfECF6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 01:57:58 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:53511 "EHLO
+        Fri, 3 May 2019 01:58:39 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59027 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfECF56 (ORCPT
+        with ESMTP id S1726658AbfECF6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 01:57:58 -0400
+        Fri, 3 May 2019 01:58:39 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x435vigI2618837
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x435wPcL2618875
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 2 May 2019 22:57:44 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x435vigI2618837
+        Thu, 2 May 2019 22:58:25 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x435wPcL2618875
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556863065;
-        bh=++hh1yg5aqjHiY1Nuplh1Eur4zvagm4/E58wzwhEN1E=;
+        s=2019041745; t=1556863106;
+        bh=4gFiNc6aYZNRTTk314IoaB/2DWOUvIoG/2Ua+VpEQH4=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Hwr8lpcEFM+WKLJpmkQa6SSdcZHdkfvv7AW4YdgxPNMs03K0e8Ck5xhlg9OHub0Je
-         w1JhRhZjG7xll1icq68xKBCgvfiYNPfcsMQ8p1SLKPIsH9b+gBT9YTnjN2OZl+l5IE
-         ynDlq9S2iPnxGlsey48MNeuvBWKAJ6D5397JVWiS9AhYxb5ePoS1xyrLM4aP4zxV28
-         1VK3OLjSy1lZ5TCLdJ5vIbmG7wEeWejDj6usWgCinKtmozVwvgo+6macjtYhFBPGpS
-         xyZlMqNuslWgbu2DzhyAasginjbo/Y2c9rGu/qKtAKYgVDUS5BaYj0LGq6a//GLiy3
-         o9TNf9udPYnxQ==
+        b=EHkAhj55jswPaTTpLu738ycSZCmp2A2bIp3O9t+QnjOHCWc1QYWWujLMl5FanQNWa
+         6ez8u1dEvjfriTHNDv/L1V98OTpW5husqtfnYgg+RxiHoo9tFqkrt2mNFQjsO+pk6F
+         j27BHAGlNQHn34/2UzVw9+i9pXVK39Kp/kgBuzzxDIiE+/L6nSmuCZv/zD3TDETF/e
+         NQ973DHQeL33UZPeLqqBKx05YjH6rKtToF4shS+PbRTvs52lnSaBc8DcxWB28v1LM6
+         1CCgXDSeY7PHurYoxhx3Pm+hsy3/wTE9PPhb2CWqjRiE5o+Dxk7w9Yt9Mby8IcxpDu
+         frQ+YSO6rCcbA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x435vi302618834;
-        Thu, 2 May 2019 22:57:44 -0700
-Date:   Thu, 2 May 2019 22:57:44 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x435wP082618872;
+        Thu, 2 May 2019 22:58:25 -0700
+Date:   Thu, 2 May 2019 22:58:25 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-c638417e1a64b1f43ebab589e697d1cd1a127a74@git.kernel.org>
-Cc:     adrian.hunter@intel.com, acme@redhat.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, songliubraving@fb.com,
-        tglx@linutronix.de, namhyung@kernel.org, tmb@mageia.org,
-        mingo@kernel.org, jolsa@kernel.org
-Reply-To: jolsa@kernel.org, mingo@kernel.org, namhyung@kernel.org,
-          tmb@mageia.org, tglx@linutronix.de, songliubraving@fb.com,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, acme@redhat.com,
-          adrian.hunter@intel.com
-In-Reply-To: <20190501173158.GC21436@kernel.org>
-References: <20190501173158.GC21436@kernel.org>
+Message-ID: <tip-18f90d372cf35b387663f1567de701e5393f6eb5@git.kernel.org>
+Cc:     tglx@linutronix.de, hpa@zytor.com, arnd@arndb.de, acme@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, adrian.hunter@intel.com,
+        Vineet.Gupta1@synopsys.com, mingo@kernel.org
+Reply-To: hpa@zytor.com, tglx@linutronix.de, namhyung@kernel.org,
+          acme@redhat.com, arnd@arndb.de, linux-kernel@vger.kernel.org,
+          jolsa@kernel.org, mingo@kernel.org, adrian.hunter@intel.com,
+          Vineet.Gupta1@synopsys.com
+In-Reply-To: <20190426193531.GC28586@kernel.org>
+References: <20190426193531.GC28586@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] tools build: Add -ldl to the
- disassembler-four-args feature test
-Git-Commit-ID: c638417e1a64b1f43ebab589e697d1cd1a127a74
+Subject: [tip:perf/urgent] tools arch uapi: Copy missing unistd.h headers
+ for arc, hexagon and riscv
+Git-Commit-ID: 18f90d372cf35b387663f1567de701e5393f6eb5
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,61 +72,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  c638417e1a64b1f43ebab589e697d1cd1a127a74
-Gitweb:     https://git.kernel.org/tip/c638417e1a64b1f43ebab589e697d1cd1a127a74
+Commit-ID:  18f90d372cf35b387663f1567de701e5393f6eb5
+Gitweb:     https://git.kernel.org/tip/18f90d372cf35b387663f1567de701e5393f6eb5
 Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Wed, 1 May 2019 16:27:00 -0400
+AuthorDate: Mon, 22 Apr 2019 15:21:35 -0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Thu, 2 May 2019 16:00:20 -0400
 
-tools build: Add -ldl to the disassembler-four-args feature test
+tools arch uapi: Copy missing unistd.h headers for arc, hexagon and riscv
 
-Thomas Backlund reported that the perf build was failing on the Mageia 7
-distro, that is because it uses:
+Since those were introduced in:
 
-  cat /tmp/build/perf/feature/test-disassembler-four-args.make.output
-  /usr/bin/ld: /usr/lib64/libbfd.a(plugin.o): in function `try_load_plugin':
-  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:243:
-  undefined reference to `dlopen'
-  /usr/bin/ld:
-  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:271:
-  undefined reference to `dlsym'
-  /usr/bin/ld:
-  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:256:
-  undefined reference to `dlclose'
-  /usr/bin/ld:
-  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:246:
-  undefined reference to `dlerror'
-  as we allow dynamic linking and loading
+  c8ce48f06503 ("asm-generic: Make time32 syscall numbers optional")
 
-Mageia 7 uses these linker flags:
-  $ rpm --eval %ldflags
-    -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id -Wl,--enable-new-dtags
+But when the asm-generic/unistd.h was sync'ed with tools/ in:
 
-So add -ldl to this feature LDFLAGS.
+  1a787fc5ba18 ("tools headers uapi: Sync copy of asm-generic/unistd.h with the kernel sources")
 
-Reported-by: Thomas Backlund <tmb@mageia.org>
-Tested-by: Thomas Backlund <tmb@mageia.org>
+I forgot to copy the files for the architectures that define
+__ARCH_WANT_TIME32_SYSCALLS, so the perf build was breaking there, as
+reported by Vineet Gupta for the ARC architecture.
+
+After updating my ARC container to use the glibc based toolchain + cross
+building libnuma, zlib and elfutils, I finally managed to reproduce the
+problem and verify that this now is fixed and will not regress as will
+be tested before each pull req sent upstream.
+
+Reported-by: Vineet Gupta <Vineet.Gupta1@synopsys.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Jiri Olsa <jolsa@kernel.org>
+CC: linux-snps-arc@lists.infradead.org
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Link: https://lkml.kernel.org/r/20190501173158.GC21436@kernel.org
+Link: https://lkml.kernel.org/r/20190426193531.GC28586@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ {arch => tools/arch}/arc/include/uapi/asm/unistd.h     | 0
+ {arch => tools/arch}/hexagon/include/uapi/asm/unistd.h | 0
+ {arch => tools/arch}/riscv/include/uapi/asm/unistd.h   | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index fe3f97e342fa..6d65874e16c3 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -227,7 +227,7 @@ FEATURE_CHECK_LDFLAGS-libpython-version := $(PYTHON_EMBED_LDOPTS)
- 
- FEATURE_CHECK_LDFLAGS-libaio = -lrt
- 
--FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes
-+FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
- 
- CFLAGS += -fno-omit-frame-pointer
- CFLAGS += -ggdb3
+diff --git a/arch/arc/include/uapi/asm/unistd.h b/tools/arch/arc/include/uapi/asm/unistd.h
+similarity index 100%
+copy from arch/arc/include/uapi/asm/unistd.h
+copy to tools/arch/arc/include/uapi/asm/unistd.h
+diff --git a/arch/hexagon/include/uapi/asm/unistd.h b/tools/arch/hexagon/include/uapi/asm/unistd.h
+similarity index 100%
+copy from arch/hexagon/include/uapi/asm/unistd.h
+copy to tools/arch/hexagon/include/uapi/asm/unistd.h
+diff --git a/arch/riscv/include/uapi/asm/unistd.h b/tools/arch/riscv/include/uapi/asm/unistd.h
+similarity index 100%
+copy from arch/riscv/include/uapi/asm/unistd.h
+copy to tools/arch/riscv/include/uapi/asm/unistd.h
