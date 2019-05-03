@@ -2,106 +2,99 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8959FC04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F0AC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E8D2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED760205C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="lwVcWn4f"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rnmCSXI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbfECAGc (ORCPT
+        id S1726338AbfECAVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 20:06:32 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38268 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfECAGc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 20:06:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id k16so5627992wrn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 17:06:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=u9fjAdS4qdgFfKFlDRvvkJV9M4g4jVaDIHEILhziWRQ=;
-        b=lwVcWn4fm6lmr28FcUaQsljk8FqtLm5Hte6ys8oWd59t9ygx2NiGxEPj6JoZwF5opJ
-         J79wAJ1J3kHm4sOV32Or83vLTqNxrm3DquSx7ekcoR+7DhwXYRYG8pp7TBo2WQF0xm/t
-         DJjD6mWcgA132V1mYKqI6H8hho1Ap79YKUK3OD0Er7zooJvKvkUnFuOtI6Y0+c3afkAM
-         Ppiz/is79P/UvLNDKzgSXsqjLxnT2sofXL9WLTfkQGcKc+rG/6rh3lSV3nS0s7WlJMiB
-         uV/4MWxjwJwve8u+o7KnkALqqwEZTqaREypJEnYhiL836pxNRsQGyjLX86NBV7mhvBMb
-         FegA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=u9fjAdS4qdgFfKFlDRvvkJV9M4g4jVaDIHEILhziWRQ=;
-        b=BGihTxfxR+f+Y4ro8wi7O1RsGgN1Qgt//PuyPfB7MJ2M6dj8ZAsO0Grq+g4Kivnp03
-         Lav7desjVRahyrO2ozDkyvbHyRIXPq/A1tJCAkIDlyKGiL7f0ue3ZyIpGBYb5QmVz1Qq
-         CAJD4kAojnvE+fwzqXi4S9o5Xph8NL2PGzSyt3HTX6uv0X2G/LMUAXoQWgVl/lSzYFjr
-         RVYgYrLl5f5VbbS/WsD1bMXOAkq26iWzqLxAYiplQHQIWoRFFpb6+PDKZ2qGWsgqF5nM
-         yPHo97xF/kLqEDyjB/Dt+SxXme0GVvUBzH8cfHd/pUS3DaYS9lPoFDi0rVSbUzu9wp/D
-         X0LA==
-X-Gm-Message-State: APjAAAU4PGjAw2dqifrWE2yQyN1mIMdCSRfvvVP1+UGeQWUuTBBdiKZm
-        MdDl3S6fQCMeKhvkREsH3onz8A==
-X-Google-Smtp-Source: APXvYqxe7cb/mNz0rZXAg3iZnw2AsmeMfr8H9O8EUYtf1Wley4+M0XNIm8yW59JI2swvkgST7iOeXw==
-X-Received: by 2002:a5d:408c:: with SMTP id o12mr4671872wrp.302.1556841990764;
-        Thu, 02 May 2019 17:06:30 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id u9sm538056wmd.14.2019.05.02.17.06.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 17:06:30 -0700 (PDT)
-Message-ID: <5ccb8606.1c69fb81.24d63.3313@mx.google.com>
-Date:   Thu, 02 May 2019 17:06:30 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 2 May 2019 20:21:09 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42289 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbfECAVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 20:21:09 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44wCTt58BYz9s6w;
+        Fri,  3 May 2019 10:21:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556842866;
+        bh=iB2kFXGtEnOSbwiR9xeXR4mCwyLISyBZiA2Ze3gRu8Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=rnmCSXI9cMUnLeXno9pURgO/Biwsc2t2Xp1DQ+jJe4DbYzI6fvntgfij8LyCJqnGm
+         EGgYkPkFnlCRnmRrj3CKW1QcGqD6CXSYpNt0axmFEuEMcBAaZO7mf4gosWC0aVhojS
+         Z3oRP8Ag0OTmkkFBMr7zocO+EsQB9G4jsZnZ+XgDRkzpFmv6QjyA2tqWaikgNChSb5
+         NBXV+LpPkwnzgP+rTnqcKJN6KQX5RGDybhcXyQS6F8N6JcRS4gRUmT9a56DFlHTEwr
+         +hQBvdQfltw5TS+Y1ZIsadXmkdmB2Q5t8A9vzN89nMODiZn0+gFgI0hJe5IPF2axEM
+         i+fnX/+B+R8DQ==
+Date:   Fri, 3 May 2019 10:21:05 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Sterba <dsterba@suse.cz>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>
+Subject: linux-next: build warning after merge of the btrfs-kdave tree
+Message-ID: <20190503102105.13578cc9@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v4.14.115-50-ga4aa5bff0752
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Tree: stable-rc
-In-Reply-To: <20190502143323.397051088@linuxfoundation.org>
-References: <20190502143323.397051088@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/49] 4.14.116-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/K4F6Rk6H_h3u9KOnGG440l4"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 122 boots: 1 failed, 121 passed (v4.14.115-50-=
-ga4aa5bff0752)
+--Sig_/K4F6Rk6H_h3u9KOnGG440l4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.115-50-ga4aa5bff0752/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.115-50-ga4aa5bff0752/
+Hi David,
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.115-50-ga4aa5bff0752
-Git Commit: a4aa5bff075214a024ba945abb791813e33860ac
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 65 unique boards, 24 SoC families, 14 builds out of 201
+After merging the btrfs-kdave tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
-Boot Failure Detected:
+fs/btrfs/props.c: In function 'inherit_props':
+fs/btrfs/props.c:389:4: warning: 'num_bytes' may be used uninitialized in t=
+his function [-Wmaybe-uninitialized]
+    btrfs_block_rsv_release(fs_info, trans->block_rsv,
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      num_bytes);
+      ~~~~~~~~~~
 
-arm64:
-    defconfig:
-        gcc-7:
-            rk3399-firefly: 1 failed lab
+Probably introduced by commit
 
----
-For more info write to <info@kernelci.org>
+  b835a4a3faec ("btrfs: use the existing reserved items for our first prop =
+for inheritance")
+
+Looks like a false positive to me.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/K4F6Rk6H_h3u9KOnGG440l4
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzLiXEACgkQAVBC80lX
+0GzPiAgAkCD5vW0p2Wllg6dt5AOJU2az/iQDy4SvSYz2JLvLvpOUnOpHs9YU+A9F
+mrWb8vkCUNq8ZJq79dHE3ICdlo9JsqHNfz1SOHTUc4uh4P7Dc5AUeO5kxFq8elm6
+GC+5XlfRPpMlMAlGeQbplcAYUdq//cZOfRUHXADQSlS8/cZmjVzFfdXuUwha4qDg
+YuVIwEvs55573nvbH1T+a2QzYYatmiNIJlglzbHLoDgdKSiy1hbev1EYOT+CNiJu
+zCiHWaiinNyb8QeZwAJ+qBvJmjq56Md7i0CVY2pLLHSU6qkw4plGQCWNL9h+ctjr
+/wyP92ilqxutPot/OButB7m0Zzs6mA==
+=wCvO
+-----END PGP SIGNATURE-----
+
+--Sig_/K4F6Rk6H_h3u9KOnGG440l4--
