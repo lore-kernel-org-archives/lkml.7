@@ -4,65 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19462C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EA4C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3902075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85913206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 05:57:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="q9jnEdYx"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Hwr8lpcE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfECF5P (ORCPT
+        id S1726766AbfECF56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 01:57:15 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55195 "EHLO
+        Fri, 3 May 2019 01:57:58 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53511 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfECF5O (ORCPT
+        with ESMTP id S1725775AbfECF56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 01:57:14 -0400
+        Fri, 3 May 2019 01:57:58 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x435v2Ik2618778
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x435vigI2618837
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 2 May 2019 22:57:03 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x435v2Ik2618778
+        Thu, 2 May 2019 22:57:44 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x435vigI2618837
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556863023;
-        bh=kz6MNukui0KiADnNHmzlQuaCU0ATrKZ8pqEHdLeHMVc=;
+        s=2019041745; t=1556863065;
+        bh=++hh1yg5aqjHiY1Nuplh1Eur4zvagm4/E58wzwhEN1E=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=q9jnEdYxQCvaiqAQbg2AVzEmkrnJivFHzkUGrCHqbziC0+QrLomsVSM4JGKsZtR5p
-         kpQmkzYogxOO9qw1oNuw5YDKHyyh/QKJRxIYE3JnqkkLqXD5zfHGFu6GJzJV2AjfWg
-         p9AWJkhbKBnZCgGB+uRo6d5REBVcu1BOhvTvjrUEZf3anw9q4SiMjsgxVSg8HbNUS6
-         z9LWnuEHXUy4j4JF/jGknaz1ez/V5GP4VwOUVKg87x8qJSHTrUf/DDvEzBoHnXjG+I
-         xkW2u7N1LsujDvf1Cer39ovK1A7N9zf59ze1L4Ccq+IZzWWLRCULRo4/TIavhI9jwE
-         KhG1nb1Jjp7gA==
+        b=Hwr8lpcEFM+WKLJpmkQa6SSdcZHdkfvv7AW4YdgxPNMs03K0e8Ck5xhlg9OHub0Je
+         w1JhRhZjG7xll1icq68xKBCgvfiYNPfcsMQ8p1SLKPIsH9b+gBT9YTnjN2OZl+l5IE
+         ynDlq9S2iPnxGlsey48MNeuvBWKAJ6D5397JVWiS9AhYxb5ePoS1xyrLM4aP4zxV28
+         1VK3OLjSy1lZ5TCLdJ5vIbmG7wEeWejDj6usWgCinKtmozVwvgo+6macjtYhFBPGpS
+         xyZlMqNuslWgbu2DzhyAasginjbo/Y2c9rGu/qKtAKYgVDUS5BaYj0LGq6a//GLiy3
+         o9TNf9udPYnxQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x435v2MJ2618680;
-        Thu, 2 May 2019 22:57:02 -0700
-Date:   Thu, 2 May 2019 22:57:02 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x435vi302618834;
+        Thu, 2 May 2019 22:57:44 -0700
+Date:   Thu, 2 May 2019 22:57:44 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Leo Yan <tipbot@zytor.com>
-Message-ID: <tip-35bb59c10a6d0578806dd500477dae9cb4be344e@git.kernel.org>
-Cc:     acme@redhat.com, tglx@linutronix.de, jolsa@redhat.com,
-        leo.yan@linaro.org, robert.walker@arm.com,
-        linux-kernel@vger.kernel.org, suzuki.poulose@arm.com,
-        alexander.shishkin@linux.intel.com, hpa@zytor.com,
-        mike.leach@linaro.org, namhyung@kernel.org, mingo@kernel.org,
-        mathieu.poirier@linaro.org
-Reply-To: jolsa@redhat.com, tglx@linutronix.de, acme@redhat.com,
-          alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-          suzuki.poulose@arm.com, leo.yan@linaro.org,
-          robert.walker@arm.com, mike.leach@linaro.org,
-          namhyung@kernel.org, hpa@zytor.com, mingo@kernel.org,
-          mathieu.poirier@linaro.org
-In-Reply-To: <20190428083228.20246-1-leo.yan@linaro.org>
-References: <20190428083228.20246-1-leo.yan@linaro.org>
+From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
+Message-ID: <tip-c638417e1a64b1f43ebab589e697d1cd1a127a74@git.kernel.org>
+Cc:     adrian.hunter@intel.com, acme@redhat.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, songliubraving@fb.com,
+        tglx@linutronix.de, namhyung@kernel.org, tmb@mageia.org,
+        mingo@kernel.org, jolsa@kernel.org
+Reply-To: jolsa@kernel.org, mingo@kernel.org, namhyung@kernel.org,
+          tmb@mageia.org, tglx@linutronix.de, songliubraving@fb.com,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, acme@redhat.com,
+          adrian.hunter@intel.com
+In-Reply-To: <20190501173158.GC21436@kernel.org>
+References: <20190501173158.GC21436@kernel.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] perf cs-etm: Always allocate memory for
- cs_etm_queue::prev_packet
-Git-Commit-ID: 35bb59c10a6d0578806dd500477dae9cb4be344e
+Subject: [tip:perf/urgent] tools build: Add -ldl to the
+ disassembler-four-args feature test
+Git-Commit-ID: c638417e1a64b1f43ebab589e697d1cd1a127a74
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -76,67 +72,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  35bb59c10a6d0578806dd500477dae9cb4be344e
-Gitweb:     https://git.kernel.org/tip/35bb59c10a6d0578806dd500477dae9cb4be344e
-Author:     Leo Yan <leo.yan@linaro.org>
-AuthorDate: Sun, 28 Apr 2019 16:32:27 +0800
+Commit-ID:  c638417e1a64b1f43ebab589e697d1cd1a127a74
+Gitweb:     https://git.kernel.org/tip/c638417e1a64b1f43ebab589e697d1cd1a127a74
+Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate: Wed, 1 May 2019 16:27:00 -0400
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Thu, 2 May 2019 16:00:20 -0400
 
-perf cs-etm: Always allocate memory for cs_etm_queue::prev_packet
+tools build: Add -ldl to the disassembler-four-args feature test
 
-Robert Walker reported a segmentation fault is observed when process
-CoreSight trace data; this issue can be easily reproduced by the command
-'perf report --itrace=i1000i' for decoding tracing data.
+Thomas Backlund reported that the perf build was failing on the Mageia 7
+distro, that is because it uses:
 
-If neither the 'b' flag (synthesize branches events) nor 'l' flag
-(synthesize last branch entries) are specified to option '--itrace',
-cs_etm_queue::prev_packet will not been initialised.  After merging the
-code to support exception packets and sample flags, there introduced a
-number of uses of cs_etm_queue::prev_packet without checking whether it
-is valid, for these cases any accessing to uninitialised prev_packet
-will cause crash.
+  cat /tmp/build/perf/feature/test-disassembler-four-args.make.output
+  /usr/bin/ld: /usr/lib64/libbfd.a(plugin.o): in function `try_load_plugin':
+  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:243:
+  undefined reference to `dlopen'
+  /usr/bin/ld:
+  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:271:
+  undefined reference to `dlsym'
+  /usr/bin/ld:
+  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:256:
+  undefined reference to `dlclose'
+  /usr/bin/ld:
+  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:246:
+  undefined reference to `dlerror'
+  as we allow dynamic linking and loading
 
-As cs_etm_queue::prev_packet is used more widely now and it's already
-hard to follow which functions have been called in a context where the
-validity of cs_etm_queue::prev_packet has been checked, this patch
-always allocates memory for cs_etm_queue::prev_packet.
+Mageia 7 uses these linker flags:
+  $ rpm --eval %ldflags
+    -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id -Wl,--enable-new-dtags
 
-Reported-by: Robert Walker <robert.walker@arm.com>
-Suggested-by: Robert Walker <robert.walker@arm.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Robert Walker <robert.walker@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
+So add -ldl to this feature LDFLAGS.
+
+Reported-by: Thomas Backlund <tmb@mageia.org>
+Tested-by: Thomas Backlund <tmb@mageia.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Fixes: 7100b12cf474 ("perf cs-etm: Generate branch sample for exception packet")
-Fixes: 24fff5eb2b93 ("perf cs-etm: Avoid stale branch samples when flush packet")
-Link: http://lkml.kernel.org/r/20190428083228.20246-1-leo.yan@linaro.org
+Cc: Song Liu <songliubraving@fb.com>
+Link: https://lkml.kernel.org/r/20190501173158.GC21436@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ tools/perf/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 7777cfc1ad8c..de488b43f440 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -422,11 +422,9 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
- 	if (!etmq->packet)
- 		goto out_free;
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index fe3f97e342fa..6d65874e16c3 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -227,7 +227,7 @@ FEATURE_CHECK_LDFLAGS-libpython-version := $(PYTHON_EMBED_LDOPTS)
  
--	if (etm->synth_opts.last_branch || etm->sample_branches) {
--		etmq->prev_packet = zalloc(szp);
--		if (!etmq->prev_packet)
--			goto out_free;
--	}
-+	etmq->prev_packet = zalloc(szp);
-+	if (!etmq->prev_packet)
-+		goto out_free;
+ FEATURE_CHECK_LDFLAGS-libaio = -lrt
  
- 	if (etm->synth_opts.last_branch) {
- 		size_t sz = sizeof(struct branch_stack);
+-FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes
++FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
+ 
+ CFLAGS += -fno-omit-frame-pointer
+ CFLAGS += -ggdb3
