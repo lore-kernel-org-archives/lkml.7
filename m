@@ -2,289 +2,171 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB47C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7904C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48D252075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556846828;
-	bh=dAK2Yt3qD5zmHe8mgMxIoRaAMTlU3x5G2+ZN52E6vSA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=0PuZ0Z40OeatODveEBy49OKw9oYef1i36DJrx4P+XlR1nmVxXmFqGBQcqo7OsVUQr
-	 JRfoSuXCQEAhK+7WzS2RiwRvh8NvVr6BNBRKZ6qBte//TPLmFfIp45zlN1hkPl6VJU
-	 8jCftAb/QAaDtjlUL3HTCQovCA317Qhn5q2PHfaY=
+	by mail.kernel.org (Postfix) with ESMTP id 64D20206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:41:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="llZt1Kn0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="plN8q35K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfECB1H (ORCPT
+        id S1726451AbfECBk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 21:27:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbfECB1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 21:27:06 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 460E42087F;
-        Fri,  3 May 2019 01:27:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556846825;
-        bh=dAK2Yt3qD5zmHe8mgMxIoRaAMTlU3x5G2+ZN52E6vSA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=2ZG9iWIOocrV7hcyVglaDnCJiz8k4RbmB3/LRyEHNma4V4IwEoNjKwD08ekcqRYdU
-         g2GcPdNXrVGy6v3DdWBSgrkFqmYHp///VcR62QeEanyeEDG2SEbQ9/zt8M12/Pj1yF
-         3Kzg8A3TvxXZgIHVppO615sf2GPaT+5qfLbHzp04=
-Subject: Re: [PATCH v2 07/17] kunit: test: add initial tests
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, richard@nod.at, rientjes@google.com,
-        rostedt@goodmis.org, wfg@linux.intel.com, skhan@linuxfoundation.org
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-8-brendanhiggins@google.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <d4934565-9b41-880e-3bbe-984224b50fac@kernel.org>
-Date:   Thu, 2 May 2019 19:27:02 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 21:40:59 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:47551 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726128AbfECBk6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 21:40:58 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 3DF8314AEE;
+        Thu,  2 May 2019 21:40:57 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Thu, 02 May 2019 21:40:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=lCcAU6v9USd6O6HdXYYD0bpWXJQ
+        yvhP17fafAT6vWFg=; b=llZt1Kn0pG8HKFKAI6d1NqzJGq24SlGJ65lr50ds3GR
+        WgNq3mzcnBhb+1U01cuVhrsB36RtrCjYzYzlX7mYl+yAFp3TMgp7E55ZgA0Gici2
+        lmYauM1iOH7b7fsT9Rugz8kpo8PF7eLiX0lY4T+m9v0S/Eg9zrHFd2DZU07DdFiB
+        +l+XCUC0R0YEtt1ErbcQgzvi297Erj6LTwiIn25E1GHHl/9w9DuGNFvMg3H8073t
+        bTGNeff/lFluc6nW2E8EC9P8o81Dg2cc8X+H0i0wfhGntVbYGXLi7hXsnyojqeLR
+        +07YxTj+79lNHTn3TEB/cJGazPNp8TozPUs8rc94riQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=lCcAU6
+        v9USd6O6HdXYYD0bpWXJQyvhP17fafAT6vWFg=; b=plN8q35Kpda21thj9QoPxQ
+        IoA5NRiWaJ434/oOSFeEnCNie7ogazP8vDDGCpOJe0PMoVvn9D50dal7553V25+N
+        L3O8CO///B3dN1eb3LN/lKNHaicCuF06fnC29yZFJS7KUUyVT2hIkfT0NcEtzBqP
+        mdMW9j9tCLePN0+YLQjabo6/kMQY59o3DWP6lBArQIfyjIg25kSQasqMaJiy+QKW
+        sggG0c+o4mYihzHsYaaKfxmZmxP9HJboyYyjZuSApCItErJRUw0ZKfE/Y1G0S/X+
+        AnFQ//tJmwMt6oBkj0hNIW1BTrXt+jRjBbJ9GyXwU4WN8c66C1nQnnS0XVhi4p8g
+        ==
+X-ME-Sender: <xms:KJzLXGleEhRc00X81IsFGER0mVwlEqPHkioZSzBlkgG7poJSz-W8Zw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrjedtgdehtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
+    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvddurdeg
+    gedrvddtgedrvdefheenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsehtohgsihhnrd
+    gttgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:KJzLXGjW35US08xGSTMjk805EitBMvAmZ808H3vUzOwjK9nkMmhmcA>
+    <xmx:KJzLXElPVbYU7F6DB6KH4xPElHmOS_FsWnUb6vkirFPAOVjaUswaZw>
+    <xmx:KJzLXHFQPHpJbYw39B72-oCC0eIkTr6o3lH05dk_dIrRxErWArAaig>
+    <xmx:KZzLXL9DRBVouhsX65f-C_8ZbrxmEjlPYyX3RdJZeI3PHcuak3q1lg>
+Received: from localhost (ppp121-44-204-235.bras1.syd2.internode.on.net [121.44.204.235])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 34C87E4625;
+        Thu,  2 May 2019 21:40:54 -0400 (EDT)
+Date:   Fri, 3 May 2019 11:40:15 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/5] kobject: Fix kernel-doc comment first line
+Message-ID: <20190503014015.GC7416@eros.localdomain>
+References: <20190502023142.20139-1-tobin@kernel.org>
+ <20190502023142.20139-4-tobin@kernel.org>
+ <20190502073823.GQ26546@localhost>
+ <20190502082539.GB18363@eros.localdomain>
+ <20190502083922.GR26546@localhost>
 MIME-Version: 1.0
-In-Reply-To: <20190501230126.229218-8-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502083922.GR26546@localhost>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/1/19 5:01 PM, Brendan Higgins wrote:
-> Add a test for string stream along with a simpler example.
-> 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
->   kunit/Kconfig              | 12 ++++++
->   kunit/Makefile             |  4 ++
->   kunit/example-test.c       | 88 ++++++++++++++++++++++++++++++++++++++
->   kunit/string-stream-test.c | 61 ++++++++++++++++++++++++++
->   4 files changed, 165 insertions(+)
->   create mode 100644 kunit/example-test.c
->   create mode 100644 kunit/string-stream-test.c
-> 
-> diff --git a/kunit/Kconfig b/kunit/Kconfig
-> index 64480092b2c24..5cb500355c873 100644
-> --- a/kunit/Kconfig
-> +++ b/kunit/Kconfig
-> @@ -13,4 +13,16 @@ config KUNIT
->   	  special hardware. For more information, please see
->   	  Documentation/kunit/
->   
-> +config KUNIT_TEST
-> +	bool "KUnit test for KUnit"
-> +	depends on KUNIT
-> +	help
-> +	  Enables KUnit test to test KUnit.
-> +
+On Thu, May 02, 2019 at 10:39:22AM +0200, Johan Hovold wrote:
+> On Thu, May 02, 2019 at 06:25:39PM +1000, Tobin C. Harding wrote: > Adding Jon to CC
+> > 
+> > On Thu, May 02, 2019 at 09:38:23AM +0200, Johan Hovold wrote:
+> > > On Thu, May 02, 2019 at 12:31:40PM +1000, Tobin C. Harding wrote:
+> > > > kernel-doc comments have a prescribed format.  This includes parenthesis
+> > > > on the function name.  To be _particularly_ correct we should also
+> > > > capitalise the brief description and terminate it with a period.
+> > > 
+> > > Why do think capitalisation and full stop is required for the function
+> > > description?
+> > > 
+> > > Sure, the example in the current doc happen to use that, but I'm not
+> > > sure that's intended as a prescription.
+> > > 
+> > > The old kernel-doc nano-HOWTO specifically did not use this:
+> > > 
+> > > 	https://www.kernel.org/doc/Documentation/kernel-doc-nano-HOWTO.txt
+> > > 
+> > 
+> > Oh?  I was basing this on Documentation/doc-guide/kernel-doc.rst
+> > 
+> > 	Function documentation
+> > 	----------------------
+> > 
+> > 	The general format of a function and function-like macro kernel-doc comment is::
+> > 
+> > 	  /**
+> > 	   * function_name() - Brief description of function.
+> > 	   * @arg1: Describe the first argument.
+> > 	   * @arg2: Describe the second argument.
+> > 	   *        One can provide multiple line descriptions
+> > 	   *        for arguments.
+> > 
+> > I figured that was the canonical way to do kernel-doc function
+> > comments.  I have however refrained from capitalising and adding the
+> > period to argument strings to reduce code churn.  I figured if I'm
+> > touching the line to add parenthesis then I might as well make it
+> > perfect (if such a thing exists).
+>
+> I think you may have read too much into that example. Many of the
+> current function and parameter descriptions aren't even full sentences,
+> so sentence case and full stop doesn't really make any sense.
+>
+> Looks like we discussed this last fall as well:
 
-Please add a bit more information on what this config option
-does. Why should user care to enable it?
+Ha, this was funny.  By 'we' at first I thought you meant 'we the kernel
+community' but you actually meant we as in 'me and you'.  Clearly you
+failed to convince me last time :)
 
-> +config KUNIT_EXAMPLE_TEST
-> +	bool "Example test for KUnit"
-> +	depends on KUNIT
-> +	help
-> +	  Enables example KUnit test to demo features of KUnit.
-> +
+> 	https://lkml.kernel.org/r/20180912093116.GC1089@localhost
 
-Same here.
+I am totally aware this is close to code churn and any discussion is
+bikeshedding ... for me just because loads of places don't do this it
+still looks nicer to my eyes
 
->   endmenu
-> diff --git a/kunit/Makefile b/kunit/Makefile
-> index 6ddc622ee6b1c..60a9ea6cb4697 100644
-> --- a/kunit/Makefile
-> +++ b/kunit/Makefile
-> @@ -1,3 +1,7 @@
->   obj-$(CONFIG_KUNIT) +=			test.o \
->   					string-stream.o \
->   					kunit-stream.o
-> +
-> +obj-$(CONFIG_KUNIT_TEST) +=		string-stream-test.o
-> +
-> +obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	example-test.o
-> diff --git a/kunit/example-test.c b/kunit/example-test.c
-> new file mode 100644
-> index 0000000000000..3947dd7c8f922
-> --- /dev/null
-> +++ b/kunit/example-test.c
-> @@ -0,0 +1,88 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Example KUnit test to show how to use KUnit.
-> + *
-> + * Copyright (C) 2019, Google LLC.
-> + * Author: Brendan Higgins <brendanhiggins@google.com>
-> + */
-> +
-> +#include <kunit/test.h>
-> +
-> +/*
-> + * This is the most fundamental element of KUnit, the test case. A test case
-> + * makes a set EXPECTATIONs and ASSERTIONs about the behavior of some code; if
-> + * any expectations or assertions are not met, the test fails; otherwise, the
-> + * test passes.
-> + *
-> + * In KUnit, a test case is just a function with the signature
-> + * `void (*)(struct kunit *)`. `struct kunit` is a context object that stores
-> + * information about the current test.
-> + */
-> +static void example_simple_test(struct kunit *test)
-> +{
-> +	/*
-> +	 * This is an EXPECTATION; it is how KUnit tests things. When you want
-> +	 * to test a piece of code, you set some expectations about what the
-> +	 * code should do. KUnit then runs the test and verifies that the code's
-> +	 * behavior matched what was expected.
-> +	 */
-> +	KUNIT_EXPECT_EQ(test, 1 + 1, 2);
-> +}
-> +
-> +/*
-> + * This is run once before each test case, see the comment on
-> + * example_test_module for more information.
-> + */
-> +static int example_test_init(struct kunit *test)
-> +{
-> +	kunit_info(test, "initializing\n");
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Here we make a list of all the test cases we want to add to the test module
-> + * below.
-> + */
-> +static struct kunit_case example_test_cases[] = {
-> +	/*
-> +	 * This is a helper to create a test case object from a test case
-> +	 * function; its exact function is not important to understand how to
-> +	 * use KUnit, just know that this is how you associate test cases with a
-> +	 * test module.
-> +	 */
-> +	KUNIT_CASE(example_simple_test),
-> +	{},
-> +};
-> +
-> +/*
-> + * This defines a suite or grouping of tests.
-> + *
-> + * Test cases are defined as belonging to the suite by adding them to
-> + * `kunit_cases`.
-> + *
-> + * Often it is desirable to run some function which will set up things which
-> + * will be used by every test; this is accomplished with an `init` function
-> + * which runs before each test case is invoked. Similarly, an `exit` function
-> + * may be specified which runs after every test case and can be used to for
-> + * cleanup. For clarity, running tests in a test module would behave as follows:
-> + *
-> + * module.init(test);
-> + * module.test_case[0](test);
-> + * module.exit(test);
-> + * module.init(test);
-> + * module.test_case[1](test);
-> + * module.exit(test);
-> + * ...;
-> + */
-> +static struct kunit_module example_test_module = {
-> +	.name = "example",
-> +	.init = example_test_init,
-> +	.test_cases = example_test_cases,
-> +};
-> +
-> +/*
-> + * This registers the above test module telling KUnit that this is a suite of
-> + * tests that need to be run.
-> + */
-> +module_test(example_test_module);
-> diff --git a/kunit/string-stream-test.c b/kunit/string-stream-test.c
-> new file mode 100644
-> index 0000000000000..b2a98576797c9
-> --- /dev/null
-> +++ b/kunit/string-stream-test.c
-> @@ -0,0 +1,61 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * KUnit test for struct string_stream.
-> + *
-> + * Copyright (C) 2019, Google LLC.
-> + * Author: Brendan Higgins <brendanhiggins@google.com>
-> + */
-> +
-> +#include <linux/slab.h>
-> +#include <kunit/test.h>
-> +#include <kunit/string-stream.h>
-> +
-> +static void string_stream_test_get_string(struct kunit *test)
-> +{
-> +	struct string_stream *stream = new_string_stream();
-> +	char *output;
-> +
-> +	string_stream_add(stream, "Foo");
-> +	string_stream_add(stream, " %s", "bar");
-> +
-> +	output = string_stream_get_string(stream);
-> +	KUNIT_EXPECT_STREQ(test, output, "Foo bar");
-> +	kfree(output);
-> +	destroy_string_stream(stream);
-> +}
-> +
-> +static void string_stream_test_add_and_clear(struct kunit *test)
-> +{
-> +	struct string_stream *stream = new_string_stream();
-> +	char *output;
-> +	int i;
-> +
-> +	for (i = 0; i < 10; i++)
-> +		string_stream_add(stream, "A");
-> +
-> +	output = string_stream_get_string(stream);
-> +	KUNIT_EXPECT_STREQ(test, output, "AAAAAAAAAA");
-> +	KUNIT_EXPECT_EQ(test, stream->length, 10);
-> +	KUNIT_EXPECT_FALSE(test, string_stream_is_empty(stream));
-> +	kfree(output);
-> +
-> +	string_stream_clear(stream);
-> +
-> +	output = string_stream_get_string(stream);
-> +	KUNIT_EXPECT_STREQ(test, output, "");
-> +	KUNIT_EXPECT_TRUE(test, string_stream_is_empty(stream));
-> +	destroy_string_stream(stream);
-> +}
-> +
-> +static struct kunit_case string_stream_test_cases[] = {
-> +	KUNIT_CASE(string_stream_test_get_string),
-> +	KUNIT_CASE(string_stream_test_add_and_clear),
-> +	{}
-> +};
-> +
-> +static struct kunit_module string_stream_test_module = {
-> +	.name = "string-stream-test",
-> +	.test_cases = string_stream_test_cases
-> +};
-> +module_test(string_stream_test_module);
-> +
-> 
+/**
+* sfn() - Super awesome function.
 
+than
+
+/**
+*/ sfn() - super awesome function
+
+I most likely will keep doing these changes if I am touching the
+kernel-doc comments for other reasons and then drop the changes if the
+subsystem maintainer thinks its code churn.
+
+I defiantly won't do theses changes in GNSS, GREYBUS, or USB SERIAL.
+
+Oh, and I'm totally going to CC you know every time I flick one of these
+patches, prepare to get spammed :)
+
+Cheers,
+Tobin.
