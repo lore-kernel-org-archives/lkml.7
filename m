@@ -3,51 +3,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4401C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F97C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 927AC2087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8257C2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfECG71 (ORCPT
+        id S1726451AbfECG7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:59:27 -0400
-Received: from ozlabs.org ([203.11.71.1]:34027 "EHLO ozlabs.org"
+        Fri, 3 May 2019 02:59:33 -0400
+Received: from ozlabs.org ([203.11.71.1]:53895 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727212AbfECG7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:59:23 -0400
+        id S1727256AbfECG7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 02:59:30 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 44wNKP6y15z9sPV; Fri,  3 May 2019 16:59:21 +1000 (AEST)
+        id 44wNKX3tkmz9sPV; Fri,  3 May 2019 16:59:27 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: d1720adff3783a2ba7c128e304a385d18962835b
+X-powerpc-patch-commit: 8a23fdec3dbdc8bfde6f806d36e773236dab6663
 X-Patchwork-Hint: ignore
-In-Reply-To: <20190416094831.7264-2-anju@linux.vnet.ibm.com>
-To:     Anju T Sudhakar <anju@linux.vnet.ibm.com>
+In-Reply-To: <1103b2c9715bab90d680dcf78303619ff49debd0.1556627571.git.christophe.leroy@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     maddy@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, anju@linux.vnet.ibm.com
-Subject: Re: [PATCH v4 1/5] powerpc/include: Add data structures and macros for IMC trace mode
-Message-Id: <44wNKP6y15z9sPV@ozlabs.org>
-Date:   Fri,  3 May 2019 16:59:21 +1000 (AEST)
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/16] powerpc/32: Refactor EXCEPTION entry macros for head_8xx.S and head_32.S
+Message-Id: <44wNKX3tkmz9sPV@ozlabs.org>
+Date:   Fri,  3 May 2019 16:59:27 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-04-16 at 09:48:27 UTC, Anju T Sudhakar wrote:
-> Add the macros needed for IMC (In-Memory Collection Counters) trace-mode
-> and data structure to hold the trace-imc record data.
-> Also, add the new type "OPAL_IMC_COUNTERS_TRACE" in 'opal-api.h', since
-> there is a new switch case added in the opal-calls for IMC.
+On Tue, 2019-04-30 at 12:38:50 UTC, Christophe Leroy wrote:
+> EXCEPTION_PROLOG is similar in head_8xx.S and head_32.S
 > 
-> Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-> Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+> This patch creates head_32.h and moves EXCEPTION_PROLOG macro
+> into it. It also converts it from a GCC macro to a GAS macro
+> in order to ease refactorisation with 40x later, since
+> GAS macros allows the use of #ifdef/#else/#endif inside it.
+> And it also has the advantage of not requiring the uggly "; \"
+> at the end of each line.
+> 
+> This patch also moves EXCEPTION() and EXC_XFER_XXXX() macros which
+> are also similar while adding START_EXCEPTION() out of EXCEPTION().
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
 Series applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/d1720adff3783a2ba7c128e304a385d1
+https://git.kernel.org/powerpc/c/8a23fdec3dbdc8bfde6f806d36e77323
 
 cheers
