@@ -2,96 +2,167 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0F0C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CD4C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C9120B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D97432133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556899442;
-	bh=u8nMHEbZWJcIno8b2VP0zq26Pj+DlJZJ6b1N7AkLZGs=;
-	h=In-Reply-To:References:To:Cc:From:Subject:Date:List-ID:From;
-	b=FXkOGzm2LA8JlZgxIpWsZ799iVcYzUwANOobNqXkmdyJ5BIi4RT8JSAVaWBoaN5oC
-	 ln/RB12WYz4NGRo99o3U/vyV4wN76yfOI6S0rXMFoRs0E+jpbK4Q0v7H8ST7m4U0wk
-	 /7jBqoJiGeoex8xLngmI2tLMBhTxTpgUsIdtnwgE=
+	s=default; t=1556899451;
+	bh=9K26hWqGMesApQFdaAhFuNyta2kJgrhs2hDdmQ00qcY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DgciMQp8xBa1zGqbO0EJdFs1iZl7if84h0NCR4ehCJJJ0sI+YRoZmIhsojB0Wa+/Y
+	 MZ+NxCJ8tSSbaS0wlGFeGobWfqqc208e+22gho3I2M7VnsCILE9xI6vXiSBtPBqndq
+	 ROn88tPzzFAf6eorE1s2TRs34/gDWDLQZMOo0z7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbfECQEB (ORCPT
+        id S1728420AbfECQEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 12:04:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39286 "EHLO mail.kernel.org"
+        Fri, 3 May 2019 12:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbfECQEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 12:04:00 -0400
-Received: from localhost (unknown [104.132.0.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726495AbfECQEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 12:04:10 -0400
+Received: from guoren-Inspiron-7460 (23.83.240.247.16clouds.com [23.83.240.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EBE32087F;
-        Fri,  3 May 2019 16:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B79282075C;
+        Fri,  3 May 2019 16:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556899440;
-        bh=u8nMHEbZWJcIno8b2VP0zq26Pj+DlJZJ6b1N7AkLZGs=;
-        h=In-Reply-To:References:To:Cc:From:Subject:Date:From;
-        b=TD5d3cqye9lABfgNnSbABLKv5dC1suwdjX/scpb6aAPmD8sQ4qpHuYG/hdBsDeru7
-         BWClVjMxXIJhOIA6VGsgOr+AZy2t3xgbd9ClZ8eRiulq6SFD3llwWT2Ncg+ulC4Bmy
-         SRdIpHHDC2g2g5HIypFN9DW97CkTgy1i2hqmoVK8=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1556899448;
+        bh=9K26hWqGMesApQFdaAhFuNyta2kJgrhs2hDdmQ00qcY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HpZWwg5gL0lVYH9xXr2lFjIs4Hr4EFxgLMU0fvIEmuLFdJqilQ6jQYN4Ocb6SStWw
+         iJWfiG66zAQYSvJeB8l3sHAhW93+kPdDD0sZUeypbCGK/KXfyMm98BkvfNuimDaaPM
+         OT2y75fIlpEILXIObpyUg29WsNXovSO+5g+0/f6w=
+Date:   Sat, 4 May 2019 00:03:48 +0800
+From:   Guo Ren <guoren@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, Helge Deller <deller@gmx.de>,
+        Ley Foon Tan <lftan@altera.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Richard Kuo <rkuo@codeaurora.org>,
+        Richard Weinberger <richard@nod.at>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
+        nios2-dev@lists.rocketboards.org
+Subject: Re: [PATCH 05/15] csky: switch to generic version of pte allocation
+Message-ID: <20190503160348.GA9526@guoren-Inspiron-7460>
+References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
+ <1556810922-20248-6-git-send-email-rppt@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190430143206.GA4035@embeddedor>
-References: <20190430143206.GA4035@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: imx: clk-pllv3: mark expected switch fall-throughs
-Message-ID: <155689943924.200842.14239421795559565409@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Fri, 03 May 2019 09:03:59 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556810922-20248-6-git-send-email-rppt@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Gustavo A. R. Silva (2019-04-30 07:32:06)
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
->=20
-> This patch fixes the following warnings:
->=20
-> drivers/clk/imx/clk-pllv3.c: In function =E2=80=98imx_clk_pllv3=E2=80=99:
-> drivers/clk/imx/clk-pllv3.c:446:18: warning: this statement may fall thro=
-ugh [-Wimplicit-fallthrough=3D]
->    pll->div_shift =3D 1;
->    ~~~~~~~~~~~~~~~^~~
-> drivers/clk/imx/clk-pllv3.c:447:2: note: here
->   case IMX_PLLV3_USB:
->   ^~~~
-> drivers/clk/imx/clk-pllv3.c:453:21: warning: this statement may fall thro=
-ugh [-Wimplicit-fallthrough=3D]
->    pll->denom_offset =3D PLL_IMX7_DENOM_OFFSET;
->                      ^
-> drivers/clk/imx/clk-pllv3.c:454:2: note: here
->   case IMX_PLLV3_AV:
->   ^~~~
->=20
-> Warning level 3 was used: -Wimplicit-fallthrough=3D3
->=20
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Hi Mike,
+
+Acked-by: Guo Ren <ren_guo@c-sky.com>
+
+On Thu, May 02, 2019 at 06:28:32PM +0300, Mike Rapoport wrote:
+> The csky implementation pte_alloc_one(), pte_free_kernel() and pte_free()
+> is identical to the generic except of lack of __GFP_ACCOUNT for the user
+> PTEs allocation.
+> 
+> Switch csky to use generic version of these functions.
+Ok.
+
+> 
+> The csky implementation of pte_alloc_one_kernel() is not replaced because
+> it does not clear the allocated page but rather sets each PTE in it to a
+> non-zero value.
+Yes, we must set each PTE to _PAGE_GLOBAL because hardware refill the
+MMU TLB entry with two PTEs and it use the result of pte0.global | pte1.global.
+If pte0 is valid and pte1 is invalid, we must set _PAGE_GLOBAL in
+invalid pte entry. Fortunately, there is no performance issue.
+
+> 
+> The pte_free_kernel() and pte_free() versions on csky are identical to the
+> generic ones and can be simply dropped.
+Ok.
+
+Best Regards
+ Guo Ren
+
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 > ---
-
-Applied to clk-next
-
+>  arch/csky/include/asm/pgalloc.h | 30 +++---------------------------
+>  1 file changed, 3 insertions(+), 27 deletions(-)
+> 
+> diff --git a/arch/csky/include/asm/pgalloc.h b/arch/csky/include/asm/pgalloc.h
+> index d213bb4..98c571670 100644
+> --- a/arch/csky/include/asm/pgalloc.h
+> +++ b/arch/csky/include/asm/pgalloc.h
+> @@ -8,6 +8,9 @@
+>  #include <linux/mm.h>
+>  #include <linux/sched.h>
+>  
+> +#define __HAVE_ARCH_PTE_ALLOC_ONE_KERNEL
+> +#include <asm-generic/pgalloc.h>	/* for pte_{alloc,free}_one */
+> +
+>  static inline void pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmd,
+>  					pte_t *pte)
+>  {
+> @@ -39,33 +42,6 @@ static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+>  	return pte;
+>  }
+>  
+> -static inline struct page *pte_alloc_one(struct mm_struct *mm)
+> -{
+> -	struct page *pte;
+> -
+> -	pte = alloc_pages(GFP_KERNEL | __GFP_ZERO, 0);
+> -	if (!pte)
+> -		return NULL;
+> -
+> -	if (!pgtable_page_ctor(pte)) {
+> -		__free_page(pte);
+> -		return NULL;
+> -	}
+> -
+> -	return pte;
+> -}
+> -
+> -static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+> -{
+> -	free_pages((unsigned long)pte, PTE_ORDER);
+> -}
+> -
+> -static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
+> -{
+> -	pgtable_page_dtor(pte);
+> -	__free_pages(pte, PTE_ORDER);
+> -}
+> -
+>  static inline void pgd_free(struct mm_struct *mm, pgd_t *pgd)
+>  {
+>  	free_pages((unsigned long)pgd, PGD_ORDER);
+> -- 
+> 2.7.4
+> 
