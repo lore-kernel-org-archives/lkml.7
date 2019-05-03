@@ -2,340 +2,143 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35730C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28549C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF9E62070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA9682085A
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 01:09:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RZO5UNJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfECBGH (ORCPT
+        id S1726560AbfECBJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 21:06:07 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:47048 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbfECBGH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 21:06:07 -0400
-Received: by mail-io1-f72.google.com with SMTP id h189so925435ioa.13
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 18:06:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=VzCj3Nnmvs7DMHUtzSYcHisPUznb7GXkmaagy/qmZY0=;
-        b=DfdcyQ0YFhDtNyHdZZIhwApb9GgjdkXxbgdZpzu7ru66ilKmkj+AqyLeiv5fcUwA+0
-         U3HpgRMP9SYt4J31REIUTdhZgIIcHd/lAIyWU92J4HvR+iGQLAv7ozjLnaFvFl7b94tl
-         7CXRkS++HIvGV8G4Xp9WWn0I4zR7UW7220At2O8ch94aztJbc9kkGHAjtP6FHqfVGMpP
-         FTXlqyUd0PP854gn82WW3/C0FYqFdpEU3H2W8PaSOBg5XAcp+RcCQF8fShFpKk/es2kV
-         gaUtY0xUHWGeE6rC1KvwYrhaEH+PhESB7uzcfK4iU6JbJ56ldm5gerA5VMd1CbY5/4Rz
-         MkQQ==
-X-Gm-Message-State: APjAAAXYUitRNwxuunxE4Etl3jvA2DqnATuwN4lwWHoZOG308q3kuOKJ
-        ZMhOjDypbB/3pjeWIdBx0DImoB00khUzu0A0EgYZ04CWVhQf
-X-Google-Smtp-Source: APXvYqwszxiZU65FeCKJ2+aBskWIPIbsUDr5NoENAtRCJ7u6BPShgBMyZbu8a0Dzz1l5PqEPqty0g1MFxiDczwxihPQnAvPMvvFr
+        Thu, 2 May 2019 21:09:59 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45065 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726520AbfECBJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 21:09:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44wDZC3ZpMz9s5c;
+        Fri,  3 May 2019 11:09:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556845795;
+        bh=7bkWu+6rTKTwonGgaS4sxAMv9lTzGjIejg51YopzHN0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RZO5UNJIoAh/9+uhW+GTctr6u07vLhc9B9vOzhUi5sIMCOdT9uvdypMIfXsmA0Fal
+         0gexw1z+s2y2lavQ8wxNrLz1jfA+kz9TLhbCn964sRdKoLAOa2iUW02AoEUWIHIjkr
+         lyu+VGN2ajvrbrHRHsubWqOPrezsVkOc2zkGZXpjIOLnARy5/m2zvOH0i/Var85Eqi
+         2KjbZVUtt1jSg+oVR/gfvUtg9z4AJrFYHdps47IVxuYgs9bLKtRBmxB94wMRl/4pRE
+         kKQWeUEudn9vjR0inEyTzV9zQlN1BV3SEYeiUtaBOVGbWN8VG3DGorIJ9fsXmULWnx
+         BIc+oqUHldigg==
+Date:   Fri, 3 May 2019 11:09:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>, Theodore Ts'o <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the vfs tree with the fscrypt tree
+Message-ID: <20190503110951.2df97b8c@canb.auug.org.au>
 MIME-Version: 1.0
-X-Received: by 2002:a24:d91:: with SMTP id 139mr5175945itx.152.1556845566181;
- Thu, 02 May 2019 18:06:06 -0700 (PDT)
-Date:   Thu, 02 May 2019 18:06:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f14d5c0587f15a95@google.com>
-Subject: INFO: task hung in mount_bdev (2)
-From:   syzbot <syzbot+97889fb583ef1f3d42c6@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/5DT88H2gGKsN9j+elZMjYA_"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--Sig_/5DT88H2gGKsN9j+elZMjYA_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-syzbot found the following crash on:
+Hi all,
 
-HEAD commit:    9520b532 Merge tag 'for-linus' of git://git.armlinux.org.u..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1104bb90a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a42d110b47dd6b36
-dashboard link: https://syzkaller.appspot.com/bug?extid=97889fb583ef1f3d42c6
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10357834a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10e1d160a00000
+Today's linux-next merge of the vfs tree got a conflict in:
 
-Bisection is inconclusive: the bug happens on the oldest tested release.
+  fs/ext4/super.c
+  fs/f2fs/super.c
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1478aa98a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1278aa98a00000
+between commit:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+97889fb583ef1f3d42c6@syzkaller.appspotmail.com
+  2c58d548f570 ("fscrypt: cache decrypted symlink target in ->i_link")
 
-INFO: task syz-executor013:7561 blocked for more than 143 seconds.
-       Not tainted 5.1.0-rc6+ #90
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor013 D29336  7561   7543 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2877 [inline]
-  __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
-  schedule+0x92/0x180 kernel/sched/core.c:3562
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
-  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
-  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
-  mount_bdev+0x93/0x3c0 fs/super.c:1313
-  udf_mount+0x35/0x40 fs/udf/super.c:131
-  legacy_get_tree+0xf2/0x200 fs/fs_context.c:584
-  vfs_get_tree+0x123/0x450 fs/super.c:1481
-  do_new_mount fs/namespace.c:2622 [inline]
-  do_mount+0x1436/0x2c40 fs/namespace.c:2942
-  ksys_mount+0xdb/0x150 fs/namespace.c:3151
-  __do_sys_mount fs/namespace.c:3165 [inline]
-  __se_sys_mount fs/namespace.c:3162 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3162
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x44a739
-Code: 00 49 6e 76 61 6c 69 64 20 22 24 41 63 74 69 6f 6e 51 75 65 75 65 43  
-68 65 63 6b 70 6f 69 6e 74 49 6e 74 65 72 76 61 6c 22 2c <20> 65 72 72 6f  
-72 20 25 64 2e 20 49 67 6e 6f 72 65 64 2c 20 72 75
-RSP: 002b:00007f9541ef0db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 000000000044a739
-RDX: 0000000020000240 RSI: 0000000020000200 RDI: 0000000020000080
-RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007ffc6cf3cddf R14: 00007f9541ef19c0 R15: 0000000000000000
-INFO: task syz-executor013:7563 blocked for more than 143 seconds.
-       Not tainted 5.1.0-rc6+ #90
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor013 D29720  7563   7541 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2877 [inline]
-  __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
-  schedule+0x92/0x180 kernel/sched/core.c:3562
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
-  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
-  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
-  mount_bdev+0x93/0x3c0 fs/super.c:1313
-  udf_mount+0x35/0x40 fs/udf/super.c:131
-  legacy_get_tree+0xf2/0x200 fs/fs_context.c:584
-  vfs_get_tree+0x123/0x450 fs/super.c:1481
-  do_new_mount fs/namespace.c:2622 [inline]
-  do_mount+0x1436/0x2c40 fs/namespace.c:2942
-  ksys_mount+0xdb/0x150 fs/namespace.c:3151
-  __do_sys_mount fs/namespace.c:3165 [inline]
-  __se_sys_mount fs/namespace.c:3162 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3162
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x44a739
-Code: 00 49 6e 76 61 6c 69 64 20 22 24 41 63 74 69 6f 6e 51 75 65 75 65 43  
-68 65 63 6b 70 6f 69 6e 74 49 6e 74 65 72 76 61 6c 22 2c <20> 65 72 72 6f  
-72 20 25 64 2e 20 49 67 6e 6f 72 65 64 2c 20 72 75
-RSP: 002b:00007f9541ef0db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 000000000044a739
-RDX: 0000000020000240 RSI: 0000000020000200 RDI: 0000000020000080
-RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007ffc6cf3cddf R14: 00007f9541ef19c0 R15: 0000000000000000
-INFO: task syz-executor013:7559 blocked for more than 143 seconds.
-       Not tainted 5.1.0-rc6+ #90
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor013 D29096  7559   7544 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2877 [inline]
-  __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
-  schedule+0x92/0x180 kernel/sched/core.c:3562
-  __rwsem_down_write_failed_common kernel/locking/rwsem-xadd.c:582 [inline]
-  rwsem_down_write_failed+0x774/0xc30 kernel/locking/rwsem-xadd.c:611
-  call_rwsem_down_write_failed+0x17/0x30 arch/x86/lib/rwsem.S:117
-  __down_write arch/x86/include/asm/rwsem.h:142 [inline]
-  down_write+0x53/0x90 kernel/locking/rwsem.c:72
-  grab_super+0xb4/0x290 fs/super.c:385
-  sget_userns+0x1ab/0x560 fs/super.c:601
-  sget+0x10c/0x150 fs/super.c:660
-  mount_bdev+0xff/0x3c0 fs/super.c:1319
-  udf_mount+0x35/0x40 fs/udf/super.c:131
-  legacy_get_tree+0xf2/0x200 fs/fs_context.c:584
-  vfs_get_tree+0x123/0x450 fs/super.c:1481
-  do_new_mount fs/namespace.c:2622 [inline]
-  do_mount+0x1436/0x2c40 fs/namespace.c:2942
-  ksys_mount+0xdb/0x150 fs/namespace.c:3151
-  __do_sys_mount fs/namespace.c:3165 [inline]
-  __se_sys_mount fs/namespace.c:3162 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3162
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x44a739
-Code: 00 49 6e 76 61 6c 69 64 20 22 24 41 63 74 69 6f 6e 51 75 65 75 65 43  
-68 65 63 6b 70 6f 69 6e 74 49 6e 74 65 72 76 61 6c 22 2c <20> 65 72 72 6f  
-72 20 25 64 2e 20 49 67 6e 6f 72 65 64 2c 20 72 75
-RSP: 002b:00007f9541ef0db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 000000000044a739
-RDX: 0000000020000240 RSI: 0000000020000200 RDI: 0000000020000080
-RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007ffc6cf3cddf R14: 00007f9541ef19c0 R15: 0000000000000000
-INFO: task syz-executor013:7565 blocked for more than 144 seconds.
-       Not tainted 5.1.0-rc6+ #90
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor013 D29720  7565   7542 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2877 [inline]
-  __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
-  schedule+0x92/0x180 kernel/sched/core.c:3562
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
-  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
-  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
-  mount_bdev+0x93/0x3c0 fs/super.c:1313
-  udf_mount+0x35/0x40 fs/udf/super.c:131
-  legacy_get_tree+0xf2/0x200 fs/fs_context.c:584
-  vfs_get_tree+0x123/0x450 fs/super.c:1481
-  do_new_mount fs/namespace.c:2622 [inline]
-  do_mount+0x1436/0x2c40 fs/namespace.c:2942
-  ksys_mount+0xdb/0x150 fs/namespace.c:3151
-  __do_sys_mount fs/namespace.c:3165 [inline]
-  __se_sys_mount fs/namespace.c:3162 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3162
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x44a739
-Code: 00 49 6e 76 61 6c 69 64 20 22 24 41 63 74 69 6f 6e 51 75 65 75 65 43  
-68 65 63 6b 70 6f 69 6e 74 49 6e 74 65 72 76 61 6c 22 2c <20> 65 72 72 6f  
-72 20 25 64 2e 20 49 67 6e 6f 72 65 64 2c 20 72 75
-RSP: 002b:00007f9541ef0db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 000000000044a739
-RDX: 0000000020000240 RSI: 0000000020000200 RDI: 0000000020000080
-RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007ffc6cf3cddf R14: 00007f9541ef19c0 R15: 0000000000000000
-INFO: task syz-executor013:7562 blocked for more than 144 seconds.
-       Not tainted 5.1.0-rc6+ #90
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor013 D29720  7562   7546 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:2877 [inline]
-  __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
-  schedule+0x92/0x180 kernel/sched/core.c:3562
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
-  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
-  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
-  mount_bdev+0x93/0x3c0 fs/super.c:1313
-  udf_mount+0x35/0x40 fs/udf/super.c:131
-  legacy_get_tree+0xf2/0x200 fs/fs_context.c:584
-  vfs_get_tree+0x123/0x450 fs/super.c:1481
-  do_new_mount fs/namespace.c:2622 [inline]
-  do_mount+0x1436/0x2c40 fs/namespace.c:2942
-  ksys_mount+0xdb/0x150 fs/namespace.c:3151
-  __do_sys_mount fs/namespace.c:3165 [inline]
-  __se_sys_mount fs/namespace.c:3162 [inline]
-  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3162
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x44a739
-Code: 00 49 6e 76 61 6c 69 64 20 22 24 41 63 74 69 6f 6e 51 75 65 75 65 43  
-68 65 63 6b 70 6f 69 6e 74 49 6e 74 65 72 76 61 6c 22 2c <20> 65 72 72 6f  
-72 20 25 64 2e 20 49 67 6e 6f 72 65 64 2c 20 72 75
-RSP: 002b:00007f9541ef0db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 000000000044a739
-RDX: 0000000020000240 RSI: 0000000020000200 RDI: 0000000020000080
-RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007ffc6cf3cddf R14: 00007f9541ef19c0 R15: 0000000000000000
+from the fscrypt tree and commits:
 
-Showing all locks held in the system:
-1 lock held by khungtaskd/1042:
-  #0: 000000006329251d (rcu_read_lock){....}, at:  
-debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5057
-1 lock held by rsyslogd/7425:
-  #0: 00000000d77ddd95 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
-fs/file.c:801
-2 locks held by getty/7515:
-  #0: 000000004c45b4e6 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000cb1f5c30 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7516:
-  #0: 0000000061e5eac7 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000aab03c35 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7517:
-  #0: 00000000205ee5b4 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 0000000002712bdb (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7518:
-  #0: 000000000cc046b2 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000d5140a4a (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7519:
-  #0: 000000003624da6d (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000f5b16893 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7520:
-  #0: 0000000082294f91 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000870dfcb5 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by getty/7521:
-  #0: 000000000f72fa86 (&tty->ldisc_sem){++++}, at:  
-ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
-  #1: 00000000a044b2e0 (&ldata->atomic_read_lock){+.+.}, at:  
-n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
-2 locks held by syz-executor013/7547:
-1 lock held by syz-executor013/7561:
-  #0: 00000000d97cb347 (&bdev->bd_fsfreeze_mutex){+.+.}, at:  
-mount_bdev+0x93/0x3c0 fs/super.c:1313
-1 lock held by syz-executor013/7563:
-  #0: 00000000d97cb347 (&bdev->bd_fsfreeze_mutex){+.+.}, at:  
-mount_bdev+0x93/0x3c0 fs/super.c:1313
-2 locks held by syz-executor013/7559:
-  #0: 00000000d97cb347 (&bdev->bd_fsfreeze_mutex){+.+.}, at:  
-mount_bdev+0x93/0x3c0 fs/super.c:1313
-  #1: 000000001ecfe564 (&type->s_umount_key#39){+.+.}, at:  
-grab_super+0xb4/0x290 fs/super.c:385
-1 lock held by syz-executor013/7565:
-  #0: 00000000d97cb347 (&bdev->bd_fsfreeze_mutex){+.+.}, at:  
-mount_bdev+0x93/0x3c0 fs/super.c:1313
-1 lock held by syz-executor013/7562:
-  #0: 00000000d97cb347 (&bdev->bd_fsfreeze_mutex){+.+.}, at:  
-mount_bdev+0x93/0x3c0 fs/super.c:1313
+  94053139d482 ("ext4: make use of ->free_inode()")
+  d01718a050d0 ("f2fs: switch to ->free_inode()")
 
-=============================================
+from the vfs tree.
 
-NMI backtrace for cpu 1
-CPU: 1 PID: 1042 Comm: khungtaskd Not tainted 5.1.0-rc6+ #90
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:204 [inline]
-  watchdog+0x9b7/0xec0 kernel/hung_task.c:288
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 1 to CPUs 0:
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
+Thanks, Al, for the heads up and example merge.
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--=20
+Cheers,
+Stephen Rothwell
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --cc fs/ext4/super.c
+index 489cdeeab789,981f702848e7..000000000000
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@@ -1111,12 -1107,8 +1111,9 @@@ static int ext4_drop_inode(struct inod
+  	return drop;
+  }
+ =20
+- static void ext4_i_callback(struct rcu_head *head)
++ static void ext4_free_in_core_inode(struct inode *inode)
+  {
+- 	struct inode *inode =3D container_of(head, struct inode, i_rcu);
+-=20
+ +	fscrypt_free_inode(inode);
+-=20
+  	kmem_cache_free(ext4_inode_cachep, EXT4_I(inode));
+  }
+ =20
+diff --cc fs/f2fs/super.c
+index f7605b3ff1f9,9924eac76254..000000000000
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@@ -1000,12 -1000,8 +1000,9 @@@ static void f2fs_dirty_inode(struct ino
+  	f2fs_inode_dirtied(inode, false);
+  }
+ =20
+- static void f2fs_i_callback(struct rcu_head *head)
++ static void f2fs_free_inode(struct inode *inode)
+  {
+- 	struct inode *inode =3D container_of(head, struct inode, i_rcu);
+-=20
+ +	fscrypt_free_inode(inode);
+-=20
+  	kmem_cache_free(f2fs_inode_cachep, F2FS_I(inode));
+  }
+ =20
+
+--Sig_/5DT88H2gGKsN9j+elZMjYA_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzLlN8ACgkQAVBC80lX
+0Gz7Pwf/V59IXjAUO1LLeQX7qhHxgK0OoZD2mvhrgFz2NbECImXsXvmFR9RhPstg
+TjHn1Vi6WT3gRnSRWPqJd0ywS9VN60S4GnB9Ho0OQv55aPjyP1FF8VGxsuy6UDFQ
+NBrs/JysXdfr/SCBV3FCUgB4oYTwwosZePsBurPotO/V2RySRFPM/GGOLGa/HKox
+sqA3WL4p4x9O+eIBqj1iO642lHI9gTWZ4rGzfn2oEwxfRdhWO/CKLZ4yXksI5LXm
+QB6EU8Keb+VlC1pWTBW6mKxlAnanNcmVNm5gxpQZD3GNDe9YY8cS5L9AJRRpYC/I
+G5YlnIWhrE6yalf3zZpe6NHRTOliCA==
+=oD1k
+-----END PGP SIGNATURE-----
+
+--Sig_/5DT88H2gGKsN9j+elZMjYA_--
