@@ -2,146 +2,258 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A77C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5D5C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07AAC2089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A1412087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F6lrwkUO"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iLMy2Lbt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbfECRsD (ORCPT
+        id S1728778AbfECRsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:48:03 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45212 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728487AbfECRsD (ORCPT
+        Fri, 3 May 2019 13:48:33 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36803 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfECRsc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:48:03 -0400
-Received: by mail-pl1-f194.google.com with SMTP id o5so3012867pls.12
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 10:48:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hcu8K+zWlIGVcO7HslnrIVULTnaD0CZgK/YRsSv5h7E=;
-        b=F6lrwkUObP5QsxdWxxiNyUKTwB/nEyF4/2ZuY81qbcsiroixxS1vfHPuhgJCG74vnG
-         ZpQu2+yRS0RB44jtMo71Bq3M3BbxP6cxxmSZI8bQ/c/OgD/1tMxXKzfjUhB2JqKaAn/l
-         NG8WILFO9GWdfOIoO5C2INyNQwVBGc70wO/D0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Hcu8K+zWlIGVcO7HslnrIVULTnaD0CZgK/YRsSv5h7E=;
-        b=PMHzIjfZT/1DPOR7HnaM4nqX35J/HWymjdm2v5+uZOlNVMSC7yMaFHXKtRTmsbp65+
-         p+FBRyoMObR/IKNVhw2r4JJInApUoXKuE1HaEV93Imq1Er1lNY1GnkL8Qtr6/wDQacIm
-         K5oL9SuV6vQ6VnE/JBrlX/qTlXD5ifL5h9UFIn1kML6OWAOFynvgpk6UKM1Vk9nrFE/e
-         oD0ccEhrruE+bKNYUPMzJGtQDyJSHgPJESO1tO5Q5jKcK5joW6Pq6zvptXUZQn2qEG8u
-         CZ5MQxOCgR0XUuOY+FTuAE87JC7fV2qdiRMGtn2DfyIYCwTUpOxLmY6OoInrYogCn4uZ
-         ShtA==
-X-Gm-Message-State: APjAAAVSEFwp3KzwCYO3NuvHqe9NBDCKzPYLHX9AImFhJjiWMC8Wa52y
-        FO+0GTSW4nbVafLTIaRzVZkPYw==
-X-Google-Smtp-Source: APXvYqwUHs8vMvaru9Cwe1tZkDsvr7dVSbNkuW/Q+VhSh7UtsmWhvEG5ztlrguWI+8XxxHBhnHpwGA==
-X-Received: by 2002:a17:902:7085:: with SMTP id z5mr12285610plk.78.1556905682002;
-        Fri, 03 May 2019 10:48:02 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id v15sm3588446pff.105.2019.05.03.10.48.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 10:48:01 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>
-Cc:     linux-rockchip@lists.infradead.org, jwerner@chromium.org,
-        groeck@chromium.org, mka@chromium.org, briannorris@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] pstore/ram: Improve backward compatibility with older Chromebooks
-Date:   Fri,  3 May 2019 10:47:30 -0700
-Message-Id: <20190503174730.245762-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+        Fri, 3 May 2019 13:48:32 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x43HmK8J2845299
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 3 May 2019 10:48:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x43HmK8J2845299
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1556905701;
+        bh=4+ckTtPbMORPhFYjpg2pFzQJAlYuwjP392LAUnNvpQE=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=iLMy2LbtFV36LwfrOcDB3xkqyHuVxtqg4ING5NMI91aZyj/NrJQ2fWYXRrNYwfoCl
+         9XicAx7dIGl6ipK83gZwOFRBS5sd/9Dqk5DERjfSufh0L3iLNoAbkxkzvupVWmpQMs
+         PF0F00jnf7WuIb9j4hXFnImzCNlRhP3grNzGTRoaozK7Vu9wlwjQvlgUV1E9z/TY09
+         5IiQBJkvN0Nh7K507cxQi+C94gb2HK99NR5yVlzbuCoia9Lj8MjyGRya7gnA0wX/rg
+         eTmz8kzucbA0d2lPlbHrZMCYyBctXtLBIBLuW0/F/Bksy/u348Rl+7b107IjYct/lH
+         SRLOQhRCirARA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x43HmKuE2845296;
+        Fri, 3 May 2019 10:48:20 -0700
+Date:   Fri, 3 May 2019 10:48:20 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Nicholas Piggin <tipbot@zytor.com>
+Message-ID: <tip-08ae95f4fd3b38b257f5dc7e6507e071c27ba0d5@git.kernel.org>
+Cc:     npiggin@gmail.com, tglx@linutronix.de, rafael.j.wysocki@intel.com,
+        fweisbec@gmail.com, hpa@zytor.com, torvalds@linux-foundation.org,
+        peterz@infradead.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org
+Reply-To: hpa@zytor.com, npiggin@gmail.com, fweisbec@gmail.com,
+          rafael.j.wysocki@intel.com, tglx@linutronix.de,
+          peterz@infradead.org, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
+In-Reply-To: <20190411033448.20842-6-npiggin@gmail.com>
+References: <20190411033448.20842-6-npiggin@gmail.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] nohz_full: Allow the boot CPU to be nohz_full
+Git-Commit-ID: 08ae95f4fd3b38b257f5dc7e6507e071c27ba0d5
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When you try to run an upstream kernel on an old ARM-based Chromebook
-you'll find that console-ramoops doesn't work.
+Commit-ID:  08ae95f4fd3b38b257f5dc7e6507e071c27ba0d5
+Gitweb:     https://git.kernel.org/tip/08ae95f4fd3b38b257f5dc7e6507e071c27ba0d5
+Author:     Nicholas Piggin <npiggin@gmail.com>
+AuthorDate: Thu, 11 Apr 2019 13:34:48 +1000
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Fri, 3 May 2019 19:42:58 +0200
 
-Old ARM-based Chromebooks, before <https://crrev.com/c/439792>
-("ramoops: support upstream {console,pmsg,ftrace}-size properties")
-used to create a "ramoops" node at the top level that looked like:
+nohz_full: Allow the boot CPU to be nohz_full
 
-/ {
-  ramoops {
-    compatible = "ramoops";
-    reg = <...>;
-    record-size = <...>;
-    dump-oops;
-  };
-};
+Allow the boot CPU/CPU0 to be nohz_full. Have the boot CPU take the
+do_timer duty during boot until a housekeeping CPU can take over.
 
-...and these Chromebooks assumed that the downstream kernel would make
-console_size / pmsg_size match the record size.  The above ramoops
-node was added by the firmware so it's not easy to make any changes.
+This is supported when CONFIG_PM_SLEEP_SMP is not configured, or when
+it is configured and the arch allows suspend on non-zero CPUs.
 
-Let's match the expected behavior, but only for those using the old
-backward-compatible way of working where ramoops is right under the
-root node.
+nohz_full has been trialed at a large supercomputer site and found to
+significantly reduce jitter. In order to deploy it in production, they
+need CPU0 to be nohz_full because their job control system requires
+the application CPUs to start from 0, and the housekeeping CPUs are
+placed higher. An equivalent job scheduling that uses CPU0 for
+housekeeping could be achieved by modifying their system, but it is
+preferable if nohz_full can support their environment without
+modification.
 
-NOTE: if there are some out-of-tree devices that had ramoops at the
-top level, left everything but the record size as 0, and somehow
-doesn't want this behavior, we can try to add more conditions here.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linuxppc-dev@lists.ozlabs.org
+Link: https://lkml.kernel.org/r/20190411033448.20842-6-npiggin@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
+ kernel/time/tick-common.c | 50 +++++++++++++++++++++++++++++++++++++++++++----
+ kernel/time/tick-sched.c  | 34 ++++++++++++++++++++++----------
+ 2 files changed, 70 insertions(+), 14 deletions(-)
 
- fs/pstore/ram.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index c5c685589e36..8df3bfa2837f 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -669,6 +669,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
- 			    struct ramoops_platform_data *pdata)
- {
- 	struct device_node *of_node = pdev->dev.of_node;
-+	struct device_node *parent_node;
- 	struct resource *res;
- 	u32 value;
- 	int ret;
-@@ -703,6 +704,23 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+index df401463a191..e49e8091f9ac 100644
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -46,6 +46,14 @@ ktime_t tick_period;
+  *    procedure also covers cpu hotplug.
+  */
+ int tick_do_timer_cpu __read_mostly = TICK_DO_TIMER_BOOT;
++#ifdef CONFIG_NO_HZ_FULL
++/*
++ * tick_do_timer_boot_cpu indicates the boot CPU temporarily owns
++ * tick_do_timer_cpu and it should be taken over by an eligible secondary
++ * when one comes online.
++ */
++static int tick_do_timer_boot_cpu __read_mostly = -1;
++#endif
  
- #undef parse_size
- 
-+	/*
-+	 * Some old Chromebooks relied on the kernel setting the console_size
-+	 * and pmsg_size to the record size since that's what the downstream
-+	 * kernel did.  These same Chromebooks had "ramoops" straight under
-+	 * the root node which isn't according to the upstream bindings.  Let's
-+	 * make those old Chromebooks work by detecting this and mimicing the
-+	 * expected behavior.
-+	 */
-+	parent_node = of_get_parent(of_node);
-+	if (of_node_is_root(parent_node) &&
-+	    !pdata->console_size && !pdata->ftrace_size &&
-+	    !pdata->pmsg_size && !pdata->ecc_info.ecc_size) {
-+		pdata->console_size = pdata->record_size;
-+		pdata->pmsg_size = pdata->record_size;
-+	}
-+	of_node_put(parent_node);
-+
- 	return 0;
+ /*
+  * Debugging: see timer_list.c
+@@ -167,6 +175,26 @@ void tick_setup_periodic(struct clock_event_device *dev, int broadcast)
+ 	}
  }
  
--- 
-2.21.0.1020.gf2820cf01a-goog
-
++#ifdef CONFIG_NO_HZ_FULL
++static void giveup_do_timer(void *info)
++{
++	int cpu = *(unsigned int *)info;
++
++	WARN_ON(tick_do_timer_cpu != smp_processor_id());
++
++	tick_do_timer_cpu = cpu;
++}
++
++static void tick_take_do_timer_from_boot(void)
++{
++	int cpu = smp_processor_id();
++	int from = tick_do_timer_boot_cpu;
++
++	if (from >= 0 && from != cpu)
++		smp_call_function_single(from, giveup_do_timer, &cpu, 1);
++}
++#endif
++
+ /*
+  * Setup the tick device
+  */
+@@ -186,12 +214,26 @@ static void tick_setup_device(struct tick_device *td,
+ 		 * this cpu:
+ 		 */
+ 		if (tick_do_timer_cpu == TICK_DO_TIMER_BOOT) {
+-			if (!tick_nohz_full_cpu(cpu))
+-				tick_do_timer_cpu = cpu;
+-			else
+-				tick_do_timer_cpu = TICK_DO_TIMER_NONE;
++			tick_do_timer_cpu = cpu;
++
+ 			tick_next_period = ktime_get();
+ 			tick_period = NSEC_PER_SEC / HZ;
++#ifdef CONFIG_NO_HZ_FULL
++			/*
++			 * The boot CPU may be nohz_full, in which case set
++			 * tick_do_timer_boot_cpu so the first housekeeping
++			 * secondary that comes up will take do_timer from
++			 * us.
++			 */
++			if (tick_nohz_full_cpu(cpu))
++				tick_do_timer_boot_cpu = cpu;
++
++		} else if (tick_do_timer_boot_cpu != -1 &&
++						!tick_nohz_full_cpu(cpu)) {
++			tick_take_do_timer_from_boot();
++			tick_do_timer_boot_cpu = -1;
++			WARN_ON(tick_do_timer_cpu != cpu);
++#endif
+ 		}
+ 
+ 		/*
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index 6fa52cd6df0b..4aa917acbe1c 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -121,10 +121,16 @@ static void tick_sched_do_timer(struct tick_sched *ts, ktime_t now)
+ 	 * into a long sleep. If two CPUs happen to assign themselves to
+ 	 * this duty, then the jiffies update is still serialized by
+ 	 * jiffies_lock.
++	 *
++	 * If nohz_full is enabled, this should not happen because the
++	 * tick_do_timer_cpu never relinquishes.
+ 	 */
+-	if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)
+-	    && !tick_nohz_full_cpu(cpu))
++	if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)) {
++#ifdef CONFIG_NO_HZ_FULL
++		WARN_ON(tick_nohz_full_running);
++#endif
+ 		tick_do_timer_cpu = cpu;
++	}
+ #endif
+ 
+ 	/* Check, if the jiffies need an update */
+@@ -395,8 +401,8 @@ void __init tick_nohz_full_setup(cpumask_var_t cpumask)
+ static int tick_nohz_cpu_down(unsigned int cpu)
+ {
+ 	/*
+-	 * The boot CPU handles housekeeping duty (unbound timers,
+-	 * workqueues, timekeeping, ...) on behalf of full dynticks
++	 * The tick_do_timer_cpu CPU handles housekeeping duty (unbound
++	 * timers, workqueues, timekeeping, ...) on behalf of full dynticks
+ 	 * CPUs. It must remain online when nohz full is enabled.
+ 	 */
+ 	if (tick_nohz_full_running && tick_do_timer_cpu == cpu)
+@@ -423,12 +429,15 @@ void __init tick_nohz_init(void)
+ 		return;
+ 	}
+ 
+-	cpu = smp_processor_id();
++	if (IS_ENABLED(CONFIG_PM_SLEEP_SMP) &&
++			!IS_ENABLED(CONFIG_PM_SLEEP_SMP_NONZERO_CPU)) {
++		cpu = smp_processor_id();
+ 
+-	if (cpumask_test_cpu(cpu, tick_nohz_full_mask)) {
+-		pr_warn("NO_HZ: Clearing %d from nohz_full range for timekeeping\n",
+-			cpu);
+-		cpumask_clear_cpu(cpu, tick_nohz_full_mask);
++		if (cpumask_test_cpu(cpu, tick_nohz_full_mask)) {
++			pr_warn("NO_HZ: Clearing %d from nohz_full range "
++				"for timekeeping\n", cpu);
++			cpumask_clear_cpu(cpu, tick_nohz_full_mask);
++		}
+ 	}
+ 
+ 	for_each_cpu(cpu, tick_nohz_full_mask)
+@@ -904,8 +913,13 @@ static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
+ 		/*
+ 		 * Boot safety: make sure the timekeeping duty has been
+ 		 * assigned before entering dyntick-idle mode,
++		 * tick_do_timer_cpu is TICK_DO_TIMER_BOOT
+ 		 */
+-		if (tick_do_timer_cpu == TICK_DO_TIMER_NONE)
++		if (unlikely(tick_do_timer_cpu == TICK_DO_TIMER_BOOT))
++			return false;
++
++		/* Should not happen for nohz-full */
++		if (WARN_ON_ONCE(tick_do_timer_cpu == TICK_DO_TIMER_NONE))
+ 			return false;
+ 	}
+ 
