@@ -6,40 +6,42 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432E2C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D786C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182BC205ED
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502B8205ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbfECOgU (ORCPT
+        id S1728158AbfECOfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:36:20 -0400
-Received: from smtp-out.xnet.cz ([178.217.244.18]:17163 "EHLO smtp-out.xnet.cz"
+        Fri, 3 May 2019 10:35:17 -0400
+Received: from smtp-out.xnet.cz ([178.217.244.18]:17089 "EHLO smtp-out.xnet.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbfECOfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:35:18 -0400
+        id S1726377AbfECOfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 10:35:16 -0400
 Received: from meh.true.cz (meh.true.cz [108.61.167.218])
         (Authenticated sender: petr@true.cz)
-        by smtp-out.xnet.cz (Postfix) with ESMTPSA id 34C214ACB;
-        Fri,  3 May 2019 16:27:32 +0200 (CEST)
-Received: by meh.true.cz (OpenSMTPD) with ESMTP id 37a7c2d4;
-        Fri, 3 May 2019 16:27:30 +0200 (CEST)
+        by smtp-out.xnet.cz (Postfix) with ESMTPSA id 52D994AD8;
+        Fri,  3 May 2019 16:27:50 +0200 (CEST)
+Received: by meh.true.cz (OpenSMTPD) with ESMTP id 58992be4;
+        Fri, 3 May 2019 16:27:48 +0200 (CEST)
 From:   =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
 To:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Frank Rowand <frowand.list@gmail.com>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 03/10] net: macb: support of_get_mac_address new ERR_PTR error
-Date:   Fri,  3 May 2019 16:27:08 +0200
-Message-Id: <1556893635-18549-4-git-send-email-ynezz@true.cz>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 09/10] ARM: Kirkwood: support of_get_mac_address new ERR_PTR error
+Date:   Fri,  3 May 2019 16:27:14 +0200
+Message-Id: <1556893635-18549-10-git-send-email-ynezz@true.cz>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556893635-18549-1-git-send-email-ynezz@true.cz>
 References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
@@ -51,50 +53,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There was NVMEM support added directly to of_get_mac_address, and it uses
-nvmem_get_mac_address under the hood, so we can remove it. As
-of_get_mac_address can now return ERR_PTR encoded error values, adjust to
-that as well.
+There was NVMEM support added to of_get_mac_address, so it could now return
+ERR_PTR encoded error values, so we need to adjust all current users of
+of_get_mac_address to this new fact.
 
 Signed-off-by: Petr Štetiar <ynezz@true.cz>
 ---
-
- Changes since v2:
-
- * ERR_PTR and EPROBE_DEFER handling
 
  Changes since v3:
 
   * IS_ERR_OR_NULL -> IS_ERR
 
- drivers/net/ethernet/cadence/macb_main.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ arch/arm/mach-mvebu/kirkwood.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 3da2795..f0466e8 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -4172,15 +4172,13 @@ static int macb_probe(struct platform_device *pdev)
- 		bp->rx_intr_mask |= MACB_BIT(RXUBR);
+diff --git a/arch/arm/mach-mvebu/kirkwood.c b/arch/arm/mach-mvebu/kirkwood.c
+index 0aa8810..9b5f4d6 100644
+--- a/arch/arm/mach-mvebu/kirkwood.c
++++ b/arch/arm/mach-mvebu/kirkwood.c
+@@ -92,7 +92,8 @@ static void __init kirkwood_dt_eth_fixup(void)
+ 			continue;
  
- 	mac = of_get_mac_address(np);
--	if (mac) {
-+	if (PTR_ERR(mac) == -EPROBE_DEFER) {
-+		err = -EPROBE_DEFER;
-+		goto err_out_free_netdev;
-+	} else if (!IS_ERR(mac)) {
- 		ether_addr_copy(bp->dev->dev_addr, mac);
- 	} else {
--		err = nvmem_get_mac_address(&pdev->dev, bp->dev->dev_addr);
--		if (err) {
--			if (err == -EPROBE_DEFER)
--				goto err_out_free_netdev;
--			macb_get_hwaddr(bp);
--		}
-+		macb_get_hwaddr(bp);
- 	}
+ 		/* skip disabled nodes or nodes with valid MAC address*/
+-		if (!of_device_is_available(pnp) || of_get_mac_address(np))
++		if (!of_device_is_available(pnp) ||
++		    !IS_ERR(of_get_mac_address(np)))
+ 			goto eth_fixup_skip;
  
- 	err = of_get_phy_mode(np);
+ 		clk = of_clk_get(pnp, 0);
 -- 
 1.9.1
 
