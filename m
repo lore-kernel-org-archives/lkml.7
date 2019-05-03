@@ -2,87 +2,93 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D199FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7ACC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F80C2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951442075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:33:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sBotVlkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfECDTY (ORCPT
+        id S1726304AbfECDdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 23:19:24 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:38220 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbfECDTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 23:19:24 -0400
-Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=[172.20.29.49])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hMOiq-0006pS-Iv; Thu, 02 May 2019 21:18:53 -0600
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, mpe@ellerman.id.au, pmladek@suse.com,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-References: <20190501230126.229218-1-brendanhiggins@google.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <ea36c3d6-8c13-2186-16f3-596d834aeebe@deltatee.com>
-Date:   Thu, 2 May 2019 21:18:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 23:33:46 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42518 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfECDdp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 23:33:45 -0400
+Received: by mail-ed1-f67.google.com with SMTP id l25so4348830eda.9
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 20:33:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=RdojDANAJ6rzclEPLAA4FdcSP1GiFYCSI8+a3mJzXmI=;
+        b=sBotVlkfKKZhxUaYy9XvO+EUUTHs8VDdZ9d2b8+7Yu8V+9yfbQjMmQfIVL46zxU35N
+         CIyqpEit6G/j5dqs20bTv8PB6UYJmiEpyn379hyP63eOmsh7BRJv3pxXN9HCnWzs76MU
+         GSOw4PV1v2wwKP3COFu3mZZzMa3iJWwQzczQ8SO1jp4GD48+lyNnt4txrqpJDyVo7hNP
+         jLEFyEMhQ71v7Dfk8i9nazI6dgcPNDMbYkImEVUL/PD+XW/W1SpgmrwP2YGwin/QdTES
+         r9Lrvb33kLOfYwX2/tSZmE5R4az/pFs/xdCsQR9Vathyz36YesXZFJDzLkKoOlJ4hEny
+         6r0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=RdojDANAJ6rzclEPLAA4FdcSP1GiFYCSI8+a3mJzXmI=;
+        b=O1QI/NKbNSryk20rls+PYsKKVjlbw41fQyQTScI0T7w6UBsTdccPQ8CN3PPmkSYDeC
+         ayhKp0FCGArN2cv7/z92FVafQl4C6pbAabacRzDc1QM3NOywL9r0xjlEkK3pmmNzrvs5
+         kdESK3PcFMsXUijywwVOUsMxleAnNwxCuf4fLv8UGbBAL0H4re7DwnDaBPly9X4o5Yfj
+         OONPfKeEolN1O9IjMSi4ZjUoRzA7lyHkuc5bHI7mI8wjs5Dv4E19t0WDL5SVr12LIw2+
+         UzmINcqXMoZMMzA0mQIwuuQ+7gye0ijQ1vHxxmEvnIR6NExIcLcvOhC2oqBwVAvaBl9y
+         0ZrQ==
+X-Gm-Message-State: APjAAAUNoMkJ+sGnw1KMEw0Y0YN8xrfC/WwYC45H2a35uUmFIdDqtr7I
+        znPK49YTD3tANWXPX9DEfOE=
+X-Google-Smtp-Source: APXvYqxoOBfWgFA3QZ5YcV5wYRnq9lz5at6L+Nl0JyBStbS6YGlUx5uUsozDEn1Jy8a3c7kAKW5S5w==
+X-Received: by 2002:a50:8c03:: with SMTP id p3mr5401146edp.267.1556854423921;
+        Thu, 02 May 2019 20:33:43 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id g32sm258988ede.88.2019.05.02.20.33.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 02 May 2019 20:33:42 -0700 (PDT)
+Date:   Thu, 2 May 2019 20:33:40 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Cliff Whickman <cpw@sgi.com>, Robin Holt <robinmholt@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com
+Subject: -Wuninitialized warning in drivers/misc/sgi-xp/xpc_partition.c
+Message-ID: <20190503033340.GA7980@archlinux-i9>
 MIME-Version: 1.0
-In-Reply-To: <20190501230126.229218-1-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 173.228.226.134
-X-SA-Exim-Rcpt-To: wfg@linux.intel.com, rostedt@goodmis.org, rientjes@google.com, richard@nod.at, pmladek@suse.com, mpe@ellerman.id.au, knut.omang@oracle.com, khilman@baylibre.com, julia.lawall@lip6.fr, joel@jms.id.au, jdike@addtoit.com, daniel@ffwll.ch, dan.j.williams@intel.com, dan.carpenter@oracle.com, amir73il@gmail.com, Tim.Bird@sony.com, Alexander.Levin@microsoft.com, linux-um@lists.infradead.org, linux-nvdimm@lists.01.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, shuah@kernel.org, sboyd@kernel.org, robh@kernel.org, mcgrof@kernel.org, kieran.bingham@ideasonboard.com, keescook@google.com, gregkh@linuxfoundation.org, frowand.list@gmail.com, brendanhiggins@google.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
+When building with -Wuninitialized, Clang warns:
 
-On 2019-05-01 5:01 p.m., Brendan Higgins wrote:
-> ## TLDR
-> 
-> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
-> 5.2.
-> 
+drivers/misc/sgi-xp/xpc_partition.c:73:14: warning: variable 'buf' is uninitialized when used within its own initialization [-Wuninitialized]
+        void *buf = buf;
+              ~~~   ^~~
+1 warning generated.
 
-As I said on the last posting, I like this and would like to see it move
-forward. I still have the same concerns over the downsides of using UML
-(ie. not being able to compile large swaths of the tree due to features
-that don't exist in that arch) but these are concerns for later.
+I am not really sure how to properly initialize buf in this instance.
+I would assume it would involve xpc_kmalloc_cacheline_aligned like
+further down in the function but maybe not, this function isn't entirely
+clear. Could we get your input, this is one of the last warnings I see
+in a few allyesconfig builds.
 
-I'd prefer to see the unnecessary indirection that I pointed out in
-patch 8 cleaned up but, besides that, the code looks good to me.
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
-Thanks!
-
-Logan
+Thanks,
+Nathan
