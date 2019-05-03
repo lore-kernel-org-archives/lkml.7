@@ -2,144 +2,136 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE55AC46470
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14069C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD522075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93AD2075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:33:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFtJtD6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbfECRbe (ORCPT
+        id S1728440AbfECRdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:31:34 -0400
-Received: from fieldses.org ([173.255.197.46]:54610 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbfECRbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:31:34 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 4C0301C26; Fri,  3 May 2019 13:31:33 -0400 (EDT)
-Date:   Fri, 3 May 2019 13:31:33 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     NeilBrown <neilb@suse.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
-        <andreas.gruenbacher@gmail.com>,
-        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
-        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
-Message-ID: <20190503173133.GB14954@fieldses.org>
-References: <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
- <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de>
- <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
- <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
- <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
- <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
- <20161206185806.GC31197@fieldses.org>
- <87bm0l4nra.fsf@notabene.neil.brown.name>
- <20190503153531.GJ12608@fieldses.org>
- <CAOQ4uxi6MRT=1nFqPD3cfEfBxHsGdUm=FgTjv3ts2bb4zSYwsw@mail.gmail.com>
+        Fri, 3 May 2019 13:33:53 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:52491 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727628AbfECRdx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 13:33:53 -0400
+Received: by mail-it1-f193.google.com with SMTP id q65so8947192itg.2;
+        Fri, 03 May 2019 10:33:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+2gg4z+rZQjGBdEHbAJ4Di8CT1K8c80KfYEwGpo3ExQ=;
+        b=QFtJtD6cDlJAuC8vKYj7CL4OcRplxArKSJHumAz+4p4B+rMiZu53xdwSDnVzwZgJtp
+         mY/AWhQm1EGoBjjxcoPX/D0+kFC1zHVp/hfcPoLbAMI90faNss56WEab1M7q27E3MaMc
+         6NUzAkbGgqZNRr8wGnIO+2gztWjDkvNxDpqP0eldjbNcLz3ouCYNh1Qr3Fx23dQDFBF2
+         nh7jI7vAYLH4vkph8fnbwyKh7jlP2Nd8HBuO4D0QYWOGB0R/BIUSfIXDSa91fsWEnbec
+         qSd8PES6VbgBp8SNtvRxLRcy7k4/IJxJW3fmrirxYmcAvZF8X5RMQgQZxgCY/2W4S4jm
+         MrQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+2gg4z+rZQjGBdEHbAJ4Di8CT1K8c80KfYEwGpo3ExQ=;
+        b=RsGifRn2IJgvjbZsakC70t7fCS0oR2TDko/xGl4uECMKeePK7Fwf6cTdeksuYU+I6B
+         8zSJR3nQkGjvHdVM0orORo3r3k3+Hix9K2OgSlT9tZPJbQrF1J9qiy1Sn8bJNutUeLN8
+         i0z4zcj9URBmA865ndXvMvmyxL6MtFTCuDsJHtyxuztc3eXc56keX2eyyP/nNArUbTJ4
+         xnbtJbpr0uCft9ekioEPnlyqbsg06wVtl18Dc1AARHg4RpU8sumhz/EPLPZdEpZsszOG
+         wpeUMVi3143OUJliiETaNS5JpJxKf6XpHFQb41FMDd0Qi4QEDr2HWG245UcxeJeZky/M
+         Pk/Q==
+X-Gm-Message-State: APjAAAVT5RTFhhzRCxareJqyQTcohM6nxwrbvuTbpn1R3muvlMVTdvQb
+        /JdLatvdgrHkIRveg/uBPbWM+6P7q8rkFx7/n7TOBA==
+X-Google-Smtp-Source: APXvYqw1EkOFpizqKtYRCCB80ruydNztpPx2ZCg1Kc6JEcxISL2U/hQCMGKmlgump6DkNieuo1FkD45dzVBdRQ0KQd0=
+X-Received: by 2002:a05:660c:2c5:: with SMTP id j5mr1731491itd.154.1556904832500;
+ Fri, 03 May 2019 10:33:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxi6MRT=1nFqPD3cfEfBxHsGdUm=FgTjv3ts2bb4zSYwsw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190503170042.19334-1-andrew.smirnov@gmail.com>
+ <20190503170042.19334-4-andrew.smirnov@gmail.com> <20190503170326.GB32529@roeck-us.net>
+In-Reply-To: <20190503170326.GB32529@roeck-us.net>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Fri, 3 May 2019 12:33:40 -0500
+Message-ID: <CAHQ1cqGkcOHnW1S8QGGcgY3qV6ErCq5gbYgGwspVeoEt_ce6tg@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] dt-bindings: power: supply: Add bindings for
+ Microchip UCS1002
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Linux PM list <linux-pm@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 01:26:01PM -0400, Amir Goldstein wrote:
-> On Fri, May 3, 2019 at 12:03 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+On Fri, May 3, 2019 at 12:03 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Fri, May 03, 2019 at 10:00:42AM -0700, Andrey Smirnov wrote:
+> > Add bindings for Microchip UCS1002 Programmable USB Port Power
+> > Controller with Charger Emulation.
 > >
-> > On Thu, May 02, 2019 at 12:02:33PM +1000, NeilBrown wrote:
-> > > On Tue, Dec 06 2016, J. Bruce Fields wrote:
-> > >
-> > > > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrote:
-> > > >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > > >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Grünbacher
-> > > >> > <andreas.gruenbacher@gmail.com> wrote:
-> > > >> >> 2016-12-06 0:19 GMT+01:00 Andreas Grünbacher <andreas.gruenbacher@gmail.com>:
-> > > >> >
-> > > >> >>> It's not hard to come up with a heuristic that determines if a
-> > > >> >>> system.nfs4_acl value is equivalent to a file mode, and to ignore the
-> > > >> >>> attribute in that case. (The file mode is transmitted in its own
-> > > >> >>> attribute already, so actually converting .) That way, overlayfs could
-> > > >> >>> still fail copying up files that have an actual ACL. It's still an
-> > > >> >>> ugly hack ...
-> > > >> >>
-> > > >> >> Actually, that kind of heuristic would make sense in the NFS client
-> > > >> >> which could then hide the "system.nfs4_acl" attribute.
-> > > >> >
-> > > >> > Even simpler would be if knfsd didn't send the attribute if not
-> > > >> > necessary.  Looks like there's code actively creating the nfs4_acl on
-> > > >> > the wire even if the filesystem had none:
-> > > >> >
-> > > >> >     pacl = get_acl(inode, ACL_TYPE_ACCESS);
-> > > >> >     if (!pacl)
-> > > >> >         pacl = posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
-> > > >> >
-> > > >> > What's the point?
-> > > >>
-> > > >> That's how the protocol is specified.
-> > > >
-> > > > Yep, even if we could make that change to nfsd it wouldn't help the
-> > > > client with the large number of other servers that are out there
-> > > > (including older knfsd's).
-> > > >
-> > > > --b.
-> > > >
-> > > >> (I'm not saying that that's very helpful.)
-> > > >>
-> > > >> Andreas
-> > >
-> > > Hi everyone.....
-> > >  I have a customer facing this problem, and so stumbled onto the email
-> > >  thread.
-> > >  Unfortunately it didn't resolve anything.  Maybe I can help kick things
-> > >  along???
-> > >
-> > >  The core problem here is that NFSv4 and ext4 use different and largely
-> > >  incompatible ACL implementations.  There is no way to accurately
-> > >  translate from one to the other in general (common specific examples
-> > >  can be converted).
-> > >
-> > >  This means that either:
-> > >    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
-> > >       versa) or
-> > >    2/ overlayfs need to accept that sometimes it cannot copy ACLs, and
-> > >       that is OK.
-> > >
-> > >  Silently not copying the ACLs is probably not a good idea as it might
-> > >  result in inappropriate permissions being given away.  So if the
-> > >  sysadmin wants this (and some clearly do), they need a way to
-> > >  explicitly say "I accept the risk".
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Reviewed-by: Rob Herring <robh+dt@kernel.org>
+> > Cc: Enric Balletbo Serra <enric.balletbo@collabora.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Fabio Estevam <festevam@gmail.com>
+> > Cc: Guenter Roeck <linux@roeck-us.net>
+> > Cc: Sebastian Reichel <sre@kernel.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > ---
+> >  .../power/supply/microchip,ucs1002.txt        | 27 +++++++++++++++++++
+> >  1 file changed, 27 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
 > >
-> > So, I feel like silently copying ACLs up *also* carries a risk, if that
-> > means switching from server-enforcement to client-enforcement of those
-> > permissions.
-> >
-> > Sorry, I know we had another thread recently about permissions in this
-> > situation, and I've forgotten the conclusion.
-> >
-> > Out of curiosity, what's done with selinux labels?
-> >
-> 
-> overlayfs calls security_inode_copy_up_xattr(name) which
-> can fail (<0) allow (0) or skip(1).
-> 
-> selinux_inode_copy_up_xattr() as well as smack_inode_copy_up_xattr()
-> skip their own xattr on copy up and fail any other xattr copy up.
+> > diff --git a/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+> > new file mode 100644
+> > index 000000000000..1d284ad816bf
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+> > @@ -0,0 +1,27 @@
+> > +Microchip UCS1002 USB Port Power Controller
+> > +
+> > +Required properties:
+> > +- compatible         : Should be "microchip,ucs1002";
+> > +- reg                        : I2C slave address
+> > +
+> > +Optional properties:
+> > +- interrupts         : A list of interrupts lines present (could be either
+> > +                       corresponding to A_DET# pin, ALERT# pin, or both)
+> > +- interrupt-names    : A list of interrupt names. Should contain (if
+> > +                       present):
+> > +                       - "a_det" for line connected to A_DET# pin
+> > +                       - "alert" for line connected to ALERT# pin
+> > +                       Both are expected to be IRQ_TYPE_EDGE_BOTH
+> > +Example:
+> > +
+> > +&i2c3 {
+> > +     charger@32 {
+> > +             compatible = "microchip,ucs1002";
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&pinctrl_ucs1002_pins>;
+> > +             reg = <0x32>;
+> > +             interrupts-extended = <&gpio5 2 IRQ_TYPE_EDGE_BOTH>,
+> > +                                   <&gpio3 21 IRQ_TYPE_EDGE_BOTH>;
+>
+> interrupts ?
 
-If it's OK to silently skip copying up security labels, maybe it's OK to
-silently skip NFSv4 ACLs too?
+Can't really use it here since it assumes single "interrupt-parent"
+(we have gpio5 and gpio3 as parents above)
 
---b.
+Thanks,
+Andrey Smirnov
