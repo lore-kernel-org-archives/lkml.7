@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77865C004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10B7C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4C52081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA752081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfECIpZ (ORCPT
+        id S1727046AbfECIp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 04:45:25 -0400
+        Fri, 3 May 2019 04:45:29 -0400
 Received: from mga01.intel.com ([192.55.52.88]:5527 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbfECIpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 04:45:22 -0400
+        id S1726996AbfECIpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 04:45:24 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 May 2019 01:45:22 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 May 2019 01:45:23 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,425,1549958400"; 
-   d="scan'208";a="147811520"
+   d="scan'208";a="147811527"
 Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 03 May 2019 01:45:20 -0700
+  by orsmga003.jf.intel.com with ESMTP; 03 May 2019 01:45:22 -0700
 From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-kernel@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: [GIT PULL 01/22] intel_th: msu: Fix single mode with IOMMU
-Date:   Fri,  3 May 2019 11:44:34 +0300
-Message-Id: <20190503084455.23436-2-alexander.shishkin@linux.intel.com>
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [GIT PULL 02/22] intel_th: SPDX-ify the documentation
+Date:   Fri,  3 May 2019 11:44:35 +0300
+Message-Id: <20190503084455.23436-3-alexander.shishkin@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190503084455.23436-1-alexander.shishkin@linux.intel.com>
 References: <20190503084455.23436-1-alexander.shishkin@linux.intel.com>
@@ -46,101 +46,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the pages that are allocated for the single mode of MSC are not
-mapped into the device's dma space and the code is incorrectly using
-*_to_phys() in place of a dma address. This fails with IOMMU enabled and
-is otherwise bad practice.
-
-Fix the single mode buffer allocation to map the pages into the device's
-DMA space.
+Add the SPDX header to the Intel TH documentation.
 
 Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: ba82664c134e ("intel_th: Add Memory Storage Unit driver")
-Cc: stable@vger.kernel.org # v4.4+
+Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/hwtracing/intel_th/msu.c | 35 +++++++++++++++++++++++++++++---
- 1 file changed, 32 insertions(+), 3 deletions(-)
+ Documentation/trace/intel_th.rst | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hwtracing/intel_th/msu.c b/drivers/hwtracing/intel_th/msu.c
-index ba7aaf421f36..8ff326c0c406 100644
---- a/drivers/hwtracing/intel_th/msu.c
-+++ b/drivers/hwtracing/intel_th/msu.c
-@@ -84,6 +84,7 @@ struct msc_iter {
-  * @reg_base:		register window base address
-  * @thdev:		intel_th_device pointer
-  * @win_list:		list of windows in multiblock mode
-+ * @single_sgt:		single mode buffer
-  * @nr_pages:		total number of pages allocated for this buffer
-  * @single_sz:		amount of data in single mode
-  * @single_wrap:	single mode wrap occurred
-@@ -104,6 +105,7 @@ struct msc {
- 	struct intel_th_device	*thdev;
- 
- 	struct list_head	win_list;
-+	struct sg_table		single_sgt;
- 	unsigned long		nr_pages;
- 	unsigned long		single_sz;
- 	unsigned int		single_wrap : 1;
-@@ -617,22 +619,45 @@ static void intel_th_msc_deactivate(struct intel_th_device *thdev)
-  */
- static int msc_buffer_contig_alloc(struct msc *msc, unsigned long size)
- {
-+	unsigned long nr_pages = size >> PAGE_SHIFT;
- 	unsigned int order = get_order(size);
- 	struct page *page;
-+	int ret;
- 
- 	if (!size)
- 		return 0;
- 
-+	ret = sg_alloc_table(&msc->single_sgt, 1, GFP_KERNEL);
-+	if (ret)
-+		goto err_out;
+diff --git a/Documentation/trace/intel_th.rst b/Documentation/trace/intel_th.rst
+index 19e2d633f3c7..baa12eb09ef4 100644
+--- a/Documentation/trace/intel_th.rst
++++ b/Documentation/trace/intel_th.rst
+@@ -1,3 +1,5 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+	ret = -ENOMEM;
- 	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
- 	if (!page)
--		return -ENOMEM;
-+		goto err_free_sgt;
- 
- 	split_page(page, order);
--	msc->nr_pages = size >> PAGE_SHIFT;
-+	sg_set_buf(msc->single_sgt.sgl, page_address(page), size);
-+
-+	ret = dma_map_sg(msc_dev(msc)->parent->parent, msc->single_sgt.sgl, 1,
-+			 DMA_FROM_DEVICE);
-+	if (ret < 0)
-+		goto err_free_pages;
-+
-+	msc->nr_pages = nr_pages;
- 	msc->base = page_address(page);
--	msc->base_addr = page_to_phys(page);
-+	msc->base_addr = sg_dma_address(msc->single_sgt.sgl);
- 
- 	return 0;
-+
-+err_free_pages:
-+	__free_pages(page, order);
-+
-+err_free_sgt:
-+	sg_free_table(&msc->single_sgt);
-+
-+err_out:
-+	return ret;
- }
- 
- /**
-@@ -643,6 +668,10 @@ static void msc_buffer_contig_free(struct msc *msc)
- {
- 	unsigned long off;
- 
-+	dma_unmap_sg(msc_dev(msc)->parent->parent, msc->single_sgt.sgl,
-+		     1, DMA_FROM_DEVICE);
-+	sg_free_table(&msc->single_sgt);
-+
- 	for (off = 0; off < msc->nr_pages << PAGE_SHIFT; off += PAGE_SIZE) {
- 		struct page *page = virt_to_page(msc->base + off);
- 
+ =======================
+ Intel(R) Trace Hub (TH)
+ =======================
 -- 
 2.20.1
 
