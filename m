@@ -2,93 +2,98 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83159C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D7DC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E5E82087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901B62177B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 15:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556899063;
-	bh=AUKU07ZUFBcme7h7KpoCXxRbhp++Lt8tHdh+MTSYDRU=;
-	h=In-Reply-To:References:To:Cc:From:Subject:Date:List-ID:From;
-	b=JRPzXELTW0Ng/Lv1+zJYQq2JetBNrx2nFcECUtwJHnjDH023ST8TB+u5gB5kN7JJD
-	 R3jUIsG9eysubp0QRIaA1PBEJkKIFAUXFBXnZmagCaA6oIrsTvp5mrdFAGaNbwAocd
-	 272AmTM+/8TSpGfMtEXpCvKfSQYwNcKgJz1IoVY4=
+	s=default; t=1556899076;
+	bh=7UvSCsvaU3FibAjgp3LxMomulZ/CBjuKxs/Y/E35SNw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=WpAN0k4e3h1tp4vVA9o1gUDqq9csnKRpHOftsNgAg5iQ89+a02gyvOrQ8+i6+pRGX
+	 TdeOn14wPx6ddCnPeREBYmbLIhjwVl4j48GROjNpN6HoBUNPsjTM6uPXq0ePMEPJww
+	 ToczvUnE2kRSeMZNNlY8ZT07ppwYsjvDqWIRCWGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbfECP5m (ORCPT
+        id S1728400AbfECP5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 11:57:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728282AbfECP5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 11:57:41 -0400
-Received: from localhost (unknown [104.132.0.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E136A2075C;
-        Fri,  3 May 2019 15:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556899061;
-        bh=AUKU07ZUFBcme7h7KpoCXxRbhp++Lt8tHdh+MTSYDRU=;
-        h=In-Reply-To:References:To:Cc:From:Subject:Date:From;
-        b=iI/v3AxYZ3PJnJf9fEElJ2Nayg2jbyzgtTKyeB6wlFN+K94YWkHAx/BRhkDtU21h9
-         PgnpcxZOLaP0pqK/8Zixe3GJVBZwSih16RDfnV+iabXZLPjyUNmtVPxruD55BWUB3d
-         BuTjUxT025pMKA56mDZaoNKJObKLJYbIfOkqv0rw=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 3 May 2019 11:57:55 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41448 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfECP5y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 11:57:54 -0400
+Received: by mail-lf1-f66.google.com with SMTP id d8so4747693lfb.8
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 08:57:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ibRuMb4Bna9Lf59jNSb/p17IRXiYMOZB66PZMleQAFs=;
+        b=Mq5eVoczRJURfZsdXhS9oP3NhpZv5wXhXnOqp8qHWiNvQOz+rETlU/A2QcKUFDFnz5
+         Sq1JQFVWaj/80vebLcI8fipUuRYHaPgAnuXp33kyQZgYoXDOR0aLYLuDD2rALAjF+Zhy
+         dpbVZPOmZt+6TOX9GKp1HHfqn5zT7UxqO+9KZkoZuJn69h2Kjni3cRm4us8aF1UVB7DT
+         jb3IDXkG8+1Ykv5CZKGKOhB99FAKcu3zP5Ckv+iUsTV7e+2RRy7OylJyhZY32uuSpS48
+         pDAelmOujjfiAEOHFKtjcHTue6xN0OTBKHqHzL8JDJvFNCIQOQFgtngRhrkmofxfxRl7
+         mRlQ==
+X-Gm-Message-State: APjAAAVjL0UXRIZnlxiEbIA0G7kpwhTsGl6JVNf65gsN5BqJeIi/AhqV
+        WtGAqWJ3jrQdQXrCA8HB48e6ogEb
+X-Google-Smtp-Source: APXvYqxNrvBi+4h1bzhwzbJoyVnewtUL64RWBQcrUpTLhoG9hITlqJWzOLTFjKvD9azlcPU/xPKz1Q==
+X-Received: by 2002:a19:550d:: with SMTP id n13mr5390047lfe.127.1556899073034;
+        Fri, 03 May 2019 08:57:53 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id q21sm491761lfa.84.2019.05.03.08.57.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 08:57:51 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hMaZZ-0003Ix-4B; Fri, 03 May 2019 17:58:05 +0200
+Date:   Fri, 3 May 2019 17:58:05 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] GNSS updates for 5.2-rc1
+Message-ID: <20190503155805.GA12685@localhost>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <AM0PR04MB4211B63333AB7C50497AE17680350@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1556585557-28795-1-git-send-email-Anson.Huang@nxp.com> <155674445915.200842.2835083854881674143@swboyd.mtv.corp.google.com> <AM0PR04MB4211B63333AB7C50497AE17680350@AM0PR04MB4211.eurprd04.prod.outlook.com>
-To:     "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>
-Cc:     dl-linux-imx <linux-imx@nxp.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: RE: [PATCH V2] clk: imx: pllv4: add fractional-N pll support
-Message-ID: <155689906009.200842.4702575036187120025@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Fri, 03 May 2019 08:57:40 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Aisheng Dong (2019-05-02 19:38:34)
-> > From: Stephen Boyd [mailto:sboyd@kernel.org]
-> > Sent: Thursday, May 2, 2019 5:01 AM
-> >=20
-> > The Content-transfer-encoding header is still base64. I guess it can't =
-be fixed.
-> >=20
->=20
-> How can we know it's base64?
-> As I saw from the 'Headers' in patchwork, it's:
-> "Content-Type: text/plain; charset=3D"us-ascii"
-> Content-Transfer-Encoding: 7bit"
-> https://patchwork.kernel.org/patch/10922657/
->=20
-> We'd like to fix it this.
->=20
+The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
 
-I see:
+  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
 
-Content-Type                                      text/plain; charset=3D"ut=
-f-8"                                                                       =
-                                =20
-Content-Transfer-Encoding                         base64              =20
+are available in the Git repository at:
 
-Maybe that's because I'm getting the mail directly instead of from the
-mailing list?
+  https://git.kernel.org/pub/scm/linux/kernel/git/johan/gnss.git tags/gnss-5.2-rc1
 
+for you to fetch changes up to 7cc10c5cb14397d61d203d0a319ef796d4f6d943:
+
+  gnss: ubx: add u-blox,neo-6m compatible (2019-04-04 12:46:19 +0200)
+
+----------------------------------------------------------------
+GNSS updates for 5.2-rc1
+
+Here are the GNSS updates for 5.2-rc1; only a new u-blox compatible.
+
+All have been in linux-next with no reported issues.
+
+Signed-off-by: Johan Hovold <johan@kernel.org>
+
+----------------------------------------------------------------
+Ondrej Jirman (2):
+      dt-bindings: gnss: add u-blox,neo-6m compatible
+      gnss: ubx: add u-blox,neo-6m compatible
+
+ Documentation/devicetree/bindings/gnss/u-blox.txt | 1 +
+ drivers/gnss/ubx.c                                | 1 +
+ 2 files changed, 2 insertions(+)
