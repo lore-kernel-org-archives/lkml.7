@@ -2,122 +2,92 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A258CC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99ABC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E32A20652
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 21:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD666206BB
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 22:04:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vs1Wwtdj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfECV5n (ORCPT
+        id S1726996AbfECWE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 17:57:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56308 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726727AbfECV5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 17:57:42 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1C9E787620;
-        Fri,  3 May 2019 21:57:42 +0000 (UTC)
-Received: from x230.aquini.net (ovpn-120-150.rdu2.redhat.com [10.10.120.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B180E189F5;
-        Fri,  3 May 2019 21:57:34 +0000 (UTC)
-Date:   Fri, 3 May 2019 17:57:31 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Micah Morton <mortonm@chromium.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Jann Horn <jannh@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH v3 0/2] sys/prctl: expose TASK_SIZE value to userspace
-Message-ID: <20190503215731.GB10302@x230.aquini.net>
-References: <1556907021-29730-1-git-send-email-jsavitz@redhat.com>
- <20190503204912.GA5887@yury-thinkpad>
+        Fri, 3 May 2019 18:04:29 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43084 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726470AbfECWE3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 18:04:29 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t22so3333870pgi.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 15:04:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=RHqjWmIkEHkJIYN5J/tVVIuTNo00OY/OtIEp+UgaBMs=;
+        b=vs1Wwtdj12+4iyb5/FTiwoquXxOvfotLHiVZQBM0eVs35LqbzeLBSZ21Cbuv9Jzj6k
+         +l3Gkzfrp5skcy8xbupOg1WR2hrh8rTeKUrNindpPWulnAX23kBMZX7/1FioAqXcRahi
+         jKQ30nPtK6HRUtUC7TJ1oWfG3OiVR/GAwuGK/W8wsHt4SlcLPDnc5dHM4SNZuNWoQDg5
+         CBIdoOGjfFOOGHPJPR9Rs1LVS0zwX5TIpnFpIPEEaOMlvmL0s/FrrD9jlnnUwomNHh6t
+         xcl6m991Fwkj4cDdGMdWNtTKS66pd5YBnLACLiBRdj1M5xru8xXNs8OPgSdTUA0pDFhU
+         antQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=RHqjWmIkEHkJIYN5J/tVVIuTNo00OY/OtIEp+UgaBMs=;
+        b=ao3gXPd6MvohZumxT7kINcEgN38lqIjv2QxFtjOylM9YpVSCba0K88Gt4OaH8I5qzv
+         CGpoBb4r3rnHj2PDhAaKttcdQtc9uDaNTf5jZ/kvrvsxaavyYmFhmIaNoToL46jMtu8K
+         A54xY+QpKIdrDfui2e4PEJCxfhrxkHZA6aGa2LsGDtsT5UAfyW04/tD8j5ohChVMiOFv
+         bShXXjlOPfuGgCpCDIdN9u90T2BZ8jsXSPfalyuFEsbZj8h6mT+fhGi0CiCPOKXed/Bb
+         QiACfVoEId8iNtL7sDOmbvDN8rbuCjqWGl2LW/pJ4cRGniQFYTz6Ff1cMD5o9BTRAZ3f
+         Ao6w==
+X-Gm-Message-State: APjAAAWeDbDZnKzWO6qzBL+ScjEIPDsHB6KdDohn5BAHznQrT3JoYJXI
+        6jYw5M3qTacv2rKylvoPxOAkXQ==
+X-Google-Smtp-Source: APXvYqzyU+wMWrFoRA1gvmfadd4aYpSMdzHEAgB0uTziUcb1/nwfYiSc4SEq8pdkNU7ww0+yBusrfQ==
+X-Received: by 2002:a63:3746:: with SMTP id g6mr13796813pgn.422.1556921068758;
+        Fri, 03 May 2019 15:04:28 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:84dd:d87f:858b:45f])
+        by smtp.googlemail.com with ESMTPSA id s32sm4512668pgm.19.2019.05.03.15.04.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 15:04:27 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        patchwork-bot+notify@kernel.org
+Subject: Re: [PATCH 0/6] arm64: dts: meson: mmc clean-up
+In-Reply-To: <20190418122714.30805-1-jbrunet@baylibre.com>
+References: <20190418122714.30805-1-jbrunet@baylibre.com>
+Date:   Fri, 03 May 2019 15:04:27 -0700
+Message-ID: <7hh8abkxec.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190503204912.GA5887@yury-thinkpad>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 03 May 2019 21:57:42 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 01:49:12PM -0700, Yury Norov wrote:
-> On Fri, May 03, 2019 at 02:10:19PM -0400, Joel Savitz wrote:
-> > In the mainline kernel, there is no quick mechanism to get the virtual
-> > memory size of the current process from userspace.
-> > 
-> > Despite the current state of affairs, this information is available to the
-> > user through several means, one being a linear search of the entire address
-> > space. This is an inefficient use of cpu cycles.
-> > 
-> > A component of the libhugetlb kernel test does exactly this, and as
-> > systems' address spaces increase beyond 32-bits, this method becomes
-> > exceedingly tedious.
-> > 
-> > For example, on a ppc64le system with a 47-bit address space, the linear
-> > search causes the test to hang for some unknown amount of time. I
-> > couldn't give you an exact number because I just ran it for about 10-20
-> > minutes and went to go do something else, probably to get coffee or
-> > something, and when I came back, I just killed the test and patched it
-> > to use this new mechanism. I re-ran my new version of the test using a
-> > kernel with this patch, and of course it passed through the previously
-> > bottlenecking codepath nearly instantaneously.
-> > 
-> > As such, I propose that the prctl syscall be extended to include the
-> > option to retrieve TASK_SIZE from the kernel.
-> > 
-> > This patch will allow us to upgrade an O(n) codepath to O(1) in an
-> > architecture-independent manner, and provide a mechanism for future
-> > generations to do the same.
-> 
-> So the only reason for the new API is boosting some random poorly
-> written userspace test? Why don't you introduce binary search instead?
->
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-there's no real cost in exposing the value that is known to the kernel,
-anyways, as long as it's not a freaking hassle (like trying to go with
-this prctl(2) stunt). We just need to get it properly exported alongside
-other task's VM-related values at /proc/<pid>/status.
- 
-> Look at /proc/<pid>/maps. It may help to reduce the memory area to be
-> checked.
->  
-> > Changes from v2:
-> >  We now account for the case of 32-bit compat userspace on a 64-bit kernel
-> >  More detail about the nature of TASK_SIZE in documentation
-> > 
-> > Joel Savitz(2):
-> >   sys/prctl: add PR_GET_TASK_SIZE option to prctl(2)
-> >   prctl.2: Document the new PR_GET_TASK_SIZE option
-> > 
-> >  include/uapi/linux/prctl.h |  3 +++
-> >  kernel/sys.c               | 23 +++++++++++++++++++++++
-> >  2 files changed, 26 insertions(+)
-> > 
-> >  man2/prctl.2 | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > --
-> > 2.18.1
+> The patchset is bunch of clean-up found while debugging meson mmc.
+>
+> * The first 2 patches address the libretech-cc which actually uses 1.8v
+>   eMMC modules.
+> * Patch 3 is a pin bias fixup depending on mmc pins.
+> * Patch 4 lower the mmc max frequencies on gx chips. It was not easy
+>   to spot but, according to the datasheet, the maximum UHS rate
+>   supported by these chips is 100MHz (SDR50). This explains why we
+>   never really managed to get a stable SDR104. SDIO is limited to HS.
+> * Patch 5 adds missing pinctrl definition on the vim2
+> * Patch 6 remove hs400 from the supported modes of the vim2. This mode is
+>   mode reliable enough with HW/SW ATM.
+
+Queued for v5.3 (branch: v5.3/dt64)
+
+Kevin
