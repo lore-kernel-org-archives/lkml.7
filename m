@@ -6,44 +6,40 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EE2C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E313C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 518982075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1C220C01
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfECOkR (ORCPT
+        id S1727555AbfECOlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:40:17 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:52107 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfECOkQ (ORCPT
+        Fri, 3 May 2019 10:41:46 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:43311 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbfECOlp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:40:16 -0400
+        Fri, 3 May 2019 10:41:45 -0400
 X-Originating-IP: 90.88.149.145
 Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id A05781C0018;
-        Fri,  3 May 2019 14:40:12 +0000 (UTC)
-Date:   Fri, 3 May 2019 16:40:12 +0200
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 1E3876000F;
+        Fri,  3 May 2019 14:41:42 +0000 (UTC)
+Date:   Fri, 3 May 2019 16:41:42 +0200
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v5 3/3] arm64: dts: allwinner: a64-oceanic-5205-5inmfd:
- Enable GT911 CTP
-Message-ID: <20190503144012.hvbm54xjldyqysk4@flea>
-References: <20190503104753.27562-1-jagan@amarulasolutions.com>
- <20190503104753.27562-3-jagan@amarulasolutions.com>
+Subject: Re: [PATCH v2] arm64: dts: allwinner: h6: add PIO VCC bank supplies
+ for Pine H64
+Message-ID: <20190503144142.a5yvqghyqjm26g5u@flea>
+References: <20190503094720.21502-1-icenowy@aosc.io>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gxwv7dhu5oerttl5"
+        protocol="application/pgp-signature"; boundary="siexvtguxgppryms"
 Content-Disposition: inline
-In-Reply-To: <20190503104753.27562-3-jagan@amarulasolutions.com>
+In-Reply-To: <20190503094720.21502-1-icenowy@aosc.io>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -51,25 +47,21 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---gxwv7dhu5oerttl5
+--siexvtguxgppryms
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, May 03, 2019 at 04:17:53PM +0530, Jagan Teki wrote:
-> Goodix GT911 CTP is bound with Oceanic 5205 5inMFD board.
+On Fri, May 03, 2019 at 05:47:20PM +0800, Icenowy Zheng wrote:
+> The Allwinner H6 SoC features tweakable VCC for PC, PD, PG, PL and PM
+> banks.
 >
-> The CTP connected to board with,
-> - SDA, SCK from i2c0
-> - GPIO-LD0 as AVDD28 supply
-> - PH4 gpio as interrupt pin
-> - PH11 gpio as reset pin
-> - X axis is inverted
-> - Y axis is inverted
+> This patch adds supplies for these banks except PL bank. PL bank is
+> where PMIC is attached, and currently if a PMIC regulator is added
+> for it a dependency loop will happen.
 >
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 
-Applied all three for 5.3, thanks
-
+Applied for 5.3, thanks!
 Maxime
 
 --
@@ -77,15 +69,15 @@ Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---gxwv7dhu5oerttl5
+--siexvtguxgppryms
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMxSzAAKCRDj7w1vZxhR
-xYW7AP0dBgkeuoEAunfGpwjVDN2vcJEOdH+H8sPkHTrGOqStsQEA3CpzynjQPQOR
-Wq/vO9MjeqFw6SmSCcX+zlG6SurG9Ac=
-=s4aJ
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMxTJgAKCRDj7w1vZxhR
+xZBGAQD0GZcPeUDGu0W80Ry+o9dByn1an5WGaUI4LMHMNEg93wEAtjSHUwhmYqnG
+VtpI36Q9pGIIS/I5jYzM1FjDnV49UwE=
+=KYOT
 -----END PGP SIGNATURE-----
 
---gxwv7dhu5oerttl5--
+--siexvtguxgppryms--
