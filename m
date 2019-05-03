@@ -2,104 +2,60 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6521FC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A57AC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1C12075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151362075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbfECLbp convert rfc822-to-8bit (ORCPT
+        id S1727539AbfECLd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:31:45 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:23808 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726372AbfECLbp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:31:45 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-119-bsrUedipMsKCwape80AdzQ-1; Fri, 03 May 2019 12:31:41 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 3 May 2019 12:31:40 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 3 May 2019 12:31:40 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Cyrill Gorcunov' <gorcunov@gmail.com>,
-        Joel Savitz <jsavitz@redhat.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Micah Morton <mortonm@chromium.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Jann Horn <jannh@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Yury Norov <norov.maillist@gmail.com>
-Subject: RE: [PATCH v2 1/2] kernel/sys: add PR_GET_TASK_SIZE option to
- prctl(2)
-Thread-Topic: [PATCH v2 1/2] kernel/sys: add PR_GET_TASK_SIZE option to
- prctl(2)
-Thread-Index: AQHVAYqqcxRhj7bMTkeIUrrm9JebiKZZRD3w
-Date:   Fri, 3 May 2019 11:31:40 +0000
-Message-ID: <6cf43408000149d98cc1683943c436cb@AcuMS.aculab.com>
-References: <1556830342-32307-1-git-send-email-jsavitz@redhat.com>
- <1556830342-32307-2-git-send-email-jsavitz@redhat.com>
- <20190502210922.GF2488@uranus.lan>
- <CAL1p7m6eC3-99oFEyp0F1xn7qN4Vx+s-kHQXh14cMUWoVFqbWw@mail.gmail.com>
- <20190503083149.GH2488@uranus.lan>
-In-Reply-To: <20190503083149.GH2488@uranus.lan>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 3 May 2019 07:33:58 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58866 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726372AbfECLd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 07:33:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B750374;
+        Fri,  3 May 2019 04:33:57 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3E1B3F220;
+        Fri,  3 May 2019 04:33:55 -0700 (PDT)
+Date:   Fri, 3 May 2019 12:33:53 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/25] arm64/iommu: handle non-remapped addresses in
+ ->mmap and ->get_sgtable
+Message-ID: <20190503113352.GA55449@arrakis.emea.arm.com>
+References: <20190430105214.24628-1-hch@lst.de>
+ <20190430105214.24628-2-hch@lst.de>
 MIME-Version: 1.0
-X-MC-Unique: bsrUedipMsKCwape80AdzQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430105214.24628-2-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cyrill Gorcunov
-> Sent: 03 May 2019 09:32
-> On Thu, May 02, 2019 at 05:46:08PM -0400, Joel Savitz wrote:
-> > > Won't be possible to use put_user here? Something like
-> > >
-> > > static int prctl_get_tasksize(unsigned long __user *uaddr)
-> > > {
-> > >         return put_user(TASK_SIZE, uaddr) ? -EFAULT : 0;
-> > > }
-> >
-> > What would be the benefit of using put_user() over copy_to_user() in
-> > this context?
+On Tue, Apr 30, 2019 at 06:51:50AM -0400, Christoph Hellwig wrote:
+> DMA allocations that can't sleep may return non-remapped addresses, but
+> we do not properly handle them in the mmap and get_sgtable methods.
+> Resolve non-vmalloc addresses using virt_to_page to handle this corner
+> case.
 > 
-> It is a common pattern to use put_user with native types, where
-> copy_to_user more biased for composed types transfer.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-It also removes all the crappy code that checks whether the
-kernel buffer is valid.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
