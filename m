@@ -2,150 +2,147 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D925BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C70C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C39D2075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:52:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556927575;
-	bh=FRZu2uAXb3RBHRAKvIJgvp7yONkAmGJYfDrcPd66jkU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t5YBwDXq7+KjAYSW/hbibXwx2QK+QNoiap8B4ZxczoLj2pqF4DMmFHj4mEcYw97RF
-	 6NTD0ULIqcNNwVXpRaL04uJpVixnCwh0BV/0xQrVujyWRGUwc+uCQGROj3bK2rjEGU
-	 WmpUPmmunKgOXBFNGb63Sxwt+1ukh0vhKw9icqOU=
+	by mail.kernel.org (Postfix) with ESMTP id E73922075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:53:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="N9BE3PqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfECXwy (ORCPT
+        id S1727105AbfECXw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 19:52:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726779AbfECXwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 19:52:54 -0400
-Received: from localhost (lfbn-1-18355-218.w90-101.abo.wanadoo.fr [90.101.143.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14D69206C3;
-        Fri,  3 May 2019 23:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556927572;
-        bh=FRZu2uAXb3RBHRAKvIJgvp7yONkAmGJYfDrcPd66jkU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GrrJX3euKLhnPZ9oIp8ZozN2BIHM5PG/7NVqUCxINMH/y8XI6POZsAm2Kum4UzPjb
-         w5WTdcyEP300e2Efe6wE1FHKik+Hfgonxzv6rJObO3DbS6ELM+t48yUs8848SeOSj7
-         AgmVlQ3ky5eGb5smXFq3YpRbhayLjeK9R3U9MXVk=
-Date:   Sat, 4 May 2019 01:52:49 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
-        npiggin@gmail.com, fweisbec@gmail.com, peterz@infradead.org,
-        torvalds@linux-foundation.org
-Cc:     linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:sched/core] sched/isolation: Require a present CPU in
- housekeeping mask
-Message-ID: <20190503235248.GA19076@lenoir>
-References: <20190411033448.20842-5-npiggin@gmail.com>
- <tip-9219565aa89033a9cfdae788c1940473a1253d6c@git.kernel.org>
+        Fri, 3 May 2019 19:52:59 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39213 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727017AbfECXw6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 19:52:58 -0400
+Received: by mail-qt1-f195.google.com with SMTP id y42so8714634qtk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 16:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Y9uds37g7f4813/ZqlKEDnGn948IiuDvboVC7bPadlI=;
+        b=N9BE3PqMA0nL0NvpOU63kepSs17NWxuaQGMx7Tupv6wpFQNuRqB6tenh0G/BWpJ1PP
+         HEd7ZRYuplIPMrp/i3Cbd8pyLv65lE/Kcn6MATxFD0LAM764ONzAI9CGs51aZh5QkF2i
+         IUvMmfzMxlcfJSqngQx2TZEML8ZbCAHWTFmHtqfhFJeQ8JVqaTAgfiqfKRaZhlNd6jZX
+         Xiy8j3oAf41/Kg4WEp6FuwvI9DlafHuBxOiRzLclafXL2AMIXhBmFJmJrK5KHtm2pgmi
+         Pkc8sfsyJqh6zaTpfCu0T9ewb4rk6AtpL8uJLJA4xZTB0LSOR9blqcrj5s/eIqJuMPaw
+         q8oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Y9uds37g7f4813/ZqlKEDnGn948IiuDvboVC7bPadlI=;
+        b=t+TTuajcYJMoUZMMWXQOPdchC0V0eKSTEIE+Sfu8Em+nJ01Mmta2GmlE4Xqe1x5s7d
+         NEciRXfxOJ3TUPiw9U3z2Az8jOgKLUGr2w3r9AxZ6Hv9D5EjAL2pf4Zv8g2G4pZe7x94
+         U9hgVft3VJo5DFN5IvvGWHhYZ4JAzQ8gm6bEVLV2yjIkvadMLm+na5p22i8iaWNb5YuZ
+         LSGTKX5ac/RVLZYV3b4faWokBMgSFlfwMFbokH90uWrLaxtg7FqDxzG6ITXlCePEFhZk
+         +bbj4+ZlXh9E9vZIBskklEtULnM7c2boOt31BItJupsPtUPFgElBpTmeppKkKvbChAwW
+         s2QQ==
+X-Gm-Message-State: APjAAAWIrAh/B64NCjRN67+T+9vyIpftu6bf3sx/IS5p2hSeE+RASEkG
+        9f9P/8Dz91cMoO3FArMBkZAepg==
+X-Google-Smtp-Source: APXvYqziKdH2wZvx3iC97K6c8A4weeprYaQkrXpo4FxMM1oMFrPSRq/nQcOHMobAnKPDvieS6kD22g==
+X-Received: by 2002:ac8:8ad:: with SMTP id v42mr10692638qth.337.1556927577786;
+        Fri, 03 May 2019 16:52:57 -0700 (PDT)
+Received: from ziepe.ca ([65.119.211.164])
+        by smtp.gmail.com with ESMTPSA id r1sm1636491qtp.77.2019.05.03.16.52.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 16:52:56 -0700 (PDT)
+Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hMhz6-0001lg-BL; Fri, 03 May 2019 20:52:56 -0300
+Date:   Fri, 3 May 2019 20:52:56 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v13 16/20] IB/mlx4, arm64: untag user pointers in
+ mlx4_get_umem_mr
+Message-ID: <20190503235256.GB6660@ziepe.ca>
+References: <cover.1553093420.git.andreyknvl@google.com>
+ <1e2824fd77e8eeb351c6c6246f384d0d89fd2d58.1553093421.git.andreyknvl@google.com>
+ <20190429180915.GZ6705@mtr-leonro.mtl.com>
+ <20190430111625.GD29799@arrakis.emea.arm.com>
+ <20190502184442.GA31165@ziepe.ca>
+ <20190503162846.GI55449@arrakis.emea.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <tip-9219565aa89033a9cfdae788c1940473a1253d6c@git.kernel.org>
+In-Reply-To: <20190503162846.GI55449@arrakis.emea.arm.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 10:47:37AM -0700, tip-bot for Nicholas Piggin wrote:
-> Commit-ID:  9219565aa89033a9cfdae788c1940473a1253d6c
-> Gitweb:     https://git.kernel.org/tip/9219565aa89033a9cfdae788c1940473a1253d6c
-> Author:     Nicholas Piggin <npiggin@gmail.com>
-> AuthorDate: Thu, 11 Apr 2019 13:34:47 +1000
-> Committer:  Ingo Molnar <mingo@kernel.org>
-> CommitDate: Fri, 3 May 2019 19:42:58 +0200
+On Fri, May 03, 2019 at 05:28:46PM +0100, Catalin Marinas wrote:
+> Thanks Jason and Leon for the information.
 > 
-> sched/isolation: Require a present CPU in housekeeping mask
+> On Thu, May 02, 2019 at 03:44:42PM -0300, Jason Gunthorpe wrote:
+> > On Tue, Apr 30, 2019 at 12:16:25PM +0100, Catalin Marinas wrote:
+> > > > Interesting, the followup question is why mlx4 is only one driver in IB which
+> > > > needs such code in umem_mr. I'll take a look on it.
+> > > 
+> > > I don't know. Just using the light heuristics of find_vma() shows some
+> > > other places. For example, ib_umem_odp_get() gets the umem->address via
+> > > ib_umem_start(). This was previously set in ib_umem_get() as called from
+> > > mlx4_get_umem_mr(). Should the above patch have just untagged "start" on
+> > > entry?
+> > 
+> > I have a feeling that there needs to be something for this in the odp
+> > code..
+> > 
+> > Presumably mmu notifiers and what not also use untagged pointers? Most
+> > likely then the umem should also be storing untagged pointers.
 > 
-> During housekeeping mask setup, currently a possible CPU is required.
-> That does not guarantee the CPU would be available at boot time, so
-> check to ensure that at least one present CPU is in the mask.
+> Yes.
 > 
-> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Cc: Frederic Weisbecker <fweisbec@gmail.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Link: https://lkml.kernel.org/r/20190411033448.20842-5-npiggin@gmail.com
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> ---
->  kernel/sched/isolation.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
+> > This probably becomes problematic because we do want the tag in cases
+> > talking about the base VA of the MR..
 > 
-> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-> index b02d148e7672..687302051a27 100644
-> --- a/kernel/sched/isolation.c
-> +++ b/kernel/sched/isolation.c
-> @@ -65,6 +65,7 @@ void __init housekeeping_init(void)
->  static int __init housekeeping_setup(char *str, enum hk_flags flags)
->  {
->  	cpumask_var_t non_housekeeping_mask;
-> +	cpumask_var_t tmp;
->  	int err;
->  
->  	alloc_bootmem_cpumask_var(&non_housekeeping_mask);
-> @@ -75,16 +76,23 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
->  		return 0;
->  	}
->  
-> +	alloc_bootmem_cpumask_var(&tmp);
->  	if (!housekeeping_flags) {
->  		alloc_bootmem_cpumask_var(&housekeeping_mask);
->  		cpumask_andnot(housekeeping_mask,
->  			       cpu_possible_mask, non_housekeeping_mask);
-> -		if (cpumask_empty(housekeeping_mask))
-> +
-> +		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
-> +		if (cpumask_empty(tmp)) {
-> +			pr_warn("Housekeeping: must include one present CPU, "
-> +				"using boot CPU:%d\n", smp_processor_id());
->  			__cpumask_set_cpu(smp_processor_id(), housekeeping_mask);
-> +			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
+> It depends on whether the tag is relevant to the kernel or not. The only
+> useful case so far is for the kernel performing copy_form_user() etc.
+> accesses so they'd get checked in the presence of hardware memory
+> tagging (MTE; but it's not mandatory, a 0 tag would do as well).
+> 
+> If we talk about a memory range where the content is relatively opaque
+> (or irrelevant) to the kernel code, we don't really need the tag. I'm
+> not familiar to RDMA but I presume it would be a device accessing such
+> MR but not through the user VA directly. 
 
-Ah that line (along with its twin below) is actually also a fix for the upstream code.
-If the housekeeping mask is empty and we force the current one, we must make sure that
-the current CPU is excluded from the nohz_full set. Ideally it should have come as a
-separate patch but it's nice that you fixed it anyway.
+RDMA exposes the user VA directly (the IOVA) as part of the wire
+protocol, we must preserve the tag in these cases as that is what the
+userspace is using for the pointer.
 
-Thanks!
+So the ODP stuff will definately need some adjusting when it interacts
+with the mmu notifiers and get user pages.
 
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
-
-> +		}
->  	} else {
-> -		cpumask_var_t tmp;
-> -
-> -		alloc_bootmem_cpumask_var(&tmp);
-> +		cpumask_andnot(tmp, cpu_present_mask, non_housekeeping_mask);
-> +		if (cpumask_empty(tmp))
-> +			__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
->  		cpumask_andnot(tmp, cpu_possible_mask, non_housekeeping_mask);
->  		if (!cpumask_equal(tmp, housekeeping_mask)) {
->  			pr_warn("Housekeeping: nohz_full= must match isolcpus=\n");
-> @@ -92,8 +100,8 @@ static int __init housekeeping_setup(char *str, enum hk_flags flags)
->  			free_bootmem_cpumask_var(non_housekeeping_mask);
->  			return 0;
->  		}
-> -		free_bootmem_cpumask_var(tmp);
->  	}
-> +	free_bootmem_cpumask_var(tmp);
->  
->  	if ((flags & HK_FLAG_TICK) && !(housekeeping_flags & HK_FLAG_TICK)) {
->  		if (IS_ENABLED(CONFIG_NO_HZ_FULL)) {
+Jason
