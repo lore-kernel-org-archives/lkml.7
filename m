@@ -2,114 +2,186 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FD6C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A505C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00BE2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45322070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:59:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KeUBh5m7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntfThZUL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfECX6L (ORCPT
+        id S1727023AbfECX7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 19:58:11 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44830 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfECX6L (ORCPT
+        Fri, 3 May 2019 19:59:00 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41390 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfECX67 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 19:58:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id l2so3424936plt.11
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 16:58:11 -0700 (PDT)
+        Fri, 3 May 2019 19:58:59 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 188so3656143pfd.8;
+        Fri, 03 May 2019 16:58:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=v7+8a0jOi82vA98ZW8MLz4Zxp+tPvn5pEZ3hYsxU2i4=;
-        b=KeUBh5m7XrqqJoGtrD6Ib6knt5i2ib8XP24NKJEJyGpAwUOaLX/x7UY2/uecLPiyDe
-         9yyqjXnlM7Sdn7qZVIKCfp4lijNioihmlVmSLfE2FTzxpqPXWb817IqTmUzMWrglz7sL
-         SQh/iyPbwkDdI8Zm3zUAt91zibej3pbV7DGpc=
+        bh=DdddGI6DDT7dsMKCDs7wmk1NY1s6eqW3FG1qa627pfU=;
+        b=ntfThZULWIMDKZD8/FI97Sy8goP7TxfL2GUgz3WMEJBa0EVSmZx/8tH/d63kkoZxp9
+         pvJKiWDe6rZpTQbrAEkRc4RFkcGH3ypR093twH8LFUYQMXLQ1rbGDjNx/18Xl+asTYoh
+         KyjuYxFOpRkhA5+WOrLQ6BxRQOnOWDkcd2PAw7ZmYJm4DPS4xaomXRr5DxrrDMMfAZK+
+         QJwXmiXTSRyoNAxAD3hX7okYG80IyhTOC2+bGrsgmNn8pVHcNzQ2pPyicuH4Wkcp8v2v
+         CZW/v7A9o8PCP1E+eRw5IFAcgxS7WrXEhhBtV8NIQ5M8uUzGRap+9o+95KExRYmBhEGa
+         2G2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v7+8a0jOi82vA98ZW8MLz4Zxp+tPvn5pEZ3hYsxU2i4=;
-        b=WmG8s5kI2TB2ALbk8MwtcrflpfDbM/tUDgb3U9RhTn5WYL8F4QNc1AE0GIgBeu3cS8
-         iaUEm3Cq7WEpkg9Qfxixd5FUDbOQnxFyyBK0uI4b8aQTVuom+IL50HdQ9MbRWekmZQFZ
-         g6RLBrfh1HLBnUnDNqb5eCNbB3Dyz0cGc3L/9Ak9DRHraPoHzEeVvXvczq6o3z5wSd20
-         ndGy6HmL9rqrkTxbzTfNQboU3NDbwqhDzWyu2I8nQEBlcXWhnvntxrFvz1lQFR9DXXcT
-         pUP0hjLgywfjLMEFoHvUe/wqqRH4Zku0KnCKCotCp+RyBXY/q64+sZr/akS2VZ/m5zqb
-         o0AQ==
-X-Gm-Message-State: APjAAAU3tC/cryZtzr158VEbisqdPB1vM+9NoHUO3DSRNAkKgWDYOf/C
-        LCE7VKumrZBgyEABF1eqRDftpWJgdAYrWA==
-X-Google-Smtp-Source: APXvYqwCj3vkQhdXIGJu9EpWV0sc4q41te3mEjK0JRvTex2+xk1qSEGE3uWqGCe5EwjRzmV9owoA+A==
-X-Received: by 2002:a17:902:7207:: with SMTP id ba7mr13779305plb.329.1556927890867;
-        Fri, 03 May 2019 16:58:10 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id h127sm4092709pgc.31.2019.05.03.16.58.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 16:58:10 -0700 (PDT)
-Date:   Fri, 3 May 2019 16:58:09 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org, briannorris@chromium.org,
-        amstan@chromium.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: rockchip: Remove bogus 'i2s_clk_out' from
- rk3288-veyron-mickey
-Message-ID: <20190503235809.GD40515@google.com>
-References: <20190503234814.230901-1-dianders@chromium.org>
+        bh=DdddGI6DDT7dsMKCDs7wmk1NY1s6eqW3FG1qa627pfU=;
+        b=rIzUc8toXVyv84Hlt43YeoRYQip4YhYZqHILPwkwHR4OehYxbaP1gHxK64913ZRWkU
+         1R2CunW01yUqFZju1yPGWuAlfoGhZQ2TLaiRMQavjjeh+uJgjmJBAU4eUm07KBO0I6Bv
+         Bft/5vX28psDBzUB6RXNzS6JRIxp6xvMaNcAsX8thnR3MZUgqPljE9iynBhSm5BlzLLh
+         ZLqYWd/4nNe2Fkc8uGF56XWDOd1zYw8HbfnUAjBPIEEJ1WHpfP6MOBejJhMXSFPzu/uc
+         hLEpmdjzQeAazq+oru+wKeIadAHcnYnMQmQ2MoK80uxiemQrX9i0Gh3fXNbciox6z5d/
+         ZwCw==
+X-Gm-Message-State: APjAAAW20uInmIoJK4/GIuEGfhvBEAKFgeedIYzzuitgGWjtdMCaNn55
+        CNizqXLkhm2b1wzRslgpeWs=
+X-Google-Smtp-Source: APXvYqywxmvzEg/abOIYBaWKkRkJeaD7WfUZmeBvshORCc5bVqRKb1vw7fMBaC+PVFCTiTq2WBkBxw==
+X-Received: by 2002:a65:6541:: with SMTP id a1mr13854624pgw.233.1556927938712;
+        Fri, 03 May 2019 16:58:58 -0700 (PDT)
+Received: from pc ([123.201.65.103])
+        by smtp.gmail.com with ESMTPSA id j32sm3703933pgi.73.2019.05.03.16.58.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 16:58:57 -0700 (PDT)
+Date:   Sat, 4 May 2019 05:28:51 +0530
+From:   Raag Jadav <raagjadav@gmail.com>
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc:     linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] i2c: at91: handle TXRDY interrupt spam
+Message-ID: <20190503235851.GA4242@pc>
+References: <1556005008-6318-1-git-send-email-raagjadav@gmail.com>
+ <20190429090005.f6ydghzu5n5yruav@M43218.corp.atmel.com>
+ <20190429223332.GA3908@pc>
+ <20190502140116.rim72idpgvq4h4vc@M43218.corp.atmel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190503234814.230901-1-dianders@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190502140116.rim72idpgvq4h4vc@M43218.corp.atmel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 04:48:14PM -0700, Douglas Anderson wrote:
-> The rk3288-veyron-mickey device tree overrides the default "i2s" clock
-> settings to add the clock for "i2s_clk_out".
+On Thu, May 02, 2019 at 04:01:16PM +0200, Ludovic Desroches wrote:
+> On Tue, Apr 30, 2019 at 04:03:32AM +0530, Raag Jadav wrote:
+> > External E-Mail
+> > 
+> > 
+> > On Mon, Apr 29, 2019 at 11:00:05AM +0200, Ludovic Desroches wrote:
+> > > Hello Raag,
+> > > 
+> > > On Tue, Apr 23, 2019 at 01:06:48PM +0530, Raag Jadav wrote:
+> > > > External E-Mail
+> > > > 
+> > > > 
+> > > > Performing i2c write operation while SDA or SCL line is held
+> > > > or grounded by slave device, we go into infinite at91_twi_write_next_byte
+> > > > loop with TXRDY interrupt spam.
+> > > 
+> > > Sorry but I am not sure to have the full picture, the controller is in
+> > > slave or master mode?
+> > > 
+> > > SVREAD is only used in slave mode. When SVREAD is set, it means that a read
+> > > access is performed and your issue concerns the write operation.
+> > > 
+> > > Regards
+> > > 
+> > > Ludovic
+> > 
+> > Yes, even though the datasheet suggests that SVREAD is irrelevant in master mode,
+> > TXRDY and SVREAD are the only ones being set in status register upon reproducing the issue.
+> > Couldn't think of a better way to handle such strange behaviour.
+> > Any suggestions would be appreciated.
 > 
-> That clock is only present in the bindings downstream Chrome OS 3.14
-> tree.  Upstream the i2s port bindings doesn't specify that as a
-> possible clock.
+> I have the confirmation that you can't rely on the SVREAD flag when in
+> master mode. This flag should always have the same value.
 > 
-> Let's remove it.
-> 
-> NOTE: for other rk3288-veyron devices this clock is consumed by
-> 'maxim,max98090'.  Presumably if this clock is needed for mickey it'll
-> need to be consumed by something similar.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  arch/arm/boot/dts/rk3288-veyron-mickey.dts | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-veyron-mickey.dts b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-> index e852594417b5..f9c4ece3c0d3 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-> +++ b/arch/arm/boot/dts/rk3288-veyron-mickey.dts
-> @@ -142,8 +142,6 @@
->  
->  &i2s {
->  	status = "okay";
-> -	clock-names = "i2s_hclk", "i2s_clk", "i2s_clk_out";
-> -	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>, <&cru SCLK_I2S0_OUT>;
->  };
->  
->  &rk808 {
+> I am trying to understand what could lead to your situation. Can you
+> give me more details. What kind of device it is? What does lead to this
+> situation? Does it happen randomly or not?
 
-effectively, 'i2s_clk_out' is not use in the upstream kernel.
+One of the sama5d2 based board I worked on, was having trouble complete its boot
+because of a faulty i2c device, which was randomly holding down the SDA line
+on i2c write operation, not allowing the controller to complete its transmission,
+causing a massive TXRDY interrupt spam, ultimately hanging the processor.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Another strange observation was that SVREAD was being set in the status register
+along with TXRDY, every time I reproduced the issue.
+You can reproduce it by simply grounding the SDA line and performing i2c write
+on the bus.
+
+Note that NACK, LOCK or TXCOMP are never set as the transmission never completes.
+I'm not sure why slave bits are being set in master mode,
+but it's been working reliably for me.
+
+This patch doesn't recover the SDA line. It just prevents the processor from
+getting hanged in case of i2c bus lockup.
+
+Cheers,
+Raag
+
+> 
+> Regards
+> 
+> Ludovic
+> 
+> > 
+> > Cheers,
+> > Raag
+> > 
+> > > 
+> > > > 
+> > > > Signed-off-by: Raag Jadav <raagjadav@gmail.com>
+> > > > ---
+> > > >  drivers/i2c/busses/i2c-at91.c | 6 +++++-
+> > > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-at91.c
+> > > > index 3f3e8b3..b2f5fdb 100644
+> > > > --- a/drivers/i2c/busses/i2c-at91.c
+> > > > +++ b/drivers/i2c/busses/i2c-at91.c
+> > > > @@ -72,6 +72,7 @@
+> > > >  #define	AT91_TWI_TXCOMP		BIT(0)	/* Transmission Complete */
+> > > >  #define	AT91_TWI_RXRDY		BIT(1)	/* Receive Holding Register Ready */
+> > > >  #define	AT91_TWI_TXRDY		BIT(2)	/* Transmit Holding Register Ready */
+> > > > +#define	AT91_TWI_SVREAD		BIT(3)	/* Slave Read */
+> > > >  #define	AT91_TWI_OVRE		BIT(6)	/* Overrun Error */
+> > > >  #define	AT91_TWI_UNRE		BIT(7)	/* Underrun Error */
+> > > >  #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
+> > > > @@ -571,7 +572,10 @@ static irqreturn_t atmel_twi_interrupt(int irq, void *dev_id)
+> > > >  		at91_disable_twi_interrupts(dev);
+> > > >  		complete(&dev->cmd_complete);
+> > > >  	} else if (irqstatus & AT91_TWI_TXRDY) {
+> > > > -		at91_twi_write_next_byte(dev);
+> > > > +		if ((status & AT91_TWI_SVREAD) && (dev->buf_len == 0))
+> > > > +			at91_twi_write(dev, AT91_TWI_IDR, AT91_TWI_TXRDY);
+> > > > +		else
+> > > > +			at91_twi_write_next_byte(dev);
+> > > >  	}
+> > > >  
+> > > >  	/* catch error flags */
+> > > > -- 
+> > > > 2.7.4
+> > > > 
+> > > > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
