@@ -2,95 +2,78 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088D5C004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA14C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD19D206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72052089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:34:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfECIeB (ORCPT
+        id S1726973AbfECIeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 04:34:01 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50555 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfECIeA (ORCPT
+        Fri, 3 May 2019 04:34:05 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37303 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfECIeB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 04:34:00 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 9C28E80377; Fri,  3 May 2019 10:33:49 +0200 (CEST)
-Date:   Fri, 3 May 2019 10:33:59 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Li RongQing <lirongqing@baidu.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 10/72] ieee802154: hwsim: propagate genlmsg_reply
- return code
-Message-ID: <20190503083359.GC5834@amd>
-References: <20190502143333.437607839@linuxfoundation.org>
- <20190502143334.278374504@linuxfoundation.org>
+        Fri, 3 May 2019 04:34:01 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r20so4612329otg.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 01:34:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xkA4rUZid498zuZlBKXewVkWxOql+ECkNVlns8NAUFM=;
+        b=G1Jihvabp6Tr4iwnKCEqgELDpP8rr9H+P5mo5u5He9whl8gKRJI5nFIQ5jVqdFddCF
+         SiZhfKmClbmsoy1azxadHDyWHpaVphrSH2dAY64TfsRnXcMMmCUa2gDOQjXwUw92BT9Y
+         rMHbJnCPciMpbYP/n+Uxu/jtgHBzhsPmeB/V9KZJyBM7MQOokSrG8XDCYvdm0Tz4AgGK
+         BVHjqQRjFmPMSE3nMNC1QRSm08kfnnmGnAexZ/zAg+wrCKCTpmkwLLSbgPEo1z+cbU25
+         sz141ESOyOiIWZEosGDNElQxcXFhnGQiPwgutqqZE82Nt0nT/qLWOddQOrqSF2vtnd9o
+         jESA==
+X-Gm-Message-State: APjAAAXEqn+9CgolMQDqxsj2ds3z8nO1MOmA/+70240YzHxqqhOGBEtc
+        hsVzXdEZlVlwenGIZZEzpxsp/R5JXR9QT3G6XfBDbNJE
+X-Google-Smtp-Source: APXvYqxqFvOYZDyLSgY47TFcZH0BVRefctqjJ3IDvv/aFeXORlTO/ktwgTtKvHzK0w8/WXJ8EgoK2SVU7/XJofFa++Q=
+X-Received: by 2002:a9d:19af:: with SMTP id k44mr5500477otk.300.1556872440898;
+ Fri, 03 May 2019 01:34:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="6zdv2QT/q3FMhpsV"
-Content-Disposition: inline
-In-Reply-To: <20190502143334.278374504@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <44wNKc0KZFz9sPd@ozlabs.org> <cf6948fb8ab8e395e139a3440f3600a6050c1efa.camel@perches.com>
+In-Reply-To: <cf6948fb8ab8e395e139a3440f3600a6050c1efa.camel@perches.com>
+From:   Mathieu Malaterre <malat@debian.org>
+Date:   Fri, 3 May 2019 10:33:49 +0200
+Message-ID: <CA+7wUswrvpt7CmU0m3Di0W4-NVivZMGNqqoWNnHa-vhgMAVq_w@mail.gmail.com>
+Subject: Re: [PATCH] powerpc/powernv/ioda2: Add __printf format/argument verification
+To:     Joe Perches <joe@perches.com>
+Cc:     Michael Ellerman <patch-notifications@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 3, 2019 at 10:21 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Fri, 2019-05-03 at 16:59 +1000, Michael Ellerman wrote:
+> > On Thu, 2017-03-30 at 10:19:25 UTC, Joe Perches wrote:
+> > > Fix fallout too.
+> > >
+> > > Signed-off-by: Joe Perches <joe@perches.com>
+> >
+> > Applied to powerpc next, thanks.
+> >
+> > https://git.kernel.org/powerpc/c/1e496391a8452101308a23b7395cdd49
+>
+> 2+ years later.
+>
+>
 
---6zdv2QT/q3FMhpsV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Can't wait until someone compute stats about largest delta (author
+date / committer date)
 
-On Thu 2019-05-02 17:20:32, Greg Kroah-Hartman wrote:
-> [ Upstream commit 19b39a25388e71390e059906c979f87be4ef0c71 ]
->=20
-> genlmsg_reply can fail, so propagate its return code
-
-> diff --git a/drivers/net/ieee802154/mac802154_hwsim.c b/drivers/net/ieee8=
-02154/mac802154_hwsim.c
-> index 624bff4d3636..f1ed1744801c 100644
-> --- a/drivers/net/ieee802154/mac802154_hwsim.c
-> +++ b/drivers/net/ieee802154/mac802154_hwsim.c
-> @@ -332,7 +332,7 @@ static int hwsim_get_radio_nl(struct sk_buff *msg, st=
-ruct genl_info *info)
->  			goto out_err;
->  		}
-> =20
-> -		genlmsg_reply(skb, info);
-> +		res =3D genlmsg_reply(skb, info);
->  		break;
->  	}
-
-How does the bug manifest for the user and is it severe enough?
-
-Should this free the skb when it is signalling an error?
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---6zdv2QT/q3FMhpsV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzL/PcACgkQMOfwapXb+vJWnQCgugyfXV5OAsDsuIiwJURwLqDp
-FtEAoJUgUHX2bJuNHYGWG6tYU92cQ+Pw
-=pVLA
------END PGP SIGNATURE-----
-
---6zdv2QT/q3FMhpsV--
+;)
