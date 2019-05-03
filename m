@@ -2,132 +2,124 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A77C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9150C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9771A2081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:23:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aXCH1J6x"
+	by mail.kernel.org (Postfix) with ESMTP id 8373C2081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfECLXZ (ORCPT
+        id S1727454AbfECLXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:23:25 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37003 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfECLXZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:23:25 -0400
-Received: by mail-lf1-f66.google.com with SMTP id h126so4159201lfh.4
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 04:23:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FcmHPfvEkgCRhs8MwoURUl12UTs7GZp3rUDQq2z45EE=;
-        b=aXCH1J6xY+/I0fRBC5l2TkylR8ncaSqF0iH9iRdZifa30uW4FbL+VAmirt/NHu6BQq
-         d527HighZnr4tXz0jSTC3xXYTXIB6vN0ud+aUEW1qqrVJqLzUgYMqaL4/uJdMBZggtKw
-         4sdy6zGXHwMMGB1hA7qBBtJUeo7AfS8X8g/hg+L2RpKPHRMfehAoUYU0BbRd6usYRO9A
-         fqKrjy//b+ku/HRJc2ZWXQSCmc6QEpl89ATotIsRO7rUK+V8fuH5f4n76TcLPkJL/lcW
-         igcFDxUCnBLDYfE0uTd2ZJ2q0ZEnpUvSvQw9Q+syZhIjM4NQQ8/avuy7eKts80CRI9Ni
-         M5ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FcmHPfvEkgCRhs8MwoURUl12UTs7GZp3rUDQq2z45EE=;
-        b=m5u4DX+mP1XP8Rcotk9mSPLpy0/eaSvxmTmU8qW71thFT18cxSc0ceRg1PMIehrkCT
-         wgD2iPakqRE/+ARsRNrhh+nWACLKhRqNvyuSCp/KMgJ5Ky+5XvSCXHPXwNfyvwjq8OCX
-         I1vpLmCbFs4FIz0BQwhgQCz4e4s3jGbHwB8x/tpemIWcz3Eq6c2LF7XHkz5Ri62a8Z+H
-         lWvqC5qEwTH0NL14t95fYApseo65RZWcb1gkfWFnXJGRQLQxlAy9mAGrxhiNGaNvC8bA
-         igVCenDngTHvgsOhGBm7NzpFBZfLGXnTo4AkLcySXkpGAt52jYKuJzPzzVSe8UHmEdoB
-         41RQ==
-X-Gm-Message-State: APjAAAVzLhPTCUERhJXiKK9cUJX8JbcL11YnDBMCg8qABc/RrvuXBH5v
-        +6MBYVfIDY2u5i0aXsffe0nK7nIHS4DpGsqApuZ/2Q==
-X-Google-Smtp-Source: APXvYqyXKDOaZl5gMrFAmM7l9HtHHujY7b3HVhWKSjCAqLiTX2MO5kn5v/977JIG5Y2u0JLrhJzi0ShM6hTwtf55OsY=
-X-Received: by 2002:a19:f001:: with SMTP id p1mr5110685lfc.27.1556882603201;
- Fri, 03 May 2019 04:23:23 -0700 (PDT)
+        Fri, 3 May 2019 07:23:47 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58740 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726396AbfECLXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 07:23:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58EB9374;
+        Fri,  3 May 2019 04:23:46 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 503E33F220;
+        Fri,  3 May 2019 04:23:44 -0700 (PDT)
+Date:   Fri, 3 May 2019 12:23:38 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        bhelgaas@google.com, Jisheng.Zhang@synaptics.com,
+        thierry.reding@gmail.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
+Message-ID: <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
+References: <20190502170426.28688-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <1556793293-21019-1-git-send-email-yash.shah@sifive.com>
- <1556793293-21019-3-git-send-email-yash.shah@sifive.com> <a92e356d-aadc-2c4f-8b23-3d732e7aa58a@ti.com>
-In-Reply-To: <a92e356d-aadc-2c4f-8b23-3d732e7aa58a@ti.com>
-From:   Yash Shah <yash.shah@sifive.com>
-Date:   Fri, 3 May 2019 16:52:46 +0530
-Message-ID: <CAJ2_jOEBDyG_7THdbGzny3gAmijGSQGV7eUO8MBwQaTgqKdN5g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] RISC-V: sifive_l2_cache: Add L2 cache controller
- driver for SiFive SoCs
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502170426.28688-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 7:07 PM Andrew F. Davis <afd@ti.com> wrote:
->
-> On 5/2/19 6:34 AM, Yash Shah wrote:
-> > The driver currently supports only SiFive FU540-C000 platform.
-> >
-> > The initial version of L2 cache controller driver includes:
-> > - Initial configuration reporting at boot up.
-> > - Support for ECC related functionality.
-> >
-> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> > ---
-> >  arch/riscv/mm/Makefile          |   1 +
-> >  arch/riscv/mm/sifive_l2_cache.c | 221 ++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 222 insertions(+)
-> >  create mode 100644 arch/riscv/mm/sifive_l2_cache.c
-> >
-> > diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-> > index eb22ab4..1523ee5 100644
-> > --- a/arch/riscv/mm/Makefile
-> > +++ b/arch/riscv/mm/Makefile
-> > @@ -3,3 +3,4 @@ obj-y += fault.o
-> >  obj-y += extable.o
-> >  obj-y += ioremap.o
-> >  obj-y += cacheflush.o
-> > +obj-y += sifive_l2_cache.o
-> > diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
-> > new file mode 100644
-> > index 0000000..923ab34
-> > --- /dev/null
-> > +++ b/arch/riscv/mm/sifive_l2_cache.c
-> > @@ -0,0 +1,221 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * SiFive L2 cache controller Driver
-> > + *
-> > + * Copyright (C) 2018-2019 SiFive, Inc.
-> > + *
-> > + */
+On Thu, May 02, 2019 at 10:34:25PM +0530, Vidya Sagar wrote:
+> Add an API to group all the tasks to be done to de-initialize host which
+> can then be called by any DesignWare core based driver implementations
+> while adding .remove() support in their respective drivers.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+> Changes from v3:
+> * Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) before calling
+>   dw_pcie_free_msi() API to mimic init path
+> 
+> Changes from v2:
+> * Rebased on top of linux-next top of the tree branch
+> 
+> Changes from v1:
+> * s/Designware/DesignWare
+> 
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h      | 5 +++++
+>  2 files changed, 13 insertions(+)
 
-...
+Series doesn't apply to v5.1-rc1, what's based on ? I suspect
+there is a dependency on pci/keystone, given the tight timeline
+for the merge window, would you mind postponing it to v5.3 ?
 
-> > +static unsigned int l2_datfail_count(void)
-> > +{
-> > +     return readl(l2_base + SIFIVE_L2_DATECCFAIL_COUNT);
-> > +}
->
-> Do you really need all these single line functions? Below in several
-> spots you use the readl directly, just do that everywhere.
+I do not think it is urgent, I am happy to create a branch
+for it as soon as v5.2-rc1 is released.
 
-Ok. Will remove these single line functions.
-Thanks for your comments.
+Thanks,
+Lorenzo
 
-- Yash
-
->
-> Andrew
->
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 77db32529319..d069e4290180 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	return ret;
+>  }
+>  
+> +void dw_pcie_host_deinit(struct pcie_port *pp)
+> +{
+> +	pci_stop_root_bus(pp->root_bus);
+> +	pci_remove_root_bus(pp->root_bus);
+> +	if (pci_msi_enabled() && !pp->ops->msi_host_init)
+> +		dw_pcie_free_msi(pp);
+> +}
+> +
+>  static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+>  				     u32 devfn, int where, int size, u32 *val,
+>  				     bool write)
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index deab426affd3..4f48ec78c7b9 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+>  void dw_pcie_free_msi(struct pcie_port *pp);
+>  void dw_pcie_setup_rc(struct pcie_port *pp);
+>  int dw_pcie_host_init(struct pcie_port *pp);
+> +void dw_pcie_host_deinit(struct pcie_port *pp);
+>  int dw_pcie_allocate_domains(struct pcie_port *pp);
+>  #else
+>  static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
+>  	return 0;
+>  }
+>  
+> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
+> +{
+> +}
+> +
+>  static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+>  {
+>  	return 0;
+> -- 
+> 2.17.1
+> 
