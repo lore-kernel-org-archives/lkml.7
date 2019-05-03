@@ -3,130 +3,229 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A3BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433E4C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3239A2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE42206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="mNCFc8wN"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PWCoM0k2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfECJDW (ORCPT
+        id S1726981AbfECJKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 05:03:22 -0400
-Received: from mail-eopbgr80084.outbound.protection.outlook.com ([40.107.8.84]:30689
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726138AbfECJDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 05:03:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yrEDpZWVwMd225XqkRd/JdqC5eDCN7BYEhBawF9UxaA=;
- b=mNCFc8wNwElb6cvRVh9IGe04U8DyUkia7UeBNnOIGhWkuzakU2tGdFAHGjWhpWyPh2w5Hwod2Bu2UsT5cvuZbZGAicW/wkx23lLYPzvucOk214UmdDpbDx7Pz4h65A732h6nEJaIfLVfquY3uYf+z5WStzUey2zmprmDlafi7kU=
-Received: from HE1PR0502MB3641.eurprd05.prod.outlook.com (10.167.127.11) by
- HE1PR0502MB3817.eurprd05.prod.outlook.com (10.167.127.159) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.12; Fri, 3 May 2019 09:03:12 +0000
-Received: from HE1PR0502MB3641.eurprd05.prod.outlook.com
- ([fe80::8a6:f9c8:9a75:8948]) by HE1PR0502MB3641.eurprd05.prod.outlook.com
- ([fe80::8a6:f9c8:9a75:8948%2]) with mapi id 15.20.1856.008; Fri, 3 May 2019
- 09:03:12 +0000
-From:   Vlad Buslov <vladbu@mellanox.com>
-To:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>
-CC:     Vlad Buslov <vladbu@mellanox.com>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net] cls_matchall: avoid panic when receiving a packet
- before filter set
-Thread-Topic: [PATCH net] cls_matchall: avoid panic when receiving a packet
- before filter set
-Thread-Index: AQHU/rJZyWdv7dUO60+kMc0WWWwiZaZVOOWAgADJ0wCAAQFbgIACHJGA
-Date:   Fri, 3 May 2019 09:03:11 +0000
-Message-ID: <vbf8svnq59y.fsf@mellanox.com>
-References: <20190429173805.4455-1-mcroce@redhat.com>
- <CAM_iQpXB83o+Nnbef8-h_8cg6rTVZn194uZvP1-VKPcJ+xMEjA@mail.gmail.com>
- <CAGnkfhzPZjqnemq+Sh=pAQPsoadYD2UYfdVf8UHt-Dd7gqhVOg@mail.gmail.com>
- <CAM_iQpXNdZPAWiGuwRGhgX4WdRGEwVnax5VyMrXZ+hM9xhhzCQ@mail.gmail.com>
-In-Reply-To: <CAM_iQpXNdZPAWiGuwRGhgX4WdRGEwVnax5VyMrXZ+hM9xhhzCQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0261.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:8a::33) To HE1PR0502MB3641.eurprd05.prod.outlook.com
- (2603:10a6:7:85::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vladbu@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [37.142.13.130]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0b5882c5-1c4f-494a-bf41-08d6cfa62b03
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:HE1PR0502MB3817;
-x-ms-traffictypediagnostic: HE1PR0502MB3817:
-x-microsoft-antispam-prvs: <HE1PR0502MB38171F06D32C09FB31393A98AD350@HE1PR0502MB3817.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0026334A56
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(396003)(366004)(376002)(136003)(51444003)(199004)(189003)(102836004)(81166006)(186003)(81156014)(68736007)(256004)(66446008)(64756008)(66556008)(66476007)(66946007)(73956011)(14444005)(26005)(54906003)(52116002)(86362001)(4326008)(229853002)(2906002)(478600001)(110136005)(316002)(25786009)(36756003)(76176011)(71200400001)(6486002)(486006)(99286004)(8676002)(2616005)(446003)(11346002)(305945005)(7736002)(14454004)(8936002)(6246003)(5660300002)(6436002)(53546011)(53936002)(6116002)(6506007)(386003)(3846002)(476003)(66066001)(6512007)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0502MB3817;H:HE1PR0502MB3641.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:3;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: P/BSrS8/eVmgpemDN7YDt70i8oXqEQw7mQE+aYD+1EgqafX84tOL1TjqT7NUrRJziawXyh2dQ4qawIbP8E4KeZDjO6SGYcQANsmo+5YTTXTIuiuN2Hp04tC9F3yq8mWoJTFXTmhztASbxg6SbU5vVl3556OVCW0R6CdHknAkgQB7dFnnfQakkMEY4ROMln9ab+5Lz+jY9iR7+RI3qsy7B90XEEm7kkxjoubYyozUNFX+qIuvqCk80ElRms8Kx2as8p+jjQpvmA/WKYcmfEA89zMjpsSyQhrr732y3qvkT4JNuvoq+tU8i1lGeP71xkNodKWeYUWdr5g035LTopq+TXntWvkB/KNfp9brRkOCt/Ue1ZMtX3xHF4n0HE2xjezQW89voc2N+1UdkVRJi2dZI+INJ6OF0ZcsCjD6d4ExkPY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 3 May 2019 05:10:39 -0400
+Received: from ozlabs.org ([203.11.71.1]:55695 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726245AbfECJKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 05:10:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44wRDq2SBFz9s7T;
+        Fri,  3 May 2019 19:10:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556874635;
+        bh=OHrQnwt0Q+cyG0LJi49DTjxDdYF1gnPSBeIM2Vpb0NE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PWCoM0k2XwMQEAtQplF+QXOtZWyJdWWAekVLel19/7Qh19Hs1ArHUhLo5rRcR1Vq4
+         i6R3u4XOPbsi00l5I1ms0vOos8/H+LP4DtB3sxkUPEXK15Xucf4zpaF2Vlsjfkn8iZ
+         pBErVlexxTxNXGKTcv1r5SFh9pub/PTvoZclGlAmxpt59hgRFkZpGOINjs7vZ/qaKH
+         Yk6H8latJ3jqzkcZxvk1X85mSVDTrsDz2lAD/FJvd9l5ZmBxpFyUyATFKRfHYG3Sbv
+         TERCQ8KNghToRyW0g7EArTBOnptUnDZphwM0HOzF7ZkWvH8PpS62mlRGWTDgUOWoLs
+         Y1sbJXfr+XJOA==
+Date:   Fri, 3 May 2019 19:10:33 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Amir Goldstein <amir73il@gmail.com>
+Subject: linux-next: manual merge of the akpm-current tree with the block
+ tree
+Message-ID: <20190503191033.6c56e4c0@canb.auug.org.au>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b5882c5-1c4f-494a-bf41-08d6cfa62b03
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2019 09:03:11.9105
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0502MB3817
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/50NvD80NcihNTNGKrEpz2Nq"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1IDAyIE1heSAyMDE5IGF0IDAzOjQ4LCBDb25nIFdhbmcgPHhpeW91Lndhbmdjb25nQGdt
-YWlsLmNvbT4gd3JvdGU6DQo+IE9uIFdlZCwgTWF5IDEsIDIwMTkgYXQgMjoyNyBBTSBNYXR0ZW8g
-Q3JvY2UgPG1jcm9jZUByZWRoYXQuY29tPiB3cm90ZToNCj4+DQo+PiBPbiBUdWUsIEFwciAzMCwg
-MjAxOSBhdCAxMToyNSBQTSBDb25nIFdhbmcgPHhpeW91Lndhbmdjb25nQGdtYWlsLmNvbT4gd3Jv
-dGU6DQo+PiA+DQo+PiA+IE9uIE1vbiwgQXByIDI5LCAyMDE5IGF0IDEwOjM4IEFNIE1hdHRlbyBD
-cm9jZSA8bWNyb2NlQHJlZGhhdC5jb20+IHdyb3RlOg0KPj4gPiA+DQo+PiA+ID4gV2hlbiBhIG1h
-dGNoYWxsIGNsYXNzaWZpZXIgaXMgYWRkZWQsIHRoZXJlIGlzIGEgc21hbGwgdGltZSBpbnRlcnZh
-bCBpbg0KPj4gPiA+IHdoaWNoIHRwLT5yb290IGlzIE5VTEwuIElmIHdlIHJlY2VpdmUgYSBwYWNr
-ZXQgaW4gdGhpcyBzbWFsbCB0aW1lIHNsaWNlDQo+PiA+ID4gYSBOVUxMIHBvaW50ZXIgZGVyZWZl
-cmVuY2Ugd2lsbCBoYXBwZW4sIGxlYWRpbmcgdG8gYSBrZXJuZWwgcGFuaWM6DQo+PiA+DQo+PiA+
-IEhtbSwgd2h5IG5vdCBqdXN0IGNoZWNrIHRwLT5yb290IGFnYWluc3QgTlVMTCBpbiBtYWxsX2Ns
-YXNzaWZ5KCk/DQo+PiA+DQo+PiA+IEFsc28sIHdoaWNoIGlzIHRoZSBvZmZlbmRpbmcgY29tbWl0
-IGhlcmU/IFBsZWFzZSBhZGQgYSBGaXhlczogdGFnLg0KPj4gPg0KPj4gPiBUaGFua3MuDQo+Pg0K
-Pj4gSGksDQo+Pg0KPj4gSSBqdXN0IHdhbnQgdG8gYXZvaWQgYW4gZXh0cmEgY2hlY2sgd2hpY2gg
-d291bGQgYmUgbWFkZSBmb3IgZXZlcnkgcGFja2V0Lg0KPj4gUHJvYmFibHkgdGhlIGJlbmVmaXQg
-b3ZlciBhIGNoZWNrIGlzIG5lZ2xpZ2libGUsIGJ1dCBpdCdzIHN0aWxsIGENCj4+IHBlci1wYWNr
-ZXQgdGhpbmcuDQo+PiBJZiB5b3UgcHJlZmVyIGEgc2ltcGxlIGNoZWNrLCBJIGNhbiBtYWtlIGEg
-djIgdGhhdCB3YXkuDQo+DQo+IFllYWgsIEkgdGhpbmsgdGhhdCBpcyBiZXR0ZXIsIHlvdSBjYW4g
-YWRkIGFuIHVubGlrZWx5KCkgZm9yIHBlcmZvcm1hbmNlDQo+IGNvbmNlcm4sIGFzIE5VTEwgaXMg
-YSByYXJlIGNhc2UuDQo+DQo+DQo+Pg0KPj4gRm9yIHRoZSBmaXhlcyB0YWcsIEkgZGlkbid0IHB1
-dCBpdCBhcyBJJ20gbm90IHJlYWxseSBzdXJlIGFib3V0IHRoZQ0KPj4gb2ZmZW5kaW5nIGNvbW1p
-dC4gSSBndWVzcyBpdCdzIHRoZSBmb2xsb3dpbmcsIHdoYXQgZG8geW91IHRoaW5rPw0KPj4NCj4+
-IGNvbW1pdCBlZDc2ZjVlZGNjYzk4ZmE2NmYyMzM3ZjBiM2IyNTVkNmUxYTU2OGI3DQo+PiBBdXRo
-b3I6IFZsYWQgQnVzbG92IDx2bGFkYnVAbWVsbGFub3guY29tPg0KPj4gRGF0ZTogICBNb24gRmVi
-IDExIDEwOjU1OjM4IDIwMTkgKzAyMDANCj4+DQo+PiAgICAgbmV0OiBzY2hlZDogcHJvdGVjdCBm
-aWx0ZXJfY2hhaW4gbGlzdCB3aXRoIGZpbHRlcl9jaGFpbl9sb2NrIG11dGV4DQo+DQo+IEkgdGhp
-bmsgeW91IGFyZSByaWdodCwgdGhpcyBpcyB0aGUgY29tbWl0IGludHJvZHVjZWQgdGhlIGNvZGUN
-Cj4gdGhhdCBpbnNlcnRzIHRoZSB0cCBiZWZvcmUgZnVsbHkgaW5pdGlhbGl6aW5nIGl0LiBQbGVh
-c2UgQ2MgVmxhZA0KPiBmb3IgeW91ciB2MiwgaW4gY2FzZSB3ZSBibGFtZSBhIHdyb25nIGNvbW1p
-dCBoZXJlLg0KPg0KPg0KPiBCVFcsIGl0IGxvb2tzIGxpa2UgY2xzX2Nncm91cCBuZWVkcyBhIHNh
-bWUgZml4LiBQbGVhc2UgYXVkaXQNCj4gb3RoZXIgdGMgZmlsdGVycyBhcyB3ZWxsLg0KPg0KPiBU
-aGFua3MhDQoNClNvcnJ5IGZvciBsYXRlIHJlc3BvbnNlLiBUaGlzIGlzIGluZGVlZCB0aGUgb2Zm
-ZW5kaW5nIGNvbW1pdCB0aGF0IHNob3VsZA0KYmUgcmVmZXJlbmNlZCBieSBmaXhlcyB0YWcuDQoN
-ClRoYW5rcyBmb3IgZml4aW5nIHRoaXMsIE1hdHRlbyENCg==
+--Sig_/50NvD80NcihNTNGKrEpz2Nq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+Today's linux-next merge of the akpm-current tree got a conflict in:
+
+  fs/sync.c
+
+between commit:
+
+  22f96b3808c1 ("fs: add sync_file_range() helper")
+
+from the block tree and commit:
+
+  9a8d18789a18 ("fs/sync.c: sync_file_range(2) may use WB_SYNC_ALL writebac=
+k")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/sync.c
+index 01e82170545a,9e8cd90e890f..000000000000
+--- a/fs/sync.c
++++ b/fs/sync.c
+@@@ -292,10 -348,16 +292,16 @@@ int sync_file_range(struct file *file,=20
+  	}
+ =20
+  	if (flags & SYNC_FILE_RANGE_WRITE) {
++ 		int sync_mode =3D WB_SYNC_NONE;
++=20
++ 		if ((flags & SYNC_FILE_RANGE_WRITE_AND_WAIT) =3D=3D
++ 			     SYNC_FILE_RANGE_WRITE_AND_WAIT)
++ 			sync_mode =3D WB_SYNC_ALL;
++=20
+  		ret =3D __filemap_fdatawrite_range(mapping, offset, endbyte,
+- 						 WB_SYNC_NONE);
++ 						 sync_mode);
+  		if (ret < 0)
+ -			goto out_put;
+ +			goto out;
+  	}
+ =20
+  	if (flags & SYNC_FILE_RANGE_WAIT_AFTER)
+@@@ -305,68 -369,6 +311,71 @@@ out
+  	return ret;
+  }
+ =20
+ +/*
+-  * sys_sync_file_range() permits finely controlled syncing over a segment=
+ of
+++ * ksys_sync_file_range() permits finely controlled syncing over a segmen=
+t of
+ + * a file in the range offset .. (offset+nbytes-1) inclusive.  If nbytes =
+is
+-  * zero then sys_sync_file_range() will operate from offset out to EOF.
+++ * zero then ksys_sync_file_range() will operate from offset out to EOF.
+ + *
+ + * The flag bits are:
+ + *
+ + * SYNC_FILE_RANGE_WAIT_BEFORE: wait upon writeout of all pages in the ra=
+nge
+ + * before performing the write.
+ + *
+ + * SYNC_FILE_RANGE_WRITE: initiate writeout of all those dirty pages in t=
+he
+ + * range which are not presently under writeback. Note that this may bloc=
+k for
+ + * significant periods due to exhaustion of disk request structures.
+ + *
+ + * SYNC_FILE_RANGE_WAIT_AFTER: wait upon writeout of all pages in the ran=
+ge
+ + * after performing the write.
+ + *
+ + * Useful combinations of the flag bits are:
+ + *
+ + * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE: ensures that all pa=
+ges
+-  * in the range which were dirty on entry to sys_sync_file_range() are pl=
+aced
+++ * in the range which were dirty on entry to ksys_sync_file_range() are p=
+laced
+ + * under writeout.  This is a start-write-for-data-integrity operation.
+ + *
+ + * SYNC_FILE_RANGE_WRITE: start writeout of all dirty pages in the range =
+which
+ + * are not presently under writeout.  This is an asynchronous flush-to-di=
+sk
+ + * operation.  Not suitable for data integrity operations.
+ + *
+ + * SYNC_FILE_RANGE_WAIT_BEFORE (or SYNC_FILE_RANGE_WAIT_AFTER): wait for
+ + * completion of writeout of all pages in the range.  This will be used a=
+fter an
+ + * earlier SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE operation to=
+ wait
+ + * for that operation to complete and to return the result.
+ + *
+-  * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE|SYNC_FILE_RANGE_WAIT=
+_AFTER:
+++ * SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE|SYNC_FILE_RANGE_WAIT=
+_AFTER
+++ * (a.k.a. SYNC_FILE_RANGE_WRITE_AND_WAIT):
+ + * a traditional sync() operation.  This is a write-for-data-integrity op=
+eration
+ + * which will ensure that all pages in the range which were dirty on entr=
+y to
+-  * sys_sync_file_range() are committed to disk.
+++ * ksys_sync_file_range() are committed to disk.  It should be noted that=
+ disk
+++ * caches are not flushed by this call, so there are no guarantees here t=
+hat the
+++ * data will be available on disk after a crash.
+ + *
+ + *
+ + * SYNC_FILE_RANGE_WAIT_BEFORE and SYNC_FILE_RANGE_WAIT_AFTER will detect=
+ any
+ + * I/O errors or ENOSPC conditions and will return those to the caller, a=
+fter
+ + * clearing the EIO and ENOSPC flags in the address_space.
+ + *
+ + * It should be noted that none of these operations write out the file's
+ + * metadata.  So unless the application is strictly performing overwrites=
+ of
+ + * already-instantiated disk blocks, there are no guarantees here that th=
+e data
+ + * will be available after a crash.
+ + */
+ +int ksys_sync_file_range(int fd, loff_t offset, loff_t nbytes,
+ +			 unsigned int flags)
+ +{
+ +	int ret;
+ +	struct fd f;
+ +
+ +	ret =3D -EBADF;
+ +	f =3D fdget(fd);
+ +	if (f.file)
+ +		ret =3D sync_file_range(f.file, offset, nbytes, flags);
+ +
+ +	fdput(f);
+ +	return ret;
+ +}
+ +
+  SYSCALL_DEFINE4(sync_file_range, int, fd, loff_t, offset, loff_t, nbytes,
+  				unsigned int, flags)
+  {
+
+--Sig_/50NvD80NcihNTNGKrEpz2Nq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzMBYkACgkQAVBC80lX
+0GxNMwf/Qu+4OIxyC18LTMWiLlq/v2yt//xaEHH3u8b0ZI3i8IWdw0RQ/BUWDyHr
+AWSuSnoS6NNxL0dN5a8TxtEuRwz+0bDosc8McDv4DvyPNU4EByq4BQR7vqoif97G
+GDCX+rlb2Toa+ZbSwePvxvWTxqTi36OxoQ/4Okr8tASkjsd/j2nwU3LySjA8QBdR
+jCIVQwdxt4gglBXrhUNIJSIO3stAKJjHtrDSLAIhxz80eC5D9R3oswoJMQ5IzYhX
+9u0Dj0qNae951Xnm/s0Z9hNRs4Zq3POJJoHQo3BGvPQD7QpdyYZWGAABdtzst33U
+LA94Y7DRU1eG+ouiNGUvY6RHzj6KgA==
+=29qT
+-----END PGP SIGNATURE-----
+
+--Sig_/50NvD80NcihNTNGKrEpz2Nq--
