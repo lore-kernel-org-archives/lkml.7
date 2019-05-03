@@ -2,177 +2,156 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F66C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1D8C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28892075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556870160;
-	bh=yOewz8eZhwDkUs74JLgedP/Gupxhk2Jz+mMgfcxCXsE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BiUNSIeFKxnvZa0moHi2LO1Qj+RcagTxGa9/JXwkGYZiZCR8kEhdzAB2xCnJtTvUT
-	 wG/OYD1M08WOUZsjjIwu1VzZcPOkbwN6I36LzQ2M3LYBmfi919ct+FCvPEcHZhY2tm
-	 f768fwRsqNCflIqdmupKvaVL7Ih8NtKcotVl7y5E=
+	by mail.kernel.org (Postfix) with ESMTP id AD1662087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:56:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DRWkNWGA";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ap9zuQAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfECHz7 (ORCPT
+        id S1727099AbfECH40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:55:59 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36113 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfECHz6 (ORCPT
+        Fri, 3 May 2019 03:56:26 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35232 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfECH40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 03:55:58 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y8so4252811ljd.3;
-        Fri, 03 May 2019 00:55:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jg7UCnx31PjlLcCQ+wH+UcUuN001R3UUaiuZHRMbLuw=;
-        b=uLBVrkUZjDOaLDsGBXo8i9fqwofD/IavFiSnIErA7R2IacnOiA/5UnEQ9/umL8/Qa6
-         lpHpj6BPj2my/z9ZtEPmYPVEwZ+YspFa77HIFttOhJIY7PADxIjytqkpE9/84A4FRYXQ
-         Di3NxlPeDarpkS6SQVmXSH1SF6VoC2BOw8+fjsh67NO4GU03LSjfbT4h48MD9kOO13Er
-         hCsU37+YXnWMTlCOrzTpvWf4XP2zB4C32OUKrg50WpDuuYIMCinmiJcke1KfAQTXC3z9
-         p+4n34ZeDYGzMqClBZ9J//IRORqytZtfKHq8fX6PmMJrNBt91QRofhPRiQjCVdOGgPb9
-         xuhg==
-X-Gm-Message-State: APjAAAWs8cf2rOuv4j8yRpKiHjWohdayXQLRE8JEW68imTxgDTZKBVLP
-        /l6TDQaNnTfV5n4UP9npPjU=
-X-Google-Smtp-Source: APXvYqwvxjASXrpe81U574Nq7OeeJHcfRF1tR+491A7KPmFa2CxowftZ2jlXJUNPFGV3Xg6nxoSITA==
-X-Received: by 2002:a2e:9094:: with SMTP id l20mr4323814ljg.60.1556870156361;
-        Fri, 03 May 2019 00:55:56 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id d16sm279487lfi.75.2019.05.03.00.55.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 00:55:55 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hMT39-0006LG-Ja; Fri, 03 May 2019 09:56:07 +0200
-Date:   Fri, 3 May 2019 09:56:07 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     "Tobin C. Harding" <me@tobin.cc>
-Cc:     Johan Hovold <johan@kernel.org>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/5] kobject: Fix kernel-doc comment first line
-Message-ID: <20190503075607.GC26546@localhost>
-References: <20190502023142.20139-1-tobin@kernel.org>
- <20190502023142.20139-4-tobin@kernel.org>
- <20190502073823.GQ26546@localhost>
- <20190502082539.GB18363@eros.localdomain>
- <20190502083922.GR26546@localhost>
- <20190503014015.GC7416@eros.localdomain>
+        Fri, 3 May 2019 03:56:26 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4D0A7611FA; Fri,  3 May 2019 07:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556870184;
+        bh=aDusQfMCjBF3dgdzRMthBxZkCv+AeRrwz8Z7d1VTjKo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DRWkNWGAu7exQ3h4FFMC4HoxLk3WlgQ/prXDPdGrKGq5XEuvhLMmnMIPJ1UONp8JC
+         IdJpXD8luIkdRlg7tK31E6NdUm18rXc2veqcjehjof7wFxNnycWsn374j87pL4PYKx
+         S5ZJI5UEoCvkrtHRpSkMAyzXyE5mlDnEnPQ304r4=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 27FBB61112;
+        Fri,  3 May 2019 07:56:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1556870183;
+        bh=aDusQfMCjBF3dgdzRMthBxZkCv+AeRrwz8Z7d1VTjKo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ap9zuQAHsDHkRvSiCgmkJ2xd96WFTtPhOLcWJKSupjL2AXB/QnOa3Uiscn8bktcLW
+         O97hFHWI9+1QUfaKMxREaqDRACQuVHq+3rgFBBnFdhz14nHSTQ/AhQDpBq1Qa/92Lo
+         lzvQm+MogmNpc7fsLW72XQ3a/D8ky3sau1reA4Zk=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190503014015.GC7416@eros.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 03 May 2019 15:56:23 +0800
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Thierry Escande <thierry.escande@linaro.org>,
+        netdev <netdev@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        linux-bluetooth-owner@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device property
+ firmware-name for QCA6174
+In-Reply-To: <60C7AC89-37B6-441C-9349-BCB15717EB2C@holtmann.org>
+References: <1554368908-22017-2-git-send-email-rjliao@codeaurora.org>
+ <1554888476-17560-1-git-send-email-rjliao@codeaurora.org>
+ <A85D7982-E000-4A5F-9927-CA36E0BA60F2@holtmann.org>
+ <7e0cf9ba98260309c43d9d6e63dead6c@codeaurora.org>
+ <CAL_JsqLnM4XqQTCT7VTUSmukujz0VHJoCbXMF2--RmTEx_LZww@mail.gmail.com>
+ <60C7AC89-37B6-441C-9349-BCB15717EB2C@holtmann.org>
+Message-ID: <17221139821fb6ee35f3119df7405401@codeaurora.org>
+X-Sender: rjliao@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 11:40:15AM +1000, Tobin C. Harding wrote:
-> On Thu, May 02, 2019 at 10:39:22AM +0200, Johan Hovold wrote:
-> > On Thu, May 02, 2019 at 06:25:39PM +1000, Tobin C. Harding wrote: > Adding Jon to CC
-> > > 
-> > > On Thu, May 02, 2019 at 09:38:23AM +0200, Johan Hovold wrote:
-> > > > On Thu, May 02, 2019 at 12:31:40PM +1000, Tobin C. Harding wrote:
-> > > > > kernel-doc comments have a prescribed format.  This includes parenthesis
-> > > > > on the function name.  To be _particularly_ correct we should also
-> > > > > capitalise the brief description and terminate it with a period.
-> > > > 
-> > > > Why do think capitalisation and full stop is required for the function
-> > > > description?
-> > > > 
-> > > > Sure, the example in the current doc happen to use that, but I'm not
-> > > > sure that's intended as a prescription.
-> > > > 
-> > > > The old kernel-doc nano-HOWTO specifically did not use this:
-> > > > 
-> > > > 	https://www.kernel.org/doc/Documentation/kernel-doc-nano-HOWTO.txt
-> > > > 
-> > > 
-> > > Oh?  I was basing this on Documentation/doc-guide/kernel-doc.rst
-> > > 
-> > > 	Function documentation
-> > > 	----------------------
-> > > 
-> > > 	The general format of a function and function-like macro kernel-doc comment is::
-> > > 
-> > > 	  /**
-> > > 	   * function_name() - Brief description of function.
-> > > 	   * @arg1: Describe the first argument.
-> > > 	   * @arg2: Describe the second argument.
-> > > 	   *        One can provide multiple line descriptions
-> > > 	   *        for arguments.
-> > > 
-> > > I figured that was the canonical way to do kernel-doc function
-> > > comments.  I have however refrained from capitalising and adding the
-> > > period to argument strings to reduce code churn.  I figured if I'm
-> > > touching the line to add parenthesis then I might as well make it
-> > > perfect (if such a thing exists).
-> >
-> > I think you may have read too much into that example. Many of the
-> > current function and parameter descriptions aren't even full sentences,
-> > so sentence case and full stop doesn't really make any sense.
-> >
-> > Looks like we discussed this last fall as well:
-> 
-> Ha, this was funny.  By 'we' at first I thought you meant 'we the kernel
-> community' but you actually meant we as in 'me and you'.  Clearly you
-> failed to convince me last time :)
-> 
-> > 	https://lkml.kernel.org/r/20180912093116.GC1089@localhost
-> 
-> I am totally aware this is close to code churn and any discussion is
-> bikeshedding ... for me just because loads of places don't do this it
-> still looks nicer to my eyes
-> 
-> /**
-> * sfn() - Super awesome function.
-> 
-> than
-> 
-> /**
-> */ sfn() - super awesome function
-> 
-> I most likely will keep doing these changes if I am touching the
-> kernel-doc comments for other reasons and then drop the changes if the
-> subsystem maintainer thinks its code churn.
-> 
-> I defiantly won't do theses changes in GNSS, GREYBUS, or USB SERIAL.
+Hi Marcel,
 
-This isn't about any particular subsystem, but more the tendency of
-people to make up random rules and try to to force it on others. It's
-churn, and also makes things like code forensics and backports harder
-for no good reason.
+On 2019-04-27 13:59, Marcel Holtmann wrote:
+> Hi Rob,
+> 
+>>>>> This patch adds an optional device property "firmware-name" to 
+>>>>> allow
+>>>>> the
+>>>>> driver to load customized nvm firmware file based on this property.
+>>>>> 
+>>>>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>>>>> ---
+>>>>> Changes in v3:
+>>>>> * added firmware-name instead of nvm-postfix to specify full 
+>>>>> firmware
+>>>>> name
+>>>>> ---
+>>>>> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 ++
+>>>>> 1 file changed, 2 insertions(+)
+>>>>> 
+>>>>> diff --git
+>>>>> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>>>>> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>>>>> index 824c0e2..2bcea50 100644
+>>>>> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>>>>> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>>>>> @@ -16,6 +16,7 @@ Optional properties for compatible string
+>>>>> qcom,qca6174-bt:
+>>>>> 
+>>>>> - enable-gpios: gpio specifier used to enable chip
+>>>>> - clocks: clock provided to the controller (SUSCLK_32KHZ)
+>>>>> + - firmware-name: specify the name of nvm firmware to load
+>>>>> 
+>>>>> Required properties for compatible string qcom,wcn3990-bt:
+>>>>> 
+>>>>> @@ -39,6 +40,7 @@ serial@7570000 {
+>>>>> 
+>>>>>             enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
+>>>>>             clocks = <&divclk4>;
+>>>>> +            firmware-name = "nvm_00440302.bin";
+>>>>>     };
+>>>> 
+>>>> and how is this a firmware-name property. Wouldn’t this be more like
+>>>> nvm-file or something along these lines. This really needs to be
+>>>> cleared with Rob to pick the right property name.
+>>>> 
+>>>> Regards
+>>>> 
+>>>> Marcel
+>>> 
+>>> Hi Rob,
+>>> 
+>>> Are you OK to use a property name "nvm-file" or "firmware-nvm-file"?
+>>> Actually we have two firmware files, one is the patch file which is
+>>> common to all of the products, the other is the nvm file which is
+>>> customized. Using a "nvm-file" or "firmware-nvm-file" property name
+>>> would be more clear.
+>> 
+>> 'firmware-name' is the standard name for specifying firmware file 
+>> names.
+> 
+> but it is not a firmware file, it is a NVM file. What happens if in
+> the future they need a firmware file and a NVM file?
+> 
+> Regards
+> 
+> Marcel
 
-Both capitalisation styles are about as common for the function
-description judging from a quick grep, but only 10% or so use a full
-stop ('.'). And forcing the use of sentence case and full stop for
-things like
+We won't need to specify a rampatch firmware file in future as it's a 
+same file for all the boards with same chip, only the NVM firmware file 
+may have board differences. NVM file is also one of the firmware files 
+so I think it should be OK to use "firmware-name" property to specify 
+it.
 
-	/**
-	 * maar_init() - Initialise MAARs.
-
-or
-
-	* @instr: Operational instruction.
-
-would be not just ugly, but wrong (as these are not independent
-clauses).
-
-Johan
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum,
+a Linux Foundation Collaborative Project
