@@ -2,180 +2,125 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19939C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64769C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D604920675
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36AC62087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:04:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TFsaDfJk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KOwMT0Cl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbfECIEL (ORCPT
+        id S1726511AbfECIEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 04:04:11 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44540 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfECIEL (ORCPT
+        Fri, 3 May 2019 04:04:44 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46756 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfECIEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 04:04:11 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a26so3380544qtp.11
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 01:04:10 -0700 (PDT)
+        Fri, 3 May 2019 04:04:43 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r7so6569504wrr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 01:04:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QyYnh8hGNxo4y79JyoBAvnyJOsqV/eKCHgC2055Dj70=;
-        b=TFsaDfJktcepJhaSVkSy9jmcH5WklitGZ2BBIrKTkDmfye484EI32NBvqAF18RhDM4
-         icz2jBCDxSTj6qmQVp0LN0YlkJPVgxnXUunfIEesZ1FOAC5727DnzDgNJ++yI7ZM9nil
-         K47/JWKZTYl0cyTlCD15zHWhm1WvSpjJECOdY=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TpXqJQI7PVBHDytg+IGA8i8m1/XYj0MrND3X98mgWRU=;
+        b=KOwMT0Cl9efaAA08+DXGflf+klv1sSVEHKxtGUL+CBB2gxt07xyd+GyRUCCFVKzsBF
+         vKFUzaTq0/DOqlmb39mbYs9iH9RkOcgL/KAAeaSaMlUscaGj/bjbj+P1qApNVwESdscJ
+         g+1LJrqUlO8vcWihy8sZ39L1L6LS1ajt0o5fzIYYJaQhvca+WfuJGXFbdFR2rcym4b4t
+         zBYkf1Llb/Z3r2f2Mqm8DStMLgaZcHBFBYpuH2Uow5/FZOaBijtEgoGFhaFs2w3Lbcsf
+         fUx7d6Qd9AwY90DycZfziK6toE6kMAjg8Mx+cK1CNVyDwdMXuzYcxD1e3vRmAV6UcGSV
+         1pBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QyYnh8hGNxo4y79JyoBAvnyJOsqV/eKCHgC2055Dj70=;
-        b=QBzj9/99avVfKtgQqQpqrtQeAf0mU4XUverxJcb343JgQw87q1vmaplo0B97186WRM
-         lkNFMlkM8M8YE9M/63RXifsTC6NFtojPnZ6s9Ii+5HN8HvyO183mOE6loaG62nBBC8H+
-         WmTZDd6x1EBfCR1rqIEPHCJqv5I0kXZVJV7NuGdw9BxGi4qcs7kED1SWF06U45nuXaFw
-         qtX3SWebFW3LK3LOJFQMLIU64olaG6UZFvn6kBkvD0AUrnBZ3KulKO2HpAF8UmWmfF1M
-         8KNzhj0KO0K1FeZh/ZwkMYo70Y10niqWj6r16FPLDweZpflozzvBtexo2vtIVGiizUEr
-         KtRQ==
-X-Gm-Message-State: APjAAAWGueto4SP23lELRaaYjjIcM5w7z4D81QYM3Y++gYGisQInjz1l
-        vro6SCmzAX8hK7Emz+Bai1WTjjRHQsVmeXKv9G8OAw==
-X-Google-Smtp-Source: APXvYqwK9NYfQA/9uIkz+E3ZSXoSVmvGacXxJP1bm9lZj8RtDGEHaMjRHL1WIrVFMhk5ZLbA20X7lzzIyVAj/Hr6Db0=
-X-Received: by 2002:ac8:3822:: with SMTP id q31mr7331051qtb.0.1556870649914;
- Fri, 03 May 2019 01:04:09 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TpXqJQI7PVBHDytg+IGA8i8m1/XYj0MrND3X98mgWRU=;
+        b=U3vxwseudQwJhE909Lqk4TC3s7u+DfnHiySE2+qHqv3lMYg21xt4VcUAz7psBdG+Pm
+         4z+a8a/BFOKgfk8+SX7owao1y4hzmDAkhmewJ8zYHWKaPa2jhQg4re3QpskW4D2rnMqo
+         3j5mSz8s75I7BHJai318w4D2Iy4Qed65DWv532mNG6WToqTuAW+6x25YMs0FDKRf8u3e
+         PbipmuHY49/QIxrY34gm47yIG6fWG3KQWPxq2+R+X8qTVwvY0J5uNXKiyCDXI3j1o2OO
+         jeoEMLP1Ycp964IaK9p70SY+dXAMMjcZDC6lMOhq0aKhRHCciuLARR0Dyb3m8S6QaSdu
+         EJVQ==
+X-Gm-Message-State: APjAAAWw7M949HUIbFgorfsNBfh63jvAj3Ah6FBRkQaBaSZ0ZTyVB6kw
+        jQ7ICgZl+IcDuiD4e8ZCdeR2+g==
+X-Google-Smtp-Source: APXvYqzRH5TpkdzGloadzIxAtQZsM2JgxqfDy9oibY2Qrd4ctA1Tpc85qqJ9ZfJamG8tTMt5Vi3YIQ==
+X-Received: by 2002:a5d:430f:: with SMTP id h15mr5756534wrq.132.1556870681778;
+        Fri, 03 May 2019 01:04:41 -0700 (PDT)
+Received: from [192.168.0.41] (223.235.129.77.rev.sfr.net. [77.129.235.223])
+        by smtp.googlemail.com with ESMTPSA id k1sm1159060wmi.48.2019.05.03.01.04.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 01:04:41 -0700 (PDT)
+Subject: Re: [PATCH 1/6] thermal: Introduce
+ devm_thermal_of_cooling_device_register
+To:     Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-pm@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>
+References: <1555617500-10862-1-git-send-email-linux@roeck-us.net>
+ <1555617500-10862-2-git-send-email-linux@roeck-us.net>
+ <20190501164843.GA16333@roeck-us.net>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <c8a26b7d-2775-e13f-21b7-dbc901ea3b0b@linaro.org>
+Date:   Fri, 3 May 2019 10:04:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com> <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
-In-Reply-To: <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Fri, 3 May 2019 16:03:58 +0800
-Message-ID: <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
-Subject: Re: [PATCH 1/8] arm64: dts: mt8183: add thermal zone node
-To:     "michael.kao" <michael.kao@mediatek.com>
-Cc:     fan.chen@mediatek.com, jamesjj.liao@mediatek.com,
-        dawei.chien@mediatek.com, louis.yu@mediatek.com,
-        roger.lu@mediatek.com, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190501164843.GA16333@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
->
-> Add thermal zone node to Mediatek MT8183 dts file.
->
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 64 ++++++++++++++++++++++++++++++++
->  1 file changed, 64 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index 926df75..b92116f 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -334,6 +334,67 @@
->                         status = "disabled";
->                 };
->
-> +               thermal: thermal@1100b000 {
-> +                       #thermal-sensor-cells = <1>;
-> +                       compatible = "mediatek,mt8183-thermal";
-> +                       reg = <0 0x1100b000 0 0x1000>;
-> +                       interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>;
-> +                       clocks = <&infracfg CLK_INFRA_THERM>,
-> +                                <&infracfg CLK_INFRA_AUXADC>;
-> +                       clock-names = "therm", "auxadc";
-> +                       resets = <&infracfg  MT8183_INFRACFG_AO_THERM_SW_RST>;
-> +                       mediatek,auxadc = <&auxadc>;
-> +                       mediatek,apmixedsys = <&apmixedsys>;
-> +                       mediatek,hw-reset-temp = <117000>;
-> +                       nvmem-cells = <&thermal_calibration>;
-> +                       nvmem-cell-names = "calibration-data";
-> +               };
-> +
-> +               thermal-zones {
-> +                       cpu_thermal: cpu_thermal {
-> +                               polling-delay-passive = <1000>;
-> +                               polling-delay = <1000>;
-> +
-> +                               thermal-sensors = <&thermal 0>;
-> +                               sustainable-power = <1500>;
-> +                       };
-> +
-> +                       tzts1: tzts1 {
-> +                               polling-delay-passive = <1000>;
-> +                               polling-delay = <1000>;
-> +                               thermal-sensors = <&thermal 1>;
-Is sustainable-power required for tzts? Though it's an optional
-property, kernel would have warning:
-[    0.631556] thermal thermal_zone1: power_allocator:
-sustainable_power will be estimated
-[    0.639586] thermal thermal_zone2: power_allocator:
-sustainable_power will be estimated
-[    0.647611] thermal thermal_zone3: power_allocator:
-sustainable_power will be estimated
-[    0.655635] thermal thermal_zone4: power_allocator:
-sustainable_power will be estimated
-[    0.663658] thermal thermal_zone5: power_allocator:
-sustainable_power will be estimated
-if no sustainable-power assigned.
+On 01/05/2019 18:48, Guenter Roeck wrote:
+> On Thu, Apr 18, 2019 at 12:58:15PM -0700, Guenter Roeck wrote:
+>> thermal_of_cooling_device_register() and thermal_cooling_device_register()
+>> are typically called from driver probe functions, and
+>> thermal_cooling_device_unregister() is called from remove functions. This
+>> makes both a perfect candidate for device managed functions.
+>>
+>> Introduce devm_thermal_of_cooling_device_register(). This function can
+>> also be used to replace thermal_cooling_device_register() by passing a NULL
+>> pointer as device node. The new function requires both struct device *
+>> and struct device_node * as parameters since the struct device_node *
+>> parameter is not always identical to dev->of_node.
+>>
+>> Don't introduce a device managed remove function since it is not needed
+>> at this point.
+>>
+> 
+> Any feedback / thoughts / comments ?
 
-> +                       };
-> +
-> +                       tzts2: tzts2 {
-> +                               polling-delay-passive = <1000>;
-> +                               polling-delay = <1000>;
-> +                               thermal-sensors = <&thermal 2>;
-> +                       };
-> +
-> +                       tzts3: tzts3 {
-> +                               polling-delay-passive = <1000>;
-> +                               polling-delay = <1000>;
-> +                               thermal-sensors = <&thermal 3>;
-> +                       };
-> +
-> +                       tzts4: tzts4 {
-> +                               polling-delay-passive = <1000>;
-> +                               polling-delay = <1000>;
-> +                               thermal-sensors = <&thermal 4>;
-> +                       };
-> +
-> +                       tzts5: tzts5 {
-> +                               polling-delay-passive = <1000>;
-> +                               polling-delay = <1000>;
-> +                               thermal-sensors = <&thermal 5>;
-> +                       };
-> +
-> +                       tztsABB: tztsABB {
-> +                               polling-delay-passive = <1000>;
-> +                               polling-delay = <1000>;
-> +                               thermal-sensors = <&thermal 6>;
-> +                       };
-> +               };
->                 audiosys: syscon@11220000 {
->                         compatible = "mediatek,mt8183-audiosys", "syscon";
->                         reg = <0 0x11220000 0 0x1000>;
-> @@ -368,6 +429,9 @@
->                         compatible = "mediatek,mt8183-efuse",
->                                      "mediatek,efuse";
->                         reg = <0 0x11f10000 0 0x1000>;
-> +                       thermal_calibration: calib@180 {
-> +                               reg = <0x180 0xc>;
-> +                       };
->                 };
->
->                 mfgcfg: syscon@13000000 {
+Hi Guenter,
+
+I have comments about your patch but I need some time to double check in
+the current code how the 'of' and 'devm' are implemented.
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
