@@ -2,133 +2,171 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B133C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3D7C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BF5206E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A9720644
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:41:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E1kHCtY3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uHwVMflH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfECXfm (ORCPT
+        id S1726788AbfECXlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 19:35:42 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40080 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfECXfl (ORCPT
+        Fri, 3 May 2019 19:41:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37240 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbfECXlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 19:35:41 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u17so3633965pfn.7
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 16:35:41 -0700 (PDT)
+        Fri, 3 May 2019 19:41:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id u3so1346751otq.4
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 16:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SHEjHfO9A5bRiMAqWYWHqc/8OGhvcUxNJFwk8XrvHsE=;
-        b=E1kHCtY3StjY2jL6mVYyFBDOHkYOyxkDZHKrjgcQsUNJy8dDwNhCXMPstgxWlAWDVu
-         N6/tKl0/5fSaSVUZeI/AswN2edBTfVnN7rBh5z5LP395vsJXAlfWtuvsqNrYQVbSP7/9
-         hwBMR6j63Xx/mEajgFYbn6QXfKqogcl8pxheQ=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mKALN1OkcwtQhcysb+FWH3t2vFKNjrdMKVQt2ijO0Po=;
+        b=uHwVMflHMaQY3whJ1EE4nVizGRxOy/tr5WOjeZAzMUNneEi1VOxLR7ILboGXaDspKX
+         EZdcTnWDLsjH5Xuv6Dpbla+mLd+ZOej6UTDsdicbg1f2NGRfNWvT53QLlViJ91MtO47Y
+         +NMNZSv0/KOCCjGp/8Z6JcV8oAgctk1uHe5BjikYU+meECnNZzF0Xtb+m6Lql1RyQZ+f
+         6pOCAlUul4FDKtOsuwcFiCf6Z4SU4Q97jpl1Ljx2pJqKs6Ok7cLSU5UcjCBf989disYo
+         L1k/caWEqmSpv8hm8mIrQVDY6SOrZ43BcimXmBjT67ScyO4HOEunsbiGdbsaE+Lu0zj7
+         pGEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SHEjHfO9A5bRiMAqWYWHqc/8OGhvcUxNJFwk8XrvHsE=;
-        b=DwWl7Kr5aUZlsXFWOUCWcCPlxE0wcJQk+7eIwiPWEovnFhxO9TRbXXVeaj/WXSKQp0
-         eiq+caAWnYyXPA2sDRpEB0hDkt9rt+oHezb74oCWYvRWLYYrrUM6IH43b+9jPFqTBycP
-         eRohTIYYO8zqkj421gRiNrT7pw8POuEo+Hb9KEZpVi+fo1ixkbQ+Z3+zJo0aUrOW6L+7
-         afTeMQIYdw/zUbnSpYYya+8TGeFFTZ/pACMUcK7gDHL23zoPF4JX+X8CiS0zJydqeQEQ
-         TeVHYmg14V7AhqxVNu1a0IJpc+4FKeJVmk4swd36pJ6oxBYb3GwWabNG1zXDewEH4SWi
-         nK0w==
-X-Gm-Message-State: APjAAAVpgAhxbMxTwAwOdkz6E8sekqUQNL4yL2fSiQ0OPFVb294IzIQi
-        kJeY7CFaRbmaDPkHUOizv8EW3w==
-X-Google-Smtp-Source: APXvYqxSl2kbX2wBpR+4fMn6q0ci7jtMz8uiaw/Pxs3UtU6+iNJMRtgXKO7o7X0k+XZwbkDsvK4mwA==
-X-Received: by 2002:a65:62d2:: with SMTP id m18mr14209583pgv.122.1556926540856;
-        Fri, 03 May 2019 16:35:40 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id l184sm7763304pfc.98.2019.05.03.16.35.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 16:35:39 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-rockchip@lists.infradead.org, groeck@chromium.org,
-        mka@chromium.org, drinkcat@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Ming Lei <ming.lei@redhat.com>, linux-mmc@vger.kernel.org,
-        Hannes Reinecke <hare@suse.com>, linux-kernel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@fb.com>
-Subject: [PATCH] mmc: block: Fix memory leak in blk-mq when cleaning up
-Date:   Fri,  3 May 2019 16:35:26 -0700
-Message-Id: <20190503233526.226272-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mKALN1OkcwtQhcysb+FWH3t2vFKNjrdMKVQt2ijO0Po=;
+        b=pocKFCruwqx8rC5oxXcppsKowiAjEOA5Qj5igE6ycP06lp3Z7ZzlbES8LrITRXS+wG
+         HJR+9v5b6l5qpIBMcwYHNzXViJoGQEh/K2HoJrZ4PmFwWJIpb8pOLB0lMffWwWEnh+z1
+         NL8ut9c0f217epnXEHBEUxabFlldLVbpaKn9UyfTbRHfmT6EvY5RPkoJeYkrEz+JAEau
+         +blkAKHwWrM9v0xKMH/o3+VIKUd77IQC4lBsXxglun1Wq9ddscQmSPhMcUZICUQU/pwh
+         pLGV2GwmmLHxSYofGSjlOWEld29+AeSJBpfmw2tMD3Rw1nV0IxMhGjdZ2nDt+vjH0nVV
+         BhtA==
+X-Gm-Message-State: APjAAAW7UVkXwzW8sN+Le88fOxWlgJnP1qoIdoXwKk9KxSTPwBx3jEsu
+        qNFnQnAmR2H3f8xzADXESKorMG/h9JAMUHVc3lN6/w==
+X-Google-Smtp-Source: APXvYqzBloPRnX50VrJGlf0zwqZMx4kE8jlcjkF1A4MmAb/1CmwV6C22Krcs7y2A5uFCH7cqu5h7HYnPPCqLvVBMptw=
+X-Received: by 2002:a9d:5cc3:: with SMTP id r3mr8335667oti.338.1556926881968;
+ Fri, 03 May 2019 16:41:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-17-brendanhiggins@google.com> <20190502110347.GE12416@kroah.com>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770A3A0@USCULXMSG01.am.sony.com>
+ <CAFd5g471Wawu6g14p0AO3aY8VPBKLA0mjHSdfR1qStFGzp3iGQ@mail.gmail.com> <20190503064241.GC20723@kroah.com>
+In-Reply-To: <20190503064241.GC20723@kroah.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 3 May 2019 16:41:10 -0700
+Message-ID: <CAFd5g44NrKM9WQCF1xW-BWpFNsC05UAS9jt1-S+vNRuBDZVsHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 16/17] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Bird, Timothy" <Tim.Bird@sony.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Iurii Zaikin <yzaikin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If I run the following on rk3288-veyron-minnie (a 2GB machine)
+> On Thu, May 02, 2019 at 11:45:43AM -0700, Brendan Higgins wrote:
+> > On Thu, May 2, 2019 at 11:15 AM <Tim.Bird@sony.com> wrote:
+> > >
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Greg KH
+> > > >
+> > > > On Wed, May 01, 2019 at 04:01:25PM -0700, Brendan Higgins wrote:
+> > > > > From: Iurii Zaikin <yzaikin@google.com>
+> > > > >
+> > > > > KUnit tests for initialized data behavior of proc_dointvec that is
+> > > > > explicitly checked in the code. Includes basic parsing tests including
+> > > > > int min/max overflow.
+> > > > >
+> > > > > Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+> > > > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > > > > ---
+> > > > >  kernel/Makefile      |   2 +
+> > > > >  kernel/sysctl-test.c | 292
+> > > > +++++++++++++++++++++++++++++++++++++++++++
+> > > > >  lib/Kconfig.debug    |   6 +
+> > > > >  3 files changed, 300 insertions(+)
+> > > > >  create mode 100644 kernel/sysctl-test.c
+> > > > >
+> > > > > diff --git a/kernel/Makefile b/kernel/Makefile
+> > > > > index 6c57e78817dad..c81a8976b6a4b 100644
+> > > > > --- a/kernel/Makefile
+> > > > > +++ b/kernel/Makefile
+> > > > > @@ -112,6 +112,8 @@ obj-$(CONFIG_HAS_IOMEM) += iomem.o
+> > > > >  obj-$(CONFIG_ZONE_DEVICE) += memremap.o
+> > > > >  obj-$(CONFIG_RSEQ) += rseq.o
+> > > > >
+> > > > > +obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
+> > > >
+> > > > You are going to have to have a "standard" naming scheme for test
+> > > > modules, are you going to recommend "foo-test" over "test-foo"?  If so,
+> > > > that's fine, we should just be consistant and document it somewhere.
+> > > >
+> > > > Personally, I'd prefer "test-foo", but that's just me, naming is hard...
+> > >
+> > > My preference would be "test-foo" as well.  Just my 2 cents.
+> >
+> > I definitely agree we should be consistent. My personal bias
+> > (unsurprisingly) is "foo-test," but this is just because that is the
+> > convention I am used to in other projects I have worked on.
+> >
+> > On an unbiased note, we are currently almost evenly split between the
+> > two conventions with *slight* preference for "foo-test": I ran the two
+> > following grep commands on v5.1-rc7:
+> >
+> > grep -Hrn --exclude-dir="build" -e "config [a-zA-Z_0-9]\+_TEST$" | wc -l
+> > grep -Hrn --exclude-dir="build" -e "config TEST_[a-zA-Z_0-9]\+" | wc -l
+> >
+> > "foo-test" has 36 occurrences.
+> > "test-foo" has 33 occurrences.
+> >
+> > The things I am more concerned about is how this would affect file
+> > naming. If we have a unit test for foo.c, I think foo_test.c is more
+> > consistent with our namespacing conventions. The other thing, is if we
+> > already have a Kconfig symbol called FOO_TEST (or TEST_FOO) what
+> > should we name the KUnit test in this case? FOO_UNIT_TEST?
+> > FOO_KUNIT_TEST, like I did above?
+>
+> Ok, I can live with "foo-test", as you are right, in a directory listing
+> and config option, it makes more sense to add it as a suffix.
 
-  cd /sys/bus/platform/drivers/dwmmc_rockchip
-  for i in $(seq 1 3000); do
-    echo "========================" $i
-    echo ff0f0000.dwmmc > unbind
-    sleep .5
-    echo ff0f0000.dwmmc > bind
-    while true; do
-      if [ -e /dev/mmcblk2 ]; then
-        break;
-      fi
-      sleep .1
-    done
-  done
-
-Then I start OOMing somewhere between iteration 200 and 250.  Using
-kmemleak, I see reports like:
-
-unreferenced object 0xe39c5580 (size 64):
-  comm "kworker/1:0", pid 17, jiffies 4294821091 (age 96.952s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ad19d10a>] __kmalloc+0x1ec/0x2dc
-    [<a28614c3>] blk_mq_alloc_tag_set+0x27c/0x2bc
-    [<0955ae01>] mmc_init_queue+0xa8/0x2a8
-    [<5102b986>] mmc_blk_alloc_req+0xf8/0x2d4
-    [<f1c2214f>] mmc_blk_probe+0x4a8/0x6c0
-    [<0dfdd9d5>] mmc_bus_probe+0x24/0x28
-
-It's pretty clear that we're missing a call to blk_mq_free_tag_set().
-Let's add it.
-
-Fixes: 81196976ed94 ("mmc: block: Add blk-mq support")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- drivers/mmc/core/queue.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-index 7c364a9c4eeb..09071e13282e 100644
---- a/drivers/mmc/core/queue.c
-+++ b/drivers/mmc/core/queue.c
-@@ -480,6 +480,8 @@ void mmc_cleanup_queue(struct mmc_queue *mq)
- 	 */
- 	flush_work(&mq->complete_work);
- 
-+	blk_mq_free_tag_set(&mq->tag_set);
-+
- 	mq->card = NULL;
- }
- 
--- 
-2.21.0.1020.gf2820cf01a-goog
-
+Cool, so just for future reference, if we already have a Kconfig
+symbol called FOO_TEST (or TEST_FOO) what should we name the KUnit
+test in this case? FOO_UNIT_TEST? FOO_KUNIT_TEST, like I did above?
