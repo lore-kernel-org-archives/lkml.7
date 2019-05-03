@@ -2,170 +2,80 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1715DC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D44C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E79D02075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D1A2075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfECOq5 (ORCPT
+        id S1727738AbfECOsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:46:57 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:52713 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfECOq4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:46:56 -0400
-X-Originating-IP: 90.88.149.145
-Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 2C69420008;
-        Fri,  3 May 2019 14:46:51 +0000 (UTC)
-Date:   Fri, 3 May 2019 16:46:51 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2] arm64: allwinner: h6: orangepi-one-plus: Add Ethernet
- support
-Message-ID: <20190503144651.ttqfha656dykqjzo@flea>
-References: <20190503115928.27662-1-jagan@amarulasolutions.com>
+        Fri, 3 May 2019 10:48:47 -0400
+Received: from sauhun.de ([88.99.104.3]:34258 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727173AbfECOsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 10:48:47 -0400
+Received: from localhost (p54B33153.dip0.t-ipconnect.de [84.179.49.83])
+        by pokefinder.org (Postfix) with ESMTPSA id 3C2DB2C2868;
+        Fri,  3 May 2019 16:48:45 +0200 (CEST)
+Date:   Fri, 3 May 2019 16:48:44 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Pu Wen <puwen@hygon.cn>
+Cc:     jdelvare@suse.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 RESEND] i2c-piix4: Add Hygon Dhyana SMBus support
+Message-ID: <20190503144844.GD24385@kunai>
+References: <1556554123-5894-1-git-send-email-puwen@hygon.cn>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2rmkjhbiz7qfnwvn"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vni90+aGYgRvsTuO"
 Content-Disposition: inline
-In-Reply-To: <20190503115928.27662-1-jagan@amarulasolutions.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1556554123-5894-1-git-send-email-puwen@hygon.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---2rmkjhbiz7qfnwvn
+--vni90+aGYgRvsTuO
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 03, 2019 at 05:29:28PM +0530, Jagan Teki wrote:
-> Add Ethernet support for orangepi-one-plus board,
->
-> - Ethernet port connected via RTL8211E PHY
-> - PHY suppiled with
->   GMAC-2V5, fixed regulator with GMAC_EN pin via PD6
->   GMAC-3V, which is supplied by VCC3V3-MAC via aldo2
-> - RGMII-RESET pin connected via PD14
->
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+On Tue, Apr 30, 2019 at 12:08:43AM +0800, Pu Wen wrote:
+> The Hygon Dhyana CPU has the SMBus device with PCI device ID 0x790b,
+> which is the same as AMD CZ SMBus device. So add Hygon Dhyana support
+> to the i2c-piix4 driver by using the code path of AMD.
+>=20
+> Signed-off-by: Pu Wen <puwen@hygon.cn>
+> Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
-Your commit log should be improved. We can get those informations from
-the patch itself...
+Applied to for-next, thanks!
 
-> ---
-> Changes for v2:
-> - emac changes on top of https://patchwork.kernel.org/cover/10899529/
->   series
->
->  .../allwinner/sun50i-h6-orangepi-one-plus.dts |  8 ++++
->  .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 42 +++++++++++++++++++
->  2 files changed, 50 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-> index 12e17567ab56..9e8ed1053715 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-> @@ -9,4 +9,12 @@
->  / {
->  	model = "OrangePi One Plus";
->  	compatible = "xunlong,orangepi-one-plus", "allwinner,sun50i-h6";
-> +
-> +	aliases {
-> +		ethernet0 = &emac;
-> +	};
-> +};
-> +
-> +&emac {
-> +	status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> index 62e27948a3fa..c48e24acaf8a 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> @@ -45,6 +45,48 @@
->  		regulator-max-microvolt = <5000000>;
->  		regulator-always-on;
->  	};
-> +
-> +	/*
-> +	 * The board uses 2.5V RGMII signalling. Power sequence to enable
-> +	 * the phy is to enable GMAC-2V5 and GMAC-3V (aldo2) power rails
-> +	 * at the same time and to wait 100ms.
-> +	 */
-> +	reg_gmac_2v5: gmac-2v5 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "gmac-2v5";
-> +		regulator-min-microvolt = <2500000>;
-> +		regulator-max-microvolt = <2500000>;
-> +		startup-delay-us = <100000>;
-> +		enable-active-high;
-> +		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* GMAC_EN: PD6 */
-> +
-> +		/* The real parent of gmac-2v5 is reg_vcc5v, but we need to
-> +		 * enable two regulators to power the phy. This is one way
-> +		 * to achieve that.
-> +		 */
-> +		vin-supply = <&reg_aldo2>; /* VCC3V3-MAC: GMAC-3V */
-> +	};
-> +};
-> +
-> +&emac {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&ext_rgmii_pins>;
-> +	phy-mode = "rgmii";
-> +	phy-handle = <&ext_rgmii_phy>;
-> +	phy-supply = <&reg_gmac_2v5>;
-> +	allwinner,rx-delay-ps = <1500>;
-> +	allwinner,tx-delay-ps = <700>;
-> +};
-> +
-> +&mdio {
-> +	ext_rgmii_phy: ethernet-phy@1 {
-> +		compatible = "ethernet-phy-ieee802.3-c22";
-> +		reg = <1>;
-> +
-> +		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* RGMII-RESET: PD14 */
-> +		reset-assert-us = <15000>;
-> +		reset-deassert-us = <40000>;
-> +	};
->  };
 
-... however, at no point in time you explain why you made that switch,
-and while most of the definition of the EMAC nodes is in the DTSI, you
-only enable it in one DTS.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---2rmkjhbiz7qfnwvn
+--vni90+aGYgRvsTuO
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXMxUWwAKCRDj7w1vZxhR
-xRfCAQDVy0LVhlnpOdbjD47WRofRerK8UUI9OFy/pcKdkOrHHwD9GqdywGWCgKB+
-W2rCZhn4ntKVt7j9hzPYI7c9zdztUAM=
-=I+i9
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzMVMwACgkQFA3kzBSg
+KbZHEBAAm8xAjCbx/jdBVaWlBiuWE57fQzmTjQ8pLUH6e0SNl90RBbCHI+7ex0ik
+ugD8hcUKkLiF7OVEDmnCsyXFkp60ED/0lelHKRLIeeDHpkqmSrABfhnDr3CWoo+G
+kknkicjAVO+pvFlcYYmdL1j2h7jKbUjs1eWjBBpJm9wWTWyKfDUzN8mSG12Sma2b
++N0DtNiefwTAicsM0DgSfsWyLImG9SUO+L/KVVkODfbIp/I2maHUDgoL36TXzR/8
+ppPFdpFqyku4siDO9LdvSCEdWkEoYWstOC/nWm3UNy4h0tEZEIV1/kKw/r6snDCe
+Ot+WG6ijg+2KcZY3E4pdNBza2tiTM/WvsJC8Dm6/LhaWilV4vavner/RjjFaiMHu
+h4bnmp1kApVscOpTfEB1C3/MZnTgXgYX3THreRaHsiMo8a1FO4TLQ43oDBt/CLgm
+hfscDMPOnQ5a+hyp4+5Wk+1TghM2+ejIN/U763csByKkPLRD2rwZ1MIOr9HPMMPf
+8U6MAF4yVGLxO7cgSoX1+0TqRqife9+OnQngm18xG4QGvx/pMZVg44idJcyrafEA
+85phXEX5+t73W8nRWw9gHdD6st/levRpqyT/Eu+VuFhKWnJ7uRKOgEt6kSKgKTUb
+JHxXN5Y7oRizL9QbohCFseNz6UDICK/cyJBDtvrqmWegkxgP1iQ=
+=LW73
 -----END PGP SIGNATURE-----
 
---2rmkjhbiz7qfnwvn--
+--vni90+aGYgRvsTuO--
