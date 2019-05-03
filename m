@@ -2,397 +2,248 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB10DC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECDDC04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23E22075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E01320675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 09:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfECJvq (ORCPT
+        id S1727212AbfECJxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 05:51:46 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7717 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725777AbfECJv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 05:51:29 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 968568EC41FD42738A69;
-        Fri,  3 May 2019 17:51:27 +0800 (CST)
-Received: from linux-ioko.site (10.71.200.31) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 3 May 2019 17:51:19 +0800
-From:   Peng Li <lipeng321@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <yisen.zhuang@huawei.com>,
-        <salil.mehta@huawei.com>, <lipeng321@huawei.com>
-Subject: [PATCH V2 net-next 3/3] net: hns3: add support for FEC encoding control
-Date:   Fri, 3 May 2019 17:50:39 +0800
-Message-ID: <1556877039-1692-4-git-send-email-lipeng321@huawei.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556877039-1692-1-git-send-email-lipeng321@huawei.com>
-References: <1556877039-1692-1-git-send-email-lipeng321@huawei.com>
+        Fri, 3 May 2019 05:53:37 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57610 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725777AbfECJxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 05:53:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC0F0374;
+        Fri,  3 May 2019 02:53:35 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C5C0C3F557;
+        Fri,  3 May 2019 02:53:33 -0700 (PDT)
+Date:   Fri, 3 May 2019 10:53:27 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, poza@codeaurora.org,
+        Ray Jui <rjui@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/3] iommu/dma: Reserve IOVA for PCIe inaccessible DMA
+ address
+Message-ID: <20190503095327.GA16238@e121166-lin.cambridge.arm.com>
+References: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
+ <1556732186-21630-3-git-send-email-srinath.mannam@broadcom.com>
+ <20190502110152.GA7313@e121166-lin.cambridge.arm.com>
+ <2f4b9492-0caf-d6e3-e727-e3c869eefb58@arm.com>
+ <20190502130624.GA10470@e121166-lin.cambridge.arm.com>
+ <b4420901-60d4-69ab-6ed0-5d2fa9449595@arm.com>
+ <CABe79T7CgtLG=DZTFy8efVocPMLi-MDtyUT5rToy7xj8GHkBSA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.71.200.31]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABe79T7CgtLG=DZTFy8efVocPMLi-MDtyUT5rToy7xj8GHkBSA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+On Fri, May 03, 2019 at 10:53:23AM +0530, Srinath Mannam wrote:
+> Hi Robin, Lorenzo,
+> 
+> Thanks for review and guidance.
+> AFAIU, conclusion of discussion is, to return error if dma-ranges list
+> is not sorted.
+> 
+> So that, Can I send a new patch with below change to return error if
+> dma-ranges list is not sorted?
 
-This patch adds support for FEC encoding control, user can change
-FEC mode by command ethtool --set-fec, and get FEC mode by command
-ethtool --show-fec. The fec capability is changed follow the port
-speed. If autoneg on, the user configure fec mode will be overwritten
-by autoneg result.
+You can but I can't guarantee it will make it for v5.2.
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |  10 ++
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  77 +++++++++++++++
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h |  16 ++++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 106 +++++++++++++++++++++
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   5 +-
- 5 files changed, 213 insertions(+), 1 deletion(-)
+We will have to move the DT parsing and dma list ranges creation
+to core code anyway because I want this to work by construction,
+so even if we manage to make v5.2 you will have to do that.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index 7ee40ec..ad21b0e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -132,6 +132,13 @@ enum hnae3_module_type {
- 
- };
- 
-+enum hnae3_fec_mode {
-+	HNAE3_FEC_AUTO = 0,
-+	HNAE3_FEC_BASER,
-+	HNAE3_FEC_RS,
-+	HNAE3_FEC_USER_DEF,
-+};
-+
- enum hnae3_reset_notify_type {
- 	HNAE3_UP_CLIENT,
- 	HNAE3_DOWN_CLIENT,
-@@ -360,6 +367,9 @@ struct hnae3_ae_ops {
- 	void (*get_media_type)(struct hnae3_handle *handle, u8 *media_type,
- 			       u8 *module_type);
- 	int (*check_port_speed)(struct hnae3_handle *handle, u32 speed);
-+	void (*get_fec)(struct hnae3_handle *handle, u8 *fec_ability,
-+			u8 *fec_mode);
-+	int (*set_fec)(struct hnae3_handle *handle, u32 fec_mode);
- 	void (*adjust_link)(struct hnae3_handle *handle, int speed, int duplex);
- 	int (*set_loopback)(struct hnae3_handle *handle,
- 			    enum hnae3_loop loop_mode, bool en);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 23ded8a..1746943 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -1211,6 +1211,81 @@ static void hns3_set_msglevel(struct net_device *netdev, u32 msg_level)
- 	h->msg_enable = msg_level;
- }
- 
-+/* Translate local fec value into ethtool value. */
-+static unsigned int loc_to_eth_fec(u8 loc_fec)
-+{
-+	u32 eth_fec = 0;
-+
-+	if (loc_fec & BIT(HNAE3_FEC_AUTO))
-+		eth_fec |= ETHTOOL_FEC_AUTO;
-+	if (loc_fec & BIT(HNAE3_FEC_RS))
-+		eth_fec |= ETHTOOL_FEC_RS;
-+	if (loc_fec & BIT(HNAE3_FEC_BASER))
-+		eth_fec |= ETHTOOL_FEC_BASER;
-+
-+	/* if nothing is set, then FEC is off */
-+	if (!eth_fec)
-+		eth_fec = ETHTOOL_FEC_OFF;
-+
-+	return eth_fec;
-+}
-+
-+/* Translate ethtool fec value into local value. */
-+static unsigned int eth_to_loc_fec(unsigned int eth_fec)
-+{
-+	u32 loc_fec = 0;
-+
-+	if (eth_fec & ETHTOOL_FEC_OFF)
-+		return loc_fec;
-+
-+	if (eth_fec & ETHTOOL_FEC_AUTO)
-+		loc_fec |= BIT(HNAE3_FEC_AUTO);
-+	if (eth_fec & ETHTOOL_FEC_RS)
-+		loc_fec |= BIT(HNAE3_FEC_RS);
-+	if (eth_fec & ETHTOOL_FEC_BASER)
-+		loc_fec |= BIT(HNAE3_FEC_BASER);
-+
-+	return loc_fec;
-+}
-+
-+static int hns3_get_fecparam(struct net_device *netdev,
-+			     struct ethtool_fecparam *fec)
-+{
-+	struct hnae3_handle *handle = hns3_get_handle(netdev);
-+	const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
-+	u8 fec_ability;
-+	u8 fec_mode;
-+
-+	if (handle->pdev->revision == 0x20)
-+		return -EOPNOTSUPP;
-+
-+	if (!ops->get_fec)
-+		return -EOPNOTSUPP;
-+
-+	ops->get_fec(handle, &fec_ability, &fec_mode);
-+
-+	fec->fec = loc_to_eth_fec(fec_ability);
-+	fec->active_fec = loc_to_eth_fec(fec_mode);
-+
-+	return 0;
-+}
-+
-+static int hns3_set_fecparam(struct net_device *netdev,
-+			     struct ethtool_fecparam *fec)
-+{
-+	struct hnae3_handle *handle = hns3_get_handle(netdev);
-+	const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
-+	u32 fec_mode;
-+
-+	if (handle->pdev->revision == 0x20)
-+		return -EOPNOTSUPP;
-+
-+	if (!ops->set_fec)
-+		return -EOPNOTSUPP;
-+	fec_mode = eth_to_loc_fec(fec->fec);
-+	return ops->set_fec(handle, fec_mode);
-+}
-+
- static const struct ethtool_ops hns3vf_ethtool_ops = {
- 	.get_drvinfo = hns3_get_drvinfo,
- 	.get_ringparam = hns3_get_ringparam,
-@@ -1264,6 +1339,8 @@ static void hns3_set_msglevel(struct net_device *netdev, u32 msg_level)
- 	.set_phys_id = hns3_set_phys_id,
- 	.get_msglevel = hns3_get_msglevel,
- 	.set_msglevel = hns3_set_msglevel,
-+	.get_fecparam = hns3_get_fecparam,
-+	.set_fecparam = hns3_set_fecparam,
- };
- 
- void hns3_ethtool_set_ops(struct net_device *netdev)
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index 653ef6ad..d79a209 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -113,6 +113,7 @@ enum hclge_opcode_type {
- 	HCLGE_OPC_MAC_TNL_INT_EN	= 0x0311,
- 	HCLGE_OPC_CLEAR_MAC_TNL_INT	= 0x0312,
- 	HCLGE_OPC_SERDES_LOOPBACK       = 0x0315,
-+	HCLGE_OPC_CONFIG_FEC_MODE	= 0x031A,
- 
- 	/* PFC/Pause commands */
- 	HCLGE_OPC_CFG_MAC_PAUSE_EN      = 0x0701,
-@@ -610,6 +611,21 @@ struct hclge_sfp_info_cmd {
- 	u8 rsv[8];
- };
- 
-+#define HCLGE_MAC_CFG_FEC_AUTO_EN_B	0
-+#define HCLGE_MAC_CFG_FEC_MODE_S	1
-+#define HCLGE_MAC_CFG_FEC_MODE_M	GENMASK(3, 1)
-+#define HCLGE_MAC_CFG_FEC_SET_DEF_B	0
-+#define HCLGE_MAC_CFG_FEC_CLR_DEF_B	1
-+
-+#define HCLGE_MAC_FEC_OFF		0
-+#define HCLGE_MAC_FEC_BASER		1
-+#define HCLGE_MAC_FEC_RS		2
-+struct hclge_config_fec_cmd {
-+	u8 fec_mode;
-+	u8 default_config;
-+	u8 rsv[22];
-+};
-+
- #define HCLGE_MAC_UPLINK_PORT		0x100
- 
- struct hclge_config_max_frm_size_cmd {
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 87615c9..d3b1f8c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -966,6 +966,37 @@ static void hclge_convert_setting_kr(struct hclge_mac *mac, u8 speed_ability)
- 				 mac->supported);
- }
- 
-+static void hclge_convert_setting_fec(struct hclge_mac *mac)
-+{
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_FEC_BASER_BIT, mac->supported);
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_FEC_RS_BIT, mac->supported);
-+
-+	switch (mac->speed) {
-+	case HCLGE_MAC_SPEED_10G:
-+	case HCLGE_MAC_SPEED_40G:
-+		linkmode_set_bit(ETHTOOL_LINK_MODE_FEC_BASER_BIT,
-+				 mac->supported);
-+		mac->fec_ability =
-+			BIT(HNAE3_FEC_BASER) | BIT(HNAE3_FEC_AUTO);
-+		break;
-+	case HCLGE_MAC_SPEED_25G:
-+	case HCLGE_MAC_SPEED_50G:
-+		linkmode_set_bit(ETHTOOL_LINK_MODE_FEC_RS_BIT,
-+				 mac->supported);
-+		mac->fec_ability =
-+			BIT(HNAE3_FEC_BASER) | BIT(HNAE3_FEC_RS) |
-+			BIT(HNAE3_FEC_AUTO);
-+		break;
-+	case HCLGE_MAC_SPEED_100G:
-+		linkmode_set_bit(ETHTOOL_LINK_MODE_FEC_RS_BIT, mac->supported);
-+		mac->fec_ability = BIT(HNAE3_FEC_RS) | BIT(HNAE3_FEC_AUTO);
-+		break;
-+	default:
-+		mac->fec_ability = 0;
-+		break;
-+	}
-+}
-+
- static void hclge_parse_fiber_link_mode(struct hclge_dev *hdev,
- 					u8 speed_ability)
- {
-@@ -978,9 +1009,12 @@ static void hclge_parse_fiber_link_mode(struct hclge_dev *hdev,
- 	hclge_convert_setting_sr(mac, speed_ability);
- 	hclge_convert_setting_lr(mac, speed_ability);
- 	hclge_convert_setting_cr(mac, speed_ability);
-+	if (hdev->pdev->revision >= 0x21)
-+		hclge_convert_setting_fec(mac);
- 
- 	linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT, mac->supported);
- 	linkmode_set_bit(ETHTOOL_LINK_MODE_Pause_BIT, mac->supported);
-+	linkmode_set_bit(ETHTOOL_LINK_MODE_FEC_NONE_BIT, mac->supported);
- }
- 
- static void hclge_parse_backplane_link_mode(struct hclge_dev *hdev,
-@@ -989,8 +1023,11 @@ static void hclge_parse_backplane_link_mode(struct hclge_dev *hdev,
- 	struct hclge_mac *mac = &hdev->hw.mac;
- 
- 	hclge_convert_setting_kr(mac, speed_ability);
-+	if (hdev->pdev->revision >= 0x21)
-+		hclge_convert_setting_fec(mac);
- 	linkmode_set_bit(ETHTOOL_LINK_MODE_Backplane_BIT, mac->supported);
- 	linkmode_set_bit(ETHTOOL_LINK_MODE_Pause_BIT, mac->supported);
-+	linkmode_set_bit(ETHTOOL_LINK_MODE_FEC_NONE_BIT, mac->supported);
- }
- 
- static void hclge_parse_copper_link_mode(struct hclge_dev *hdev,
-@@ -2279,6 +2316,64 @@ static int hclge_restart_autoneg(struct hnae3_handle *handle)
- 	return hclge_notify_client(hdev, HNAE3_UP_CLIENT);
- }
- 
-+static int hclge_set_fec_hw(struct hclge_dev *hdev, u32 fec_mode)
-+{
-+	struct hclge_config_fec_cmd *req;
-+	struct hclge_desc desc;
-+	int ret;
-+
-+	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_CONFIG_FEC_MODE, false);
-+
-+	req = (struct hclge_config_fec_cmd *)desc.data;
-+	if (fec_mode & BIT(HNAE3_FEC_AUTO))
-+		hnae3_set_bit(req->fec_mode, HCLGE_MAC_CFG_FEC_AUTO_EN_B, 1);
-+	if (fec_mode & BIT(HNAE3_FEC_RS))
-+		hnae3_set_field(req->fec_mode, HCLGE_MAC_CFG_FEC_MODE_M,
-+				HCLGE_MAC_CFG_FEC_MODE_S, HCLGE_MAC_FEC_RS);
-+	if (fec_mode & BIT(HNAE3_FEC_BASER))
-+		hnae3_set_field(req->fec_mode, HCLGE_MAC_CFG_FEC_MODE_M,
-+				HCLGE_MAC_CFG_FEC_MODE_S, HCLGE_MAC_FEC_BASER);
-+
-+	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
-+	if (ret)
-+		dev_err(&hdev->pdev->dev, "set fec mode failed %d.\n", ret);
-+
-+	return ret;
-+}
-+
-+static int hclge_set_fec(struct hnae3_handle *handle, u32 fec_mode)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+	struct hclge_mac *mac = &hdev->hw.mac;
-+	int ret;
-+
-+	if (fec_mode && !(mac->fec_ability & fec_mode)) {
-+		dev_err(&hdev->pdev->dev, "unsupported fec mode\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = hclge_set_fec_hw(hdev, fec_mode);
-+	if (ret)
-+		return ret;
-+
-+	mac->user_fec_mode = fec_mode | BIT(HNAE3_FEC_USER_DEF);
-+	return 0;
-+}
-+
-+static void hclge_get_fec(struct hnae3_handle *handle, u8 *fec_ability,
-+			  u8 *fec_mode)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+	struct hclge_mac *mac = &hdev->hw.mac;
-+
-+	if (fec_ability)
-+		*fec_ability = mac->fec_ability;
-+	if (fec_mode)
-+		*fec_mode = mac->fec_mode;
-+}
-+
- static int hclge_mac_init(struct hclge_dev *hdev)
- {
- 	struct hclge_mac *mac = &hdev->hw.mac;
-@@ -2296,6 +2391,15 @@ static int hclge_mac_init(struct hclge_dev *hdev)
- 
- 	mac->link = 0;
- 
-+	if (mac->user_fec_mode & BIT(HNAE3_FEC_USER_DEF)) {
-+		ret = hclge_set_fec_hw(hdev, mac->user_fec_mode);
-+		if (ret) {
-+			dev_err(&hdev->pdev->dev,
-+				"Fec mode init fail, ret = %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
- 	ret = hclge_set_mac_mtu(hdev, hdev->mps);
- 	if (ret) {
- 		dev_err(&hdev->pdev->dev, "set mtu failed ret=%d\n", ret);
-@@ -8753,6 +8857,8 @@ static int hclge_gro_en(struct hnae3_handle *handle, bool enable)
- 	.cfg_mac_speed_dup_h = hclge_cfg_mac_speed_dup_h,
- 	.get_media_type = hclge_get_media_type,
- 	.check_port_speed = hclge_check_port_speed,
-+	.get_fec = hclge_get_fec,
-+	.set_fec = hclge_set_fec,
- 	.get_rss_key_size = hclge_get_rss_key_size,
- 	.get_rss_indir_size = hclge_get_rss_indir_size,
- 	.get_rss = hclge_get_rss,
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 197e702..dd06b11 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -253,7 +253,10 @@ struct hclge_mac {
- 	u32 speed;
- 	u32 speed_ability; /* speed ability supported by current media */
- 	u32 module_type; /* sub media type, e.g. kr/cr/sr/lr */
--	int link;	/* store the link status of mac & phy (if phy exit)*/
-+	u32 fec_mode; /* active fec mode */
-+	u32 user_fec_mode;
-+	u32 fec_ability;
-+	int link;	/* store the link status of mac & phy (if phy exit) */
- 	struct phy_device *phydev;
- 	struct mii_bus *mdio_bus;
- 	phy_interface_t phy_if;
--- 
-1.9.1
+I pushed a branch out:
 
+not-to-merge/iova-dma-ranges
+
+where I rewrote all commit logs and I am not willing to do it again
+so please use them for your v6 posting if you manage to make it
+today.
+
+Lorenzo
+
+> -static void iova_reserve_pci_windows(struct pci_dev *dev,
+> +static int iova_reserve_pci_windows(struct pci_dev *dev,
+>                 struct iova_domain *iovad)
+>  {
+>         struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+> @@ -227,11 +227,15 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+>         resource_list_for_each_entry(window, &bridge->dma_ranges) {
+>                 end = window->res->start - window->offset;
+>  resv_iova:
+> -               if (end - start) {
+> +               if (end > start) {
+>                         lo = iova_pfn(iovad, start);
+>                         hi = iova_pfn(iovad, end);
+>                         reserve_iova(iovad, lo, hi);
+> +               } else {
+> +                       dev_err(&dev->dev, "Unsorted dma_ranges list\n");
+> +                       return -EINVAL;
+>                 }
+> +
+> 
+> Please provide your inputs if any more changes required. Thank you,
+> 
+> Regards,
+> Srinath.
+> 
+> On Thu, May 2, 2019 at 7:45 PM Robin Murphy <robin.murphy@arm.com> wrote:
+> >
+> > On 02/05/2019 14:06, Lorenzo Pieralisi wrote:
+> > > On Thu, May 02, 2019 at 12:27:02PM +0100, Robin Murphy wrote:
+> > >> Hi Lorenzo,
+> > >>
+> > >> On 02/05/2019 12:01, Lorenzo Pieralisi wrote:
+> > >>> On Wed, May 01, 2019 at 11:06:25PM +0530, Srinath Mannam wrote:
+> > >>>> dma_ranges field of PCI host bridge structure has resource entries in
+> > >>>> sorted order of address range given through dma-ranges DT property. This
+> > >>>> list is the accessible DMA address range. So that this resource list will
+> > >>>> be processed and reserve IOVA address to the inaccessible address holes in
+> > >>>> the list.
+> > >>>>
+> > >>>> This method is similar to PCI IO resources address ranges reserving in
+> > >>>> IOMMU for each EP connected to host bridge.
+> > >>>>
+> > >>>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > >>>> Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
+> > >>>> Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+> > >>>> Acked-by: Robin Murphy <robin.murphy@arm.com>
+> > >>>> ---
+> > >>>>    drivers/iommu/dma-iommu.c | 19 +++++++++++++++++++
+> > >>>>    1 file changed, 19 insertions(+)
+> > >>>>
+> > >>>> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> > >>>> index 77aabe6..da94844 100644
+> > >>>> --- a/drivers/iommu/dma-iommu.c
+> > >>>> +++ b/drivers/iommu/dma-iommu.c
+> > >>>> @@ -212,6 +212,7 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+> > >>>>            struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+> > >>>>            struct resource_entry *window;
+> > >>>>            unsigned long lo, hi;
+> > >>>> +  phys_addr_t start = 0, end;
+> > >>>>            resource_list_for_each_entry(window, &bridge->windows) {
+> > >>>>                    if (resource_type(window->res) != IORESOURCE_MEM)
+> > >>>> @@ -221,6 +222,24 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+> > >>>>                    hi = iova_pfn(iovad, window->res->end - window->offset);
+> > >>>>                    reserve_iova(iovad, lo, hi);
+> > >>>>            }
+> > >>>> +
+> > >>>> +  /* Get reserved DMA windows from host bridge */
+> > >>>> +  resource_list_for_each_entry(window, &bridge->dma_ranges) {
+> > >>>
+> > >>> If this list is not sorted it seems to me the logic in this loop is
+> > >>> broken and you can't rely on callers to sort it because it is not a
+> > >>> written requirement and it is not enforced (you know because you
+> > >>> wrote the code but any other developer is not supposed to guess
+> > >>> it).
+> > >>>
+> > >>> Can't we rewrite this loop so that it does not rely on list
+> > >>> entries order ?
+> > >>
+> > >> The original idea was that callers should be required to provide a sorted
+> > >> list, since it keeps things nice and simple...
+> > >
+> > > I understand, if it was self-contained in driver code that would be fine
+> > > but in core code with possible multiple consumers this must be
+> > > documented/enforced, somehow.
+> > >
+> > >>> I won't merge this series unless you sort it, no pun intended.
+> > >>>
+> > >>> Lorenzo
+> > >>>
+> > >>>> +          end = window->res->start - window->offset;
+> > >>
+> > >> ...so would you consider it sufficient to add
+> > >>
+> > >>              if (end < start)
+> > >>                      dev_err(...);
+> > >
+> > > We should also revert any IOVA reservation we did prior to this
+> > > error, right ?
+> >
+> > I think it would be enough to propagate an error code back out through
+> > iommu_dma_init_domain(), which should then end up aborting the whole
+> > IOMMU setup - reserve_iova() isn't really designed to be undoable, but
+> > since this is the kind of error that should only ever be hit during
+> > driver or DT development, as long as we continue booting such that the
+> > developer can clearly see what's gone wrong, I don't think we need
+> > bother spending too much effort tidying up inside the unused domain.
+> >
+> > > Anyway, I think it is best to ensure it *is* sorted.
+> > >
+> > >> here, plus commenting the definition of pci_host_bridge::dma_ranges
+> > >> that it must be sorted in ascending order?
+> > >
+> > > I don't think that commenting dma_ranges would help much, I am more
+> > > keen on making it work by construction.
+> > >
+> > >> [ I guess it might even make sense to factor out the parsing and list
+> > >> construction from patch #3 into an of_pci core helper from the beginning, so
+> > >> that there's even less chance of another driver reimplementing it
+> > >> incorrectly in future. ]
+> > >
+> > > This makes sense IMO and I would like to take this approach if you
+> > > don't mind.
+> >
+> > Sure - at some point it would be nice to wire this up to
+> > pci-host-generic for Juno as well (with a parallel version for ACPI
+> > _DMA), so from that viewpoint, the more groundwork in place the better :)
+> >
+> > Thanks,
+> > Robin.
+> >
+> > >
+> > > Either this or we move the whole IOVA reservation and dma-ranges
+> > > parsing into PCI IProc.
+> > >
+> > >> Failing that, although I do prefer the "simple by construction"
+> > >> approach, I'd have no objection to just sticking a list_sort() call in
+> > >> here instead, if you'd rather it be entirely bulletproof.
+> > >
+> > > I think what you outline above is a sensible way forward - if we
+> > > miss the merge window so be it.
+> > >
+> > > Thanks,
+> > > Lorenzo
+> > >
+> > >> Robin.
+> > >>
+> > >>>> +resv_iova:
+> > >>>> +          if (end - start) {
+> > >>>> +                  lo = iova_pfn(iovad, start);
+> > >>>> +                  hi = iova_pfn(iovad, end);
+> > >>>> +                  reserve_iova(iovad, lo, hi);
+> > >>>> +          }
+> > >>>> +          start = window->res->end - window->offset + 1;
+> > >>>> +          /* If window is last entry */
+> > >>>> +          if (window->node.next == &bridge->dma_ranges &&
+> > >>>> +              end != ~(dma_addr_t)0) {
+> > >>>> +                  end = ~(dma_addr_t)0;
+> > >>>> +                  goto resv_iova;
+> > >>>> +          }
+> > >>>> +  }
+> > >>>>    }
+> > >>>>    static int iova_reserve_iommu_regions(struct device *dev,
+> > >>>> --
+> > >>>> 2.7.4
+> > >>>>
