@@ -7,54 +7,55 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C798C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C16FC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20357206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD1D206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556864674;
-	bh=0c6Jh9sp14Lq4lNe2LNf826gtJ4onGQ0WuWN1zlFr50=;
+	s=default; t=1556864677;
+	bh=sTEzmzJe/wBL5QDfL5DoYLT6SJuXW3GNt0X7I9wUiLM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=a0psYUqNydbZ1UrdNrJhq8w0v6IKJMl00wd8PTF9/5Jm+OehZo25sLxSbUp03ZEez
-	 v+ZFYJ698wz5ja7zyXfiuxEzfldCfJqXv3hTvceyt7FjXecEYJNwQ/WEJPLQBWLYP4
-	 7AIdalD4L3S21w2blHoZXH+9HuDD6vQFibOvFksc=
+	b=qLaCW/jZj8Fwc9RYHSk24Ld+TgyNIFMs3tgaKUnLq9ythqk5as8FmTxObQ0T117LT
+	 Q5yh6WzoOzHVR3FhbtVWAnmjn04Z608ebo8c8PsgQUPN930DW5lokx0fdtpC899ZYx
+	 KeMEITpJftAmQlSOKdbpGhCtAnfLrfWY/RpHmAbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfECGYc (ORCPT
+        id S1727017AbfECGXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:24:32 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33682 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbfECGXr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 3 May 2019 02:23:47 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33542 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfECGXp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 02:23:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=uJRhtLsdNNAJveJ+s2NSgBPxfvfgbqKbRQ8fG+F4ZtQ=; b=XDeKA8O/mXDD
-        poy7k9HJsdMD6ZH+MN1OBFLG43JK9jBxpeqTsshJV+76KpCXAtDneNsuVCsWIyXOTUGqYVE2/vj59
-        dyGkATwd/j0unMm3wqZ+wTn33sWbms3FTpqB5vFOydpaxnskgQJ9zu6DgKj4zN2VPAkSaSXf4sJkJ
-        kljwQ=;
+        List-Archive; bh=dr8iiJcg2+vpOn+Dy6n/2x3VLOxcn420oALuCMcHAYQ=; b=oo7cmxh/aAbY
+        yFTodeg2dACxq6SzaOR7x8TSv9dNbo8qaZ4Zx18EwuSjbM/rxsKJzP44h0A2cQzlxm7L+qrgurwMs
+        XpyeF1OksuLD69JJACWUlFBwLuGH0P7uXG7lG+lOHU90O1mVF3kmzu4d9LB2+dU4p3PoHBSAFq7Gw
+        m+TdM=;
 Received: from [42.29.24.106] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hMRbi-0000ly-Ti; Fri, 03 May 2019 06:23:43 +0000
+        id 1hMRbg-0000l4-Fc; Fri, 03 May 2019 06:23:41 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id E7B94441D58; Fri,  3 May 2019 07:23:38 +0100 (BST)
+        id B373E441D3E; Fri,  3 May 2019 07:23:36 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: ab3100: Constify regulator_ops and ab3100_regulator_desc" to the regulator tree
-In-Reply-To: <20190502142233.24730-1-axel.lin@ingics.com>
+Cc:     James Ban <James.Ban.opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: Applied "regulator: da9xxx: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: <20190503053637.25911-2-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190503062338.E7B94441D58@finisterre.ee.mobilebroadband>
-Date:   Fri,  3 May 2019 07:23:38 +0100 (BST)
+Message-Id: <20190503062336.B373E441D3E@finisterre.ee.mobilebroadband>
+Date:   Fri,  3 May 2019 07:23:36 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: ab3100: Constify regulator_ops and ab3100_regulator_desc
+   regulator: da9xxx: Switch to SPDX identifier
 
 has been applied to the regulator tree at
 
@@ -87,86 +88,243 @@ to this mail.
 Thanks,
 Mark
 
-From 95602d7d77f502d656e648ab38f8e0586364e7dc Mon Sep 17 00:00:00 2001
+From fd2f02f9724c416221b42af95e1a7a57fa42d681 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Thu, 2 May 2019 22:22:32 +0800
-Subject: [PATCH] regulator: ab3100: Constify regulator_ops and
- ab3100_regulator_desc
+Date: Fri, 3 May 2019 13:36:37 +0800
+Subject: [PATCH] regulator: da9xxx: Switch to SPDX identifier
 
-These regulator_ops variables and ab3100_regulator_desc array never need
-to be modified, make them const so compiler can put them to .rodata.
+Convert Dialog Semiconductor DA9xxx regulator drivers to SPDX identifier.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/ab3100.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/regulator/da903x.c           | 16 ++++++----------
+ drivers/regulator/da9052-regulator.c | 20 +++++++-------------
+ drivers/regulator/da9055-regulator.c | 20 +++++++-------------
+ drivers/regulator/da9062-regulator.c | 19 +++++--------------
+ drivers/regulator/da9210-regulator.c | 23 ++++-------------------
+ drivers/regulator/da9210-regulator.h | 17 +----------------
+ drivers/regulator/da9211-regulator.c | 20 +++++---------------
+ drivers/regulator/da9211-regulator.h | 11 +----------
+ 8 files changed, 36 insertions(+), 110 deletions(-)
 
-diff --git a/drivers/regulator/ab3100.c b/drivers/regulator/ab3100.c
-index c92966a79a7e..edde907a7062 100644
---- a/drivers/regulator/ab3100.c
-+++ b/drivers/regulator/ab3100.c
-@@ -353,14 +353,14 @@ static int ab3100_get_voltage_regulator_external(struct regulator_dev *reg)
- 		return 0;
- }
+diff --git a/drivers/regulator/da903x.c b/drivers/regulator/da903x.c
+index 33e8f3b8d2bd..5493c3a86426 100644
+--- a/drivers/regulator/da903x.c
++++ b/drivers/regulator/da903x.c
+@@ -1,13 +1,9 @@
+-/*
+- * Regulators driver for Dialog Semiconductor DA903x
+- *
+- * Copyright (C) 2006-2008 Marvell International Ltd.
+- * Copyright (C) 2008 Compulab Ltd.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// Regulators driver for Dialog Semiconductor DA903x
++//
++// Copyright (C) 2006-2008 Marvell International Ltd.
++// Copyright (C) 2008 Compulab Ltd.
  
--static struct regulator_ops regulator_ops_fixed = {
-+static const struct regulator_ops regulator_ops_fixed = {
- 	.list_voltage = regulator_list_voltage_linear,
- 	.enable      = ab3100_enable_regulator,
- 	.disable     = ab3100_disable_regulator,
- 	.is_enabled  = ab3100_is_enabled_regulator,
- };
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+diff --git a/drivers/regulator/da9052-regulator.c b/drivers/regulator/da9052-regulator.c
+index b90a7ac3f3de..e18d291c7f21 100644
+--- a/drivers/regulator/da9052-regulator.c
++++ b/drivers/regulator/da9052-regulator.c
+@@ -1,16 +1,10 @@
+-/*
+-* da9052-regulator.c: Regulator driver for DA9052
+-*
+-* Copyright(c) 2011 Dialog Semiconductor Ltd.
+-*
+-* Author: David Dajun Chen <dchen@diasemi.com>
+-*
+-* This program is free software; you can redistribute it and/or modify
+-* it under the terms of the GNU General Public License as published by
+-* the Free Software Foundation; either version 2 of the License, or
+-* (at your option) any later version.
+-*
+-*/
++// SPDX-License-Identifier: GPL-2.0+
++//
++// da9052-regulator.c: Regulator driver for DA9052
++//
++// Copyright(c) 2011 Dialog Semiconductor Ltd.
++//
++// Author: David Dajun Chen <dchen@diasemi.com>
  
--static struct regulator_ops regulator_ops_variable = {
-+static const struct regulator_ops regulator_ops_variable = {
- 	.enable      = ab3100_enable_regulator,
- 	.disable     = ab3100_disable_regulator,
- 	.is_enabled  = ab3100_is_enabled_regulator,
-@@ -369,7 +369,7 @@ static struct regulator_ops regulator_ops_variable = {
- 	.list_voltage = regulator_list_voltage_table,
- };
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+diff --git a/drivers/regulator/da9055-regulator.c b/drivers/regulator/da9055-regulator.c
+index bcbc2fbd7fea..c025ccb1a30a 100644
+--- a/drivers/regulator/da9055-regulator.c
++++ b/drivers/regulator/da9055-regulator.c
+@@ -1,16 +1,10 @@
+-/*
+-* Regulator driver for DA9055 PMIC
+-*
+-* Copyright(c) 2012 Dialog Semiconductor Ltd.
+-*
+-* Author: David Dajun Chen <dchen@diasemi.com>
+-*
+-* This program is free software; you can redistribute it and/or modify
+-* it under the terms of the GNU General Public License as published by
+-* the Free Software Foundation; either version 2 of the License, or
+-* (at your option) any later version.
+-*
+-*/
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Regulator driver for DA9055 PMIC
++//
++// Copyright(c) 2012 Dialog Semiconductor Ltd.
++//
++// Author: David Dajun Chen <dchen@diasemi.com>
  
--static struct regulator_ops regulator_ops_variable_sleepable = {
-+static const struct regulator_ops regulator_ops_variable_sleepable = {
- 	.enable      = ab3100_enable_regulator,
- 	.disable     = ab3100_disable_regulator,
- 	.is_enabled  = ab3100_is_enabled_regulator,
-@@ -385,14 +385,14 @@ static struct regulator_ops regulator_ops_variable_sleepable = {
-  * is an on/off switch plain an simple. The external
-  * voltage is defined in the board set-up if any.
+ #include <linux/module.h>
+ #include <linux/init.h>
+diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
+index a7d929b7776a..a02e0488410f 100644
+--- a/drivers/regulator/da9062-regulator.c
++++ b/drivers/regulator/da9062-regulator.c
+@@ -1,17 +1,8 @@
+-/*
+- * Regulator device driver for DA9061 and DA9062.
+- * Copyright (C) 2015-2017  Dialog Semiconductor
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * as published by the Free Software Foundation; either version 2
+- * of the License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Regulator device driver for DA9061 and DA9062.
++// Copyright (C) 2015-2017  Dialog Semiconductor
++
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+diff --git a/drivers/regulator/da9210-regulator.c b/drivers/regulator/da9210-regulator.c
+index 528303771723..f9448ed50e05 100644
+--- a/drivers/regulator/da9210-regulator.c
++++ b/drivers/regulator/da9210-regulator.c
+@@ -1,22 +1,7 @@
+-/*
+- * da9210-regulator.c - Regulator device driver for DA9210
+- * Copyright (C) 2013  Dialog Semiconductor Ltd.
+- *
+- * This library is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU Library General Public
+- * License as published by the Free Software Foundation; either
+- * version 2 of the License, or (at your option) any later version.
+- *
+- * This library is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Library General Public License for more details.
+- *
+- * You should have received a copy of the GNU Library General Public
+- * License along with this library; if not, write to the
+- * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
+- */
++// SPDX-License-Identifier: GPL-2.0+
++//
++// da9210-regulator.c - Regulator device driver for DA9210
++// Copyright (C) 2013  Dialog Semiconductor Ltd.
+ 
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+diff --git a/drivers/regulator/da9210-regulator.h b/drivers/regulator/da9210-regulator.h
+index 749c550808b6..b1f1a607c208 100644
+--- a/drivers/regulator/da9210-regulator.h
++++ b/drivers/regulator/da9210-regulator.h
+@@ -1,22 +1,7 @@
+-
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * da9210-regulator.h - Regulator definitions for DA9210
+  * Copyright (C) 2013  Dialog Semiconductor Ltd.
+- *
+- * This library is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU Library General Public
+- * License as published by the Free Software Foundation; either
+- * version 2 of the License, or (at your option) any later version.
+- *
+- * This library is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Library General Public License for more details.
+- *
+- * You should have received a copy of the GNU Library General Public
+- * License along with this library; if not, write to the
+- * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
   */
--static struct regulator_ops regulator_ops_external = {
-+static const struct regulator_ops regulator_ops_external = {
- 	.enable      = ab3100_enable_regulator,
- 	.disable     = ab3100_disable_regulator,
- 	.is_enabled  = ab3100_is_enabled_regulator,
- 	.get_voltage = ab3100_get_voltage_regulator_external,
- };
  
--static struct regulator_desc
-+static const struct regulator_desc
- ab3100_regulator_desc[AB3100_NUM_REGULATORS] = {
- 	{
- 		.name = "LDO_A",
-@@ -499,7 +499,7 @@ static int ab3100_regulator_register(struct platform_device *pdev,
- 				     struct device_node *np,
- 				     unsigned long id)
- {
--	struct regulator_desc *desc;
-+	const struct regulator_desc *desc;
- 	struct ab3100_regulator *reg;
- 	struct regulator_dev *rdev;
- 	struct regulator_config config = { };
-@@ -688,7 +688,7 @@ static int ab3100_regulators_probe(struct platform_device *pdev)
+ #ifndef __DA9210_REGISTERS_H__
+diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
+index 4d7fe4819c1c..da37b4ccd834 100644
+--- a/drivers/regulator/da9211-regulator.c
++++ b/drivers/regulator/da9211-regulator.c
+@@ -1,18 +1,8 @@
+-/*
+- * da9211-regulator.c - Regulator device driver for DA9211/DA9212
+- * /DA9213/DA9223/DA9214/DA9224/DA9215/DA9225
+- * Copyright (C) 2015  Dialog Semiconductor Ltd.
+- *
+- * This library is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU Library General Public
+- * License as published by the Free Software Foundation; either
+- * version 2 of the License, or (at your option) any later version.
+- *
+- * This library is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Library General Public License for more details.
+- */
++// SPDX-License-Identifier: GPL-2.0+
++//
++// da9211-regulator.c - Regulator device driver for DA9211/DA9212
++// /DA9213/DA9223/DA9214/DA9224/DA9215/DA9225
++// Copyright (C) 2015  Dialog Semiconductor Ltd.
  
- 	/* Register the regulators */
- 	for (i = 0; i < AB3100_NUM_REGULATORS; i++) {
--		struct regulator_desc *desc = &ab3100_regulator_desc[i];
-+		const struct regulator_desc *desc = &ab3100_regulator_desc[i];
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+diff --git a/drivers/regulator/da9211-regulator.h b/drivers/regulator/da9211-regulator.h
+index 2cb32aab4f82..1201e7cc056c 100644
+--- a/drivers/regulator/da9211-regulator.h
++++ b/drivers/regulator/da9211-regulator.h
+@@ -1,17 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * da9211-regulator.h - Regulator definitions for DA9211/DA9212
+  * /DA9213/DA9223/DA9214/DA9224/DA9215/DA9225
+  * Copyright (C) 2015  Dialog Semiconductor Ltd.
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * as published by the Free Software Foundation; either version 2
+- * of the License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
  
- 		err = ab3100_regulator_register(pdev, plfdata, NULL, NULL,
- 						desc->id);
+ #ifndef __DA9211_REGISTERS_H__
 -- 
 2.20.1
 
