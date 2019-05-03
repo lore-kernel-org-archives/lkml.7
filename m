@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9ADFC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0D0C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8292A2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93BEC2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:00:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="V87dHIKz"
+	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="eNQUOsV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbfECEAm (ORCPT
+        id S1726549AbfECEAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 00:00:42 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35286 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbfECEAg (ORCPT
+        Fri, 3 May 2019 00:00:40 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45846 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfECEAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 00:00:36 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g24so4174497otq.2
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 21:00:35 -0700 (PDT)
+        Fri, 3 May 2019 00:00:38 -0400
+Received: by mail-ot1-f65.google.com with SMTP id a10so4126677otl.12
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 21:00:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dEuYGj0O58tspSnt+ZpOw9dKatfC4l7Bo34N+ze4Knk=;
-        b=V87dHIKzVmPP/S0N0PyA7zHPHu0mXweFGmROyi7cgyoDDCiEgvvPCV1HYDxGPuTgqY
-         Fd0xLFcmafP2TOblvOznWvEiq8HGfuM8kpfMV30SO+9XOjgWLgzOX7UkmZPhrK6QdMWb
-         JsTKAZT5PVeh3jytdlz9OXYKFhHxSpUIMiHE3iHwGdQp6MyfvQz2W74HXZVPMSGLGtd9
-         elAW+vDgI8ucFakopyD18+qJH3mIxBmJnhFe7Xkcyrk3K3IwUUATHj9KrfNe4tDqC+Yb
-         WN3GhwaDYl4h7nJ2VZfGLeBaT7CZXew5/WDttJw4x5R1q/buXnq04zYNfj5wNG0jAlKG
-         C4/g==
+        bh=fQTfIhLtolzo7NGl6+w85L74CyrcJ2T1el+EJtuAO/g=;
+        b=eNQUOsV3p1S5rw9tyuQYQJfwZEwUcT3UzHbe0jfAgqpyBxsmOezGdM7Yj+9eCWnEgj
+         rKEehdR39u9F87bBjLDT7wqIvIA0lzKQ6h1hNmBDwfiqsRS0ixkExaXOAy+lVq5Xritg
+         fFuNh/VgytsD7zz1nnXbms79n+Ha8NZmTdlCmUGGtry6tAVt5lY1V4xipyz4nc3EhJph
+         5UVbmOsXQCuetOg66HUBJwf944d4osycnUtU39X0U60LsITcnE03kp7qUHx63QbBAo8P
+         xp3V05HvAZZ5fHxZFDmp48OrnI36k1By6ommCwkG+GCzA9vl9048VzLS03x3okLRzqAT
+         PmFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=dEuYGj0O58tspSnt+ZpOw9dKatfC4l7Bo34N+ze4Knk=;
-        b=Qy1YSVuwQCW6yZsf8E/hUaktId/IzlFjyvZo5UCCBGpXVddE/Uz1sRcPfAhSoJqZvT
-         dWJHljlk/lWJ/DIzTcF7Hsk0npXwuWZcoTz+vEE+eTGhwrsadE94CKAH2qPda0KLf3g+
-         lCZvFHduc6MmmnHAp/CL+srqw9gxUBITks31Op94KvPUPc00FVtwXWSGMV42IzFsjhWN
-         rZi4r8vi7ZhAEoB5MwOMb/22S0rj6VPYN4qerAtoROYFvJZzmTDAxsbWoGlYT/rSjT3l
-         DKXtYiY83/2JGWDa5mtDfqnO1RXOI2jS51R+H47CUtXM8iY5eQAoQ1X8WRf7ty2e1K2l
-         Hvaw==
-X-Gm-Message-State: APjAAAU0cjm4FWcN950r6nr4AMTc2drNn/gHXd4tSnfgj5/qAfBbyAvY
-        ML4+5gi3Ei+BIZDY5tEbOTaBXw==
-X-Google-Smtp-Source: APXvYqyBqDNVdOgBq9t2LsPo/+tMkFG2FU+eo+9lqaRWS7Ru1tZs8aXOCtkYVJOKUbsZm7r5P4ZaIQ==
-X-Received: by 2002:a9d:609e:: with SMTP id m30mr4650287otj.337.1556856035626;
-        Thu, 02 May 2019 21:00:35 -0700 (PDT)
+        bh=fQTfIhLtolzo7NGl6+w85L74CyrcJ2T1el+EJtuAO/g=;
+        b=Fp6DKzRcQV2ESlMAFm6D9OJy2oGa1zQUmwsdlKV/oR2kfra3TMKpbEtai1yq042NoD
+         G1iBvY+ojpXbyQstnpSJ1a7Kv1Wcn9H7mRZ9GOUS/+K2/dWHSS0DFtkQSSNUYHxZFNNZ
+         +6UgG69YGEwTP27jYyr1QK+VCUIEfc6+zdwSe7+1ZwpXBSeIyEC/3ZUMGOjM0XhGmchG
+         +56f+PuuVGrPc9r1+rtShS03qV/FiAF2D10bTmw/0pnyEM5Hm7Vh5Y3ephfWyMToP6Fr
+         086JzYV03KyZNWiJ4g7e1agrVqQprIyXGmUTpcivInsN7G6LGt+M8rIr8NxwREGkDYSc
+         vxBg==
+X-Gm-Message-State: APjAAAWfbeA9Z8rvtRz+My4tjkz5WnSDJwk4epWGb8kLVjqrXEWJgLzB
+        OmEW7gKQI4ewS3DbjNnnBnR0bA==
+X-Google-Smtp-Source: APXvYqyoZGrcpyztZBaHHgeAY4Ciqk3pTinXMmDdZpwdAJ2/iufAVMAvv38SM30cDZDYpZcDx+4v4g==
+X-Received: by 2002:a9d:4ef:: with SMTP id 102mr5389441otm.302.1556856037677;
+        Thu, 02 May 2019 21:00:37 -0700 (PDT)
 Received: from linux.fredlawl.com ([2600:1700:18a0:11d0:5518:38b8:ef25:393a])
-        by smtp.gmail.com with ESMTPSA id d78sm543523oib.15.2019.05.02.21.00.34
+        by smtp.gmail.com with ESMTPSA id q82sm614742oif.28.2019.05.02.21.00.36
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 21:00:34 -0700 (PDT)
+        Thu, 02 May 2019 21:00:36 -0700 (PDT)
 From:   Frederick Lawler <fred@fredlawl.com>
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -61,9 +61,9 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         andriy.shevchenko@linux.intel.com, keith.busch@intel.com,
         mr.nuke.me@gmail.com, liudongdong3@huawei.com, thesven73@gmail.com,
         Frederick Lawler <fred@fredlawl.com>
-Subject: [PATCH v2 8/9] PCI: hotplug: Remove unnecessary dbg/err/info/warn() printk() wrappers
-Date:   Thu,  2 May 2019 22:59:45 -0500
-Message-Id: <20190503035946.23608-9-fred@fredlawl.com>
+Subject: [PATCH v2 9/9] PCI: hotplug: Prefix ctrl_*() dmesg logs with pciehp slot name
+Date:   Thu,  2 May 2019 22:59:46 -0500
+Message-Id: <20190503035946.23608-10-fred@fredlawl.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190503035946.23608-1-fred@fredlawl.com>
 References: <20190503035946.23608-1-fred@fredlawl.com>
@@ -72,50 +72,251 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary deb/err/info/warn() printk() wrappers.
+Remove current uses of "Slot(%s)" and then prefix ctrl_*() dmesg
+with pciehp slot name to include the slot name for all uses of ctrl_*()
+wrappers.
 
 Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 ---
- drivers/pci/hotplug/pciehp.h      | 9 ---------
- drivers/pci/hotplug/pciehp_core.c | 4 ++--
- 2 files changed, 2 insertions(+), 11 deletions(-)
+ drivers/pci/hotplug/pciehp.h      | 12 ++++---
+ drivers/pci/hotplug/pciehp_core.c |  9 +++--
+ drivers/pci/hotplug/pciehp_ctrl.c | 58 ++++++++++++-------------------
+ drivers/pci/hotplug/pciehp_hpc.c  |  5 ++-
+ 4 files changed, 38 insertions(+), 46 deletions(-)
 
 diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index e852aa478802..06ff9d31405e 100644
+index 06ff9d31405e..e1cdc3565c62 100644
 --- a/drivers/pci/hotplug/pciehp.h
 +++ b/drivers/pci/hotplug/pciehp.h
-@@ -31,15 +31,6 @@ extern bool pciehp_poll_mode;
- extern int pciehp_poll_time;
+@@ -32,13 +32,17 @@ extern int pciehp_poll_time;
  extern bool pciehp_debug;
  
--#define dbg(format, arg...)						\
--	pr_debug(format, ## arg);
--#define err(format, arg...)						\
--	pr_err(format, ## arg)
--#define info(format, arg...)						\
--	pr_info(format, ## arg)
--#define warn(format, arg...)						\
--	pr_warn(format, ## arg)
--
  #define ctrl_dbg(ctrl, format, arg...)					\
- 	pci_dbg(ctrl->pcie->port, format, ## arg)
+-	pci_dbg(ctrl->pcie->port, format, ## arg)
++	pci_dbg(ctrl->pcie->port, "Slot(%s): " format,			\
++		slot_name(ctrl), ## arg)
  #define ctrl_err(ctrl, format, arg...)					\
+-	pci_err(ctrl->pcie->port, format, ## arg)
++	pci_err(ctrl->pcie->port, "Slot(%s): " format,			\
++		slot_name(ctrl), ## arg)
+ #define ctrl_info(ctrl, format, arg...)					\
+-	pci_info(ctrl->pcie->port, format, ## arg)
++	pci_info(ctrl->pcie->port, "Slot(%s): " format,			\
++		 slot_name(ctrl), ## arg)
+ #define ctrl_warn(ctrl, format, arg...)					\
+-	pci_warn(ctrl->pcie->port, format, ## arg)
++	pci_warn(ctrl->pcie->port, "Slot(%s): " format,			\
++		 slot_name(ctrl), ## arg)
+ 
+ #define SLOT_NAME_SIZE 10
+ 
 diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index 7e06a0f9e644..67d024b7f476 100644
+index 67d024b7f476..ddaa45475572 100644
 --- a/drivers/pci/hotplug/pciehp_core.c
 +++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -331,9 +331,9 @@ int __init pcie_hp_init(void)
- 	int retval = 0;
- 
- 	retval = pcie_port_service_register(&hpdriver_portdrv);
--	dbg("pcie_port_service_register = %d\n", retval);
-+	pr_debug("pcie_port_service_register = %d\n", retval);
- 	if (retval)
--		dbg("Failure to register service\n");
-+		pr_debug("Failure to register service\n");
- 
+@@ -85,7 +85,8 @@ static int init_slot(struct controller *ctrl)
+ 	retval = pci_hp_initialize(&ctrl->hotplug_slot,
+ 				   ctrl->pcie->port->subordinate, 0, name);
+ 	if (retval) {
+-		ctrl_err(ctrl, "pci_hp_initialize failed: error %d\n", retval);
++		pci_err(ctrl->pcie->port,
++			"pci_hp_initialize failed: error %d\n", retval);
+ 		kfree(ops);
+ 	}
  	return retval;
- }
+@@ -201,9 +202,11 @@ static int pciehp_probe(struct pcie_device *dev)
+ 	rc = init_slot(ctrl);
+ 	if (rc) {
+ 		if (rc == -EBUSY)
+-			ctrl_warn(ctrl, "Slot already registered by another hotplug driver\n");
++			pci_warn(ctrl->pcie->port,
++				 "Slot already registered by another hotplug driver\n");
+ 		else
+-			ctrl_err(ctrl, "Slot initialization failed (%d)\n", rc);
++			pci_err(ctrl->pcie->port,
++				"Slot initialization failed (%d)\n", rc);
+ 		goto err_out_release_ctlr;
+ 	}
+ 
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index bf81f977a751..046ec4d52159 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -76,7 +76,7 @@ static int board_added(struct controller *ctrl)
+ 
+ 	/* Check for a power fault */
+ 	if (ctrl->power_fault_detected || pciehp_query_power_fault(ctrl)) {
+-		ctrl_err(ctrl, "Slot(%s): Power fault\n", slot_name(ctrl));
++		ctrl_err(ctrl, "Power fault\n");
+ 		retval = -EIO;
+ 		goto err_exit;
+ 	}
+@@ -160,12 +160,10 @@ void pciehp_handle_button_press(struct controller *ctrl)
+ 	case ON_STATE:
+ 		if (ctrl->state == ON_STATE) {
+ 			ctrl->state = BLINKINGOFF_STATE;
+-			ctrl_info(ctrl, "Slot(%s): Powering off due to button press\n",
+-				  slot_name(ctrl));
++			ctrl_info(ctrl, "Powering off due to button press\n");
+ 		} else {
+ 			ctrl->state = BLINKINGON_STATE;
+-			ctrl_info(ctrl, "Slot(%s) Powering on due to button press\n",
+-				  slot_name(ctrl));
++			ctrl_info(ctrl, "Powering on due to button press\n");
+ 		}
+ 		/* blink green LED and turn off amber */
+ 		pciehp_green_led_blink(ctrl);
+@@ -179,7 +177,7 @@ void pciehp_handle_button_press(struct controller *ctrl)
+ 		 * press the attention again before the 5 sec. limit
+ 		 * expires to cancel hot-add or hot-remove
+ 		 */
+-		ctrl_info(ctrl, "Slot(%s): Button cancel\n", slot_name(ctrl));
++		ctrl_info(ctrl, "Button cancel\n");
+ 		cancel_delayed_work(&ctrl->button_work);
+ 		if (ctrl->state == BLINKINGOFF_STATE) {
+ 			ctrl->state = ON_STATE;
+@@ -189,12 +187,11 @@ void pciehp_handle_button_press(struct controller *ctrl)
+ 			pciehp_green_led_off(ctrl);
+ 		}
+ 		pciehp_set_attention_status(ctrl, 0);
+-		ctrl_info(ctrl, "Slot(%s): Action canceled due to button press\n",
+-			  slot_name(ctrl));
++		ctrl_info(ctrl, "Action canceled due to button press\n");
+ 		break;
+ 	default:
+-		ctrl_err(ctrl, "Slot(%s): Ignoring invalid state %#x\n",
+-			 slot_name(ctrl), ctrl->state);
++		ctrl_err(ctrl, "Ignoring invalid state %#x\n",
++			 ctrl->state);
+ 		break;
+ 	}
+ 	mutex_unlock(&ctrl->state_lock);
+@@ -232,11 +229,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 		ctrl->state = POWEROFF_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+ 		if (events & PCI_EXP_SLTSTA_DLLSC)
+-			ctrl_info(ctrl, "Slot(%s): Link Down\n",
+-				  slot_name(ctrl));
++			ctrl_info(ctrl, "Link Down\n");
+ 		if (events & PCI_EXP_SLTSTA_PDC)
+-			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+-				  slot_name(ctrl));
++			ctrl_info(ctrl, "Card not present\n");
+ 		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+ 		break;
+ 	default:
+@@ -261,11 +256,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 		ctrl->state = POWERON_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+ 		if (present)
+-			ctrl_info(ctrl, "Slot(%s): Card present\n",
+-				  slot_name(ctrl));
++			ctrl_info(ctrl, "Card present\n");
+ 		if (link_active)
+-			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+-				  slot_name(ctrl));
++			ctrl_info(ctrl, "Link Up\n");
+ 		ctrl->request_result = pciehp_enable_slot(ctrl);
+ 		break;
+ 	default:
+@@ -281,8 +274,7 @@ static int __pciehp_enable_slot(struct controller *ctrl)
+ 	if (MRL_SENS(ctrl)) {
+ 		pciehp_get_latch_status(ctrl, &getstatus);
+ 		if (getstatus) {
+-			ctrl_info(ctrl, "Slot(%s): Latch open\n",
+-				  slot_name(ctrl));
++			ctrl_info(ctrl, "Latch open\n");
+ 			return -ENODEV;
+ 		}
+ 	}
+@@ -290,8 +282,7 @@ static int __pciehp_enable_slot(struct controller *ctrl)
+ 	if (POWER_CTRL(ctrl)) {
+ 		pciehp_get_power_status(ctrl, &getstatus);
+ 		if (getstatus) {
+-			ctrl_info(ctrl, "Slot(%s): Already enabled\n",
+-				  slot_name(ctrl));
++			ctrl_info(ctrl, "Already enabled\n");
+ 			return 0;
+ 		}
+ 	}
+@@ -323,8 +314,7 @@ static int __pciehp_disable_slot(struct controller *ctrl, bool safe_removal)
+ 	if (POWER_CTRL(ctrl)) {
+ 		pciehp_get_power_status(ctrl, &getstatus);
+ 		if (!getstatus) {
+-			ctrl_info(ctrl, "Slot(%s): Already disabled\n",
+-				  slot_name(ctrl));
++			ctrl_info(ctrl, "Already disabled\n");
+ 			return -EINVAL;
+ 		}
+ 	}
+@@ -367,18 +357,16 @@ int pciehp_sysfs_enable_slot(struct hotplug_slot *hotplug_slot)
+ 			   !atomic_read(&ctrl->pending_events));
+ 		return ctrl->request_result;
+ 	case POWERON_STATE:
+-		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
+-			  slot_name(ctrl));
++		ctrl_info(ctrl, "Already in powering on state\n");
+ 		break;
+ 	case BLINKINGOFF_STATE:
+ 	case ON_STATE:
+ 	case POWEROFF_STATE:
+-		ctrl_info(ctrl, "Slot(%s): Already enabled\n",
+-			  slot_name(ctrl));
++		ctrl_info(ctrl, "Already enabled\n");
+ 		break;
+ 	default:
+-		ctrl_err(ctrl, "Slot(%s): Invalid state %#x\n",
+-			 slot_name(ctrl), ctrl->state);
++		ctrl_err(ctrl, "Invalid state %#x\n",
++			 ctrl->state);
+ 		break;
+ 	}
+ 	mutex_unlock(&ctrl->state_lock);
+@@ -400,18 +388,16 @@ int pciehp_sysfs_disable_slot(struct hotplug_slot *hotplug_slot)
+ 			   !atomic_read(&ctrl->pending_events));
+ 		return ctrl->request_result;
+ 	case POWEROFF_STATE:
+-		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",
+-			  slot_name(ctrl));
++		ctrl_info(ctrl, "Already in powering off state\n");
+ 		break;
+ 	case BLINKINGON_STATE:
+ 	case OFF_STATE:
+ 	case POWERON_STATE:
+-		ctrl_info(ctrl, "Slot(%s): Already disabled\n",
+-			  slot_name(ctrl));
++		ctrl_info(ctrl, "Already disabled\n");
+ 		break;
+ 	default:
+-		ctrl_err(ctrl, "Slot(%s): Invalid state %#x\n",
+-			 slot_name(ctrl), ctrl->state);
++		ctrl_err(ctrl, "Invalid state %#x\n",
++			 ctrl->state);
+ 		break;
+ 	}
+ 	mutex_unlock(&ctrl->state_lock);
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 1713b0b08a5e..2cb85433736d 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -629,15 +629,14 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+ 
+ 	/* Check Attention Button Pressed */
+ 	if (events & PCI_EXP_SLTSTA_ABP) {
+-		ctrl_info(ctrl, "Slot(%s): Attention button pressed\n",
+-			  slot_name(ctrl));
++		ctrl_info(ctrl, "Attention button pressed\n");
+ 		pciehp_handle_button_press(ctrl);
+ 	}
+ 
+ 	/* Check Power Fault Detected */
+ 	if ((events & PCI_EXP_SLTSTA_PFD) && !ctrl->power_fault_detected) {
+ 		ctrl->power_fault_detected = 1;
+-		ctrl_err(ctrl, "Slot(%s): Power fault\n", slot_name(ctrl));
++		ctrl_err(ctrl, "Power fault\n");
+ 		pciehp_set_attention_status(ctrl, 1);
+ 		pciehp_green_led_off(ctrl);
+ 	}
 -- 
 2.17.1
 
