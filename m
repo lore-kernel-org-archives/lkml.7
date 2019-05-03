@@ -2,106 +2,85 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2C0C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB76C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99052206E0
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556916605;
-	bh=kcNsF86h0vzqOQzNgkJjCzF0nga/XfpjftT3dALWrQ0=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=JsLtKAeihX55vA6yrIDHdSCvth19RlGu1uEYp7cn2BtsUN3jaEgR2WerJSC7sX9mO
-	 HfkM9Z05m9qPu3umUowd0XJZQHH/5NsO0Cnv/fhDBMj8hy8Kd13Q7K6Zbc8udoUspK
-	 +QHuIsiRdbJ/AdyEEaPlp+fcn4aXEDsObX/aLYb4=
+	by mail.kernel.org (Postfix) with ESMTP id 88BF62075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 20:54:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JVLgl0fR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfECUuE (ORCPT
+        id S1726873AbfECUyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 16:50:04 -0400
-Received: from mail-wm1-f51.google.com ([209.85.128.51]:55202 "EHLO
-        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726022AbfECUuD (ORCPT
+        Fri, 3 May 2019 16:54:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40788 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfECUyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 16:50:03 -0400
-Received: by mail-wm1-f51.google.com with SMTP id b10so8580198wmj.4;
-        Fri, 03 May 2019 13:50:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=3WRefylpHoq+bmA7wobTBIMipAzUtIxZ32oIEUbNhnE=;
-        b=TPIpMq3HbAOhfdMbRJU+GqbLr16pSHc22BKzSqjJah8dneY3X41Ms3cST5caLh70Ij
-         k/BCu3CnOADUd/FPMt4kc9bkAqm0o1L8XPAJeQwHqImpWar0wKVPeds3TlsGAXDYyuFd
-         JV1Hqo+cPsWlYmXCvLqZGpdoF1iuT71nghZFYektRxsR2WD4GihJcgLcPQF8wh4Fy7Tp
-         GWs7pK8qiZ/15z6j+G97Ae7UaMo1YIxZ5t1HGS3pz9JdwEjefwg5MoJ3IHUMUetm4J4C
-         5tbG6zfApvPPe83pXCiETYVdLrYRB60Nzgz0JmF77SksAUhHhvh2Iu9QsK93h/602y1t
-         MtKQ==
-X-Gm-Message-State: APjAAAWXa7H5R0aMZX1p39xSvcef+TPyQYko97KC4ecpNwulhiIgVDSP
-        CEhphmJi6AzfUA5Dz+P4kfQ=
-X-Google-Smtp-Source: APXvYqxklGno0XFB4B8cXBfafnXg63KYZCefaROZACKbwwyBii0hsOJbnj4lXJGrDnQZPPJlsVlyag==
-X-Received: by 2002:a7b:c00e:: with SMTP id c14mr7539524wmb.110.1556916601167;
-        Fri, 03 May 2019 13:50:01 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.114])
-        by smtp.googlemail.com with ESMTPSA id q2sm2204786wrd.48.2019.05.03.13.49.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 13:50:00 -0700 (PDT)
-Date:   Fri, 3 May 2019 22:49:58 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jules Maselbas <jmaselbas@kalray.eu>
-Cc:     Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [BUG BISECT] USB on Exynos4412 fails after usb: dwc2: gadget:
- Replace phyif with phy_utmi_width
-Message-ID: <20190503204958.GA12532@kozik-lap>
+        Fri, 3 May 2019 16:54:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DrwnEZ0jPLsFz0jW7P9u5r38DMTWFjUguZ+Ev/6WmO4=; b=JVLgl0fRopyF1En17yM958COm
+        OXNkSscnyIL1JiUyn9BBOfpNOInMqgaTNc8asvtb8v4mdi38dJymdPDTNLyypMJMmSv47kjMOvE6U
+        9z+bHu6SdGNf0EXNOtDeUepQbZW6e1ik2Gg1OhxbosiAx+wDAJ6+n/pql+B5nfD9gLF0sRdhPe+Lq
+        gOYkSw8KXZ4VXmyLLj5MCbArRrhov9DLklRdMSh4GtIanO3UizoPZw7kc0N4L7kuHTC7bYnQc4O+A
+        Sp4FKLgxKyy3ffBBMzj/yh6fvP8UyPnj+Dnr11GFvl1QGW7LtCRgWqu3Qs63Sli35lZo2NsDOif6J
+        MTwhT9WsQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hMfC8-0001CG-Bi; Fri, 03 May 2019 20:54:12 +0000
+Subject: Re: ERROR: "paddr_to_nid" [drivers/md/raid1.ko] undefined!
+To:     "Luck, Tony" <tony.luck@intel.com>, lkp <lkp@intel.com>,
+        Ming Lei <ming.lei@redhat.com>
+Cc:     "kbuild-all@01.org" <kbuild-all@01.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Wu, Fengguang" <fengguang.wu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
+References: <201905032019.tzlqufi0%lkp@intel.com>
+ <4e48dcb2-6e82-4bbe-3920-e1c5fd5c265a@infradead.org>
+ <3908561D78D1C84285E8C5FCA982C28F7E91BABF@ORSMSX104.amr.corp.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a8b6fa47-d696-1aa1-4eb1-513de3c71e5a@infradead.org>
+Date:   Fri, 3 May 2019 13:54:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7E91BABF@ORSMSX104.amr.corp.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 5/3/19 1:25 PM, Luck, Tony wrote:
+>>> Exporting paddr_to_nid() in arch/ia64/mm/numa.c fixes all of these build errors.
+>>> Is there a problem with doing that?
+>>
+>> I don't see a problem with exporting it.
+> 
+> But I also don't see these build errors.  I'm using the same HEAD commit. I think the
+> same .config (derived from arch/ia64/configs/bigsur_defconfig.
+> 
+> Big difference is I'm doing a natinve build with a much older compiler (4.6.4)
+> 
+> -Tony
+> 
 
-Bisect pointed commit 707d80f0a3c5 ("usb: dwc2: gadget: Replace phyif
-with phy_utmi_width") as reason for failures of USB on Exynos4412,
-Odroid U3 board (ARMv7, exynos_defconfig, TFTP boot with nfsroot from
-NFSv4):
+I was able to reproduce the build errors.
+using gcc 8.1.0 cross-compile.
 
-[    4.333996] usb 1-2: new high-speed USB device number 3 using exynos-ehci
-[    4.503942] usb 1-2: device descriptor read/64, error -71
-[    4.793970] usb 1-2: device descriptor read/64, error -71
-[    4.914748] usb usb1-port2: attempt power cycle
-[    6.224267] usb 1-3: new high-speed USB device number 5 using exynos-ehci
-[    6.393983] usb 1-3: device descriptor read/64, error -71
-[    6.684243] usb 1-3: device descriptor read/64, error -71
-[    6.954259] usb 1-3: new high-speed USB device number 6 using exynos-ehci
-[    7.123980] usb 1-3: device descriptor read/64, error -71
-[    7.413969] usb 1-3: device descriptor read/64, error -71
-[    7.534778] usb usb1-port3: attempt power cycle
-
-The boot failure is effect of lack of network adapter (USB, smsc95xx).
-Expected:
-[    4.285831] usb 1-3: New USB device found, idVendor=0424, idProduct=3503, bcdDevice=a1.a0
-[    4.288986] usb 1-3: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-[    4.299596] hub 1-3:1.0: USB hub found
-[    4.300027] hub 1-3:1.0: 3 ports detected
-[    5.895541] smsc95xx 1-2:1.0 eth0: link up, 100Mbps, full-duplex, lpa 0xCDE1
-
-Full kernel log is here:
-https://krzk.eu/#/builders/25/builds/1330/steps/14/logs/serial0
-https://krzk.eu/#/builders/25/builds/1330
-
-Let me know if you need any more details.
-
-Best regards,
-Krzysztof
-
+-- 
+~Randy
