@@ -2,143 +2,218 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F234C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D1AC004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 225F7205F4
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:02:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556866930;
-	bh=IcvQC+frg6y6ZaWJXs/KGFXCTKJdaKyXhcgKDcfoX+o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SHOhrKBn8m6B8yOxmm/zsw4QrZY8MFdrDbEHwP0L8cQlXLNoJcBil4lZePQlBHmqF
-	 1nNDCbvBG2zIUJKrCmNzHde2/RDzDpWGC2RMmrbfp3wa1zpcFwRDMcilqHCovTTfCb
-	 XikiOCksXTpe36X+xZy6IHr8FYDS0BwNrVU5QnlY=
+	by mail.kernel.org (Postfix) with ESMTP id C45BC205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfECHCJ (ORCPT
+        id S1726869AbfECHCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:02:09 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35142 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfECHCI (ORCPT
+        Fri, 3 May 2019 03:02:31 -0400
+Received: from icp-osb-irony-out6.external.iinet.net.au ([203.59.1.106]:40741
+        "EHLO icp-osb-irony-out6.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725806AbfECHCb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 03:02:08 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z26so4373960ljj.2;
-        Thu, 02 May 2019 23:59:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Iqk3xergUOsKAugJuc5t6KOxZcaZnh5miw46WUEvyZ8=;
-        b=d99CEB95BnT5kT6nYuwo4XUE9+LijDslkebppPl3zeWTrN7tRjObi/3iIb2XB9/knw
-         njZIDnYYS2q4uQb/rGd+x1PQpS1WdjjLgufi8wNBbBW5o3cqyslT8bQGdy7zctj/3S7n
-         ASILmFXb7rBiDNgUEQa7IZnaUjJSXMibotux51Vq4MmrimBDovr7ARBGv/KMb36RiAwa
-         TR1kUWlSvhqiGO+ILc9TjR5mxfbeees/F8LY/55/EBSqwRuNUTrthlZfL9rYMml5oH96
-         lR1EBQRrtXYj8tcaYwZhtEQwHlsbjj8oPiF4waxO9IibriqctMlpWTezzNeDL2jKCXCV
-         WE4A==
-X-Gm-Message-State: APjAAAVE0SBOK4ZbGKm26mitXjbGMgYsa0FOmwuYqYxegbcTbQ+qvbQ7
-        m+CkSpOpEEGlvvLDPSCg6AM=
-X-Google-Smtp-Source: APXvYqwaLakM0EHUo6NfD8Mw26aclhii8edWJbqB5mPdjVZ+4De+RAEx471f5MRfpEibtEo5pHLNyA==
-X-Received: by 2002:a2e:655a:: with SMTP id z87mr4194357ljb.150.1556866745836;
-        Thu, 02 May 2019 23:59:05 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id u12sm227951ljk.89.2019.05.02.23.59.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 May 2019 23:59:04 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hMSA9-0004aP-7Z; Fri, 03 May 2019 08:59:17 +0200
-Date:   Fri, 3 May 2019 08:59:17 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Cc:     peter_hong@fintek.com.tw, johan@kernel.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: Re: [PATCH V9 4/4] USB: serial: f81232: implement break control
-Message-ID: <20190503065917.GA26546@localhost>
-References: <1556587352-19500-1-git-send-email-hpeter+linux_kernel@gmail.com>
- <1556587352-19500-4-git-send-email-hpeter+linux_kernel@gmail.com>
+        Fri, 3 May 2019 03:02:31 -0400
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AHAABU5stc/zXSMGcNWBkBAQEBAQE?=
+ =?us-ascii?q?BAQEBAQEHAQEBAQEBgVMCAQEBAQELAYQlhBCTYwEBAQEBAQaBNYNehW6PBoF?=
+ =?us-ascii?q?7hH0Chlc2Bw4BAwEBAQQBAQEBAoZfAQEBAQIBIwQRQQULCw0LAgImAgJXBg0?=
+ =?us-ascii?q?GAgEBgx6BdwWtGXF8MxqFLYMqgUWBCycBgV2KBXiBB4E4gms+h06CWASLE4c?=
+ =?us-ascii?q?mUJQkCYILkj4hjCcDiRyifwqBfTMaCCgIgyeCGxeOMWCTCQEB?=
+X-IPAS-Result: =?us-ascii?q?A2AHAABU5stc/zXSMGcNWBkBAQEBAQEBAQEBAQEHAQEBA?=
+ =?us-ascii?q?QEBgVMCAQEBAQELAYQlhBCTYwEBAQEBAQaBNYNehW6PBoF7hH0Chlc2Bw4BA?=
+ =?us-ascii?q?wEBAQQBAQEBAoZfAQEBAQIBIwQRQQULCw0LAgImAgJXBg0GAgEBgx6BdwWtG?=
+ =?us-ascii?q?XF8MxqFLYMqgUWBCycBgV2KBXiBB4E4gms+h06CWASLE4cmUJQkCYILkj4hj?=
+ =?us-ascii?q?CcDiRyifwqBfTMaCCgIgyeCGxeOMWCTCQEB?=
+X-IronPort-AV: E=Sophos;i="5.60,424,1549900800"; 
+   d="scan'208";a="157783043"
+Received: from unknown (HELO [10.44.0.22]) ([103.48.210.53])
+  by icp-osb-irony-out6.iinet.net.au with ESMTP; 03 May 2019 15:02:26 +0800
+Subject: Re: [PATCH 1/6] ARM: ks8695: watchdog: stop using mach/*.h
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, arm@kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+References: <20190415202501.941196-1-arnd@arndb.de>
+From:   Greg Ungerer <gerg@uclinux.org>
+Message-ID: <2424c672-e3fb-4c32-4c24-fafc59d03a96@uclinux.org>
+Date:   Fri, 3 May 2019 17:02:23 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556587352-19500-4-git-send-email-hpeter+linux_kernel@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190415202501.941196-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 09:22:32AM +0800, Ji-Ze Hong (Peter Hong) wrote:
-> Implement Fintek F81232 break on/off with LCR register.
-> It's the same with 16550A LCR register layout.
+Hi Arnd,
+
+On 16/4/19 6:24 am, Arnd Bergmann wrote:
+> drivers should not rely on machine specific headers but
+> get their information from the platform device.
 > 
-> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
-> ---
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
->  static void f81232_break_ctl(struct tty_struct *tty, int break_state)
->  {
-> -	/* FIXME - Stubbed out for now */
-> +	struct usb_serial_port *port = tty->driver_data;
-> +	struct f81232_private *priv = usb_get_serial_port_data(port);
-> +	int status;
->  
-> -	/*
-> -	 * break_state = -1 to turn on break, and 0 to turn off break
-> -	 * see drivers/char/tty_io.c to see it used.
-> -	 * last_set_data_urb_value NEVER has the break bit set in it.
-> -	 */
-> +	mutex_lock(&priv->lock);
+I dug out some old ks8695 based hardware to try this out.
+I had a lot of trouble getting anything modern working on it.
+In the end I still don't have a reliable test bed to test this properly.
+
+Your patch series works as well as the kernel before the changes,
+so I am happy enough to ack them as they are.
+
+Acked-by: Greg Ungerer <gerg@kernel.org>
+
+Ultimately though I am left wondering if the ks8695 support in the
+kernel is useful to anyone the way it is at the moment. With a minimal
+kernel configuration I can boot up to a shell - but the system is
+really unreliable if you try to interactively use it. I don't think
+it is the hardware - it seems to run reliably with the old code
+it has running from flash on it. I am only testing the new kernel,
+running with the existing user space root filesystem on it (which
+dates from 2004 :-)
+
+Regards
+Greg
+
+
+
+>   arch/arm/mach-ks8695/devices.c | 13 ++++++++++++-
+>   drivers/watchdog/Kconfig       |  2 +-
+>   drivers/watchdog/ks8695_wdt.c  | 30 +++++++++++++++++-------------
+>   3 files changed, 30 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/arm/mach-ks8695/devices.c b/arch/arm/mach-ks8695/devices.c
+> index 61cf20beb45f..57766817d86f 100644
+> --- a/arch/arm/mach-ks8695/devices.c
+> +++ b/arch/arm/mach-ks8695/devices.c
+> @@ -169,11 +169,22 @@ void __init ks8696_add_device_hpna(void)
+>   /* --------------------------------------------------------------------
+>    *  Watchdog
+>    * -------------------------------------------------------------------- */
+> +#define KS8695_TMR_OFFSET      (0xF0000 + 0xE400)
+> +#define KS8695_TMR_PA          (KS8695_IO_PA + KS8695_TMR_OFFSET)
+> +static struct resource ks8695_wdt_resources[] = {
+> +	[0] = {
+> +		.name	= "tmr",
+> +		.start	= KS8695_TMR_PA,
+> +		.end	= KS8695_TMR_PA + 0xf,
+> +		.flags	= IORESOURCE_MEM,
+> +	},
+> +};
+>   
+>   static struct platform_device ks8695_wdt_device = {
+>   	.name		= "ks8695_wdt",
+>   	.id		= -1,
+> -	.num_resources	= 0,
+> +	.resource	= ks8695_wdt_resources,
+> +	.num_resources	= ARRAY_SIZE(ks8695_wdt_resources),
+>   };
+>   
+>   static void __init ks8695_add_device_watchdog(void)
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 242eea859637..046e01daef57 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -397,7 +397,7 @@ config IXP4XX_WATCHDOG
+>   
+>   config KS8695_WATCHDOG
+>   	tristate "KS8695 watchdog"
+> -	depends on ARCH_KS8695
+> +	depends on ARCH_KS8695 || COMPILE_TEST
+>   	help
+>   	  Watchdog timer embedded into KS8695 processor. This will reboot your
+>   	  system when the timeout is reached.
+> diff --git a/drivers/watchdog/ks8695_wdt.c b/drivers/watchdog/ks8695_wdt.c
+> index 1e41818a44bc..87c542c2f912 100644
+> --- a/drivers/watchdog/ks8695_wdt.c
+> +++ b/drivers/watchdog/ks8695_wdt.c
+> @@ -23,10 +23,8 @@
+>   #include <linux/watchdog.h>
+>   #include <linux/io.h>
+>   #include <linux/uaccess.h>
+> -#include <mach/hardware.h>
+>   
+> -#define KS8695_TMR_OFFSET	(0xF0000 + 0xE400)
+> -#define KS8695_TMR_VA		(KS8695_IO_VA + KS8695_TMR_OFFSET)
+> +#define KS8695_CLOCK_RATE  25000000
+>   
+>   /*
+>    * Timer registers
+> @@ -57,6 +55,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+>   
+>   static unsigned long ks8695wdt_busy;
+>   static DEFINE_SPINLOCK(ks8695_lock);
+> +static void __iomem *tmr_reg;
+>   
+>   /* ......................................................................... */
+>   
+> @@ -69,8 +68,8 @@ static inline void ks8695_wdt_stop(void)
+>   
+>   	spin_lock(&ks8695_lock);
+>   	/* disable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
+> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
+>   	spin_unlock(&ks8695_lock);
+>   }
+>   
+> @@ -84,15 +83,15 @@ static inline void ks8695_wdt_start(void)
+>   
+>   	spin_lock(&ks8695_lock);
+>   	/* disable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
+> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
+>   
+>   	/* program timer0 */
+> -	__raw_writel(tval | T0TC_WATCHDOG, KS8695_TMR_VA + KS8695_T0TC);
+> +	__raw_writel(tval | T0TC_WATCHDOG, tmr_reg + KS8695_T0TC);
+>   
+>   	/* re-enable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
+> +	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
+>   	spin_unlock(&ks8695_lock);
+>   }
+>   
+> @@ -105,9 +104,9 @@ static inline void ks8695_wdt_reload(void)
+>   
+>   	spin_lock(&ks8695_lock);
+>   	/* disable, then re-enable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
+> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
+> +	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
+>   	spin_unlock(&ks8695_lock);
+>   }
+>   
+> @@ -238,6 +237,11 @@ static struct miscdevice ks8695wdt_miscdev = {
+>   static int ks8695wdt_probe(struct platform_device *pdev)
+>   {
+>   	int res;
+> +	struct resource *resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 > +
-> +	if (break_state)
-> +		priv->shadow_lcr |= UART_LCR_SBC;
-> +	else
-> +		priv->shadow_lcr &= ~UART_LCR_SBC;
-> +
-> +	status = f81232_set_register(port, LINE_CONTROL_REGISTER,
-> +					priv->shadow_lcr);
-> +	if (status)
-> +		dev_err(&port->dev, "set break failed: %d\n", status);
-> +
-> +	mutex_unlock(&priv->lock);
->  }
-
-> @@ -519,6 +530,7 @@ static int f81232_port_disable(struct usb_serial_port *port)
->  static void f81232_set_termios(struct tty_struct *tty,
->  		struct usb_serial_port *port, struct ktermios *old_termios)
->  {
-> +	struct f81232_private *priv = usb_get_serial_port_data(port);
->  	u8 new_lcr = 0;
->  	int status = 0;
->  	speed_t baudrate;
-> @@ -572,11 +584,16 @@ static void f81232_set_termios(struct tty_struct *tty,
->  		break;
->  	}
->  
-> +	mutex_lock(&priv->lock);
-> +
-> +	new_lcr |= (priv->shadow_lcr & UART_LCR_SBC);
->  	status = f81232_set_register(port, LINE_CONTROL_REGISTER, new_lcr);
->  	if (status) {
->  		dev_err(&port->dev, "%s failed to set LCR: %d\n",
->  			__func__, status);
->  	}
-> +
-> +	mutex_unlock(&priv->lock);
-
-You forgot to update shadow_lcr here so the line settings would be
-corrupted (e.g set to 5 bit words) whenever a break is signalled.
-
-Did you not test this version of the patch?
-
-I added the missing update, but please test the code that's in my
-usb-next branch in a minute and confirm everything works as expected.
-
-All four patches now applied.
-
-Thanks,
-Johan
+> +	tmr_reg = devm_ioremap_resource(&pdev->dev, resource);
+> +	if (!tmr_reg)
+> +		return -ENXIO;
+>   
+>   	if (ks8695wdt_miscdev.parent)
+>   		return -EBUSY;
+> 
