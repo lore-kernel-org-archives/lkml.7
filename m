@@ -2,59 +2,58 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04A6C004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE429C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2CE42070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DE42070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 04:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="LVK1/bG0"
+	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="PCIU09pT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbfECEAU (ORCPT
+        id S1726337AbfECEAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 00:00:20 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42024 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbfECEAT (ORCPT
+        Fri, 3 May 2019 00:00:24 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46171 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfECEAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 00:00:19 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k9so3398442oig.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 21:00:18 -0700 (PDT)
+        Fri, 3 May 2019 00:00:22 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d62so3380457oib.13
+        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 21:00:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ehFlep6RHoGfNzKXt68A98xnVIeOv0Wgz2pAcINSx0w=;
-        b=LVK1/bG0FMi2gOxnOUtEdOrc2NC+ARCm+f2q/4zQN/10NQHVwIdYsz3xLeUZseeH0A
-         lZ5aeqYGQoqLG9yE5KMkS++MjXsy/j1sQz09TwaaALOD2R7QS/hskG6NbVVzlHEJ6Vcx
-         1OPYo+vsjaQXGksUnrvS3kRu/xxWJCItyTo5C015thwhvXemFz0Kay+yBgotRw/od6oX
-         uZYOsLPIXx1/yNniP1EVU/1Ci/ORc3bc9hVs7uCrn4EGBJpgN/EwiOHzWx5N4OJETk3r
-         d+TeGTlCwuxUvPUmy2EKZVApiz6A82ysFUOv938B9Tzv4FFfPQrwbANFl5eV98nnkK+i
-         51bQ==
+        bh=yoA0qcUcZf9hNKPIWW0C4rSDs4LhPQglzx9oFAh3Sp8=;
+        b=PCIU09pTLCDoNBfuGUpnEwF/031Tw8z2XMWTENYF9S2enJJC9C0X9GP97RazgMNftx
+         J6TBwEw1BI93Psj5Fw+9WbYsRWjhAiAMwoF1SBTxWFRmBdt2b2fDMC1CAu6pJl6u9CUk
+         bBaeR5fHRRQQ8ZadgpMzUqYf+1ahLXHpYwsuKWhrVrZWvh+TRaJ8nuhU6hi3RNndaYPN
+         z67KgNqV3la0jAkzrIA130TI32Wx562a5GP+UEUWilbL6JFPvQoWBiDACyxu+uNW1ms8
+         cro3wAfFUUS1bzig0Lgq1dUivtSZZY2cyAUULOTINeO2agVt9oNDtwvLeiiwtobQPXtd
+         Leog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ehFlep6RHoGfNzKXt68A98xnVIeOv0Wgz2pAcINSx0w=;
-        b=lAagePHL47f3TdEWtM144K6VQF6FXVgWKlvcQfZlUVFt0kTSddSBPygnjBMNybjgwL
-         xn8CtkR6+BI92m9TKR9pJceP9bfOqH98atEmS2I+IGAaVgQVRGOSmL0HjR4Z+wnn21+f
-         kFhFl3DuJ7dGOk/8jnL5oUMU4YL3tbS+8zw028smEzVUvp/3BJFA98e3B7YMyxEWN4u/
-         0k+h+/JK2UHmPlHkt0SJN6m3isWV27/DejEHZoHdWdyicZDoVdWSDhVVb9LoRm0Lf1be
-         4P0CLjN2TkckDDJGwy7BL+BRncdkRn7uyUGkF9VlQbe5AXb3rmCvVSps1GoZ0p/Q2cdm
-         MRyA==
-X-Gm-Message-State: APjAAAW7cKuQrwt4i8RFxUSiYbcu/qdk1JmDzRMelWtYG3LBBiOGHWLp
-        J0rEfpeEWYlEcmB3YsOK2AAA4w==
-X-Google-Smtp-Source: APXvYqwudvvXv9QrPckqhB9/9QIEdpPo75PqFD8VCoGOI3bQltuttSiRozB9BZDZUI1iOVIfENcgEg==
-X-Received: by 2002:aca:6c47:: with SMTP id h68mr5139285oic.57.1556856017635;
-        Thu, 02 May 2019 21:00:17 -0700 (PDT)
+        bh=yoA0qcUcZf9hNKPIWW0C4rSDs4LhPQglzx9oFAh3Sp8=;
+        b=M43vytlVMcjvjqWfOC3ebHl0Zj8+smYkcEy0MWf5b8OqtG9sCmlOp42Cdzh1lSbNYc
+         alt8qq7n5n8LdUJXm6pSEkKzAnzSELLTe38PBYRX3JKFIHPaDh7d57wStulZBtLfvZq5
+         uZ3LKdu+G1dqS9CHL+EriMV/G3nA8rmCwoegsa2e2IYbQilkUWNMapnkzsamJ8hvPPlQ
+         hBlOSkRNWRRK200YeO7HGhGySUDUHp4slmxKP/PX0K8Sx/EBmMq68puNF/noD5fsfk16
+         CjVCPJchkmhZYaHZU+tUXEie3jk5PD/+ccujHLXQeU+qdX1qw7RARspj8cKSs/JOUTPb
+         AS0g==
+X-Gm-Message-State: APjAAAVJKgifQSWy/mt2s1Kkm1vGGXrmfSbQxels9lnaAOOzx2buAaN8
+        iIcoTsEwjL4QPtjiRzt7B9syow==
+X-Google-Smtp-Source: APXvYqzV4giO3K8ryYMsLh3jD9fGBT9x5cgZ/aCBmN7s2tyWpB4CldLG7uLNMfdnn+oxiAcHESSLdg==
+X-Received: by 2002:aca:4f85:: with SMTP id d127mr4301389oib.123.1556856021605;
+        Thu, 02 May 2019 21:00:21 -0700 (PDT)
 Received: from linux.fredlawl.com ([2600:1700:18a0:11d0:5518:38b8:ef25:393a])
-        by smtp.gmail.com with ESMTPSA id u22sm419161otk.49.2019.05.02.21.00.16
+        by smtp.gmail.com with ESMTPSA id w5sm413787otg.34.2019.05.02.21.00.20
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 02 May 2019 21:00:16 -0700 (PDT)
+        Thu, 02 May 2019 21:00:20 -0700 (PDT)
 From:   Frederick Lawler <fred@fredlawl.com>
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -62,9 +61,9 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         andriy.shevchenko@linux.intel.com, keith.busch@intel.com,
         mr.nuke.me@gmail.com, liudongdong3@huawei.com, thesven73@gmail.com,
         Frederick Lawler <fred@fredlawl.com>
-Subject: [PATCH v2 2/9] PCI/DPC: Prefix dmesg logs with PCIe service name
-Date:   Thu,  2 May 2019 22:59:39 -0500
-Message-Id: <20190503035946.23608-3-fred@fredlawl.com>
+Subject: [PATCH v2 4/9] PCI/LINK: Prefix dmesg logs with PCIe service name
+Date:   Thu,  2 May 2019 22:59:41 -0500
+Message-Id: <20190503035946.23608-5-fred@fredlawl.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190503035946.23608-1-fred@fredlawl.com>
 References: <20190503035946.23608-1-fred@fredlawl.com>
@@ -73,154 +72,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prefix dmesg logs with PCIe service name.
+bw_notification.c currently does not have any dmesg logs. As the
+service continues to expand in functionality, prefix logs anyways.
 
 Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 ---
- drivers/pci/pcie/dpc.c | 37 ++++++++++++++++++-------------------
- 1 file changed, 18 insertions(+), 19 deletions(-)
+ drivers/pci/pcie/bw_notification.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 7b77754a82de..934391c91c23 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -6,6 +6,8 @@
-  * Copyright (C) 2016 Intel Corp.
+diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
+index d2eae3b7cc0f..a4bb90562cd5 100644
+--- a/drivers/pci/pcie/bw_notification.c
++++ b/drivers/pci/pcie/bw_notification.c
+@@ -14,6 +14,8 @@
+  * and warns when links become degraded in operation.
   */
  
-+#define dev_fmt(fmt) "DPC: " fmt
++#define dev_fmt(fmt) "BWN: " fmt
 +
- #include <linux/aer.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
-@@ -100,7 +102,6 @@ static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
- {
- 	unsigned long timeout = jiffies + HZ;
- 	struct pci_dev *pdev = dpc->dev->port;
--	struct device *dev = &dpc->dev->device;
- 	u16 cap = dpc->cap_pos, status;
+ #include "../pci.h"
+ #include "portdrv.h"
  
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
-@@ -110,7 +111,7 @@ static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
- 		pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
- 	}
- 	if (status & PCI_EXP_DPC_RP_BUSY) {
--		dev_warn(dev, "DPC root port still busy\n");
-+		pci_warn(pdev, "DPC root port still busy\n");
- 		return -EBUSY;
- 	}
- 	return 0;
-@@ -148,7 +149,6 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
- 
- static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
- {
--	struct device *dev = &dpc->dev->device;
- 	struct pci_dev *pdev = dpc->dev->port;
- 	u16 cap = dpc->cap_pos, dpc_status, first_error;
- 	u32 status, mask, sev, syserr, exc, dw0, dw1, dw2, dw3, log, prefix;
-@@ -156,13 +156,13 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
- 
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_STATUS, &status);
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_MASK, &mask);
--	dev_err(dev, "rp_pio_status: %#010x, rp_pio_mask: %#010x\n",
-+	pci_err(pdev, "rp_pio_status: %#010x, rp_pio_mask: %#010x\n",
- 		status, mask);
- 
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_SEVERITY, &sev);
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_SYSERROR, &syserr);
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_EXCEPTION, &exc);
--	dev_err(dev, "RP PIO severity=%#010x, syserror=%#010x, exception=%#010x\n",
-+	pci_err(pdev, "RP PIO severity=%#010x, syserror=%#010x, exception=%#010x\n",
- 		sev, syserr, exc);
- 
- 	/* Get First Error Pointer */
-@@ -171,7 +171,7 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
- 
- 	for (i = 0; i < ARRAY_SIZE(rp_pio_error_string); i++) {
- 		if ((status & ~mask) & (1 << i))
--			dev_err(dev, "[%2d] %s%s\n", i, rp_pio_error_string[i],
-+			pci_err(pdev, "[%2d] %s%s\n", i, rp_pio_error_string[i],
- 				first_error == i ? " (First)" : "");
- 	}
- 
-@@ -185,18 +185,18 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
- 			      &dw2);
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_HEADER_LOG + 12,
- 			      &dw3);
--	dev_err(dev, "TLP Header: %#010x %#010x %#010x %#010x\n",
-+	pci_err(pdev, "TLP Header: %#010x %#010x %#010x %#010x\n",
- 		dw0, dw1, dw2, dw3);
- 
- 	if (dpc->rp_log_size < 5)
- 		goto clear_status;
- 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_IMPSPEC_LOG, &log);
--	dev_err(dev, "RP PIO ImpSpec Log %#010x\n", log);
-+	pci_err(pdev, "RP PIO ImpSpec Log %#010x\n", log);
- 
- 	for (i = 0; i < dpc->rp_log_size - 5; i++) {
- 		pci_read_config_dword(pdev,
- 			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
--		dev_err(dev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
-+		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
- 	}
-  clear_status:
- 	pci_write_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_STATUS, status);
-@@ -229,18 +229,17 @@ static irqreturn_t dpc_handler(int irq, void *context)
- 	struct aer_err_info info;
- 	struct dpc_dev *dpc = context;
- 	struct pci_dev *pdev = dpc->dev->port;
--	struct device *dev = &dpc->dev->device;
- 	u16 cap = dpc->cap_pos, status, source, reason, ext_reason;
- 
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
- 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
- 
--	dev_info(dev, "DPC containment event, status:%#06x source:%#06x\n",
-+	pci_info(pdev, "DPC containment event, status:%#06x source:%#06x\n",
- 		 status, source);
- 
- 	reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN) >> 1;
- 	ext_reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT) >> 5;
--	dev_warn(dev, "DPC %s detected\n",
-+	pci_warn(pdev, "DPC %s detected\n",
- 		 (reason == 0) ? "unmasked uncorrectable error" :
- 		 (reason == 1) ? "ERR_NONFATAL" :
- 		 (reason == 2) ? "ERR_FATAL" :
-@@ -307,7 +306,7 @@ static int dpc_probe(struct pcie_device *dev)
- 					   dpc_handler, IRQF_SHARED,
- 					   "pcie-dpc", dpc);
- 	if (status) {
--		dev_warn(device, "request IRQ%d failed: %d\n", dev->irq,
-+		pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
- 			 status);
- 		return status;
- 	}
-@@ -319,7 +318,7 @@ static int dpc_probe(struct pcie_device *dev)
- 	if (dpc->rp_extensions) {
- 		dpc->rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
- 		if (dpc->rp_log_size < 4 || dpc->rp_log_size > 9) {
--			dev_err(device, "RP PIO log size %u is invalid\n",
-+			pci_err(pdev, "RP PIO log size %u is invalid\n",
- 				dpc->rp_log_size);
- 			dpc->rp_log_size = 0;
- 		}
-@@ -328,11 +327,11 @@ static int dpc_probe(struct pcie_device *dev)
- 	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
- 	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
- 
--	dev_info(device, "DPC error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
--		cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
--		FLAG(cap, PCI_EXP_DPC_CAP_POISONED_TLP),
--		FLAG(cap, PCI_EXP_DPC_CAP_SW_TRIGGER), dpc->rp_log_size,
--		FLAG(cap, PCI_EXP_DPC_CAP_DL_ACTIVE));
-+	pci_info(pdev, "DPC error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
-+		 cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
-+		 FLAG(cap, PCI_EXP_DPC_CAP_POISONED_TLP),
-+		 FLAG(cap, PCI_EXP_DPC_CAP_SW_TRIGGER), dpc->rp_log_size,
-+		 FLAG(cap, PCI_EXP_DPC_CAP_DL_ACTIVE));
- 
- 	pci_add_ext_cap_save_buffer(pdev, PCI_EXT_CAP_ID_DPC, sizeof(u16));
- 	return status;
 -- 
 2.17.1
 
