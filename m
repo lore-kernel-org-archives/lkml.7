@@ -2,157 +2,89 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC96C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C255FC004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFEC32133F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:36:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="bS3Q7c6y"
+	by mail.kernel.org (Postfix) with ESMTP id 93E512133F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556908674;
+	bh=UBxcZxzFld3G2g7m8BqdNbaEx6zt7+38GcnBJB/cjpQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ni4rSeaGH2QHHBj/HL01Ix6L2GdD2bdnyJ3lV0PFPu2KtsTqyUrf1nSKdgyC5SWiI
+	 ARGi4iroNedf5OEQCobpXFo3dps3EVqi5vQSSLTtKfCmv4ZhMhZ/rUj++DbnNHT+1k
+	 jxjYygNbh2bkEGblOvTT4p1FwlzXOSBcHvTkeBfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbfECSgF (ORCPT
+        id S1726468AbfECShx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 14:36:05 -0400
-Received: from mail.efficios.com ([167.114.142.138]:46420 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbfECSgF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 14:36:05 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 641C71DD78A;
-        Fri,  3 May 2019 14:36:03 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id JJEe9UUBIbrN; Fri,  3 May 2019 14:36:02 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id B88B11DD779;
-        Fri,  3 May 2019 14:36:02 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B88B11DD779
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556908562;
-        bh=lCKVxMU3qGBGUPt68WuIIx9ADpMi0+hIh0FPjZb4IXg=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=bS3Q7c6yNlPv4L7OQgGylnEROtWVTOidXlR3RIgdSE/xJH57jNPcY7/aGaihqaO5k
-         NI3B2YZzMpWOpnlqVXx9fng3Qh9GrbfLXoElln6emRbQxLF1yb+hOw1a6YM0EVv2HK
-         CGSqoG3TTGF6hWn01bCjTDslNR5Ukjsvi8hGYtsIu/NzbxvZfJnfNy6MS0pt0Z5Eyj
-         LhhYBJXcA+PeKZ/gIxi5RgJmwRz3MAZzI0JR0/bgqAE/oFbkfGv34ypz2RJEHzTulj
-         xfaeOQmBqFt12h4W0vcc1GlvwKb5wDEjRtTanDqvrZiENFIjAF+ZFw1Af5AQeGOpbO
-         Y6Nu8QjizJx4g==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id Dvbx8kLUtBVk; Fri,  3 May 2019 14:36:02 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 966701DD771;
-        Fri,  3 May 2019 14:36:02 -0400 (EDT)
-Date:   Fri, 3 May 2019 14:36:02 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
-        rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>
-Message-ID: <678952111.699.1556908562445.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
-References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH for 5.2 00/12] Restartable Sequences selftests updates
+        Fri, 3 May 2019 14:37:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbfECShx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 14:37:53 -0400
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47CC6216FD;
+        Fri,  3 May 2019 18:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556908672;
+        bh=UBxcZxzFld3G2g7m8BqdNbaEx6zt7+38GcnBJB/cjpQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hM0cpJzrKnoUOQGImhGa6M0L6Ce0BnUA80fCJnWzjEEdR1fPBR0q0On2aHq1U+n/A
+         YbLxKAH0Cl2A3fZ6TixNkY8uwzs+BYGaueQH9W9MYf+qfcuQGv4M+/ilMPdswg0oCW
+         YZl5PfkuurrwZE5DAHQWsem5aJjT9s1M+Mrj7pko=
+Received: by mail-lj1-f170.google.com with SMTP id c6so628593lji.11;
+        Fri, 03 May 2019 11:37:52 -0700 (PDT)
+X-Gm-Message-State: APjAAAUnTITf5Vc2TeGQbVqad2l7IEA2msspg4ubrgTycutvCy4emaDo
+        PwQmxo+FZBYlDJiUZA78JJQ6GU4a4NV9B6ODy5g=
+X-Google-Smtp-Source: APXvYqyYTVh7YDpZFN7xj6hghkJrSFAfXvx2/BjGs2iZoFl5sr2936maY0RBxyzw5eSgEy/Y6NBJ04y+Pvqp+k5GrJ8=
+X-Received: by 2002:a2e:4a09:: with SMTP id x9mr5160180lja.19.1556908670459;
+ Fri, 03 May 2019 11:37:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: Restartable Sequences selftests updates
-Thread-Index: 0ENCky/Ret7tFVO1wxVX5kIhz+XlIw==
+References: <20190430092832.7376-1-geert+renesas@glider.be>
+In-Reply-To: <20190430092832.7376-1-geert+renesas@glider.be>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 3 May 2019 20:37:39 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPd5EK2L89roSOMRoH6qtXSjHebnYTAu3KYwsP4dSLO3hA@mail.gmail.com>
+Message-ID: <CAJKOXPd5EK2L89roSOMRoH6qtXSjHebnYTAu3KYwsP4dSLO3hA@mail.gmail.com>
+Subject: Re: [PATCH -next] mlxsw: Remove obsolete dependency on THERMAL=m
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>, linux-pm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 29, 2019, at 11:27 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+On Tue, 30 Apr 2019 at 11:29, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+> The THERMAL configuration option was changed from tristate to bool, but
+> a dependency on THERMAL=m was forgotten, leading to a warning when
+> running "make savedefconfig":
+>
+>     boolean symbol THERMAL tested for 'm'? test forced to 'n'
+>
+> Fixes: be33e4fbbea581ea ("thermal/drivers/core: Remove the module Kconfig's option")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/net/ethernet/mellanox/mlxsw/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
 
-> Those rseq selftests updates are hereby submitted to Shuah Khan,
-> maintainer of kernel selftests, for the next merge window (5.2).
-> 
-> They change the per-architecture pre-abort signatures to ensure those
-> are valid trap instructions.
-> 
-> The way exit points are presented to debuggers is enhanced, ensuring
-> all exit points are present, so debuggers don't have to disassemble
-> rseq critical section to properly skip over them.
-> 
-> Discussions with the glibc community is reaching a concensus of exposing
-> a __rseq_handled symbol from glibc to coexist with rseq early adopters.
-> Update the rseq selftest code to expose and use this symbol.
-> 
-> Support for compiling asm goto with clang is added with the
-> "-no-integrated-as" compiler switch, similarly to the toplevel kernel
-> Makefile.
+This also fixes olddefconfig, image_name and other targets:
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Hi Shuah,
-
-Is there anything else you need before you can pick up those patches ?
-
-Thanks,
-
-Mathieu
-
-> 
-> Thanks,
-> 
-> Mathieu
-> 
-> Martin Schwidefsky (1):
->  rseq/selftests: s390: use trap4 for RSEQ_SIG
-> 
-> Mathieu Desnoyers (11):
->  rseq/selftests: x86: Work-around bogus gcc-8 optimisation
->  rseq/selftests: Add __rseq_exit_point_array section for debuggers
->  rseq/selftests: Introduce __rseq_cs_ptr_array, rename __rseq_table to
->    __rseq_cs
->  rseq/selftests: Use __rseq_handled symbol to coexist with glibc
->  rseq/selftests: s390: use jg instruction for jumps outside of the asm
->  rseq/selftests: x86: use ud1 instruction as RSEQ_SIG opcode
->  rseq/selftests: arm: use udf instruction for RSEQ_SIG
->  rseq/selftests: aarch64 code signature: handle big-endian environment
->  rseq/selftests: powerpc code signature: generate valid instructions
->  rseq/selftests: mips: use break instruction for RSEQ_SIG
->  rseq/selftests: add -no-integrated-as for clang
-> 
-> tools/testing/selftests/rseq/Makefile     |   8 +-
-> tools/testing/selftests/rseq/rseq-arm.h   | 132 +++++++++++++--
-> tools/testing/selftests/rseq/rseq-arm64.h |  74 ++++++++-
-> tools/testing/selftests/rseq/rseq-mips.h  | 115 +++++++++++--
-> tools/testing/selftests/rseq/rseq-ppc.h   |  90 +++++++++-
-> tools/testing/selftests/rseq/rseq-s390.h  |  78 ++++++++-
-> tools/testing/selftests/rseq/rseq-x86.h   | 264 +++++++++++++++++++++---------
-> tools/testing/selftests/rseq/rseq.c       |  55 ++++++-
-> tools/testing/selftests/rseq/rseq.h       |   1 +
-> 9 files changed, 688 insertions(+), 129 deletions(-)
-> 
-> --
-> 2.11.0
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Best regards,
+Krzysztof
