@@ -2,107 +2,164 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E66C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D8EC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB9FC2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB31F2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:16:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B9RPr9e5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hEJ22Rh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfECHQT (ORCPT
+        id S1726670AbfECHQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:16:19 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38165 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfECHQT (ORCPT
+        Fri, 3 May 2019 03:16:41 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39766 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfECHQl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 03:16:19 -0400
-Received: by mail-lf1-f66.google.com with SMTP id v1so3701610lfg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 00:16:17 -0700 (PDT)
+        Fri, 3 May 2019 03:16:41 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y42so5619087qtk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 00:16:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rtSbGYmKklFW+DrwkU0C+VxMVLVuu2pUhj66Een1PGY=;
-        b=B9RPr9e5dWYYhfvLP6A/hH+KrXtO/Yez0gb/5L0LdyKb8z8MZhdeHeOt+yi2UNKxXX
-         kqhFr7Ga99BGfpc+a7PON1hZXY4Ke+EL0MrvbB7dteYDQWAsBcmhEJ18AHotXv2HHwvf
-         komU/gZlAC7p1nBwxEhrNanbFdWzVS7fMkxqZYXV4NNNER5XUhDvqqrg89GlUsrbC9/D
-         4CA9xMlkTkFFYb1aVaVqqM/PSMm01raoSSns+BYDEleFwFzhtuVKCTIBCc/I5EIMtaw6
-         O/utJQ8G1FP22BHM9I2VTN84Si0h+UUECdvX4JD7wVp96wfqesqzdaujEMuf6dNutDQo
-         5AjQ==
+        bh=KlnuPNTSqAOsReFStbtqUTb18X37z9g45qyDj7kddRA=;
+        b=hEJ22Rh6lnEcmSMaMMuUlZdfXJ7KCYTX3AM2srreiE8Sf6OAnRXfVnZRnjcSn4jHPY
+         3p24HRD5HVSh44RxdFmCpqu/1sYnULlRTl0XRo2uF6K5RVegrPF0550505OwkW0+qT+m
+         5FmONnZuEwLBqfg9dGyH0yJSkdmST31cbhVaE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rtSbGYmKklFW+DrwkU0C+VxMVLVuu2pUhj66Een1PGY=;
-        b=Ey6ZGCJ6byi2SbOdvictXSDyVtO97QlR0uX+3Dd8egiC47/An9tHbeycVkBP7WHCgY
-         n11EpWWw6GBfCZWY4zyRaDULPjfwvE6S0cav1CIhMezRYW1PSxDZ1G8DmE/4tm+mo2ws
-         BJqwu6hPCoHVjb1GPvuZuiy3rshUPlWYqGvHrh3rEsijwfT1VZ9MZrRBhypBvBNL6V0A
-         ik+qLkAAaSlrJjo48TL1No5kiXBCelO/2UYW6vSZvi5GNEl91CRgkQR9GOWuQ1+kR73q
-         eTJVA9TB0LodrDyVBRRUmVi/kcRecmWPDRbElPHy+AZ+ByBKIxdjx/SqebJdZxXQ593V
-         +9vQ==
-X-Gm-Message-State: APjAAAUPg5/11KSZqCvXaUWKVjwXTFgJcUu+129rdyI52ErM7RF60u25
-        M7LOsLn3/m+ru6IQnTnDlxKGNwxL1QAap3RbTmlMtg==
-X-Google-Smtp-Source: APXvYqzJk0GUKle7WEk7r+TX6j6b6Koid9bqgPMCDj802pdYnmzrB/eWrxxyZQDNpWxQCQ3SCkyms1KNQoSQ8MdZwSE=
-X-Received: by 2002:a19:f001:: with SMTP id p1mr4474778lfc.27.1556867777010;
- Fri, 03 May 2019 00:16:17 -0700 (PDT)
+        bh=KlnuPNTSqAOsReFStbtqUTb18X37z9g45qyDj7kddRA=;
+        b=lYMuJb21adn0+EP6ETzzO1ccsyCGLpczq0HGWJ1nUcBK4Cwh1dDFTYXhMWqLjrBDke
+         ZmawzFf/Mh9LBXr8j1SGUE6AguzAoGrmGYRi9SvaJ1/+8vfJRzgDoW0WnLDX9OOrDiU4
+         hw/pqTvjzcXt44iqsVr03M3B4Mur9r9rXG9Xh+s2qR6L+zMv4mwTSUvcnnDEj/k1B0U0
+         V7jxI8hBsq3bG1fR9NascW7bNhqVxw56p+ZbKC0IAMY3U4FkDJB5pz7yyxS/Z3hEA6o6
+         kdkKF2N6nhgLKt78Fpbt0Rga4oJXI2F+5b6ZvHxyJQP3b8xzvuF+J3BUWFnBgJWo22oX
+         juVQ==
+X-Gm-Message-State: APjAAAXsyALSGz0ccuFu7OypNKkeKC4RyZKco4uf8hbxElZYE9IfO3Gf
+        GgEDh50SyLTdC2LtzujHd9lULXEIj6a98QkSrth6mQ==
+X-Google-Smtp-Source: APXvYqwhRV3TvOuByNuwZ+DDBwx1hJ5Ye6qvgO/XvXATKgGv9cIvbe0igodjrM3jyeRk2df7QWBovKlHBg7m9FObZ4Q=
+X-Received: by 2002:ad4:534b:: with SMTP id v11mr6824906qvs.31.1556867800383;
+ Fri, 03 May 2019 00:16:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190415202501.941196-1-arnd@arndb.de> <2424c672-e3fb-4c32-4c24-fafc59d03a96@uclinux.org>
-In-Reply-To: <2424c672-e3fb-4c32-4c24-fafc59d03a96@uclinux.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 3 May 2019 08:16:05 +0100
-Message-ID: <CACRpkdaJ+2bub_nDp9=5b4kyKjWDnOGKscWg3KsEVixDpk8rzA@mail.gmail.com>
-Subject: Re: [PATCH 1/6] ARM: ks8695: watchdog: stop using mach/*.h
-To:     Greg Ungerer <gerg@uclinux.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, arm-soc <arm@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com> <1556793795-25204-3-git-send-email-michael.kao@mediatek.com>
+In-Reply-To: <1556793795-25204-3-git-send-email-michael.kao@mediatek.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Fri, 3 May 2019 15:16:29 +0800
+Message-ID: <CAJMQK-jujDXt18M8610G4GpHdrikTD0ZZG_=C2YTt63UfxuHuQ@mail.gmail.com>
+Subject: Re: [PATCH 2/8] arm64: dts: mt8183: add/update dynamic power coefficients
+To:     "michael.kao" <michael.kao@mediatek.com>
+Cc:     fan.chen@mediatek.com, jamesjj.liao@mediatek.com,
+        dawei.chien@mediatek.com, louis.yu@mediatek.com,
+        roger.lu@mediatek.com, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 8:02 AM Greg Ungerer <gerg@uclinux.org> wrote:
+On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
+>
+> Add dynamic power coefficients for all cores and update those of
+> CPU0 and CPU4.
+>
+> Signed-off-by: Michael.Kao <michael.kao@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index b92116f..5668fb8 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -58,6 +58,8 @@
+>                         compatible = "arm,cortex-a53";
+>                         reg = <0x000>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <84>;
+> +                       #cooling-cells = <2>;
+Should this line be in [3/8] arm64: dts: mt8183: Add #cooling-cells to
+CPU nodes?
 
-> I dug out some old ks8695 based hardware to try this out.
-> I had a lot of trouble getting anything modern working on it.
-> In the end I still don't have a reliable test bed to test this properly.
-
-What is usually used by old ARMv4 systems is OpenWrt or
-OpenEmbedded. Those is the only build systems that reliably
-produce a userspace for these things now, and it is also the
-appropriate size for this kind of systems.
-
-> Ultimately though I am left wondering if the ks8695 support in the
-> kernel is useful to anyone the way it is at the moment. With a minimal
-> kernel configuration I can boot up to a shell - but the system is
-> really unreliable if you try to interactively use it. I don't think
-> it is the hardware - it seems to run reliably with the old code
-> it has running from flash on it. I am only testing the new kernel,
-> running with the existing user space root filesystem on it (which
-> dates from 2004 :-)
-
-Personally I think it is a bad sign that this subarch and boards do
-not have active OpenWrt support, they are routers after all (right?)
-and any active use of networking equipment should use a recent
-userspace as well, given all the security bugs that popped up over
-the years.
-
-With IXP4xx, Gemini and EP93xx we have found active users and
-companies selling the chips and reference designs and even
-recommending it for new products (!) at times.  If this is not the
-case with KS8695 and no hobbyists are willing to submit it
-to OpenWrt and modernize it to use device tree I think it should be
-deleted from the kernel.
-
-Yours,
-Linus Walleij
+>                 };
+>
+>                 cpu1: cpu@1 {
+> @@ -65,6 +67,8 @@
+>                         compatible = "arm,cortex-a53";
+>                         reg = <0x001>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <84>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu2: cpu@2 {
+> @@ -72,6 +76,8 @@
+>                         compatible = "arm,cortex-a53";
+>                         reg = <0x002>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <84>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu3: cpu@3 {
+> @@ -79,6 +85,8 @@
+>                         compatible = "arm,cortex-a53";
+>                         reg = <0x003>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <84>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu4: cpu@100 {
+> @@ -86,6 +94,8 @@
+>                         compatible = "arm,cortex-a73";
+>                         reg = <0x100>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <211>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu5: cpu@101 {
+> @@ -93,6 +103,8 @@
+>                         compatible = "arm,cortex-a73";
+>                         reg = <0x101>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <211>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu6: cpu@102 {
+> @@ -100,6 +112,8 @@
+>                         compatible = "arm,cortex-a73";
+>                         reg = <0x102>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <211>;
+> +                       #cooling-cells = <2>;
+>                 };
+>
+>                 cpu7: cpu@103 {
+> @@ -107,6 +121,8 @@
+>                         compatible = "arm,cortex-a73";
+>                         reg = <0x103>;
+>                         enable-method = "psci";
+> +                       dynamic-power-coefficient = <211>;
+> +                       #cooling-cells = <2>;
+>                 };
+>         };
+>
