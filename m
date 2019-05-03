@@ -2,123 +2,279 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CEAC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2B9C004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309F320675
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B73E20675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:06:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AZY2vhQ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfECKFS (ORCPT
+        id S1727406AbfECKGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 06:05:18 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57752 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725777AbfECKFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 06:05:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3CB1374;
-        Fri,  3 May 2019 03:05:16 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CC463F557;
-        Fri,  3 May 2019 03:05:11 -0700 (PDT)
-Date:   Fri, 3 May 2019 11:05:09 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>,
-        Helge Deller <deller@gmx.de>, Ley Foon Tan <lftan@altera.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Richard Kuo <rkuo@codeaurora.org>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        nios2-dev@lists.rocketboards.org
-Subject: Re: [PATCH 04/15] arm64: switch to generic version of pte allocation
-Message-ID: <20190503100508.GB47811@lakrids.cambridge.arm.com>
-References: <1556810922-20248-1-git-send-email-rppt@linux.ibm.com>
- <1556810922-20248-5-git-send-email-rppt@linux.ibm.com>
+        Fri, 3 May 2019 06:06:09 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33066 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfECKGI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 06:06:08 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b188so5371438wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 03:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dox3FSfmkK0yeol/me9DACa1ttCqBgM68apJRosptPg=;
+        b=AZY2vhQ7afUctWCVJp8LZT3vjdACKM5SwTtQQFntbi8647v9FA5MazDnvt+fl/AVtr
+         OXsmkQdjKNkJtLHGCsqL4+ixJVNTUxLz1hN0WZ1oHoe/pIsdru5H3bw/gnjgPX+mU5Av
+         c2XZiQVzrYtRX/L2XrilGEAuzzB86D98bWQ3c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dox3FSfmkK0yeol/me9DACa1ttCqBgM68apJRosptPg=;
+        b=uO6qE6ejjLBw8WlRLasMpHSZQD78bmF9CsJSgkmUGoxsINRtyVnLxiQjN2tRK6kvvS
+         dRyxj8m1dnp88qccyI413CFrv76kRt34Dn7aYwXUtRx+wWCWiR6hECmaRguTwM+kcCTM
+         bkeRKzOumG4WmM4pw3XiJ1YULb5RyvF95KcAMZ7Qw/OE6EJKDSZpFbfo7zrQxqmUjxMb
+         soEicSY0CiHGS9T6lB0aFX/XIqBxob7/O4QkQXe9GUM8UZ1yl66g1alz42fOLkQH4aWG
+         jN6U3eiUI6ImDJBpanzoAA/PYACYmpsI+wOGmfHrXREaAr4HeKlmdsBDiO9homXumNe0
+         xOTA==
+X-Gm-Message-State: APjAAAXQ9N4+96xWd3so4EBR698H1ZyNmhtHaAO+dmb59Mcve+/WKGaZ
+        FfDTXbJo5uUK2AM5Q1zR2EnHd7hjNzz+aonRqLxuNg==
+X-Google-Smtp-Source: APXvYqzBg28+ru1P/ErUzR23DfSr/H1jvEJ90H7OSqwqTiTkg+Qu0zarE3YtlTYHdf3Dw3am17Phj2Q6kYvSThhs00M=
+X-Received: by 2002:a05:600c:2298:: with SMTP id 24mr5150259wmf.21.1556877965489;
+ Fri, 03 May 2019 03:06:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556810922-20248-5-git-send-email-rppt@linux.ibm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <1556732186-21630-1-git-send-email-srinath.mannam@broadcom.com>
+ <1556732186-21630-3-git-send-email-srinath.mannam@broadcom.com>
+ <20190502110152.GA7313@e121166-lin.cambridge.arm.com> <2f4b9492-0caf-d6e3-e727-e3c869eefb58@arm.com>
+ <20190502130624.GA10470@e121166-lin.cambridge.arm.com> <b4420901-60d4-69ab-6ed0-5d2fa9449595@arm.com>
+ <CABe79T7CgtLG=DZTFy8efVocPMLi-MDtyUT5rToy7xj8GHkBSA@mail.gmail.com> <20190503095327.GA16238@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190503095327.GA16238@e121166-lin.cambridge.arm.com>
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+Date:   Fri, 3 May 2019 15:35:53 +0530
+Message-ID: <CABe79T4U8raMu5kTMHHXevC0c=494f2FN=tu_oXn8ciQcgfwAg@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, poza@codeaurora.org,
+        Ray Jui <rjui@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Lorenzo,
 
-On Thu, May 02, 2019 at 06:28:31PM +0300, Mike Rapoport wrote:
-> The PTE allocations in arm64 are identical to the generic ones modulo the
-> GFP flags.
-> 
-> Using the generic pte_alloc_one() functions ensures that the user page
-> tables are allocated with __GFP_ACCOUNT set.
-> 
-> The arm64 definition of PGALLOC_GFP is removed and replaced with
-> GFP_PGTABLE_USER for p[gum]d_alloc_one() and for KVM memory cache.
-> 
-> The mappings created with create_pgd_mapping() are now using
-> GFP_PGTABLE_KERNEL.
-> 
-> The conversion to the generic version of pte_free_kernel() removes the NULL
-> check for pte.
-> 
-> The pte_free() version on arm64 is identical to the generic one and
-> can be simply dropped.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/arm64/include/asm/pgalloc.h | 43 ++++------------------------------------
->  arch/arm64/mm/mmu.c              |  2 +-
->  arch/arm64/mm/pgd.c              |  4 ++--
->  virt/kvm/arm/mmu.c               |  2 +-
->  4 files changed, 8 insertions(+), 43 deletions(-)
+Thank you so much, Please see my reply below.
 
-[...]
+On Fri, May 3, 2019 at 3:23 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Fri, May 03, 2019 at 10:53:23AM +0530, Srinath Mannam wrote:
+> > Hi Robin, Lorenzo,
+> >
+> > Thanks for review and guidance.
+> > AFAIU, conclusion of discussion is, to return error if dma-ranges list
+> > is not sorted.
+> >
+> > So that, Can I send a new patch with below change to return error if
+> > dma-ranges list is not sorted?
+>
+> You can but I can't guarantee it will make it for v5.2.
+>
+> We will have to move the DT parsing and dma list ranges creation
+> to core code anyway because I want this to work by construction,
+> so even if we manage to make v5.2 you will have to do that.
+Yes, Later I will work on it and do required core code changes.
+>
+> I pushed a branch out:
+>
+> not-to-merge/iova-dma-ranges
+>
+> where I rewrote all commit logs and I am not willing to do it again
+> so please use them for your v6 posting if you manage to make it
+> today.
+Thank you, I will take all commit log changes and push v6 version today.
 
-> diff --git a/arch/arm64/mm/pgd.c b/arch/arm64/mm/pgd.c
-> index 289f911..2ef1a53 100644
-> --- a/arch/arm64/mm/pgd.c
-> +++ b/arch/arm64/mm/pgd.c
-> @@ -31,9 +31,9 @@ static struct kmem_cache *pgd_cache __ro_after_init;
->  pgd_t *pgd_alloc(struct mm_struct *mm)
->  {
->  	if (PGD_SIZE == PAGE_SIZE)
-> -		return (pgd_t *)__get_free_page(PGALLOC_GFP);
-> +		return (pgd_t *)__get_free_page(GFP_PGTABLE_USER);
->  	else
-> -		return kmem_cache_alloc(pgd_cache, PGALLOC_GFP);
-> +		return kmem_cache_alloc(pgd_cache, GFP_PGTABLE_USER);
->  }
-
-In efi_virtmap_init() we use pgd_alloc() to allocate a pgd for EFI
-runtime services, which we map with a special kernel page table.
-
-I'm not sure if accounting that is problematic, as it's allocated in a
-kernel thread off the back of an early_initcall.
-
-Just to check, Is that sound, or do we need a pgd_alloc_kernel()?
-
-Thanks,
-Mark.
+Regards,
+Srinath.
+>
+> Lorenzo
+>
+> > -static void iova_reserve_pci_windows(struct pci_dev *dev,
+> > +static int iova_reserve_pci_windows(struct pci_dev *dev,
+> >                 struct iova_domain *iovad)
+> >  {
+> >         struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+> > @@ -227,11 +227,15 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+> >         resource_list_for_each_entry(window, &bridge->dma_ranges) {
+> >                 end = window->res->start - window->offset;
+> >  resv_iova:
+> > -               if (end - start) {
+> > +               if (end > start) {
+> >                         lo = iova_pfn(iovad, start);
+> >                         hi = iova_pfn(iovad, end);
+> >                         reserve_iova(iovad, lo, hi);
+> > +               } else {
+> > +                       dev_err(&dev->dev, "Unsorted dma_ranges list\n");
+> > +                       return -EINVAL;
+> >                 }
+> > +
+> >
+> > Please provide your inputs if any more changes required. Thank you,
+> >
+> > Regards,
+> > Srinath.
+> >
+> > On Thu, May 2, 2019 at 7:45 PM Robin Murphy <robin.murphy@arm.com> wrote:
+> > >
+> > > On 02/05/2019 14:06, Lorenzo Pieralisi wrote:
+> > > > On Thu, May 02, 2019 at 12:27:02PM +0100, Robin Murphy wrote:
+> > > >> Hi Lorenzo,
+> > > >>
+> > > >> On 02/05/2019 12:01, Lorenzo Pieralisi wrote:
+> > > >>> On Wed, May 01, 2019 at 11:06:25PM +0530, Srinath Mannam wrote:
+> > > >>>> dma_ranges field of PCI host bridge structure has resource entries in
+> > > >>>> sorted order of address range given through dma-ranges DT property. This
+> > > >>>> list is the accessible DMA address range. So that this resource list will
+> > > >>>> be processed and reserve IOVA address to the inaccessible address holes in
+> > > >>>> the list.
+> > > >>>>
+> > > >>>> This method is similar to PCI IO resources address ranges reserving in
+> > > >>>> IOMMU for each EP connected to host bridge.
+> > > >>>>
+> > > >>>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > > >>>> Based-on-patch-by: Oza Pawandeep <oza.oza@broadcom.com>
+> > > >>>> Reviewed-by: Oza Pawandeep <poza@codeaurora.org>
+> > > >>>> Acked-by: Robin Murphy <robin.murphy@arm.com>
+> > > >>>> ---
+> > > >>>>    drivers/iommu/dma-iommu.c | 19 +++++++++++++++++++
+> > > >>>>    1 file changed, 19 insertions(+)
+> > > >>>>
+> > > >>>> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> > > >>>> index 77aabe6..da94844 100644
+> > > >>>> --- a/drivers/iommu/dma-iommu.c
+> > > >>>> +++ b/drivers/iommu/dma-iommu.c
+> > > >>>> @@ -212,6 +212,7 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+> > > >>>>            struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+> > > >>>>            struct resource_entry *window;
+> > > >>>>            unsigned long lo, hi;
+> > > >>>> +  phys_addr_t start = 0, end;
+> > > >>>>            resource_list_for_each_entry(window, &bridge->windows) {
+> > > >>>>                    if (resource_type(window->res) != IORESOURCE_MEM)
+> > > >>>> @@ -221,6 +222,24 @@ static void iova_reserve_pci_windows(struct pci_dev *dev,
+> > > >>>>                    hi = iova_pfn(iovad, window->res->end - window->offset);
+> > > >>>>                    reserve_iova(iovad, lo, hi);
+> > > >>>>            }
+> > > >>>> +
+> > > >>>> +  /* Get reserved DMA windows from host bridge */
+> > > >>>> +  resource_list_for_each_entry(window, &bridge->dma_ranges) {
+> > > >>>
+> > > >>> If this list is not sorted it seems to me the logic in this loop is
+> > > >>> broken and you can't rely on callers to sort it because it is not a
+> > > >>> written requirement and it is not enforced (you know because you
+> > > >>> wrote the code but any other developer is not supposed to guess
+> > > >>> it).
+> > > >>>
+> > > >>> Can't we rewrite this loop so that it does not rely on list
+> > > >>> entries order ?
+> > > >>
+> > > >> The original idea was that callers should be required to provide a sorted
+> > > >> list, since it keeps things nice and simple...
+> > > >
+> > > > I understand, if it was self-contained in driver code that would be fine
+> > > > but in core code with possible multiple consumers this must be
+> > > > documented/enforced, somehow.
+> > > >
+> > > >>> I won't merge this series unless you sort it, no pun intended.
+> > > >>>
+> > > >>> Lorenzo
+> > > >>>
+> > > >>>> +          end = window->res->start - window->offset;
+> > > >>
+> > > >> ...so would you consider it sufficient to add
+> > > >>
+> > > >>              if (end < start)
+> > > >>                      dev_err(...);
+> > > >
+> > > > We should also revert any IOVA reservation we did prior to this
+> > > > error, right ?
+> > >
+> > > I think it would be enough to propagate an error code back out through
+> > > iommu_dma_init_domain(), which should then end up aborting the whole
+> > > IOMMU setup - reserve_iova() isn't really designed to be undoable, but
+> > > since this is the kind of error that should only ever be hit during
+> > > driver or DT development, as long as we continue booting such that the
+> > > developer can clearly see what's gone wrong, I don't think we need
+> > > bother spending too much effort tidying up inside the unused domain.
+> > >
+> > > > Anyway, I think it is best to ensure it *is* sorted.
+> > > >
+> > > >> here, plus commenting the definition of pci_host_bridge::dma_ranges
+> > > >> that it must be sorted in ascending order?
+> > > >
+> > > > I don't think that commenting dma_ranges would help much, I am more
+> > > > keen on making it work by construction.
+> > > >
+> > > >> [ I guess it might even make sense to factor out the parsing and list
+> > > >> construction from patch #3 into an of_pci core helper from the beginning, so
+> > > >> that there's even less chance of another driver reimplementing it
+> > > >> incorrectly in future. ]
+> > > >
+> > > > This makes sense IMO and I would like to take this approach if you
+> > > > don't mind.
+> > >
+> > > Sure - at some point it would be nice to wire this up to
+> > > pci-host-generic for Juno as well (with a parallel version for ACPI
+> > > _DMA), so from that viewpoint, the more groundwork in place the better :)
+> > >
+> > > Thanks,
+> > > Robin.
+> > >
+> > > >
+> > > > Either this or we move the whole IOVA reservation and dma-ranges
+> > > > parsing into PCI IProc.
+> > > >
+> > > >> Failing that, although I do prefer the "simple by construction"
+> > > >> approach, I'd have no objection to just sticking a list_sort() call in
+> > > >> here instead, if you'd rather it be entirely bulletproof.
+> > > >
+> > > > I think what you outline above is a sensible way forward - if we
+> > > > miss the merge window so be it.
+> > > >
+> > > > Thanks,
+> > > > Lorenzo
+> > > >
+> > > >> Robin.
+> > > >>
+> > > >>>> +resv_iova:
+> > > >>>> +          if (end - start) {
+> > > >>>> +                  lo = iova_pfn(iovad, start);
+> > > >>>> +                  hi = iova_pfn(iovad, end);
+> > > >>>> +                  reserve_iova(iovad, lo, hi);
+> > > >>>> +          }
+> > > >>>> +          start = window->res->end - window->offset + 1;
+> > > >>>> +          /* If window is last entry */
+> > > >>>> +          if (window->node.next == &bridge->dma_ranges &&
+> > > >>>> +              end != ~(dma_addr_t)0) {
+> > > >>>> +                  end = ~(dma_addr_t)0;
+> > > >>>> +                  goto resv_iova;
+> > > >>>> +          }
+> > > >>>> +  }
+> > > >>>>    }
+> > > >>>>    static int iova_reserve_iommu_regions(struct device *dev,
+> > > >>>> --
+> > > >>>> 2.7.4
+> > > >>>>
