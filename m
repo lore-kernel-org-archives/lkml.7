@@ -2,151 +2,176 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFB1C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97961C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B892A2075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB822075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 17:26:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0EVyFqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbfECRVd (ORCPT
+        id S1728414AbfECR0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 13:21:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49202 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726724AbfECRVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 13:21:33 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5C196C05E767;
-        Fri,  3 May 2019 17:21:32 +0000 (UTC)
-Received: from [10.36.112.11] (unknown [10.36.112.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CA8517A70;
-        Fri,  3 May 2019 17:21:20 +0000 (UTC)
-Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
- export
-To:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        stable <stable@vger.kernel.org>
-References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
- <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
- <CALCETrWTCB9xLVdKCODghpeQpJ_3Rz3OwE8FB+5hjYXMYwYPLg@mail.gmail.com>
- <20190502165520.GC6565@zn.tnic>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <bcb6c893-61e6-4b08-5b40-b1b2e24f495b@redhat.com>
-Date:   Fri, 3 May 2019 11:21:15 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 3 May 2019 13:26:15 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:34355 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbfECR0O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 13:26:14 -0400
+Received: by mail-yw1-f68.google.com with SMTP id u14so4901288ywe.1;
+        Fri, 03 May 2019 10:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DocVtyuDeHQRG32pg5UwnwTFNToS8yf9UPgc4/qdeYU=;
+        b=e0EVyFqETr57jizVPCvWUQZE7uxN6M2tTc+6UdysEiRdPcr1cUNisT47b8063Pc99g
+         UOzOrmQa122NOXaPegyqwwhWpRsgnY4VhirbDLzS218imz+LgrEM5hQtIDAsBfl0BC3m
+         OGmovcqBiT9YF2y4+QPlnfZhicVEvytgX5iu5ClPNMrbSYh/7TsFDq2/u62EJ2D1lBwv
+         RrUBkzMqGsG+usGlzaJSsSYmubj2awu1HoPbW/2IiVdYlh6oRdW0qKj7vyj/RQs87ZUL
+         fStnyKsmIJi+HGwogJQtm+woSVwvgBeC5/TWuNpjwt++JQMNG9NpAZZdtp+hrVt9rLwL
+         2Pyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DocVtyuDeHQRG32pg5UwnwTFNToS8yf9UPgc4/qdeYU=;
+        b=nSxqj+VRlnu2s41a7q7JhuDSjSDrfiHZYZ1Opk3A5A3PC2RAhRe7IhCxzzBsPH2Qys
+         jN4/Nm4O8iUDo4mY/Tb3oAcRdst8vhYyEqvLYjxTmCD+wX10JPoBHEpcmvmq8FZNspp1
+         hGGVTaPLhpMA7N9eNYDRgyW9uzZ2ZTs9d4WP0ZyQ+GihULJnl3xxJmsw+UlOi50eawSE
+         OSBNsZ8hKudxWjP6t5rcitRlpJYJipS1NEvTrdVCG5jEKQzeWVU1/YxvqzrPCpwFH4q/
+         r6egOcGfXaBGqOLJnHzt+EUdJOz6A1Q5chXEmgtG3K6dq8R1XDyT9riM1aFr/piMnjwS
+         RkJw==
+X-Gm-Message-State: APjAAAVJfRzOjf7u/v/+eb6QHjUsM/lwjttrMoel0nAkRbdUZ2lc9hun
+        qkUNzGFLp/YE8CurusfdrxCDTsDwxz0EMWXSWiFVSkJQkik=
+X-Google-Smtp-Source: APXvYqxPOL5lm9yxwUgbMIR/AwgPkpjd6Je1pA7eUdFjFpMljhdACsq//C9CApPakzISWWiJLvydO7To7D6ERb3dsHs=
+X-Received: by 2002:a25:74c9:: with SMTP id p192mr8777605ybc.507.1556904373293;
+ Fri, 03 May 2019 10:26:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190502165520.GC6565@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 03 May 2019 17:21:32 +0000 (UTC)
+References: <CAJfpegtpkavseTFLspaC7svbvHRq-0-7jvyh63+DK5iWHTGnaQ@mail.gmail.com>
+ <20161205162559.GB17517@fieldses.org> <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
+ <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de> <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org> <87bm0l4nra.fsf@notabene.neil.brown.name>
+ <20190503153531.GJ12608@fieldses.org>
+In-Reply-To: <20190503153531.GJ12608@fieldses.org>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Fri, 3 May 2019 13:26:01 -0400
+Message-ID: <CAOQ4uxi6MRT=1nFqPD3cfEfBxHsGdUm=FgTjv3ts2bb4zSYwsw@mail.gmail.com>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     NeilBrown <neilb@suse.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/05/19 10:55, Borislav Petkov wrote:
-> On Thu, May 02, 2019 at 09:29:01AM -0700, Andy Lutomirski wrote:
->> I'm not saying that we should export things for ZFS's benefit.  But,
->> as far as I know, _GPL means "this interface is sufficiently specific
->> to Linux details that we think that any user must be a derived work".
->> I don't think that kernel_fpu_begin() is an example of that.
-> But it is sufficiently specific. It is present on x86 and s390 only -
-> other arches don't have it.
+On Fri, May 3, 2019 at 12:03 PM J. Bruce Fields <bfields@fieldses.org> wrot=
+e:
+>
+> On Thu, May 02, 2019 at 12:02:33PM +1000, NeilBrown wrote:
+> > On Tue, Dec 06 2016, J. Bruce Fields wrote:
+> >
+> > > On Tue, Dec 06, 2016 at 02:18:31PM +0100, Andreas Gruenbacher wrote:
+> > >> On Tue, Dec 6, 2016 at 11:08 AM, Miklos Szeredi <miklos@szeredi.hu> =
+wrote:
+> > >> > On Tue, Dec 6, 2016 at 12:24 AM, Andreas Gr=C3=BCnbacher
+> > >> > <andreas.gruenbacher@gmail.com> wrote:
+> > >> >> 2016-12-06 0:19 GMT+01:00 Andreas Gr=C3=BCnbacher <andreas.gruenb=
+acher@gmail.com>:
+> > >> >
+> > >> >>> It's not hard to come up with a heuristic that determines if a
+> > >> >>> system.nfs4_acl value is equivalent to a file mode, and to ignor=
+e the
+> > >> >>> attribute in that case. (The file mode is transmitted in its own
+> > >> >>> attribute already, so actually converting .) That way, overlayfs=
+ could
+> > >> >>> still fail copying up files that have an actual ACL. It's still =
+an
+> > >> >>> ugly hack ...
+> > >> >>
+> > >> >> Actually, that kind of heuristic would make sense in the NFS clie=
+nt
+> > >> >> which could then hide the "system.nfs4_acl" attribute.
+> > >> >
+> > >> > Even simpler would be if knfsd didn't send the attribute if not
+> > >> > necessary.  Looks like there's code actively creating the nfs4_acl=
+ on
+> > >> > the wire even if the filesystem had none:
+> > >> >
+> > >> >     pacl =3D get_acl(inode, ACL_TYPE_ACCESS);
+> > >> >     if (!pacl)
+> > >> >         pacl =3D posix_acl_from_mode(inode->i_mode, GFP_KERNEL);
+> > >> >
+> > >> > What's the point?
+> > >>
+> > >> That's how the protocol is specified.
+> > >
+> > > Yep, even if we could make that change to nfsd it wouldn't help the
+> > > client with the large number of other servers that are out there
+> > > (including older knfsd's).
+> > >
+> > > --b.
+> > >
+> > >> (I'm not saying that that's very helpful.)
+> > >>
+> > >> Andreas
+> >
+> > Hi everyone.....
+> >  I have a customer facing this problem, and so stumbled onto the email
+> >  thread.
+> >  Unfortunately it didn't resolve anything.  Maybe I can help kick thing=
+s
+> >  along???
+> >
+> >  The core problem here is that NFSv4 and ext4 use different and largely
+> >  incompatible ACL implementations.  There is no way to accurately
+> >  translate from one to the other in general (common specific examples
+> >  can be converted).
+> >
+> >  This means that either:
+> >    1/ overlayfs cannot use ext4 for upper and NFS for lower (or vice
+> >       versa) or
+> >    2/ overlayfs need to accept that sometimes it cannot copy ACLs, and
+> >       that is OK.
+> >
+> >  Silently not copying the ACLs is probably not a good idea as it might
+> >  result in inappropriate permissions being given away.  So if the
+> >  sysadmin wants this (and some clearly do), they need a way to
+> >  explicitly say "I accept the risk".
+>
+> So, I feel like silently copying ACLs up *also* carries a risk, if that
+> means switching from server-enforcement to client-enforcement of those
+> permissions.
+>
+> Sorry, I know we had another thread recently about permissions in this
+> situation, and I've forgotten the conclusion.
+>
+> Out of curiosity, what's done with selinux labels?
+>
 
-This is not what is meant usually by "sufficiently specific to Linux
-details".  The questions to ask are:
+overlayfs calls security_inode_copy_up_xattr(name) which
+can fail (<0) allow (0) or skip(1).
 
-1) Is it a Linux-only thing to run FPU or SIMD code in the kernel?  The
-answer is clearly no.
+selinux_inode_copy_up_xattr() as well as smack_inode_copy_up_xattr()
+skip their own xattr on copy up and fail any other xattr copy up.
 
-2) Is the API form tied to Linux's implementation of the FPU?  I'd argue
-that a simple begin/end pair is not (for example, on Windows you just
-xsave at the beginning and xrstor at the end).
-
-So I totally agree with Andy on this.
-
-
-Your observation that the API only exists on x86 and s390 has no bearing
-to whether the functions should be EXPORT_SYMBOL_GPL or EXPORT_SYMBOL.
-ARM has kernel_neon_begin/end, PPC has enable/disable_kernel_altivec.
-It's just that SIMD code is so arch-specific that nobody has bothered
-unifying the namings (or, nobody considers the different names a problem
-at all).
-
-Paolo
+Thanks,
+Amir.
