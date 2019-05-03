@@ -2,123 +2,103 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25E9C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C15C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96AA520C01
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Cu4XJd4j"
+	by mail.kernel.org (Postfix) with ESMTP id 48D1F2075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 18:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfECSHq (ORCPT
+        id S1728183AbfECSMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 14:07:46 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:45632 "EHLO mail.skyhub.de"
+        Fri, 3 May 2019 14:12:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55710 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727221AbfECSHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 14:07:46 -0400
-Received: from zn.tnic (p200300EC2F0CA900ED4C00FAF1DC8C17.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:a900:ed4c:fa:f1dc:8c17])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726992AbfECSMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 14:12:15 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 92EBC1EC021C;
-        Fri,  3 May 2019 20:07:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1556906864;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=FwwKpD3uSNoOFlcgjRaZh20WCk4wqtxh0zC+plzB4pw=;
-        b=Cu4XJd4jGrp29+kEqnr+REiJv1Qd2B9YZMGQL2UaFxWfI5ulSgsbHfRtch5FWltjic14iM
-        R1Aqhme6bHXuDEYP8AfIF2vhjUwFB6QII+qppOmUF8cnxd8Hu7CHr4jVy1M3jyIdIfNKpK
-        HCMtvVT2Bgvrj+idGuaMF3C0kVTpAIA=
-Date:   Fri, 3 May 2019 20:07:39 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
- export
-Message-ID: <20190503180739.GF5020@zn.tnic>
-References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
- <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
- <CALCETrWTCB9xLVdKCODghpeQpJ_3Rz3OwE8FB+5hjYXMYwYPLg@mail.gmail.com>
- <20190502165520.GC6565@zn.tnic>
- <bcb6c893-61e6-4b08-5b40-b1b2e24f495b@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <bcb6c893-61e6-4b08-5b40-b1b2e24f495b@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mx1.redhat.com (Postfix) with ESMTPS id C9A08369CA;
+        Fri,  3 May 2019 18:12:14 +0000 (UTC)
+Received: from jsavitz.bos.com (dhcp-17-237.bos.redhat.com [10.18.17.237])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 02AB960BFC;
+        Fri,  3 May 2019 18:12:07 +0000 (UTC)
+From:   Joel Savitz <jsavitz@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Joel Savitz <jsavitz@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Jann Horn <jannh@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        David Laight <David.Laight@aculab.com>
+Subject: [PATCH v3 0/2] sys/prctl: expose TASK_SIZE value to userspace
+Date:   Fri,  3 May 2019 14:10:19 -0400
+Message-Id: <1556907021-29730-1-git-send-email-jsavitz@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 03 May 2019 18:12:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 11:21:15AM -0600, Paolo Bonzini wrote:
-> Your observation that the API only exists on x86 and s390 has no bearing
-> to whether the functions should be EXPORT_SYMBOL_GPL or EXPORT_SYMBOL.
-> ARM has kernel_neon_begin/end, PPC has enable/disable_kernel_altivec.
-> It's just that SIMD code is so arch-specific that nobody has bothered
-> unifying the namings (or, nobody considers the different names a problem
-> at all).
+In the mainline kernel, there is no quick mechanism to get the virtual
+memory size of the current process from userspace.
 
-This is actually proving my point: there wasn't any real agreement on
-what interfaces should be immutable so that out-of-tree code can use
-them and us guaranteeing they won't change. Instead, it was a random
-thing that just happened.
+Despite the current state of affairs, this information is available to the
+user through several means, one being a linear search of the entire address
+space. This is an inefficient use of cpu cycles.
 
-So if you have to use them in some out-of-tree module, you'd have to
-do arch-specific hackery, obviously, because each arch does different
-things.
+A component of the libhugetlb kernel test does exactly this, and as
+systems' address spaces increase beyond 32-bits, this method becomes
+exceedingly tedious.
 
-So what happened is that out-of-tree module simply grabbed them and now
-when we change our implementation, we broke it. And I care about this
-why exactly?
+For example, on a ppc64le system with a 47-bit address space, the linear
+search causes the test to hang for some unknown amount of time. I
+couldn't give you an exact number because I just ran it for about 10-20
+minutes and went to go do something else, probably to get coffee or
+something, and when I came back, I just killed the test and patched it
+to use this new mechanism. I re-ran my new version of the test using a
+kernel with this patch, and of course it passed through the previously
+bottlenecking codepath nearly instantaneously.
 
-So let me cut to the chase: you and Andy are arguing about what exactly?
+As such, I propose that the prctl syscall be extended to include the
+option to retrieve TASK_SIZE from the kernel.
 
-* We should support out-of-tree code in general?
+This patch will allow us to upgrade an O(n) codepath to O(1) in an
+architecture-independent manner, and provide a mechanism for future
+generations to do the same.
 
-* We should support out-of-tree code if/when <fill in the specifics which
-out-of-tree code should be supported by Linux and which not>?
+Changes from v2:
+ We now account for the case of 32-bit compat userspace on a 64-bit kernel
+ More detail about the nature of TASK_SIZE in documentation
 
-* We should be free to change kernel interfaces and implementation as
-we see fit, without paying attention to some out-of-tree, probably
-license-incompatible, maybe even proprietary code? (I don't think it is
-that, though).
+Joel Savitz(2):
+  sys/prctl: add PR_GET_TASK_SIZE option to prctl(2)
+  prctl.2: Document the new PR_GET_TASK_SIZE option
 
-* Something else I've missed.
+ include/uapi/linux/prctl.h |  3 +++
+ kernel/sys.c               | 23 +++++++++++++++++++++++
+ 2 files changed, 26 insertions(+)
 
-So before we waste any more time with this, let's agree on the rules
-first: do we support out-of-tree code and if so, how much and to what
-degree?
+ man2/prctl.2 | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+--
+2.18.1
 
-This keeps happening so I think we should write it all down so that it
-is crystal clear to all parties involved what can and cannot be done.
-And then when we all agree, we can enforce those rules and then act
-accordingly when changing implementations.
-
-Maybe it is written down somewhere but I haven't found it yet so if you
-do, pls point me to it.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
