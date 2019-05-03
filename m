@@ -2,130 +2,207 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9F7C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217BDC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23E612070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA66520675
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 03:17:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L52EIfbj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfECDPT (ORCPT
+        id S1726447AbfECDRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 23:15:19 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:38140 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbfECDPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 23:15:18 -0400
-Received: from adsl-173-228-226-134.prtc.net ([173.228.226.134] helo=[172.20.29.49])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hMOef-0006md-Tg; Thu, 02 May 2019 21:14:35 -0600
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, mpe@ellerman.id.au, pmladek@suse.com,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-9-brendanhiggins@google.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <0a605543-477a-1854-eb35-6e586606889b@deltatee.com>
-Date:   Thu, 2 May 2019 21:14:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 2 May 2019 23:17:24 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35742 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfECDRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 2 May 2019 23:17:23 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p26so4345835edr.2;
+        Thu, 02 May 2019 20:17:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=exm4N7u1IvYx+pAgkJoEgIpNRAWHACWM3KM/oLglz1E=;
+        b=L52EIfbjMFkrvpnCBpB2Ic0diQIMkhnGNXTc8F8TeXGqPFqcwI8pM9IPnseH7Zjue/
+         XZdgY1E0k1acaDyfNbPrzRP4Ic5q8ShLFqqBHZXowhrwMosClo76xtBRkNEXBlDwJ3ro
+         bnJ2XHdXT51FPoGHvuq4W1Mrbb/C+bPUfcjziK0GlpY4jA1sC0UAI8vxy3QEbzOhr1gv
+         bSD244mwxge46W1PyQU6p1l2xvf6kaxb4+U/b49sQNYi5qpRHQzH08L+RdRR7sH45DvU
+         upQoiiAyGgS8WUBOg9jizo9pWj3R25tO0UlqTCgO6IUZ1A6bD7OalKmRwQKikHj0kuVJ
+         1RnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=exm4N7u1IvYx+pAgkJoEgIpNRAWHACWM3KM/oLglz1E=;
+        b=k+oobnOqqz1eSvBiLinAiaMiF8Mq907Zq2C0fk+FyhD3U0W05CFD6k0MVq6/91mc7h
+         H99A2E5b3RUe4d0m1+zPx4qjlWf3ysT/aw+hzAyd/HoX9W/ww3kOrGyZN9ZnFIxQf+0S
+         hmTEOmcR2IqW7FbukkxiyRp20wg65BHK5RniOKM8Rmx/h/Rp+tlp6qvyM9Oxkxcnicz7
+         mQUzizgk95yK1JLC7mpOcsTOutQBBWvb2aw3xVsba59fGmxpJnHoTJ8LPw8jufxHBss1
+         /TGkU4BwEf10DUT0RjeyaW/7naodhm3o39U6euM/37meU8IE2pqEsotNVeyGvzGts172
+         gQFw==
+X-Gm-Message-State: APjAAAXwF57GGTG2FfLXWFFe7iztmNx3kzuw57nZfSZzblOKvIcJEPHQ
+        P/tIVeZu5Nzw5ePTnMmJ0vY=
+X-Google-Smtp-Source: APXvYqzgq+VHW0yGO5hJ1ZnRyxSpb3YrJW9d7xNPwzFkJDfP4QdW501wWw7j5Td6gr8cNm5bLafnAg==
+X-Received: by 2002:a17:906:9519:: with SMTP id u25mr4120326ejx.34.1556853441256;
+        Thu, 02 May 2019 20:17:21 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id o9sm243533edh.95.2019.05.02.20.17.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 02 May 2019 20:17:20 -0700 (PDT)
+Date:   Thu, 2 May 2019 20:17:18 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] rsi: Properly initialize data in rsi_sdio_ta_reset
+Message-ID: <20190503031718.GB6969@archlinux-i9>
+References: <20190502151548.11143-1-natechancellor@gmail.com>
+ <CAKwvOd=nvKGGW5jvN+WFUXzOm9xeiNNUD0F9--9YcpuRmnWWhA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190501230126.229218-9-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 173.228.226.134
-X-SA-Exim-Rcpt-To: wfg@linux.intel.com, rostedt@goodmis.org, rientjes@google.com, richard@nod.at, pmladek@suse.com, mpe@ellerman.id.au, knut.omang@oracle.com, khilman@baylibre.com, julia.lawall@lip6.fr, joel@jms.id.au, jdike@addtoit.com, daniel@ffwll.ch, dan.j.williams@intel.com, dan.carpenter@oracle.com, amir73il@gmail.com, Tim.Bird@sony.com, Alexander.Levin@microsoft.com, linux-um@lists.infradead.org, linux-nvdimm@lists.01.org, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, shuah@kernel.org, sboyd@kernel.org, robh@kernel.org, mcgrof@kernel.org, kieran.bingham@ideasonboard.com, keescook@google.com, gregkh@linuxfoundation.org, frowand.list@gmail.com, brendanhiggins@google.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2 08/17] kunit: test: add support for test abort
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=nvKGGW5jvN+WFUXzOm9xeiNNUD0F9--9YcpuRmnWWhA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 02, 2019 at 11:18:01AM -0700, Nick Desaulniers wrote:
+> On Thu, May 2, 2019 at 8:16 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > When building with -Wuninitialized, Clang warns:
+> >
+> > drivers/net/wireless/rsi/rsi_91x_sdio.c:940:43: warning: variable 'data'
+> > is uninitialized when used here [-Wuninitialized]
+> >         put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
+> >                                                  ^~~~
+> > drivers/net/wireless/rsi/rsi_91x_sdio.c:930:10: note: initialize the
+> > variable 'data' to silence this warning
+> >         u8 *data;
+> >                 ^
+> >                  = NULL
+> > 1 warning generated.
+> >
+> > Using Clang's suggestion of initializing data to NULL wouldn't work out
+> > because data will be dereferenced by put_unaligned_le32. Use kzalloc to
+> > properly initialize data, which matches a couple of other places in this
+> > driver.
+> >
+> > Fixes: e5a1ecc97e5f ("rsi: add firmware loading for 9116 device")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/464
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> >  drivers/net/wireless/rsi/rsi_91x_sdio.c | 21 ++++++++++++++-------
+> >  1 file changed, 14 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+> > index f9c67ed473d1..b35728564c7b 100644
+> > --- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
+> > +++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+> > @@ -929,11 +929,15 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+> >         u32 addr;
+> >         u8 *data;
+> >
+> > +       data = kzalloc(sizeof(u32), GFP_KERNEL);
+> 
+> Something fishy is going on here.  We allocate 4 B but declare data as
+> a u8* (pointer to individual bytes)?  In general, dynamically
+> allocating that few bytes is a code smell; either you meant to just
+> use the stack, or this memory's lifetime extends past the lifetime of
+> this stackframe, at which point you probably just meant to stack
+> allocate space in a higher parent frame and pass this preallocated
+> memory down to the child frame to get filled in.
+> 
+> Reading through this code, I don't think that the memory is meant to
+> outlive the stack frame.  Is there a reason why we can't just declare
+> data as:
+> 
+> u8 data [4];
+
+data was __le32 in rsi_reset_chip() before commit f700546682a6 ("rsi:
+fix nommu_map_sg overflow kernel panic").
+
+I wonder if this would be okay for this function:
+
+-------------------------------------------------
+
+diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+index f9c67ed473d1..0330c50ab99c 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
++++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+@@ -927,7 +927,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+ {
+        int status;
+        u32 addr;
+-       u8 *data;
++       u8 data;
+ 
+        status = rsi_sdio_master_access_msword(adapter, TA_BASE_ADDR);
+        if (status < 0) {
+@@ -937,7 +937,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+        }
+ 
+        rsi_dbg(INIT_ZONE, "%s: Bring TA out of reset\n", __func__);
+-       put_unaligned_le32(TA_HOLD_THREAD_VALUE, data);
++       put_unaligned_le32(TA_HOLD_THREAD_VALUE, &data);
+        addr = TA_HOLD_THREAD_REG | RSI_SD_REQUEST_MASTER;
+        status = rsi_sdio_write_register_multiple(adapter, addr,
+                                                  (u8 *)&data,
+@@ -947,7 +947,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+                return status;
+        }
+ 
+-       put_unaligned_le32(TA_SOFT_RST_CLR, data);
++       put_unaligned_le32(TA_SOFT_RST_CLR, &data);
+        addr = TA_SOFT_RESET_REG | RSI_SD_REQUEST_MASTER;
+        status = rsi_sdio_write_register_multiple(adapter, addr,
+                                                  (u8 *)&data,
+@@ -957,7 +957,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+                return status;
+        }
+ 
+-       put_unaligned_le32(TA_PC_ZERO, data);
++       put_unaligned_le32(TA_PC_ZERO, &data);
+        addr = TA_TH0_PC_REG | RSI_SD_REQUEST_MASTER;
+        status = rsi_sdio_write_register_multiple(adapter, addr,
+                                                  (u8 *)&data,
+@@ -967,7 +967,7 @@ static int rsi_sdio_ta_reset(struct rsi_hw *adapter)
+                return -EINVAL;
+        }
+ 
+-       put_unaligned_le32(TA_RELEASE_THREAD_VALUE, data);
++       put_unaligned_le32(TA_RELEASE_THREAD_VALUE, &data);
+        addr = TA_RELEASE_THREAD_REG | RSI_SD_REQUEST_MASTER;
+        status = rsi_sdio_write_register_multiple(adapter, addr,
+                                                  (u8 *)&data,
 
 
-On 2019-05-01 5:01 p.m., Brendan Higgins wrote:
-> +/*
-> + * struct kunit_try_catch - provides a generic way to run code which might fail.
-> + * @context: used to pass user data to the try and catch functions.
-> + *
-> + * kunit_try_catch provides a generic, architecture independent way to execute
-> + * an arbitrary function of type kunit_try_catch_func_t which may bail out by
-> + * calling kunit_try_catch_throw(). If kunit_try_catch_throw() is called, @try
-> + * is stopped at the site of invocation and @catch is catch is called.
+> 
+> then use ARRAY_SIZE(data) or RSI_9116_REG_SIZE in rsi_reset_chip(),
+> getting rid of the kzalloc/kfree?
+> 
+> (Sorry, I hate when a simple fixup becomes a "hey let's rewrite all
+> this code" thus becoming "that guy.")
 
-I found some of the C++ comparisons in this series a bit distasteful but
-wasn't going to say anything until I saw the try catch.... But looking
-into the implementation it's just a thread that can exit early which
-seems fine to me. Just a poor choice of name I guess...
+If we aren't actually improving the code, then why bother? :)
 
-[snip]
+Thank you for the review!
+Nathan
 
-> +static void __noreturn kunit_abort(struct kunit *test)
-> +{
-> +	kunit_set_death_test(test, true);
-> +
-> +	kunit_try_catch_throw(&test->try_catch);
-> +
-> +	/*
-> +	 * Throw could not abort from test.
-> +	 *
-> +	 * XXX: we should never reach this line! As kunit_try_catch_throw is
-> +	 * marked __noreturn.
-> +	 */
-> +	WARN_ONCE(true, "Throw could not abort from test!\n");
-> +}
-> +
->  int kunit_init_test(struct kunit *test, const char *name)
->  {
->  	spin_lock_init(&test->lock);
-> @@ -77,6 +103,7 @@ int kunit_init_test(struct kunit *test, const char *name)
->  	test->name = name;
->  	test->vprintk = kunit_vprintk;
->  	test->fail = kunit_fail;
-> +	test->abort = kunit_abort;
-
-There are a number of these function pointers which seem to be pointless
-to me as you only ever set them to one function. Just call the function
-directly. As it is, it is an unnecessary indirection for someone reading
-the code. If and when you have multiple implementations of the function
-then add the pointer. Don't assume you're going to need it later on and
-add all this maintenance burden if you never use it..
-
-[snip]
-
-> +void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch)
-> +{
-> +	try_catch->run = kunit_generic_run_try_catch;
-> +	try_catch->throw = kunit_generic_throw;
-> +}
-
-Same here. There's only one implementation of try_catch and I can't
-really see any sensible justification for another implementation. Even
-if there is, add the indirection when the second implementation is
-added. This isn't C++ and we don't need to make everything a "method".
-
-Thanks,
-
-Logan
+> -- 
+> Thanks,
+> ~Nick Desaulniers
