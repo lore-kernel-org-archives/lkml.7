@@ -2,115 +2,112 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4F3C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994A6C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9B22063F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1CA2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loJhy4XJ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SNWtejo0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfECKhU (ORCPT
+        id S1727623AbfECKht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 06:37:20 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44000 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbfECKhS (ORCPT
+        Fri, 3 May 2019 06:37:49 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:35240 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfECKhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 06:37:18 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u27so3803589lfg.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 03:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y49iuZlGEFRKXGMhL/FW153snu1fMi8v/es25880oE8=;
-        b=loJhy4XJ97xuNf+RrpSA+jCJMImzpJ6++PjvZ3i+MfQK3dS1nWqOJbjKYB4QcVeQHU
-         18pp/eByTT443pvkHn8G3n8oY/EpCXnMMlJjlVjJSKM34iB8HzqJ74dogtIAyYQx5wwi
-         SDDuxo4bNGGgSoNkV6ngd2ulv2Lg1eveOEwULJvBt2juAmdWqOkMr4c7zcC1VqIChbNt
-         yk+HgI4/yiG/SlUDJj8aDQdNTdAwUN1L+dhvQZGkQImNLMC+deS5j3/304qUhcQyNB7r
-         LsUARKemMOAfqft34Qg6d3Epi1ObP6uDY3/xsEy08J8YFfp1qBEgGjayFLOCLOISgr6O
-         d2Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y49iuZlGEFRKXGMhL/FW153snu1fMi8v/es25880oE8=;
-        b=SqQU9hLIcGmcXcatXYcR65Gy4ZW29TDQ3ZguTE3GXZ/X9bSWCXzW/kntm257vONw0s
-         5yBf/TMzmVd/q51t+K+abj8ApPyWX4+l/gCWZQuBbqtLomM6zWTiakCLUghbhE9aO5TJ
-         04N+RH8DwxPehgb9mxz09cC+qb55DIq6TzDiU+hbBHBRpsndTOjShPy8B9QhdEI/Y6Aj
-         Q6B56efic5Ps20VROKjEf6KjYzzOVSg22ug3SOdjbNUvK06bCc7zasKqqOiFQdF2ak8a
-         CiCPljy9l97a5Ki1HJ7yffVxYVI0HDS16jxiL3nd/olQm1pP1NRTNZ3kV//WbJY3Y+iL
-         JZyA==
-X-Gm-Message-State: APjAAAWEewW2YdhzagN0q/4UqQ4Oa25ZXALMTgrKLhENq3VW0l7bD/YG
-        IGfgf27C5q/V8itLYAS8KczQV5u7cdq7NwSRGQ4=
-X-Google-Smtp-Source: APXvYqxU+UuYktvsztEvJ9/ariHXzb6Ot8TO3Mjaxpfia5I1sJ6/SrkkV2s5OAkU7J7gMftr/G2qyyQxowiQWzM4eiA=
-X-Received: by 2002:a19:ec12:: with SMTP id b18mr4411872lfa.149.1556879836632;
- Fri, 03 May 2019 03:37:16 -0700 (PDT)
+        Fri, 3 May 2019 06:37:48 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43AXxGJ011376;
+        Fri, 3 May 2019 10:37:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
+ bh=kNlNIR9Fo8ESlQnZzVfciYR2PSzGbl848JM9YPcBKYo=;
+ b=SNWtejo0Pn5WyY8kfzS5pBy0rXnkeaePknhO5TudvQjauk3QuFK79+iawq49XVppmJmF
+ V9pPPx4oabYneoc/h9ZFYqxQqj2kgpMXJaFPZUeFSQqW7pg/3w7deTYhjhL7K0GMPIfi
+ xGCnFsiOhWSbwtNawnamBh628dYflZsP7q7CYZI9cy7NvoZud4lvNSAZ2g2AtcnDKFBO
+ mY+VkeronehCITjGqFoPBiiw+qH9656hGKKcEmeklLaZ0yUd4pp0V4BfMQiTP7wQ+ueQ
+ gcqD+0snD0LZD2zX1TNSvC1dQtIWwDhk4m1NHHJPUrNZbab50vBrSH2XaudOzaLGy8qq vg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2s6xhynw4b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 10:37:20 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43AXhUc024411;
+        Fri, 3 May 2019 10:35:19 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2s7p8a8va6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 10:35:19 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x43AZ9n3014091;
+        Fri, 3 May 2019 10:35:10 GMT
+Received: from kadam (/196.104.111.181)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 May 2019 03:35:09 -0700
+Date:   Fri, 3 May 2019 13:34:56 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v3 08/10] staging: octeon-ethernet: support
+ of_get_mac_address new ERR_PTR error
+Message-ID: <20190503103456.GF2269@kadam>
+References: <1556870168-26864-1-git-send-email-ynezz@true.cz>
+ <1556870168-26864-9-git-send-email-ynezz@true.cz>
 MIME-Version: 1.0
-References: <20190503085327.5180-1-simon.k.r.goldschmidt@gmail.com> <8161008c-fafd-a89f-d2d8-413224844cd2@gmail.com>
-In-Reply-To: <8161008c-fafd-a89f-d2d8-413224844cd2@gmail.com>
-From:   Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-Date:   Fri, 3 May 2019 12:37:05 +0200
-Message-ID: <CAAh8qsyBHCD9o_wyk6cHxyxagpQvX0dtXxy_P4KqZgoeU8VrEg@mail.gmail.com>
-Subject: Re: [PATCH] mtd: spi-nor: enable 4B opcodes for n25q256a
-To:     Marek Vasut <marek.vasut@gmail.com>
-Cc:     linux-mtd@lists.infradead.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1556870168-26864-9-git-send-email-ynezz@true.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=933
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905030067
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=955 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905030067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 12:00 PM Marek Vasut <marek.vasut@gmail.com> wrote:
->
-> On 5/3/19 10:53 AM, Simon Goldschmidt wrote:
-> > Tested on socfpga cyclone5 where this is required to ensure that the
-> > boot rom can access this flash after warm reboot.
->
-> Are you sure _all_ variants of the N25Q256 support 4NB opcodes ?
-> I think there were some which didn't, but I might be wrong.
+On Fri, May 03, 2019 at 09:56:05AM +0200, Petr Štetiar wrote:
+> There was NVMEM support added to of_get_mac_address, so it could now
+> return NULL and ERR_PTR encoded error values, so we need to adjust all
+> current users of of_get_mac_address to this new fact.
 
-Oh, damn, you're right. The documentation [1] statest that 4-byte erase and
-program opcodes are only supported for part numbers N25Q256A83ESF40x,
-N25Q256A83E1240x and N25QA83ESFA0F.
+Which commit added NVMEM support?  It hasn't hit net-next or linux-next
+yet...  Very strange.
 
-Any idea of how I can still enable 4-byte opcodes for my chip?
+Why would of_get_mac_address() return a mix of NULL and error pointers?
+In that situation, then NULL is a special kind of success like when you
+request feature and the feature works but it's disabled by the user.  We
+don't want to treat it as an error but we still can't return a pointer
+to a feature we don't have...  It's hard for me to imagine how that
+makes sense for getting a mac address.
 
-Regards,
-Simon
+At the very least, this patch needs a Fixes tag.
 
->
-> > Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-> > ---
-> >
-> >  drivers/mtd/spi-nor/spi-nor.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> > index fae147452..4cdec2cc2 100644
-> > --- a/drivers/mtd/spi-nor/spi-nor.c
-> > +++ b/drivers/mtd/spi-nor/spi-nor.c
-> > @@ -1874,7 +1874,7 @@ static const struct flash_info spi_nor_ids[] = {
-> >       { "n25q064a",    INFO(0x20bb17, 0, 64 * 1024,  128, SECT_4K | SPI_NOR_QUAD_READ) },
-> >       { "n25q128a11",  INFO(0x20bb18, 0, 64 * 1024,  256, SECT_4K | SPI_NOR_QUAD_READ) },
-> >       { "n25q128a13",  INFO(0x20ba18, 0, 64 * 1024,  256, SECT_4K | SPI_NOR_QUAD_READ) },
-> > -     { "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> > +     { "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
-> >       { "n25q256ax1",  INFO(0x20bb19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_QUAD_READ) },
-> >       { "n25q512a",    INFO(0x20bb20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
-> >       { "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
-> >
->
->
+regards,
+dan carpenter
+
