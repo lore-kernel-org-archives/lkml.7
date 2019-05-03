@@ -3,83 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF6BC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5E1C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D472089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6BB2075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 13:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfECNcL (ORCPT
+        id S1727800AbfECNch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 09:32:11 -0400
-Received: from ozlabs.org ([203.11.71.1]:48915 "EHLO ozlabs.org"
+        Fri, 3 May 2019 09:32:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54154 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfECNcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 09:32:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726289AbfECNch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 09:32:37 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44wY2Z5SZTz9sDn;
-        Fri,  3 May 2019 23:32:06 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: Linux 5.1-rc5
-In-Reply-To: <20190502122128.GA2670@kroah.com>
-References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com> <20190415051919.GA31481@infradead.org> <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com> <20190502122128.GA2670@kroah.com>
-Date:   Fri, 03 May 2019 23:31:48 +1000
-Message-ID: <87ef5fy88r.fsf@concordia.ellerman.id.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id 05DD0328C8A1;
+        Fri,  3 May 2019 13:32:37 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B60DE60BF7;
+        Fri,  3 May 2019 13:32:35 +0000 (UTC)
+Subject: Re: [PATCH-tip v7 01/20] locking/rwsem: Prevent decrement of reader
+ count before increment
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        stable@vger.kernel.org
+References: <20190428212557.13482-1-longman@redhat.com>
+ <20190428212557.13482-2-longman@redhat.com>
+ <20190503120656.GD2623@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <66a295a1-86ca-5e3c-a41a-ec335ab35b78@redhat.com>
+Date:   Fri, 3 May 2019 09:32:35 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190503120656.GD2623@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 03 May 2019 13:32:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg KH <gregkh@linuxfoundation.org> writes:
-> On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:
->> On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:
->> >
->> > Can we please have the page refcount overflow fixes out on the list
->> > for review, even if it is after the fact?
->> 
->> They were actually on a list for review long before the fact, but it
->> was the security mailing list. The issue actually got discussed back
->> in January along with early versions of the patches, but then we
->> dropped the ball because it just wasn't on anybody's radar and it got
->> resurrected late March. Willy wrote a rather bigger patch-series, and
->> review of that is what then resulted in those commits. So they may
->> look recent, but that's just because the original patches got
->> seriously edited down and rewritten.
->> 
->> That said, powerpc and s390 should at least look at maybe adding a
->> check for the page ref in their gup paths too. Powerpc has the special
->> gup_hugepte() case, and s390 has its own version of gup entirely. I
->> was actually hoping the s390 guys would look at using the generic gup
->> code.
->> 
->> I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
->> largely irrelevant, partly since even theoretically this whole issue
->> needs a _lot_ of memory.
->> 
->> Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
->> (page ref overflow)"). You may or may not really care.
+On 5/3/19 8:06 AM, Peter Zijlstra wrote:
+> On Sun, Apr 28, 2019 at 05:25:38PM -0400, Waiman Long wrote:
+>> During my rwsem testing, it was found that after a down_read(), the
+>> reader count may occasionally become 0 or even negative. Consequently,
+>> a writer may steal the lock at that time and execute with the reader
+>> in parallel thus breaking the mutual exclusion guarantee of the write
+>> lock. In other words, both readers and writer can become rwsem owners
+>> simultaneously.
+>>
+>> The current reader wakeup code does it in one pass to clear waiter->task
+>> and put them into wake_q before fully incrementing the reader count.
+>> Once waiter->task is cleared, the corresponding reader may see it,
+>> finish the critical section and do unlock to decrement the count before
+>> the count is incremented. This is not a problem if there is only one
+>> reader to wake up as the count has been pre-incremented by 1.  It is
+>> a problem if there are more than one readers to be woken up and writer
+>> can steal the lock.
+>>
+>> The wakeup was actually done in 2 passes before the v4.9 commit
+>> 70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only
+>> once"). To fix this problem, the wakeup is now done in two passes
+>> again. In the first pass, we collect the readers and count them. The
+>> reader count is then fully incremented. In the second pass, the
+>> waiter->task is then cleared and they are put into wake_q to be woken
+>> up later.
+>>
+>> Fixes: 70800c3c0cc5 ("locking/rwsem: Scan the wait_list for readers only once")
+> It is effectively a revert of that patch, right? Just written more
+> clever.
 >
-> I've now queued these patches up for the next round of stable releases,
-> as some people seem to care about these.
->
-> I didn't see any follow-on patches for s390 or ppc64 hit the tree for
-> these changes, am I just missing them and should also queue up a few
-> more to handle this issue on those platforms?
+Yes, it is essentially a revert.
 
-No you haven't missed them for powerpc. It's on my list.
+Cheers,
+Longman
 
-cheers
