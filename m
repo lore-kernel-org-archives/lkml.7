@@ -2,108 +2,118 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01133C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392A9C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F042087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:35:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="shNY8wGs"
+	by mail.kernel.org (Postfix) with ESMTP id 174A9205ED
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfECOfI (ORCPT
+        id S1728202AbfECOfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:35:08 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46602 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfECOfI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:35:08 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bi2so2778848plb.13;
-        Fri, 03 May 2019 07:35:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kMGLnhggc8cifwRrjEK9HALOorMf0mLsznAzU3ByQJ4=;
-        b=shNY8wGsdG7K1gn0sScFEu/UG87+cKxU8rBCXtb8tyo+rAKekJK+7uISp4XTWWgBA4
-         mMR6f1lRqLExLgSCD47O08vLxUrzx+Aa7MtEwDM1fYTizYyGG991dxO+1rGubS8CeqGL
-         fuH0M46aEiOtlQIEybjoTs34L1vO9NcvFKaJCb2f7xoKFeK2vROY6owPj1Y4VdRET597
-         yXFSgXFQfIIaA0gouVJTOTy0z/eoMMxy5g+gNiK7bm0B/v3ylUmrwBMUtJZGJKxh2owY
-         9r45sdCvSgKdqpkckoiMVZ/5UPCn26BqC/8kYXBAKiZXhrY+0dj4HX8W3Z4OJFLiRSYl
-         +Mqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kMGLnhggc8cifwRrjEK9HALOorMf0mLsznAzU3ByQJ4=;
-        b=THODU3yHnS6lIzCyLc7fLHCvaSx4wHo7PvB6T49dntdaiNT7/fKDjxF/LkLbg/R5WE
-         tdpok1VV5QXs+ICr18LB47m/jbDrY4a4qdibk2LYh4XEmM+wo1/lKABrLJQZ6lHIhPgM
-         TVJGbbjhiQ29eCd/ouM4ab6aveRpC9T02Zm19mO8T4A2QSktLtGn/Oi5xBsE8bkNFdnD
-         AZdwiO4lsYR62g4XxpZ6aKV+78WwSwBdUQ4NESKYE9Ksy+aP9mFEDkCtVZtDosUYhBjW
-         dO3sC5L2g/nc95lyMIINgPuWpVfyZwG4HYH3qMMIQYxgVz7huQnkgv7oj2+eIGBOGdx7
-         xi+g==
-X-Gm-Message-State: APjAAAXVnd5TddQHcRq7xplxLVZaFw7QoXDTAaHANQv/HkfOe7P0z01v
-        btCgJ/I0+thB1GsUriWQG2g=
-X-Google-Smtp-Source: APXvYqzLw5RFP+moTLdaj7O6UqQIbnzuJQcywkHNCxDgZyn604CU0+GbY7CVtCWF8KqN+EQLh/fuSQ==
-X-Received: by 2002:a17:902:8c81:: with SMTP id t1mr2372272plo.333.1556893714461;
-        Fri, 03 May 2019 07:28:34 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id s19sm2789351pgj.62.2019.05.03.07.28.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 07:28:33 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] net: e1000: Fix some bugs in error handling code of e1000_probe()
-Date:   Fri,  3 May 2019 22:28:23 +0800
-Message-Id: <20190503142823.15319-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        Fri, 3 May 2019 10:35:20 -0400
+Received: from smtp-out.xnet.cz ([178.217.244.18]:17092 "EHLO smtp-out.xnet.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727639AbfECOfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 10:35:17 -0400
+Received: from meh.true.cz (meh.true.cz [108.61.167.218])
+        (Authenticated sender: petr@true.cz)
+        by smtp-out.xnet.cz (Postfix) with ESMTPSA id 2BDF24AD4;
+        Fri,  3 May 2019 16:27:47 +0200 (CEST)
+Received: by meh.true.cz (OpenSMTPD) with ESMTP id cbd31f28;
+        Fri, 3 May 2019 16:27:45 +0200 (CEST)
+From:   =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+To:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Helmut Schaa <helmut.schaa@googlemail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH v4 07/10] net: wireless: support of_get_mac_address new ERR_PTR error
+Date:   Fri,  3 May 2019 16:27:12 +0200
+Message-Id: <1556893635-18549-8-git-send-email-ynezz@true.cz>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When "hw->ce4100_gbe_mdio_base_virt = ioremap(...)" fails, the driver
-does not free the memory allocated in e1000_sw_init(), and also calls
-"iounmap(hw->ce4100_gbe_mido_base_virt)" that is unnecessary.
+There was NVMEM support added to of_get_mac_address, so it could now return
+ERR_PTR encoded error values, so we need to adjust all current users of
+of_get_mac_address to this new fact.
 
-Besides, when e1000_sw_init() fails, the driver also calls 
-"iounmap(hw->ce4100_gbe_mido_base_virt)" but 
-hw->ce4100_gbe_mido_base_virt has not been assigned.
-
-These bugs are found by a runtime fuzzing tool named FIZZER written by us.
-
-To fix these bugs, the error handling code of e1000_probe() is adjusted.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
 ---
- drivers/net/ethernet/intel/e1000/e1000_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index 8fe9af0e2ab7..7743c4d9723f 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -1227,12 +1227,12 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ Changes since v3:
+
+  * IS_ERR_OR_NULL -> IS_ERR
+
+ drivers/net/wireless/ath/ath9k/init.c          | 2 +-
+ drivers/net/wireless/mediatek/mt76/eeprom.c    | 2 +-
+ drivers/net/wireless/ralink/rt2x00/rt2x00dev.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath9k/init.c b/drivers/net/wireless/ath/ath9k/init.c
+index 98141b6..a04d861 100644
+--- a/drivers/net/wireless/ath/ath9k/init.c
++++ b/drivers/net/wireless/ath/ath9k/init.c
+@@ -642,7 +642,7 @@ static int ath9k_of_init(struct ath_softc *sc)
+ 	}
  
- 	if (hw->flash_address)
- 		iounmap(hw->flash_address);
-+	iounmap(hw->ce4100_gbe_mdio_base_virt);
-+err_mdio_ioremap:
- 	kfree(adapter->tx_ring);
- 	kfree(adapter->rx_ring);
--err_dma:
- err_sw_init:
--err_mdio_ioremap:
--	iounmap(hw->ce4100_gbe_mdio_base_virt);
-+err_dma:
- 	iounmap(hw->hw_addr);
- err_ioremap:
- 	disable_dev = !test_and_set_bit(__E1000_DISABLED, &adapter->flags);
+ 	mac = of_get_mac_address(np);
+-	if (mac)
++	if (!IS_ERR(mac))
+ 		ether_addr_copy(common->macaddr, mac);
+ 
+ 	return 0;
+diff --git a/drivers/net/wireless/mediatek/mt76/eeprom.c b/drivers/net/wireless/mediatek/mt76/eeprom.c
+index a1529920d..0496493 100644
+--- a/drivers/net/wireless/mediatek/mt76/eeprom.c
++++ b/drivers/net/wireless/mediatek/mt76/eeprom.c
+@@ -94,7 +94,7 @@
+ 		return;
+ 
+ 	mac = of_get_mac_address(np);
+-	if (mac)
++	if (!IS_ERR(mac))
+ 		memcpy(dev->macaddr, mac, ETH_ALEN);
+ #endif
+ 
+diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c b/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
+index 357c094..19a794a 100644
+--- a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
+@@ -1007,7 +1007,7 @@ void rt2x00lib_set_mac_address(struct rt2x00_dev *rt2x00dev, u8 *eeprom_mac_addr
+ 	const char *mac_addr;
+ 
+ 	mac_addr = of_get_mac_address(rt2x00dev->dev->of_node);
+-	if (mac_addr)
++	if (!IS_ERR(mac_addr))
+ 		ether_addr_copy(eeprom_mac_addr, mac_addr);
+ 
+ 	if (!is_valid_ether_addr(eeprom_mac_addr)) {
 -- 
-2.17.0
+1.9.1
 
