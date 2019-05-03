@@ -2,77 +2,95 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFA7C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C348FC04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0C120B7C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C6942075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556868772;
+	bh=NCOqAHbr04W3fEc+gwthvKv36/OfLDeO7qlPWhVGpyk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RMDD5ZUCblMIowOvSbSVQftglefYwFrCuzFH5jPzhSLgbFaexWoIunTzkgQHiN9+4
+	 iPa1bmsuq1gNolHxUHSuXhMPUKVKjElLPtB7PItmN4PIhjk15XnrPMFTUNodUgejF8
+	 xFsWAIUVbg5MVqcWKBbLDGDytwtBSP0G1hGTb0mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfECHbb (ORCPT
+        id S1726521AbfECHcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:31:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52498 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725768AbfECHbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 03:31:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C5BB9AEA1;
-        Fri,  3 May 2019 07:31:29 +0000 (UTC)
-Date:   Fri, 3 May 2019 09:31:26 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jane Chu <jane.chu@oracle.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 03/12] mm/sparsemem: Add helpers track active portions
- of a section at boot
-Message-ID: <20190503073121.GA15740@linux>
-References: <155677652226.2336373.8700273400832001094.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155677653785.2336373.11131100812252340469.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190502074803.GA3495@linux>
- <CAPcyv4jPG56sf4hHaKEoacQbDEpcMrr4fJVEwkxGjcWcCmieNQ@mail.gmail.com>
+        Fri, 3 May 2019 03:32:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbfECHcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 03:32:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ECA52075C;
+        Fri,  3 May 2019 07:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556868770;
+        bh=NCOqAHbr04W3fEc+gwthvKv36/OfLDeO7qlPWhVGpyk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xXmQQhw5idyZnqcAdHvJCpJRLJ2MhR28IoA9OSokyVyJ0po5kWEXlR0Ey+NEWqHyE
+         RlEjVrRkas+LkjxQpb04RQN1PXTrsyxAbHcoVPy9ShyWgHrgzNzxMA8k50depe+Wj6
+         Z5gR667vkiiWlscFeQQughY/74NX2XhNG+5UttS0=
+Date:   Fri, 3 May 2019 09:32:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 5.0 000/101] 5.0.12-stable review
+Message-ID: <20190503073247.GA24977@kroah.com>
+References: <20190502143339.434882399@linuxfoundation.org>
+ <CA+G9fYuu37iYrWuY_+jYjawjmFmjvMTOXJCFKT7k853-_ruiew@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4jPG56sf4hHaKEoacQbDEpcMrr4fJVEwkxGjcWcCmieNQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYuu37iYrWuY_+jYjawjmFmjvMTOXJCFKT7k853-_ruiew@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 07:03:45AM -0700, Dan Williams wrote:
-> > section_active_mask() also converts the value to address/size.
-> > Why do we need to convert the values and we cannot work with pfn/pages instead?
-> > It should be perfectly possible unless I am missing something.
+On Fri, May 03, 2019 at 12:19:51PM +0530, Naresh Kamboju wrote:
+> On Thu, 2 May 2019 at 21:00, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 > >
-> > The only thing required would be to export earlier your:
+> > This is the start of the stable review cycle for the 5.0.12 release.
+> > There are 101 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > >
-> > +#define PAGES_PER_SUB_SECTION (SECTION_ACTIVE_SIZE / PAGE_SIZE)
-> > +#define PAGE_SUB_SECTION_MASK (~(PAGES_PER_SUB_SECTION-1))
+> > Responses should be made by Sat 04 May 2019 02:32:10 PM UTC.
+> > Anything received after that time might be too late.
 > >
-> > and change section_active_index to:
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.12-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+> > and the diffstat can be found below.
 > >
-> > static inline int section_active_index(unsigned long pfn)
-> > {
-> >         return (pfn & ~(PAGE_SECTION_MASK)) / SUB_SECTION_ACTIVE_PAGES;
+> > thanks,
+> >
+> > greg k-h
+> >
+> 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-Sorry, here I meant:
+Great!  Thanks for testing all of these and letting me know.
 
-return (pfn & ~(PAGE_SECTION_MASK)) / PAGES_PER_SUB_SECTION;
-
-But I think you got the idea :-)
-
--- 
-Oscar Salvador
-SUSE L3
+greg k-h
