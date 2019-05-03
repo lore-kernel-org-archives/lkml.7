@@ -2,123 +2,131 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632ABC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8507C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7E02081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2284205F4
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfECKoN (ORCPT
+        id S1726830AbfECKrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 06:44:13 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:51625 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727631AbfECKoK (ORCPT
+        Fri, 3 May 2019 06:47:24 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:11257 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfECKrY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 06:44:10 -0400
-Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x43Ai4CN052528;
-        Fri, 3 May 2019 19:44:04 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp);
- Fri, 03 May 2019 19:44:04 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x43Ai4Es052522
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Fri, 3 May 2019 19:44:04 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] kernel/hung_task.c: Replace trigger_all_cpu_backtrace()
- with task traversal.
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>
-References: <1556538727-11876-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <39601316-2a59-bbd7-7570-0592f1791ff4@i-love.sakura.ne.jp>
-Date:   Fri, 3 May 2019 19:44:03 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 3 May 2019 06:47:24 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Joergen.Andreasen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Joergen.Andreasen@microchip.com";
+  x-sender="Joergen.Andreasen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Joergen.Andreasen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Joergen.Andreasen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,425,1549954800"; 
+   d="scan'208";a="31691973"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 03 May 2019 03:47:23 -0700
+Received: from localhost (10.10.76.4) by chn-sv-exch02.mchp-main.com
+ (10.10.76.38) with Microsoft SMTP Server id 14.3.352.0; Fri, 3 May 2019
+ 03:47:22 -0700
+Date:   Fri, 3 May 2019 12:47:21 +0200
+From:   Joergen Andreasen <joergen.andreasen@microchip.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     <netdev@vger.kernel.org>, Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Joergen Andreasen" <joergen.andreasen@microchip.com>
+Subject: Re: [PATCH net-next 3/3] MIPS: generic: Add police related options
+ to ocelot_defconfig
+Message-ID: <20190503104720.v5iltltcfdbyy3it@soft-dev16>
+References: <20190502094029.22526-1-joergen.andreasen@microchip.com>
+ <20190502094029.22526-4-joergen.andreasen@microchip.com>
+ <20190502162700.GC22550@piout.net>
 MIME-Version: 1.0
-In-Reply-To: <1556538727-11876-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20190502162700.GC22550@piout.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry, I know you are currently OOO.
+Hi Alexandre,
 
-For the record, two console outputs from two bug reports showed that syzbot is
-dropping hint of the culprit thread which is causing the khungtaskd to fire.
-
-  https://syzkaller.appspot.com/text?tag=CrashLog&x=1104bb90a00000
-  https://syzkaller.appspot.com/text?tag=CrashLog&x=135ff034a00000
-
-On 2019/04/29 20:52, Tetsuo Handa wrote:
-> Since trigger_all_cpu_backtrace() uses NMI interface, printk() from other
-> CPUs are called from interrupt context. Therefore, CONFIG_PRINTK_CALLER=y
-> needlessly separates printk() from khungtaskd kernel thread running on
-> current CPU and printk() from other threads running on other CPUs.
+The 05/02/2019 18:27, Alexandre Belloni wrote:
+> External E-Mail
 > 
-> Also, it is completely a garbage that trigger_all_cpu_backtrace() reports
-> khungtaskd kernel thread running on current CPU, for the purpose of
-> calling trigger_all_cpu_backtrace() from khungtaskd is to report running
-> threads which might have caused other threads being blocked for so long.
 > 
-> Therefore, report threads (except khungtaskd kernel thread itself) which
-> are on the scheduler using task traversal approach. This allows syzbot to
-> include backtrace of running threads into its report files.
+> Hi Joergen,
 > 
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> ---
->  kernel/hung_task.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
+> On 02/05/2019 11:40:29+0200, Joergen Andreasen wrote:
+> > Add default support for ingress qdisc, matchall classification
+> > and police action on MSCC Ocelot.
+> > 
 > 
-> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-> index f108a95..2fddd98 100644
-> --- a/kernel/hung_task.c
-> +++ b/kernel/hung_task.c
-> @@ -164,6 +164,23 @@ static bool rcu_lock_break(struct task_struct *g, struct task_struct *t)
->  	return can_cont;
->  }
->  
-> +static void print_all_running_threads(void)
-> +{
-> +#ifdef CONFIG_SMP
-> +	struct task_struct *g;
-> +	struct task_struct *t;
-> +
-> +	rcu_read_lock();
-> +	for_each_process_thread(g, t) {
-> +		if (!t->on_cpu || t == current)
-> +			continue;
-> +		pr_err("INFO: Currently running\n");
-> +		sched_show_task(t);
-> +	}
-> +	rcu_read_unlock();
-> +#endif
-> +}
-> +
->  /*
->   * Check whether a TASK_UNINTERRUPTIBLE does not get woken up for
->   * a really long time (120 seconds). If that happens, print out
-> @@ -201,7 +218,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
->  	if (hung_task_show_lock)
->  		debug_show_all_locks();
->  	if (hung_task_call_panic) {
-> -		trigger_all_cpu_backtrace();
-> +		print_all_running_threads();
->  		panic("hung_task: blocked tasks");
->  	}
->  }
+> This patch should be separated from the series as this doesn't have any
+> dependencies and should go through the MIPS tree.
 > 
 
+I will create a separate patch for this when the other patches has been
+accepted.
+
+> > Signed-off-by: Joergen Andreasen <joergen.andreasen@microchip.com>
+> > ---
+> >  arch/mips/configs/generic/board-ocelot.config | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/arch/mips/configs/generic/board-ocelot.config b/arch/mips/configs/generic/board-ocelot.config
+> > index 5e53b4bc47f1..5c7360dd819c 100644
+> > --- a/arch/mips/configs/generic/board-ocelot.config
+> > +++ b/arch/mips/configs/generic/board-ocelot.config
+> > @@ -25,6 +25,13 @@ CONFIG_SERIAL_OF_PLATFORM=y
+> >  CONFIG_NETDEVICES=y
+> >  CONFIG_NET_SWITCHDEV=y
+> >  CONFIG_NET_DSA=y
+> > +CONFIG_NET_SCHED=y
+> > +CONFIG_NET_SCH_INGRESS=y
+> > +CONFIG_NET_CLS_MATCHALL=y
+> > +CONFIG_NET_CLS_ACT=y
+> > +CONFIG_NET_ACT_POLICE=y
+> > +CONFIG_NET_ACT_GACT=y
+> > +
+> >  CONFIG_MSCC_OCELOT_SWITCH=y
+> >  CONFIG_MSCC_OCELOT_SWITCH_OCELOT=y
+> >  CONFIG_MDIO_MSCC_MIIM=y
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+> 
+
+-- 
+Joergen Andreasen, Microchip
