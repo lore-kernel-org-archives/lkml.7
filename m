@@ -2,202 +2,135 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E336C04AAB
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF62C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19EA62081C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:23:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e3Z24GLl"
+	by mail.kernel.org (Postfix) with ESMTP id DDACD2087F
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 10:23:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfECKXb (ORCPT
+        id S1727575AbfECKX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 06:23:31 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:34640 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfECKX3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 06:23:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yWINozWi4B8/0b+zeQRxYewAS+koeusVmFIImsL4ACM=; b=e3Z24GLl2UD/i7MtfoO9Zn+1s
-        aOjqo4XYiaU6TA4EV7N+9AsJHT1zV27NytuQBr1YvJk6KUbqMVuYruylM99/m1WUuogmdZ/56St5b
-        4dmoglSTjnQKMD8FuO8PU2p9eqckaGA3fsfa2GL1IN6EyCVKr1vUbgck9GTdg4dvIJmje97LlunJh
-        7hYWE4A5NB1Ajh1PQ8h5bKtPEGwJ1sSQdUttdLPEm0WqLP8EnAN+3sVGhPhbHhQYu2MNod/SEGcp6
-        jp7B8sDaoNH+JOzA8oC4AmS/UUeCHQ7BX+I7txb282udOd86t/J7BaBok6Q66wPX1KuZ/83fY21o3
-        EEAvVY+cQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hMVL9-0003jO-J4; Fri, 03 May 2019 10:22:51 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 15C5E29B65EA1; Fri,  3 May 2019 12:22:47 +0200 (CEST)
-Date:   Fri, 3 May 2019 12:22:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: [RFC][PATCH 1.5/2] x86: Add int3_emulate_call() selftest
-Message-ID: <20190503102247.GC2623@hirez.programming.kicks-ass.net>
-References: <20190501202830.347656894@goodmis.org>
+        Fri, 3 May 2019 06:23:26 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57990 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727561AbfECKXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 06:23:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 920F715AD;
+        Fri,  3 May 2019 03:23:24 -0700 (PDT)
+Received: from e119886-lin.cambridge.arm.com (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81B063F557;
+        Fri,  3 May 2019 03:23:23 -0700 (PDT)
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 2/2] perf: Use consistent style of comments for optional callbacks
+Date:   Fri,  3 May 2019 11:23:15 +0100
+Message-Id: <20190503102315.5697-3-andrew.murray@arm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190503102315.5697-1-andrew.murray@arm.com>
+References: <20190503102315.5697-1-andrew.murray@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501202830.347656894@goodmis.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+To improve the readability of perf_event.h, let's be consistent in how we
+annotate optional struct pmu callbacks. Where a multi-line comment block
+is present before a single function prototype we add the annotation at the
+end of the block. Otherwise we use a single line comment at the end of the
+function prototype.
 
-Given that the entry_*.S changes for this functionality are somewhat
-tricky, make sure the paths are tested every boot, instead of on the
-rare occasion when we trip an INT3 while rewriting text.
-
-Getting the INT3 frame setup even slightly wrong will make this come
-unstuck something spectacular.
-
-Requested-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
 ---
- arch/x86/kernel/alternative.c | 81 ++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 77 insertions(+), 4 deletions(-)
+ include/linux/perf_event.h | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 4db9c0d29bc1..2b853c2ab894 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -613,11 +613,83 @@ extern struct paravirt_patch_site __start_parainstructions[],
- 	__stop_parainstructions[];
- #endif	/* CONFIG_PARAVIRT */
- 
-+/*
-+ * Self-test for the INT3 based CALL emulation code.
-+ *
-+ * This exercises int3_emulate_call() to make sure INT3 pt_regs are set up
-+ * properly and that there is a stack gap between the INT3 frame and the
-+ * previous context. Without this gap doing a virtual PUSH on the interrupted
-+ * stack would corrupt the INT3 IRET frame.
-+ *
-+ * See entry_{32,64}.S for more details.
-+ */
-+static void __init int3_magic(unsigned int *ptr)
-+{
-+	*ptr = 1;
-+}
-+
-+extern __initdata unsigned long int3_selftest_ip; /* defined in asm below */
-+
-+static int __init
-+int3_exception_notify(struct notifier_block *self, unsigned long val, void *data)
-+{
-+	struct die_args *args = data;
-+	struct pt_regs *regs = args->regs;
-+
-+	if (!regs || user_mode(regs))
-+		return NOTIFY_DONE;
-+
-+	if (val != DIE_INT3)
-+		return NOTIFY_DONE;
-+
-+	if (regs->ip - INT3_INSN_SIZE != int3_selftest_ip)
-+		return NOTIFY_DONE;
-+
-+	int3_emulate_call(regs, (unsigned long)&int3_magic);
-+	return NOTIFY_STOP;
-+}
-+
-+static void __init int3_selftest(void)
-+{
-+	static __initdata struct notifier_block int3_exception_nb = {
-+		.notifier_call	= int3_exception_notify,
-+		.priority	= INT_MAX-1, /* last */
-+	};
-+	unsigned int val = 0;
-+
-+	BUG_ON(register_die_notifier(&int3_exception_nb));
-+
-+	/*
-+	 * Basically: int3_magic(&val); but really complicated :-)
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 27c1cb3cddf1..f0479c99d2ec 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -393,8 +393,10 @@ struct pmu {
+ 	/*
+ 	 * Will return the value for perf_event_mmap_page::index for this event,
+ 	 * if no implementation is provided it will default to: 0.
 +	 *
-+	 * Stick the address of the INT3 instruction into int3_selftest_ip,
-+	 * then trigger the INT3, padded with NOPs to match a CALL instruction
-+	 * length.
-+	 */
-+	asm volatile ("1: int3; nop; nop; nop; nop\n\t"
-+		      ".pushsection .init.data,\"aw\"\n\t"
-+		      ".align " __ASM_SEL(4, 8) "\n\t"
-+		      ".type int3_selftest_ip, @object\n\t"
-+		      ".size int3_selftest_ip, " __ASM_SEL(4, 8) "\n\t"
-+		      "int3_selftest_ip:\n\t"
-+		      __ASM_SEL(.long, .quad) " 1b\n\t"
-+		      ".popsection\n\t"
-+		      : : __ASM_SEL_RAW(a, D) (&val) : "memory");
-+
-+	BUG_ON(val != 1);
-+
-+	unregister_die_notifier(&int3_exception_nb);
-+}
-+
- void __init alternative_instructions(void)
- {
--	/* The patching is not fully atomic, so try to avoid local interruptions
--	   that might execute the to be patched code.
--	   Other CPUs are not running. */
-+	int3_selftest();
-+
-+	/*
-+	 * The patching is not fully atomic, so try to avoid local
-+	 * interruptions that might execute the to be patched code.
-+	 * Other CPUs are not running.
-+	 */
- 	stop_nmi();
++	 * Optional.
+ 	 */
+-	int (*event_idx)		(struct perf_event *event); /*optional */
++	int (*event_idx)		(struct perf_event *event);
  
  	/*
-@@ -642,10 +714,11 @@ void __init alternative_instructions(void)
- 					    _text, _etext);
- 	}
+ 	 * context-switches callback
+@@ -409,15 +411,18 @@ struct pmu {
  
--	if (!uniproc_patched || num_possible_cpus() == 1)
-+	if (!uniproc_patched || num_possible_cpus() == 1) {
- 		free_init_pages("SMP alternatives",
- 				(unsigned long)__smp_locks,
- 				(unsigned long)__smp_locks_end);
-+	}
- #endif
+ 	/*
+ 	 * Set up pmu-private data structures for an AUX area
++	 *
++	 * Optional.
+ 	 */
+ 	void *(*setup_aux)		(struct perf_event *event, void **pages,
+ 					 int nr_pages, bool overwrite);
+-					/* optional */
  
- 	apply_paravirt(__parainstructions, __parainstructions_end);
+ 	/*
+ 	 * Free pmu-private AUX data structures
++	 *
++	 * Optional.
+ 	 */
+-	void (*free_aux)		(void *aux); /* optional */
++	void (*free_aux)		(void *aux);
+ 
+ 	/*
+ 	 * Validate address range filters: make sure the HW supports the
+@@ -426,9 +431,10 @@ struct pmu {
+ 	 *
+ 	 * Runs in the context of the ioctl()ing process and is not serialized
+ 	 * with the rest of the PMU callbacks.
++	 *
++	 * Optional.
+ 	 */
+ 	int (*addr_filters_validate)	(struct list_head *filters);
+-					/* optional */
+ 
+ 	/*
+ 	 * Synchronize address range filter configuration:
+@@ -440,19 +446,24 @@ struct pmu {
+ 	 *
+ 	 * May (and should) traverse event::addr_filters::list, for which its
+ 	 * caller provides necessary serialization.
++	 *
++	 * Optional.
+ 	 */
+ 	void (*addr_filters_sync)	(struct perf_event *event);
+-					/* optional */
+ 
+ 	/*
+ 	 * Filter events for PMU-specific reasons.
++	 *
++	 * Optional.
+ 	 */
+-	int (*filter_match)		(struct perf_event *event); /* optional */
++	int (*filter_match)		(struct perf_event *event);
+ 
+ 	/*
+ 	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
++	 *
++	 * Optional.
+ 	 */
+-	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
++	int (*check_period)		(struct perf_event *event, u64 value);
+ };
+ 
+ enum perf_addr_filter_action_t {
+-- 
+2.21.0
+
