@@ -2,127 +2,76 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA96C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE77C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE4A2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:44:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OmqtnHqh"
+	by mail.kernel.org (Postfix) with ESMTP id BA41D2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 00:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfECAoS (ORCPT
+        id S1726486AbfECArp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 2 May 2019 20:44:18 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42713 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfECAoR (ORCPT
+        Thu, 2 May 2019 20:47:45 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:51933 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbfECArp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 2 May 2019 20:44:17 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k9so3161342oig.9
-        for <linux-kernel@vger.kernel.org>; Thu, 02 May 2019 17:44:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A2hincFuCgvv5JHuCTV0zjcSgRetC4sQsA2RxJqwbHE=;
-        b=OmqtnHqhiWeR9Oui8paJzv152rY6QABSkuQBz4HTi+7RcYfpqAMASWqQsmYpDFgDN6
-         8u4QGxIX+281+PUfSj8hi/U7tm8NJ9VAxVw6f/1fIubO5IRk2JSVgWheDKh9YqA4Wsbf
-         24sX8hJEdjs5npjlV/LbLiqkJxkPc5vfXFxPFLtHmaYVvwOT1Kl25XRCnzlFSWh2Q25H
-         cUcrTa1e6pmnoMfZEaTHDQhpE68nGq58M6J2ln/kAXPBqhupBP9xcAgry1zyiFWDMuo5
-         NRZs5NySNRdFsKgdLNe5bdoZ8f/LlUzn/ZIEd8r9DQV7aKNkXapSSaI0cJxyrsljswdm
-         UMNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A2hincFuCgvv5JHuCTV0zjcSgRetC4sQsA2RxJqwbHE=;
-        b=bZy63JultpG7S4ukEH7bgDrHy+op/P5svkaWsE3cMTn7fHTmIl/ycZlA3qdy2CBQ2a
-         gfOeuqexRHRGroo94SIZaRQYTd1VMnudKLAB8PtEfkLTCDcn7puDPbo+aRMxYIAWJFd6
-         wWR3r4dfKXj88n9XzXZCEda71IQp26oqg67TjzN/CDUfaoWAHKnQRiPo6kHGCWNIR+Oh
-         FEMoPjkWFRBjjcH7yZTqe49CwBrdBo/i1vUAFsJEgk0BwCtV4INVDjogiQDkqldrr7ao
-         1fZL2yWVUdJBqTV2vS3BmfXCFgXH/7CtECKBdM6H/clDlDQ+bOFiPTmAT0Q6xW78S0Nn
-         2xfA==
-X-Gm-Message-State: APjAAAWZZAXGMVmA0K5QJDR0401LPBK1A0cqObWBswIYfldI1fpl5J/B
-        z7SxuxUBv84JCto5WuR8VzYwqTRpTcPdZMAuPDXP1A==
-X-Google-Smtp-Source: APXvYqyH7XhI3a/DkRyh575w1BCN/DsRH5SQN4U4GjnrWhviWpfRz21kNlgkWO7kwhjd2fwRpqP4aZoATeVVAm4A6kc=
-X-Received: by 2002:aca:4586:: with SMTP id s128mr4131634oia.148.1556844256812;
- Thu, 02 May 2019 17:44:16 -0700 (PDT)
+        Thu, 2 May 2019 20:47:45 -0400
+Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x430l87H085453;
+        Fri, 3 May 2019 09:47:09 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp);
+ Fri, 03 May 2019 09:47:08 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav403.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x430l3WU085429
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Fri, 3 May 2019 09:47:08 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] RFC: hung_task: taint kernel
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Liu, Chuansheng" <chuansheng.liu@intel.com>
+References: <20190502194208.3535-1-daniel.vetter@ffwll.ch>
+ <20190502204648.5537-1-daniel.vetter@ffwll.ch>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <7e4ef8c8-2def-5af9-f80e-b276fea8696a@i-love.sakura.ne.jp>
+Date:   Fri, 3 May 2019 09:47:03 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190502105053.GA12416@kroah.com> <76e84d54-6b7e-8cc1-492b-43822fc43ac4@kernel.org>
-In-Reply-To: <76e84d54-6b7e-8cc1-492b-43822fc43ac4@kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 2 May 2019 17:44:05 -0700
-Message-ID: <CAFd5g47JiSXHvMEu9NovkGdG7ugMCwVO0pGwT7bC=NCghD0w-g@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     shuah <shuah@kernel.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190502204648.5537-1-daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 7:04 AM shuah <shuah@kernel.org> wrote:
->
-> On 5/2/19 4:50 AM, Greg KH wrote:
-> > On Wed, May 01, 2019 at 04:01:09PM -0700, Brendan Higgins wrote:
-> >> ## TLDR
-> >>
-> >> I rebased the last patchset on 5.1-rc7 in hopes that we can get this in
-> >> 5.2.
-> >
-> > That might be rushing it, normally trees are already closed now for
-> > 5.2-rc1 if 5.1-final comes out this Sunday.
-> >
-> >> Shuah, I think you, Greg KH, and myself talked off thread, and we agreed
-> >> we would merge through your tree when the time came? Am I remembering
-> >> correctly?
-> >
-> > No objection from me.
-> >
->
-> Yes. I can take these through kselftest tree when the time comes.
+On 2019/05/03 5:46, Daniel Vetter wrote:
+> There's the hung_task_panic sysctl, but that's a bit an extreme measure.
+> As a fallback taint at least the machine.
+> 
+> Our CI uses this to decide when a reboot is necessary, plus to figure
+> out whether the kernel is still happy.
 
-Awesome.
+Why your CI can't watch for "blocked for more than" message instead of
+setting the taint flag? How does your CI decide a reboot is necessary?
 
-> Agree with Greg that 5.2 might be rushing it. 5.3 would be a good
-> target.
-
-Whoops. I guess I should have sent this out a bit earlier. Oh well, as
-long as we are on our way!
+There is no need to set the tainted flag when some task was just blocked
+for a while. It might be due to memory pressure, it might be due to setting
+very short timeout (e.g. a few seconds), it might be due to busy CPUs doing
+something else...
