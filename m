@@ -3,115 +3,161 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C562C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA8BC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2035206BB
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:19:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556911161;
-	bh=SIJupZM4xQzu2jtyclWLaYPyvNuOiK7IIuEm2BLYF9o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ut3YmCK5h3z7MrnNNCu5P809EXeeZ/gMLGImAwtKFzCi9A9E8MmPehycbh/VEbMzT
-	 TeE/Dx0uhXNYrsU+meZavIjnkv2q6RMyyedmJrEI18UBaxnhpyr5n4XjAvs751Pwtp
-	 dCmXHm4sO1JF/mivqFx1Su06dvpY6fFxXl++rTdI=
+	by mail.kernel.org (Postfix) with ESMTP id 550BB2075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 19:22:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="oJyLWiZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfECTTT (ORCPT
+        id S1726552AbfECTWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 15:19:19 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45182 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfECTTS (ORCPT
+        Fri, 3 May 2019 15:22:35 -0400
+Received: from mail.efficios.com ([167.114.142.138]:59300 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfECTWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 15:19:18 -0400
-Received: by mail-lj1-f196.google.com with SMTP id w12so6100670ljh.12
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 12:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vrZPNFycjIPCS5MGk9MAG+nKHJrhm1Q0xvifSIf+zuk=;
-        b=OEfmC6eJF2GPkWPbvs4stvkodrbQDXUL+PPqhjLUfk1i/pl6J+3SSY0xZI0I1g2RFb
-         diBNMWHW/rqTdKWhuupppKaljsSj6VtB1P1+GlwSP1NRVFF3v/NVGneYtUDR6DkQKMp+
-         sCaMQ/861on6pkLTiIark2/tC7R2z4uluIE84=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vrZPNFycjIPCS5MGk9MAG+nKHJrhm1Q0xvifSIf+zuk=;
-        b=png8RdStsH8bPifcEFp5nZkmMIC2ngXduXYcf6U+xBkf7PsXb1h3+m1Utc3b7AEmWd
-         JIJ72GxcwwyPnd7yXsoI93W0oz72gweSSggwMpMPgeMXU49opv9pUcUurmPawFNZl+/R
-         aIsadP4o4DSbNpUn2O5XIhb9lL5omW+rppWI7lU+rGsZlGH7Uu+ocxF2VXy2COrmHgPJ
-         5r3+4r3oxYSByacj3fktaoThPDHQPjsNI7XtuvW34RSmmPlIPnaavAwoBu4C3NkrdIFi
-         LgbuHiDg9S6P2uQWvj+f0oGVH/w4mt4cLpdOPRemC4OkIqVdcuiTHov2JPZFfJ3o6myz
-         YG/Q==
-X-Gm-Message-State: APjAAAWvdsvLqrA3pQYoaR0I2k709sqa+LQCSQPRNzOJRcKuckAEMLyj
-        ofdVj4hIYX6HTZBAUTroG4r8rS8ob3o=
-X-Google-Smtp-Source: APXvYqxljcF1tMuGynVphKjowWMGuP81s5jvDsEGL/i5dtX29jjNpWL5Za6794ZoiZFGG8IZoSg8Mg==
-X-Received: by 2002:a2e:9583:: with SMTP id w3mr1201463ljh.150.1556911156369;
-        Fri, 03 May 2019 12:19:16 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id g20sm173120lja.67.2019.05.03.12.19.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 12:19:16 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id u27so4886300lfg.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 12:19:15 -0700 (PDT)
-X-Received: by 2002:a19:4f54:: with SMTP id a20mr5886095lfk.136.1556910664485;
- Fri, 03 May 2019 12:11:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <57357E35-3D9B-4CA7-BAB9-0BE89E0094D2@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C66A8A@IRSMSX102.ger.corp.intel.com>
- <6860856C-6A92-4569-9CD8-FF6C5C441F30@amacapital.net> <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
- <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com> <2236FBA76BA1254E88B949DDB74E612BA4C6C2C3@IRSMSX102.ger.corp.intel.com>
- <2e55aeb3b39440c0bebf47f0f9522dd8@AcuMS.aculab.com> <CALCETrXjGvWVgZHrKCfH6RBsnYOyD2+Mey1Esw7BsA4Eg6PS0A@mail.gmail.com>
- <20190502150853.GA16779@gmail.com> <d64b3562d179430f9bdd8712999ff98a@AcuMS.aculab.com>
- <20190502164524.GB115950@gmail.com> <2236FBA76BA1254E88B949DDB74E612BA4C6F523@IRSMSX102.ger.corp.intel.com>
- <e4fbad8c51284a0583b98c52de4a207d@AcuMS.aculab.com>
-In-Reply-To: <e4fbad8c51284a0583b98c52de4a207d@AcuMS.aculab.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 3 May 2019 12:10:48 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjb9c4JV5xOWp5VMGTzgCmpFCegf2MydVwbvjr5gnBV9A@mail.gmail.com>
-Message-ID: <CAHk-=wjb9c4JV5xOWp5VMGTzgCmpFCegf2MydVwbvjr5gnBV9A@mail.gmail.com>
-Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        Fri, 3 May 2019 15:22:35 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 6E86D1DEA36;
+        Fri,  3 May 2019 15:22:33 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id 0QuwNrTwQwAY; Fri,  3 May 2019 15:22:33 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id E9E7F1DEA14;
+        Fri,  3 May 2019 15:22:32 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E9E7F1DEA14
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1556911353;
+        bh=Z1fXbode9z//U9geZ8RU9W20aXBHSnu7pA0JsyOME6U=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=oJyLWiZAFwoLwOGgE/MF/ve5CmfrvgRQC3357sjT/Lu+vyPLa4t5XIFPcail2khfE
+         FPuWIFxcT7lRWMYv1LTCAsgWVuzmLi901E1sH/a7YNODtduZGFcJkVqK00NTgq7ysG
+         5CwtUVbbufy8KEkLSUDax3NDMfTMs3EDN0FZ7eYqFPptZHAqgfpqIPc9yeH6c7rXq9
+         wHCqgo/7rpLRpgzH6Z+/+VHw/as3wcOATZg/1kAMGmfJx9gEUP5814jnH8UdYq5Xy4
+         TnPppbgf75vEsavaCGv8GON7R+4IMK5Du7x+4XpbQGztic6wZNUAej7vjHmdVy3Cgv
+         xmltnO/50PLkw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id zcPuURcV7p-X; Fri,  3 May 2019 15:22:32 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id C98851DEA0E;
+        Fri,  3 May 2019 15:22:32 -0400 (EDT)
+Date:   Fri, 3 May 2019 15:22:32 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     shuah <shuah@kernel.org>, Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Content-Type: text/plain; charset="UTF-8"
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>
+Message-ID: <1137649333.995.1556911352713.JavaMail.zimbra@efficios.com>
+In-Reply-To: <68a135d7-7b30-71c7-c570-c7608d6f75d5@kernel.org>
+References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com> <678952111.699.1556908562445.JavaMail.zimbra@efficios.com> <68a135d7-7b30-71c7-c570-c7608d6f75d5@kernel.org>
+Subject: Re: [PATCH for 5.2 00/12] Restartable Sequences selftests updates
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: Restartable Sequences selftests updates
+Thread-Index: nivK8tFeBpLkZ4PuzE/4yflaEoxB+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 9:40 AM David Laight <David.Laight@aculab.com> wrote:
->
-> That gives you 10 system calls per rdrand instruction
-> and mostly takes the latency out of line.
+----- On May 3, 2019, at 2:53 PM, shuah shuah@kernel.org wrote:
 
-Do we really want to do this? What is the attack scenario?
+> On 5/3/19 12:36 PM, Mathieu Desnoyers wrote:
+>> ----- On Apr 29, 2019, at 11:27 AM, Mathieu Desnoyers
+>> mathieu.desnoyers@efficios.com wrote:
+>> 
+>>> Those rseq selftests updates are hereby submitted to Shuah Khan,
+>>> maintainer of kernel selftests, for the next merge window (5.2).
+>>>
+>>> They change the per-architecture pre-abort signatures to ensure those
+>>> are valid trap instructions.
+>>>
+>>> The way exit points are presented to debuggers is enhanced, ensuring
+>>> all exit points are present, so debuggers don't have to disassemble
+>>> rseq critical section to properly skip over them.
+>>>
+>>> Discussions with the glibc community is reaching a concensus of exposing
+>>> a __rseq_handled symbol from glibc to coexist with rseq early adopters.
+>>> Update the rseq selftest code to expose and use this symbol.
+>>>
+>>> Support for compiling asm goto with clang is added with the
+>>> "-no-integrated-as" compiler switch, similarly to the toplevel kernel
+>>> Makefile.
+>> 
+>> Hi Shuah,
+>> 
+>> Is there anything else you need before you can pick up those patches ?
+>> 
+> 
+> I was going to say "no more work needed" and noticed that the series has
+> checkpatch errors and warns as I was running the series through
+> pre-commit tests.
+> 
+> Patches 1,2,3,8 have errors/warns based
+> on quick look at the log.
+> 
+> 
+> ERROR: need consistent spacing around '%' (ctx:WxV)
+> #227: FILE: tools/testing/selftests/rseq/rseq-x86.h:104:
+> +		RSEQ_ASM_CMP_CPU_ID(cpu_id, RSEQ_CPU_ID_OFFSET(%[rseq_abi]), %l[error1])
+> 
+> 
+> Will you be able to fix them and resend?
 
-With no VLA's, and the stackleak plugin, what's the upside? Are we
-adding random code (literally) "just because"?
+(CCing the che checkpatch maintainers)
 
-                   Linus
+checkpatch appears to be wrong for these errors. I suspect it thinks those are
+'%' modulo operators (for which the style requires space before/after),
+but those are actually part of the asm input and goto target operands.
+
+Most warnings are about some lines over 80 cols. However, the areas where
+this happens is due to following the style of already upstream code which
+has the final "\" at the end of line sometimes beyond 80 col to accommodate
+macros that take a bit of horizontal real estate.
+
+For patch 8, the warning about "availble" being a typo is right. The
+style error about space after "asm (" is right as well. Should I send only
+this updated patch to you or should I send the whole patchset again ?
+
+Thanks,
+
+Mathieu
+
+
+> 
+> thanks,
+> -- Shuah
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
