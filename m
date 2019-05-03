@@ -4,57 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4812C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE262C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72CC206DF
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8818120B7C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556864699;
-	bh=RyclbqGtS6gvfBKvc8P5Iyp4BAt/bLNGMdZezLTsL3c=;
+	s=default; t=1556864704;
+	bh=sTEzmzJe/wBL5QDfL5DoYLT6SJuXW3GNt0X7I9wUiLM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=2ncdJkZguhsQzrnnfQWx4QbfTAKPVp7D/AeS26kQgY27Q13OnbC7BahccErpVdtQO
-	 Ctbk/1CMKzgUAdCtnroilGnsPSTSXAfHtkXAGjgVBqRQpv0bGAoSKcbGYIHwRH8png
-	 FADRJ6zGF8BWiB+6yj8ANYZ3kMYQBuJrn6sKvRHA=
+	b=MsjPZPzcBimVwf4ihULWeRZoMQWfv/iJ/72BP1xsFpviPUFur/ZJ4G+8PokVYFNT4
+	 /q2ba6/wDW6yoFsfaW+maTfpv0mD8gUR/IYYxUaJKj1+nPnncqrGmHfn12v2QPgux/
+	 /FZgCc8e8RnaDcDQCwCRanNFoE99YNzGV3M0OXRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfECGXM (ORCPT
+        id S1726731AbfECGXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:23:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60302 "EHLO
+        Fri, 3 May 2019 02:23:08 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60126 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbfECGXJ (ORCPT
+        with ESMTP id S1726618AbfECGXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:23:09 -0400
+        Fri, 3 May 2019 02:23:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=v0HC/nVs3Jb9s28ZkKENRWvTIY8Iq2+d1nHoiE8oPto=; b=pzJnETXAmL2h
-        Tc0yoPYtb2E6F4PMEfQEGQK/T1nvFVte0sJwFaSpPiJa3nvCLG5uSBGboFvksnzFyxeuT+7+QFubZ
-        0YTsIvXmiQeFTWfEE/blOmhBSm8gQylKzw3bQatysGWR83WcSwOfq2UYPzClaogZXVaaERMeFpWwb
-        0sToo=;
+        List-Archive; bh=dr8iiJcg2+vpOn+Dy6n/2x3VLOxcn420oALuCMcHAYQ=; b=v5A2hVPHhQv7
+        l72/x03qRBmvK/WIsLn/WWiK7rUORLwa0ZsGHt6IGFJE+vVirjPTERgSB+q3lJMLBBW4d8CRRClIS
+        TXSnJrp4IHQB7QpATlqV4k2dNBgGoMK4ke9HRP2s4tJl02JVDO7hgzY9p0gaWggNlVkSL461E0WvO
+        ZZHYo=;
 Received: from [42.29.24.106] (helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hMRb7-0000bW-Tj; Fri, 03 May 2019 06:23:06 +0000
+        id 1hMRb3-0000az-AQ; Fri, 03 May 2019 06:23:02 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 85F76441D68; Fri,  3 May 2019 07:21:30 +0100 (BST)
+        id 38005441D6E; Fri,  3 May 2019 07:21:34 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     James Ban <James.Ban.opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        patchwork-bot+notify@kernel.org
-Subject: Applied "ASoC: hdmi-codec: stream is already locked in hw_params" to the asoc tree
-In-Reply-To: <20190429132943.16269-4-jbrunet@baylibre.com>
+        Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: Applied "regulator: da9xxx: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: <20190503053637.25911-2-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190503062130.85F76441D68@finisterre.ee.mobilebroadband>
-Date:   Fri,  3 May 2019 07:21:30 +0100 (BST)
+Message-Id: <20190503062134.38005441D6E@finisterre.ee.mobilebroadband>
+Date:   Fri,  3 May 2019 07:21:34 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,11 +63,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: hdmi-codec: stream is already locked in hw_params
+   regulator: da9xxx: Switch to SPDX identifier
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -87,37 +88,243 @@ to this mail.
 Thanks,
 Mark
 
-From 726fc60babe4a46e946e69a9dbd3e21aaec4d58e Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Mon, 29 Apr 2019 15:29:40 +0200
-Subject: [PATCH] ASoC: hdmi-codec: stream is already locked in hw_params
+From fd2f02f9724c416221b42af95e1a7a57fa42d681 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Fri, 3 May 2019 13:36:37 +0800
+Subject: [PATCH] regulator: da9xxx: Switch to SPDX identifier
 
-startup() should have run before hw_params() is called, so the
-current_substream pointer should already be properly set. There
-is no reason to call hdmi_codec_new_stream() again in the
-hw_params() callback
+Convert Dialog Semiconductor DA9xxx regulator drivers to SPDX identifier.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/hdmi-codec.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/regulator/da903x.c           | 16 ++++++----------
+ drivers/regulator/da9052-regulator.c | 20 +++++++-------------
+ drivers/regulator/da9055-regulator.c | 20 +++++++-------------
+ drivers/regulator/da9062-regulator.c | 19 +++++--------------
+ drivers/regulator/da9210-regulator.c | 23 ++++-------------------
+ drivers/regulator/da9210-regulator.h | 17 +----------------
+ drivers/regulator/da9211-regulator.c | 20 +++++---------------
+ drivers/regulator/da9211-regulator.h | 11 +----------
+ 8 files changed, 36 insertions(+), 110 deletions(-)
 
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index b9d9dde9fbaf..ef6d6959ecc5 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -492,10 +492,6 @@ static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
- 		return ret;
- 	}
+diff --git a/drivers/regulator/da903x.c b/drivers/regulator/da903x.c
+index 33e8f3b8d2bd..5493c3a86426 100644
+--- a/drivers/regulator/da903x.c
++++ b/drivers/regulator/da903x.c
+@@ -1,13 +1,9 @@
+-/*
+- * Regulators driver for Dialog Semiconductor DA903x
+- *
+- * Copyright (C) 2006-2008 Marvell International Ltd.
+- * Copyright (C) 2008 Compulab Ltd.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- */
++// SPDX-License-Identifier: GPL-2.0
++//
++// Regulators driver for Dialog Semiconductor DA903x
++//
++// Copyright (C) 2006-2008 Marvell International Ltd.
++// Copyright (C) 2008 Compulab Ltd.
  
--	ret = hdmi_codec_new_stream(substream, dai);
--	if (ret)
--		return ret;
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+diff --git a/drivers/regulator/da9052-regulator.c b/drivers/regulator/da9052-regulator.c
+index b90a7ac3f3de..e18d291c7f21 100644
+--- a/drivers/regulator/da9052-regulator.c
++++ b/drivers/regulator/da9052-regulator.c
+@@ -1,16 +1,10 @@
+-/*
+-* da9052-regulator.c: Regulator driver for DA9052
+-*
+-* Copyright(c) 2011 Dialog Semiconductor Ltd.
+-*
+-* Author: David Dajun Chen <dchen@diasemi.com>
+-*
+-* This program is free software; you can redistribute it and/or modify
+-* it under the terms of the GNU General Public License as published by
+-* the Free Software Foundation; either version 2 of the License, or
+-* (at your option) any later version.
+-*
+-*/
++// SPDX-License-Identifier: GPL-2.0+
++//
++// da9052-regulator.c: Regulator driver for DA9052
++//
++// Copyright(c) 2011 Dialog Semiconductor Ltd.
++//
++// Author: David Dajun Chen <dchen@diasemi.com>
+ 
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+diff --git a/drivers/regulator/da9055-regulator.c b/drivers/regulator/da9055-regulator.c
+index bcbc2fbd7fea..c025ccb1a30a 100644
+--- a/drivers/regulator/da9055-regulator.c
++++ b/drivers/regulator/da9055-regulator.c
+@@ -1,16 +1,10 @@
+-/*
+-* Regulator driver for DA9055 PMIC
+-*
+-* Copyright(c) 2012 Dialog Semiconductor Ltd.
+-*
+-* Author: David Dajun Chen <dchen@diasemi.com>
+-*
+-* This program is free software; you can redistribute it and/or modify
+-* it under the terms of the GNU General Public License as published by
+-* the Free Software Foundation; either version 2 of the License, or
+-* (at your option) any later version.
+-*
+-*/
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Regulator driver for DA9055 PMIC
++//
++// Copyright(c) 2012 Dialog Semiconductor Ltd.
++//
++// Author: David Dajun Chen <dchen@diasemi.com>
+ 
+ #include <linux/module.h>
+ #include <linux/init.h>
+diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
+index a7d929b7776a..a02e0488410f 100644
+--- a/drivers/regulator/da9062-regulator.c
++++ b/drivers/regulator/da9062-regulator.c
+@@ -1,17 +1,8 @@
+-/*
+- * Regulator device driver for DA9061 and DA9062.
+- * Copyright (C) 2015-2017  Dialog Semiconductor
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * as published by the Free Software Foundation; either version 2
+- * of the License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Regulator device driver for DA9061 and DA9062.
++// Copyright (C) 2015-2017  Dialog Semiconductor
++
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+diff --git a/drivers/regulator/da9210-regulator.c b/drivers/regulator/da9210-regulator.c
+index 528303771723..f9448ed50e05 100644
+--- a/drivers/regulator/da9210-regulator.c
++++ b/drivers/regulator/da9210-regulator.c
+@@ -1,22 +1,7 @@
+-/*
+- * da9210-regulator.c - Regulator device driver for DA9210
+- * Copyright (C) 2013  Dialog Semiconductor Ltd.
+- *
+- * This library is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU Library General Public
+- * License as published by the Free Software Foundation; either
+- * version 2 of the License, or (at your option) any later version.
+- *
+- * This library is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Library General Public License for more details.
+- *
+- * You should have received a copy of the GNU Library General Public
+- * License along with this library; if not, write to the
+- * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
+- */
++// SPDX-License-Identifier: GPL-2.0+
++//
++// da9210-regulator.c - Regulator device driver for DA9210
++// Copyright (C) 2013  Dialog Semiconductor Ltd.
+ 
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+diff --git a/drivers/regulator/da9210-regulator.h b/drivers/regulator/da9210-regulator.h
+index 749c550808b6..b1f1a607c208 100644
+--- a/drivers/regulator/da9210-regulator.h
++++ b/drivers/regulator/da9210-regulator.h
+@@ -1,22 +1,7 @@
 -
- 	hdmi_audio_infoframe_init(&hp.cea);
- 	hp.cea.channels = params_channels(params);
- 	hp.cea.coding_type = HDMI_AUDIO_CODING_TYPE_STREAM;
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * da9210-regulator.h - Regulator definitions for DA9210
+  * Copyright (C) 2013  Dialog Semiconductor Ltd.
+- *
+- * This library is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU Library General Public
+- * License as published by the Free Software Foundation; either
+- * version 2 of the License, or (at your option) any later version.
+- *
+- * This library is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Library General Public License for more details.
+- *
+- * You should have received a copy of the GNU Library General Public
+- * License along with this library; if not, write to the
+- * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+- * Boston, MA  02110-1301, USA.
+  */
+ 
+ #ifndef __DA9210_REGISTERS_H__
+diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
+index 4d7fe4819c1c..da37b4ccd834 100644
+--- a/drivers/regulator/da9211-regulator.c
++++ b/drivers/regulator/da9211-regulator.c
+@@ -1,18 +1,8 @@
+-/*
+- * da9211-regulator.c - Regulator device driver for DA9211/DA9212
+- * /DA9213/DA9223/DA9214/DA9224/DA9215/DA9225
+- * Copyright (C) 2015  Dialog Semiconductor Ltd.
+- *
+- * This library is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU Library General Public
+- * License as published by the Free Software Foundation; either
+- * version 2 of the License, or (at your option) any later version.
+- *
+- * This library is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Library General Public License for more details.
+- */
++// SPDX-License-Identifier: GPL-2.0+
++//
++// da9211-regulator.c - Regulator device driver for DA9211/DA9212
++// /DA9213/DA9223/DA9214/DA9224/DA9215/DA9225
++// Copyright (C) 2015  Dialog Semiconductor Ltd.
+ 
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+diff --git a/drivers/regulator/da9211-regulator.h b/drivers/regulator/da9211-regulator.h
+index 2cb32aab4f82..1201e7cc056c 100644
+--- a/drivers/regulator/da9211-regulator.h
++++ b/drivers/regulator/da9211-regulator.h
+@@ -1,17 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
+ /*
+  * da9211-regulator.h - Regulator definitions for DA9211/DA9212
+  * /DA9213/DA9223/DA9214/DA9224/DA9215/DA9225
+  * Copyright (C) 2015  Dialog Semiconductor Ltd.
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License
+- * as published by the Free Software Foundation; either version 2
+- * of the License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
+ 
+ #ifndef __DA9211_REGISTERS_H__
 -- 
 2.20.1
 
