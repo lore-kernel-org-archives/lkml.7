@@ -2,213 +2,173 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC066C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60143C004C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D03A208C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE692081C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:26:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KhcmV8O0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfECLXv (ORCPT
+        id S1727314AbfECL0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:23:51 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:6979 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfECLXu (ORCPT
+        Fri, 3 May 2019 07:26:42 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44586 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726468AbfECL0m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:23:50 -0400
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Joergen.Andreasen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Joergen.Andreasen@microchip.com";
-  x-sender="Joergen.Andreasen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Joergen.Andreasen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Joergen.Andreasen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,425,1549954800"; 
-   d="scan'208";a="29952556"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 03 May 2019 04:23:50 -0700
-Received: from localhost (10.10.76.4) by chn-sv-exch07.mchp-main.com
- (10.10.76.108) with Microsoft SMTP Server id 14.3.352.0; Fri, 3 May 2019
- 04:23:29 -0700
-Date:   Fri, 3 May 2019 13:23:28 +0200
-From:   Joergen Andreasen <joergen.andreasen@microchip.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <netdev@vger.kernel.org>, Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Ralf Baechle" <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        "James Hogan" <jhogan@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Joergen Andreasen <joergen.andreasen@microchip.com>
-Subject: Re: [PATCH net-next 2/3] net: mscc: ocelot: Implement port policers
- via tc command
-Message-ID: <20190503112327.he2unkak7rhm6ajk@soft-dev16>
-References: <20190502094029.22526-1-joergen.andreasen@microchip.com>
- <20190502094029.22526-3-joergen.andreasen@microchip.com>
- <20190502123245.GB9844@lunn.ch>
+        Fri, 3 May 2019 07:26:42 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c5so7392070wrs.11;
+        Fri, 03 May 2019 04:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j9Bj+Dr7WyGv/rMCkmt5BFQpG8uQuF0RuguMoXtRvS0=;
+        b=KhcmV8O0dVPoB8tdfI0z+kSjdn0vdYUoQOtCSIuzIFMc9Aa4HDUEnrmw8ciYUvNEJy
+         cvtUtn9J7f0xcQIm9oTTSb1CPbKpiYTi63Up+RBnqOLRJEy3mB75iZM3JjDoGR8dg2in
+         MMdZCcNPKdneA1jqG0wBS25E0In2g/NgyNJcxSAzkGzuQF/bnPJ9sYywS8i0ErLThyoP
+         q8Z9/bTw4J4LJDR1aGodbcw9SXlS+YrsYzComoXB45V24RjcJN6pzGoMIUd3Kf/g0kFo
+         JBhZoShu8+BzKxJtAFo+zvIyY5YFvWbaE2SwEA+I/0YifEKenih8ayBtbD5eUv1s6Eoo
+         Mmuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j9Bj+Dr7WyGv/rMCkmt5BFQpG8uQuF0RuguMoXtRvS0=;
+        b=dEQmtHp+toHLJ8h/5h9m1N8nJ+1FPwCUyLS7g+9h8e3QJ8PVMt3fVuteZgX1OggOFw
+         mYZProyh2bA8r856178FlOAfs//des2PNBWC0uKQ54MYlSF01SgaJFLn90LS2ItCnJ/o
+         +XbeuuWmfK5XcFWHKiKB93bEQ/Fdh0nJHhUHFEBm55nXMBzHYCjcDZWXP4DuiKtqchnG
+         NP02JsP4ZlUvOKuB0BddW790is8ZDRYD1uueB3HaJx0C0T6x+sCDF/EEOOPOzy8C5Pzx
+         icggykp/599UuMmjS2TQNxFmGzjUIG5JCTUiVwRxIeROnBdRqGUK2A6bhrVYijvZkB8g
+         pBRg==
+X-Gm-Message-State: APjAAAWlsMNSRenQd2PINlUcjEi4xcZ+rFT5P10xvtCeLhRPRf7iU2PN
+        BdM6OgzAHoRk9M4hcCLKR0S9ZRJeDns=
+X-Google-Smtp-Source: APXvYqw2hvhDgJ3VCDJcQcuW3ahQwR7R2Mg91+rWb9Y8oVcliDb9EpMX8XcPO53tP0nhm0GQTpf37g==
+X-Received: by 2002:adf:e9cb:: with SMTP id l11mr6376382wrn.114.1556882799909;
+        Fri, 03 May 2019 04:26:39 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id t27sm4332288wrb.27.2019.05.03.04.26.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 04:26:39 -0700 (PDT)
+Date:   Fri, 3 May 2019 13:26:37 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V5 12/16] arm64: tegra: Add P2U and PCIe controller nodes
+ to Tegra194 DT
+Message-ID: <20190503112637.GF32400@ulmo>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-13-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jkO+KyKz7TfD21mV"
 Content-Disposition: inline
-In-Reply-To: <20190502123245.GB9844@lunn.ch>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190424052004.6270-13-vidyas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
 
-The 05/02/2019 14:32, Andrew Lunn wrote:
-> External E-Mail
-> 
-> 
-> Hi Joergen
-> 
-> > +
-> > +#define MSCC_RC(expr)				\
-> > +	do {					\
-> > +		int __rc__ = (expr);		\
-> > +		if (__rc__ < 0)			\
-> > +			return __rc__;		\
-> > +	}					\
-> > +	while (0)
-> 
-> I'm sure checkpatch warned about this. A return inside a macros is a
-> bad idea. I inherited code doing this, and broke it when adding
-> locking, because it was not obvious there was a return.
->
+--jkO+KyKz7TfD21mV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I saw the warning but I assumed that it wasn't a problem in this small context.
-The macro will be removed in v2.
+On Wed, Apr 24, 2019 at 10:50:00AM +0530, Vidya Sagar wrote:
+> Add P2U (PIPE to UPHY) and PCIe controller nodes to device tree.
+> The Tegra194 SoC contains six PCIe controllers and twenty P2U instances
+> grouped into two different PHY bricks namely High-Speed IO (HSIO-12 P2Us)
+> and NVIDIA High Speed (NVHS-8 P2Us) respectively.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v4]:
+> * None
+>=20
+> Changes since [v3]:
+> * None
+>=20
+> Changes since [v2]:
+> * Included 'hsio' or 'nvhs' in P2U node's label names to reflect which br=
+ick
+>   they belong to
+> * Removed leading zeros in unit address
+>=20
+> Changes since [v1]:
+> * Flattened all P2U nodes by removing 'hsio-p2u' and 'nvhs-p2u' super nod=
+es
+> * Changed P2U nodes compatible string from 'nvidia,tegra194-phy-p2u' to '=
+nvidia,tegra194-p2u'
+> * Changed reg-name from 'base' to 'ctl'
+> * Updated all PCIe nodes according to the changes made to DT documentatio=
+n file
+>=20
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 449 +++++++++++++++++++++++
+>  1 file changed, 449 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/d=
+ts/nvidia/tegra194.dtsi
+> index c77ca211fa8f..dc433b446ff5 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+[...]
+> +	pcie@14180000 {
+[...]
+> +		ranges =3D <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000   =
+ /* downstream I/O (1MB) */
+> +			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000  /* prefe=
+tchable memory (13GB) */
+> +			  0x82000000 0x0 0x40000000 0x1B 0x40000000 0x0 0xC0000000>; /* non-p=
+refetchable memory (3GB) */
 
-> > +
-> > +/* The following two functions do the same as in iproute2 */
-> > +#define TIME_UNITS_PER_SEC	1000000
-> > +static unsigned int tc_core_tick2time(unsigned int tick)
-> > +{
-> > +	return (tick * (u32)PSCHED_TICKS2NS(1)) / 1000;
-> > +}
-> > +
-> > +static unsigned int tc_calc_xmitsize(u64 rate, unsigned int ticks)
-> > +{
-> > +	return div_u64(rate * tc_core_tick2time(ticks), TIME_UNITS_PER_SEC);
-> > +}
-> 
-> Should these but put somewhere others can use them?
->
+Please be consistent in the capitalization of hexadecimal numbers. You
+use lowercase hexdigits in one place and upprecase in others. Just stick
+to one (preferably lowercase since that's already used elsewhere in this
+file).
 
-It would be nice to put them in a more public place, but I am in doubt where to
-put them and what to call them.
+> +	};
+> +
+> +	pcie@14100000 {
 
-Maybe they belong in the new file: include/net/tc_act/tc_police.h.
-Would that be ok?
+Also, entries should be sorted by unit-address, so controller 0 above
+needs to go further down.
 
-> > +
-> > +enum mscc_qos_rate_mode {
-> > +	MSCC_QOS_RATE_MODE_DISABLED, /* Policer/shaper disabled */
-> > +	MSCC_QOS_RATE_MODE_LINE, /* Measure line rate in kbps incl. IPG */
-> > +	MSCC_QOS_RATE_MODE_DATA, /* Measures data rate in kbps excl. IPG */
-> > +	MSCC_QOS_RATE_MODE_FRAME, /* Measures frame rate in fps */
-> > +	__MSCC_QOS_RATE_MODE_END,
-> > +	NUM_MSCC_QOS_RATE_MODE = __MSCC_QOS_RATE_MODE_END,
-> > +	MSCC_QOS_RATE_MODE_MAX = __MSCC_QOS_RATE_MODE_END - 1,
-> > +};
-> > +
-> > +/* Round x divided by y to nearest integer. x and y are integers */
-> > +#define MSCC_ROUNDING_DIVISION(x, y) (((x) + ((y) / 2)) / (y))
-> 
-> linux/kernel.h defines DIV_ROUND_UP(). Maybe add DIV_ROUND_DOWN()?
->
+Thierry
 
-This macro is currently not used and I will remove it in v2.
+--jkO+KyKz7TfD21mV
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > +
-> > +/* Round x divided by y to nearest higher integer. x and y are integers */
-> > +#define MSCC_DIV_ROUND_UP(x, y) (((x) + (y) - 1) / (y))
-> 
-> DIV_ROUND_UP() ?
->
+-----BEGIN PGP SIGNATURE-----
 
-I will use DIV_ROUND_UP() in v2.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzMJW0ACgkQ3SOs138+
+s6E+CxAAl1IP5hPwNub+ynrfDHIlvS8wnANVpXA+TBShMg1rBrA2c7ErQwRKFKrH
+nt0A/GAU1JPp+Ugy6Rvesx1f+mNpHl3ueZY9DnlY7FRjfgv39qKvFuCRAPHR2YDk
+CCgNJjCBroY3+OvmMxtK0b46pB7xtAwDXVBp0DbUGibGU+6wQ5XplqmwqQONu9YU
+tmMCy2vpr1PNzwgLGfhC7owYfz4vQVzJDWeSfUVbuf0uuhaYg9Lak5cfPJqEPPEF
+husujx86GqI+xk4zhAN/mvoMN9OoJplO7icUXCJRrB9lHOycZOA3SZwDFZm/rRmA
+q7AwE+bXW0FIX6Zel+6wAxBdpwvqc/RJmsRAe1efSh88NuTFn3AWW8Fc4K+4mOn/
+royxYh3z7Z/91PmfgoF9Ku6xtpeZVmD63lDQ+LHbTgrDb2lEjZ66Wcque1mYn4pt
+N6ko8YOVjwSEu0kVTk36j7Qyrk7VMTzuloelaaplcXY8iX0ClplKPTYH8+FbzXgQ
+W3itYlLXLNJQpfEceRZwuqWCcerLyURykmeVOih1n8PLuK0yEK8fr8GvyGP2JMvG
+hoF0m1QDdjnm1G7LvfLCBrngb6Bze4wQ+wLqn2u3ydi0m1gU5vJ0ac1oKIhMm6Si
+ntXZJ7cuJbnw4M3fkL8zHz+2HPyVZ+ZmZV/1GNX6KMKocNI8A6o=
+=IZEE
+-----END PGP SIGNATURE-----
 
-> > +	/* Limit to maximum values */
-> > +	pir = min_t(u32, GENMASK(15, 0), pir);
-> > +	cir = min_t(u32, GENMASK(15, 0), cir);
-> > +	pbs = min_t(u32, pbs_max, pbs);
-> > +	cbs = min_t(u32, cbs_max, cbs);
-> 
-> If it does need to limit, maybe return -EOPNOTSUPP?
->
-
-It seems fine to return -EOPBITSUPP here.
-I will do that in v2.
-
-> > +int ocelot_port_policer_add(struct ocelot_port *port,
-> > +			    struct tcf_police *p)
-> > +{
-> > +	struct ocelot *ocelot = port->ocelot;
-> > +	struct qos_policer_conf pp;
-> > +
-> > +	if (!p)
-> > +		return -EINVAL;
-> > +
-> > +	netdev_dbg(port->dev,
-> > +		   "result %d ewma_rate %u burst %lld mtu %u mtu_pktoks %lld\n",
-> > +		   p->params->tcfp_result,
-> > +		   p->params->tcfp_ewma_rate,
-> > +		   p->params->tcfp_burst,
-> > +		   p->params->tcfp_mtu,
-> > +		   p->params->tcfp_mtu_ptoks);
-> > +
-> > +	if (p->params->rate_present)
-> > +		netdev_dbg(port->dev,
-> > +			   "rate: rate %llu mult %u over %u link %u shift %u\n",
-> > +			   p->params->rate.rate_bytes_ps,
-> > +			   p->params->rate.mult,
-> > +			   p->params->rate.overhead,
-> > +			   p->params->rate.linklayer,
-> > +			   p->params->rate.shift);
-> > +
-> > +	if (p->params->peak_present)
-> > +		netdev_dbg(port->dev,
-> > +			   "peak: rate %llu mult %u over %u link %u shift %u\n",
-> > +			   p->params->peak.rate_bytes_ps,
-> > +			   p->params->peak.mult,
-> > +			   p->params->peak.overhead,
-> > +			   p->params->peak.linklayer,
-> > +			   p->params->peak.shift);
-> > +
-> > +	memset(&pp, 0, sizeof(pp));
-> 
-> Rather than memset, you can do:
-> 
-> 	struct qos_policer_conf pp = { 0 };
->
-
-I will do as you suggest in v2.
-
-> 	Andrew
-> 
-
--- 
-Joergen Andreasen, Microchip
+--jkO+KyKz7TfD21mV--
