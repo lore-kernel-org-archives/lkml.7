@@ -2,103 +2,125 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5B9C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40851C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACD52089E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556864841;
-	bh=ikQLO6/eT8HrwZPXkoqVkYn9ngP4X/Js5fRaLyLbP2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rgl1HsoNZzALNywg+r0is5+H9zv27HXcCaZZDP+8jziX0OWi9wXTHFic0ZBsZxrxF
-	 BtWgieYfkvjg1KC2HvN19UVkgvyxw6Zxzvd797rXVDVsySuQD70VJt0Ub5GZSIPMOJ
-	 JimW3eCwao5kX/sxTDbTPCwqofhqen/2UPHUyZMU=
+	by mail.kernel.org (Postfix) with ESMTP id 0E97B206DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 06:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfECG1T (ORCPT
+        id S1726650AbfECGbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 02:27:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35282 "EHLO mail.kernel.org"
+        Fri, 3 May 2019 02:31:15 -0400
+Received: from mga04.intel.com ([192.55.52.120]:23973 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfECG1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 02:27:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70DF8206DF;
-        Fri,  3 May 2019 06:27:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556864838;
-        bh=ikQLO6/eT8HrwZPXkoqVkYn9ngP4X/Js5fRaLyLbP2U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pKa9M0rUa2nDqQCp72/jGuaDLrrdJtXOwRQ9CtuZTH+Gk2RkwGryJiyrAshl8oqE8
-         nxE1vmI8F+0YCq7hoeIO3O0JtfPoDD4wBEZPvSjjg3FI798TcgYQKTuqCr0R+X1T1X
-         WSaCNE37x6cVf7VhYGkdyrek53pNjCU5OWLD67uY=
-Date:   Fri, 3 May 2019 08:27:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Tobin C. Harding" <me@tobin.cc>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, cl@linux.com,
-        tycho@tycho.ws, willy@infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kobject: clean up the kobject add documentation a bit
- more
-Message-ID: <20190503062716.GA8960@kroah.com>
-References: <20190427081330.GA26788@eros.localdomain>
- <20190427192809.GA8454@kroah.com>
- <20190501215616.GD18827@eros.localdomain>
- <20190502071742.GC16247@kroah.com>
- <20190502072808.GA14064@kroah.com>
- <20190502081918.GA18363@eros.localdomain>
- <20190502102224.GA15012@kroah.com>
- <20190503012529.GB7416@eros.localdomain>
+        id S1725775AbfECGbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 02:31:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 May 2019 23:31:14 -0700
+X-ExtLoop1: 1
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by orsmga002.jf.intel.com with ESMTP; 02 May 2019 23:31:10 -0700
+Subject: Re: [PATCH] mmc: Fix tag set memory leak
+To:     Raul E Rangel <rrangel@chromium.org>, linux-mmc@vger.kernel.org
+Cc:     avri.altman@wdc.com, djkurtz@chromium.org, zwisler@chromium.org,
+        Ming Lei <ming.lei@redhat.com>,
+        Hannes Reinecke <hare@suse.com>, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@fb.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+References: <20190502190714.181664-1-rrangel@chromium.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <681b2cba-4442-ae9a-5a3c-461c384198bd@intel.com>
+Date:   Fri, 3 May 2019 09:29:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190503012529.GB7416@eros.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190502190714.181664-1-rrangel@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 11:25:29AM +1000, Tobin C. Harding wrote:
-> On Thu, May 02, 2019 at 12:22:24PM +0200, Greg Kroah-Hartman wrote:
-> > Commit 1fd7c3b438a2 ("kobject: Improve doc clarity kobject_init_and_add()")
-> > tried to provide more clarity, but the reference to kobject_del() was
-> > incorrect.  Fix that up by removing that line, and hopefully be more explicit
-> > as to exactly what needs to happen here once you register a kobject with the
-> > kobject core.
-> > 
-> > Cc: Tobin C. Harding <tobin@kernel.org>
-> > Fixes: 1fd7c3b438a2 ("kobject: Improve doc clarity kobject_init_and_add()")
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > diff --git a/lib/kobject.c b/lib/kobject.c
-> > index 3f4b7e95b0c2..f2ccdbac8ed9 100644
-> > --- a/lib/kobject.c
-> > +++ b/lib/kobject.c
-> > @@ -416,8 +416,12 @@ static __printf(3, 0) int kobject_add_varg(struct kobject *kobj,
-> >   *         to this function be directly freed with a call to kfree(),
-> >   *         that can leak memory.
-> >   *
-> > - *         If this call returns successfully and you later need to unwind
-> > - *         kobject_add() for the error path you should call kobject_del().
-> > + *         If this function returns success, kobject_put() must also be called
-> > + *         in order to properly clean up the memory associated with the object.
-> > + *
-> > + *         In short, once this function is called, kobject_put() MUST be called
-> > + *         when the use of the object is finished in order to properly free
-> > + *         everything.
-> >   */
-> >  int kobject_add(struct kobject *kobj, struct kobject *parent,
-> >  		const char *fmt, ...)
+On 2/05/19 10:07 PM, Raul E Rangel wrote:
+> The tag set is allocated in mmc_init_queue but never freed. This results
+> in a memory leak. This change makes sure we free the tag set when the
+> queue is also freed.
 > 
-> Ack! (Do I get to do those :)
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 
-Yes you do, thanks, now added to the patch and queued up.
+One comment below, otherwise:
 
-greg k-h
+Fixes: 81196976ed94 ("mmc: block: Add blk-mq support")
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+> I found this using kmemleak and plugging and unplugging an SD card in a
+> few times.
+> 
+> Here is an example of the output of kmemleak:
+> unreferenced object 0xffff888125be4ce8 (size 8):
+>   comm "kworker/1:0", pid 17, jiffies 4294901575 (age 204.773s)
+>   hex dump (first 8 bytes):
+>     00 00 00 00 00 00 00 00                          ........
+>   backtrace:
+>     [<0000000061cb8887>] blk_mq_alloc_tag_set+0xe9/0x234
+>     [<00000000cf532a0f>] mmc_init_queue+0xa9/0x2f0
+>     [<000000001e085171>] mmc_blk_alloc_req+0x125/0x2f9
+>     [<00000000eae1bd01>] mmc_blk_probe+0x1e2/0x6c1
+>     [<00000000a0b4a87d>] really_probe+0x1bd/0x3b0
+>     [<00000000e58f3eb9>] driver_probe_device+0xe1/0x115
+>     [<00000000358f3b3c>] bus_for_each_drv+0x89/0xac
+>     [<00000000ef52ccbe>] __device_attach+0xb0/0x14a
+>     [<00000000c9daafa7>] bus_probe_device+0x33/0x9f
+>     [<0000000008ac5779>] device_add+0x34b/0x5e2
+>     [<00000000b42623cc>] mmc_add_card+0x1f5/0x20d
+>     [<00000000f114ebc3>] mmc_attach_sd+0xc5/0x14b
+>     [<000000006e915e0d>] mmc_rescan+0x261/0x2b6
+>     [<00000000e5b49c26>] process_one_work+0x1d3/0x31f
+>     [<0000000068c8cd3c>] worker_thread+0x1cd/0x2bf
+>     [<00000000326e2e22>] kthread+0x14f/0x157
+> 
+> Once I applied this patch the leak went away.
+> 
+> p.s., I included a small white space fix. Hope that's ok.
+
+Not really.  For example, the patch does not apply cleanly to stable trees
+only because of that chunk.
+
+> 
+>  drivers/mmc/core/queue.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+> index 7c364a9c4eeb..176a08748cf1 100644
+> --- a/drivers/mmc/core/queue.c
+> +++ b/drivers/mmc/core/queue.c
+> @@ -402,7 +402,7 @@ int mmc_init_queue(struct mmc_queue *mq, struct mmc_card *card)
+>  
+>  	mq->card = card;
+>  	mq->use_cqe = host->cqe_enabled;
+> -	
+> +
+>  	spin_lock_init(&mq->lock);
+>  
+>  	memset(&mq->tag_set, 0, sizeof(mq->tag_set));
+> @@ -472,6 +472,7 @@ void mmc_cleanup_queue(struct mmc_queue *mq)
+>  		blk_mq_unquiesce_queue(q);
+>  
+>  	blk_cleanup_queue(q);
+> +	blk_mq_free_tag_set(&mq->tag_set);
+>  
+>  	/*
+>  	 * A request can be completed before the next request, potentially
+> 
+
