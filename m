@@ -2,137 +2,109 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B194C004C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856CEC43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA1B206C3
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56529206C3
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 08:31:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HHKoFlgu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fenSNmyA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfECI3r (ORCPT
+        id S1726552AbfECIbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 04:29:47 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51359 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfECI3q (ORCPT
+        Fri, 3 May 2019 04:31:53 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44251 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfECIbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 04:29:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t76so6047743wmt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 01:29:45 -0700 (PDT)
+        Fri, 3 May 2019 04:31:52 -0400
+Received: by mail-lf1-f67.google.com with SMTP id n134so2020776lfn.11
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 01:31:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9BWo4wrOMB7S6ZNUaQSd5jSdL7ORd90HoRUjKXASCiQ=;
-        b=HHKoFlguUqMrYs86X0mAjpTHbiYUGjBZBnQY2FzIfEE8KKRzBWHZ8eb57oRe4+Bfp8
-         yFXtFxpH7T9X0bXnNj6+VYMnbGFBJ+4kxQmuf9ONuGaS/9yK2/vEzUQPPu8dYC21rhr4
-         jdAvNAqaDu5WTi2WjZnyXaDS1H1aQ40jn8LY/rfrD27yN2DWrmsUSaTOXMeE6ioKxmtr
-         S4WT3GtCL6xcU7/RgBWqRVN/VdlcdySBgBvnKbzSEIY7pyPXuHbjlgWdX627m1slu3ma
-         7GZaoBTOsBUMqkvmPxY/XA93MIZHMWOviSdD8ui/CJX7qRwAudIKteETxeZxnLVntxmo
-         26eQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k2ylaX4prU4y+pJMH/9/AjUxzWLSop/aCDuaVRH32I0=;
+        b=fenSNmyAj8ADxOqyLIXpSSgKSa18U27vLWgPFOcTBPX3r1oVH/L5+X7iKMGOav5uC7
+         L7bNwKgzA8UuBq2OxXMFqWzjntIcIRlUgwx4iTgUVD2S9JbOyQlnwO06rXTW95YWvJGl
+         j3xNn+GCJReS8E1zTpEzk+gOjOUjTHsjJal/KK8+doqYfnBNAF9LG7UtGIq+NHK+e1SR
+         9V/k0feRtMS6QhkvHmFjSydmOg6TYZ0XFkAqZ7ZDXt7TcX5hM3kXuWUTZekjyBzK4E4D
+         0N3J6vwqXCQAWdlssO5SLt3FhAvt7j6kJlBy3oynVH/CFt04n+ncij+gVW/iwrpUqUFv
+         ydaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9BWo4wrOMB7S6ZNUaQSd5jSdL7ORd90HoRUjKXASCiQ=;
-        b=Oqgqw2EsTAK6c5+mETV/f//GHUluRalIerncKvfY6Q7sTcyfghNOhNzuUHIJ3CjDZn
-         7g2rSV9Pg4OSXzH6hxLGtR4g+YFt6+swv2KFb0FTksw1NSlZiBVi+z0Shuz1lVhqrMJO
-         N1h7sKRohci4HP6rjrqW3qwiwMyjRqnMTHDR8QrSLwWym3GcxvoiV4IPhGfPL92tn+2M
-         levecQkmlA1e5qF6G53nfUYcktZDwldRhK+pYx5AGj0WN0g6kjn9QIIecNb17pfoH71y
-         bioQFb6gzh3jn5XKXhtb+SbFnaFO9LZbj8RMbHDtdDv5IpOowmbzKeo8t8qF3E+1mtVI
-         OITQ==
-X-Gm-Message-State: APjAAAUVNJqGXiR83LGqq0J/Dt+qtXFR7SwS4dLH2qTrhDa9MLm7YA/P
-        pKQNZMdzS9L89UN24UZsy9FJ/84Vlb8=
-X-Google-Smtp-Source: APXvYqyVCwBwURKCdJNbafReM5dEKW0CL0LzHWCrcu7tg33cbbP2AxeFXU3xXgXEccvg/l0jXNBytw==
-X-Received: by 2002:a1c:ce:: with SMTP id 197mr5168760wma.105.1556872184621;
-        Fri, 03 May 2019 01:29:44 -0700 (PDT)
-Received: from [192.168.1.2] (200.red-83-34-200.dynamicip.rima-tde.net. [83.34.200.200])
-        by smtp.gmail.com with ESMTPSA id n4sm1714792wmk.24.2019.05.03.01.29.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 01:29:43 -0700 (PDT)
-Subject: Re: [PATCH 2/3] drivers: regulator: qcom: add PMS405 SPMI regulator
-To:     Mark Brown <broonie@kernel.org>
-Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        bjorn.andersson@linaro.org, vinod.koul@linaro.org,
-        niklas.cassel@linaro.org, khasim.mohammed@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-References: <a3c281d5-d30e-294f-71ab-957decde2ba0@linaro.org>
- <20190502023316.GS14916@sirena.org.uk>
- <dd15d784-f2a1-78c6-3543-69bbcc1143c4@linaro.org>
- <20190503062626.GE14916@sirena.org.uk>
-From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Message-ID: <229823c4-f5d4-4821-ded1-cc046dd0bd20@linaro.org>
-Date:   Fri, 3 May 2019 10:29:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k2ylaX4prU4y+pJMH/9/AjUxzWLSop/aCDuaVRH32I0=;
+        b=RYz9zq+cL5AF83G/ZnGqNPoi/pPV7/MS/GkYvq66um8wYRE1YGrsmyi0iXA7MHrVee
+         8gzNVOWnbA/gMPZl9XYOEVliQcV5VVofz+BCcEk3Lhztv/eix4z1XwtwUPdC2wcKSSzW
+         SM/y7oOEmIVL5Mgr9z6pi4irHpd3p7zajW0LlvS/95T51LNCFDsfOPf/QFWgqQnLbVRQ
+         SsZbJbMkzgjsesSkrHfoLOsUdFO/ENBViIKgX7TTRCzxH7dTlXYANXNsf5pWpMW7kkqn
+         NEhbNth3RGFHLs6cZ3pcqd/gbTZBtUj6a4yP1KLvFXRB6amACjbDyNp+o9uIab84enJW
+         8x5w==
+X-Gm-Message-State: APjAAAVRC2C1rv7Ll4jFOUr70GTaUeQ7DqY5D10elJMJW18EV6Z4GVwF
+        ghYfWHQkuIoQZoKCam/Q7S8=
+X-Google-Smtp-Source: APXvYqz/F601TjsizceYi3h6zVYbfffsDkGISMMCQWPUJFYk/Fyck/6BZ5MgKXOLvl1t6oS9lr/1NQ==
+X-Received: by 2002:ac2:50ca:: with SMTP id h10mr4468043lfm.31.1556872310606;
+        Fri, 03 May 2019 01:31:50 -0700 (PDT)
+Received: from uranus.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id v23sm270042ljk.14.2019.05.03.01.31.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 01:31:49 -0700 (PDT)
+Received: by uranus.localdomain (Postfix, from userid 1000)
+        id 530F04603F4; Fri,  3 May 2019 11:31:49 +0300 (MSK)
+Date:   Fri, 3 May 2019 11:31:49 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     Joel Savitz <jsavitz@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Micah Morton <mortonm@chromium.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Jann Horn <jannh@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Yury Norov <norov.maillist@gmail.com>
+Subject: Re: [PATCH v2 1/2] kernel/sys: add PR_GET_TASK_SIZE option to
+ prctl(2)
+Message-ID: <20190503083149.GH2488@uranus.lan>
+References: <1556830342-32307-1-git-send-email-jsavitz@redhat.com>
+ <1556830342-32307-2-git-send-email-jsavitz@redhat.com>
+ <20190502210922.GF2488@uranus.lan>
+ <CAL1p7m6eC3-99oFEyp0F1xn7qN4Vx+s-kHQXh14cMUWoVFqbWw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190503062626.GE14916@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL1p7m6eC3-99oFEyp0F1xn7qN4Vx+s-kHQXh14cMUWoVFqbWw@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/19 08:26, Mark Brown wrote:
-> On Thu, May 02, 2019 at 01:30:48PM +0200, Jorge Ramirez wrote:
->> On 5/2/19 04:33, Mark Brown wrote:
+On Thu, May 02, 2019 at 05:46:08PM -0400, Joel Savitz wrote:
+> > Won't be possible to use put_user here? Something like
+> >
+> > static int prctl_get_tasksize(unsigned long __user *uaddr)
+> > {
+> >         return put_user(TASK_SIZE, uaddr) ? -EFAULT : 0;
+> > }
 > 
->>> I'm not sure I follow here, sorry - I can see that the driver needs a
->>> custom get/set selector operation but shouldn't it be able to use the
->>> standard list and map operations for linear ranges?
-> 
->> I agree it should, but unfortunately that is not the case; when I first
->> posted the patch I was concerned that for a regulator to be supported by
->> this driver it should obey to the driver's internals (ie: comply with
->> all of the spmi_common_regulator_registers definitions).
-> 
-> That's not a requirement that I'd particularly expect - it's not unusual
-> for devices to have multiple different styles of regulators in a single
-> chip (eg, DCDCs often have quite different register maps to LDOs).
-> 
->> However, since there was just a single range to support, the
->> modifications I had to do to support this SPMI regulator were minimal -
->> hence why I opted for the changes under discussion instead of writing a
->> new driver (which IMO it is an overkill).
-> 
->> what do you think?
-> 
-> It seems a bit of a jump to add a new driver - it's just another
-> descriptor and ops structure isn't it?  Though as ever with the Qualcomm
-> stuff this driver is pretty baroque which doesn't entirely help though I
-> think it's just another regulator type which there's already some
-> handling for.
-> 
+> What would be the benefit of using put_user() over copy_to_user() in
+> this context?
 
-So how do we move this forward?
-
-To sum up his regulator needs to be able to bypass accesses to
-SPMI_COMMON_REG_VOLTAGE_RANGE and provide the range in some other way
-hence the change below
-
-I can't find a simpler solution than this since the function does now
-what is supposed to do for all the regulator types supported in the driver
-
- @@ -653,6 +708,10 @@ spmi_regulator_find_range(struct spmi_regulator *vreg)
-  	range = vreg->set_points->range;
-  	end = range + vreg->set_points->count;
-
- +	/* we know we only have one range for this type */
- +	if (vreg->logical_type == SPMI_REGULATOR_LOGICAL_TYPE_HFS430)
- +		return range;
- +
-  	spmi_vreg_read(vreg, SPMI_COMMON_REG_VOLTAGE_RANGE, &range_sel, 1);
-
-  	for (; range < end; range++)
-
-
-
+It is a common pattern to use put_user with native types, where
+copy_to_user more biased for composed types transfer.
