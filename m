@@ -2,276 +2,128 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	URIBL_SBL,URIBL_SBL_A,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C41C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72636C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33D42075C
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41CC82075C
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 07:21:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VYeihwAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbfECHSy (ORCPT
+        id S1726653AbfECHVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 03:18:54 -0400
-Received: from smtp.nue.novell.com ([195.135.221.5]:37571 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfECHSy (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
-        Fri, 3 May 2019 03:18:54 -0400
-Received: from emea4-mta.ukb.novell.com ([10.120.13.87])
-        by smtp.nue.novell.com with ESMTP (TLS encrypted); Fri, 03 May 2019 09:18:52 +0200
-Received: from linux-l9pv.suse (nwb-a10-snat.microfocus.com [10.120.13.201])
-        by emea4-mta.ukb.novell.com with ESMTP (TLS encrypted); Fri, 03 May 2019 08:18:24 +0100
-Date:   Fri, 3 May 2019 15:18:19 +0800
-From:   joeyli <jlee@suse.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Josh Boyer <jwboyer@fedoraproject.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2 v3] efi: print appropriate status message when
- loading certificates
-Message-ID: <20190503071819.GN11486@linux-l9pv.suse>
-References: <20190502040441.30372-1-jlee@suse.com>
- <20190502040441.30372-2-jlee@suse.com>
- <CAKv+Gu8MESd3BXCKR=EH7Z1kWegm9XjTP38jBsizpgDAuyA3YQ@mail.gmail.com>
+        Fri, 3 May 2019 03:21:25 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32800 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbfECHVZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 03:21:25 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y3so2295553plp.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 00:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cuSlUL65Xiw709t0yCxPP8D9MQj3q7kiVJeq2I3hujg=;
+        b=VYeihwAthmmT61RYkOnOcb6q+9n+gbWqi60UQimsI9/9mDBote8mHHNY/Me7oDCN/I
+         83elSHOXuEbO+1KhEMiOh8ERvYrYzVBYR5ztvK5PnvQ+bWX1LJbC00lnKNgvp2/3U10u
+         M9DFrJ901h+wgC/9KBugvwZrmkZazcrE9J3EVEOxUGSWVtsSfl7mcfm+RHP0g5y2sBYJ
+         2ISuxAE3nznT+/7VBdc2PH6s799QU2vTOJoVqu5eCddLyEK1laGnRxiOSNVnEykZTmZn
+         1rdN0oydsy/lZ3PtdSDjDgO2k5jKqpjrnRJaODQcBVOYj5qcab7uz+ZVqvewQhoFHfAj
+         A6HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cuSlUL65Xiw709t0yCxPP8D9MQj3q7kiVJeq2I3hujg=;
+        b=KEpFbvbV4Ps+6t1CIjcFdZ95h7KSTcy0V3hBPfS/1VwQXj8H5wlQNPxwWC6nVu1f6y
+         eEzvtHVFE+MN7StW21x05ptYgHWhlR+S6myc5a0yCDYlZZxplWeHXulxtISoBPWPaKaJ
+         Fv4VONnRpd+Zqlo6uDN//lJ4XYgNH8PX4cDaqUz9lJU2cuWnVq03g4n2oe3nUxwvSVON
+         2ka+cz+9HTxfvA+VJAKB4rbfbvaCaIwdLq5uIkuuE4z52AXiVZwEEloZRtlc2Z6Fx6Vd
+         pKfPk6EXsbjXtRWuQirWxlOn/scwQ9PeIZrHbaRHYES6381SttZl3J9byi+hlee/bgTL
+         KIig==
+X-Gm-Message-State: APjAAAU3ieFFkMxYnhVJ27DOsXMlWd/dUbuyR8zDeN1PsCbAdxiSd7IY
+        xBX+3pfy3IKpdN29IIqvxJiSpg==
+X-Google-Smtp-Source: APXvYqx0sjBi/uQUbVukjr1ZlV+7VB+uA96jSCHmJbR//3T/bGuSLeTjAs7jL9nJZkSTJKuSKtfFdw==
+X-Received: by 2002:a17:902:3281:: with SMTP id z1mr8326525plb.44.1556868084055;
+        Fri, 03 May 2019 00:21:24 -0700 (PDT)
+Received: from localhost ([171.61.121.242])
+        by smtp.gmail.com with ESMTPSA id f14sm1602581pgj.24.2019.05.03.00.21.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 00:21:23 -0700 (PDT)
+Date:   Fri, 3 May 2019 12:51:20 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] thermal: cpu_cooling: Actually trace CPU load in
+ thermal_power_cpu_get_power
+Message-ID: <20190503072120.bm7xtvxc6k4s2kyc@vireshk-i7>
+References: <20190502183238.182058-1-mka@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu8MESd3BXCKR=EH7Z1kWegm9XjTP38jBsizpgDAuyA3YQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190502183238.182058-1-mka@chromium.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ard,
-
-On Thu, May 02, 2019 at 11:04:34AM +0200, Ard Biesheuvel wrote:
-> On Thu, 2 May 2019 at 06:04, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
-> >
-> > When loading certificates list from UEFI variable, the original error
-> > message direct shows the efi status code from UEFI firmware. It looks
-> > ugly:
-> >
-> > [    2.335031] Couldn't get size: 0x800000000000000e
-> > [    2.335032] Couldn't get UEFI MokListRT
-> > [    2.339985] Couldn't get size: 0x800000000000000e
-> > [    2.339987] Couldn't get UEFI dbx list
-> >
-> > So, this patch shows the status string instead of status code.
-> >
-> > On the other hand, the "Couldn't get UEFI" message doesn't need
-> > to be exposed when db/dbx/mok variable do not exist. So, this
-> > patch set the message level to debug.
-> >
-> > v3.
-> > - Print messages similar to db/mok when loading dbx hash to blacklist:
-> > [    1.500952] EFI: Blacklisting hash of an executable: UEFI:dbx
-> > [    1.501773] blacklist: Loaded blacklisting hash
-> > 'bin:80b4d96931bf0d02fd91a61e19d14f1da452e66db2408ca8604d411f92659f0a'
-> >
-> > - Setting messages for the existence of db/mok/dbx lists to debug level.
-> >
-> > v2.
-> > Setting the MODSIGN messages level to debug.
-> >
-> > Link:
-> > https://forums.opensuse.org/showthread.php/535324-MODSIGN-Couldn-t-get-UEFI-db-list?p=2897516#post2897516
-> > Cc: James Morris <jmorris@namei.org>
-> > Cc: Serge E. Hallyn" <serge@hallyn.com>
-> > Cc: David Howells <dhowells@redhat.com>
-> > Cc: Nayna Jain <nayna@linux.ibm.com>
-> > Cc: Josh Boyer <jwboyer@fedoraproject.org>
-> > Cc: Mimi Zohar <zohar@linux.ibm.com>
-> > Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
-> > ---
-> >  certs/blacklist.c                             |  3 +-
-> >  security/integrity/platform_certs/load_uefi.c | 40 +++++++++++++++++++--------
-> >  2 files changed, 31 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/certs/blacklist.c b/certs/blacklist.c
-> > index 3a507b9e2568..f91437e39e44 100644
-> > --- a/certs/blacklist.c
-> > +++ b/certs/blacklist.c
-> > @@ -100,7 +100,8 @@ int mark_hash_blacklisted(const char *hash)
-> >         if (IS_ERR(key)) {
-> >                 pr_err("Problem blacklisting hash (%ld)\n", PTR_ERR(key));
-> >                 return PTR_ERR(key);
-> > -       }
-> > +       } else
-> > +               pr_notice("Loaded blacklisting hash '%s'\n", hash);
-> >         return 0;
-> >  }
-> >
-> > diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-> > index 81b19c52832b..6b6996e5bc27 100644
-> > --- a/security/integrity/platform_certs/load_uefi.c
-> > +++ b/security/integrity/platform_certs/load_uefi.c
-> > @@ -1,5 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >
-> > +#define pr_fmt(fmt) "EFI: "fmt
-> > +
-> >  #include <linux/kernel.h>
-> >  #include <linux/sched.h>
-> >  #include <linux/cred.h>
-> > @@ -35,6 +37,18 @@ static __init bool uefi_check_ignore_db(void)
-> >         return status == EFI_SUCCESS;
-> >  }
-> >
-> > +static void str16_to_str(efi_char16_t *str16, char *str, int str_size)
-> > +{
-> > +       int i = 0;
-> > +
-> > +       while (str16[i] != '\0' && i < (str_size - 1)) {
-> > +               str[i] = str16[i];
-> > +               i++;
-> > +       }
-> > +
-> > +       str[i] = '\0';
-> > +}
-> > +
-> >  /*
-> >   * Get a certificate list blob from the named EFI variable.
-> >   */
-> > @@ -44,13 +58,20 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
-> >         efi_status_t status;
-> >         unsigned long lsize = 4;
-> >         unsigned long tmpdb[4];
-> > +       char namestr[16];
-> >         void *db;
-> >
-> > +       str16_to_str(name, namestr, ARRAY_SIZE(namestr));
+On 02-05-19, 11:32, Matthias Kaehlcke wrote:
+> The CPU load values passed to the thermal_power_cpu_get_power
+> tracepoint are zero for all CPUs, unless, unless the
+> thermal_power_cpu_limit tracepoint is enabled too:
 > 
-> Please drop this (and the function above) - instead, just return NULL
-> if the variable is not found (without reporting an error).
->
-
-This name string is for printing debug level message, not error message.
-This function already returns NULL when EFI_NOT_FOUND be returned by
-firmware.
- 
-> >         status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
-> >         if (status != EFI_BUFFER_TOO_SMALL) {
-> > -               pr_err("Couldn't get size: 0x%lx\n", status);
-> > +               if (status == EFI_NOT_FOUND)
-> > +                       pr_debug("UEFI %s list doesn't exist\n", namestr);
-> > +               else
-> > +                       pr_err("Couldn't get size for UEFI %s list: %s\n",
-> > +                               namestr, efi_status_to_str(status));
-> >                 return NULL;
-
-here returns NULL when EFI_NOT_FOUND. The message of existence is for
-debugging. 
-
-> >         }
-> > +       pr_debug("UEFI %s list exists\n", namestr);
-> >
-> >         db = kmalloc(lsize, GFP_KERNEL);
-> >         if (!db)
-> > @@ -59,7 +80,8 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
-> >         status = efi.get_variable(name, guid, NULL, &lsize, db);
-> >         if (status != EFI_SUCCESS) {
-> >                 kfree(db);
-> > -               pr_err("Error reading db var: 0x%lx\n", status);
-> > +               pr_err("Error reading UEFI %s list: %s\n",
-> > +                       namestr, efi_status_to_str(status));
-> >                 return NULL;
-> >         }
-> >
-> > @@ -95,6 +117,7 @@ static __init void uefi_blacklist_hash(const char *source, const void *data,
-> >  static __init void uefi_blacklist_x509_tbs(const char *source,
-> >                                            const void *data, size_t len)
-> >  {
-> > +       pr_info("Blacklisting X.509 TBS hash: %s\n", source);
-> >         uefi_blacklist_hash(source, data, len, "tbs:", 4);
-> >  }
-> >
-> > @@ -104,6 +127,7 @@ static __init void uefi_blacklist_x509_tbs(const char *source,
-> >  static __init void uefi_blacklist_binary(const char *source,
-> >                                          const void *data, size_t len)
-> >  {
-> > +       pr_info("Blacklisting hash of an executable: %s\n", source);
-> >         uefi_blacklist_hash(source, data, len, "bin:", 4);
-> >  }
-> >
+>   irq/41-rockchip-98    [000] ....   290.972410: thermal_power_cpu_get_power:
+>   cpus=0000000f freq=1800000 load={{0x0,0x0,0x0,0x0}} dynamic_power=4815
 > 
-> These are separate changes - I don't have an opinion whether they are
-> appropriate or not, but they should be in a separate patch.
->
-
-I will move the message of blacklising hash to other patch. Thanks!
- 
-> > @@ -154,9 +178,7 @@ static int __init load_uefi_certs(void)
-> >          */
-> >         if (!uefi_check_ignore_db()) {
-> >                 db = get_cert_list(L"db", &secure_var, &dbsize);
-> > -               if (!db) {
-> > -                       pr_err("MODSIGN: Couldn't get UEFI db list\n");
-> > -               } else {
-> > +               if (db) {
-> >                         rc = parse_efi_signature_list("UEFI:db",
-> >                                         db, dbsize, get_handler_for_db);
-> >                         if (rc)
-> > @@ -167,9 +189,7 @@ static int __init load_uefi_certs(void)
-> >         }
-> >
-> >         mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
-> > -       if (!mok) {
-> > -               pr_info("Couldn't get UEFI MokListRT\n");
-> > -       } else {
-> > +       if (mok) {
-> >                 rc = parse_efi_signature_list("UEFI:MokListRT",
-> >                                               mok, moksize, get_handler_for_db);
-> >                 if (rc)
-> > @@ -178,9 +198,7 @@ static int __init load_uefi_certs(void)
-> >         }
-> >
-> >         dbx = get_cert_list(L"dbx", &secure_var, &dbxsize);
-> > -       if (!dbx) {
-> > -               pr_info("Couldn't get UEFI dbx list\n");
-> > -       } else {
-> > +       if (dbx) {
-> >                 rc = parse_efi_signature_list("UEFI:dbx",
-> >                                               dbx, dbxsize,
-> >                                               get_handler_for_dbx);
-> > --
-> > 2.16.4
-> >
+> vs
 > 
-> I think we should consider carefully what it means if some of these
-> variables don't exist:
-> - if secure boot is enabled, db and dbx must exist, so if they don't,
-> something is wrong
+>   irq/41-rockchip-96    [000] ....    95.773585: thermal_power_cpu_get_power:
+>   cpus=0000000f freq=1800000 load={{0x56,0x64,0x64,0x5e}} dynamic_power=4959
+>   irq/41-rockchip-96    [000] ....    95.773596: thermal_power_cpu_limit:
+>   cpus=0000000f freq=408000 cdev_state=10 power=416
+> 
+> There seems to be no good reason for omitting the CPU load information
+> depending on another tracepoint. My guess is that the intention was to
+> check whether thermal_power_cpu_get_power is (still) enabled, however
+> 'load_cpu != NULL' already indicates that it was at least enabled when
+> cpufreq_get_requested_power() was entered, there seems little gain
+> from omitting the assignment if the tracepoint was just disabled, so
+> just remove the check.
+> 
+> Fixes: 6828a4711f99 ("thermal: add trace events to the power allocator governor")
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  drivers/thermal/cpu_cooling.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+> index f7c1f49ec87f..b437804e099b 100644
+> --- a/drivers/thermal/cpu_cooling.c
+> +++ b/drivers/thermal/cpu_cooling.c
+> @@ -458,7 +458,7 @@ static int cpufreq_get_requested_power(struct thermal_cooling_device *cdev,
+>  			load = 0;
+>  
+>  		total_load += load;
+> -		if (trace_thermal_power_cpu_limit_enabled() && load_cpu)
+> +		if (load_cpu)
+>  			load_cpu[i] = load;
+>  
+>  		i++;
 
-The existence of db/dbx is not related to secure boot. If manufacturer/user
-enrolled certificate/hash to db or dbx, then the variable will be created.
-If user didn't enroll anything to db/dbx, then variables will not show up.
+@Javi: I find this change to be fine, do you have any comments on this ?
 
-> - secure boot might be enabled but we may be booting without shim.
-
-Shim always creates MokListRT no matter secure boot enabled or disabled.
-
-> - secure boot might be disabled.
->
-
-It's not about secure boot, db/dbx/MokListRT are always available at
-runtime if user was enrolled something to those list.
- 
-> Tweaking the severity of error messages without having a clear idea of
-> the policy we are aiming to implement is likely to cause trouble down
-> the road, so perhaps someone could explain what this code does, and
-> how it should behave in the above circumstances.
-
-Thanks
-Joey Lee
+-- 
+viresh
