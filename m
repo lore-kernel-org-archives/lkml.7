@@ -2,100 +2,85 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EB8C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 629A6C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA52F2075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:44:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RxZCYN0g"
+	by mail.kernel.org (Postfix) with ESMTP id 33B2F2075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfECLoW (ORCPT
+        id S1727696AbfECLo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:44:22 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:42120 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbfECLoV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:44:21 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43BdQ35061107;
-        Fri, 3 May 2019 11:43:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=/lUSL6u6dCv+qk16245uxZt1XSGKYM9t/rlDDOHNkoM=;
- b=RxZCYN0gGG+lQ+eUhZU3ekXqD8QfSg69uur9UTnrN9aU1f9+Ggw+y5LXgk6EOXcU4JCQ
- 2k83xHsdvNPIs3UiadOfmOuBfxRV3UJLAjac3a9+lnaNMCk+97wpdHWu5FS3/9U774bm
- zJyd8fDi2tZpEVzaDhsQdezf1YjUyc8DwLDrBQwcXeiQqh3GvhWz1IWvOu6oACsCwYC3
- bU79La0Rm9+XSLjl2tTglB3nuZ+keGvYxPbPQQLkC04rbKY5k9OG2nqVZbu4eg23+9KW
- 8kvLfMr1+4HpVBdesZOaOnigRpEUjQUbEhwauuN03U8ZTed3Lu/wFXMh8903i3l1kMcE 6w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2s6xhyp62p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 11:43:55 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43BgnR4145790;
-        Fri, 3 May 2019 11:43:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2s7rtc82w4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 11:43:54 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x43BhqvR005877;
-        Fri, 3 May 2019 11:43:53 GMT
-Received: from mwanda (/196.104.111.181)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 May 2019 04:43:52 -0700
-Date:   Fri, 3 May 2019 14:43:34 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Amritha Nambiar <amritha.nambiar@intel.com>,
-        Willem de Bruijn <willemb@google.com>,
-        kernel-janitors@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 2/2] io_uring: Potential Oops in io_sq_offload_start()
-Message-ID: <20190503114334.GA16540@mwanda>
-References: <20190404104527.GX4038@hirez.programming.kicks-ass.net>
- <20190408081513.GB15239@kadam>
- <20190430092619.GC2239@kadam>
+        Fri, 3 May 2019 07:44:59 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59048 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726377AbfECLo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 07:44:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EBDF374;
+        Fri,  3 May 2019 04:44:58 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA2A53F220;
+        Fri,  3 May 2019 04:44:56 -0700 (PDT)
+Date:   Fri, 3 May 2019 12:44:54 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 04/25] iommu/dma: Remove the flush_page callback
+Message-ID: <20190503114454.GD55449@arrakis.emea.arm.com>
+References: <20190430105214.24628-1-hch@lst.de>
+ <20190430105214.24628-5-hch@lst.de>
+ <20190503114335.GC55449@arrakis.emea.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430092619.GC2239@kadam>
+In-Reply-To: <20190503114335.GC55449@arrakis.emea.arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=848
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905030074
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=894 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905030074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:26:19PM +0300, Dan Carpenter wrote:
-> The io_uring patches are slated for v5.7 so we should figure out a
-> solution for this bug.
+On Fri, May 03, 2019 at 12:43:35PM +0100, Catalin Marinas wrote:
+> On Tue, Apr 30, 2019 at 06:51:53AM -0400, Christoph Hellwig wrote:
+> > We now have a arch_dma_prep_coherent architecture hook that is used
+> > for the generic DMA remap allocator, and we should use the same
+> > interface for the dma-iommu code.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> > ---
+> >  arch/arm64/mm/dma-mapping.c | 8 +-------
+> >  drivers/iommu/dma-iommu.c   | 8 +++-----
+> >  include/linux/dma-iommu.h   | 3 +--
+> >  3 files changed, 5 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
+> > index 674860e3e478..10a8852c8b6a 100644
+> > --- a/arch/arm64/mm/dma-mapping.c
+> > +++ b/arch/arm64/mm/dma-mapping.c
+> > @@ -104,12 +104,6 @@ arch_initcall(arm64_dma_init);
+> >  #include <linux/platform_device.h>
+> >  #include <linux/amba/bus.h>
+> >  
+> > -/* Thankfully, all cache ops are by VA so we can ignore phys here */
+> > -static void flush_page(struct device *dev, const void *virt, phys_addr_t phys)
+> > -{
+> > -	__dma_flush_area(virt, PAGE_SIZE);
+> > -}
 > 
+> Rather than removing, should this not become arch_dma_prep_coherent()?
+> With patch 2 selecting the corresponding Kconfig option, I think with
+> this patch you'd get a build error (haven't tried).
 
-Never mind.  We merged a different fix.  975554b03edd
-("io_uring: fix SQPOLL cpu validation").
+Ah, sorry, it was already there.
 
-regards,
-dan carpenter
-
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
