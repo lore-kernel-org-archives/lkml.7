@@ -2,149 +2,109 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C41CC43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8A0C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354642075E
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 305232075E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 14:16:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jHj+ZaM7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfECOPt (ORCPT
+        id S1728101AbfECOQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 10:15:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49674 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726681AbfECOPt (ORCPT
+        Fri, 3 May 2019 10:16:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42400 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbfECOQk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 10:15:49 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43E914X034296
-        for <linux-kernel@vger.kernel.org>; Fri, 3 May 2019 10:15:48 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s8pvjh4qf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 10:15:48 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Fri, 3 May 2019 15:15:47 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 May 2019 15:15:43 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x43EFgSr24379454
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 May 2019 14:15:42 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AC25EB2066;
-        Fri,  3 May 2019 14:15:42 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E5E7B206C;
-        Fri,  3 May 2019 14:15:42 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  3 May 2019 14:15:42 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 1FA8816C2A49; Fri,  3 May 2019 07:15:43 -0700 (PDT)
-Date:   Fri, 3 May 2019 07:15:43 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, kbuild-all@01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [rcu:dev.2019.04.28a 85/85] htmldocs: kernel/rcu/sync.c:74:
- warning: Function parameter or member 'rcu' not described in 'rcu_sync_func'
-Reply-To: paulmck@linux.ibm.com
-References: <201905031452.Nu9N5LwE%lkp@intel.com>
+        Fri, 3 May 2019 10:16:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=J9W9Q4RwiLQp9Sxk+txbESocb1vb6ZSeLsVCWdXZ624=; b=jHj+ZaM7Yh7/FUWKzczrKwmnX
+        paUcyATNVJPq2aPs3IZ6Un25fSsIHERDGJoK+31MpQi7Bl4FMTp3Lz1jiyprkMYyUTS/U5XVQPR5h
+        1i5XwsgIY3fKaamqNt0ete4AhdAJNHhPfP5mei+SnXm9D9M/RKOlkq5t81SLULLLTKVIc0MqI/Blf
+        cfTXM+0S5ijLuv7hegtlVrrHxXsIqvSbHqU9KTQTY9TnSPdYFVaHVG/Jj6siY9LTQWQP7tNn86q67
+        5WwGnJDmXY8ZW1ntg43iisjKJbaWF5mxsVXJqMsKjkN8ElHey2GOATClNDIsqdxC23pzyuMD64F9W
+        xzYl4EXpA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hMYzL-000586-R9; Fri, 03 May 2019 14:16:36 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9F854214242E2; Fri,  3 May 2019 16:16:33 +0200 (CEST)
+Date:   Fri, 3 May 2019 16:16:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>, jack@suse.com,
+        Waiman Long <longman@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) !=
+ current) with fsfreeze (4.19.25-rt16)
+Message-ID: <20190503141633.GB2606@hirez.programming.kicks-ass.net>
+References: <20190326093421.GA29508@localhost.localdomain>
+ <20190419085627.GI4742@localhost.localdomain>
+ <20190430125130.uw7mhdnsoqr2v3gf@linutronix.de>
+ <20190430132811.GB2589@hirez.programming.kicks-ass.net>
+ <20190501170953.GB2650@hirez.programming.kicks-ass.net>
+ <20190502100932.GA7323@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201905031452.Nu9N5LwE%lkp@intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19050314-0052-0000-0000-000003B78801
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011041; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01198004; UDB=6.00628393; IPR=6.00978865;
- MB=3.00026714; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-03 14:15:45
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050314-0053-0000-0000-000060BCD055
-Message-Id: <20190503141543.GY3923@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905030089
+In-Reply-To: <20190502100932.GA7323@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 02:58:59PM +0800, kbuild test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.04.28a
-> head:   a4e0e069df6e8718bf165fb009cd3a23e7a808a3
-> commit: a4e0e069df6e8718bf165fb009cd3a23e7a808a3 [85/85] rcu/sync: Simplify the state machine
-> reproduce: make htmldocs
+On Thu, May 02, 2019 at 12:09:32PM +0200, Oleg Nesterov wrote:
+> On 05/01, Peter Zijlstra wrote:
+> >
+> > Anyway; I cobbled together the below. Oleg, could you have a look, I'm
+> > sure I messed it up.
 > 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
+> Oh, I will need to read this carefully. but at first glance I do not see
+> any hole...
 > 
-> All warnings (new ones prefixed by >>):
+> > +static void readers_block(struct percpu_rw_semaphore *sem)
+> > +{
+> > +	wait_event_cmd(sem->writer, !sem->readers_block,
+> > +		       __up_read(&sem->rw_sem), __down_read(&sem->rw_sem));
+> > +}
+> > +
+> > +static void block_readers(struct percpu_rw_semaphore *sem)
+> > +{
+> > +	wait_event_exclusive_cmd(sem->writer, !sem->readers_block,
+> > +				 __up_write(&sem->rw_sem),
+> > +				 __down_write(&sem->rw_sem));
+> > +	/*
+> > +	 * Notify new readers to block; up until now, and thus throughout the
+> > +	 * longish rcu_sync_enter() above, new readers could still come in.
+> > +	 */
+> > +	WRITE_ONCE(sem->readers_block, 1);
+> > +}
 > 
->    WARNING: convert(1) not found, for SVG to PDF conversion install ImageMagick (https://www.imagemagick.org)
->    include/linux/generic-radix-tree.h:1: warning: no structured comments found
->    kernel/rcu/tree_plugin.h:1: warning: no structured comments found
-> >> kernel/rcu/sync.c:74: warning: Function parameter or member 'rcu' not described in 'rcu_sync_func'
->    kernel/rcu/sync.c:74: warning: Excess function parameter 'rhp' description in 'rcu_sync_func'
+> So iiuc, despite it name block_readers() also serializes the writers, ->rw_sem
+> can be dropped by down_write_non_owner() so the new writer can take this lock.
 
-Good catch!  I will be folding in the diff shown below.
+I don't think block_readers() is sufficient to serialize writers;
+suppose two concurrent callers when !->readers_block. Without ->rwsem
+that case would not serialize.
 
->    kernel/rcu/tree_plugin.h:1: warning: no structured comments found
+> But this all is cosmetic, it seems that we can remove ->rw_sem altogether
+> but I am not sure...
 
-Maybe I should add some?  ;-)
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 54479fcd0f2956d4168a5e2dd170bc9b2689df45
-Author: Paul E. McKenney <paulmck@linux.ibm.com>
-Date:   Fri May 3 07:13:42 2019 -0700
-
-    squash! rcu/sync: Simplify the state machine
-    
-    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-    [ paulmck: Tweaks to make htmldocs happy. (Reported by kbuild test robot.) ]
-
-diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
-index f72b779f9a8a..d4558ab7a07d 100644
---- a/kernel/rcu/sync.c
-+++ b/kernel/rcu/sync.c
-@@ -40,7 +40,7 @@ void rcu_sync_enter_start(struct rcu_sync *rsp)
- }
- 
- 
--static void rcu_sync_func(struct rcu_head *rcu);
-+static void rcu_sync_func(struct rcu_head *rhp);
- 
- static void rcu_sync_call(struct rcu_sync *rsp)
- {
-@@ -70,9 +70,9 @@ static void rcu_sync_call(struct rcu_sync *rsp)
-  * rcu_sync_exit().  Otherwise, set all state back to idle so that readers
-  * can again use their fastpaths.
-  */
--static void rcu_sync_func(struct rcu_head *rcu)
-+static void rcu_sync_func(struct rcu_head *rhp)
- {
--	struct rcu_sync *rsp = container_of(rcu, struct rcu_sync, cb_head);
-+	struct rcu_sync *rsp = container_of(rhp, struct rcu_sync, cb_head);
- 	unsigned long flags;
- 
- 	WARN_ON_ONCE(READ_ONCE(rsp->gp_state) == GP_IDLE);
-
+Only if we introduce something like ->wait_lock to serialize things.
