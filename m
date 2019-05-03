@@ -2,71 +2,202 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7152C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450C9C04AAA
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91A1F2070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7ED2070B
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 12:28:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCsrwsTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbfECMXZ (ORCPT
+        id S1727709AbfECM2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 08:23:25 -0400
-Received: from ms.lwn.net ([45.79.88.28]:47944 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbfECMXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 08:23:25 -0400
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id DAF647DE;
-        Fri,  3 May 2019 12:23:22 +0000 (UTC)
-Date:   Fri, 3 May 2019 06:23:20 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     "Tobin C. Harding" <me@tobin.cc>, Johan Hovold <johan@kernel.org>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/5] kobject: Fix kernel-doc comment first line
-Message-ID: <20190503062320.62849fd4@lwn.net>
-In-Reply-To: <8e237ab7-681b-dccf-792f-264e3f6fcd2d@infradead.org>
-References: <20190502023142.20139-1-tobin@kernel.org>
-        <20190502023142.20139-4-tobin@kernel.org>
-        <20190502073823.GQ26546@localhost>
-        <20190502082539.GB18363@eros.localdomain>
-        <20190502083922.GR26546@localhost>
-        <20190503014015.GC7416@eros.localdomain>
-        <8e237ab7-681b-dccf-792f-264e3f6fcd2d@infradead.org>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 3 May 2019 08:28:09 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45306 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfECM2I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 08:28:08 -0400
+Received: by mail-lj1-f193.google.com with SMTP id w12so5016374ljh.12;
+        Fri, 03 May 2019 05:28:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=GDiBzSj4s/zGBV/+MMNhWpQAi3gkIAYNBVktbdFKSgw=;
+        b=ZCsrwsTS2xpFfckVXsgcYwTbevaFBpmuAtPyYh/AlT7a064cvWcOGOMSm2JediMlzR
+         fLvxowlzmy3ahD4X0FVY62lr3IhpOK3Se/C3fnRq8gnQrA2t6MwbWBOVRh0zWraGBiaf
+         9m1yLzrM1MONeXbI3aJVuJdQ4MYtFIW4Lin9fiiR5cB/d3DguKEireYtvi8SryIXqQ3N
+         98sxP+P3WaBMzOsP98j0HtRmyY7sEXSTstSPyUvAk4tY620NebwV01nTriPR+fPW4TSu
+         rI+car/C+XaPozjD4BPgF4EzLpBYIgMDxsAzYK4SQbkOjZJZEUi8pR8r2nOtwh+uZQ8r
+         qlZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=GDiBzSj4s/zGBV/+MMNhWpQAi3gkIAYNBVktbdFKSgw=;
+        b=q0d8MgiO4e7jcRRzwUI8U49FFUpmef9p7GWH6JJutG8deRVJ17/L21jpgvtQ3/J27Z
+         jB2vbLR7PLfRwu+9VKFWTMf8XNNEl/Q6foGIEu+v4f9kANyNk/E/pfRQysSKzOdgUTxp
+         BtASqneDmjiXtbmHsHIxH7GOcbvvzoOpbXhgwaR/BkNlm/c999ZCO4hawzZ+oo3+FFeS
+         fD1bxuUyLrT9jUHLbNnig2IlFs9TUM1qPbzT2VYsSkD1nhNYkB2cXki+BQHGw3FT6LKg
+         apDzPKkXBS08hB+95EsESlHWaU1eLLYNKFBk/eHpLWh5DO6wtcPnX0VTUKbx0jAyQ/82
+         dsTg==
+X-Gm-Message-State: APjAAAWhgsKsuR78npV1ugwlAdJT+t3riBfokC2qWDIFDwoDy+XE6K1A
+        IKsv2UL2xanXR9pxPFNhhS0=
+X-Google-Smtp-Source: APXvYqzR7jfYzAEVsFVVdfQNIvT4vlFd7utbUxEe52N8l4f5W1LQIRmjltFlKKRaglrNuwdSMr7ukQ==
+X-Received: by 2002:a2e:8446:: with SMTP id u6mr5024354ljh.71.1556886485682;
+        Fri, 03 May 2019 05:28:05 -0700 (PDT)
+Received: from [10.17.182.120] (ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
+        by smtp.gmail.com with ESMTPSA id b29sm405382lfo.38.2019.05.03.05.28.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 05:28:04 -0700 (PDT)
+Subject: Re: [PATCH V2] ARM: mach-shmobile: Don't init CNTVOFF if PSCI is
+ available
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julien Grall <julien.grall@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+References: <1556882268-27451-1-git-send-email-olekstysh@gmail.com>
+ <CAMuHMdVYff-YsGxJykT_p31iyw9f4yVY967_i166TSm__WRG9g@mail.gmail.com>
+From:   Oleksandr <olekstysh@gmail.com>
+Message-ID: <a7b82354-abce-4317-7495-d97ee2092bc4@gmail.com>
+Date:   Fri, 3 May 2019 15:28:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdVYff-YsGxJykT_p31iyw9f4yVY967_i166TSm__WRG9g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 May 2019 18:46:16 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> I have seen this discussion before also.  And sometimes it is not even
-> a discussion -- it's more of an edict.  To which I object/disagree.
-> The current (or past) comment style is perfectly fine IMO.
-> No caps needed.  No ending '.' needed.
+On 03.05.19 14:38, Geert Uytterhoeven wrote:
+> Hi Oleksandr,
 
-For however much this matters...I really don't see that there needs to be
-a rule one way or the other on this; the documentation serves its purpose
-either way.  I guess I see it like "British or American spelling";
-there's nothing to drive a conversion in either direction.
+Hi Geert
 
-jon
+
+>
+> On Fri, May 3, 2019 at 1:21 PM Oleksandr Tyshchenko <olekstysh@gmail.com> wrote:
+>> From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+>>
+>> If PSCI is available then most likely we are running on PSCI-enabled
+>> U-Boot which, we assume, has already taken care of resetting CNTVOFF
+>> before switching to non-secure mode and we don't need to.
+>>
+>> Also, don't init CNTVOFF if we are running on top of Xen hypervisor,
+>> as CNTVOFF is controlled by hypervisor itself and shouldn't be touched
+>> by Dom0 in such case.
+>>
+>> Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+>> CC: Julien Grall <julien.grall@arm.com>
+> Thanks for your patch!
+
+Thank you for review!
+
+
+>
+>> ---
+>>     You can find previous discussion here:
+>>     https://lkml.org/lkml/2019/4/17/810
+>>
+>>     Changes in v2:
+>>        - Clarify patch subject/description
+>>        - Don't use CONFIG_ARM_PSCI option, check whether the PSCI is available,
+>>          by using psci_smp_available()
+>>        - Check whether we are running on top of Xen, by using xen_domain()
+>> ---
+>>   arch/arm/mach-shmobile/setup-rcar-gen2.c | 13 ++++++++++++-
+>>   1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+>> index eea60b2..bc8537b 100644
+>> --- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
+>> +++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+>> @@ -17,7 +17,9 @@
+>>   #include <linux/of.h>
+>>   #include <linux/of_fdt.h>
+>>   #include <linux/of_platform.h>
+>> +#include <xen/xen.h>
+>>   #include <asm/mach/arch.h>
+>> +#include <asm/psci.h>
+>>   #include <asm/secure_cntvoff.h>
+>>   #include "common.h"
+>>   #include "rcar-gen2.h"
+>> @@ -63,7 +65,16 @@ void __init rcar_gen2_timer_init(void)
+>>          void __iomem *base;
+>>          u32 freq;
+>>
+>> -       secure_cntvoff_init();
+>> +       /*
+>> +        * If PSCI is available then most likely we are running on PSCI-enabled
+>> +        * U-Boot which, we assume, has already taken care of resetting CNTVOFF
+>> +        * before switching to non-secure mode and we don't need to.
+>> +        * Another check is to be sure that we are not running on top of Xen
+>> +        * hypervisor, as CNTVOFF is controlled by hypervisor itself and
+>> +        * shouldn't be touched by Dom0 in such case.
+>> +        */
+>> +       if (!psci_smp_available() && !xen_domain())
+>> +               secure_cntvoff_init();
+>>
+>>          if (of_machine_is_compatible("renesas,r8a7745") ||
+>>              of_machine_is_compatible("renesas,r8a77470") ||
+> How do you prevent secure_cntvoff_init() from being called for secondary
+> CPUs in arch/arm/mach-shmobile/headsmp-apmu.S?
+
+Good question.
+
+
+>
+> With PSCI, it is not called if "enable-method" in DT is "psci"', so that case
+> is covered, I guess.
+
+Yes.
+
+>
+> What about XEN? Do you override the "enable-method"?
+> If yes, perhaps a check for "renesas,apmu" is more appropriate?
+
+No, I don't override.
+
+
+The correct way to run Xen would be to use PSCI, so Linux shouldn't do 
+any platform low level operation with secondary CPU cores (on/off, 
+reset, etc) by itself when running on top of Xen hypervisor.
+
+As Xen brings available secondary cores up before starting first domain 
+(Dom0) using PSCI CPU_ON call to FW, and these cores are entered Xen in 
+Hyp mode, so any attempts from Dom0 to perform CPU power management 
+directly (using APMU, RST, etc) may result in something not good. I 
+think that in case when someone wants to run Xen on R-Car Gen2 system 
+(which is SMP) without PSCI enabled, we need to forbid even trying to 
+start secondary cores using APMU.
+
+What do you think?
+
+
+>
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
+-- 
+Regards,
+
+Oleksandr Tyshchenko
+
