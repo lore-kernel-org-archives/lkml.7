@@ -2,127 +2,109 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2C0C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BE8C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6E120651
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C192A20651
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 16:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbfECQVq (ORCPT
+        id S1728393AbfECQ2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 12:21:46 -0400
-Received: from sauhun.de ([88.99.104.3]:35006 "EHLO pokefinder.org"
+        Fri, 3 May 2019 12:28:55 -0400
+Received: from foss.arm.com ([217.140.101.70]:36690 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbfECQVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 12:21:45 -0400
-Received: from localhost (p54B33153.dip0.t-ipconnect.de [84.179.49.83])
-        by pokefinder.org (Postfix) with ESMTPSA id 0C7D52C2868;
-        Fri,  3 May 2019 18:21:43 +0200 (CEST)
-Date:   Fri, 3 May 2019 18:21:42 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.1
-Message-ID: <20190503162138.GA7676@kunai>
+        id S1726444AbfECQ2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 12:28:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17C7FA78;
+        Fri,  3 May 2019 09:28:54 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E4AE3F557;
+        Fri,  3 May 2019 09:28:49 -0700 (PDT)
+Date:   Fri, 3 May 2019 17:28:46 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v13 16/20] IB/mlx4, arm64: untag user pointers in
+ mlx4_get_umem_mr
+Message-ID: <20190503162846.GI55449@arrakis.emea.arm.com>
+References: <cover.1553093420.git.andreyknvl@google.com>
+ <1e2824fd77e8eeb351c6c6246f384d0d89fd2d58.1553093421.git.andreyknvl@google.com>
+ <20190429180915.GZ6705@mtr-leonro.mtl.com>
+ <20190430111625.GD29799@arrakis.emea.arm.com>
+ <20190502184442.GA31165@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190502184442.GA31165@ziepe.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks Jason and Leon for the information.
 
---d6Gm4EdcadzBjdND
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, May 02, 2019 at 03:44:42PM -0300, Jason Gunthorpe wrote:
+> On Tue, Apr 30, 2019 at 12:16:25PM +0100, Catalin Marinas wrote:
+> > > Interesting, the followup question is why mlx4 is only one driver in IB which
+> > > needs such code in umem_mr. I'll take a look on it.
+> > 
+> > I don't know. Just using the light heuristics of find_vma() shows some
+> > other places. For example, ib_umem_odp_get() gets the umem->address via
+> > ib_umem_start(). This was previously set in ib_umem_get() as called from
+> > mlx4_get_umem_mr(). Should the above patch have just untagged "start" on
+> > entry?
+> 
+> I have a feeling that there needs to be something for this in the odp
+> code..
+> 
+> Presumably mmu notifiers and what not also use untagged pointers? Most
+> likely then the umem should also be storing untagged pointers.
 
-Linus,
+Yes.
 
-here are I2C driver bugfixes and a MAINTAINERS update for you.
+> This probably becomes problematic because we do want the tag in cases
+> talking about the base VA of the MR..
 
-Please pull.
+It depends on whether the tag is relevant to the kernel or not. The only
+useful case so far is for the kernel performing copy_form_user() etc.
+accesses so they'd get checked in the presence of hardware memory
+tagging (MTE; but it's not mandatory, a 0 tag would do as well).
 
-Thanks,
+If we talk about a memory range where the content is relatively opaque
+(or irrelevant) to the kernel code, we don't really need the tag. I'm
+not familiar to RDMA but I presume it would be a device accessing such
+MR but not through the user VA directly. The tag is a property of the
+buffer address/pointer when accessed by the CPU at that specific address
+range. Any DMA or even kernel accessing it through the linear mapping
+(get_user_pages()) would drop such tag.
 
-   Wolfram
-
-
-The following changes since commit 085b7755808aa11f78ab9377257e1dad2e6fa4bb:
-
-  Linux 5.1-rc6 (2019-04-21 10:45:57 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current-fixed
-
-for you to fetch changes up to 72bfcee11cf89509795c56b0e40a3785ab00bbdd:
-
-  i2c: Prevent runtime suspend of adapter when Host Notify is required (2019-05-02 18:42:15 +0200)
-
-----------------------------------------------------------------
-Anson Huang (1):
-      i2c: imx: correct the method of getting private data in notifier_call
-
-Ard Biesheuvel (1):
-      i2c: synquacer: fix enumeration of slave devices
-
-Jarkko Nikula (1):
-      i2c: Prevent runtime suspend of adapter when Host Notify is required
-
-Wolfram Sang (2):
-      i2c: designware: ratelimit 'transfer when suspended' errors
-      MAINTAINERS: friendly takeover of i2c-gpio driver
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      (Rev.) i2c: designware: ratelimit 'transfer when suspended' errors
-
-Dong Aisheng (1):
-      (Rev.) i2c: imx: correct the method of getting private data in notifier_call
-
-Keijo Vaara (1):
-      (Test) i2c: Prevent runtime suspend of adapter when Host Notify is required
-
-skidnik (1):
-      (Test) i2c: designware: ratelimit 'transfer when suspended' errors
-
- MAINTAINERS                                | 2 +-
- drivers/i2c/busses/i2c-designware-master.c | 3 +--
- drivers/i2c/busses/i2c-imx.c               | 4 ++--
- drivers/i2c/busses/i2c-synquacer.c         | 2 ++
- drivers/i2c/i2c-core-base.c                | 4 ++++
- 5 files changed, 10 insertions(+), 5 deletions(-)
-
---d6Gm4EdcadzBjdND
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzMao0ACgkQFA3kzBSg
-Kbbjpw/9E3A3lvEj8FUzoo/MNGa20QlRyFg+ho91Td6FCuytM0ojNsygaNs7E9G1
-Lmy+n/3WX7LKMuQCykHItyC0KARp9VRG0Y30etCYO/gTW6llIdAbbcB14QO3y4qz
-5SfVCKBgzdODlKiVYlTc3+iM7Wu5FfUtd2qfO1wN/uXDSZduBYN+8p21M80AMOt/
-ZiEklFNRwMSZfMeDTWX+uCBGQxvxiOrq3OwuuPrOEak8PxQ+JjO8eGszEJK3o4z3
-YD+K3pfwNeC18HnMUoCXKNRUcRFueQxsL5M4w/PcEK+h13PpgyZupvH6iNnBrDqp
-4M8LXH7mgX7395FjWnKQ60LW/SibbZLQCNs23SgpqnDz6LQsue/7aOMRrpbsjZmM
-jrA2cf7yq72Y7UvQsO0vmvVfQUyWfRbEkKO3N0kE1nVWs0z6trxipbNfS0YDTeqj
-rdHLfZEfXFemAxRTqj0TdjHCOp/4GGbL4AKaYYAlS/86Zo6G84N6IPj+DRV9sXEY
-pMf8VePaS7VNR+cGOkiIQCEiiC2R6fsWSYLR+ap93ylmvSSi+D7zcDkZ3haEIXca
-sL6vbHbmAxaevRmByF1VRWBsySq3/2ICmAq8Fx8XieXptafEMRYCIvVA3YWebukX
-maSSI9VNKCcZay+lF6JUPGMi5lI9VVT7dmmWXm2cDI6PfR+g8Ic=
-=sLYt
------END PGP SIGNATURE-----
-
---d6Gm4EdcadzBjdND--
+-- 
+Catalin
