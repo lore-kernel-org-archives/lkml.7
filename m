@@ -2,158 +2,123 @@ Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9F7C04AAA
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F90C43219
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3662087F
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:07:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caBhdS/8"
+	by mail.kernel.org (Postfix) with ESMTP id BA4812089E
+	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 11:12:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfECLHh (ORCPT
+        id S1727519AbfECLL7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 07:07:37 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44552 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfECLHg (ORCPT
+        Fri, 3 May 2019 07:11:59 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:50555 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfECLL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 07:07:36 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c5so7320931wrs.11;
-        Fri, 03 May 2019 04:07:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YpAYu2aGgmHElV09nPrKKKpHaRIZFfJTu8xyr7w6FJ0=;
-        b=caBhdS/8I0WX4MnHOx4k7w/1pPNo2BgsqRuKhIyi5451TY2FeTuE9X4avsaYGkO7Pz
-         a6lp9CxLKUK/Np/D15pRUinhgeXHS1eI1wTV5Igoica47BnsseYsiz4EELf1x/sXyB+/
-         vcznVD1pptRAQEYkF/78qb2T7ekuFgcxGDVgrjtV85uOa99WDnAQ2/G0VLNpvR732Kx0
-         Kh0Oprx11ReIMvFT7iNeBA0dwD1PSy6ffKV2U7/L0XXFGq0ZG/l/lOvK1CuK1F/r+jX+
-         Y1NUdNk3ozGc/AtqN1MO51lgZQfqrI/b4vBwnesiFmjwxPd8aWciWvg+NQGMtyrF61Xt
-         DaTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YpAYu2aGgmHElV09nPrKKKpHaRIZFfJTu8xyr7w6FJ0=;
-        b=IH+Wqar6AW32O7LmvODZ6lCJ1fKh9/RaRpH8A3wi5FKsLcXRK1YBp15N+sf776Fnkh
-         kRePmc4DDiZhLhcKP9YORQRwn7K7YSdUomQS+SECgnBUPstS8QezC55DL8uQ2s+MsT9f
-         QqbMou2s2Vy8ADA2eXLKJXqc1ttIeRGSzCSz58zd3lin0C9kz99zZLgFdPpXl3lDby/D
-         +1wIyUNlRsOWSQJNKy0rqerJJ1VHrAuPjqfRNUvlss6eKpeQ417bQT7DQznYvGPCrGav
-         CkvV5M7A5V6JBDEBlgCGtD+/N2wklsNKfL4lVmtszbEL+QdRENpr5+npvA4R22zM2EcA
-         kPuw==
-X-Gm-Message-State: APjAAAXfyi8lBWnNKKfYcyBOSdkHy9KKSRJ0f+en3cNTuOwyXX1N/dFt
-        umfOZZvzq6tvMXQDvhv97KU=
-X-Google-Smtp-Source: APXvYqzjiQa8Q7+aDDyQPZIshcqUe8xFgkRxo6KKN6IKWW0PaiXZLSdZpkK0irkKsMNSsQieQ0Zlsg==
-X-Received: by 2002:a5d:6341:: with SMTP id b1mr6600866wrw.28.1556881654652;
-        Fri, 03 May 2019 04:07:34 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id j190sm2404085wmb.19.2019.05.03.04.07.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 04:07:33 -0700 (PDT)
-Date:   Fri, 3 May 2019 13:07:32 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 03/16] PCI: Export pcie_bus_config symbol
-Message-ID: <20190503110732.GC32400@ulmo>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-4-vidyas@nvidia.com>
+        Fri, 3 May 2019 07:11:58 -0400
+Received: from xps13 (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 9D4FF100005;
+        Fri,  3 May 2019 11:11:53 +0000 (UTC)
+Date:   Fri, 3 May 2019 13:11:52 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Mathieu Malaterre <malat@debian.org>, X86 ML <x86@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RESEND PATCH v3 05/11] mtd: rawnand: vf610_nfc: add
+ initializer to avoid -Wmaybe-uninitialized
+Message-ID: <20190503131152.57b4ce25@xps13>
+In-Reply-To: <CAK7LNAQH8v8_HG6-cytT4qe05W9iiYwEP1mud4zG2NxxYcFptQ@mail.gmail.com>
+References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
+        <20190423034959.13525-6-yamada.masahiro@socionext.com>
+        <20190502161346.07c15187@xps13>
+        <CAK7LNAQH8v8_HG6-cytT4qe05W9iiYwEP1mud4zG2NxxYcFptQ@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="R+My9LyyhiUvIEro"
-Content-Disposition: inline
-In-Reply-To: <20190424052004.6270-4-vidyas@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Masahiro,
 
---R+My9LyyhiUvIEro
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Fri, 3 May
+2019 19:36:35 +0900:
 
-On Wed, Apr 24, 2019 at 10:49:51AM +0530, Vidya Sagar wrote:
-> Export pcie_bus_config to enable host controller drivers setting it to a
-> specific configuration be able to build as loadable modules
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v4]:
-> * None
->=20
-> Changes since [v3]:
-> * None
->=20
-> Changes since [v2]:
-> * None
->=20
-> Changes since [v1]:
-> * This is a new patch in v2 series
->=20
->  drivers/pci/pci.c | 1 +
->  1 file changed, 1 insertion(+)
+> Hi Miquel,
+> 
+> On Thu, May 2, 2019 at 11:14 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> >
+> > Hi Masahiro,
+> >
+> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 23 Apr
+> > 2019 12:49:53 +0900:
+> >  
+> > > This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
+> > > place. We need to eliminate potential issues beforehand.
+> > >
+> > > Kbuild test robot has never reported -Wmaybe-uninitialized warning
+> > > for this probably because vf610_nfc_run() is inlined by the x86
+> > > compiler's inlining heuristic.
+> > >
+> > > If CONFIG_OPTIMIZE_INLINING is enabled for a different architecture
+> > > and vf610_nfc_run() is not inlined, the following warning is reported:
+> > >
+> > > drivers/mtd/nand/raw/vf610_nfc.c: In function ‘vf610_nfc_cmd’:
+> > > drivers/mtd/nand/raw/vf610_nfc.c:455:3: warning: ‘offset’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+> > >    vf610_nfc_rd_from_sram(instr->ctx.data.buf.in + offset,
+> > >    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > >             nfc->regs + NFC_MAIN_AREA(0) + offset,
+> > >             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > >             trfr_sz, !nfc->data_access);
+> > >             ~~~~~~~~~~~~~~~~~~~~~~~~~~~  
+> >
+> > IMHO this patch has no dependencies with this series.  
+> 
+> 
+> This patch is the prerequisite for 11/11.
+> https://lore.kernel.org/patchwork/patch/1064959/
+> 
+> 
+> Without the correct patch order,
+> the kbuild test robot reports the warning.
+> 
+> 
+> > Would you mind sending it alone with the proper Fixes tag?  
+> 
+> 
+> I do not think Fixes is necessary.
 
-It doesn't look to me like this is something that host controller
-drivers are supposed to change. This is set via the pci kernel command-
-line parameter, meaning it's a way of tuning the system configuration.
-Drivers should not be allowed to override this after the fact.
+IMHO it is. Even if today the warning does not spawn, there is a
+real C error which might already be an issue.
 
-Why do we need to set this?
+> 
+> Nobody has noticed this potential issue before.
+> Without 11/11, probably we cannot reproduce this warning.
+> 
+> 
+> BTW, this series has been for a while in linux-next.
 
-Thierry
+Missed that. Ok, nevermind.
 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index f5ff01dc4b13..731f78508601 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -94,6 +94,7 @@ unsigned long pci_hotplug_mem_size =3D DEFAULT_HOTPLUG_=
-MEM_SIZE;
->  unsigned long pci_hotplug_bus_size =3D DEFAULT_HOTPLUG_BUS_SIZE;
-> =20
->  enum pcie_bus_config_types pcie_bus_config =3D PCIE_BUS_DEFAULT;
-> +EXPORT_SYMBOL_GPL(pcie_bus_config);
-> =20
->  /*
->   * The default CLS is used if arch didn't set CLS explicitly and not
-> --=20
-> 2.17.1
->=20
 
---R+My9LyyhiUvIEro
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlzMIPQACgkQ3SOs138+
-s6GSnA/9HdsbQNxtdYHMx36I9O7XPCiJpWTqbqCG5v80y6wwm85gZ7gKZ3tnpqoG
-AVff+CvhQQwIIW7t5OxkdDNvNz/65YPCYRngILQIIgQbXppF/tMu3YMQVPWGNY6R
-LuV8/SkicRqGoyYvEhNY8oxObL191X964tV6roAy2zaPCk4FuNCqJPlRPpu7fXlG
-u9H5zlpi/gVtvZNyJyOJLb/zG9cXIaO4lJCN43thTSD/vVCtytgvQRNWHWT9r7lR
-wqy5o69fRtUXowCRNjlVR/nYJfguU1Eh+9YVr8l0Hen9XgKyNv6ebrzWSeZx76nS
-xTj3bgbOrGm4yWM4EbQZNiGzM1d1+Ggz08osM7n6dqymSMP1zjAHAvb/S+7AulfC
-J2b9VwKf/VnRzdU5fkbQEHtPsoOAwA7t70z5qwukraNLVgE7BO0R4A+Wca1kRRJ+
-2NMhLmTFJJoR42ZI80UGH6KjixdU7p8cAup1ftb6YqxAWxIthSjb+xhka9s0cPV0
-/XcAjoNMXXV9LRk/VoiuNhPMNs17u19NwVZ4O4f/l6qiSvI4BsjMs5B/70UXJgET
-aAw4RI207uObGTDCKFKEXNVKf3WPwjiCRBv8X06OfKReDdnPobVETv4boTZFfreZ
-WNKJYDqWndqUkSMR46sxPEUnfXNr+he7XCyzGLhOs3lAxGEsdPE=
-=F/Ew
------END PGP SIGNATURE-----
-
---R+My9LyyhiUvIEro--
+Thanks,
+Miquèl
