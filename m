@@ -2,131 +2,110 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF7EC46460
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67633C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302C820859
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:12:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="okfHOiGD"
+	by mail.kernel.org (Postfix) with ESMTP id 3D0F6206DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727353AbfEDLMe (ORCPT
+        id S1727435AbfEDLeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 07:12:34 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42020 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfEDLMe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 07:12:34 -0400
-Received: by mail-ot1-f66.google.com with SMTP id f23so7557348otl.9;
-        Sat, 04 May 2019 04:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wdgzat9GNRyIGbxR7C3Z7X+GP78JD3qzbFV7NRAacTA=;
-        b=okfHOiGDGkWULDmqf0cp2YMr3x6UsqExFume52CnakuFFA4tsOhki4semX533ppbfW
-         lvr8xk+teD5FgXm45Ws3KyW15/9sY0BpqX7onpCrvJBEj42+OvoBenp3qSyvJU8I4uyD
-         ERsPSWZcqx6RhkTMgqWUaL50+1l1xG4riuQIfpneKp6TpMuTqNzlOCm4IXE2E3Hnw/zX
-         T8tEz7GuxHdrQ3XMnL0Q9ww+0VWlYIVigJY8SNDXhEHIsV98ecnfSqEU12XIE4WyXrwX
-         N+oKFbOU74lh46JlR/ZF6jv7Qq0GpqnfVXjVC27gR96fNmAizcFeqleL5mXffbPQNBJ2
-         BBSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wdgzat9GNRyIGbxR7C3Z7X+GP78JD3qzbFV7NRAacTA=;
-        b=VRBhDQ3wzLCNs4f0EnDA0s0C3GVnEJXKSq7fr/iTeLsGPLRVRpO3g37HB+7zgqskjl
-         GQb7AynfC/fDGJOlUl3rruNCmzS9bFqEdm6nbg1V/btlBQL5zEtC57prS8zln49lkr7p
-         TbpQHHrh7XHi8XVZgO8pqeZLXZ2NerZVlg4qPWdtcIc7Zi2I2tUDeV2Vp9WpCOep7yC+
-         lsqE/V3sRgnuQudLw3pqLMYBMhb8QsUT+Kx/fAC3mxkXCyp9Nn1pU5CjpYnuwmv7bg1e
-         LBqaRMP2fr0pQZbZPgpUlMfbmQxCqvOg0U3Qr9CKqcNzs1pM2QNQT2HPReUzqkqgsi/X
-         XLjA==
-X-Gm-Message-State: APjAAAUV0tEWw3JApoY1wJy3Zp2GQ/vBMbI6AHxXrjMUZuIff7oLy7AX
-        gzgIMgjG/6Bs0BDPuJYPsr03UWKBjggj0xTiVEY=
-X-Google-Smtp-Source: APXvYqwWmBzM+pWb1OHLXUNCoiFbZs8cR6lhs9O5+BlpQMMj+fFpPxDmiDkHrb7fFtk2hqYEqd5WtfVBpAAiLUsMEa8=
-X-Received: by 2002:a9d:7858:: with SMTP id c24mr4142103otm.66.1556968353301;
- Sat, 04 May 2019 04:12:33 -0700 (PDT)
+        Sat, 4 May 2019 07:34:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7722 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726529AbfEDLeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 07:34:12 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4919084083BFD99A0328;
+        Sat,  4 May 2019 19:34:09 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.20) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
+ 19:34:02 +0800
+Subject: Re: [PATCH] net: route: Fix vrf dst_entry ref count false increasing
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <davem@davemloft.net>, <christian@brauner.io>,
+        <roopa@cumulusnetworks.com>, <dsahern@gmail.com>,
+        <Jason@zx2c4.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     mousuanming <mousuanming@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>
+References: <76551ed7-47ef-7442-69de-6fb42fff4708@huawei.com>
+Message-ID: <9f599716-eef7-a224-0bda-2f4e7c2f58b4@huawei.com>
+Date:   Sat, 4 May 2019 19:33:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <cover.1556919363.git.melissa.srw@gmail.com>
-In-Reply-To: <cover.1556919363.git.melissa.srw@gmail.com>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Sat, 4 May 2019 14:12:22 +0300
-Message-ID: <CA+U=DsqiRBAdGK0aqp5Chv-AtuL8W47tu+Bq6O_Pc97HYbewkQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] staging: iio: ad7150: improve driver readability
-To:     Melissa Wen <melissa.srw@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Barry Song <21cnbao@gmail.com>, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-usp@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <76551ed7-47ef-7442-69de-6fb42fff4708@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.20]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 4, 2019 at 1:24 AM Melissa Wen <melissa.srw@gmail.com> wrote:
->
-> This patchset solves readability issues in AD7150 code, such as clarify
-> register and mask definition, fashion improvement of mask uses, reduce
-> tedious operation and useless comments.
->
-
-Hey,
-
-Two patches seem a bit noisy/un-needed.
-The other 2 are fine from me.
-
-This driver does need some work to move it out of staging.
-I am not sure what would be a big blocker for it, other than maybe it
-needs a device-tree binding doc (in YAML format).
-Maybe Jonathan remembers.
-
-Some other low-hanging-fruit ideas would be:
-1) remove the code for platform_data ; that one seems forgotten from
-some other time; the interrupts should be coming from device-tree,
-from the i2c bindings
-2) you could do a AD7150_EVENT_SPEC() macro (similar to
-AD7150_TIMEOUT() macro) and use it in the ad7150_events[] list; that
-would reduce a few lines
-3) similar to 2), you could do a AD7150_CHANNEL(x) macro ;
-4) in ad7150_event_handler() the checks could be wrapped into a macro,
-or maybe some function ; i am referring to "(int_status &
-AD7150_STATUS_OUT1) && (chip->old_state & AD7150_STATUS_OUT1)" checks
-; those seem to be repeated
-5) add of_match_table to the driver
-
-I (now) suspect that the reason this driver is still in staging is this comment:
-/* Timeouts not currently handled by core */
-
-I wonder if things changed since then ?
-If not, it would be interesting to implement it in core.
-
-Thanks
-Alex
 
 
-> Melissa Wen (4):
->   staging: iio: ad7150: organize registers definition
->   staging: iio: ad7150: use FIELD_GET and GENMASK
->   staging: iio: ad7150: simplify i2c SMBus return treatment
->   staging: iio: ad7150: clean up of comments
->
->  drivers/staging/iio/cdc/ad7150.c | 102 ++++++++++++++-----------------
->  1 file changed, 47 insertions(+), 55 deletions(-)
->
-> --
-> 2.20.1
->
+On 2019/5/4 16:03, linmiaohe wrote:
+> From: Suanming.Mou <mousuanming@huawei.com>
+> 
+> When config ip in default vrf same as the ip in specified
+> vrf, fib_lookup will return the route from table local
+> even if the in device is an enslaved l3mdev. Then the
+> dst_entry will hold the vrf device rather than loopback
+> device in local_input of function ip_route_input_slow.
+> So vrf dst_entry is false increased by route from table
+> local.
+> 
+> Here is reproduce step:
+> 1.enslave enp4s0 to vrf2, and config ip address:
+> ip link add vrf2 type vrf table 1
+> ip link set vrf2 up
+> ip link set enp4s0 master vrf2
+> ip addr ad 125.1.1.1/16 dev enp4s0
+> 
+> 2.config same ip in default vrf:
+> ip addr ad 125.1.1.1/16 dev enp6s0
+> 
+> 3.config peer and ping:
+> ip vrf exec vrf2 ping 125.1.1.2 -c 3
+> 
+> 4.del vrf2 link:
+> ip link del vrf2
+> 
+> And "unregister_netdevice: waiting for vrf2 to become free.
+> Usage count = 1" will occur.
+> 
+> Signed-off-by: Suanming.Mou <mousuanming@huawei.com>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  net/core/fib_rules.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
+> index ffbb827723a2..1a2c11ed1585 100644
+> --- a/net/core/fib_rules.c
+> +++ b/net/core/fib_rules.c
+> @@ -263,6 +263,11 @@ static int fib_rule_match(struct fib_rule *rule, struct fib_rules_ops *ops,
+>  	if (rule->tun_id && (rule->tun_id != fl->flowi_tun_key.tun_id))
+>  		goto out;
+> 
+> +	if (!rule->l3mdev &&
+> +	    (netif_index_is_l3_master(rule->fr_net, fl->flowi_iif) ||
+> +	     netif_index_is_l3_master(rule->fr_net, fl->flowi_oif)))
+> +		goto out;
+> +
+>  	if (rule->l3mdev && !l3mdev_fib_rule_match(rule->fr_net, fl, arg))
+>  		goto out;
+> 
+
+I'am sorry, but I think this fix looks bad because this patch make vrf
+working with other ip rule impossible. I will send anothor patch to fix
+this. Thanks.
+
