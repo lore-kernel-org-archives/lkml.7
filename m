@@ -2,125 +2,60 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E70C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 03:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCE1C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 04:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23ECA206A3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 03:57:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m648r1JF"
+	by mail.kernel.org (Postfix) with ESMTP id 0156A206A3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 04:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfEDD5o (ORCPT
+        id S1726016AbfEDEAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 23:57:44 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43107 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbfEDD5o (ORCPT
+        Sat, 4 May 2019 00:00:11 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:55634 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbfEDEAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 23:57:44 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t22so3661266pgi.10;
-        Fri, 03 May 2019 20:57:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=MpGeBmnAD3IdpKM/Ux4cDI5Oyl8dJfySPKH9DScovQw=;
-        b=m648r1JFPdeVavMTYM0jrfIRknmMPsvHTNpJIdPfUHz8e0MO0l6WfVWAPFV/xoIze/
-         /fL2P67/NxCULASrq+8PJi+A6azPQTyfO/OcCR9lfGN7/F1TBgBb8If27wTlBsKjtqFa
-         lZ4VGq7YuXvd/zNBXWckB6iPZum7iQGcl37O8FeG1GdAmJVAoNI72/Yual65+ApUZEyt
-         u8jvTyU84m6S+SOzQOPJFlh+kBhVZlghcx0pyZi3s+Osnb2S4rmqIMkTIrC6w9cO6GPr
-         Ye+J8lwatDWgss2KKKMS5Y5Bq7mP8xonVbG1Mcp/MUuduIU0r3V/2fokz8/uVo8gm/SW
-         qIrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=MpGeBmnAD3IdpKM/Ux4cDI5Oyl8dJfySPKH9DScovQw=;
-        b=ZzlNxMP+IU/M2GzxhkMxejkxZHG+OUBqfUj8oOq3MI4hU4rjvpJJZxbRJ4WGE4mfOt
-         +EJoZRSnau4dMjl/QujE3Lmq8zqrj2lxBLOjo9OTY0ZJzbqr2nn9CRbVpo7z8HdE0tl0
-         HENP8ljT+hmB7UBETrxCwKnOcsx7owdrP/TBSbyHwr84k3hr8f9uZNg8/tTuXOqIRcp6
-         q4NOZK8f0Wn90+aC9/0w3fJfu5C7vfYNKPTmlSL68pboygDIkKGM+aOMTv6VujKG2FCn
-         xdLxDcTqn2gyqP/gHvYzfecwPjmg02WWHXJuSYc7x3/blCkNHbIHP6ceSwN1bwqHIa3L
-         3Rmg==
-X-Gm-Message-State: APjAAAUGPixPn1CrtVjl1Pu/nWH6ZSuM1a58Nw8IXqI5RR390FEsv5TN
-        sgxyNJhJIlSAjgmrNl/6hDeWeVkK
-X-Google-Smtp-Source: APXvYqzOaGOvjzbbv45uyOBSlrMpN5ECxTm5OlIrEf3MpNFr1r5O32OnQMSncWM8kAQ8kGuTVs5ZVA==
-X-Received: by 2002:a62:6e05:: with SMTP id j5mr16233190pfc.5.1556942263589;
-        Fri, 03 May 2019 20:57:43 -0700 (PDT)
-Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.71.43? ([2402:f000:1:1501:200:5efe:a66f:472b])
-        by smtp.gmail.com with ESMTPSA id j9sm6954337pfc.43.2019.05.03.20.57.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 20:57:43 -0700 (PDT)
-Subject: Re: [PATCH] net: via-rhine: net: Fix a resource leak in rhine_init()
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190504030813.17684-1-baijiaju1990@gmail.com>
- <20190503.231308.1440125282445011089.davem@davemloft.net>
- <f2e7c284-aa70-2b67-b9dd-461db102cbc5@gmail.com>
- <20190503.234131.1909607319842703379.davem@davemloft.net>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <477140c2-841c-616f-fa25-faa428381111@gmail.com>
-Date:   Sat, 4 May 2019 11:57:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190503.234131.1909607319842703379.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Sat, 4 May 2019 00:00:10 -0400
+Received: from localhost (unknown [75.104.87.19])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D73F514D79773;
+        Fri,  3 May 2019 21:00:05 -0700 (PDT)
+Date:   Sat, 04 May 2019 00:00:01 -0400 (EDT)
+Message-Id: <20190504.000001.652024295667504645.davem@davemloft.net>
+To:     linux@roeck-us.net
+Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, garsilva@embeddedor.com
+Subject: Re: [PATCH] usbnet: ipheth: Remove unnecessary NULL pointer check
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1556670933-755-1-git-send-email-linux@roeck-us.net>
+References: <1556670933-755-1-git-send-email-linux@roeck-us.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 03 May 2019 21:00:10 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Guenter Roeck <linux@roeck-us.net>
+Date: Tue, 30 Apr 2019 17:35:33 -0700
 
+> ipheth_carrier_set() is called from two locations. In
+> ipheth_carrier_check_work(), its parameter 'dev' is set with
+> container_of(work, ...) and can not be NULL. In ipheth_open(),
+> dev is extracted from netdev_priv(net) and dereferenced before
+> the call to ipheth_carrier_set(). The NULL pointer check of dev
+> in ipheth_carrier_set() is therefore unnecessary and can be removed.
+> 
+> Cc: Gustavo A. R. Silva <garsilva@embeddedor.com>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
-On 2019/5/4 11:41, David Miller wrote:
-> From: Jia-Ju Bai <baijiaju1990@gmail.com>
-> Date: Sat, 4 May 2019 11:23:06 +0800
->
->>
->> On 2019/5/4 11:13, David Miller wrote:
->>> From: Jia-Ju Bai <baijiaju1990@gmail.com>
->>> Date: Sat,  4 May 2019 11:08:13 +0800
->>>
->>>> When platform_driver_register() fails, pci_unregister_driver() is not
->>>> called to release the resource allocated by pci_register_driver().
->>>>
->>>> To fix this bug, error handling code for platform_driver_register()
->>>> and
->>>> pci_register_driver() is separately implemented.
->>>>
->>>> This bug is found by a runtime fuzzing tool named FIZZER written by
->>>> us.
->>>>
->>>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
->>> I think the idea here is that PCI is not enabled in the kernel, it is
->>> fine for the pci register to fail and only the platform register to
->>> succeed.
->>>
->>> You are breaking that.
->> Okay, I can understand it.
->> If so, I think that platform_driver_register() should be called before
->> pci_register_driver(), and it is still necessary to separately handle
->> their errors.
->> If you agree, I will send a v2 patch.
-> It is only a failure if both fail.
->
-> If at least one succeeds, the driver can potentially probe properly.
-
-Thanks for the explanation, I understand now :)
-The code logic seems a little strange, but it should be correct in 
-rhine_init()...
-If so, if one fails, I wonder whether it is correct for rhine_cleanup() 
-to call both platform_driver_unregister() and pci_unregister_driver()?
-
-
-Best wishes,
-Jia-Ju Bai
+Applied to net-next.
