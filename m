@@ -2,109 +2,222 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F54C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B01C04AA9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF272086C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6CF2086A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965622;
-	bh=T3+TvoQx00KlNtioV5SS/qLaMlZYWs8rRDnJUY8hdfw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=msAd+Vxlb7h5aHbcriXv5Mrb/XeTxbVk8WahpYVOoZvinQfPVYAY08hXSJqX5lHb/
-	 Ux6S+LlCkYDZaH5hV7E+hFXyEUc7/yltJp46FWjIB4B3k2XrMjU8bCD30xbQNfeh25
-	 nc8Cn6Xhcmejo8bbgD9kcaUmkM+I2KKzBYDW2zyc=
+	s=default; t=1556965624;
+	bh=0frTpDyXVI2os4G/vFG4NYCHV3w8NxIMRC96qxOeHjE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=C2MrO+gwYCwhO6KWq/a8zyeWem7ADL0misg6ISGXf3GzZe0WdADcDMd8hajkpgIpQ
+	 XKyYwC72VVy45s2GZMuHLIF5qHS7p0PSHGPGUhVDiHyBJB5T5U9YRfEM3OMD7jiF4C
+	 g3d183xnjNEH6mqVCxZKMJRT6JmVfoRJWGzPDlnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbfEDK1B (ORCPT
+        id S1728007AbfEDK1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:27:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36764 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727958AbfEDK05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:26:57 -0400
+        id S1727318AbfEDK1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:27:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E90E20859;
-        Sat,  4 May 2019 10:26:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA29F2085A;
+        Sat,  4 May 2019 10:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965616;
-        bh=T3+TvoQx00KlNtioV5SS/qLaMlZYWs8rRDnJUY8hdfw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3FICoi0XcTGoVA7uq0e1GSNi63P+7WHBcwev3pi8NmwYTsUxoSRF3/WCNT7pDWej
-         7Mbzrry1l3g1DSVFO1oVEtvgdcufBc6R7ZisFyvCWb8605tAWb+97YVAaoAdzjEzVZ
-         PQ6NQEDlsDcC+EQYHhyBLS3xkl+KU9Hdi+qp6UYU=
+        s=default; t=1556965619;
+        bh=0frTpDyXVI2os4G/vFG4NYCHV3w8NxIMRC96qxOeHjE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=grvTRaRcYMpLdrogtxkZb37qJgmneS19I25ibqWpFABWyMm2rJTzw+dOQtQq1JwbS
+         +7g/5KYzYvGAFZgzGRGlb76drQDq96mGJ68ghzUACse8UQC7WvDAdPY/zdi/2pZhn9
+         0sVsY47pwwGw1OLxBz0WeQeVOYPKc3i1N7DmDOfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 09/32] net: phy: marvell: Fix buffer overrun with stats counters
-Date:   Sat,  4 May 2019 12:24:54 +0200
-Message-Id: <20190504102452.823647104@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.0 00/32] 5.0.13-stable review
+Date:   Sat,  4 May 2019 12:24:45 +0200
+Message-Id: <20190504102452.523724210@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
-References: <20190504102452.523724210@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.0.13-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.0.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.0.13-rc1
+X-KernelTest-Deadline: 2019-05-06T10:24+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+This is the start of the stable review cycle for the 5.0.13 release.
+There are 32 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit fdfdf86720a34527f777cbe0d8599bf0528fa146 ]
+Responses should be made by Mon 06 May 2019 10:24:23 AM UTC.
+Anything received after that time might be too late.
 
-marvell_get_sset_count() returns how many statistics counters there
-are. If the PHY supports fibre, there are 3, otherwise two.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.13-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+and the diffstat can be found below.
 
-marvell_get_strings() does not make this distinction, and always
-returns 3 strings. This then often results in writing past the end
-of the buffer for the strings.
+thanks,
 
-Fixes: 2170fef78a40 ("Marvell phy: add field to get errors from fiber link.")
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/phy/marvell.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+greg k-h
 
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -1494,9 +1494,10 @@ static int marvell_get_sset_count(struct
- 
- static void marvell_get_strings(struct phy_device *phydev, u8 *data)
- {
-+	int count = marvell_get_sset_count(phydev);
- 	int i;
- 
--	for (i = 0; i < ARRAY_SIZE(marvell_hw_stats); i++) {
-+	for (i = 0; i < count; i++) {
- 		strlcpy(data + i * ETH_GSTRING_LEN,
- 			marvell_hw_stats[i].string, ETH_GSTRING_LEN);
- 	}
-@@ -1524,9 +1525,10 @@ static u64 marvell_get_stat(struct phy_d
- static void marvell_get_stats(struct phy_device *phydev,
- 			      struct ethtool_stats *stats, u64 *data)
- {
-+	int count = marvell_get_sset_count(phydev);
- 	int i;
- 
--	for (i = 0; i < ARRAY_SIZE(marvell_hw_stats); i++)
-+	for (i = 0; i < count; i++)
- 		data[i] = marvell_get_stat(phydev, i);
- }
- 
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.0.13-rc1
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    ath10k: Drop WARN_ON()s that always trigger during system resume
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    iwlwifi: mvm: properly check debugfs dentry before using it
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    ALSA: line6: use dynamic buffers
+
+Jim Mattson <jmattson@google.com>
+    KVM: nVMX: Fix size checks in vmx_set_nested_state
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: x86: Whitelist port 0x7e for pre-incrementing %rip
+
+Jakub Kicinski <jakub.kicinski@netronome.com>
+    net/tls: fix copy to fragments in reencrypt
+
+Jakub Kicinski <jakub.kicinski@netronome.com>
+    net/tls: don't copy negative amounts of data in reencrypt
+
+Michael Chan <michael.chan@broadcom.com>
+    bnxt_en: Fix uninitialized variable usage in bnxt_rx_pkt().
+
+Michael Chan <michael.chan@broadcom.com>
+    bnxt_en: Fix statistics context reservation logic.
+
+Michael Chan <michael.chan@broadcom.com>
+    bnxt_en: Pass correct extended TX port statistics size to firmware.
+
+Michael Chan <michael.chan@broadcom.com>
+    bnxt_en: Fix possible crash in bnxt_hwrm_ring_free() under error conditions.
+
+Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+    bnxt_en: Free short FW command HWRM memory in error path in bnxt_init_one()
+
+Michael Chan <michael.chan@broadcom.com>
+    bnxt_en: Improve multicast address setup logic.
+
+Eric Dumazet <edumazet@google.com>
+    udp: fix GRO packet of death
+
+Paolo Abeni <pabeni@redhat.com>
+    udp: fix GRO reception in case of length mismatch
+
+Eric Dumazet <edumazet@google.com>
+    tcp: add sanity tests in tcp_add_backlog()
+
+David Ahern <dsahern@gmail.com>
+    selftests: fib_rule_tests: Fix icmp proto with ipv6
+
+Willem de Bruijn <willemb@google.com>
+    packet: in recvmsg msg_name return at least sizeof sockaddr_ll
+
+Willem de Bruijn <willemb@google.com>
+    packet: validate msg_namelen in send directly
+
+Hangbin Liu <liuhangbin@gmail.com>
+    selftests: fib_rule_tests: print the result and return 1 if any tests failed
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: avoid running the sctp state machine recursively
+
+David Howells <dhowells@redhat.com>
+    rxrpc: Fix net namespace cleanup
+
+Jakub Kicinski <jakub.kicinski@netronome.com>
+    net/tls: avoid NULL pointer deref on nskb->sk in fallback
+
+Andrew Lunn <andrew@lunn.ch>
+    net: phy: marvell: Fix buffer overrun with stats counters
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    net: dsa: bcm_sf2: fix buffer overflow doing set_rxnfc
+
+Eric Dumazet <edumazet@google.com>
+    l2tp: use rcu_dereference_sk_user_data() in l2tp_udp_encap_recv()
+
+Eric Dumazet <edumazet@google.com>
+    l2ip: fix possible use-after-free
+
+Willem de Bruijn <willemb@google.com>
+    ipv6: invert flowlabel sharing check in process and user mode
+
+Eric Dumazet <edumazet@google.com>
+    ipv6/flowlabel: wait rcu grace period before put_pid()
+
+Eric Dumazet <edumazet@google.com>
+    ipv6: fix races in ip6_dst_destroy()
+
+Martin KaFai Lau <kafai@fb.com>
+    ipv6: A few fixes on dereferencing rt->from
+
+Shmulik Ladkani <shmulik@metanetworks.com>
+    ipv4: ip_do_fragment: Preserve skb_iif during fragmentation
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/x86/include/uapi/asm/kvm.h                    |  1 +
+ arch/x86/kvm/vmx/nested.c                          |  4 +-
+ arch/x86/kvm/x86.c                                 | 21 +++++++-
+ drivers/net/dsa/bcm_sf2_cfp.c                      |  6 +++
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c          | 53 +++++++++++--------
+ drivers/net/phy/marvell.c                          |  6 ++-
+ drivers/net/wireless/ath/ath10k/mac.c              |  4 +-
+ .../net/wireless/intel/iwlwifi/mvm/debugfs-vif.c   |  5 ++
+ include/net/sctp/command.h                         |  1 -
+ net/ipv4/ip_output.c                               |  1 +
+ net/ipv4/tcp_ipv4.c                                | 13 ++++-
+ net/ipv4/udp_offload.c                             | 16 ++++--
+ net/ipv6/ip6_fib.c                                 |  4 +-
+ net/ipv6/ip6_flowlabel.c                           | 22 +++++---
+ net/ipv6/route.c                                   | 47 ++++++++---------
+ net/l2tp/l2tp_core.c                               | 10 ++--
+ net/packet/af_packet.c                             | 37 ++++++++-----
+ net/rxrpc/call_object.c                            | 32 ++++++------
+ net/sctp/sm_sideeffect.c                           | 29 -----------
+ net/sctp/sm_statefuns.c                            | 35 ++++++++++---
+ net/tls/tls_device.c                               | 39 ++++++++++----
+ net/tls/tls_device_fallback.c                      |  3 +-
+ sound/usb/line6/driver.c                           | 60 +++++++++++++---------
+ sound/usb/line6/podhd.c                            | 21 ++++----
+ sound/usb/line6/toneport.c                         | 24 ++++++---
+ tools/testing/selftests/net/fib_rule_tests.sh      | 10 +++-
+ 27 files changed, 309 insertions(+), 199 deletions(-)
 
 
