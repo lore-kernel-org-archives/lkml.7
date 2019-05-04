@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E93C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3C4C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2632084A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1070206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965598;
-	bh=avul0cnOxwjudBm5dCBZYO/64mJrQ9Rp6WK+ScGtFBc=;
+	s=default; t=1556965602;
+	bh=LtiEmKRnOf4ksZ01CQhY8ojA3ltVuzRQkuvilKrzSsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sC370iZ7jhWQBv6RiJbpCxbYofLrZoWbgHJXS3NOx2Tb+jgtyfy8eG+t6RZHpwI5r
-	 9/EvsumA1hYwZBTOQE95RDkQHZY4jaNGvj/2Cp0JBrvC4/V4ng6eB2NqAD+Qr6/JWv
-	 BbXT4HnaH2HKXII9L8VBtF1jdVRiKtbz7I65Dr54=
+	b=iYUSVFeUMk/jC/RaC76KtIZognvBzkV9Tjk5PihJsIif5iey3LPB6Go03VCKBpTmZ
+	 klGiwk8FsyGcM5oMrOlml0dLgVkraPa/U7MQtaNHBoIgaO3gJJiEt2XZt1d4aKIvdu
+	 REKhOf3wgPGvY9A4eXv6EKTCI8wwe8u3euURcsiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfEDK0h (ORCPT
+        id S1727828AbfEDK0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:26:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36118 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:26:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbfEDK0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:26:34 -0400
+        id S1727794AbfEDK0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:26:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C307B20862;
-        Sat,  4 May 2019 10:26:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 520A920881;
+        Sat,  4 May 2019 10:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965593;
-        bh=avul0cnOxwjudBm5dCBZYO/64mJrQ9Rp6WK+ScGtFBc=;
+        s=default; t=1556965595;
+        bh=LtiEmKRnOf4ksZ01CQhY8ojA3ltVuzRQkuvilKrzSsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zdgK3Iy6D+thmKQ8d1rKdAHUwNr0QDTJdxvs/zCaxDSOubAeU7IEZ97mmZfmEgq41
-         fLi9o3hKIuy8PaG6yQfpEv1f/5bEq2jtXojTcgpR2n/eKHW3eRw5+4VGdeBcXu27qy
-         Tbi/BjHCA7dOc1WSmN3uqEUEXfX1e6Ac7+NVbFOQ=
+        b=QrFSevoQK5UisvoAd1dRBN44LEBgyrvuTc7pfiFbWDQhgnDAG/JG5gievsiWGeScc
+         9cHk9jaFzW6MZWztmXe5u9NUCx3XN0gKP6bA6JCjEPOxf/9mCz2RTDIRnrzu2lVqhO
+         WIleJ9Y+o6pCoY0ezg4U8SojEqf5otQVDgNSUYC8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        David Ahern <dsahern@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Wei Wang <weiwan@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 03/32] ipv6: fix races in ip6_dst_destroy()
-Date:   Sat,  4 May 2019 12:24:48 +0200
-Message-Id: <20190504102452.638695880@linuxfoundation.org>
+        stable@vger.kernel.org, Christo Gouws <gouws.christo@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.0 30/32] ALSA: line6: use dynamic buffers
+Date:   Sat,  4 May 2019 12:25:15 +0200
+Message-Id: <20190504102453.401059961@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
 References: <20190504102452.523724210@linuxfoundation.org>
@@ -63,140 +60,299 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit 0e2338749192ce0e52e7174c5352f627632f478a ]
+commit e5c812e84f0dece3400d5caf42522287e6ef139f upstream.
 
-We had many syzbot reports that seem to be caused by use-after-free
-of struct fib6_info.
+The line6 driver uses a lot of USB buffers off of the stack, which is
+not allowed on many systems, causing the driver to crash on some of
+them.  Fix this up by dynamically allocating the buffers with kmalloc()
+which allows for proper DMA-able memory.
 
-ip6_dst_destroy(), fib6_drop_pcpu_from() and rt6_remove_exception()
-are writers vs rt->from, and use non consistent synchronization among
-themselves.
-
-Switching to xchg() will solve the issues with no possible
-lockdep issues.
-
-BUG: KASAN: user-memory-access in atomic_dec_and_test include/asm-generic/atomic-instrumented.h:747 [inline]
-BUG: KASAN: user-memory-access in fib6_info_release include/net/ip6_fib.h:294 [inline]
-BUG: KASAN: user-memory-access in fib6_info_release include/net/ip6_fib.h:292 [inline]
-BUG: KASAN: user-memory-access in fib6_drop_pcpu_from net/ipv6/ip6_fib.c:927 [inline]
-BUG: KASAN: user-memory-access in fib6_purge_rt+0x4f6/0x670 net/ipv6/ip6_fib.c:960
-Write of size 4 at addr 0000000000ffffb4 by task syz-executor.1/7649
-
-CPU: 0 PID: 7649 Comm: syz-executor.1 Not tainted 5.1.0-rc6+ #183
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- kasan_report.cold+0x5/0x40 mm/kasan/report.c:321
- check_memory_region_inline mm/kasan/generic.c:185 [inline]
- check_memory_region+0x123/0x190 mm/kasan/generic.c:191
- kasan_check_write+0x14/0x20 mm/kasan/common.c:108
- atomic_dec_and_test include/asm-generic/atomic-instrumented.h:747 [inline]
- fib6_info_release include/net/ip6_fib.h:294 [inline]
- fib6_info_release include/net/ip6_fib.h:292 [inline]
- fib6_drop_pcpu_from net/ipv6/ip6_fib.c:927 [inline]
- fib6_purge_rt+0x4f6/0x670 net/ipv6/ip6_fib.c:960
- fib6_del_route net/ipv6/ip6_fib.c:1813 [inline]
- fib6_del+0xac2/0x10a0 net/ipv6/ip6_fib.c:1844
- fib6_clean_node+0x3a8/0x590 net/ipv6/ip6_fib.c:2006
- fib6_walk_continue+0x495/0x900 net/ipv6/ip6_fib.c:1928
- fib6_walk+0x9d/0x100 net/ipv6/ip6_fib.c:1976
- fib6_clean_tree+0xe0/0x120 net/ipv6/ip6_fib.c:2055
- __fib6_clean_all+0x118/0x2a0 net/ipv6/ip6_fib.c:2071
- fib6_clean_all+0x2b/0x40 net/ipv6/ip6_fib.c:2082
- rt6_sync_down_dev+0x134/0x150 net/ipv6/route.c:4057
- rt6_disable_ip+0x27/0x5f0 net/ipv6/route.c:4062
- addrconf_ifdown+0xa2/0x1220 net/ipv6/addrconf.c:3705
- addrconf_notify+0x19a/0x2260 net/ipv6/addrconf.c:3630
- notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
- __raw_notifier_call_chain kernel/notifier.c:394 [inline]
- raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
- call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1753
- call_netdevice_notifiers_extack net/core/dev.c:1765 [inline]
- call_netdevice_notifiers net/core/dev.c:1779 [inline]
- dev_close_many+0x33f/0x6f0 net/core/dev.c:1522
- rollback_registered_many+0x43b/0xfd0 net/core/dev.c:8177
- rollback_registered+0x109/0x1d0 net/core/dev.c:8242
- unregister_netdevice_queue net/core/dev.c:9289 [inline]
- unregister_netdevice_queue+0x1ee/0x2c0 net/core/dev.c:9282
- unregister_netdevice include/linux/netdevice.h:2658 [inline]
- __tun_detach+0xd5b/0x1000 drivers/net/tun.c:727
- tun_detach drivers/net/tun.c:744 [inline]
- tun_chr_close+0xe0/0x180 drivers/net/tun.c:3443
- __fput+0x2e5/0x8d0 fs/file_table.c:278
- ____fput+0x16/0x20 fs/file_table.c:309
- task_work_run+0x14a/0x1c0 kernel/task_work.c:113
- exit_task_work include/linux/task_work.h:22 [inline]
- do_exit+0x90a/0x2fa0 kernel/exit.c:876
- do_group_exit+0x135/0x370 kernel/exit.c:980
- __do_sys_exit_group kernel/exit.c:991 [inline]
- __se_sys_exit_group kernel/exit.c:989 [inline]
- __x64_sys_exit_group+0x44/0x50 kernel/exit.c:989
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458da9
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffeafc2a6a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 000000000000001c RCX: 0000000000458da9
-RDX: 0000000000412a80 RSI: 0000000000a54ef0 RDI: 0000000000000043
-RBP: 00000000004be552 R08: 000000000000000c R09: 000000000004c0d1
-R10: 0000000002341940 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00007ffeafc2a7f0 R14: 000000000004c065 R15: 00007ffeafc2a800
-
-Fixes: a68886a69180 ("net/ipv6: Make from in rt6_info rcu protected")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: David Ahern <dsahern@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: Wei Wang <weiwan@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Christo Gouws <gouws.christo@gmail.com>
+Reported-by: Alan Stern <stern@rowland.harvard.edu>
+Tested-by: Christo Gouws <gouws.christo@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/ip6_fib.c |    4 +---
- net/ipv6/route.c   |    9 ++-------
- 2 files changed, 3 insertions(+), 10 deletions(-)
 
---- a/net/ipv6/ip6_fib.c
-+++ b/net/ipv6/ip6_fib.c
-@@ -921,9 +921,7 @@ static void fib6_drop_pcpu_from(struct f
- 		if (pcpu_rt) {
- 			struct fib6_info *from;
+---
+ sound/usb/line6/driver.c   |   60 ++++++++++++++++++++++++++-------------------
+ sound/usb/line6/podhd.c    |   21 +++++++++------
+ sound/usb/line6/toneport.c |   24 +++++++++++++-----
+ 3 files changed, 65 insertions(+), 40 deletions(-)
+
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -351,12 +351,16 @@ int line6_read_data(struct usb_line6 *li
+ {
+ 	struct usb_device *usbdev = line6->usbdev;
+ 	int ret;
+-	unsigned char len;
++	unsigned char *len;
+ 	unsigned count;
  
--			from = rcu_dereference_protected(pcpu_rt->from,
--					     lockdep_is_held(&table->tb6_lock));
--			rcu_assign_pointer(pcpu_rt->from, NULL);
-+			from = xchg((__force struct fib6_info **)&pcpu_rt->from, NULL);
- 			fib6_info_release(from);
+ 	if (address > 0xffff || datalen > 0xff)
+ 		return -EINVAL;
+ 
++	len = kmalloc(sizeof(*len), GFP_KERNEL);
++	if (!len)
++		return -ENOMEM;
++
+ 	/* query the serial number: */
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
+ 			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+@@ -365,7 +369,7 @@ int line6_read_data(struct usb_line6 *li
+ 
+ 	if (ret < 0) {
+ 		dev_err(line6->ifcdev, "read request failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
+ 	}
+ 
+ 	/* Wait for data length. We'll get 0xff until length arrives. */
+@@ -375,28 +379,29 @@ int line6_read_data(struct usb_line6 *li
+ 		ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
+ 				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
+ 				      USB_DIR_IN,
+-				      0x0012, 0x0000, &len, 1,
++				      0x0012, 0x0000, len, 1,
+ 				      LINE6_TIMEOUT * HZ);
+ 		if (ret < 0) {
+ 			dev_err(line6->ifcdev,
+ 				"receive length failed (error %d)\n", ret);
+-			return ret;
++			goto exit;
  		}
- 	}
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -379,11 +379,8 @@ static void ip6_dst_destroy(struct dst_e
- 		in6_dev_put(idev);
+ 
+-		if (len != 0xff)
++		if (*len != 0xff)
+ 			break;
  	}
  
--	rcu_read_lock();
--	from = rcu_dereference(rt->from);
--	rcu_assign_pointer(rt->from, NULL);
-+	from = xchg((__force struct fib6_info **)&rt->from, NULL);
- 	fib6_info_release(from);
--	rcu_read_unlock();
+-	if (len == 0xff) {
++	ret = -EIO;
++	if (*len == 0xff) {
+ 		dev_err(line6->ifcdev, "read failed after %d retries\n",
+ 			count);
+-		return -EIO;
+-	} else if (len != datalen) {
++		goto exit;
++	} else if (*len != datalen) {
+ 		/* should be equal or something went wrong */
+ 		dev_err(line6->ifcdev,
+ 			"length mismatch (expected %d, got %d)\n",
+-			(int)datalen, (int)len);
+-		return -EIO;
++			(int)datalen, (int)*len);
++		goto exit;
+ 	}
+ 
+ 	/* receive the result: */
+@@ -405,12 +410,12 @@ int line6_read_data(struct usb_line6 *li
+ 			      0x0013, 0x0000, data, datalen,
+ 			      LINE6_TIMEOUT * HZ);
+ 
+-	if (ret < 0) {
++	if (ret < 0)
+ 		dev_err(line6->ifcdev, "read failed (error %d)\n", ret);
+-		return ret;
+-	}
+ 
+-	return 0;
++exit:
++	kfree(len);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(line6_read_data);
+ 
+@@ -422,12 +427,16 @@ int line6_write_data(struct usb_line6 *l
+ {
+ 	struct usb_device *usbdev = line6->usbdev;
+ 	int ret;
+-	unsigned char status;
++	unsigned char *status;
+ 	int count;
+ 
+ 	if (address > 0xffff || datalen > 0xffff)
+ 		return -EINVAL;
+ 
++	status = kmalloc(sizeof(*status), GFP_KERNEL);
++	if (!status)
++		return -ENOMEM;
++
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
+ 			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+ 			      0x0022, address, data, datalen,
+@@ -436,7 +445,7 @@ int line6_write_data(struct usb_line6 *l
+ 	if (ret < 0) {
+ 		dev_err(line6->ifcdev,
+ 			"write request failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
+ 	}
+ 
+ 	for (count = 0; count < LINE6_READ_WRITE_MAX_RETRIES; count++) {
+@@ -447,28 +456,29 @@ int line6_write_data(struct usb_line6 *l
+ 				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
+ 				      USB_DIR_IN,
+ 				      0x0012, 0x0000,
+-				      &status, 1, LINE6_TIMEOUT * HZ);
++				      status, 1, LINE6_TIMEOUT * HZ);
+ 
+ 		if (ret < 0) {
+ 			dev_err(line6->ifcdev,
+ 				"receiving status failed (error %d)\n", ret);
+-			return ret;
++			goto exit;
+ 		}
+ 
+-		if (status != 0xff)
++		if (*status != 0xff)
+ 			break;
+ 	}
+ 
+-	if (status == 0xff) {
++	if (*status == 0xff) {
+ 		dev_err(line6->ifcdev, "write failed after %d retries\n",
+ 			count);
+-		return -EIO;
+-	} else if (status != 0) {
++		ret = -EIO;
++	} else if (*status != 0) {
+ 		dev_err(line6->ifcdev, "write failed (error %d)\n", ret);
+-		return -EIO;
++		ret = -EIO;
+ 	}
+-
+-	return 0;
++exit:
++	kfree(status);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(line6_write_data);
+ 
+--- a/sound/usb/line6/podhd.c
++++ b/sound/usb/line6/podhd.c
+@@ -225,28 +225,32 @@ static void podhd_startup_start_workqueu
+ static int podhd_dev_start(struct usb_line6_podhd *pod)
+ {
+ 	int ret;
+-	u8 init_bytes[8];
++	u8 *init_bytes;
+ 	int i;
+ 	struct usb_device *usbdev = pod->line6.usbdev;
+ 
++	init_bytes = kmalloc(8, GFP_KERNEL);
++	if (!init_bytes)
++		return -ENOMEM;
++
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
+ 					0x67, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+ 					0x11, 0,
+ 					NULL, 0, LINE6_TIMEOUT * HZ);
+ 	if (ret < 0) {
+ 		dev_err(pod->line6.ifcdev, "read request failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
+ 	}
+ 
+ 	/* NOTE: looks like some kind of ping message */
+ 	ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
+ 					USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
+ 					0x11, 0x0,
+-					&init_bytes, 3, LINE6_TIMEOUT * HZ);
++					init_bytes, 3, LINE6_TIMEOUT * HZ);
+ 	if (ret < 0) {
+ 		dev_err(pod->line6.ifcdev,
+ 			"receive length failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
+ 	}
+ 
+ 	pod->firmware_version =
+@@ -255,7 +259,7 @@ static int podhd_dev_start(struct usb_li
+ 	for (i = 0; i <= 16; i++) {
+ 		ret = line6_read_data(&pod->line6, 0xf000 + 0x08 * i, init_bytes, 8);
+ 		if (ret < 0)
+-			return ret;
++			goto exit;
+ 	}
+ 
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
+@@ -263,10 +267,9 @@ static int podhd_dev_start(struct usb_li
+ 					USB_TYPE_STANDARD | USB_RECIP_DEVICE | USB_DIR_OUT,
+ 					1, 0,
+ 					NULL, 0, LINE6_TIMEOUT * HZ);
+-	if (ret < 0)
+-		return ret;
+-
+-	return 0;
++exit:
++	kfree(init_bytes);
++	return ret;
  }
  
- static void ip6_dst_ifdown(struct dst_entry *dst, struct net_device *dev,
-@@ -1288,9 +1285,7 @@ static void rt6_remove_exception(struct
- 	/* purge completely the exception to allow releasing the held resources:
- 	 * some [sk] cache may keep the dst around for unlimited time
- 	 */
--	from = rcu_dereference_protected(rt6_ex->rt6i->from,
--					 lockdep_is_held(&rt6_exception_lock));
--	rcu_assign_pointer(rt6_ex->rt6i->from, NULL);
-+	from = xchg((__force struct fib6_info **)&rt6_ex->rt6i->from, NULL);
- 	fib6_info_release(from);
- 	dst_dev_put(&rt6_ex->rt6i->dst);
+ static void podhd_startup_workqueue(struct work_struct *work)
+--- a/sound/usb/line6/toneport.c
++++ b/sound/usb/line6/toneport.c
+@@ -365,16 +365,21 @@ static bool toneport_has_source_select(s
+ /*
+ 	Setup Toneport device.
+ */
+-static void toneport_setup(struct usb_line6_toneport *toneport)
++static int toneport_setup(struct usb_line6_toneport *toneport)
+ {
+-	u32 ticks;
++	u32 *ticks;
+ 	struct usb_line6 *line6 = &toneport->line6;
+ 	struct usb_device *usbdev = line6->usbdev;
  
++	ticks = kmalloc(sizeof(*ticks), GFP_KERNEL);
++	if (!ticks)
++		return -ENOMEM;
++
+ 	/* sync time on device with host: */
+ 	/* note: 32-bit timestamps overflow in year 2106 */
+-	ticks = (u32)ktime_get_real_seconds();
+-	line6_write_data(line6, 0x80c6, &ticks, 4);
++	*ticks = (u32)ktime_get_real_seconds();
++	line6_write_data(line6, 0x80c6, ticks, 4);
++	kfree(ticks);
+ 
+ 	/* enable device: */
+ 	toneport_send_cmd(usbdev, 0x0301, 0x0000);
+@@ -389,6 +394,7 @@ static void toneport_setup(struct usb_li
+ 		toneport_update_led(toneport);
+ 
+ 	mod_timer(&toneport->timer, jiffies + TONEPORT_PCM_DELAY * HZ);
++	return 0;
+ }
+ 
+ /*
+@@ -451,7 +457,9 @@ static int toneport_init(struct usb_line
+ 			return err;
+ 	}
+ 
+-	toneport_setup(toneport);
++	err = toneport_setup(toneport);
++	if (err)
++		return err;
+ 
+ 	/* register audio system: */
+ 	return snd_card_register(line6->card);
+@@ -463,7 +471,11 @@ static int toneport_init(struct usb_line
+ */
+ static int toneport_reset_resume(struct usb_interface *interface)
+ {
+-	toneport_setup(usb_get_intfdata(interface));
++	int err;
++
++	err = toneport_setup(usb_get_intfdata(interface));
++	if (err)
++		return err;
+ 	return line6_resume(interface);
+ }
+ #endif
 
 
