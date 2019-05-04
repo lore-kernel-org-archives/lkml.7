@@ -2,143 +2,145 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADAFC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C971AC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D95B206E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:59:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="YvyFgbpu"
+	by mail.kernel.org (Postfix) with ESMTP id 96E17206E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfEDA7Y (ORCPT
+        id S1726924AbfEDBAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 20:59:24 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35204 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbfEDA7X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 20:59:23 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t87so3148076pfa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 17:59:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Yvz1h3uWXxpTkOnnU/TKaBDR2WAc1nuALwyWB7QLiTo=;
-        b=YvyFgbpuBemeeHnrSn+PdX7AyZ4vOEFKZO+dOgh3izhAOTRnS/K74laZpqfhSO+LpS
-         Jx2poX6BhBhW9SFpGW5jyP2vj1YNk9NOUD3ecYlTttLd7e32AtIIcx+W9+yl3DNVESyB
-         wXKGnUBGYX5aiU9l09tLqw3DXTe5q1/D+TbFg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Yvz1h3uWXxpTkOnnU/TKaBDR2WAc1nuALwyWB7QLiTo=;
-        b=rZOPmuJ7e+HNnFT2hGXRf9oEiawKReEi21wi+4lo0qNY24Eoc6idaGqGYegmyZI3Do
-         goYtStk9193HJQ8bSO8PgvobwajGQS4N1zaVHc8DEcEpV3nNb5fVxRELgQ91poApU8l/
-         pcrpYy6/Ds8iQTZRTUvh6CDaqq46NwmX1eNun7ulPFZLaL8+B+r7UXQDvwxRcuqRP6oK
-         WOV5GdYu6UImFEUs5bDuZdbJiedkL72wZf0rkqWKa7JQIPqmYpo69V6HgNYLmISOCktB
-         HYCNQ7USXpOI3PUXUuXC5OUZWv9Pb9Ny4tcVEMm37ncKJuKtuErYNBdTOuIxLJZzmpht
-         EOcw==
-X-Gm-Message-State: APjAAAXORi98XbOD5A+FkHaWySFb+pPNS+nafy0zP3iqsIYs7a1yTATL
-        TnNfs0Aq7DKXx37AGXPJczFjBA==
-X-Google-Smtp-Source: APXvYqzU0FF3sN/XGW7SSYo9TzXqrKS0wyl4DSiB+gjPutQPkAxOrFppUNq0o5ssZ1n2oIesTG4UKQ==
-X-Received: by 2002:a62:70c6:: with SMTP id l189mr15362930pfc.139.1556931562728;
-        Fri, 03 May 2019 17:59:22 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a3sm4163407pfn.182.2019.05.03.17.59.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 17:59:21 -0700 (PDT)
-Date:   Fri, 3 May 2019 20:59:20 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        atish patra <atishp04@gmail.com>, bpf@vger.kernel.org,
-        Brendan Gregg <bgregg@netflix.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?utf-8?Q?Micha=C5=82?= Gregorczyk <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH] kheaders: Move from proc to sysfs
-Message-ID: <20190504005920.GA261146@google.com>
-References: <20190503182459.159121-1-joel@joelfernandes.org>
- <CAK7LNATRTqh_OJcQaWfcYYYqyZ-c0u1prD17LDYwDh18z2V31Q@mail.gmail.com>
- <CAK7LNASkR7cauvcLprgrTKNv-iY4yjS278FPGJ-UEYTBrANKYw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNASkR7cauvcLprgrTKNv-iY4yjS278FPGJ-UEYTBrANKYw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 3 May 2019 21:00:41 -0400
+Received: from mga18.intel.com ([134.134.136.126]:33280 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726042AbfEDBAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 21:00:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 May 2019 18:00:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,427,1549958400"; 
+   d="scan'208";a="148114192"
+Received: from jlwhitty-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.254.28.45])
+  by fmsmga007.fm.intel.com with ESMTP; 03 May 2019 18:00:38 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [RFC PATCH 0/7] soundwire: add sysfs and debugfs support
+Date:   Fri,  3 May 2019 20:00:23 -0500
+Message-Id: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 04, 2019 at 09:21:41AM +0900, Masahiro Yamada wrote:
-> On Sat, May 4, 2019 at 9:18 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > On Sat, May 4, 2019 at 3:27 AM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > >
-> > > The kheaders archive consisting of the kernel headers used for compiling
-> > > bpf programs is in /proc. However there is concern that moving it here
-> > > will make it permanent. Let us move it to /sys/kernel as discussed [1].
-> > >
-> > > [1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
-> > >
-> > > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > ---
-> > > This patch applies on top of the previous patch that was applied to the
-> > > driver tree:
-> > > https://lore.kernel.org/patchwork/patch/1067310/
-> > >
-> > >  kernel/kheaders.c | 40 ++++++++++++++++------------------------
-> >
-> >
-> > Please rename CONFIG_IKHEADERS_PROC.
-> >
-> > Thanks.
-> 
-> 
-> Please adjust Kconfig prompt.
->   tristate "Enable kernel header artifacts through /proc/kheaders.tar.xz"
-> 
-> 
-> "depends on PROC_FS"  ->  "depends on SYSFS"
+This patchset is not fully-tested and is not a candidate for any
+merge. Since I am not very comfortable with sysfs and debugfs support,
+and I am not the initial author for this code, I could use feedback
+from smarter people than me. 
 
-Sorry to miss these config updates. I will update the patch and resend.
+This series is intented to be applied on top of the 'soundwire:
+corrections to ACPI and DisCo properties' series
+
+Parts of this code was initially written by my Intel colleagues Vinod
+Koul, Sanyog Kale, Shreyas Nc and Hardik Shah, who are either no
+longer with Intel or no longer involved in SoundWire development. When
+relevant, I explictly added a note in commit messages to give them
+credit for their hard work, but I removed their signed-off-by tags to
+avoid email bounces and avoid spamming them forever with SoundWire
+patches.
+
+The sysfs parts essentially expose the values of MIPI DisCo
+properties. My contribution here was mainly to align with the
+specification, a number of properties from the Intel internal code
+were missing. I also split the code to make sure the same attribute
+names can be used at different levels, as described in the spec.
+
+One of the main questions I have is whether there is really a need to
+add new devices, or if the attributes can be added to the *existing*
+ones. For example, the sysfs hierarchy for the SoundWire 0 master
+shows as:
+
+/sys/bus/acpi/devices/PRP00001:00/int-sdw.0# ls sdw*
+'sdw:0:25d:700:0:0':
+bank_delay_support  hda_reg           paging_support           source_ports
+ch_prep_timeout     high_PHY_capable  power                    src-dp2
+clk_stop_mode1      index_reg         reset_behave             src-dp4
+clk_stop_timeout    master_count      simple_clk_stop_capable  subsystem
+dp0                 mipi_revision     sink-dp1                 test_mode_capable
+driver              modalias          sink-dp3                 uevent
+firmware_node       p15_behave        sink_ports               wake_capable
+
+'sdw:0:25d:701:0:0':
+bank_delay_support  high_PHY_capable  paging_support           source_ports
+ch_prep_timeout     master_count      power                    subsystem
+clk_stop_mode1      mipi_revision     reset_behave             test_mode_capable
+clk_stop_timeout    modalias          simple_clk_stop_capable  uevent
+firmware_node       p15_behave        sink_ports               wake_capable
+
+'sdw-master:0':
+clk_stop_modes     default_col         dynamic_frame  power      uevent
+clock_frequencies  default_frame_rate  err_threshold  revision
+clock_gears        default_row         max_clk_freq   subsystem
+
+For the first two Slaves, this results in pretend-devices being added
+below each master, the actual Slave devices are children of the
+PRP00001 devices, so here we add a bit of complexity. Likewise, the
+'sdw-master:0' is a pretend-device whose purpose is only to expose
+property values. Is this the recommended direction? Or should all the
+sysfs properties be added to the devices exposed by ACPI?
+
+The debugfs part is mainly to dump the Master and Slave registers, as
+well as the Intel-specific parts. One of the main changes from the
+previous code was to harden the code with scnprintf
+
+Feedback welcome.
+~Pierre
+
+Pierre-Louis Bossart (7):
+  soundwire: Add sysfs support for master(s)
+  soundwire: add Slave sysfs support
+  ABI: testing: Add description of soundwire master sysfs files
+  ABI: testing: Add description of soundwire slave sysfs files
+  soundwire: add debugfs support
+  soundwire: cadence_master: add debugfs register dump
+  soundwire: intel: add debugfs register dump
+
+ .../ABI/testing/sysfs-bus-soundwire-master    |  21 +
+ .../ABI/testing/sysfs-bus-soundwire-slave     |  85 ++++
+ drivers/soundwire/Makefile                    |   4 +-
+ drivers/soundwire/bus.c                       |  13 +
+ drivers/soundwire/bus.h                       |  30 ++
+ drivers/soundwire/bus_type.c                  |   8 +
+ drivers/soundwire/cadence_master.c            |  98 +++++
+ drivers/soundwire/cadence_master.h            |   5 +
+ drivers/soundwire/debugfs.c                   | 214 ++++++++++
+ drivers/soundwire/intel.c                     | 115 ++++++
+ drivers/soundwire/slave.c                     |   2 +
+ drivers/soundwire/sysfs.c                     | 376 ++++++++++++++++++
+ drivers/soundwire/sysfs_local.h               |  42 ++
+ drivers/soundwire/sysfs_slave_dp0.c           | 112 ++++++
+ drivers/soundwire/sysfs_slave_dpn.c           | 168 ++++++++
+ include/linux/soundwire/sdw.h                 |  24 ++
+ 16 files changed, 1316 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-soundwire-master
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-soundwire-slave
+ create mode 100644 drivers/soundwire/debugfs.c
+ create mode 100644 drivers/soundwire/sysfs.c
+ create mode 100644 drivers/soundwire/sysfs_local.h
+ create mode 100644 drivers/soundwire/sysfs_slave_dp0.c
+ create mode 100644 drivers/soundwire/sysfs_slave_dpn.c
+
+-- 
+2.17.1
 
