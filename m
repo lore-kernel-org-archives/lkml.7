@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A87C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87822C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4866206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD9F206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965735;
-	bh=5lUeQBG0ZmEvdz4I8R0kP1lrUXmYLTdnfiS59FfdrtY=;
+	s=default; t=1556965750;
+	bh=mj5bq9ExhWvppyqu2OGwhYDfO1FA/a7oNaWdZHOr7yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aik6370GnBpjgagRM4veEO9TgX/QGqilea44qlzK5PLEdJx2LJo71YGlpm2q0J7yT
-	 SrH36F/4n4XXet08H8F+Rd5W18+yod6BuZtztjGM+tABySJ9XG7qaPSsQ9dmdbi0N1
-	 izmH8N7/Pg/IltgYABHYodkkCXvZHNCeFN350KfA=
+	b=M2CkM1CwnERssEkAOsHzjDvCplTrMaYxn/7jLEsUaeiizBSzpORS3V0NYfJC9PNGE
+	 ZzzSCeRh86t197oxg8+lWb6yb6esFu76wixwYtGoRvg3LipXEnNhPw0KjlxfNJOWTY
+	 5KH8khJGAz+/vZLV6Lgb9hYFiHJsOFIahtEIouJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfEDK1W (ORCPT
+        id S1727960AbfEDK3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:27:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37352 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:29:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728101AbfEDK1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:27:18 -0400
+        id S1727312AbfEDK1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:27:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2785C206BB;
-        Sat,  4 May 2019 10:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DC7F20859;
+        Sat,  4 May 2019 10:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965637;
-        bh=5lUeQBG0ZmEvdz4I8R0kP1lrUXmYLTdnfiS59FfdrtY=;
+        s=default; t=1556965624;
+        bh=mj5bq9ExhWvppyqu2OGwhYDfO1FA/a7oNaWdZHOr7yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=koVDlpSlXE1lfOoxz5X7OXlCgya1AVJNuDBk6MDQzRDUR3HN+pjnCu4h1KA6syc94
-         1DN7T/wlDCrXhz3GXWxnRaXPTtinbI4hqHY0t3M4Wj9jZkoP6Ll70fSItbZBJSlCcq
-         ZIT+uIFaaMuQ/O+HSKoPjA2oswgsY2/t4i80gBqE=
+        b=u0SdDuXsq//Ny4RJGUpWG/H4O91Zy6YhJOF4F/xo0QHF55TO+Ivkbs6J3ekSFGXoQ
+         vzqGh43gogPf0QQqL+GR2SnPc94z7AyfjtCPY4cLpb33JrNQAvagX3frNIYYd8pJPf
+         4yNFDxm6HHgz9vqx8NnZ2aLwJpOIz5zPppnWOH9A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 15/23] bnxt_en: Improve multicast address setup logic.
-Date:   Sat,  4 May 2019 12:25:17 +0200
-Message-Id: <20190504102452.031344554@linuxfoundation.org>
+Subject: [PATCH 4.19 10/23] net/tls: avoid NULL pointer deref on nskb->sk in fallback
+Date:   Sat,  4 May 2019 12:25:12 +0200
+Message-Id: <20190504102451.887482769@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102451.512405835@linuxfoundation.org>
 References: <20190504102451.512405835@linuxfoundation.org>
@@ -59,43 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit b4e30e8e7ea1d1e35ffd64ca46f7d9a7f227b4bf ]
+[ Upstream commit 2dcb003314032c6efb13a065ffae60d164b2dd35 ]
 
-The driver builds a list of multicast addresses and sends it to the
-firmware when the driver's ndo_set_rx_mode() is called.  In rare
-cases, the firmware can fail this call if internal resources to
-add multicast addresses are exhausted.  In that case, we should
-try the call again by setting the ALL_MCAST flag which is more
-guaranteed to succeed.
+update_chksum() accesses nskb->sk before it has been set
+by complete_skb(), move the init up.
 
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ net/tls/tls_device_fallback.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -7441,8 +7441,15 @@ static int bnxt_cfg_rx_mode(struct bnxt
+--- a/net/tls/tls_device_fallback.c
++++ b/net/tls/tls_device_fallback.c
+@@ -200,13 +200,14 @@ static void complete_skb(struct sk_buff
  
- skip_uc:
- 	rc = bnxt_hwrm_cfa_l2_set_rx_mask(bp, 0);
-+	if (rc && vnic->mc_list_count) {
-+		netdev_info(bp->dev, "Failed setting MC filters rc: %d, turning on ALL_MCAST mode\n",
-+			    rc);
-+		vnic->rx_mask |= CFA_L2_SET_RX_MASK_REQ_MASK_ALL_MCAST;
-+		vnic->mc_list_count = 0;
-+		rc = bnxt_hwrm_cfa_l2_set_rx_mask(bp, 0);
-+	}
- 	if (rc)
--		netdev_err(bp->dev, "HWRM cfa l2 rx mask failure rc: %x\n",
-+		netdev_err(bp->dev, "HWRM cfa l2 rx mask failure rc: %d\n",
- 			   rc);
+ 	skb_put(nskb, skb->len);
+ 	memcpy(nskb->data, skb->data, headln);
+-	update_chksum(nskb, headln);
  
- 	return rc;
+ 	nskb->destructor = skb->destructor;
+ 	nskb->sk = sk;
+ 	skb->destructor = NULL;
+ 	skb->sk = NULL;
+ 
++	update_chksum(nskb, headln);
++
+ 	delta = nskb->truesize - skb->truesize;
+ 	if (likely(delta < 0))
+ 		WARN_ON_ONCE(refcount_sub_and_test(-delta, &sk->sk_wmem_alloc));
 
 
