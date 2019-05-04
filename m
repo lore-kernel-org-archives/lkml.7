@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B097C04AAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FF5C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0986C2081C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4186D2081C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TAHzkIPo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ThXkQdds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfEDBSv (ORCPT
+        id S1727372AbfEDBTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 21:18:51 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40663 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727173AbfEDBSr (ORCPT
+        Fri, 3 May 2019 21:19:03 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43063 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbfEDBSu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 21:18:47 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h4so9907703wre.7;
-        Fri, 03 May 2019 18:18:46 -0700 (PDT)
+        Fri, 3 May 2019 21:18:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id q10so1202832wrj.10;
+        Fri, 03 May 2019 18:18:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IIUcmLhElCI93DDESapOvTPyO5IBp1J0kUUxpCHpsLo=;
-        b=TAHzkIPowTU1+WIShGaYjfvfNKHN9zgkohUh1z1XDTs2Hu+h5JJ9W1Vy4DY5td/8QR
-         0Z2skqtz6lDiBbU7/bF9ccEROLptdRQW3Y+BciEnyyriJJMDCy6VpOg62w/Z1YA7rS+9
-         r0NpickGwHYujg8vrNXA2RBaM/6yhIKFHCyuzytMMAAPaLU6JN4Wa5pfNzwhu19TeXrU
-         GmYlActx+j/3FhTyz6KXMIi06vg/BD9zyfwOEdrK5gFhRViyXm/uEbe/XQ/peW1+uKs4
-         AnSfem0hAPrDtWk9G6kwQYWjvAuuR9EkaQiv7O0XLPa/H6gsssIdWKZDeTe7fcsilMFe
-         XS1A==
+        bh=GMxx0hfNg0S6TyYo+/TlCXzUzs2MTlBPjkoBkX7WuR4=;
+        b=ThXkQdds0bXV/6iNdU9sDDldrsniUrWXyrr5niTtye0xU22q6V/0VxKudOQJh1wIyI
+         rDtXjfgFLeIIGvlgjoPUrZtH3GNN2lqjLWuF0l8QQRdktK0Wd5cZo1pewyuJCMeuk68S
+         Ezf8PxdCFC9g78a1Xo9p4XZCcX5igkqsoi+ld5VEAMtyGt5MwUQcvBnYy9WPMDNNDkvm
+         /Xed7J6Q5cCrexRAcTYmW/cPzUiZOps770YC2Uah0WjPjYfM1qQ6qziz1nQmo/+5UzrV
+         rfCoHjPhpV9Dh7gDKwvBgUctMxSZ6XogIjFop8LtuzHcR4fnVO7ulgDaqQHnrv4Ir25E
+         M5ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=IIUcmLhElCI93DDESapOvTPyO5IBp1J0kUUxpCHpsLo=;
-        b=W/P++xG991eWspZGponKnV/0cHVvZT12yiHw0EPQLWe+jWbaAMFBwGKifWJ3d9DVED
-         kStGLNQdWNAWsmTW8dX0LtgssRpanDFa5i2EXk8lQgF/YFFWXd1AfhoFgnJnCR3i/PqZ
-         U+qmpBLBDGVpup6zUIJ4DOMNHiY1HnCTsd4qVWgwCYUFHnIip46Nz3yXbYmRrF88E7u1
-         5Hr5aotG9aMYz1xqydTfwr3rimM2wcPGl0BmlTahpBVddFUjsiiLz+L4SPFVWq+//ivQ
-         Xqh/RDG59Gq/ifWLnm2RLUN5o1uIxMqDdblvuJK20Itrdz0uPiUEd8l7BgGRFgqFFGgA
-         rYTw==
-X-Gm-Message-State: APjAAAV2SYOaN0TfKxOCIjavc299+egH+8X6Wyh0omI4eKx4oeU3GI4e
-        5GiPYRNJdezzH+SUvcyTrDVcvnFgDBc=
-X-Google-Smtp-Source: APXvYqzUOCUy2aHxl1msfJ6vU+Qy6gE1WfFArAwklpYsZPABh8pQCWjUOxRFpQDhwPJuyvGnQBvaLA==
-X-Received: by 2002:a05:6000:ca:: with SMTP id q10mr1684102wrx.148.1556932725473;
-        Fri, 03 May 2019 18:18:45 -0700 (PDT)
+        bh=GMxx0hfNg0S6TyYo+/TlCXzUzs2MTlBPjkoBkX7WuR4=;
+        b=qh5jPTQ3INlCe8VibX3JcMy0Fmns+3bvEsB6nIV+msDSNZL6s/vJyLp0heS3sLcNB6
+         LsuV0wlsLzmcKzgJRG4OMLQnPQIozDCru85JLXX5xSVskV4muu0nW64RZomdoLzGQM2H
+         wpnmWCxNdWdrdr/iKldYFrtip1ZxYKaOVCqb4bQPnPGjUNY3tSPNn7XX9uGss8J4iSEg
+         6o4Ad11WB5fSTJVNM5lEW4s5WY83SZcaW7MxjgkXfGRoj0pK8ZpOAQBFJrSjnMo0JuUw
+         ylNPtgkMDLn0GGtbSycWvFTXI2+GfKa5/vbSmmTISWgRueGrnQSHvdUTiQHYl3YMCDze
+         JmXg==
+X-Gm-Message-State: APjAAAW24QFzftgEKuVbRuVPt7neYdtcPOECFNuP8paowbRpsPy2BuhO
+        FfJXbWkv1gvEpB9ou0bnRV8=
+X-Google-Smtp-Source: APXvYqxYVrjTJI6PgE5QIuCBsBKS8TK3l7sDnzcY0OsQIxwXzxX+gMarSylz7ciXcVQfRQFRABerwg==
+X-Received: by 2002:adf:f2c9:: with SMTP id d9mr9461622wrp.36.1556932728532;
+        Fri, 03 May 2019 18:18:48 -0700 (PDT)
 Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id t1sm3937639wro.34.2019.05.03.18.18.44
+        by smtp.gmail.com with ESMTPSA id t1sm3937639wro.34.2019.05.03.18.18.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 18:18:45 -0700 (PDT)
+        Fri, 03 May 2019 18:18:48 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH net-next 6/9] net: dsa: Add a private structure pointer to dsa_port
-Date:   Sat,  4 May 2019 04:18:23 +0300
-Message-Id: <20190504011826.30477-7-olteanv@gmail.com>
+Subject: [PATCH net-next 9/9] Documentation: net: dsa: sja1105: Add info about supported traffic modes
+Date:   Sat,  4 May 2019 04:18:26 +0300
+Message-Id: <20190504011826.30477-10-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190504011826.30477-1-olteanv@gmail.com>
 References: <20190504011826.30477-1-olteanv@gmail.com>
@@ -71,31 +71,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is supposed to share information between the driver and the tagger,
-or used by the tagger to keep some state. Its use is optional.
-
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- include/net/dsa.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/networking/dsa/sja1105.rst | 49 ++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 936d53139865..b9e0ef6c5750 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -207,6 +207,12 @@ struct dsa_port {
- 	struct work_struct	xmit_work;
- 	struct sk_buff_head	xmit_queue;
+diff --git a/Documentation/networking/dsa/sja1105.rst b/Documentation/networking/dsa/sja1105.rst
+index 7c13b40915c0..a70a04164d07 100644
+--- a/Documentation/networking/dsa/sja1105.rst
++++ b/Documentation/networking/dsa/sja1105.rst
+@@ -63,6 +63,38 @@ If that changed setting can be transmitted to the switch through the dynamic
+ reconfiguration interface, it is; otherwise the switch is reset and
+ reprogrammed with the updated static configuration.
  
-+	/*
-+	 * Give the switch driver somewhere to hang its per-port private data
-+	 * structures (accessible from the tagger).
-+	 */
-+	void *priv;
++Traffic support
++===============
 +
- 	/*
- 	 * Original copy of the master netdev ethtool_ops
- 	 */
++The switches do not support switch tagging in hardware. But they do support
++customizing the TPID by which VLAN traffic is identified as such. The switch
++driver is leveraging ``CONFIG_NET_DSA_TAG_8021Q`` by requesting that special
++VLANs (with a custom TPID of ``ETH_P_EDSA`` instead of ``ETH_P_8021Q``) are
++installed on its ports when not in ``vlan_filtering`` mode. This does not
++interfere with the reception and transmission of real 802.1Q-tagged traffic,
++because the switch does no longer parse those packets as VLAN after the TPID
++change.
++The TPID is restored when ``vlan_filtering`` is requested by the user through
++the bridge layer, and general IP termination becomes no longer possible through
++the switch netdevices in this mode.
++
++The switches have two programmable filters for link-local destination MACs.
++These are used to trap BPDUs and PTP traffic to the master netdevice, and are
++further used to support STP and 1588 ordinary clock/boundary clock
++functionality.
++
++The following traffic modes are supported over the switch netdevices:
++
+++--------------------+------------+------------------+------------------+
++|                    | Standalone |   Bridged with   |   Bridged with   |
++|                    |    ports   | vlan_filtering 0 | vlan_filtering 1 |
+++====================+============+==================+==================+
++| Regular traffic    |     Yes    |       Yes        |  No (use master) |
+++--------------------+------------+------------------+------------------+
++| Management traffic |     Yes    |       Yes        |       Yes        |
++|    (BPDU, PTP)     |            |                  |                  |
+++--------------------+------------+------------------+------------------+
++
+ Switching features
+ ==================
+ 
+@@ -92,6 +124,23 @@ that VLAN awareness is global at the switch level is that once a bridge with
+ ``vlan_filtering`` enslaves at least one switch port, the other un-bridged
+ ports are no longer available for standalone traffic termination.
+ 
++Topology and loop detection through STP is supported.
++
++L2 FDB manipulation (add/delete/dump) is currently possible for the first
++generation devices. Aging time of FDB entries, as well as enabling fully static
++management (no address learning and no flooding of unknown traffic) is not yet
++configurable in the driver.
++
++Other notable features
++======================
++
++The switches have a PTP Hardware Clock that can be steered through SPI and used
++for timestamping management traffic on ingress and egress.
++Also, the T, Q and S devices support TTEthernet (an implementation of SAE
++AS6802 from TTTech), which is a set of Ethernet QoS enhancements somewhat
++similar in behavior to IEEE TSN (time-aware shaping, time-based policing).
++Configuring these features is currently not supported in the driver.
++
+ Device Tree bindings and board design
+ =====================================
+ 
 -- 
 2.17.1
 
