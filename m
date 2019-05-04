@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0547BC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F07C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA79206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF412085A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965672;
-	bh=WxviFEhBUVUEYscPUv8ZVWpQNTSHav4t3Z4Ag8TB/i8=;
+	s=default; t=1556965679;
+	bh=e1o4mFFNofXkPR/ecgVDEav2/lkN45hLVFmaojZ77Vw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UK83oly0klfUFq16oxd1PsLLT2A8/+NBvVMdZguuk3hspUnKKZ+8bdLjJOCIr+N5k
-	 8+s3jd/antGDVGUx+qXuWjATKX4NaCmQ5le5/UktIUGwv3Xv6ugy5P6pqQrfQpE/pO
-	 m57ic8aWpH3w2fAIDg3IN5xyEUHB8HXEHenBTNws=
+	b=AIrH5qbCibF3PCSbnIBFZe9L8LLTClCId6HlaXxLUvnGpxv7Z3YooGrXROE87QsKb
+	 ko2Y4G+IJisrLLkoOqgJ+X9rBauKJ5o9H0JfNvM01YuiOdWb5QPhYi0Zti+NxnqKBe
+	 QkpPl3zbUx+Pt+zepKxxmQSekSQ0PO0n7V9AW7iA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbfEDK1v (ORCPT
+        id S1728363AbfEDK16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38372 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:27:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727592AbfEDK1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:27:49 -0400
+        id S1727430AbfEDK1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:27:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2238206BB;
-        Sat,  4 May 2019 10:27:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D37EA20862;
+        Sat,  4 May 2019 10:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965669;
-        bh=WxviFEhBUVUEYscPUv8ZVWpQNTSHav4t3Z4Ag8TB/i8=;
+        s=default; t=1556965674;
+        bh=e1o4mFFNofXkPR/ecgVDEav2/lkN45hLVFmaojZ77Vw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bXIRrpkmOPte8nRlLUZ9Rh5el7KTewWeXhwrRnCrpOo1Ge1CbK0HqljcwWRSCx/iy
-         VVinkSq1NGh9Ad6Vft06a8XjMFQ9++pyJhQgRPBCbE4DK0RMMPboywgErPQRwHAzWL
-         EpMlnMccCN3vdkM5UzedtzUELWZVAcH5gjj0taks=
+        b=XzuTuAd9iICmfswOV5dO0zECeAB0YgZZ8ZKv/7wFjK0UomXR4dZ64F0Wflpnw0+DY
+         RhCoxNnXFn5/eqBc32e3gr+DRJKmY7IBSd0v3JwWkL3prjkOLvFQ81o9XbIraaFPRK
+         /6NiTcgCWsf7LpWtaODIWeYrhKLeuyUEsKKe91Ac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        James Chapman <jchapman@katalix.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 05/23] ipv6: invert flowlabel sharing check in process and user mode
-Date:   Sat,  4 May 2019 12:25:07 +0200
-Message-Id: <20190504102451.747750335@linuxfoundation.org>
+Subject: [PATCH 4.19 07/23] l2tp: use rcu_dereference_sk_user_data() in l2tp_udp_encap_recv()
+Date:   Sat,  4 May 2019 12:25:09 +0200
+Message-Id: <20190504102451.803770039@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102451.512405835@linuxfoundation.org>
 References: <20190504102451.512405835@linuxfoundation.org>
@@ -59,37 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 95c169251bf734aa555a1e8043e4d88ec97a04ec ]
+[ Upstream commit c1c477217882c610a2ba0268f5faf36c9c092528 ]
 
-A request for a flowlabel fails in process or user exclusive mode must
-fail if the caller pid or uid does not match. Invert the test.
+Canonical way to fetch sk_user_data from an encap_rcv() handler called
+from UDP stack in rcu protected section is to use rcu_dereference_sk_user_data(),
+otherwise compiler might read it multiple times.
 
-Previously, the test was unsafe wrt PID recycling, but indeed tested
-for inequality: fl1->owner != fl->owner
-
-Fixes: 4f82f45730c68 ("net ip6 flowlabel: Make owner a union of struct pid* and kuid_t")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
+Fixes: d00fa9adc528 ("il2tp: fix races with tunnel socket close")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: James Chapman <jchapman@katalix.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/ip6_flowlabel.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/l2tp/l2tp_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/ip6_flowlabel.c
-+++ b/net/ipv6/ip6_flowlabel.c
-@@ -639,9 +639,9 @@ recheck:
- 				if (fl1->share == IPV6_FL_S_EXCL ||
- 				    fl1->share != fl->share ||
- 				    ((fl1->share == IPV6_FL_S_PROCESS) &&
--				     (fl1->owner.pid == fl->owner.pid)) ||
-+				     (fl1->owner.pid != fl->owner.pid)) ||
- 				    ((fl1->share == IPV6_FL_S_USER) &&
--				     uid_eq(fl1->owner.uid, fl->owner.uid)))
-+				     !uid_eq(fl1->owner.uid, fl->owner.uid)))
- 					goto release;
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -909,7 +909,7 @@ int l2tp_udp_encap_recv(struct sock *sk,
+ {
+ 	struct l2tp_tunnel *tunnel;
  
- 				err = -ENOMEM;
+-	tunnel = l2tp_tunnel(sk);
++	tunnel = rcu_dereference_sk_user_data(sk);
+ 	if (tunnel == NULL)
+ 		goto pass_up;
+ 
 
 
