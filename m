@@ -2,125 +2,67 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145EBC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED13C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4F5420675
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7190F20675
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556965275;
+	bh=rQTWEeZZ9og7kvu5nLySRWym5zK+gidejdVifNmQJmc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DX8MS5ctxCakEJL0mE7EU76J19DZ1uA10+YmOj260OZwghbt/7yK/LZ64O14FOFYP
+	 wSmrNazQVT/f59mMqMAtvKJxdPVNR7wDdfa/2V9Ns/rP+zLzyGOv/SzGrS5UMzZcMZ
+	 sgQK5d67DRQ8v+8xiNOPOm4ftUGSepovpdOUNLdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfEDKUn (ORCPT
+        id S1727140AbfEDKVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:20:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7154 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726208AbfEDKUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:20:43 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B9B73B0D760868D4156B;
-        Sat,  4 May 2019 18:20:40 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
- 18:20:29 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <michal.simek@xilinx.com>,
-        <esben@geanix.com>, <andrew@lunn.ch>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: ll_temac: Make some functions static
-Date:   Sat, 4 May 2019 18:10:30 +0800
-Message-ID: <20190504101030.37896-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 4 May 2019 06:21:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33180 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726208AbfEDKVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:21:14 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 718F420675;
+        Sat,  4 May 2019 10:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556965273;
+        bh=rQTWEeZZ9og7kvu5nLySRWym5zK+gidejdVifNmQJmc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T5PsgJllpDgabG60xxfaFbbCrFtJkz55oU0/QPZxaqCOGx/FwcEo2Rgg1ZiOfk6OW
+         WE8NYGRJ6ZYGDjE9RMMSIH85y1T0FxfdpcXLtpRILVRoT1vPV1ptpoaxxZnDeA3gmy
+         R4/M9+gdaMDLQdjHw5dicOxmFiP9+CPeckPLfIK8=
+Date:   Sat, 4 May 2019 15:51:01 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 1/2] dmaengine: fsl-edma: Fix typo in Vybrid name
+Message-ID: <20190504102101.GY3845@vkoul-mobl.Dlink>
+References: <20190504095225.23883-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190504095225.23883-1-krzk@kernel.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
+On 04-05-19, 11:52, Krzysztof Kozlowski wrote:
+> Fix typo in comment for Vybrid SoC family.
 
-drivers/net/ethernet/xilinx/ll_temac_main.c:66:5: warning: symbol '_temac_ior_be' was not declared. Should it be static?
-drivers/net/ethernet/xilinx/ll_temac_main.c:71:6: warning: symbol '_temac_iow_be' was not declared. Should it be static?
-drivers/net/ethernet/xilinx/ll_temac_main.c:76:5: warning: symbol '_temac_ior_le' was not declared. Should it be static?
-drivers/net/ethernet/xilinx/ll_temac_main.c:81:6: warning: symbol '_temac_iow_le' was not declared. Should it be static?
-drivers/net/ethernet/xilinx/ll_temac_main.c:648:6: warning: symbol 'ptr_to_txbd' was not declared. Should it be static?
-drivers/net/ethernet/xilinx/ll_temac_main.c:654:6: warning: symbol 'ptr_from_txbd' was not declared. Should it be static?
+Applied both in the series and ignore the (3rd?) usb patch! thanks
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/xilinx/ll_temac_main.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index ca95c72..530a525 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -63,22 +63,22 @@
-  * Low level register access functions
-  */
- 
--u32 _temac_ior_be(struct temac_local *lp, int offset)
-+static u32 _temac_ior_be(struct temac_local *lp, int offset)
- {
- 	return ioread32be(lp->regs + offset);
- }
- 
--void _temac_iow_be(struct temac_local *lp, int offset, u32 value)
-+static void _temac_iow_be(struct temac_local *lp, int offset, u32 value)
- {
- 	return iowrite32be(value, lp->regs + offset);
- }
- 
--u32 _temac_ior_le(struct temac_local *lp, int offset)
-+static u32 _temac_ior_le(struct temac_local *lp, int offset)
- {
- 	return ioread32(lp->regs + offset);
- }
- 
--void _temac_iow_le(struct temac_local *lp, int offset, u32 value)
-+static void _temac_iow_le(struct temac_local *lp, int offset, u32 value)
- {
- 	return iowrite32(value, lp->regs + offset);
- }
-@@ -645,25 +645,25 @@ static void temac_adjust_link(struct net_device *ndev)
- 
- #ifdef CONFIG_64BIT
- 
--void ptr_to_txbd(void *p, struct cdmac_bd *bd)
-+static void ptr_to_txbd(void *p, struct cdmac_bd *bd)
- {
- 	bd->app3 = (u32)(((u64)p) >> 32);
- 	bd->app4 = (u32)((u64)p & 0xFFFFFFFF);
- }
- 
--void *ptr_from_txbd(struct cdmac_bd *bd)
-+static void *ptr_from_txbd(struct cdmac_bd *bd)
- {
- 	return (void *)(((u64)(bd->app3) << 32) | bd->app4);
- }
- 
- #else
- 
--void ptr_to_txbd(void *p, struct cdmac_bd *bd)
-+static void ptr_to_txbd(void *p, struct cdmac_bd *bd)
- {
- 	bd->app4 = (u32)p;
- }
- 
--void *ptr_from_txbd(struct cdmac_bd *bd)
-+static void *ptr_from_txbd(struct cdmac_bd *bd)
- {
- 	return (void *)(bd->app4);
- }
 -- 
-2.7.4
-
-
+~Vinod
