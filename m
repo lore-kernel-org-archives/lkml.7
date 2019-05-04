@@ -2,145 +2,114 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A50C8C04AAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 21:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BDAC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 21:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750AB20652
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 21:38:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="LEbu+fcy"
+	by mail.kernel.org (Postfix) with ESMTP id 400B220652
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 21:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfEDViI (ORCPT
+        id S1727327AbfEDVur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 17:38:08 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:56400 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfEDViH (ORCPT
+        Sat, 4 May 2019 17:50:47 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41826 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfEDVuq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 17:38:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1557005886; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=ixblMq9gpsv2V5t/BACIvNf/S56OJS9Yyae3o4eLU6E=;
-        b=LEbu+fcyhPKMMdnaGlKBwbYRtSENCThXbjT59r9HC55Hyn31HkDmFDUYDOWXE17Tuum4sY
-        RL+Z5fd7NuBVQFJw7592yJzqsa+0UO1S5xHe25DdXorOfIgSlcgi+hMxJNJlJtKA0G6UZe
-        8tF7h0kBXCJjnryRTbA7193UZm7+500=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     od@zcrc.me, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] dmaengine: jz4780: Fix transfers being ACKed too soon
-Date:   Sat,  4 May 2019 23:37:57 +0200
-Message-Id: <20190504213757.6693-1-paul@crapouillou.net>
+        Sat, 4 May 2019 17:50:46 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hN2YN-0003qK-Um; Sat, 04 May 2019 21:50:44 +0000
+To:     Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        linux-wireless@vger.kernel.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: static analysis issue in rtl8188de driver
+Message-ID: <a1842b3e-f0af-d1a1-8609-a76c25dfd37b@canonical.com>
+Date:   Sat, 4 May 2019 22:50:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a multi-descriptor DMA transfer is in progress, the "IRQ pending"
-flag will apparently be set for that channel as soon as the last
-descriptor loads, way before the IRQ actually happens. This behaviour
-has been observed on the JZ4725B, but maybe other SoCs are affected.
+Hi,
 
-In the case where another DMA transfer is running into completion on a
-separate channel, the IRQ handler would then run the completion handler
-for our previous channel even if the transfer didn't actually finish.
+Static analysis with Coverity has found an issue in the rtl8188de
+wireless driver in drivers/net/wireless/realtek/rtlwifi/rtl8192de/dm.c
+in function tl92d_dm_txpower_tracking_callback_thermalmeter.
 
-Fix this by checking in the completion handler that we're indeed done;
-if not the interrupted DMA transfer will simply be resumed.
+The issue is that u8 array ofdm_index[3] is never initialized, however
+it is decremented and incremented in two places resulting in garbage
+value from the stack being updated in the following code:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/dma/dma-jz4780.c | 32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+	if (thermalvalue > rtlpriv->dm.thermalvalue) {
+        	for (i = 0; i < rf; i++)
+                	ofdm_index[i] -= delta;
+        	cck_index -= delta;
+	} else {
+        	for (i = 0; i < rf; i++)
+                	ofdm_index[i] += index;
+        	cck_index += index;	
+	}
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 02075417c69f..5c34d23bdea4 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -662,10 +662,11 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
- 	return status;
- }
- 
--static void jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
--	struct jz4780_dma_chan *jzchan)
-+static bool jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
-+				struct jz4780_dma_chan *jzchan)
- {
- 	uint32_t dcs;
-+	bool ack = true;
- 
- 	spin_lock(&jzchan->vchan.lock);
- 
-@@ -688,12 +689,20 @@ static void jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
- 		if ((dcs & (JZ_DMA_DCS_AR | JZ_DMA_DCS_HLT)) == 0) {
- 			if (jzchan->desc->type == DMA_CYCLIC) {
- 				vchan_cyclic_callback(&jzchan->desc->vdesc);
--			} else {
-+
-+				jz4780_dma_begin(jzchan);
-+			} else if (dcs & JZ_DMA_DCS_TT) {
- 				vchan_cookie_complete(&jzchan->desc->vdesc);
- 				jzchan->desc = NULL;
--			}
- 
--			jz4780_dma_begin(jzchan);
-+				jz4780_dma_begin(jzchan);
-+			} else {
-+				/* False positive - continue the transfer */
-+				ack = false;
-+				jz4780_dma_chn_writel(jzdma, jzchan->id,
-+						      JZ_DMA_REG_DCS,
-+						      JZ_DMA_DCS_CTE);
-+			}
- 		}
- 	} else {
- 		dev_err(&jzchan->vchan.chan.dev->device,
-@@ -701,21 +710,22 @@ static void jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
- 	}
- 
- 	spin_unlock(&jzchan->vchan.lock);
-+
-+	return ack;
- }
- 
- static irqreturn_t jz4780_dma_irq_handler(int irq, void *data)
- {
- 	struct jz4780_dma_dev *jzdma = data;
-+	unsigned int nb_channels = jzdma->soc_data->nb_channels;
- 	uint32_t pending, dmac;
- 	int i;
- 
- 	pending = jz4780_dma_ctrl_readl(jzdma, JZ_DMA_REG_DIRQP);
- 
--	for (i = 0; i < jzdma->soc_data->nb_channels; i++) {
--		if (!(pending & (1<<i)))
--			continue;
--
--		jz4780_dma_chan_irq(jzdma, &jzdma->chan[i]);
-+	for_each_set_bit(i, (unsigned long *)&pending, nb_channels) {
-+		if (jz4780_dma_chan_irq(jzdma, &jzdma->chan[i]))
-+			pending &= ~BIT(i);
- 	}
- 
- 	/* Clear halt and address error status of all channels. */
-@@ -724,7 +734,7 @@ static irqreturn_t jz4780_dma_irq_handler(int irq, void *data)
- 	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DMAC, dmac);
- 
- 	/* Clear interrupt pending status. */
--	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DIRQP, 0);
-+	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DIRQP, pending);
- 
- 	return IRQ_HANDLED;
- }
--- 
-2.21.0.593.g511ec345e18
+At my first look at the code I believe ofdm_index should be just
+zero-initialized at declaration time, but I suspect that I'm overlooking
+something maybe a bit deeper. Any ideas?
+
+Colin
 
