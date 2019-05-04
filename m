@@ -2,105 +2,65 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D37C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 13:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461A9C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 13:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C4020645
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 13:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A2C206DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 13:20:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfEDNOB (ORCPT
+        id S1727232AbfEDNUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 09:14:01 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59456 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726529AbfEDNOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 09:14:01 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7B240A1AF4234E123CF5;
-        Sat,  4 May 2019 21:13:58 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.20) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
- 21:13:47 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-Subject: [PATCH v2] net: route: Fix vrf dst_entry ref count false increasing
-To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <dsahern@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     mousuanming <mousuanming@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>
-Message-ID: <1a4c0c31-e74c-5167-0668-328dd342005e@huawei.com>
-Date:   Sat, 4 May 2019 21:13:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Sat, 4 May 2019 09:20:11 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:55990 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbfEDNUK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 09:20:10 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hMuaG-0006ra-Hp; Sat, 04 May 2019 13:20:08 +0000
+Date:   Sat, 4 May 2019 14:20:08 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Carmeli Tamir <carmeli.tamir@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] Use list.h instead of file_system_type next
+Message-ID: <20190504132008.GY23075@ZenIV.linux.org.uk>
+References: <20190504094549.10021-1-carmeli.tamir@gmail.com>
+ <20190504094549.10021-2-carmeli.tamir@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.189.20]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190504094549.10021-2-carmeli.tamir@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suanming.Mou <mousuanming@huawei.com>
+On Sat, May 04, 2019 at 05:45:48AM -0400, Carmeli Tamir wrote:
+> From: Tamir <carmeli.tamir@gmail.com>
+> 
+> Changed file_system_type next field to list_head and refactored
+> the code to use list.h functions.
 
-When config ip in default vrf same as the ip in specified
-vrf, fib_lookup will return the route from table local
-even if the in device is an enslaved l3mdev. Then the
-dst_entry will hold the vrf device rather than loopback
-device in local_input of function ip_route_input_slow.
-So vrf dst_entry is false increased by route from table
-local because device passed to rt_dst_alloc is in device
-rather than fib result device.
+... except that list_head is not a good match here.  For one thing,
+we never walk that thing backwards.  For another, filesystem
+can be used without ever going through register_filesystem(),
+making your data structure quite a mess - e.g. use of list_empty()
+(a perfectly normal list.h primitive) on it might oops on some
+instances.
 
-Here is reproduce step:
-1.enslave enp4s0 to vrf2, and config ip address:
-ip link add vrf2 type vrf table 1
-ip link set vrf2 up
-ip link set enp4s0 master vrf2
-ip addr ad 125.1.1.1/16 dev enp4s0
+IOW, what you are making is not quite list_head and pretending it
+to be list_head is asking for serious headache down the road.
 
-2.config same ip in default vrf:
-ip addr ad 125.1.1.1/16 dev enp6s0
+Frankly, what's the point?  Reusing an existing data type, to
+avoid DIY is generally a good advice, but then you'd better
+make sure that existing type *does* fit your needs and that
+your creation is playing by that type's rules.
 
-3.config peer and ping:
-ip vrf exec vrf2 ping 125.1.1.2 -c 3
+This patch does neither...
 
-4.del vrf2 link:
-ip link del vrf2
-
-System hang with del vrf2 ops and "unregister_netdevice:
-waiting for vrf2 to become free. Usage count = 1" occur.
-
-Reported-by: Hui Wang <wanghui104@huawei.com>
-Signed-off-by: Suanming.Mou <mousuanming@huawei.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- net/ipv4/route.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-index 6fdf1c195d8e..74def8710ae8 100644
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -2077,6 +2077,11 @@ out:	return err;
- 			}
- 			do_cache = true;
- 		}
-+		/* Use fib res nh_dev as local input device because enslaved
-+		 * l3mdev may hit route from other rule table. Dst_entry
-+		 * should hold right device.
-+		 */
-+		dev = FIB_RES_DEV(*res);
- 	}
-
- 	rth = rt_dst_alloc(l3mdev_master_dev_rcu(dev) ? : net->loopback_dev,
--- 
-2.21.GIT
-
-
+NAKed-by: Al Viro <viro@zeniv.linux.org.uk>
