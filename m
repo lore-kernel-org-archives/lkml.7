@@ -2,93 +2,133 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5411C43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DFAC04AAA
 	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 15:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768C9206DF
+	by mail.kernel.org (Postfix) with ESMTP id A450620862
 	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 15:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="ZrdWTpIg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qXaN7ziX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfEDP4D (ORCPT
+        id S1727094AbfEDP4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 11:56:03 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39010 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfEDP4D (ORCPT
+        Sat, 4 May 2019 11:56:41 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38699 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfEDP4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 11:56:03 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e24so9800417edq.6
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 08:56:02 -0700 (PDT)
+        Sat, 4 May 2019 11:56:41 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a59so4183534pla.5;
+        Sat, 04 May 2019 08:56:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D/xUA4we+CfWIBMstY2ZZGUlR8dNMfA/8aG9kri4RSo=;
-        b=ZrdWTpIgvvrF424jIp+wrwRFjns9Vws1VhvhVyeQLQ8yUB0K/RtorMBF6hIJ8qdZr/
-         EMNY9XodjCnuUSks5vvIic5f25dogm0UqOVLHW1qPGEa5AIPjIUxhdJ6vyyG+zQwjSVb
-         Es6EOhcjogmP+jv9TmQXzop3fT6A5kIYR4QdSUVCyYBPBKteqVQv+Mr+7uyZmdwuPuLX
-         0XuWwnIzEw5utfKyj4eEzEOCUe+bSQvYbR0zp66AsLiLTgD/1mSrqF+0Fi72jzDJxuSU
-         jUBy/A5BIp4B5w1mm3m2TYLN7uiDehFBdz/RSQ6Qku4HP2JVpf746kbtSaqqIkqt/mKN
-         QUJA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ozyZS/tA6cPkZB5Jf/QmfWhCYZ2taRWbsknV+2MnVY0=;
+        b=qXaN7ziX/RFvjumvzdXQz3iz1c9JXLK8N0N4VT40SAUxsfkqI7LLMjYDff2vfwQRP4
+         wm6Q6O7wGCzMVnV/3xLLwwwsyHdpi05XBnPNWHhvW4eZxCqDm6BTczSQF8iE26a67WoE
+         Odv1vJWtxKEkw5P2+rzlzIaKm03ynX0aJNnC1Jw5oTpV9ZYnIq4bixVcRkIBjwSXhoBZ
+         uRtcXvhgjiPpgI375WOzG6ftz4yqE7IZFVt6oKnGQpDzkkfiVGBpZ0qv/mBfFJ5VlIx0
+         Yr/+ENFw0ZjhATQOsxtlqqsw9sXKICHOYRTRxit5iDyXdXCTvEff80QplCrutUxUgit9
+         +Akg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D/xUA4we+CfWIBMstY2ZZGUlR8dNMfA/8aG9kri4RSo=;
-        b=Ey21+H2MH96GY7pgMQeTRcddpTbXVjFcxGjU8UQV8hy8N18N0BBDFzC+FMqLW6Pupy
-         w7h39EVYXrJXj+Irc8TQCgBK/002Iqlv+D+Cr2tNWz/j9R1K6kxJXkn1PgE7mSBeYhN9
-         92ERYAMYBVpoFP6i+ridfsVGhtZm5KgU1QCGUhryiU+bVinNxZPjIp3LZE7SQQ2utiEZ
-         nnFfhCVBBs2JXQ41TATYHw8EzIXxiWFPt65GtzTyHM+WX79mp18RFQy8HEjNrGBgZ0Fn
-         PqKdz7e1ahPf4exM8VH5ZYmyA8Z1wfH1HzO7YFLwcsNAb0mJoeYJyDEZ+9vNE9wXGGjp
-         Ac5g==
-X-Gm-Message-State: APjAAAWXehnVuim4+ziGNUNRWyM34UTtzw1rxdejdMD4fFt3CGYUrd6k
-        zp8XqLutMLCTzL7HyTfQTYON8b/JR7ECElzmBKiITw==
-X-Google-Smtp-Source: APXvYqwL1+OT6I7xDELCdfNz+oPiiC/N2OEv5oobeObUVGp+lISzqLMPEiMy5oB5eqPGvxPFUEwyNJ8Pi/qnMyQIUAw=
-X-Received: by 2002:a17:906:3fca:: with SMTP id k10mr11517604ejj.126.1556985361722;
- Sat, 04 May 2019 08:56:01 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ozyZS/tA6cPkZB5Jf/QmfWhCYZ2taRWbsknV+2MnVY0=;
+        b=Lr1EfPNsjCXipDFZT45aYV/YJTN6rGelv0EYXzfTFQPrVJ6gXML5ZGsisYZxFxZq9Q
+         iucVybdmdC/EHe8eFOTBqARiG//AN6owbDczKUycr+a4fmJGCt2m9Bo/xAfT5EJXayS4
+         4IVuXYp0FQuIy0pdaIOF2NyJPoLFJeBiSiDfaIo/zqc2gsdQ4gydhxUKs2qKIFo4hww2
+         KMoTUeKl3dzg6lPSooJfPJdut0qJJoALADUq5PkPVSyMiaEPPW09vMelt/Oo1UkvECo7
+         5DnU483Eqa/mHulgIoXrhTvJmzD6cdrMU3FM4Z6M1cOS1kyx8a54Wzxfl20pFm7gSkZ1
+         /arQ==
+X-Gm-Message-State: APjAAAXzZf49SFLJbJO/bTee+FDgcPBMf+1pM1krCOXm/8xHIUjVkY6N
+        CizfBM7S8ty8/V8uzqglzMc=
+X-Google-Smtp-Source: APXvYqzJ6nnN5y6pun4s6v+aB6cFgDzezM8CZNGf1Z/GAMyax5X7Q331TVHleQQS4b64EiSHAC0TFg==
+X-Received: by 2002:a17:902:84:: with SMTP id a4mr19706617pla.210.1556985400387;
+        Sat, 04 May 2019 08:56:40 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
+        by smtp.gmail.com with ESMTPSA id a129sm6993370pfa.152.2019.05.04.08.56.38
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 May 2019 08:56:39 -0700 (PDT)
+Subject: Re: [PATCH] ipv4: Delete uncached routes upon unregistration of
+ loopback device.
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     David Ahern <dsahern@gmail.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Julian Anastasov <ja@ssi.bg>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
+        ddstreet@ieee.org, dvyukov@google.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mahesh Bandewar <maheshb@google.com>
+References: <0000000000007d22100573d66078@google.com>
+ <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
+ <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
+ <9d430543-33c3-0d9b-dc77-3a179a8e3919@I-love.SAKURA.ne.jp>
+ <920ebaf1-ee87-0dbb-6805-660c1cbce3d0@I-love.SAKURA.ne.jp>
+ <cc054b5c-4e95-8d30-d4bf-9c85f7e20092@gmail.com>
+ <15b353e9-49a2-f08b-dc45-2e9bad3abfe2@i-love.sakura.ne.jp>
+ <057735f0-4475-7a7b-815f-034b1095fa6c@gmail.com>
+ <6e57bc11-1603-0898-dfd4-0f091901b422@i-love.sakura.ne.jp>
+ <f71dd5cd-c040-c8d6-ab4b-df97dea23341@gmail.com>
+ <d56b7989-8ac6-36be-0d0b-43251e1a2907@gmail.com>
+ <117fcc49-d389-c389-918f-86ccaef82e51@i-love.sakura.ne.jp>
+ <70be7d61-a6fe-e703-978a-d17f544efb44@gmail.com>
+ <40199494-8eb7-d861-2e3b-6e20fcebc0dc@i-love.sakura.ne.jp>
+ <519ea12b-4c24-9e8e-c5eb-ca02c9c7d264@i-love.sakura.ne.jp>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <f6f770a7-17af-d51f-3ffb-4edba9b28101@gmail.com>
+Date:   Sat, 4 May 2019 11:56:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155552634075.2015392.3371070426600230054.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190501232517.crbmgcuk7u4gvujr@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
- <CAPcyv4hxy86gWN3ncTQmHi8DT31k8YzsweMfGHgCh=sORMQQcg@mail.gmail.com> <CAPcyv4hAh-Joe3Pt0r5CPSaWpZ4YoNF2jNDcvbMF2fsQm7Hetg@mail.gmail.com>
-In-Reply-To: <CAPcyv4hAh-Joe3Pt0r5CPSaWpZ4YoNF2jNDcvbMF2fsQm7Hetg@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Sat, 4 May 2019 11:55:50 -0400
-Message-ID: <CA+CK2bCVAuYFFee+P09H_5fN4w2BHXUS1ZeSVN7hxcCTwgobqA@mail.gmail.com>
-Subject: Re: [PATCH v6 01/12] mm/sparsemem: Introduce struct mem_section_usage
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <519ea12b-4c24-9e8e-c5eb-ca02c9c7d264@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > I'm ok with it being 16M for now unless it causes a problem in
-> > practice, i.e. something like the minimum hardware mapping alignment
-> > for physical memory being less than 16M.
->
-> On second thought, arbitrary differences across architectures is a bit
-> sad. The most common nvdimm namespace alignment granularity is
-> PMD_SIZE, so perhaps the default sub-section size should try to match
-> that default.
 
-I think that even if you keep it 16M for now, at very least you should
-make the map_active bitmap scalable so it will be possible to change
-as required later without revisiting all functions that use it. Making
-it a static array won't slowdown x86, as it will be still a single
-64-bit word on x86.
 
-Pasha
+On 5/4/19 10:52 AM, Tetsuo Handa wrote:
+> syzbot is hitting infinite loop when a loopback device in a namespace is
+> unregistered [1]. This is because rt_flush_dev() is moving the refcount of
+> "any device to unregister" to "a loopback device in that namespace" but
+> nobody can drop the refcount moved from non loopback devices when the
+> loopback device in that namespace is unregistered.
+> 
+> This behavior was introduced by commit caacf05e5ad1abf0 ("ipv4: Properly
+> purge netdev references on uncached routes.") but there is no description
+> why we have to temporarily move the refcount to "a loopback device in that
+> namespace" and why it is safe to do so, for rt_flush_dev() becomes a no-op
+> when "a loopback device in that namespace" is about to be unregistered.
+> 
+> Since I don't know the reason, this patch breaks the infinite loop by
+> deleting the uncached route (which eventually drops the refcount via
+> dst_destroy()) when "a loopback device in that namespace" is unregistered
+> rather than when "non-loopback devices in that namespace" is unregistered.
+
+Well, you have not fixed a bug, you simply made sure that whatever cpu is using the
+routes you forcibly deleted is going to crash the host very soon (use-after-frees have
+undefined behavior, but KASAN should crash most of the times)
+
+Please do not send patches like that with a huge CC list, keep networking patches
+to netdev mailing list.
+
+Mahesh has an alternative patch, adding a fake device that can not be dismantled
+to make sure we fully intercept skbs sent through a dead route, instead of relying
+on loopback dropping them later at some point.
+
