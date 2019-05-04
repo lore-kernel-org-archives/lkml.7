@@ -2,99 +2,192 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D586C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7333C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E218620862
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDC220862
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965684;
-	bh=yCIp8hvQRzWQWnTcmjKnPab4t1jUjfTfxobF3VWZbzA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TD4vp5C6eizPcQCOFaOy3id46SYG85mPUK9p7TkybkiZPbeiK6QFru4ER3ifK3nZX
-	 m56+ho1NI26vr/fIkiBdiS3UEsLySHc+EDl2rv7z7y3+2BmXC8Hktx5h5RUQ2lxJAG
-	 WGQp2nUTpDY0XEKV6LOXC3J/ZcIb0ks8fXkHe/1s=
+	s=default; t=1556965687;
+	bh=+QqCsL8V6t0A56FIlZhLTjflrVGHje5K4fDZZT4DztQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Gu4Ykbn4abLhkuGoeLviE4mdrbGm68Kvgn4Wju1dWskJa5wLsPG4meHYWdgFtARaD
+	 rxng9+s0Jfo+cxCneuZIgx8nctT3jevbRWCJUFIPevz6+STiabJXwv/KZr7JdUKcHc
+	 x7rSqP8HaY/bpfA2Ouu7l4vBd1+T/KSiVUTc5t/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbfEDK2C (ORCPT
+        id S1728395AbfEDK2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:28:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38624 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:28:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728340AbfEDK15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:27:57 -0400
+        id S1728374AbfEDK2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:28:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 600262085A;
-        Sat,  4 May 2019 10:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 895952086A;
+        Sat,  4 May 2019 10:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965676;
-        bh=yCIp8hvQRzWQWnTcmjKnPab4t1jUjfTfxobF3VWZbzA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e2hQOVcmA9i680ljj1au9w4qB6snfQpDVoBqiuyFvSSROPqhErDIWyTFuscRpMNc0
-         Xm3xgK1Jsuy0PWoGJV0EStDM6DqdF4JoIwSkXoD+GLav6Y48uo2ag2COgLeE96n+sO
-         2imerCjjSJNsHvLvTQGcZMk1G8a103kqo+L84NR8=
+        s=default; t=1556965682;
+        bh=+QqCsL8V6t0A56FIlZhLTjflrVGHje5K4fDZZT4DztQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=v1VFCO2InCwMB1tFzIB1Sn7luWVHWIMN0me2ukzgOvq4vRFMPtGS+/ZEmUZUl6y/b
+         fAtzHCgpB4ed0fMumDIjN/Y5feJBdzaeKxKedvZIZgQKB6+J/90z6MIeRHo/s81xFV
+         Tewv8Onmimbs/jkaO7lPqjE6HWRq5OzvXGmj7g3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 08/23] net: dsa: bcm_sf2: fix buffer overflow doing set_rxnfc
-Date:   Sat,  4 May 2019 12:25:10 +0200
-Message-Id: <20190504102451.831062292@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 00/23] 4.19.40-stable review
+Date:   Sat,  4 May 2019 12:25:02 +0200
+Message-Id: <20190504102451.512405835@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190504102451.512405835@linuxfoundation.org>
-References: <20190504102451.512405835@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.40-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.40-rc1
+X-KernelTest-Deadline: 2019-05-06T10:24+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+This is the start of the stable review cycle for the 4.19.40 release.
+There are 23 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit f949a12fd697479f68d99dc65e9bbab68ee49043 ]
+Responses should be made by Mon 06 May 2019 10:24:19 AM UTC.
+Anything received after that time might be too late.
 
-The "fs->location" is a u32 that comes from the user in ethtool_set_rxnfc().
-We can't pass unclamped values to test_bit() or it results in an out of
-bounds access beyond the end of the bitmap.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.40-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
 
-Fixes: 7318166cacad ("net: dsa: bcm_sf2: Add support for ethtool::rxnfc")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/dsa/bcm_sf2_cfp.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+thanks,
 
---- a/drivers/net/dsa/bcm_sf2_cfp.c
-+++ b/drivers/net/dsa/bcm_sf2_cfp.c
-@@ -742,6 +742,9 @@ static int bcm_sf2_cfp_rule_set(struct d
- 	     fs->m_ext.data[1]))
- 		return -EINVAL;
- 
-+	if (fs->location != RX_CLS_LOC_ANY && fs->location >= CFP_NUM_RULES)
-+		return -EINVAL;
-+
- 	if (fs->location != RX_CLS_LOC_ANY &&
- 	    test_bit(fs->location, priv->cfp.used))
- 		return -EBUSY;
-@@ -836,6 +839,9 @@ static int bcm_sf2_cfp_rule_del(struct b
- 	u32 next_loc = 0;
- 	int ret;
- 
-+	if (loc >= CFP_NUM_RULES)
-+		return -EINVAL;
-+
- 	/* Refuse deleting unused rules, and those that are not unique since
- 	 * that could leave IPv6 rules with one of the chained rule in the
- 	 * table.
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.40-rc1
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    ath10k: Drop WARN_ON()s that always trigger during system resume
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    ALSA: line6: use dynamic buffers
+
+Jim Mattson <jmattson@google.com>
+    KVM: nVMX: Fix size checks in vmx_set_nested_state
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: x86: Whitelist port 0x7e for pre-incrementing %rip
+
+Jakub Kicinski <jakub.kicinski@netronome.com>
+    net/tls: fix copy to fragments in reencrypt
+
+Jakub Kicinski <jakub.kicinski@netronome.com>
+    net/tls: don't copy negative amounts of data in reencrypt
+
+Michael Chan <michael.chan@broadcom.com>
+    bnxt_en: Fix uninitialized variable usage in bnxt_rx_pkt().
+
+Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+    bnxt_en: Free short FW command HWRM memory in error path in bnxt_init_one()
+
+Michael Chan <michael.chan@broadcom.com>
+    bnxt_en: Improve multicast address setup logic.
+
+Willem de Bruijn <willemb@google.com>
+    packet: validate msg_namelen in send directly
+
+Hangbin Liu <liuhangbin@gmail.com>
+    selftests: fib_rule_tests: print the result and return 1 if any tests failed
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: avoid running the sctp state machine recursively
+
+David Howells <dhowells@redhat.com>
+    rxrpc: Fix net namespace cleanup
+
+Jakub Kicinski <jakub.kicinski@netronome.com>
+    net/tls: avoid NULL pointer deref on nskb->sk in fallback
+
+Andrew Lunn <andrew@lunn.ch>
+    net: phy: marvell: Fix buffer overrun with stats counters
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    net: dsa: bcm_sf2: fix buffer overflow doing set_rxnfc
+
+Eric Dumazet <edumazet@google.com>
+    l2tp: use rcu_dereference_sk_user_data() in l2tp_udp_encap_recv()
+
+Eric Dumazet <edumazet@google.com>
+    l2ip: fix possible use-after-free
+
+Willem de Bruijn <willemb@google.com>
+    ipv6: invert flowlabel sharing check in process and user mode
+
+Eric Dumazet <edumazet@google.com>
+    ipv6/flowlabel: wait rcu grace period before put_pid()
+
+Eric Dumazet <edumazet@google.com>
+    ipv6: fix races in ip6_dst_destroy()
+
+Martin KaFai Lau <kafai@fb.com>
+    ipv6: A few fixes on dereferencing rt->from
+
+Shmulik Ladkani <shmulik@metanetworks.com>
+    ipv4: ip_do_fragment: Preserve skb_iif during fragmentation
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                      |  4 +-
+ arch/x86/include/uapi/asm/kvm.h               |  1 +
+ arch/x86/kvm/vmx.c                            |  4 +-
+ arch/x86/kvm/x86.c                            | 21 +++++++++-
+ drivers/net/dsa/bcm_sf2_cfp.c                 |  6 +++
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c     | 19 ++++++---
+ drivers/net/phy/marvell.c                     |  6 ++-
+ drivers/net/wireless/ath/ath10k/mac.c         |  2 +-
+ include/net/sctp/command.h                    |  1 -
+ net/ipv4/ip_output.c                          |  1 +
+ net/ipv6/ip6_fib.c                            |  4 +-
+ net/ipv6/ip6_flowlabel.c                      | 22 ++++++----
+ net/ipv6/route.c                              | 47 +++++++++------------
+ net/l2tp/l2tp_core.c                          | 10 ++---
+ net/packet/af_packet.c                        | 24 ++++++-----
+ net/rxrpc/call_object.c                       | 32 +++++++-------
+ net/sctp/sm_sideeffect.c                      | 29 -------------
+ net/sctp/sm_statefuns.c                       | 35 ++++++++++++----
+ net/tls/tls_device.c                          | 39 ++++++++++++-----
+ net/tls/tls_device_fallback.c                 |  3 +-
+ sound/usb/line6/driver.c                      | 60 ++++++++++++++++-----------
+ sound/usb/line6/podhd.c                       | 21 ++++++----
+ sound/usb/line6/toneport.c                    | 24 ++++++++---
+ tools/testing/selftests/net/fib_rule_tests.sh |  6 +++
+ 24 files changed, 248 insertions(+), 173 deletions(-)
 
 
