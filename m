@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3BBC04AAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EF3C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1539F20862
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACF6206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965637;
-	bh=bdyM8oxbQkd8wXQ6tcNLjvAslpgVHezybpZhC3gVPT0=;
+	s=default; t=1556965639;
+	bh=aMmom8i1CZXrKAwiIbaXBCIae3WEMKTSqa+RADeoR24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PBeF7wwARX5YC8CkfIc95DXNzlgdkbrkd3mfHVThst9MQbPd3PiPDkNWAb7YkxVbF
-	 ymX/34WtaIznVaaZ2wu5P0R/tYU5uHrCnGcvN1/chSJS8FAuIQmpV3BzARYJjkzvLD
-	 +Yp3meQ5OLPUN3eXnqlhD7RQ75z5NGXQI2FgDmig=
+	b=O49n6FIe94YKm9oUCl34YThb8TmIzDdkfgm1olE9D+33faKw/keX1CUPAEiToP8o1
+	 Al+pvlqbwQnP1QwIS82QR9tL+hPSrA4kuYmz3I1XYBroA0U7ohs8vijRhFf1ONBJ/B
+	 UMUnhwpKs6xZLd41PJrOKc8g2e7aTcHjKX1vZ9go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfEDK1P (ORCPT
+        id S1728104AbfEDK1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:27:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37176 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:27:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbfEDK1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:27:13 -0400
+        id S1728082AbfEDK1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:27:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D88320859;
-        Sat,  4 May 2019 10:27:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D2DA20859;
+        Sat,  4 May 2019 10:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965632;
-        bh=bdyM8oxbQkd8wXQ6tcNLjvAslpgVHezybpZhC3gVPT0=;
+        s=default; t=1556965635;
+        bh=aMmom8i1CZXrKAwiIbaXBCIae3WEMKTSqa+RADeoR24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hqvAhDgH/H2TM0SN8sFF2lZ6zLbBc8eCzTD6jZwdrPCakwun7I3rEBRyFgD1GOFm1
-         BaA6ndOmr4IBPnDRi0lPPCrHmIvnefPKF+ABAu/z/9Oi4aIQyQmZJRxsOOebBF2S+G
-         p87m7AsgorbX12A5ynxyvvjBfiPpDGh5l3gaaIb0=
+        b=K78RidgwgvRVNFFpVN9jbHHShjf5adf3aNGwy3sLgO7BqOhhlhp5ccawQv5qn2c0P
+         8qRGgJ3N4DmtS2BzEZsDZ4RA4bcj2Z5SrKfp0570PV+FwXskny5Rb48iMiZkF1Klg7
+         JSmXydNckH033/5VmrQ3/u/o4NU+VFOj85Oe2gbo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, David Laight <David.Laight@aculab.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 13/23] selftests: fib_rule_tests: print the result and return 1 if any tests failed
-Date:   Sat,  4 May 2019 12:25:15 +0200
-Message-Id: <20190504102451.973046799@linuxfoundation.org>
+Subject: [PATCH 4.19 14/23] packet: validate msg_namelen in send directly
+Date:   Sat,  4 May 2019 12:25:16 +0200
+Message-Id: <20190504102452.002650513@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102451.512405835@linuxfoundation.org>
 References: <20190504102451.512405835@linuxfoundation.org>
@@ -60,38 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit f68d7c44e76532e46f292ad941aa3706cb9e6e40 ]
+[ Upstream commit 486efdc8f6ce802b27e15921d2353cc740c55451 ]
 
-Fixes: 65b2b4939a64 ("selftests: net: initial fib rule tests")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Packet sockets in datagram mode take a destination address. Verify its
+length before passing to dev_hard_header.
+
+Prior to 2.6.14-rc3, the send code ignored sll_halen. This is
+established behavior. Directly compare msg_namelen to dev->addr_len.
+
+Change v1->v2: initialize addr in all paths
+
+Fixes: 6b8d95f1795c4 ("packet: validate address length if non-zero")
+Suggested-by: David Laight <David.Laight@aculab.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/fib_rule_tests.sh |    6 ++++++
- 1 file changed, 6 insertions(+)
+ net/packet/af_packet.c |   24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
---- a/tools/testing/selftests/net/fib_rule_tests.sh
-+++ b/tools/testing/selftests/net/fib_rule_tests.sh
-@@ -27,6 +27,7 @@ log_test()
- 		nsuccess=$((nsuccess+1))
- 		printf "\n    TEST: %-50s  [ OK ]\n" "${msg}"
- 	else
-+		ret=1
- 		nfail=$((nfail+1))
- 		printf "\n    TEST: %-50s  [FAIL]\n" "${msg}"
- 		if [ "${PAUSE_ON_FAIL}" = "yes" ]; then
-@@ -245,4 +246,9 @@ setup
- run_fibrule_tests
- cleanup
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -2603,8 +2603,8 @@ static int tpacket_snd(struct packet_soc
+ 	void *ph;
+ 	DECLARE_SOCKADDR(struct sockaddr_ll *, saddr, msg->msg_name);
+ 	bool need_wait = !(msg->msg_flags & MSG_DONTWAIT);
++	unsigned char *addr = NULL;
+ 	int tp_len, size_max;
+-	unsigned char *addr;
+ 	void *data;
+ 	int len_sum = 0;
+ 	int status = TP_STATUS_AVAILABLE;
+@@ -2615,7 +2615,6 @@ static int tpacket_snd(struct packet_soc
+ 	if (likely(saddr == NULL)) {
+ 		dev	= packet_cached_dev_get(po);
+ 		proto	= po->num;
+-		addr	= NULL;
+ 	} else {
+ 		err = -EINVAL;
+ 		if (msg->msg_namelen < sizeof(struct sockaddr_ll))
+@@ -2625,10 +2624,13 @@ static int tpacket_snd(struct packet_soc
+ 						sll_addr)))
+ 			goto out;
+ 		proto	= saddr->sll_protocol;
+-		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
+ 		dev = dev_get_by_index(sock_net(&po->sk), saddr->sll_ifindex);
+-		if (addr && dev && saddr->sll_halen < dev->addr_len)
+-			goto out_put;
++		if (po->sk.sk_socket->type == SOCK_DGRAM) {
++			if (dev && msg->msg_namelen < dev->addr_len +
++				   offsetof(struct sockaddr_ll, sll_addr))
++				goto out_put;
++			addr = saddr->sll_addr;
++		}
+ 	}
  
-+if [ "$TESTS" != "none" ]; then
-+	printf "\nTests passed: %3d\n" ${nsuccess}
-+	printf "Tests failed: %3d\n"   ${nfail}
-+fi
-+
- exit $ret
+ 	err = -ENXIO;
+@@ -2800,7 +2802,7 @@ static int packet_snd(struct socket *soc
+ 	struct sk_buff *skb;
+ 	struct net_device *dev;
+ 	__be16 proto;
+-	unsigned char *addr;
++	unsigned char *addr = NULL;
+ 	int err, reserve = 0;
+ 	struct sockcm_cookie sockc;
+ 	struct virtio_net_hdr vnet_hdr = { 0 };
+@@ -2817,7 +2819,6 @@ static int packet_snd(struct socket *soc
+ 	if (likely(saddr == NULL)) {
+ 		dev	= packet_cached_dev_get(po);
+ 		proto	= po->num;
+-		addr	= NULL;
+ 	} else {
+ 		err = -EINVAL;
+ 		if (msg->msg_namelen < sizeof(struct sockaddr_ll))
+@@ -2825,10 +2826,13 @@ static int packet_snd(struct socket *soc
+ 		if (msg->msg_namelen < (saddr->sll_halen + offsetof(struct sockaddr_ll, sll_addr)))
+ 			goto out;
+ 		proto	= saddr->sll_protocol;
+-		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
+ 		dev = dev_get_by_index(sock_net(sk), saddr->sll_ifindex);
+-		if (addr && dev && saddr->sll_halen < dev->addr_len)
+-			goto out_unlock;
++		if (sock->type == SOCK_DGRAM) {
++			if (dev && msg->msg_namelen < dev->addr_len +
++				   offsetof(struct sockaddr_ll, sll_addr))
++				goto out_unlock;
++			addr = saddr->sll_addr;
++		}
+ 	}
+ 
+ 	err = -ENXIO;
 
 
