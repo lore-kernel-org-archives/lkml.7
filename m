@@ -6,74 +6,62 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A186CC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 04:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB79FC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 04:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4EF206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 04:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778E5206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 04:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfEDEo6 (ORCPT
+        id S1726744AbfEDErM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 00:44:58 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56270 "EHLO
+        Sat, 4 May 2019 00:47:12 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56304 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfEDEo6 (ORCPT
+        with ESMTP id S1725823AbfEDErL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 00:44:58 -0400
+        Sat, 4 May 2019 00:47:11 -0400
 Received: from localhost (unknown [75.104.87.19])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 205E314D91286;
-        Fri,  3 May 2019 21:44:52 -0700 (PDT)
-Date:   Sat, 04 May 2019 00:44:49 -0400 (EDT)
-Message-Id: <20190504.004449.945185836330139212.davem@davemloft.net>
-To:     chris.packham@alliedtelesis.co.nz
-Cc:     jon.maloy@ericsson.com, ying.xue@windriver.com,
-        netdev@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tipc: Avoid copying bytes beyond the supplied data
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 67F1D14D91C4B;
+        Fri,  3 May 2019 21:47:04 -0700 (PDT)
+Date:   Sat, 04 May 2019 00:47:00 -0400 (EDT)
+Message-Id: <20190504.004700.1643902028919203643.davem@davemloft.net>
+To:     gustavo@embeddedor.com
+Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: sched: cls_u32: use struct_size() helper
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190502031004.7125-1-chris.packham@alliedtelesis.co.nz>
-References: <20190502031004.7125-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20190501162315.GA27166@embeddedor>
+References: <20190501162315.GA27166@embeddedor>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 03 May 2019 21:44:57 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 03 May 2019 21:47:11 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Date: Thu,  2 May 2019 15:10:04 +1200
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Date: Wed, 1 May 2019 11:23:15 -0500
 
-> TLV_SET is called with a data pointer and a len parameter that tells us
-> how many bytes are pointed to by data. When invoking memcpy() we need
-> to careful to only copy len bytes.
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes, in particular in the
+> context in which this code is being used.
 > 
-> Previously we would copy TLV_LENGTH(len) bytes which would copy an extra
-> 4 bytes past the end of the data pointer which newer GCC versions
-> complain about.
+> So, replace code of the following form:
 > 
->  In file included from test.c:17:
->  In function 'TLV_SET',
->      inlined from 'test' at test.c:186:5:
->  /usr/include/linux/tipc_config.h:317:3:
->  warning: 'memcpy' forming offset [33, 36] is out of the bounds [0, 32]
->  of object 'bearer_name' with type 'char[32]' [-Warray-bounds]
->      memcpy(TLV_DATA(tlv_ptr), data, tlv_len);
->      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->  test.c: In function 'test':
->  test.c::161:10: note:
->  'bearer_name' declared here
->      char bearer_name[TIPC_MAX_BEARER_NAME];
->           ^~~~~~~~~~~
+> sizeof(*s) + s->nkeys*sizeof(struct tc_u32_key)
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> with:
+> 
+> struct_size(s, keys, s->nkeys)
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-But now the pad bytes at the end are uninitialized.
-
-The whole idea is that the encapsulating TLV object has to be rounded
-up in size based upon the given 'len' for the data.
+Applied.
