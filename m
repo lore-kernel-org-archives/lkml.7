@@ -2,143 +2,148 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC610C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A337C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9118B206E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E5C2075C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:22:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YU9EPwrh"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="vCaTJVpf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfEDAUx (ORCPT
+        id S1726700AbfEDAWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 20:20:53 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:38913 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfEDAUw (ORCPT
+        Fri, 3 May 2019 20:22:35 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45634 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfEDAWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 20:20:52 -0400
-Received: by mail-yw1-f67.google.com with SMTP id x204so5694655ywg.6
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 17:20:52 -0700 (PDT)
+        Fri, 3 May 2019 20:22:35 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a10so6824973otl.12
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 17:22:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8u1LS+6EqPde0F+xVFBLFStY6rhD6RydqN/kGWzKQf0=;
-        b=YU9EPwrhmmXadyeroskbASOXBwkuSiVpsxM5r1tpL1zoFYO1+XqiRm2a8HecWWAg3I
-         bEct98nox4aXDJUtojb/NYqyUZ2z2prwd7BJf3DJH33w4na4cFh85CYofQWnvVRx+Iod
-         0rLrYWhcO5VjwnuJCMLlhljGSuT1p4svq95TJ9mHiumO2IlzByTI5loZX+kgdexEsUZ6
-         Dpsmpd0UL9DTn2EBBY3dOd8p4w/8MwdS5mRUtrtfueN/d/lbdfgRE4wgyu+1nwXUFcyu
-         4HSdcjoayXzP2/PvhBYDs9pMFZYAncBgEli0wIDFBEltwRQFZyNSN4a4tbidhjH9MA79
-         YjIA==
+        bh=P2GLzP+mIPWDKsZ2J8CpfXaoOt0+K7Q0KkqhqHG4CQc=;
+        b=vCaTJVpfuYZulF2lvGYTlcwKbV4bHIuldvUdxOqs+uH+ZWUG8MHCqU5LYRU4Ii5WsS
+         PDEi1Bnr5u7uVLSxwEHBcH9FcPgYoz9Zrqra3zoo3B3CV5rf1+xPBXBNtymFu8jTtI2b
+         4t2wu2eKaV7ho3Zf63LxX2I8ETXX16rERV2zGWVqTQO/gyE/IpH1gehvfpn1PuaZ9XQ2
+         nmeLDeeeVTfbVR8/sYJ645rjgSmbfdxHU+oB6gDOf5ZuLEJW+SGhXPmQQNsK5GI6X0Ln
+         ByAdVXtAjKqekszhk+thuc6BqPOtKacnBhw35lG5RNxfap33IOANS8l1kbF1doUDWmMd
+         3bmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8u1LS+6EqPde0F+xVFBLFStY6rhD6RydqN/kGWzKQf0=;
-        b=Q0152DjIW0EU9IPY9pRUoVRCBZ/VzX/kcdf/Vov2Zth3SvwfnqRVbZzyw+e5cHunuD
-         lktzs5oCrlY1XKlGFNI1F+DK1jdAwpJBRX1We6fQoSTqUs2Rr7o6avwnWBpSPke8NbMf
-         bdzxpdCURvIrcnhM5KHfIhtiGOi35PvqqwWuwVYP9PhdSbK8sNALNFc8WBcsWu3PSZrZ
-         lDr8s/MjOV3AVQz3tOzWToAdrbYW5G+XFvOL6zn0PKgQtmCBsYgl+bvMH+RNmKlJQz8v
-         7dLXu1PqP96NhVWzp85vCiVPXJbtxyD03TvpzJi2SZSc1WT5FPqL6oxTY65AIUd0FEz+
-         Ra0g==
-X-Gm-Message-State: APjAAAX3TF/4IswXsCffCtOrSRHE/Cb0ij4BM0dBbIBNlwyis/uhNYBZ
-        JpG5b36KmamKZlj3K3lT49AS+2HNi4lQPrVtv+YdiA==
-X-Google-Smtp-Source: APXvYqxZ0MJdyv3RZ5UYVNcpudMiD1zPtDVQBqLz9kFWv+/GAVLknMFUquuDlVBi73oSm4fBY/9sovp3rLwLQ8Vtbnc=
-X-Received: by 2002:a81:5a0b:: with SMTP id o11mr9041234ywb.444.1556929251923;
- Fri, 03 May 2019 17:20:51 -0700 (PDT)
+        bh=P2GLzP+mIPWDKsZ2J8CpfXaoOt0+K7Q0KkqhqHG4CQc=;
+        b=jDqEwoMjdsLvETqTZo00XPDG/8BPOEoz2xf2xhZSWafj+4CsqBdyVcIX8ZODrQqk60
+         RU2TOAqjxNYbgtqX5yafNWHV2OdLSlLz29R0i9HuMc+qiqpFu8AMscN3WxSwoPjOmQ/n
+         kWe0tFA8WYI9WoBrAhL/BjjTAmzGqDQTbyR3693yQbSwiyAvWHol44pW0CJ/wXsieBaP
+         Lrok6P9hlCzRMkRyU9HfyTpf47+mz9HiMxOLBQzT00p2w3VrK9pl4NFUckv9OlSzbqY4
+         Ujsd0ezo56OvAxtCGz1WJu8SlfwQPiOrZYtlfel6U6kFcqIa37lHkBWVrnfr8T/drOZ9
+         qL6Q==
+X-Gm-Message-State: APjAAAWZnM0TNERoWT2bEbK3Xaa3v27NEZUJa9hAeMGSv+xh4OZwhmHn
+        5OnZsqNycC4JD85fKEyX7GkCz6Mgg+ggNkgyH4Nj74pr
+X-Google-Smtp-Source: APXvYqxdVipoa5z31EifFG5ifrC68H+QnObLfr0ceemkguKFFrj+suFsJQfhR6Tx4LZgszvoXiMNhHCc5XuKsKhoJxk=
+X-Received: by 2002:a9d:5cc1:: with SMTP id r1mr6880612oti.229.1556929354326;
+ Fri, 03 May 2019 17:22:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190503233526.226272-1-dianders@chromium.org>
-In-Reply-To: <20190503233526.226272-1-dianders@chromium.org>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Fri, 3 May 2019 17:20:41 -0700
-Message-ID: <CABXOdTdsB82EGn_9ZTQCS2TfcNSR6Mq5J9WjGYbdrKOPsd-jzg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: block: Fix memory leak in blk-mq when cleaning up
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Ming Lei <ming.lei@redhat.com>, linux-mmc@vger.kernel.org,
-        Hannes Reinecke <hare@suse.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@fb.com>
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155552634075.2015392.3371070426600230054.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190501232517.crbmgcuk7u4gvujr@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
+ <CAPcyv4hxy86gWN3ncTQmHi8DT31k8YzsweMfGHgCh=sORMQQcg@mail.gmail.com>
+In-Reply-To: <CAPcyv4hxy86gWN3ncTQmHi8DT31k8YzsweMfGHgCh=sORMQQcg@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 3 May 2019 17:22:23 -0700
+Message-ID: <CAPcyv4hAh-Joe3Pt0r5CPSaWpZ4YoNF2jNDcvbMF2fsQm7Hetg@mail.gmail.com>
+Subject: Re: [PATCH v6 01/12] mm/sparsemem: Introduce struct mem_section_usage
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 4:35 PM Douglas Anderson <dianders@chromium.org> wrote:
+On Wed, May 1, 2019 at 11:07 PM Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> If I run the following on rk3288-veyron-minnie (a 2GB machine)
+> On Wed, May 1, 2019 at 4:25 PM Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
+> >
+> > On 19-04-17 11:39:00, Dan Williams wrote:
+> > > Towards enabling memory hotplug to track partial population of a
+> > > section, introduce 'struct mem_section_usage'.
+> > >
+> > > A pointer to a 'struct mem_section_usage' instance replaces the existing
+> > > pointer to a 'pageblock_flags' bitmap. Effectively it adds one more
+> > > 'unsigned long' beyond the 'pageblock_flags' (usemap) allocation to
+> > > house a new 'map_active' bitmap.  The new bitmap enables the memory
+> > > hot{plug,remove} implementation to act on incremental sub-divisions of a
+> > > section.
+> > >
+> > > The primary motivation for this functionality is to support platforms
+> > > that mix "System RAM" and "Persistent Memory" within a single section,
+> > > or multiple PMEM ranges with different mapping lifetimes within a single
+> > > section. The section restriction for hotplug has caused an ongoing saga
+> > > of hacks and bugs for devm_memremap_pages() users.
+> > >
+> > > Beyond the fixups to teach existing paths how to retrieve the 'usemap'
+> > > from a section, and updates to usemap allocation path, there are no
+> > > expected behavior changes.
+> > >
+> > > Cc: Michal Hocko <mhocko@suse.com>
+> > > Cc: Vlastimil Babka <vbabka@suse.cz>
+> > > Cc: Logan Gunthorpe <logang@deltatee.com>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > ---
+> > >  include/linux/mmzone.h |   23 ++++++++++++--
+> > >  mm/memory_hotplug.c    |   18 ++++++-----
+> > >  mm/page_alloc.c        |    2 +
+> > >  mm/sparse.c            |   81 ++++++++++++++++++++++++------------------------
+> > >  4 files changed, 71 insertions(+), 53 deletions(-)
+> > >
+> > > diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> > > index 70394cabaf4e..f0bbd85dc19a 100644
+> > > --- a/include/linux/mmzone.h
+> > > +++ b/include/linux/mmzone.h
+> > > @@ -1160,6 +1160,19 @@ static inline unsigned long section_nr_to_pfn(unsigned long sec)
+> > >  #define SECTION_ALIGN_UP(pfn)        (((pfn) + PAGES_PER_SECTION - 1) & PAGE_SECTION_MASK)
+> > >  #define SECTION_ALIGN_DOWN(pfn)      ((pfn) & PAGE_SECTION_MASK)
+> > >
+> > > +#define SECTION_ACTIVE_SIZE ((1UL << SECTION_SIZE_BITS) / BITS_PER_LONG)
+> > > +#define SECTION_ACTIVE_MASK (~(SECTION_ACTIVE_SIZE - 1))
+> > > +
+> > > +struct mem_section_usage {
+> > > +     /*
+> > > +      * SECTION_ACTIVE_SIZE portions of the section that are populated in
+> > > +      * the memmap
+> > > +      */
+> > > +     unsigned long map_active;
+> >
+> > I think this should be proportional to section_size / subsection_size.
+> > For example, on intel section size = 128M, and subsection is 2M, so
+> > 64bits work nicely. But, on arm64 section size if 1G, so subsection is
+> > 16M.
+> >
+> > On the other hand 16M is already much better than what we have: with 1G
+> > section size and 2M pmem alignment we guaranteed to loose 1022M. And
+> > with 16M subsection it is only 14M.
 >
->   cd /sys/bus/platform/drivers/dwmmc_rockchip
->   for i in $(seq 1 3000); do
->     echo "========================" $i
->     echo ff0f0000.dwmmc > unbind
->     sleep .5
->     echo ff0f0000.dwmmc > bind
->     while true; do
->       if [ -e /dev/mmcblk2 ]; then
->         break;
->       fi
->       sleep .1
->     done
->   done
->
-> Then I start OOMing somewhere between iteration 200 and 250.  Using
-> kmemleak, I see reports like:
->
-> unreferenced object 0xe39c5580 (size 64):
->   comm "kworker/1:0", pid 17, jiffies 4294821091 (age 96.952s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<ad19d10a>] __kmalloc+0x1ec/0x2dc
->     [<a28614c3>] blk_mq_alloc_tag_set+0x27c/0x2bc
->     [<0955ae01>] mmc_init_queue+0xa8/0x2a8
->     [<5102b986>] mmc_blk_alloc_req+0xf8/0x2d4
->     [<f1c2214f>] mmc_blk_probe+0x4a8/0x6c0
->     [<0dfdd9d5>] mmc_bus_probe+0x24/0x28
->
-> It's pretty clear that we're missing a call to blk_mq_free_tag_set().
-> Let's add it.
->
-> Fixes: 81196976ed94 ("mmc: block: Add blk-mq support")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> I'm ok with it being 16M for now unless it causes a problem in
+> practice, i.e. something like the minimum hardware mapping alignment
+> for physical memory being less than 16M.
 
-Nice one.
-
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
-
-> ---
->
->  drivers/mmc/core/queue.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-> index 7c364a9c4eeb..09071e13282e 100644
-> --- a/drivers/mmc/core/queue.c
-> +++ b/drivers/mmc/core/queue.c
-> @@ -480,6 +480,8 @@ void mmc_cleanup_queue(struct mmc_queue *mq)
->          */
->         flush_work(&mq->complete_work);
->
-> +       blk_mq_free_tag_set(&mq->tag_set);
-> +
->         mq->card = NULL;
->  }
->
-> --
-> 2.21.0.1020.gf2820cf01a-goog
->
+On second thought, arbitrary differences across architectures is a bit
+sad. The most common nvdimm namespace alignment granularity is
+PMD_SIZE, so perhaps the default sub-section size should try to match
+that default.
