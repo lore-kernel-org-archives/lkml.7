@@ -4,146 +4,220 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A337C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94C0C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E5C2075C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1522081C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:22:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="vCaTJVpf"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CQahTyAQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfEDAWf (ORCPT
+        id S1726789AbfEDAWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 20:22:35 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45634 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfEDAWf (ORCPT
+        Fri, 3 May 2019 20:22:40 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:52815 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfEDAWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 20:22:35 -0400
-Received: by mail-ot1-f67.google.com with SMTP id a10so6824973otl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 17:22:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P2GLzP+mIPWDKsZ2J8CpfXaoOt0+K7Q0KkqhqHG4CQc=;
-        b=vCaTJVpfuYZulF2lvGYTlcwKbV4bHIuldvUdxOqs+uH+ZWUG8MHCqU5LYRU4Ii5WsS
-         PDEi1Bnr5u7uVLSxwEHBcH9FcPgYoz9Zrqra3zoo3B3CV5rf1+xPBXBNtymFu8jTtI2b
-         4t2wu2eKaV7ho3Zf63LxX2I8ETXX16rERV2zGWVqTQO/gyE/IpH1gehvfpn1PuaZ9XQ2
-         nmeLDeeeVTfbVR8/sYJ645rjgSmbfdxHU+oB6gDOf5ZuLEJW+SGhXPmQQNsK5GI6X0Ln
-         ByAdVXtAjKqekszhk+thuc6BqPOtKacnBhw35lG5RNxfap33IOANS8l1kbF1doUDWmMd
-         3bmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P2GLzP+mIPWDKsZ2J8CpfXaoOt0+K7Q0KkqhqHG4CQc=;
-        b=jDqEwoMjdsLvETqTZo00XPDG/8BPOEoz2xf2xhZSWafj+4CsqBdyVcIX8ZODrQqk60
-         RU2TOAqjxNYbgtqX5yafNWHV2OdLSlLz29R0i9HuMc+qiqpFu8AMscN3WxSwoPjOmQ/n
-         kWe0tFA8WYI9WoBrAhL/BjjTAmzGqDQTbyR3693yQbSwiyAvWHol44pW0CJ/wXsieBaP
-         Lrok6P9hlCzRMkRyU9HfyTpf47+mz9HiMxOLBQzT00p2w3VrK9pl4NFUckv9OlSzbqY4
-         Ujsd0ezo56OvAxtCGz1WJu8SlfwQPiOrZYtlfel6U6kFcqIa37lHkBWVrnfr8T/drOZ9
-         qL6Q==
-X-Gm-Message-State: APjAAAWZnM0TNERoWT2bEbK3Xaa3v27NEZUJa9hAeMGSv+xh4OZwhmHn
-        5OnZsqNycC4JD85fKEyX7GkCz6Mgg+ggNkgyH4Nj74pr
-X-Google-Smtp-Source: APXvYqxdVipoa5z31EifFG5ifrC68H+QnObLfr0ceemkguKFFrj+suFsJQfhR6Tx4LZgszvoXiMNhHCc5XuKsKhoJxk=
-X-Received: by 2002:a9d:5cc1:: with SMTP id r1mr6880612oti.229.1556929354326;
- Fri, 03 May 2019 17:22:34 -0700 (PDT)
+        Fri, 3 May 2019 20:22:36 -0400
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x440MHP6014335;
+        Sat, 4 May 2019 09:22:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x440MHP6014335
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556929338;
+        bh=P85xUkVWJ0dVHjIoSMC9P7JcDgYlOOM9rXQ6Qi0p0vg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CQahTyAQ45r3fagnlthGRnySZMZTYWUjqC6LECJL9xJGfKxJJLNQn5rq6/g26ko2e
+         pB1fM739t7Y/nY5hjamdvPlVuacNNc+JcXJQAUV7+CqgijZZxH8fyn3+j1nhFMUYeJ
+         CsPUnIK1FJMeTVVifmPyDvbt9FDOEgtsd8MrMoF/5o7agKBjl+6S6b8n6D+Jpijuzp
+         ctXoX8yQSTysY1ZQDxhIoX7gDVwWcn6FqDulUcT5jGKRC+rHsWYgE59r6msaY5L24f
+         mzceQufaEs9s6IeYWEhPhYMU2kRE9AAWJkKVpNUt5BA3A2xAnwkE9l9L4Ei7dVRn22
+         dXFaKyJDcn6oA==
+X-Nifty-SrcIP: [209.85.221.171]
+Received: by mail-vk1-f171.google.com with SMTP id r195so1833317vke.0;
+        Fri, 03 May 2019 17:22:18 -0700 (PDT)
+X-Gm-Message-State: APjAAAWk45h/xia1A/6pvA5Oz30UMBX1HE7+b1aYhYXaLzmISfciKfn1
+        tik/Z2TE1zI+bwmQfKkPd8kWnZLUHtq0cbrSA/0=
+X-Google-Smtp-Source: APXvYqyhwo/BO28dVxsYhKsTVzTm7XUmbtpM59+2r952C1dirhJx0xS8CCDu/KKhvL8UaMiGTGUyGHQ1pLysyRV45jI=
+X-Received: by 2002:a1f:38b:: with SMTP id f11mr2437795vki.34.1556929337068;
+ Fri, 03 May 2019 17:22:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155552634075.2015392.3371070426600230054.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190501232517.crbmgcuk7u4gvujr@soleen.tm1wkky2jk1uhgkn0ivaxijq1c.bx.internal.cloudapp.net>
- <CAPcyv4hxy86gWN3ncTQmHi8DT31k8YzsweMfGHgCh=sORMQQcg@mail.gmail.com>
-In-Reply-To: <CAPcyv4hxy86gWN3ncTQmHi8DT31k8YzsweMfGHgCh=sORMQQcg@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 3 May 2019 17:22:23 -0700
-Message-ID: <CAPcyv4hAh-Joe3Pt0r5CPSaWpZ4YoNF2jNDcvbMF2fsQm7Hetg@mail.gmail.com>
-Subject: Re: [PATCH v6 01/12] mm/sparsemem: Introduce struct mem_section_usage
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
+References: <20190503182459.159121-1-joel@joelfernandes.org> <CAK7LNATRTqh_OJcQaWfcYYYqyZ-c0u1prD17LDYwDh18z2V31Q@mail.gmail.com>
+In-Reply-To: <CAK7LNATRTqh_OJcQaWfcYYYqyZ-c0u1prD17LDYwDh18z2V31Q@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 4 May 2019 09:21:41 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASkR7cauvcLprgrTKNv-iY4yjS278FPGJ-UEYTBrANKYw@mail.gmail.com>
+Message-ID: <CAK7LNASkR7cauvcLprgrTKNv-iY4yjS278FPGJ-UEYTBrANKYw@mail.gmail.com>
+Subject: Re: [PATCH] kheaders: Move from proc to sysfs
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        atish patra <atishp04@gmail.com>, bpf@vger.kernel.org,
+        Brendan Gregg <bgregg@netflix.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        duyuchao <yuchao.du@unisoc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        =?UTF-8?Q?Micha=C5=82_Gregorczyk?= <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 1, 2019 at 11:07 PM Dan Williams <dan.j.williams@intel.com> wrote:
+On Sat, May 4, 2019 at 9:18 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
-> On Wed, May 1, 2019 at 4:25 PM Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
+> On Sat, May 4, 2019 at 3:27 AM Joel Fernandes (Google)
+> <joel@joelfernandes.org> wrote:
 > >
-> > On 19-04-17 11:39:00, Dan Williams wrote:
-> > > Towards enabling memory hotplug to track partial population of a
-> > > section, introduce 'struct mem_section_usage'.
-> > >
-> > > A pointer to a 'struct mem_section_usage' instance replaces the existing
-> > > pointer to a 'pageblock_flags' bitmap. Effectively it adds one more
-> > > 'unsigned long' beyond the 'pageblock_flags' (usemap) allocation to
-> > > house a new 'map_active' bitmap.  The new bitmap enables the memory
-> > > hot{plug,remove} implementation to act on incremental sub-divisions of a
-> > > section.
-> > >
-> > > The primary motivation for this functionality is to support platforms
-> > > that mix "System RAM" and "Persistent Memory" within a single section,
-> > > or multiple PMEM ranges with different mapping lifetimes within a single
-> > > section. The section restriction for hotplug has caused an ongoing saga
-> > > of hacks and bugs for devm_memremap_pages() users.
-> > >
-> > > Beyond the fixups to teach existing paths how to retrieve the 'usemap'
-> > > from a section, and updates to usemap allocation path, there are no
-> > > expected behavior changes.
-> > >
-> > > Cc: Michal Hocko <mhocko@suse.com>
-> > > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > > Cc: Logan Gunthorpe <logang@deltatee.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > ---
-> > >  include/linux/mmzone.h |   23 ++++++++++++--
-> > >  mm/memory_hotplug.c    |   18 ++++++-----
-> > >  mm/page_alloc.c        |    2 +
-> > >  mm/sparse.c            |   81 ++++++++++++++++++++++++------------------------
-> > >  4 files changed, 71 insertions(+), 53 deletions(-)
-> > >
-> > > diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> > > index 70394cabaf4e..f0bbd85dc19a 100644
-> > > --- a/include/linux/mmzone.h
-> > > +++ b/include/linux/mmzone.h
-> > > @@ -1160,6 +1160,19 @@ static inline unsigned long section_nr_to_pfn(unsigned long sec)
-> > >  #define SECTION_ALIGN_UP(pfn)        (((pfn) + PAGES_PER_SECTION - 1) & PAGE_SECTION_MASK)
-> > >  #define SECTION_ALIGN_DOWN(pfn)      ((pfn) & PAGE_SECTION_MASK)
-> > >
-> > > +#define SECTION_ACTIVE_SIZE ((1UL << SECTION_SIZE_BITS) / BITS_PER_LONG)
-> > > +#define SECTION_ACTIVE_MASK (~(SECTION_ACTIVE_SIZE - 1))
-> > > +
-> > > +struct mem_section_usage {
-> > > +     /*
-> > > +      * SECTION_ACTIVE_SIZE portions of the section that are populated in
-> > > +      * the memmap
-> > > +      */
-> > > +     unsigned long map_active;
+> > The kheaders archive consisting of the kernel headers used for compiling
+> > bpf programs is in /proc. However there is concern that moving it here
+> > will make it permanent. Let us move it to /sys/kernel as discussed [1].
 > >
-> > I think this should be proportional to section_size / subsection_size.
-> > For example, on intel section size = 128M, and subsection is 2M, so
-> > 64bits work nicely. But, on arm64 section size if 1G, so subsection is
-> > 16M.
+> > [1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
 > >
-> > On the other hand 16M is already much better than what we have: with 1G
-> > section size and 2M pmem alignment we guaranteed to loose 1022M. And
-> > with 16M subsection it is only 14M.
+> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> > This patch applies on top of the previous patch that was applied to the
+> > driver tree:
+> > https://lore.kernel.org/patchwork/patch/1067310/
+> >
+> >  kernel/kheaders.c | 40 ++++++++++++++++------------------------
 >
-> I'm ok with it being 16M for now unless it causes a problem in
-> practice, i.e. something like the minimum hardware mapping alignment
-> for physical memory being less than 16M.
+>
+> Please rename CONFIG_IKHEADERS_PROC.
+>
+> Thanks.
 
-On second thought, arbitrary differences across architectures is a bit
-sad. The most common nvdimm namespace alignment granularity is
-PMD_SIZE, so perhaps the default sub-section size should try to match
-that default.
+
+Please adjust Kconfig prompt.
+  tristate "Enable kernel header artifacts through /proc/kheaders.tar.xz"
+
+
+"depends on PROC_FS"  ->  "depends on SYSFS"
+
+
+
+
+
+
+>
+>
+>
+> >  1 file changed, 16 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/kernel/kheaders.c b/kernel/kheaders.c
+> > index 70ae6052920d..6a16f8f6898d 100644
+> > --- a/kernel/kheaders.c
+> > +++ b/kernel/kheaders.c
+> > @@ -8,9 +8,8 @@
+> >
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> > -#include <linux/proc_fs.h>
+> > +#include <linux/kobject.h>
+> >  #include <linux/init.h>
+> > -#include <linux/uaccess.h>
+> >
+> >  /*
+> >   * Define kernel_headers_data and kernel_headers_data_end, within which the
+> > @@ -31,39 +30,32 @@ extern char kernel_headers_data;
+> >  extern char kernel_headers_data_end;
+> >
+> >  static ssize_t
+> > -ikheaders_read_current(struct file *file, char __user *buf,
+> > -                     size_t len, loff_t *offset)
+> > +ikheaders_read(struct file *file,  struct kobject *kobj,
+> > +              struct bin_attribute *bin_attr,
+> > +              char *buf, loff_t off, size_t len)
+> >  {
+> > -       return simple_read_from_buffer(buf, len, offset,
+> > -                                      &kernel_headers_data,
+> > -                                      &kernel_headers_data_end -
+> > -                                      &kernel_headers_data);
+> > +       memcpy(buf, &kernel_headers_data + off, len);
+> > +       return len;
+> >  }
+> >
+> > -static const struct file_operations ikheaders_file_ops = {
+> > -       .read = ikheaders_read_current,
+> > -       .llseek = default_llseek,
+> > +static struct bin_attribute kheaders_attr __ro_after_init = {
+> > +       .attr = {
+> > +               .name = "kheaders.tar.xz",
+> > +               .mode = S_IRUGO,
+> > +       },
+> > +       .read = &ikheaders_read,
+> >  };
+> >
+> >  static int __init ikheaders_init(void)
+> >  {
+> > -       struct proc_dir_entry *entry;
+> > -
+> > -       /* create the current headers file */
+> > -       entry = proc_create("kheaders.tar.xz", S_IRUGO, NULL,
+> > -                           &ikheaders_file_ops);
+> > -       if (!entry)
+> > -               return -ENOMEM;
+> > -
+> > -       proc_set_size(entry,
+> > -                     &kernel_headers_data_end -
+> > -                     &kernel_headers_data);
+> > -       return 0;
+> > +       kheaders_attr.size = (&kernel_headers_data_end -
+> > +                             &kernel_headers_data);
+> > +       return sysfs_create_bin_file(kernel_kobj, &kheaders_attr);
+> >  }
+> >
+> >  static void __exit ikheaders_cleanup(void)
+> >  {
+> > -       remove_proc_entry("kheaders.tar.xz", NULL);
+> > +       sysfs_remove_bin_file(kernel_kobj, &kheaders_attr);
+> >  }
+> >
+> >  module_init(ikheaders_init);
+> > --
+> > 2.21.0.1020.gf2820cf01a-goog
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
