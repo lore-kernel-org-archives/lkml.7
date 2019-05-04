@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06AEC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4611AC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768062084A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075D72085A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965584;
-	bh=Ty9E5+1vH/VLQSpzJPQG5wtADY5AI13ywUyXo2N/arY=;
+	s=default; t=1556965588;
+	bh=K4R6WH1m108Q8qjtdhaEEwfLxxwWzDC5/gUn77zrxtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePXZdmPBT+n1a2Y46b7nBRtpCQOPCop9pM1Wd5tARMrnLEleTSpVPRks6lwTVmdQt
-	 BpNRNjvuEfgvYqNiNIPHIEYOpySpSqUS0hZKYZHUMs4aNgTUs7DhSnj2G2DaFDRKkp
-	 +MkXKiHeGPmPEk/VvYgLyGRVfe1QgjsL1P0rdp48=
+	b=SwIvLHOnY0peiWHnnmD10CjgK+7BhXO6kVUlqh7CH/l65LTqZ5LuhSvM0+kuyeyTl
+	 BVhm9Ffq+whDZTXCpRee6Kt9J6bFkbA9qoXJlVjzCYkcgvCNauONkHAsicDzovWr1q
+	 D35qWdHdBCDpwDJgG03b0VSJxRIHeBZXgBeVCWEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbfEDK0X (ORCPT
+        id S1727719AbfEDK00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:26:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35876 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:26:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727635AbfEDK0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:26:20 -0400
+        id S1727694AbfEDK0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:26:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D3812084A;
-        Sat,  4 May 2019 10:26:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E80D2084A;
+        Sat,  4 May 2019 10:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965580;
-        bh=Ty9E5+1vH/VLQSpzJPQG5wtADY5AI13ywUyXo2N/arY=;
+        s=default; t=1556965582;
+        bh=K4R6WH1m108Q8qjtdhaEEwfLxxwWzDC5/gUn77zrxtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wyx/0Sxm9U7LLP1Kqtdylz74kX0vrMVXe8QbtQDBE/FtOTQzEGqbBEjp+1ndUhd9Y
-         tMjVfg3EIrTK2kvhcNIisMn8H9KJiiips7xvUWLXrN15LJO9Kj19SFQECN9iL6QvaZ
-         LB+MAs8c3ohu0Oau7TX/Ub+o9lCk8g6iHtSU0ULc=
+        b=iPSI6dk7OS/lSKyJ9h3Zi9Jtq9GFfhfRAM/vNN4RLtHV0OP/IS98WpGP3zywRfsrW
+         2kkWnRkIalC9qtgk7kuFhsj6TUyPyo4o6+nuGPN959vG57pDdoGs6wALqeqXzDrfgG
+         qPrxlyCKP1Ue6RTS7xAuMdM4T1+LaBctluBPMbig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Hurley <john.hurley@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 25/32] bnxt_en: Fix uninitialized variable usage in bnxt_rx_pkt().
-Date:   Sat,  4 May 2019 12:25:10 +0200
-Message-Id: <20190504102453.265164993@linuxfoundation.org>
+Subject: [PATCH 5.0 26/32] net/tls: dont copy negative amounts of data in reencrypt
+Date:   Sat,  4 May 2019 12:25:11 +0200
+Message-Id: <20190504102453.291848347@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
 References: <20190504102452.523724210@linuxfoundation.org>
@@ -61,55 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 0b397b17a4120cb80f7bf89eb30587b3dd9b0d1d ]
+[ Upstream commit 97e1caa517e22d62a283b876fb8aa5f4672c83dd ]
 
-In bnxt_rx_pkt(), if the driver encounters BD errors, it will recycle
-the buffers and jump to the end where the uninitailized variable "len"
-is referenced.  Fix it by adding a new jump label that will skip
-the length update.  This is the most correct fix since the length
-may not be valid when we get this type of error.
+There is no guarantee the record starts before the skb frags.
+If we don't check for this condition copy amount will get
+negative, leading to reads and writes to random memory locations.
+Familiar hilarity ensues.
 
-Fixes: 6a8788f25625 ("bnxt_en: add support for software dynamic interrupt moderation")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Cc: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Fixes: 4799ac81e52a ("tls: Add rx inline crypto offload")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: John Hurley <john.hurley@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/tls/tls_device.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -1621,7 +1621,7 @@ static int bnxt_rx_pkt(struct bnxt *bp,
- 			netdev_warn(bp->dev, "RX buffer error %x\n", rx_err);
- 			bnxt_sched_reset(bp, rxr);
- 		}
--		goto next_rx;
-+		goto next_rx_no_len;
- 	}
+--- a/net/tls/tls_device.c
++++ b/net/tls/tls_device.c
+@@ -610,14 +610,16 @@ static int tls_device_reencrypt(struct s
+ 	else
+ 		err = 0;
  
- 	len = le32_to_cpu(rxcmp->rx_cmp_len_flags_type) >> RX_CMP_LEN_SHIFT;
-@@ -1702,12 +1702,13 @@ static int bnxt_rx_pkt(struct bnxt *bp,
- 	rc = 1;
+-	copy = min_t(int, skb_pagelen(skb) - offset,
+-		     rxm->full_len - TLS_CIPHER_AES_GCM_128_TAG_SIZE);
++	if (skb_pagelen(skb) > offset) {
++		copy = min_t(int, skb_pagelen(skb) - offset,
++			     rxm->full_len - TLS_CIPHER_AES_GCM_128_TAG_SIZE);
  
- next_rx:
--	rxr->rx_prod = NEXT_RX(prod);
--	rxr->rx_next_cons = NEXT_RX(cons);
--
- 	cpr->rx_packets += 1;
- 	cpr->rx_bytes += len;
+-	if (skb->decrypted)
+-		skb_store_bits(skb, offset, buf, copy);
++		if (skb->decrypted)
++			skb_store_bits(skb, offset, buf, copy);
  
-+next_rx_no_len:
-+	rxr->rx_prod = NEXT_RX(prod);
-+	rxr->rx_next_cons = NEXT_RX(cons);
-+
- next_rx_no_prod_no_len:
- 	*raw_cons = tmp_raw_cons;
+-	offset += copy;
+-	buf += copy;
++		offset += copy;
++		buf += copy;
++	}
  
+ 	skb_walk_frags(skb, skb_iter) {
+ 		copy = min_t(int, skb_iter->len,
 
 
