@@ -2,101 +2,130 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50455C04AAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62B2C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 02:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B422075E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603A72075C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 02:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PuVZYNeN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rLp3wy5K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfEDB2P (ORCPT
+        id S1726781AbfEDCA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 21:28:15 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45707 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfEDB2O (ORCPT
+        Fri, 3 May 2019 22:00:59 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34935 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfEDCA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 21:28:14 -0400
-Received: by mail-io1-f66.google.com with SMTP id b3so1021454iob.12;
-        Fri, 03 May 2019 18:28:14 -0700 (PDT)
+        Fri, 3 May 2019 22:00:58 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t87so3209292pfa.2;
+        Fri, 03 May 2019 19:00:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fqoxiZyCvyf+sKhxeClpHtSGA08x0zbRLqOhBkhWRcU=;
-        b=PuVZYNeN9paugDedZluU0+Pnfxj09pUnMxZdpb8xEkS17IgNgchlUxgrnQ/Z6gO3s6
-         O4PhncNb+3OmvX7eKalHCCYgiigBOwpMHEQaAPb2dX15nil75T7aLUYoa0F+JWzRSHOO
-         KQnNgZsmNm277KnLWTSZj4La3HHfT+4Nl4bYz5zebMDzRG1Aj6tKfnkFOWoQrkVgi9zE
-         7gPhLFS8mr7KpQHtP0kpmBL4fORMh3liWizt/ppQKomENoK9Y3e4Iu8AgOI/aW2zcNiv
-         Gkk46hYLF1puCxBftcFRhNuzXvFxr/f+2TIucwv1GNB5NaTHVejlNGS6ekz79QAyOw28
-         3wsA==
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sW39XxwT6QxdvhUrZmgvyJobiq2om+iJ0XiMpRypi+g=;
+        b=rLp3wy5KDzDEvPVw74Y+MqMi9ViwScosjL3tXLCkJu1N2ysh07L4YXyvysO+5tebTy
+         zA7nrLg16SC7p8WcX6po5VTR4cOaioXJPCeVtiWT3y1mZLkR7lVlS+nZGkvVnD9zhJcv
+         qvK8iDtaoKb7vNCxbcAmpj/jSZklnm5cay1TLliQBSCs81dbanlAhF2rTSjrHM6j5Zr5
+         uFGkREMQdxtUYdCwsTQhCI/yfPx9hLeq5HsRv3j5Ue2Ey1cN+uSp02+94lZXai6/4eOH
+         pqIU1ZzNaMcqYo3r+7293R1PhYdSN/j7Fi6KY92s1O63buAXSkyNQK5GgPODroEgMv2G
+         Kd4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fqoxiZyCvyf+sKhxeClpHtSGA08x0zbRLqOhBkhWRcU=;
-        b=dP2nZf5HXL+mixEFAVKeEHqSGZxiiQpVc8qg5LC04VHYZtVr0xbuzCqN6JlDI1Z3XQ
-         vKzzTamj5kvOTxmDZdeCQRUr+zzzxLHMimTnJWM6ZxoEVbedc46WuqFWsBTuXt0xArRl
-         5i3OenXYP3IT47PcmdR5iOq98jXTwnC0Zp1gTGQ9bDRKjkvKilwykjvUQlnNRo6bMR8g
-         iWlAZj2uQR6Sjep1ISTb4lwYkDkT5AhHQ9jJOOz5yFUU9vEnyLCuJCfY7AE4W+2aKbjv
-         XWhHdOuH88hngsydju1F2poELLWPEvcPBtrfrwjup0v6LLrCAHe2ys1H8lbGXnw6p9AR
-         Pyrg==
-X-Gm-Message-State: APjAAAXy6GM/y3ZDkzFw2F6pQqFo4HQOg3lmp+ZNfmPWD0lwVIHAbxuq
-        NA2CxQVZnDknfAZfSRzBPreSJquaNXFw/A==
-X-Google-Smtp-Source: APXvYqwKe+cIFUdbkRF72PFk0UVrYJLo2sQ80sv0NiPxl5SJGkeAxjTsptrCur2oUC9ABF9hi8gzaQ==
-X-Received: by 2002:a6b:c901:: with SMTP id z1mr5149311iof.3.1556933293852;
-        Fri, 03 May 2019 18:28:13 -0700 (PDT)
-Received: from asus (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id q207sm1738281itc.37.2019.05.03.18.28.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 18:28:13 -0700 (PDT)
-Date:   Fri, 3 May 2019 19:28:11 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.0 000/101] 5.0.12-stable review
-Message-ID: <20190504012810.GA20514@asus>
-References: <20190502143339.434882399@linuxfoundation.org>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sW39XxwT6QxdvhUrZmgvyJobiq2om+iJ0XiMpRypi+g=;
+        b=NHeXkMep6PVzPVGEIb0M+aRuNt+eZoCzY4O+3UgaqCRZmFwt2DCJBwCdjYuEK+ebLa
+         TS8sGKiNGLzfsbSocU8Au2LMnz+qZtMn6/c64IlKzx5JLcBNqXuWK8LzJ4pb00chWk0l
+         6R6ySSIt0Wjn3k9dEF7EfBocCmy6KkpOUrwXZJH0d8CgwI9g6q5Q3X/4YOU/YriRrQ2z
+         pKro5qqVxjb6b60ZwG8tnxMrx8RVV+bkND6trORJcWNt/zq6KLZc5QgPgBuMkMir+A8C
+         35tTIYrerMLHu8MU/01eLoYv+9KmEYoRqrqShKRkxGLgt4n0OV1xSn8UAqF9PvFUvyD+
+         gl+w==
+X-Gm-Message-State: APjAAAUCDk806EirkCVWiCpM7eiHLdDZLmIFXypSPFFWDcHF88Bj/125
+        KJvLHJGnVkIcSoA95ZC5T2NQhdum
+X-Google-Smtp-Source: APXvYqybv9eWUjV7PPH4WD029y5MbVvqkeaCkgFrqj8jVjI3TI5K6ELDl5flVVaTjzR+Y56s1Eh89g==
+X-Received: by 2002:a62:b411:: with SMTP id h17mr15529149pfn.61.1556935257555;
+        Fri, 03 May 2019 19:00:57 -0700 (PDT)
+Received: from [10.230.28.107] ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id n11sm3711061pgq.8.2019.05.03.19.00.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 19:00:56 -0700 (PDT)
+Subject: Re: [PATCH net-next 3/9] net: dsa: Allow drivers to filter packets
+ they can decode source port from
+To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
+        andrew@lunn.ch, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190504011826.30477-1-olteanv@gmail.com>
+ <20190504011826.30477-4-olteanv@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <dcf251bc-ace1-4a3e-d500-54c916fcfdbb@gmail.com>
+Date:   Fri, 3 May 2019 19:00:52 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502143339.434882399@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190504011826.30477-4-olteanv@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 05:20:02PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.12 release.
-> There are 101 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 04 May 2019 02:32:10 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.12-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
 
-Compiled, booted, and no dmesg regressions on my system. 
 
-Cheers,
-Kelsey 
+On 5/3/2019 6:18 PM, Vladimir Oltean wrote:
+> Frames get processed by DSA and redirected to switch port net devices
+> based on the ETH_P_XDSA multiplexed packet_type handler found by the
+> network stack when calling eth_type_trans().
+> 
+> The running assumption is that once the DSA .rcv function is called, DSA
+> is always able to decode the switch tag in order to change the skb->dev
+> from its master.
+> 
+> However there are tagging protocols (such as the new DSA_TAG_PROTO_SJA1105,
+> user of DSA_TAG_PROTO_8021Q) where this assumption is not completely
+> true, since switch tagging piggybacks on the absence of a vlan_filtering
+> bridge. Moreover, management traffic (BPDU, PTP) for this switch doesn't
+> rely on switch tagging, but on a different mechanism. So it would make
+> sense to at least be able to terminate that.
+> 
+> Having DSA receive traffic it can't decode would put it in an impossible
+> situation: the eth_type_trans() function would invoke the DSA .rcv(),
+> which could not change skb->dev, then eth_type_trans() would be invoked
+> again, which again would call the DSA .rcv, and the packet would never
+> be able to exit the DSA filter and would spiral in a loop until the
+> whole system dies.
+> 
+> This happens because eth_type_trans() doesn't actually look at the skb
+> (so as to identify a potential tag) when it deems it as being
+> ETH_P_XDSA. It just checks whether skb->dev has a DSA private pointer
+> installed (therefore it's a DSA master) and that there exists a .rcv
+> callback (everybody except DSA_TAG_PROTO_NONE has that). This is
+> understandable as there are many switch tags out there, and exhaustively
+> checking for all of them is far from ideal.
+> 
+> The solution lies in introducing a filtering function for each tagging
+> protocol. In the absence of a filtering function, all traffic is passed
+> to the .rcv DSA callback. The tagging protocol should see the filtering
+> function as a pre-validation that it can decode the incoming skb. The
+> traffic that doesn't match the filter will bypass the DSA .rcv callback
+> and be left on the master netdevice, which wasn't previously possible.
+
+I can't come up with a different solution either:
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Maybe one day we will have in-kernel BPF filter for parsing DSA tags
+(similar to PTP) and then we can preserve the layering while leveraging
+the power of BPF!
+-- 
+Florian
