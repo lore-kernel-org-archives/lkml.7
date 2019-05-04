@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF52C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06AEC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB2B2085A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768062084A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965579;
-	bh=/VLryxNAOQ7i+D8vtOLwhoK4JVjHjDNuF8b8vv87mG4=;
+	s=default; t=1556965584;
+	bh=Ty9E5+1vH/VLQSpzJPQG5wtADY5AI13ywUyXo2N/arY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVcr7NbNi3veMcIxM4RQsqzqy+NBVPM6gCsZYCdbE/IfTsBgJPY9CE18EOkJa4zW9
-	 8lGUshyTnIJ3F0EuEya4luwIU/ktRX45WQ6b9KoMBqVs8bC6rTZH151NzsNw0k6u7C
-	 rmh9dfO/z5tDY/hg0S3lCI7ZUNXIBB1kXrtlNTLI=
+	b=ePXZdmPBT+n1a2Y46b7nBRtpCQOPCop9pM1Wd5tARMrnLEleTSpVPRks6lwTVmdQt
+	 BpNRNjvuEfgvYqNiNIPHIEYOpySpSqUS0hZKYZHUMs4aNgTUs7DhSnj2G2DaFDRKkp
+	 +MkXKiHeGPmPEk/VvYgLyGRVfe1QgjsL1P0rdp48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfEDK0S (ORCPT
+        id S1727699AbfEDK0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:26:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35742 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:26:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727635AbfEDK0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:26:15 -0400
+        id S1727635AbfEDK0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:26:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FFE22084A;
-        Sat,  4 May 2019 10:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D3812084A;
+        Sat,  4 May 2019 10:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965574;
-        bh=/VLryxNAOQ7i+D8vtOLwhoK4JVjHjDNuF8b8vv87mG4=;
+        s=default; t=1556965580;
+        bh=Ty9E5+1vH/VLQSpzJPQG5wtADY5AI13ywUyXo2N/arY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XOHzvNoSHFv3Ai73bqBPodxjgDNys+edoni5GeNDevMWpH36fbzJZ5KIR6HqGaqLF
-         45Al7GjAMIQTARAD8+YKbpAZ6yMr9s85I4KWiBIN8Y9XNMVz34XU9OZxosG03lWJpd
-         e/0SmCr7mnGLQ2ZeFF7R6wKPLFE1WMW2jdBwLzcg=
+        b=wyx/0Sxm9U7LLP1Kqtdylz74kX0vrMVXe8QbtQDBE/FtOTQzEGqbBEjp+1ndUhd9Y
+         tMjVfg3EIrTK2kvhcNIisMn8H9KJiiips7xvUWLXrN15LJO9Kj19SFQECN9iL6QvaZ
+         LB+MAs8c3ohu0Oau7TX/Ub+o9lCk8g6iHtSU0ULc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 23/32] bnxt_en: Pass correct extended TX port statistics size to firmware.
-Date:   Sat,  4 May 2019 12:25:08 +0200
-Message-Id: <20190504102453.210019339@linuxfoundation.org>
+Subject: [PATCH 5.0 25/32] bnxt_en: Fix uninitialized variable usage in bnxt_rx_pkt().
+Date:   Sat,  4 May 2019 12:25:10 +0200
+Message-Id: <20190504102453.265164993@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
 References: <20190504102452.523724210@linuxfoundation.org>
@@ -61,51 +63,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit ad361adf0d08f1135f3845c6b3a36be7cc0bfda5 ]
+[ Upstream commit 0b397b17a4120cb80f7bf89eb30587b3dd9b0d1d ]
 
-If driver determines that extended TX port statistics are not supported
-or allocation of the data structure fails, make sure to pass 0 TX stats
-size to firmware to disable it.  The firmware returned TX stats size should
-also be set to 0 for consistency.  This will prevent
-bnxt_get_ethtool_stats() from accessing the NULL TX stats pointer in
-case there is mismatch between firmware and driver.
+In bnxt_rx_pkt(), if the driver encounters BD errors, it will recycle
+the buffers and jump to the end where the uninitailized variable "len"
+is referenced.  Fix it by adding a new jump label that will skip
+the length update.  This is the most correct fix since the length
+may not be valid when we get this type of error.
 
-Fixes: 36e53349b60b ("bnxt_en: Add additional extended port statistics.")
+Fixes: 6a8788f25625 ("bnxt_en: add support for software dynamic interrupt moderation")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
 +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -6745,6 +6745,7 @@ static int bnxt_hwrm_port_qstats_ext(str
- 	struct hwrm_queue_pri2cos_qcfg_input req2 = {0};
- 	struct hwrm_port_qstats_ext_input req = {0};
- 	struct bnxt_pf_info *pf = &bp->pf;
-+	u32 tx_stat_size;
- 	int rc;
+@@ -1621,7 +1621,7 @@ static int bnxt_rx_pkt(struct bnxt *bp,
+ 			netdev_warn(bp->dev, "RX buffer error %x\n", rx_err);
+ 			bnxt_sched_reset(bp, rxr);
+ 		}
+-		goto next_rx;
++		goto next_rx_no_len;
+ 	}
  
- 	if (!(bp->flags & BNXT_FLAG_PORT_STATS_EXT))
-@@ -6754,13 +6755,16 @@ static int bnxt_hwrm_port_qstats_ext(str
- 	req.port_id = cpu_to_le16(pf->port_id);
- 	req.rx_stat_size = cpu_to_le16(sizeof(struct rx_port_stats_ext));
- 	req.rx_stat_host_addr = cpu_to_le64(bp->hw_rx_port_stats_ext_map);
--	req.tx_stat_size = cpu_to_le16(sizeof(struct tx_port_stats_ext));
-+	tx_stat_size = bp->hw_tx_port_stats_ext ?
-+		       sizeof(*bp->hw_tx_port_stats_ext) : 0;
-+	req.tx_stat_size = cpu_to_le16(tx_stat_size);
- 	req.tx_stat_host_addr = cpu_to_le64(bp->hw_tx_port_stats_ext_map);
- 	mutex_lock(&bp->hwrm_cmd_lock);
- 	rc = _hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
- 	if (!rc) {
- 		bp->fw_rx_stats_ext_size = le16_to_cpu(resp->rx_stat_size) / 8;
--		bp->fw_tx_stats_ext_size = le16_to_cpu(resp->tx_stat_size) / 8;
-+		bp->fw_tx_stats_ext_size = tx_stat_size ?
-+			le16_to_cpu(resp->tx_stat_size) / 8 : 0;
- 	} else {
- 		bp->fw_rx_stats_ext_size = 0;
- 		bp->fw_tx_stats_ext_size = 0;
+ 	len = le32_to_cpu(rxcmp->rx_cmp_len_flags_type) >> RX_CMP_LEN_SHIFT;
+@@ -1702,12 +1702,13 @@ static int bnxt_rx_pkt(struct bnxt *bp,
+ 	rc = 1;
+ 
+ next_rx:
+-	rxr->rx_prod = NEXT_RX(prod);
+-	rxr->rx_next_cons = NEXT_RX(cons);
+-
+ 	cpr->rx_packets += 1;
+ 	cpr->rx_bytes += len;
+ 
++next_rx_no_len:
++	rxr->rx_prod = NEXT_RX(prod);
++	rxr->rx_next_cons = NEXT_RX(cons);
++
+ next_rx_no_prod_no_len:
+ 	*raw_cons = tmp_raw_cons;
+ 
 
 
