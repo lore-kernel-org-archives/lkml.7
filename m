@@ -2,105 +2,228 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958ABC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 08:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70070C04AA9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 08:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66FF32084A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 08:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356772084A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 08:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556958013;
+	bh=o3kG/hfCv1ccdOuvTxjhloIJO5yP1qGbRQXc+0vS9pM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=HgmfR0pVWboxX0Dpzs7zN1zcR/RG9I+/JgqtcsFGlXe2SlGufSa4sK7VNj7/2faHU
+	 MBcjCU+cP+iIen/Zn+xVVaTbKHJyXdaKXHOfvy9OAgDuZ0qsJC2Ng2/KlK9l9Ki2oW
+	 J2HPomiIZPEGWmk6Ds6fjTTkmv6lUDINTFwVKHgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfEDISl (ORCPT
+        id S1727075AbfEDIUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 04:18:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35814 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725819AbfEDISl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 04:18:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E9109AE41;
-        Sat,  4 May 2019 08:18:39 +0000 (UTC)
-From:   NeilBrown <neil@brown.name>
-To:     Chaotian Jing <chaotian.jing@mediatek.com>
-Date:   Sat, 04 May 2019 18:18:31 +1000
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thirtythreeforty@gmail.com
-Subject: Re: [PATCH 4/5] mmc: mtk-sd: enable internal card-detect logic.
-In-Reply-To: <1555569583.18628.29.camel@mhfsdcap03>
-References: <155538933003.25108.3338569916935462285.stgit@noble.brown> <155539004931.25108.17076624786044710325.stgit@noble.brown> <1555569583.18628.29.camel@mhfsdcap03>
-Message-ID: <87o94i3a5k.fsf@notabene.neil.brown.name>
+        Sat, 4 May 2019 04:20:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725819AbfEDIUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 04:20:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 937D92084A;
+        Sat,  4 May 2019 08:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556958010;
+        bh=o3kG/hfCv1ccdOuvTxjhloIJO5yP1qGbRQXc+0vS9pM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=zMMG9nSUFBnB3BuExykhz0pBLUSr1qbFSLnSsg9sPxWDgbGgTCfcTdd3MsCrPao1o
+         TFBJV23TDP7BV8NPIHLP2UpJ8dLQ4vehTPZA6ZXcqJIsP3a4UeKBVRCUrMbcg8wssp
+         q+3JN+tIASQE5gx4gGhb2o/X0XMRBenFgRMawSh8=
+Date:   Sat, 4 May 2019 10:20:07 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.9.173
+Message-ID: <20190504082007.GA15253@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+Content-Disposition: inline
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+
+--AhhlLboLdkugWU4S
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 18 2019, Chaotian Jing wrote:
+I'm announcing the release of the 4.9.173 kernel.
 
-> On Tue, 2019-04-16 at 14:47 +1000, NeilBrown wrote:
->> The mtk-sd silicon has integrated card-detect logic that is
->> enabled, at least, on the MT7621 as used in the GNUBEE NAS.
->>=20
->> If the sdhci isn't marked non-removable and doesn't have a
->> cd-gpio configured, assume the internal cd logic should be used.
->>=20
->> Signed-off-by: NeilBrown <neil@brown.name>
-...
+All users of the 4.9 kernel series must upgrade.
 
->> @@ -2206,6 +2247,15 @@ static int msdc_drv_probe(struct platform_device =
-*pdev)
->>  		goto host_free;
->>  	}
->>=20=20
->> +	if (!(mmc->caps & MMC_CAP_NONREMOVABLE) &&
->> +	    !mmc_can_gpio_cd(mmc)) {
->
-> Should not do this assume!
-> better to add "mediatek,internal-cd" in your DTS, then no impact to
-> other Soc.
+The updated 4.9.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-4.9.y
+and can be browsed at the normal kernel.org git web browser:
+	http://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Dsu=
+mmary
 
-(Sorry for the delay).
+thanks,
 
-Documentation/devicetree/bindings/mmc/mmc.txt
+greg k-h
 
-says:
-   If no property below is supplied, host native card detect is used.
+------------
 
-So this assumption is *exactly* what the documentation said we should
-do.
+ Makefile                                            |    2 -
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts            |    2 -
+ arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi        |    1=20
+ arch/s390/include/asm/elf.h                         |   11 +++---
+ drivers/ata/libata-zpodd.c                          |   34 +++++++++++++--=
+---
+ drivers/gpio/gpiolib-of.c                           |    8 +++-
+ drivers/leds/leds-pca9532.c                         |    8 +++-
+ drivers/media/platform/vivid/vivid-vid-common.c     |    3 +
+ drivers/net/ethernet/ibm/ehea/ehea_main.c           |    1=20
+ drivers/net/ethernet/micrel/ks8851.c                |   36 ++++++++++-----=
+-----
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c |    2 +
+ drivers/net/ethernet/ti/netcp_ethss.c               |    8 +++-
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c   |    2 +
+ drivers/net/usb/ipheth.c                            |   33 +++++++++++++--=
+---
+ drivers/s390/scsi/zfcp_fc.c                         |   21 +++++++++--
+ drivers/scsi/qla4xxx/ql4_os.c                       |    2 +
+ drivers/staging/rtl8712/rtl8712_cmd.c               |   10 -----
+ drivers/staging/rtl8712/rtl8712_cmd.h               |    2 -
+ drivers/tty/serial/ar933x_uart.c                    |   24 ++++---------
+ drivers/tty/serial/sc16is7xx.c                      |   12 +++++-
+ drivers/usb/gadget/udc/net2272.c                    |    1=20
+ drivers/usb/gadget/udc/net2280.c                    |    8 +---
+ drivers/usb/host/u132-hcd.c                         |    3 +
+ drivers/vfio/vfio_iommu_type1.c                     |   14 +++++++
+ fs/ceph/inode.c                                     |    2 -
+ fs/nfs/client.c                                     |    2 -
+ net/bridge/br_netfilter_hooks.c                     |    1=20
+ net/bridge/br_netfilter_ipv6.c                      |    2 +
+ net/netfilter/nft_set_rbtree.c                      |    7 +--
+ scripts/kconfig/lxdialog/inputbox.c                 |    3 +
+ scripts/kconfig/nconf.c                             |    2 -
+ scripts/kconfig/nconf.gui.c                         |    3 +
+ 32 files changed, 175 insertions(+), 95 deletions(-)
 
-How about I limit this assumption to mt7621 using a flag in the
-mtk_mmc_compatible structure?
+Aditya Pakki (1):
+      qlcnic: Avoid potential NULL pointer dereference
 
-Thanks,
-NeilBrown
+Al Viro (1):
+      ceph: fix use-after-free on symlink traversal
 
---=-=-=
+Alex Williamson (1):
+      vfio/type1: Limit DMA mappings per container
+
+Alexander Kappner (1):
+      usbnet: ipheth: prevent TX queue timeouts when device not ready
+
+Changbin Du (1):
+      kconfig/[mn]conf: handle backspace (^H) key
+
+Dan Carpenter (1):
+      staging: rtl8712: uninitialized memory in read_bbreg_hdl()
+
+Geert Uytterhoeven (1):
+      gpio: of: Fix of_gpiochip_add() error path
+
+Greg Kroah-Hartman (1):
+      Linux 4.9.173
+
+Guido Kiener (3):
+      usb: gadget: net2280: Fix overrun of OUT messages
+      usb: gadget: net2280: Fix net2280_dequeue()
+      usb: gadget: net2272: Fix net2272_dequeue()
+
+Gustavo A. R. Silva (1):
+      usbnet: ipheth: fix potential null pointer dereference in ipheth_carr=
+ier_set
+
+Hans Verkuil (1):
+      media: vivid: check if the cec_adapter is valid
+
+Helen Koike (1):
+      ARM: dts: bcm283x: Fix hdmi hpd gpio pull
+
+Kangjie Lu (2):
+      scsi: qla4xxx: fix a potential NULL pointer dereference
+      leds: pca9532: fix a potential NULL pointer dereference
+
+Lukas Wunner (4):
+      net: ks8851: Dequeue RX packets explicitly
+      net: ks8851: Reassert reset pin if chip ID check fails
+      net: ks8851: Delay requesting IRQ until opened
+      net: ks8851: Set initial carrier state to down
+
+Mao Wenan (1):
+      sc16is7xx: missing unregister/delete driver on error in sc16is7xx_ini=
+t()
+
+Marco Felsch (1):
+      ARM: dts: pfla02: increase phy reset duration
+
+Martin Schwidefsky (1):
+      s390: limit brk randomization to 32MB
+
+Mukesh Ojha (1):
+      usb: u132-hcd: fix resource leak
+
+Pablo Neira Ayuso (1):
+      netfilter: nft_set_rbtree: check for inactive element after flag mism=
+atch
+
+Petr =C5=A0tetiar (1):
+      serial: ar933x_uart: Fix build failure with disabled console
+
+Steffen Maier (1):
+      scsi: zfcp: reduce flood of fcrscn1 trace records on multi-element RS=
+CN
+
+Trond Myklebust (1):
+      NFS: Fix a typo in nfs_init_timeout_values()
+
+Wen Yang (3):
+      net: xilinx: fix possible object reference leak
+      net: ibm: fix possible object reference leak
+      net: ethernet: ti: fix possible object reference leak
+
+Xin Long (1):
+      netfilter: bridge: set skb transport_header before entering NF_INET_P=
+RE_ROUTING
+
+raymond pang (1):
+      libata: fix using DMA buffers on stack
+
+
+--AhhlLboLdkugWU4S
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzNStcACgkQOeye3VZi
-gbnPBA//eN9sE9P0TV5+KckYl7NgUH1whziK3Ot5PrCfyuwxOQIqSxuIF7ZRDS+X
-6gk6CDYO59Y2DAvCTUJNUWWwEoSrB21EMbKTBmcTLywiaBqTPGn4k8usUQ3xchnh
-oZQzfUrwyOM8b0O1jBRh0CJkk345rFMaew30WO1Qvyq4PGUAIEtFpDap1Xd5KWOP
-ax8hG1FX/G3mmd2gIxMp8HJmIRvEhnXZOPQ2lI4PRktLO8jG1ltBjF8schg/v8Fh
-aIGO+F4bjQRdGrnSPIFbIbu5p5s5oXPW1KDJSzvim7IUFrg9iyBkpgkpnkgT6Id4
-oa1x05CG01yNQ5LKtZZGkyiU1XH602964hbzZ9Qvtw7KYV9QqRniDvCx3XxRIIea
-MW77EhImTh98jwhjj9hP5R1i/hBUJ3nYs7vVF4AMfSik+dyJyhu1+j26tnD7JQdp
-efMeOX1grtDqGrlw1aCWsRBrTA343H/zUMHoRPHnCusOSuSZ7kVDkJ4b/306Gfyi
-hGckqJ6+9XTFFWG2r7WfTS+XDVgvZbtcPj0OZhpsg+kWN+/6CfY9zv0ZdK2erPdi
-ZTOlse/zGjzTh4vqHV2ajkreK/LRDmR4s4m1iXoynx7SCzR7bjTDcso6bP15ihdc
-pHPLL2kBlScb9RZYc3ldl9LFAnQhsMV5uOM0mzrYSR+eb419kkY=
-=Q94r
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAlzNSzMACgkQONu9yGCS
+aT657Q//YFhX8e8Rc0DnLo15Npqn37FU13NnDdcaAWFCJ3e0GSocQPZHU63xptkv
+EE3gfCT0WEOZvzj4ORAljXabpwzx8zeL93tkTM5ZoCW99xPFTHDM+jjpfvjD8fnh
+MnPng0AgTKXMarvz+Tx8IDChq0N2Xvj4yIg9yJj9FNITDWkR0VN6buhZaAp8G5lc
+pzADigoUO9NtMc1IEsQPEmgtJshRGClTScY73hvvulXVE0wyXUcVvypNi78GZbRI
+oA6Md1tlbqLYhsyLLCjNxrev2qL+ROfA8hUTCg8JIT7cqXvga8Qo4PxMeQoxXUY8
+/X9ZXlimK5qAk2h6CeNuQ8NYEktKK5y3+LoIVq27hgb7U7TieZBqcXgn5mohuxdX
+/lkF+9NJoL/w9Sclu0qT49CgEOsx8aIv1O2gwfpkCSqdfR/B5ia3PJPKjkPqTmwU
+KBa3kJFST234pTPUBrfh47DQwWx1uK9S08+n6sZslpqn5yXwsvSPih01ZOJ/LPWf
+stGNwA5oJURvLgAfqpd8qhzn7CjABQtUbESrAwViimSh8wqt2K57rV1WHuHFFkd9
+JiDDFiBFJsNj6L4BAZVHdsNKt71wB4tANEB9Z/yoW7DZjtRzriOJTJEPlM4Wb6DO
+PARlWZqqMjLnbXGDdZWit6TIK12np1kVgZLShulWYqcnrfWQw7Q=
+=Rdkh
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--AhhlLboLdkugWU4S--
