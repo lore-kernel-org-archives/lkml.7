@@ -2,224 +2,152 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83089C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668E4C04AAA
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5341B206E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 429A32133F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfEDBBV (ORCPT
+        id S1726661AbfEDBPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 21:01:21 -0400
-Received: from mga02.intel.com ([134.134.136.20]:20974 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbfEDBBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 21:01:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 May 2019 18:01:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,427,1549958400"; 
-   d="scan'208";a="148114240"
-Received: from jlwhitty-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.254.28.45])
-  by fmsmga007.fm.intel.com with ESMTP; 03 May 2019 18:00:59 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org,
-        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
-        srinivas.kandagatla@linaro.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [RFC PATCH 7/7] soundwire: intel: add debugfs register dump
-Date:   Fri,  3 May 2019 20:00:30 -0500
-Message-Id: <20190504010030.29233-8-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
-References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
+        Fri, 3 May 2019 21:15:20 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40675 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfEDBPT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 21:15:19 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so3502536plr.7;
+        Fri, 03 May 2019 18:15:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language;
+        bh=a9IXq1ExE3LjBqi16WuQaXq/l5pxcNR9gCGN3rok/Ak=;
+        b=drPha09l8ornjRRh0t2yyNmeujW4bqTPr/yR/vaozRTGRrZNggPswNG2Nw6RZU6H6R
+         XpRWEBkWxZJsHFSAQlC42u96nUn376pwCSoNtcuzRgA8lHbx8GsCNwYVJ8eFilnfwm92
+         roEPrA6Zojn4ubjxnPw79wnGsgE2RGLY4vXQRiJy5DNTcMDF2XzZK1UKhHM5h07jd68D
+         Xcoy7kiXM685BnrHDP9b6K1s6Qnc01FJTMVLdybL7hO4G4tjOSE3eliCr4OUBsLEWPtV
+         wV3umo+OHO3sbmtdiG7VuY57Bcv2QWL9T7HV6Q0Ra/XQJzsZUsHnx20A1QbC55BpxnV3
+         /HPw==
+X-Gm-Message-State: APjAAAWnmupasYdVwBqy1MPemjztT6vIbcGw8xedXn+anQjygtJzDNv+
+        +lJSF6F3QjuFTdOdSlIuB8yTyZ5T
+X-Google-Smtp-Source: APXvYqzLQm/VwjCjeibtxTsonIuvUl/wEsrh5GUCvnUSEzJDjjrpwxojlgclByE7lybGUbrravG1WQ==
+X-Received: by 2002:a17:902:7287:: with SMTP id d7mr14937211pll.186.1556932518486;
+        Fri, 03 May 2019 18:15:18 -0700 (PDT)
+Received: from asus.site ([2601:647:4000:5dd1:a41e:80b4:deb3:fb66])
+        by smtp.gmail.com with ESMTPSA id h30sm8830268pgi.38.2019.05.03.18.15.16
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 18:15:17 -0700 (PDT)
+Subject: Re: blkdev_get deadlock
+To:     Evan Green <evgreen@chromium.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>
+References: <CAE=gft4irmMAapAj3O0hWr53PnyRUmcX2AJB+p_PqCJHT0rvNg@mail.gmail.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <ca507480-0b06-5e4d-ebe6-464302d3af92@acm.org>
+Date:   Fri, 3 May 2019 18:15:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAE=gft4irmMAapAj3O0hWr53PnyRUmcX2AJB+p_PqCJHT0rvNg@mail.gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------78929E0BE3A126298D42A8E9"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add debugfs file to dump the Intel SoundWire registers
+This is a multi-part message in MIME format.
+--------------78929E0BE3A126298D42A8E9
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Credits: this patch is based on an earlier internal contribution by
-Vinod Koul, Sanyog Kale, Shreyas Nc and Hardik Shah. The main change
-is the use of scnprintf to avoid known issues with snprintf.
+On 5/3/19 10:47 AM, Evan Green wrote:
+> Hey blockies,
+  ^^^^^^^^^^^^
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- drivers/soundwire/intel.c | 115 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 115 insertions(+)
+That's the weirdest greeting I have encountered so far on the
+linux-block mailing list.
 
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index 4ac141730b13..7fb2cd6d5bb5 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/module.h>
- #include <linux/interrupt.h>
-@@ -16,6 +17,7 @@
- #include <linux/soundwire/sdw.h>
- #include <linux/soundwire/sdw_intel.h>
- #include "cadence_master.h"
-+#include "bus.h"
- #include "intel.h"
- 
- /* Intel SHIM Registers Definition */
-@@ -98,6 +100,7 @@ struct sdw_intel {
- 	struct sdw_cdns cdns;
- 	int instance;
- 	struct sdw_intel_link_res *res;
-+	struct dentry *fs;
- };
- 
- #define cdns_to_intel(_cdns) container_of(_cdns, struct sdw_intel, cdns)
-@@ -161,6 +164,115 @@ static int intel_set_bit(void __iomem *base, int offset, u32 value, u32 mask)
- 	return -EAGAIN;
- }
- 
-+/*
-+ * debugfs
-+ */
-+
-+#define RD_BUF (2 * PAGE_SIZE)
-+
-+static ssize_t intel_sprintf(void __iomem *mem, bool l,
-+			     char *buf, size_t pos, unsigned int reg)
-+{
-+	int value;
-+
-+	if (l)
-+		value = intel_readl(mem, reg);
-+	else
-+		value = intel_readw(mem, reg);
-+
-+	return scnprintf(buf + pos, RD_BUF - pos, "%4x\t%4x\n", reg, value);
-+}
-+
-+static ssize_t intel_reg_read(struct file *file, char __user *user_buf,
-+			      size_t count, loff_t *ppos)
-+{
-+	struct sdw_intel *sdw = file->private_data;
-+	void __iomem *s = sdw->res->shim;
-+	void __iomem *a = sdw->res->alh;
-+	char *buf;
-+	ssize_t ret;
-+	int i, j;
-+	unsigned int links, reg;
-+
-+	buf = kzalloc(RD_BUF, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	links = intel_readl(s, SDW_SHIM_LCAP) & GENMASK(2, 0);
-+
-+	ret = scnprintf(buf, RD_BUF, "Register  Value\n");
-+	ret += scnprintf(buf + ret, RD_BUF - ret, "\nShim\n");
-+
-+	for (i = 0; i < 4; i++) {
-+		reg = SDW_SHIM_LCAP + i * 4;
-+		ret += intel_sprintf(s, true, buf, ret, reg);
-+	}
-+
-+	for (i = 0; i < links; i++) {
-+		ret += scnprintf(buf + ret, RD_BUF - ret, "\nLink%d\n", i);
-+		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTLSCAP(i));
-+		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTLS0CM(i));
-+		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTLS1CM(i));
-+		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTLS2CM(i));
-+		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTLS3CM(i));
-+		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_PCMSCAP(i));
-+
-+		for (j = 0; j < 8; j++) {
-+			ret += intel_sprintf(s, false, buf, ret,
-+					SDW_SHIM_PCMSYCHM(i, j));
-+			ret += intel_sprintf(s, false, buf, ret,
-+					SDW_SHIM_PCMSYCHC(i, j));
-+		}
-+
-+		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_PDMSCAP(i));
-+		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_IOCTL(i));
-+		ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_CTMCTL(i));
-+	}
-+
-+	ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_WAKEEN);
-+	ret += intel_sprintf(s, false, buf, ret, SDW_SHIM_WAKESTS);
-+
-+	ret += scnprintf(buf + ret, RD_BUF - ret, "\nALH\n");
-+	for (i = 0; i < 8; i++)
-+		ret += intel_sprintf(a, true, buf, ret, SDW_ALH_STRMZCFG(i));
-+
-+	ret = simple_read_from_buffer(user_buf, count, ppos, buf, ret);
-+	kfree(buf);
-+
-+	return ret;
-+}
-+
-+static const struct file_operations intel_reg_fops = {
-+	.open = simple_open,
-+	.read = intel_reg_read,
-+	.llseek = default_llseek,
-+};
-+
-+static void intel_debugfs_init(struct sdw_intel *sdw)
-+{
-+	struct dentry *root = sdw_bus_debugfs_get_root(sdw->cdns.bus.debugfs);
-+
-+	if (!root)
-+		return;
-+
-+	sdw->fs = debugfs_create_dir("intel-sdw", root);
-+	if (IS_ERR_OR_NULL(sdw->fs)) {
-+		dev_err(sdw->cdns.dev, "debugfs root creation failed\n");
-+		sdw->fs = NULL;
-+		return;
-+	}
-+
-+	debugfs_create_file("intel-registers", 0400, sdw->fs, sdw,
-+			    &intel_reg_fops);
-+
-+	sdw_cdns_debugfs_init(&sdw->cdns, sdw->fs);
-+}
-+
-+static void intel_debugfs_exit(struct sdw_intel *sdw)
-+{
-+	debugfs_remove_recursive(sdw->fs);
-+}
-+
- /*
-  * shim ops
-  */
-@@ -890,6 +1002,8 @@ static int intel_probe(struct platform_device *pdev)
- 		goto err_dai;
- 	}
- 
-+	intel_debugfs_init(sdw);
-+
- 	return 0;
- 
- err_dai:
-@@ -906,6 +1020,7 @@ static int intel_remove(struct platform_device *pdev)
- 
- 	sdw = platform_get_drvdata(pdev);
- 
-+	intel_debugfs_exit(sdw);
- 	free_irq(sdw->res->irq, sdw);
- 	snd_soc_unregister_component(sdw->cdns.dev);
- 	sdw_delete_bus_master(&sdw->cdns.bus);
--- 
-2.17.1
+> I'm seeing a hung task in the kernel, and I wanted to share it in case
+> it's a known issue. I'm still trying to wrap my head around the stacks
+> myself. This is our Chrome OS 4.19 kernel, which is admittedly not
+> 100% vanilla mainline master, but we try to keep it pretty close.
+> 
+> I can reproduce this reliably within our chrome OS installer, where
+> it's trying to dd from my system disk (NVMe) to a loop device backed
+> by a removable UFS card (4kb sectors) in a USB dongle.
 
+Although this is not the only possible cause such hangs are often caused
+by a block driver or SCSI LLD not completing a request. A list of
+pending requests can be obtained e.g. by running the attached script.
+
+Bart.
+
+--------------78929E0BE3A126298D42A8E9
+Content-Type: text/plain; charset=UTF-8;
+ name="list-pending-block-requests"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="list-pending-block-requests"
+
+IyEvYmluL2Jhc2gKCnNob3dfc3RhdGUoKSB7CiAgICBsb2NhbCBhIGRldj0kMQoKICAgIGZv
+ciBhIGluIGRldmljZS9zdGF0ZSBxdWV1ZS9zY2hlZHVsZXI7IGRvCglbIC1lICIkZGV2LyRh
+IiBdICYmIGdyZXAgLWFIIC4gIiRkZXYvJGEiCiAgICBkb25lCn0KCmlmIFsgLWUgL3N5cy9r
+ZXJuZWwvZGVidWcvYmxvY2sgXTsgdGhlbgogICAgZGV2cz0oJChjZCAvc3lzL2tlcm5lbC9k
+ZWJ1Zy9ibG9jayAmJiBlY2hvIC4vKikpCmVsc2UKICAgIGRldnM9KCQoY2QgL3N5cy9jbGFz
+cy9ibG9jayAmJiBlY2hvIC4vKikpCmZpCgpjZCAvc3lzL2NsYXNzL2Jsb2NrIHx8IGV4aXQg
+JD8KZm9yIGRldiBpbiAiJHtkZXZzW0BdfSI7IGRvCiAgICBkZXY9IiR7ZGV2Iy4vfSIKICAg
+IGVjaG8gIiRkZXYiCiAgICBwZW5kaW5nPTAKICAgIGlmIFsgLWUgIiRkZXYvbXEiIF07IHRo
+ZW4KCWZvciBmIGluICIkZGV2Ii9tcS8qL3twZW5kaW5nLCovcnFfbGlzdH07IGRvCgkgICAg
+WyAtZSAiJGYiIF0gfHwgY29udGludWUKCSAgICBpZiB7IHJlYWQgLXIgbGluZTEgJiYgcmVh
+ZCAtciBsaW5lMjsgfSA8IiRmIjsgdGhlbgoJCWVjaG8gIiRmIgoJCWVjaG8gIiRsaW5lMSAk
+bGluZTIiID4vZGV2L251bGwKCQloZWFkIC1uIDkgIiRmIgoJCSgocGVuZGluZysrKSkKCSAg
+ICBmaQoJZG9uZQogICAgZmkKICAgICgKCWJ1c3k9MAoJY2QgL3N5cy9rZXJuZWwvZGVidWcv
+YmxvY2sgPiYvZGV2L251bGwgJiYKCSAgICB7IGdyZXAgLWFIIC4gJGRldi9yZXF1ZXVlX2xp
+c3Q7IHRydWU7IH0gJiYKCSAgICBmb3IgZCBpbiAiJGRldiIvbXEvaGN0eCogIiRkZXYiL2hj
+dHgqOyBkbwoJCVsgISAtZCAiJGQiIF0gJiYgY29udGludWUKCQl7IFsgISAtZSAiJGQvdGFn
+cyIgXSB8fAoJCSAgICAgIGdyZXAgLXEgJ15idXN5PTAkJyAiJGQvdGFncyI7IH0gJiYKCQkg
+ICAgeyBbICEgLWUgIiRkL3NjaGVkX3RhZ3MiIF0gfHwKCQkJICBbICIkKDwiJGQvc2NoZWRf
+dGFncyIpIiA9ICIiIF0gfHwKCQkJICBncmVwIC1xICdeYnVzeT0wJCcgIiRkL3NjaGVkX3Rh
+Z3MiOyB9ICYmIGNvbnRpbnVlCgkJKChidXN5KyspKQoJICAgICAgICBmb3IgZiBpbiAiJGQi
+L3thY3RpdmUsYnVzeSxkaXNwYXRjaCxmbGFncyxyZXF1ZXVlX2xpc3Qsc2NoZWRfdGFncyxz
+dGF0ZSx0YWdzKixjcHUqL3JxX2xpc3Qsc2NoZWQvKnJxc307IGRvCgkJICAgIFsgLWUgIiRm
+IiBdICYmIGdyZXAgLWFIIC4gIiRmIgoJCWRvbmUKCSAgICBkb25lCglleGl0ICRidXN5CiAg
+ICApCiAgICBwZW5kaW5nPSQoKHBlbmRpbmcrJD8pKQogICAgaWYgWyAiJHBlbmRpbmciIC1n
+dCAwIF07IHRoZW4KCSgKCSAgICBjZCAvc3lzL2tlcm5lbC9kZWJ1Zy9ibG9jayA+Ji9kZXYv
+bnVsbCAmJgoJCWlmIFsgLWUgIiRkZXYvbXEvc3RhdGUiIF07IHRoZW4KCQkgICAgZ3JlcCAt
+YUggLiAiJGRldi9tcS9zdGF0ZSIKCQllbHNlCgkJICAgIGdyZXAgLWFIIC4gIiRkZXYvc3Rh
+dGUiCgkJZmkKCSkKCXNob3dfc3RhdGUgIiRkZXYiCiAgICBmaQpkb25lCg==
+--------------78929E0BE3A126298D42A8E9--
