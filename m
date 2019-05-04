@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A41BC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A3EC04AA9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECE32085A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C56E20859
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965590;
-	bh=ls4QDGuqYdGPmgaeQMHr6F52iikuwmWvSQiGIdTpikY=;
+	s=default; t=1556965595;
+	bh=y7eIOfRWIMAAfniG9cWwpHWvZj9HvBWQy/hZ1FvcB2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VV1VIkbbeSIf3EWl4l2FoHjjG5ocd4ag/YoK03675krM6GcCmHXgmX0M260dRlUJK
-	 IG7gIE2PkY4AivXp+CzMUp6IHo3Y84mn1IJo45v6HtZCZaVrAjI+6reTDgTuooo/dh
-	 gETH81o6/FtZ6ggMst7SvQbpb0v8jTVQNfb1Y6dU=
+	b=uJU8i5LUtSAa2DulFGSP/UQa4d7wwVdMW4ZXLMQxFebjSeEwflq4T7Gc4iR4uVd89
+	 MDphDfyoNYwwT8k9crGe2/iaur1nvBURrIos+A9aNvS/OVRI7bDpLHxh8JselaKirw
+	 jFJx4Z2+3mCUfYS/AczIaRK/9zMqIaLxz0bgMihQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfEDK03 (ORCPT
+        id S1727791AbfEDK0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:26:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35990 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:26:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727710AbfEDK00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:26:26 -0400
+        id S1727750AbfEDK0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:26:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D589E2084A;
-        Sat,  4 May 2019 10:26:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 309BB20859;
+        Sat,  4 May 2019 10:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965585;
-        bh=ls4QDGuqYdGPmgaeQMHr6F52iikuwmWvSQiGIdTpikY=;
+        s=default; t=1556965590;
+        bh=y7eIOfRWIMAAfniG9cWwpHWvZj9HvBWQy/hZ1FvcB2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cxBfpZlT2BAj0LUHRO88Bkx0ucnubtBXmcCEYN2M0oOBLys62loRaqCjXqSR0z0oD
-         UTjdCn8S4m2MeuHsEwqbPb6qb2W9mhM/Y/BWRa7sGC1M9AHkKzc3zdysrMlEzzPiFt
-         aybMAd8CoKsaIqLO6E5jqujmuxlOKwOy6wlS0bdM=
+        b=0yLvglB2aMcJLAIdKx4v1Eh8ivanwMbkGIYbkC6Y/xdjUL/VUABSYm9NDhHKEoAek
+         1CmYSFd44lLJ8GBN1ZEFNrOSIkcWHa/lt1/Xp/DHY9Md84it5Xx6mZvqF80qP7zztA
+         j5VJZTo7mnY07BNFBJTI0OjZTXauXEWTNmqZc6bA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Hurley <john.hurley@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 27/32] net/tls: fix copy to fragments in reencrypt
-Date:   Sat,  4 May 2019 12:25:12 +0200
-Message-Id: <20190504102453.318811912@linuxfoundation.org>
+        stable@vger.kernel.org, Felix Wilhelm <fwilhelm@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Drew Schmitt <dasch@google.com>, Marc Orr <marcorr@google.com>,
+        Peter Shier <pshier@google.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        stable@ver.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.0 29/32] KVM: nVMX: Fix size checks in vmx_set_nested_state
+Date:   Sat,  4 May 2019 12:25:14 +0200
+Message-Id: <20190504102453.374211973@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
 References: <20190504102452.523724210@linuxfoundation.org>
@@ -61,85 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Jim Mattson <jmattson@google.com>
 
-[ Upstream commit eb3d38d5adb520435d4e4af32529ccb13ccc9935 ]
+commit e8ab8d24b488632d07ce5ddb261f1d454114415b upstream.
 
-Fragments may contain data from other records so we have to account
-for that when we calculate the destination and max length of copy we
-can perform.  Note that 'offset' is the offset within the message,
-so it can't be passed as offset within the frag..
+The size checks in vmx_nested_state are wrong because the calculations
+are made based on the size of a pointer to a struct kvm_nested_state
+rather than the size of a struct kvm_nested_state.
 
-Here skb_store_bits() would have realised the call is wrong and
-simply not copy data.
-
-Fixes: 4799ac81e52a ("tls: Add rx inline crypto offload")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: John Hurley <john.hurley@netronome.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Felix Wilhelm  <fwilhelm@google.com>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Reviewed-by: Drew Schmitt <dasch@google.com>
+Reviewed-by: Marc Orr <marcorr@google.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Fixes: 8fcc4b5923af5de58b80b53a069453b135693304
+Cc: stable@ver.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/tls/tls_device.c |   29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
 
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -579,7 +579,7 @@ void handle_device_resync(struct sock *s
- static int tls_device_reencrypt(struct sock *sk, struct sk_buff *skb)
- {
- 	struct strp_msg *rxm = strp_msg(skb);
--	int err = 0, offset = rxm->offset, copy, nsg;
-+	int err = 0, offset = rxm->offset, copy, nsg, data_len, pos;
- 	struct sk_buff *skb_iter, *unused;
- 	struct scatterlist sg[1];
- 	char *orig_buf, *buf;
-@@ -610,9 +610,10 @@ static int tls_device_reencrypt(struct s
- 	else
- 		err = 0;
+---
+ arch/x86/kvm/vmx/nested.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5407,7 +5407,7 @@ static int vmx_set_nested_state(struct k
+ 		return ret;
  
-+	data_len = rxm->full_len - TLS_CIPHER_AES_GCM_128_TAG_SIZE;
-+
- 	if (skb_pagelen(skb) > offset) {
--		copy = min_t(int, skb_pagelen(skb) - offset,
--			     rxm->full_len - TLS_CIPHER_AES_GCM_128_TAG_SIZE);
-+		copy = min_t(int, skb_pagelen(skb) - offset, data_len);
+ 	/* Empty 'VMXON' state is permitted */
+-	if (kvm_state->size < sizeof(kvm_state) + sizeof(*vmcs12))
++	if (kvm_state->size < sizeof(*kvm_state) + sizeof(*vmcs12))
+ 		return 0;
  
- 		if (skb->decrypted)
- 			skb_store_bits(skb, offset, buf, copy);
-@@ -621,16 +622,30 @@ static int tls_device_reencrypt(struct s
- 		buf += copy;
- 	}
+ 	if (kvm_state->vmx.vmcs_pa != -1ull) {
+@@ -5451,7 +5451,7 @@ static int vmx_set_nested_state(struct k
+ 	    vmcs12->vmcs_link_pointer != -1ull) {
+ 		struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
  
-+	pos = skb_pagelen(skb);
- 	skb_walk_frags(skb, skb_iter) {
--		copy = min_t(int, skb_iter->len,
--			     rxm->full_len - offset + rxm->offset -
--			     TLS_CIPHER_AES_GCM_128_TAG_SIZE);
-+		int frag_pos;
-+
-+		/* Practically all frags must belong to msg if reencrypt
-+		 * is needed with current strparser and coalescing logic,
-+		 * but strparser may "get optimized", so let's be safe.
-+		 */
-+		if (pos + skb_iter->len <= offset)
-+			goto done_with_frag;
-+		if (pos >= data_len + rxm->offset)
-+			break;
-+
-+		frag_pos = offset - pos;
-+		copy = min_t(int, skb_iter->len - frag_pos,
-+			     data_len + rxm->offset - offset);
+-		if (kvm_state->size < sizeof(kvm_state) + 2 * sizeof(*vmcs12))
++		if (kvm_state->size < sizeof(*kvm_state) + 2 * sizeof(*vmcs12))
+ 			return -EINVAL;
  
- 		if (skb_iter->decrypted)
--			skb_store_bits(skb_iter, offset, buf, copy);
-+			skb_store_bits(skb_iter, frag_pos, buf, copy);
- 
- 		offset += copy;
- 		buf += copy;
-+done_with_frag:
-+		pos += skb_iter->len;
- 	}
- 
- free_buf:
+ 		if (copy_from_user(shadow_vmcs12,
 
 
