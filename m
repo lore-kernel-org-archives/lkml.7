@@ -2,175 +2,87 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064B8C04AA9
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DCEC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C27D92084A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:22:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556972523;
-	bh=IBw2N45cvp/ZEURHb5T5bLAIDO89kyXiqinCT+QEbA8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PQTn4462WFSMRdjmCqtUitFRvhuL0h3pdSCtlBiRsiGkz07Iua/IflB1XXgaRXN87
-	 LZVpzVZ8pg5jD+Gz3Fi9Duq0bkqpCTi2rlx0wGoTA+7hih0M8uelkUDOV9QWUXjBmL
-	 LOeP27DAULeqm960+HmMJ9IH/6yQ3T9pOhEnEbWk=
+	by mail.kernel.org (Postfix) with ESMTP id DE75F206A3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:26:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CIoA2EZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfEDMWC (ORCPT
+        id S1727066AbfEDM0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 08:22:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfEDMWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 08:22:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BA9E206DF;
-        Sat,  4 May 2019 12:22:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556972520;
-        bh=IBw2N45cvp/ZEURHb5T5bLAIDO89kyXiqinCT+QEbA8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dU6xgIdhNWsDQovAswdbLFWQFqFKcnsBBOhY/6ua6z0UTLwYOd9XRCvnCE397+pBM
-         /YIu02/rirMU0z0HZQeg44mZZAklSt6H7lcMbSEM7CIT79MQnhX47WAM2MRNT3pnpP
-         FYOhSjPKQP8Cm+ekHDmQ46TsCIuPo+E4XNQZTGSM=
-Date:   Sat, 4 May 2019 14:21:58 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, atishp04@gmail.com,
-        bpf@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, dancol@google.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dietmar.eggemann@arm.com, duyuchao <yuchao.du@unisoc.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?utf-8?Q?Micha=C5=82?= Gregorczyk <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Olof Johansson <olof@lixom.net>, qais.yousef@arm.com,
-        rdunlap@infradead.org, Shuah Khan <shuah@kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>, yhs@fb.com
-Subject: Re: [PATCH v2] kheaders: Move from proc to sysfs
-Message-ID: <20190504122158.GA23535@kroah.com>
-References: <20190504121213.183203-1-joel@joelfernandes.org>
+        Sat, 4 May 2019 08:26:23 -0400
+Received: from mail-ot1-f42.google.com ([209.85.210.42]:40122 "EHLO
+        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfEDM0X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 08:26:23 -0400
+Received: by mail-ot1-f42.google.com with SMTP id w6so7666751otl.7;
+        Sat, 04 May 2019 05:26:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=k+CZPzYP3Yyswg9oTnF6oEFTU7iNfbsaWXChU/S/CYg=;
+        b=CIoA2EZZV5PVoJ9eIUXQxN05vDxkAcRgRBn+HfqvHwqS1+NaNPi2PBfV5Dy6sxKTzg
+         D3zqOm8uJ4mK98RfqDDTr/ZrvqVR/P7PkqXY9bj2AFsbkpLJYi+o1SwTdToKV1U4DIXM
+         0WR8bbXLwSGEDSYArSV9kEax4+Fr6cfH6FsZGxh1HQdd2Mf8Npz4X1YXgPRCq2YXXRT6
+         Eb854qd6snAgJsyiZxi1Er6hsuD28fWGtERL+Y5FzU9gI8OYdTWYLuUG4DzLUZFXBebC
+         zZMV1qTqWDFgnRiHdxBt+wNITCX3iETNlQ+OH92eaKceTpr8+sQNknwPcPiky9YW1of7
+         w8rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=k+CZPzYP3Yyswg9oTnF6oEFTU7iNfbsaWXChU/S/CYg=;
+        b=CCISbr+osc9AeKe+pc8qbN8hxEsti0iXUUSyjwn5YKL5BNhIsj2N8aN3BhYmPOOajG
+         Y0DHkYr+LkS0x2TWdtOJpXjZ+ULB7juefIgIfjsJeAjddp5oUkY3ppTWwHjAp4hKw6+y
+         q6QPjDakuUo+WBNsFygYiL7hodN5rKQviyICaOoJczA+wJlPSzGUnGEPpoCYQ+PNZs9t
+         nAC1O22nFLwcIFJOdkw6Pc9jfnQHsf2m/vGlsX9sd8dQPYpD33qQSjSndhRrjJhF32Xi
+         DmgWD2Bi5YmHO0o25bw37iQa9yCjUC+Wu50n2lubdhchz6MFRsVTk/fvEOkw4yJOpLd+
+         3dFQ==
+X-Gm-Message-State: APjAAAUzyXSBZYvN6aKIWiLHMXgcEnUogk5QnaF9snmWg372doRZDqhr
+        2gMNpHalaINEGyZTy78AdrkQvKCB+gAluU6U0QRjz2Zp
+X-Google-Smtp-Source: APXvYqx4sIJLThGU9uzZ/Rr2Gk4H83M6bptFgzXpJGA0J9K8RmDRCskZ1kHf6JVQ0hQ1yxbAio25kXGYBDdtWpENCVk=
+X-Received: by 2002:a9d:6b82:: with SMTP id b2mr2580468otq.232.1556972782477;
+ Sat, 04 May 2019 05:26:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190504121213.183203-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+From:   Ulf Magnusson <ulfalizer@gmail.com>
+Date:   Sat, 4 May 2019 14:26:11 +0200
+Message-ID: <CAFkk2KR+of+7YZKC=LOn1J7q8_u5b8HyM6yh4Ynfh68jYW7X8w@mail.gmail.com>
+Subject: [ANNOUNCE] Kconfiglib GUI menuconfig
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 04, 2019 at 08:12:13AM -0400, Joel Fernandes (Google) wrote:
-> The kheaders archive consisting of the kernel headers used for compiling
-> bpf programs is in /proc. However there is concern that moving it here
-> will make it permanent. Let us move it to /sys/kernel as discussed [1].
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
-> 
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
-> This patch applies on top of the previous patch that was applied to the
-> driver tree:
-> https://lore.kernel.org/patchwork/patch/1067310/
-> 
-> v1->v2: Fixed some kconfig nits (Masami).
-> 
->  init/Kconfig                                | 16 ++++-----
->  kernel/Makefile                             |  4 +--
->  kernel/{gen_ikh_data.sh => gen_kheaders.sh} |  2 +-
->  kernel/kheaders.c                           | 40 +++++++++------------
->  4 files changed, 26 insertions(+), 36 deletions(-)
->  rename kernel/{gen_ikh_data.sh => gen_kheaders.sh} (98%)
-> 
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 26a364a95b57..c3661991b089 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -579,15 +579,13 @@ config IKCONFIG_PROC
->  	  This option enables access to the kernel configuration file
->  	  through /proc/config.gz.
->  
-> -config IKHEADERS_PROC
-> -	tristate "Enable kernel header artifacts through /proc/kheaders.tar.xz"
-> -	depends on PROC_FS
-> -	help
-> -	  This option enables access to the kernel header and other artifacts that
-> -	  are generated during the build process. These can be used to build eBPF
-> -	  tracing programs, or similar programs.  If you build the headers as a
-> -	  module, a module called kheaders.ko is built which can be loaded on-demand
-> -	  to get access to the headers.
-> +config IKHEADERS
-> +	tristate "Enable kernel headers through /sys/kernel/kheaders.tar.xz"
-> +	help
-> +	  This option enables access to the in-kernel headers that are generated during
-> +	  the build process. These can be used to build eBPF tracing programs,
-> +	  or similar programs.  If you build the headers as a module, a module called
-> +	  kheaders.ko is built which can be loaded on-demand to get access to headers.
->  
->  config LOG_BUF_SHIFT
->  	int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
-> diff --git a/kernel/Makefile b/kernel/Makefile
-> index 12399614c350..b32a558fae2f 100644
-> --- a/kernel/Makefile
-> +++ b/kernel/Makefile
-> @@ -70,7 +70,7 @@ obj-$(CONFIG_UTS_NS) += utsname.o
->  obj-$(CONFIG_USER_NS) += user_namespace.o
->  obj-$(CONFIG_PID_NS) += pid_namespace.o
->  obj-$(CONFIG_IKCONFIG) += configs.o
-> -obj-$(CONFIG_IKHEADERS_PROC) += kheaders.o
-> +obj-$(CONFIG_IKHEADERS) += kheaders.o
+Hello,
 
-Good in changing the config name, I hadn't thought of that.
+Kconfiglib (https://github.com/ulfalizer/Kconfiglib) now has a
+Tkinter-based guiconfig.py in addition to the curses-based
+menuconfig.py. It has been tested on Linux, Windows, and macOS.
 
-> diff --git a/kernel/gen_ikh_data.sh b/kernel/gen_kheaders.sh
-> similarity index 98%
-> rename from kernel/gen_ikh_data.sh
-> rename to kernel/gen_kheaders.sh
+See https://github.com/ulfalizer/Kconfiglib#menuconfig-interfaces for
+a screenshot (with show-all mode on). The interface is inspired by
+qconfig.
 
-Same here, nice.
+The images come from data embedded directly in guiconfig.py by
+default, to avoid having to carry around a bunch of separate .gif
+files.
 
-> -static const struct file_operations ikheaders_file_ops = {
-> -	.read = ikheaders_read_current,
-> -	.llseek = default_llseek,
-> +static struct bin_attribute kheaders_attr __ro_after_init = {
+makefile.patch now has a new 'guiconfig' target for trying out the GUI
+menuconfig on the Linux kernel. Python 2 is used by default. Run 'make
+PYTHONCMD=python3 guiconfig' to use Python 3.
 
-Minor nit, are you sure about __ro_after_init for an attribute
-structure?  Is it even needed?
+Please tell me if you try it out and spot any issues or annoyances. :)
 
-> +	.attr = {
-> +		.name = "kheaders.tar.xz",
-> +		.mode = S_IRUGO,
-> +	},
-> +	.read = &ikheaders_read,
->  };
-
-BIN_ATTR_RO?  Ah, no, that will not work with the name of the file,
-nevermind.
-
-But, you should change S_IRUGO to the correct octal number, checkpatch
-should have barfed on this change.
-
-thanks,
-
-greg k-h
+Cheers,
+Ulf
