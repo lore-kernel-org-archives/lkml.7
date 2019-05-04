@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AAAC04AA9
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFD3C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A48CB206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C37206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965764;
-	bh=f7Cds3IEmGod9nHABUEE86odvZKG8OzNZxsfTmMyK+o=;
+	s=default; t=1556965779;
+	bh=Sem2o+BRdo2MN41/QrjREvOG/W8x17nS6VM0QFnHptg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zLSyYZQZxt/6EuudfcXPZL9A+YIU2H4xSuhv9w6t75+KZ3F/MhRhBENB0w0aHznbx
-	 jgXFrx75n46At9tfKsKbExWyNFJCsK1BftyAU09PM6Hi+SSwv807yZmkX4zouQoqes
-	 sQ4y3CJ8SxzjzyeydHH+sl13dhM3TCQz7N4JDi2A=
+	b=pJMh+26LfkGyHu1cYgis7DP7dQ2bGxOHOLlr8+MKtINl/LExypRQVVGNe9l6Re9Bd
+	 VaDmAb81CVRQGTbALownT5EN5vwpzLypY03K8AnPpKNYsMMLZxiGvi8pYSfZtl3ChJ
+	 LREvAWLoaR3Y9oSbYrOk5WIsKn0EC3+klN6DHnpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfEDK0w (ORCPT
+        id S1728014AbfEDK3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36552 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:29:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727901AbfEDK0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:26:49 -0400
+        id S1727788AbfEDK0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:26:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 660EA2085A;
-        Sat,  4 May 2019 10:26:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 000A020859;
+        Sat,  4 May 2019 10:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965608;
-        bh=f7Cds3IEmGod9nHABUEE86odvZKG8OzNZxsfTmMyK+o=;
+        s=default; t=1556965598;
+        bh=Sem2o+BRdo2MN41/QrjREvOG/W8x17nS6VM0QFnHptg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tKtKjVXsghKuXUuDM7YUOLcJ5NZYuNQ4IpPuWVLe0s5Cai4SSlqcn0+KjxBP+Ad4C
-         P1dhNV8V7ILpy4fZb0L8uwclsE/dB6j6tLnnoVxuibX43yxlPsQODdgIXHDvwShkhR
-         dxJ2fwb8TEasNfge9OUeuv/lP7V+KagyFiorpVUI=
+        b=LTqL8DgNn3/zvrbD67ladwdlCG3GdVfrH4RKCrrHchVKc87GsfAMUpk7rtQPCdF0+
+         MxaXGVlp2UgtunQyMdYnPR6rn6//2HwiFjURvWQgs8bHrwEMqBgSXWtRzkz533/Fd+
+         9DoQbr7ClSoH3oKIa9pwACrNdHMJIEREDB4QvKQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Guillaume Nault <g.nault@alphalink.fr>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 06/32] l2ip: fix possible use-after-free
-Date:   Sat,  4 May 2019 12:24:51 +0200
-Message-Id: <20190504102452.733697756@linuxfoundation.org>
+        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
+        Gabriel Ramirez <gabriello.ramirez@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.0 31/32] iwlwifi: mvm: properly check debugfs dentry before using it
+Date:   Sat,  4 May 2019 12:25:16 +0200
+Message-Id: <20190504102453.427675597@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
 References: <20190504102452.523724210@linuxfoundation.org>
@@ -61,82 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit a622b40035d16196bf19b2b33b854862595245fc ]
+commit 154d4899e4111ae24e68d6ba955f46856cb046bc upstream.
 
-Before taking a refcount on a rcu protected structure,
-we need to make sure the refcount is not zero.
+debugfs can now report an error code if something went wrong instead of
+just NULL.  So if the return value is to be used as a "real" dentry, it
+needs to be checked if it is an error before dereferencing it.
 
-syzbot reported :
+This is now happening because of ff9fb72bc077 ("debugfs: return error
+values, not NULL").  If multiple iwlwifi devices are in the system, this
+can cause problems when the driver attempts to create the main debugfs
+directory again.  Later on in the code we fail horribly by trying to
+dereference a pointer that is an error value.
 
-refcount_t: increment on 0; use-after-free.
-WARNING: CPU: 1 PID: 23533 at lib/refcount.c:156 refcount_inc_checked lib/refcount.c:156 [inline]
-WARNING: CPU: 1 PID: 23533 at lib/refcount.c:156 refcount_inc_checked+0x61/0x70 lib/refcount.c:154
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 23533 Comm: syz-executor.2 Not tainted 5.1.0-rc7+ #93
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- panic+0x2cb/0x65c kernel/panic.c:214
- __warn.cold+0x20/0x45 kernel/panic.c:571
- report_bug+0x263/0x2b0 lib/bug.c:186
- fixup_bug arch/x86/kernel/traps.c:179 [inline]
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
- do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
- invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:refcount_inc_checked lib/refcount.c:156 [inline]
-RIP: 0010:refcount_inc_checked+0x61/0x70 lib/refcount.c:154
-Code: 1d 98 2b 2a 06 31 ff 89 de e8 db 2c 40 fe 84 db 75 dd e8 92 2b 40 fe 48 c7 c7 20 7a a1 87 c6 05 78 2b 2a 06 01 e8 7d d9 12 fe <0f> 0b eb c1 90 90 90 90 90 90 90 90 90 90 90 55 48 89 e5 41 57 41
-RSP: 0018:ffff888069f0fba8 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 000000000000f353 RSI: ffffffff815afcb6 RDI: ffffed100d3e1f67
-RBP: ffff888069f0fbb8 R08: ffff88809b1845c0 R09: ffffed1015d23ef1
-R10: ffffed1015d23ef0 R11: ffff8880ae91f787 R12: ffff8880a8f26968
-R13: 0000000000000004 R14: dffffc0000000000 R15: ffff8880a49a6440
- l2tp_tunnel_inc_refcount net/l2tp/l2tp_core.h:240 [inline]
- l2tp_tunnel_get+0x250/0x580 net/l2tp/l2tp_core.c:173
- pppol2tp_connect+0xc00/0x1c70 net/l2tp/l2tp_ppp.c:702
- __sys_connect+0x266/0x330 net/socket.c:1808
- __do_sys_connect net/socket.c:1819 [inline]
- __se_sys_connect net/socket.c:1816 [inline]
- __x64_sys_connect+0x73/0xb0 net/socket.c:1816
-
-Fixes: 54652eb12c1b ("l2tp: hold tunnel while looking up sessions in l2tp_netlink")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Guillaume Nault <g.nault@alphalink.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Laura Abbott <labbott@redhat.com>
+Reported-by: Gabriel Ramirez <gabriello.ramirez@gmail.com>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Cc: Luca Coelho <luciano.coelho@intel.com>
+Cc: Intel Linux Wireless <linuxwifi@intel.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: stable <stable@vger.kernel.org> # 5.0
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/l2tp/l2tp_core.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -169,8 +169,8 @@ struct l2tp_tunnel *l2tp_tunnel_get(cons
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/debugfs-vif.c
+@@ -1482,6 +1482,11 @@ void iwl_mvm_vif_dbgfs_register(struct i
+ 		return;
  
- 	rcu_read_lock_bh();
- 	list_for_each_entry_rcu(tunnel, &pn->l2tp_tunnel_list, list) {
--		if (tunnel->tunnel_id == tunnel_id) {
--			l2tp_tunnel_inc_refcount(tunnel);
-+		if (tunnel->tunnel_id == tunnel_id &&
-+		    refcount_inc_not_zero(&tunnel->ref_count)) {
- 			rcu_read_unlock_bh();
+ 	mvmvif->dbgfs_dir = debugfs_create_dir("iwlmvm", dbgfs_dir);
++	if (IS_ERR_OR_NULL(mvmvif->dbgfs_dir)) {
++		IWL_ERR(mvm, "Failed to create debugfs directory under %pd\n",
++			dbgfs_dir);
++		return;
++	}
  
- 			return tunnel;
-@@ -190,8 +190,8 @@ struct l2tp_tunnel *l2tp_tunnel_get_nth(
- 
- 	rcu_read_lock_bh();
- 	list_for_each_entry_rcu(tunnel, &pn->l2tp_tunnel_list, list) {
--		if (++count > nth) {
--			l2tp_tunnel_inc_refcount(tunnel);
-+		if (++count > nth &&
-+		    refcount_inc_not_zero(&tunnel->ref_count)) {
- 			rcu_read_unlock_bh();
- 			return tunnel;
- 		}
+ 	if (!mvmvif->dbgfs_dir) {
+ 		IWL_ERR(mvm, "Failed to create debugfs directory under %pd\n",
 
 
