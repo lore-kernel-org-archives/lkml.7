@@ -2,116 +2,115 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDC0C04AAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D85C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D1F206DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B128205F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:47:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="yWHI46OT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FH5gmfmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfEDSqn (ORCPT
+        id S1727381AbfEDSrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 14:46:43 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39033 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfEDSqn (ORCPT
+        Sat, 4 May 2019 14:47:15 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33190 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfEDSrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 14:46:43 -0400
-Received: by mail-wr1-f65.google.com with SMTP id a9so11924704wrp.6
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 11:46:41 -0700 (PDT)
+        Sat, 4 May 2019 14:47:14 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k19so4373213pgh.0
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 11:47:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=KPACyaSmM7SH7Z/mR6C52rw+ki7LFPR7iQQVajdcVW4=;
-        b=yWHI46OT1kwRnI4WAy+/jjFu1FxtQdf8bMQjbVOKwlTGqXeMyuL6069vsuA87ThNsk
-         wmh5ORb8WoKhnRQ0u/wj4HAZ+RSqcqoGuu1zmfslTR6NJ78x76a9/FYQ+Vsngo93wtgZ
-         DM7hK47ElTjmSWDJfZuhk/h/apShTNQTLTUn8zqz3zjHWBayOySy02Q9O0cMa1VYgfGC
-         DFW1qrQnxw0PhAG2O+XvGFnCAz+/kj9UycGL8v9gVcpNj3Hqp9ptEBqV1KsUPTGN8C7w
-         2nbbtItzObh4MkK0lB5JQLsuLGqPOEFXS8mAITHPrPnZ1E+chkDqKXYSzw4I6+FGX/Ml
-         pJrw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=l3c6KFF6BsmBy3LVEJIfrDKvV0/RDELn3G8eEmiKxLM=;
+        b=FH5gmfmQbT7Z7/f7ibgaYZzoAGT0PM9xBJJDOLN8ljEUxvD53vVI8RJD/m2hdsuvX4
+         aRuGjIFon600zbymKxPsy7JArdeJP0XNnLueZd9pdoRJbciHY+5aGmYKTzhBSGK9GxVo
+         p6oWdxksOTWSmeDcUinlCds+P2/Q8qn4wzaM6WxP+LKdq5gE5PpR7aKEfCEIzbcJi7bC
+         Pch8ZHzyFOljRjmfOpk4bd/7eI1yl3nwbajFVUCQM1cZxbdYxE31M0m9l4UeY4uIphKl
+         BsQY8zWeL2egFIc66sciXuUeiAfJG14EkyaJEPJH4ptcBKaSOUCOcEOC+V/abRUhv5XI
+         wXJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=KPACyaSmM7SH7Z/mR6C52rw+ki7LFPR7iQQVajdcVW4=;
-        b=NDrurXZMIeg9xiC8FaURZ8zC4Hp2m0VvkU75+e4duBVqTupUqM5olU/ABz2ootTCqI
-         vRo58DIVt74TKRICnGupJc98Ji4MmiUkXW3baQoH9Yzz7QlFY9SdmaS24HyrEWlOo3UA
-         0plWjePZsCdx+UD6Re/j6mbKOXF7jLzvkDr3hTpQElRkKzf20A4j1uF8YAcQW/dgHdUZ
-         xzQ4mRZgs6RmIs/DwYWUYM+9MDkVWteJK/Nx+B5cLv7d43oo4oZvEIfiLP887Y+xbSrV
-         OFft6ksFTlUXCSppr/PH+AzL1ex4EhTk+ApQsjTwiVfF4FbDRinH4EIGk2HoylIVGexT
-         +hMQ==
-X-Gm-Message-State: APjAAAXspdHsQ8o36DeZgmoNPpSN07eclvqseYOZeY3WQFSyLF1zliDF
-        LoRpkqKhLh6Gq1aJsfyGj6EmyImqqEw=
-X-Google-Smtp-Source: APXvYqzGD991jjuijsE+yDY3NLCeLH8x2fimp3tghKTxdYpnpUZrjzRmSW9yq3PwDbHanga5nBG3aw==
-X-Received: by 2002:a5d:6b07:: with SMTP id v7mr3563090wrw.311.1556995601156;
-        Sat, 04 May 2019 11:46:41 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id d3sm10344624wmf.46.2019.05.04.11.46.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=l3c6KFF6BsmBy3LVEJIfrDKvV0/RDELn3G8eEmiKxLM=;
+        b=jkHw8MLf5dc6WPhANjKAgs+wUsHnUNIWFXa2AUwsKxmPuSgZiNI301FhjUsaGZX16U
+         XcbqbHN5sBvczRIhDQ4LOJZmt12YNQwEYL2RRQrfyjCofgdCZKhN7NnFB+NyBUKDhgtZ
+         A7m8QrO2VK0VS+DkvlAy4MbMbeCFxjw+fG9KXJFvpzH5Xp8M+leZ4pTL72Uumw86Lnqu
+         S+DDilnXl/up86PcHMyj8ucPn9wYmevO7wa6lLH/I0sFX6EP8GBcWLg4FSbfCgdSE3Ao
+         VweRvFpnpLU+Fq0TlT/h07IS3EdPqvQ+nlcyK3/zpMkhc4zq8fKzfcS/oFtm0f1wLI4a
+         sTgw==
+X-Gm-Message-State: APjAAAXhk97ix4vB1SfkrIbRs8bj8UvmMZWJfs986JY/RWrRfKHu6P+d
+        CZE9E7OAzWrMG0DvI4Wr0yXXBi0F
+X-Google-Smtp-Source: APXvYqymQKkkxsqq8taEVSzOWaYsFAAvsSK6EKs5rUtEyV71u2gBpBEFW5W/MxiIANly9lBD6Q/cZw==
+X-Received: by 2002:a62:27c2:: with SMTP id n185mr20628729pfn.51.1556995633508;
+        Sat, 04 May 2019 11:47:13 -0700 (PDT)
+Received: from localhost.localdomain ([103.87.57.241])
+        by smtp.gmail.com with ESMTPSA id f21sm6989063pfn.30.2019.05.04.11.47.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 11:46:40 -0700 (PDT)
-Message-ID: <5ccdde10.1c69fb81.7061b.99ef@mx.google.com>
-Date:   Sat, 04 May 2019 11:46:40 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v4.19.39-24-gb0d6421bd855
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: linux-4.19.y
-X-Kernelci-Tree: stable-rc
-In-Reply-To: <20190504102451.512405835@linuxfoundation.org>
-References: <20190504102451.512405835@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 00/23] 4.19.40-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+        Sat, 04 May 2019 11:47:12 -0700 (PDT)
+From:   Vatsala Narang <vatsalanarang@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     hadess@hadess.net, hdegoede@redhat.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, julia.lawall@lip6.fr,
+        Vatsala Narang <vatsalanarang@gmail.com>
+Subject: [PATCH 4/7] staging: rtl8723bs: core: Remove unnecessary parentheses.
+Date:   Sun,  5 May 2019 00:16:44 +0530
+Message-Id: <20190504184644.25988-1-vatsalanarang@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.19.y boot: 128 boots: 0 failed, 123 passed with 4 offline=
-, 1 untried/unknown (v4.19.39-24-gb0d6421bd855)
+Remove unnecessary parentheses after 'address-of' operator to get rid of
+checkpatch warning.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.19.y/kernel/v4.19.39-24-gb0d6421bd855/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
-y/kernel/v4.19.39-24-gb0d6421bd855/
-
-Tree: stable-rc
-Branch: linux-4.19.y
-Git Describe: v4.19.39-24-gb0d6421bd855
-Git Commit: b0d6421bd85515e878edcf33121a818666df7749
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 70 unique boards, 24 SoC families, 14 builds out of 206
-
-Offline Platforms:
-
-arm:
-
-    davinci_all_defconfig:
-        gcc-7
-            dm365evm,legacy: 1 offline lab
-
-    exynos_defconfig:
-        gcc-7
-            exynos5800-peach-pi: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-7
-            exynos5800-peach-pi: 1 offline lab
-            stih410-b2120: 1 offline lab
-
+Signed-off-by: Vatsala Narang <vatsalanarang@gmail.com>
 ---
-For more info write to <info@kernelci.org>
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+index 32b66dce99cd..60079532bddd 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+@@ -277,7 +277,7 @@ void init_mlme_default_rate_set(struct adapter *padapter)
+ static void init_mlme_ext_priv_value(struct adapter *padapter)
+ {
+ 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+-	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
++	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
+ 
+ 	atomic_set(&pmlmeext->event_seq, 0);
+ 	pmlmeext->mgnt_seq = 0;/* reset to zero when disconnect at client mode */
+@@ -464,8 +464,8 @@ int	init_mlme_ext_priv(struct adapter *padapter)
+ 	int	res = _SUCCESS;
+ 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
+ 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+-	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
+-	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
++	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
++	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
+ 
+ 	pmlmeext->padapter = padapter;
+ 
+@@ -609,8 +609,8 @@ unsigned int OnProbeReq(struct adapter *padapter, union recv_frame *precv_frame)
+ 	unsigned char *p;
+ 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+ 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+-	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
+-	struct wlan_bssid_ex	*cur = &(pmlmeinfo->network);
++	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
++	struct wlan_bssid_ex	*cur = &pmlmeinfo->network;
+ 	u8 *pframe = precv_frame->u.hdr.rx_data;
+ 	uint len = precv_frame->u.hdr.len;
+ 	u8 is_valid_p2p_probereq = false;
+-- 
+2.17.1
+
