@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20175C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A87C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E457D206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4866206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965726;
-	bh=sAhk4I5io+dT+5nzwBKDAgCUct94Q5arr07VNQb8uxc=;
+	s=default; t=1556965735;
+	bh=5lUeQBG0ZmEvdz4I8R0kP1lrUXmYLTdnfiS59FfdrtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ew+6WRUKr16wp5LBpoTlMJK6AsznyvphhiGqSuSXrxLBniZ+DXgCXyFhgcfXHZvD
-	 ofEFQHAB4e0c4WSLsZJ1dQ1t0nLFpLLNgDDkHXCPgWdy9sT7nP4HhkKY32UMvz0SzY
-	 MsGfBSrBGyk8h+PDAZneTOqg9zSmkVao4vZosPHE=
+	b=aik6370GnBpjgagRM4veEO9TgX/QGqilea44qlzK5PLEdJx2LJo71YGlpm2q0J7yT
+	 SrH36F/4n4XXet08H8F+Rd5W18+yod6BuZtztjGM+tABySJ9XG7qaPSsQ9dmdbi0N1
+	 izmH8N7/Pg/IltgYABHYodkkCXvZHNCeFN350KfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbfEDK2p (ORCPT
+        id S1728128AbfEDK1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:28:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37780 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:27:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbfEDK1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:27:31 -0400
+        id S1728101AbfEDK1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:27:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DE4F206BB;
-        Sat,  4 May 2019 10:27:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2785C206BB;
+        Sat,  4 May 2019 10:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965650;
-        bh=sAhk4I5io+dT+5nzwBKDAgCUct94Q5arr07VNQb8uxc=;
+        s=default; t=1556965637;
+        bh=5lUeQBG0ZmEvdz4I8R0kP1lrUXmYLTdnfiS59FfdrtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bFillQUq4ZduaKj5kC4Fkyl6Qbat/jeAb86P9nRm93TCqav1Z+wE6svckuSrnZhOK
-         sTXiJnCD1nEUcv6F5CAj5fgMK8M5aVSh1fpX7LfYIjqzOjl5sNuYmgKoO6EI75imjl
-         tFkAOZiCiI3p/2A0zUWF8uKNHuGwOqoNxBZds8vo=
+        b=koVDlpSlXE1lfOoxz5X7OXlCgya1AVJNuDBk6MDQzRDUR3HN+pjnCu4h1KA6syc94
+         1DN7T/wlDCrXhz3GXWxnRaXPTtinbI4hqHY0t3M4Wj9jZkoP6Ll70fSItbZBJSlCcq
+         ZIT+uIFaaMuQ/O+HSKoPjA2oswgsY2/t4i80gBqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Wei Wang <weiwan@google.com>, David Ahern <dsahern@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 02/23] ipv6: A few fixes on dereferencing rt->from
-Date:   Sat,  4 May 2019 12:25:04 +0200
-Message-Id: <20190504102451.652963315@linuxfoundation.org>
+Subject: [PATCH 4.19 15/23] bnxt_en: Improve multicast address setup logic.
+Date:   Sat,  4 May 2019 12:25:17 +0200
+Message-Id: <20190504102452.031344554@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102451.512405835@linuxfoundation.org>
 References: <20190504102451.512405835@linuxfoundation.org>
@@ -61,108 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 886b7a50100a50f1cbd08a6f8ec5884dfbe082dc ]
+[ Upstream commit b4e30e8e7ea1d1e35ffd64ca46f7d9a7f227b4bf ]
 
-It is a followup after the fix in
-commit 9c69a1320515 ("route: Avoid crash from dereferencing NULL rt->from")
+The driver builds a list of multicast addresses and sends it to the
+firmware when the driver's ndo_set_rx_mode() is called.  In rare
+cases, the firmware can fail this call if internal resources to
+add multicast addresses are exhausted.  In that case, we should
+try the call again by setting the ALL_MCAST flag which is more
+guaranteed to succeed.
 
-rt6_do_redirect():
-1. NULL checking is needed on rt->from because a parallel
-   fib6_info delete could happen that sets rt->from to NULL.
-   (e.g. rt6_remove_exception() and fib6_drop_pcpu_from()).
-
-2. fib6_info_hold() is not enough.  Same reason as (1).
-   Meaning, holding dst->__refcnt cannot ensure
-   rt->from is not NULL or rt->from->fib6_ref is not 0.
-
-   Instead of using fib6_info_hold_safe() which ip6_rt_cache_alloc()
-   is already doing, this patch chooses to extend the rcu section
-   to keep "from" dereference-able after checking for NULL.
-
-inet6_rtm_getroute():
-1. NULL checking is also needed on rt->from for a similar reason.
-   Note that inet6_rtm_getroute() is using RTNL_FLAG_DOIT_UNLOCKED.
-
-Fixes: a68886a69180 ("net/ipv6: Make from in rt6_info rcu protected")
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: Wei Wang <weiwan@google.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/route.c |   38 ++++++++++++++++++--------------------
- 1 file changed, 18 insertions(+), 20 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -3454,11 +3454,8 @@ static void rt6_do_redirect(struct dst_e
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -7441,8 +7441,15 @@ static int bnxt_cfg_rx_mode(struct bnxt
  
- 	rcu_read_lock();
- 	from = rcu_dereference(rt->from);
--	/* This fib6_info_hold() is safe here because we hold reference to rt
--	 * and rt already holds reference to fib6_info.
--	 */
--	fib6_info_hold(from);
--	rcu_read_unlock();
-+	if (!from)
-+		goto out;
- 
- 	nrt = ip6_rt_cache_alloc(from, &msg->dest, NULL);
- 	if (!nrt)
-@@ -3470,10 +3467,7 @@ static void rt6_do_redirect(struct dst_e
- 
- 	nrt->rt6i_gateway = *(struct in6_addr *)neigh->primary_key;
- 
--	/* No need to remove rt from the exception table if rt is
--	 * a cached route because rt6_insert_exception() will
--	 * takes care of it
--	 */
-+	/* rt6_insert_exception() will take care of duplicated exceptions */
- 	if (rt6_insert_exception(nrt, from)) {
- 		dst_release_immediate(&nrt->dst);
- 		goto out;
-@@ -3486,7 +3480,7 @@ static void rt6_do_redirect(struct dst_e
- 	call_netevent_notifiers(NETEVENT_REDIRECT, &netevent);
- 
- out:
--	fib6_info_release(from);
-+	rcu_read_unlock();
- 	neigh_release(neigh);
- }
- 
-@@ -4991,16 +4985,20 @@ static int inet6_rtm_getroute(struct sk_
- 
- 	rcu_read_lock();
- 	from = rcu_dereference(rt->from);
--
--	if (fibmatch)
--		err = rt6_fill_node(net, skb, from, NULL, NULL, NULL, iif,
--				    RTM_NEWROUTE, NETLINK_CB(in_skb).portid,
--				    nlh->nlmsg_seq, 0);
--	else
--		err = rt6_fill_node(net, skb, from, dst, &fl6.daddr,
--				    &fl6.saddr, iif, RTM_NEWROUTE,
--				    NETLINK_CB(in_skb).portid, nlh->nlmsg_seq,
--				    0);
-+	if (from) {
-+		if (fibmatch)
-+			err = rt6_fill_node(net, skb, from, NULL, NULL, NULL,
-+					    iif, RTM_NEWROUTE,
-+					    NETLINK_CB(in_skb).portid,
-+					    nlh->nlmsg_seq, 0);
-+		else
-+			err = rt6_fill_node(net, skb, from, dst, &fl6.daddr,
-+					    &fl6.saddr, iif, RTM_NEWROUTE,
-+					    NETLINK_CB(in_skb).portid,
-+					    nlh->nlmsg_seq, 0);
-+	} else {
-+		err = -ENETUNREACH;
+ skip_uc:
+ 	rc = bnxt_hwrm_cfa_l2_set_rx_mask(bp, 0);
++	if (rc && vnic->mc_list_count) {
++		netdev_info(bp->dev, "Failed setting MC filters rc: %d, turning on ALL_MCAST mode\n",
++			    rc);
++		vnic->rx_mask |= CFA_L2_SET_RX_MASK_REQ_MASK_ALL_MCAST;
++		vnic->mc_list_count = 0;
++		rc = bnxt_hwrm_cfa_l2_set_rx_mask(bp, 0);
 +	}
- 	rcu_read_unlock();
+ 	if (rc)
+-		netdev_err(bp->dev, "HWRM cfa l2 rx mask failure rc: %x\n",
++		netdev_err(bp->dev, "HWRM cfa l2 rx mask failure rc: %d\n",
+ 			   rc);
  
- 	if (err < 0) {
+ 	return rc;
 
 
