@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD185C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0BDC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C282084B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318F720859
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:39:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="Y1xz9B5T"
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="M8V5zNal"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfEDSiz (ORCPT
+        id S1727613AbfEDSiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 4 May 2019 14:38:55 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44162 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfEDSiw (ORCPT
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37977 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727511AbfEDSiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 14:38:52 -0400
-Received: by mail-lj1-f195.google.com with SMTP id c6so2433367lji.11
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 11:38:50 -0700 (PDT)
+        Sat, 4 May 2019 14:38:51 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e18so7863681lja.5
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 11:38:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=111n1Q8PXGJzaoGm9JyRCPHdkkw3QXVjBFzlxnZD76A=;
-        b=Y1xz9B5Tqg2VixkZD5Mh3Gm/KtlMFaA6xDtI4CoBYvmiMooJFwv+2LbBq/DJQO27P6
-         D3ywHDY/B9LpL8++IlGGmKfRypitZI3vBwEJUix+tP0x28iMhM7b9xf+l1ecDWmicp9x
-         50LgSjamwXXrzdRTe56oXPSTYx4lv4WOmwCClWlmWp2nEwzdxu7W8l99ITNnCbmZmvNq
-         iU/hUeK78uXnynUfd2Vxep8fTiQaG9tuOwBv/pBBRy5npVjkk4ps3VZYg1F0VtODrKyc
-         oKhIKr2MgdYO6S24A1VqecspnZdlbW2cbY7Krwhofku8AIs0214r8dK2nL2k2TZc5gwf
-         RZqA==
+        bh=W+fz1WBqtK2kshIyR2Qy2A/qLzLIFsJppqbJhNx1/P8=;
+        b=M8V5zNaljhWtxtuBXTuGFbRujWTkkl+eL3w+btFLXlpdgIjs+q26bnsdOMjfToBVCg
+         d4yi+E+NMqveeS6UtgqtBcJ3Zfcr1JnZOmsF0H32CptT7vES/32m0D6cPBKz6y1xOcvt
+         3ULkose2yX3f69iZJG6Lh1MIbyvnNR21LgwqqkH5PHtsbgBNY2K3k7rJ42mQ14JfBgjF
+         iOfW47dPj68OFnjVwwQxwJ++hjOfA0wZqy/J77EC1wUl5bqEEeCdx8Rci6jqTmf2CZUY
+         9ZesZmhYYKSioxLPseE6HI2hTVP7RaS4SfHzJxzEjwZR+hYUGvnJwMWwcKGkg/GW0NeH
+         4t/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=111n1Q8PXGJzaoGm9JyRCPHdkkw3QXVjBFzlxnZD76A=;
-        b=NpqwUM23lpBPUQiFTr5+xN4/6WFEAXmscc54mHti2Tzc+i4N+vHUyEckulNgEkWnnK
-         6nGAt0IN3y7/MIY454uRumBdMs4mg5FtM3MNWi7mBUkJ/GDe/fwiclnnEX5oScXBS49S
-         jO6sXIHBqHmrY5yYPHSTmJH4XV20KUc9YX0MXuwE/aYDtrKvjnBo0ZIHjmwSI2nb+1fS
-         /nBeUwi4SdCJgWg2BeCk7ub3M7UJB+grPEIM518nGb2/ZK8vI/+FC7+Ab/tzhB/JJq6F
-         bDNZf7sMOv0ZtwwmmNPFdB0LVuj2ee0vq91ia61yubob3llvdrEZisoK123sZPGs2TGl
-         P8rg==
-X-Gm-Message-State: APjAAAWOT+FuCanETAe9XN5zdfn1sdMDb4HTlwhh1Uq/Ka3aTwGNmp1V
-        SP/LGD85wAK5VphimpTJkN9vRQreU5UfVQ==
-X-Google-Smtp-Source: APXvYqwGAAFAneDP3QNlgjnihVBqXmiUyQzm98O70hpqr5y9l8RQlfomyezX0AvIUpLE3uiiM5MGRA==
-X-Received: by 2002:a2e:9241:: with SMTP id v1mr6645240ljg.6.1556995129283;
-        Sat, 04 May 2019 11:38:49 -0700 (PDT)
+        bh=W+fz1WBqtK2kshIyR2Qy2A/qLzLIFsJppqbJhNx1/P8=;
+        b=Sdb1aZ51JnLgEkQQMf97850UuIwF/u2DG1I7L9WA1E+irjsmI3QjXED9Xux61V0KaO
+         IK9+Xbj286Ra6lM2qHbStsBZgcEXsvOZfvdqpb0VxpU19QTbA2NrrPEa0LcoHvEJQAGY
+         E2KJmvVWKSNNdoNy72FOWZeXYH8i2f4KqgTHoTV2g9/rSSploZ/vDOht2ndj55aAKJyp
+         +T+7EtIpZL6Zf2EIzQqOixA35PQw5VVuEJIBQmVrJ/+0N6C2Dz5MRbBzb3X+a1TKFFhq
+         IfSAvpIL18c9RC5AyXbeqyPorvXMI04eGCOpyUEulZf3VQYK4egvKRgpbdk88X7IsCjN
+         RQWA==
+X-Gm-Message-State: APjAAAW2hpodaxhNapkIZrKHauLKYvBAYKzuLBFigCOUj4/Zwy996Ktq
+        mGrkXp9z9jRYPvVqpzdNHjlPlg==
+X-Google-Smtp-Source: APXvYqz6+scUOvddMrxW01qgQr7UjSKqJt2M+QK1LDZpjb4fXjjPrktddlJsPVaWD/KO+raAHg0cYw==
+X-Received: by 2002:a2e:86c5:: with SMTP id n5mr9000107ljj.184.1556995127544;
+        Sat, 04 May 2019 11:38:47 -0700 (PDT)
 Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
-        by smtp.gmail.com with ESMTPSA id q21sm1050260lfa.84.2019.05.04.11.38.48
+        by smtp.gmail.com with ESMTPSA id q21sm1050260lfa.84.2019.05.04.11.38.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 11:38:48 -0700 (PDT)
+        Sat, 04 May 2019 11:38:47 -0700 (PDT)
 From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
 To:     axboe@fb.com
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Igor Konopko <igor.j.konopko@intel.com>,
         =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-Subject: [GIT PULL 23/26] lightnvm: track inflight target creations
-Date:   Sat,  4 May 2019 20:38:08 +0200
-Message-Id: <20190504183811.18725-24-mb@lightnvm.io>
+Subject: [GIT PULL 21/26] lightnvm: pblk: IO path reorganization
+Date:   Sat,  4 May 2019 20:38:06 +0200
+Message-Id: <20190504183811.18725-22-mb@lightnvm.io>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190504183811.18725-1-mb@lightnvm.io>
 References: <20190504183811.18725-1-mb@lightnvm.io>
@@ -76,160 +76,276 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Igor Konopko <igor.j.konopko@intel.com>
 
-When creation process is still in progress, target is not yet on
-targets list. This causes a chance for removing whole lightnvm
-subsystem by calling nvm_unregister() in the meantime and finally by
-causing kernel panic inside target init function.
+This patch is made in order to prepare read path for new approach to
+partial read handling, which is simpler in compare with previous one.
 
-This patch changes the behaviour by adding kref variable which tracks
-all the users of nvm_dev structure. When nvm_dev is allocated, kref
-value is set to 1. Then before every target creation the value is
-increased and decreased after target removal. The extra reference
-is decreased when nvm subsystem is unregistered.
+The most important change is to move the handling of completed and
+failed bio from the pblk_make_rq() to particular read and write
+functions. This is needed, since after partial read path changes,
+sometimes completed/failed bio will be different from original one, so
+we cannot do this any longer in pblk_make_rq().
+
+Other changes are small read path refactor in order to reduce the size
+of the following patch with partial read changes.
+
+Generally the goal of this patch is not to change the functionality,
+but just to prepare the code for the following changes.
 
 Signed-off-by: Igor Konopko <igor.j.konopko@intel.com>
 Reviewed-by: Javier González <javier@javigon.com>
 Signed-off-by: Matias Bjørling <mb@lightnvm.io>
 ---
- drivers/lightnvm/core.c  | 41 ++++++++++++++++++++++++++++++----------
- include/linux/lightnvm.h |  1 +
- 2 files changed, 32 insertions(+), 10 deletions(-)
+ drivers/lightnvm/pblk-cache.c |  8 +++-
+ drivers/lightnvm/pblk-init.c  | 14 +-----
+ drivers/lightnvm/pblk-read.c  | 83 ++++++++++++++++-------------------
+ drivers/lightnvm/pblk.h       |  4 +-
+ 4 files changed, 48 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-index e2abe88a139c..0e9f7996ff1d 100644
---- a/drivers/lightnvm/core.c
-+++ b/drivers/lightnvm/core.c
-@@ -45,6 +45,8 @@ struct nvm_dev_map {
- 	int num_ch;
- };
+diff --git a/drivers/lightnvm/pblk-cache.c b/drivers/lightnvm/pblk-cache.c
+index c9fa26f95659..5c1034c22197 100644
+--- a/drivers/lightnvm/pblk-cache.c
++++ b/drivers/lightnvm/pblk-cache.c
+@@ -18,7 +18,8 @@
  
-+static void nvm_free(struct kref *ref);
-+
- static struct nvm_target *nvm_find_target(struct nvm_dev *dev, const char *name)
+ #include "pblk.h"
+ 
+-int pblk_write_to_cache(struct pblk *pblk, struct bio *bio, unsigned long flags)
++void pblk_write_to_cache(struct pblk *pblk, struct bio *bio,
++				unsigned long flags)
  {
- 	struct nvm_target *tgt;
-@@ -501,6 +503,7 @@ static int nvm_remove_tgt(struct nvm_dev *dev, struct nvm_ioctl_remove *remove)
+ 	struct request_queue *q = pblk->dev->q;
+ 	struct pblk_w_ctx w_ctx;
+@@ -43,6 +44,7 @@ int pblk_write_to_cache(struct pblk *pblk, struct bio *bio, unsigned long flags)
+ 		goto retry;
+ 	case NVM_IO_ERR:
+ 		pblk_pipeline_stop(pblk);
++		bio_io_error(bio);
+ 		goto out;
  	}
- 	__nvm_remove_target(t, true);
- 	mutex_unlock(&dev->mlock);
-+	kref_put(&dev->ref, nvm_free);
  
- 	return 0;
- }
-@@ -1094,15 +1097,16 @@ static int nvm_core_init(struct nvm_dev *dev)
- 	return ret;
- }
- 
--static void nvm_free(struct nvm_dev *dev)
-+static void nvm_free(struct kref *ref)
- {
--	if (!dev)
--		return;
-+	struct nvm_dev *dev = container_of(ref, struct nvm_dev, ref);
- 
- 	if (dev->dma_pool)
- 		dev->ops->destroy_dma_pool(dev->dma_pool);
- 
--	nvm_unregister_map(dev);
-+	if (dev->rmap)
-+		nvm_unregister_map(dev);
+@@ -79,7 +81,9 @@ int pblk_write_to_cache(struct pblk *pblk, struct bio *bio, unsigned long flags)
+ out:
+ 	generic_end_io_acct(q, REQ_OP_WRITE, &pblk->disk->part0, start_time);
+ 	pblk_write_should_kick(pblk);
+-	return ret;
 +
- 	kfree(dev->lun_map);
- 	kfree(dev);
++	if (ret == NVM_IO_DONE)
++		bio_endio(bio);
  }
-@@ -1139,7 +1143,13 @@ static int nvm_init(struct nvm_dev *dev)
  
- struct nvm_dev *nvm_alloc_dev(int node)
+ /*
+diff --git a/drivers/lightnvm/pblk-init.c b/drivers/lightnvm/pblk-init.c
+index 1e227a08e54a..b351c7f002de 100644
+--- a/drivers/lightnvm/pblk-init.c
++++ b/drivers/lightnvm/pblk-init.c
+@@ -50,7 +50,6 @@ struct bio_set pblk_bio_set;
+ static blk_qc_t pblk_make_rq(struct request_queue *q, struct bio *bio)
  {
--	return kzalloc_node(sizeof(struct nvm_dev), GFP_KERNEL, node);
-+	struct nvm_dev *dev;
-+
-+	dev = kzalloc_node(sizeof(struct nvm_dev), GFP_KERNEL, node);
-+	if (dev)
-+		kref_init(&dev->ref);
-+
-+	return dev;
+ 	struct pblk *pblk = q->queuedata;
+-	int ret;
+ 
+ 	if (bio_op(bio) == REQ_OP_DISCARD) {
+ 		pblk_discard(pblk, bio);
+@@ -65,7 +64,7 @@ static blk_qc_t pblk_make_rq(struct request_queue *q, struct bio *bio)
+ 	 */
+ 	if (bio_data_dir(bio) == READ) {
+ 		blk_queue_split(q, &bio);
+-		ret = pblk_submit_read(pblk, bio);
++		pblk_submit_read(pblk, bio);
+ 	} else {
+ 		/* Prevent deadlock in the case of a modest LUN configuration
+ 		 * and large user I/Os. Unless stalled, the rate limiter
+@@ -74,16 +73,7 @@ static blk_qc_t pblk_make_rq(struct request_queue *q, struct bio *bio)
+ 		if (pblk_get_secs(bio) > pblk_rl_max_io(&pblk->rl))
+ 			blk_queue_split(q, &bio);
+ 
+-		ret = pblk_write_to_cache(pblk, bio, PBLK_IOTYPE_USER);
+-	}
+-
+-	switch (ret) {
+-	case NVM_IO_ERR:
+-		bio_io_error(bio);
+-		break;
+-	case NVM_IO_DONE:
+-		bio_endio(bio);
+-		break;
++		pblk_write_to_cache(pblk, bio, PBLK_IOTYPE_USER);
+ 	}
+ 
+ 	return BLK_QC_T_NONE;
+diff --git a/drivers/lightnvm/pblk-read.c b/drivers/lightnvm/pblk-read.c
+index 27f8a76d8bd8..f5f155d540e2 100644
+--- a/drivers/lightnvm/pblk-read.c
++++ b/drivers/lightnvm/pblk-read.c
+@@ -179,7 +179,8 @@ static void pblk_end_user_read(struct bio *bio, int error)
+ {
+ 	if (error && error != NVM_RSP_WARN_HIGHECC)
+ 		bio_io_error(bio);
+-	bio_endio(bio);
++	else
++		bio_endio(bio);
  }
- EXPORT_SYMBOL(nvm_alloc_dev);
  
-@@ -1147,12 +1157,16 @@ int nvm_register(struct nvm_dev *dev)
+ static void __pblk_end_io_read(struct pblk *pblk, struct nvm_rq *rqd,
+@@ -389,7 +390,6 @@ static int pblk_partial_read_bio(struct pblk *pblk, struct nvm_rq *rqd,
+ 
+ 	/* Free allocated pages in new bio */
+ 	pblk_bio_free_pages(pblk, rqd->bio, 0, rqd->bio->bi_vcnt);
+-	__pblk_end_io_read(pblk, rqd, false);
+ 	return NVM_IO_ERR;
+ }
+ 
+@@ -434,7 +434,7 @@ static void pblk_read_rq(struct pblk *pblk, struct nvm_rq *rqd, struct bio *bio,
+ 	}
+ }
+ 
+-int pblk_submit_read(struct pblk *pblk, struct bio *bio)
++void pblk_submit_read(struct pblk *pblk, struct bio *bio)
  {
- 	int ret, exp_pool_size;
+ 	struct nvm_tgt_dev *dev = pblk->dev;
+ 	struct request_queue *q = dev->q;
+@@ -442,9 +442,9 @@ int pblk_submit_read(struct pblk *pblk, struct bio *bio)
+ 	unsigned int nr_secs = pblk_get_secs(bio);
+ 	struct pblk_g_ctx *r_ctx;
+ 	struct nvm_rq *rqd;
++	struct bio *int_bio;
+ 	unsigned int bio_init_idx;
+ 	DECLARE_BITMAP(read_bitmap, NVM_MAX_VLBA);
+-	int ret = NVM_IO_ERR;
  
--	if (!dev->q || !dev->ops)
-+	if (!dev->q || !dev->ops) {
-+		kref_put(&dev->ref, nvm_free);
- 		return -EINVAL;
+ 	generic_start_io_acct(q, REQ_OP_READ, bio_sectors(bio),
+ 			      &pblk->disk->part0);
+@@ -455,74 +455,67 @@ int pblk_submit_read(struct pblk *pblk, struct bio *bio)
+ 
+ 	rqd->opcode = NVM_OP_PREAD;
+ 	rqd->nr_ppas = nr_secs;
+-	rqd->bio = NULL; /* cloned bio if needed */
+ 	rqd->private = pblk;
+ 	rqd->end_io = pblk_end_io_read;
+ 
+ 	r_ctx = nvm_rq_to_pdu(rqd);
+ 	r_ctx->start_time = jiffies;
+ 	r_ctx->lba = blba;
+-	r_ctx->private = bio; /* original bio */
+ 
+ 	/* Save the index for this bio's start. This is needed in case
+ 	 * we need to fill a partial read.
+ 	 */
+ 	bio_init_idx = pblk_get_bi_idx(bio);
+ 
+-	if (pblk_alloc_rqd_meta(pblk, rqd))
+-		goto fail_rqd_free;
++	if (pblk_alloc_rqd_meta(pblk, rqd)) {
++		bio_io_error(bio);
++		pblk_free_rqd(pblk, rqd, PBLK_READ);
++		return;
 +	}
++
++	/* Clone read bio to deal internally with:
++	 * -read errors when reading from drive
++	 * -bio_advance() calls during l2p lookup and cache reads
++	 */
++	int_bio = bio_clone_fast(bio, GFP_KERNEL, &pblk_bio_set);
  
- 	ret = nvm_init(dev);
+ 	if (nr_secs > 1)
+ 		pblk_read_ppalist_rq(pblk, rqd, bio, blba, read_bitmap);
+ 	else
+ 		pblk_read_rq(pblk, rqd, bio, blba, read_bitmap);
+ 
++	r_ctx->private = bio; /* original bio */
++	rqd->bio = int_bio; /* internal bio */
++
+ 	if (bitmap_full(read_bitmap, nr_secs)) {
++		pblk_end_user_read(bio, 0);
+ 		atomic_inc(&pblk->inflight_io);
+ 		__pblk_end_io_read(pblk, rqd, false);
+-		return NVM_IO_DONE;
++		return;
+ 	}
+ 
+-	/* All sectors are to be read from the device */
+-	if (bitmap_empty(read_bitmap, rqd->nr_ppas)) {
+-		struct bio *int_bio = NULL;
+-
+-		/* Clone read bio to deal with read errors internally */
+-		int_bio = bio_clone_fast(bio, GFP_KERNEL, &pblk_bio_set);
+-		if (!int_bio) {
+-			pblk_err(pblk, "could not clone read bio\n");
+-			goto fail_end_io;
+-		}
+-
+-		rqd->bio = int_bio;
+-
+-		if (pblk_submit_io(pblk, rqd)) {
++	if (!bitmap_empty(read_bitmap, rqd->nr_ppas)) {
++		/* The read bio request could be partially filled by the write
++		 * buffer, but there are some holes that need to be read from
++		 * the drive.
++		 */
++		bio_put(int_bio);
++		rqd->bio = NULL;
++		if (pblk_partial_read_bio(pblk, rqd, bio_init_idx, read_bitmap,
++					    nr_secs)) {
+ 			pblk_err(pblk, "read IO submission failed\n");
+-			ret = NVM_IO_ERR;
+-			goto fail_end_io;
++			bio_io_error(bio);
++			__pblk_end_io_read(pblk, rqd, false);
+ 		}
+-
+-		return NVM_IO_OK;
++		return;
+ 	}
+ 
+-	/* The read bio request could be partially filled by the write buffer,
+-	 * but there are some holes that need to be read from the drive.
+-	 */
+-	ret = pblk_partial_read_bio(pblk, rqd, bio_init_idx, read_bitmap,
+-				    nr_secs);
 -	if (ret)
-+	if (ret) {
-+		kref_put(&dev->ref, nvm_free);
- 		return ret;
+-		goto fail_meta_free;
+-
+-	return NVM_IO_OK;
+-
+-fail_meta_free:
+-	nvm_dev_dma_free(dev->parent, rqd->meta_list, rqd->dma_meta_list);
+-fail_rqd_free:
+-	pblk_free_rqd(pblk, rqd, PBLK_READ);
+-	return ret;
+-fail_end_io:
+-	__pblk_end_io_read(pblk, rqd, false);
+-	return ret;
++	/* All sectors are to be read from the device */
++	if (pblk_submit_io(pblk, rqd)) {
++		pblk_err(pblk, "read IO submission failed\n");
++		bio_io_error(bio);
++		__pblk_end_io_read(pblk, rqd, false);
 +	}
- 
- 	exp_pool_size = max_t(int, PAGE_SIZE,
- 			      (NVM_MAX_VLBA * (sizeof(u64) + dev->geo.sos)));
-@@ -1162,7 +1176,7 @@ int nvm_register(struct nvm_dev *dev)
- 						  exp_pool_size);
- 	if (!dev->dma_pool) {
- 		pr_err("nvm: could not create dma pool\n");
--		nvm_free(dev);
-+		kref_put(&dev->ref, nvm_free);
- 		return -ENOMEM;
- 	}
- 
-@@ -1184,6 +1198,7 @@ void nvm_unregister(struct nvm_dev *dev)
- 		if (t->dev->parent != dev)
- 			continue;
- 		__nvm_remove_target(t, false);
-+		kref_put(&dev->ref, nvm_free);
- 	}
- 	mutex_unlock(&dev->mlock);
- 
-@@ -1191,13 +1206,14 @@ void nvm_unregister(struct nvm_dev *dev)
- 	list_del(&dev->devices);
- 	up_write(&nvm_lock);
- 
--	nvm_free(dev);
-+	kref_put(&dev->ref, nvm_free);
- }
- EXPORT_SYMBOL(nvm_unregister);
- 
- static int __nvm_configure_create(struct nvm_ioctl_create *create)
- {
- 	struct nvm_dev *dev;
-+	int ret;
- 
- 	down_write(&nvm_lock);
- 	dev = nvm_find_nvm_dev(create->dev);
-@@ -1208,7 +1224,12 @@ static int __nvm_configure_create(struct nvm_ioctl_create *create)
- 		return -EINVAL;
- 	}
- 
--	return nvm_create_tgt(dev, create);
-+	kref_get(&dev->ref);
-+	ret = nvm_create_tgt(dev, create);
-+	if (ret)
-+		kref_put(&dev->ref, nvm_free);
-+
-+	return ret;
  }
  
- static long nvm_ioctl_info(struct file *file, void __user *arg)
-diff --git a/include/linux/lightnvm.h b/include/linux/lightnvm.h
-index d3b02708e5f0..4d0d5655c7b2 100644
---- a/include/linux/lightnvm.h
-+++ b/include/linux/lightnvm.h
-@@ -428,6 +428,7 @@ struct nvm_dev {
- 	char name[DISK_NAME_LEN];
- 	void *private_data;
+ static int read_ppalist_rq_gc(struct pblk *pblk, struct nvm_rq *rqd,
+diff --git a/drivers/lightnvm/pblk.h b/drivers/lightnvm/pblk.h
+index e304754aaa3c..17ced12db7dd 100644
+--- a/drivers/lightnvm/pblk.h
++++ b/drivers/lightnvm/pblk.h
+@@ -867,7 +867,7 @@ void pblk_get_packed_meta(struct pblk *pblk, struct nvm_rq *rqd);
+ /*
+  * pblk user I/O write path
+  */
+-int pblk_write_to_cache(struct pblk *pblk, struct bio *bio,
++void pblk_write_to_cache(struct pblk *pblk, struct bio *bio,
+ 			unsigned long flags);
+ int pblk_write_gc_to_cache(struct pblk *pblk, struct pblk_gc_rq *gc_rq);
  
-+	struct kref ref;
- 	void *rmap;
- 
- 	struct mutex mlock;
+@@ -893,7 +893,7 @@ void pblk_write_kick(struct pblk *pblk);
+  * pblk read path
+  */
+ extern struct bio_set pblk_bio_set;
+-int pblk_submit_read(struct pblk *pblk, struct bio *bio);
++void pblk_submit_read(struct pblk *pblk, struct bio *bio);
+ int pblk_submit_read_gc(struct pblk *pblk, struct pblk_gc_rq *gc_rq);
+ /*
+  * pblk recovery
 -- 
 2.19.1
 
