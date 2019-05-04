@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 022D7C04AAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBD8C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C862820870
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A2120870
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965657;
-	bh=wFZarfcDgNI7qhNyVlSgudZx3UqdoujzUUIR5OvFHI4=;
+	s=default; t=1556965663;
+	bh=LtiEmKRnOf4ksZ01CQhY8ojA3ltVuzRQkuvilKrzSsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g6VNERZODQrcRkRZINlApAwRFTB7fl6jkVRopes/ZVMKs6N9Gy6XFllxRU52mKEDD
-	 X0UhcXNm/oLPzug1VnPVGdc+IAC7rigZJaVtNtvVJnIaGIuZVF2+x3I+AfaU0AV1Ky
-	 Z5A83JOUjI9RSkqBVAnpy4GarFFTeUGuU5bpMo2k=
+	b=jD23KtgqulTp+MqoTxvbgArAYv3vVwT3kGTPCLaLKC7zhNHSiY75Cxj9hKPm59xuh
+	 RscO2tK88eyZcUHW76TpeMmXL4urHJ8M30HzCIbFdHf0pZE5sYxgdCAMxve4ZDmXNI
+	 79W/GN3J41zoPZNlukrplK1YU2FV844DK6nn88lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbfEDK1g (ORCPT
+        id S1728262AbfEDK1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37846 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727501AbfEDK1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:27:34 -0400
+        id S1727521AbfEDK1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:27:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E071B20859;
-        Sat,  4 May 2019 10:27:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23E0D2087F;
+        Sat,  4 May 2019 10:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965653;
-        bh=wFZarfcDgNI7qhNyVlSgudZx3UqdoujzUUIR5OvFHI4=;
+        s=default; t=1556965658;
+        bh=LtiEmKRnOf4ksZ01CQhY8ojA3ltVuzRQkuvilKrzSsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rybvaAuBx/dKz4hAGnm2GFyjvMtK16udlumHPGHw7ORRPkTkq1zFkS8vM72LG+yYO
-         bS+uO1UH/CvM7THaGDAPVRxl/HJSE0OKgFAt0E86HbXnHfPic2OEoL6E42f2xUzb1A
-         F+y1mrjPcwBmyfFCEluIegcQD0RMSzwF1533y6QI=
+        b=ghguLL3/FFL0vGOL1gp2jcnqTSyEymXifBnqj2vjUhhQZo4+t5VW6h84DrEntNPtb
+         2zrxrqx21Nx2m7uxMBlRQck+cc/nkghbpnu7slD0gb8buxtyixLthrjXo1rmcLevNG
+         k0QsMZYDPaGygtfxlohYB/qU4FtWAyohNgabgYLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Becherer <simon@becherer.de>,
-        Gabriele Balducci <balducci@units.it>,
-        Antti Antinoja <reader@fennosys.fi>,
-        Takashi Iwai <tiwai@suse.com>, Jiri Slaby <jslaby@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Iakov Karpov <srid@rkmail.ru>
-Subject: [PATCH 4.19 20/23] KVM: x86: Whitelist port 0x7e for pre-incrementing %rip
-Date:   Sat,  4 May 2019 12:25:22 +0200
-Message-Id: <20190504102452.182919984@linuxfoundation.org>
+        stable@vger.kernel.org, Christo Gouws <gouws.christo@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 22/23] ALSA: line6: use dynamic buffers
+Date:   Sat,  4 May 2019 12:25:24 +0200
+Message-Id: <20190504102452.243508732@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102451.512405835@linuxfoundation.org>
 References: <20190504102451.512405835@linuxfoundation.org>
@@ -64,94 +60,299 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 8764ed55c9705e426d889ff16c26f398bba70b9b upstream.
+commit e5c812e84f0dece3400d5caf42522287e6ef139f upstream.
 
-KVM's recent bug fix to update %rip after emulating I/O broke userspace
-that relied on the previous behavior of incrementing %rip prior to
-exiting to userspace.  When running a Windows XP guest on AMD hardware,
-Qemu may patch "OUT 0x7E" instructions in reaction to the OUT itself.
-Because KVM's old behavior was to increment %rip before exiting to
-userspace to handle the I/O, Qemu manually adjusted %rip to account for
-the OUT instruction.
+The line6 driver uses a lot of USB buffers off of the stack, which is
+not allowed on many systems, causing the driver to crash on some of
+them.  Fix this up by dynamically allocating the buffers with kmalloc()
+which allows for proper DMA-able memory.
 
-Arguably this is a userspace bug as KVM requires userspace to re-enter
-the kernel to complete instruction emulation before taking any other
-actions.  That being said, this is a bit of a grey area and breaking
-userspace that has worked for many years is bad.
-
-Pre-increment %rip on OUT to port 0x7e before exiting to userspace to
-hack around the issue.
-
-Fixes: 45def77ebf79e ("KVM: x86: update %rip after emulating IO")
-Reported-by: Simon Becherer <simon@becherer.de>
-Reported-and-tested-by: Iakov Karpov <srid@rkmail.ru>
-Reported-by: Gabriele Balducci <balducci@units.it>
-Reported-by: Antti Antinoja <reader@fennosys.fi>
-Cc: stable@vger.kernel.org
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: Jiri Slaby <jslaby@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reported-by: Christo Gouws <gouws.christo@gmail.com>
+Reported-by: Alan Stern <stern@rowland.harvard.edu>
+Tested-by: Christo Gouws <gouws.christo@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/uapi/asm/kvm.h |    1 +
- arch/x86/kvm/x86.c              |   21 +++++++++++++++++++--
- 2 files changed, 20 insertions(+), 2 deletions(-)
+ sound/usb/line6/driver.c   |   60 ++++++++++++++++++++++++++-------------------
+ sound/usb/line6/podhd.c    |   21 +++++++++------
+ sound/usb/line6/toneport.c |   24 +++++++++++++-----
+ 3 files changed, 65 insertions(+), 40 deletions(-)
 
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -378,6 +378,7 @@ struct kvm_sync_regs {
- #define KVM_X86_QUIRK_LINT0_REENABLED	(1 << 0)
- #define KVM_X86_QUIRK_CD_NW_CLEARED	(1 << 1)
- #define KVM_X86_QUIRK_LAPIC_MMIO_HOLE	(1 << 2)
-+#define KVM_X86_QUIRK_OUT_7E_INC_RIP	(1 << 3)
- 
- #define KVM_STATE_NESTED_GUEST_MODE	0x00000001
- #define KVM_STATE_NESTED_RUN_PENDING	0x00000002
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6328,6 +6328,12 @@ int kvm_emulate_instruction_from_buffer(
- }
- EXPORT_SYMBOL_GPL(kvm_emulate_instruction_from_buffer);
- 
-+static int complete_fast_pio_out_port_0x7e(struct kvm_vcpu *vcpu)
-+{
-+	vcpu->arch.pio.count = 0;
-+	return 1;
-+}
-+
- static int complete_fast_pio_out(struct kvm_vcpu *vcpu)
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -351,12 +351,16 @@ int line6_read_data(struct usb_line6 *li
  {
- 	vcpu->arch.pio.count = 0;
-@@ -6344,12 +6350,23 @@ static int kvm_fast_pio_out(struct kvm_v
- 	unsigned long val = kvm_register_read(vcpu, VCPU_REGS_RAX);
- 	int ret = emulator_pio_out_emulated(&vcpu->arch.emulate_ctxt,
- 					    size, port, &val, 1);
-+	if (ret)
-+		return ret;
+ 	struct usb_device *usbdev = line6->usbdev;
+ 	int ret;
+-	unsigned char len;
++	unsigned char *len;
+ 	unsigned count;
  
--	if (!ret) {
-+	/*
-+	 * Workaround userspace that relies on old KVM behavior of %rip being
-+	 * incremented prior to exiting to userspace to handle "OUT 0x7e".
-+	 */
-+	if (port == 0x7e &&
-+	    kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_OUT_7E_INC_RIP)) {
-+		vcpu->arch.complete_userspace_io =
-+			complete_fast_pio_out_port_0x7e;
-+		kvm_skip_emulated_instruction(vcpu);
-+	} else {
- 		vcpu->arch.pio.linear_rip = kvm_get_linear_rip(vcpu);
- 		vcpu->arch.complete_userspace_io = complete_fast_pio_out;
+ 	if (address > 0xffff || datalen > 0xff)
+ 		return -EINVAL;
+ 
++	len = kmalloc(sizeof(*len), GFP_KERNEL);
++	if (!len)
++		return -ENOMEM;
++
+ 	/* query the serial number: */
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
+ 			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+@@ -365,7 +369,7 @@ int line6_read_data(struct usb_line6 *li
+ 
+ 	if (ret < 0) {
+ 		dev_err(line6->ifcdev, "read request failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
  	}
--	return ret;
+ 
+ 	/* Wait for data length. We'll get 0xff until length arrives. */
+@@ -375,28 +379,29 @@ int line6_read_data(struct usb_line6 *li
+ 		ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
+ 				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
+ 				      USB_DIR_IN,
+-				      0x0012, 0x0000, &len, 1,
++				      0x0012, 0x0000, len, 1,
+ 				      LINE6_TIMEOUT * HZ);
+ 		if (ret < 0) {
+ 			dev_err(line6->ifcdev,
+ 				"receive length failed (error %d)\n", ret);
+-			return ret;
++			goto exit;
+ 		}
+ 
+-		if (len != 0xff)
++		if (*len != 0xff)
+ 			break;
+ 	}
+ 
+-	if (len == 0xff) {
++	ret = -EIO;
++	if (*len == 0xff) {
+ 		dev_err(line6->ifcdev, "read failed after %d retries\n",
+ 			count);
+-		return -EIO;
+-	} else if (len != datalen) {
++		goto exit;
++	} else if (*len != datalen) {
+ 		/* should be equal or something went wrong */
+ 		dev_err(line6->ifcdev,
+ 			"length mismatch (expected %d, got %d)\n",
+-			(int)datalen, (int)len);
+-		return -EIO;
++			(int)datalen, (int)*len);
++		goto exit;
+ 	}
+ 
+ 	/* receive the result: */
+@@ -405,12 +410,12 @@ int line6_read_data(struct usb_line6 *li
+ 			      0x0013, 0x0000, data, datalen,
+ 			      LINE6_TIMEOUT * HZ);
+ 
+-	if (ret < 0) {
++	if (ret < 0)
+ 		dev_err(line6->ifcdev, "read failed (error %d)\n", ret);
+-		return ret;
+-	}
+ 
+-	return 0;
++exit:
++	kfree(len);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(line6_read_data);
+ 
+@@ -422,12 +427,16 @@ int line6_write_data(struct usb_line6 *l
+ {
+ 	struct usb_device *usbdev = line6->usbdev;
+ 	int ret;
+-	unsigned char status;
++	unsigned char *status;
+ 	int count;
+ 
+ 	if (address > 0xffff || datalen > 0xffff)
+ 		return -EINVAL;
+ 
++	status = kmalloc(sizeof(*status), GFP_KERNEL);
++	if (!status)
++		return -ENOMEM;
++
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
+ 			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+ 			      0x0022, address, data, datalen,
+@@ -436,7 +445,7 @@ int line6_write_data(struct usb_line6 *l
+ 	if (ret < 0) {
+ 		dev_err(line6->ifcdev,
+ 			"write request failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
+ 	}
+ 
+ 	for (count = 0; count < LINE6_READ_WRITE_MAX_RETRIES; count++) {
+@@ -447,28 +456,29 @@ int line6_write_data(struct usb_line6 *l
+ 				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
+ 				      USB_DIR_IN,
+ 				      0x0012, 0x0000,
+-				      &status, 1, LINE6_TIMEOUT * HZ);
++				      status, 1, LINE6_TIMEOUT * HZ);
+ 
+ 		if (ret < 0) {
+ 			dev_err(line6->ifcdev,
+ 				"receiving status failed (error %d)\n", ret);
+-			return ret;
++			goto exit;
+ 		}
+ 
+-		if (status != 0xff)
++		if (*status != 0xff)
+ 			break;
+ 	}
+ 
+-	if (status == 0xff) {
++	if (*status == 0xff) {
+ 		dev_err(line6->ifcdev, "write failed after %d retries\n",
+ 			count);
+-		return -EIO;
+-	} else if (status != 0) {
++		ret = -EIO;
++	} else if (*status != 0) {
+ 		dev_err(line6->ifcdev, "write failed (error %d)\n", ret);
+-		return -EIO;
++		ret = -EIO;
+ 	}
+-
+-	return 0;
++exit:
++	kfree(status);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(line6_write_data);
+ 
+--- a/sound/usb/line6/podhd.c
++++ b/sound/usb/line6/podhd.c
+@@ -225,28 +225,32 @@ static void podhd_startup_start_workqueu
+ static int podhd_dev_start(struct usb_line6_podhd *pod)
+ {
+ 	int ret;
+-	u8 init_bytes[8];
++	u8 *init_bytes;
+ 	int i;
+ 	struct usb_device *usbdev = pod->line6.usbdev;
+ 
++	init_bytes = kmalloc(8, GFP_KERNEL);
++	if (!init_bytes)
++		return -ENOMEM;
++
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
+ 					0x67, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
+ 					0x11, 0,
+ 					NULL, 0, LINE6_TIMEOUT * HZ);
+ 	if (ret < 0) {
+ 		dev_err(pod->line6.ifcdev, "read request failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
+ 	}
+ 
+ 	/* NOTE: looks like some kind of ping message */
+ 	ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
+ 					USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
+ 					0x11, 0x0,
+-					&init_bytes, 3, LINE6_TIMEOUT * HZ);
++					init_bytes, 3, LINE6_TIMEOUT * HZ);
+ 	if (ret < 0) {
+ 		dev_err(pod->line6.ifcdev,
+ 			"receive length failed (error %d)\n", ret);
+-		return ret;
++		goto exit;
+ 	}
+ 
+ 	pod->firmware_version =
+@@ -255,7 +259,7 @@ static int podhd_dev_start(struct usb_li
+ 	for (i = 0; i <= 16; i++) {
+ 		ret = line6_read_data(&pod->line6, 0xf000 + 0x08 * i, init_bytes, 8);
+ 		if (ret < 0)
+-			return ret;
++			goto exit;
+ 	}
+ 
+ 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
+@@ -263,10 +267,9 @@ static int podhd_dev_start(struct usb_li
+ 					USB_TYPE_STANDARD | USB_RECIP_DEVICE | USB_DIR_OUT,
+ 					1, 0,
+ 					NULL, 0, LINE6_TIMEOUT * HZ);
+-	if (ret < 0)
+-		return ret;
+-
+-	return 0;
++exit:
++	kfree(init_bytes);
++	return ret;
+ }
+ 
+ static void podhd_startup_workqueue(struct work_struct *work)
+--- a/sound/usb/line6/toneport.c
++++ b/sound/usb/line6/toneport.c
+@@ -365,16 +365,21 @@ static bool toneport_has_source_select(s
+ /*
+ 	Setup Toneport device.
+ */
+-static void toneport_setup(struct usb_line6_toneport *toneport)
++static int toneport_setup(struct usb_line6_toneport *toneport)
+ {
+-	u32 ticks;
++	u32 *ticks;
+ 	struct usb_line6 *line6 = &toneport->line6;
+ 	struct usb_device *usbdev = line6->usbdev;
+ 
++	ticks = kmalloc(sizeof(*ticks), GFP_KERNEL);
++	if (!ticks)
++		return -ENOMEM;
++
+ 	/* sync time on device with host: */
+ 	/* note: 32-bit timestamps overflow in year 2106 */
+-	ticks = (u32)ktime_get_real_seconds();
+-	line6_write_data(line6, 0x80c6, &ticks, 4);
++	*ticks = (u32)ktime_get_real_seconds();
++	line6_write_data(line6, 0x80c6, ticks, 4);
++	kfree(ticks);
+ 
+ 	/* enable device: */
+ 	toneport_send_cmd(usbdev, 0x0301, 0x0000);
+@@ -389,6 +394,7 @@ static void toneport_setup(struct usb_li
+ 		toneport_update_led(toneport);
+ 
+ 	mod_timer(&toneport->timer, jiffies + TONEPORT_PCM_DELAY * HZ);
 +	return 0;
  }
  
- static int complete_fast_pio_in(struct kvm_vcpu *vcpu)
+ /*
+@@ -451,7 +457,9 @@ static int toneport_init(struct usb_line
+ 			return err;
+ 	}
+ 
+-	toneport_setup(toneport);
++	err = toneport_setup(toneport);
++	if (err)
++		return err;
+ 
+ 	/* register audio system: */
+ 	return snd_card_register(line6->card);
+@@ -463,7 +471,11 @@ static int toneport_init(struct usb_line
+ */
+ static int toneport_reset_resume(struct usb_interface *interface)
+ {
+-	toneport_setup(usb_get_intfdata(interface));
++	int err;
++
++	err = toneport_setup(usb_get_intfdata(interface));
++	if (err)
++		return err;
+ 	return line6_resume(interface);
+ }
+ #endif
 
 
