@@ -2,140 +2,55 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDFCC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 19:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7A0C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 19:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67EF20675
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 19:11:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="g3omv1xv"
+	by mail.kernel.org (Postfix) with ESMTP id D7A47205F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 19:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfEDTLM (ORCPT
+        id S1727463AbfEDTZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 15:11:12 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34181 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbfEDTLL (ORCPT
+        Sat, 4 May 2019 15:25:12 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:7749 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726596AbfEDTZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 15:11:11 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w35so8508696edd.1
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 12:11:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=WcxhAgw8WDvU3ud152po/wV56qFlyq6ha4UCMPsuo1o=;
-        b=g3omv1xvZ8JG1O+yBpN9ylXgwt/WvBEQ6+qsh2OV9HpSDVEhCnNhg6qftQ2BfCrn7i
-         D2nu3rqrXI9bIU/Lt5cU68YdRHr149kcV6dqetx0SYB3xkzKiPUg46s72hcAb0BxWEc1
-         nLmyC4uCMykptoeapyo1MOWO9WKlWB/HVvUaE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WcxhAgw8WDvU3ud152po/wV56qFlyq6ha4UCMPsuo1o=;
-        b=GulmWlOBvbErblDS1yM25n7RCKx6Ax+DazsKU8nDzB8FZ3HiSnm8LJ/VfAWdQFq45a
-         JTf8rSMqQoSV+7ARrV7KYm5D7eWDC5SVShkZnN4VfVxiwBcIDonbgofgW9JCAqvkWNGU
-         rxrIXRr9BVI/Cx2ZXhOZ2R9jRlnY9pmxTR9Xu66064x6qljj4UPSGil6+bQxqcAnw+fu
-         KIquP1O5N+UjrHGadUlHOWO01N7/2bQOG3c99yJ3/eP7CZuaNhACbWdiwQJlMLb3kluM
-         luVnGJfOaxZbUpwc3mWZgkhsoOWES/r99il1DWaltc6VsQ+1pXPfc24nifuXBx0v4h0t
-         lYkw==
-X-Gm-Message-State: APjAAAVxDEv129akS3JE76Wj/G5GRe5s4GUkxtBNYogINmFKJlrdq3lv
-        Glgaehgo8DvqjU4SYr8mQhqflg==
-X-Google-Smtp-Source: APXvYqzLgUjS54L/ju63S54v/MSaPLusRxM9P7AiWF3+06G1byNgBbeaacrNZzW1m7Ra717/0p3hQg==
-X-Received: by 2002:a17:906:1f53:: with SMTP id d19mr11978649ejk.12.1556997069734;
-        Sat, 04 May 2019 12:11:09 -0700 (PDT)
-Received: from [192.168.178.129] (f140230.upc-f.chello.nl. [80.56.140.230])
-        by smtp.gmail.com with ESMTPSA id y12sm831873ejo.85.2019.05.04.12.11.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 12:11:09 -0700 (PDT)
-Subject: Re: PROBLEM: brcmfmac's DMI-based fw file names break built-in fw
- loader
-To:     Victor Bravo <1905@spmblk.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>
-References: <20190504162633.ldrz2nqfocg55grb@localhost>
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-Message-ID: <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
-Date:   Sat, 4 May 2019 21:11:09 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 4 May 2019 15:25:12 -0400
+X-IronPort-AV: E=Sophos;i="5.60,430,1549926000"; 
+   d="scan'208";a="381667713"
+Received: from abo-60-75-68.mrs.modulonet.fr (HELO hadrien) ([85.68.75.60])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 May 2019 21:25:10 +0200
+Date:   Sat, 4 May 2019 21:25:10 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Vatsala Narang <vatsalanarang@gmail.com>
+cc:     gregkh@linuxfoundation.org, hadess@hadess.net, hdegoede@redhat.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] staging: rtl8723bs: core: Remove return in void
+ function.
+In-Reply-To: <20190504184358.25632-1-vatsalanarang@gmail.com>
+Message-ID: <alpine.DEB.2.21.1905042124130.2506@hadrien>
+References: <20190504184358.25632-1-vatsalanarang@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190504162633.ldrz2nqfocg55grb@localhost>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Hans, Luis
+> @@ -5828,8 +5822,6 @@ void survey_timer_hdl(struct timer_list *t)
+>
+>
+>  exit_survey_timer_hdl:
+> -
+> -	return;
+>  }
 
-On 5/4/2019 6:26 PM, Victor Bravo wrote:
-> The brcmfmac driver seems to have partially fixed problems which
-> prevented it to be used in shared system/kernel images for multiple
-> hardware by trying to load it's <config>.txt as
-> <config>.<dmi_sys_vendor>.<dmi_product_name>.txt first and then
-> falling back to <config>.txt. Real-life example:
-> 
-> brcmfmac mmc1:0001:1: Direct firmware load for brcm/brcmfmac43340-sdio.ASUSTeK COMPUTER INC.-T100HAN.txt failed with
-> error -2
-> brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac43340-sdio for chip
-> BCM43340/2
-> 
-> Unfortunately this doesn't really help on systems which use static
-> kernel with firmware blobs (and also text configuration files in case of
-> brcmfmac) built-in using CONFIG_EXTRA_FIRMWARE, as CONFIG_EXTRA_FIRMWARE
-> doesn't support spaces in file names - kernel build fails with
-> 
-> CONFIG_EXTRA_FIRMWARE="brcm/brcmfmac43340-sdio.bin brcm/brcmfmac43340-sdio.ASUSTeK COMPUTER INC.-T100HAN.txt"
-> 
-> for obvious reasons. So the only way here is to stay with good old
-> brcmfmac43340-sdio.txt and support at most one brcmfmac-equipped machine
-> per kernel image.
-> 
-> Please consider filtering the DMI strings and replacing spaces and
-> possibly other invalid characters with underscores, and/or adding module
-> parameter to allow passing the string from command line (using
-> brcmfmac.tag=t100 or brcmfmac.board=t100 to make the module load
-> brcmfmac43340-sdio.t100.txt seems nicer to me, and isn't prone to
-> breaking when DMI strings change on BIOS update).
+Are you sure that you compiled this code?  I'm not sure that it is possible
+to have a label without a subsequent statement.
 
-The intent of the DMI approach was to avoid end-users from passing 
-module parameters for this. As to fixing DMI string usage patches are 
-welcome.
-
-> My brief grep-based research also suggest that strings retrieved
-> by dmi_get_system_info() are passed to firmware loader without any
-> checks for special character, /../ etc. I'm not sure whether this is
-> considered to be proper & safe use, but if it's not, it may also have
-> some security implications, as it allows attacker with access to DMI
-> strings (using root rights/other OS/BIOS/physical access) to mess
-> with kernel space or secure boot.
-
-Hmm. Attackers with that kind of access can do bad is a gazillion ways.
-
-> I would also really appreciate not allowing future brcm (and other)
-> drivers to leave staging area before they fully support =y.
-
-Define fully support. At the time we moved into the wireless tree 
-(almost a decade ago) we did support =y. As such you could consider the 
-DMI approach a regression, but I find that a bit harsh to say. Hans made 
-a honest attempt and it is something that can be fixed. It can be you 
-providing just that ;-)
-
-Regards,
-Arend
+julia
