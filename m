@@ -5,71 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8806FC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 15:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F10C04AA9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 15:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D95206DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 15:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957B5206DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 15:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkV9CeLH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lust9394"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfEDPRE (ORCPT
+        id S1727203AbfEDPRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 11:17:04 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37587 "EHLO
+        Sat, 4 May 2019 11:17:08 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35852 "EHLO
         mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfEDPRD (ORCPT
+        with ESMTP id S1726776AbfEDPRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 11:17:03 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w37so9711226edw.4
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 08:17:02 -0700 (PDT)
+        Sat, 4 May 2019 11:17:05 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a8so9718258edx.3
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 08:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KKxuf/hi1yYphfQ+88mSEQc9wjYEjbyUrnqcwIgu1rk=;
-        b=GkV9CeLHxp45QEwPr7UlPQCxO4xWKkm8OzvxrchpOF1GptdulXMIET8lsMxLk8/H8u
-         rLJR57mikKX6OQhxrJczdiTEXxuRyjM0gh4WC14xEj8oYMnT+mTSJAjnDplqvT35I4eo
-         CskCdAjugYQgvWJQ350soR5+eFuUWD2W/Xfe+zXflXWPZof3zcfAUQhe/5RGCmjcVif0
-         Jvipxb6sdOdS/GtoMs29eQcVa3SRI/yDKOGdG1VOJeB4SajaKpuims8ihZWlGOVkVpS4
-         RcBr8d/tzB9WrLMUpdUcRcTZwRMIUhpvqc2XoU19apiTtF5By/tam09gHtqIL47dnUkY
-         2+Kw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eVaNiZEHc2WcLQetcZoCKC6E7inFmZ0Pm/1lAy3U6IQ=;
+        b=lust9394uk9VsG0Af6ixeNW7Ob8Y4vrJJbdXC0+Iz6YUJM2pFZz5fdUE3ZUf/dUZRS
+         258q1s8zOau8xZFmjfqsexI66BrPIQnJhr3KMpu6KjXwhU260OS08iBj8RVzzM/UmkVL
+         KHnF7+YdzH8mMcxykyLrVlI00WT0ZMIjocPqbkAL12+JMv1O1XLx/guD5xeWUDWFi1aC
+         tLYAU+cx5cOt1L4gGVkLrgdC54ecQW83nn90RIFMI8CddXjJSsVrdWuPRYxU2J0I8ai1
+         NLwtKehhdv2w4k9SqtGVpKIhu3vBAY2sp7w6mZnweCDEb3wNSXmDK0F/9fl/sKPYCBJS
+         hayg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KKxuf/hi1yYphfQ+88mSEQc9wjYEjbyUrnqcwIgu1rk=;
-        b=HyCf9gJJdAmjDyoVezQ3Z0UfSUsdW3/ivO8O/xA/n9HnsNX/sDIdDylomLY4sgC5yq
-         ToZokYFAyQs0ILKHnCTXjXZHjR6YSN4TDpFbcB28lOvxXP2Xgoq/hZUEb23LCQ073GVl
-         CvaHZWez4PjZsgWRXskU9qRjtpcmWGHY6unghjCCWlkZ64/sAkPgc1WK0vGFw8IAiTAs
-         N997Wezt+0cqGlvMHkJUyqUlEqeTtbkY0SxLRWxqUd0G+jU82JllQnmJvUVCozSafjTn
-         oByMhnOedbtKFW3CqWTnJx5szUoOrzdK1O7fa84sTpGJT1gF64QDySLk2bk1eKeUFlI7
-         3gzA==
-X-Gm-Message-State: APjAAAXck007ZKVeKEAHqxjBDW0O1IAuDOpH5J8kul6rlgnW94+fhf5E
-        J5OrEYYTfRcOKZBKWUEpi+0=
-X-Google-Smtp-Source: APXvYqzYI91jwcJvMMaT9G5FwRumk2j9LLyXM+6BB+GxQwFDolbwDkJrK/enUdUkjHQJTDF392fpng==
-X-Received: by 2002:a17:906:2583:: with SMTP id m3mr11319529ejb.74.1556983021553;
-        Sat, 04 May 2019 08:17:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eVaNiZEHc2WcLQetcZoCKC6E7inFmZ0Pm/1lAy3U6IQ=;
+        b=XR60Te8eMoaa1OEu8Pp7OSO5FzEG3M0P5JXY+shmbpY4jYCeRBRBjUAVzDFaaVrFEd
+         sMPF3wCLrvyaS36H62CrgxonbRMUY9c/thobzapMBGCZ/c+C7iH2pNCr5Z2NhRyEBsa1
+         hgCiguYZGAwnjQo16EwEpmsIv+D++/RNSlgGCRIqYfGF5DrdN8zEnqKidT+G0hYxW3Kp
+         7uzZZmKBAaP4+UFkPfPCuX1K0dXoEcimCZ5Q3nIq3BMX80OsckR+ukBpwpJMWqaSQnXq
+         wp9zL8zimJmmCb3+l0wxHxpqMeoq9L/0meeXY2hOLFWU4N0tznUGgUmh7Z0TSRFfDujK
+         w7rA==
+X-Gm-Message-State: APjAAAX70WIDfrhXv+H+UgcIRMQ8ClPC6dGY9gozS1GV2n1RBt6XRL9/
+        bGGkHgs5rnK0kYHaSgjN8ZA=
+X-Google-Smtp-Source: APXvYqyjUMC5lD1Ttz9DnqsIcJ7TsmGtzUtIugjLV+/qjipULhLu9wXCxDrKuT4+m1zJljEJdgNsyQ==
+X-Received: by 2002:a17:906:c52:: with SMTP id t18mr11359001ejf.53.1556983023082;
+        Sat, 04 May 2019 08:17:03 -0700 (PDT)
 Received: from elitebook-localhost (84-106-70-146.cable.dynamic.v4.ziggo.nl. [84.106.70.146])
-        by smtp.gmail.com with ESMTPSA id v17sm51489ejj.33.2019.05.04.08.17.00
+        by smtp.gmail.com with ESMTPSA id x44sm1438747edb.51.2019.05.04.08.17.02
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 04 May 2019 08:17:00 -0700 (PDT)
+        Sat, 04 May 2019 08:17:02 -0700 (PDT)
 From:   Nariman <narimantos@gmail.com>
 X-Google-Original-From: Nariman <root>
 To:     linux-kernel@vger.kernel.org
 Cc:     hdegoede@redhat.com, pierre-louis.bossart@linux.intel.com,
         liam.r.girdwood@linux.intel.com, yang.jie@linux.intel.com,
         broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, Erik Bussing <eabbussing@outlook.com>
-Subject: [PATCH] ASoC: Intel: bytcr_5640.c: refactored codec_fixup
-Date:   Sat,  4 May 2019 17:16:51 +0200
-Message-Id: <20190504151652.5213-3-user@elitebook-localhost>
+        alsa-devel@alsa-project.org, Nariman Etemadi <narimantos@gmail.com>
+Subject: [PATCH] ASoC: Intel: bytcr_5640.c:Refactored if statement and removed buffer
+Date:   Sat,  4 May 2019 17:16:49 +0200
+Message-Id: <20190504151652.5213-1-user@elitebook-localhost>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190504151652.5213-1-user@elitebook-localhost>
-References: <20190504151652.5213-1-user@elitebook-localhost>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,103 +74,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erik Bussing <eabbussing@outlook.com>
+From: Nariman Etemadi <narimantos@gmail.com>
 
-Remove code duplication in byt_rt5640_codec_fixup
+in function snd_byt_rt5640_mc_probe and removed buffer yt_rt5640_codec_aif_name & byt_rt5640_cpu_dai_name
 
-Signed-off-by: Erik Bussing <eabbussing@outlook.com>
+Signed-off-by: Nariman Etemadi <narimantos@gmail.com>
 ---
- sound/soc/intel/boards/bytcr_rt5640.c | 64 ++++++++++-----------------
- 1 file changed, 23 insertions(+), 41 deletions(-)
+ sound/soc/intel/boards/bytcr_rt5640.c | 26 ++++----------------------
+ 1 file changed, 4 insertions(+), 22 deletions(-)
 
 diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
-index a22366ce33c4..679be55418bf 100644
+index 940eb27158da..0d91642ca287 100644
 --- a/sound/soc/intel/boards/bytcr_rt5640.c
 +++ b/sound/soc/intel/boards/bytcr_rt5640.c
-@@ -939,6 +939,7 @@ static int byt_rt5640_codec_fixup(struct snd_soc_pcm_runtime *rtd,
- 	struct snd_interval *channels = hw_param_interval(params,
- 						SNDRV_PCM_HW_PARAM_CHANNELS);
- 	int ret;
-+	int bits;
+@@ -1075,8 +1075,6 @@ static struct snd_soc_dai_link byt_rt5640_dais[] = {
  
- 	/* The DSP will covert the FE rate to 48k, stereo */
- 	rate->min = rate->max = 48000;
-@@ -949,53 +950,34 @@ static int byt_rt5640_codec_fixup(struct snd_soc_pcm_runtime *rtd,
+ /* SoC card */
+ static char byt_rt5640_codec_name[SND_ACPI_I2C_ID_LEN];
+-static char byt_rt5640_codec_aif_name[12]; /*  = "rt5640-aif[1|2]" */
+-static char byt_rt5640_cpu_dai_name[10]; /*  = "ssp[0|2]-port" */
+ static char byt_rt5640_long_name[40]; /* = "bytcr-rt5640-*-spk-*-mic" */
  
- 		/* set SSP0 to 16-bit */
- 		params_set_format(params, SNDRV_PCM_FORMAT_S16_LE);
+ static int byt_rt5640_suspend(struct snd_soc_card *card)
+@@ -1268,28 +1266,12 @@ static int snd_byt_rt5640_mc_probe(struct platform_device *pdev)
+ 	log_quirks(&pdev->dev);
+ 
+ 	if ((byt_rt5640_quirk & BYT_RT5640_SSP2_AIF2) ||
+-	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2)) {
 -
--		/*
--		 * Default mode for SSP configuration is TDM 4 slot, override config
--		 * with explicit setting to I2S 2ch 16-bit. The word length is set with
--		 * dai_set_tdm_slot() since there is no other API exposed
--		 */
--		ret = snd_soc_dai_set_fmt(rtd->cpu_dai,
--					SND_SOC_DAIFMT_I2S     |
--					SND_SOC_DAIFMT_NB_NF   |
--					SND_SOC_DAIFMT_CBS_CFS
--			);
--		if (ret < 0) {
--			dev_err(rtd->dev, "can't set format to I2S, err %d\n", ret);
--			return ret;
--		}
+-		/* fixup codec aif name */
+-		snprintf(byt_rt5640_codec_aif_name,
+-			sizeof(byt_rt5640_codec_aif_name),
+-			"%s", "rt5640-aif2");
 -
--		ret = snd_soc_dai_set_tdm_slot(rtd->cpu_dai, 0x3, 0x3, 2, 16);
--		if (ret < 0) {
--			dev_err(rtd->dev, "can't set I2S config, err %d\n", ret);
--			return ret;
--		}
+-		byt_rt5640_dais[dai_index].codec_dai_name =
+-			byt_rt5640_codec_aif_name;
+-	}
++	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2))
++		byt_rt5640_dais[dai_index].codec_dai_name = "rt5640-aif2";
+ 
+ 	if ((byt_rt5640_quirk & BYT_RT5640_SSP0_AIF1) ||
+-	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2)) {
 -
-+	bits = 16;
- 	} else {
+-		/* fixup cpu dai name name */
+-		snprintf(byt_rt5640_cpu_dai_name,
+-			sizeof(byt_rt5640_cpu_dai_name),
+-			"%s", "ssp0-port");
+-
+-		byt_rt5640_dais[dai_index].cpu_dai_name =
+-			byt_rt5640_cpu_dai_name;
+-	}
++	    (byt_rt5640_quirk & BYT_RT5640_SSP0_AIF2))
++		byt_rt5640_dais[dai_index].cpu_dai_name = "ssp0-port";
  
- 		/* set SSP2 to 24-bit */
- 		params_set_format(params, SNDRV_PCM_FORMAT_S24_LE);
-+		bits = 24;
-+	}
- 
--		/*
--		 * Default mode for SSP configuration is TDM 4 slot, override config
--		 * with explicit setting to I2S 2ch 24-bit. The word length is set with
--		 * dai_set_tdm_slot() since there is no other API exposed
--		 */
--		ret = snd_soc_dai_set_fmt(rtd->cpu_dai,
--					SND_SOC_DAIFMT_I2S     |
--					SND_SOC_DAIFMT_NB_NF   |
--					SND_SOC_DAIFMT_CBS_CFS
--			);
--		if (ret < 0) {
--			dev_err(rtd->dev, "can't set format to I2S, err %d\n", ret);
--			return ret;
--		}
- 
--		ret = snd_soc_dai_set_tdm_slot(rtd->cpu_dai, 0x3, 0x3, 2, 24);
--		if (ret < 0) {
--			dev_err(rtd->dev, "can't set I2S config, err %d\n", ret);
--			return ret;
--		}
-+	/*
-+	 * Default mode for SSP configuration is TDM 4 slot, override config
-+	 * with explicit setting to I2S 2ch 24-bit. The word length is set with
-+	 * dai_set_tdm_slot() since there is no other API exposed
-+	 */
-+	ret = snd_soc_dai_set_fmt(rtd->cpu_dai,
-+		SND_SOC_DAIFMT_I2S     |
-+		SND_SOC_DAIFMT_NB_NF   |
-+		SND_SOC_DAIFMT_CBS_CFS
-+	);
-+	if (ret < 0) {
-+		dev_err(rtd->dev, "can't set format to I2S, err %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_tdm_slot(rtd->cpu_dai, 0x3, 0x3, 2, bits);
-+	if (ret < 0) {
-+		dev_err(rtd->dev, "can't set I2S config, err %d\n", ret);
-+		return ret;
- 	}
- 	return 0;
- }
+ 	if (byt_rt5640_quirk & BYT_RT5640_MCLK_EN) {
+ 		priv->mclk = devm_clk_get(&pdev->dev, "pmc_plt_clk_3");
 -- 
 2.20.1
 
