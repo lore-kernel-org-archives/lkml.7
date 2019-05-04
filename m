@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53574C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73801C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28110206DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48685206DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:40:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="JwDbYsTF"
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="hxarlySS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfEDSkF (ORCPT
+        id S1727881AbfEDSkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 14:40:05 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35063 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727427AbfEDSim (ORCPT
+        Sat, 4 May 2019 14:40:11 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36511 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727413AbfEDSij (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 14:38:42 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z26so3037275ljj.2
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 11:38:40 -0700 (PDT)
+        Sat, 4 May 2019 14:38:39 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y8so7634159ljd.3
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 11:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=3843mVBw2aKQSM14ec6tRYSSMjiPOntWSMzut81TFAY=;
-        b=JwDbYsTFb4yxp4ZUBe6/DXzDMyAvDefOOAFD/TtIa5KpnOttK7KaVLYSitUMzO0Z55
-         u0DBNjm1M5FH31OgE8XJFmHUtJ48ZkyGtMFOVoIouaNTy3Sm8hU71qpnN1HG3He0mLVW
-         Zre5Jjcdvj5TunVqlX8Os/yRHDSJgZrgpf8t1bVlNi2tURj3P6c8ZKbFnY+uqvtMFsoq
-         eehK2IYREB4u256xbI7iwBkwJ0ved7JfS0nqQ2VET2dU0+LqTGBcUTvpuoJpCThbcMZ3
-         tCZj4Jdgj+58tXebL1RhxjgO69rCJPMli2DCuPkcMRT/DZgkkIwxMePZo1BCnbYDyoiK
-         lLhA==
+        bh=4sMfKD6BWHHY2w0leCFH8ILHNGcbbmFVkVvKPdVieNc=;
+        b=hxarlySSKrvW9s7uG9u1fIU9cGNTvxWsqqv5ikXOvS3MO579hnmYEU/umNLoGeFlyl
+         3b1iwcDzIFAP3Jl/owreGfLhII+TA99CUWyvLxIy+qEtnklNfvtxIF9D7Njdv+Zzcbjo
+         l/3RVycxqsyLrrWfwwccNMkhZJ27/SNVUwFmdPdZ8E5ixWDdu/aXjl4UYR1ywEGw7bAP
+         0pNrQ9dWpNvVt+2WjOsORXL1uuYrbpMZ49Q/lnz+ObKGW2cYV/4d7OrN3Vrw/1ogTmFr
+         Nl+daEBaPqcL3gaWtAPqYqdgS6eGSQR/ORnzr8zbPNe2zZOCWgc9q1s2yZ3mI+T26CVI
+         oNow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=3843mVBw2aKQSM14ec6tRYSSMjiPOntWSMzut81TFAY=;
-        b=t5aHBhD5ubsOUdCI2jH86i/4lGTRDz2f+eW3OGjPJZWsm6XFVWGGHzZ/kKJEttCG8h
-         VoFJlO6WNQ+v9bl3qQhoOewmjAXePpAoWRV/vamiucJDB+ortlto8pY7bsX7kQEi02Uz
-         /5iEAoJygB7JM43y2JdPNEDrzzEJELNatl2q+AmOLKLMtvR8iCrHaZJWvDfavys9dJbG
-         12In1+1Q3HwrMwWLhYA5PbyUcmE8DKtkzMJdG26tD9a99NfDT4YtplJrkcBiTqFKC+zj
-         wFjulMZesO/rQxZlxIzjcBDyjRX18aqLAuds7zetdW5JEZX9U4GR6qBe41Pq94mqW1aW
-         1ALw==
-X-Gm-Message-State: APjAAAX4ww2k5v44zVZcKczjMMTGWAmtucAPlBNDfJhjeJ/+3GhS3ENU
-        F9ziym27p7vKp9ckZSoRtCiZ+A==
-X-Google-Smtp-Source: APXvYqztbPkqlrOfQRcm5dTJdYEtSFLQQq5jpQMMbr9aVHMNr+Tyk33CA9pRAdKnB2aUm7BUzAuGEA==
-X-Received: by 2002:a2e:9216:: with SMTP id k22mr8846076ljg.179.1556995120087;
-        Sat, 04 May 2019 11:38:40 -0700 (PDT)
+        bh=4sMfKD6BWHHY2w0leCFH8ILHNGcbbmFVkVvKPdVieNc=;
+        b=egZVyXKdQLZv2i1MDPRXzkisiO8RCTMGRgE/xqsjtJJCGyHP5BQ085BivTscrUBxy2
+         vanCwFyxecCetpGu+yNniRX9u+FzUt5VseT0Mge3/QKdynX7tN6z0DFxOoFFvAnATY/E
+         IVtZ7UBoxK3kpX7ZNlHNtqVjMf718tnKY5Sis08hz1heQctVvrHjaHiJ80SygnfY4AYJ
+         BDYEcy9dfm9XqTkjbas+c+ekDee+5KRJpY+yUWp6sq6/nu5tRGWJT3WYCvOXzaWLINv5
+         ME0IAJizeHkn59ItExWPCwIVIVNgpKaRmBQ1HVDRqse/P+kSpEx2NSr6qMyUj1/dTl4j
+         sIxw==
+X-Gm-Message-State: APjAAAUPUSeZLdKGNSzf+MU9KNiYAEJIh+t58ZcXHOp84OpjBKjM6VYl
+        sSgupvzIh8ZNnSxYRaNv1nQ9hw==
+X-Google-Smtp-Source: APXvYqwg9+2iF7iezU58WykeOaS9dYyJU+rYamqU1PfMDzCQIa5wT2f6a1cyss8VQSuveC8kunoMjw==
+X-Received: by 2002:a2e:7611:: with SMTP id r17mr2332585ljc.95.1556995117501;
+        Sat, 04 May 2019 11:38:37 -0700 (PDT)
 Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
-        by smtp.gmail.com with ESMTPSA id q21sm1050260lfa.84.2019.05.04.11.38.39
+        by smtp.gmail.com with ESMTPSA id q21sm1050260lfa.84.2019.05.04.11.38.36
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 11:38:39 -0700 (PDT)
+        Sat, 04 May 2019 11:38:36 -0700 (PDT)
 From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
 To:     axboe@fb.com
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Igor Konopko <igor.j.konopko@intel.com>,
+        Marcin Dziegielewski <marcin.dziegielewski@intel.com>,
         =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-Subject: [GIT PULL 15/26] lightnvm: pblk: kick writer on write recovery path
-Date:   Sat,  4 May 2019 20:38:00 +0200
-Message-Id: <20190504183811.18725-16-mb@lightnvm.io>
+Subject: [GIT PULL 12/26] lightnvm: pblk: set propper line as data_line after gc
+Date:   Sat,  4 May 2019 20:37:57 +0200
+Message-Id: <20190504183811.18725-13-mb@lightnvm.io>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190504183811.18725-1-mb@lightnvm.io>
 References: <20190504183811.18725-1-mb@lightnvm.io>
@@ -75,31 +75,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Konopko <igor.j.konopko@intel.com>
+From: Marcin Dziegielewski <marcin.dziegielewski@intel.com>
 
-In case of write recovery path, there is a chance that writer thread
-is not active, kick immediately instead of waiting for timer.
+In current implementation of l2p recovery, when we are after gc and we
+have open line, we are not setting current data line properly (we set
+last line from the device instead of last line ordered by seq_nr) and
+in consequence, kernel panic and data corruption.
 
-Signed-off-by: Igor Konopko <igor.j.konopko@intel.com>
+Signed-off-by: Marcin Dziegielewski <marcin.dziegielewski@intel.com>
 Reviewed-by: Javier González <javier@javigon.com>
-Reviewed-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
 Signed-off-by: Matias Bjørling <mb@lightnvm.io>
 ---
- drivers/lightnvm/pblk-write.c | 1 +
+ drivers/lightnvm/pblk-recovery.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/lightnvm/pblk-write.c b/drivers/lightnvm/pblk-write.c
-index 6593deab52da..4e63f9b5954c 100644
---- a/drivers/lightnvm/pblk-write.c
-+++ b/drivers/lightnvm/pblk-write.c
-@@ -228,6 +228,7 @@ static void pblk_submit_rec(struct work_struct *work)
- 	mempool_free(recovery, &pblk->rec_pool);
- 
- 	atomic_dec(&pblk->inflight_io);
-+	pblk_write_kick(pblk);
- }
- 
- 
+diff --git a/drivers/lightnvm/pblk-recovery.c b/drivers/lightnvm/pblk-recovery.c
+index 83b467b5edc7..017874e03253 100644
+--- a/drivers/lightnvm/pblk-recovery.c
++++ b/drivers/lightnvm/pblk-recovery.c
+@@ -844,6 +844,7 @@ struct pblk_line *pblk_recov_l2p(struct pblk *pblk)
+ 		spin_unlock(&l_mg->free_lock);
+ 	} else {
+ 		spin_lock(&l_mg->free_lock);
++		l_mg->data_line = data_line;
+ 		/* Allocate next line for preparation */
+ 		l_mg->data_next = pblk_line_get(pblk);
+ 		if (l_mg->data_next) {
 -- 
 2.19.1
 
