@@ -2,103 +2,113 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C475C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 09:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 658DCC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 09:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C4C2084A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 09:02:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556960528;
-	bh=0HZkZL9+I1+nEWaQ8L+l+Qk9L37TE+cDxjDKQFi3lR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wxPhivFoGtIcD471Gh7kpCMGFEO73YQY2BK9ZVhAFlwDos2+mFI8ov1D+3gZXwg8K
-	 i4NC+bmp2HdwGxuDIAEPHAcov5JxcquaqCI2JfpxefZbkwt210FhX2hZMtLHi8yxrg
-	 b2C1Fi4ZU/OD+HddDU0e+FQIYB65k/vZqEHslA88=
+	by mail.kernel.org (Postfix) with ESMTP id 2967D20675
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 09:10:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GX1wUbav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfEDJCG (ORCPT
+        id S1726622AbfEDJKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 05:02:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfEDJCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 05:02:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 328C9206BB;
-        Sat,  4 May 2019 09:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556960525;
-        bh=0HZkZL9+I1+nEWaQ8L+l+Qk9L37TE+cDxjDKQFi3lR4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sXlFYt/gekvCpmVrEJ1kh89YcejLx5OXMuCHj+pbUfveEorE7uUURo5+Xd/QOxshh
-         G7VAjy4dYKRuRrzpQHjwHAKPFQ4/vrWfLXOkCAnixni9c/QCKftw4UKHQ9XNIbOpz8
-         wypPlbeEvAs5LS+Zb2lCGAUnaMtzuuqNqRsTNA+k=
-Date:   Sat, 4 May 2019 11:02:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dragan Cvetic <draganc@xilinx.com>
-Cc:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Derek Kiernan <dkiernan@xilinx.com>
-Subject: Re: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioctl
-Message-ID: <20190504090203.GD13840@kroah.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-5-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172304.GB1874@kroah.com>
- <BL0PR02MB5681F4C4AF4786AC6241DDA1CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL0PR02MB5681F4C4AF4786AC6241DDA1CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Sat, 4 May 2019 05:10:13 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45928 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfEDJKN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 05:10:13 -0400
+Received: by mail-pf1-f196.google.com with SMTP id e24so4109490pfi.12;
+        Sat, 04 May 2019 02:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=weyn+CHVWujXbQhxQpPXY+MmlPD3OaJ4CkltxPjfrS4=;
+        b=GX1wUbavt4/yeinpEnt7G2fmTCdYJ9kThtfe5FiGkRtqRpYj0PH5HJUNhAxuG+G0PO
+         Lgn+96yNkQ8xZNxbYtEElcrlGz49Ze6NAzDamdrDNFjxCIYe9wnMZDW9JUiFzLRXU6Zg
+         RLdi6HBpjD0EcKxEf6Hr2pA5yOeoHR3uPcOBbq5L0mUE28iwCq8din3Wyn+IhRFEcFUY
+         4Zex3MuxV0laRfO7Xz7VWlI3cyI8m4LedyLp+iHhmXzW4ay4CLzGfj4gVZWsn2KPRn8c
+         o2GNGL/sUpN2sjq0E893V2hmsWcnwnfvKQI+2ypviuDGHRcqChtOT+2iuOZORaJcfLZV
+         UB6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=weyn+CHVWujXbQhxQpPXY+MmlPD3OaJ4CkltxPjfrS4=;
+        b=bDNSq2yk4PrFCo687XuZ3q0v56N3jb8O3QOJUbs/7vA1kvLgFYShAJIuBdK+VBmz4G
+         IFihM0Mjxb64WPMBcqVeRJvGJhd2P7gxbhpSApoI/edWIxuRTqLE1tlr4cxslIr1QPRt
+         /o/l40yCFJWv/ltGL9E/fU2rQyYmn9ZDhtCR8JhBDzR/zS4kxlVvqDB4eGVCHlNhMQKN
+         jIqeYMyegTohUXDhUzOQJasm9uBAd6u7ziNRfm/evYUmPnGavtay4sfPf0wQuolOmP7J
+         tV0NIBCORzlaEjKTMvYtb1RLizvv/cmz+dzIUs32APlFWYhKlh6l3AJjWHnzwlD8+KVb
+         b3mg==
+X-Gm-Message-State: APjAAAWItNaxtukoDY+T7OO8PvlhEnWkr/9eNCzSMgahzlSPxb8G+6x+
+        GAF53849mPCvGncQW6s4Okc=
+X-Google-Smtp-Source: APXvYqzQaP3Vs7X9Cum2Z7PgW42q0Cahgu53Yir7dPOIiaVQSVyphkycH/dr0MPdOVXn3iWNrPWxig==
+X-Received: by 2002:aa7:8252:: with SMTP id e18mr17944696pfn.105.1556961012702;
+        Sat, 04 May 2019 02:10:12 -0700 (PDT)
+Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
+        by smtp.gmail.com with ESMTPSA id 19sm9225490pfs.104.2019.05.04.02.10.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 May 2019 02:10:11 -0700 (PDT)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     kvalo@codeaurora.org, davem@davemloft.net,
+        colin.king@canonical.com, yuehaibing@huawei.com
+Cc:     linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] net: wireless: b43: Avoid possible double calls to b43_one_core_detach()
+Date:   Sat,  4 May 2019 17:10:00 +0800
+Message-Id: <20190504091000.18665-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 04:44:57PM +0000, Dragan Cvetic wrote:
-> > -----Original Message-----
-> > From: Greg KH [mailto:gregkh@linuxfoundation.org]
-> > Sent: Thursday 2 May 2019 18:23
-> > To: Dragan Cvetic <draganc@xilinx.com>
-> > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
-> > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
-> > Subject: Re: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioctl
-> > 
-> > On Sat, Apr 27, 2019 at 11:04:58PM +0100, Dragan Cvetic wrote:
-> > > +static int xsdfec_dev_open(struct inode *iptr, struct file *fptr)
-> > > +{
-> > > +	struct xsdfec_dev *xsdfec;
-> > > +
-> > > +	xsdfec = container_of(iptr->i_cdev, struct xsdfec_dev, xsdfec_cdev);
-> > > +
-> > > +	if (!atomic_dec_and_test(&xsdfec->open_count)) {
-> > 
-> > Why do you care about this?
-> > 
-> > And do you really think it matters?  What are you trying to protect from
-> > here?
-> 
-> There is a request to increase the driver security. 
+In b43_request_firmware(), when ieee80211_register_hw() fails,
+b43_one_core_detach() is called. In b43_bcma_remove() and
+b43_ssb_remove(), b43_one_core_detach() is called again. In this case, 
+null-pointer dereferences and double-free problems can occur when 
+the driver is removed.
 
-How does this affect "security" in any way?
+To fix this bug, the call to b43_one_core_detach() in
+b43_request_firmware() is deleted.
 
-> It is acceptable for us for now, even with non-perfections (will not
-> be protected if opened twice with dup() or fork()).  This is covered
-> in the documentation.
+This bug is found by a runtime fuzzing tool named FIZZER written by us.
 
-As this really "does nothing", no need to bother the kernel with trying
-to keep this logic working properly.  So please just drop it.
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/net/wireless/broadcom/b43/main.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-thanks,
+diff --git a/drivers/net/wireless/broadcom/b43/main.c b/drivers/net/wireless/broadcom/b43/main.c
+index 74be3c809225..e666a472a0da 100644
+--- a/drivers/net/wireless/broadcom/b43/main.c
++++ b/drivers/net/wireless/broadcom/b43/main.c
+@@ -2610,18 +2610,13 @@ static void b43_request_firmware(struct work_struct *work)
+ 
+ 	err = ieee80211_register_hw(wl->hw);
+ 	if (err)
+-		goto err_one_core_detach;
++		goto out;
+ 	wl->hw_registered = true;
+ 	b43_leds_register(wl->current_dev);
+ 
+ 	/* Register HW RNG driver */
+ 	b43_rng_init(wl);
+ 
+-	goto out;
+-
+-err_one_core_detach:
+-	b43_one_core_detach(dev->dev);
+-
+ out:
+ 	kfree(ctx);
+ }
+-- 
+2.17.0
 
-greg k-h
