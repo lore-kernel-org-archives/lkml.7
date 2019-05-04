@@ -2,91 +2,109 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C39C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 15:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22F8C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 15:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5EA320862
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 15:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556984085;
-	bh=XB+2ke+O8ycEXrjtGw3aam7SL9GBf1WhXYl7lNP9HoY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sWkYFHUhWsYDhr5v+UYuiy3CqNOYc0b251ZHot82dGGDLsQDvRefAojL9pIuVnEOQ
-	 S/UEINGJ6MPOXmkM6YlEC3qDG+zJtmdrnScpRU8010MMEokEapvcjmLM8joeiU7BZP
-	 zrfrW/+FeqsvPFu2jZvSv1O7r6H7GDIzS6+zv7wE=
+	by mail.kernel.org (Postfix) with ESMTP id 89C202084A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 15:41:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUK4rgKd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbfEDPen (ORCPT
+        id S1726962AbfEDPlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 11:34:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbfEDPen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 11:34:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F61120644;
-        Sat,  4 May 2019 15:34:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556984082;
-        bh=XB+2ke+O8ycEXrjtGw3aam7SL9GBf1WhXYl7lNP9HoY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SEpoWxJnTRmyiQg0gX9C6izeET8Mc5tzrOIXV9bD8L+VNvtoDSozHid9xk/Vtop3x
-         GiZfuNzyH8fhFvKAfaWaAI/CBjgDEJ2FIehuU2RHZB7m+j2ap1q+Wuv5Ju0T6YL136
-         Fqf2FC8gZ2SGbiDFsGOtHq7wDX7zyAzEa6s95I1k=
-Date:   Sat, 4 May 2019 17:34:40 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Muchun Song <smuchun@gmail.com>
-Cc:     rafael@kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        zhaowuyun@wingtech.com
-Subject: Re: [PATCH] driver core: Fix use-after-free and double free on glue
- directory
-Message-ID: <20190504153440.GB19654@kroah.com>
-References: <20190423143258.96706-1-smuchun@gmail.com>
- <24b0fff3775147c04b006282727d94fea7f408b4.camel@kernel.crashing.org>
- <CAPSr9jHhwASv7=83hU+81mC0JJyuyt2gGxLmyzpCOfmc9vKgGQ@mail.gmail.com>
- <a37e7a49c3e7fa6ece2be2b76798fef3e51ade4e.camel@kernel.crashing.org>
- <CAPSr9jHCVCHNK+AmKkUBgs4dPC0UC5KdYKqMinkauyL3OL6qrQ@mail.gmail.com>
- <79fbc203bc9fa09d88ab2c4bff8635be4c293d49.camel@kernel.crashing.org>
- <CAPSr9jHw9hgAZo2TuDAKdSLEG1c6EtJG005MWxsxfnbsk1AXow@mail.gmail.com>
+        Sat, 4 May 2019 11:41:05 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34223 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfEDPlF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 11:41:05 -0400
+Received: by mail-ot1-f65.google.com with SMTP id h2so174983oth.1;
+        Sat, 04 May 2019 08:41:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NOqG3X6KeVU8jW9kB98iNlmMsjqP6JLYvww7EO9cTKU=;
+        b=CUK4rgKdIDA1cxCLaZilQgFgzUsj9LIn0xHBaVoj+tL1ynJO1ymrgmzCIBt1XKa9DI
+         7mjStmXpr4Md2G1X9It7LU6wyMY6LFu0S6zKL7bmKqY+bNDoDktyjuq1kMBlNR3owAYV
+         fn8d4tEvrjEXSxRAUphxi0KgZvkd5mQHAeysOjiVrT5NsPY948XFIo8roUsyLuV4nLfc
+         cToezmC45OVtOa6mCRXGhiyVILMOff9YGeo4gaTfIneOJAcp1eDoTn5R8Q2riM5NKqcC
+         YbhC2kUg/NUE225KMl7PJN8hQF2uMslrUhtUP9fXKkN8freEXF8UCm0LZFuzmbn+Xonv
+         q9eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NOqG3X6KeVU8jW9kB98iNlmMsjqP6JLYvww7EO9cTKU=;
+        b=e9/KjuUzkp7Pd6MMPLP9p3eULVvJuukO586HbWrZWlVFzP/S1GAuPkHbpR4Si2Y6hW
+         Lv4z9f13Z5KJp1Fg8fpHXy/0t0S+BZMtcUt1/79qZUVGuz6QkIYahCKZyAfTP/PIpEwb
+         nXd9MZvHex1qSdqMqWD9sicpGVnIBWeWbqHJi7EMkJixE6NETfm3wgGNvnXrTXywsn2C
+         pMR3tVdyg7+9fW4LcLY7rxH6NWi8mtWItMPc+36eUeOZz+4TxGdpwgy9tNCm3Jidh8qX
+         ByDjc8QssUBquaOJcNb/RVckrzPSh6Xz8wDUzdsTYbwEFy37Iq04/DSuNGBla2WesAMs
+         dHHg==
+X-Gm-Message-State: APjAAAU0cmGbK0X4b7Z59hXDMHI0FE16LiaaKYelLDx0A6PFwDwS7Ib4
+        rK3p0L0w//IY4BNwccWr9bYa6jJ9J+nhWX6Xs+4=
+X-Google-Smtp-Source: APXvYqxcHQ/Bg7b3kWRZyf62dPFG7TyyCvCwOhkNH6X/hpK+QcYgbUfM30aI6ikuoHEyWbcw00nNIg2rTZHkgyI0YW8=
+X-Received: by 2002:a05:6830:14c2:: with SMTP id t2mr5165076otq.64.1556984464473;
+ Sat, 04 May 2019 08:41:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPSr9jHw9hgAZo2TuDAKdSLEG1c6EtJG005MWxsxfnbsk1AXow@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190422064046.2822-1-o.rempel@pengutronix.de>
+ <20190422064046.2822-4-o.rempel@pengutronix.de> <20190422132533.GA12718@lunn.ch>
+In-Reply-To: <20190422132533.GA12718@lunn.ch>
+From:   Chuanhong Guo <gch981213@gmail.com>
+Date:   Sat, 4 May 2019 23:40:53 +0800
+Message-ID: <CAJsYDVJ84RsNVe9Mj9sYYwwLmmMkinRSJW4ziW22Sf04wS5gyw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] net: ethernet: add ag71xx driver
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-mips@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 04, 2019 at 10:47:07PM +0800, Muchun Song wrote:
-> Benjamin Herrenschmidt <benh@kernel.crashing.org> 于2019年5月2日周四 下午2:25写道：
-> 
-> > > > The basic idea yes, the whole bool *locked is horrid though.
-> > > > Wouldn't it
-> > > > work to have a get_device_parent_locked that always returns with
-> > > > the mutex held,
-> > > > or just move the mutex to the caller or something simpler like this
-> > > > ?
-> > > >
-> > >
-> > > Greg and Rafael, do you have any suggestions for this? Or you also
-> > > agree with Ben?
-> >
-> > Ping guys ? This is worth fixing...
-> 
-> I also agree with you. But Greg and Rafael seem to be high latency right now.
+Hi!
 
-It's in my list of patches to get to, sorry, hopefully will dig out of
-that next week with the buffer that the merge window provides me.
+On Mon, Apr 22, 2019 at 9:28 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> [...]
+> > +     /*
+> > +      * On most (all?) Atheros/QCA SoCs dual eth interfaces are not equal.
+> > +      *
+> > +      * That is to say eth0 can not work independently. It only works
+> > +      * when eth1 is working.
+> > +      */
+>
+> Please could you explain that some more? Is there just one MDIO bus
+> shared by two ethernet controllers? If so, it would be better to have
+> the MDIO bus controller as a separate driver.
 
-thanks,
+mdio registers exists on both ethernet blocks. And due to how reset
+works on this ethernet IP, it's hard to split it into a separated
+driver. (Only asserting both eth and mdio resets together will reset
+everything including register values.)
+The reason why gmac1 should be brought up first is that on some chips,
+mdio on gmac0 connects to nothing and phy used by gmac0 is on mdio bus
+of gmac1.
 
-greg k-h
+> [...]
+
+Regards,
+Chuanhong Guo
