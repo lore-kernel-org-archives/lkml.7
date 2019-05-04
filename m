@@ -2,127 +2,80 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ED5C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 09:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA765C04AA9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 09:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0EC206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 09:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C5F52084A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 09:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556963560;
+	bh=Uni34c/o6D0GHiHq8PrHrCJH5kAMTO787liaEy0LQSI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=nGftLNd7DRJQ/oZiJur0rU1Mzyn6e2YtXG5tkh5A5hnMBOVzRznVaJvJGQoeH/z3c
+	 xLgV/25Ijp34MSQwpfV7mCEwY/tpQGxVBsEFMODEkRocz3I27ivBqFVMQ1XznAc16I
+	 rvZHJrYha9PRlYR5ykYzvWAW8i+5iq8tfvYq3xUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfEDJrb (ORCPT
+        id S1726924AbfEDJwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 05:47:31 -0400
-Received: from 178.115.242.59.static.drei.at ([178.115.242.59]:38129 "EHLO
-        mail.osadl.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbfEDJra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 05:47:30 -0400
-Received: by mail.osadl.at (Postfix, from userid 1001)
-        id AF5A55C0B0A; Sat,  4 May 2019 11:46:35 +0200 (CEST)
-Date:   Sat, 4 May 2019 11:46:35 +0200
-From:   Nicholas Mc Guire <der.herr@hofr.at>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Nicholas Mc Guire <hofrat@opentech.at>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] media: smiapp: core: add range to usleep_range
-Message-ID: <20190504094635.GA27029@osadl.at>
-References: <1554603364-10500-1-git-send-email-hofrat@opentech.at>
- <20190430134944.6sutxdztj6crgo6w@valkosipuli.retiisi.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430134944.6sutxdztj6crgo6w@valkosipuli.retiisi.org.uk>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sat, 4 May 2019 05:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbfEDJwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 05:52:39 -0400
+Received: from localhost.localdomain (unknown [194.230.155.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6039F206DF;
+        Sat,  4 May 2019 09:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556963558;
+        bh=Uni34c/o6D0GHiHq8PrHrCJH5kAMTO787liaEy0LQSI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GGXKJhBnDhrPXSbuGX6II8/OXfs/Nwf1ZtY1EfckBYWBlEn9k/HiyELZQnIf5WFcM
+         rQTEGamyL6zloVmekMtCFb7Hg3YjaKXk0Omkwx4bWOZJry53TPTdg7BU/F3Ofw9Flr
+         DOPpEujFnVe8vaW62S/D/T9bMw7veh/DwQXy0//A=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/2] dmaengine: fsl-edma: Fix typo in Vybrid name
+Date:   Sat,  4 May 2019 11:52:23 +0200
+Message-Id: <20190504095225.23883-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 04:49:44PM +0300, Sakari Ailus wrote:
-> Hi Nicholas,
-> 
-> On Sun, Apr 07, 2019 at 04:16:02AM +0200, Nicholas Mc Guire wrote:
-> > Allow the hrtimer subsystem to coalesce delay timers of lower accuracy
-> > by providing a suitable range
-> > 
-> > Signed-off-by: Nicholas Mc Guire <hofrat@opentech.at>
-> > ---
-> > 
-> > Problem located by an experimental coccinelle script
-> > 
-> > hrtimers in atomic context have limited accuracy due to possible
-> > context-switching and interruption so the accuracy is limited 
-> > anyway. Giving the hrtimer subsystem a reasonable range for merging
-> > hrtimers helps to reduce the load on the hrtimer subsystem. As this
-> > delays do not seem to mandate high accuracy the range of a factor
-> > two seems acceptable.
-> > 
-> > Patch was compile tested with: x86_64_defconfig + MEDIA_SUPPORT=m,
-> > MEDIA_CAMERA_SUPPORT=y, MEDIA_CONTROLLER=y, VIDEO_V4L2_SUBDEV_API=y,
-> > VIDEO_SMIAPP=m                                                                                               
-> > (with a number of sparse warnings on sizeof() usage)
-> > 
-> > Patch is against 5.1-rc3 (localversion-next is next-20190405)
-> 
-> The delays are exact for the reason that they are user-visible delays in
-> image capturing related use cases. Sometimes milliseconds matter, or at
-> least adding more does not help.
->
+Fix typo in comment for Vybrid SoC family.
 
-Actually it can be better iwith respect to jitter to let the hrtimer 
-subsystem use an existing timer event than to have a close by second event 
-and the accuracy is determined by the non-atomic context anyway - 
-so while the proposed delay extension might be excessive in your case
-I would still suggest to try to get away from a range of 0 - even if
-you only end up with (1000,1050) that would be an advantage for the
-timer subsystem.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/dma/fsl-edma-common.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thx!
-hofrat
+diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+index b435d8e1e3a1..c53f76eeb4d3 100644
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -136,7 +136,7 @@ struct fsl_edma_desc {
+ };
  
-> > 
-> >  drivers/media/i2c/smiapp/smiapp-core.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-> > index 58a45c3..c0c29ec 100644
-> > --- a/drivers/media/i2c/smiapp/smiapp-core.c
-> > +++ b/drivers/media/i2c/smiapp/smiapp-core.c
-> > @@ -1222,19 +1222,19 @@ static int smiapp_power_on(struct device *dev)
-> >  		dev_err(&client->dev, "failed to enable vana regulator\n");
-> >  		return rval;
-> >  	}
-> > -	usleep_range(1000, 1000);
-> > +	usleep_range(1000, 2000);
-> >  
-> >  	rval = clk_prepare_enable(sensor->ext_clk);
-> >  	if (rval < 0) {
-> >  		dev_dbg(&client->dev, "failed to enable xclk\n");
-> >  		goto out_xclk_fail;
-> >  	}
-> > -	usleep_range(1000, 1000);
-> > +	usleep_range(1000, 2000);
-> >  
-> >  	gpiod_set_value(sensor->xshutdown, 1);
-> >  
-> >  	sleep = SMIAPP_RESET_DELAY(sensor->hwcfg->ext_clk);
-> > -	usleep_range(sleep, sleep);
-> > +	usleep_range(sleep, sleep*2);
-> >  
-> >  	mutex_lock(&sensor->mutex);
-> >  
-> > @@ -1381,7 +1381,7 @@ static int smiapp_power_off(struct device *dev)
-> >  
-> >  	gpiod_set_value(sensor->xshutdown, 0);
-> >  	clk_disable_unprepare(sensor->ext_clk);
-> > -	usleep_range(5000, 5000);
-> > +	usleep_range(5000, 10000);
-> >  	regulator_disable(sensor->vana);
-> >  	sensor->streaming = false;
-> >  
-> 
-> -- 
-> Sakari Ailus
+ enum edma_version {
+-	v1, /* 32ch, Vybdir, mpc57x, etc */
++	v1, /* 32ch, Vybrid, mpc57x, etc */
+ 	v2, /* 64ch Coldfire */
+ };
+ 
+-- 
+2.17.1
+
