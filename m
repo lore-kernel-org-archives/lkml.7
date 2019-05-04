@@ -2,202 +2,167 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B511DC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A50C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C582084A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63DA20870
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556965569;
+	bh=K5lYJwuJeJ7LsJFj37qYIH8A6/gaHBzzR1qmQ1eRQeM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1v2CqkHtF2Xfgw8ip1P8NUU0SIn1Ks8NRNuq3XjtraYUImAQqbMMJUbcpg+pHtJH1
+	 QnCDdvdhou3iV95OkIoPaESvGUky/SsH/XxyKnF7oO36hrvEBzah11cKn6tHdF/5/C
+	 5b6hcbLWGMVkUFLUGXCpSogJTir7ygWNu496z5W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfEDK0E (ORCPT
+        id S1727597AbfEDK0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sat, 4 May 2019 06:26:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727548AbfEDK0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 4 May 2019 06:26:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48458 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727504AbfEDK0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:26:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2E5B0AF03;
-        Sat,  4 May 2019 10:26:01 +0000 (UTC)
-From:   NeilBrown <neil@brown.name>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>
-Date:   Sat, 04 May 2019 20:24:57 +1000
-Subject: [PATCH 3/4] mmc: mtk-sd: enable internal card-detect logic.
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thirtythreeforty@gmail.com
-Message-ID: <155696549691.8632.10285608726034686897.stgit@noble.brown>
-In-Reply-To: <155696540998.8632.5242582397805128125.stgit@noble.brown>
-References: <155696540998.8632.5242582397805128125.stgit@noble.brown>
-User-Agent: StGit/0.17.1-dirty
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E5572086A;
+        Sat,  4 May 2019 10:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556965564;
+        bh=K5lYJwuJeJ7LsJFj37qYIH8A6/gaHBzzR1qmQ1eRQeM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=q47Lvp/aavc5ey8wYoQToBzD7ahqLvS1eeklJRpuLdzhzZHkGJulCR1Wr9jJvg6N5
+         C/heOsB0rAFbID87qIq1EzgmyTstiDiznkgRvgoyv+mS5chkI9LdAif8RAHadOsOkR
+         ZKjsjLoUCMLhzfxR0B3685cGG5BcZ1X1av35EJHI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Wei Wang <weiwan@google.com>, David Ahern <dsahern@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 02/32] ipv6: A few fixes on dereferencing rt->from
+Date:   Sat,  4 May 2019 12:24:47 +0200
+Message-Id: <20190504102452.606769366@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
+References: <20190504102452.523724210@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mtk-sd silicon has integrated card-detect logic that is
-enabled on the MT7621.  The circuit is phased out on newer hardware so
-we should be careful to only enabled it on hardware known to support
-it.  This a new "use_internal_cd" flag in struct mtk_mmc_compatible.
+From: Martin KaFai Lau <kafai@fb.com>
 
-If the sdhci isn't marked non-removable and doesn't have a
-cd-gpio configured, and if use_internal_cd is set, then assume the
-internal cd logic should be used as recommended by
- Documentation/devicetree/bindings/mmc/mmc.txt
+[ Upstream commit 886b7a50100a50f1cbd08a6f8ec5884dfbe082dc ]
 
-Signed-off-by: NeilBrown <neil@brown.name>
+It is a followup after the fix in
+commit 9c69a1320515 ("route: Avoid crash from dereferencing NULL rt->from")
+
+rt6_do_redirect():
+1. NULL checking is needed on rt->from because a parallel
+   fib6_info delete could happen that sets rt->from to NULL.
+   (e.g. rt6_remove_exception() and fib6_drop_pcpu_from()).
+
+2. fib6_info_hold() is not enough.  Same reason as (1).
+   Meaning, holding dst->__refcnt cannot ensure
+   rt->from is not NULL or rt->from->fib6_ref is not 0.
+
+   Instead of using fib6_info_hold_safe() which ip6_rt_cache_alloc()
+   is already doing, this patch chooses to extend the rcu section
+   to keep "from" dereference-able after checking for NULL.
+
+inet6_rtm_getroute():
+1. NULL checking is also needed on rt->from for a similar reason.
+   Note that inet6_rtm_getroute() is using RTNL_FLAG_DOIT_UNLOCKED.
+
+Fixes: a68886a69180 ("net/ipv6: Make from in rt6_info rcu protected")
+Signed-off-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: Wei Wang <weiwan@google.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/mmc/host/mtk-sd.c |   64 ++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 60 insertions(+), 4 deletions(-)
+ net/ipv6/route.c |   38 ++++++++++++++++++--------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 0c2be4f54b1f..c518cc208a1f 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -300,6 +300,8 @@
- #define CMD_TIMEOUT         (HZ/10 * 5)	/* 100ms x5 */
- #define DAT_TIMEOUT         (HZ    * 5)	/* 1000ms x5 */
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -3403,11 +3403,8 @@ static void rt6_do_redirect(struct dst_e
  
-+#define DEFAULT_DEBOUNCE	(8)	/* 8 cycles CD debounce */
-+
- #define PAD_DELAY_MAX	32 /* PAD delay cells */
- /*--------------------------------------------------------------------------*/
- /* Descriptor Structure                                                     */
-@@ -372,6 +374,7 @@ struct mtk_mmc_compatible {
- 	bool stop_clk_fix;
- 	bool enhance_rx;
- 	bool support_64g;
-+	bool use_internal_cd;
- };
+ 	rcu_read_lock();
+ 	from = rcu_dereference(rt->from);
+-	/* This fib6_info_hold() is safe here because we hold reference to rt
+-	 * and rt already holds reference to fib6_info.
+-	 */
+-	fib6_info_hold(from);
+-	rcu_read_unlock();
++	if (!from)
++		goto out;
  
- struct msdc_tune_para {
-@@ -430,6 +433,7 @@ struct msdc_host {
- 	bool hs400_cmd_resp_sel_rising;
- 				 /* cmd response sample selection for HS400 */
- 	bool hs400_mode;	/* current eMMC will run at hs400 mode */
-+	bool internal_cd;	/* Use internal card-detect logic */
- 	struct msdc_save_para save_para; /* used when gate HCLK */
- 	struct msdc_tune_para def_tune_para; /* default tune setting */
- 	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
-@@ -526,6 +530,7 @@ static const struct mtk_mmc_compatible mt7620_compat = {
- 	.busy_check = false,
- 	.stop_clk_fix = false,
- 	.enhance_rx = false,
-+	.use_internal_cd = true,
- };
+ 	nrt = ip6_rt_cache_alloc(from, &msg->dest, NULL);
+ 	if (!nrt)
+@@ -3419,10 +3416,7 @@ static void rt6_do_redirect(struct dst_e
  
- static const struct of_device_id msdc_of_ids[] = {
-@@ -1430,6 +1435,12 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
- 			sdio_signal_irq(host->mmc);
- 		}
+ 	nrt->rt6i_gateway = *(struct in6_addr *)neigh->primary_key;
  
-+		if ((events & event_mask) & MSDC_INT_CDSC) {
-+			if (host->internal_cd)
-+				mmc_detect_change(host->mmc, msecs_to_jiffies(20));
-+			events &= ~MSDC_INT_CDSC;
-+		}
-+
- 		if (!(events & (event_mask & ~MSDC_INT_SDIOIRQ)))
- 			break;
+-	/* No need to remove rt from the exception table if rt is
+-	 * a cached route because rt6_insert_exception() will
+-	 * takes care of it
+-	 */
++	/* rt6_insert_exception() will take care of duplicated exceptions */
+ 	if (rt6_insert_exception(nrt, from)) {
+ 		dst_release_immediate(&nrt->dst);
+ 		goto out;
+@@ -3435,7 +3429,7 @@ static void rt6_do_redirect(struct dst_e
+ 	call_netevent_notifiers(NETEVENT_REDIRECT, &netevent);
  
-@@ -1463,14 +1474,24 @@ static void msdc_init_hw(struct msdc_host *host)
- 	/* Reset */
- 	msdc_reset_hw(host);
- 
--	/* Disable card detection */
--	sdr_clr_bits(host->base + MSDC_PS, MSDC_PS_CDEN);
--
- 	/* Disable and clear all interrupts */
- 	writel(0, host->base + MSDC_INTEN);
- 	val = readl(host->base + MSDC_INT);
- 	writel(val, host->base + MSDC_INT);
- 
-+	/* Configure card detection */
-+	if (host->internal_cd) {
-+		sdr_set_field(host->base + MSDC_PS, MSDC_PS_CDDEBOUNCE,
-+			      DEFAULT_DEBOUNCE);
-+		sdr_set_bits(host->base + MSDC_PS, MSDC_PS_CDEN);
-+		sdr_set_bits(host->base + MSDC_INTEN, MSDC_INTEN_CDSC);
-+		sdr_set_bits(host->base + SDC_CFG, SDC_CFG_INSWKUP);
-+	} else {
-+		sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_INSWKUP);
-+		sdr_clr_bits(host->base + MSDC_PS, MSDC_PS_CDEN);
-+		sdr_clr_bits(host->base + MSDC_INTEN, MSDC_INTEN_CDSC);
-+	}
-+
- 	if (host->top_base) {
- 		writel(0, host->top_base + EMMC_TOP_CONTROL);
- 		writel(0, host->top_base + EMMC_TOP_CMD);
-@@ -1580,6 +1601,13 @@ static void msdc_init_hw(struct msdc_host *host)
- static void msdc_deinit_hw(struct msdc_host *host)
- {
- 	u32 val;
-+
-+	if (host->internal_cd) {
-+		/* Disabled card-detect */
-+		sdr_clr_bits(host->base + MSDC_PS, MSDC_PS_CDEN);
-+		sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_INSWKUP);
-+	}
-+
- 	/* Disable and clear all interrupts */
- 	writel(0, host->base + MSDC_INTEN);
- 
-@@ -2078,13 +2106,31 @@ static void msdc_ack_sdio_irq(struct mmc_host *mmc)
- 	__msdc_enable_sdio_irq(mmc, 1);
+ out:
+-	fib6_info_release(from);
++	rcu_read_unlock();
+ 	neigh_release(neigh);
  }
  
-+static int msdc_get_cd(struct mmc_host *mmc)
-+{
-+	struct msdc_host *host = mmc_priv(mmc);
-+	int val;
-+
-+	if (mmc->caps & MMC_CAP_NONREMOVABLE)
-+		return 1;
-+
-+	if (!host->internal_cd)
-+		return mmc_gpio_get_cd(mmc);
-+
-+	val = readl(host->base + MSDC_PS) & MSDC_PS_CDSTS;
-+	if (mmc->caps2 & MMC_CAP2_CD_ACTIVE_HIGH)
-+		return !!val;
-+	else
-+		return !val;
-+}
-+
- static const struct mmc_host_ops mt_msdc_ops = {
- 	.post_req = msdc_post_req,
- 	.pre_req = msdc_pre_req,
- 	.request = msdc_ops_request,
- 	.set_ios = msdc_ops_set_ios,
- 	.get_ro = mmc_gpio_get_ro,
--	.get_cd = mmc_gpio_get_cd,
-+	.get_cd = msdc_get_cd,
- 	.enable_sdio_irq = msdc_enable_sdio_irq,
- 	.ack_sdio_irq = msdc_ack_sdio_irq,
- 	.start_signal_voltage_switch = msdc_ops_switch_volt,
-@@ -2216,6 +2262,16 @@ static int msdc_drv_probe(struct platform_device *pdev)
- 	else
- 		mmc->f_min = DIV_ROUND_UP(host->src_clk_freq, 4 * 4095);
+@@ -4957,16 +4951,20 @@ static int inet6_rtm_getroute(struct sk_
  
-+	if (!(mmc->caps & MMC_CAP_NONREMOVABLE) &&
-+	    !mmc_can_gpio_cd(mmc) &&
-+	    host->dev_comp->use_internal_cd) {
-+		/*
-+		 * Is removable but no GPIO declared, so
-+		 * use internal functionality.
-+		 */
-+		host->internal_cd = true;
+ 	rcu_read_lock();
+ 	from = rcu_dereference(rt->from);
+-
+-	if (fibmatch)
+-		err = rt6_fill_node(net, skb, from, NULL, NULL, NULL, iif,
+-				    RTM_NEWROUTE, NETLINK_CB(in_skb).portid,
+-				    nlh->nlmsg_seq, 0);
+-	else
+-		err = rt6_fill_node(net, skb, from, dst, &fl6.daddr,
+-				    &fl6.saddr, iif, RTM_NEWROUTE,
+-				    NETLINK_CB(in_skb).portid, nlh->nlmsg_seq,
+-				    0);
++	if (from) {
++		if (fibmatch)
++			err = rt6_fill_node(net, skb, from, NULL, NULL, NULL,
++					    iif, RTM_NEWROUTE,
++					    NETLINK_CB(in_skb).portid,
++					    nlh->nlmsg_seq, 0);
++		else
++			err = rt6_fill_node(net, skb, from, dst, &fl6.daddr,
++					    &fl6.saddr, iif, RTM_NEWROUTE,
++					    NETLINK_CB(in_skb).portid,
++					    nlh->nlmsg_seq, 0);
++	} else {
++		err = -ENETUNREACH;
 +	}
-+
- 	if (mmc->caps & MMC_CAP_SDIO_IRQ)
- 		mmc->caps2 |= MMC_CAP2_SDIO_IRQ_NOTHREAD;
+ 	rcu_read_unlock();
  
+ 	if (err < 0) {
 
 
