@@ -2,64 +2,66 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D8FC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 02:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBBAC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 02:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FFC206A3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 02:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16C6206A3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 02:37:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQ9E+W8a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Slx5wgrb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfEDCXg (ORCPT
+        id S1727203AbfEDChG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 22:23:36 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53113 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfEDCXg (ORCPT
+        Fri, 3 May 2019 22:37:06 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38061 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbfEDChG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 22:23:36 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v189so258669wmf.2;
-        Fri, 03 May 2019 19:23:34 -0700 (PDT)
+        Fri, 3 May 2019 22:37:06 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k16so10043618wrn.5;
+        Fri, 03 May 2019 19:37:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vy6SVGBEM6Og4OE2RW7BuROW403oEvGMLl81g4MfGf0=;
-        b=BQ9E+W8aHmRHwRxstMGtUHaTUzb63Uvmf/Goo25OEunRSKEc97DTsi05Q4Lwfv5rql
-         uO15DjXTQ3SNT/JGkjzUESj5pkUhyXyGXMoN+iPF312bhAub+u/waJyiAzSElyIwm/Oz
-         MSNii622HFXP3WY5IFOqR1DBLItwJvHwn67ZH2C2+/Wq+yo22LTVmvcfR6/uSl5CoFji
-         rBCimCGfMfbkb5x8aS/chE5kdl4f5SeGpqP5YacTdmvhEuUfV0aGCnS41WYSiHcUQ+mS
-         jwJhM9IZCcDrKxiM45KXrgZ9Xm6ykgmWTDgMXaD7S5c029Bsq/U05AiVEEYeb/d69xYX
-         468w==
+        bh=2Ntx05QG4ilOvib9WtlBUryyH4t9YJiOtbQVxpeRJFs=;
+        b=Slx5wgrbNxF3svrHhvpnyiLtH1KaGl67V26B/Nk/rM/aB9VEL9V6IjZfbZfyMGgH30
+         Ul6AJgAfXekcWpobFf92VDfXK/shYpuMiQBX/fY+q5dYu9PjEI3aYRV8u5Fne/GD+lza
+         h4faDZqb0Oxb7eUAlf4Vci5cvEWJ1jMINL5o3VaupC7H6xFGHX7x/wyEbF/1iAwgEB3o
+         L37u83UDCW3o/8qfg/ogJLdJhpHY1tv57Ap4KIpxJ4kxemz2ASL8OfTY8bwpFdlTNcI7
+         hfHz3rUUoOUDsNEoX25xIbn9O6hj050xg8dOhlUftuZa4Sz195WGI2ZM5j0hiGvP0LXC
+         0m/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vy6SVGBEM6Og4OE2RW7BuROW403oEvGMLl81g4MfGf0=;
-        b=mKFlEDJmoaEfzzCie8hIqH61u91q3zBcPyESMSfoJpV7Up9zEa/k2kuvh90IFCd2Ep
-         e48/e3y5WDD//uMQxxXZ3o8J8RD5fUk7zRe+pd/E2aRvAEcvM2GOkH8rO6tMN2tTMaRg
-         7galSRGHN3CpO+cKE8Rx/zRfXJS9sP46ZINNHWXtkzXkXicdeosrOlx/vwedQUSDjhBH
-         Dm2CMYv9oVRnNwxcbYEk0uuJAjy/bGqYxLIjPQGQjHSuyQakaI/mWhgvb5ED8hNpzaYm
-         GoncZ8OAmPAPIUv655S0SdchG8XVBtCdnU7jHJ/kRMCP3dq0f4qx3VJ2tOeeRKy/bHZh
-         /dOg==
-X-Gm-Message-State: APjAAAW5EOBjEoA2IzOc2VdDLuz+8C14ieMHVWDDEzValOPNh8gtP7Q3
-        lrlgW3tF65/liksDxRw32lE5/oigANSGBx4okoQ=
-X-Google-Smtp-Source: APXvYqwjYm5lze0XG/xZtIqpU7RudQ9UzbQb/oWkKPqFCsSlmvCrxBQ2vv93lKeMU0HBPLoSh115ueBkJyfM+u2vp9w=
-X-Received: by 2002:a1c:e904:: with SMTP id q4mr8174644wmc.43.1556936614101;
- Fri, 03 May 2019 19:23:34 -0700 (PDT)
+        bh=2Ntx05QG4ilOvib9WtlBUryyH4t9YJiOtbQVxpeRJFs=;
+        b=Z3AkSf+rmNDKm9qxvioIIeCdLPbCp48pk7BTUKI6ya7PRHSslZSXB7Ts9pGSVokhtF
+         /XLy0dtVD5zTNX/t9B6+tc/FXQ4/mcnTckJvqNUdWjR9rx/uuBYMCnuorRyqnTGOAjfG
+         rpy6ZN0iOxqmdlGSZn9NQ2vc/+xOpbHPJAVHyerw6lNmNuZp3ifpa5gycjpiRxlauTcT
+         q3FQKkDcGN3EOEw28ZtdhAg7hpldnACp3j7fb1jass+4HaTbljwWT2ji9EAc6Mr5JBBF
+         1sH6z6zvRYdWMPxMPx0eYlYD9YIaPPHhrH3+MHSeq8D+ywws7Il/CvPqFHl+tQ55afxQ
+         4Nyw==
+X-Gm-Message-State: APjAAAWMU8tmDf04X6qx5GVz/E2uG0DiTpgFXh0Eo3uYtVCCh/8JRt3k
+        eUoMd9tjyJQU1AkXIIV1nwe7+zQxJpJn1GajJ+TQD45g
+X-Google-Smtp-Source: APXvYqzNS7/KAzFHNHYB+DNtu+lzHFn3oMUNt4ik3tylQdZULoa9EFuk9QS0iADHAwJXloGDpPdTpBN7t7nNrRHMz2c=
+X-Received: by 2002:a5d:4dc1:: with SMTP id f1mr9521663wru.300.1556937423661;
+ Fri, 03 May 2019 19:37:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190504011826.30477-1-olteanv@gmail.com> <20190504011826.30477-5-olteanv@gmail.com>
- <4d3ea715-676c-c550-cff6-18c94a9d93e6@gmail.com>
-In-Reply-To: <4d3ea715-676c-c550-cff6-18c94a9d93e6@gmail.com>
+References: <20190504011826.30477-1-olteanv@gmail.com> <20190504011826.30477-10-olteanv@gmail.com>
+ <a0b29ac4-7159-6ccf-9ad1-8193951be7ea@gmail.com>
+In-Reply-To: <a0b29ac4-7159-6ccf-9ad1-8193951be7ea@gmail.com>
 From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Sat, 4 May 2019 05:23:23 +0300
-Message-ID: <CA+h21hqjKCZ5+ETRU-qPaCNkRQf1-D2pKpFbxJa4wwEU6nCX8Q@mail.gmail.com>
-Subject: Re: [PATCH net-next 4/9] net: dsa: Keep private info in the skb->cb
+Date:   Sat, 4 May 2019 05:36:52 +0300
+Message-ID: <CA+h21hq25OSou=SJHgJmGyhmSFrPA3nsDV446Trg+awZwKTmtw@mail.gmail.com>
+Subject: Re: [PATCH net-next 9/9] Documentation: net: dsa: sja1105: Add info
+ about supported traffic modes
 To:     Florian Fainelli <f.fainelli@gmail.com>
 Cc:     vivien.didelot@gmail.com, Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>,
@@ -70,51 +72,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 4 May 2019 at 05:04, Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Sat, 4 May 2019 at 05:17, Florian Fainelli <f.fainelli@gmail.com> wrote:
 >
 >
 >
 > On 5/3/2019 6:18 PM, Vladimir Oltean wrote:
-> > Map a DSA structure over the 48-byte control block that will hold
-> > persistent skb info on transmit and receive.
-> >
->
-> On receive you cannot quite do that because you don't know if the DSA
-> master network device calls netif_receive_skb() or napi_gro_receive().
-> The latter arguably may not be able to aggregate flows at all because it
-> does not know how to parse the SKB, but the point remains that skb->cb[]
-> on receive may already be used, up to 48 bytes already. I tried to make
-> use of it for storing the HW extracted Broadcom tag, but it blew the
-> budge on 64-bit hosts:
->
-> https://www.spinics.net/lists/netdev/msg337777.html
->
-> Not asking you to change anything here, just to be aware of it.
->
-> > Also add a DSA_SKB_CB_PRIV() macro which retrieves a pointer to the
-> > space up to 48 bytes that the DSA structure does not use. This space can
-> > be used for drivers to add their own private info.
-> >
-> > One use is for the PTP timestamping code path. When cloning a skb,
-> > annotate the original with a pointer to the clone, which the driver can
-> > then find easily and place the timestamp to. This avoids the need of a
-> > separate queue to hold clones and a way to match an original to a cloned
-> > skb.
-> >
 > > Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> > ---
+> >  Documentation/networking/dsa/sja1105.rst | 49 ++++++++++++++++++++++++
+> >  1 file changed, 49 insertions(+)
+> >
+> > diff --git a/Documentation/networking/dsa/sja1105.rst b/Documentation/networking/dsa/sja1105.rst
+> > index 7c13b40915c0..a70a04164d07 100644
+> > --- a/Documentation/networking/dsa/sja1105.rst
+> > +++ b/Documentation/networking/dsa/sja1105.rst
+> > @@ -63,6 +63,38 @@ If that changed setting can be transmitted to the switch through the dynamic
+> >  reconfiguration interface, it is; otherwise the switch is reset and
+> >  reprogrammed with the updated static configuration.
+> >
+> > +Traffic support
+> > +===============
+> > +
+> > +The switches do not support switch tagging in hardware. But they do support
+> > +customizing the TPID by which VLAN traffic is identified as such. The switch
+> > +driver is leveraging ``CONFIG_NET_DSA_TAG_8021Q`` by requesting that special
+> > +VLANs (with a custom TPID of ``ETH_P_EDSA`` instead of ``ETH_P_8021Q``) are
+> > +installed on its ports when not in ``vlan_filtering`` mode. This does not
+> > +interfere with the reception and transmission of real 802.1Q-tagged traffic,
+> > +because the switch does no longer parse those packets as VLAN after the TPID
+> > +change.
+> > +The TPID is restored when ``vlan_filtering`` is requested by the user through
+> > +the bridge layer, and general IP termination becomes no longer possible through
+> > +the switch netdevices in this mode.
+> > +
+> > +The switches have two programmable filters for link-local destination MACs.
+> > +These are used to trap BPDUs and PTP traffic to the master netdevice, and are
+> > +further used to support STP and 1588 ordinary clock/boundary clock
+> > +functionality.
+> > +
+> > +The following traffic modes are supported over the switch netdevices:
+> > +
+> > ++--------------------+------------+------------------+------------------+
+> > +|                    | Standalone |   Bridged with   |   Bridged with   |
+> > +|                    |    ports   | vlan_filtering 0 | vlan_filtering 1 |
+> > ++====================+============+==================+==================+
+> > +| Regular traffic    |     Yes    |       Yes        |  No (use master) |
+> > ++--------------------+------------+------------------+------------------+
 >
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Just to make sure I fully understand the limitation here and sorry for
+> making you repeat it since I am sure you have explained it already.
+>
+> Let's say that I have a bridge with vlan_filtering=1 configured, and I
+> assign an IP address to the bridge master device (as is a common thing
+> with e.g.: SOHO routers), does that mean I cannot ping any stations
+> behind that bridge at all?
+>
+
+Let's make it even more concrete to make sure I understand.
+Let's say I have eth0, eth1, swp0@eth1, swp1@eth1, swp2@eth1,
+swp3@eth1. The DSA master is eth1, and swp0-3 are under br0.
+You are asking: "can I put more netdevices under br0 other than the
+switch ports, such as eth0?"
+No, if you want to do that you'd have to create br1 and bridge the DSA
+master (eth1) with the other netdevice you want to speak with. In the
+situation we're talking about, br0 is simply a conduit for switchdev
+operations and not so much of a netdevice.
+
+> We used to have this problem with DSA master devices being a bridge
+> member which was fixed a while ago by simply denying them a bridge join
+> [1], would that be something to rework somehow here such that we can let
+> your DSA master device join the bridge to continue delivering frames to
+> the bridge master?
+>
+> [1]:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8db0a2ee2c6302a1dcbcdb93cb731dfc6c0cdb5e
+>
+>
+
+I know this patch, but in what ways are you proposing a rework
+exactly? Would you want the "dumb switch" mode to bridge the master
+with the switch ports, so that you don't need another br1?
+
+> > +| Management traffic |     Yes    |       Yes        |       Yes        |
+> > +|    (BPDU, PTP)     |            |                  |                  |
+> > ++--------------------+------------+------------------+------------------+
+> > +
+> >  Switching features
+> >  ==================
+> >
+> > @@ -92,6 +124,23 @@ that VLAN awareness is global at the switch level is that once a bridge with
+> >  ``vlan_filtering`` enslaves at least one switch port, the other un-bridged
+> >  ports are no longer available for standalone traffic termination.
+> >
+> > +Topology and loop detection through STP is supported.
+> > +
+> > +L2 FDB manipulation (add/delete/dump) is currently possible for the first
+> > +generation devices. Aging time of FDB entries, as well as enabling fully static
+> > +management (no address learning and no flooding of unknown traffic) is not yet
+> > +configurable in the driver.
+> > +
+> > +Other notable features
+> > +======================
+> > +
+> > +The switches have a PTP Hardware Clock that can be steered through SPI and used
+> > +for timestamping management traffic on ingress and egress.
+> > +Also, the T, Q and S devices support TTEthernet (an implementation of SAE
+> > +AS6802 from TTTech), which is a set of Ethernet QoS enhancements somewhat
+> > +similar in behavior to IEEE TSN (time-aware shaping, time-based policing).
+> > +Configuring these features is currently not supported in the driver.
+> > +
+> >  Device Tree bindings and board design
+> >  =====================================
+> >
+> >
+>
 > --
 > Florian
 
-Hi Florian,
-This is good to know. So I'm understanding that you tried to pass data
-in the skb->cb between the master netdev and DSA, and GRO got
-in-between? That's kind of expected in a way. I'm proposing a more
-minimalistic use even on receive, which should be ok. If you look at
-07/09 you'll see I'm setting the frame type from within the
-eth_type_trans callback (technically still not in the DSA packet_type
-handler yet, but quite close) and using it in the actual rcv. Then for
-timestamping I'm communicating between the rcv function and a
-workqueue that I start from .port_rxtstamp.
+Thanks,
 -Vladimir
