@@ -2,96 +2,114 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F0CC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5387C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67996206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965856;
-	bh=bdyM8oxbQkd8wXQ6tcNLjvAslpgVHezybpZhC3gVPT0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DRcz+/VaohgNi69SC0bND3/HEnXGnr84M7pBvfe2gP4QkF9/W1VQNa/gQfz2N/c9c
-	 yP3ZLq+L7zRi0+dGNC0INuizOxOVOgfgavvHxD0Ey/Dgvtqx1E6HC1/RcywSpv8uRj
-	 sWmZSLrCjlnOiYLMgRPzv1H6hI5SMlaXDIJ2QcfU=
+	by mail.kernel.org (Postfix) with ESMTP id BA3C6206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:33:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbfEDKaz (ORCPT
+        id S1727435AbfEDKdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:30:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbfEDKZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:25:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E0C420862;
-        Sat,  4 May 2019 10:25:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965545;
-        bh=bdyM8oxbQkd8wXQ6tcNLjvAslpgVHezybpZhC3gVPT0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lEFZD8xpIx02Hqo7NPIKl5bCre2X9oWRZeAbGoBa9DrbmVFkA0AseAlsAPhmXVM3/
-         CiP5i745U2Mif7OgvCsEIo/6L3SllEzCA4C31C+9MpFy0iJZrQZoJKtoEqGBxzatPj
-         XcCqEYtloUBcYZG19Wdc4uTeQJXmB5HzFViyHU/Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 13/32] selftests: fib_rule_tests: print the result and return 1 if any tests failed
-Date:   Sat,  4 May 2019 12:24:58 +0200
-Message-Id: <20190504102452.937110928@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
-References: <20190504102452.523724210@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sat, 4 May 2019 06:33:18 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34840 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726776AbfEDKdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:33:18 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9B1C75067530B2D663B0;
+        Sat,  4 May 2019 18:33:15 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
+ 18:33:08 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <yhchuang@realtek.com>, <kvalo@codeaurora.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>, <davem@davemloft.net>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] rtw88: Make some symbols static
+Date:   Sat, 4 May 2019 18:32:24 +0800
+Message-ID: <20190504103224.27524-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+Fix sparse warnings:
 
-[ Upstream commit f68d7c44e76532e46f292ad941aa3706cb9e6e40 ]
+drivers/net/wireless/realtek/rtw88/phy.c:851:4: warning: symbol 'rtw_cck_size' was not declared. Should it be static?
+drivers/net/wireless/realtek/rtw88/phy.c:852:4: warning: symbol 'rtw_ofdm_size' was not declared. Should it be static?
+drivers/net/wireless/realtek/rtw88/phy.c:853:4: warning: symbol 'rtw_ht_1s_size' was not declared. Should it be static?
+drivers/net/wireless/realtek/rtw88/phy.c:854:4: warning: symbol 'rtw_ht_2s_size' was not declared. Should it be static?
+drivers/net/wireless/realtek/rtw88/phy.c:855:4: warning: symbol 'rtw_vht_1s_size' was not declared. Should it be static?
+drivers/net/wireless/realtek/rtw88/phy.c:856:4: warning: symbol 'rtw_vht_2s_size' was not declared. Should it be static?
+drivers/net/wireless/realtek/rtw88/fw.c:11:6: warning: symbol 'rtw_fw_c2h_cmd_handle_ext' was not declared. Should it be static?
+drivers/net/wireless/realtek/rtw88/fw.c:50:6: warning: symbol 'rtw_fw_send_h2c_command' was not declared. Should it be static?
 
-Fixes: 65b2b4939a64 ("selftests: net: initial fib rule tests")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- tools/testing/selftests/net/fib_rule_tests.sh |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/wireless/realtek/rtw88/fw.c  |  6 ++++--
+ drivers/net/wireless/realtek/rtw88/phy.c | 13 +++++++------
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
---- a/tools/testing/selftests/net/fib_rule_tests.sh
-+++ b/tools/testing/selftests/net/fib_rule_tests.sh
-@@ -27,6 +27,7 @@ log_test()
- 		nsuccess=$((nsuccess+1))
- 		printf "\n    TEST: %-50s  [ OK ]\n" "${msg}"
- 	else
-+		ret=1
- 		nfail=$((nfail+1))
- 		printf "\n    TEST: %-50s  [FAIL]\n" "${msg}"
- 		if [ "${PAUSE_ON_FAIL}" = "yes" ]; then
-@@ -245,4 +246,9 @@ setup
- run_fibrule_tests
- cleanup
+diff --git a/drivers/net/wireless/realtek/rtw88/fw.c b/drivers/net/wireless/realtek/rtw88/fw.c
+index cf4265c..62847797 100644
+--- a/drivers/net/wireless/realtek/rtw88/fw.c
++++ b/drivers/net/wireless/realtek/rtw88/fw.c
+@@ -8,7 +8,8 @@
+ #include "reg.h"
+ #include "debug.h"
  
-+if [ "$TESTS" != "none" ]; then
-+	printf "\nTests passed: %3d\n" ${nsuccess}
-+	printf "Tests failed: %3d\n"   ${nfail}
-+fi
+-void rtw_fw_c2h_cmd_handle_ext(struct rtw_dev *rtwdev, struct sk_buff *skb)
++static void rtw_fw_c2h_cmd_handle_ext(struct rtw_dev *rtwdev,
++				      struct sk_buff *skb)
+ {
+ 	struct rtw_c2h_cmd *c2h;
+ 	u8 sub_cmd_id;
+@@ -47,7 +48,8 @@ void rtw_fw_c2h_cmd_handle(struct rtw_dev *rtwdev, struct sk_buff *skb)
+ 	}
+ }
+ 
+-void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev, u8 *h2c)
++static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
++				    u8 *h2c)
+ {
+ 	u8 box;
+ 	u8 box_state;
+diff --git a/drivers/net/wireless/realtek/rtw88/phy.c b/drivers/net/wireless/realtek/rtw88/phy.c
+index 4381b36..2105fc4 100644
+--- a/drivers/net/wireless/realtek/rtw88/phy.c
++++ b/drivers/net/wireless/realtek/rtw88/phy.c
+@@ -848,12 +848,13 @@ u8 rtw_vht_2s_rates[] = {
+ 	DESC_RATEVHT2SS_MCS6, DESC_RATEVHT2SS_MCS7,
+ 	DESC_RATEVHT2SS_MCS8, DESC_RATEVHT2SS_MCS9
+ };
+-u8 rtw_cck_size = ARRAY_SIZE(rtw_cck_rates);
+-u8 rtw_ofdm_size = ARRAY_SIZE(rtw_ofdm_rates);
+-u8 rtw_ht_1s_size = ARRAY_SIZE(rtw_ht_1s_rates);
+-u8 rtw_ht_2s_size = ARRAY_SIZE(rtw_ht_2s_rates);
+-u8 rtw_vht_1s_size = ARRAY_SIZE(rtw_vht_1s_rates);
+-u8 rtw_vht_2s_size = ARRAY_SIZE(rtw_vht_2s_rates);
 +
- exit $ret
++static u8 rtw_cck_size = ARRAY_SIZE(rtw_cck_rates);
++static u8 rtw_ofdm_size = ARRAY_SIZE(rtw_ofdm_rates);
++static u8 rtw_ht_1s_size = ARRAY_SIZE(rtw_ht_1s_rates);
++static u8 rtw_ht_2s_size = ARRAY_SIZE(rtw_ht_2s_rates);
++static u8 rtw_vht_1s_size = ARRAY_SIZE(rtw_vht_1s_rates);
++static u8 rtw_vht_2s_size = ARRAY_SIZE(rtw_vht_2s_rates);
+ u8 *rtw_rate_section[RTW_RATE_SECTION_MAX] = {
+ 	rtw_cck_rates, rtw_ofdm_rates,
+ 	rtw_ht_1s_rates, rtw_ht_2s_rates,
+-- 
+2.7.4
 
 
