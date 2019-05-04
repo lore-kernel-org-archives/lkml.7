@@ -2,93 +2,220 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6769FC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F61C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E66720675
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C062E20675
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:14:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uezVEqpT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="boNvDlRI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfEDKIY (ORCPT
+        id S1726672AbfEDKOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:08:24 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43954 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfEDKIX (ORCPT
+        Sat, 4 May 2019 06:14:08 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44983 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfEDKOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:08:23 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t22so3952795pgi.10;
-        Sat, 04 May 2019 03:08:23 -0700 (PDT)
+        Sat, 4 May 2019 06:14:07 -0400
+Received: by mail-ot1-f67.google.com with SMTP id d10so2397807otp.11;
+        Sat, 04 May 2019 03:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WtljU9VToTYo8/FnSPzYs4PaGQxXjF45f7gWSItjexo=;
-        b=uezVEqpTS7R5exHUJZd+k/vahlPQ/GxwBMvWkTXvH8408RduT9Z9SuEi2+MZ6JuThG
-         s+za/oGHOUsOco2Y71Sy64prIH61vmdgArRHXiDVuLsiVghrfcvLt/AZFAnkeEiq/Itv
-         x/FFC1nF5f1l+SPVr34F/rZSnPOC/3Xiv8l2SaIiD2BQKSdg8Aay1uuUVt9E3tT5uXLa
-         3CAA/GDg1XOYv2Q/qDS+sA32lZNOtez+u8Twz8cb00wCj7Dfo/EuzRcRBpJqzDtz6Or6
-         HMi0br1PQ29S3hXehG58adHnvxud/mos0rAaLI8b8Gze9L6mwnhJWb1KxtawBSxE88ss
-         AMBQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lPA/HIaDQ/Ghehk/BJTv13aPK8G2LL/IH3O3cng7o7E=;
+        b=boNvDlRImfuTWIQlvpaKfakLmm3cBpk/ofsj1V9dSCm5v4fKg/lpVp+gRidxoN7bJ0
+         +ejW1h55gsN0bZd98Tm+av7sQXqOAfhvp0rQhVYy5+W9HQs4kwPtOuKhmouzs5sp/ZU7
+         YRvFJYUPnQZ92Rkvtgha/i/5NQ4z1bNC3Qf5ld+p3yQ+aqTzIc/3h3sCyhwFZadhMhpv
+         0z6gZLTXoligLLSkkVoOIIX8EOgsjz+6aVWJIICal2pyXq4tZ0jvtfyFEa74ovGF4Dfs
+         w2x/2Ubq+VoA8Uvovg83KWI2/mzyNcoujjBjtKFabhECEohiZBhtAlq3S7nxjylE8qa7
+         VpEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WtljU9VToTYo8/FnSPzYs4PaGQxXjF45f7gWSItjexo=;
-        b=I29Fdt5CL6vNhVuieToxkjCdShazT1XM5cVLNLFgi3tXfGwJlQg6FuNlyVgWy6+Txs
-         2uI1kTXWFNLHmfRkoro226IGrPx9mMpyU9z8OYHW/s+HtZRfMm53BrxN6SHrE42fN5mS
-         c0kcx5Rz8fDLFMg6/6c7gUS3AzCoQv0SadNeLfcOM7urbrbNJNJi6ofKAiojhQoL/Sao
-         deMJBgz11W4/HDhnzvq5GVSxM/mg4FKibPoVqZGR/IC8OLlyoWKWLB92ic+Wi7B3ly2L
-         Ic1082MUvN71tuUXDKJiKWXX0gESfwprIKL7+8F9qEnKNT/iZyt2Rv2MaYkUizuHqKQq
-         3P+Q==
-X-Gm-Message-State: APjAAAUeKdI9yC7dLAmFX2SwXeXy1WM15nJrB59mMQKzRwaeRxwxHv+v
-        tKuRhom9kZdgN9M20lj2vmY=
-X-Google-Smtp-Source: APXvYqyIvw5W7ofeadhPhx5ePsCQ+yCQS3ne3Y/esS26bhFKtz6qSQleAgTLpJ3NwUYfXJUqWr6iGA==
-X-Received: by 2002:a63:90c7:: with SMTP id a190mr17995325pge.23.1556964502977;
-        Sat, 04 May 2019 03:08:22 -0700 (PDT)
-Received: from oslab.tsinghua.edu.cn ([2402:f000:4:72:808::3ca])
-        by smtp.gmail.com with ESMTPSA id a26sm4221622pfl.177.2019.05.04.03.08.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 03:08:22 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     ath9k-devel@qca.qualcomm.com, kvalo@codeaurora.org,
-        davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] net: wireless: ath9k: Return an error when ath9k_hw_reset() fails
-Date:   Sat,  4 May 2019 18:08:15 +0800
-Message-Id: <20190504100815.19876-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lPA/HIaDQ/Ghehk/BJTv13aPK8G2LL/IH3O3cng7o7E=;
+        b=ORJvwLxKz77gCleekWHvy9wPch/oHHk/yM/tX1FV7XZg0N8grU4IiO8PNVuoJIF+U2
+         Yut3AHRaMb41JjfFY32UC9hWN+Ttj7H0eDNYgNIaw2XaX99kKWKGIKteH9UK9Jbxot7r
+         iZEHNyp+3u3pWM6le2PfAhboeB+B02M+hOeeqHJBzT0FLGJavwSUapLlE2d0HVUQY/GF
+         q9NbBw4Si9zOoBKg3oHaErTijfYg5Av3kQfUSU86TuFWic+Tc8kDPQciWrSKZBc4JqXj
+         5Hr1yUS+fciPsLBBQw5FvnTX09l8r4n0AgHNcGyi7AA3Xb7SqauNzg6NwGsb1pRhun+w
+         uwEw==
+X-Gm-Message-State: APjAAAXuLeQaPvDG4yZG+SL/00TdtJnKbUoGcQBpvGLYfp+4s0BCdZHm
+        ca3UcrKJyIPNOkU+lKBGJ8p5v7Ny3/+VB1cK1lk=
+X-Google-Smtp-Source: APXvYqz/+Q5FmRoRj5RI043UV1KsNjSvB6h0cOf4M8djfpMsgtRlFr1YLNbSahkqeQR3kcyGaB58/7ndpUrX5aSxU2A=
+X-Received: by 2002:a9d:6d93:: with SMTP id x19mr7815895otp.157.1556964846739;
+ Sat, 04 May 2019 03:14:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1556919363.git.melissa.srw@gmail.com> <10781f40fa8a403480833e49b7356ade5af57b94.1556919363.git.melissa.srw@gmail.com>
+In-Reply-To: <10781f40fa8a403480833e49b7356ade5af57b94.1556919363.git.melissa.srw@gmail.com>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Sat, 4 May 2019 13:13:55 +0300
+Message-ID: <CA+U=DspGcZjru0cqkO3fHJjg04Gxg-3Yu6jnNKZjx1dBZTG+Pg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] staging: iio: ad7150: organize registers definition
+To:     Melissa Wen <melissa.srw@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Barry Song <21cnbao@gmail.com>, linux-iio@vger.kernel.org,
+        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-usp@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ath9k_hw_reset() in ath9k_start() can fail, and in this case, 
-ath9k_start() should return an error instead of executing the 
-subsequent code.
+On Sat, May 4, 2019 at 1:25 AM Melissa Wen <melissa.srw@gmail.com> wrote:
+>
+> Use the suffix REG to make the register addresses clear
+> and indentation to highlight field names.
+>
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/net/wireless/ath/ath9k/main.c | 1 +
- 1 file changed, 1 insertion(+)
+I'm inclined to say that this change is a bit too much noise versus added value.
+While the REG suffix does make sense (generally), since it hasn't been
+added from the beginning, it doesn't make much sense to add it now.
 
-diff --git a/drivers/net/wireless/ath/ath9k/main.c b/drivers/net/wireless/ath/ath9k/main.c
-index f23cb2f3d296..f78e7c46764d 100644
---- a/drivers/net/wireless/ath/ath9k/main.c
-+++ b/drivers/net/wireless/ath/ath9k/main.c
-@@ -681,6 +681,7 @@ static int ath9k_start(struct ieee80211_hw *hw)
- 			"Unable to reset hardware; reset status %d (freq %u MHz)\n",
- 			r, curchan->center_freq);
- 		ah->reset_power_on = false;
-+		return r;
- 	}
- 
- 	/* Setup our intr mask. */
--- 
-2.17.0
+It is sufficiently clear (as-is) that these macros refer to registers.
+They should be easy to match with the datasheet as well.
 
+> Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+> ---
+>  drivers/staging/iio/cdc/ad7150.c | 75 ++++++++++++++++----------------
+>  1 file changed, 37 insertions(+), 38 deletions(-)
+>
+> diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
+> index dd7fcab8e19e..24601ba7db88 100644
+> --- a/drivers/staging/iio/cdc/ad7150.c
+> +++ b/drivers/staging/iio/cdc/ad7150.c
+> @@ -15,35 +15,34 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+>  #include <linux/iio/events.h>
+> -/*
+> - * AD7150 registers definition
+> - */
+>
+> -#define AD7150_STATUS              0
+> -#define AD7150_STATUS_OUT1         BIT(3)
+> -#define AD7150_STATUS_OUT2         BIT(5)
+> -#define AD7150_CH1_DATA_HIGH       1
+> -#define AD7150_CH2_DATA_HIGH       3
+> -#define AD7150_CH1_AVG_HIGH        5
+> -#define AD7150_CH2_AVG_HIGH        7
+> -#define AD7150_CH1_SENSITIVITY     9
+> -#define AD7150_CH1_THR_HOLD_H      9
+> -#define AD7150_CH1_TIMEOUT         10
+> -#define AD7150_CH1_SETUP           11
+> -#define AD7150_CH2_SENSITIVITY     12
+> -#define AD7150_CH2_THR_HOLD_H      12
+> -#define AD7150_CH2_TIMEOUT         13
+> -#define AD7150_CH2_SETUP           14
+> -#define AD7150_CFG                 15
+> -#define AD7150_CFG_FIX             BIT(7)
+> -#define AD7150_PD_TIMER            16
+> -#define AD7150_CH1_CAPDAC          17
+> -#define AD7150_CH2_CAPDAC          18
+> -#define AD7150_SN3                 19
+> -#define AD7150_SN2                 20
+> -#define AD7150_SN1                 21
+> -#define AD7150_SN0                 22
+> -#define AD7150_ID                  23
+> +/* AD7150 registers */
+> +
+> +#define AD7150_STATUS_REG                      0x00
+> +#define         AD7150_STATUS_OUT1                     BIT(3)
+> +#define         AD7150_STATUS_OUT2                     BIT(5)
+> +#define AD7150_CH1_DATA_HIGH_REG               0x01
+> +#define AD7150_CH2_DATA_HIGH_REG               0x03
+> +#define AD7150_CH1_AVG_HIGH_REG                        0x05
+> +#define AD7150_CH2_AVG_HIGH_REG                        0x07
+> +#define AD7150_CH1_SENSITIVITY_REG             0x09
+> +#define AD7150_CH1_THR_HOLD_H_REG              0x09
+> +#define AD7150_CH2_SENSITIVITY_REG             0x0C
+> +#define AD7150_CH1_TIMEOUT_REG                 0x0A
+> +#define AD7150_CH1_SETUP_REG                   0x0B
+> +#define AD7150_CH2_THR_HOLD_H_REG              0x0C
+> +#define AD7150_CH2_TIMEOUT_REG                 0x0D
+> +#define AD7150_CH2_SETUP_REG                   0x0E
+> +#define AD7150_CFG_REG                         0x0F
+> +#define         AD7150_CFG_FIX                         BIT(7)
+> +#define AD7150_PD_TIMER_REG                    0x10
+> +#define AD7150_CH1_CAPDAC_REG                  0x11
+> +#define AD7150_CH2_CAPDAC_REG                  0x12
+> +#define AD7150_SN3_REG                         0x13
+> +#define AD7150_SN2_REG                         0x14
+> +#define AD7150_SN1_REG                         0x15
+> +#define AD7150_SN0_REG                         0x16
+> +#define AD7150_ID_REG                          0x17
+>
+>  /**
+>   * struct ad7150_chip_info - instance specific chip data
+> @@ -85,12 +84,12 @@ struct ad7150_chip_info {
+>   */
+>
+>  static const u8 ad7150_addresses[][6] = {
+> -       { AD7150_CH1_DATA_HIGH, AD7150_CH1_AVG_HIGH,
+> -         AD7150_CH1_SETUP, AD7150_CH1_THR_HOLD_H,
+> -         AD7150_CH1_SENSITIVITY, AD7150_CH1_TIMEOUT },
+> -       { AD7150_CH2_DATA_HIGH, AD7150_CH2_AVG_HIGH,
+> -         AD7150_CH2_SETUP, AD7150_CH2_THR_HOLD_H,
+> -         AD7150_CH2_SENSITIVITY, AD7150_CH2_TIMEOUT },
+> +       { AD7150_CH1_DATA_HIGH_REG, AD7150_CH1_AVG_HIGH_REG,
+> +         AD7150_CH1_SETUP_REG, AD7150_CH1_THR_HOLD_H_REG,
+> +         AD7150_CH1_SENSITIVITY_REG, AD7150_CH1_TIMEOUT_REG },
+> +       { AD7150_CH2_DATA_HIGH_REG, AD7150_CH2_AVG_HIGH_REG,
+> +         AD7150_CH2_SETUP_REG, AD7150_CH2_THR_HOLD_H_REG,
+> +         AD7150_CH2_SENSITIVITY_REG, AD7150_CH2_TIMEOUT_REG },
+>  };
+>
+>  static int ad7150_read_raw(struct iio_dev *indio_dev,
+> @@ -133,7 +132,7 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
+>         bool adaptive;
+>         struct ad7150_chip_info *chip = iio_priv(indio_dev);
+>
+> -       ret = i2c_smbus_read_byte_data(chip->client, AD7150_CFG);
+> +       ret = i2c_smbus_read_byte_data(chip->client, AD7150_CFG_REG);
+>         if (ret < 0)
+>                 return ret;
+>
+> @@ -229,7 +228,7 @@ static int ad7150_write_event_config(struct iio_dev *indio_dev,
+>         if (event_code == chip->current_event)
+>                 return 0;
+>         mutex_lock(&chip->state_lock);
+> -       ret = i2c_smbus_read_byte_data(chip->client, AD7150_CFG);
+> +       ret = i2c_smbus_read_byte_data(chip->client, AD7150_CFG_REG);
+>         if (ret < 0)
+>                 goto error_ret;
+>
+> @@ -264,7 +263,7 @@ static int ad7150_write_event_config(struct iio_dev *indio_dev,
+>
+>         cfg |= (!adaptive << 7) | (thresh_type << 5);
+>
+> -       ret = i2c_smbus_write_byte_data(chip->client, AD7150_CFG, cfg);
+> +       ret = i2c_smbus_write_byte_data(chip->client, AD7150_CFG_REG, cfg);
+>         if (ret < 0)
+>                 goto error_ret;
+>
+> @@ -497,7 +496,7 @@ static irqreturn_t ad7150_event_handler(int irq, void *private)
+>         s64 timestamp = iio_get_time_ns(indio_dev);
+>         int ret;
+>
+> -       ret = i2c_smbus_read_byte_data(chip->client, AD7150_STATUS);
+> +       ret = i2c_smbus_read_byte_data(chip->client, AD7150_STATUS_REG);
+>         if (ret < 0)
+>                 return IRQ_HANDLED;
+>
+> --
+> 2.20.1
+>
