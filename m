@@ -2,101 +2,102 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4C1C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FDEC46460
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9683E206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34235206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556965537;
+	bh=D55D08CONspWLhBS8CP5uK3zWzXCxHbfhX8Il6tUGys=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=M4GXE6vf4K5OIOMA4X0DimNjkPL5x4EaqpWylXSLRu1DvRRUUIPfS/e4ONBXQFq1E
+	 qu9qeY0oLvK9ka9TqKvTz8aJEF9wZIZ/158GWXBDQZ0P9YBSWcZiLukUiz4BME/wJW
+	 RK16p9/9EHzVFjrKio1aXKIk58GTKfAwTBja8LEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfEDKZV (ORCPT
+        id S1727325AbfEDKZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:25:21 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57798 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726217AbfEDKZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:25:20 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5909689F2E5ECEAAF074;
-        Sat,  4 May 2019 18:25:18 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
- 18:25:11 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <mpe@ellerman.id.au>, <christophe.leroy@c-s.fr>,
-        <aneesh.kumar@linux.vnet.ibm.com>
-CC:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] powerpc/book3s64: Make some symbols static
-Date:   Sat, 4 May 2019 18:24:27 +0800
-Message-ID: <20190504102427.12332-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 4 May 2019 06:25:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726217AbfEDKZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:25:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06649206BB;
+        Sat,  4 May 2019 10:25:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556965535;
+        bh=D55D08CONspWLhBS8CP5uK3zWzXCxHbfhX8Il6tUGys=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NeMwIhIeYznE+RigtY+BsIrAWArMOoEYGJ2U1eNpwREg3vR2zWSDDvghdv0D+yb52
+         FPcj2HsJJy7dwdEBHCipncA5NwzdFn27seqMbA+8OLdIb43t41hsMnybYqwPS3N3Um
+         oaJFPlvfO+cfH9+5piobpMNF30H3W6JDMoKtUVTQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Shmulik Ladkani <shmulik.ladkani@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 01/32] ipv4: ip_do_fragment: Preserve skb_iif during fragmentation
+Date:   Sat,  4 May 2019 12:24:46 +0200
+Message-Id: <20190504102452.572033884@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
+References: <20190504102452.523724210@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
+From: Shmulik Ladkani <shmulik@metanetworks.com>
 
-arch/powerpc/mm/book3s64/radix_pgtable.c:326:13: warning: symbol 'radix_init_pgtable' was not declared. Should it be static?
-arch/powerpc/mm/book3s64/hash_native.c:48:1: warning: symbol 'native_tlbie_lock' was not declared. Should it be static?
-arch/powerpc/mm/book3s64/hash_utils.c:988:24: warning: symbol 'init_hash_mm_context' was not declared. Should it be static?
+[ Upstream commit d2f0c961148f65bc73eda72b9fa3a4e80973cb49 ]
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Previously, during fragmentation after forwarding, skb->skb_iif isn't
+preserved, i.e. 'ip_copy_metadata' does not copy skb_iif from given
+'from' skb.
+
+As a result, ip_do_fragment's creates fragments with zero skb_iif,
+leading to inconsistent behavior.
+
+Assume for example an eBPF program attached at tc egress (post
+forwarding) that examines __sk_buff->ingress_ifindex:
+ - the correct iif is observed if forwarding path does not involve
+   fragmentation/refragmentation
+ - a bogus iif is observed if forwarding path involves
+   fragmentation/refragmentatiom
+
+Fix, by preserving skb_iif during 'ip_copy_metadata'.
+
+Signed-off-by: Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/mm/book3s64/hash_native.c   | 2 +-
- arch/powerpc/mm/book3s64/hash_utils.c    | 2 +-
- arch/powerpc/mm/book3s64/radix_pgtable.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ net/ipv4/ip_output.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/mm/book3s64/hash_native.c b/arch/powerpc/mm/book3s64/hash_native.c
-index aaa28fd..47caecd 100644
---- a/arch/powerpc/mm/book3s64/hash_native.c
-+++ b/arch/powerpc/mm/book3s64/hash_native.c
-@@ -45,7 +45,7 @@
- #define HPTE_LOCK_BIT (56+3)
- #endif
- 
--DEFINE_RAW_SPINLOCK(native_tlbie_lock);
-+static DEFINE_RAW_SPINLOCK(native_tlbie_lock);
- 
- static inline void tlbiel_hash_set_isa206(unsigned int set, unsigned int is)
- {
-diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-index 919a861..1ff4518 100644
---- a/arch/powerpc/mm/book3s64/hash_utils.c
-+++ b/arch/powerpc/mm/book3s64/hash_utils.c
-@@ -985,7 +985,7 @@ void __init hash__early_init_devtree(void)
- 	htab_scan_page_sizes();
- }
- 
--struct hash_mm_context init_hash_mm_context;
-+static struct hash_mm_context init_hash_mm_context;
- void __init hash__early_init_mmu(void)
- {
- #ifndef CONFIG_PPC_64K_PAGES
-diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-index c9bcf42..c929d31 100644
---- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-@@ -323,7 +323,7 @@ static int __meminit create_physical_mapping(unsigned long start,
- 	return 0;
- }
- 
--void __init radix_init_pgtable(void)
-+static void __init radix_init_pgtable(void)
- {
- 	unsigned long rts_field;
- 	struct memblock_region *reg;
--- 
-2.7.4
+--- a/net/ipv4/ip_output.c
++++ b/net/ipv4/ip_output.c
+@@ -519,6 +519,7 @@ static void ip_copy_metadata(struct sk_b
+ 	to->pkt_type = from->pkt_type;
+ 	to->priority = from->priority;
+ 	to->protocol = from->protocol;
++	to->skb_iif = from->skb_iif;
+ 	skb_dst_drop(to);
+ 	skb_dst_copy(to, from);
+ 	to->dev = from->dev;
 
 
