@@ -2,71 +2,76 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB15C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA3AC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A90206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F3C2084A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:59:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Li6WFi66"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfEDOxG (ORCPT
+        id S1727148AbfEDO7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 10:53:06 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:55749 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfEDOxF (ORCPT
+        Sat, 4 May 2019 10:59:54 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35295 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbfEDO7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 10:53:05 -0400
-Received: from fsav107.sakura.ne.jp (fsav107.sakura.ne.jp [27.133.134.234])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x44EqVHa064400;
-        Sat, 4 May 2019 23:52:31 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav107.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav107.sakura.ne.jp);
- Sat, 04 May 2019 23:52:31 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav107.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x44EqVPX064396
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sat, 4 May 2019 23:52:31 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: [PATCH] ipv4: Delete uncached routes upon unregistration of loopback
- device.
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     David Ahern <dsahern@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Julian Anastasov <ja@ssi.bg>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
-        ddstreet@ieee.org, dvyukov@google.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <0000000000007d22100573d66078@google.com>
- <alpine.LFD.2.20.1808201527230.2758@ja.home.ssi.bg>
- <4684eef5-ea50-2965-86a0-492b8b1e4f52@I-love.SAKURA.ne.jp>
- <9d430543-33c3-0d9b-dc77-3a179a8e3919@I-love.SAKURA.ne.jp>
- <920ebaf1-ee87-0dbb-6805-660c1cbce3d0@I-love.SAKURA.ne.jp>
- <cc054b5c-4e95-8d30-d4bf-9c85f7e20092@gmail.com>
- <15b353e9-49a2-f08b-dc45-2e9bad3abfe2@i-love.sakura.ne.jp>
- <057735f0-4475-7a7b-815f-034b1095fa6c@gmail.com>
- <6e57bc11-1603-0898-dfd4-0f091901b422@i-love.sakura.ne.jp>
- <f71dd5cd-c040-c8d6-ab4b-df97dea23341@gmail.com>
- <d56b7989-8ac6-36be-0d0b-43251e1a2907@gmail.com>
- <117fcc49-d389-c389-918f-86ccaef82e51@i-love.sakura.ne.jp>
- <70be7d61-a6fe-e703-978a-d17f544efb44@gmail.com>
- <40199494-8eb7-d861-2e3b-6e20fcebc0dc@i-love.sakura.ne.jp>
-Message-ID: <519ea12b-4c24-9e8e-c5eb-ca02c9c7d264@i-love.sakura.ne.jp>
-Date:   Sat, 4 May 2019 23:52:31 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 4 May 2019 10:59:53 -0400
+Received: by mail-io1-f67.google.com with SMTP id r18so7644718ioh.2;
+        Sat, 04 May 2019 07:59:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vXyPYwh2Aq3WibaP/8Un33K8uj/LrX/mI1kiBZBysck=;
+        b=Li6WFi66KT0Byk46CFTux0SmkV0EI1YQ8bZwJXDG/JDdJh3wfoMXQn5hGoTOn2gTfI
+         uVsEAYNKqtidKYzNjTEMoAjsV3mAgQjNaCUCXLDfTJPmBnU7DXmqTWre46h7b2GC0l6j
+         5lIkDb9ojo9nMH05JJJAPX9WFJ4VaTrTUd6OlNSDVWa8AXrkAqoAlVGuAt0s9uJKnRKf
+         s2DKUS1wSdnRtnF1txTk/8ydw9pPqUEf9Em7agPWuXuUFXAP25W90VeHxFy/EACmNmnS
+         /MlMLhqivEACnGzKITctDMTB6ewAoca/O2/pLHGTYBq+Bo43wlKBLP0vPbjBTEC9vU3N
+         3PNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vXyPYwh2Aq3WibaP/8Un33K8uj/LrX/mI1kiBZBysck=;
+        b=YSZ7Wtv1S7Dfub6GxqV3Od2sR+evH9iKMZZ8CaXZdRb/grwxheS2YUFVBm0xA2aKgs
+         6LdxkCPXsKIXr3h61j3LwYHh9yzYOJZ4JbQGj7sh57raRE5pCyjRWd5JjcJcqN2wNBkr
+         U2sumfqUoXr2IVW181ktwpVjcZDZPv+3M6Bo1QF0qr35w294amMaknrQ4/5OfkLiz3DM
+         /iCAkCYqm0GAZJMApJU9PppF7pN9mcr9PJaHxVx0MsnI6xTdGd4yYtuC7dfr436dqTAS
+         obV2nkywAdhWXtdiQ24OP0qE8SHLeRGZS4ZxHwbYL0E4FneQUUL/iKuLxOKTKA2C029w
+         zuPw==
+X-Gm-Message-State: APjAAAVPmnZgLFG/IycaxDRny2toktdYweW06FcmGgqgoabiBCN4kbXi
+        HKI0mIUe+QrolpQ7abkmQII=
+X-Google-Smtp-Source: APXvYqzC3b9Dl43p57p3KMEmcNZzHnpDjPgVnP0RxcwE+lVMGcUTN7jBNnIE7IrZCFcARSPDRGRnSg==
+X-Received: by 2002:a6b:9306:: with SMTP id v6mr2387711iod.278.1556981992799;
+        Sat, 04 May 2019 07:59:52 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:ad89:69d7:57b3:6a28? ([2601:282:800:fd80:ad89:69d7:57b3:6a28])
+        by smtp.googlemail.com with ESMTPSA id g13sm2043979iom.46.2019.05.04.07.59.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 May 2019 07:59:51 -0700 (PDT)
+Subject: Re: [PATCH v2] net: route: Fix vrf dst_entry ref count false
+ increasing
+To:     linmiaohe <linmiaohe@huawei.com>, davem@davemloft.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     mousuanming <mousuanming@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>
+References: <1a4c0c31-e74c-5167-0668-328dd342005e@huawei.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <dd325420-37ae-f731-1ea8-01f630820af0@gmail.com>
+Date:   Sat, 4 May 2019 08:59:50 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <40199494-8eb7-d861-2e3b-6e20fcebc0dc@i-love.sakura.ne.jp>
+In-Reply-To: <1a4c0c31-e74c-5167-0668-328dd342005e@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -75,59 +80,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot is hitting infinite loop when a loopback device in a namespace is
-unregistered [1]. This is because rt_flush_dev() is moving the refcount of
-"any device to unregister" to "a loopback device in that namespace" but
-nobody can drop the refcount moved from non loopback devices when the
-loopback device in that namespace is unregistered.
+On 5/4/19 7:13 AM, linmiaohe wrote:
+> From: Suanming.Mou <mousuanming@huawei.com>
+> 
+> When config ip in default vrf same as the ip in specified
+> vrf, fib_lookup will return the route from table local
+> even if the in device is an enslaved l3mdev. Then the
 
-This behavior was introduced by commit caacf05e5ad1abf0 ("ipv4: Properly
-purge netdev references on uncached routes.") but there is no description
-why we have to temporarily move the refcount to "a loopback device in that
-namespace" and why it is safe to do so, for rt_flush_dev() becomes a no-op
-when "a loopback device in that namespace" is about to be unregistered.
-
-Since I don't know the reason, this patch breaks the infinite loop by
-deleting the uncached route (which eventually drops the refcount via
-dst_destroy()) when "a loopback device in that namespace" is unregistered
-rather than when "non-loopback devices in that namespace" is unregistered.
-
-[1] https://syzkaller.appspot.com/bug?id=bae9a2236bfede42cf3d219e6bf6740c583568a4
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reported-by: syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>
----
- net/ipv4/route.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-index 6fdf1c195d8e..7e865c11d4f3 100644
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -1522,15 +1522,21 @@ void rt_flush_dev(struct net_device *dev)
- {
- 	struct net *net = dev_net(dev);
- 	struct rtable *rt;
-+	struct rtable *tmp;
- 	int cpu;
- 
- 	for_each_possible_cpu(cpu) {
- 		struct uncached_list *ul = &per_cpu(rt_uncached_list, cpu);
- 
- 		spin_lock_bh(&ul->lock);
--		list_for_each_entry(rt, &ul->head, rt_uncached) {
-+		list_for_each_entry_safe(rt, tmp, &ul->head, rt_uncached) {
- 			if (rt->dst.dev != dev)
- 				continue;
-+			if (dev == net->loopback_dev) {
-+				list_del_init(&rt->rt_uncached);
-+				ip_rt_put(rt);
-+				continue;
-+			}
- 			rt->dst.dev = net->loopback_dev;
- 			dev_hold(rt->dst.dev);
- 			dev_put(dev);
--- 
-2.17.1
-
-
+you need to move the local rule with a preference of 0 after the l3mdev
+rule.
