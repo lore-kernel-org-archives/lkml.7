@@ -2,94 +2,344 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BD8C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D287C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D2820859
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:52:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556974368;
-	bh=Tn/Xh9BC2361aMIb7WmsJUAhVveRtEPdktsYhKL8B7k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/q08LtIY55IhzEPdI18yN/hpNjPDyicl7LTVB1SvKnz3xCtywBQtAPyungh/WFOr
-	 QlA/YAKonPx55RUaFx0BfuKMI1K9xsfsM/iYuPkpl3tz6ZcopqMFa3NW2+2ShOrkNU
-	 HFOF2d6jmBEsq1r6CUBvTX3MAfXbiYheZIGFoD4k=
+	by mail.kernel.org (Postfix) with ESMTP id C67CD206A3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbfEDMwU (ORCPT
+        id S1726781AbfEDMyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 08:52:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43188 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfEDMwP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 08:52:15 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9D60B81DE6;
-        Sat,  4 May 2019 12:52:15 +0000 (UTC)
-Received: from krava.brq.redhat.com (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 00CE65C298;
-        Sat,  4 May 2019 12:52:13 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 3/8] perf/x86: Get rid of x86_pmu::event_attrs
-Date:   Sat,  4 May 2019 14:52:02 +0200
-Message-Id: <20190504125207.24662-4-jolsa@kernel.org>
-In-Reply-To: <20190504125207.24662-1-jolsa@kernel.org>
-References: <20190504125207.24662-1-jolsa@kernel.org>
+        Sat, 4 May 2019 08:54:04 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45179 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfEDMyE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 08:54:04 -0400
+Received: by mail-pf1-f193.google.com with SMTP id e24so4289379pfi.12
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 05:54:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CqD0yBLy8fiu8lDmkeW7ISRq/jukQ05kPPTcy7NIEDg=;
+        b=kTn53fS0ICN4Q95FOm7fdIt+PcnK5gE/khl16qMxj1Nd66f6AyLtc50Np+OOsHCqbe
+         /oh2z3vWe66rzs7gAvdAj4eLGGVXj+SeJlnr5cjtT1Ql16iBcJhS7dq6IXn8i4bATsWe
+         Qumyv+uSsiu8AtE1jmrf5N/oFr364+9Ff/km8Ko7ILnRbi6kqfN/oIyIP40lyx/VmzyX
+         foffna68ojR0yvvu6A4iVt2Yr4NWZtVDk3KVvYS7+CP0fzZb1uJUCJEPreTeX5FpFH7r
+         NLL2v6aKF3T9WK8c5gpRXBkIwgaU0k+Suymtv4t34U13Q745rsLmhGvI33UEjtuovHer
+         K9xg==
+X-Gm-Message-State: APjAAAWg3Blg/uWOGJlqcIqwo4Z8hYCc0rx85dFCkohRa8iWbdzalwZI
+        xXpwdQrHcEOBcTkHN6NeNeUMqQ==
+X-Google-Smtp-Source: APXvYqzc3Fx6lfWjKGpMmVUlhGg4wxF/Ql7pB9YkwMEMHZudGElf/WeNEscSXnPVz1IYgcTfZ+AbbA==
+X-Received: by 2002:a62:5144:: with SMTP id f65mr19008663pfb.13.1556974443200;
+        Sat, 04 May 2019 05:54:03 -0700 (PDT)
+Received: from localhost.localdomain ([182.69.197.204])
+        by smtp.gmail.com with ESMTPSA id p7sm5959264pgk.10.2019.05.04.05.53.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 May 2019 05:54:01 -0700 (PDT)
+Subject: Re: [PATCH v3 1/3] arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to
+ vmcoreinfo
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+To:     James Morse <james.morse@arm.com>
+Cc:     linux-kernel@vger.kernel.org, bhupesh.linux@gmail.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Anderson <anderson@redhat.com>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
+        kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+        Steve Capper <Steve.Capper@arm.com>
+References: <1553058574-18606-1-git-send-email-bhsharma@redhat.com>
+ <1553058574-18606-2-git-send-email-bhsharma@redhat.com>
+ <2757805b-61cb-8f4a-1917-0c57012f09df@arm.com>
+ <58c6cda9-9fd4-3b3e-740a-7b9b80b1f634@redhat.com>
+ <a48bb02c-8f93-4e3b-085d-a6f0e5a1f3a0@arm.com>
+ <66da4098-b221-408b-50ca-f3790b943965@redhat.com>
+Message-ID: <380b137b-a611-5c8d-3890-8021084f87fe@redhat.com>
+Date:   Sat, 4 May 2019 18:23:56 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Sat, 04 May 2019 12:52:15 +0000 (UTC)
+In-Reply-To: <66da4098-b221-408b-50ca-f3790b943965@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nobody is using that.
+On 04/03/2019 11:24 PM, Bhupesh Sharma wrote:
+> Hi James,
+> 
+> On 04/02/2019 10:56 PM, James Morse wrote:
+>> Hi Bhupesh,
+>>
+>> On 28/03/2019 11:42, Bhupesh Sharma wrote:
+>>> On 03/26/2019 10:06 PM, James Morse wrote:
+>>>> On 20/03/2019 05:09, Bhupesh Sharma wrote:
+>>>>> With ARMv8.2-LVA architecture extension availability, arm64 hardware
+>>>>> which supports this extension can support a virtual address-space upto
+>>>>> 52-bits.
+>>>>>
+>>>>> Since at the moment we enable the support of this extension in kernel
+>>>>> via CONFIG flags, e.g.
+>>>>>    - User-space 52-bit LVA via CONFIG_ARM64_USER_VA_BITS_52
+>>>>>
+>>>>> so, there is no clear mechanism in the user-space right now to
+>>>>> determine these CONFIG flag values and hence determine the maximum
+>>>>> virtual address space supported by the underlying kernel.
+>>>>>
+>>>>> User-space tools like 'makedumpfile' therefore are broken currently
+>>>>> as they have no proper method to calculate the 'PTRS_PER_PGD' value
+>>>>> which is required to perform a page table walk to determine the
+>>>>> physical address of a corresponding virtual address found in
+>>>>> kcore/vmcoreinfo.
+>>>>>
+>>>>> If one appends 'PTRS_PER_PGD' number to vmcoreinfo for arm64,
+>>>>> it can be used in user-space to determine the maximum virtual address
+>>>>> supported by underlying kernel.
+>>>>
+>>>> I don't think this really solves the problem, it feels fragile.
+>>>>
+>>>> I can see how vmcoreinfo tells you VA_BITS==48, PAGE_SIZE==64K and 
+>>>> PTRS_PER_PGD=1024.
+>>>> You can use this to work out that the top level page table size 
+>>>> isn't consistent with a
+>>>> 48bit VA, so 52bit VA must be in use...
+>>>>
+>>>> But wasn't your problem walking the kernel page tables? In 
+>>>> particular the offset that we
+>>>> apply because the tables were based on a 48bit VA shifted up in 
+>>>> swapper_pg_dir.
+>>>>
+>>>> Where does the TTBR1_EL1 offset come from with this property? I 
+>>>> assume makedumpfile
+>>>> hard-codes it when it sees 52bit is in use ... somewhere.
+>>>> We haven't solved the problem!
+>>
+>>> But isn't the TTBR1_EL1 offset already appended by the kernel via 
+>>> e842dfb5a2d3 ("arm64:
+>>> mm: Offset TTBR1 to allow 52-bit PTRS_PER_PGD")
+>>> in case of kernel configuration where 52-bit userspace VAs are possible.
+>>
+>>> Accordingly we have the following assembler helper in 
+>>> 'arch/arm64/include/asm/assembler.h':
+>>>
+>>>         .macro  offset_ttbr1, ttbr
+>>> #ifdef CONFIG_ARM64_52BIT_VA
+>>>         orr     \ttbr, \ttbr, #TTBR1_BADDR_4852_OFFSET
+>>> #endif
+>>>         .endm
+>>>
+>>> where:
+>>> #ifdef CONFIG_ARM64_52BIT_VA
+>>> /* Must be at least 64-byte aligned to prevent corruption of the TTBR */
+>>> #define TTBR1_BADDR_4852_OFFSET        (((UL(1) << (52 - 
+>>> PGDIR_SHIFT)) - \
+>>>                                  (UL(1) << (48 - PGDIR_SHIFT))) * 8)
+>>> #endif
+>>
+>> Sure, and all this would work today, because there is only one weird 
+>> combination. But once
+>> we support another combination of 52bit-va, you'd either need another 
+>> value, or to start
+>> using PTRS_PER_PGD as a flag for v5.1_FUNNY_BEHAVIOUR_ONE.
+> 
+> I completed my user-space experimentation with 52-bit kernel VA changes 
+> from Steve today and have shared a detailed review on his patchset (See 
+> <http://lists.infradead.org/pipermail/kexec/2019-April/022750.html>).
+> 
+> But first let me share some opinion on how we are adding the 52-bit 
+> address space changes for arm64 in the kernel.
+> 
+> I think we have ended up adding just a bit _too many_ CONFIG and MACRO 
+> values for the increased address space changes. For e.g. after the 
+> 52-bit kernel VA changes we have at-least 4 macros which explain the VA 
+> address range with CONFIG_ARM64_USER_KERNEL_VA_BITS_52=y:
+> 
+> VA_BITS = 52,
+> VA_BITS_ACTUAL = vabits_actual = 48,
+> VA_BITS_MIN = min (48, VA_BITS) = 48.
+> PTRS_PER_PGD = 64 (48-bit) or 1024 (52-bit)
+> 
+> Of these, VA_BITS, VA_BITS_ACTUAL and PTRS_PER_PGD are definitely of 
+> interest in the userspace as they define:
+> 
+> 1.
+>   /*
+>      * VMEMMAP_SIZE - allows the whole linear region to be covered by
+>      *                a struct page array
+>      */
+>     #define VMEMMAP_SIZE (UL(1) << (VA_BITS - PAGE_SHIFT - 1 + 
+> STRUCT_PAGE_MAX_SHIFT))
+> 
+> 2. #define __is_lm_address(addr)    (!((addr) & BIT(VA_BITS_ACTUAL - 1)))
+> 
+> We have discussed the usage of PTRS_PER_PGD in userspace already at 
+> quite some length, so I will focus on the other two below (VA_BITS and 
+> VA_BITS_ACUAL).
+> 
+> Both are critical for determining VMEMMAP_SIZE and whether a virtual 
+> address lies in the linear map range respectively.
+> 
+> I don't see any standard mechanism other than the following to achieve a 
+> working user-space with these changes:
+> - a sysfs node (may be a 
+> '/sys/devices/system/cpu/addressing-capabilities' node?) or HWCAP 
+> capability export for user-space utilities which perform a live analysis 
+> and use the above variables.
+> - exporting these variables in vmcoreinfo (for analysis of crash dump).
+> 
+> VA_BITS is already exported in vmcoreinfo, whereas I have proposed 
+> exporting PTRS_PER_PGD to vmcoreinfo via this patch.
+> 
+> For 52-bit kernel VA changes, VA_BITS_ACTUAL will also be needed in 
+> vmcoreinfo (See 
+> <http://lists.infradead.org/pipermail/kexec/2019-April/022750.html> for 
+> details).
+> 
+>>> Note that the above computation holds true both for PTRS_PER_PGD = 64 
+>>> (48-bit kernel with
+>>> 48-bit User VA) and 1024 (48-bit with 52-bit User VA) cases. And 
+>>> these are the
+>>> configurations for which we are trying to fix the user-space 
+>>> regressions reported (on
+>>> arm64) recently.
+>>
+>> ... and revisit it when there is another combination?
+> 
+> See above.
+> 
+>>>> Today __cpu_setup() sets T0SZ and T1SZ differently for 52bit VA, but 
+>>>> in the future it
+>>>> could set them the same, or different the other-way-round.
+>>>>
+>>>> Will makedumpfile using this value keep working once T1SZ is 52bit 
+>>>> VA too? In this case
+>>>> there would be no ttbr offset.
+>>>>
+>>>> If you need another vmcoreinfo flag once that happens, we've done 
+>>>> something wrong here.
+>>>
+>>> I am currently experimenting with Steve's patches for 52-bit kernel VA
+>>> (<https://lwn.net/Articles/780093/>) and will comment more on the 
+>>> same when I am able to
+>>> get the user-space utilities like makedumpfile and kexec-tools to 
+>>> work with the same on
+>>> both ARMv8 Fast Simulator model and older CPUs which don't support 
+>>> ARMv8.2 extensions.
+>>
+>>> However, I think we should not hold up fixes for regressions already 
+>>> reported, because the
+>>> 52-bit kernel VA changes probably still need some more rework.
+>>
+>> Chucking things into vmcoreinfo isn't free: we need to keep them there 
+>> forever, otherwise
+>> yesterdays version of the tools breaks. Can we take the time to get 
+>> this right for the
+>> cases we know about?
+> 
+> Sure, but exporting variable(s) in vmcoreinfo in directly related to the 
+> information variable(s) we add in the kernel side without which the 
+> user-space would break.
+> 
+> I have added the requirements for 52-bit kernel VA above (i.e we need an 
+> additional VA_BITS_ACTUAL variable export'ed rather than any tinkering 
+> with already proposed PTRS_PER_PGD).
+> 
+> May be this is a good time to also talk about minimizing the kernel 
+> interfaces we are proposing to hold and indicate normal (48-bit) and 
+> extended (52-bit) address spaces on arm64.
+> 
+> Ideally, we would want to simplify it further to be on similar lines as 
+> x86:
+> CONFIG_X86_5LEVEL=y
+> vmcoreinfo_append_str("NUMBER(pgtable_l5_enabled)=%d\n",
+>              pgtable_l5_enabled());
+> 
+> which seems much cleaner..
+> 
+> I am open to any suggestions on the same.
+> 
+>> Yes the kernel code is going to move around, this is why the 
+>> information we expose via
+>> vmcoreinfo needs to be thought through: something we would always 
+>> need, regardless of how
+>> the kernel implements it.
+>>
+>>
+>>>> (Not to mention what happens if the TTBR1_EL1 uses 52bit va, but 
+>>>> TTBR0_EL1 doesn't)
+>>>
+>>> I am wondering if there are any real users of the above combination.
+>>
+>> Heh! Is there any hardware that supports this?
+>>
+>> Pointer-auth changes all this again, as we may prefer to use the bits 
+>> for pointer-auth in
+>> one TTB or the other. PTRS_PER_PGD may show the 52bit value in this 
+>> case, but neither TTBR
+>> is mapping 52bits of VA.
+>>
+>>
+>>> So far, I have generally come across discussions where the following 
+>>> variations of the
+>>> address spaces have been proposed/requested:
+>>> - 48bit kernel VA + 48-bit User VA,
+>>> - 48-bit kernel VA + 52-bit User VA,
+>>
+>> + 52bit kernel, because there is excessive quantities of memory, and 
+>> the kernel maps it
+>> all, but 48-bit user, because it never maps all the memory, and we 
+>> prefer the bits for
+>> pointer-auth.
+>>
+>>> - 52-bit kernel VA + 52-bit User VA.
+>>
+>> And...  all four may happen with the same built image. I don't see how 
+>> you can tell these
+>> cases apart with the one (build-time-constant!) PTRS_PER_PGD value.
+>>
+>> I'm sure some of these cases are hypothetical, but by considering it 
+>> all now, we can avoid
+>> three more kernel:vmcoreinfo updates, and three more 
+>> fix-user-space-to-use-the-new-value.
+> 
+> Agree.
+> 
+>> I think you probably do need PTRS_PER_PGD, as this is the one value 
+>> the mm is using to
+>> generate page tables. I'm pretty sure you also need T0SZ and T1SZ to 
+>> know if that's
+>> actually in use, or the kernel is bodging round it with an offset.
+> 
+> Sure, I am open to suggestions (as I realize that we need an additional 
+> VA_BITS_ACTUAL variable export'ed for 52-bit kernel VA changes).
+> 
+> Also how do we standardize reading T0SZ and T1SZ in user-space. Do you 
+> propose I make an enhancement in the cpu-feature-registers interface 
+> (see [1]) or the HWCAPS interface (see [2]) for the same?
+> 
+> [1]. 
+> https://www.kernel.org/doc/Documentation/arm64/cpu-feature-registers.txt
+> [2]. https://www.kernel.org/doc/Documentation/arm64/elf_hwcaps.txt
+> 
+> Thanks,
+> Bhupesh
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- arch/x86/events/core.c       | 3 ---
- arch/x86/events/perf_event.h | 1 -
- 2 files changed, 4 deletions(-)
+Ping.
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index de1a924a4914..f2be5d2a62fe 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1850,9 +1850,6 @@ static int __init init_hw_perf_events(void)
- 			x86_pmu_caps_group.attrs = tmp;
- 	}
- 
--	if (x86_pmu.event_attrs)
--		x86_pmu_events_group.attrs = x86_pmu.event_attrs;
--
- 	if (!x86_pmu.events_sysfs_show)
- 		x86_pmu_events_group.attrs = &empty_attrs;
- 	else
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 07fc84bb85c1..3f87cb4d7585 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -631,7 +631,6 @@ struct x86_pmu {
- 	int		attr_rdpmc_broken;
- 	int		attr_rdpmc;
- 	struct attribute **format_attrs;
--	struct attribute **event_attrs;
- 	struct attribute **caps_attrs;
- 
- 	ssize_t		(*events_sysfs_show)(char *page, u64 config);
--- 
-2.20.1
+Hi James, Steve,
 
+Any comments on the above points? At the moment we have to carry these 
+fixes in the distribution kernels and I would like to have these fixed 
+in upstream kernel itself.
+
+Thanks,
+Bhupesh
