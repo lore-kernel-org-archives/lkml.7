@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DE4C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E975C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF892075C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F192081C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcFrJEoU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6nyEu8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbfEDBTX (ORCPT
+        id S1727438AbfEDBTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 21:19:23 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53752 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfEDBSq (ORCPT
+        Fri, 3 May 2019 21:19:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44714 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfEDBSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 21:18:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id q15so9033396wmf.3;
-        Fri, 03 May 2019 18:18:45 -0700 (PDT)
+        Fri, 3 May 2019 21:18:44 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c5so9883047wrs.11;
+        Fri, 03 May 2019 18:18:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nzBWUxtxpVGUsJl9dQFkvbFimymw5p/mAoy1qHkZo4I=;
-        b=bcFrJEoUVBbonFhLf0suyCZWAZeV8Ao/Yjf/7FIBNvhvXVI5BBdZSFfeiLtEvK1QCw
-         KrouoeiFsdfEynYBdgk8dPKL3TjVyeZ9JvTW8yG90PrWlUIu3Aa+aH3jffWcEQt/Twql
-         LU09550MdN8hkNmVysHhpoK0gedgy42AYg1/KztmIR49vp4dQx2Wke51mWr5RQjQd8kb
-         Xwo1Jk/oKzj+6oWMT4PqOXQfKR9g0/AxJDZ1k7NGPEuL5jAvhrsCo10KFyoIHm5OJX7P
-         jCJyj9fuqxmHFTXRhfHh2jHnx032VEMGfuAeYKkjjk1z0EBPUV+d8mEbiUNMjuxOI82n
-         HgRQ==
+        bh=r3gWbU66Gb4F+ksq9kAmK2pxg5SekFLFxe9XHbpja70=;
+        b=h6nyEu8Olbvb1Bb0OZjlUr7rl+IwQ1HBFPh8JaEad/RcuwThjcXfqMBYNtuF0qiYE3
+         ubhQMzv6zVLJYfKWjGnALjx9XsboLvr3NZ5HasWmLV8x+WC8I8P8cxwZZng6sG6S9b6m
+         STduepBM+bWOpMRuBoBrR2ztC0TLd4jixLENnxxXgzoKrdgOn58GmNl1zDdA3c+DDAFz
+         QD1PXaMyHA1DwOnTwYCtlFPwlyQywZ8J66bWQ8DUlapjieem+xCfECr8NIUwSA0Lchoz
+         Fct8iDHz9hbOE5pdzu+NrAx64xqSBDas3tQRS5tsXpo6B5yRlBZ6oLD7tJX5FVuQYl6z
+         dSxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=nzBWUxtxpVGUsJl9dQFkvbFimymw5p/mAoy1qHkZo4I=;
-        b=ClXkN+OaWZI1vbU/3W10gipN3g1FDEybvHsOfYvZKlFRPGmZEe6NvLKK4NWFtZMndp
-         IrMDM3kwt92+Jvl8pAAPahf1ufaTFYHofwBzPj8RV7Up7EUvVOdbp9+bzB+TdCdum/ly
-         4ez0TRbgsekN1xLtOY01SwovDZDRZU4iTA9EeAW3R7G1acy8c7DMmtqgTOO95KMgZt3G
-         seAZxNPZbQhTuETEwEOizA1fDpg19uh62mctIV4UfWgHfg5tF6jPoWRG3TGl2yiRYoKC
-         gOloJy2Cz/xcoryQ0R9l2p0KWZULjnYND8e1Eyq7Fcy37vCvvXdw0aOD/VKxsQTNRyoa
-         TpHA==
-X-Gm-Message-State: APjAAAWQJFV2sB+9rI9A+pmS5WU6vquUh3GanDJzsf3S/4vhH0f9WNOp
-        8r+47ar0iGK1rzuKDJe224YHZqCL8ow=
-X-Google-Smtp-Source: APXvYqyT38JYCKSu65Hp6ZClQ2j7L80AKnhZo3E0w6Di9uuGhSifbcqt2aIhcqXmZaQkLMdhuB8QAQ==
-X-Received: by 2002:a05:600c:2208:: with SMTP id z8mr8060782wml.89.1556932724530;
-        Fri, 03 May 2019 18:18:44 -0700 (PDT)
+        bh=r3gWbU66Gb4F+ksq9kAmK2pxg5SekFLFxe9XHbpja70=;
+        b=KOYWSuY5snuqBrWd3L2rNZoGMaArKNbj3RYlytuCsR7LaMshTuFP6xT9t6WtSR66it
+         ++oF2guRUxahfnyUHFW1pYongk4NPKSTFfrkGVXNljFHhnfqg+j4tHOJ7tmwFAkhSttm
+         +tyZNqL8k4qz3lvk1wcTVhlz9cPONsrftO5YuHlzwwAg9la8r6H6PG6z68AqJQhpeBUk
+         +1smU7cUOvPDTuemL5Vwj3IgHWDCTSVctBZBXpYohxj5L6BYj27ukDvqe/odLI+LwLPa
+         jO8EmdgvvsFTGuf6D3Z3A2xDcg8BQPgDRARiW9t80xbQqL1cPPp6pU/qR1mUHPmU6lX+
+         o/cA==
+X-Gm-Message-State: APjAAAVQjvo6KK1v2yAQ97R5Ao3m10QpaHIhOaNrktGFZ30w1nFvt8aZ
+        oCFpsSB+gns08hRb8SA4aCI=
+X-Google-Smtp-Source: APXvYqwkRP8yhXOi9qIm3Jh1JPyOaHjqBhRADffLKh8mHhWraKgwvOIe/EIZTFAgyhL2Yu/uWGcadQ==
+X-Received: by 2002:a5d:67cb:: with SMTP id n11mr9139408wrw.3.1556932721801;
+        Fri, 03 May 2019 18:18:41 -0700 (PDT)
 Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id t1sm3937639wro.34.2019.05.03.18.18.43
+        by smtp.gmail.com with ESMTPSA id t1sm3937639wro.34.2019.05.03.18.18.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 18:18:43 -0700 (PDT)
+        Fri, 03 May 2019 18:18:41 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH net-next 5/9] net: dsa: Add support for deferred xmit
-Date:   Sat,  4 May 2019 04:18:22 +0300
-Message-Id: <20190504011826.30477-6-olteanv@gmail.com>
+Subject: [PATCH net-next 3/9] net: dsa: Allow drivers to filter packets they can decode source port from
+Date:   Sat,  4 May 2019 04:18:20 +0300
+Message-Id: <20190504011826.30477-4-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190504011826.30477-1-olteanv@gmail.com>
 References: <20190504011826.30477-1-olteanv@gmail.com>
@@ -71,196 +71,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some hardware needs to take some convincing work in order to receive
-frames on the CPU port (such as the sja1105 which takes temporary L2
-forwarding rules over SPI that last for a single frame). Such work needs
-a sleepable context, and because the regular .ndo_start_xmit is atomic,
-this cannot be done in the tagger. So introduce a generic DSA mechanism
-that sets up a transmit skb queue and a workqueue for deferred
-transmission.
+Frames get processed by DSA and redirected to switch port net devices
+based on the ETH_P_XDSA multiplexed packet_type handler found by the
+network stack when calling eth_type_trans().
 
-The new driver callback (.port_deferred_xmit) is in dsa_switch and not
-in the tagger because the operations that require sleeping typically
-also involve interacting with the hardware, and not simply skb
-manipulations. Therefore having it there simplifies the structure a bit
-and makes it unnecessary to export functions from the driver to the
-tagger.
+The running assumption is that once the DSA .rcv function is called, DSA
+is always able to decode the switch tag in order to change the skb->dev
+from its master.
 
-The driver is responsible of calling dsa_enqueue_skb which transfers it
-to the master netdevice. This is so that it has a chance of performing
-some more work afterwards, such as cleanup or TX timestamping.
+However there are tagging protocols (such as the new DSA_TAG_PROTO_SJA1105,
+user of DSA_TAG_PROTO_8021Q) where this assumption is not completely
+true, since switch tagging piggybacks on the absence of a vlan_filtering
+bridge. Moreover, management traffic (BPDU, PTP) for this switch doesn't
+rely on switch tagging, but on a different mechanism. So it would make
+sense to at least be able to terminate that.
 
-To tell DSA that skb xmit deferral is required, I have thought about
-changing the return type of the tagger .xmit from struct sk_buff * into
-a enum dsa_tx_t that could potentially encode a DSA_XMIT_DEFER value.
+Having DSA receive traffic it can't decode would put it in an impossible
+situation: the eth_type_trans() function would invoke the DSA .rcv(),
+which could not change skb->dev, then eth_type_trans() would be invoked
+again, which again would call the DSA .rcv, and the packet would never
+be able to exit the DSA filter and would spiral in a loop until the
+whole system dies.
 
-But the trailer tagger is reallocating every skb on xmit and therefore
-making a valid use of the pointer return value. So instead of reworking
-the API in complicated ways, right now a boolean property in the newly
-introduced DSA_SKB_CB is set.
+This happens because eth_type_trans() doesn't actually look at the skb
+(so as to identify a potential tag) when it deems it as being
+ETH_P_XDSA. It just checks whether skb->dev has a DSA private pointer
+installed (therefore it's a DSA master) and that there exists a .rcv
+callback (everybody except DSA_TAG_PROTO_NONE has that). This is
+understandable as there are many switch tags out there, and exhaustively
+checking for all of them is far from ideal.
+
+The solution lies in introducing a filtering function for each tagging
+protocol. In the absence of a filtering function, all traffic is passed
+to the .rcv DSA callback. The tagging protocol should see the filtering
+function as a pre-validation that it can decode the incoming skb. The
+traffic that doesn't match the filter will bypass the DSA .rcv callback
+and be left on the master netdevice, which wasn't previously possible.
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- include/net/dsa.h  | 12 +++++++++
- net/dsa/dsa_priv.h |  2 ++
- net/dsa/slave.c    | 61 +++++++++++++++++++++++++++++++++++++---------
- 3 files changed, 63 insertions(+), 12 deletions(-)
+ include/net/dsa.h  | 15 +++++++++++++++
+ net/dsa/dsa2.c     |  1 +
+ net/ethernet/eth.c |  6 +++++-
+ 3 files changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 8f5fcec30b13..936d53139865 100644
+index 69f3714f42ba..c90ceeec7d1f 100644
 --- a/include/net/dsa.h
 +++ b/include/net/dsa.h
-@@ -85,6 +85,7 @@ struct dsa_device_ops {
- 
- struct dsa_skb_cb {
- 	struct sk_buff *clone;
-+	bool deferred_xmit;
- };
- 
- struct __dsa_skb_cb {
-@@ -202,6 +203,10 @@ struct dsa_port {
- 	struct net_device	*bridge_dev;
- 	struct devlink_port	devlink_port;
- 	struct phylink		*pl;
-+
-+	struct work_struct	xmit_work;
-+	struct sk_buff_head	xmit_queue;
-+
- 	/*
- 	 * Original copy of the master netdev ethtool_ops
- 	 */
-@@ -536,6 +541,12 @@ struct dsa_switch_ops {
- 				 struct sk_buff *clone, unsigned int type);
- 	bool	(*port_rxtstamp)(struct dsa_switch *ds, int port,
- 				 struct sk_buff *skb, unsigned int type);
-+
-+	/*
-+	 * Deferred frame Tx
+@@ -69,6 +69,11 @@ struct dsa_device_ops {
+ 			       struct packet_type *pt);
+ 	int (*flow_dissect)(const struct sk_buff *skb, __be16 *proto,
+ 			    int *offset);
++	/* Used to determine which traffic should match the DSA filter in
++	 * eth_type_trans, and which, if any, should bypass it and be processed
++	 * as regular on the master net device.
 +	 */
-+	netdev_tx_t (*port_deferred_xmit)(struct dsa_switch *ds, int port,
-+					  struct sk_buff *skb);
- };
++	bool (*filter)(const struct sk_buff *skb, struct net_device *dev);
+ 	unsigned int overhead;
+ 	const char *name;
+ 	enum dsa_tag_protocol proto;
+@@ -148,6 +153,7 @@ struct dsa_port {
+ 	struct dsa_switch_tree *dst;
+ 	struct sk_buff *(*rcv)(struct sk_buff *skb, struct net_device *dev,
+ 			       struct packet_type *pt);
++	bool (*filter)(const struct sk_buff *skb, struct net_device *dev);
  
- struct dsa_switch_driver {
-@@ -631,6 +642,7 @@ static inline int call_dsa_notifiers(unsigned long val, struct net_device *dev,
- #define BRCM_TAG_GET_QUEUE(v)		((v) & 0xff)
- 
- 
-+netdev_tx_t dsa_enqueue_skb(struct sk_buff *skb, struct net_device *dev);
- int dsa_port_get_phy_strings(struct dsa_port *dp, uint8_t *data);
- int dsa_port_get_ethtool_phy_stats(struct dsa_port *dp, uint64_t *data);
- int dsa_port_get_phy_sset_count(struct dsa_port *dp);
-diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
-index b434f5ff55ab..8f1222324646 100644
---- a/net/dsa/dsa_priv.h
-+++ b/net/dsa/dsa_priv.h
-@@ -174,6 +174,8 @@ int dsa_slave_resume(struct net_device *slave_dev);
- int dsa_slave_register_notifier(void);
- void dsa_slave_unregister_notifier(void);
- 
-+void *dsa_defer_xmit(struct sk_buff *skb, struct net_device *dev);
-+
- static inline struct dsa_port *dsa_slave_to_port(const struct net_device *dev)
- {
- 	struct dsa_slave_priv *p = netdev_priv(dev);
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index 8ad9bf957da1..cfb8cba6458c 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -120,6 +120,9 @@ static int dsa_slave_close(struct net_device *dev)
- 	struct net_device *master = dsa_slave_to_master(dev);
- 	struct dsa_port *dp = dsa_slave_to_port(dev);
- 
-+	cancel_work_sync(&dp->xmit_work);
-+	skb_queue_purge(&dp->xmit_queue);
-+
- 	phylink_stop(dp->pl);
- 
- 	dsa_port_disable(dp);
-@@ -430,6 +433,24 @@ static void dsa_skb_tx_timestamp(struct dsa_slave_priv *p,
- 	kfree_skb(clone);
+ 	enum {
+ 		DSA_PORT_TYPE_UNUSED = 0,
+@@ -520,6 +526,15 @@ static inline bool netdev_uses_dsa(struct net_device *dev)
+ 	return false;
  }
  
-+netdev_tx_t dsa_enqueue_skb(struct sk_buff *skb, struct net_device *dev)
++static inline bool dsa_can_decode(const struct sk_buff *skb,
++				  struct net_device *dev)
 +{
-+	/* SKB for netpoll still need to be mangled with the protocol-specific
-+	 * tag to be successfully transmitted
-+	 */
-+	if (unlikely(netpoll_tx_running(dev)))
-+		return dsa_slave_netpoll_send_skb(dev, skb);
-+
-+	/* Queue the SKB for transmission on the parent interface, but
-+	 * do not modify its EtherType
-+	 */
-+	skb->dev = dsa_slave_to_master(dev);
-+	dev_queue_xmit(skb);
-+
-+	return NETDEV_TX_OK;
++#if IS_ENABLED(CONFIG_NET_DSA)
++	return !dev->dsa_ptr->filter || dev->dsa_ptr->filter(skb, dev);
++#endif
++	return false;
 +}
-+EXPORT_SYMBOL_GPL(dsa_enqueue_skb);
 +
- static netdev_tx_t dsa_slave_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct dsa_slave_priv *p = netdev_priv(dev);
-@@ -452,23 +473,37 @@ static netdev_tx_t dsa_slave_xmit(struct sk_buff *skb, struct net_device *dev)
+ struct dsa_switch *dsa_switch_alloc(struct device *dev, size_t n);
+ void dsa_unregister_switch(struct dsa_switch *ds);
+ int dsa_register_switch(struct dsa_switch *ds);
+diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+index f1ad80851616..3b5f434cad3f 100644
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -586,6 +586,7 @@ static int dsa_port_parse_cpu(struct dsa_port *dp, struct net_device *master)
+ 	}
+ 
+ 	dp->type = DSA_PORT_TYPE_CPU;
++	dp->filter = tag_ops->filter;
+ 	dp->rcv = tag_ops->rcv;
+ 	dp->tag_ops = tag_ops;
+ 	dp->master = master;
+diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
+index 0f9863dc4d44..fddcee38c1da 100644
+--- a/net/ethernet/eth.c
++++ b/net/ethernet/eth.c
+@@ -185,8 +185,12 @@ __be16 eth_type_trans(struct sk_buff *skb, struct net_device *dev)
+ 	 * at all, so we check here whether one of those tagging
+ 	 * variants has been configured on the receiving interface,
+ 	 * and if so, set skb->protocol without looking at the packet.
++	 * The DSA tagging protocol may be able to decode some but not all
++	 * traffic (for example only for management). In that case give it the
++	 * option to filter the packets from which it can decode source port
++	 * information.
  	 */
- 	nskb = p->xmit(skb, dev);
- 	if (!nskb) {
--		kfree_skb(skb);
-+		if (!DSA_SKB_CB(skb)->deferred_xmit)
-+			kfree_skb(skb);
- 		return NETDEV_TX_OK;
- 	}
+-	if (unlikely(netdev_uses_dsa(dev)))
++	if (unlikely(netdev_uses_dsa(dev)) && dsa_can_decode(skb, dev))
+ 		return htons(ETH_P_XDSA);
  
--	/* SKB for netpoll still need to be mangled with the protocol-specific
--	 * tag to be successfully transmitted
--	 */
--	if (unlikely(netpoll_tx_running(dev)))
--		return dsa_slave_netpoll_send_skb(dev, nskb);
-+	return dsa_enqueue_skb(nskb, dev);
-+}
- 
--	/* Queue the SKB for transmission on the parent interface, but
--	 * do not modify its EtherType
--	 */
--	nskb->dev = dsa_slave_to_master(dev);
--	dev_queue_xmit(nskb);
-+void *dsa_defer_xmit(struct sk_buff *skb, struct net_device *dev)
-+{
-+	struct dsa_port *dp = dsa_slave_to_port(dev);
- 
--	return NETDEV_TX_OK;
-+	DSA_SKB_CB(skb)->deferred_xmit = true;
-+
-+	skb_queue_tail(&dp->xmit_queue, skb);
-+	schedule_work(&dp->xmit_work);
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(dsa_defer_xmit);
-+
-+static void dsa_port_xmit_work(struct work_struct *work)
-+{
-+	struct dsa_port *dp = container_of(work, struct dsa_port, xmit_work);
-+	struct dsa_switch *ds = dp->ds;
-+	struct sk_buff *skb;
-+
-+	if (unlikely(!ds->ops->port_deferred_xmit))
-+		return;
-+
-+	while ((skb = skb_dequeue(&dp->xmit_queue)) != NULL)
-+		ds->ops->port_deferred_xmit(ds, dp->index, skb);
- }
- 
- /* ethtool operations *******************************************************/
-@@ -1407,6 +1442,8 @@ int dsa_slave_create(struct dsa_port *port)
- 	}
- 	p->dp = port;
- 	INIT_LIST_HEAD(&p->mall_tc_list);
-+	INIT_WORK(&port->xmit_work, dsa_port_xmit_work);
-+	skb_queue_head_init(&port->xmit_queue);
- 	p->xmit = cpu_dp->tag_ops->xmit;
- 	port->slave = slave_dev;
- 
+ 	if (likely(eth_proto_is_802_3(eth->h_proto)))
 -- 
 2.17.1
 
