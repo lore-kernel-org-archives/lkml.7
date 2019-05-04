@@ -2,152 +2,126 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668E4C04AAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A12C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429A32133F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DAE92075C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:18:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cSwF2+Lr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbfEDBPU (ORCPT
+        id S1727055AbfEDBSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 21:15:20 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40675 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfEDBPT (ORCPT
+        Fri, 3 May 2019 21:18:42 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33411 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfEDBSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 21:15:19 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b3so3502536plr.7;
-        Fri, 03 May 2019 18:15:18 -0700 (PDT)
+        Fri, 3 May 2019 21:18:41 -0400
+Received: by mail-wr1-f67.google.com with SMTP id e28so9949444wra.0;
+        Fri, 03 May 2019 18:18:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=tHmbQEBxmUDjUBw4vJF51xJd9xZGVrC7H9l/slmei+4=;
+        b=cSwF2+LrR+XqUOXvwzSjtPv5S1kFJUKtnCMqzIAjPN0znGxe3Vwq4HET5M2MJSSAv8
+         FqUFK5bGhO1TaOT7r+sTHI7B7NT2ZhnHgKbFgdAovlpRHCVJuCIjo8WhN9PQkWRllqGC
+         kc4tBlx5mRL4pg5xrqKfd1xkH5sm5pGrXlQzKCF6ppNxofUjax6odu0612pOxa+4v1S+
+         he7roxQN3I3cIQWDy5F2L2HNfDpQ8YQ9JtJhg3WQgd5rrB7550Xf0098qXVrnwVRXb2i
+         cl/gpoFxuA2YxI1Y6qmNBpH1Sdx9Q2OBvCONHa/B5Z/yClfcD9O9lkRf0kTaPx7O8uDB
+         kxZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language;
-        bh=a9IXq1ExE3LjBqi16WuQaXq/l5pxcNR9gCGN3rok/Ak=;
-        b=drPha09l8ornjRRh0t2yyNmeujW4bqTPr/yR/vaozRTGRrZNggPswNG2Nw6RZU6H6R
-         XpRWEBkWxZJsHFSAQlC42u96nUn376pwCSoNtcuzRgA8lHbx8GsCNwYVJ8eFilnfwm92
-         roEPrA6Zojn4ubjxnPw79wnGsgE2RGLY4vXQRiJy5DNTcMDF2XzZK1UKhHM5h07jd68D
-         Xcoy7kiXM685BnrHDP9b6K1s6Qnc01FJTMVLdybL7hO4G4tjOSE3eliCr4OUBsLEWPtV
-         wV3umo+OHO3sbmtdiG7VuY57Bcv2QWL9T7HV6Q0Ra/XQJzsZUsHnx20A1QbC55BpxnV3
-         /HPw==
-X-Gm-Message-State: APjAAAWnmupasYdVwBqy1MPemjztT6vIbcGw8xedXn+anQjygtJzDNv+
-        +lJSF6F3QjuFTdOdSlIuB8yTyZ5T
-X-Google-Smtp-Source: APXvYqzLQm/VwjCjeibtxTsonIuvUl/wEsrh5GUCvnUSEzJDjjrpwxojlgclByE7lybGUbrravG1WQ==
-X-Received: by 2002:a17:902:7287:: with SMTP id d7mr14937211pll.186.1556932518486;
-        Fri, 03 May 2019 18:15:18 -0700 (PDT)
-Received: from asus.site ([2601:647:4000:5dd1:a41e:80b4:deb3:fb66])
-        by smtp.gmail.com with ESMTPSA id h30sm8830268pgi.38.2019.05.03.18.15.16
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 18:15:17 -0700 (PDT)
-Subject: Re: blkdev_get deadlock
-To:     Evan Green <evgreen@chromium.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>
-References: <CAE=gft4irmMAapAj3O0hWr53PnyRUmcX2AJB+p_PqCJHT0rvNg@mail.gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <ca507480-0b06-5e4d-ebe6-464302d3af92@acm.org>
-Date:   Fri, 3 May 2019 18:15:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAE=gft4irmMAapAj3O0hWr53PnyRUmcX2AJB+p_PqCJHT0rvNg@mail.gmail.com>
-Content-Type: multipart/mixed;
- boundary="------------78929E0BE3A126298D42A8E9"
-Content-Language: en-US
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=tHmbQEBxmUDjUBw4vJF51xJd9xZGVrC7H9l/slmei+4=;
+        b=gVMw7owJleyT3zvg4VgPLtiqF/w1pKi9OKG+hJ635vXDJ8nt+ZYBpLYsbigz8C75b6
+         Acs44T9pAV8ot1CLJv/xt5tsl2s5TrLtcCV4LURNiHXeiHRdCzFp4mjJPrt+18dglHUG
+         /8Rd1WANmV40qFkpKYk9Ed+rqH3xg6RDFnd+ToY5jyyzpDx0wHHCqy7KUViLBrCoaCX2
+         UUb9EDVlc/kMN95hVrwV/aejH0ZZ1+sUz1kUkidFEJX4f7w0/t7KFQL4SqDQE1MO+aJL
+         ydic2w2FDTOaafgjtFkuDuaLPH/16fDwXbb2Etk9KsUR6YFcymJ0BnjCTUUbfxR6AvYD
+         GpGg==
+X-Gm-Message-State: APjAAAXjvvcHGozdM6WKUpsyog/oYDgzJSa1RMaGDMehGKHrUuuAlcmh
+        sin7eBchEWIj3/BbtIS+10ODRGue7DE=
+X-Google-Smtp-Source: APXvYqz8nJX5LmH7U2oTaGMYxl5oVTjYXLA/pg+avz3nYvbXWp603XeUsnVcyzY6//hHeoaITxqehw==
+X-Received: by 2002:adf:f309:: with SMTP id i9mr9010499wro.258.1556932719680;
+        Fri, 03 May 2019 18:18:39 -0700 (PDT)
+Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
+        by smtp.gmail.com with ESMTPSA id t1sm3937639wro.34.2019.05.03.18.18.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 18:18:39 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH net-next 1/9] net: dsa: Call driver's setup callback after setting up its switchdev notifier
+Date:   Sat,  4 May 2019 04:18:18 +0300
+Message-Id: <20190504011826.30477-2-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190504011826.30477-1-olteanv@gmail.com>
+References: <20190504011826.30477-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------78929E0BE3A126298D42A8E9
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+This allows the driver to perform some manipulations of its own during
+setup, using generic switchdev calls. Having the notifiers registered at
+setup time is important because otherwise any switchdev transaction
+emitted during this time would be ignored (dispatched to an empty call
+chain).
 
-On 5/3/19 10:47 AM, Evan Green wrote:
-> Hey blockies,
-  ^^^^^^^^^^^^
+One current usage scenario is for the driver to request DSA to set up
+802.1Q based switch tagging for its ports.
 
-That's the weirdest greeting I have encountered so far on the
-linux-block mailing list.
+There is no danger for the driver setup code to start racing now with
+switchdev events emitted from the network stack (such as bridge core)
+even if the notifier is registered earlier. This is because the network
+stack needs a net_device as a vehicle to perform switchdev operations,
+and the slave net_devices are registered later than the core driver
+setup anyway (ds->ops->setup in dsa_switch_setup vs dsa_port_setup).
 
-> I'm seeing a hung task in the kernel, and I wanted to share it in case
-> it's a known issue. I'm still trying to wrap my head around the stacks
-> myself. This is our Chrome OS 4.19 kernel, which is admittedly not
-> 100% vanilla mainline master, but we try to keep it pretty close.
-> 
-> I can reproduce this reliably within our chrome OS installer, where
-> it's trying to dd from my system disk (NVMe) to a loop device backed
-> by a removable UFS card (4kb sectors) in a USB dongle.
+Luckily DSA doesn't need a net_device to carry out switchdev callbacks,
+and therefore drivers shouldn't assume either that net_devices are
+available at the time their switchdev callbacks get invoked.
 
-Although this is not the only possible cause such hangs are often caused
-by a block driver or SCSI LLD not completing a request. A list of
-pending requests can be obtained e.g. by running the attached script.
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+ net/dsa/dsa2.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Bart.
+diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+index bbc9f56e89b9..f1ad80851616 100644
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -371,14 +371,14 @@ static int dsa_switch_setup(struct dsa_switch *ds)
+ 	if (err)
+ 		return err;
+ 
+-	err = ds->ops->setup(ds);
+-	if (err < 0)
+-		return err;
+-
+ 	err = dsa_switch_register_notifier(ds);
+ 	if (err)
+ 		return err;
+ 
++	err = ds->ops->setup(ds);
++	if (err < 0)
++		return err;
++
+ 	if (!ds->slave_mii_bus && ds->ops->phy_read) {
+ 		ds->slave_mii_bus = devm_mdiobus_alloc(ds->dev);
+ 		if (!ds->slave_mii_bus)
+-- 
+2.17.1
 
---------------78929E0BE3A126298D42A8E9
-Content-Type: text/plain; charset=UTF-8;
- name="list-pending-block-requests"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="list-pending-block-requests"
-
-IyEvYmluL2Jhc2gKCnNob3dfc3RhdGUoKSB7CiAgICBsb2NhbCBhIGRldj0kMQoKICAgIGZv
-ciBhIGluIGRldmljZS9zdGF0ZSBxdWV1ZS9zY2hlZHVsZXI7IGRvCglbIC1lICIkZGV2LyRh
-IiBdICYmIGdyZXAgLWFIIC4gIiRkZXYvJGEiCiAgICBkb25lCn0KCmlmIFsgLWUgL3N5cy9r
-ZXJuZWwvZGVidWcvYmxvY2sgXTsgdGhlbgogICAgZGV2cz0oJChjZCAvc3lzL2tlcm5lbC9k
-ZWJ1Zy9ibG9jayAmJiBlY2hvIC4vKikpCmVsc2UKICAgIGRldnM9KCQoY2QgL3N5cy9jbGFz
-cy9ibG9jayAmJiBlY2hvIC4vKikpCmZpCgpjZCAvc3lzL2NsYXNzL2Jsb2NrIHx8IGV4aXQg
-JD8KZm9yIGRldiBpbiAiJHtkZXZzW0BdfSI7IGRvCiAgICBkZXY9IiR7ZGV2Iy4vfSIKICAg
-IGVjaG8gIiRkZXYiCiAgICBwZW5kaW5nPTAKICAgIGlmIFsgLWUgIiRkZXYvbXEiIF07IHRo
-ZW4KCWZvciBmIGluICIkZGV2Ii9tcS8qL3twZW5kaW5nLCovcnFfbGlzdH07IGRvCgkgICAg
-WyAtZSAiJGYiIF0gfHwgY29udGludWUKCSAgICBpZiB7IHJlYWQgLXIgbGluZTEgJiYgcmVh
-ZCAtciBsaW5lMjsgfSA8IiRmIjsgdGhlbgoJCWVjaG8gIiRmIgoJCWVjaG8gIiRsaW5lMSAk
-bGluZTIiID4vZGV2L251bGwKCQloZWFkIC1uIDkgIiRmIgoJCSgocGVuZGluZysrKSkKCSAg
-ICBmaQoJZG9uZQogICAgZmkKICAgICgKCWJ1c3k9MAoJY2QgL3N5cy9rZXJuZWwvZGVidWcv
-YmxvY2sgPiYvZGV2L251bGwgJiYKCSAgICB7IGdyZXAgLWFIIC4gJGRldi9yZXF1ZXVlX2xp
-c3Q7IHRydWU7IH0gJiYKCSAgICBmb3IgZCBpbiAiJGRldiIvbXEvaGN0eCogIiRkZXYiL2hj
-dHgqOyBkbwoJCVsgISAtZCAiJGQiIF0gJiYgY29udGludWUKCQl7IFsgISAtZSAiJGQvdGFn
-cyIgXSB8fAoJCSAgICAgIGdyZXAgLXEgJ15idXN5PTAkJyAiJGQvdGFncyI7IH0gJiYKCQkg
-ICAgeyBbICEgLWUgIiRkL3NjaGVkX3RhZ3MiIF0gfHwKCQkJICBbICIkKDwiJGQvc2NoZWRf
-dGFncyIpIiA9ICIiIF0gfHwKCQkJICBncmVwIC1xICdeYnVzeT0wJCcgIiRkL3NjaGVkX3Rh
-Z3MiOyB9ICYmIGNvbnRpbnVlCgkJKChidXN5KyspKQoJICAgICAgICBmb3IgZiBpbiAiJGQi
-L3thY3RpdmUsYnVzeSxkaXNwYXRjaCxmbGFncyxyZXF1ZXVlX2xpc3Qsc2NoZWRfdGFncyxz
-dGF0ZSx0YWdzKixjcHUqL3JxX2xpc3Qsc2NoZWQvKnJxc307IGRvCgkJICAgIFsgLWUgIiRm
-IiBdICYmIGdyZXAgLWFIIC4gIiRmIgoJCWRvbmUKCSAgICBkb25lCglleGl0ICRidXN5CiAg
-ICApCiAgICBwZW5kaW5nPSQoKHBlbmRpbmcrJD8pKQogICAgaWYgWyAiJHBlbmRpbmciIC1n
-dCAwIF07IHRoZW4KCSgKCSAgICBjZCAvc3lzL2tlcm5lbC9kZWJ1Zy9ibG9jayA+Ji9kZXYv
-bnVsbCAmJgoJCWlmIFsgLWUgIiRkZXYvbXEvc3RhdGUiIF07IHRoZW4KCQkgICAgZ3JlcCAt
-YUggLiAiJGRldi9tcS9zdGF0ZSIKCQllbHNlCgkJICAgIGdyZXAgLWFIIC4gIiRkZXYvc3Rh
-dGUiCgkJZmkKCSkKCXNob3dfc3RhdGUgIiRkZXYiCiAgICBmaQpkb25lCg==
---------------78929E0BE3A126298D42A8E9--
