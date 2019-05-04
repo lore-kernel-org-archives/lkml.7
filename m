@@ -2,97 +2,103 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4BAC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 07:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA631C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 07:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D71F2084A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 07:26:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556954794;
-	bh=7M8LWi4HCapsDw9sC9lfXVqB6NXjC4jpoo3wJEk0Y9U=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=imyymGBbbMr/iuHCh8jZMpYnDPg+dMoYxYO7KfjbDXMpWB5W8L0zcaS6q8IVp0FDq
-	 PAncnx6h57G926dORFR2ayjx4PdNf0jQ9Gkv4X+RRuakvqiIEozJXmywwU7EJHG7/n
-	 3bIjOoqkrwbCJIlw/x2IJOtjVsAE4Vblq7773Mng=
+	by mail.kernel.org (Postfix) with ESMTP id A134720645
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 07:31:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ge81vD4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbfEDH0b (ORCPT
+        id S1726579AbfEDHa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 03:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbfEDH0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 03:26:30 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D90E20645;
-        Sat,  4 May 2019 07:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556954790;
-        bh=7M8LWi4HCapsDw9sC9lfXVqB6NXjC4jpoo3wJEk0Y9U=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=yovRT7xNo6EJS5AH5pqX9Cc4Od3KFmo5LaqMcdp6FyopwPsLd2nTziHl/GpA+WBpU
-         d4vFGD8Skpdj5ktfU/+OD9RfJD9aQqOy0Up285HuLdxvvBa5Qf4OgI47tV230FyQ7W
-         eDAlNqmXnu+A8hJjiJWiGuDBog4HntdljGn1VLhE=
-Date:   Sat, 4 May 2019 09:26:19 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-cc:     Andy Lutomirski <luto@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
- export
-In-Reply-To: <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>
-Message-ID: <nycvar.YFH.7.76.1905040849370.17054@cbobk.fhfr.pm>
-References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org> <20190502154043.gfv4iplcvzjz3mc6@linutronix.de> <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Sat, 4 May 2019 03:30:59 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38944 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfEDHa6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 03:30:58 -0400
+Received: by mail-pl1-f195.google.com with SMTP id e92so3805885plb.6;
+        Sat, 04 May 2019 00:30:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=EwweiBCfeJ/cKJj/kqdEZt5KyrfkU7tGiFKFsGG/ynM=;
+        b=ge81vD4ktejLRqGTFd9opeJ/bQJ81OT/HtLTZzaN081dOnSgLk/b4K2qCWI3DuNOFL
+         hfc4X2tNsk30NvPs1jLB+XcdWr20To+HKWCNte0d21hYM1a1a3ttIoQiVLyjK5uLvCxa
+         oTMnOHFyaCUcu/vlLC+M1HGJnrERA1RECs9fwpDdoE60z3e16wsUl42bRcglYlOSKszs
+         eMeuMwtXjpPLHTUCkZfhYQZ5sbBS//NQ9P3FMM3GVL5EKiucHHGacmZT3j9U8Znnlcyq
+         LWl3+W5m//QptC1QEeeWS73cG4dRjlK94XBzIDJ5oXfwDlnwtOIu5KfjbTkVD5xBBC1Z
+         4l7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=EwweiBCfeJ/cKJj/kqdEZt5KyrfkU7tGiFKFsGG/ynM=;
+        b=iZZKs1gOGgDXJ8tUZ9GQlpebNb+0uqHRZ4jjug/8Qg0GaW8opuuXjB/M3bLPrdLQ1P
+         yMXDKBem3JXgMlokH5Mr9Y6JX2v8EUnVJkQjanI5RcAOHcKmxgUhiCX0T+/qSjESrv6u
+         Fb0KGLVgEBtyV7qfr8oRQa1Nfu3++/4q/A2wrGxVSYHTNlftJTG+Bke0bOSVyq/47LBS
+         pRUXIb3fSq0zIVAf2N10APx+pBd/21wNadI8zPPnofGXCcb0mRtuTlwHLKYNKouS3b91
+         vA0dFEX3Iy5YHfEYwGWGkkt+76AtqGIoOXfp+Vg92py8/e11ZI9OUzswIyneawKtKx/m
+         foGA==
+X-Gm-Message-State: APjAAAU8h27rtCdSZfE3wczdSrW/i6jpdwsDVIOHAUpC4wn1hIqfVlr6
+        YMZGn5tJCDnocs4Yys4In58zcK/t
+X-Google-Smtp-Source: APXvYqwQuHJjllCV9Zt2vI8TIT03UGNOh62eAd7zsJvPGi1g80RArlbgZHfIrLj+U/y4d+XrSyu0jg==
+X-Received: by 2002:a17:902:2702:: with SMTP id c2mr16524210plb.277.1556955057920;
+        Sat, 04 May 2019 00:30:57 -0700 (PDT)
+Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.71.43? ([2402:f000:1:1501:200:5efe:a66f:472b])
+        by smtp.gmail.com with ESMTPSA id j6sm5711397pfe.107.2019.05.04.00.30.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 May 2019 00:30:56 -0700 (PDT)
+Subject: Re: [PATCH] usb: host: xhci_debugfs: Fix a null pointer dereference
+ in xhci_debugfs_create_endpoint()
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mathias.nyman@intel.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190504033748.17964-1-baijiaju1990@gmail.com>
+ <20190504063340.GA26311@kroah.com>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <db68433e-d655-217a-4a73-4bb83069addc@gmail.com>
+Date:   Sat, 4 May 2019 15:30:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190504063340.GA26311@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 3 May 2019, Jiri Kosina wrote:
 
-> > Please don't start this. We have everything _GPL that is used for FPU
-> > related code and only a few functions are exported because KVM needs it.
-> 
-> That's not completely true. There are a lot of static inlines out there, 
-> which basically made it possible for external modules to use FPU (in some 
-> way) when they had kernel_fpu_[begin|end]() available.
 
-... any for many uses that's really the only thing that's needed.
+On 2019/5/4 14:33, Greg KH wrote:
+> On Sat, May 04, 2019 at 11:37:48AM +0800, Jia-Ju Bai wrote:
+>> In xhci_debugfs_create_slot(), kzalloc() can fail and
+>> dev->debugfs_private will be NULL.
+>> In xhci_debugfs_create_endpoint(), dev->debugfs_private is used without
+>> any null-pointer check, and can cause a null pointer dereference.
+>>
+>> To fix this bug, a null-pointer check is added in
+>> xhci_debugfs_create_endpoint().
+>>
+>> This bug is found by a runtime fuzzing tool named FIZZER written by us.
+>>
+>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> Very rare case, but nice fix.  You should put "potential" in your
+> subject line as this is something that no one should ever hit :)
 
-	kernel_fpu_beign();
-	asm volatile ("some SSE2/AVX/... math");
-	kernel_fpu_end();
+Okay, Greg, thanks for this advice :)
 
-No other bits of the FPU API, so there is no way of getting anything wrong 
-because of FPU intrinsic details really.
 
-So I don't really see a problem with Andy's patch. If we want to annoy 
-external non-GPL modules as much as possible, sure, that's for a separate 
-discussion though (and I am sure many people would agree to that). 
-Proposal to get rid of EXPORT_SYMBOL in favor of EXPORT_SYMBOL_GPL would 
-be a good start I guess :)
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Best wishes,
+Jia-Ju Bai
