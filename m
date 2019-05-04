@@ -2,75 +2,149 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC7EC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4279BC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B63206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15FA220859
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556965398;
+	bh=l3Xmchzoy355shuJN+rybTT5lgs3HpoVHmcBPPwvdw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Pa3iWDZZDru1nGLLhT5wWqjPwpbLSqmslj1v10JRHkjM0RPRTLwl2GCw2cddEs3zk
+	 CB29Ei7KPUa0KCEs+I9kRyMUgFIR0JLWan3CTO4JkvIoF+FjrAuM7qdpu3vRA7LZZT
+	 hniNpiraJX9etiCHy/uVmdjIqSzxEeckUtNCldMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbfEDKXH (ORCPT
+        id S1727265AbfEDKXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:23:07 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56432 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726631AbfEDKXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:23:06 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C39828FB586CBB087327;
-        Sat,  4 May 2019 18:23:04 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
- 18:22:54 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <nbd@nbd.name>, <lorenzo.bianconi83@gmail.com>,
-        <ryder.lee@mediatek.com>, <royluo@google.com>,
-        <kvalo@codeaurora.org>, <matthias.bgg@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] mt76: mt7615: Make mt7615_irq_handler static
-Date:   Sat, 4 May 2019 18:22:47 +0800
-Message-ID: <20190504102247.43720-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 4 May 2019 06:23:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726631AbfEDKXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:23:15 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34DC1206BB;
+        Sat,  4 May 2019 10:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556965394;
+        bh=l3Xmchzoy355shuJN+rybTT5lgs3HpoVHmcBPPwvdw0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vIvgQAAJjm99iKHQb50KLr6KkU85Hi9OPPJZZXOdBz6InhdjA7o2UBQvsSdxVBy2a
+         snTo30dEEUyOrMigvD1dKsY6aXWLjuHoxvUbV1b0hLrxvUpGGnacaLhgZ5zkuSJDVx
+         XXQBBqJW5SIfjZVJf41xQhnvaKq+nnbnvSQHWbDU=
+Date:   Sat, 4 May 2019 15:53:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     dan.j.williams@intel.com, tiwai@suse.com, jonathanh@nvidia.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+Message-ID: <20190504102304.GZ3845@vkoul-mobl.Dlink>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+On 02-05-19, 18:59, Sameer Pujar wrote:
+> 
+> On 5/2/2019 5:55 PM, Vinod Koul wrote:
+> > On 02-05-19, 16:23, Sameer Pujar wrote:
+> > > On 5/2/2019 11:34 AM, Vinod Koul wrote:
+> > > > On 30-04-19, 17:00, Sameer Pujar wrote:
+> > > > > During the DMA transfers from memory to I/O, it was observed that transfers
+> > > > > were inconsistent and resulted in glitches for audio playback. It happened
+> > > > > because fifo size on DMA did not match with slave channel configuration.
+> > > > > 
+> > > > > currently 'dma_slave_config' structure does not have a field for fifo size.
+> > > > > Hence the platform pcm driver cannot pass the fifo size as a slave_config.
+> > > > > Note that 'snd_dmaengine_dai_dma_data' structure has fifo_size field which
+> > > > > cannot be used to pass the size info. This patch introduces fifo_size field
+> > > > > and the same can be populated on slave side. Users can set required size
+> > > > > for slave peripheral (multiple channels can be independently running with
+> > > > > different fifo sizes) and the corresponding sizes are programmed through
+> > > > > dma_slave_config on DMA side.
+> > > > FIFO size is a hardware property not sure why you would want an
+> > > > interface to program that?
+> > > > 
+> > > > On mismatch, I guess you need to take care of src/dst_maxburst..
+> > > Yes, FIFO size is a HW property. But it is SW configurable(atleast in my
+> > > case) on
+> > > slave side and can be set to different sizes. The src/dst_maxburst is
+> > Are you sure, have you talked to HW folks on that? IIUC you are
+> > programming the data to be used in FIFO not the FIFO length!
+> Yes, I mentioned about FIFO length.
+> 
+> 1. MAX FIFO size is fixed in HW. But there is a way to limit the usage per
+> channel
+>    in multiples of 64 bytes.
+> 2. Having a separate member would give independent control over MAX BURST
+> SIZE and
+>    FIFO SIZE.
+> > 
+> > > programmed
+> > > for specific values, I think this depends on few factors related to
+> > > bandwidth
+> > > needs of client, DMA needs of the system etc.,
+> > Precisely
+> > 
+> > > In such cases how does DMA know the actual FIFO depth of slave peripheral?
+> > Why should DMA know? Its job is to push/pull data as configured by
+> > peripheral driver. The peripheral driver knows and configures DMA
+> > accordingly.
+> I am not sure if there is any HW logic that mandates DMA to know the size
+> of configured FIFO depth on slave side. I will speak to HW folks and
+> would update here.
 
-drivers/net/wireless/mediatek/mt76/mt7615/pci.c:37:13:
- warning: symbol 'mt7615_irq_handler' was not declared. Should it be static?
+I still do not comprehend why dma would care about slave side
+configuration. In the absence of patch which uses this I am not sure
+what you are trying to do...
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/wireless/mediatek/mt76/mt7615/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > Request for feedback/suggestions.
+> > > > > 
+> > > > > Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> > > > > ---
+> > > > >    include/linux/dmaengine.h | 3 +++
+> > > > >    1 file changed, 3 insertions(+)
+> > > > > 
+> > > > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> > > > > index d49ec5c..9ec198b 100644
+> > > > > --- a/include/linux/dmaengine.h
+> > > > > +++ b/include/linux/dmaengine.h
+> > > > > @@ -351,6 +351,8 @@ enum dma_slave_buswidth {
+> > > > >     * @slave_id: Slave requester id. Only valid for slave channels. The dma
+> > > > >     * slave peripheral will have unique id as dma requester which need to be
+> > > > >     * pass as slave config.
+> > > > > + * @fifo_size: Fifo size value. The dma slave peripheral can configure required
+> > > > > + * fifo size and the same needs to be passed as slave config.
+> > > > >     *
+> > > > >     * This struct is passed in as configuration data to a DMA engine
+> > > > >     * in order to set up a certain channel for DMA transport at runtime.
+> > > > > @@ -376,6 +378,7 @@ struct dma_slave_config {
+> > > > >    	u32 dst_port_window_size;
+> > > > >    	bool device_fc;
+> > > > >    	unsigned int slave_id;
+> > > > > +	u32 fifo_size;
+> > > > >    };
+> > > > >    /**
+> > > > > -- 
+> > > > > 2.7.4
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/pci.c b/drivers/net/wireless/mediatek/mt76/mt7615/pci.c
-index 11122bd..c181e59 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/pci.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/pci.c
-@@ -34,7 +34,7 @@ void mt7615_rx_poll_complete(struct mt76_dev *mdev, enum mt76_rxq_id q)
- 	mt7615_irq_enable(dev, MT_INT_RX_DONE(q));
- }
- 
--irqreturn_t mt7615_irq_handler(int irq, void *dev_instance)
-+static irqreturn_t mt7615_irq_handler(int irq, void *dev_instance)
- {
- 	struct mt7615_dev *dev = dev_instance;
- 	u32 intr;
 -- 
-2.7.4
-
-
+~Vinod
