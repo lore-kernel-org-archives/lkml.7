@@ -2,121 +2,110 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3A9C46460
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 06:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5628C04AAA
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 06:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7282084A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 06:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F20E2084A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 06:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556952046;
-	bh=0Ftj/3PzhwV4/auuONbabTb56xCaipaSaiEBU3GT0Ww=;
+	s=default; t=1556952331;
+	bh=LGCs4gvPTmGr/6mh5CkkCOnBvPtC6U3fKyL7tODsf90=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ol1Jjv8BjZHSU8S9Cfy4GOPXBOcjvxR19ELwGKKhfcUsGmJj5SAx0ikqxLGiwjIdR
-	 Kk5EW7kJ53eY65dH7YRpEPXfD4TvVwWYo8BgplhvR2jmSdFMs8/Vvhp3VvMYMlkFN8
-	 YHFu7qT22Sa5s4QPJI1wjjCuWSpWKME/pcCCYirs=
+	b=Dqb9bfgHmOfctU/Jp0Of/VlhBJpu/muoxmmmnOn+OWGISK1Cx4bJOKFH73ZgUryX0
+	 anjVQinz5+wSHrihIHzLYt8//D1Wku/Qjyw3mh0ZdP6y2aWZzsBg9vRqGHVWH56JqU
+	 w5BUUcVrUbNGKYYytXqR/dmLBZwWeMZw0CeM0ffY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbfEDGkp (ORCPT
+        id S1726605AbfEDGpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 02:40:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57640 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 02:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbfEDGkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 02:40:45 -0400
+        id S1725802AbfEDGpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 02:45:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C0420675;
-        Sat,  4 May 2019 06:40:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37AA920675;
+        Sat,  4 May 2019 06:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556952043;
-        bh=0Ftj/3PzhwV4/auuONbabTb56xCaipaSaiEBU3GT0Ww=;
+        s=default; t=1556952329;
+        bh=LGCs4gvPTmGr/6mh5CkkCOnBvPtC6U3fKyL7tODsf90=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1XC+EywlhZEUrQ5rCeT1HuWtfedf999QLIBYexcBC+WZlwj2k9RKcYB7DCbVsYutE
-         E11X9CgGo/TQHcFOPnQDyh7Z+7ur4qbUm9ZSmIGtjCMm2QEG91ZiZ2ibv9CV4uS3AY
-         OEQPREOquHyd1HDjV1y9lFcDO292VgIoZSJNIW5U=
-Date:   Sat, 4 May 2019 08:40:41 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sebastian Gottschall <s.gottschall@newmedia-net.de>
-Cc:     Ingo Molnar <mingo@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        stable@vger.kernel.org, Jiri Kosina <jikos@jikos.cz>
-Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
- export
-Message-ID: <20190504064041.GB26311@kroah.com>
-References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
- <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
- <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>
- <20190504004747.GA107909@gmail.com>
- <2238f6ed-9338-903c-760c-6200e73b1599@newmedia-net.de>
+        b=uPZNCo/dsELO/HxHPmYaPXapjZsBEx9NDHyE0uCgKGEdT6skj1Gfyo8zMiXMqucyv
+         Sq8BkeDRmOfSGn5tLAXB8P2ppTVjQNm4WMKAI+HCXMZ91wmzbrGNHN2btMVuKGCN+H
+         mU7/cQgYNETeGJ6kp//UsfYu2feKn6YBDrwALo7M=
+Date:   Sat, 4 May 2019 08:45:27 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Aditya Pakki <pakki001@umn.edu>,
+        Richard Leitner <richard.leitner@skidata.com>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 57/72] usb: usb251xb: fix to avoid potential NULL
+ pointer dereference
+Message-ID: <20190504064527.GD26311@kroah.com>
+References: <20190502143333.437607839@linuxfoundation.org>
+ <20190502143337.920245890@linuxfoundation.org>
+ <20190503213235.GA9080@amd>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2238f6ed-9338-903c-760c-6200e73b1599@newmedia-net.de>
+In-Reply-To: <20190503213235.GA9080@amd>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 04, 2019 at 04:28:17AM +0200, Sebastian Gottschall wrote:
-> 
-> Am 04.05.2019 um 02:47 schrieb Ingo Molnar:
-> > * Jiri Kosina <jikos@kernel.org> wrote:
+On Fri, May 03, 2019 at 11:32:35PM +0200, Pavel Machek wrote:
+> On Thu 2019-05-02 17:21:19, Greg Kroah-Hartman wrote:
+> > [ Upstream commit 41f00e6e9e55546390031996b773e7f3c1d95928 ]
 > > 
-> > > On Thu, 2 May 2019, Sebastian Andrzej Siewior wrote:
-> > > 
-> > > > Please don't start this. We have everything _GPL that is used for FPU
-> > > > related code and only a few functions are exported because KVM needs it.
-> > > That's not completely true. There are a lot of static inlines out there,
-> > > which basically made it possible for external modules to use FPU (in some
-> > > way) when they had kernel_fpu_[begin|end]() available.
-> > > 
-> > > I personally don't care about ZFS a tiny little bit; but in general, the
-> > > current situation with _GPL and non-_GPL exports is simply not nice. It's
-> > > not really about licensing (despite the name), it's about 'internal vs
-> > > external', which noone is probably able to define properly.
-> > But that's exactly what licensing *IS* about: the argument is that
-> > 'internal' interfaces are clear proof that the binary module is actually
-> > a derived work of the kernel.
-> Using fpu code in kernel space in a kernel module is a derived work of the
-> kernel itself?
-> dont get me wrong, but this is absurd. i mean you limit the use of cpu
-> instructions. the use
-> of cpu instructions should be free of any licensing issue. i would even
-> argument you are violating
-> the license of the cpu ower given to the kernel by executing it, by
-> restricting its use for no reason
+> > of_match_device in usb251xb_probe can fail and returns a NULL pointer.
+> > The patch avoids a potential NULL pointer dereference in this scenario.
+> > 
+> > Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+> > Reviewed-by: Richard Leitner <richard.leitner@skidata.com>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+> > ---
+> >  drivers/usb/misc/usb251xb.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+> > index a6efb9a72939..5f7734c729b1 100644
+> > --- a/drivers/usb/misc/usb251xb.c
+> > +++ b/drivers/usb/misc/usb251xb.c
+> > @@ -601,7 +601,7 @@ static int usb251xb_probe(struct usb251xb *hub)
+> >  							   dev);
+> >  	int err;
+> >  
+> > -	if (np) {
+> > +	if (np && of_id) {
+> >  		err = usb251xb_get_ofdata(hub,
+> >  					  (struct usb251xb_data *)of_id->data);
+> >  		if (err) {
+> 
+> Are you sure this si correct?
+> 
+> If of_id is NULL, this will proceed without setting up hub->conf_data
+> etc.
+> 
+> I'd expect it to just return error from probe...?
 
-Now you are just being crazy, please go talk to a lawyer about how the
-GPL actually works.
+I think it will error out later on.
 
-If Andy wants to change the symbol of what he wrote from
-EXPORT_SYMBOL_GPL() to EXPORT_SYMBOL(), that's fine, it's his option.
-Any loony discussion about if this is actually a licensing issue or not
-needs to just go to /dev/null
+> Was this tested?
 
-As homework, everyone please go read this:
-	http://softwarefreedom.org/resources/2014/SFLC-Guide_to_GPL_Compliance_2d_ed.pdf
-and remember that the license of the Linux kernel is GPLv2.
+Don't know, error paths are hard to test :)
 
-Now where's the "kill this thread" option on mutt so I don't have to see
-any more of this nonsense...
+But the code obviously fixes a null dereference, so that's a good thing.
+
+thanks,
 
 greg k-h
