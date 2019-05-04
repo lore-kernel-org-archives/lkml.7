@@ -7,108 +7,152 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1F2C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186DBC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E42820675
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D03DF20862
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:03:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aEV5cKHE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q97G8pZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfEDLCf (ORCPT
+        id S1727282AbfEDLD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 07:02:35 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38172 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfEDLCe (ORCPT
+        Sat, 4 May 2019 07:03:58 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38293 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfEDLD6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 07:02:34 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f2so4594037wmj.3;
-        Sat, 04 May 2019 04:02:32 -0700 (PDT)
+        Sat, 4 May 2019 07:03:58 -0400
+Received: by mail-lj1-f194.google.com with SMTP id e18so7299445lja.5;
+        Sat, 04 May 2019 04:03:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=d9xqRvQ7LglnQSyEdyWwx0LaW1NdfXcmsha1uWwwA5U=;
-        b=aEV5cKHE7rw5w8phwcnK4XYABmhkwlqMGBjm4KtKfMkB3HMEFI0UbjyP1MWPKSsuO4
-         kV10cFluOgdaRPFW8lcQTDEA3j6cDs/KB4XFx2CjN2ohfEB9IiBX+JjKmplO9ehRUnXi
-         M8IfK57Avok/aRvhLtp5YxHlQLOWE/Bf7q4La4FNtfqWZkqCHBTtTAwVTTKze3VeRFBN
-         jUM10tGMTAIUns2YSTTTq+AynStJ805mdf6251QBordFuPHO+HdxdEtTAj/LpZX+tWIy
-         xwyNyGDc/gxwOuofptU3PJSSPHcKfeq+DuG5LdMzWZ5DzC+Otm7ocsyICkodvIuAUyS+
-         O1Hw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BiywJZA9r6kxv/OyDdQ+nsf3ks4JUNhEjjCyaz/iKGE=;
+        b=Q97G8pZiOy62ZVDNe0KVvckArrkMdxecNMK4C/6pgUuK8qH7i5kTR0Xp9u0nXvwy7h
+         ieRz1pH9APKGOrspbwKDycEg93+6W263uNuzYcBeJQYleT8EaeL6QY6XR/yIrk+xtufz
+         C6371n8NrtHYFPe6DHKMlYBxBa1EXFXF5t3V276WQnuPj9AFY5iwuk7lSd8RMNRHtAau
+         XMzujU6b0I2dH/9Qdfs9Te1PrrHwdrUEIrc0lpC7nPuqmC8A/QxsznKfCrqNVO0iWXQ5
+         8Qm1DP/ACg/HV3uBVnYP5tyRc0+y7isFYLES++OZ0zSPeZN0GeWiwiXuoMQX/Cifce8V
+         qWJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d9xqRvQ7LglnQSyEdyWwx0LaW1NdfXcmsha1uWwwA5U=;
-        b=WOp5zGp+rJXnUjfAak9oDZimyNV3QY9dzv5gZOI6TKWFUomqtVTdczkTy9kYbhmzOv
-         NKkh8p0iXDyvlBunZ1a0EbCVjem3l4t8JviqIbU4dl0QEBOXE+OCQtLH182xBSS8o1Aw
-         1bSLciZ6stovJT0zHy+JljzCyIIyKGQWX8SsM5qejhCb5pssMXgL0n2V++lHqDhBzllj
-         T0opQRhUL+DLhnTX7dZQIjBF0pAL0WQEX65z6ztcztag3/oRdrKlsJLdycSzigbdGHA8
-         ZxICLAoMaXaql/zgvbyHsasF8UHeB7yC7VlaGp81ov9P4TKCzEk4PjRNRLzItZMKpEPJ
-         hvlw==
-X-Gm-Message-State: APjAAAVTJ63JHIuQOPEqw5gmyxKUwl6JK5N5OuoFJpJA+fgYmu1joDAE
-        8FeG7wVsXOvdYKs3YHmcHagvf6jB7/o=
-X-Google-Smtp-Source: APXvYqy3dfTFdLwZrygw5pSCGAvurOj9VwUtSKJIX0E/y05IQOuv2UX4urpxWai1LbIz2W3WXRPigg==
-X-Received: by 2002:a1c:a008:: with SMTP id j8mr9967493wme.73.1556967751884;
-        Sat, 04 May 2019 04:02:31 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd4:5700:4cd8:8005:fc98:c429? (p200300EA8BD457004CD88005FC98C429.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:4cd8:8005:fc98:c429])
-        by smtp.googlemail.com with ESMTPSA id z4sm3251606wrq.75.2019.05.04.04.02.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 04:02:30 -0700 (PDT)
-Subject: Re: [PATCH] net: wireless: ath9k: Return an error when
- ath9k_hw_reset() fails
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>, ath9k-devel@qca.qualcomm.com,
-        kvalo@codeaurora.org, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190504100815.19876-1-baijiaju1990@gmail.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <e47117d6-f918-1dd0-834e-d056534bfead@gmail.com>
-Date:   Sat, 4 May 2019 13:02:25 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BiywJZA9r6kxv/OyDdQ+nsf3ks4JUNhEjjCyaz/iKGE=;
+        b=We1011AvdsidE1gxliuTsal6ZnL1SLQzMNvQNUdCA77csaSurqw1ift8VpdtDEJMB+
+         oZsIXk1Dy5Jn6DN0zL4VpI9ANn+IGVnN4LFEYHYVmEaq0C2iU5iYRmLLfY64mOHvlBWw
+         LT7rTGSbgXOLAkE0p3v5PXiJCArr4ePJUdhyrihwUqwM0uGvWOJOC7a+UKLhh0mTBSQe
+         PYo2PF8MlR1mgxolRUgn56657K9ljYI29Qn5hZlUXajnDoAjDE0OeflBFmxgXrByJwU4
+         tn+cc5mvmuWX/bkVUzqMcBLcmewGsP3qptV7xZ6oF4gl2x8Ux1cgHrWdgJxrHL1HioAA
+         K47w==
+X-Gm-Message-State: APjAAAWvPd9VhqcdS1T4m9RpY8N+m3I2hXykGt5juI5+gP6uBgXt11VK
+        0ZyQ82KZ/8BhtaeULu5Q/tnKAIOYqfGYqyrm7kM=
+X-Google-Smtp-Source: APXvYqxAdM8lMj0YVduKkje1fAP2BJHG25g2COytac2Z1uIxoAVV6UQJjuekl53q0zv8YxsZvrYsyKGgLHP7ZDgHWOA=
+X-Received: by 2002:a2e:9188:: with SMTP id f8mr5201827ljg.100.1556967835818;
+ Sat, 04 May 2019 04:03:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190504100815.19876-1-baijiaju1990@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1556190530-19541-1-git-send-email-liuk@cetca.net.cn>
+In-Reply-To: <1556190530-19541-1-git-send-email-liuk@cetca.net.cn>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sat, 4 May 2019 08:03:55 -0300
+Message-ID: <CAOMZO5BbA6oq8okTR-r800k4XY76XxxEdufd1mjcV6HdTpVotA@mail.gmail.com>
+Subject: Re: [PATCHv2 1/2] ARM: dts: imx6sx: Use MX6SX_CLK_ENET for fec 'ahb' clock
+To:     Kay-Liu <liuk@cetca.net.cn>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.05.2019 12:08, Jia-Ju Bai wrote:
-> ath9k_hw_reset() in ath9k_start() can fail, and in this case, 
-> ath9k_start() should return an error instead of executing the 
-> subsequent code.
-> 
-Such mechanical patches w/o understanding the code are always
-problematic. Do you have any proof that this error is fatal?
-I think it is not, else we wouldn't have this line:
-ah->reset_power_on = false;
-Also you should consider that a mutex and a spinlock are held.
-Maybe changing the error message to a warning would be more
-appropriate. But this I would leave to somebody being more
-familiar with this driver.
+Hi Kay-Liu,
 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+On Thu, Apr 25, 2019 at 8:09 AM <liuk@cetca.net.cn> wrote:
+>
+> From: Kay-Liu <liuk@cetca.net.cn>
+>
+> The imx6sx's dts file defines five clocks for fec, the
+> 'ahb'clock's value is IMX6SX_CLK_ENET_AHB, but in the
+> i.MX6SX Reference Manual there is no such enet ahb clock,
+> there is only one "enet clock" in the CCM_CCGR3 register
+> which is controlled by bits 5-4, the enet clock is defined
+> for the 'ipg' clock, this can cause problem.
+> The original phenomenon is using imx6-solox processor and
+> Marvel 88E6390 switch with linux OS, the kernel will hang
+> during the startup of the linux OS.
+> After analyzing the phenomenon, the reason of CPU hang is
+> read/write enet module's register when the enet clock
+> is disabled. The kernel code try to avoids the problem
+> by resume enet clock before read/write enet register.
+> But the enet module's clock config will cause a special
+> environment which can bypass the clock resume mechanism.
+> The CPU has only one enet clock, after kernel parses
+> the dts file, the two clock variables 'ipg' and 'ahb'
+> finnaly point to the same enet clock register. This will
+> cause enet clock be disabled after fec probe over.
+> Because the power saving module will affect the BUG, so
+> there are two situations for this problem:
+> 1)Turn off power saving
+> Turn off power saving means that the resume mechanism is
+> disabled, so after fec probe over if any one read/write
+> enet module's register, the CPU will hang because no one
+> could resume the enet clock.
+> 2)Turn on power saving
+> Turn on power saving could resume enet clock before
+> read/write enet register by enable 'ipg' clk, this will
+> cause 'ahb' variable state and enet clock register value
+> don't match.If any task read/write enet at a high
+> frequently, the kernel will keep resume state and never
+> enter suspend process, this means that the kernel will
+> only modifies the register value during the first resume.
+> But the kernel init will check unused clock variable in
+> the late initcall, the 'ahb' clock will be treated as
+> unused, at this time, the enet clock will be disabled
+> bypass the resume mechanism, then the next read/write
+> enet module's register will cause the CPU hang.
+> Proposed solution is delete the 'ahb' clock's definition
+> in the clk-imx6sx.c, and modify fec device=E2=80=99s clocks in
+> the dts file, point =E2=80=98ahb=E2=80=99 from IMX6SX_CLK_ENET_AHB to
+> IMX6SX_CLK_ENET
+>
+> Signed-off-by: Kay-Liu <liuk@cetca.net.cn>
 > ---
->  drivers/net/wireless/ath/ath9k/main.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/wireless/ath/ath9k/main.c b/drivers/net/wireless/ath/ath9k/main.c
-> index f23cb2f3d296..f78e7c46764d 100644
-> --- a/drivers/net/wireless/ath/ath9k/main.c
-> +++ b/drivers/net/wireless/ath/ath9k/main.c
-> @@ -681,6 +681,7 @@ static int ath9k_start(struct ieee80211_hw *hw)
->  			"Unable to reset hardware; reset status %d (freq %u MHz)\n",
->  			r, curchan->center_freq);
->  		ah->reset_power_on = false;
-> +		return r;
->  	}
->  
->  	/* Setup our intr mask. */
-> 
+> Change since v1:
+> -inproved commit log description
+> -add platform related clock change instead of describe is in the external=
+ URL
+>
+>  arch/arm/boot/dts/imx6sx.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dts=
+i
+> index 5b16e65..b8b23a6 100644
+> --- a/arch/arm/boot/dts/imx6sx.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx.dtsi
+> @@ -919,7 +919,7 @@
+>                                 interrupts =3D <GIC_SPI 118 IRQ_TYPE_LEVE=
+L_HIGH>,
+>                                              <GIC_SPI 119 IRQ_TYPE_LEVEL_=
+HIGH>;
+>                                 clocks =3D <&clks IMX6SX_CLK_ENET>,
+> -                                        <&clks IMX6SX_CLK_ENET_AHB>,
+> +                                        <&clks IMX6SX_CLK_ENET>,
 
+Yes, there is really no IMX6SX_CLK_ENET_AHB as per the Refernce Manual
+and it is the same we do on imx6qdl.dtsi:
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
