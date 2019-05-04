@@ -2,132 +2,69 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79E4C04AAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AB8C04AAA
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88591206DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:43:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxVjpKX4"
+	by mail.kernel.org (Postfix) with ESMTP id 18EEB2084A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556966650;
+	bh=JGWkOV/hj8H+O/TaeLZewNOAIluePPJyTL/Z+sEbtrc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Irvtv/MKcfnzAwuPTUmEog4T2cEJ1CRYGHGqrApOMhYs12kVM7TryQly26bGxYt8U
+	 PjsJSKTCalKUGSAli5kHLXsQPHZRLZsNERA72SFXwWPnmb5wqgobgcuHkcA34ChLnv
+	 VltKge1RcWxRIqPg4cekoZ9HVKf9jlKpG5zXU504=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfEDKnr (ORCPT
+        id S1727398AbfEDKoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:43:47 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40936 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfEDKnr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:43:47 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y64so6322633oia.7;
-        Sat, 04 May 2019 03:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jP4HbLDkknhP4A9EDJa5u2q42TL/gPI6IzJv6fDFbOE=;
-        b=QxVjpKX4PVr06tzfYCHVDnwasOj8Lay1fQHuq7MDHynAVFS1ghYDIn9Epz8T7hksdl
-         +Sn6K4p1MCxfb0Sjol0zvoAqsv0sYvL/8kBiHCdOyHmHRM2lwgZCJwf7VgcENDcgrR+2
-         /V3yVEVrmHPz1xsXnCWkShf0F/Uk6Xrd3RUK0PKCW5D1AotrYrTMbKPLosAww7GsY7yY
-         wJmmWdsdevwn3IDuJcYjWu5fEGgwfWxBjv22eUzl3xgfE0GUtuDBW7sYqjj04XmIYath
-         /xX1t1eVkuxSVLnC0Pfq/6ZwtaCuMGDzETzGUrd17jjbamU8lnQzgSRxhQCobguc0J26
-         uzeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jP4HbLDkknhP4A9EDJa5u2q42TL/gPI6IzJv6fDFbOE=;
-        b=qr7T5D5XCOCRevjhcinKh//epQ/L7VLcnZ4awEg6yn790ZdW4JFpQqNRWQ5F+MvsYU
-         wldtq3TjiRYlPo0PJmpwFbzhpyMjX4DoeFaQ3CifT+bytgeVSawknGYamNkC3s98UQ4Q
-         V74Hpr6vh60AlJOUFk0EUyfML4rP315BIOERQrrZFkvyMlYkYt2/LaYJShdhzgS7gLXi
-         OZMgJI8C5LdSZWtkTs2bTgr7hJFSUBuyjGymYqwq9jKZndxhPC+SxM8ohjt+mDHjepS6
-         kX8vJiE1B5PYuYUGK00KhTgK6p2505Y3QbXgeqb4fCtn7UCgOYIORchsIUsYwp1iq7MH
-         7vjA==
-X-Gm-Message-State: APjAAAXG6BEYiCvGBJKBICJNKbdTsxmU8/j2LRMLsFRKdioFmzzrIMhI
-        YQgmBRFV/Tz+RD9CLd2rCf0dJawqTTbznVpN1Lg=
-X-Google-Smtp-Source: APXvYqwCrRtjDLEJreXyuy076r7vAv19fwipMMdtgaVutPfe+ZBelYYYdLgoyxQ3nllr1qxbJe0rltNF0vUGorWhUNA=
-X-Received: by 2002:aca:305:: with SMTP id 5mr2011759oid.117.1556966626650;
- Sat, 04 May 2019 03:43:46 -0700 (PDT)
+        Sat, 4 May 2019 06:44:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfEDKoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:44:08 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57471206DF;
+        Sat,  4 May 2019 10:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556966648;
+        bh=JGWkOV/hj8H+O/TaeLZewNOAIluePPJyTL/Z+sEbtrc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R1/I7vGESntvEjsznnS5YSGrJEHFUUsl/HX7tDipbeSdMiEflWSxaLbl6HrrNSuQe
+         wOyfDUGn52JKUfQxlBb5rr94/JCdQXupAjocbPBTs4KEblMN1VfEwuuvut+fJsgksQ
+         +iffzYiqmarWuk5PjBCU0Qs1X9I3WtMvT/Zinvzo=
+Date:   Sat, 4 May 2019 16:13:59 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     dan.j.williams@intel.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        ldewangan@nvidia.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] Add support for Tegra186/Tegra194 and generic fixes
+Message-ID: <20190504104359.GB3845@vkoul-mobl.Dlink>
+References: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
 MIME-Version: 1.0
-References: <cover.1556919363.git.melissa.srw@gmail.com> <7f7d36348bca1de25bd70350b7c665be6441250f.1556919363.git.melissa.srw@gmail.com>
-In-Reply-To: <7f7d36348bca1de25bd70350b7c665be6441250f.1556919363.git.melissa.srw@gmail.com>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Sat, 4 May 2019 13:43:34 +0300
-Message-ID: <CA+U=Dso6zSLzhhdiZcc+P4-2zcabxnoMd2539HmofTXrtYoKDQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] staging: iio: ad7150: use FIELD_GET and GENMASK
-To:     Melissa Wen <melissa.srw@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Barry Song <21cnbao@gmail.com>, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-usp@googlegroups.com,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 4, 2019 at 1:25 AM Melissa Wen <melissa.srw@gmail.com> wrote:
->
-> Use the bitfield macro FIELD_GET, and GENMASK to do the shift and mask in
-> one go. This makes the code more readable than explicit masking followed
-> by a shift.
->
+On 02-05-19, 18:25, Sameer Pujar wrote:
+> Audio DMA(ADMA) interface is a gateway in the AHUB for facilitating DMA
+> transfers between memory and all of its clients. Currently the driver
+> supports Tegra210 based platforms. This series adds support for Tegra186
+> and Tegra194 based platforms and fixes few functional issues.
 
-This looks neat.
-I'd have to remember to ack it from my work email.
-
-One minor comment inline, which would be the object of a new patch.
-
-> Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-> ---
->  drivers/staging/iio/cdc/ad7150.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
-> index 24601ba7db88..4ba46fb6ac02 100644
-> --- a/drivers/staging/iio/cdc/ad7150.c
-> +++ b/drivers/staging/iio/cdc/ad7150.c
-> @@ -5,6 +5,7 @@
->   * Copyright 2010-2011 Analog Devices Inc.
->   */
->
-> +#include <linux/bitfield.h>
->  #include <linux/interrupt.h>
->  #include <linux/device.h>
->  #include <linux/kernel.h>
-> @@ -44,6 +45,9 @@
->  #define AD7150_SN0_REG                         0x16
->  #define AD7150_ID_REG                          0x17
->
-> +/* AD7150 masks */
-> +#define AD7150_THRESHTYPE_MSK                  GENMASK(6, 5)
-> +
->  /**
->   * struct ad7150_chip_info - instance specific chip data
->   * @client: i2c client for this device
-> @@ -136,7 +140,7 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
->         if (ret < 0)
->                 return ret;
->
-> -       threshtype = (ret >> 5) & 0x03;
-> +       threshtype = FIELD_GET(AD7150_THRESHTYPE_MSK, ret);
->         adaptive = !!(ret & 0x80);
-
-Why not also do something similar for the `adaptive` value ?
-
->
->         switch (type) {
-> --
-> 2.20.1
->
+Applied all, thanks
+-- 
+~Vinod
