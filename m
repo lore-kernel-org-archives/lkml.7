@@ -2,101 +2,68 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6B0C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A30C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE87D2081C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:08:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=expunge-us.20150623.gappssmtp.com header.i=@expunge-us.20150623.gappssmtp.com header.b="W8rgmeki"
+	by mail.kernel.org (Postfix) with ESMTP id B0C6E206E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556928604;
+	bh=nsZC0USU0psqXiLgGlN+iWonkITiOE1mFKRnJulUJaY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=VvLavvyrWrbIRHj0gYs+DovC20GuNQEtujLRrLVWKUZ/EHJdFsoNJ8VGnabJc3Bwa
+	 mXuimsvIZfk0r+lBnPklb0LG3HZUH7mvPFd6xcTCH0VUklyxf9BW21/+z0FkObRWLZ
+	 P4jBMefKpBK4Lhqg/VXQcZ5/u10iqdcY5zoE8J64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfEDAH1 (ORCPT
+        id S1726543AbfEDAKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 20:07:27 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38468 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbfEDAH0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 20:07:26 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 10so3673110pfo.5
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 17:07:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=expunge-us.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iovEWy/GQChZ/awOVkY7H6FjwQrlO6bXxHcgVwGcj+4=;
-        b=W8rgmekidkx06udnPHuIxrTgcS2YyZ/LnwzT6OTCVziN3r5PRkkLYxoe7fwnd5b0ga
-         2VJwv8y76owide44YO6ZyQKvuukxmTgJcLNdo28rpX3HjRdjU5N8L6yMvOsAlTQiPedE
-         waro9Bcie9EwVPNqm2XO3FyHPi5rrOykd+55Yx1fHghO74FBmnhDH8EpPCiOMdzuGW3E
-         p46lDx1PHKOCTgw6LLFUqgDndChvSBSr2+75BqEEvg2Dvesj7aEiBgkEiK+oLD8Vcdxg
-         0XvASQGTgo5FaHaVoUrMynrre74WHv8B4G8Y7riJfNcVdAH4Y9DGcQ9RIhjLhFFASPGP
-         2vkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iovEWy/GQChZ/awOVkY7H6FjwQrlO6bXxHcgVwGcj+4=;
-        b=gsDoFp3B6VnTRVipPbMWW/Yi9CmiCZIb716UpxX5cbcAv104S5Ct5wMwwvhcSQL+4I
-         YD8+Nsds8GAdjo3PbnsaesO8RaHNTzK1q5jvucBTTE3XzJ4rf0tNdn6VaIUzxaZcjO+x
-         DUf9ohnm9HFCjmLA5V41rts7vG5lwth7VgcujJHp3UVgA9/f1IM2d9/yc26K03LKxCCH
-         fyF42GLFirGPlcQjyCEMObh9nkZtUtQVkzjg98PYxtKP15xSz12pHUymR/c+s/6A4wGP
-         XrNvszKdfDfgwOGHd2RH0b10IVPLiDLfZgI8kFq2MPgJg4s2oQYo6mMqvQya8kwhhNkU
-         mw+w==
-X-Gm-Message-State: APjAAAVVeKo+dgZyRl1NUm24IqCoCCZ1oYGLNNJsNcWDj0pY+O3i+HiG
-        XifAZIgl2RC1ydL1MK5yCmHdXcYepTxfYA==
-X-Google-Smtp-Source: APXvYqzHuVCCkd14uJH1YbxuOuV8rfgJYzruetuIOrsuqy6jbZ3ju1hiUC+6Qr/w2YB8KbnLNyJ5dQ==
-X-Received: by 2002:aa7:8d81:: with SMTP id i1mr15024146pfr.127.1556928446138;
-        Fri, 03 May 2019 17:07:26 -0700 (PDT)
-Received: from gamepad.lan ([2604:4080:1159:80a0:148b:33f9:3a17:5899])
-        by smtp.gmail.com with ESMTPSA id c137sm4868997pfb.154.2019.05.03.17.07.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 17:07:25 -0700 (PDT)
-From:   Jared Baldridge <jrb@expunge.us>
-Cc:     Jared Baldridge <jrb@expunge.us>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: panel-orientation-quirks: Update GPD Win 2 FW dates
-Date:   Fri,  3 May 2019 17:07:16 -0700
-Message-Id: <20190504000716.8063-1-jrb@expunge.us>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 3 May 2019 20:10:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726041AbfEDAKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 20:10:03 -0400
+Subject: Re: [GIT PULL] KVM fixes for 5.1-rc8 or final
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556928602;
+        bh=nsZC0USU0psqXiLgGlN+iWonkITiOE1mFKRnJulUJaY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=kD30eDf/18ex/fkL1b2c+zwAazR0GDfR4wL3CNG3rM/IqUyI5PoxBcBIkBHPNNZKh
+         ts6E7lHd2+H1QRrr8B0CtVtssl1QPInDmEaS78iRaqKVnKuVoecmCb01b5DvSzu2do
+         tvzGLMDrfRpRHeIZKa/giw71rgRO51q2QFl+bI48=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190503214614.21250-1-pbonzini@redhat.com>
+References: <20190503214614.21250-1-pbonzini@redhat.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190503214614.21250-1-pbonzini@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/virt/kvm/kvm.git
+ tags/for-linus
+X-PR-Tracked-Commit-Id: e8ab8d24b488632d07ce5ddb261f1d454114415b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: aa1be08f52585fe36ecfaf5bddfdc784eb4c94cf
+Message-Id: <155692860261.31859.12161279767404451309.pr-tracker-bot@kernel.org>
+Date:   Sat, 04 May 2019 00:10:02 +0000
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        rkrcmar@kernel.org, kvm@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GPD Win 2 is shipping with a new firmware release date. As
-the quirk is still required with the new firmware, this commit
-adds the new release date to the quirks table.
+The pull request you sent on Fri,  3 May 2019 15:46:14 -0600:
 
-Signed-off-by: Jared Baldridge <jrb@expunge.us>
----
- drivers/gpu/drm/drm_panel_orientation_quirks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-index 52e445bb1aa5..e0d0f3169581 100644
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -63,7 +63,7 @@ static const struct drm_dmi_panel_orientation_data gpd_win2 = {
- 	.width = 720,
- 	.height = 1280,
- 	.bios_dates = (const char * const []){
--		"12/07/2017", "05/24/2018", "06/29/2018", NULL },
-+		"12/07/2017", "05/24/2018", "06/29/2018", "07/30/2018", NULL },
- 	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
- };
- 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/aa1be08f52585fe36ecfaf5bddfdc784eb4c94cf
+
+Thank you!
+
 -- 
-2.21.0
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
