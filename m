@@ -2,92 +2,82 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74599C46470
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDD3C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4461B2075E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3152075E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556930874;
-	bh=mzMYKs3hM6NSOSBp7bZILFWpJ57xCdHq9A7xdjtVNCM=;
+	s=default; t=1556931022;
+	bh=MM3NOmVCz1xRVAPGR+BO0vxpdhPxpsI1uVGkFEMG4jo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=de0NN5STjHslTWSjwACGYOEoB+5JNNnto4cBhsRlzkNMFjuyCXAvWntOGEX6ZeoV4
-	 LHOt40eoiVNxqShXpkcXnX4vT6UacQ5MK4ef2PPA/Q+dof90YXkKCXxTfwOppN0etF
-	 v7zMVAy9d5nlRs3TCyL8klSUX+FmtfIHtOOMHHMk=
+	b=lYNnGmcvGb28RZ/AftDCMT/6kcfdMQ8wU2piWi/JoydU/npcoda8A48h6mgq8TWYp
+	 VWAhqzcJqX6JfPu+7GZklFZ1b6TzdC9HrXytlVNKdJFlNXucapAjlAxmE1yCH53P7d
+	 11wAIMgP6R/HxvxISv8372dxr9eP+TcsRpyO3YHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfEDArx (ORCPT
+        id S1726733AbfEDAuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 20:47:53 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55099 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbfEDArx (ORCPT
+        Fri, 3 May 2019 20:50:21 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35445 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbfEDAuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 20:47:53 -0400
-Received: by mail-wm1-f66.google.com with SMTP id b10so9018058wmj.4;
-        Fri, 03 May 2019 17:47:50 -0700 (PDT)
+        Fri, 3 May 2019 20:50:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y197so8543283wmd.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 17:50:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=+RUUwZtfXQ6xT1Hl/GMU6GnIUFgYiZSHQrHKa24Cz/8=;
-        b=e9jyjmpD8fiiYb49IxcHxpChjnbrt1GkXmGxwB1yqkxqqVlETUfPgyoZF8OLyj8Vlg
-         TKU5W4H1geDqj7jHrt6evWTUgDGUX0won4Lwepx20VYfP/p8znKpo19B9ccdU4NqOfk4
-         htvFT2oqzAo5G+bqmXBiY74Rq0y/8JgentxiMLcK5adNQH4wC/OzHa5bvQKENmpbrZR8
-         DGpH5hMMBDSGlHqRwQCvasbq4AtHAsMqZpi9zeMET3SEXEDs8MZq3wgzcXRhzHSyGBpq
-         Ov0xyP8imrn2hjPKGe1Tm3pUi3xozie3c/EKMviGvs94DdVAApEGMcs5QiSPBuVInWw5
-         cUTw==
+        bh=tGIpyHh66ISLnP9KLegCkli4scoOI6Fnu3GjehQgDl8=;
+        b=IE6UhRY1pPuvWnH3xnrZtGNsqcaedvt0I8FQ2FRycRtPXTr0R4/fdfjyhM9p3Ae3le
+         O4rqAxjVI46PREipkQ+lCLwAvU6vmeoEGU2wjMF7wEAbJNC1Jbmv3sVOWnQS8tOOubEU
+         UVRrLT/Ws2OcQeza8YwnxmSICAB3/Rq+oNINxSUAGistlHIEJIHIwfE7kxYnnl/y0Zoe
+         hez4/hyfEHFfEB7RlPFN1JrUc64PQ7L/xrBWVD3pkzgyE3tbCThWBgXjWXrCONev0MGY
+         xGsS+o3hluR/a+zcH7CBqfyYr6M8TgWCYqcgldHkcyYeQX6jJWFRnai9VfrTbGKihK4T
+         CegQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+RUUwZtfXQ6xT1Hl/GMU6GnIUFgYiZSHQrHKa24Cz/8=;
-        b=c/9a//Dj/6wyitwDni17HA1MpodR5f7D5TzRIA3Y+86q5AimLHPxIfZiUxvho3ZbeH
-         MBpL//w8k4JM1xNCPnccZimXobPT6WJEWutk4+KSxItTOcQlKNB0HfKrihlzZiBcCSwX
-         k+sB8epLo+/4yLQjCTWK6SJjcIjXumTx1Nmnq4S4bvGEPPTgeHZDE0C/Ov+oVG3b5mIs
-         OLZ1h/K0Si1zmongVzwvYP47n/mYStYzwl2rnL+BoY9ro9JyjClCMcnEOZPfrE3nxuno
-         P40fi6wklOBjm7eJO6dTp+RIqQQSt0g12AwhBcjMFYQIO6+aQ7U+iXAAGsnaZBqsvBSK
-         99FA==
-X-Gm-Message-State: APjAAAUDsaKij/9HaSF/WOxarqGm+mRdvt4/7VNqiw4/hS7YuyGMzLk0
-        MUyX22d4jIAP7fqgEKSErUg=
-X-Google-Smtp-Source: APXvYqz0+T8y6x0T9meXdQkJNwiqY/hDY+0VfBJ31nL1K7ogZV8XxypLDM0xmr9I9Hgakjqvgu4rng==
-X-Received: by 2002:a7b:ce84:: with SMTP id q4mr8590958wmj.41.1556930870237;
-        Fri, 03 May 2019 17:47:50 -0700 (PDT)
+        bh=tGIpyHh66ISLnP9KLegCkli4scoOI6Fnu3GjehQgDl8=;
+        b=cYwa17VIMBWB2YiOyhRKx+gFKj1q0my/38UPrZVP8C3SdvlcuKyv2DTOViKCu/1qTL
+         6UC/klNulYajlFmOYxzCrnA1KzpAVC3vU90JKr5i1LwX9b2eyTWgnsz0ksGrV0AUipri
+         /tITJt8QidXcgdmSDV2LHG5MYsVGZ02QLcuKu5xogWvkMpwnNGRX8MrRzh8fuDwa4q8u
+         CXHIVX/cFqEQryU9p+3pIvcrwduPGviaAXAV1Mq8c066Z0SIvmyqmYEz0NWgQiwGx32P
+         b4HSh6rPuYkKjwv6aq/jcxbkFend2FEH+a27otiuSbsak2caJnj/MoihCyQUhtj4ZgOU
+         OGJQ==
+X-Gm-Message-State: APjAAAVo3g4imCZyPuVFV6IqAykkHOHf7tCWD3S1YV01kUZOSz+nJSa5
+        u75b60EBXgPQ2r6Irp/0il9DReRX
+X-Google-Smtp-Source: APXvYqyKFvmF+br5OVCto9o0pgs6tcx1qlgY//9FgKDcY9hx/2CZFXeR/vd78tS0qUPMhiBs2wffFg==
+X-Received: by 2002:a1c:e3c4:: with SMTP id a187mr8698370wmh.87.1556931019401;
+        Fri, 03 May 2019 17:50:19 -0700 (PDT)
 Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id n17sm3078515wrw.77.2019.05.03.17.47.48
+        by smtp.gmail.com with ESMTPSA id a17sm3651391wrm.53.2019.05.03.17.50.18
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 17:47:49 -0700 (PDT)
-Date:   Sat, 4 May 2019 02:47:47 +0200
+        Fri, 03 May 2019 17:50:18 -0700 (PDT)
+Date:   Sat, 4 May 2019 02:50:16 +0200
 From:   Ingo Molnar <mingo@kernel.org>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Nicolai Stange <nstange@suse.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        stable@vger.kernel.org, Jiri Kosina <jikos@jikos.cz>
-Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
- export
-Message-ID: <20190504004747.GA107909@gmail.com>
-References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
- <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
- <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, kbuild-all@01.org,
+        linux-kernel@vger.kernel.org, tipbuild@zytor.com,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>
+Subject: Re: [tip:sched/core 24/27] kernel/power/suspend.c:431:10: error:
+ implicit declaration of function 'suspend_disable_secondary_cpus'
+Message-ID: <20190504005016.GA114514@gmail.com>
+References: <201905032053.KmG848Ye%lkp@intel.com>
+ <20190503160458.GF2606@hirez.programming.kicks-ass.net>
+ <1556927451.rwdz1vqk9f.astroid@bobo.none>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>
+In-Reply-To: <1556927451.rwdz1vqk9f.astroid@bobo.none>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -95,44 +85,45 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Jiri Kosina <jikos@kernel.org> wrote:
+* Nicholas Piggin <npiggin@gmail.com> wrote:
 
-> On Thu, 2 May 2019, Sebastian Andrzej Siewior wrote:
+> Peter Zijlstra's on May 4, 2019 2:04 am:
+> > On Fri, May 03, 2019 at 08:34:57PM +0800, kbuild test robot wrote:
+> >> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
+> >> head:   65874bd36e6ae3028539e989bfb5c28ad457368e
+> >> commit: c2cb30bfceceba8a2a0d5713230a250dd6140e22 [24/27] power/suspend: Add function to disable secondaries for suspend
+> >> config: x86_64-randconfig-l3-05031806 (attached as .config)
+> >> compiler: gcc-5 (Debian 5.5.0-3) 5.4.1 20171010
+> >> reproduce:
+> >>         git checkout c2cb30bfceceba8a2a0d5713230a250dd6140e22
+> >>         # save the attached .config to linux build tree
+> >>         make ARCH=x86_64 
+> >> 
+> > 
+> > The below appears to fix.
+> > 
+> > 
+> > --- a/include/linux/cpu.h
+> > +++ b/include/linux/cpu.h
+> > @@ -150,6 +150,8 @@ static inline void suspend_enable_second
+> >  #else /* !CONFIG_PM_SLEEP_SMP */
+> >  static inline int disable_nonboot_cpus(void) { return 0; }
+> >  static inline void enable_nonboot_cpus(void) {}
+> > +static inline int suspend_disable_secondary_cpus(void) { return 0; }
+> > +static inline void suspend_enable_secondary_cpus(void) { }
+> >  #endif /* !CONFIG_PM_SLEEP_SMP */
+> >  
+> >  void cpu_startup_entry(enum cpuhp_state state);
+> > 
 > 
-> > Please don't start this. We have everything _GPL that is used for FPU
-> > related code and only a few functions are exported because KVM needs it.
-> 
-> That's not completely true. There are a lot of static inlines out there, 
-> which basically made it possible for external modules to use FPU (in some 
-> way) when they had kernel_fpu_[begin|end]() available.
-> 
-> I personally don't care about ZFS a tiny little bit; but in general, the 
-> current situation with _GPL and non-_GPL exports is simply not nice. It's 
-> not really about licensing (despite the name), it's about 'internal vs 
-> external', which noone is probably able to define properly.
+> Oops, thanks for that, it looks okay.
 
-But that's exactly what licensing *IS* about: the argument is that 
-'internal' interfaces are clear proof that the binary module is actually 
-a derived work of the kernel.
+I back-merged the fix into tip:sched/core.
 
-(Using regular exported symbols might still make a binary module derived 
-work, but it's less clear-cut.)
+For these bits to make it upstream in the merge window which starts in 
+two days, Frederic's questions about this patch need to be addressed:
 
-So don't be complicit with binary module authors who try to circumvent 
-the GPL by offloading the actual license violation to the end user ...
-
-> If it would be strictly about license compatibility, that'd at least 
-> make us somewhat deterministic.
-
-License compatibility is rarely deterministic to begin with, there's a 
-lot of grey area. Adding _GPL increases the likelihood that the module 
-using it has to be covered by the GPL too. In fact behavior of binary 
-modules seems to confirm that legal expectation: very few binary modules 
-are trying to circumvent _GPL symbols by ignoring the _GPL attribute.
-
-Anyway, in terms of _GPL exports the policy has always been that if a 
-major author of the code asks for a symbol to be _GPL, then it should be 
-so, even if other authors have a different judgement.
+   Re: [tip:sched/core] sched/isolation: Require a present CPU in housekeeping mask
 
 Thanks,
 
