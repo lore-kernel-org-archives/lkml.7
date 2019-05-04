@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6C7C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBB9C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020E1206A3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6100E206A3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556974348;
-	bh=c45lMWl+tzp9dLEbI6wga+Hk1i0joi8BAMF4G4RsiT0=;
+	s=default; t=1556974353;
+	bh=crwCRa0uJD+gJFHRfkRB0Gj090IJmW/sLuxqZJKA6Oo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jwPX8OguWae5xR0OZri8b4vo7xvJUjnIEndQgFs3tzbbtCgsuqn5IS3XauThb17En
-	 CJplWSVHTSX4plZAPocLfNJXJCpHAnQqnxvbtMGmLJcBtr3BVVfejzrmRFx3IUvXUC
-	 NbIeh+lF11Pttn/ukrkHMm3wlDvp/JitffFZtoF8=
+	b=cgZmB9ZWfS2esF8BWF7vWqtDVOTSiBA7m3oBhzUIQhAa4CQzxVW2Hwhm2ZboUqVYu
+	 +jummgyaWrGdvsRUESqJtcYclcrbFbjCMR8MwMoUgljU01nhA0Q+9NKm02IZd6U8nR
+	 PMNVB8rwB4J5SPwuJF2nj0/ScWHRl3EDhKDCzr5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfEDMw0 (ORCPT
+        id S1727434AbfEDMw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 08:52:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44025 "EHLO mx1.redhat.com"
+        Sat, 4 May 2019 08:52:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59298 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727318AbfEDMwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 08:52:19 -0400
+        id S1727335AbfEDMwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 08:52:22 -0400
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 86589356D3;
-        Sat,  4 May 2019 12:52:19 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 79DBF3082E06;
+        Sat,  4 May 2019 12:52:21 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE19A5C298;
-        Sat,  4 May 2019 12:52:17 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1B6F5C298;
+        Sat,  4 May 2019 12:52:19 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Peter Zijlstra <a.p.zijlstra@chello.nl>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -42,108 +42,149 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5/8] perf/x86: Add is_visible attribute_group callback for base events
-Date:   Sat,  4 May 2019 14:52:04 +0200
-Message-Id: <20190504125207.24662-6-jolsa@kernel.org>
+Subject: [PATCH 6/8] perf/x86: Use update attribute groups for caps
+Date:   Sat,  4 May 2019 14:52:05 +0200
+Message-Id: <20190504125207.24662-7-jolsa@kernel.org>
 In-Reply-To: <20190504125207.24662-1-jolsa@kernel.org>
 References: <20190504125207.24662-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sat, 04 May 2019 12:52:19 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Sat, 04 May 2019 12:52:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We dont need to pre-filter out unsupported base events,
-we can just use its group's is_visible function to do this.
+Using the new pmu::update_attrs attribute group for
+"caps" directory.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- arch/x86/events/core.c | 52 ++++++++++++------------------------------
- 1 file changed, 14 insertions(+), 38 deletions(-)
+ arch/x86/events/core.c       |  8 -------
+ arch/x86/events/intel/core.c | 44 ++++++++++++++++++++++++++++--------
+ arch/x86/events/perf_event.h |  1 -
+ 3 files changed, 34 insertions(+), 19 deletions(-)
 
 diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index a43d8d1e8590..1889e45e6742 100644
+index 1889e45e6742..b7e907b5c4ea 100644
 --- a/arch/x86/events/core.c
 +++ b/arch/x86/events/core.c
-@@ -1618,42 +1618,6 @@ static struct attribute_group x86_pmu_format_group __ro_after_init = {
- 	.attrs = NULL,
+@@ -1820,14 +1820,6 @@ static int __init init_hw_perf_events(void)
+ 
+ 	x86_pmu_format_group.attrs = x86_pmu.format_attrs;
+ 
+-	if (x86_pmu.caps_attrs) {
+-		struct attribute **tmp;
+-
+-		tmp = merge_attr(x86_pmu_caps_group.attrs, x86_pmu.caps_attrs);
+-		if (!WARN_ON(!tmp))
+-			x86_pmu_caps_group.attrs = tmp;
+-	}
+-
+ 	if (!x86_pmu.events_sysfs_show)
+ 		x86_pmu_events_group.attrs = &empty_attrs;
+ 
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 354396da90a8..235d06e2aac5 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4402,6 +4402,18 @@ pebs_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ 	return x86_pmu.pebs ? attr->mode : 0;
+ }
+ 
++static umode_t
++lbr_is_visible(struct kobject *kobj, struct attribute *attr, int i)
++{
++	return x86_pmu.lbr_nr ? attr->mode : 0;
++}
++
++static umode_t
++exra_is_visible(struct kobject *kobj, struct attribute *attr, int i)
++{
++	return x86_pmu.version >= 2 ? attr->mode : 0;
++}
++
+ static struct attribute_group group_events_td  = {
+ 	.name = "events",
+ };
+@@ -4416,13 +4428,33 @@ static struct attribute_group group_events_tsx = {
+ 	.is_visible = tsx_is_visible,
  };
  
--/*
-- * Remove all undefined events (x86_pmu.event_map(id) == 0)
-- * out of events_attr attributes.
-- */
--static void __init filter_events(struct attribute **attrs)
--{
--	struct device_attribute *d;
--	struct perf_pmu_events_attr *pmu_attr;
--	int offset = 0;
--	int i, j;
--
--	for (i = 0; attrs[i]; i++) {
--		d = (struct device_attribute *)attrs[i];
--		pmu_attr = container_of(d, struct perf_pmu_events_attr, attr);
--		/* str trumps id */
--		if (pmu_attr->event_str)
--			continue;
--		if (x86_pmu.event_map(i + offset))
--			continue;
--
--		for (j = i; attrs[j]; j++)
--			attrs[j] = attrs[j + 1];
--
--		/* Check the shifted attr. */
--		i--;
--
--		/*
--		 * event_map() is index based, the attrs array is organized
--		 * by increasing event index. If we shift the events, then
--		 * we need to compensate for the event_map(), otherwise
--		 * we are looking up the wrong event in the map
--		 */
--		offset++;
--	}
--}
--
- /* Merge two pointer arrays */
- __init struct attribute **merge_attr(struct attribute **a, struct attribute **b)
- {
-@@ -1744,9 +1708,23 @@ static struct attribute *events_attr[] = {
++static struct attribute_group group_caps_gen = {
++	.name  = "caps",
++	.attrs = intel_pmu_caps_attrs,
++};
++
++static struct attribute_group group_caps_lbr = {
++	.name       = "caps",
++	.attrs	    = lbr_attrs,
++	.is_visible = lbr_is_visible,
++};
++
++static struct attribute_group group_format_extra = {
++	.name       = "format",
++	.is_visible = exra_is_visible,
++};
++
+ static const struct attribute_group *attr_update[] = {
+ 	&group_events_td,
+ 	&group_events_mem,
+ 	&group_events_tsx,
++	&group_caps_gen,
++	&group_caps_lbr,
++	&group_format_extra,
  	NULL,
  };
  
-+/*
-+ * Remove all undefined events (x86_pmu.event_map(id) == 0)
-+ * out of events_attr attributes.
-+ */
-+static umode_t
-+is_visible(struct kobject *kobj, struct attribute *attr, int idx)
-+{
-+	struct perf_pmu_events_attr *pmu_attr;
 +
-+	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr.attr);
-+	return pmu_attr->event_str || x86_pmu.event_map(idx) ? attr->mode : 0;
-+}
-+
- static struct attribute_group x86_pmu_events_group __ro_after_init = {
- 	.name = "events",
- 	.attrs = events_attr,
-+	.is_visible = is_visible,
- };
+ __init int intel_pmu_init(void)
+ {
+ 	struct attribute **extra_attr = NULL;
+@@ -4986,15 +5018,11 @@ __init int intel_pmu_init(void)
  
- ssize_t x86_event_sysfs_show(char *page, u64 config, u64 event)
-@@ -1852,8 +1830,6 @@ static int __init init_hw_perf_events(void)
+ 	snprintf(pmu_name_str, sizeof(pmu_name_str), "%s", name);
  
- 	if (!x86_pmu.events_sysfs_show)
- 		x86_pmu_events_group.attrs = &empty_attrs;
--	else
--		filter_events(x86_pmu_events_group.attrs);
+-	if (version >= 2 && extra_attr) {
+-		x86_pmu.format_attrs = merge_attr(intel_arch3_formats_attr,
+-						  extra_attr);
+-		WARN_ON(!x86_pmu.format_attrs);
+-	}
  
- 	if (x86_pmu.attrs) {
- 		struct attribute **tmp;
+ 	group_events_td.attrs  = td_attr;
+ 	group_events_mem.attrs = mem_attr;
+ 	group_events_tsx.attrs = tsx_attr;
++	group_format_extra.attrs = extra_attr;
+ 
+ 	x86_pmu.attr_update = attr_update;
+ 
+@@ -5044,12 +5072,8 @@ __init int intel_pmu_init(void)
+ 			x86_pmu.lbr_nr = 0;
+ 	}
+ 
+-	x86_pmu.caps_attrs = intel_pmu_caps_attrs;
+-
+-	if (x86_pmu.lbr_nr) {
+-		x86_pmu.caps_attrs = merge_attr(x86_pmu.caps_attrs, lbr_attrs);
++	if (x86_pmu.lbr_nr)
+ 		pr_cont("%d-deep LBR, ", x86_pmu.lbr_nr);
+-	}
+ 
+ 	/*
+ 	 * Access extra MSR may cause #GP under certain circumstances.
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 7dd91607b5fa..1e3a7d74ea49 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -631,7 +631,6 @@ struct x86_pmu {
+ 	int		attr_rdpmc_broken;
+ 	int		attr_rdpmc;
+ 	struct attribute **format_attrs;
+-	struct attribute **caps_attrs;
+ 
+ 	ssize_t		(*events_sysfs_show)(char *page, u64 config);
+ 	const struct attribute_group **attr_update;
 -- 
 2.20.1
 
