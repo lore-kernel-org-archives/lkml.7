@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87822C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AAAC04AA9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD9F206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48CB206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965750;
-	bh=mj5bq9ExhWvppyqu2OGwhYDfO1FA/a7oNaWdZHOr7yo=;
+	s=default; t=1556965764;
+	bh=f7Cds3IEmGod9nHABUEE86odvZKG8OzNZxsfTmMyK+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M2CkM1CwnERssEkAOsHzjDvCplTrMaYxn/7jLEsUaeiizBSzpORS3V0NYfJC9PNGE
-	 ZzzSCeRh86t197oxg8+lWb6yb6esFu76wixwYtGoRvg3LipXEnNhPw0KjlxfNJOWTY
-	 5KH8khJGAz+/vZLV6Lgb9hYFiHJsOFIahtEIouJ0=
+	b=zLSyYZQZxt/6EuudfcXPZL9A+YIU2H4xSuhv9w6t75+KZ3F/MhRhBENB0w0aHznbx
+	 jgXFrx75n46At9tfKsKbExWyNFJCsK1BftyAU09PM6Hi+SSwv807yZmkX4zouQoqes
+	 sQ4y3CJ8SxzjzyeydHH+sl13dhM3TCQz7N4JDi2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfEDK3J (ORCPT
+        id S1727927AbfEDK0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:29:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36978 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727312AbfEDK1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:27:05 -0400
+        id S1727901AbfEDK0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:26:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DC7F20859;
-        Sat,  4 May 2019 10:27:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 660EA2085A;
+        Sat,  4 May 2019 10:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965624;
-        bh=mj5bq9ExhWvppyqu2OGwhYDfO1FA/a7oNaWdZHOr7yo=;
+        s=default; t=1556965608;
+        bh=f7Cds3IEmGod9nHABUEE86odvZKG8OzNZxsfTmMyK+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u0SdDuXsq//Ny4RJGUpWG/H4O91Zy6YhJOF4F/xo0QHF55TO+Ivkbs6J3ekSFGXoQ
-         vzqGh43gogPf0QQqL+GR2SnPc94z7AyfjtCPY4cLpb33JrNQAvagX3frNIYYd8pJPf
-         4yNFDxm6HHgz9vqx8NnZ2aLwJpOIz5zPppnWOH9A=
+        b=tKtKjVXsghKuXUuDM7YUOLcJ5NZYuNQ4IpPuWVLe0s5Cai4SSlqcn0+KjxBP+Ad4C
+         P1dhNV8V7ILpy4fZb0L8uwclsE/dB6j6tLnnoVxuibX43yxlPsQODdgIXHDvwShkhR
+         dxJ2fwb8TEasNfge9OUeuv/lP7V+KagyFiorpVUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Guillaume Nault <g.nault@alphalink.fr>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 10/23] net/tls: avoid NULL pointer deref on nskb->sk in fallback
-Date:   Sat,  4 May 2019 12:25:12 +0200
-Message-Id: <20190504102451.887482769@linuxfoundation.org>
+Subject: [PATCH 5.0 06/32] l2ip: fix possible use-after-free
+Date:   Sat,  4 May 2019 12:24:51 +0200
+Message-Id: <20190504102452.733697756@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190504102451.512405835@linuxfoundation.org>
-References: <20190504102451.512405835@linuxfoundation.org>
+In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
+References: <20190504102452.523724210@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,39 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 2dcb003314032c6efb13a065ffae60d164b2dd35 ]
+[ Upstream commit a622b40035d16196bf19b2b33b854862595245fc ]
 
-update_chksum() accesses nskb->sk before it has been set
-by complete_skb(), move the init up.
+Before taking a refcount on a rcu protected structure,
+we need to make sure the refcount is not zero.
 
-Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+syzbot reported :
+
+refcount_t: increment on 0; use-after-free.
+WARNING: CPU: 1 PID: 23533 at lib/refcount.c:156 refcount_inc_checked lib/refcount.c:156 [inline]
+WARNING: CPU: 1 PID: 23533 at lib/refcount.c:156 refcount_inc_checked+0x61/0x70 lib/refcount.c:154
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 23533 Comm: syz-executor.2 Not tainted 5.1.0-rc7+ #93
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ panic+0x2cb/0x65c kernel/panic.c:214
+ __warn.cold+0x20/0x45 kernel/panic.c:571
+ report_bug+0x263/0x2b0 lib/bug.c:186
+ fixup_bug arch/x86/kernel/traps.c:179 [inline]
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+ do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+ invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:refcount_inc_checked lib/refcount.c:156 [inline]
+RIP: 0010:refcount_inc_checked+0x61/0x70 lib/refcount.c:154
+Code: 1d 98 2b 2a 06 31 ff 89 de e8 db 2c 40 fe 84 db 75 dd e8 92 2b 40 fe 48 c7 c7 20 7a a1 87 c6 05 78 2b 2a 06 01 e8 7d d9 12 fe <0f> 0b eb c1 90 90 90 90 90 90 90 90 90 90 90 55 48 89 e5 41 57 41
+RSP: 0018:ffff888069f0fba8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 000000000000f353 RSI: ffffffff815afcb6 RDI: ffffed100d3e1f67
+RBP: ffff888069f0fbb8 R08: ffff88809b1845c0 R09: ffffed1015d23ef1
+R10: ffffed1015d23ef0 R11: ffff8880ae91f787 R12: ffff8880a8f26968
+R13: 0000000000000004 R14: dffffc0000000000 R15: ffff8880a49a6440
+ l2tp_tunnel_inc_refcount net/l2tp/l2tp_core.h:240 [inline]
+ l2tp_tunnel_get+0x250/0x580 net/l2tp/l2tp_core.c:173
+ pppol2tp_connect+0xc00/0x1c70 net/l2tp/l2tp_ppp.c:702
+ __sys_connect+0x266/0x330 net/socket.c:1808
+ __do_sys_connect net/socket.c:1819 [inline]
+ __se_sys_connect net/socket.c:1816 [inline]
+ __x64_sys_connect+0x73/0xb0 net/socket.c:1816
+
+Fixes: 54652eb12c1b ("l2tp: hold tunnel while looking up sessions in l2tp_netlink")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Guillaume Nault <g.nault@alphalink.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_device_fallback.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/l2tp/l2tp_core.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/tls/tls_device_fallback.c
-+++ b/net/tls/tls_device_fallback.c
-@@ -200,13 +200,14 @@ static void complete_skb(struct sk_buff
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -169,8 +169,8 @@ struct l2tp_tunnel *l2tp_tunnel_get(cons
  
- 	skb_put(nskb, skb->len);
- 	memcpy(nskb->data, skb->data, headln);
--	update_chksum(nskb, headln);
+ 	rcu_read_lock_bh();
+ 	list_for_each_entry_rcu(tunnel, &pn->l2tp_tunnel_list, list) {
+-		if (tunnel->tunnel_id == tunnel_id) {
+-			l2tp_tunnel_inc_refcount(tunnel);
++		if (tunnel->tunnel_id == tunnel_id &&
++		    refcount_inc_not_zero(&tunnel->ref_count)) {
+ 			rcu_read_unlock_bh();
  
- 	nskb->destructor = skb->destructor;
- 	nskb->sk = sk;
- 	skb->destructor = NULL;
- 	skb->sk = NULL;
+ 			return tunnel;
+@@ -190,8 +190,8 @@ struct l2tp_tunnel *l2tp_tunnel_get_nth(
  
-+	update_chksum(nskb, headln);
-+
- 	delta = nskb->truesize - skb->truesize;
- 	if (likely(delta < 0))
- 		WARN_ON_ONCE(refcount_sub_and_test(-delta, &sk->sk_wmem_alloc));
+ 	rcu_read_lock_bh();
+ 	list_for_each_entry_rcu(tunnel, &pn->l2tp_tunnel_list, list) {
+-		if (++count > nth) {
+-			l2tp_tunnel_inc_refcount(tunnel);
++		if (++count > nth &&
++		    refcount_inc_not_zero(&tunnel->ref_count)) {
+ 			rcu_read_unlock_bh();
+ 			return tunnel;
+ 		}
 
 
