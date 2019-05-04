@@ -1,187 +1,102 @@
-Return-Path: <SRS0=RThv=TD=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A505C43219
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6B0C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E45322070B
-	for <linux-kernel@archiver.kernel.org>; Fri,  3 May 2019 23:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE87D2081C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntfThZUL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=expunge-us.20150623.gappssmtp.com header.i=@expunge-us.20150623.gappssmtp.com header.b="W8rgmeki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfECX7A (ORCPT
+        id S1726833AbfEDAH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 19:59:00 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41390 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfECX67 (ORCPT
+        Fri, 3 May 2019 20:07:27 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38468 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbfEDAH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 19:58:59 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 188so3656143pfd.8;
-        Fri, 03 May 2019 16:58:59 -0700 (PDT)
+        Fri, 3 May 2019 20:07:26 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 10so3673110pfo.5
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 17:07:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DdddGI6DDT7dsMKCDs7wmk1NY1s6eqW3FG1qa627pfU=;
-        b=ntfThZULWIMDKZD8/FI97Sy8goP7TxfL2GUgz3WMEJBa0EVSmZx/8tH/d63kkoZxp9
-         pvJKiWDe6rZpTQbrAEkRc4RFkcGH3ypR093twH8LFUYQMXLQ1rbGDjNx/18Xl+asTYoh
-         KyjuYxFOpRkhA5+WOrLQ6BxRQOnOWDkcd2PAw7ZmYJm4DPS4xaomXRr5DxrrDMMfAZK+
-         QJwXmiXTSRyoNAxAD3hX7okYG80IyhTOC2+bGrsgmNn8pVHcNzQ2pPyicuH4Wkcp8v2v
-         CZW/v7A9o8PCP1E+eRw5IFAcgxS7WrXEhhBtV8NIQ5M8uUzGRap+9o+95KExRYmBhEGa
-         2G2A==
+        d=expunge-us.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iovEWy/GQChZ/awOVkY7H6FjwQrlO6bXxHcgVwGcj+4=;
+        b=W8rgmekidkx06udnPHuIxrTgcS2YyZ/LnwzT6OTCVziN3r5PRkkLYxoe7fwnd5b0ga
+         2VJwv8y76owide44YO6ZyQKvuukxmTgJcLNdo28rpX3HjRdjU5N8L6yMvOsAlTQiPedE
+         waro9Bcie9EwVPNqm2XO3FyHPi5rrOykd+55Yx1fHghO74FBmnhDH8EpPCiOMdzuGW3E
+         p46lDx1PHKOCTgw6LLFUqgDndChvSBSr2+75BqEEvg2Dvesj7aEiBgkEiK+oLD8Vcdxg
+         0XvASQGTgo5FaHaVoUrMynrre74WHv8B4G8Y7riJfNcVdAH4Y9DGcQ9RIhjLhFFASPGP
+         2vkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DdddGI6DDT7dsMKCDs7wmk1NY1s6eqW3FG1qa627pfU=;
-        b=rIzUc8toXVyv84Hlt43YeoRYQip4YhYZqHILPwkwHR4OehYxbaP1gHxK64913ZRWkU
-         1R2CunW01yUqFZju1yPGWuAlfoGhZQ2TLaiRMQavjjeh+uJgjmJBAU4eUm07KBO0I6Bv
-         Bft/5vX28psDBzUB6RXNzS6JRIxp6xvMaNcAsX8thnR3MZUgqPljE9iynBhSm5BlzLLh
-         ZLqYWd/4nNe2Fkc8uGF56XWDOd1zYw8HbfnUAjBPIEEJ1WHpfP6MOBejJhMXSFPzu/uc
-         hLEpmdjzQeAazq+oru+wKeIadAHcnYnMQmQ2MoK80uxiemQrX9i0Gh3fXNbciox6z5d/
-         ZwCw==
-X-Gm-Message-State: APjAAAW20uInmIoJK4/GIuEGfhvBEAKFgeedIYzzuitgGWjtdMCaNn55
-        CNizqXLkhm2b1wzRslgpeWs=
-X-Google-Smtp-Source: APXvYqywxmvzEg/abOIYBaWKkRkJeaD7WfUZmeBvshORCc5bVqRKb1vw7fMBaC+PVFCTiTq2WBkBxw==
-X-Received: by 2002:a65:6541:: with SMTP id a1mr13854624pgw.233.1556927938712;
-        Fri, 03 May 2019 16:58:58 -0700 (PDT)
-Received: from pc ([123.201.65.103])
-        by smtp.gmail.com with ESMTPSA id j32sm3703933pgi.73.2019.05.03.16.58.55
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iovEWy/GQChZ/awOVkY7H6FjwQrlO6bXxHcgVwGcj+4=;
+        b=gsDoFp3B6VnTRVipPbMWW/Yi9CmiCZIb716UpxX5cbcAv104S5Ct5wMwwvhcSQL+4I
+         YD8+Nsds8GAdjo3PbnsaesO8RaHNTzK1q5jvucBTTE3XzJ4rf0tNdn6VaIUzxaZcjO+x
+         DUf9ohnm9HFCjmLA5V41rts7vG5lwth7VgcujJHp3UVgA9/f1IM2d9/yc26K03LKxCCH
+         fyF42GLFirGPlcQjyCEMObh9nkZtUtQVkzjg98PYxtKP15xSz12pHUymR/c+s/6A4wGP
+         XrNvszKdfDfgwOGHd2RH0b10IVPLiDLfZgI8kFq2MPgJg4s2oQYo6mMqvQya8kwhhNkU
+         mw+w==
+X-Gm-Message-State: APjAAAVVeKo+dgZyRl1NUm24IqCoCCZ1oYGLNNJsNcWDj0pY+O3i+HiG
+        XifAZIgl2RC1ydL1MK5yCmHdXcYepTxfYA==
+X-Google-Smtp-Source: APXvYqzHuVCCkd14uJH1YbxuOuV8rfgJYzruetuIOrsuqy6jbZ3ju1hiUC+6Qr/w2YB8KbnLNyJ5dQ==
+X-Received: by 2002:aa7:8d81:: with SMTP id i1mr15024146pfr.127.1556928446138;
+        Fri, 03 May 2019 17:07:26 -0700 (PDT)
+Received: from gamepad.lan ([2604:4080:1159:80a0:148b:33f9:3a17:5899])
+        by smtp.gmail.com with ESMTPSA id c137sm4868997pfb.154.2019.05.03.17.07.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 16:58:57 -0700 (PDT)
-Date:   Sat, 4 May 2019 05:28:51 +0530
-From:   Raag Jadav <raagjadav@gmail.com>
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] i2c: at91: handle TXRDY interrupt spam
-Message-ID: <20190503235851.GA4242@pc>
-References: <1556005008-6318-1-git-send-email-raagjadav@gmail.com>
- <20190429090005.f6ydghzu5n5yruav@M43218.corp.atmel.com>
- <20190429223332.GA3908@pc>
- <20190502140116.rim72idpgvq4h4vc@M43218.corp.atmel.com>
+        Fri, 03 May 2019 17:07:25 -0700 (PDT)
+From:   Jared Baldridge <jrb@expunge.us>
+Cc:     Jared Baldridge <jrb@expunge.us>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm: panel-orientation-quirks: Update GPD Win 2 FW dates
+Date:   Fri,  3 May 2019 17:07:16 -0700
+Message-Id: <20190504000716.8063-1-jrb@expunge.us>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502140116.rim72idpgvq4h4vc@M43218.corp.atmel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 04:01:16PM +0200, Ludovic Desroches wrote:
-> On Tue, Apr 30, 2019 at 04:03:32AM +0530, Raag Jadav wrote:
-> > External E-Mail
-> > 
-> > 
-> > On Mon, Apr 29, 2019 at 11:00:05AM +0200, Ludovic Desroches wrote:
-> > > Hello Raag,
-> > > 
-> > > On Tue, Apr 23, 2019 at 01:06:48PM +0530, Raag Jadav wrote:
-> > > > External E-Mail
-> > > > 
-> > > > 
-> > > > Performing i2c write operation while SDA or SCL line is held
-> > > > or grounded by slave device, we go into infinite at91_twi_write_next_byte
-> > > > loop with TXRDY interrupt spam.
-> > > 
-> > > Sorry but I am not sure to have the full picture, the controller is in
-> > > slave or master mode?
-> > > 
-> > > SVREAD is only used in slave mode. When SVREAD is set, it means that a read
-> > > access is performed and your issue concerns the write operation.
-> > > 
-> > > Regards
-> > > 
-> > > Ludovic
-> > 
-> > Yes, even though the datasheet suggests that SVREAD is irrelevant in master mode,
-> > TXRDY and SVREAD are the only ones being set in status register upon reproducing the issue.
-> > Couldn't think of a better way to handle such strange behaviour.
-> > Any suggestions would be appreciated.
-> 
-> I have the confirmation that you can't rely on the SVREAD flag when in
-> master mode. This flag should always have the same value.
-> 
-> I am trying to understand what could lead to your situation. Can you
-> give me more details. What kind of device it is? What does lead to this
-> situation? Does it happen randomly or not?
+The GPD Win 2 is shipping with a new firmware release date. As
+the quirk is still required with the new firmware, this commit
+adds the new release date to the quirks table.
 
-One of the sama5d2 based board I worked on, was having trouble complete its boot
-because of a faulty i2c device, which was randomly holding down the SDA line
-on i2c write operation, not allowing the controller to complete its transmission,
-causing a massive TXRDY interrupt spam, ultimately hanging the processor.
+Signed-off-by: Jared Baldridge <jrb@expunge.us>
+---
+ drivers/gpu/drm/drm_panel_orientation_quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Another strange observation was that SVREAD was being set in the status register
-along with TXRDY, every time I reproduced the issue.
-You can reproduce it by simply grounding the SDA line and performing i2c write
-on the bus.
+diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+index 52e445bb1aa5..e0d0f3169581 100644
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -63,7 +63,7 @@ static const struct drm_dmi_panel_orientation_data gpd_win2 = {
+ 	.width = 720,
+ 	.height = 1280,
+ 	.bios_dates = (const char * const []){
+-		"12/07/2017", "05/24/2018", "06/29/2018", NULL },
++		"12/07/2017", "05/24/2018", "06/29/2018", "07/30/2018", NULL },
+ 	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
+ };
+ 
+-- 
+2.21.0
 
-Note that NACK, LOCK or TXCOMP are never set as the transmission never completes.
-I'm not sure why slave bits are being set in master mode,
-but it's been working reliably for me.
-
-This patch doesn't recover the SDA line. It just prevents the processor from
-getting hanged in case of i2c bus lockup.
-
-Cheers,
-Raag
-
-> 
-> Regards
-> 
-> Ludovic
-> 
-> > 
-> > Cheers,
-> > Raag
-> > 
-> > > 
-> > > > 
-> > > > Signed-off-by: Raag Jadav <raagjadav@gmail.com>
-> > > > ---
-> > > >  drivers/i2c/busses/i2c-at91.c | 6 +++++-
-> > > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-at91.c
-> > > > index 3f3e8b3..b2f5fdb 100644
-> > > > --- a/drivers/i2c/busses/i2c-at91.c
-> > > > +++ b/drivers/i2c/busses/i2c-at91.c
-> > > > @@ -72,6 +72,7 @@
-> > > >  #define	AT91_TWI_TXCOMP		BIT(0)	/* Transmission Complete */
-> > > >  #define	AT91_TWI_RXRDY		BIT(1)	/* Receive Holding Register Ready */
-> > > >  #define	AT91_TWI_TXRDY		BIT(2)	/* Transmit Holding Register Ready */
-> > > > +#define	AT91_TWI_SVREAD		BIT(3)	/* Slave Read */
-> > > >  #define	AT91_TWI_OVRE		BIT(6)	/* Overrun Error */
-> > > >  #define	AT91_TWI_UNRE		BIT(7)	/* Underrun Error */
-> > > >  #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
-> > > > @@ -571,7 +572,10 @@ static irqreturn_t atmel_twi_interrupt(int irq, void *dev_id)
-> > > >  		at91_disable_twi_interrupts(dev);
-> > > >  		complete(&dev->cmd_complete);
-> > > >  	} else if (irqstatus & AT91_TWI_TXRDY) {
-> > > > -		at91_twi_write_next_byte(dev);
-> > > > +		if ((status & AT91_TWI_SVREAD) && (dev->buf_len == 0))
-> > > > +			at91_twi_write(dev, AT91_TWI_IDR, AT91_TWI_TXRDY);
-> > > > +		else
-> > > > +			at91_twi_write_next_byte(dev);
-> > > >  	}
-> > > >  
-> > > >  	/* catch error flags */
-> > > > -- 
-> > > > 2.7.4
-> > > > 
-> > > > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > 
