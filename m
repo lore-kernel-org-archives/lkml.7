@@ -2,136 +2,113 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA373C04AAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1F2C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95D320675
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E42820675
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="riV8JEoz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aEV5cKHE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfEDLBd (ORCPT
+        id S1727425AbfEDLCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 07:01:33 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38409 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfEDLBd (ORCPT
+        Sat, 4 May 2019 07:02:35 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38172 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfEDLCe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 07:01:33 -0400
-Received: by mail-lf1-f65.google.com with SMTP id v1so6103133lfg.5;
-        Sat, 04 May 2019 04:01:31 -0700 (PDT)
+        Sat, 4 May 2019 07:02:34 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f2so4594037wmj.3;
+        Sat, 04 May 2019 04:02:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ATLiVoBxxhEOS8NvRMpVfm5vp0+xIW6FH1duvNVR9Kc=;
-        b=riV8JEozmHsz1uD5VmVavAtEwwNzMYJxpNxhpAg1JpSnZp7niXJBdOEsWf4OWCpTQ1
-         SwL3TzEzZWyTlMj1uDlrhWadFFJvEHLVyJu5L10G4RKgkHmTOO5iOrZpT1+7rIKetI/1
-         pVvjivPdighZuIA6hmDPkrD7zI0Fb/rly2K2h439HKSZrKfDk4XwIM4p6buyEIlp11ou
-         FMfG4Plm5VhQA1Tgui1k6EvqOfuAJstYZQnc1xynM/W2hRWnv4bgCjIANw1kFRg9s9vI
-         VM3QeMg5cM+U6uGUIGjRXxG2uz58tZSSoNVm2kXiqJ8cGgIl1UehspMRyRTIedw3JMHf
-         rWHA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=d9xqRvQ7LglnQSyEdyWwx0LaW1NdfXcmsha1uWwwA5U=;
+        b=aEV5cKHE7rw5w8phwcnK4XYABmhkwlqMGBjm4KtKfMkB3HMEFI0UbjyP1MWPKSsuO4
+         kV10cFluOgdaRPFW8lcQTDEA3j6cDs/KB4XFx2CjN2ohfEB9IiBX+JjKmplO9ehRUnXi
+         M8IfK57Avok/aRvhLtp5YxHlQLOWE/Bf7q4La4FNtfqWZkqCHBTtTAwVTTKze3VeRFBN
+         jUM10tGMTAIUns2YSTTTq+AynStJ805mdf6251QBordFuPHO+HdxdEtTAj/LpZX+tWIy
+         xwyNyGDc/gxwOuofptU3PJSSPHcKfeq+DuG5LdMzWZ5DzC+Otm7ocsyICkodvIuAUyS+
+         O1Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ATLiVoBxxhEOS8NvRMpVfm5vp0+xIW6FH1duvNVR9Kc=;
-        b=cMUyrvG69LShemS+qQYi7o6dK/qu4gQOShYQ7K+WZU/+PqKbqyHr96R49lFXNb10PF
-         +YV9gAKsfxl+IkniQx0OADzQlH0V4rEiOd7WLJDbMCKMr4C9+zXEn5/ErqUaf/cC7TAg
-         dJWXdjm/q+UybJNSHOhACMiNa3/YWHlCDe2Aaae0cbbshf6aVSUJx+dY4UzgM9Cx2Dil
-         XwigJL7zbFAXr2GBFWDVl3Jkgizj/v3MaCxHCw37Yo6dF2eEl8nFFrN7yGuYJwNwaYGG
-         jMUp2C2MKdWi+vpet5cqV3xmNpTqGSY2V9jal4+EhC/R1YAzNIgvKaPS6ec04sidfALP
-         48Qg==
-X-Gm-Message-State: APjAAAVOmvhX9Ggv1A+KZLhx3qXT1AtFMeMnXcgavKYGrLlUJFQPgXjc
-        RD20ryIiMF2LGUqZ16XVW496g1wYhPwe1Afaa2M=
-X-Google-Smtp-Source: APXvYqzH5Ak7RQ55w0jmSuQwoqPOIw9XWF1XR9OwgNlmv9dSRHmaVwCW1d/wpdTvIu9yqSxaHmFDH+iPeFVnzosIBnU=
-X-Received: by 2002:a19:c7c3:: with SMTP id x186mr8350944lff.107.1556967690885;
- Sat, 04 May 2019 04:01:30 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d9xqRvQ7LglnQSyEdyWwx0LaW1NdfXcmsha1uWwwA5U=;
+        b=WOp5zGp+rJXnUjfAak9oDZimyNV3QY9dzv5gZOI6TKWFUomqtVTdczkTy9kYbhmzOv
+         NKkh8p0iXDyvlBunZ1a0EbCVjem3l4t8JviqIbU4dl0QEBOXE+OCQtLH182xBSS8o1Aw
+         1bSLciZ6stovJT0zHy+JljzCyIIyKGQWX8SsM5qejhCb5pssMXgL0n2V++lHqDhBzllj
+         T0opQRhUL+DLhnTX7dZQIjBF0pAL0WQEX65z6ztcztag3/oRdrKlsJLdycSzigbdGHA8
+         ZxICLAoMaXaql/zgvbyHsasF8UHeB7yC7VlaGp81ov9P4TKCzEk4PjRNRLzItZMKpEPJ
+         hvlw==
+X-Gm-Message-State: APjAAAVTJ63JHIuQOPEqw5gmyxKUwl6JK5N5OuoFJpJA+fgYmu1joDAE
+        8FeG7wVsXOvdYKs3YHmcHagvf6jB7/o=
+X-Google-Smtp-Source: APXvYqy3dfTFdLwZrygw5pSCGAvurOj9VwUtSKJIX0E/y05IQOuv2UX4urpxWai1LbIz2W3WXRPigg==
+X-Received: by 2002:a1c:a008:: with SMTP id j8mr9967493wme.73.1556967751884;
+        Sat, 04 May 2019 04:02:31 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd4:5700:4cd8:8005:fc98:c429? (p200300EA8BD457004CD88005FC98C429.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:4cd8:8005:fc98:c429])
+        by smtp.googlemail.com with ESMTPSA id z4sm3251606wrq.75.2019.05.04.04.02.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 May 2019 04:02:30 -0700 (PDT)
+Subject: Re: [PATCH] net: wireless: ath9k: Return an error when
+ ath9k_hw_reset() fails
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>, ath9k-devel@qca.qualcomm.com,
+        kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190504100815.19876-1-baijiaju1990@gmail.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <e47117d6-f918-1dd0-834e-d056534bfead@gmail.com>
+Date:   Sat, 4 May 2019 13:02:25 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1556190810-19690-1-git-send-email-liuk@cetca.net.cn>
-In-Reply-To: <1556190810-19690-1-git-send-email-liuk@cetca.net.cn>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Sat, 4 May 2019 08:01:30 -0300
-Message-ID: <CAOMZO5AM-Ee_8ScFEk3hSrujKqH2+XiLHPto3ES3r9AbDkUnkg@mail.gmail.com>
-Subject: Re: [PATCHv2 2/2] clk: imx6sx: Remove unexisting IMX6SX_CLK_ENET_AHB clock
-To:     Kay-Liu <liuk@cetca.net.cn>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Yongcai Huang <Anson.Huang@nxp.com>,
-        Rob Herring <robh@kernel.org>,
-        root <root@localhost.localdomain>, tiny.windzz@gmail.com,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190504100815.19876-1-baijiaju1990@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kay-Liu,
+On 04.05.2019 12:08, Jia-Ju Bai wrote:
+> ath9k_hw_reset() in ath9k_start() can fail, and in this case, 
+> ath9k_start() should return an error instead of executing the 
+> subsequent code.
+> 
+Such mechanical patches w/o understanding the code are always
+problematic. Do you have any proof that this error is fatal?
+I think it is not, else we wouldn't have this line:
+ah->reset_power_on = false;
+Also you should consider that a mutex and a spinlock are held.
+Maybe changing the error message to a warning would be more
+appropriate. But this I would leave to somebody being more
+familiar with this driver.
 
-On Thu, Apr 25, 2019 at 8:14 AM <liuk@cetca.net.cn> wrote:
->
-> From: Kay-Liu <liuk@cetca.net.cn>
->
-> The imx6sx's dts file defines five clocks for fec, the
-> 'ahb'clock's value is IMX6SX_CLK_ENET_AHB, but in the
-> i.MX6SX Reference Manual there is no such enet ahb clock,
-> there is only one "enet clock" in the CCM_CCGR3 register
-> which is controlled by bits 5-4, the enet clock is defined
-> for the 'ipg' clock, this can cause problem.
-> The original phenomenon is using imx6-solox processor and
-> Marvel 88E6390 switch with linux OS, the kernel will hang
-> during the startup of the linux OS.
-> After analyzing the phenomenon, the reason of CPU hang is
-> read/write enet module's register when the enet clock
-> is disabled. The kernel code try to avoids the problem
-> by resume enet clock before read/write enet register.
-> But the enet module's clock config will cause a special
-> environment which can bypass the clock resume mechanism.
-> The CPU has only one enet clock, after kernel parses
-> the dts file, the two clock variables 'ipg' and 'ahb'
-> finnaly point to the same enet clock register. This will
-> cause enet clock be disabled after fec probe over.
-> Because the power saving module will affect the BUG, so
-> there are two situations for this problem:
-> 1)Turn off power saving
-> Turn off power saving means that the resume mechanism is
-> disabled, so after fec probe over if any one read/write
-> enet module's register, the CPU will hang because no one
-> could resume the enet clock.
-> 2)Turn on power saving
-> Turn on power saving could resume enet clock before
-> read/write enet register by enable 'ipg' clk, this will
-> cause 'ahb' variable state and enet clock register value
-> don't match.If any task read/write enet at a high
-> frequently, the kernel will keep resume state and never
-> enter suspend process, this means that the kernel will
-> only modifies the register value during the first resume.
-> But the kernel init will check unused clock variable in
-> the late initcall, the 'ahb' clock will be treated as
-> unused, at this time, the enet clock will be disabled
-> bypass the resume mechanism, then the next read/write
-> enet module's register will cause the CPU hang.
-> Proposed solution is delete the 'ahb' clock's definition
-> in the clk-imx6sx.c, and modify fec device=E2=80=99s clocks in
-> the dts file, point =E2=80=98ahb=E2=80=99 from IMX6SX_CLK_ENET_AHB to
-> IMX6SX_CLK_ENET
->
-> Signed-off-by: Kay-Liu <liuk@cetca.net.cn>
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> ---
+>  drivers/net/wireless/ath/ath9k/main.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/wireless/ath/ath9k/main.c b/drivers/net/wireless/ath/ath9k/main.c
+> index f23cb2f3d296..f78e7c46764d 100644
+> --- a/drivers/net/wireless/ath/ath9k/main.c
+> +++ b/drivers/net/wireless/ath/ath9k/main.c
+> @@ -681,6 +681,7 @@ static int ath9k_start(struct ieee80211_hw *hw)
+>  			"Unable to reset hardware; reset status %d (freq %u MHz)\n",
+>  			r, curchan->center_freq);
+>  		ah->reset_power_on = false;
+> +		return r;
+>  	}
+>  
+>  	/* Setup our intr mask. */
+> 
 
-This matches the mx6sx reference manual:
-
-Reviewed-by: Fabio Estevam <festtevam@gmail.com>
