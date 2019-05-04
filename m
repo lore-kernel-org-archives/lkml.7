@@ -2,189 +2,165 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E975C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B192AC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F192081C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8009C2081C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6nyEu8O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNyGD2dj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfEDBTd (ORCPT
+        id S1726925AbfEDBSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 21:19:33 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44714 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfEDBSo (ORCPT
+        Fri, 3 May 2019 21:18:42 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40656 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfEDBSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 21:18:44 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c5so9883047wrs.11;
-        Fri, 03 May 2019 18:18:42 -0700 (PDT)
+        Fri, 3 May 2019 21:18:41 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h4so9907543wre.7;
+        Fri, 03 May 2019 18:18:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=r3gWbU66Gb4F+ksq9kAmK2pxg5SekFLFxe9XHbpja70=;
-        b=h6nyEu8Olbvb1Bb0OZjlUr7rl+IwQ1HBFPh8JaEad/RcuwThjcXfqMBYNtuF0qiYE3
-         ubhQMzv6zVLJYfKWjGnALjx9XsboLvr3NZ5HasWmLV8x+WC8I8P8cxwZZng6sG6S9b6m
-         STduepBM+bWOpMRuBoBrR2ztC0TLd4jixLENnxxXgzoKrdgOn58GmNl1zDdA3c+DDAFz
-         QD1PXaMyHA1DwOnTwYCtlFPwlyQywZ8J66bWQ8DUlapjieem+xCfECr8NIUwSA0Lchoz
-         Fct8iDHz9hbOE5pdzu+NrAx64xqSBDas3tQRS5tsXpo6B5yRlBZ6oLD7tJX5FVuQYl6z
-         dSxQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=1zQYpHCU7UlsHYJBg7jwPlzoSjQyIJpUN9QDyya+MQ4=;
+        b=iNyGD2djAV4yvcaEiFk74Q3jMsefHRPo2VLdHt6+MDRkoGpn2/BdwSM85jK0O+lh4w
+         FtoB0Pwc9HSyTKTj/PJo+u6qGIosa+3AGS1dIIfPGvUwXqqBsCLYXM244i5/mzazaTbZ
+         romkbGP14FJPlQNLK+MMJ4i5iwO+KE0K7T59l1k5NlcVYPp9aNn6kBbgFnwLAuw0ixKV
+         1ZJIdiA/YhxssYzwoiv6ezEuvkiOpWUZwkHerdNl9AyaKVx0E4+Al6hzKtCo5l1RwZFX
+         hxRaWR5bcZRcXwk7xIGKibIBDjcbVkwQP+EFsTyVyMiCN3K+b9MKJlNkdjWPtAQvHxXH
+         EJXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=r3gWbU66Gb4F+ksq9kAmK2pxg5SekFLFxe9XHbpja70=;
-        b=KOYWSuY5snuqBrWd3L2rNZoGMaArKNbj3RYlytuCsR7LaMshTuFP6xT9t6WtSR66it
-         ++oF2guRUxahfnyUHFW1pYongk4NPKSTFfrkGVXNljFHhnfqg+j4tHOJ7tmwFAkhSttm
-         +tyZNqL8k4qz3lvk1wcTVhlz9cPONsrftO5YuHlzwwAg9la8r6H6PG6z68AqJQhpeBUk
-         +1smU7cUOvPDTuemL5Vwj3IgHWDCTSVctBZBXpYohxj5L6BYj27ukDvqe/odLI+LwLPa
-         jO8EmdgvvsFTGuf6D3Z3A2xDcg8BQPgDRARiW9t80xbQqL1cPPp6pU/qR1mUHPmU6lX+
-         o/cA==
-X-Gm-Message-State: APjAAAVQjvo6KK1v2yAQ97R5Ao3m10QpaHIhOaNrktGFZ30w1nFvt8aZ
-        oCFpsSB+gns08hRb8SA4aCI=
-X-Google-Smtp-Source: APXvYqwkRP8yhXOi9qIm3Jh1JPyOaHjqBhRADffLKh8mHhWraKgwvOIe/EIZTFAgyhL2Yu/uWGcadQ==
-X-Received: by 2002:a5d:67cb:: with SMTP id n11mr9139408wrw.3.1556932721801;
-        Fri, 03 May 2019 18:18:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1zQYpHCU7UlsHYJBg7jwPlzoSjQyIJpUN9QDyya+MQ4=;
+        b=ftNhThYlCHcVFPoRxlqLjXcTWCo+G7x8K63nmEL726MpXohQI1G7H9stIB8uxttiOk
+         97TLZupVMeKYCRLMVgyuzon+RuEIak/cEebBu0ZoT/v8CV+MofwoRLAt57ea8qdWVnIK
+         shUIV3NT418Yl+2kkeejvHNkXuWuZHfArK/NNKixFEdk+xYzZmEQ2/y7A8tSs3Vn+/at
+         4+Q4vT8+Q+2sksGqPUpvnmFyIbTTlvRvhoRMLo8zbAP2xulErjiltC1f/O2HJE9rwwq7
+         rZFEROsCG5IUmV7H2cAS0Mcd7o7NatQAhBuJNl5Z8p5CZkJllGsgTOeu04WCqmUtAo4V
+         NViw==
+X-Gm-Message-State: APjAAAU7KvaRv0xythf+3DmLeUfDwvpDjhXKmdSb+znEK+TMpQ0fsTCt
+        UIyY9wbUjvAdrzxRZ8QRtCs=
+X-Google-Smtp-Source: APXvYqw6wc3ZIfNewUS90lwCR4NOKjdRSzhVflAo5NyRDdVdP/14J8wfKH0BjyoXDNrlziVicETL/g==
+X-Received: by 2002:adf:dbce:: with SMTP id e14mr9061327wrj.249.1556932718724;
+        Fri, 03 May 2019 18:18:38 -0700 (PDT)
 Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id t1sm3937639wro.34.2019.05.03.18.18.40
+        by smtp.gmail.com with ESMTPSA id t1sm3937639wro.34.2019.05.03.18.18.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 18:18:41 -0700 (PDT)
+        Fri, 03 May 2019 18:18:38 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH net-next 3/9] net: dsa: Allow drivers to filter packets they can decode source port from
-Date:   Sat,  4 May 2019 04:18:20 +0300
-Message-Id: <20190504011826.30477-4-olteanv@gmail.com>
+Subject: [PATCH net-next 0/9] Traffic support for SJA1105 DSA driver
+Date:   Sat,  4 May 2019 04:18:17 +0300
+Message-Id: <20190504011826.30477-1-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190504011826.30477-1-olteanv@gmail.com>
-References: <20190504011826.30477-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Frames get processed by DSA and redirected to switch port net devices
-based on the ETH_P_XDSA multiplexed packet_type handler found by the
-network stack when calling eth_type_trans().
+This patch set is a continuation of the "NXP SJA1105 DSA driver" v3
+series, which was split in multiple pieces for easier review.
 
-The running assumption is that once the DSA .rcv function is called, DSA
-is always able to decode the switch tag in order to change the skb->dev
-from its master.
+Supporting a fully-featured (traffic-capable) driver for this switch
+requires some rework in DSA and also leaves behind a more generic
+infrastructure for other dumb switches that rely on 802.1Q pseudo-switch
+tagging for port separation. Among the DSA changes required are:
 
-However there are tagging protocols (such as the new DSA_TAG_PROTO_SJA1105,
-user of DSA_TAG_PROTO_8021Q) where this assumption is not completely
-true, since switch tagging piggybacks on the absence of a vlan_filtering
-bridge. Moreover, management traffic (BPDU, PTP) for this switch doesn't
-rely on switch tagging, but on a different mechanism. So it would make
-sense to at least be able to terminate that.
+* Generic xmit and rcv functions for pushing/popping 802.1Q tags on
+  skb's. These are modeled as a tagging protocol of its own but which
+  must be customized by drivers to fit their own hardware possibilities.
 
-Having DSA receive traffic it can't decode would put it in an impossible
-situation: the eth_type_trans() function would invoke the DSA .rcv(),
-which could not change skb->dev, then eth_type_trans() would be invoked
-again, which again would call the DSA .rcv, and the packet would never
-be able to exit the DSA filter and would spiral in a loop until the
-whole system dies.
+* Permitting the .setup callback to invoke switchdev operations that
+  will loop back into the driver through the switchdev notifier chain.
 
-This happens because eth_type_trans() doesn't actually look at the skb
-(so as to identify a potential tag) when it deems it as being
-ETH_P_XDSA. It just checks whether skb->dev has a DSA private pointer
-installed (therefore it's a DSA master) and that there exists a .rcv
-callback (everybody except DSA_TAG_PROTO_NONE has that). This is
-understandable as there are many switch tags out there, and exhaustively
-checking for all of them is far from ideal.
+The SJA1105 driver then proceeds to extend this 8021q switch tagging
+protocol while adding its own (tag_sja1105). This is done because
+the driver actually implements a "dual tagger":
 
-The solution lies in introducing a filtering function for each tagging
-protocol. In the absence of a filtering function, all traffic is passed
-to the .rcv DSA callback. The tagging protocol should see the filtering
-function as a pre-validation that it can decode the incoming skb. The
-traffic that doesn't match the filter will bypass the DSA .rcv callback
-and be left on the master netdevice, which wasn't previously possible.
+* For normal traffic it uses 802.1Q tags
 
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
- include/net/dsa.h  | 15 +++++++++++++++
- net/dsa/dsa2.c     |  1 +
- net/ethernet/eth.c |  6 +++++-
- 3 files changed, 21 insertions(+), 1 deletion(-)
+* For management (multicast DMAC) frames the switch has native support
+  for recognizing and annotating these with source port and switch id
+  information.
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 69f3714f42ba..c90ceeec7d1f 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -69,6 +69,11 @@ struct dsa_device_ops {
- 			       struct packet_type *pt);
- 	int (*flow_dissect)(const struct sk_buff *skb, __be16 *proto,
- 			    int *offset);
-+	/* Used to determine which traffic should match the DSA filter in
-+	 * eth_type_trans, and which, if any, should bypass it and be processed
-+	 * as regular on the master net device.
-+	 */
-+	bool (*filter)(const struct sk_buff *skb, struct net_device *dev);
- 	unsigned int overhead;
- 	const char *name;
- 	enum dsa_tag_protocol proto;
-@@ -148,6 +153,7 @@ struct dsa_port {
- 	struct dsa_switch_tree *dst;
- 	struct sk_buff *(*rcv)(struct sk_buff *skb, struct net_device *dev,
- 			       struct packet_type *pt);
-+	bool (*filter)(const struct sk_buff *skb, struct net_device *dev);
- 
- 	enum {
- 		DSA_PORT_TYPE_UNUSED = 0,
-@@ -520,6 +526,15 @@ static inline bool netdev_uses_dsa(struct net_device *dev)
- 	return false;
- }
- 
-+static inline bool dsa_can_decode(const struct sk_buff *skb,
-+				  struct net_device *dev)
-+{
-+#if IS_ENABLED(CONFIG_NET_DSA)
-+	return !dev->dsa_ptr->filter || dev->dsa_ptr->filter(skb, dev);
-+#endif
-+	return false;
-+}
-+
- struct dsa_switch *dsa_switch_alloc(struct device *dev, size_t n);
- void dsa_unregister_switch(struct dsa_switch *ds);
- int dsa_register_switch(struct dsa_switch *ds);
-diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
-index f1ad80851616..3b5f434cad3f 100644
---- a/net/dsa/dsa2.c
-+++ b/net/dsa/dsa2.c
-@@ -586,6 +586,7 @@ static int dsa_port_parse_cpu(struct dsa_port *dp, struct net_device *master)
- 	}
- 
- 	dp->type = DSA_PORT_TYPE_CPU;
-+	dp->filter = tag_ops->filter;
- 	dp->rcv = tag_ops->rcv;
- 	dp->tag_ops = tag_ops;
- 	dp->master = master;
-diff --git a/net/ethernet/eth.c b/net/ethernet/eth.c
-index 0f9863dc4d44..fddcee38c1da 100644
---- a/net/ethernet/eth.c
-+++ b/net/ethernet/eth.c
-@@ -185,8 +185,12 @@ __be16 eth_type_trans(struct sk_buff *skb, struct net_device *dev)
- 	 * at all, so we check here whether one of those tagging
- 	 * variants has been configured on the receiving interface,
- 	 * and if so, set skb->protocol without looking at the packet.
-+	 * The DSA tagging protocol may be able to decode some but not all
-+	 * traffic (for example only for management). In that case give it the
-+	 * option to filter the packets from which it can decode source port
-+	 * information.
- 	 */
--	if (unlikely(netdev_uses_dsa(dev)))
-+	if (unlikely(netdev_uses_dsa(dev)) && dsa_can_decode(skb, dev))
- 		return htons(ETH_P_XDSA);
- 
- 	if (likely(eth_proto_is_802_3(eth->h_proto)))
+Because this is a "dual tagger", decoding of management frames should
+still function when regular traffic can't (under a bridge with VLAN
+filtering).
+There was intervention in the DSA receive hotpath, where a new
+filtering function called from eth_type_trans() is needed. This is
+useful in the general sense for switches that might actually have some
+limited means of source port decoding, such as only for management
+traffic, but not for everything.
+In order for the 802.1Q tagging protocol (which cannot be enabled under
+all conditions, unlike the management traffic decoding) to not be an
+all-or-nothing choice, the filtering function matches everything that
+can be decoded, and everything else is left to pass to the master
+netdevice.
+
+Lastly, DSA core support was added for drivers to request skb deferral.
+SJA1105 needs this for SPI intervention during transmission of link-local
+traffic. This is not done from within the tagger.
+
+Some patches were carried over unchanged from the previous patchset
+(01/09). Others were slightly reworked while adapting to the recent
+changes in "Make DSA tag drivers kernel modules" (02/09).
+
+The introduction of some structures (DSA_SKB_CB, dp->priv) may seem a
+little premature at this point and the new structures under-utilized.
+The reason is that traffic support has been rewritten with PTP
+timestamping in mind, and then I removed the timestamping code from the
+current submission (1. it is a different topic, 2. it does not work very
+well yet). On demand I can provide the timestamping patchset as a RFC
+though.
+
+"NXP SJA1105 DSA driver" v3 patchset can be found at:
+https://lkml.org/lkml/2019/4/12/978
+
+Vladimir Oltean (9):
+  net: dsa: Call driver's setup callback after setting up its switchdev
+    notifier
+  net: dsa: Optional VLAN-based port separation for switches without
+    tagging
+  net: dsa: Allow drivers to filter packets they can decode source port
+    from
+  net: dsa: Keep private info in the skb->cb
+  net: dsa: Add support for deferred xmit
+  net: dsa: Add a private structure pointer to dsa_port
+  net: dsa: sja1105: Add support for traffic through standalone ports
+  net: dsa: sja1105: Add support for Spanning Tree Protocol
+  Documentation: net: dsa: sja1105: Add info about supported traffic
+    modes
+
+ Documentation/networking/dsa/sja1105.rst |  49 +++++
+ drivers/net/dsa/sja1105/Kconfig          |   1 +
+ drivers/net/dsa/sja1105/sja1105.h        |   6 +
+ drivers/net/dsa/sja1105/sja1105_main.c   | 246 +++++++++++++++++++++--
+ include/linux/dsa/8021q.h                |  76 +++++++
+ include/linux/dsa/sja1105.h              |  35 +++-
+ include/net/dsa.h                        |  65 ++++++
+ net/dsa/Kconfig                          |  20 ++
+ net/dsa/Makefile                         |   2 +
+ net/dsa/dsa2.c                           |   9 +-
+ net/dsa/dsa_priv.h                       |   2 +
+ net/dsa/slave.c                          |  61 ++++--
+ net/dsa/tag_8021q.c                      | 222 ++++++++++++++++++++
+ net/dsa/tag_sja1105.c                    | 131 ++++++++++++
+ net/ethernet/eth.c                       |   6 +-
+ 15 files changed, 890 insertions(+), 41 deletions(-)
+ create mode 100644 include/linux/dsa/8021q.h
+ create mode 100644 net/dsa/tag_8021q.c
+ create mode 100644 net/dsa/tag_sja1105.c
+
 -- 
 2.17.1
 
