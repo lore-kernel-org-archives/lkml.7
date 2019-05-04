@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F421C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 07:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAF3C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 07:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5F02085A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 07:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17005206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 07:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556953432;
-	bh=06o88Q/xn9ojq7khzJkjBbDh8svWhXIRLYGsoQ+OuOU=;
+	s=default; t=1556953456;
+	bh=1AJ1bTaZS7IUTULpTVyVapc3iESDALoBwgOltqRyx1g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fzvuLYTbwirn2LoY9iOOTBQbPi3kwhVikxJSBlaJmChvud/vsohaXDsi5rZMwN7VY
-	 08SFcC6MQxElDBGMtNN4NhLV2tyEaH9NasUjLHYPaEYMmrtw/Ms5uhC+uZmSvs06I0
-	 mQbMrADEx98p29UGoTaqspdtQrdKjXvAtxygXNGk=
+	b=gHfYHM3Rd+IKqKr4UpHfuAbCk2DHqKXCwUH+sJGWy4D/ggNzpppQ1/WBjDezxE9sg
+	 8q3oGmiBFQjt1V8D2bHeW6SPA83UCMBYVnoDr/pos0Di/g2wxWRr74U3nXnyvAyR1x
+	 79OEt2rrJgVV4t/DIjRQdVBC6Vc6u/S5wVPdUkN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfEDHDu (ORCPT
+        id S1727111AbfEDHEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 03:03:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42438 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 03:04:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbfEDHDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 03:03:50 -0400
+        id S1725802AbfEDHEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 03:04:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F73B206BB;
-        Sat,  4 May 2019 07:03:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54694206BB;
+        Sat,  4 May 2019 07:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556953429;
-        bh=06o88Q/xn9ojq7khzJkjBbDh8svWhXIRLYGsoQ+OuOU=;
+        s=default; t=1556953452;
+        bh=1AJ1bTaZS7IUTULpTVyVapc3iESDALoBwgOltqRyx1g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k2W1wzdjSC/WyY75j2/5/XcF4xTYDy7KFkG4lNjz+dD+W1OVD6XRKOqh+hTQQWWeN
-         CIn2qtCmCOEaAPJzbK/hpphO2vJsIfwtidaHr5ZTcrJbQ7IKclRdskff34c3G1u3ts
-         yE6NEl2TvI321zfcx7XCuJrB0q/5kfJrHMuw0GUM=
-Date:   Sat, 4 May 2019 09:03:46 +0200
+        b=fVDSyUsTzcMGxxWmCApcfqmTWyTv5WmwWG85SyqMN56Jkr0A11qqluNIxlTpWwuVf
+         dKJ01DVOS0J+IK8ICyyG4sEuXEwOkFYcS4sJHO36tNLncYRlqqHUVHh60AbbMZU5yZ
+         qPMgfxRTc5ddPGR/+0i09hV/FpRzS96OpSXiZIRY=
+Date:   Sat, 4 May 2019 09:04:10 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
@@ -49,7 +49,7 @@ Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         Sanyog Kale <sanyog.r.kale@intel.com>
 Subject: Re: [RFC PATCH 6/7] soundwire: cadence_master: add debugfs register
  dump
-Message-ID: <20190504070346.GE9770@kroah.com>
+Message-ID: <20190504070410.GF9770@kroah.com>
 References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
  <20190504010030.29233-7-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
@@ -188,9 +188,4 @@ On Fri, May 03, 2019 at 08:00:29PM -0500, Pierre-Louis Bossart wrote:
 > +}
 > +EXPORT_SYMBOL(sdw_cdns_debugfs_init);
 
-Don't wrap debugfs calls with export symbol without using
-EXPORT_SYMBOL_GPL() or you will get grumpy emails from me :)
-
-thanks,
-
-greg k-h
+Wait, why is this exported at all?  No one is calling it.
