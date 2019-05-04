@@ -4,161 +4,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE034C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C87C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93D3F206DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F2220859
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rVTjYVBl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCT1/s8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfEDOg4 (ORCPT
+        id S1727258AbfEDOiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 10:36:56 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39583 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfEDOgz (ORCPT
+        Sat, 4 May 2019 10:38:24 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34905 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfEDOiY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 10:36:55 -0400
-Received: by mail-pg1-f196.google.com with SMTP id w22so2865827pgi.6
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 07:36:55 -0700 (PDT)
+        Sat, 4 May 2019 10:38:24 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t87so3814976pfa.2
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 07:38:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3/UhKsCGkW4s6b3CKLSpWg03k2UImtt0PnOB2N02e3E=;
-        b=rVTjYVBl38TZ1yBXffS6DjJV4YNwnABswrZ+TCLs6fD5UhADPj7DgToHW0h/bXLgqQ
-         kfcrY4jK1VlXfRQaGiHJhoMq+5vgoq6yba1hnjV/OfPeVpcxei6RT/lBQvgON/KaYTs2
-         hL8KXipjeKNmuLjlacRIvlGCdVABXceYeVfkzdmtxXtQE8cuoTwnChoWX/iIgCGz7xUD
-         j1HV9RevkOT+BKVwvqBOh3znIvMThd0uHxVy9+lc04uxvbEHmkW8WbAPluPycVNFkMye
-         75XOIbTePGnaDHmO9SPEIOOuyDOWutWnUvuJ4HxRq10qa9mQuYyaNThjRCaM3CdSsSiF
-         pXkg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dxXlXPIHOiLEpa62Dvte4CGqyLQwPemJ6HrBcCCpswo=;
+        b=gCT1/s8nmlYKVhGuab7b1b/q6N5FcSvjRhXig3XmZHCMS+n2uaBpRMEPH5K5RrCOjn
+         RygCg2uYp+K4ALI+AYOXKkDWOomFpPyPYbFD8zy8RZ/UdU3OSZJ9YqnmKqlopSxbF32V
+         RdPUeOh5gk0vk+zeHFufWbmCRYHflgYv1TXe+5taBhD8bhY47hKoCFIV7t/LhgxSStGA
+         l7rU8kS5NbygAivqyXzIXkIqV9WkOf+Euq7L7PpZKFfKs+NjYfunkOPqneqLiqGfHGhx
+         JMER+4zr3cl41pBuwswV/cY7giVmo2Dtx9SplATZeqcFpDUBbb0lrBFi48rLUajmqOPs
+         tcwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3/UhKsCGkW4s6b3CKLSpWg03k2UImtt0PnOB2N02e3E=;
-        b=CRWJbGm89C20N4sk2wb38nFINbPUyyBzlVpR3nKEhTWOkz+lQ0bi6Zy8rxthemMOQY
-         RzXvzTAA1gD/77YMohSgqQF3dVMp1I9Ge0JrEk+3eazz9aNOOQHDqj1Vfbq6KSvEKZ/t
-         CdJcoRkeFrbhTMpR8AKihsE4u/KDAnlRMKuGA/BdsM0V+WJR8vgBVFr5V3FLr5BYp5xq
-         Y38xi/Pf9ETlqnHP/rF44+S1uGsMbM/gR1dttJOmSinw/ld8jPrTT4yV7oIO7ERoT3/d
-         5hk1+1qMszdvyTx9nAqMA37F491KYKl0uTPTRyE4ltXCsPp0ZSNDdTEhuODv7pG9HWtc
-         0sDw==
-X-Gm-Message-State: APjAAAVT3LQBDo+4RQn4t6s3F5vs8/EdPuFKRN6jYWWkysHmEkJXlGFA
-        I0n1SIfBtgKHyhbAdCcML5lySwVRzMLXaREx+N8=
-X-Google-Smtp-Source: APXvYqxxlP38m6Yla41WSRx+7y8oQXHn/Bax/14XGYPPPuFOSLTT/RRUqfiOPW6k63m/lqFx4aSGAHuFK0kL3yp9n+A=
-X-Received: by 2002:aa7:9214:: with SMTP id 20mr19486575pfo.202.1556980615110;
- Sat, 04 May 2019 07:36:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <1556787561-5113-1-git-send-email-akinobu.mita@gmail.com>
- <20190502125722.GA28470@localhost.localdomain> <CAC5umygdADGrYeJy=F53Mm4bNPHmo+WY4SD3HFSRqi_cLrz9jw@mail.gmail.com>
- <20190503121232.GB30013@localhost.localdomain> <20190503122035.GA21501@lst.de>
- <CAC5umyiGbDNCtzhJioR_2EV6-6xMuZXOMThCizwJEMHi+KqxAw@mail.gmail.com> <61bf6f0b-4087-cfb3-1ae6-539f18b5b6ea@gmail.com>
-In-Reply-To: <61bf6f0b-4087-cfb3-1ae6-539f18b5b6ea@gmail.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Sat, 4 May 2019 23:36:44 +0900
-Message-ID: <CAC5umygP5cQHQk2ytpNbV5yY-tQ1E-FayMugOfg5gTmnpYtnjQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] nvme-pci: support device coredump
-To:     Minwoo Im <minwoo.im.dev@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@fb.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dxXlXPIHOiLEpa62Dvte4CGqyLQwPemJ6HrBcCCpswo=;
+        b=Uea+tk4+jvhgc+gAPcS5byx0uPDikVmaLjzU36XcXFTCRaaZAxNI5d09OAJMii7gy+
+         g6f0qZ7HuU8xLXsBt/N6sk7IOIBB6UfbrZ4rGDmsp+Y6ztlQa8HtSS1LerSaNex5Dnwq
+         jGSU45rMjOh95vAoyB8EpSe1L0vhk4eBuRzD/t6mpANPKa6gcPuZhHiROddAqwbsbpGk
+         1kz2EzDJyYdhGGUxE6Ayy2p2he4BKeKN/RWut5YzORZz4dUHvhheeZ4z8vXKtm0MfCfG
+         jgjw5bI1vHX2eeJUUeM1rxRbeSb8yKO8Z4wfPT5glWjdWrhecfuh/dIDXecfxuG8rzpG
+         PpNQ==
+X-Gm-Message-State: APjAAAVL1noLMoFYJev54U9qlLi5Ub7lATKjmRhaGV84b/T9v1lRCVy5
+        J8bKuJeaiy/Kgh+bCvdiAzE=
+X-Google-Smtp-Source: APXvYqztLpaOJbeitHdyXx91AXCQ7vkzoCZ5cNm3xDxC29DA7atORy+tKhl/hAnuUM7vOrR9Mg0M9Q==
+X-Received: by 2002:aa7:8458:: with SMTP id r24mr19709400pfn.231.1556980703466;
+        Sat, 04 May 2019 07:38:23 -0700 (PDT)
+Received: from [192.168.0.6] ([123.213.206.190])
+        by smtp.gmail.com with ESMTPSA id p7sm6957050pgk.10.2019.05.04.07.38.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 May 2019 07:38:22 -0700 (PDT)
+Subject: Re: [PATCH 3/4] nvme-pci: add device coredump support
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     linux-nvme@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@fb.com>,
         Sagi Grimberg <sagi@grimberg.me>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org,
         Keith Busch <keith.busch@intel.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Johannes Berg <johannes@sipsolutions.net>,
+        Christoph Hellwig <hch@lst.de>
+References: <1556787561-5113-1-git-send-email-akinobu.mita@gmail.com>
+ <1556787561-5113-4-git-send-email-akinobu.mita@gmail.com>
+ <66a5d068-47b1-341f-988f-c890d7f01720@gmail.com>
+ <CAC5umyjsAh7aZ8JEh8=QMXpNwRdnxxfdPBDwmuVKfafG+rT-PA@mail.gmail.com>
+From:   Minwoo Im <minwoo.im.dev@gmail.com>
+Message-ID: <d0de1c5d-1168-086c-cc16-7d33fd307cd3@gmail.com>
+Date:   Sat, 4 May 2019 23:38:19 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAC5umyjsAh7aZ8JEh8=QMXpNwRdnxxfdPBDwmuVKfafG+rT-PA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B45=E6=9C=884=E6=97=A5(=E5=9C=9F) 18:40 Minwoo Im <minwoo.im.dev=
-@gmail.com>:
->
-> Hi Akinobu,
->
-> On 5/4/19 1:20 PM, Akinobu Mita wrote:
-> > 2019=E5=B9=B45=E6=9C=883=E6=97=A5(=E9=87=91) 21:20 Christoph Hellwig <h=
-ch@lst.de>:
-> >>
-> >> On Fri, May 03, 2019 at 06:12:32AM -0600, Keith Busch wrote:
-> >>> Could you actually explain how the rest is useful? I personally have
-> >>> never encountered an issue where knowing these values would have help=
-ed:
-> >>> every device timeout always needed device specific internal firmware
-> >>> logs in my experience.
-> >
-> > I agree that the device specific internal logs like telemetry are the m=
-ost
-> > useful.  The memory dump of command queues and completion queues is not
-> > that powerful but helps to know what commands have been submitted befor=
-e
-> > the controller goes wrong (IOW, it's sometimes not enough to know
-> > which commands are actually failed), and it can be parsed without vendo=
-r
-> > specific knowledge.
->
-> I'm not pretty sure I can say that memory dump of queues are useless at a=
-ll.
->
-> As you mentioned, sometimes it's not enough to know which command has
-> actually been failed because we might want to know what happened before a=
-nd
-> after the actual failure.
->
-> But, the information of commands handled from device inside would be much
-> more useful to figure out what happened because in case of multiple queue=
-s,
-> the arbitration among them could not be represented by this memory dump.
+On 5/4/19 11:26 PM, Akinobu Mita wrote:
+> 2019年5月4日(土) 19:04 Minwoo Im <minwoo.im.dev@gmail.com>:
+>>
+>> Hi, Akinobu,
+>>
+>> Regardless to reply of the cover, few nits here.
+>>
+>> On 5/2/19 5:59 PM, Akinobu Mita wrote:
+>>> +
+>>> +static const struct nvme_reg nvme_regs[] = {
+>>> +     { NVME_REG_CAP,         "cap",          64 },
+>>> +     { NVME_REG_VS,          "version",      32 },
+>>
+>> Why don't we just go with "vs" instead of full name of it just like
+>> the others.
+> 
+> I tried to imitate the output of 'nvme show-regs'.
 
-Correct.
+Okay.
 
-> > If the issue is reproducible, the nvme trace is the most powerful for t=
-his
-> > kind of information.  The memory dump of the queues is not that powerfu=
-l,
-> > but it can always be enabled by default.
->
-> If the memory dump is a key to reproduce some issues, then it will be
-> powerful
-> to hand it to a vendor to solve it.  But I'm afraid of it because the
-> dump might
-> not be able to give relative submitted times among the commands in queues=
-.
+> 
+>>> +     { NVME_REG_INTMS,       "intms",        32 },
+>>> +     { NVME_REG_INTMC,       "intmc",        32 },
+>>> +     { NVME_REG_CC,          "cc",           32 },
+>>> +     { NVME_REG_CSTS,        "csts",         32 },
+>>> +     { NVME_REG_NSSR,        "nssr",         32 },
+>>> +     { NVME_REG_AQA,         "aqa",          32 },
+>>> +     { NVME_REG_ASQ,         "asq",          64 },
+>>> +     { NVME_REG_ACQ,         "acq",          64 },
+>>> +     { NVME_REG_CMBLOC,      "cmbloc",       32 },
+>>> +     { NVME_REG_CMBSZ,       "cmbsz",        32 },
+>>
+>> If it's going to support optional registers also, then we can have
+>> BP-related things (BPINFO, BPRSEL, BPMBL) here also.
+> 
+> I'm going to change the register dump in binary format just like
+> 'nvme show-regs -o binary' does.  So we'll have registers from 00h to 4Fh.
+> 
 
-I agree that only the memory dump of queues don't help much to reproduce
-issues.  However when analyzing the customer-side issues, we would like to
-know whether unusual commands have been issued before crash, especially on
-admin queue.
+Got it.
 
-> >> Yes.  Also not that NVMe now has the 'device initiated telemetry'
-> >> feauture, which is just a wired name for device coredump.  Wiring that
-> >> up so that we can easily provide that data to the device vendor would
-> >> actually be pretty useful.
-> >
-> > This version of nvme coredump captures controller registers and each qu=
-eue.
-> > So before resetting controller is a suitable time to capture these.
-> > If we'll capture other log pages in this mechanism, the coredump proced=
-ure
-> > will be splitted into two phases (before resetting controller and after
-> > resetting as soon as admin queue is available).
->
-> I agree with that it would be nice if we have a information that might no=
-t
-> be that powerful rather than nothing.
->
-> But, could we request controller-initiated telemetry log page if
-> supported by
-> the controller to get the internal information at the point of failure
-> like reset?
-> If the dump is generated with the telemetry log page, I think it would
-> be great
-> to be a clue to solve the issue.
+And now I can see those two commands `nvme show-regs` and
+`nvme show-regs -o binary` have different results for the register
+range.  The binary output covers just 0x50 size, but it shows all the
+registers including BP-related things in normal && json format.
 
-OK.  Let me try it in the next version.
+Anyway, I'll prepare a patch for nvme-cli to support binary output
+format to cover BP things also.
+
+Thanks, for your reply.
