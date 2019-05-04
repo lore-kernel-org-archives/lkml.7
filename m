@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3C4C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A302AC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1070206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 759E720859
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965602;
-	bh=LtiEmKRnOf4ksZ01CQhY8ojA3ltVuzRQkuvilKrzSsc=;
+	s=default; t=1556965605;
+	bh=9ZHuU2Hf6SOEwxUkORIvKlysz29x98mgwyOMfsIKH0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iYUSVFeUMk/jC/RaC76KtIZognvBzkV9Tjk5PihJsIif5iey3LPB6Go03VCKBpTmZ
-	 klGiwk8FsyGcM5oMrOlml0dLgVkraPa/U7MQtaNHBoIgaO3gJJiEt2XZt1d4aKIvdu
-	 REKhOf3wgPGvY9A4eXv6EKTCI8wwe8u3euURcsiw=
+	b=gljbBq54e04FwzUZmxsnrGXHFgEkvNWcWjbF/w5wh8WVCsfTLeCRrQ32exVyWZQmo
+	 jnLufJ3gVH5j48TSGFBOeivC8xiwjA+56dXySMySseDn/G11EVXR5ldc1EG/vyQ66T
+	 5o5zuPKX+iAttBOKFsRhGV3PEj8RqenqSm+2zhGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfEDK0l (ORCPT
+        id S1727860AbfEDK0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:26:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36204 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:26:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727794AbfEDK0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:26:37 -0400
+        id S1727824AbfEDK0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:26:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 520A920881;
-        Sat,  4 May 2019 10:26:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5F9E2084A;
+        Sat,  4 May 2019 10:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965595;
-        bh=LtiEmKRnOf4ksZ01CQhY8ojA3ltVuzRQkuvilKrzSsc=;
+        s=default; t=1556965601;
+        bh=9ZHuU2Hf6SOEwxUkORIvKlysz29x98mgwyOMfsIKH0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QrFSevoQK5UisvoAd1dRBN44LEBgyrvuTc7pfiFbWDQhgnDAG/JG5gievsiWGeScc
-         9cHk9jaFzW6MZWztmXe5u9NUCx3XN0gKP6bA6JCjEPOxf/9mCz2RTDIRnrzu2lVqhO
-         WIleJ9Y+o6pCoY0ezg4U8SojEqf5otQVDgNSUYC8=
+        b=dqtzm+e/KulpgE4UnUqTMjXoKIa8JgB/adsgWXRH+Y76WTlBNRX7TicCXhorOi64c
+         35vxiP9sPfjMMydIzAlsqv1XIVmf9I+6nnFz7DcE8+fmwYI9cWuntzKQzyW8kG4hV/
+         itS5AZ09EOmPBo2WzUFMpFm0i6sAAHtT6rkLAUhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christo Gouws <gouws.christo@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 30/32] ALSA: line6: use dynamic buffers
-Date:   Sat,  4 May 2019 12:25:15 +0200
-Message-Id: <20190504102453.401059961@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Claire Chang <tientzu@chromium.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.0 32/32] ath10k: Drop WARN_ON()s that always trigger during system resume
+Date:   Sat,  4 May 2019 12:25:17 +0200
+Message-Id: <20190504102453.455405100@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
 References: <20190504102452.523724210@linuxfoundation.org>
@@ -60,299 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit e5c812e84f0dece3400d5caf42522287e6ef139f upstream.
+commit 9e80ad37f6788ed52b89a3cfcd593e0aa69b216d upstream.
 
-The line6 driver uses a lot of USB buffers off of the stack, which is
-not allowed on many systems, causing the driver to crash on some of
-them.  Fix this up by dynamically allocating the buffers with kmalloc()
-which allows for proper DMA-able memory.
+ath10k_mac_vif_chan() always returns an error for the given vif
+during system-wide resume which reliably triggers two WARN_ON()s
+in ath10k_bss_info_changed() and they are not particularly
+useful in that code path, so drop them.
 
-Reported-by: Christo Gouws <gouws.christo@gmail.com>
-Reported-by: Alan Stern <stern@rowland.harvard.edu>
-Tested-by: Christo Gouws <gouws.christo@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Tested: QCA6174 hw3.2 PCI with WLAN.RM.2.0-00180-QCARMSWPZ-1
+Tested: QCA6174 hw3.2 SDIO with WLAN.RMH.4.4.1-00007-QCARMSWP-1
+
+Fixes: cd93b83ad927 ("ath10k: support for multicast rate control")
+Fixes: f279294e9ee2 ("ath10k: add support for configuring management packet rate")
+Cc: stable@vger.kernel.org
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Claire Chang <tientzu@chromium.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/line6/driver.c   |   60 ++++++++++++++++++++++++++-------------------
- sound/usb/line6/podhd.c    |   21 +++++++++------
- sound/usb/line6/toneport.c |   24 +++++++++++++-----
- 3 files changed, 65 insertions(+), 40 deletions(-)
+ drivers/net/wireless/ath/ath10k/mac.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/usb/line6/driver.c
-+++ b/sound/usb/line6/driver.c
-@@ -351,12 +351,16 @@ int line6_read_data(struct usb_line6 *li
- {
- 	struct usb_device *usbdev = line6->usbdev;
- 	int ret;
--	unsigned char len;
-+	unsigned char *len;
- 	unsigned count;
- 
- 	if (address > 0xffff || datalen > 0xff)
- 		return -EINVAL;
- 
-+	len = kmalloc(sizeof(*len), GFP_KERNEL);
-+	if (!len)
-+		return -ENOMEM;
-+
- 	/* query the serial number: */
- 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
- 			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
-@@ -365,7 +369,7 @@ int line6_read_data(struct usb_line6 *li
- 
- 	if (ret < 0) {
- 		dev_err(line6->ifcdev, "read request failed (error %d)\n", ret);
--		return ret;
-+		goto exit;
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -5705,7 +5705,7 @@ static void ath10k_bss_info_changed(stru
  	}
  
- 	/* Wait for data length. We'll get 0xff until length arrives. */
-@@ -375,28 +379,29 @@ int line6_read_data(struct usb_line6 *li
- 		ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
- 				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
- 				      USB_DIR_IN,
--				      0x0012, 0x0000, &len, 1,
-+				      0x0012, 0x0000, len, 1,
- 				      LINE6_TIMEOUT * HZ);
- 		if (ret < 0) {
- 			dev_err(line6->ifcdev,
- 				"receive length failed (error %d)\n", ret);
--			return ret;
-+			goto exit;
+ 	if (changed & BSS_CHANGED_MCAST_RATE &&
+-	    !WARN_ON(ath10k_mac_vif_chan(arvif->vif, &def))) {
++	    !ath10k_mac_vif_chan(arvif->vif, &def)) {
+ 		band = def.chan->band;
+ 		rateidx = vif->bss_conf.mcast_rate[band] - 1;
+ 
+@@ -5743,7 +5743,7 @@ static void ath10k_bss_info_changed(stru
+ 	}
+ 
+ 	if (changed & BSS_CHANGED_BASIC_RATES) {
+-		if (WARN_ON(ath10k_mac_vif_chan(vif, &def))) {
++		if (ath10k_mac_vif_chan(vif, &def)) {
+ 			mutex_unlock(&ar->conf_mutex);
+ 			return;
  		}
- 
--		if (len != 0xff)
-+		if (*len != 0xff)
- 			break;
- 	}
- 
--	if (len == 0xff) {
-+	ret = -EIO;
-+	if (*len == 0xff) {
- 		dev_err(line6->ifcdev, "read failed after %d retries\n",
- 			count);
--		return -EIO;
--	} else if (len != datalen) {
-+		goto exit;
-+	} else if (*len != datalen) {
- 		/* should be equal or something went wrong */
- 		dev_err(line6->ifcdev,
- 			"length mismatch (expected %d, got %d)\n",
--			(int)datalen, (int)len);
--		return -EIO;
-+			(int)datalen, (int)*len);
-+		goto exit;
- 	}
- 
- 	/* receive the result: */
-@@ -405,12 +410,12 @@ int line6_read_data(struct usb_line6 *li
- 			      0x0013, 0x0000, data, datalen,
- 			      LINE6_TIMEOUT * HZ);
- 
--	if (ret < 0) {
-+	if (ret < 0)
- 		dev_err(line6->ifcdev, "read failed (error %d)\n", ret);
--		return ret;
--	}
- 
--	return 0;
-+exit:
-+	kfree(len);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(line6_read_data);
- 
-@@ -422,12 +427,16 @@ int line6_write_data(struct usb_line6 *l
- {
- 	struct usb_device *usbdev = line6->usbdev;
- 	int ret;
--	unsigned char status;
-+	unsigned char *status;
- 	int count;
- 
- 	if (address > 0xffff || datalen > 0xffff)
- 		return -EINVAL;
- 
-+	status = kmalloc(sizeof(*status), GFP_KERNEL);
-+	if (!status)
-+		return -ENOMEM;
-+
- 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0), 0x67,
- 			      USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
- 			      0x0022, address, data, datalen,
-@@ -436,7 +445,7 @@ int line6_write_data(struct usb_line6 *l
- 	if (ret < 0) {
- 		dev_err(line6->ifcdev,
- 			"write request failed (error %d)\n", ret);
--		return ret;
-+		goto exit;
- 	}
- 
- 	for (count = 0; count < LINE6_READ_WRITE_MAX_RETRIES; count++) {
-@@ -447,28 +456,29 @@ int line6_write_data(struct usb_line6 *l
- 				      USB_TYPE_VENDOR | USB_RECIP_DEVICE |
- 				      USB_DIR_IN,
- 				      0x0012, 0x0000,
--				      &status, 1, LINE6_TIMEOUT * HZ);
-+				      status, 1, LINE6_TIMEOUT * HZ);
- 
- 		if (ret < 0) {
- 			dev_err(line6->ifcdev,
- 				"receiving status failed (error %d)\n", ret);
--			return ret;
-+			goto exit;
- 		}
- 
--		if (status != 0xff)
-+		if (*status != 0xff)
- 			break;
- 	}
- 
--	if (status == 0xff) {
-+	if (*status == 0xff) {
- 		dev_err(line6->ifcdev, "write failed after %d retries\n",
- 			count);
--		return -EIO;
--	} else if (status != 0) {
-+		ret = -EIO;
-+	} else if (*status != 0) {
- 		dev_err(line6->ifcdev, "write failed (error %d)\n", ret);
--		return -EIO;
-+		ret = -EIO;
- 	}
--
--	return 0;
-+exit:
-+	kfree(status);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(line6_write_data);
- 
---- a/sound/usb/line6/podhd.c
-+++ b/sound/usb/line6/podhd.c
-@@ -225,28 +225,32 @@ static void podhd_startup_start_workqueu
- static int podhd_dev_start(struct usb_line6_podhd *pod)
- {
- 	int ret;
--	u8 init_bytes[8];
-+	u8 *init_bytes;
- 	int i;
- 	struct usb_device *usbdev = pod->line6.usbdev;
- 
-+	init_bytes = kmalloc(8, GFP_KERNEL);
-+	if (!init_bytes)
-+		return -ENOMEM;
-+
- 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
- 					0x67, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_OUT,
- 					0x11, 0,
- 					NULL, 0, LINE6_TIMEOUT * HZ);
- 	if (ret < 0) {
- 		dev_err(pod->line6.ifcdev, "read request failed (error %d)\n", ret);
--		return ret;
-+		goto exit;
- 	}
- 
- 	/* NOTE: looks like some kind of ping message */
- 	ret = usb_control_msg(usbdev, usb_rcvctrlpipe(usbdev, 0), 0x67,
- 					USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_DIR_IN,
- 					0x11, 0x0,
--					&init_bytes, 3, LINE6_TIMEOUT * HZ);
-+					init_bytes, 3, LINE6_TIMEOUT * HZ);
- 	if (ret < 0) {
- 		dev_err(pod->line6.ifcdev,
- 			"receive length failed (error %d)\n", ret);
--		return ret;
-+		goto exit;
- 	}
- 
- 	pod->firmware_version =
-@@ -255,7 +259,7 @@ static int podhd_dev_start(struct usb_li
- 	for (i = 0; i <= 16; i++) {
- 		ret = line6_read_data(&pod->line6, 0xf000 + 0x08 * i, init_bytes, 8);
- 		if (ret < 0)
--			return ret;
-+			goto exit;
- 	}
- 
- 	ret = usb_control_msg(usbdev, usb_sndctrlpipe(usbdev, 0),
-@@ -263,10 +267,9 @@ static int podhd_dev_start(struct usb_li
- 					USB_TYPE_STANDARD | USB_RECIP_DEVICE | USB_DIR_OUT,
- 					1, 0,
- 					NULL, 0, LINE6_TIMEOUT * HZ);
--	if (ret < 0)
--		return ret;
--
--	return 0;
-+exit:
-+	kfree(init_bytes);
-+	return ret;
- }
- 
- static void podhd_startup_workqueue(struct work_struct *work)
---- a/sound/usb/line6/toneport.c
-+++ b/sound/usb/line6/toneport.c
-@@ -365,16 +365,21 @@ static bool toneport_has_source_select(s
- /*
- 	Setup Toneport device.
- */
--static void toneport_setup(struct usb_line6_toneport *toneport)
-+static int toneport_setup(struct usb_line6_toneport *toneport)
- {
--	u32 ticks;
-+	u32 *ticks;
- 	struct usb_line6 *line6 = &toneport->line6;
- 	struct usb_device *usbdev = line6->usbdev;
- 
-+	ticks = kmalloc(sizeof(*ticks), GFP_KERNEL);
-+	if (!ticks)
-+		return -ENOMEM;
-+
- 	/* sync time on device with host: */
- 	/* note: 32-bit timestamps overflow in year 2106 */
--	ticks = (u32)ktime_get_real_seconds();
--	line6_write_data(line6, 0x80c6, &ticks, 4);
-+	*ticks = (u32)ktime_get_real_seconds();
-+	line6_write_data(line6, 0x80c6, ticks, 4);
-+	kfree(ticks);
- 
- 	/* enable device: */
- 	toneport_send_cmd(usbdev, 0x0301, 0x0000);
-@@ -389,6 +394,7 @@ static void toneport_setup(struct usb_li
- 		toneport_update_led(toneport);
- 
- 	mod_timer(&toneport->timer, jiffies + TONEPORT_PCM_DELAY * HZ);
-+	return 0;
- }
- 
- /*
-@@ -451,7 +457,9 @@ static int toneport_init(struct usb_line
- 			return err;
- 	}
- 
--	toneport_setup(toneport);
-+	err = toneport_setup(toneport);
-+	if (err)
-+		return err;
- 
- 	/* register audio system: */
- 	return snd_card_register(line6->card);
-@@ -463,7 +471,11 @@ static int toneport_init(struct usb_line
- */
- static int toneport_reset_resume(struct usb_interface *interface)
- {
--	toneport_setup(usb_get_intfdata(interface));
-+	int err;
-+
-+	err = toneport_setup(usb_get_intfdata(interface));
-+	if (err)
-+		return err;
- 	return line6_resume(interface);
- }
- #endif
 
 
