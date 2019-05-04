@@ -2,97 +2,201 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CF5C004C9
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE47C004C9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A93BB20652
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568C9206E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:18:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oeQsoIXn"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NUD8K65g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfEDARm (ORCPT
+        id S1726622AbfEDASv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 20:17:42 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43308 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfEDARl (ORCPT
+        Fri, 3 May 2019 20:18:51 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:30240 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfEDASu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 20:17:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id e67so3671221pfe.10
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 17:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=T0GFsU5iTOyCwj8QNb5BtH0GpMGDHOczgY1Uj/CZHXk=;
-        b=oeQsoIXnKAJoKnIszLlOgMj6J9duncW8mzUEey2yO4oNzCVnmVL0XX+8v9FM5pIy2s
-         lj2aO3Aoo+Ij4241jr1fnMBi8z2hYk1KgQr7A2eOY8hTzfApsR4JhFNawomFUYNI1rzI
-         8kKJt+eaMdWlosvTyjoMnPmu5jUASwgPiJ2D49QPZe5GVpAGEHSdgtJ2pp0tvNrK8/nP
-         YD0IxCHRQojMDUkPcZQrUq/fYJcRrENPVAf7wOFaRMVYXyqZsqNu2kP0a1NL/B9+izSu
-         WMuD+dGAQClX7s8+hSZr27NH9SDNlHuoEMnsc31/PEFQyzW5OUmzcrzHkI6/MnOawgA/
-         VMVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=T0GFsU5iTOyCwj8QNb5BtH0GpMGDHOczgY1Uj/CZHXk=;
-        b=TQpbt3/aFfk5bsz/WKk5FtbwjUWOpws/a5HyC67N8mCrLhThzR7/o1Tc2jTP38VIJ3
-         DPVTL70S7/CH5TmCgM/CHmK/xsQ4cXYO2RYw0IYC0uXwBJ93WmlrXjteY96HZBEcZORD
-         JZX84Bcxz/Qth14yec3olBAZ1xa+uaZhEmB1M/WNQt3RiyZ500JprFbIhAbFHyJWAOaj
-         GVhGVSMTb0eIa4WAHm5zLULj1BgyCvSxXwEwm8VoC1mbtp/bRaSHlR5CZEcmY1BYC8Pn
-         AP+5jwgB/1809R/BTV75FNzsIvGSP2gdwfaXf44xNrDZWi+ful7Yu3f8tRmlZNGF6DR3
-         l3aw==
-X-Gm-Message-State: APjAAAUFAaIGCs51cSkdRegBxPdU9XvvmvP2ohAiXmoywNekW1Yn9+oF
-        li5JVyUGOvclg5uBioDzaYCZ5A==
-X-Google-Smtp-Source: APXvYqyEjLXIJyLHnBMCT+wiJSfzdTRGABuxSLtEAXX8MsYrKBxK/Ma8r1oNRsXOlNMqaMEy5XECgw==
-X-Received: by 2002:a62:4690:: with SMTP id o16mr15035772pfi.166.1556929060198;
-        Fri, 03 May 2019 17:17:40 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 144sm4364785pfy.49.2019.05.03.17.17.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 17:17:38 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: qcom: gdsc: WARN when failing to toggle
-Date:   Fri,  3 May 2019 17:17:36 -0700
-Message-Id: <20190504001736.8598-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.18.0
+        Fri, 3 May 2019 20:18:50 -0400
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x440IgwS017039;
+        Sat, 4 May 2019 09:18:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x440IgwS017039
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556929123;
+        bh=c8nPhv768vX2rH2LIPU5db7QC5zJM6dP8fcOJeANzIo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NUD8K65gHLvJKZ6CorxTZ2gHXAsg4jk31iY2vxXdYRz129hRPJllcYEW45xFD+WkC
+         JfGn1+BvsJ3Dr6QoAN8FAnb5uQDnPUovVasiik2vtABKc7Hx/2O8+huNpWg7VFLr2J
+         7R5j8dsEaNe4rcYaHqcNybv3IVtCPxOImiQY3ZyMTNTccNrk0FBCoF/EZwh8lJxIfz
+         eqpulLbKEJyojKS7T5dKpaYp1Zl8UqhAAaSUldsTkRJaJehtQ3vW5CS9Dcy5xYbD8H
+         S4tv+ektpQ2De3kFBmcIVFfQDMTFywWiPytRB/kJ1/zZyPng1H3AUtUPtGjwzUbth7
+         ObNsKAU/9NhUQ==
+X-Nifty-SrcIP: [209.85.222.52]
+Received: by mail-ua1-f52.google.com with SMTP id s30so2634161uas.8;
+        Fri, 03 May 2019 17:18:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAX9SBTA0dcVs+af1LtlHRI8kRBvcvKBfkTkjDnnD9nId6E0PcOp
+        wRarXF3CUpDznq1AgWEjWjVyalmPsIgWNyTTGg8=
+X-Google-Smtp-Source: APXvYqzaIfuRwLQ1jVGvVN1riluv4VWuN/A9RqHOltcZzkIHvIML4BRzScARIh9ssE09iflt+rGQei9iEEC96FPpInc=
+X-Received: by 2002:ab0:2bd8:: with SMTP id s24mr6910953uar.121.1556929121882;
+ Fri, 03 May 2019 17:18:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190503182459.159121-1-joel@joelfernandes.org>
+In-Reply-To: <20190503182459.159121-1-joel@joelfernandes.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 4 May 2019 09:18:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATRTqh_OJcQaWfcYYYqyZ-c0u1prD17LDYwDh18z2V31Q@mail.gmail.com>
+Message-ID: <CAK7LNATRTqh_OJcQaWfcYYYqyZ-c0u1prD17LDYwDh18z2V31Q@mail.gmail.com>
+Subject: Re: [PATCH] kheaders: Move from proc to sysfs
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        atish patra <atishp04@gmail.com>, bpf@vger.kernel.org,
+        Brendan Gregg <bgregg@netflix.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        duyuchao <yuchao.du@unisoc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        =?UTF-8?Q?Micha=C5=82_Gregorczyk?= <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Failing to toggle a GDSC as the driver core is attaching the
-power-domain to a device will cause a silent probe deferral. Provide an
-explicit warning to the developer, in order to reduce the amount of time
-it take to debug this.
+On Sat, May 4, 2019 at 3:27 AM Joel Fernandes (Google)
+<joel@joelfernandes.org> wrote:
+>
+> The kheaders archive consisting of the kernel headers used for compiling
+> bpf programs is in /proc. However there is concern that moving it here
+> will make it permanent. Let us move it to /sys/kernel as discussed [1].
+>
+> [1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
+>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+> This patch applies on top of the previous patch that was applied to the
+> driver tree:
+> https://lore.kernel.org/patchwork/patch/1067310/
+>
+>  kernel/kheaders.c | 40 ++++++++++++++++------------------------
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/clk/qcom/gdsc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
-index dd63aa36b092..6a8a4996dde3 100644
---- a/drivers/clk/qcom/gdsc.c
-+++ b/drivers/clk/qcom/gdsc.c
-@@ -149,7 +149,9 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
- 		udelay(1);
- 	}
- 
--	return gdsc_poll_status(sc, status);
-+	ret = gdsc_poll_status(sc, status);
-+	WARN(ret, "%s status stuck at 'o%s'", sc->pd.name, status ? "ff" : "n");
-+	return ret;
- }
- 
- static inline int gdsc_deassert_reset(struct gdsc *sc)
+Please rename CONFIG_IKHEADERS_PROC.
+
+Thanks.
+
+
+
+
+>  1 file changed, 16 insertions(+), 24 deletions(-)
+>
+> diff --git a/kernel/kheaders.c b/kernel/kheaders.c
+> index 70ae6052920d..6a16f8f6898d 100644
+> --- a/kernel/kheaders.c
+> +++ b/kernel/kheaders.c
+> @@ -8,9 +8,8 @@
+>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/proc_fs.h>
+> +#include <linux/kobject.h>
+>  #include <linux/init.h>
+> -#include <linux/uaccess.h>
+>
+>  /*
+>   * Define kernel_headers_data and kernel_headers_data_end, within which the
+> @@ -31,39 +30,32 @@ extern char kernel_headers_data;
+>  extern char kernel_headers_data_end;
+>
+>  static ssize_t
+> -ikheaders_read_current(struct file *file, char __user *buf,
+> -                     size_t len, loff_t *offset)
+> +ikheaders_read(struct file *file,  struct kobject *kobj,
+> +              struct bin_attribute *bin_attr,
+> +              char *buf, loff_t off, size_t len)
+>  {
+> -       return simple_read_from_buffer(buf, len, offset,
+> -                                      &kernel_headers_data,
+> -                                      &kernel_headers_data_end -
+> -                                      &kernel_headers_data);
+> +       memcpy(buf, &kernel_headers_data + off, len);
+> +       return len;
+>  }
+>
+> -static const struct file_operations ikheaders_file_ops = {
+> -       .read = ikheaders_read_current,
+> -       .llseek = default_llseek,
+> +static struct bin_attribute kheaders_attr __ro_after_init = {
+> +       .attr = {
+> +               .name = "kheaders.tar.xz",
+> +               .mode = S_IRUGO,
+> +       },
+> +       .read = &ikheaders_read,
+>  };
+>
+>  static int __init ikheaders_init(void)
+>  {
+> -       struct proc_dir_entry *entry;
+> -
+> -       /* create the current headers file */
+> -       entry = proc_create("kheaders.tar.xz", S_IRUGO, NULL,
+> -                           &ikheaders_file_ops);
+> -       if (!entry)
+> -               return -ENOMEM;
+> -
+> -       proc_set_size(entry,
+> -                     &kernel_headers_data_end -
+> -                     &kernel_headers_data);
+> -       return 0;
+> +       kheaders_attr.size = (&kernel_headers_data_end -
+> +                             &kernel_headers_data);
+> +       return sysfs_create_bin_file(kernel_kobj, &kheaders_attr);
+>  }
+>
+>  static void __exit ikheaders_cleanup(void)
+>  {
+> -       remove_proc_entry("kheaders.tar.xz", NULL);
+> +       sysfs_remove_bin_file(kernel_kobj, &kheaders_attr);
+>  }
+>
+>  module_init(ikheaders_init);
+> --
+> 2.21.0.1020.gf2820cf01a-goog
+
+
+
 -- 
-2.18.0
-
+Best Regards
+Masahiro Yamada
