@@ -4,65 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC47C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 20:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899C1C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 20:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C76F2063F
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 20:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544472063F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 20:36:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557002135;
-	bh=Ai+NE6T4WMicrnJa8DVQV2dFeTgORqXZUzRQm2S8boI=;
+	s=default; t=1557002195;
+	bh=vV5507wJbZVKbJj3SVUGqgF/EssTZCyMkGS0QBSnGB4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dQFZA5cP/aag7VTMSgX0Ua80Ap74YvNrJou37krXkbray6/5AWvIh7DFT7eqKHayG
-	 veeHz6g12utd9qkRdOv2deNpPjdBhn3fzqWE5BfhWN8HGz5VMBqF5iWaAxEZDbSSxC
-	 3gFmlSHzqnJCJ4Xr+UE7Kp9CYagC7WNA3GD3Kd2E=
+	b=mEjYFMEzFslHR++JSPtYhwlBjT5J9UJqgvKuEO8za1gXvFAYC8977m/Rx8gwHqQ3u
+	 bj029mZk3KvSD7yApRbj54sLBsf9hhcbYXjmjRhKvC+HRypzohvmijsOBKl85+5DrC
+	 1MnSRIdFOjJ8lf41+UVvBbBUjpbkyAuJvBsxQXMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfEDUfe (ORCPT
+        id S1727526AbfEDUge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 16:35:34 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43779 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727404AbfEDUfd (ORCPT
+        Sat, 4 May 2019 16:36:34 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38819 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727404AbfEDUgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 16:35:33 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u27so6338498lfg.10
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 13:35:32 -0700 (PDT)
+        Sat, 4 May 2019 16:36:33 -0400
+Received: by mail-lj1-f196.google.com with SMTP id e18so7979812lja.5
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 13:36:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=SaUefhj41Vo9ICd62i3E2YPs3qFZSdkbgRUMEL66AdI=;
-        b=YWFWemqJ0JLsacxwcohY3H1Ru+7m68bmnSG7LYrodNEBsa1vqFIe7N+Z7/ib2SOef8
-         WWNNvU+E2HH25gh9czdMXSA1W+PtOHyDLxhTntgAp0nZMXOMd6zYnlK0dQqvtzAQo8bz
-         LSBMlFzIL2Q2R5LmuSDspX30nFFTSIPoTZtwA=
+        bh=avpeditiG05762mr+ZBdVz17aE8sPPywlzbuzRkmGu8=;
+        b=eBpIF9Qh2Hh0a0CcqEOOixnUMFDAfxwLic/0D52BIV/HRO+FWsY+c08Ox/yuCHEacF
+         mJC8j9rp5rLkkT9f+c1BKX/iz9KrtGntnPsK8AK0jGNLBjYY4668h41M7CZS5dbNLsey
+         YaMrbtqOGLf0xVoZWCaQuSJHUjRnRlFE0Y9iQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SaUefhj41Vo9ICd62i3E2YPs3qFZSdkbgRUMEL66AdI=;
-        b=K/aKQCCw4JNTcZfXYpqVwtFLx7w/Nu3EhouOXptDp3U3w/9vl/iB3lgSI47cFYGV7G
-         PwOmuhUxgo7GMiR9q4WzzVXdPm82xe2nctie8qNYU7ch90lpui6eJHC4GnIFybbEVy+l
-         J3psBnKLF7MggNv4eLHdfIIP6q2nRd/8UzmjeV3zNDnNJtLPoNg2jPkkUdNfYgRnAU8S
-         sTgRMKzFCUncuVDPe81PbFMwgWnGQIhfjToa4KrFW8dErnDEyHrsK5oJZFp54xk8H5B3
-         vYU9PDuTJacQUK02PVaqO/mt2NXLlAYWtfi0Xu8hmMg0EIZ5ZM2MCmLTY+Q1Te26RKqD
-         YfqA==
-X-Gm-Message-State: APjAAAW8O03C/zcoCPsWO2dOUEyqHHWUpHtOn7z/P6baj58fAljvZS02
-        uX8Y73Iz0mOyKmwDNnGw9gMwvQEtKyc=
-X-Google-Smtp-Source: APXvYqxrQwuE9l8o/kHf+hw3fuMx8NsHeSkMZiW/cXG9j98Q+E3avPe8bkTPAJwCpWgeRd1LOYen5Q==
-X-Received: by 2002:a19:ec12:: with SMTP id b18mr8359518lfa.149.1557002131001;
-        Sat, 04 May 2019 13:35:31 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id p4sm1075426lji.41.2019.05.04.13.35.30
+        bh=avpeditiG05762mr+ZBdVz17aE8sPPywlzbuzRkmGu8=;
+        b=ZboK4SkDtAoq3sbi6g0TJbCcY1nEYUZ0P32m/H2T13ArZIbangja7F/NUyF/uPFd79
+         Vh4sjuothnWafAHh61O8hRe3fvUYhbFI9gtuztILRl/yPss5ENWv3ajDBV+jFKnORnWr
+         GoOtf3MsZN2AU3jMU13gECeTWjaMnRQ0uTNrj5TVtAsh17hEvjaDLjHngoIaQxw/P/cN
+         ZMuAH15WBPWxvgc8BmUS9/blu2rGA29Uje9HAJBCfj3amtmdvXhjf0hQHBbNgRTbJwD/
+         bigmCvqeoR7cvA8LBfoFgy/x6+fBtB/nMwSBXN5BYvhiFDo8XOsLNP21S3+Giq+iLYUm
+         YKzg==
+X-Gm-Message-State: APjAAAWlWjU+YMlDYMXllXlkvHwV942S61oPnrijbJghQdfApouXULou
+        Q6aehdzd3Zm6M3q261G8FblhZ7Boj60=
+X-Google-Smtp-Source: APXvYqyn2Rn3X5kPiANHd9jqFouWdK4rsjWZ8Whd44stwOc0wrFmFm3QsZEApnOSzWZoGveffq0i2w==
+X-Received: by 2002:a2e:6384:: with SMTP id s4mr3669864lje.63.1557002191365;
+        Sat, 04 May 2019 13:36:31 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id h26sm1108577lfm.11.2019.05.04.13.36.28
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 13:35:30 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id z26so3153217ljj.2
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 13:35:30 -0700 (PDT)
-X-Received: by 2002:a2e:3e0e:: with SMTP id l14mr8970707lja.125.1557001696580;
- Sat, 04 May 2019 13:28:16 -0700 (PDT)
+        Sat, 04 May 2019 13:36:28 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id h126so6610509lfh.4
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 13:36:28 -0700 (PDT)
+X-Received: by 2002:ac2:4567:: with SMTP id k7mr8933590lfm.166.1557002188058;
+ Sat, 04 May 2019 13:36:28 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190501202830.347656894@goodmis.org> <20190501203152.397154664@goodmis.org>
  <20190501232412.1196ef18@oasis.local.home> <20190502162133.GX2623@hirez.programming.kicks-ass.net>
@@ -75,9 +74,9 @@ References: <20190501202830.347656894@goodmis.org> <20190501203152.397154664@goo
  <CAHk-=wjGNx8xcwg=7nE_0-nLQ_d4UALHvJ8O+TurbA25n8MyNg@mail.gmail.com> <2BF1AE4B-8105-49F0-8B6A-AA3B11FD66FD@amacapital.net>
 In-Reply-To: <2BF1AE4B-8105-49F0-8B6A-AA3B11FD66FD@amacapital.net>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 4 May 2019 13:28:00 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiwc8NDahj455iBWmYyvDDS+sN1TObFsxxS51gNbtZ9iw@mail.gmail.com>
-Message-ID: <CAHk-=wiwc8NDahj455iBWmYyvDDS+sN1TObFsxxS51gNbtZ9iw@mail.gmail.com>
+Date:   Sat, 4 May 2019 13:36:11 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgEDAFUKRR=iELwUCk1kpoACk4eOfyyQhnYb78H9AEaSw@mail.gmail.com>
+Message-ID: <CAHk-=wgEDAFUKRR=iELwUCk1kpoACk4eOfyyQhnYb78H9AEaSw@mail.gmail.com>
 Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
 To:     Andy Lutomirski <luto@amacapital.net>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
@@ -122,22 +121,11 @@ k SDM read, the INT3 instruction causes #GP if VM=3D1 and IOPL<3.  And, if =
 we allow vm86() to have IOPL=3D3, we should just remove that ability. It=E2=
 =80=99s nuts.
 
-We've definitely historically allowed IOPL=3D3 with the whole "iopl()"
-system call. And yes, afaik it works together with the vm86 system
-call too. I think we copy the unsafe bits from the original eflags, so
-if you do iopl(3) followed by vm86(), you will be running in vm86 mode
-with iopl 3.
+Oh, and I think you mis-read the SDM.
 
-> (We should maybe consider a config option for iopl() that defaults off. W=
-e=E2=80=99ve supported ioperm() for a long, long time.)
+Yes, iopl matters for "int X" (cd xx) instruction in vm86 mode.
 
-It's entirely possible that nobody uses iopl() and we should make it a
-config option that defaults to off.
+But no, iopl does *not* matter for the special "int3/into/int1"
+(cc/ce/f1) instructions, I think.
 
-But we've already done that with the VM86 support entirely, and I'm
-not sure modern distros even enable it.
-
-And obviously vm86 mode isn't available at all with a 64-bit kernel,
-so this is all slowly becoming more or less moot.
-
-                  Linus
+              Linus
