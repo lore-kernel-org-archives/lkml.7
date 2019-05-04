@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CB9C04AA9
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5D6C04AAA
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB6D205F4
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 110DD20859
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 18:38:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="aEli/RHJ"
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="jtk5M/I6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfEDSic (ORCPT
+        id S1727363AbfEDSie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 14:38:32 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38544 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbfEDSia (ORCPT
+        Sat, 4 May 2019 14:38:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34272 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbfEDSic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 14:38:30 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v1so6530397lfg.5
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 11:38:29 -0700 (PDT)
+        Sat, 4 May 2019 14:38:32 -0400
+Received: by mail-lj1-f195.google.com with SMTP id s7so2437984ljh.1
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 11:38:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=a9RavLGoIs/lnDK5Lu6hOyR7V69/kOZA5XlkRY8NIyQ=;
-        b=aEli/RHJ/0kQtLT28mmdqbdwfQ4kVP0Ocn6go9/A66iEW33ePeTgOQcGjpHXhMsTOx
-         wMLTfazjmoJr/0DILN4xRci//Zir/PATnYdDLo9Q0o6i2Nm6pcjOhhNIiv7GlHZDTMWV
-         q6qBAwEbi5hABxneTtdsGMXpYRYYu0V3vZ0BzW+ppwRb0ZzX04uh8w0yzolMtZ/PLmB4
-         zlbsnR+YS55wyUjxDIib0jkWg/wMpqzCNriH4VBaivpDFOHjoeYgf0Qg4ohMrSGRsMzY
-         1sVAG92FtAOeusA9O0dUWyWHhhM9rRlQfEngv1CmQOQRuFF3YPzb6Toe19/oJ/BSw2TO
-         1UCA==
+        bh=f1xp8dy6HUVHg33310d7zWs5VJh87FSyOg/4AbibYuc=;
+        b=jtk5M/I65vabxpWzTKSLJu2t7uKIF/8C8YgcM/SNsEa79VuMuGsrGU/mSCXs7gcqKZ
+         KQvTuW9x/RkXyVfNCdg3BuNskDCSFW/xcTtHDw3EbDFXJlsWlJXzxoumUvvbDoNq9ols
+         g4//QBoN22t3ZDu7jXirHW8+3tiCYwGrbeb0w9C4JdyVXye0Okcx2ZyILdJ37PcbGL0w
+         mXYAkr2EqVtaus+6j/e5NhWFpgfJdoyqlY2fymUQX0xIYf9+QZlnBykc++dKC2JyGUa5
+         kh1MqBAUvqxnflKAZcpsPB9GgoCLYP4TukexRypB9NDl3YRCA+Gg29SL/M5N4UoidzBE
+         6duA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=a9RavLGoIs/lnDK5Lu6hOyR7V69/kOZA5XlkRY8NIyQ=;
-        b=P2LQgzXOOrwrVxxBYEFhl2JZElcfAbWB7isL0r2gjIH39R2+o1d6GfPLUu61dX25aR
-         l+Mq3XSuvM6PEQx1WpcuUu9NlBlthYPAuZNtVPHTwqj7YR3vD8nGunUtPatMX07SYDCR
-         ka3AyhqvTfPXwqHjejB/RSfJNza3VlZGmeArEg83Q9pvm2pBjemkdHQ+fNX38oeG5oPg
-         oRxxAmG6IL7lDwPMlAHiySdv9pkCamyNf9oQhcsieNPGxZwwAvX2+Lkg7RIVgC08DXa4
-         3hPt3KTTnHUD0og1nzbiY4pg8u9UPSPnyN1mFWYJ8/bGF4kWfXuBQ3gNE1CosNTSSLP8
-         1pGg==
-X-Gm-Message-State: APjAAAVrygemipBUFnfE4fpDDo5/1K75HTKbnvHRfBzNdKkpmItDPpRf
-        NVyjB0VUUwcVVgytdVv8GP1OwA==
-X-Google-Smtp-Source: APXvYqzJ3dlSV6eQsQZzATJQq1zPRD5tE6hnql1aWMg4ppBR7Kgyqaf4MeAyrbqGi/v9F6wemsMtbw==
-X-Received: by 2002:ac2:457a:: with SMTP id k26mr5602909lfm.161.1556995108764;
-        Sat, 04 May 2019 11:38:28 -0700 (PDT)
+        bh=f1xp8dy6HUVHg33310d7zWs5VJh87FSyOg/4AbibYuc=;
+        b=pe7v0aVpA6M58F6W6BmVtwOD47X8/N8zSJsi0vaNPRI5M6/p1Igd7BZZdgW7IBnfZN
+         dPx0c0QKBr50WTXL/rU+DETSCvNgDUIq96Le3raZ1rG83OKMooujX0tmE4gdFxdJWHL7
+         C37r6WKO+8yiH2F+PTfTeACZSBVVuSOjdQ5wgZCdJ29pPjEkbkxE9GBzDZ1TIXXYKk7a
+         kRBU2lpt0L28FzkR9E2QMlXI44bLflNSEzdkZ0X8u0PT2pdcoFSNOCCppxHPeCZf2f/v
+         rnkPdZoUJToRrtW1iJHYGH6hrxPp4Liur3FVPqFICTdSeK3vaW2qV4IsID1EpQ3SHPsv
+         sMtg==
+X-Gm-Message-State: APjAAAUY6sJjwKSKQAY2PbepEb9rTVniKyMdoW8QEtcOVS4TYWpKbSbQ
+        AIw0yos+r7fKO24nlxIAe+FDwA==
+X-Google-Smtp-Source: APXvYqx97SRcZ8E0qKrSXc2UTkL7+7bLDMMFHegDSUKfg0LC78M80znZuxGDnN/VbwIkvkWbhKskwQ==
+X-Received: by 2002:a2e:9812:: with SMTP id a18mr9281616ljj.146.1556995110524;
+        Sat, 04 May 2019 11:38:30 -0700 (PDT)
 Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
-        by smtp.gmail.com with ESMTPSA id q21sm1050260lfa.84.2019.05.04.11.38.27
+        by smtp.gmail.com with ESMTPSA id q21sm1050260lfa.84.2019.05.04.11.38.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 11:38:28 -0700 (PDT)
+        Sat, 04 May 2019 11:38:30 -0700 (PDT)
 From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
 To:     axboe@fb.com
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         Igor Konopko <igor.j.konopko@intel.com>,
         =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-Subject: [GIT PULL 02/26] lightnvm: pblk: rollback on error during gc read
-Date:   Sat,  4 May 2019 20:37:47 +0200
-Message-Id: <20190504183811.18725-3-mb@lightnvm.io>
+Subject: [GIT PULL 04/26] lightnvm: pblk: remove unused smeta_ssec field
+Date:   Sat,  4 May 2019 20:37:49 +0200
+Message-Id: <20190504183811.18725-5-mb@lightnvm.io>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190504183811.18725-1-mb@lightnvm.io>
 References: <20190504183811.18725-1-mb@lightnvm.io>
@@ -77,39 +77,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Igor Konopko <igor.j.konopko@intel.com>
 
-A line is left unsigned to the blocks lists in case pblk_gc_line
-returns an error.
-
-This moves the line back to be appropriate list, which can then be
-picked up by the garbage collector.
+smeta_ssec field in pblk_line is never used after it was replaced by
+the function pblk_line_smeta_start().
 
 Signed-off-by: Igor Konopko <igor.j.konopko@intel.com>
 Reviewed-by: Hans Holmberg <hans.holmberg@cnexlabs.com>
 Reviewed-by: Javier González <javier@javigon.com>
 Signed-off-by: Matias Bjørling <mb@lightnvm.io>
 ---
- drivers/lightnvm/pblk-gc.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/lightnvm/pblk-core.c | 1 -
+ drivers/lightnvm/pblk.h      | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/drivers/lightnvm/pblk-gc.c b/drivers/lightnvm/pblk-gc.c
-index 901e49951ab5..65692e6d76e6 100644
---- a/drivers/lightnvm/pblk-gc.c
-+++ b/drivers/lightnvm/pblk-gc.c
-@@ -358,8 +358,13 @@ static int pblk_gc_read(struct pblk *pblk)
+diff --git a/drivers/lightnvm/pblk-core.c b/drivers/lightnvm/pblk-core.c
+index fac32138291f..39280c1e9b5d 100644
+--- a/drivers/lightnvm/pblk-core.c
++++ b/drivers/lightnvm/pblk-core.c
+@@ -1162,7 +1162,6 @@ static int pblk_line_init_bb(struct pblk *pblk, struct pblk_line *line,
+ 	off = bit * geo->ws_opt;
+ 	bitmap_set(line->map_bitmap, off, lm->smeta_sec);
+ 	line->sec_in_line -= lm->smeta_sec;
+-	line->smeta_ssec = off;
+ 	line->cur_sec = off + lm->smeta_sec;
  
- 	pblk_gc_kick(pblk);
+ 	if (init && pblk_line_smeta_write(pblk, line, off)) {
+diff --git a/drivers/lightnvm/pblk.h b/drivers/lightnvm/pblk.h
+index 58da72dbef45..381f0746a9cf 100644
+--- a/drivers/lightnvm/pblk.h
++++ b/drivers/lightnvm/pblk.h
+@@ -464,7 +464,6 @@ struct pblk_line {
+ 	int meta_line;			/* Metadata line id */
+ 	int meta_distance;		/* Distance between data and metadata */
  
--	if (pblk_gc_line(pblk, line))
-+	if (pblk_gc_line(pblk, line)) {
- 		pblk_err(pblk, "failed to GC line %d\n", line->id);
-+		/* rollback */
-+		spin_lock(&gc->r_lock);
-+		list_add_tail(&line->list, &gc->r_list);
-+		spin_unlock(&gc->r_lock);
-+	}
+-	u64 smeta_ssec;			/* Sector where smeta starts */
+ 	u64 emeta_ssec;			/* Sector where emeta starts */
  
- 	return 0;
- }
+ 	unsigned int sec_in_line;	/* Number of usable secs in line */
 -- 
 2.19.1
 
