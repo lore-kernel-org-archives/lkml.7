@@ -2,114 +2,360 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7FDC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4DAC04AA9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADBC3206A3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BBA20644
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:36:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ivMR+lTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfEDM3D (ORCPT
+        id S1726917AbfEDMgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 08:29:03 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7157 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725981AbfEDM3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 08:29:03 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EAC5DC8686F7E88E918E;
-        Sat,  4 May 2019 20:29:00 +0800 (CST)
-Received: from [127.0.0.1] (10.184.225.177) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
- 20:28:54 +0800
-To:     <mhocko@suse.com>, <mike.kravetz@oracle.com>,
-        <shenkai8@huawei.com>, <linfeilong@huawei.com>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <wangwang2@huawei.com>, "Zhoukang (A)" <zhoukang7@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>, <agl@us.ibm.com>,
-        <nacc@us.ibm.com>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH] mm/hugetlb: Don't put_page in lock of hugetlb_lock
-Message-ID: <12a693da-19c8-dd2c-ea6a-0a5dc9d2db27@huawei.com>
-Date:   Sat, 4 May 2019 20:28:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Sat, 4 May 2019 08:36:54 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44536 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfEDMgy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 08:36:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y13so4284341pfm.11
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 05:36:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PxUJTLhuZlQHBimNsUfYE4P4yJ5RwUoFbz6XIZj2VZw=;
+        b=ivMR+lTIp0RIYya4X5ScTYARRXT2GVNc1GFdWwc/iifUvbjDvrK4zQkiN7CKLQY+16
+         N0ECbCEc9LLqCHK3aAO2LZoRRcKacoM67BsD8RncoJuEH+NPBdhNP3ZQe5kmHcUlF2PP
+         8c7E/fOaH1/UyNU/fVmgZlgXfUqNsZ1p4q4zY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PxUJTLhuZlQHBimNsUfYE4P4yJ5RwUoFbz6XIZj2VZw=;
+        b=W/PbJ6fOCZJWplt8TNaJzy20Pokx0VpxYCjSRMpdoCnO2Ze1zldgZm9QVtjn7MJIQ9
+         21rwR5/i/g99y/k/3Lz7crVWTAJtRNC1KAlCVwgfV/Q/hUm6P+kjxTlBJ8lkqWq7vI8f
+         iReJgRlpLBIHrVxC2+qWQ1V0DIqefgfo7W5kAydrgmY+1FluuOCtET7knIrojXyI+Nnq
+         +ZW1IZiKslWs4f1g3ZF/psbP4zpEowbkkaKPwmpOgD10dcqeroDcLoP7hoiIXLjSk28H
+         mUIPdO5XqCwZBpT34eRwxHXj7/SBSfN+0P62wdLauLN5lui8Y0y76xmTtceKIdZDQm57
+         BT2w==
+X-Gm-Message-State: APjAAAUoZztlnHVaeaMsnuvjRPr9id2mM3EMWSyPYYUa3zxLoVCmuGHp
+        Fd4V4pzsr5WzymnfR7QFSigbAg==
+X-Google-Smtp-Source: APXvYqxiCyYBUj8FKZq7Cr2iOIpAgXz+3AbywPnfFFS8nId+wRtznx2EXa8TT/SlGTn/TFjFri+vYA==
+X-Received: by 2002:a63:c243:: with SMTP id l3mr18175178pgg.448.1556973413050;
+        Sat, 04 May 2019 05:36:53 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id h189sm9544928pfc.125.2019.05.04.05.36.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 May 2019 05:36:51 -0700 (PDT)
+Date:   Sat, 4 May 2019 08:36:50 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, atishp04@gmail.com,
+        bpf@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>, dancol@google.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dietmar.eggemann@arm.com, duyuchao <yuchao.du@unisoc.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        =?utf-8?Q?Micha=C5=82?= Gregorczyk <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Olof Johansson <olof@lixom.net>, qais.yousef@arm.com,
+        rdunlap@infradead.org, Shuah Khan <shuah@kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>, yhs@fb.com
+Subject: Re: [PATCH v2] kheaders: Move from proc to sysfs
+Message-ID: <20190504123650.GA229151@google.com>
+References: <20190504121213.183203-1-joel@joelfernandes.org>
+ <20190504122158.GA23535@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.225.177]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190504122158.GA23535@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Shen <shenkai8@huawei.com>
+On Sat, May 04, 2019 at 02:21:58PM +0200, Greg KH wrote:
+> On Sat, May 04, 2019 at 08:12:13AM -0400, Joel Fernandes (Google) wrote:
+> > The kheaders archive consisting of the kernel headers used for compiling
+> > bpf programs is in /proc. However there is concern that moving it here
+> > will make it permanent. Let us move it to /sys/kernel as discussed [1].
+> > 
+> > [1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
+> > 
+> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> > This patch applies on top of the previous patch that was applied to the
+> > driver tree:
+> > https://lore.kernel.org/patchwork/patch/1067310/
+> > 
+> > v1->v2: Fixed some kconfig nits (Masami).
+> > 
+> >  init/Kconfig                                | 16 ++++-----
+> >  kernel/Makefile                             |  4 +--
+> >  kernel/{gen_ikh_data.sh => gen_kheaders.sh} |  2 +-
+> >  kernel/kheaders.c                           | 40 +++++++++------------
+> >  4 files changed, 26 insertions(+), 36 deletions(-)
+> >  rename kernel/{gen_ikh_data.sh => gen_kheaders.sh} (98%)
+> > 
+> > diff --git a/init/Kconfig b/init/Kconfig
+> > index 26a364a95b57..c3661991b089 100644
+> > --- a/init/Kconfig
+> > +++ b/init/Kconfig
+> > @@ -579,15 +579,13 @@ config IKCONFIG_PROC
+> >  	  This option enables access to the kernel configuration file
+> >  	  through /proc/config.gz.
+> >  
+> > -config IKHEADERS_PROC
+> > -	tristate "Enable kernel header artifacts through /proc/kheaders.tar.xz"
+> > -	depends on PROC_FS
+> > -	help
+> > -	  This option enables access to the kernel header and other artifacts that
+> > -	  are generated during the build process. These can be used to build eBPF
+> > -	  tracing programs, or similar programs.  If you build the headers as a
+> > -	  module, a module called kheaders.ko is built which can be loaded on-demand
+> > -	  to get access to the headers.
+> > +config IKHEADERS
+> > +	tristate "Enable kernel headers through /sys/kernel/kheaders.tar.xz"
+> > +	help
+> > +	  This option enables access to the in-kernel headers that are generated during
+> > +	  the build process. These can be used to build eBPF tracing programs,
+> > +	  or similar programs.  If you build the headers as a module, a module called
+> > +	  kheaders.ko is built which can be loaded on-demand to get access to headers.
+> >  
+> >  config LOG_BUF_SHIFT
+> >  	int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
+> > diff --git a/kernel/Makefile b/kernel/Makefile
+> > index 12399614c350..b32a558fae2f 100644
+> > --- a/kernel/Makefile
+> > +++ b/kernel/Makefile
+> > @@ -70,7 +70,7 @@ obj-$(CONFIG_UTS_NS) += utsname.o
+> >  obj-$(CONFIG_USER_NS) += user_namespace.o
+> >  obj-$(CONFIG_PID_NS) += pid_namespace.o
+> >  obj-$(CONFIG_IKCONFIG) += configs.o
+> > -obj-$(CONFIG_IKHEADERS_PROC) += kheaders.o
+> > +obj-$(CONFIG_IKHEADERS) += kheaders.o
+> 
+> Good in changing the config name, I hadn't thought of that.
+> 
+> > diff --git a/kernel/gen_ikh_data.sh b/kernel/gen_kheaders.sh
+> > similarity index 98%
+> > rename from kernel/gen_ikh_data.sh
+> > rename to kernel/gen_kheaders.sh
+> 
+> Same here, nice.
 
-spinlock recursion happened when do LTP test:
-#!/bin/bash
-./runltp -p -f hugetlb &
-./runltp -p -f hugetlb &
-./runltp -p -f hugetlb &
-./runltp -p -f hugetlb &
-./runltp -p -f hugetlb &
+Thanks.
 
-The dtor returned by get_compound_page_dtor in __put_compound_page
-may be the function of free_huge_page which will lock the hugetlb_lock,
-so don't put_page in lock of hugetlb_lock.
+> > -static const struct file_operations ikheaders_file_ops = {
+> > -	.read = ikheaders_read_current,
+> > -	.llseek = default_llseek,
+> > +static struct bin_attribute kheaders_attr __ro_after_init = {
+> 
+> Minor nit, are you sure about __ro_after_init for an attribute
+> structure?  Is it even needed?
 
- BUG: spinlock recursion on CPU#0, hugemmap05/1079
-  lock: hugetlb_lock+0x0/0x18, .magic: dead4ead, .owner: hugemmap05/1079, .owner_cpu: 0
- Call trace:
-  dump_backtrace+0x0/0x198
-  show_stack+0x24/0x30
-  dump_stack+0xa4/0xcc
-  spin_dump+0x84/0xa8
-  do_raw_spin_lock+0xd0/0x108
-  _raw_spin_lock+0x20/0x30
-  free_huge_page+0x9c/0x260
-  __put_compound_page+0x44/0x50
-  __put_page+0x2c/0x60
-  alloc_surplus_huge_page.constprop.19+0xf0/0x140
-  hugetlb_acct_memory+0x104/0x378
-  hugetlb_reserve_pages+0xe0/0x250
-  hugetlbfs_file_mmap+0xc0/0x140
-  mmap_region+0x3e8/0x5b0
-  do_mmap+0x280/0x460
-  vm_mmap_pgoff+0xf4/0x128
-  ksys_mmap_pgoff+0xb4/0x258
-  __arm64_sys_mmap+0x34/0x48
-  el0_svc_common+0x78/0x130
-  el0_svc_handler+0x38/0x78
-  el0_svc+0x8/0xc
+Yes, because after init, we don't need to change it, so it makes it more
+robust to accidental overwrite. We change it on init because we have to
+calculate the size of the archive. I was following this from kernel/ksysfs.c
+actually.
 
-Fixes: 9980d744a0 ("mm, hugetlb: get rid of surplus page accounting tricks")
-Signed-off-by: Kai Shen <shenkai8@huawei.com>
-Signed-off-by: Feilong Lin <linfeilong@huawei.com>
-Reported-by: Wang Wang <wangwang2@huawei.com>
+I have recently encountered this mechanism in the module loader as well while
+doing an RCU patch. The module loader post init will mark the page as
+read-only and any writes to it will fault. These variables will be placed in
+a ".data.ro_after_init" or a similarly named section in the module ELF.
+
+> But, you should change S_IRUGO to the correct octal number, checkpatch
+> should have barfed on this change.
+
+fixed, below is the updated patch inline, thanks!
+
+---8<-----------------------
+
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH v3] kheaders: Move from proc to sysfs
+
+The kheaders archive consisting of the kernel headers used for compiling
+bpf programs is in /proc. However there is concern that moving it here
+will make it permanent. Let us move it to /sys/kernel as discussed [1].
+
+[1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
+
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- mm/hugetlb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This patch applies on top of the previous patch that was applied to the
+driver tree:
+https://lore.kernel.org/patchwork/patch/1067310/
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 6cdc7b2..c1e7b81 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1574,8 +1574,9 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
- 	 */
- 	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
- 		SetPageHugeTemporary(page);
-+		spin_unlock(&hugetlb_lock);
- 		put_page(page);
--		page = NULL;
-+		return NULL;
- 	} else {
- 		h->surplus_huge_pages++;
- 		h->surplus_huge_pages_node[page_to_nid(page)]++;
+v2->v3: Fixed sysfs file mode nit (Greg).
+v1->v2: Fixed some kconfig nits (Masami).
+
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ init/Kconfig                                | 16 ++++-----
+ kernel/Makefile                             |  4 +--
+ kernel/{gen_ikh_data.sh => gen_kheaders.sh} |  2 +-
+ kernel/kheaders.c                           | 40 +++++++++------------
+ 4 files changed, 26 insertions(+), 36 deletions(-)
+ rename kernel/{gen_ikh_data.sh => gen_kheaders.sh} (98%)
+
+diff --git a/init/Kconfig b/init/Kconfig
+index 26a364a95b57..c3661991b089 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -579,15 +579,13 @@ config IKCONFIG_PROC
+ 	  This option enables access to the kernel configuration file
+ 	  through /proc/config.gz.
+ 
+-config IKHEADERS_PROC
+-	tristate "Enable kernel header artifacts through /proc/kheaders.tar.xz"
+-	depends on PROC_FS
+-	help
+-	  This option enables access to the kernel header and other artifacts that
+-	  are generated during the build process. These can be used to build eBPF
+-	  tracing programs, or similar programs.  If you build the headers as a
+-	  module, a module called kheaders.ko is built which can be loaded on-demand
+-	  to get access to the headers.
++config IKHEADERS
++	tristate "Enable kernel headers through /sys/kernel/kheaders.tar.xz"
++	help
++	  This option enables access to the in-kernel headers that are generated during
++	  the build process. These can be used to build eBPF tracing programs,
++	  or similar programs.  If you build the headers as a module, a module called
++	  kheaders.ko is built which can be loaded on-demand to get access to headers.
+ 
+ config LOG_BUF_SHIFT
+ 	int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
+diff --git a/kernel/Makefile b/kernel/Makefile
+index 12399614c350..b32a558fae2f 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -70,7 +70,7 @@ obj-$(CONFIG_UTS_NS) += utsname.o
+ obj-$(CONFIG_USER_NS) += user_namespace.o
+ obj-$(CONFIG_PID_NS) += pid_namespace.o
+ obj-$(CONFIG_IKCONFIG) += configs.o
+-obj-$(CONFIG_IKHEADERS_PROC) += kheaders.o
++obj-$(CONFIG_IKHEADERS) += kheaders.o
+ obj-$(CONFIG_SMP) += stop_machine.o
+ obj-$(CONFIG_KPROBES_SANITY_TEST) += test_kprobes.o
+ obj-$(CONFIG_AUDIT) += audit.o auditfilter.o
+@@ -126,7 +126,7 @@ $(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
+ $(obj)/kheaders.o: $(obj)/kheaders_data.tar.xz
+ 
+ quiet_cmd_genikh = CHK     $(obj)/kheaders_data.tar.xz
+-cmd_genikh = $(srctree)/kernel/gen_ikh_data.sh $@
++cmd_genikh = $(srctree)/kernel/gen_kheaders.sh $@
+ $(obj)/kheaders_data.tar.xz: FORCE
+ 	$(call cmd,genikh)
+ 
+diff --git a/kernel/gen_ikh_data.sh b/kernel/gen_kheaders.sh
+similarity index 98%
+rename from kernel/gen_ikh_data.sh
+rename to kernel/gen_kheaders.sh
+index 591a94f7b387..581b83534587 100755
+--- a/kernel/gen_ikh_data.sh
++++ b/kernel/gen_kheaders.sh
+@@ -2,7 +2,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ # This script generates an archive consisting of kernel headers
+-# for CONFIG_IKHEADERS_PROC.
++# for CONFIG_IKHEADERS.
+ set -e
+ spath="$(dirname "$(readlink -f "$0")")"
+ kroot="$spath/.."
+diff --git a/kernel/kheaders.c b/kernel/kheaders.c
+index 70ae6052920d..8f69772af77b 100644
+--- a/kernel/kheaders.c
++++ b/kernel/kheaders.c
+@@ -8,9 +8,8 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/proc_fs.h>
++#include <linux/kobject.h>
+ #include <linux/init.h>
+-#include <linux/uaccess.h>
+ 
+ /*
+  * Define kernel_headers_data and kernel_headers_data_end, within which the
+@@ -31,39 +30,32 @@ extern char kernel_headers_data;
+ extern char kernel_headers_data_end;
+ 
+ static ssize_t
+-ikheaders_read_current(struct file *file, char __user *buf,
+-		      size_t len, loff_t *offset)
++ikheaders_read(struct file *file,  struct kobject *kobj,
++	       struct bin_attribute *bin_attr,
++	       char *buf, loff_t off, size_t len)
+ {
+-	return simple_read_from_buffer(buf, len, offset,
+-				       &kernel_headers_data,
+-				       &kernel_headers_data_end -
+-				       &kernel_headers_data);
++	memcpy(buf, &kernel_headers_data + off, len);
++	return len;
+ }
+ 
+-static const struct file_operations ikheaders_file_ops = {
+-	.read = ikheaders_read_current,
+-	.llseek = default_llseek,
++static struct bin_attribute kheaders_attr __ro_after_init = {
++	.attr = {
++		.name = "kheaders.tar.xz",
++		.mode = 0444,
++	},
++	.read = &ikheaders_read,
+ };
+ 
+ static int __init ikheaders_init(void)
+ {
+-	struct proc_dir_entry *entry;
+-
+-	/* create the current headers file */
+-	entry = proc_create("kheaders.tar.xz", S_IRUGO, NULL,
+-			    &ikheaders_file_ops);
+-	if (!entry)
+-		return -ENOMEM;
+-
+-	proc_set_size(entry,
+-		      &kernel_headers_data_end -
+-		      &kernel_headers_data);
+-	return 0;
++	kheaders_attr.size = (&kernel_headers_data_end -
++			      &kernel_headers_data);
++	return sysfs_create_bin_file(kernel_kobj, &kheaders_attr);
+ }
+ 
+ static void __exit ikheaders_cleanup(void)
+ {
+-	remove_proc_entry("kheaders.tar.xz", NULL);
++	sysfs_remove_bin_file(kernel_kobj, &kheaders_attr);
+ }
+ 
+ module_init(ikheaders_init);
 -- 
-1.8.3.1
-
+2.21.0.1020.gf2820cf01a-goog
 
