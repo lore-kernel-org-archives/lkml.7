@@ -6,60 +6,63 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D869C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2130DC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD82206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 11:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E73F6206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:00:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EagF2etD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kGhXJihK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfEDL71 (ORCPT
+        id S1727700AbfEDMAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 07:59:27 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42032 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727626AbfEDL70 (ORCPT
+        Sat, 4 May 2019 08:00:21 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35769 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727521AbfEDMAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 07:59:26 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y10so832728lji.9
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 04:59:25 -0700 (PDT)
+        Sat, 4 May 2019 08:00:21 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j20so6176407lfh.2
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 05:00:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3BX39v3pu7ldHFdjAOxh6Msu2ZnLD9jNF7ehK/cIJkM=;
-        b=EagF2etDmy1Qb4QiyLGp5kmZcDoAiDccs87hKdobjUQFqxAEHSWsrdE9zjQ/1j2byu
-         4JMhWitx1FQZMkGaU4947wmJouyju9O05m4yWtknxQWQXpxFzy8+V9ffhGLY1Hg70RTt
-         QuMpT0qPWThcFKNEx5GXw/749wn3/5+WAqWnIQpPHTmKzL6kq/ZuG+nSQK1Z8mJIP4oW
-         uNVu22mxIVOpwIIWlhRvW8mQk+C0lsyr5uTuniknleB8sMrUcjxKiP1KgTOdzPhrCbU7
-         V8TR/nglDjaq/WwlR5d8UvRIkQ/i4R9obleYo3vc/Nwh7fbestsbsXu6IuIWohAyAiIY
-         cXyg==
+        bh=bVUZ/YdfIbEAyeXyxlZd8C1Dn3iXlSts8Rn7bzFJXgo=;
+        b=kGhXJihKafot6irmobTIl6Oc/jaJTM7ilojeVby1fdeUoYY1bwyJyEkb/fkyPxsS4/
+         kTevTY+CK++MYB+OpW/NTSerAKU2rgWWFs2K6XhP9dXhN1d/HGmybKLJb54DfeM3SNCx
+         u5SOLWs3HwSZDiKzbJ55SvmB17Zv8nlf3Op6P6yDQrCi+QBLwRGAmG0iDB0AiJ3fAuNQ
+         vJnkoCwP1yNvLBBUEDHEH8EnYehG045loHp7wED4F9xcYUCsy3gfmKlQyIluiAH3a/fq
+         LbwWJC+sGQXQxYFKLltphezTZ18/M4FaSvSbsqUY2bIoFcpYuhOJ48I+nAR7W55F4pi2
+         WSNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3BX39v3pu7ldHFdjAOxh6Msu2ZnLD9jNF7ehK/cIJkM=;
-        b=PKOKORTTtMfUbrC+p2C/swZOQ9+JjbMIHK/oVryLMchhjjbZOQan/iQMdWSVQUrg0I
-         GtANAorARi7f22c8cyAhnwTa2VUbnxjTbrCe6PG336e4oaS5q5oN7z27wkS0Mdp+6Wqv
-         p5y0fZZVDWuoM+bGWoqnMKHhPeBTrlICU04KVDhZeV2eDfKHfxWlP1fb+CZmijYhMT6+
-         IsU7imDpwnxjcWxkRV72qbyvoUooUWv0l7XUv2bnSiZ2V+0HjsYMlcmYXZHkDNqEbE1U
-         pEBSZapayENdo/ESOzDT/urOYUmMymeC/xQbLmwR3VqhxndlCCq7bhfXRFukS4toy1nJ
-         UazA==
-X-Gm-Message-State: APjAAAU3IVg1MZ2cPf0q56WRrc1H9bOSL7Tufsmo3PI6FI9Ojmj9ERWC
-        kz+EoJXyjtSe24nkugo+GVhXlyUz9S+fPYw6xjB7TYuE2mU=
-X-Google-Smtp-Source: APXvYqwBbsY6IMHgupX97VlIU9A0jH3IvIDBH7G1IoxqWmOmQyFNPYt9uxWoihm/pbMWCpEUH68oVO/6dIZZgWpK6jo=
-X-Received: by 2002:a2e:834d:: with SMTP id l13mr8308279ljh.97.1556971164572;
- Sat, 04 May 2019 04:59:24 -0700 (PDT)
+        bh=bVUZ/YdfIbEAyeXyxlZd8C1Dn3iXlSts8Rn7bzFJXgo=;
+        b=IwNVMi6qWTVAwMaXwgf8ChBHJUHycD2vX2Mpxe7NMEaGOlUvUM2vP+88w/K3f7RiLy
+         2duRAg6IzMFZa7Lo+SY7i7XsreLc8bmhSgIYX07E9Pi7vFz/AXEbgkPRudO3UBcemX6n
+         WGqD8xdgqWZv8LleKs6v6rb5sytqsk7lTJCfYv8TyGrDiTUTvzR8LsMuffEcFi8cTuF8
+         Lp3/31txmwuEROB2n7DA8k0OrF4Kx20DTFlp88QdqrQrGMcJd5MTVPoNZovWGb7WpPTh
+         9SJZDmSgQFP+dlG6U5tiwjIa1PSqos8+ZhnfXhVMB/j3olia1/artDo3sVHYTq0El4f0
+         /qKg==
+X-Gm-Message-State: APjAAAVz3RZFuC5xPcc39yn7SKyznFiHsCJTsYQDsemn1jpIsfcrotII
+        sFSUtKC2SSUJBKJq2fN1IAB062Yzbi3+DvgCIsjB0w==
+X-Google-Smtp-Source: APXvYqzHb3J2SQJgpBCRN+rySa3T5qo6CkgHRVTBI6q3LGfhjNT7Dye0M39QqMKy0La/eziTVGqnfSlDJ08oWBgpIEA=
+X-Received: by 2002:ac2:51a1:: with SMTP id f1mr7143976lfk.129.1556971219802;
+ Sat, 04 May 2019 05:00:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190503131651.GC1236@mwanda>
-In-Reply-To: <20190503131651.GC1236@mwanda>
+References: <20190504070318.56760-1-yuehaibing@huawei.com>
+In-Reply-To: <20190504070318.56760-1-yuehaibing@huawei.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 4 May 2019 13:59:13 +0200
-Message-ID: <CACRpkdajJgP6zAYOw3zRVjtPj-dEoA0ZtrMerPMkxW046aEQ7w@mail.gmail.com>
-Subject: Re: [PATCH] soc: ixp4xx: qmgr: Fix an NULL vs IS_ERR() check in probe
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Krzysztof Halasa <khalasa@piap.pl>,
+Date:   Sat, 4 May 2019 14:00:07 +0200
+Message-ID: <CACRpkdaN+BeaKA91rvMJwJsSW2epEb1YJPzpvXoJ=+M=Ly-7tQ@mail.gmail.com>
+Subject: Re: [PATCH -next] ARM: ixp4xx: Remove duplicated include from common.c
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>,
+        Krzysztof Halasa <khalasa@piap.pl>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -68,17 +71,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 3:17 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+On Sat, May 4, 2019 at 8:53 AM YueHaibing <yuehaibing@huawei.com> wrote:
 
-> The devm_ioremap_resource() function doesn't retunr NULL, it returns
-> error pointers.
+> Remove duplicated include.
 >
-> Fixes: ecc133c6da60 ("soc: ixp4xx: qmgr: Pass resources")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Good catch! Patch applied.
-
-I will make sure this fix lands in ARM SoC for v5.2.
+Patch applied, thanks!
 
 Yours,
 Linus Walleij
