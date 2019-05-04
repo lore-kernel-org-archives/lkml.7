@@ -2,87 +2,114 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DCEC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7FDC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE75F206A3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:26:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CIoA2EZZ"
+	by mail.kernel.org (Postfix) with ESMTP id ADBC3206A3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfEDM0X (ORCPT
+        id S1726770AbfEDM3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 08:26:23 -0400
-Received: from mail-ot1-f42.google.com ([209.85.210.42]:40122 "EHLO
-        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfEDM0X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 08:26:23 -0400
-Received: by mail-ot1-f42.google.com with SMTP id w6so7666751otl.7;
-        Sat, 04 May 2019 05:26:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=k+CZPzYP3Yyswg9oTnF6oEFTU7iNfbsaWXChU/S/CYg=;
-        b=CIoA2EZZV5PVoJ9eIUXQxN05vDxkAcRgRBn+HfqvHwqS1+NaNPi2PBfV5Dy6sxKTzg
-         D3zqOm8uJ4mK98RfqDDTr/ZrvqVR/P7PkqXY9bj2AFsbkpLJYi+o1SwTdToKV1U4DIXM
-         0WR8bbXLwSGEDSYArSV9kEax4+Fr6cfH6FsZGxh1HQdd2Mf8Npz4X1YXgPRCq2YXXRT6
-         Eb854qd6snAgJsyiZxi1Er6hsuD28fWGtERL+Y5FzU9gI8OYdTWYLuUG4DzLUZFXBebC
-         zZMV1qTqWDFgnRiHdxBt+wNITCX3iETNlQ+OH92eaKceTpr8+sQNknwPcPiky9YW1of7
-         w8rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=k+CZPzYP3Yyswg9oTnF6oEFTU7iNfbsaWXChU/S/CYg=;
-        b=CCISbr+osc9AeKe+pc8qbN8hxEsti0iXUUSyjwn5YKL5BNhIsj2N8aN3BhYmPOOajG
-         Y0DHkYr+LkS0x2TWdtOJpXjZ+ULB7juefIgIfjsJeAjddp5oUkY3ppTWwHjAp4hKw6+y
-         q6QPjDakuUo+WBNsFygYiL7hodN5rKQviyICaOoJczA+wJlPSzGUnGEPpoCYQ+PNZs9t
-         nAC1O22nFLwcIFJOdkw6Pc9jfnQHsf2m/vGlsX9sd8dQPYpD33qQSjSndhRrjJhF32Xi
-         DmgWD2Bi5YmHO0o25bw37iQa9yCjUC+Wu50n2lubdhchz6MFRsVTk/fvEOkw4yJOpLd+
-         3dFQ==
-X-Gm-Message-State: APjAAAUzyXSBZYvN6aKIWiLHMXgcEnUogk5QnaF9snmWg372doRZDqhr
-        2gMNpHalaINEGyZTy78AdrkQvKCB+gAluU6U0QRjz2Zp
-X-Google-Smtp-Source: APXvYqx4sIJLThGU9uzZ/Rr2Gk4H83M6bptFgzXpJGA0J9K8RmDRCskZ1kHf6JVQ0hQ1yxbAio25kXGYBDdtWpENCVk=
-X-Received: by 2002:a9d:6b82:: with SMTP id b2mr2580468otq.232.1556972782477;
- Sat, 04 May 2019 05:26:22 -0700 (PDT)
+        Sat, 4 May 2019 08:29:03 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7157 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725981AbfEDM3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 08:29:03 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EAC5DC8686F7E88E918E;
+        Sat,  4 May 2019 20:29:00 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
+ 20:28:54 +0800
+To:     <mhocko@suse.com>, <mike.kravetz@oracle.com>,
+        <shenkai8@huawei.com>, <linfeilong@huawei.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <wangwang2@huawei.com>, "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>, <agl@us.ibm.com>,
+        <nacc@us.ibm.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH] mm/hugetlb: Don't put_page in lock of hugetlb_lock
+Message-ID: <12a693da-19c8-dd2c-ea6a-0a5dc9d2db27@huawei.com>
+Date:   Sat, 4 May 2019 20:28:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-From:   Ulf Magnusson <ulfalizer@gmail.com>
-Date:   Sat, 4 May 2019 14:26:11 +0200
-Message-ID: <CAFkk2KR+of+7YZKC=LOn1J7q8_u5b8HyM6yh4Ynfh68jYW7X8w@mail.gmail.com>
-Subject: [ANNOUNCE] Kconfiglib GUI menuconfig
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.225.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Kai Shen <shenkai8@huawei.com>
 
-Kconfiglib (https://github.com/ulfalizer/Kconfiglib) now has a
-Tkinter-based guiconfig.py in addition to the curses-based
-menuconfig.py. It has been tested on Linux, Windows, and macOS.
+spinlock recursion happened when do LTP test:
+#!/bin/bash
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
 
-See https://github.com/ulfalizer/Kconfiglib#menuconfig-interfaces for
-a screenshot (with show-all mode on). The interface is inspired by
-qconfig.
+The dtor returned by get_compound_page_dtor in __put_compound_page
+may be the function of free_huge_page which will lock the hugetlb_lock,
+so don't put_page in lock of hugetlb_lock.
 
-The images come from data embedded directly in guiconfig.py by
-default, to avoid having to carry around a bunch of separate .gif
-files.
+ BUG: spinlock recursion on CPU#0, hugemmap05/1079
+  lock: hugetlb_lock+0x0/0x18, .magic: dead4ead, .owner: hugemmap05/1079, .owner_cpu: 0
+ Call trace:
+  dump_backtrace+0x0/0x198
+  show_stack+0x24/0x30
+  dump_stack+0xa4/0xcc
+  spin_dump+0x84/0xa8
+  do_raw_spin_lock+0xd0/0x108
+  _raw_spin_lock+0x20/0x30
+  free_huge_page+0x9c/0x260
+  __put_compound_page+0x44/0x50
+  __put_page+0x2c/0x60
+  alloc_surplus_huge_page.constprop.19+0xf0/0x140
+  hugetlb_acct_memory+0x104/0x378
+  hugetlb_reserve_pages+0xe0/0x250
+  hugetlbfs_file_mmap+0xc0/0x140
+  mmap_region+0x3e8/0x5b0
+  do_mmap+0x280/0x460
+  vm_mmap_pgoff+0xf4/0x128
+  ksys_mmap_pgoff+0xb4/0x258
+  __arm64_sys_mmap+0x34/0x48
+  el0_svc_common+0x78/0x130
+  el0_svc_handler+0x38/0x78
+  el0_svc+0x8/0xc
 
-makefile.patch now has a new 'guiconfig' target for trying out the GUI
-menuconfig on the Linux kernel. Python 2 is used by default. Run 'make
-PYTHONCMD=python3 guiconfig' to use Python 3.
+Fixes: 9980d744a0 ("mm, hugetlb: get rid of surplus page accounting tricks")
+Signed-off-by: Kai Shen <shenkai8@huawei.com>
+Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+---
+ mm/hugetlb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Please tell me if you try it out and spot any issues or annoyances. :)
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 6cdc7b2..c1e7b81 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1574,8 +1574,9 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
+ 	 */
+ 	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
+ 		SetPageHugeTemporary(page);
++		spin_unlock(&hugetlb_lock);
+ 		put_page(page);
+-		page = NULL;
++		return NULL;
+ 	} else {
+ 		h->surplus_huge_pages++;
+ 		h->surplus_huge_pages_node[page_to_nid(page)]++;
+-- 
+1.8.3.1
 
-Cheers,
-Ulf
+
