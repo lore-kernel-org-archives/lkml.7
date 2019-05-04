@@ -5,140 +5,179 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA19C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 21:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0790BC04AAA
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 21:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B8A205F4
+	by mail.kernel.org (Postfix) with ESMTP id C061B205F4
 	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 21:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvfFil29"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENCHixr8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfEDV5p (ORCPT
+        id S1727344AbfEDV5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 4 May 2019 17:57:45 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41087 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbfEDV5p (ORCPT
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52853 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbfEDV5o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 17:57:45 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c12so12252679wrt.8
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 14:57:44 -0700 (PDT)
+        Sat, 4 May 2019 17:57:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id o25so38853wmf.2
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 14:57:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ki2zYft0ou3H6TJj4mjFNNxPee1lMyNDS4gDZCtx/Fs=;
-        b=UvfFil29+0EWj3BCtr67enMZScaZXSWmeVO5Cb1rX4+myTaH5rGcEpUg5vSnCN3FiH
-         S/RgLe14rF/Afkvhs7mMZpvEnjoRIMXTzfrStJWpBeCUon2Jk3oDQZJFWndi/O3CPq91
-         QHi+a5GREyVbehp1rsU4+8tYBywNKNSIHTfU/rxpR/O77B/0jiu52PN4hUd7jpC6N1zW
-         4+uqdNlpBpLY79qswAnKlIuw4KHOsNSLGCawF0PwNe6EKJrOosnrHSl/yogLRN/6qp1F
-         GJEOvWsyfCpp/88fByVlmNdVOShW6KQ7Ew+d3BIQxCZScKleilG/hy27e7vutMPLZ+4U
-         STog==
+        h=from:to:cc:subject:date:message-id;
+        bh=0aiiUSlKWk1zRxgyzOUd6WjEOUD1U9slmEAtOBZxokE=;
+        b=ENCHixr8kvbFs69ag0VlxSqslNcwxX0TA6M0wm51QM1wU7SbvXjIrTNn5V8rSHWFOv
+         xJSnAH/sSXdvDntndKHPv5YrobLTZInGrSVYRY68DSGsiI7g2seAqbaystvKqfOQPkvG
+         dDU7TccLhE1bVbIPfRnO35l4sU4gT/Eb9YFPNr8/VJSopLIqUQiqYMJjBI9omqa9t0lf
+         uyKMvpavApvDezuy8RMM4EeZ7yE6UIYW58V2ZMk8NnwGt2nl4vWwdPA9JKIY2Xi4MPtS
+         Mg9ln7LWcpzLZPmkFEZkbLkofxvY2ObpTWBxjYk16G8VwH+11ayL2b4FudVlmR33MYTI
+         Kcgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Ki2zYft0ou3H6TJj4mjFNNxPee1lMyNDS4gDZCtx/Fs=;
-        b=srfpFfkCECKzSGHFx2kzGnH3pL4W6u5DIgfIdT99GTtgoBAs09A0JrSr25rF+jwkjL
-         nnq6v/Z0IDQ8UMHsWugxBa0l6yLs49DrjXiWY1ZisdrWGy/Li8/P9CeZ6cvCj7NfvUpI
-         4mSLfU9zicVOwfPUmGXFQYB+QOs0c7NYHcLAT/kJbVTi9X8D9TlzZGbk8OHYcKLrKoGm
-         5Q1pmbve9I9HBGu0pOMjf/2wgIRHQIOHUBu7XdR3R47psvNLip+sSEPXcDKdRrlwD2SA
-         d66d0XLnZZUXBBDkFAy9NMOwMc4h1y4h61mKgszPghwd9wLL832LDoCowe1siZbtRQqO
-         dfcQ==
-X-Gm-Message-State: APjAAAXOJ4byM28G7TI98424WuWW30ny8OVtJzir089HBwVmxm0iMW2x
-        iCwptan/qrm8Li/nlGiP6fQsaqfP
-X-Google-Smtp-Source: APXvYqyyDcFpqEvxdx5wH6JIpHwPpyAsNXG0X/4zMD1ZBW3pPsPhTR5afP9aJr9tqNLvL1FnM35AFw==
-X-Received: by 2002:adf:df85:: with SMTP id z5mr5795681wrl.127.1557007062869;
-        Sat, 04 May 2019 14:57:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0aiiUSlKWk1zRxgyzOUd6WjEOUD1U9slmEAtOBZxokE=;
+        b=sYl5KCRC5GDbJ4ms9IYv8/ah5C/PDlAcZqdTzoApzDsrPJOWC5v/qtCsbEpu/DOa0Q
+         pnaDtGfZYAk+NBmSLXUBBPwN6dAjqxoGWOcXrUKKVL6Bm6GYpgXy1C6esgH/hoM0s1px
+         ePseQ+NCB2JrhIcead0b5F70BAUDjdH2HZ2Qoxu6hbs5wCaHinKNyDepvYZ1dRUHyQJI
+         8RPaXia0XkBnyUuyQO4i6jLiR7P7xzCh6m38njLTYEfP+aZdkrV4slV/2sv8/uvvS6I9
+         A+yudqLBDAGtkY4xjabbG+WDfRmMPUPu2BfUQ5OMwWf5P7VqoVpMBP+jFuEEO6Yf0UUS
+         AqjA==
+X-Gm-Message-State: APjAAAVVFpBZNrKomrrBQ2Pc6vhku2YWLQ/fZ8hHRF1T9c7sO1wonw9C
+        h+b89xbgpgGu2+ZlebxBlBaLGbrq
+X-Google-Smtp-Source: APXvYqwjx6mC/ZiEgi0mztjWdydVL+eNZPJAxYfPs3028a+B5I8gf7fiddCpvz8yYPhz1zd5RziKaw==
+X-Received: by 2002:a7b:cb16:: with SMTP id u22mr11152616wmj.60.1557007061855;
+        Sat, 04 May 2019 14:57:41 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id o6sm11649237wre.60.2019.05.04.14.57.41
+        by smtp.gmail.com with ESMTPSA id o6sm11649237wre.60.2019.05.04.14.57.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 14:57:42 -0700 (PDT)
+        Sat, 04 May 2019 14:57:41 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH 2/2] uapi/habanalabs: add opcode for enable/disable device debug mode
-Date:   Sun,  5 May 2019 00:57:33 +0300
-Message-Id: <20190504215733.12823-2-oded.gabbay@gmail.com>
+Cc:     gregkh@linuxfoundation.org, Omer Shpigelman <oshpigelman@habana.ai>
+Subject: [PATCH 1/2] habanalabs: halt debug engines on user process close
+Date:   Sun,  5 May 2019 00:57:32 +0300
+Message-Id: <20190504215733.12823-1-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190504215733.12823-1-oded.gabbay@gmail.com>
-References: <20190504215733.12823-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch defines a new opcode in the DEBUG IOCTL that is used by the
-user to notify the driver when the user wants to start or stop using the
-debug and profile infrastructure of the device. i.e. set the device to
-debug mode or to non-debug mode.
+From: Omer Shpigelman <oshpigelman@habana.ai>
 
-There are a couple of restrictions that this new opcode introduces:
+This patch fix a potential bug where a user's process has closed
+unexpectedly without disabling the debug engines. In that case, the debug
+engines might continue running but because the user's MMU mappings are
+going away, we will get page fault errors.
 
-1. The user can't configure the debug/profiling infrastructure before he
-   sets the device to debug mode, by using this new opcode.
+This behavior is also opposed to the general rule where nothing runs on
+the device after the user process closes.
 
-2. The user can't set the device to debug mode unless he is the only user
-   that is currently using (has an open FD) the device.
+The patch stops the debug H/W engines upon process termination and thus
+makes sure nothing runs on the device after the process goes away.
 
-3. Other users can't use the device (open a new FD) in case an existing
-   user has set the device into debug mode.
-
-These restrictions are needed because the debug and profiling
-infrastructure is a shared component in the ASIC and therefore, can't be
-used while multiple users are working on the device.
-
-Because the driver currently does NOT support multiple users, the
-implementation of the restrictions is not required at this point. However,
-the interface definition is needed in order to avoid changing the user API
-later on.
-
+Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- include/uapi/misc/habanalabs.h | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ drivers/misc/habanalabs/context.c             |  6 ++++++
+ drivers/misc/habanalabs/goya/goya.c           |  3 ++-
+ drivers/misc/habanalabs/goya/goyaP.h          |  1 +
+ drivers/misc/habanalabs/goya/goya_coresight.c | 17 +++++++++++++++++
+ drivers/misc/habanalabs/habanalabs.h          |  2 ++
+ 5 files changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
-index 8ac292cf4d00..204ab9b4ae67 100644
---- a/include/uapi/misc/habanalabs.h
-+++ b/include/uapi/misc/habanalabs.h
-@@ -413,6 +413,10 @@ struct hl_debug_params_spmu {
- #define HL_DEBUG_OP_SPMU	5
- /* Opcode for timestamp */
- #define HL_DEBUG_OP_TIMESTAMP	6
-+/* Opcode for setting the device into or out of debug mode. The enable
-+ * variable should be 1 for enabling debug mode and 0 for disabling it
-+ */
-+#define HL_DEBUG_OP_SET_MODE	7
+diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
+index 4804cdcf4c48..f4c92f110a72 100644
+--- a/drivers/misc/habanalabs/context.c
++++ b/drivers/misc/habanalabs/context.c
+@@ -26,6 +26,12 @@ static void hl_ctx_fini(struct hl_ctx *ctx)
+ 		dma_fence_put(ctx->cs_pending[i]);
  
- struct hl_debug_args {
- 	/*
-@@ -574,8 +578,22 @@ struct hl_debug_args {
-  *
-  * This IOCTL allows the user to get debug traces from the chip.
-  *
-- * The user needs to provide the register index and essential data such as
-- * buffer address and size.
-+ * Before the user can send configuration requests of the various
-+ * debug/profile engines, it needs to set the device into debug mode.
-+ * This is because the debug/profile infrastructure is shared component in the
-+ * device and we can't allow multiple users to access it at the same time.
-+ *
-+ * Once a user set the device into debug mode, the driver won't allow other
-+ * users to "work" with the device, i.e. open a FD. If there are multiple users
-+ * opened on the device, the driver won't allow any user to debug the device.
-+ *
-+ * For each configuration request, the user needs to provide the register index
-+ * and essential data such as buffer address and size.
-+ *
-+ * Once the user has finished using the debug/profile engines, he should
-+ * set the device into non-debug mode, i.e. disable debug mode.
-+ *
-+ * The driver can decide to "kick out" the user if he abuses this interface.
-  *
+ 	if (ctx->asid != HL_KERNEL_ASID_ID) {
++		/*
++		 * The engines are stopped as there is no executing CS, but the
++		 * Coresight might be still working by accessing addresses
++		 * related to the stopped engines. Hence stop it explicitly.
++		 */
++		hdev->asic_funcs->halt_coresight(hdev);
+ 		hl_vm_ctx_fini(ctx);
+ 		hl_asid_free(hdev, ctx->asid);
+ 	}
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index a582e29c1ee4..02d116b01a1a 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -4819,7 +4819,8 @@ static const struct hl_asic_funcs goya_funcs = {
+ 	.set_dram_bar_base = goya_set_ddr_bar_base,
+ 	.init_iatu = goya_init_iatu,
+ 	.rreg = hl_rreg,
+-	.wreg = hl_wreg
++	.wreg = hl_wreg,
++	.halt_coresight = goya_halt_coresight
+ };
+ 
+ /*
+diff --git a/drivers/misc/habanalabs/goya/goyaP.h b/drivers/misc/habanalabs/goya/goyaP.h
+index 14e216cb3668..c83cab0d641e 100644
+--- a/drivers/misc/habanalabs/goya/goyaP.h
++++ b/drivers/misc/habanalabs/goya/goyaP.h
+@@ -202,6 +202,7 @@ void goya_add_device_attr(struct hl_device *hdev,
+ 			struct attribute_group *dev_attr_grp);
+ int goya_armcp_info_get(struct hl_device *hdev);
+ int goya_debug_coresight(struct hl_device *hdev, void *data);
++void goya_halt_coresight(struct hl_device *hdev);
+ 
+ void goya_mmu_prepare(struct hl_device *hdev, u32 asid);
+ int goya_mmu_clear_pgt_range(struct hl_device *hdev);
+diff --git a/drivers/misc/habanalabs/goya/goya_coresight.c b/drivers/misc/habanalabs/goya/goya_coresight.c
+index 1ac951f52d1e..49b5efb3a912 100644
+--- a/drivers/misc/habanalabs/goya/goya_coresight.c
++++ b/drivers/misc/habanalabs/goya/goya_coresight.c
+@@ -626,3 +626,20 @@ int goya_debug_coresight(struct hl_device *hdev, void *data)
+ 
+ 	return rc;
+ }
++
++void goya_halt_coresight(struct hl_device *hdev)
++{
++	struct hl_debug_params params = {0};
++	int i, rc;
++
++	for (i = GOYA_ETF_FIRST ; i <= GOYA_ETF_LAST ; i++) {
++		params.reg_idx = i;
++		rc = goya_config_etf(hdev, &params);
++		if (rc)
++			dev_err(hdev->dev, "halt ETF failed, %d/%d\n", rc, i);
++	}
++
++	rc = goya_config_etr(hdev, &params);
++	if (rc)
++		dev_err(hdev->dev, "halt ETR failed, %d\n", rc);
++}
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 71243b319920..adef7d9d7488 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -501,6 +501,7 @@ enum hl_pll_frequency {
+  * @init_iatu: Initialize the iATU unit inside the PCI controller.
+  * @rreg: Read a register. Needed for simulator support.
+  * @wreg: Write a register. Needed for simulator support.
++ * @halt_coresight: stop the ETF and ETR traces.
   */
- #define HL_IOCTL_DEBUG		\
+ struct hl_asic_funcs {
+ 	int (*early_init)(struct hl_device *hdev);
+@@ -578,6 +579,7 @@ struct hl_asic_funcs {
+ 	int (*init_iatu)(struct hl_device *hdev);
+ 	u32 (*rreg)(struct hl_device *hdev, u32 reg);
+ 	void (*wreg)(struct hl_device *hdev, u32 reg, u32 val);
++	void (*halt_coresight)(struct hl_device *hdev);
+ };
+ 
+ 
 -- 
 2.17.1
 
