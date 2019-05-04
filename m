@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A3EC04AA9
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BEFC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C56E20859
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9428F20881
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965595;
-	bh=y7eIOfRWIMAAfniG9cWwpHWvZj9HvBWQy/hZ1FvcB2Y=;
+	s=default; t=1556965593;
+	bh=VYeaM02WOFZmDAkP9Bx9OXLSTfvKcsMXVnWcxFAVXtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJU8i5LUtSAa2DulFGSP/UQa4d7wwVdMW4ZXLMQxFebjSeEwflq4T7Gc4iR4uVd89
-	 MDphDfyoNYwwT8k9crGe2/iaur1nvBURrIos+A9aNvS/OVRI7bDpLHxh8JselaKirw
-	 jFJx4Z2+3mCUfYS/AczIaRK/9zMqIaLxz0bgMihQ=
+	b=KE/u6J2EvY+A6bfS7j6bgiH6gWxB22MoU7df0m8tSYV+Zgsh5K1Td12+smP4OtKPV
+	 CSet4Gtm8vM9onthaRfH5PRg9J/y3DUXZTQb06sSe/g2/gkdHhvomokub6QbBCKTLq
+	 OgQvEfbzZ3WPLfckBqODS6gWQT0LChREL3ILHeSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfEDK0e (ORCPT
+        id S1727771AbfEDK0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:26:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36102 "EHLO mail.kernel.org"
+        Sat, 4 May 2019 06:26:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727750AbfEDK0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:26:31 -0400
+        id S1727740AbfEDK03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:26:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 309BB20859;
-        Sat,  4 May 2019 10:26:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 865D62084A;
+        Sat,  4 May 2019 10:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965590;
-        bh=y7eIOfRWIMAAfniG9cWwpHWvZj9HvBWQy/hZ1FvcB2Y=;
+        s=default; t=1556965588;
+        bh=VYeaM02WOFZmDAkP9Bx9OXLSTfvKcsMXVnWcxFAVXtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0yLvglB2aMcJLAIdKx4v1Eh8ivanwMbkGIYbkC6Y/xdjUL/VUABSYm9NDhHKEoAek
-         1CmYSFd44lLJ8GBN1ZEFNrOSIkcWHa/lt1/Xp/DHY9Md84it5Xx6mZvqF80qP7zztA
-         j5VJZTo7mnY07BNFBJTI0OjZTXauXEWTNmqZc6bA=
+        b=FmD0Q0nlLiK62RHuOcRUVvPDg+8pbfL4E8v7lmSWyyAs8IvFQbOADmR2kaYxrvnKM
+         8xlkcFdBXALD251Wei0LU+ALvW9FIrJccUrK2PAvIDcFgVp3fq8QqeTSu2hPcfz5+U
+         rDjU4qrKvb9c5M9oPsa+6aGjkrF7Ke8ESk2AIeAE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Wilhelm <fwilhelm@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Drew Schmitt <dasch@google.com>, Marc Orr <marcorr@google.com>,
-        Peter Shier <pshier@google.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        stable@ver.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.0 29/32] KVM: nVMX: Fix size checks in vmx_set_nested_state
-Date:   Sat,  4 May 2019 12:25:14 +0200
-Message-Id: <20190504102453.374211973@linuxfoundation.org>
+        stable@vger.kernel.org, Simon Becherer <simon@becherer.de>,
+        Gabriele Balducci <balducci@units.it>,
+        Antti Antinoja <reader@fennosys.fi>,
+        Takashi Iwai <tiwai@suse.com>, Jiri Slaby <jslaby@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Iakov Karpov <srid@rkmail.ru>
+Subject: [PATCH 5.0 28/32] KVM: x86: Whitelist port 0x7e for pre-incrementing %rip
+Date:   Sat,  4 May 2019 12:25:13 +0200
+Message-Id: <20190504102453.345374945@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
 References: <20190504102452.523724210@linuxfoundation.org>
@@ -63,48 +64,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit e8ab8d24b488632d07ce5ddb261f1d454114415b upstream.
+commit 8764ed55c9705e426d889ff16c26f398bba70b9b upstream.
 
-The size checks in vmx_nested_state are wrong because the calculations
-are made based on the size of a pointer to a struct kvm_nested_state
-rather than the size of a struct kvm_nested_state.
+KVM's recent bug fix to update %rip after emulating I/O broke userspace
+that relied on the previous behavior of incrementing %rip prior to
+exiting to userspace.  When running a Windows XP guest on AMD hardware,
+Qemu may patch "OUT 0x7E" instructions in reaction to the OUT itself.
+Because KVM's old behavior was to increment %rip before exiting to
+userspace to handle the I/O, Qemu manually adjusted %rip to account for
+the OUT instruction.
 
-Reported-by: Felix Wilhelm  <fwilhelm@google.com>
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Drew Schmitt <dasch@google.com>
-Reviewed-by: Marc Orr <marcorr@google.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Fixes: 8fcc4b5923af5de58b80b53a069453b135693304
-Cc: stable@ver.kernel.org
+Arguably this is a userspace bug as KVM requires userspace to re-enter
+the kernel to complete instruction emulation before taking any other
+actions.  That being said, this is a bit of a grey area and breaking
+userspace that has worked for many years is bad.
+
+Pre-increment %rip on OUT to port 0x7e before exiting to userspace to
+hack around the issue.
+
+Fixes: 45def77ebf79e ("KVM: x86: update %rip after emulating IO")
+Reported-by: Simon Becherer <simon@becherer.de>
+Reported-and-tested-by: Iakov Karpov <srid@rkmail.ru>
+Reported-by: Gabriele Balducci <balducci@units.it>
+Reported-by: Antti Antinoja <reader@fennosys.fi>
+Cc: stable@vger.kernel.org
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/uapi/asm/kvm.h |    1 +
+ arch/x86/kvm/x86.c              |   21 +++++++++++++++++++--
+ 2 files changed, 20 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5407,7 +5407,7 @@ static int vmx_set_nested_state(struct k
- 		return ret;
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -381,6 +381,7 @@ struct kvm_sync_regs {
+ #define KVM_X86_QUIRK_LINT0_REENABLED	(1 << 0)
+ #define KVM_X86_QUIRK_CD_NW_CLEARED	(1 << 1)
+ #define KVM_X86_QUIRK_LAPIC_MMIO_HOLE	(1 << 2)
++#define KVM_X86_QUIRK_OUT_7E_INC_RIP	(1 << 3)
  
- 	/* Empty 'VMXON' state is permitted */
--	if (kvm_state->size < sizeof(kvm_state) + sizeof(*vmcs12))
-+	if (kvm_state->size < sizeof(*kvm_state) + sizeof(*vmcs12))
- 		return 0;
+ #define KVM_STATE_NESTED_GUEST_MODE	0x00000001
+ #define KVM_STATE_NESTED_RUN_PENDING	0x00000002
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6536,6 +6536,12 @@ int kvm_emulate_instruction_from_buffer(
+ }
+ EXPORT_SYMBOL_GPL(kvm_emulate_instruction_from_buffer);
  
- 	if (kvm_state->vmx.vmcs_pa != -1ull) {
-@@ -5451,7 +5451,7 @@ static int vmx_set_nested_state(struct k
- 	    vmcs12->vmcs_link_pointer != -1ull) {
- 		struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
++static int complete_fast_pio_out_port_0x7e(struct kvm_vcpu *vcpu)
++{
++	vcpu->arch.pio.count = 0;
++	return 1;
++}
++
+ static int complete_fast_pio_out(struct kvm_vcpu *vcpu)
+ {
+ 	vcpu->arch.pio.count = 0;
+@@ -6552,12 +6558,23 @@ static int kvm_fast_pio_out(struct kvm_v
+ 	unsigned long val = kvm_register_read(vcpu, VCPU_REGS_RAX);
+ 	int ret = emulator_pio_out_emulated(&vcpu->arch.emulate_ctxt,
+ 					    size, port, &val, 1);
++	if (ret)
++		return ret;
  
--		if (kvm_state->size < sizeof(kvm_state) + 2 * sizeof(*vmcs12))
-+		if (kvm_state->size < sizeof(*kvm_state) + 2 * sizeof(*vmcs12))
- 			return -EINVAL;
+-	if (!ret) {
++	/*
++	 * Workaround userspace that relies on old KVM behavior of %rip being
++	 * incremented prior to exiting to userspace to handle "OUT 0x7e".
++	 */
++	if (port == 0x7e &&
++	    kvm_check_has_quirk(vcpu->kvm, KVM_X86_QUIRK_OUT_7E_INC_RIP)) {
++		vcpu->arch.complete_userspace_io =
++			complete_fast_pio_out_port_0x7e;
++		kvm_skip_emulated_instruction(vcpu);
++	} else {
+ 		vcpu->arch.pio.linear_rip = kvm_get_linear_rip(vcpu);
+ 		vcpu->arch.complete_userspace_io = complete_fast_pio_out;
+ 	}
+-	return ret;
++	return 0;
+ }
  
- 		if (copy_from_user(shadow_vmcs12,
+ static int complete_fast_pio_in(struct kvm_vcpu *vcpu)
 
 
