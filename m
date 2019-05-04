@@ -2,221 +2,169 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D07F8C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 13:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 462CEC04AAA
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876B620645
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 13:56:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nFTA/RmW"
+	by mail.kernel.org (Postfix) with ESMTP id 2231F20645
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfEDN41 (ORCPT
+        id S1727094AbfEDOE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 09:56:27 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:34844 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfEDN41 (ORCPT
+        Sat, 4 May 2019 10:04:29 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:54432 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726768AbfEDOE2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 09:56:27 -0400
-Received: by mail-pf1-f202.google.com with SMTP id c12so4959372pfb.2
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 06:56:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=JSrtuewaX5VqV5KEE7CkJwOl54n3BURDRsoqf/77RX0=;
-        b=nFTA/RmWclTIQySWEdCzmd1lLYksmm5vaBLdRXUchgXFFNHd+zZlQv16VQicvpZub3
-         pQVx01zeJHFxe+RG3R5G9EX394R0wyRXUMxLauxLn4dBIS1kSgH9hY0l7XtkH3sELrmH
-         FdI4IvlWbKbpBJq0tA57PH1H2RdsS1eQJbR17R2TLAPrGa36SP9pHZwBsIbiTriVx6Ag
-         6MZbl0gHJNFrvJweQb+069G/SPmEFoWbEm2QuaeeV6siVefhQgcZ/cjQeYcPpLKEbKsN
-         zlIuEVCiPyiRLVAWUKvawpM1CbAPp4s9jdp7hlxvhCwxJuDmT2N2OJC517IZqEU1UQfj
-         sRrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=JSrtuewaX5VqV5KEE7CkJwOl54n3BURDRsoqf/77RX0=;
-        b=tHYi1LxElhyv4ogQ4lVRe+ge9tZT8EjxB4waGv2mlvSKQGddGCpgiVSqdMaCz7ETqc
-         oYmKHz1TOpcw4RaZMY15puAMPa5XUPenD/xQVTZDQ+mZpszT/AMkGDhAeGRcDP4N02tb
-         Du7EIZHt2Hds7LkyVUsEP3Bi2x+RcNh1GC0QlOZzeJVA+gvtCFo3rYtxLIyAV/L+m7Z9
-         wmSNwMejjXV4fzcz+/b6d0ydAm7zFxaNYZjSqAJjIMYI6L7Y4U+Tvl/AK5zpyaG3TPpG
-         J4PuVIPSzFcA3rqtI6oFwLN2oSqnO0IlypIMO300N4gyDspcm2YmYgZxEiwzq1EIpzj3
-         v/kg==
-X-Gm-Message-State: APjAAAUDvFxfLMKMojQ8+AxctRFktOIdgnoVhDnSuMiapSQ8EqHGpjIJ
-        zjwOSIeEMjn3KfiZsifRsUK+JGqL5A==
-X-Google-Smtp-Source: APXvYqwbdu22XftC0bn82oDLV8X4k+EHpOS9LhjD6BT9cKcaF5Y+vEfKpTyD0IiMzeK8sRw3xwN4OHo1jg==
-X-Received: by 2002:a63:5c24:: with SMTP id q36mr18654620pgb.314.1556978185813;
- Sat, 04 May 2019 06:56:25 -0700 (PDT)
-Date:   Sat,  4 May 2019 15:56:08 +0200
-Message-Id: <20190504135608.176687-1-jannh@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH] habanalabs: fix debugfs code
-From:   Jann Horn <jannh@google.com>
-To:     Oded Gabbay <oded.gabbay@gmail.com>, jannh@google.com
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
+        Sat, 4 May 2019 10:04:28 -0400
+X-UUID: 7b45a49b02564369a708bfd590c0959e-20190504
+X-UUID: 7b45a49b02564369a708bfd590c0959e-20190504
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1990895940; Sat, 04 May 2019 22:04:24 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 4 May 2019 22:04:22 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 4 May 2019 22:04:16 +0800
+Message-ID: <1556978656.25811.1.camel@mtksdaap41>
+Subject: Re: [PATCH v3 10/10] rtc: Add support for the MediaTek MT6358 RTC
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        "Mark Brown" <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        <linux-rtc@vger.kernel.org>
+Date:   Sat, 4 May 2019 22:04:16 +0800
+In-Reply-To: <20190503093117.54830-11-hsin-hsiung.wang@mediatek.com>
+References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
+         <20190503093117.54830-11-hsin-hsiung.wang@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 94F06579A06AD170C4104FD99EDD8ACC6517C53AB96CA365032830D34A4671372000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes multiple things in the habanalabs debugfs code, in particular:
+On Fri, 2019-05-03 at 17:31 +0800, Hsin-Hsiung Wang wrote:
+> From: Ran Bi <ran.bi@mediatek.com>
+> 
+> This add support for the MediaTek MT6358 RTC. Driver using
+> compatible data to store different RTC_WRTGR address offset.
+> 
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> ---
+>  drivers/rtc/rtc-mt6397.c | 43 ++++++++++++++++++++++++++++++++--------
+>  1 file changed, 35 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index f85f1fc29e32..3476e29db87c 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/irqdomain.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/io.h>
+>  #include <linux/mfd/mt6397/core.h>
+> @@ -27,7 +28,8 @@
+>  #define RTC_BBPU		0x0000
+>  #define RTC_BBPU_CBUSY		BIT(6)
+>  
+> -#define RTC_WRTGR		0x003c
+> +#define RTC_WRTGR_MT6358	0x3a
+> +#define RTC_WRTGR_MT6397	0x3c
+>  
+>  #define RTC_IRQ_STA		0x0002
+>  #define RTC_IRQ_STA_AL		BIT(0)
+> @@ -71,6 +73,10 @@
+>  #define RTC_NUM_YEARS		128
+>  #define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
+>  
+> +struct mtk_rtc_compatible {
+> +	u32			wrtgr_addr;
+> +};
+> +
+>  struct mt6397_rtc {
+>  	struct device		*dev;
+>  	struct rtc_device	*rtc_dev;
+> @@ -78,7 +84,25 @@ struct mt6397_rtc {
+>  	struct regmap		*regmap;
+>  	int			irq;
+>  	u32			addr_base;
+> +	const struct mtk_rtc_compatible *dev_comp;
+> +};
+> +
+> +static const struct mtk_rtc_compatible mt6358_rtc_compat = {
+> +	.wrtgr_addr = RTC_WRTGR_MT6358,
+> +};
+> +
+> +static const struct mtk_rtc_compatible mt6397_rtc_compat = {
+> +	.wrtgr_addr = RTC_WRTGR_MT6397,
+> +};
+> +
+> +static const struct of_device_id mt6397_rtc_of_match[] = {
+> +	{ .compatible = "mediatek,mt6358-rtc",
+> +		.data = (void *)&mt6358_rtc_compat, },
+> +	{ .compatible = "mediatek,mt6397-rtc",
+> +		.data = (void *)&mt6397_rtc_compat, },
+> +	{}
+>  };
+> +MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
+>  
+>  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  {
+> @@ -86,7 +110,8 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  	int ret;
+>  	u32 data;
+>  
+> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
+> +	ret = regmap_write(rtc->regmap,
+> +			   rtc->addr_base + rtc->dev_comp->wrtgr_addr, 1);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -332,6 +357,7 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	struct resource *res;
+>  	struct mt6397_chip *mt6397_chip = dev_get_drvdata(pdev->dev.parent);
+>  	struct mt6397_rtc *rtc;
+> +	const struct of_device_id *of_id;
+>  	int ret;
+>  
+>  	rtc = devm_kzalloc(&pdev->dev, sizeof(struct mt6397_rtc), GFP_KERNEL);
+> @@ -341,6 +367,13 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	rtc->addr_base = res->start;
+>  
+> +	of_id = of_match_device(mt6397_rtc_of_match, &pdev->dev);
+> +	if (!of_id) {
 
- - mmu_write() was unnecessarily verbose, copying around between multiple
-   buffers
- - mmu_write() could write a user-specified, unbounded amount of userspace
-   memory into a kernel buffer (out-of-bounds write)
- - multiple debugfs read handlers ignored the user-supplied count,
-   potentially corrupting out-of-bounds userspace data
- - hl_device_read() was unnecessarily verbose
- - hl_device_write() could read uninitialized stack memory
- - multiple debugfs read handlers copied terminating null characters to
-   userspace
+This will never happens, but I'm fine with it.
 
-Signed-off-by: Jann Horn <jannh@google.com>
----
-compile-tested only, so you might want to test this before applying the
-patch
+Review-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
 
- drivers/misc/habanalabs/debugfs.c | 60 ++++++++++---------------------
- 1 file changed, 18 insertions(+), 42 deletions(-)
+Joe.C
 
-diff --git a/drivers/misc/habanalabs/debugfs.c b/drivers/misc/habanalabs/debugfs.c
-index 974a87789bd86..17ba26422b297 100644
---- a/drivers/misc/habanalabs/debugfs.c
-+++ b/drivers/misc/habanalabs/debugfs.c
-@@ -459,41 +459,31 @@ static ssize_t mmu_write(struct file *file, const char __user *buf,
- 	struct hl_debugfs_entry *entry = s->private;
- 	struct hl_dbg_device_entry *dev_entry = entry->dev_entry;
- 	struct hl_device *hdev = dev_entry->hdev;
--	char kbuf[MMU_KBUF_SIZE], asid_kbuf[MMU_ASID_BUF_SIZE],
--		addr_kbuf[MMU_ADDR_BUF_SIZE];
-+	char kbuf[MMU_KBUF_SIZE];
- 	char *c;
- 	ssize_t rc;
- 
- 	if (!hdev->mmu_enable)
- 		return count;
- 
--	memset(kbuf, 0, sizeof(kbuf));
--	memset(asid_kbuf, 0, sizeof(asid_kbuf));
--	memset(addr_kbuf, 0, sizeof(addr_kbuf));
--
-+	if (count > sizeof(kbuf) - 1)
-+		goto err;
- 	if (copy_from_user(kbuf, buf, count))
- 		goto err;
--
--	kbuf[MMU_KBUF_SIZE - 1] = 0;
-+	kbuf[count] = 0;
- 
- 	c = strchr(kbuf, ' ');
- 	if (!c)
- 		goto err;
-+	*c = '\0';
- 
--	memcpy(asid_kbuf, kbuf, c - kbuf);
--
--	rc = kstrtouint(asid_kbuf, 10, &dev_entry->mmu_asid);
-+	rc = kstrtouint(kbuf, 10, &dev_entry->mmu_asid);
- 	if (rc)
- 		goto err;
- 
--	c = strstr(kbuf, " 0x");
--	if (!c)
-+	if (strncmp(c+1, "0x", 2))
- 		goto err;
--
--	c += 3;
--	memcpy(addr_kbuf, c, (kbuf + count) - c);
--
--	rc = kstrtoull(addr_kbuf, 16, &dev_entry->mmu_addr);
-+	rc = kstrtoull(c+3, 16, &dev_entry->mmu_addr);
- 	if (rc)
- 		goto err;
- 
-@@ -525,10 +515,8 @@ static ssize_t hl_data_read32(struct file *f, char __user *buf,
- 	}
- 
- 	sprintf(tmp_buf, "0x%08x\n", val);
--	rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
--			strlen(tmp_buf) + 1);
--
--	return rc;
-+	return simple_read_from_buffer(buf, count, ppos, tmp_buf,
-+			strlen(tmp_buf));
- }
- 
- static ssize_t hl_data_write32(struct file *f, const char __user *buf,
-@@ -559,7 +547,6 @@ static ssize_t hl_get_power_state(struct file *f, char __user *buf,
- 	struct hl_dbg_device_entry *entry = file_inode(f)->i_private;
- 	struct hl_device *hdev = entry->hdev;
- 	char tmp_buf[200];
--	ssize_t rc;
- 	int i;
- 
- 	if (*ppos)
-@@ -574,10 +561,8 @@ static ssize_t hl_get_power_state(struct file *f, char __user *buf,
- 
- 	sprintf(tmp_buf,
- 		"current power state: %d\n1 - D0\n2 - D3hot\n3 - Unknown\n", i);
--	rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
--			strlen(tmp_buf) + 1);
--
--	return rc;
-+	return simple_read_from_buffer(buf, count, ppos, tmp_buf,
-+			strlen(tmp_buf));
- }
- 
- static ssize_t hl_set_power_state(struct file *f, const char __user *buf,
-@@ -630,8 +615,8 @@ static ssize_t hl_i2c_data_read(struct file *f, char __user *buf,
- 	}
- 
- 	sprintf(tmp_buf, "0x%02x\n", val);
--	rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
--			strlen(tmp_buf) + 1);
-+	rc = simple_read_from_buffer(buf, count, ppos, tmp_buf,
-+			strlen(tmp_buf));
- 
- 	return rc;
- }
-@@ -720,18 +705,9 @@ static ssize_t hl_led2_write(struct file *f, const char __user *buf,
- static ssize_t hl_device_read(struct file *f, char __user *buf,
- 					size_t count, loff_t *ppos)
- {
--	char tmp_buf[200];
--	ssize_t rc;
--
--	if (*ppos)
--		return 0;
--
--	sprintf(tmp_buf,
--		"Valid values: disable, enable, suspend, resume, cpu_timeout\n");
--	rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
--			strlen(tmp_buf) + 1);
--
--	return rc;
-+	static const char *help =
-+		"Valid values: disable, enable, suspend, resume, cpu_timeout\n";
-+	return simple_read_from_buffer(buf, count, ppos, help, strlen(help));
- }
- 
- static ssize_t hl_device_write(struct file *f, const char __user *buf,
-@@ -739,7 +715,7 @@ static ssize_t hl_device_write(struct file *f, const char __user *buf,
- {
- 	struct hl_dbg_device_entry *entry = file_inode(f)->i_private;
- 	struct hl_device *hdev = entry->hdev;
--	char data[30];
-+	char data[30] = {0};
- 
- 	/* don't allow partial writes */
- 	if (*ppos != 0)
--- 
-2.21.0.1020.gf2820cf01a-goog
 
