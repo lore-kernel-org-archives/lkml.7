@@ -2,68 +2,97 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A30C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CF5C004C9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C6E206E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556928604;
-	bh=nsZC0USU0psqXiLgGlN+iWonkITiOE1mFKRnJulUJaY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=VvLavvyrWrbIRHj0gYs+DovC20GuNQEtujLRrLVWKUZ/EHJdFsoNJ8VGnabJc3Bwa
-	 mXuimsvIZfk0r+lBnPklb0LG3HZUH7mvPFd6xcTCH0VUklyxf9BW21/+z0FkObRWLZ
-	 P4jBMefKpBK4Lhqg/VXQcZ5/u10iqdcY5zoE8J64=
+	by mail.kernel.org (Postfix) with ESMTP id A93BB20652
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:17:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oeQsoIXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbfEDAKD (ORCPT
+        id S1726480AbfEDARm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 20:10:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbfEDAKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 20:10:03 -0400
-Subject: Re: [GIT PULL] KVM fixes for 5.1-rc8 or final
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556928602;
-        bh=nsZC0USU0psqXiLgGlN+iWonkITiOE1mFKRnJulUJaY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=kD30eDf/18ex/fkL1b2c+zwAazR0GDfR4wL3CNG3rM/IqUyI5PoxBcBIkBHPNNZKh
-         ts6E7lHd2+H1QRrr8B0CtVtssl1QPInDmEaS78iRaqKVnKuVoecmCb01b5DvSzu2do
-         tvzGLMDrfRpRHeIZKa/giw71rgRO51q2QFl+bI48=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190503214614.21250-1-pbonzini@redhat.com>
-References: <20190503214614.21250-1-pbonzini@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190503214614.21250-1-pbonzini@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/virt/kvm/kvm.git
- tags/for-linus
-X-PR-Tracked-Commit-Id: e8ab8d24b488632d07ce5ddb261f1d454114415b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: aa1be08f52585fe36ecfaf5bddfdc784eb4c94cf
-Message-Id: <155692860261.31859.12161279767404451309.pr-tracker-bot@kernel.org>
-Date:   Sat, 04 May 2019 00:10:02 +0000
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        rkrcmar@kernel.org, kvm@vger.kernel.org
+        Fri, 3 May 2019 20:17:42 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43308 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfEDARl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 20:17:41 -0400
+Received: by mail-pf1-f195.google.com with SMTP id e67so3671221pfe.10
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 17:17:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=T0GFsU5iTOyCwj8QNb5BtH0GpMGDHOczgY1Uj/CZHXk=;
+        b=oeQsoIXnKAJoKnIszLlOgMj6J9duncW8mzUEey2yO4oNzCVnmVL0XX+8v9FM5pIy2s
+         lj2aO3Aoo+Ij4241jr1fnMBi8z2hYk1KgQr7A2eOY8hTzfApsR4JhFNawomFUYNI1rzI
+         8kKJt+eaMdWlosvTyjoMnPmu5jUASwgPiJ2D49QPZe5GVpAGEHSdgtJ2pp0tvNrK8/nP
+         YD0IxCHRQojMDUkPcZQrUq/fYJcRrENPVAf7wOFaRMVYXyqZsqNu2kP0a1NL/B9+izSu
+         WMuD+dGAQClX7s8+hSZr27NH9SDNlHuoEMnsc31/PEFQyzW5OUmzcrzHkI6/MnOawgA/
+         VMVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=T0GFsU5iTOyCwj8QNb5BtH0GpMGDHOczgY1Uj/CZHXk=;
+        b=TQpbt3/aFfk5bsz/WKk5FtbwjUWOpws/a5HyC67N8mCrLhThzR7/o1Tc2jTP38VIJ3
+         DPVTL70S7/CH5TmCgM/CHmK/xsQ4cXYO2RYw0IYC0uXwBJ93WmlrXjteY96HZBEcZORD
+         JZX84Bcxz/Qth14yec3olBAZ1xa+uaZhEmB1M/WNQt3RiyZ500JprFbIhAbFHyJWAOaj
+         GVhGVSMTb0eIa4WAHm5zLULj1BgyCvSxXwEwm8VoC1mbtp/bRaSHlR5CZEcmY1BYC8Pn
+         AP+5jwgB/1809R/BTV75FNzsIvGSP2gdwfaXf44xNrDZWi+ful7Yu3f8tRmlZNGF6DR3
+         l3aw==
+X-Gm-Message-State: APjAAAUFAaIGCs51cSkdRegBxPdU9XvvmvP2ohAiXmoywNekW1Yn9+oF
+        li5JVyUGOvclg5uBioDzaYCZ5A==
+X-Google-Smtp-Source: APXvYqyEjLXIJyLHnBMCT+wiJSfzdTRGABuxSLtEAXX8MsYrKBxK/Ma8r1oNRsXOlNMqaMEy5XECgw==
+X-Received: by 2002:a62:4690:: with SMTP id o16mr15035772pfi.166.1556929060198;
+        Fri, 03 May 2019 17:17:40 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 144sm4364785pfy.49.2019.05.03.17.17.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 May 2019 17:17:38 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: qcom: gdsc: WARN when failing to toggle
+Date:   Fri,  3 May 2019 17:17:36 -0700
+Message-Id: <20190504001736.8598-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri,  3 May 2019 15:46:14 -0600:
+Failing to toggle a GDSC as the driver core is attaching the
+power-domain to a device will cause a silent probe deferral. Provide an
+explicit warning to the developer, in order to reduce the amount of time
+it take to debug this.
 
-> git://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/clk/qcom/gdsc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/aa1be08f52585fe36ecfaf5bddfdc784eb4c94cf
-
-Thank you!
-
+diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
+index dd63aa36b092..6a8a4996dde3 100644
+--- a/drivers/clk/qcom/gdsc.c
++++ b/drivers/clk/qcom/gdsc.c
+@@ -149,7 +149,9 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
+ 		udelay(1);
+ 	}
+ 
+-	return gdsc_poll_status(sc, status);
++	ret = gdsc_poll_status(sc, status);
++	WARN(ret, "%s status stuck at 'o%s'", sc->pd.name, status ? "ff" : "n");
++	return ret;
+ }
+ 
+ static inline int gdsc_deassert_reset(struct gdsc *sc)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.18.0
+
