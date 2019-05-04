@@ -2,72 +2,167 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9B5C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20175C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43BDC206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E457D206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:28:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556965726;
+	bh=sAhk4I5io+dT+5nzwBKDAgCUct94Q5arr07VNQb8uxc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1ew+6WRUKr16wp5LBpoTlMJK6AsznyvphhiGqSuSXrxLBniZ+DXgCXyFhgcfXHZvD
+	 ofEFQHAB4e0c4WSLsZJ1dQ1t0nLFpLLNgDDkHXCPgWdy9sT7nP4HhkKY32UMvz0SzY
+	 MsGfBSrBGyk8h+PDAZneTOqg9zSmkVao4vZosPHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfEDK2i (ORCPT
+        id S1728412AbfEDK2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:28:38 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7155 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727568AbfEDK2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:28:37 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 102CF6A7CC9AEFD6C2D8;
-        Sat,  4 May 2019 18:28:35 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
- 18:28:25 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <fbarrat@linux.ibm.com>, <ajd@linux.ibm.com>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] misc: ocxl: Make ocxl_remove static
-Date:   Sat, 4 May 2019 18:27:20 +0800
-Message-ID: <20190504102720.42220-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 4 May 2019 06:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727049AbfEDK1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:27:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DE4F206BB;
+        Sat,  4 May 2019 10:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556965650;
+        bh=sAhk4I5io+dT+5nzwBKDAgCUct94Q5arr07VNQb8uxc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bFillQUq4ZduaKj5kC4Fkyl6Qbat/jeAb86P9nRm93TCqav1Z+wE6svckuSrnZhOK
+         sTXiJnCD1nEUcv6F5CAj5fgMK8M5aVSh1fpX7LfYIjqzOjl5sNuYmgKoO6EI75imjl
+         tFkAOZiCiI3p/2A0zUWF8uKNHuGwOqoNxBZds8vo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Wei Wang <weiwan@google.com>, David Ahern <dsahern@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 02/23] ipv6: A few fixes on dereferencing rt->from
+Date:   Sat,  4 May 2019 12:25:04 +0200
+Message-Id: <20190504102451.652963315@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190504102451.512405835@linuxfoundation.org>
+References: <20190504102451.512405835@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+From: Martin KaFai Lau <kafai@fb.com>
 
-drivers/misc/ocxl/pci.c:44:6: warning:
- symbol 'ocxl_remove' was not declared. Should it be static?
+[ Upstream commit 886b7a50100a50f1cbd08a6f8ec5884dfbe082dc ]
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+It is a followup after the fix in
+commit 9c69a1320515 ("route: Avoid crash from dereferencing NULL rt->from")
+
+rt6_do_redirect():
+1. NULL checking is needed on rt->from because a parallel
+   fib6_info delete could happen that sets rt->from to NULL.
+   (e.g. rt6_remove_exception() and fib6_drop_pcpu_from()).
+
+2. fib6_info_hold() is not enough.  Same reason as (1).
+   Meaning, holding dst->__refcnt cannot ensure
+   rt->from is not NULL or rt->from->fib6_ref is not 0.
+
+   Instead of using fib6_info_hold_safe() which ip6_rt_cache_alloc()
+   is already doing, this patch chooses to extend the rcu section
+   to keep "from" dereference-able after checking for NULL.
+
+inet6_rtm_getroute():
+1. NULL checking is also needed on rt->from for a similar reason.
+   Note that inet6_rtm_getroute() is using RTNL_FLAG_DOIT_UNLOCKED.
+
+Fixes: a68886a69180 ("net/ipv6: Make from in rt6_info rcu protected")
+Signed-off-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: Wei Wang <weiwan@google.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/misc/ocxl/pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/route.c |   38 ++++++++++++++++++--------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/misc/ocxl/pci.c b/drivers/misc/ocxl/pci.c
-index f2a3ef4..cb920aa 100644
---- a/drivers/misc/ocxl/pci.c
-+++ b/drivers/misc/ocxl/pci.c
-@@ -41,7 +41,7 @@ static int ocxl_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	return 0;
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -3454,11 +3454,8 @@ static void rt6_do_redirect(struct dst_e
+ 
+ 	rcu_read_lock();
+ 	from = rcu_dereference(rt->from);
+-	/* This fib6_info_hold() is safe here because we hold reference to rt
+-	 * and rt already holds reference to fib6_info.
+-	 */
+-	fib6_info_hold(from);
+-	rcu_read_unlock();
++	if (!from)
++		goto out;
+ 
+ 	nrt = ip6_rt_cache_alloc(from, &msg->dest, NULL);
+ 	if (!nrt)
+@@ -3470,10 +3467,7 @@ static void rt6_do_redirect(struct dst_e
+ 
+ 	nrt->rt6i_gateway = *(struct in6_addr *)neigh->primary_key;
+ 
+-	/* No need to remove rt from the exception table if rt is
+-	 * a cached route because rt6_insert_exception() will
+-	 * takes care of it
+-	 */
++	/* rt6_insert_exception() will take care of duplicated exceptions */
+ 	if (rt6_insert_exception(nrt, from)) {
+ 		dst_release_immediate(&nrt->dst);
+ 		goto out;
+@@ -3486,7 +3480,7 @@ static void rt6_do_redirect(struct dst_e
+ 	call_netevent_notifiers(NETEVENT_REDIRECT, &netevent);
+ 
+ out:
+-	fib6_info_release(from);
++	rcu_read_unlock();
+ 	neigh_release(neigh);
  }
  
--void ocxl_remove(struct pci_dev *dev)
-+static void ocxl_remove(struct pci_dev *dev)
- {
- 	struct ocxl_fn *fn;
- 	struct ocxl_afu *afu;
--- 
-2.7.4
+@@ -4991,16 +4985,20 @@ static int inet6_rtm_getroute(struct sk_
+ 
+ 	rcu_read_lock();
+ 	from = rcu_dereference(rt->from);
+-
+-	if (fibmatch)
+-		err = rt6_fill_node(net, skb, from, NULL, NULL, NULL, iif,
+-				    RTM_NEWROUTE, NETLINK_CB(in_skb).portid,
+-				    nlh->nlmsg_seq, 0);
+-	else
+-		err = rt6_fill_node(net, skb, from, dst, &fl6.daddr,
+-				    &fl6.saddr, iif, RTM_NEWROUTE,
+-				    NETLINK_CB(in_skb).portid, nlh->nlmsg_seq,
+-				    0);
++	if (from) {
++		if (fibmatch)
++			err = rt6_fill_node(net, skb, from, NULL, NULL, NULL,
++					    iif, RTM_NEWROUTE,
++					    NETLINK_CB(in_skb).portid,
++					    nlh->nlmsg_seq, 0);
++		else
++			err = rt6_fill_node(net, skb, from, dst, &fl6.daddr,
++					    &fl6.saddr, iif, RTM_NEWROUTE,
++					    NETLINK_CB(in_skb).portid,
++					    nlh->nlmsg_seq, 0);
++	} else {
++		err = -ENETUNREACH;
++	}
+ 	rcu_read_unlock();
+ 
+ 	if (err < 0) {
 
 
