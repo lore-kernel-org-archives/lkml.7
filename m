@@ -2,135 +2,93 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C87C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E87EC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F2220859
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:38:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCT1/s8n"
+	by mail.kernel.org (Postfix) with ESMTP id 2740420859
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfEDOiY (ORCPT
+        id S1727311AbfEDOis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 10:38:24 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34905 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfEDOiY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 10:38:24 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t87so3814976pfa.2
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 07:38:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dxXlXPIHOiLEpa62Dvte4CGqyLQwPemJ6HrBcCCpswo=;
-        b=gCT1/s8nmlYKVhGuab7b1b/q6N5FcSvjRhXig3XmZHCMS+n2uaBpRMEPH5K5RrCOjn
-         RygCg2uYp+K4ALI+AYOXKkDWOomFpPyPYbFD8zy8RZ/UdU3OSZJ9YqnmKqlopSxbF32V
-         RdPUeOh5gk0vk+zeHFufWbmCRYHflgYv1TXe+5taBhD8bhY47hKoCFIV7t/LhgxSStGA
-         l7rU8kS5NbygAivqyXzIXkIqV9WkOf+Euq7L7PpZKFfKs+NjYfunkOPqneqLiqGfHGhx
-         JMER+4zr3cl41pBuwswV/cY7giVmo2Dtx9SplATZeqcFpDUBbb0lrBFi48rLUajmqOPs
-         tcwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dxXlXPIHOiLEpa62Dvte4CGqyLQwPemJ6HrBcCCpswo=;
-        b=Uea+tk4+jvhgc+gAPcS5byx0uPDikVmaLjzU36XcXFTCRaaZAxNI5d09OAJMii7gy+
-         g6f0qZ7HuU8xLXsBt/N6sk7IOIBB6UfbrZ4rGDmsp+Y6ztlQa8HtSS1LerSaNex5Dnwq
-         jGSU45rMjOh95vAoyB8EpSe1L0vhk4eBuRzD/t6mpANPKa6gcPuZhHiROddAqwbsbpGk
-         1kz2EzDJyYdhGGUxE6Ayy2p2he4BKeKN/RWut5YzORZz4dUHvhheeZ4z8vXKtm0MfCfG
-         jgjw5bI1vHX2eeJUUeM1rxRbeSb8yKO8Z4wfPT5glWjdWrhecfuh/dIDXecfxuG8rzpG
-         PpNQ==
-X-Gm-Message-State: APjAAAVL1noLMoFYJev54U9qlLi5Ub7lATKjmRhaGV84b/T9v1lRCVy5
-        J8bKuJeaiy/Kgh+bCvdiAzE=
-X-Google-Smtp-Source: APXvYqztLpaOJbeitHdyXx91AXCQ7vkzoCZ5cNm3xDxC29DA7atORy+tKhl/hAnuUM7vOrR9Mg0M9Q==
-X-Received: by 2002:aa7:8458:: with SMTP id r24mr19709400pfn.231.1556980703466;
-        Sat, 04 May 2019 07:38:23 -0700 (PDT)
-Received: from [192.168.0.6] ([123.213.206.190])
-        by smtp.gmail.com with ESMTPSA id p7sm6957050pgk.10.2019.05.04.07.38.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 07:38:22 -0700 (PDT)
-Subject: Re: [PATCH 3/4] nvme-pci: add device coredump support
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     linux-nvme@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <keith.busch@intel.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Christoph Hellwig <hch@lst.de>
-References: <1556787561-5113-1-git-send-email-akinobu.mita@gmail.com>
- <1556787561-5113-4-git-send-email-akinobu.mita@gmail.com>
- <66a5d068-47b1-341f-988f-c890d7f01720@gmail.com>
- <CAC5umyjsAh7aZ8JEh8=QMXpNwRdnxxfdPBDwmuVKfafG+rT-PA@mail.gmail.com>
-From:   Minwoo Im <minwoo.im.dev@gmail.com>
-Message-ID: <d0de1c5d-1168-086c-cc16-7d33fd307cd3@gmail.com>
-Date:   Sat, 4 May 2019 23:38:19 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 4 May 2019 10:38:48 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58535 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726070AbfEDOis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 10:38:48 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44xBT15fzxz9s5c;
+        Sun,  5 May 2019 00:38:45 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     christophe.leroy@c-s.fr, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, segher@kernel.crashing.org
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.1-7 tag
+Date:   Sun, 05 May 2019 00:38:41 +1000
+Message-ID: <877eb6xp1q.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <CAC5umyjsAh7aZ8JEh8=QMXpNwRdnxxfdPBDwmuVKfafG+rT-PA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/19 11:26 PM, Akinobu Mita wrote:
-> 2019年5月4日(土) 19:04 Minwoo Im <minwoo.im.dev@gmail.com>:
->>
->> Hi, Akinobu,
->>
->> Regardless to reply of the cover, few nits here.
->>
->> On 5/2/19 5:59 PM, Akinobu Mita wrote:
->>> +
->>> +static const struct nvme_reg nvme_regs[] = {
->>> +     { NVME_REG_CAP,         "cap",          64 },
->>> +     { NVME_REG_VS,          "version",      32 },
->>
->> Why don't we just go with "vs" instead of full name of it just like
->> the others.
-> 
-> I tried to imitate the output of 'nvme show-regs'.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Okay.
+Hi Linus,
 
-> 
->>> +     { NVME_REG_INTMS,       "intms",        32 },
->>> +     { NVME_REG_INTMC,       "intmc",        32 },
->>> +     { NVME_REG_CC,          "cc",           32 },
->>> +     { NVME_REG_CSTS,        "csts",         32 },
->>> +     { NVME_REG_NSSR,        "nssr",         32 },
->>> +     { NVME_REG_AQA,         "aqa",          32 },
->>> +     { NVME_REG_ASQ,         "asq",          64 },
->>> +     { NVME_REG_ACQ,         "acq",          64 },
->>> +     { NVME_REG_CMBLOC,      "cmbloc",       32 },
->>> +     { NVME_REG_CMBSZ,       "cmbsz",        32 },
->>
->> If it's going to support optional registers also, then we can have
->> BP-related things (BPINFO, BPRSEL, BPMBL) here also.
-> 
-> I'm going to change the register dump in binary format just like
-> 'nvme show-regs -o binary' does.  So we'll have registers from 00h to 4Fh.
-> 
+Please pull one more powerpc fix for 5.1:
 
-Got it.
+The following changes since commit 7a3a4d763837d3aa654cd1059030950410c04d77:
 
-And now I can see those two commands `nvme show-regs` and
-`nvme show-regs -o binary` have different results for the register
-range.  The binary output covers just 0x50 size, but it shows all the
-registers including BP-related things in normal && json format.
+  powerpc/mm_iommu: Allow pinning large regions (2019-04-17 21:36:51 +1000)
 
-Anyway, I'll prepare a patch for nvme-cli to support binary output
-format to cover BP things also.
+are available in the git repository at:
 
-Thanks, for your reply.
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.1-7
+
+for you to fetch changes up to 12f363511d47f86c49b7766c349989cb33fd61a8:
+
+  powerpc/32s: Fix BATs setting with CONFIG_STRICT_KERNEL_RWX (2019-05-02 15:33:46 +1000)
+
+- ------------------------------------------------------------------
+powerpc fixes for 5.1 #7
+
+One regression fix.
+
+Changes we merged to STRICT_KERNEL_RWX on 32-bit were causing crashes under
+load on some machines depending on memory layout.
+
+Thanks to:
+  Christophe Leroy.
+
+- ------------------------------------------------------------------
+Christophe Leroy (1):
+      powerpc/32s: Fix BATs setting with CONFIG_STRICT_KERNEL_RWX
+
+
+ arch/powerpc/mm/ppc_mmu_32.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJczaPFAAoJEFHr6jzI4aWAEsoP+wbm3WGTTSULdF3PbIGEtVbQ
+CNrw/LpvNsmAn6210U2ag7Fwd6/hIprIy9wgwbgNiB2kDtMNy6srl1eMlC9npsV4
+y43xeJQ0E2+u10eaBNsiwJEYtmNkJMuxCu31zGH/PZ4nTi4hdvaVwUETR725vYli
+LICixZ2yr1eL948D3DzWpGigBmGhq1ajBsdXxn2sHxbeqefnFesdrjPR2e2GIj7E
+cyHb+7vUATLUVc405yYCyHEU3/cly12LPcsreGe/tPWSJxw8I2BU36lCCXgby62w
+E1KlSb4EzFx+lFujK6ICxaflFOtkP+0Xzajq8YU0qrItkGM8DA6yTy4vU99gN1KP
+pgNwbaoMQCNJvzk0cIuMZ0RMGKrkRT4y2jW+MhHALMSkyv4HGKqT/N227PMq4U94
+nVv41w868b8NnTrN9pLfSR+Gyr/Q7sF8zEVv0eIpbSciB/OTcg0yqAp7V2p0cTBG
+pKM/c6glvkrbfEkoRItMpVU0PbckPFjXgTVqI/rvdiAVoEQvi1U4r8Fpu5I28j1d
+wuryRhjnGXgkSjBlXkSK+tASWZHcKwhnD1y9KTHtKuLdxJqjDfyX0Dii+FqU5w42
+aKeU4VrlrCGX2VnLj7ViH99wzkMogP9oZWZ5bhmOva/boxo1kJ9/vQkxaiXrhVjd
+NLBrlVeLtaCjY52+eEJS
+=k/X8
+-----END PGP SIGNATURE-----
