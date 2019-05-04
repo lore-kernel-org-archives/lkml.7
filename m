@@ -2,149 +2,68 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E78C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100C1C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F159320862
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965544;
-	bh=6aRTOHe1vzk7ZdyjrKT+Sww5jGiQ/Rt7yWqVE9bsLow=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ierHvK7qRbeTrVGxIXmLxrT22QlfoGHrMMmTZrDx5Kfg3T/h/MYjRO6F9BqDyFwCu
-	 Mr2t2Gg14Z+PWHZbdWLmYlBjYx2aI2xxf0Qpw4df/THsIqnRaVYuAnK36luRcj7vys
-	 gWvvEJa5gjQXM/mF5aKoilR4jnU9MQUvJ/IPrTMA=
+	by mail.kernel.org (Postfix) with ESMTP id E01422086A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfEDKZn (ORCPT
+        id S1727414AbfEDKZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:25:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbfEDKZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:25:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 351B9206BB;
-        Sat,  4 May 2019 10:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965540;
-        bh=6aRTOHe1vzk7ZdyjrKT+Sww5jGiQ/Rt7yWqVE9bsLow=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ustnIczd6m1VarRUriUHyLIZ196HbF3u9/hLcM9CBLAUPhmb9qkKZjaI2WlQm2F7t
-         54ztADBBVXCOpWEbRaDVHC/9umoXYFZgicJzAoglOTwBb1A5pINP9gCc4eSE8lGJXm
-         O2ExsvdN9iFM2nlwo34lDW9meuu/+oHKti971iSg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 11/32] rxrpc: Fix net namespace cleanup
-Date:   Sat,  4 May 2019 12:24:56 +0200
-Message-Id: <20190504102452.880631446@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
-References: <20190504102452.523724210@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sat, 4 May 2019 06:25:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48360 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727376AbfEDKZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:25:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0FB43ACC4;
+        Sat,  4 May 2019 10:25:43 +0000 (UTC)
+From:   NeilBrown <neil@brown.name>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>
+Date:   Sat, 04 May 2019 20:24:56 +1000
+Subject: [PATCH 0/4] mtk-sd enhancement to support MT7621 - V2
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thirtythreeforty@gmail.com
+Message-ID: <155696540998.8632.5242582397805128125.stgit@noble.brown>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+The MT7621 MIPS-based SOC contains an sdhci unit that is
+much the same as the units supported by mtk-sd.c.
 
-[ Upstream commit b13023421b5179413421333f602850914f6a7ad8 ]
+These patches enhance the driver so that I can use it on my MT7621
+board (gnubee.org).
 
-In rxrpc_destroy_all_calls(), there are two phases: (1) make sure the
-->calls list is empty, emitting error messages if not, and (2) wait for the
-RCU cleanup to happen on outstanding calls (ie. ->nr_calls becomes 0).
+This series have been revised based on feedback from Chaotian.
 
-To avoid taking the call_lock, the function prechecks ->calls and if empty,
-it returns to avoid taking the lock - this is wrong, however: it still
-needs to go and do the second phase and wait for ->nr_calls to become 0.
+Thanks,
+NeilBrown
 
-Without this, the rxrpc_net struct may get deallocated before we get to the
-RCU cleanup for the last calls.  This can lead to:
-
-  Slab corruption (Not tainted): kmalloc-16k start=ffff88802b178000, len=16384
-  050: 6b 6b 6b 6b 6b 6b 6b 6b 61 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkakkkkkkk
-
-Note the "61" at offset 0x58.  This corresponds to the ->nr_calls member of
-struct rxrpc_net (which is >9k in size, and thus allocated out of the 16k
-slab).
-
-Fix this by flipping the condition on the if-statement, putting the locked
-section inside the if-body and dropping the return from there.  The
-function will then always go on to wait for the RCU cleanup on outstanding
-calls.
-
-Fixes: 2baec2c3f854 ("rxrpc: Support network namespacing")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rxrpc/call_object.c |   38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
 
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -604,30 +604,30 @@ void rxrpc_destroy_all_calls(struct rxrp
- 
- 	_enter("");
- 
--	if (list_empty(&rxnet->calls))
--		return;
--
--	write_lock(&rxnet->call_lock);
-+	if (!list_empty(&rxnet->calls)) {
-+		write_lock(&rxnet->call_lock);
- 
--	while (!list_empty(&rxnet->calls)) {
--		call = list_entry(rxnet->calls.next, struct rxrpc_call, link);
--		_debug("Zapping call %p", call);
--
--		rxrpc_see_call(call);
--		list_del_init(&call->link);
--
--		pr_err("Call %p still in use (%d,%s,%lx,%lx)!\n",
--		       call, atomic_read(&call->usage),
--		       rxrpc_call_states[call->state],
--		       call->flags, call->events);
-+		while (!list_empty(&rxnet->calls)) {
-+			call = list_entry(rxnet->calls.next,
-+					  struct rxrpc_call, link);
-+			_debug("Zapping call %p", call);
-+
-+			rxrpc_see_call(call);
-+			list_del_init(&call->link);
-+
-+			pr_err("Call %p still in use (%d,%s,%lx,%lx)!\n",
-+			       call, atomic_read(&call->usage),
-+			       rxrpc_call_states[call->state],
-+			       call->flags, call->events);
-+
-+			write_unlock(&rxnet->call_lock);
-+			cond_resched();
-+			write_lock(&rxnet->call_lock);
-+		}
- 
- 		write_unlock(&rxnet->call_lock);
--		cond_resched();
--		write_lock(&rxnet->call_lock);
- 	}
- 
--	write_unlock(&rxnet->call_lock);
--
- 	atomic_dec(&rxnet->nr_calls);
- 	wait_var_event(&rxnet->nr_calls, !atomic_read(&rxnet->nr_calls));
- }
+NeilBrown (4):
+      mmc: mtk-sd: don't hard-code interrupt trigger type
+      mmc: mtk-sd: add support for config found in mt7620 family SOCs.
+      mmc: mtk-sd: enable internal card-detect logic.
+      mmc: mtk-sd: select REGULATOR
 
+
+ Documentation/devicetree/bindings/mmc/mtk-sd.txt |    1 
+ drivers/mmc/host/Kconfig                         |    1 
+ drivers/mmc/host/mtk-sd.c                        |   78 +++++++++++++++++++++-
+ 3 files changed, 75 insertions(+), 5 deletions(-)
+
+--
+Signature
 
