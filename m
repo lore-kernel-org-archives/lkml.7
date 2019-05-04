@@ -2,84 +2,129 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFBCC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB4EC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460C6206DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308FB206DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556980590;
+	bh=dpFjx0ERLCtAbGk3+hcbuo4QR4I0xRweSyAO7a8Tk0I=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=H7lTtB9XQuQg0aqKkJGEwNOq9GoNhy9oP3agNVzExk1NaGC5EwZTKPiSkF7BVfAHj
+	 0H6GqgBdqC9u30fRmCh2VQz9JK0DsNjeUiAyMa8EZQm9HcuVf4ibhrLWaFob11iQ5n
+	 SQQXfgHxGTrTkx5K7DFvzwGljELRFjnFm0Luyg7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfEDOfV (ORCPT
+        id S1727127AbfEDOg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 10:35:21 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34370 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfEDOfV (ORCPT
+        Sat, 4 May 2019 10:36:28 -0400
+Received: from icp-osb-irony-out7.external.iinet.net.au ([203.59.1.107]:44739
+        "EHLO icp-osb-irony-out7.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726070AbfEDOg2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 10:35:21 -0400
-Received: by mail-qt1-f193.google.com with SMTP id j6so10055125qtq.1;
-        Sat, 04 May 2019 07:35:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tQgaLnyd1PzWRuAcPpOm2m6B4C3dJFTkE6v5h3uPP4o=;
-        b=OjqydM2tYABlKRPwaDWqg1dM1O9OpwEEffgOkhAUV1/6BQeoWWmfHAQR3T/WH5gCs5
-         40kbSctPEwPq2sn3g3TV4i1tKBxEbBtNZxPWKYUT2HpUY58Mnn6VbIqbjn/DLUqQL3wH
-         f0Mk4KzQdxSZ+MBF1Yi+fKfYOBSgGsLa1nqJSZU56RtJNA9aucFHK5I/LDfS0/aWssQ9
-         BTAYUOe5iVMHIUstiDge+FboiadC8gMae4FABaBL+yuYKY8qf7c4NZXYK2kwrGlWN9a5
-         yOUfVADov/HCArKbMknjIp96e0SSPtrhccBjBlXRShYdVU1zvpj1s/H1STkjQFwhxpTb
-         P3cQ==
-X-Gm-Message-State: APjAAAWt3kmG+7cZNoxxr2bb+1VS2liIE/mE+ESevVRaykTA51F2A3u3
-        d6xCzpvkDD3RhVI5axMU92kzXjjmtmTeBnkmUKg=
-X-Google-Smtp-Source: APXvYqxvPIZmsXc7/1Lsx8u1uNwbWRJxYtcxgpxdevIAEaVf/6zZoMUz0DyMRRuNK8rGfyNiuEKbyfamxoIOG5ECJA4=
-X-Received: by 2002:ac8:29cf:: with SMTP id 15mr13552977qtt.319.1556980520015;
- Sat, 04 May 2019 07:35:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-5-git-send-email-dragan.cvetic@xilinx.com> <20190502172345.GC1874@kroah.com>
-In-Reply-To: <20190502172345.GC1874@kroah.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sat, 4 May 2019 10:35:02 -0400
-Message-ID: <CAK8P3a2EKXrg4amHDi5zVvOQ8AM+u6EAhBc=T8Hk_tU20xSV4w@mail.gmail.com>
-Subject: Re: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioctl
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
+        Sat, 4 May 2019 10:36:28 -0400
+X-Greylist: delayed 557 seconds by postgrey-1.27 at vger.kernel.org; Sat, 04 May 2019 10:36:26 EDT
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AJAACjoM1c/7akqnwNWBkBAQEBAQE?=
+ =?us-ascii?q?BAQEBAQEHAQEBAQEBgVQBAQEBAQELAYQlhBCTYAEBAQEBAQaBCC2DXoVukQG?=
+ =?us-ascii?q?EfQKCKTcGDgEDAQEBBAEBAQEChl8BAQEBAgEjFUEQCw4KAgImAgJXBgEMBgI?=
+ =?us-ascii?q?BAYMegXcFqjtxgS+FR4MegUWBCycBi2R4gQeBOIJrPodOglgEizeBboVolCU?=
+ =?us-ascii?q?JgguSPwYblUiMG5Z2gXgzGggoCIMnkGNgkT8BAQ?=
+X-IPAS-Result: =?us-ascii?q?A2AJAACjoM1c/7akqnwNWBkBAQEBAQEBAQEBAQEHAQEBA?=
+ =?us-ascii?q?QEBgVQBAQEBAQELAYQlhBCTYAEBAQEBAQaBCC2DXoVukQGEfQKCKTcGDgEDA?=
+ =?us-ascii?q?QEBBAEBAQEChl8BAQEBAgEjFUEQCw4KAgImAgJXBgEMBgIBAYMegXcFqjtxg?=
+ =?us-ascii?q?S+FR4MegUWBCycBi2R4gQeBOIJrPodOglgEizeBboVolCUJgguSPwYblUiMG?=
+ =?us-ascii?q?5Z2gXgzGggoCIMnkGNgkT8BAQ?=
+X-IronPort-AV: E=Sophos;i="5.60,430,1549900800"; 
+   d="scan'208";a="173381743"
+Received: from 124-170-164-182.dyn.iinet.net.au (HELO [192.168.0.106]) ([124.170.164.182])
+  by icp-osb-irony-out7.iinet.net.au with ESMTP; 04 May 2019 22:27:06 +0800
+Subject: Re: [PATCH 1/6] ARM: ks8695: watchdog: stop using mach/*.h
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, arm-soc <arm@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Derek Kiernan <derek.kiernan@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+References: <20190415202501.941196-1-arnd@arndb.de>
+ <2424c672-e3fb-4c32-4c24-fafc59d03a96@uclinux.org>
+ <CACRpkdaJ+2bub_nDp9=5b4kyKjWDnOGKscWg3KsEVixDpk8rzA@mail.gmail.com>
+ <20190503170613.GA1783@roeck-us.net>
+From:   Greg Ungerer <gerg@kernel.org>
+Message-ID: <d8d81aca-722d-8b5f-cd5f-30cc3e4e407b@kernel.org>
+Date:   Sun, 5 May 2019 00:26:53 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190503170613.GA1783@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 2, 2019 at 1:23 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Sat, Apr 27, 2019 at 11:04:58PM +0100, Dragan Cvetic wrote:
-> > Add char device interface per DT node present and support
-> > file operations:
-> > - open(),
-> > - close(),
-> > - unlocked_ioctl(),
-> > - compat_ioctl().
->
-> Why do you need compat_ioctl() at all?  Any "new" driver should never
-> need it.  Just create your structures properly.
 
-The function he added was the version that is needed when the structures
-are compatible. I submitted a series to add a generic 'compat_ptr_ioctl'
-implementation that would save a few lines here doing the same thing,
-but it's not merged yet.
+On 4/5/19 3:06 am, Guenter Roeck wrote:
+> On Fri, May 03, 2019 at 08:16:05AM +0100, Linus Walleij wrote:
+>> On Fri, May 3, 2019 at 8:02 AM Greg Ungerer <gerg@uclinux.org> wrote:
+>>
+>>> I dug out some old ks8695 based hardware to try this out.
+>>> I had a lot of trouble getting anything modern working on it.
+>>> In the end I still don't have a reliable test bed to test this properly.
+>>
+>> What is usually used by old ARMv4 systems is OpenWrt or
+>> OpenEmbedded. Those is the only build systems that reliably
+>> produce a userspace for these things now, and it is also the
+>> appropriate size for this kind of systems.
 
-Generally speaking, every driver that has a .ioctl() function should also
-have a .compat_ioctl(), and ideally it should be exactly this trivial
-version.
+No, I can produce a user space environment for the KS8695 as well
+using the uClinux-dist build system. But that worked even less well
+than the old root filesystem that I had (which was also built with
+an older version of that build system).
 
-        Arnd
+But there is no reason that old root filesystem should not work.
+And that is the thing that concerns me a bit here. I could mount
+it ok (it was a CRAMFS), it would run up the shell to a shell prompt,
+but when I try to run any commands from there they would oops.
+I didn't debug any further than that.
+
+
+>>> Ultimately though I am left wondering if the ks8695 support in the
+>>> kernel is useful to anyone the way it is at the moment. With a minimal
+>>> kernel configuration I can boot up to a shell - but the system is
+>>> really unreliable if you try to interactively use it. I don't think
+>>> it is the hardware - it seems to run reliably with the old code
+>>> it has running from flash on it. I am only testing the new kernel,
+>>> running with the existing user space root filesystem on it (which
+>>> dates from 2004 :-)
+>>
+>> Personally I think it is a bad sign that this subarch and boards do
+>> not have active OpenWrt support, they are routers after all (right?)
+>> and any active use of networking equipment should use a recent
+>> userspace as well, given all the security bugs that popped up over
+>> the years.
+>>
+>> With IXP4xx, Gemini and EP93xx we have found active users and
+>> companies selling the chips and reference designs and even
+>> recommending it for new products (!) at times.  If this is not the
+>> case with KS8695 and no hobbyists are willing to submit it
+>> to OpenWrt and modernize it to use device tree I think it should be
+>> deleted from the kernel.
+>>
+> 
+> That may be the best approach if indeed no one is using it,
+> much less maintaining it.
+
+Well, I for one don't really use it any more. So I don't have a lot
+of motivation to maintain it any longer.
+
+Regards
+Greg
+
