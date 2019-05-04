@@ -2,71 +2,105 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13F3C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 08:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958ABC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 08:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF7D2084A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 08:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66FF32084A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 08:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbfEDIMX (ORCPT
+        id S1727044AbfEDISl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 04:12:23 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51960 "EHLO huawei.com"
+        Sat, 4 May 2019 04:18:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35814 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726217AbfEDIMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 04:12:22 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 459ACBBC3AFF944E1B78;
-        Sat,  4 May 2019 16:12:20 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
- 16:12:11 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <jakub.kicinski@netronome.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] netdevsim: Make nsim_num_vf static
-Date:   Sat, 4 May 2019 16:12:07 +0800
-Message-ID: <20190504081207.22764-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1725819AbfEDISl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 04:18:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E9109AE41;
+        Sat,  4 May 2019 08:18:39 +0000 (UTC)
+From:   NeilBrown <neil@brown.name>
+To:     Chaotian Jing <chaotian.jing@mediatek.com>
+Date:   Sat, 04 May 2019 18:18:31 +1000
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thirtythreeforty@gmail.com
+Subject: Re: [PATCH 4/5] mmc: mtk-sd: enable internal card-detect logic.
+In-Reply-To: <1555569583.18628.29.camel@mhfsdcap03>
+References: <155538933003.25108.3338569916935462285.stgit@noble.brown> <155539004931.25108.17076624786044710325.stgit@noble.brown> <1555569583.18628.29.camel@mhfsdcap03>
+Message-ID: <87o94i3a5k.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-drivers/net/netdevsim/bus.c:253:5: warning:
- symbol 'nsim_num_vf' was not declared. Should it be static?
+On Thu, Apr 18 2019, Chaotian Jing wrote:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/netdevsim/bus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Tue, 2019-04-16 at 14:47 +1000, NeilBrown wrote:
+>> The mtk-sd silicon has integrated card-detect logic that is
+>> enabled, at least, on the MT7621 as used in the GNUBEE NAS.
+>>=20
+>> If the sdhci isn't marked non-removable and doesn't have a
+>> cd-gpio configured, assume the internal cd logic should be used.
+>>=20
+>> Signed-off-by: NeilBrown <neil@brown.name>
+...
 
-diff --git a/drivers/net/netdevsim/bus.c b/drivers/net/netdevsim/bus.c
-index ae48234..868fb9a 100644
---- a/drivers/net/netdevsim/bus.c
-+++ b/drivers/net/netdevsim/bus.c
-@@ -250,7 +250,7 @@ static int nsim_bus_remove(struct device *dev)
- 	return 0;
- }
- 
--int nsim_num_vf(struct device *dev)
-+static int nsim_num_vf(struct device *dev)
- {
- 	struct nsim_bus_dev *nsim_bus_dev = to_nsim_bus_dev(dev);
- 
--- 
-2.7.0
+>> @@ -2206,6 +2247,15 @@ static int msdc_drv_probe(struct platform_device =
+*pdev)
+>>  		goto host_free;
+>>  	}
+>>=20=20
+>> +	if (!(mmc->caps & MMC_CAP_NONREMOVABLE) &&
+>> +	    !mmc_can_gpio_cd(mmc)) {
+>
+> Should not do this assume!
+> better to add "mediatek,internal-cd" in your DTS, then no impact to
+> other Soc.
 
+(Sorry for the delay).
 
+Documentation/devicetree/bindings/mmc/mmc.txt
+
+says:
+   If no property below is supplied, host native card detect is used.
+
+So this assumption is *exactly* what the documentation said we should
+do.
+
+How about I limit this assumption to mt7621 using a flag in the
+mtk_mmc_compatible structure?
+
+Thanks,
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAlzNStcACgkQOeye3VZi
+gbnPBA//eN9sE9P0TV5+KckYl7NgUH1whziK3Ot5PrCfyuwxOQIqSxuIF7ZRDS+X
+6gk6CDYO59Y2DAvCTUJNUWWwEoSrB21EMbKTBmcTLywiaBqTPGn4k8usUQ3xchnh
+oZQzfUrwyOM8b0O1jBRh0CJkk345rFMaew30WO1Qvyq4PGUAIEtFpDap1Xd5KWOP
+ax8hG1FX/G3mmd2gIxMp8HJmIRvEhnXZOPQ2lI4PRktLO8jG1ltBjF8schg/v8Fh
+aIGO+F4bjQRdGrnSPIFbIbu5p5s5oXPW1KDJSzvim7IUFrg9iyBkpgkpnkgT6Id4
+oa1x05CG01yNQ5LKtZZGkyiU1XH602964hbzZ9Qvtw7KYV9QqRniDvCx3XxRIIea
+MW77EhImTh98jwhjj9hP5R1i/hBUJ3nYs7vVF4AMfSik+dyJyhu1+j26tnD7JQdp
+efMeOX1grtDqGrlw1aCWsRBrTA343H/zUMHoRPHnCusOSuSZ7kVDkJ4b/306Gfyi
+hGckqJ6+9XTFFWG2r7WfTS+XDVgvZbtcPj0OZhpsg+kWN+/6CfY9zv0ZdK2erPdi
+ZTOlse/zGjzTh4vqHV2ajkreK/LRDmR4s4m1iXoynx7SCzR7bjTDcso6bP15ihdc
+pHPLL2kBlScb9RZYc3ldl9LFAnQhsMV5uOM0mzrYSR+eb419kkY=
+=Q94r
+-----END PGP SIGNATURE-----
+--=-=-=--
