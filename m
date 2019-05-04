@@ -2,165 +2,130 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B192AC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEBFC004C9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8009C2081C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8382075E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:25:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNyGD2dj"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="lEgevMdZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfEDBSm (ORCPT
+        id S1726538AbfEDBZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 21:18:42 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40656 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbfEDBSl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 21:18:41 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h4so9907543wre.7;
-        Fri, 03 May 2019 18:18:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=1zQYpHCU7UlsHYJBg7jwPlzoSjQyIJpUN9QDyya+MQ4=;
-        b=iNyGD2djAV4yvcaEiFk74Q3jMsefHRPo2VLdHt6+MDRkoGpn2/BdwSM85jK0O+lh4w
-         FtoB0Pwc9HSyTKTj/PJo+u6qGIosa+3AGS1dIIfPGvUwXqqBsCLYXM244i5/mzazaTbZ
-         romkbGP14FJPlQNLK+MMJ4i5iwO+KE0K7T59l1k5NlcVYPp9aNn6kBbgFnwLAuw0ixKV
-         1ZJIdiA/YhxssYzwoiv6ezEuvkiOpWUZwkHerdNl9AyaKVx0E4+Al6hzKtCo5l1RwZFX
-         hxRaWR5bcZRcXwk7xIGKibIBDjcbVkwQP+EFsTyVyMiCN3K+b9MKJlNkdjWPtAQvHxXH
-         EJXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1zQYpHCU7UlsHYJBg7jwPlzoSjQyIJpUN9QDyya+MQ4=;
-        b=ftNhThYlCHcVFPoRxlqLjXcTWCo+G7x8K63nmEL726MpXohQI1G7H9stIB8uxttiOk
-         97TLZupVMeKYCRLMVgyuzon+RuEIak/cEebBu0ZoT/v8CV+MofwoRLAt57ea8qdWVnIK
-         shUIV3NT418Yl+2kkeejvHNkXuWuZHfArK/NNKixFEdk+xYzZmEQ2/y7A8tSs3Vn+/at
-         4+Q4vT8+Q+2sksGqPUpvnmFyIbTTlvRvhoRMLo8zbAP2xulErjiltC1f/O2HJE9rwwq7
-         rZFEROsCG5IUmV7H2cAS0Mcd7o7NatQAhBuJNl5Z8p5CZkJllGsgTOeu04WCqmUtAo4V
-         NViw==
-X-Gm-Message-State: APjAAAU7KvaRv0xythf+3DmLeUfDwvpDjhXKmdSb+znEK+TMpQ0fsTCt
-        UIyY9wbUjvAdrzxRZ8QRtCs=
-X-Google-Smtp-Source: APXvYqw6wc3ZIfNewUS90lwCR4NOKjdRSzhVflAo5NyRDdVdP/14J8wfKH0BjyoXDNrlziVicETL/g==
-X-Received: by 2002:adf:dbce:: with SMTP id e14mr9061327wrj.249.1556932718724;
-        Fri, 03 May 2019 18:18:38 -0700 (PDT)
-Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id t1sm3937639wro.34.2019.05.03.18.18.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 18:18:38 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH net-next 0/9] Traffic support for SJA1105 DSA driver
-Date:   Sat,  4 May 2019 04:18:17 +0300
-Message-Id: <20190504011826.30477-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 3 May 2019 21:25:36 -0400
+Received: from mail-eopbgr800053.outbound.protection.outlook.com ([40.107.80.53]:44805
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726042AbfEDBZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 May 2019 21:25:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mdKWZNWsC2QDZPr7BKiJhEirVBVPb9zk96COLc9DNXU=;
+ b=lEgevMdZZX+zU54N6kgdk2i69yRAMZ1RjdI734MtLBF+Afc95EpzNxORO0FD2WfvJutDMZ0kn2ymdhvZRhsQkp5e9pvW+q33KQiq9UCAA6F83BbIoHEfg7hRKOR+5pje7Z7uJ0sprgYZuotYI3k+6PTIAHzEnBZ+pkpsbZXj0rc=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB6213.namprd05.prod.outlook.com (20.178.55.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Sat, 4 May 2019 01:25:25 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b057:917a:f098:6098]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b057:917a:f098:6098%7]) with mapi id 15.20.1878.012; Sat, 4 May 2019
+ 01:25:24 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Arnd Bergmann <arnd@arndb.de>, Julien Freche <jfreche@vmware.com>,
+        Pv-drivers <Pv-drivers@vmware.com>,
+        Jason Wang <jasowang@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v4 0/4] vmw_balloon: Compaction and shrinker support
+Thread-Topic: [PATCH v4 0/4] vmw_balloon: Compaction and shrinker support
+Thread-Index: AQHU+5sfw4lXp6MJj0Ov0LaKSU1Rk6ZaOUgA
+Date:   Sat, 4 May 2019 01:25:24 +0000
+Message-ID: <8A2D1D43-759A-4B09-B781-31E9002AE3DA@vmware.com>
+References: <20190425115445.20815-1-namit@vmware.com>
+In-Reply-To: <20190425115445.20815-1-namit@vmware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f4bafb9c-9199-422e-8764-08d6d02f623f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB6213;
+x-ms-traffictypediagnostic: BYAPR05MB6213:
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR05MB6213679830B52A78D4C2C711D0360@BYAPR05MB6213.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-forefront-prvs: 0027ED21E7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(39860400002)(366004)(136003)(189003)(199004)(2616005)(486006)(33656002)(68736007)(36756003)(6486002)(102836004)(186003)(6506007)(26005)(53546011)(8936002)(76176011)(73956011)(3846002)(6116002)(66946007)(66556008)(66446008)(446003)(54906003)(2906002)(7736002)(478600001)(66476007)(64756008)(11346002)(99286004)(14444005)(256004)(25786009)(229853002)(476003)(71200400001)(6916009)(66066001)(305945005)(316002)(76116006)(14454004)(82746002)(8676002)(5660300002)(83716004)(6512007)(4326008)(6246003)(53936002)(71190400001)(86362001)(81166006)(6436002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB6213;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qPo5D/F9hGET3k6Gq/zZ44ji2YXV45Kc7MgTWcwETlnHn+o1eeWnGSiDvUs5kAjzytfoSv+ws1n+fZs1J4v58hq39BFQ1JHzm2kUQJXg1M9q8oiJ4n9pAbEX2X1WCdbZabGpVu1hGH34rfhSC/y/UB3k7N0j2JSj0KikbzqDLe6yc5UrhqPy6u2uZ7VxIZc0Kk9H7IuA6CbB3+uARirVRAFFIlsjZnexzDMA/Qfi5Nq+n9FBc+rfZd54lDbYww6ErRqiudTH5yOS5CRgok602/Papr26lfeYFykWyOj5Ra6wEtA9l+IDEE7LjMlYvajvrZoAS7xGyCpSFfc1AIKZjxuzWV+Ek3NOZb+h7ntzVJkUAtm6KeYfzbz2x5NeWNFMVrj9iNJZsNex8ArbaRvy1gwGO/MK1vcnk0aVZFLa/ns=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <88829AE5ABEA6941919308A6A9557F98@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4bafb9c-9199-422e-8764-08d6d02f623f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 May 2019 01:25:24.8825
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6213
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set is a continuation of the "NXP SJA1105 DSA driver" v3
-series, which was split in multiple pieces for easier review.
+> On Apr 25, 2019, at 4:54 AM, Nadav Amit <namit@vmware.com> wrote:
+>=20
+> VMware balloon enhancements: adding support for memory compaction,
+> memory shrinker (to prevent OOM) and splitting of refused pages to
+> prevent recurring inflations.
+>=20
+> Patches 1-2: Support for compaction
+> Patch 3: Support for memory shrinker - disabled by default
+> Patch 4: Split refused pages to improve performance
+>=20
+> v3->v4:
+> * "get around to" comment [Michael]
+> * Put list_add under page lock [Michael]
+>=20
+> v2->v3:
+> * Fixing wrong argument type (int->size_t) [Michael]
+> * Fixing a comment (it) [Michael]
+> * Reinstating the BUG_ON() when page is locked [Michael]=20
+>=20
+> v1->v2:
+> * Return number of pages in list enqueue/dequeue interfaces [Michael]
+> * Removed first two patches which were already merged
+>=20
+> Nadav Amit (4):
+>  mm/balloon_compaction: List interfaces
+>  vmw_balloon: Compaction support
+>  vmw_balloon: Add memory shrinker
+>  vmw_balloon: Split refused pages
+>=20
+> drivers/misc/Kconfig               |   1 +
+> drivers/misc/vmw_balloon.c         | 489 ++++++++++++++++++++++++++---
+> include/linux/balloon_compaction.h |   4 +
+> mm/balloon_compaction.c            | 144 ++++++---
+> 4 files changed, 553 insertions(+), 85 deletions(-)
+>=20
+> --=20
+> 2.19.1
 
-Supporting a fully-featured (traffic-capable) driver for this switch
-requires some rework in DSA and also leaves behind a more generic
-infrastructure for other dumb switches that rely on 802.1Q pseudo-switch
-tagging for port separation. Among the DSA changes required are:
-
-* Generic xmit and rcv functions for pushing/popping 802.1Q tags on
-  skb's. These are modeled as a tagging protocol of its own but which
-  must be customized by drivers to fit their own hardware possibilities.
-
-* Permitting the .setup callback to invoke switchdev operations that
-  will loop back into the driver through the switchdev notifier chain.
-
-The SJA1105 driver then proceeds to extend this 8021q switch tagging
-protocol while adding its own (tag_sja1105). This is done because
-the driver actually implements a "dual tagger":
-
-* For normal traffic it uses 802.1Q tags
-
-* For management (multicast DMAC) frames the switch has native support
-  for recognizing and annotating these with source port and switch id
-  information.
-
-Because this is a "dual tagger", decoding of management frames should
-still function when regular traffic can't (under a bridge with VLAN
-filtering).
-There was intervention in the DSA receive hotpath, where a new
-filtering function called from eth_type_trans() is needed. This is
-useful in the general sense for switches that might actually have some
-limited means of source port decoding, such as only for management
-traffic, but not for everything.
-In order for the 802.1Q tagging protocol (which cannot be enabled under
-all conditions, unlike the management traffic decoding) to not be an
-all-or-nothing choice, the filtering function matches everything that
-can be decoded, and everything else is left to pass to the master
-netdevice.
-
-Lastly, DSA core support was added for drivers to request skb deferral.
-SJA1105 needs this for SPI intervention during transmission of link-local
-traffic. This is not done from within the tagger.
-
-Some patches were carried over unchanged from the previous patchset
-(01/09). Others were slightly reworked while adapting to the recent
-changes in "Make DSA tag drivers kernel modules" (02/09).
-
-The introduction of some structures (DSA_SKB_CB, dp->priv) may seem a
-little premature at this point and the new structures under-utilized.
-The reason is that traffic support has been rewritten with PTP
-timestamping in mind, and then I removed the timestamping code from the
-current submission (1. it is a different topic, 2. it does not work very
-well yet). On demand I can provide the timestamping patchset as a RFC
-though.
-
-"NXP SJA1105 DSA driver" v3 patchset can be found at:
-https://lkml.org/lkml/2019/4/12/978
-
-Vladimir Oltean (9):
-  net: dsa: Call driver's setup callback after setting up its switchdev
-    notifier
-  net: dsa: Optional VLAN-based port separation for switches without
-    tagging
-  net: dsa: Allow drivers to filter packets they can decode source port
-    from
-  net: dsa: Keep private info in the skb->cb
-  net: dsa: Add support for deferred xmit
-  net: dsa: Add a private structure pointer to dsa_port
-  net: dsa: sja1105: Add support for traffic through standalone ports
-  net: dsa: sja1105: Add support for Spanning Tree Protocol
-  Documentation: net: dsa: sja1105: Add info about supported traffic
-    modes
-
- Documentation/networking/dsa/sja1105.rst |  49 +++++
- drivers/net/dsa/sja1105/Kconfig          |   1 +
- drivers/net/dsa/sja1105/sja1105.h        |   6 +
- drivers/net/dsa/sja1105/sja1105_main.c   | 246 +++++++++++++++++++++--
- include/linux/dsa/8021q.h                |  76 +++++++
- include/linux/dsa/sja1105.h              |  35 +++-
- include/net/dsa.h                        |  65 ++++++
- net/dsa/Kconfig                          |  20 ++
- net/dsa/Makefile                         |   2 +
- net/dsa/dsa2.c                           |   9 +-
- net/dsa/dsa_priv.h                       |   2 +
- net/dsa/slave.c                          |  61 ++++--
- net/dsa/tag_8021q.c                      | 222 ++++++++++++++++++++
- net/dsa/tag_sja1105.c                    | 131 ++++++++++++
- net/ethernet/eth.c                       |   6 +-
- 15 files changed, 890 insertions(+), 41 deletions(-)
- create mode 100644 include/linux/dsa/8021q.h
- create mode 100644 net/dsa/tag_8021q.c
- create mode 100644 net/dsa/tag_sja1105.c
-
--- 
-2.17.1
-
+Ping.
