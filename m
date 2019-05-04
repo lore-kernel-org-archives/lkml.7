@@ -2,138 +2,132 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5915DC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79E4C04AAA
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F3F2084A
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:42:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556966577;
-	bh=2wZMR8kL7s1krXCBVQ2gHWVCoJe2nAbegB0hEA5FL6g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r8+f86ETvUoi/Ty+973evLh+H6dYfnRjO4Yu/twylMGxeRzQ0P8alnxKZgMou5dgV
-	 7YKPZD3gOezPoWZuddlcjhexF9TtR4qp9a4TCHo4vpTRnZi6wCY66o6ZfquEnr5bRm
-	 ArH01PlGTDhLpjvZVLBaGyJ6E+JuNvGTBn/DCh+Q=
+	by mail.kernel.org (Postfix) with ESMTP id 88591206DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:43:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxVjpKX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbfEDKm4 (ORCPT
+        id S1727375AbfEDKnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:42:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfEDKmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:42:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83EC9206DF;
-        Sat,  4 May 2019 10:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556966574;
-        bh=2wZMR8kL7s1krXCBVQ2gHWVCoJe2nAbegB0hEA5FL6g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g2qAYqK93MmeEO5EtmmbYxkKej3oQNG4Xe6XPJD6vrQPt38T1svHdBKrBvdMiYWgD
-         AZ7qWDqABTJ6olUjiTR2iLAVWnkx5H2eC/KCt6WPfdYa51NsGiNAAeStPcWNLEDQJV
-         lDwxJTqazCCtkTaH5ybwPNJUh0FxQBUrP7ZHlU+A=
-Date:   Sat, 4 May 2019 12:42:51 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Felix Guo <felixguoxiuping@gmail.com>
-Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
- KUnit tests
-Message-ID: <20190504104251.GB1478@kroah.com>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-13-brendanhiggins@google.com>
- <20190502110220.GD12416@kroah.com>
- <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
- <a49c5088-a821-210c-66de-f422536f5b01@gmail.com>
- <CAFd5g44iWRchQKdJYtjRtPY6e-6e0eXpKXXsx5Ooi6sWE474KA@mail.gmail.com>
- <1a5f3c44-9fa9-d423-66bf-45255a90c468@gmail.com>
- <CAFd5g45RYm+zfdJXnyp2KZZH5ojfOzy++aq+4zBeE5VDu6WgEw@mail.gmail.com>
- <052fa196-4ea9-8384-79b7-fe6bacc0ee82@gmail.com>
- <CAFd5g47aY-CL+d7DfiyTidY4aAVY+eg1TM1UJ4nYqKSfHOi-0w@mail.gmail.com>
+        Sat, 4 May 2019 06:43:47 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40936 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfEDKnr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:43:47 -0400
+Received: by mail-oi1-f193.google.com with SMTP id y64so6322633oia.7;
+        Sat, 04 May 2019 03:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jP4HbLDkknhP4A9EDJa5u2q42TL/gPI6IzJv6fDFbOE=;
+        b=QxVjpKX4PVr06tzfYCHVDnwasOj8Lay1fQHuq7MDHynAVFS1ghYDIn9Epz8T7hksdl
+         +Sn6K4p1MCxfb0Sjol0zvoAqsv0sYvL/8kBiHCdOyHmHRM2lwgZCJwf7VgcENDcgrR+2
+         /V3yVEVrmHPz1xsXnCWkShf0F/Uk6Xrd3RUK0PKCW5D1AotrYrTMbKPLosAww7GsY7yY
+         wJmmWdsdevwn3IDuJcYjWu5fEGgwfWxBjv22eUzl3xgfE0GUtuDBW7sYqjj04XmIYath
+         /xX1t1eVkuxSVLnC0Pfq/6ZwtaCuMGDzETzGUrd17jjbamU8lnQzgSRxhQCobguc0J26
+         uzeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jP4HbLDkknhP4A9EDJa5u2q42TL/gPI6IzJv6fDFbOE=;
+        b=qr7T5D5XCOCRevjhcinKh//epQ/L7VLcnZ4awEg6yn790ZdW4JFpQqNRWQ5F+MvsYU
+         wldtq3TjiRYlPo0PJmpwFbzhpyMjX4DoeFaQ3CifT+bytgeVSawknGYamNkC3s98UQ4Q
+         V74Hpr6vh60AlJOUFk0EUyfML4rP315BIOERQrrZFkvyMlYkYt2/LaYJShdhzgS7gLXi
+         OZMgJI8C5LdSZWtkTs2bTgr7hJFSUBuyjGymYqwq9jKZndxhPC+SxM8ohjt+mDHjepS6
+         kX8vJiE1B5PYuYUGK00KhTgK6p2505Y3QbXgeqb4fCtn7UCgOYIORchsIUsYwp1iq7MH
+         7vjA==
+X-Gm-Message-State: APjAAAXG6BEYiCvGBJKBICJNKbdTsxmU8/j2LRMLsFRKdioFmzzrIMhI
+        YQgmBRFV/Tz+RD9CLd2rCf0dJawqTTbznVpN1Lg=
+X-Google-Smtp-Source: APXvYqwCrRtjDLEJreXyuy076r7vAv19fwipMMdtgaVutPfe+ZBelYYYdLgoyxQ3nllr1qxbJe0rltNF0vUGorWhUNA=
+X-Received: by 2002:aca:305:: with SMTP id 5mr2011759oid.117.1556966626650;
+ Sat, 04 May 2019 03:43:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFd5g47aY-CL+d7DfiyTidY4aAVY+eg1TM1UJ4nYqKSfHOi-0w@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <cover.1556919363.git.melissa.srw@gmail.com> <7f7d36348bca1de25bd70350b7c665be6441250f.1556919363.git.melissa.srw@gmail.com>
+In-Reply-To: <7f7d36348bca1de25bd70350b7c665be6441250f.1556919363.git.melissa.srw@gmail.com>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Sat, 4 May 2019 13:43:34 +0300
+Message-ID: <CA+U=Dso6zSLzhhdiZcc+P4-2zcabxnoMd2539HmofTXrtYoKDQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] staging: iio: ad7150: use FIELD_GET and GENMASK
+To:     Melissa Wen <melissa.srw@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Barry Song <21cnbao@gmail.com>, linux-iio@vger.kernel.org,
+        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-usp@googlegroups.com,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 04:14:49PM -0700, Brendan Higgins wrote:
-> In any case, it sounds like you and Greg are in agreement on the core
-> libraries generating the output in TAP13, so I won't argue that point
-> further.
+On Sat, May 4, 2019 at 1:25 AM Melissa Wen <melissa.srw@gmail.com> wrote:
+>
+> Use the bitfield macro FIELD_GET, and GENMASK to do the shift and mask in
+> one go. This makes the code more readable than explicit masking followed
+> by a shift.
+>
 
-Great!
+This looks neat.
+I'd have to remember to ack it from my work email.
 
-> ## Analysis of using TAP13
-> 
-> One of my earlier concerns was that TAP13 is a bit over constrained
-> for what I would like to output from the KUnit core. It only allows
-> data to be output as either:
->  - test number
->  - ok/not ok with single line description
->  - directive
->  - diagnostics
->  - YAML block
-> 
-> The test number must become before a set of ok/not ok lines, and does
-> not contain any additional information. One annoying thing about this
-> is it doesn't provide any kind of nesting or grouping.
+One minor comment inline, which would be the object of a new patch.
 
-It should handle nesting just fine, I think we do that already today.
+> Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+> ---
+>  drivers/staging/iio/cdc/ad7150.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
+> index 24601ba7db88..4ba46fb6ac02 100644
+> --- a/drivers/staging/iio/cdc/ad7150.c
+> +++ b/drivers/staging/iio/cdc/ad7150.c
+> @@ -5,6 +5,7 @@
+>   * Copyright 2010-2011 Analog Devices Inc.
+>   */
+>
+> +#include <linux/bitfield.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/device.h>
+>  #include <linux/kernel.h>
+> @@ -44,6 +45,9 @@
+>  #define AD7150_SN0_REG                         0x16
+>  #define AD7150_ID_REG                          0x17
+>
+> +/* AD7150 masks */
+> +#define AD7150_THRESHTYPE_MSK                  GENMASK(6, 5)
+> +
+>  /**
+>   * struct ad7150_chip_info - instance specific chip data
+>   * @client: i2c client for this device
+> @@ -136,7 +140,7 @@ static int ad7150_read_event_config(struct iio_dev *indio_dev,
+>         if (ret < 0)
+>                 return ret;
+>
+> -       threshtype = (ret >> 5) & 0x03;
+> +       threshtype = FIELD_GET(AD7150_THRESHTYPE_MSK, ret);
+>         adaptive = !!(ret & 0x80);
 
-> There is one ok/not ok line per test and it may have a short
-> description of the test immediately after 'ok' or 'not ok'; this is
-> problematic because it wants the first thing you say about a test to
-> be after you know whether it passes or not.
+Why not also do something similar for the `adaptive` value ?
 
-Take a look at the output of our current tests, I think you might find
-it to be a bit more flexible than you think.
-
-Also, this isn't our standard, we picked it because we needed a standard
-that the tools of today already understand.  It might have issues and
-other problems, but we are not in the business of writing test output
-parsing tools, and we don't want to force everyone out there to write
-custom parsers.  We want them to be able to use the tools they already
-have so they can test the kernel, and to do so as easily as possible.
-
-thanks,
-
-greg k-h
+>
+>         switch (type) {
+> --
+> 2.20.1
+>
