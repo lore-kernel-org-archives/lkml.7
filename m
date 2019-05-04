@@ -2,201 +2,143 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE47C004C9
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC610C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568C9206E0
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9118B206E0
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NUD8K65g"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YU9EPwrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfEDASv (ORCPT
+        id S1726690AbfEDAUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 20:18:51 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:30240 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbfEDASu (ORCPT
+        Fri, 3 May 2019 20:20:53 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:38913 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfEDAUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 20:18:50 -0400
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x440IgwS017039;
-        Sat, 4 May 2019 09:18:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x440IgwS017039
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1556929123;
-        bh=c8nPhv768vX2rH2LIPU5db7QC5zJM6dP8fcOJeANzIo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NUD8K65gHLvJKZ6CorxTZ2gHXAsg4jk31iY2vxXdYRz129hRPJllcYEW45xFD+WkC
-         JfGn1+BvsJ3Dr6QoAN8FAnb5uQDnPUovVasiik2vtABKc7Hx/2O8+huNpWg7VFLr2J
-         7R5j8dsEaNe4rcYaHqcNybv3IVtCPxOImiQY3ZyMTNTccNrk0FBCoF/EZwh8lJxIfz
-         eqpulLbKEJyojKS7T5dKpaYp1Zl8UqhAAaSUldsTkRJaJehtQ3vW5CS9Dcy5xYbD8H
-         S4tv+ektpQ2De3kFBmcIVFfQDMTFywWiPytRB/kJ1/zZyPng1H3AUtUPtGjwzUbth7
-         ObNsKAU/9NhUQ==
-X-Nifty-SrcIP: [209.85.222.52]
-Received: by mail-ua1-f52.google.com with SMTP id s30so2634161uas.8;
-        Fri, 03 May 2019 17:18:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAX9SBTA0dcVs+af1LtlHRI8kRBvcvKBfkTkjDnnD9nId6E0PcOp
-        wRarXF3CUpDznq1AgWEjWjVyalmPsIgWNyTTGg8=
-X-Google-Smtp-Source: APXvYqzaIfuRwLQ1jVGvVN1riluv4VWuN/A9RqHOltcZzkIHvIML4BRzScARIh9ssE09iflt+rGQei9iEEC96FPpInc=
-X-Received: by 2002:ab0:2bd8:: with SMTP id s24mr6910953uar.121.1556929121882;
- Fri, 03 May 2019 17:18:41 -0700 (PDT)
+        Fri, 3 May 2019 20:20:52 -0400
+Received: by mail-yw1-f67.google.com with SMTP id x204so5694655ywg.6
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 17:20:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8u1LS+6EqPde0F+xVFBLFStY6rhD6RydqN/kGWzKQf0=;
+        b=YU9EPwrhmmXadyeroskbASOXBwkuSiVpsxM5r1tpL1zoFYO1+XqiRm2a8HecWWAg3I
+         bEct98nox4aXDJUtojb/NYqyUZ2z2prwd7BJf3DJH33w4na4cFh85CYofQWnvVRx+Iod
+         0rLrYWhcO5VjwnuJCMLlhljGSuT1p4svq95TJ9mHiumO2IlzByTI5loZX+kgdexEsUZ6
+         Dpsmpd0UL9DTn2EBBY3dOd8p4w/8MwdS5mRUtrtfueN/d/lbdfgRE4wgyu+1nwXUFcyu
+         4HSdcjoayXzP2/PvhBYDs9pMFZYAncBgEli0wIDFBEltwRQFZyNSN4a4tbidhjH9MA79
+         YjIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8u1LS+6EqPde0F+xVFBLFStY6rhD6RydqN/kGWzKQf0=;
+        b=Q0152DjIW0EU9IPY9pRUoVRCBZ/VzX/kcdf/Vov2Zth3SvwfnqRVbZzyw+e5cHunuD
+         lktzs5oCrlY1XKlGFNI1F+DK1jdAwpJBRX1We6fQoSTqUs2Rr7o6avwnWBpSPke8NbMf
+         bdzxpdCURvIrcnhM5KHfIhtiGOi35PvqqwWuwVYP9PhdSbK8sNALNFc8WBcsWu3PSZrZ
+         lDr8s/MjOV3AVQz3tOzWToAdrbYW5G+XFvOL6zn0PKgQtmCBsYgl+bvMH+RNmKlJQz8v
+         7dLXu1PqP96NhVWzp85vCiVPXJbtxyD03TvpzJi2SZSc1WT5FPqL6oxTY65AIUd0FEz+
+         Ra0g==
+X-Gm-Message-State: APjAAAX3TF/4IswXsCffCtOrSRHE/Cb0ij4BM0dBbIBNlwyis/uhNYBZ
+        JpG5b36KmamKZlj3K3lT49AS+2HNi4lQPrVtv+YdiA==
+X-Google-Smtp-Source: APXvYqxZ0MJdyv3RZ5UYVNcpudMiD1zPtDVQBqLz9kFWv+/GAVLknMFUquuDlVBi73oSm4fBY/9sovp3rLwLQ8Vtbnc=
+X-Received: by 2002:a81:5a0b:: with SMTP id o11mr9041234ywb.444.1556929251923;
+ Fri, 03 May 2019 17:20:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190503182459.159121-1-joel@joelfernandes.org>
-In-Reply-To: <20190503182459.159121-1-joel@joelfernandes.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 4 May 2019 09:18:06 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATRTqh_OJcQaWfcYYYqyZ-c0u1prD17LDYwDh18z2V31Q@mail.gmail.com>
-Message-ID: <CAK7LNATRTqh_OJcQaWfcYYYqyZ-c0u1prD17LDYwDh18z2V31Q@mail.gmail.com>
-Subject: Re: [PATCH] kheaders: Move from proc to sysfs
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        atish patra <atishp04@gmail.com>, bpf@vger.kernel.org,
-        Brendan Gregg <bgregg@netflix.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+References: <20190503233526.226272-1-dianders@chromium.org>
+In-Reply-To: <20190503233526.226272-1-dianders@chromium.org>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Fri, 3 May 2019 17:20:41 -0700
+Message-ID: <CABXOdTdsB82EGn_9ZTQCS2TfcNSR6Mq5J9WjGYbdrKOPsd-jzg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: block: Fix memory leak in blk-mq when cleaning up
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
         Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?UTF-8?Q?Micha=C5=82_Gregorczyk?= <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Ming Lei <ming.lei@redhat.com>, linux-mmc@vger.kernel.org,
+        Hannes Reinecke <hare@suse.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Omar Sandoval <osandov@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 4, 2019 at 3:27 AM Joel Fernandes (Google)
-<joel@joelfernandes.org> wrote:
+On Fri, May 3, 2019 at 4:35 PM Douglas Anderson <dianders@chromium.org> wrote:
 >
-> The kheaders archive consisting of the kernel headers used for compiling
-> bpf programs is in /proc. However there is concern that moving it here
-> will make it permanent. Let us move it to /sys/kernel as discussed [1].
+> If I run the following on rk3288-veyron-minnie (a 2GB machine)
 >
-> [1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
+>   cd /sys/bus/platform/drivers/dwmmc_rockchip
+>   for i in $(seq 1 3000); do
+>     echo "========================" $i
+>     echo ff0f0000.dwmmc > unbind
+>     sleep .5
+>     echo ff0f0000.dwmmc > bind
+>     while true; do
+>       if [ -e /dev/mmcblk2 ]; then
+>         break;
+>       fi
+>       sleep .1
+>     done
+>   done
 >
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Then I start OOMing somewhere between iteration 200 and 250.  Using
+> kmemleak, I see reports like:
+>
+> unreferenced object 0xe39c5580 (size 64):
+>   comm "kworker/1:0", pid 17, jiffies 4294821091 (age 96.952s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<ad19d10a>] __kmalloc+0x1ec/0x2dc
+>     [<a28614c3>] blk_mq_alloc_tag_set+0x27c/0x2bc
+>     [<0955ae01>] mmc_init_queue+0xa8/0x2a8
+>     [<5102b986>] mmc_blk_alloc_req+0xf8/0x2d4
+>     [<f1c2214f>] mmc_blk_probe+0x4a8/0x6c0
+>     [<0dfdd9d5>] mmc_bus_probe+0x24/0x28
+>
+> It's pretty clear that we're missing a call to blk_mq_free_tag_set().
+> Let's add it.
+>
+> Fixes: 81196976ed94 ("mmc: block: Add blk-mq support")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+
+Nice one.
+
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+
 > ---
-> This patch applies on top of the previous patch that was applied to the
-> driver tree:
-> https://lore.kernel.org/patchwork/patch/1067310/
 >
->  kernel/kheaders.c | 40 ++++++++++++++++------------------------
-
-
-Please rename CONFIG_IKHEADERS_PROC.
-
-Thanks.
-
-
-
-
->  1 file changed, 16 insertions(+), 24 deletions(-)
+>  drivers/mmc/core/queue.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/kernel/kheaders.c b/kernel/kheaders.c
-> index 70ae6052920d..6a16f8f6898d 100644
-> --- a/kernel/kheaders.c
-> +++ b/kernel/kheaders.c
-> @@ -8,9 +8,8 @@
+> diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+> index 7c364a9c4eeb..09071e13282e 100644
+> --- a/drivers/mmc/core/queue.c
+> +++ b/drivers/mmc/core/queue.c
+> @@ -480,6 +480,8 @@ void mmc_cleanup_queue(struct mmc_queue *mq)
+>          */
+>         flush_work(&mq->complete_work);
 >
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> -#include <linux/proc_fs.h>
-> +#include <linux/kobject.h>
->  #include <linux/init.h>
-> -#include <linux/uaccess.h>
->
->  /*
->   * Define kernel_headers_data and kernel_headers_data_end, within which the
-> @@ -31,39 +30,32 @@ extern char kernel_headers_data;
->  extern char kernel_headers_data_end;
->
->  static ssize_t
-> -ikheaders_read_current(struct file *file, char __user *buf,
-> -                     size_t len, loff_t *offset)
-> +ikheaders_read(struct file *file,  struct kobject *kobj,
-> +              struct bin_attribute *bin_attr,
-> +              char *buf, loff_t off, size_t len)
->  {
-> -       return simple_read_from_buffer(buf, len, offset,
-> -                                      &kernel_headers_data,
-> -                                      &kernel_headers_data_end -
-> -                                      &kernel_headers_data);
-> +       memcpy(buf, &kernel_headers_data + off, len);
-> +       return len;
+> +       blk_mq_free_tag_set(&mq->tag_set);
+> +
+>         mq->card = NULL;
 >  }
 >
-> -static const struct file_operations ikheaders_file_ops = {
-> -       .read = ikheaders_read_current,
-> -       .llseek = default_llseek,
-> +static struct bin_attribute kheaders_attr __ro_after_init = {
-> +       .attr = {
-> +               .name = "kheaders.tar.xz",
-> +               .mode = S_IRUGO,
-> +       },
-> +       .read = &ikheaders_read,
->  };
->
->  static int __init ikheaders_init(void)
->  {
-> -       struct proc_dir_entry *entry;
-> -
-> -       /* create the current headers file */
-> -       entry = proc_create("kheaders.tar.xz", S_IRUGO, NULL,
-> -                           &ikheaders_file_ops);
-> -       if (!entry)
-> -               return -ENOMEM;
-> -
-> -       proc_set_size(entry,
-> -                     &kernel_headers_data_end -
-> -                     &kernel_headers_data);
-> -       return 0;
-> +       kheaders_attr.size = (&kernel_headers_data_end -
-> +                             &kernel_headers_data);
-> +       return sysfs_create_bin_file(kernel_kobj, &kheaders_attr);
->  }
->
->  static void __exit ikheaders_cleanup(void)
->  {
-> -       remove_proc_entry("kheaders.tar.xz", NULL);
-> +       sysfs_remove_bin_file(kernel_kobj, &kheaders_attr);
->  }
->
->  module_init(ikheaders_init);
 > --
 > 2.21.0.1020.gf2820cf01a-goog
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+>
