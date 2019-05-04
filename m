@@ -2,134 +2,144 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4B3C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 19:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BD8C04AAA
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 20:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E49720652
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 19:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23CD02063F
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 20:12:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="QuR1yzxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfEDTou (ORCPT
+        id S1727321AbfEDUMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 15:44:50 -0400
-Received: from 0.ictbs.com ([203.137.112.168]:48400 "EHLO 0.ictbs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbfEDTot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 15:44:49 -0400
-Received: by hq.local (Postfix, from userid 1000)
-        id 4B53B66477; Sat,  4 May 2019 21:44:40 +0200 (CEST)
-Date:   Sat, 4 May 2019 21:44:40 +0200
-From:   Victor Bravo <1905@spmblk.com>
-To:     Arend Van Spriel <arend.vanspriel@broadcom.com>
-Cc:     Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: PROBLEM: brcmfmac's DMI-based fw file names break built-in fw
- loader
-Message-ID: <20190504194440.4zcxjrtj2aft3ka4@localhost>
-References: <20190504162633.ldrz2nqfocg55grb@localhost>
- <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Sat, 4 May 2019 16:12:13 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44126 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727037AbfEDUMM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 16:12:12 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d3so345691plj.11
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 13:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=NCMi/IJcY48aFW4si21DdOI0x27Xmxnd2GdXSGtj0KE=;
+        b=QuR1yzxQKn7DFRWWMR7fSBvuGvXauTjs+QWjPOOSysETTl7I7IUQZRZYJGQZEWrzXC
+         aXLuopskBKG1lhvC6mZrbZ19GZQbAXZxbgrHcEY7Ne2rv2yRv1+wyy9Aed2EFweFh6sT
+         MgUpM2KgnYL4er2RhJuziduNFgdJtQUuNY+rxGB6YYm4L5wZ1h2YrICNBMRWST/sIk1d
+         x9FS2IhTzzNlLOEXa4KJ5A+G6yffez6cK9ONx3kgBDi79QMtaQN7mE+Ead5KYOCSP/ew
+         B8BvOEnVYxCJoBIzbJDeiLf8mBt3Ri3eWcg7XWeNKx9f/9jOlgXQYd9q1O//WCtIlh13
+         V6Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=NCMi/IJcY48aFW4si21DdOI0x27Xmxnd2GdXSGtj0KE=;
+        b=S4Vl+VtW7aY8/KPZgtp/P+6868Ew+W6u6oMtltoT7vvj3pdhh32xVxZx84gkRYOpF/
+         BfQWTHFaGqCK7v1UaP/PvY/NtyvuPHWFcMjBoZAuy+V91kyer49m+JYHsQyCicofMOsM
+         kiMqs+HdZIfJAq0zjFYweee3oAOMwfCL3jkFezHNV1xsDVvzrZTJAdjceUmsbqqWr+rs
+         ndjJXaV4RMgwGSN0OtVSUXD6vqotCl5Tlbo7Jlw7hhW6yBulq8Tjn1jMdf86lKqmFStb
+         8R+YwHIjl88zUtJVq2/dUn3PCrwsYog5+w1lE1VflT34EQeH6eDVgpCbpzmNrFIJ/5OG
+         id0Q==
+X-Gm-Message-State: APjAAAUYzVd3NqEcFXZaRga2Lve7foz11jTdf9PSufe2c05t6+TIzBPy
+        PtvaenihsK6/kNMLCkFxKfyZ9A==
+X-Google-Smtp-Source: APXvYqxkMzmtMZymSQaZOjrq9gCEfLF9um4RJzYrrParpn8NStb9c8UxiLkvDWVFYtWVnpgI8AzCFg==
+X-Received: by 2002:a17:902:e293:: with SMTP id cf19mr21832986plb.151.1557000731668;
+        Sat, 04 May 2019 13:12:11 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b01f:7d2b:6939:d09e:b43f:2a80? ([2600:1010:b01f:7d2b:6939:d09e:b43f:2a80])
+        by smtp.gmail.com with ESMTPSA id c137sm8834253pfb.154.2019.05.04.13.12.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 May 2019 13:12:10 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <CAHk-=wjGNx8xcwg=7nE_0-nLQ_d4UALHvJ8O+TurbA25n8MyNg@mail.gmail.com>
+Date:   Sat, 4 May 2019 13:12:09 -0700
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <2BF1AE4B-8105-49F0-8B6A-AA3B11FD66FD@amacapital.net>
+References: <20190501202830.347656894@goodmis.org> <20190501203152.397154664@goodmis.org> <20190501232412.1196ef18@oasis.local.home> <20190502162133.GX2623@hirez.programming.kicks-ass.net> <CAHk-=wijZ-MD4g3zMJ9W2r=h8LUWneiu29OWuxZEoSfAF=0bhQ@mail.gmail.com> <20190502181811.GY2623@hirez.programming.kicks-ass.net> <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com> <20190502202146.GZ2623@hirez.programming.kicks-ass.net> <CAHk-=wh8bi5c_GkyjPtDAiaXaZRqtmhWs30usUvs4qK_F+c9tg@mail.gmail.com> <20190503152405.2d741af8@gandalf.local.home> <CAHk-=wiA-WbrFrDs-kOfJZMXy4zMo9-SZfk=7B-GfmBJ866naw@mail.gmail.com> <20190503184919.2b7ef242@gandalf.local.home> <CAHk-=wh2vPLvsGBi6JtmEYeqHxB5UpTzHDjY5JsWG=YR0Lypzw@mail.gmail.com> <20190504001756.17fad840@oasis.local.home> <CAHk-=wiuSFbv_rELND-BLWcP0GSZ0yF=xOAEcf61GE3bU9d=yg@mail.gmail.com> <CAHk-=wjGNx8xcwg=7nE_0-nLQ_d4UALHvJ8O+TurbA25n8MyNg@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 04, 2019 at 09:11:09PM +0200, Arend Van Spriel wrote:
-> + Hans, Luis
-> 
-> On 5/4/2019 6:26 PM, Victor Bravo wrote:
-> > The brcmfmac driver seems to have partially fixed problems which
-> > prevented it to be used in shared system/kernel images for multiple
-> > hardware by trying to load it's <config>.txt as
-> > <config>.<dmi_sys_vendor>.<dmi_product_name>.txt first and then
-> > falling back to <config>.txt. Real-life example:
-> > 
-> > brcmfmac mmc1:0001:1: Direct firmware load for brcm/brcmfmac43340-sdio.ASUSTeK COMPUTER INC.-T100HAN.txt failed with
-> > error -2
-> > brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac43340-sdio for chip
-> > BCM43340/2
-> > 
-> > Unfortunately this doesn't really help on systems which use static
-> > kernel with firmware blobs (and also text configuration files in case of
-> > brcmfmac) built-in using CONFIG_EXTRA_FIRMWARE, as CONFIG_EXTRA_FIRMWARE
-> > doesn't support spaces in file names - kernel build fails with
-> > 
-> > CONFIG_EXTRA_FIRMWARE="brcm/brcmfmac43340-sdio.bin brcm/brcmfmac43340-sdio.ASUSTeK COMPUTER INC.-T100HAN.txt"
-> > 
-> > for obvious reasons. So the only way here is to stay with good old
-> > brcmfmac43340-sdio.txt and support at most one brcmfmac-equipped machine
-> > per kernel image.
-> > 
-> > Please consider filtering the DMI strings and replacing spaces and
-> > possibly other invalid characters with underscores, and/or adding module
-> > parameter to allow passing the string from command line (using
-> > brcmfmac.tag=t100 or brcmfmac.board=t100 to make the module load
-> > brcmfmac43340-sdio.t100.txt seems nicer to me, and isn't prone to
-> > breaking when DMI strings change on BIOS update).
-> 
-> The intent of the DMI approach was to avoid end-users from passing module
-> parameters for this. As to fixing DMI string usage patches are welcome.
 
-Well I think I could also provide a patch to fix, this can be easily
-done by adding a string of allowed characters and then replacing
-unknown ones with underscores.
 
-> > My brief grep-based research also suggest that strings retrieved
-> > by dmi_get_system_info() are passed to firmware loader without any
-> > checks for special character, /../ etc. I'm not sure whether this is
-> > considered to be proper & safe use, but if it's not, it may also have
-> > some security implications, as it allows attacker with access to DMI
-> > strings (using root rights/other OS/BIOS/physical access) to mess
-> > with kernel space or secure boot.
-> 
-> Hmm. Attackers with that kind of access can do bad is a gazillion ways.
+> On May 4, 2019, at 11:59 AM, Linus Torvalds <torvalds@linux-foundation.org=
+> wrote:
+>=20
+> On Fri, May 3, 2019 at 10:08 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>=20
+>> I'll look at it tomorrow, but I think this actually makes unnecessary cha=
+nges.
+>>=20
+>> In particular, I think we could keep the existing entry code almost uncha=
+nged with this whole approach.
+>=20
+> So here's what I *think* should work. Note that I also removed your
+> test-case code, because it really didn't have a chance in hell of
+> working. Doing that
+>=20
+>        int3_emulate_call(regs, (unsigned long)&int3_magic);
+>=20
+> inside of int3_exception_notify() could not possibly be valid, since
+> int3_emulate_call() returns the new pt_regs that need to be used, and
+> throwing it away is clearly wrong.
+>=20
+> So you can't use a register_die_notifier() to try to intercept the
+> 'int3' error and then do it manually, it needs to be done by the
+> ftrace_int3_handler() code that actually returns the new regs, and
+> where do_kernel_int3() will then return it to the low-level handler.
 
-Agreed. It will be definitely easier to make filenames contain only safe
-characters than to discuss those ways.
+I hate register_die_notifier(), so I consider this a plus. I=E2=80=99ve occa=
+sionally considered removing the ability for the notifiers to skip normal pr=
+ocessing, because, as it stands, figuring out what actually happens in the t=
+rap handlers is almost impossible.
 
-> > I would also really appreciate not allowing future brcm (and other)
-> > drivers to leave staging area before they fully support =y.
-> 
-> Define fully support. At the time we moved into the wireless tree (almost a
-> decade ago) we did support =y. As such you could consider the DMI approach a
-> regression, but I find that a bit harsh to say. Hans made a honest attempt
-> and it is something that can be fixed. It can be you providing just that ;-)
+It generally looks sane to me.
 
-Well... I agree that the idea wasn't really complete ;).
+As an aside, is it even *possible* to get #BP from v8086 mode?  On a quick S=
+DM read, the INT3 instruction causes #GP if VM=3D1 and IOPL<3.  And, if we a=
+llow vm86() to have IOPL=3D3, we should just remove that ability. It=E2=80=99=
+s nuts.
 
-As for the patches, I also realized that the txt config file actually
-comes from EFI/BIOS, so it's quite possible that it may differ between
-BIOS versions. So I'm thinking of 3 patches here:
-
-  1) Character filtering as described above.
-
-  2) Adding bios_version next to board_type, and changing load order to
-
-    <config>.<dmi_sys_vendor>.<dmi_product_name>.<dmi_bios_version>.txt
-    <config>.<dmi_sys_vendor>.<dmi_product_name>.txt
-    <config>.txt
-
-  3) Adding command-line parameters to override these on problems.
-
-1) breaks backward compatibility, but the DMI code seems to be quite
-new so hopefully many people don't rely on it yet.
-
-2) & 3) are backward compatible.
-
-Regards,
-v.
+(We should maybe consider a config option for iopl() that defaults off. We=E2=
+=80=99ve supported ioperm() for a long, long time.)=
