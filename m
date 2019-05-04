@@ -5,65 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFF6C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DE4C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4153A20B7C
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF892075C
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 01:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="puSOgNxf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcFrJEoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfEDBTL (ORCPT
+        id S1727416AbfEDBTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 21:19:11 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35536 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727244AbfEDBSu (ORCPT
+        Fri, 3 May 2019 21:19:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53752 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfEDBSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 21:18:50 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h15so4214200wrb.2;
-        Fri, 03 May 2019 18:18:48 -0700 (PDT)
+        Fri, 3 May 2019 21:18:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q15so9033396wmf.3;
+        Fri, 03 May 2019 18:18:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=u8pB9pyoxRn1MnVVmPZp2ReBr/rRxljvZbKQ55zY18M=;
-        b=puSOgNxfxKKuMeEsG5MDg4++K+r2Y/aFrzVdHPxyA+UJtH+hMtbrtq4sK50pR12G/d
-         QvYLiEgzRpM2L2KLMvDlxs2GNhieeqVPGljM7BTV5F147XOpE3j9Vqv6vJ8aNKQ0LXIx
-         aGzZRuwuKrAZN7vUAPbLh8uPBaH47iMtEXuwB0tws5JkHFOdJUDBOJ6IGzkfRgblKSzc
-         09YLegJljHf5Hw4dp/KJAtKa5u4fKEi7cXNZ0OjCpFIfjEMC95O5y5DIVWUV6D3JONyM
-         m/qSNcjJvnTYcRMgVUgIKo8QxIXIsd8AxMncFwowxdwXvEEemaiULgfooY5/pA3yrzGp
-         0Hzw==
+        bh=nzBWUxtxpVGUsJl9dQFkvbFimymw5p/mAoy1qHkZo4I=;
+        b=bcFrJEoUVBbonFhLf0suyCZWAZeV8Ao/Yjf/7FIBNvhvXVI5BBdZSFfeiLtEvK1QCw
+         KrouoeiFsdfEynYBdgk8dPKL3TjVyeZ9JvTW8yG90PrWlUIu3Aa+aH3jffWcEQt/Twql
+         LU09550MdN8hkNmVysHhpoK0gedgy42AYg1/KztmIR49vp4dQx2Wke51mWr5RQjQd8kb
+         Xwo1Jk/oKzj+6oWMT4PqOXQfKR9g0/AxJDZ1k7NGPEuL5jAvhrsCo10KFyoIHm5OJX7P
+         jCJyj9fuqxmHFTXRhfHh2jHnx032VEMGfuAeYKkjjk1z0EBPUV+d8mEbiUNMjuxOI82n
+         HgRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=u8pB9pyoxRn1MnVVmPZp2ReBr/rRxljvZbKQ55zY18M=;
-        b=mnFTBD1XXdC6jR/8q0uedUlHjChNCWidXGud1zKERvnj35gWgYCC1yHVZ2jMtwQwOg
-         7ekkL/gKOnIjqe2vxYGUMD+7Q1SVbFTVkpOIe8vCFXySb96jCD/Cg9pPovHYHAaC5JOR
-         Fiv+MWlPbkgA0SYl//WWmiZAzqioC4G5HQaJgI9i1Amv9LQ9b260pMvP+KZwruqjem6C
-         5ihlA5imi6LzsjmvDe6ZeEaJocRYkqHv/i08t+7uuyJd+tqgQ+uI020dTaV7qOjMJzKf
-         90vkLENWO9WhN7jHvjijTU6k8LxFmCrpGfByZL9IWtVhaGkwxJspUyFBGrU583pIJwaU
-         lJ3g==
-X-Gm-Message-State: APjAAAUgQiePl5hOByoj4fvEa/FYBRKXOlAZG6FTxBKUnr10tgGgbvMD
-        zLI4xZL6g1Z5VfgI1h9tLHQ=
-X-Google-Smtp-Source: APXvYqzCAHakxHgO/sz8j/bNwJFtGhGj0RwBJEtIlHqwtI/NXYph8HunYTw34RkoyIGfOpinc4Oq1w==
-X-Received: by 2002:adf:dc08:: with SMTP id t8mr8740602wri.220.1556932727468;
-        Fri, 03 May 2019 18:18:47 -0700 (PDT)
+        bh=nzBWUxtxpVGUsJl9dQFkvbFimymw5p/mAoy1qHkZo4I=;
+        b=ClXkN+OaWZI1vbU/3W10gipN3g1FDEybvHsOfYvZKlFRPGmZEe6NvLKK4NWFtZMndp
+         IrMDM3kwt92+Jvl8pAAPahf1ufaTFYHofwBzPj8RV7Up7EUvVOdbp9+bzB+TdCdum/ly
+         4ez0TRbgsekN1xLtOY01SwovDZDRZU4iTA9EeAW3R7G1acy8c7DMmtqgTOO95KMgZt3G
+         seAZxNPZbQhTuETEwEOizA1fDpg19uh62mctIV4UfWgHfg5tF6jPoWRG3TGl2yiRYoKC
+         gOloJy2Cz/xcoryQ0R9l2p0KWZULjnYND8e1Eyq7Fcy37vCvvXdw0aOD/VKxsQTNRyoa
+         TpHA==
+X-Gm-Message-State: APjAAAWQJFV2sB+9rI9A+pmS5WU6vquUh3GanDJzsf3S/4vhH0f9WNOp
+        8r+47ar0iGK1rzuKDJe224YHZqCL8ow=
+X-Google-Smtp-Source: APXvYqyT38JYCKSu65Hp6ZClQ2j7L80AKnhZo3E0w6Di9uuGhSifbcqt2aIhcqXmZaQkLMdhuB8QAQ==
+X-Received: by 2002:a05:600c:2208:: with SMTP id z8mr8060782wml.89.1556932724530;
+        Fri, 03 May 2019 18:18:44 -0700 (PDT)
 Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id t1sm3937639wro.34.2019.05.03.18.18.46
+        by smtp.gmail.com with ESMTPSA id t1sm3937639wro.34.2019.05.03.18.18.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 May 2019 18:18:47 -0700 (PDT)
+        Fri, 03 May 2019 18:18:43 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     f.fainelli@gmail.com, vivien.didelot@gmail.com, andrew@lunn.ch,
         davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH net-next 8/9] net: dsa: sja1105: Add support for Spanning Tree Protocol
-Date:   Sat,  4 May 2019 04:18:25 +0300
-Message-Id: <20190504011826.30477-9-olteanv@gmail.com>
+Subject: [PATCH net-next 5/9] net: dsa: Add support for deferred xmit
+Date:   Sat,  4 May 2019 04:18:22 +0300
+Message-Id: <20190504011826.30477-6-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190504011826.30477-1-olteanv@gmail.com>
 References: <20190504011826.30477-1-olteanv@gmail.com>
@@ -72,234 +71,196 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While not explicitly documented as supported in UM10944, compliance with
-the STP states can be obtained by manipulating 3 settings at the
-(per-port) MAC config level: dynamic learning, inhibiting reception of
-regular traffic, and inhibiting transmission of regular traffic.
+Some hardware needs to take some convincing work in order to receive
+frames on the CPU port (such as the sja1105 which takes temporary L2
+forwarding rules over SPI that last for a single frame). Such work needs
+a sleepable context, and because the regular .ndo_start_xmit is atomic,
+this cannot be done in the tagger. So introduce a generic DSA mechanism
+that sets up a transmit skb queue and a workqueue for deferred
+transmission.
 
-In all these modes, transmission and reception of special BPDU frames
-from the stack is still enabled (not inhibited by the MAC-level
-settings).
+The new driver callback (.port_deferred_xmit) is in dsa_switch and not
+in the tagger because the operations that require sleeping typically
+also involve interacting with the hardware, and not simply skb
+manipulations. Therefore having it there simplifies the structure a bit
+and makes it unnecessary to export functions from the driver to the
+tagger.
 
-On ingress, BPDUs are classified by the MAC filter as link-local
-(01-80-C2-00-00-00) and forwarded to the CPU port.  This mechanism works
-under all conditions (even without the custom 802.1Q tagging) because
-the switch hardware inserts the source port and switch ID into bytes 4
-and 5 of the MAC-filtered frames. Then the DSA .rcv handler needs to put
-back zeroes into the MAC address after decoding the source port
-information.
+The driver is responsible of calling dsa_enqueue_skb which transfers it
+to the master netdevice. This is so that it has a chance of performing
+some more work afterwards, such as cleanup or TX timestamping.
 
-On egress, BPDUs are transmitted using management routes from the xmit
-worker thread. Again this does not require switch tagging, as the switch
-port is programmed through SPI to hold a temporary (single-fire) route
-for a frame with the programmed destination MAC (01-80-C2-00-00-00).
+To tell DSA that skb xmit deferral is required, I have thought about
+changing the return type of the tagger .xmit from struct sk_buff * into
+a enum dsa_tx_t that could potentially encode a DSA_XMIT_DEFER value.
 
-STP is activated using the following commands and was tested by
-connecting two front-panel ports together and noticing that switching
-loops were prevented (one port remains in the blocking state):
-
-$ ip link add name br0 type bridge stp_state 1 && ip link set br0 up
-$ for eth in $(ls /sys/devices/platform/soc/2100000.spi/spi_master/spi0/spi0.1/net/);
-  do ip link set ${eth} master br0 && ip link set ${eth} up; done
+But the trailer tagger is reallocating every skb on xmit and therefore
+making a valid use of the pointer return value. So instead of reworking
+the API in complicated ways, right now a boolean property in the newly
+introduced DSA_SKB_CB is set.
 
 Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- drivers/net/dsa/sja1105/sja1105_main.c | 108 ++++++++++++++++++++++---
- 1 file changed, 99 insertions(+), 9 deletions(-)
+ include/net/dsa.h  | 12 +++++++++
+ net/dsa/dsa_priv.h |  2 ++
+ net/dsa/slave.c    | 61 +++++++++++++++++++++++++++++++++++++---------
+ 3 files changed, 63 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-index 785bb42cb993..50ff625c85d6 100644
---- a/drivers/net/dsa/sja1105/sja1105_main.c
-+++ b/drivers/net/dsa/sja1105/sja1105_main.c
-@@ -92,8 +92,10 @@ static int sja1105_init_mac_settings(struct sja1105_private *priv)
- 		.drpuntag = false,
- 		/* Don't retag 802.1p (VID 0) traffic with the pvid */
- 		.retag = false,
--		/* Enable learning and I/O on user ports by default. */
--		.dyn_learn = true,
-+		/* Disable learning and I/O on user ports by default -
-+		 * STP will enable it.
-+		 */
-+		.dyn_learn = false,
- 		.egress = false,
- 		.ingress = false,
- 	};
-@@ -119,8 +121,17 @@ static int sja1105_init_mac_settings(struct sja1105_private *priv)
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index 8f5fcec30b13..936d53139865 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -85,6 +85,7 @@ struct dsa_device_ops {
  
- 	mac = table->entries;
+ struct dsa_skb_cb {
+ 	struct sk_buff *clone;
++	bool deferred_xmit;
+ };
  
--	for (i = 0; i < SJA1105_NUM_PORTS; i++)
-+	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
- 		mac[i] = default_mac;
-+		if (i == dsa_upstream_port(priv->ds, i)) {
-+			/* STP doesn't get called for CPU port, so we need to
-+			 * set the I/O parameters statically.
-+			 */
-+			mac[i].dyn_learn = true;
-+			mac[i].ingress = true;
-+			mac[i].egress = true;
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -655,12 +666,14 @@ static sja1105_speed_t sja1105_get_speed_cfg(unsigned int speed_mbps)
-  * for a specific port.
-  *
-  * @speed_mbps: If 0, leave the speed unchanged, else adapt MAC to PHY speed.
-- * @enabled: Manage Rx and Tx settings for this port. Overrides the static
-- *	     configuration settings.
-+ * @enabled: Manage Rx and Tx settings for this port. If false, overrides the
-+ *	     settings from the STP state, but not persistently (does not
-+ *	     overwrite the static MAC info for this port).
-  */
- static int sja1105_adjust_port_config(struct sja1105_private *priv, int port,
- 				      int speed_mbps, bool enabled)
- {
-+	struct sja1105_mac_config_entry dyn_mac;
- 	struct sja1105_xmii_params_entry *mii;
- 	struct sja1105_mac_config_entry *mac;
- 	struct device *dev = priv->ds->dev;
-@@ -693,12 +706,13 @@ static int sja1105_adjust_port_config(struct sja1105_private *priv, int port,
- 	 * the code common, we'll use the static configuration tables as a
- 	 * reasonable approximation for both E/T and P/Q/R/S.
+ struct __dsa_skb_cb {
+@@ -202,6 +203,10 @@ struct dsa_port {
+ 	struct net_device	*bridge_dev;
+ 	struct devlink_port	devlink_port;
+ 	struct phylink		*pl;
++
++	struct work_struct	xmit_work;
++	struct sk_buff_head	xmit_queue;
++
+ 	/*
+ 	 * Original copy of the master netdev ethtool_ops
  	 */
--	mac[port].ingress = enabled;
--	mac[port].egress  = enabled;
-+	dyn_mac = mac[port];
-+	dyn_mac.ingress = enabled && mac[port].ingress;
-+	dyn_mac.egress  = enabled && mac[port].egress;
+@@ -536,6 +541,12 @@ struct dsa_switch_ops {
+ 				 struct sk_buff *clone, unsigned int type);
+ 	bool	(*port_rxtstamp)(struct dsa_switch *ds, int port,
+ 				 struct sk_buff *skb, unsigned int type);
++
++	/*
++	 * Deferred frame Tx
++	 */
++	netdev_tx_t (*port_deferred_xmit)(struct dsa_switch *ds, int port,
++					  struct sk_buff *skb);
+ };
  
- 	/* Write to the dynamic reconfiguration tables */
- 	rc = sja1105_dynamic_config_write(priv, BLK_IDX_MAC_CONFIG,
--					  port, &mac[port], true);
-+					  port, &dyn_mac, true);
- 	if (rc < 0) {
- 		dev_err(dev, "Failed to write MAC config: %d\n", rc);
- 		return rc;
-@@ -986,6 +1000,50 @@ static int sja1105_bridge_member(struct dsa_switch *ds, int port,
- 					    port, &l2_fwd[port], true);
+ struct dsa_switch_driver {
+@@ -631,6 +642,7 @@ static inline int call_dsa_notifiers(unsigned long val, struct net_device *dev,
+ #define BRCM_TAG_GET_QUEUE(v)		((v) & 0xff)
+ 
+ 
++netdev_tx_t dsa_enqueue_skb(struct sk_buff *skb, struct net_device *dev);
+ int dsa_port_get_phy_strings(struct dsa_port *dp, uint8_t *data);
+ int dsa_port_get_ethtool_phy_stats(struct dsa_port *dp, uint64_t *data);
+ int dsa_port_get_phy_sset_count(struct dsa_port *dp);
+diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
+index b434f5ff55ab..8f1222324646 100644
+--- a/net/dsa/dsa_priv.h
++++ b/net/dsa/dsa_priv.h
+@@ -174,6 +174,8 @@ int dsa_slave_resume(struct net_device *slave_dev);
+ int dsa_slave_register_notifier(void);
+ void dsa_slave_unregister_notifier(void);
+ 
++void *dsa_defer_xmit(struct sk_buff *skb, struct net_device *dev);
++
+ static inline struct dsa_port *dsa_slave_to_port(const struct net_device *dev)
+ {
+ 	struct dsa_slave_priv *p = netdev_priv(dev);
+diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+index 8ad9bf957da1..cfb8cba6458c 100644
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -120,6 +120,9 @@ static int dsa_slave_close(struct net_device *dev)
+ 	struct net_device *master = dsa_slave_to_master(dev);
+ 	struct dsa_port *dp = dsa_slave_to_port(dev);
+ 
++	cancel_work_sync(&dp->xmit_work);
++	skb_queue_purge(&dp->xmit_queue);
++
+ 	phylink_stop(dp->pl);
+ 
+ 	dsa_port_disable(dp);
+@@ -430,6 +433,24 @@ static void dsa_skb_tx_timestamp(struct dsa_slave_priv *p,
+ 	kfree_skb(clone);
  }
  
-+static void sja1105_bridge_stp_state_set(struct dsa_switch *ds, int port,
-+					 u8 state)
++netdev_tx_t dsa_enqueue_skb(struct sk_buff *skb, struct net_device *dev)
 +{
-+	struct sja1105_private *priv = ds->priv;
-+	struct sja1105_mac_config_entry *mac;
++	/* SKB for netpoll still need to be mangled with the protocol-specific
++	 * tag to be successfully transmitted
++	 */
++	if (unlikely(netpoll_tx_running(dev)))
++		return dsa_slave_netpoll_send_skb(dev, skb);
 +
-+	mac = priv->static_config.tables[BLK_IDX_MAC_CONFIG].entries;
++	/* Queue the SKB for transmission on the parent interface, but
++	 * do not modify its EtherType
++	 */
++	skb->dev = dsa_slave_to_master(dev);
++	dev_queue_xmit(skb);
 +
-+	switch (state) {
-+	case BR_STATE_DISABLED:
-+	case BR_STATE_BLOCKING:
-+		/* From UM10944 description of DRPDTAG (why put this there?):
-+		 * "Management traffic flows to the port regardless of the state
-+		 * of the INGRESS flag". So BPDUs are still be allowed to pass.
-+		 * At the moment no difference between DISABLED and BLOCKING.
-+		 */
-+		mac[port].ingress   = false;
-+		mac[port].egress    = false;
-+		mac[port].dyn_learn = false;
-+		break;
-+	case BR_STATE_LISTENING:
-+		mac[port].ingress   = true;
-+		mac[port].egress    = false;
-+		mac[port].dyn_learn = false;
-+		break;
-+	case BR_STATE_LEARNING:
-+		mac[port].ingress   = true;
-+		mac[port].egress    = false;
-+		mac[port].dyn_learn = true;
-+		break;
-+	case BR_STATE_FORWARDING:
-+		mac[port].ingress   = true;
-+		mac[port].egress    = true;
-+		mac[port].dyn_learn = true;
-+		break;
-+	default:
-+		dev_err(ds->dev, "invalid STP state: %d\n", state);
-+		return;
-+	}
-+
-+	sja1105_dynamic_config_write(priv, BLK_IDX_MAC_CONFIG, port,
-+				     &mac[port], true);
++	return NETDEV_TX_OK;
 +}
++EXPORT_SYMBOL_GPL(dsa_enqueue_skb);
 +
- static int sja1105_bridge_join(struct dsa_switch *ds, int port,
- 			       struct net_device *br)
+ static netdev_tx_t dsa_slave_xmit(struct sk_buff *skb, struct net_device *dev)
  {
-@@ -998,6 +1056,23 @@ static void sja1105_bridge_leave(struct dsa_switch *ds, int port,
- 	sja1105_bridge_member(ds, port, br, false);
- }
- 
-+static u8 sja1105_stp_state_get(struct sja1105_private *priv, int port)
-+{
-+	struct sja1105_mac_config_entry *mac;
-+
-+	mac = priv->static_config.tables[BLK_IDX_MAC_CONFIG].entries;
-+
-+	if (!mac[port].ingress && !mac[port].egress && !mac[port].dyn_learn)
-+		return BR_STATE_BLOCKING;
-+	if (mac[port].ingress && !mac[port].egress && !mac[port].dyn_learn)
-+		return BR_STATE_LISTENING;
-+	if (mac[port].ingress && !mac[port].egress && mac[port].dyn_learn)
-+		return BR_STATE_LEARNING;
-+	if (mac[port].ingress && mac[port].egress && mac[port].dyn_learn)
-+		return BR_STATE_FORWARDING;
-+	return -EINVAL;
-+}
-+
- /* For situations where we need to change a setting at runtime that is only
-  * available through the static configuration, resetting the switch in order
-  * to upload the new static config is unavoidable. Back up the settings we
-@@ -1008,16 +1083,27 @@ static int sja1105_static_config_reload(struct sja1105_private *priv)
- {
- 	struct sja1105_mac_config_entry *mac;
- 	int speed_mbps[SJA1105_NUM_PORTS];
-+	u8 stp_state[SJA1105_NUM_PORTS];
- 	int rc, i;
- 
- 	mac = priv->static_config.tables[BLK_IDX_MAC_CONFIG].entries;
- 
- 	/* Back up settings changed by sja1105_adjust_port_config and
--	 * and restore their defaults.
-+	 * sja1105_bridge_stp_state_set and restore their defaults.
+ 	struct dsa_slave_priv *p = netdev_priv(dev);
+@@ -452,23 +473,37 @@ static netdev_tx_t dsa_slave_xmit(struct sk_buff *skb, struct net_device *dev)
  	 */
- 	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
- 		speed_mbps[i] = sja1105_speed[mac[i].speed];
- 		mac[i].speed = SJA1105_SPEED_AUTO;
-+		if (i == dsa_upstream_port(priv->ds, i)) {
-+			mac[i].ingress = true;
-+			mac[i].egress = true;
-+			mac[i].dyn_learn = true;
-+		} else {
-+			stp_state[i] = sja1105_stp_state_get(priv, i);
-+			mac[i].ingress = false;
-+			mac[i].egress = false;
-+			mac[i].dyn_learn = false;
-+		}
+ 	nskb = p->xmit(skb, dev);
+ 	if (!nskb) {
+-		kfree_skb(skb);
++		if (!DSA_SKB_CB(skb)->deferred_xmit)
++			kfree_skb(skb);
+ 		return NETDEV_TX_OK;
  	}
  
- 	/* Reset switch and send updated static configuration */
-@@ -1036,6 +1122,9 @@ static int sja1105_static_config_reload(struct sja1105_private *priv)
- 	for (i = 0; i < SJA1105_NUM_PORTS; i++) {
- 		bool enabled = (speed_mbps[i] != 0);
+-	/* SKB for netpoll still need to be mangled with the protocol-specific
+-	 * tag to be successfully transmitted
+-	 */
+-	if (unlikely(netpoll_tx_running(dev)))
+-		return dsa_slave_netpoll_send_skb(dev, nskb);
++	return dsa_enqueue_skb(nskb, dev);
++}
  
-+		if (i != dsa_upstream_port(priv->ds, i))
-+			sja1105_bridge_stp_state_set(priv->ds, i, stp_state[i]);
+-	/* Queue the SKB for transmission on the parent interface, but
+-	 * do not modify its EtherType
+-	 */
+-	nskb->dev = dsa_slave_to_master(dev);
+-	dev_queue_xmit(nskb);
++void *dsa_defer_xmit(struct sk_buff *skb, struct net_device *dev)
++{
++	struct dsa_port *dp = dsa_slave_to_port(dev);
+ 
+-	return NETDEV_TX_OK;
++	DSA_SKB_CB(skb)->deferred_xmit = true;
 +
- 		rc = sja1105_adjust_port_config(priv, i, speed_mbps[i],
- 						enabled);
- 		if (rc < 0)
-@@ -1433,6 +1522,7 @@ static const struct dsa_switch_ops sja1105_switch_ops = {
- 	.port_fdb_del		= sja1105_fdb_del,
- 	.port_bridge_join	= sja1105_bridge_join,
- 	.port_bridge_leave	= sja1105_bridge_leave,
-+	.port_stp_state_set	= sja1105_bridge_stp_state_set,
- 	.port_vlan_prepare	= sja1105_vlan_prepare,
- 	.port_vlan_filtering	= sja1105_vlan_filtering,
- 	.port_vlan_add		= sja1105_vlan_add,
++	skb_queue_tail(&dp->xmit_queue, skb);
++	schedule_work(&dp->xmit_work);
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(dsa_defer_xmit);
++
++static void dsa_port_xmit_work(struct work_struct *work)
++{
++	struct dsa_port *dp = container_of(work, struct dsa_port, xmit_work);
++	struct dsa_switch *ds = dp->ds;
++	struct sk_buff *skb;
++
++	if (unlikely(!ds->ops->port_deferred_xmit))
++		return;
++
++	while ((skb = skb_dequeue(&dp->xmit_queue)) != NULL)
++		ds->ops->port_deferred_xmit(ds, dp->index, skb);
+ }
+ 
+ /* ethtool operations *******************************************************/
+@@ -1407,6 +1442,8 @@ int dsa_slave_create(struct dsa_port *port)
+ 	}
+ 	p->dp = port;
+ 	INIT_LIST_HEAD(&p->mall_tc_list);
++	INIT_WORK(&port->xmit_work, dsa_port_xmit_work);
++	skb_queue_head_init(&port->xmit_queue);
+ 	p->xmit = cpu_dp->tag_ops->xmit;
+ 	port->slave = slave_dev;
+ 
 -- 
 2.17.1
 
