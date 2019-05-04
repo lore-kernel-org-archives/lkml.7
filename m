@@ -2,115 +2,138 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DF2C46460
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74599C46470
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58D22075E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:46:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J8SSYCiq"
+	by mail.kernel.org (Postfix) with ESMTP id 4461B2075E
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 00:47:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556930874;
+	bh=mzMYKs3hM6NSOSBp7bZILFWpJ57xCdHq9A7xdjtVNCM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=de0NN5STjHslTWSjwACGYOEoB+5JNNnto4cBhsRlzkNMFjuyCXAvWntOGEX6ZeoV4
+	 LHOt40eoiVNxqShXpkcXnX4vT6UacQ5MK4ef2PPA/Q+dof90YXkKCXxTfwOppN0etF
+	 v7zMVAy9d5nlRs3TCyL8klSUX+FmtfIHtOOMHHMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfEDAqT (ORCPT
+        id S1726776AbfEDArx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 May 2019 20:46:19 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55983 "EHLO
+        Fri, 3 May 2019 20:47:53 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55099 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfEDAqT (ORCPT
+        with ESMTP id S1726041AbfEDArx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 May 2019 20:46:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y2so8669734wmi.5;
-        Fri, 03 May 2019 17:46:17 -0700 (PDT)
+        Fri, 3 May 2019 20:47:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id b10so9018058wmj.4;
+        Fri, 03 May 2019 17:47:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=T1a5j4wQOMQ4OWB49dqiWbDIfmn+ssi4ipxGaHFRYmU=;
-        b=J8SSYCiqRozdI7bSGvGOYhm1x7ax0w1b7LaVJmoQVUj+4hhgjbD9miaTBZ5Q+jvmeq
-         fpw8ctvkhxGct9JcLtKw3McSO+cNxEPuDf8OCF/GoeI6dgl6pJvuAH3p6VKrsp9QX8s/
-         ieLzkHQWxnxeDWyBbjJMTPJNlvEvglCT3Lo3wJBCpy21Ir5cChJjOpcEHdh440djHoIt
-         1QDVmQ9qbrQBRflEoFQ7c+wWDZD0dV8pCBu9ngRMao/XS6Y+ROcBIuUDC5+gTbUNj1nC
-         yEG+zX832CoZ2CEc0qP8vUEm7J9L/F+ZQADT/BT5IKeEcNVf8SyPTYSknsCV4SA6uISs
-         3CLQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+RUUwZtfXQ6xT1Hl/GMU6GnIUFgYiZSHQrHKa24Cz/8=;
+        b=e9jyjmpD8fiiYb49IxcHxpChjnbrt1GkXmGxwB1yqkxqqVlETUfPgyoZF8OLyj8Vlg
+         TKU5W4H1geDqj7jHrt6evWTUgDGUX0won4Lwepx20VYfP/p8znKpo19B9ccdU4NqOfk4
+         htvFT2oqzAo5G+bqmXBiY74Rq0y/8JgentxiMLcK5adNQH4wC/OzHa5bvQKENmpbrZR8
+         DGpH5hMMBDSGlHqRwQCvasbq4AtHAsMqZpi9zeMET3SEXEDs8MZq3wgzcXRhzHSyGBpq
+         Ov0xyP8imrn2hjPKGe1Tm3pUi3xozie3c/EKMviGvs94DdVAApEGMcs5QiSPBuVInWw5
+         cUTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=T1a5j4wQOMQ4OWB49dqiWbDIfmn+ssi4ipxGaHFRYmU=;
-        b=PsM6nnRHjRACSoZpVrKZEw+n3KByh0R8VqgIPnvPwOJiXFtsfcXuplMLhTBmPGTOI3
-         ed5D5ejrQphlMhWsNXc5K/gGgttSEAfzI05wrVpNkbAeLRz2kKqW8x8ZkuiaoNLr++xC
-         L1hFHt1c2YgypiL0RSzRJuRG69k7uRv7F6vKqnQPTAljGNLcGjIjzBXgvEejWiMSj5dG
-         tQSXjklaj9b+veYtrhNJJCfETpOIldxeaU0zZFI6HI839ejIjB3D1SLCAysk8EuGDZ4x
-         7nWXjSExO5hQ9dIwgQHmTR1QY0V2cse9dmkcBjBttJ2p9LTEkjkSaeVrXi/qj5QCWGft
-         VcLg==
-X-Gm-Message-State: APjAAAXL7XamNCbVwaF5bMA69pyuJOqZaB39xHafcyf/o6UbAYk3Rt3T
-        fWA4xLKtKOyjAf872UUI6ac=
-X-Google-Smtp-Source: APXvYqx3TIhVvijrJC3CKiX/ezPH1vUd+L8XwrYGDTC+bcLqV8SpuMTT8tYKf7mYCbmo63u5XCOdLA==
-X-Received: by 2002:a1c:1a90:: with SMTP id a138mr8239064wma.81.1556930776662;
-        Fri, 03 May 2019 17:46:16 -0700 (PDT)
-Received: from localhost.localdomain (ipb218f40a.dynamic.kabel-deutschland.de. [178.24.244.10])
-        by smtp.gmail.com with ESMTPSA id b11sm5979161wmh.29.2019.05.03.17.46.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 03 May 2019 17:46:16 -0700 (PDT)
-From:   Eugeniu Rosca <roscaeugeniu@gmail.com>
-X-Google-Original-From: Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "George G . Davis" <george_davis@mentor.com>,
-        Andy Lowe <andy_lowe@mentor.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: [PATCH 6/6] Revert "arm64: dts: renesas: r8a77995: add DMA for SCIF2"
-Date:   Sat,  4 May 2019 02:42:58 +0200
-Message-Id: <20190504004258.23574-7-erosca@de.adit-jv.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190504004258.23574-1-erosca@de.adit-jv.com>
-References: <20190504004258.23574-1-erosca@de.adit-jv.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+RUUwZtfXQ6xT1Hl/GMU6GnIUFgYiZSHQrHKa24Cz/8=;
+        b=c/9a//Dj/6wyitwDni17HA1MpodR5f7D5TzRIA3Y+86q5AimLHPxIfZiUxvho3ZbeH
+         MBpL//w8k4JM1xNCPnccZimXobPT6WJEWutk4+KSxItTOcQlKNB0HfKrihlzZiBcCSwX
+         k+sB8epLo+/4yLQjCTWK6SJjcIjXumTx1Nmnq4S4bvGEPPTgeHZDE0C/Ov+oVG3b5mIs
+         OLZ1h/K0Si1zmongVzwvYP47n/mYStYzwl2rnL+BoY9ro9JyjClCMcnEOZPfrE3nxuno
+         P40fi6wklOBjm7eJO6dTp+RIqQQSt0g12AwhBcjMFYQIO6+aQ7U+iXAAGsnaZBqsvBSK
+         99FA==
+X-Gm-Message-State: APjAAAUDsaKij/9HaSF/WOxarqGm+mRdvt4/7VNqiw4/hS7YuyGMzLk0
+        MUyX22d4jIAP7fqgEKSErUg=
+X-Google-Smtp-Source: APXvYqz0+T8y6x0T9meXdQkJNwiqY/hDY+0VfBJ31nL1K7ogZV8XxypLDM0xmr9I9Hgakjqvgu4rng==
+X-Received: by 2002:a7b:ce84:: with SMTP id q4mr8590958wmj.41.1556930870237;
+        Fri, 03 May 2019 17:47:50 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id n17sm3078515wrw.77.2019.05.03.17.47.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 03 May 2019 17:47:49 -0700 (PDT)
+Date:   Sat, 4 May 2019 02:47:47 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        stable@vger.kernel.org, Jiri Kosina <jikos@jikos.cz>
+Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
+ export
+Message-ID: <20190504004747.GA107909@gmail.com>
+References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>
+ <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>
+ <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit af2ea3df851ffa68ad07ff59d4dabadbf33b45ef.
 
-Both empirically and based on the existing documentation, it looks like
-SCIF2 does not support DMA. Let's disable it. Full reasoning is given in
-commit ("Revert "arm64: dts: renesas: r8a7796: Enable DMA for SCIF2"").
+* Jiri Kosina <jikos@kernel.org> wrote:
 
-Fixes: af2ea3df851ffa ("arm64: dts: renesas: r8a77995: add DMA for SCIF2")
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
- arch/arm64/boot/dts/renesas/r8a77995.dtsi | 3 ---
- 1 file changed, 3 deletions(-)
+> On Thu, 2 May 2019, Sebastian Andrzej Siewior wrote:
+> 
+> > Please don't start this. We have everything _GPL that is used for FPU
+> > related code and only a few functions are exported because KVM needs it.
+> 
+> That's not completely true. There are a lot of static inlines out there, 
+> which basically made it possible for external modules to use FPU (in some 
+> way) when they had kernel_fpu_[begin|end]() available.
+> 
+> I personally don't care about ZFS a tiny little bit; but in general, the 
+> current situation with _GPL and non-_GPL exports is simply not nice. It's 
+> not really about licensing (despite the name), it's about 'internal vs 
+> external', which noone is probably able to define properly.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index 5bf3af246e14..bd3ac5d00b2e 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -740,9 +740,6 @@
- 				 <&cpg CPG_CORE R8A77995_CLK_S3D1C>,
- 				 <&scif_clk>;
- 			clock-names = "fck", "brg_int", "scif_clk";
--			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
--			       <&dmac2 0x13>, <&dmac2 0x12>;
--			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
- 			resets = <&cpg 310>;
- 			status = "disabled";
--- 
-2.21.0
+But that's exactly what licensing *IS* about: the argument is that 
+'internal' interfaces are clear proof that the binary module is actually 
+a derived work of the kernel.
 
+(Using regular exported symbols might still make a binary module derived 
+work, but it's less clear-cut.)
+
+So don't be complicit with binary module authors who try to circumvent 
+the GPL by offloading the actual license violation to the end user ...
+
+> If it would be strictly about license compatibility, that'd at least 
+> make us somewhat deterministic.
+
+License compatibility is rarely deterministic to begin with, there's a 
+lot of grey area. Adding _GPL increases the likelihood that the module 
+using it has to be covered by the GPL too. In fact behavior of binary 
+modules seems to confirm that legal expectation: very few binary modules 
+are trying to circumvent _GPL symbols by ignoring the _GPL attribute.
+
+Anyway, in terms of _GPL exports the policy has always been that if a 
+major author of the code asks for a symbol to be _GPL, then it should be 
+so, even if other authors have a different judgement.
+
+Thanks,
+
+	Ingo
