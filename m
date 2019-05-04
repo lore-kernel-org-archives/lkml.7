@@ -2,148 +2,103 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18976C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 04:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4742DC04AAA
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 04:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE152206DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 04:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19813206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 04:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOfl1eEE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D2dQDink"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfEDEVp (ORCPT
+        id S1726590AbfEDEmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 00:21:45 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41822 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfEDEVo (ORCPT
+        Sat, 4 May 2019 00:42:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58632 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfEDEmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 00:21:44 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d9so3658460pls.8
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2019 21:21:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Gt01AfOetDzcKf21xssimOsxGdNcsgRMqPBrhJOYNzE=;
-        b=eOfl1eEEVF0oWu8cAyXB2JksYkfWv3I2Xdt1iddeZviy+41P+3a82jGGDvsvsm72hx
-         e0hTUozh4BcA0FXITK6wR1UIUyK9uf9X/0NQ4iI2uMUTIvCX+DqOtpbvD2zWiobFvdcM
-         1MUbWi9RyaSLgmSvYzeV5BkPWo3iAtdvzVELt+bz3Rc7ME5Yfk+8SYMraKvoHgIVxGkX
-         DeLpIR4H+CDL7nPxX42cP8cm6cOfmTal7KXnyA0xBRb0iaMt0+YUCu8DCvKBZ4+yc5CI
-         fpnE1czINVDd08K5kOSHIumwLLVh/YNpSPmI0QTI1eip7uCpkXeMdAdyu3Fxx+bElhX6
-         L1Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Gt01AfOetDzcKf21xssimOsxGdNcsgRMqPBrhJOYNzE=;
-        b=gBTE2INcJeYgxCF0oQvH34CQTkO3NHxKVCFcwkaXxtQ1rvBhXLxmsuvmCfprUeDYRG
-         8ksnb7+TApYkGp5CMp6q3PexJYBLLEnoKH9Oz1VIa1dnyz1nmaWJ8CHly4m562ld7yEb
-         iLO09KnxRR0aBPlFqCn1mme7qVlZeZ0dTLcgPyFyj4ebpLkGSn9P+VYSGXvOAuXL8TJ7
-         GXivGWHU8EqR1wJiRgyj0x5keY/vOKA1/gx9TMyk6BhDZWKiDweMWVbho+Dc4gL0Gtmy
-         qa1VlHUuttitn0zGk+BzL/CHcc9aIpc3Yluvuptd1YKGinrcYOD3Hf1rGWIS3hvhQBaH
-         EDTw==
-X-Gm-Message-State: APjAAAWRtK3rwchOAV2UfEivszYuCIAwRkSNdyussueILV0kfuD8S4oU
-        DQGmD1pI+gMKFZHG/jkFHk4=
-X-Google-Smtp-Source: APXvYqzlDKD4gHF5pi1mHed/Phhe76+FLoplbyj84ZnS/mRoEc06k/H7H4lsngXZf/kFFse7BSPRHg==
-X-Received: by 2002:a17:902:7611:: with SMTP id k17mr16083398pll.30.1556943703221;
-        Fri, 03 May 2019 21:21:43 -0700 (PDT)
-Received: from localhost ([2601:640:d:fe8a:ec58:f256:b33e:bd28])
-        by smtp.gmail.com with ESMTPSA id d126sm5225970pfc.96.2019.05.03.21.21.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 03 May 2019 21:21:42 -0700 (PDT)
-Date:   Fri, 3 May 2019 21:21:41 -0700
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Micah Morton <mortonm@chromium.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Jann Horn <jannh@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        David Laight <David.Laight@aculab.com>
-Subject: Re: [PATCH v3 0/2] sys/prctl: expose TASK_SIZE value to userspace
-Message-ID: <20190504042141.GA12920@yury-thinkpad>
-References: <1556907021-29730-1-git-send-email-jsavitz@redhat.com>
- <20190503204912.GA5887@yury-thinkpad>
- <20190503215731.GB10302@x230.aquini.net>
+        Sat, 4 May 2019 00:42:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=srUlrTJCU3d0SiPx+9V3/pWBmqnF34McX7iZ7XwKiMc=; b=D2dQDinkDHoZmzHs0ltSF1bUU
+        vPxXIkS5zH4LWI14uemKSn29OeS3iTdIvGX0rLkkhdry4dJn0kWVEawi/0iSFQ0n/0j49XgM3k7eU
+        YD3G8KxjL63LMvM7oBn8nXbrz/UL1mGd6y7NcRQ2ndfsuRiy8/1RfiMVs3f7d6lV4w89SNnzKq9ef
+        bkz+cRcFELPVhUTtPM1FS3KJbCfb2clJANGPZL5H7dV6v0n3Y+ryPKrkGtmuEQLlZv6YWe68Q9ANG
+        TrvCtbsDZFbqco5Y888oF5Ds0cqzy22CpUXPFxs43C8eLbOglYSg28DRNpqnlWZ63vDesaVXv3KT1
+        MnqUwdL7A==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hMmV6-0002Xj-RN; Sat, 04 May 2019 04:42:16 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
+Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] ia64: fix build errors by exporting paddr_to_nid()
+Message-ID: <eaa72e00-e1ea-4a86-327e-8b8cca8ea492@infradead.org>
+Date:   Fri, 3 May 2019 21:42:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190503215731.GB10302@x230.aquini.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 05:57:31PM -0400, Rafael Aquini wrote:
-> On Fri, May 03, 2019 at 01:49:12PM -0700, Yury Norov wrote:
-> > On Fri, May 03, 2019 at 02:10:19PM -0400, Joel Savitz wrote:
-> > > In the mainline kernel, there is no quick mechanism to get the virtual
-> > > memory size of the current process from userspace.
-> > > 
-> > > Despite the current state of affairs, this information is available to the
-> > > user through several means, one being a linear search of the entire address
-> > > space. This is an inefficient use of cpu cycles.
-> > > 
-> > > A component of the libhugetlb kernel test does exactly this, and as
-> > > systems' address spaces increase beyond 32-bits, this method becomes
-> > > exceedingly tedious.
-> > > 
-> > > For example, on a ppc64le system with a 47-bit address space, the linear
-> > > search causes the test to hang for some unknown amount of time. I
-> > > couldn't give you an exact number because I just ran it for about 10-20
-> > > minutes and went to go do something else, probably to get coffee or
-> > > something, and when I came back, I just killed the test and patched it
-> > > to use this new mechanism. I re-ran my new version of the test using a
-> > > kernel with this patch, and of course it passed through the previously
-> > > bottlenecking codepath nearly instantaneously.
-> > > 
-> > > As such, I propose that the prctl syscall be extended to include the
-> > > option to retrieve TASK_SIZE from the kernel.
-> > > 
-> > > This patch will allow us to upgrade an O(n) codepath to O(1) in an
-> > > architecture-independent manner, and provide a mechanism for future
-> > > generations to do the same.
-> > 
-> > So the only reason for the new API is boosting some random poorly
-> > written userspace test? Why don't you introduce binary search instead?
-> >
-> 
-> there's no real cost in exposing the value that is known to the kernel,
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Really? We all here used to think that kernel programming is one of
-the most difficult professions in the world. There is huge cost of
-proper implementation of a feature, careful review, spread testing on
-various platforms and long-term maintenance and support.
+Fix build errors on ia64 when DISCONTIGMEM=y and NUMA=y by
+exporting paddr_to_nid().
 
-In this specific example of exposing TASK_SIZE your team made too much
-things wrong to realize it, I hope.
+Fixes these build errors:
 
-> anyways, as long as it's not a freaking hassle (like trying to go with
-> this prctl(2) stunt). We just need to get it properly exported alongside
-> other task's VM-related values at /proc/<pid>/status.
+ERROR: "paddr_to_nid" [sound/core/snd-pcm.ko] undefined!
+ERROR: "paddr_to_nid" [net/sunrpc/sunrpc.ko] undefined!
+ERROR: "paddr_to_nid" [fs/cifs/cifs.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/video/fbdev/core/fb.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/usb/mon/usbmon.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/usb/core/usbcore.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/raid1.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/dm-mod.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/dm-crypt.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/dm-bufio.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/ide/ide-core.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/ide/ide-cd_mod.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/gpu/drm/drm.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/char/agp/agpgart.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/block/nbd.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/block/loop.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/block/brd.ko] undefined!
+ERROR: "paddr_to_nid" [crypto/ccm.ko] undefined!
 
-I found this thread thrilling. Please keep me in CC with your
-/proc/<pid>/status effort.
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: linux-ia64@vger.kernel.org
+---
+ arch/ia64/mm/numa.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-Yury
-  
-> > Look at /proc/<pid>/maps. It may help to reduce the memory area to be
-> > checked.
+--- lnx-51-rc7.orig/arch/ia64/mm/numa.c
++++ lnx-51-rc7/arch/ia64/mm/numa.c
+@@ -55,6 +55,7 @@ paddr_to_nid(unsigned long paddr)
+ 
+ 	return (i < num_node_memblks) ? node_memblk[i].nid : (num_node_memblks ? -1 : 0);
+ }
++EXPORT_SYMBOL(paddr_to_nid);
+ 
+ #if defined(CONFIG_SPARSEMEM) && defined(CONFIG_NUMA)
+ /*
+
