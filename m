@@ -2,114 +2,143 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BDAC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 21:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA19C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 21:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 400B220652
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 21:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B8A205F4
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 21:57:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvfFil29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfEDVur (ORCPT
+        id S1727438AbfEDV5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 17:50:47 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41826 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfEDVuq (ORCPT
+        Sat, 4 May 2019 17:57:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41087 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfEDV5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 17:50:46 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hN2YN-0003qK-Um; Sat, 04 May 2019 21:50:44 +0000
-To:     Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        linux-wireless@vger.kernel.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: static analysis issue in rtl8188de driver
-Message-ID: <a1842b3e-f0af-d1a1-8609-a76c25dfd37b@canonical.com>
-Date:   Sat, 4 May 2019 22:50:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sat, 4 May 2019 17:57:45 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c12so12252679wrt.8
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 14:57:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Ki2zYft0ou3H6TJj4mjFNNxPee1lMyNDS4gDZCtx/Fs=;
+        b=UvfFil29+0EWj3BCtr67enMZScaZXSWmeVO5Cb1rX4+myTaH5rGcEpUg5vSnCN3FiH
+         S/RgLe14rF/Afkvhs7mMZpvEnjoRIMXTzfrStJWpBeCUon2Jk3oDQZJFWndi/O3CPq91
+         QHi+a5GREyVbehp1rsU4+8tYBywNKNSIHTfU/rxpR/O77B/0jiu52PN4hUd7jpC6N1zW
+         4+uqdNlpBpLY79qswAnKlIuw4KHOsNSLGCawF0PwNe6EKJrOosnrHSl/yogLRN/6qp1F
+         GJEOvWsyfCpp/88fByVlmNdVOShW6KQ7Ew+d3BIQxCZScKleilG/hy27e7vutMPLZ+4U
+         STog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Ki2zYft0ou3H6TJj4mjFNNxPee1lMyNDS4gDZCtx/Fs=;
+        b=srfpFfkCECKzSGHFx2kzGnH3pL4W6u5DIgfIdT99GTtgoBAs09A0JrSr25rF+jwkjL
+         nnq6v/Z0IDQ8UMHsWugxBa0l6yLs49DrjXiWY1ZisdrWGy/Li8/P9CeZ6cvCj7NfvUpI
+         4mSLfU9zicVOwfPUmGXFQYB+QOs0c7NYHcLAT/kJbVTi9X8D9TlzZGbk8OHYcKLrKoGm
+         5Q1pmbve9I9HBGu0pOMjf/2wgIRHQIOHUBu7XdR3R47psvNLip+sSEPXcDKdRrlwD2SA
+         d66d0XLnZZUXBBDkFAy9NMOwMc4h1y4h61mKgszPghwd9wLL832LDoCowe1siZbtRQqO
+         dfcQ==
+X-Gm-Message-State: APjAAAXOJ4byM28G7TI98424WuWW30ny8OVtJzir089HBwVmxm0iMW2x
+        iCwptan/qrm8Li/nlGiP6fQsaqfP
+X-Google-Smtp-Source: APXvYqyyDcFpqEvxdx5wH6JIpHwPpyAsNXG0X/4zMD1ZBW3pPsPhTR5afP9aJr9tqNLvL1FnM35AFw==
+X-Received: by 2002:adf:df85:: with SMTP id z5mr5795681wrl.127.1557007062869;
+        Sat, 04 May 2019 14:57:42 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id o6sm11649237wre.60.2019.05.04.14.57.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 04 May 2019 14:57:42 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org
+Subject: [PATCH 2/2] uapi/habanalabs: add opcode for enable/disable device debug mode
+Date:   Sun,  5 May 2019 00:57:33 +0300
+Message-Id: <20190504215733.12823-2-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190504215733.12823-1-oded.gabbay@gmail.com>
+References: <20190504215733.12823-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch defines a new opcode in the DEBUG IOCTL that is used by the
+user to notify the driver when the user wants to start or stop using the
+debug and profile infrastructure of the device. i.e. set the device to
+debug mode or to non-debug mode.
 
-Static analysis with Coverity has found an issue in the rtl8188de
-wireless driver in drivers/net/wireless/realtek/rtlwifi/rtl8192de/dm.c
-in function tl92d_dm_txpower_tracking_callback_thermalmeter.
+There are a couple of restrictions that this new opcode introduces:
 
-The issue is that u8 array ofdm_index[3] is never initialized, however
-it is decremented and incremented in two places resulting in garbage
-value from the stack being updated in the following code:
+1. The user can't configure the debug/profiling infrastructure before he
+   sets the device to debug mode, by using this new opcode.
 
-	if (thermalvalue > rtlpriv->dm.thermalvalue) {
-        	for (i = 0; i < rf; i++)
-                	ofdm_index[i] -= delta;
-        	cck_index -= delta;
-	} else {
-        	for (i = 0; i < rf; i++)
-                	ofdm_index[i] += index;
-        	cck_index += index;	
-	}
+2. The user can't set the device to debug mode unless he is the only user
+   that is currently using (has an open FD) the device.
 
-At my first look at the code I believe ofdm_index should be just
-zero-initialized at declaration time, but I suspect that I'm overlooking
-something maybe a bit deeper. Any ideas?
+3. Other users can't use the device (open a new FD) in case an existing
+   user has set the device into debug mode.
 
-Colin
+These restrictions are needed because the debug and profiling
+infrastructure is a shared component in the ASIC and therefore, can't be
+used while multiple users are working on the device.
+
+Because the driver currently does NOT support multiple users, the
+implementation of the restrictions is not required at this point. However,
+the interface definition is needed in order to avoid changing the user API
+later on.
+
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ include/uapi/misc/habanalabs.h | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
+index 8ac292cf4d00..204ab9b4ae67 100644
+--- a/include/uapi/misc/habanalabs.h
++++ b/include/uapi/misc/habanalabs.h
+@@ -413,6 +413,10 @@ struct hl_debug_params_spmu {
+ #define HL_DEBUG_OP_SPMU	5
+ /* Opcode for timestamp */
+ #define HL_DEBUG_OP_TIMESTAMP	6
++/* Opcode for setting the device into or out of debug mode. The enable
++ * variable should be 1 for enabling debug mode and 0 for disabling it
++ */
++#define HL_DEBUG_OP_SET_MODE	7
+ 
+ struct hl_debug_args {
+ 	/*
+@@ -574,8 +578,22 @@ struct hl_debug_args {
+  *
+  * This IOCTL allows the user to get debug traces from the chip.
+  *
+- * The user needs to provide the register index and essential data such as
+- * buffer address and size.
++ * Before the user can send configuration requests of the various
++ * debug/profile engines, it needs to set the device into debug mode.
++ * This is because the debug/profile infrastructure is shared component in the
++ * device and we can't allow multiple users to access it at the same time.
++ *
++ * Once a user set the device into debug mode, the driver won't allow other
++ * users to "work" with the device, i.e. open a FD. If there are multiple users
++ * opened on the device, the driver won't allow any user to debug the device.
++ *
++ * For each configuration request, the user needs to provide the register index
++ * and essential data such as buffer address and size.
++ *
++ * Once the user has finished using the debug/profile engines, he should
++ * set the device into non-debug mode, i.e. disable debug mode.
++ *
++ * The driver can decide to "kick out" the user if he abuses this interface.
+  *
+  */
+ #define HL_IOCTL_DEBUG		\
+-- 
+2.17.1
 
