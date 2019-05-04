@@ -2,130 +2,74 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF5DC04AAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 16:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BEBC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 16:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1A9206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 16:08:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qy5UvT9t"
+	by mail.kernel.org (Postfix) with ESMTP id 9BD1F206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 16:12:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfEDQIZ (ORCPT
+        id S1726776AbfEDQMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 12:08:25 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44429 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfEDQIY (ORCPT
+        Sat, 4 May 2019 12:12:49 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39170 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfEDQMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 12:08:24 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z16so4236371pgv.11;
-        Sat, 04 May 2019 09:08:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sC4Bm0S6AdzqPJDKFbvFqnZ8jJH7VxxKHL8X8WXctzY=;
-        b=Qy5UvT9tK7aq1yH8lclXhft6+d/JDypXwBKIS31NCEoXBkkwBqtM1qmcroOAdjjzcJ
-         HIcWozT8ShmM+S820CGLhDvYEYIj9LGR4pvCUhZ3MnaMo/fzYhnD3zmXYaE/OH78wgGY
-         w3k1UMPOa62P3EkxJOpRdu7qi2sufU2olhywG5i/IrU3Bp2AoKkNwrjwbiBuqfx/5nTH
-         Z4ASOr4Nb4nZyKKzhIY/IUTYrEsYufbhjIwiUTGx1mUILePaRxU96rrHkSnwwjUAzZTs
-         RPoQIPRCWn2kTh57tIlOhUhYS6LGgjA0aToD2hIgNTUpqbgLfdYcfIVliR+xO2V9062k
-         V8Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sC4Bm0S6AdzqPJDKFbvFqnZ8jJH7VxxKHL8X8WXctzY=;
-        b=VgG6Q5kE49RvqFCjyiEfuN14bVP7Ma8p5Du2YkgTrmampPbbOmgnBN6Llp2amtJ0Jt
-         ngOGBZOhqpVG6/fdRqCreoQrgMmrhn24j615dbpBBempNigWMSfsuCxluJAfPfpFatBT
-         OCqIhcDf/wUMZRCJQz/XT4vJUbRRFbUGkoPPPOYPxRSbmOx7mcYG/Hjdq1XCgRFhieoS
-         Mqau+pfUm51AQ1bowmWS9t6FYBTVAjX55blNGYUBhJ34brQXkOYIyYWyC0amJt7TLxUm
-         ppcWaPeNe9M5BNKaVyhU+jbusifoyUyxxAltEdqYXoXOqDl44iq1EYRp6mQX5kb00FK+
-         78RA==
-X-Gm-Message-State: APjAAAXDS+0B3/IacieCiZIpEgoupLQkvoqXW2iT/oXUu4vBmql35R9n
-        1rh3G869ICOfFUeXPsnTvpY=
-X-Google-Smtp-Source: APXvYqxBQfLA16cLdJkghpXZpM2fYIlOwAM8blNJzY1aoU3igmXWBnATMkuSzRW4vvs5XlcUhLJ6ig==
-X-Received: by 2002:a63:243:: with SMTP id 64mr19321172pgc.214.1556986103844;
-        Sat, 04 May 2019 09:08:23 -0700 (PDT)
-Received: from bridge ([119.28.31.106])
-        by smtp.gmail.com with ESMTPSA id j20sm8706452pfn.84.2019.05.04.09.08.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 09:08:23 -0700 (PDT)
-Date:   Sun, 5 May 2019 00:08:17 +0800
-From:   Wenbin Zeng <wenbin.zeng@gmail.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     davem@davemloft.net, bfields@fieldses.org, jlayton@kernel.org,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        wenbinzeng@tencent.com, dsahern@gmail.com,
-        nicolas.dichtel@6wind.com, willy@infradead.org,
-        edumazet@google.com, jakub.kicinski@netronome.com,
-        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/3] nsfs: add evict callback into struct
- proc_ns_operations
-Message-ID: <20190504160817.GA15804@bridge>
-References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
- <1556692945-3996-2-git-send-email-wenbinzeng@tencent.com>
- <20190502030406.GT23075@ZenIV.linux.org.uk>
+        Sat, 4 May 2019 12:12:49 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hMxHI-00035w-5A; Sat, 04 May 2019 16:12:44 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Boris Brezillon <bbrezillon@kernel.org>,
+        linux-i3c@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] i3c: fix undefined behaviour of a shift of an int by more than 31 places
+Date:   Sat,  4 May 2019 17:12:43 +0100
+Message-Id: <20190504161243.18879-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502030406.GT23075@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 04:04:06AM +0100, Al Viro wrote:
-> On Wed, May 01, 2019 at 02:42:23PM +0800, Wenbin Zeng wrote:
-> > The newly added evict callback shall be called by nsfs_evict(). Currently
-> > only put() callback is called in nsfs_evict(), it is not able to release
-> > all netns refcount, for example, a rpc client holds two netns refcounts,
-> > these refcounts are supposed to be released when the rpc client is freed,
-> > but the code to free rpc client is normally triggered by put() callback
-> > only when netns refcount gets to 0, specifically:
-> >     refcount=0 -> cleanup_net() -> ops_exit_list -> free rpc client
-> > But netns refcount will never get to 0 before rpc client gets freed, to
-> > break the deadlock, the code to free rpc client can be put into the newly
-> > added evict callback.
-> > 
-> > Signed-off-by: Wenbin Zeng <wenbinzeng@tencent.com>
-> > ---
-> >  fs/nsfs.c               | 2 ++
-> >  include/linux/proc_ns.h | 1 +
-> >  2 files changed, 3 insertions(+)
-> > 
-> > diff --git a/fs/nsfs.c b/fs/nsfs.c
-> > index 60702d6..5939b12 100644
-> > --- a/fs/nsfs.c
-> > +++ b/fs/nsfs.c
-> > @@ -49,6 +49,8 @@ static void nsfs_evict(struct inode *inode)
-> >  	struct ns_common *ns = inode->i_private;
-> >  	clear_inode(inode);
-> >  	ns->ops->put(ns);
-> > +	if (ns->ops->evict)
-> > +		ns->ops->evict(ns);
-> 
-> What's to guarantee that ns will not be freed by ->put()?
-> Confused...
+From: Colin Ian King <colin.king@canonical.com>
 
-Hi Al, thank you very much. You are absolutely right.
-->evict() should be called before ->put(), i.e.:
+Currently the shift of two enum ints by more than 31 places on
+can result in undefined behaviour with 64 bit longs. Fix this by
+casting the ints to unsigned long before the shift.
 
-@@ -49,6 +49,8 @@ static void nsfs_evict(struct inode *inode)
-	struct ns_common *ns = inode->i_private;
-	clear_inode(inode);
-+	if (ns->ops->evict)
-+		ns->ops->evict(ns);
-	ns->ops->put(ns);
+Addresses-Coverity: ("Bad shift operation")
+Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/i3c/master.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 1412abcff010..752256d4078f 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -385,8 +385,9 @@ static void i3c_bus_set_addr_slot_status(struct i3c_bus *bus, u16 addr,
+ 		return;
+ 
+ 	ptr = bus->addrslots + (bitpos / BITS_PER_LONG);
+-	*ptr &= ~(I3C_ADDR_SLOT_STATUS_MASK << (bitpos % BITS_PER_LONG));
+-	*ptr |= status << (bitpos % BITS_PER_LONG);
++	*ptr &= ~((unsigned long)I3C_ADDR_SLOT_STATUS_MASK <<
++		  (bitpos % BITS_PER_LONG));
++	*ptr |= (unsigned long)status << (bitpos % BITS_PER_LONG);
  }
+ 
+ static bool i3c_bus_dev_addr_is_avail(struct i3c_bus *bus, u8 addr)
+-- 
+2.20.1
 
-Does this look good?
