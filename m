@@ -2,167 +2,66 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A50C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99729C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63DA20870
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556965569;
-	bh=K5lYJwuJeJ7LsJFj37qYIH8A6/gaHBzzR1qmQ1eRQeM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1v2CqkHtF2Xfgw8ip1P8NUU0SIn1Ks8NRNuq3XjtraYUImAQqbMMJUbcpg+pHtJH1
-	 QnCDdvdhou3iV95OkIoPaESvGUky/SsH/XxyKnF7oO36hrvEBzah11cKn6tHdF/5/C
-	 5b6hcbLWGMVkUFLUGXCpSogJTir7ygWNu496z5W4=
+	by mail.kernel.org (Postfix) with ESMTP id 7685E2085A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfEDK0I (ORCPT
+        id S1727617AbfEDK0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sat, 4 May 2019 06:26:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48518 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727582AbfEDK0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 4 May 2019 06:26:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727548AbfEDK0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:26:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E5572086A;
-        Sat,  4 May 2019 10:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965564;
-        bh=K5lYJwuJeJ7LsJFj37qYIH8A6/gaHBzzR1qmQ1eRQeM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q47Lvp/aavc5ey8wYoQToBzD7ahqLvS1eeklJRpuLdzhzZHkGJulCR1Wr9jJvg6N5
-         C/heOsB0rAFbID87qIq1EzgmyTstiDiznkgRvgoyv+mS5chkI9LdAif8RAHadOsOkR
-         ZKjsjLoUCMLhzfxR0B3685cGG5BcZ1X1av35EJHI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Wei Wang <weiwan@google.com>, David Ahern <dsahern@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 02/32] ipv6: A few fixes on dereferencing rt->from
-Date:   Sat,  4 May 2019 12:24:47 +0200
-Message-Id: <20190504102452.606769366@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
-References: <20190504102452.523724210@linuxfoundation.org>
-User-Agent: quilt/0.66
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2711EAF03;
+        Sat,  4 May 2019 10:26:07 +0000 (UTC)
+From:   NeilBrown <neil@brown.name>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>
+Date:   Sat, 04 May 2019 20:24:57 +1000
+Subject: [PATCH 4/4] mmc: mtk-sd: select REGULATOR
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thirtythreeforty@gmail.com
+Message-ID: <155696549700.8632.10790498625986428152.stgit@noble.brown>
+In-Reply-To: <155696540998.8632.5242582397805128125.stgit@noble.brown>
+References: <155696540998.8632.5242582397805128125.stgit@noble.brown>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin KaFai Lau <kafai@fb.com>
+The mtk-sd driver requires a regulator to be present, even if it is
+the "fixed" regulator.  So select REGULATOR to make it hard to build
+unusable configurations.
 
-[ Upstream commit 886b7a50100a50f1cbd08a6f8ec5884dfbe082dc ]
-
-It is a followup after the fix in
-commit 9c69a1320515 ("route: Avoid crash from dereferencing NULL rt->from")
-
-rt6_do_redirect():
-1. NULL checking is needed on rt->from because a parallel
-   fib6_info delete could happen that sets rt->from to NULL.
-   (e.g. rt6_remove_exception() and fib6_drop_pcpu_from()).
-
-2. fib6_info_hold() is not enough.  Same reason as (1).
-   Meaning, holding dst->__refcnt cannot ensure
-   rt->from is not NULL or rt->from->fib6_ref is not 0.
-
-   Instead of using fib6_info_hold_safe() which ip6_rt_cache_alloc()
-   is already doing, this patch chooses to extend the rcu section
-   to keep "from" dereference-able after checking for NULL.
-
-inet6_rtm_getroute():
-1. NULL checking is also needed on rt->from for a similar reason.
-   Note that inet6_rtm_getroute() is using RTNL_FLAG_DOIT_UNLOCKED.
-
-Fixes: a68886a69180 ("net/ipv6: Make from in rt6_info rcu protected")
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: Wei Wang <weiwan@google.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: NeilBrown <neil@brown.name>
 ---
- net/ipv6/route.c |   38 ++++++++++++++++++--------------------
- 1 file changed, 18 insertions(+), 20 deletions(-)
+ drivers/mmc/host/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -3403,11 +3403,8 @@ static void rt6_do_redirect(struct dst_e
- 
- 	rcu_read_lock();
- 	from = rcu_dereference(rt->from);
--	/* This fib6_info_hold() is safe here because we hold reference to rt
--	 * and rt already holds reference to fib6_info.
--	 */
--	fib6_info_hold(from);
--	rcu_read_unlock();
-+	if (!from)
-+		goto out;
- 
- 	nrt = ip6_rt_cache_alloc(from, &msg->dest, NULL);
- 	if (!nrt)
-@@ -3419,10 +3416,7 @@ static void rt6_do_redirect(struct dst_e
- 
- 	nrt->rt6i_gateway = *(struct in6_addr *)neigh->primary_key;
- 
--	/* No need to remove rt from the exception table if rt is
--	 * a cached route because rt6_insert_exception() will
--	 * takes care of it
--	 */
-+	/* rt6_insert_exception() will take care of duplicated exceptions */
- 	if (rt6_insert_exception(nrt, from)) {
- 		dst_release_immediate(&nrt->dst);
- 		goto out;
-@@ -3435,7 +3429,7 @@ static void rt6_do_redirect(struct dst_e
- 	call_netevent_notifiers(NETEVENT_REDIRECT, &netevent);
- 
- out:
--	fib6_info_release(from);
-+	rcu_read_unlock();
- 	neigh_release(neigh);
- }
- 
-@@ -4957,16 +4951,20 @@ static int inet6_rtm_getroute(struct sk_
- 
- 	rcu_read_lock();
- 	from = rcu_dereference(rt->from);
--
--	if (fibmatch)
--		err = rt6_fill_node(net, skb, from, NULL, NULL, NULL, iif,
--				    RTM_NEWROUTE, NETLINK_CB(in_skb).portid,
--				    nlh->nlmsg_seq, 0);
--	else
--		err = rt6_fill_node(net, skb, from, dst, &fl6.daddr,
--				    &fl6.saddr, iif, RTM_NEWROUTE,
--				    NETLINK_CB(in_skb).portid, nlh->nlmsg_seq,
--				    0);
-+	if (from) {
-+		if (fibmatch)
-+			err = rt6_fill_node(net, skb, from, NULL, NULL, NULL,
-+					    iif, RTM_NEWROUTE,
-+					    NETLINK_CB(in_skb).portid,
-+					    nlh->nlmsg_seq, 0);
-+		else
-+			err = rt6_fill_node(net, skb, from, dst, &fl6.daddr,
-+					    &fl6.saddr, iif, RTM_NEWROUTE,
-+					    NETLINK_CB(in_skb).portid,
-+					    nlh->nlmsg_seq, 0);
-+	} else {
-+		err = -ENETUNREACH;
-+	}
- 	rcu_read_unlock();
- 
- 	if (err < 0) {
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 9c01310a0d2e..1249cde7004d 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -941,6 +941,7 @@ config MMC_BCM2835
+ config MMC_MTK
+ 	tristate "MediaTek SD/MMC Card Interface support"
+ 	depends on HAS_DMA
++	select REGULATOR
+ 	help
+ 	  This selects the MediaTek(R) Secure digital and Multimedia card Interface.
+ 	  If you have a machine with a integrated SD/MMC card reader, say Y or M here.
 
 
