@@ -2,114 +2,122 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4DBC43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 08:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB59C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 09:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14FAC206DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 08:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8EA206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 09:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556960440;
+	bh=7HXqKzpxUiSs04dSG1RdKuXbafCjffLyeVJkF8NBEOg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d0Y3LNlHkPuciWTVGncwajVv1VHEX3HkSVK+0dkZjucRGUPitc6iApWnhVjIn82F9
+	 xq5DlvN7jZXkWp0zcDHrKbsgBqpTip8r1gX0KAbuTQlQ+9eT/JwIZ85fCCTye/Y7Tf
+	 5qfqi0jeOy7Ft48gKtz3ozDXIwLiw9R7RjThLJKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfEDIos (ORCPT
+        id S1726742AbfEDJA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 04:44:48 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7153 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726178AbfEDIor (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 04:44:47 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EAB0F5D52CC2EA261151;
-        Sat,  4 May 2019 16:44:44 +0800 (CST)
-Received: from [127.0.0.1] (10.177.23.164) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
- 16:44:39 +0800
-Subject: Re: [PATCH v6 0/1] iommu: enhance IOMMU dma mode build options
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-References: <20190418135701.24668-1-thunder.leizhen@huawei.com>
-CC:     Hanjun Guo <guohanjun@huawei.com>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <5CCD50E7.3070505@huawei.com>
-Date:   Sat, 4 May 2019 16:44:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Sat, 4 May 2019 05:00:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726208AbfEDJA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 05:00:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADD44206BB;
+        Sat,  4 May 2019 09:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556960428;
+        bh=7HXqKzpxUiSs04dSG1RdKuXbafCjffLyeVJkF8NBEOg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=puUuzFkkzwwSmbdSjWHix07/cvUiyDGyk0+FIz9i4YcJ7oA6H7JhGuDTt7y30D2zN
+         eCdZKfgo7WOKsnlgmcJ93LF816InzU+PNYuJpGhQOM+HiUwVpwCiZstZvYR2idVS9/
+         YWJc88yVVZkIVYsvxgD8/JipbwxoZNuKsOaMrxW0=
+Date:   Sat, 4 May 2019 11:00:25 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dragan Cvetic <draganc@xilinx.com>
+Cc:     "arnd@arndb.de" <arnd@arndb.de>, Michal Simek <michals@xilinx.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <dkiernan@xilinx.com>
+Subject: Re: [PATCH V3 07/12] misc: xilinx_sdfec: Add ability to configure
+ LDPC
+Message-ID: <20190504090025.GB13840@kroah.com>
+References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
+ <1556402706-176271-8-git-send-email-dragan.cvetic@xilinx.com>
+ <20190502172713.GD1874@kroah.com>
+ <BL0PR02MB5681D386363988CB2CA4D040CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190418135701.24668-1-thunder.leizhen@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.23.164]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL0PR02MB5681D386363988CB2CA4D040CB350@BL0PR02MB5681.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-  Can anybody review or comment?
+On Fri, May 03, 2019 at 04:49:19PM +0000, Dragan Cvetic wrote:
+> Hi Greg,
+> 
+> Please find inline comments below.
 
+As they should be, no need to mention it :)
 
-On 2019/4/18 21:57, Zhen Lei wrote:
-> v5 --> v6:
-> 1. give up adding boot option iommu.dma_mode
+> > -----Original Message-----
+> > From: Greg KH [mailto:gregkh@linuxfoundation.org]
+> > Sent: Thursday 2 May 2019 18:27
+> > To: Dragan Cvetic <draganc@xilinx.com>
+> > Cc: arnd@arndb.de; Michal Simek <michals@xilinx.com>; linux-arm-kernel@lists.infradead.org; robh+dt@kernel.org;
+> > mark.rutland@arm.com; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> > Subject: Re: [PATCH V3 07/12] misc: xilinx_sdfec: Add ability to configure LDPC
+> > 
+> > On Sat, Apr 27, 2019 at 11:05:01PM +0100, Dragan Cvetic wrote:
+> > > --- a/include/uapi/misc/xilinx_sdfec.h
+> > > +++ b/include/uapi/misc/xilinx_sdfec.h
+> > 
+> > <snip>
+> > 
+> > > +/**
+> > > + * xsdfec_calculate_shared_ldpc_table_entry_size - Calculates shared code
+> > > + * table sizes.
+> > > + * @ldpc: Pointer to the LPDC Code Parameters
+> > > + * @table_sizes: Pointer to structure containing the calculated table sizes
+> > > + *
+> > > + * Calculates the size of shared LDPC code tables used for a specified LPDC code
+> > > + * parameters.
+> > > + */
+> > > +inline void
+> > > +xsdfec_calculate_shared_ldpc_table_entry_size(struct xsdfec_ldpc_params *ldpc,
+> > > +	struct xsdfec_ldpc_param_table_sizes *table_sizes)
+> > > +{
+> > > +	/* Calculate the sc_size in 32 bit words */
+> > > +	table_sizes->sc_size = (ldpc->nlayers + 3) >> 2;
+> > > +	/* Calculate the la_size in 256 bit words */
+> > > +	table_sizes->la_size = ((ldpc->nlayers << 2) + 15) >> 4;
+> > > +	/* Calculate the qc_size in 256 bit words */
+> > > +	table_sizes->qc_size = ((ldpc->nqc << 2) + 15) >> 4;
+> > > +}
+> > 
+> > Why do you have an inline function in a user api .h file?  That's really
+> > not a good idea.
 > 
-> v4 --> v5:
-> As Hanjun and Thomas Gleixner's suggestion:
-> 1. Keep the old ARCH specific boot options no change.
-> 2. Keep build option CONFIG_IOMMU_DEFAULT_PASSTHROUGH no change.
-> 
-> v4:
-> As Robin Murphy's suggestion:
-> "It's also not necessarily obvious to the user how this interacts with
-> IOMMU_DEFAULT_PASSTHROUGH, so if we really do go down this route, maybe it
-> would be better to refactor the whole lot into a single selection of something
-> like IOMMU_DEFAULT_MODE anyway."
-> 
-> In this version, I tried to normalize the IOMMU dma mode boot options for all
-> ARCHs. When IOMMU is enabled, there are 3 dma modes: paasthrough(bypass),
-> lazy(mapping but defer the IOTLB invalidation), strict. But currently each
-> ARCHs defined their private boot options, different with each other. For
-> example, to enable/disable "passthrough", ARM64 use iommu.passthrough=1/0,
-> X86 use iommu=pt/nopt, PPC/POWERNV use iommu=nobypass.
-> 
-> Zhen Lei (1):
->   iommu: enhance IOMMU dma mode build options
-> 
->  arch/ia64/kernel/pci-dma.c                |  2 +-
->  arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
->  arch/s390/pci/pci_dma.c                   |  2 +-
->  arch/x86/kernel/pci-dma.c                 |  7 ++---
->  drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
->  drivers/iommu/amd_iommu_init.c            |  3 ++-
->  drivers/iommu/intel-iommu.c               |  2 +-
->  drivers/iommu/iommu.c                     |  3 ++-
->  8 files changed, 48 insertions(+), 18 deletions(-)
-> 
+> This is just a Helper function for users aligning the calculations.
+> Please advise, is this acceptable?
 
--- 
-Thanks!
-BestRegards
+Not really, just have actual api functions in a uapi .h file, why would
+userspace care about this type of thing?
 
+thanks,
+
+greg k-h
