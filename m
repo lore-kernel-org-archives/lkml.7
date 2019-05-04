@@ -3,127 +3,174 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D338C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064B8C04AA9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6F4206DF
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:18:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pueCylAY"
+	by mail.kernel.org (Postfix) with ESMTP id C27D92084A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 12:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556972523;
+	bh=IBw2N45cvp/ZEURHb5T5bLAIDO89kyXiqinCT+QEbA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PQTn4462WFSMRdjmCqtUitFRvhuL0h3pdSCtlBiRsiGkz07Iua/IflB1XXgaRXN87
+	 LZVpzVZ8pg5jD+Gz3Fi9Duq0bkqpCTi2rlx0wGoTA+7hih0M8uelkUDOV9QWUXjBmL
+	 LOeP27DAULeqm960+HmMJ9IH/6yQ3T9pOhEnEbWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfEDMSu (ORCPT
+        id S1726996AbfEDMWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 08:18:50 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38114 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfEDMSt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 08:18:49 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a59so4024234pla.5
-        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 05:18:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PfxztiH8X3MJjkrxFVtIDIas6bc40wWgdNkV+JlNTik=;
-        b=pueCylAYmHzqPrCU1yZ9nMbM8tef0CuKfHcDYd5jwhC7vqEXugT6oi3hOZew2wkW5O
-         0pwIirm6+OtxQjiOe+GCeEAoE8njybGmtTin+x/9DUJ2PKZMDpyNJfEp7qj4Q441lvbl
-         m+Smt0p5XOecECZhRyW/ScF4sDQyLmZIDB+rFn/yBZIg40weRGUl07yWaHSdwoRtpdMC
-         74/XVOmiXTe5ANYPBpHsk5uDCShXPacvr/BH9nl+PQfOgypY7AxnY0UDz7GN9asGkITW
-         Cry+R3NCuGyVuiiWn/wGIjnOtSXbFthdA5mgQwfUdn18Iws8LjXD8swNOV1QSnefta46
-         x5ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PfxztiH8X3MJjkrxFVtIDIas6bc40wWgdNkV+JlNTik=;
-        b=FNjoaSk7zRD86T20nLRsL0WA+3Z+ZG/RDtxBBVVgPIk9QDM4xxpsj71SLwX7EbpPgQ
-         1SRUKYU0YI+2OwBDDFSTMSQozW4gBYNBxY5gYH4pvjB9qACjK/+UWuF5iG7mFyD0q3pR
-         PdQwzrWbIVYWW3yuzi4zvcVtGgIUHdrhDe8x/mNo0DOoiI5ISsKUl7yFoT5VNn+S7aIz
-         n6FaXRIvsGV36pGuUyB+ZBcvKEqg5lPpM4sArAQSqqHU/h6rPWdh2j/npmEaqMnfqLBQ
-         FD4CWkKNNn/Op6/M7MlUvwj6+JjDwS3lr3FudqJ1hfkk30IQmJuD9Or+9s8zugt7aeMa
-         6PDA==
-X-Gm-Message-State: APjAAAU3TqyVoKFg/hwNwMibloTM1s+K4sLQhTJT6SMYKG49CFuX9ncc
-        dV49qbZWC00hdtqEBddW8jI=
-X-Google-Smtp-Source: APXvYqwCXrIJJ5KHmqQq80nmIL3zB4ej5GGGXc/1zS2jCx8mjdunT0aHtAs2qYVgGws8simtIwxxlA==
-X-Received: by 2002:a17:902:4383:: with SMTP id j3mr18180779pld.320.1556972329028;
-        Sat, 04 May 2019 05:18:49 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.33])
-        by smtp.gmail.com with ESMTPSA id h189sm9330513pfc.125.2019.05.04.05.18.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 05:18:48 -0700 (PDT)
-Date:   Sat, 4 May 2019 17:48:41 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        vbabka@suse.cz, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/huge_memory.c: Make __thp_get_unmapped_area static
-Message-ID: <20190504121841.GA8142@bharath12345-Inspiron-5559>
-References: <20190504102353.GA22525@bharath12345-Inspiron-5559>
- <20190504115446.GP29835@dhcp22.suse.cz>
+        Sat, 4 May 2019 08:22:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfEDMWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 08:22:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BA9E206DF;
+        Sat,  4 May 2019 12:22:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556972520;
+        bh=IBw2N45cvp/ZEURHb5T5bLAIDO89kyXiqinCT+QEbA8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dU6xgIdhNWsDQovAswdbLFWQFqFKcnsBBOhY/6ua6z0UTLwYOd9XRCvnCE397+pBM
+         /YIu02/rirMU0z0HZQeg44mZZAklSt6H7lcMbSEM7CIT79MQnhX47WAM2MRNT3pnpP
+         FYOhSjPKQP8Cm+ekHDmQ46TsCIuPo+E4XNQZTGSM=
+Date:   Sat, 4 May 2019 14:21:58 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, atishp04@gmail.com,
+        bpf@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>, dancol@google.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dietmar.eggemann@arm.com, duyuchao <yuchao.du@unisoc.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        =?utf-8?Q?Micha=C5=82?= Gregorczyk <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Olof Johansson <olof@lixom.net>, qais.yousef@arm.com,
+        rdunlap@infradead.org, Shuah Khan <shuah@kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>, yhs@fb.com
+Subject: Re: [PATCH v2] kheaders: Move from proc to sysfs
+Message-ID: <20190504122158.GA23535@kroah.com>
+References: <20190504121213.183203-1-joel@joelfernandes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190504115446.GP29835@dhcp22.suse.cz>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190504121213.183203-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 04, 2019 at 07:54:46AM -0400, Michal Hocko wrote:
-Hi Michal,
-
-Thanks for having a look at the patch. 
-> On Sat 04-05-19 15:53:54, Bharath Vedartham wrote:
-> > __thp_get_unmapped_area is only used in mm/huge_memory.c. Make it
-> > static.
+On Sat, May 04, 2019 at 08:12:13AM -0400, Joel Fernandes (Google) wrote:
+> The kheaders archive consisting of the kernel headers used for compiling
+> bpf programs is in /proc. However there is concern that moving it here
+> will make it permanent. Let us move it to /sys/kernel as discussed [1].
 > 
-> Makes sense. Looks like an omission.
+> [1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
 > 
-> > Tested by building and booting the kernel.
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+> This patch applies on top of the previous patch that was applied to the
+> driver tree:
+> https://lore.kernel.org/patchwork/patch/1067310/
 > 
-> Testing by git grep __thp_get_unmapped_area would give you a better
-> picture. Build test migh not hit paths that are config specific and
-> static aspect of a functions should not have any functionality related
-> side effects AFAICS.
+> v1->v2: Fixed some kconfig nits (Masami).
+> 
+>  init/Kconfig                                | 16 ++++-----
+>  kernel/Makefile                             |  4 +--
+>  kernel/{gen_ikh_data.sh => gen_kheaders.sh} |  2 +-
+>  kernel/kheaders.c                           | 40 +++++++++------------
+>  4 files changed, 26 insertions(+), 36 deletions(-)
+>  rename kernel/{gen_ikh_data.sh => gen_kheaders.sh} (98%)
+> 
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 26a364a95b57..c3661991b089 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -579,15 +579,13 @@ config IKCONFIG_PROC
+>  	  This option enables access to the kernel configuration file
+>  	  through /proc/config.gz.
 >  
-I have made sure CONFIG_TRANSPARENT_HUGEPAGE was enabled before building
-and booting the kernel. I have also grepped the entire kernel source for
-__thp_get_unmapped_area to be very sure.
-> > Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
-> 
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> 
-> > ---
-> >  mm/huge_memory.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> > index 165ea46..75fe2b7 100644
-> > --- a/mm/huge_memory.c
-> > +++ b/mm/huge_memory.c
-> > @@ -509,7 +509,7 @@ void prep_transhuge_page(struct page *page)
-> >  	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
-> >  }
-> >  
-> > -unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
-> > +static unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
-> >  		loff_t off, unsigned long flags, unsigned long size)
-> >  {
-> >  	unsigned long addr;
-> > -- 
-> > 2.7.4
-> > 
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
+> -config IKHEADERS_PROC
+> -	tristate "Enable kernel header artifacts through /proc/kheaders.tar.xz"
+> -	depends on PROC_FS
+> -	help
+> -	  This option enables access to the kernel header and other artifacts that
+> -	  are generated during the build process. These can be used to build eBPF
+> -	  tracing programs, or similar programs.  If you build the headers as a
+> -	  module, a module called kheaders.ko is built which can be loaded on-demand
+> -	  to get access to the headers.
+> +config IKHEADERS
+> +	tristate "Enable kernel headers through /sys/kernel/kheaders.tar.xz"
+> +	help
+> +	  This option enables access to the in-kernel headers that are generated during
+> +	  the build process. These can be used to build eBPF tracing programs,
+> +	  or similar programs.  If you build the headers as a module, a module called
+> +	  kheaders.ko is built which can be loaded on-demand to get access to headers.
+>  
+>  config LOG_BUF_SHIFT
+>  	int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
+> diff --git a/kernel/Makefile b/kernel/Makefile
+> index 12399614c350..b32a558fae2f 100644
+> --- a/kernel/Makefile
+> +++ b/kernel/Makefile
+> @@ -70,7 +70,7 @@ obj-$(CONFIG_UTS_NS) += utsname.o
+>  obj-$(CONFIG_USER_NS) += user_namespace.o
+>  obj-$(CONFIG_PID_NS) += pid_namespace.o
+>  obj-$(CONFIG_IKCONFIG) += configs.o
+> -obj-$(CONFIG_IKHEADERS_PROC) += kheaders.o
+> +obj-$(CONFIG_IKHEADERS) += kheaders.o
 
-Thanks
-Bharath
+Good in changing the config name, I hadn't thought of that.
+
+> diff --git a/kernel/gen_ikh_data.sh b/kernel/gen_kheaders.sh
+> similarity index 98%
+> rename from kernel/gen_ikh_data.sh
+> rename to kernel/gen_kheaders.sh
+
+Same here, nice.
+
+> -static const struct file_operations ikheaders_file_ops = {
+> -	.read = ikheaders_read_current,
+> -	.llseek = default_llseek,
+> +static struct bin_attribute kheaders_attr __ro_after_init = {
+
+Minor nit, are you sure about __ro_after_init for an attribute
+structure?  Is it even needed?
+
+> +	.attr = {
+> +		.name = "kheaders.tar.xz",
+> +		.mode = S_IRUGO,
+> +	},
+> +	.read = &ikheaders_read,
+>  };
+
+BIN_ATTR_RO?  Ah, no, that will not work with the name of the file,
+nevermind.
+
+But, you should change S_IRUGO to the correct octal number, checkpatch
+should have barfed on this change.
+
+thanks,
+
+greg k-h
