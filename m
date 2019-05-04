@@ -2,95 +2,140 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471C4C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FC3C04AAA
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4B020862
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556980893;
-	bh=gSjzNXwzVADkhUG1J+XQmSWvUA18jz5VVOMIPF/+1Wo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o+Dq9Wd93ch4pv0bA92QdH6zdgyTzKGxdopS1GGKc2e1Ldwf1lUZgbiFw8+S7tNhh
-	 ZTE5OQEiT0Lm1ruWCckunOQCgwG0pWyDorcCv+3F0pQF45a5zxASDpFVU+VSZ9gJzT
-	 1j3rQnwYsBgxMM5NGeOfomXnvIsgU8cO7xKsP0ig=
+	by mail.kernel.org (Postfix) with ESMTP id C634B20859
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:42:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F9pvV3Iw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfEDOlb (ORCPT
+        id S1727335AbfEDOmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 10:41:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbfEDOlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 10:41:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F9C720859;
-        Sat,  4 May 2019 14:41:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556980890;
-        bh=gSjzNXwzVADkhUG1J+XQmSWvUA18jz5VVOMIPF/+1Wo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ThCm6UKrH6zyS8oz0Qw5T0dAyoGWPWxAFtryrhciPkXkkctI/EgK8butFvzCy9Hyu
-         RxqXKbYhZxGYfCNElmz9Q6ap8/AIANtSZHt7V2oAuWjLBRlgyXzVdYYLpGdJaRvbrO
-         tpoVgZrage+I+yowLYnvLnctJR+7XYiJHtWMEhRg=
-Date:   Sat, 4 May 2019 16:41:28 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Derek Kiernan <derek.kiernan@xilinx.com>
-Subject: Re: [PATCH V3 04/12] misc: xilinx_sdfec: Add open, close and ioctl
-Message-ID: <20190504144128.GA13454@kroah.com>
-References: <1556402706-176271-1-git-send-email-dragan.cvetic@xilinx.com>
- <1556402706-176271-5-git-send-email-dragan.cvetic@xilinx.com>
- <20190502172345.GC1874@kroah.com>
- <CAK8P3a2EKXrg4amHDi5zVvOQ8AM+u6EAhBc=T8Hk_tU20xSV4w@mail.gmail.com>
+        Sat, 4 May 2019 10:42:21 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38028 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfEDOmV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 10:42:21 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t70so6583766oif.5;
+        Sat, 04 May 2019 07:42:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r9bJ5mQH0bFiSdzMFFB9aG/I/ocJ8zclWjNdxs2Hvmc=;
+        b=F9pvV3Iw0ijwtXW8NVwe7iDvNNXcDLXlSYMftcFbSh3TXFVxECvo0hYJOPGNx7/eIV
+         Mnz6OTzHh/I+2tS1nQd9nLT2+ah8qGnw15m3JeCCuLX09gU20NwjZS1zw/Ac+h4lX7Gt
+         v5kvfKBC66bIxucRd953nF+f415VzOefkU6MM9CMItaC5QWHUvPtavkoeyMsdybKOd4N
+         PqFCzs8yAeXgWd0ldp+H/wlaqEhe4Rp1SE2FGce7oAUVvLu34C6WtYs/+9PL+uJY53za
+         g6hWBFiF/QHuvB90NqPEz3C51cOxd9KsL//TrCgQIxQ9h5u7ifEcEQNTGGpp4IaRRQrv
+         hWRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r9bJ5mQH0bFiSdzMFFB9aG/I/ocJ8zclWjNdxs2Hvmc=;
+        b=Uj16ZYWzlqL1QXGVx/Z9y0MBLzdfTPTQ4lZXagV47jMShlRCU5fc8la17VjeNzBr78
+         B36UXToOxW/F/CtxrbsCF05kWO/OQviCKLOqE/ZMimyE3osAiBXQQtm4Xd7xMHv5EnBN
+         K2jm7Qw7oGRHopGGJOaQS12/5DfQCREzdiF+WpgU6OP7Z5sf/l2KxjlMXXhJa80wKPG2
+         wetWr8s+g+WFbl7BkpUlFWG4vfyu5I/GpVmHyS9Pn3LSzPA+4UKlQgpVoCffkWuhAXAE
+         Qnhwq6lep6zQe+3DkyT3cncWOVDoOY9EZipC4dTRCQ8+LoOGIzKbtlbszJicguLj6m9M
+         CltQ==
+X-Gm-Message-State: APjAAAU8vfEK2wzPQND2Qx/cCxuQyLhUBWV+p6baR4BZmijWTGfav3pM
+        m/J3qKFTMY5WHdOnPuXIV7yI6UYFUwY/4lHEwuw=
+X-Google-Smtp-Source: APXvYqzEVEdH+1TEvoSvfgHfEz8LzW/K9QdEdDzS4k7lw+vdiS+OmGvkxrRdA1vw3qZWSKfHjIOhFLNkCCwoNRDDcww=
+X-Received: by 2002:aca:5bd7:: with SMTP id p206mr2766026oib.128.1556980940695;
+ Sat, 04 May 2019 07:42:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2EKXrg4amHDi5zVvOQ8AM+u6EAhBc=T8Hk_tU20xSV4w@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <cover.1556919363.git.melissa.srw@gmail.com> <CA+U=DsqiRBAdGK0aqp5Chv-AtuL8W47tu+Bq6O_Pc97HYbewkQ@mail.gmail.com>
+In-Reply-To: <CA+U=DsqiRBAdGK0aqp5Chv-AtuL8W47tu+Bq6O_Pc97HYbewkQ@mail.gmail.com>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Sat, 4 May 2019 17:42:06 +0300
+Message-ID: <CA+U=DspNV8JAbSesYZVV0czUL5=1fY1BWwbGFVum4a0aDp33Ng@mail.gmail.com>
+Subject: Re: [PATCH 0/4] staging: iio: ad7150: improve driver readability
+To:     Melissa Wen <melissa.srw@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Barry Song <21cnbao@gmail.com>, linux-iio@vger.kernel.org,
+        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
+        kernel-usp@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 04, 2019 at 10:35:02AM -0400, Arnd Bergmann wrote:
-> On Thu, May 2, 2019 at 1:23 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+On Sat, May 4, 2019 at 2:12 PM Alexandru Ardelean
+<ardeleanalex@gmail.com> wrote:
+>
+> On Sat, May 4, 2019 at 1:24 AM Melissa Wen <melissa.srw@gmail.com> wrote:
 > >
-> > On Sat, Apr 27, 2019 at 11:04:58PM +0100, Dragan Cvetic wrote:
-> > > Add char device interface per DT node present and support
-> > > file operations:
-> > > - open(),
-> > > - close(),
-> > > - unlocked_ioctl(),
-> > > - compat_ioctl().
+> > This patchset solves readability issues in AD7150 code, such as clarify
+> > register and mask definition, fashion improvement of mask uses, reduce
+> > tedious operation and useless comments.
 > >
-> > Why do you need compat_ioctl() at all?  Any "new" driver should never
-> > need it.  Just create your structures properly.
-> 
-> The function he added was the version that is needed when the structures
-> are compatible. I submitted a series to add a generic 'compat_ptr_ioctl'
-> implementation that would save a few lines here doing the same thing,
-> but it's not merged yet.
-> 
-> Generally speaking, every driver that has a .ioctl() function should also
-> have a .compat_ioctl(), and ideally it should be exactly this trivial
-> version.
+>
+> Hey,
+>
+> Two patches seem a bit noisy/un-needed.
+> The other 2 are fine from me.
+>
+> This driver does need some work to move it out of staging.
+> I am not sure what would be a big blocker for it, other than maybe it
+> needs a device-tree binding doc (in YAML format).
+> Maybe Jonathan remembers.
+>
+> Some other low-hanging-fruit ideas would be:
+> 1) remove the code for platform_data ; that one seems forgotten from
+> some other time; the interrupts should be coming from device-tree,
+> from the i2c bindings
+> 2) you could do a AD7150_EVENT_SPEC() macro (similar to
+> AD7150_TIMEOUT() macro) and use it in the ad7150_events[] list; that
+> would reduce a few lines
+> 3) similar to 2), you could do a AD7150_CHANNEL(x) macro ;
+> 4) in ad7150_event_handler() the checks could be wrapped into a macro,
+> or maybe some function ; i am referring to "(int_status &
+> AD7150_STATUS_OUT1) && (chip->old_state & AD7150_STATUS_OUT1)" checks
+> ; those seem to be repeated
+> 5) add of_match_table to the driver
+>
+> I (now) suspect that the reason this driver is still in staging is this comment:
+> /* Timeouts not currently handled by core */
+>
+> I wonder if things changed since then ?
+> If not, it would be interesting to implement it in core.
+>
 
-Ok, for some reason I thought if there was no need for a compat ioctl
-(i.e. no pointer mess), then no need for a callback at all.
+I forgot to mention the wiki page for the driver:
+https://wiki.analog.com/resources/tools-software/linux-drivers/iio-cdc/ad7150
 
-thanks,
+it may help with a few things
 
-greg k-h
+> Thanks
+> Alex
+>
+>
+> > Melissa Wen (4):
+> >   staging: iio: ad7150: organize registers definition
+> >   staging: iio: ad7150: use FIELD_GET and GENMASK
+> >   staging: iio: ad7150: simplify i2c SMBus return treatment
+> >   staging: iio: ad7150: clean up of comments
+> >
+> >  drivers/staging/iio/cdc/ad7150.c | 102 ++++++++++++++-----------------
+> >  1 file changed, 47 insertions(+), 55 deletions(-)
+> >
+> > --
+> > 2.20.1
+> >
