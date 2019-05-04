@@ -2,80 +2,96 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB00C43219
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F0CC43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7888A206BB
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67996206BB
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 10:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556965856;
+	bh=bdyM8oxbQkd8wXQ6tcNLjvAslpgVHezybpZhC3gVPT0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DRcz+/VaohgNi69SC0bND3/HEnXGnr84M7pBvfe2gP4QkF9/W1VQNa/gQfz2N/c9c
+	 yP3ZLq+L7zRi0+dGNC0INuizOxOVOgfgavvHxD0Ey/Dgvtqx1E6HC1/RcywSpv8uRj
+	 sWmZSLrCjlnOiYLMgRPzv1H6hI5SMlaXDIJ2QcfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfEDKax (ORCPT
+        id S1728209AbfEDKaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 06:30:53 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7721 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727424AbfEDKat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 06:30:49 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0AED3270C2C608783DE6;
-        Sat,  4 May 2019 18:30:47 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
- 18:30:38 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <agk@redhat.com>, <snitzer@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, <dm-devel@redhat.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] dm dust: Make dm_dust_init and dm_dust_exit static
-Date:   Sat, 4 May 2019 18:30:36 +0800
-Message-ID: <20190504103036.34436-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sat, 4 May 2019 06:30:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727388AbfEDKZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 06:25:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E0C420862;
+        Sat,  4 May 2019 10:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556965545;
+        bh=bdyM8oxbQkd8wXQ6tcNLjvAslpgVHezybpZhC3gVPT0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lEFZD8xpIx02Hqo7NPIKl5bCre2X9oWRZeAbGoBa9DrbmVFkA0AseAlsAPhmXVM3/
+         CiP5i745U2Mif7OgvCsEIo/6L3SllEzCA4C31C+9MpFy0iJZrQZoJKtoEqGBxzatPj
+         XcCqEYtloUBcYZG19Wdc4uTeQJXmB5HzFViyHU/Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 13/32] selftests: fib_rule_tests: print the result and return 1 if any tests failed
+Date:   Sat,  4 May 2019 12:24:58 +0200
+Message-Id: <20190504102452.937110928@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190504102452.523724210@linuxfoundation.org>
+References: <20190504102452.523724210@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-drivers/md/dm-dust.c:495:12: warning: symbol 'dm_dust_init' was not declared. Should it be static?
-drivers/md/dm-dust.c:505:13: warning: symbol 'dm_dust_exit' was not declared. Should it be static?
+[ Upstream commit f68d7c44e76532e46f292ad941aa3706cb9e6e40 ]
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: 65b2b4939a64 ("selftests: net: initial fib rule tests")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/md/dm-dust.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/fib_rule_tests.sh |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/md/dm-dust.c b/drivers/md/dm-dust.c
-index 178587b..3d42e40 100644
---- a/drivers/md/dm-dust.c
-+++ b/drivers/md/dm-dust.c
-@@ -492,7 +492,7 @@ static struct target_type dust_target = {
- 	.prepare_ioctl = dust_prepare_ioctl,
- };
+--- a/tools/testing/selftests/net/fib_rule_tests.sh
++++ b/tools/testing/selftests/net/fib_rule_tests.sh
+@@ -27,6 +27,7 @@ log_test()
+ 		nsuccess=$((nsuccess+1))
+ 		printf "\n    TEST: %-50s  [ OK ]\n" "${msg}"
+ 	else
++		ret=1
+ 		nfail=$((nfail+1))
+ 		printf "\n    TEST: %-50s  [FAIL]\n" "${msg}"
+ 		if [ "${PAUSE_ON_FAIL}" = "yes" ]; then
+@@ -245,4 +246,9 @@ setup
+ run_fibrule_tests
+ cleanup
  
--int __init dm_dust_init(void)
-+static int __init dm_dust_init(void)
- {
- 	int result = dm_register_target(&dust_target);
- 
-@@ -502,7 +502,7 @@ int __init dm_dust_init(void)
- 	return result;
- }
- 
--void __exit dm_dust_exit(void)
-+static void __exit dm_dust_exit(void)
- {
- 	dm_unregister_target(&dust_target);
- }
--- 
-2.7.4
++if [ "$TESTS" != "none" ]; then
++	printf "\nTests passed: %3d\n" ${nsuccess}
++	printf "Tests failed: %3d\n"   ${nfail}
++fi
++
+ exit $ret
 
 
