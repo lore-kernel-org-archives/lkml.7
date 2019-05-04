@@ -2,169 +2,109 @@ Return-Path: <SRS0=6aFo=TE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462CEC04AAA
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30195C43219
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2231F20645
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9743206DF
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 May 2019 14:27:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWcuTvn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbfEDOE3 (ORCPT
+        id S1726768AbfEDO1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 10:04:29 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:54432 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726768AbfEDOE2 (ORCPT
+        Sat, 4 May 2019 10:27:07 -0400
+Received: from mail-pg1-f170.google.com ([209.85.215.170]:41469 "EHLO
+        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726070AbfEDO1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 10:04:28 -0400
-X-UUID: 7b45a49b02564369a708bfd590c0959e-20190504
-X-UUID: 7b45a49b02564369a708bfd590c0959e-20190504
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1990895940; Sat, 04 May 2019 22:04:24 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sat, 4 May 2019 22:04:22 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sat, 4 May 2019 22:04:16 +0800
-Message-ID: <1556978656.25811.1.camel@mtksdaap41>
-Subject: Re: [PATCH v3 10/10] rtc: Add support for the MediaTek MT6358 RTC
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        "Mark Brown" <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        <linux-rtc@vger.kernel.org>
-Date:   Sat, 4 May 2019 22:04:16 +0800
-In-Reply-To: <20190503093117.54830-11-hsin-hsiung.wang@mediatek.com>
-References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
-         <20190503093117.54830-11-hsin-hsiung.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sat, 4 May 2019 10:27:07 -0400
+Received: by mail-pg1-f170.google.com with SMTP id z3so466277pgp.8
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 07:27:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YwuBHfxUv+FsNTRE8OYRjXR2YtGLoZqY0npSTmEsbfw=;
+        b=EWcuTvn96WfVDGvWWPSnvmbcRd2uBXRiUVok0LeVOv7Lm/ZVRvPqql8jQsig+RYPPQ
+         mhwXmmocTPWWAxZLtYPx/t3nu5shKRqPOz5UipgEP58g9vhEbQ0izwN0UiADH6ZOtu8T
+         4My7UHNsA+VrGyEZa9uDAlrUIwJOxQNokLn8Gbyt8I5JuSmExn8lvfjkKxinWl+dp9J1
+         7J66tmcWqCevyrh2wmgMzpEpIe2X3Ayl4U38x5jILrI90w5cjt8jfyL+Uy766tDzhO7A
+         HrSBrSFWpdywz82D1vCb8dc3GjBQd4QyCx3yDodcvbNcHWJwTzl0geXdmRI+Exw5gQXq
+         WM1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YwuBHfxUv+FsNTRE8OYRjXR2YtGLoZqY0npSTmEsbfw=;
+        b=L0bngEidmzkqH1XqcTzcWoXHJ1qrmuCYCvwU6qRJ7x9w2jMdm2UkqROuSjlL7UZj0P
+         v7wAbXFq+bzipDN3yPL0JnopEtKPqCttAED2fQvXNI5l+2HqsPO3k3DCP2908FsR3fu3
+         wIohCzXXz2sFDswD6MT6cUWD3sMSctPMwWS4IF8Ql6/DjZygbjjErSMxtrYrtx7ib8jJ
+         3ZLC6V79hoydRx0sdrwUv2vOzv+fDIl4+f+4hAfCS6gXMAj/zGRtOPtguJ0x5Sp6f9f9
+         Wd34K2FOp9RrdrkTptJRWOXL/bqePsVYf/KYbge4K7MOrNGr3cHAIGiLM5WSRlexZmfX
+         8NMw==
+X-Gm-Message-State: APjAAAWjPNzstMPYWIOk5AadJ84Swvp8ExgrMDL5DDr/F2TKFkVtVsyf
+        i2dI3Lp6ebMDlTB2lVKBklZk0V4Qh8BSCj8IngA=
+X-Google-Smtp-Source: APXvYqyjzRNY6LxBhCOHZqPyasesLIaHD+lDP6hp0I048CH4/ILXVyk1V0RMtV+/tBP8AIOUIn6Xf2Pz8gc9/tNqQ8o=
+X-Received: by 2002:a63:6988:: with SMTP id e130mr19062126pgc.150.1556980026387;
+ Sat, 04 May 2019 07:27:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 94F06579A06AD170C4104FD99EDD8ACC6517C53AB96CA365032830D34A4671372000:8
-X-MTK:  N
+References: <1556787561-5113-1-git-send-email-akinobu.mita@gmail.com>
+ <1556787561-5113-4-git-send-email-akinobu.mita@gmail.com> <66a5d068-47b1-341f-988f-c890d7f01720@gmail.com>
+In-Reply-To: <66a5d068-47b1-341f-988f-c890d7f01720@gmail.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Sat, 4 May 2019 23:26:55 +0900
+Message-ID: <CAC5umyjsAh7aZ8JEh8=QMXpNwRdnxxfdPBDwmuVKfafG+rT-PA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] nvme-pci: add device coredump support
+To:     Minwoo Im <minwoo.im.dev@gmail.com>
+Cc:     linux-nvme@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <keith.busch@intel.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-03 at 17:31 +0800, Hsin-Hsiung Wang wrote:
-> From: Ran Bi <ran.bi@mediatek.com>
-> 
-> This add support for the MediaTek MT6358 RTC. Driver using
-> compatible data to store different RTC_WRTGR address offset.
-> 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> ---
->  drivers/rtc/rtc-mt6397.c | 43 ++++++++++++++++++++++++++++++++--------
->  1 file changed, 35 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index f85f1fc29e32..3476e29db87c 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -20,6 +20,7 @@
->  #include <linux/irqdomain.h>
->  #include <linux/platform_device.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/io.h>
->  #include <linux/mfd/mt6397/core.h>
-> @@ -27,7 +28,8 @@
->  #define RTC_BBPU		0x0000
->  #define RTC_BBPU_CBUSY		BIT(6)
->  
-> -#define RTC_WRTGR		0x003c
-> +#define RTC_WRTGR_MT6358	0x3a
-> +#define RTC_WRTGR_MT6397	0x3c
->  
->  #define RTC_IRQ_STA		0x0002
->  #define RTC_IRQ_STA_AL		BIT(0)
-> @@ -71,6 +73,10 @@
->  #define RTC_NUM_YEARS		128
->  #define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
->  
-> +struct mtk_rtc_compatible {
-> +	u32			wrtgr_addr;
-> +};
-> +
->  struct mt6397_rtc {
->  	struct device		*dev;
->  	struct rtc_device	*rtc_dev;
-> @@ -78,7 +84,25 @@ struct mt6397_rtc {
->  	struct regmap		*regmap;
->  	int			irq;
->  	u32			addr_base;
-> +	const struct mtk_rtc_compatible *dev_comp;
-> +};
-> +
-> +static const struct mtk_rtc_compatible mt6358_rtc_compat = {
-> +	.wrtgr_addr = RTC_WRTGR_MT6358,
-> +};
-> +
-> +static const struct mtk_rtc_compatible mt6397_rtc_compat = {
-> +	.wrtgr_addr = RTC_WRTGR_MT6397,
-> +};
-> +
-> +static const struct of_device_id mt6397_rtc_of_match[] = {
-> +	{ .compatible = "mediatek,mt6358-rtc",
-> +		.data = (void *)&mt6358_rtc_compat, },
-> +	{ .compatible = "mediatek,mt6397-rtc",
-> +		.data = (void *)&mt6397_rtc_compat, },
-> +	{}
->  };
-> +MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
->  
->  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  {
-> @@ -86,7 +110,8 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  	int ret;
->  	u32 data;
->  
-> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> +	ret = regmap_write(rtc->regmap,
-> +			   rtc->addr_base + rtc->dev_comp->wrtgr_addr, 1);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -332,6 +357,7 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	struct resource *res;
->  	struct mt6397_chip *mt6397_chip = dev_get_drvdata(pdev->dev.parent);
->  	struct mt6397_rtc *rtc;
-> +	const struct of_device_id *of_id;
->  	int ret;
->  
->  	rtc = devm_kzalloc(&pdev->dev, sizeof(struct mt6397_rtc), GFP_KERNEL);
-> @@ -341,6 +367,13 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	rtc->addr_base = res->start;
->  
-> +	of_id = of_match_device(mt6397_rtc_of_match, &pdev->dev);
-> +	if (!of_id) {
+2019=E5=B9=B45=E6=9C=884=E6=97=A5(=E5=9C=9F) 19:04 Minwoo Im <minwoo.im.dev=
+@gmail.com>:
+>
+> Hi, Akinobu,
+>
+> Regardless to reply of the cover, few nits here.
+>
+> On 5/2/19 5:59 PM, Akinobu Mita wrote:
+> > +
+> > +static const struct nvme_reg nvme_regs[] =3D {
+> > +     { NVME_REG_CAP,         "cap",          64 },
+> > +     { NVME_REG_VS,          "version",      32 },
+>
+> Why don't we just go with "vs" instead of full name of it just like
+> the others.
 
-This will never happens, but I'm fine with it.
+I tried to imitate the output of 'nvme show-regs'.
 
-Review-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> > +     { NVME_REG_INTMS,       "intms",        32 },
+> > +     { NVME_REG_INTMC,       "intmc",        32 },
+> > +     { NVME_REG_CC,          "cc",           32 },
+> > +     { NVME_REG_CSTS,        "csts",         32 },
+> > +     { NVME_REG_NSSR,        "nssr",         32 },
+> > +     { NVME_REG_AQA,         "aqa",          32 },
+> > +     { NVME_REG_ASQ,         "asq",          64 },
+> > +     { NVME_REG_ACQ,         "acq",          64 },
+> > +     { NVME_REG_CMBLOC,      "cmbloc",       32 },
+> > +     { NVME_REG_CMBSZ,       "cmbsz",        32 },
+>
+> If it's going to support optional registers also, then we can have
+> BP-related things (BPINFO, BPRSEL, BPMBL) here also.
 
-Joe.C
-
-
+I'm going to change the register dump in binary format just like
+'nvme show-regs -o binary' does.  So we'll have registers from 00h to 4Fh.
