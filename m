@@ -2,211 +2,366 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79026C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 03:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2C0C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 04:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACEDD206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 03:50:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="qhcnxHpV"
+	by mail.kernel.org (Postfix) with ESMTP id 0CFB120675
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 04:20:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbfEEDuG (ORCPT
+        id S1727511AbfEEEUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 23:50:06 -0400
-Received: from mx1.cock.li ([185.10.68.5]:55519 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726524AbfEEDuG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 23:50:06 -0400
-X-Greylist: delayed 479 seconds by postgrey-1.27 at vger.kernel.org; Sat, 04 May 2019 23:50:04 EDT
+        Sun, 5 May 2019 00:20:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54576 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726895AbfEEEUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 00:20:31 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3572430832CB;
+        Sun,  5 May 2019 04:20:31 +0000 (UTC)
+Received: from [10.72.12.197] (ovpn-12-197.pek2.redhat.com [10.72.12.197])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5ACA51001E80;
+        Sun,  5 May 2019 04:20:26 +0000 (UTC)
+Subject: Re: [PATCH net] vhost_net: fix possible infinite loop
+From:   Jason Wang <jasowang@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ppandit@redhat.com
+References: <1556177599-56248-1-git-send-email-jasowang@redhat.com>
+ <20190425131021-mutt-send-email-mst@kernel.org>
+ <f4b4ff70-d64f-c3fb-fe2e-97ef6c55bda0@redhat.com>
+Message-ID: <999ef863-2994-e0c0-fbb1-a6e92de3fd24@redhat.com>
+Date:   Sun, 5 May 2019 12:20:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1557027723; bh=NUDdW5ZrpiAbLTxZs8JXE+qZXB0Y7p5sqNSW9bmT6a8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qhcnxHpVMyvJhXZFT+YTrB8sy6YDeBCGYH5MsJeUcA3eKlUr/+WRyJaKhhlmLoZ4E
-         fs4Zws7L0Oq1rNzqibS+aW73wGumCVudJfDWLUP3RjS0Q7Neac96sWFrK1Ld31EWAy
-         rnrLolXOImdwHx1QBw1VYGtZ2k6j00ZWaomxgfvoGI4wX5cTdX09Dvr3i+epCnigBd
-         irWOUsCvmwEWbEwdIHhzhz2h9rmdL0bqbWDWxqczm5+GrGCr94oHv/O1D320jq7xkG
-         HViiJUzWgSA0cIp6FlrhQbhfJ1WRX57BEhwBwUj47/RsMgrBiUILG6Zkac/zWzt+uu
-         DU5k2UYgUYB+g==
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+In-Reply-To: <f4b4ff70-d64f-c3fb-fe2e-97ef6c55bda0@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Date:   Sun, 05 May 2019 03:42:02 +0000
-From:   vsnsdualce@redchan.it
-To:     bignose@debian.org
-Cc:     debian-user@lists.debian.org, linux-kernel@vger.kernel.org,
-        qmastery16@gmail.com, rhkramer@gmail.com,
-        mailinglists@mattcrews.com, jhasler@newsguy.com, scdbackup@gmx.net,
-        richard@walnut.gen.nz, curty@free.fr, jmtd@debian.org,
-        mick.crane@gmail.com, tomas@tuxteam.de, steve@einval.com,
-        joe@jretrading.com, rms@gnu.org, esr@thyrsus.com
-Subject: Re: Can a recipients rights under GNU GPL be revoked? - Yes if they
- are free(gratis) licensees.
-Message-ID: <a8a3648020865b3e819213fccce645d9@redchan.it>
-X-Sender: vsnsdualce@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Sun, 05 May 2019 04:20:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yes, if the licensee has not paid anything (no money, no service, etc) 
-that you asked him for, for the license, it can be freely revoked. The 
-"clarification" by the FSF is complete and utter bullshit (and was 
-prompted by my writing on the issue).
 
-For a licensee to prevent a revocation, he must be able to enforce some 
-promise regarding revocation (when it can occur, etc) that the copyright 
-holder made to him.
+On 2019/4/26 下午3:35, Jason Wang wrote:
+>
+> On 2019/4/26 上午1:52, Michael S. Tsirkin wrote:
+>> On Thu, Apr 25, 2019 at 03:33:19AM -0400, Jason Wang wrote:
+>>> When the rx buffer is too small for a packet, we will discard the vq
+>>> descriptor and retry it for the next packet:
+>>>
+>>> while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
+>>>                           &busyloop_intr))) {
+>>> ...
+>>>     /* On overrun, truncate and discard */
+>>>     if (unlikely(headcount > UIO_MAXIOV)) {
+>>>         iov_iter_init(&msg.msg_iter, READ, vq->iov, 1, 1);
+>>>         err = sock->ops->recvmsg(sock, &msg,
+>>>                      1, MSG_DONTWAIT | MSG_TRUNC);
+>>>         pr_debug("Discarded rx packet: len %zd\n", sock_len);
+>>>         continue;
+>>>     }
+>>> ...
+>>> }
+>>>
+>>> This makes it possible to trigger a infinite while..continue loop
+>>> through the co-opreation of two VMs like:
+>>>
+>>> 1) Malicious VM1 allocate 1 byte rx buffer and try to slow down the
+>>>     vhost process as much as possible e.g using indirect descriptors or
+>>>     other.
+>>> 2) Malicious VM2 generate packets to VM1 as fast as possible
+>>>
+>>> Fixing this by checking against weight at the end of RX and TX
+>>> loop. This also eliminate other similar cases when:
+>>>
+>>> - userspace is consuming the packets in the meanwhile
+>>> - theoretical TOCTOU attack if guest moving avail index back and forth
+>>>    to hit the continue after vhost find guest just add new buffers
+>>>
+>>> This addresses CVE-2019-3900.
+>>>
+>>> Fixes: d8316f3991d20 ("vhost: fix total length when packets are too 
+>>> short")
+>> I agree this is the real issue.
+>>
+>>> Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
+>> This is just a red herring imho. We can stick this on any vhost patch :)
+>>
+>>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>>> ---
+>>>   drivers/vhost/net.c | 41 +++++++++++++++++++++--------------------
+>>>   1 file changed, 21 insertions(+), 20 deletions(-)
+>>>
+>>> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+>>> index df51a35..fb46e6b 100644
+>>> --- a/drivers/vhost/net.c
+>>> +++ b/drivers/vhost/net.c
+>>> @@ -778,8 +778,9 @@ static void handle_tx_copy(struct vhost_net 
+>>> *net, struct socket *sock)
+>>>       int err;
+>>>       int sent_pkts = 0;
+>>>       bool sock_can_batch = (sock->sk->sk_sndbuf == INT_MAX);
+>>> +    bool next_round = false;
+>>>   -    for (;;) {
+>>> +    do {
+>>>           bool busyloop_intr = false;
+>>>             if (nvq->done_idx == VHOST_NET_BATCH)
+>>> @@ -845,11 +846,10 @@ static void handle_tx_copy(struct vhost_net 
+>>> *net, struct socket *sock)
+>>>           vq->heads[nvq->done_idx].id = cpu_to_vhost32(vq, head);
+>>>           vq->heads[nvq->done_idx].len = 0;
+>>>           ++nvq->done_idx;
+>>> -        if (vhost_exceeds_weight(++sent_pkts, total_len)) {
+>>> -            vhost_poll_queue(&vq->poll);
+>>> -            break;
+>>> -        }
+>>> -    }
+>>> +    } while (!(next_round = vhost_exceeds_weight(++sent_pkts, 
+>>> total_len)));
+>>> +
+>>> +    if (next_round)
+>>> +        vhost_poll_queue(&vq->poll);
+>>>         vhost_tx_batch(net, nvq, sock, &msg);
+>>>   }
+>>> @@ -873,8 +873,9 @@ static void handle_tx_zerocopy(struct vhost_net 
+>>> *net, struct socket *sock)
+>>>       struct vhost_net_ubuf_ref *uninitialized_var(ubufs);
+>>>       bool zcopy_used;
+>>>       int sent_pkts = 0;
+>>> +    bool next_round = false;
+>>>   -    for (;;) {
+>>> +    do {
+>>>           bool busyloop_intr;
+>>>             /* Release DMAs done buffers first */
+>>> @@ -951,11 +952,10 @@ static void handle_tx_zerocopy(struct 
+>>> vhost_net *net, struct socket *sock)
+>>>           else
+>>>               vhost_zerocopy_signal_used(net, vq);
+>>>           vhost_net_tx_packet(net);
+>>> -        if (unlikely(vhost_exceeds_weight(++sent_pkts, total_len))) {
+>>> -            vhost_poll_queue(&vq->poll);
+>>> -            break;
+>>> -        }
+>>> -    }
+>>> +    } while (!(next_round = vhost_exceeds_weight(++sent_pkts, 
+>>> total_len)));
+>>> +
+>>> +    if (next_round)
+>>> +        vhost_poll_queue(&vq->poll);
+>>>   }
+>>>     /* Expects to be always run from workqueue - which acts as
+>>> @@ -1134,6 +1134,7 @@ static void handle_rx(struct vhost_net *net)
+>>>       struct iov_iter fixup;
+>>>       __virtio16 num_buffers;
+>>>       int recv_pkts = 0;
+>>> +    bool next_round = false;
+>>>         mutex_lock_nested(&vq->mutex, VHOST_NET_VQ_RX);
+>>>       sock = vq->private_data;
+>>> @@ -1153,8 +1154,11 @@ static void handle_rx(struct vhost_net *net)
+>>>           vq->log : NULL;
+>>>       mergeable = vhost_has_feature(vq, VIRTIO_NET_F_MRG_RXBUF);
+>>>   -    while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
+>>> -                              &busyloop_intr))) {
+>>> +    do {
+>>> +        sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
+>>> +                              &busyloop_intr);
+>>> +        if (!sock_len)
+>>> +            break;
+>>>           sock_len += sock_hlen;
+>>>           vhost_len = sock_len + vhost_hlen;
+>>>           headcount = get_rx_bufs(vq, vq->heads + nvq->done_idx,
+>>> @@ -1239,12 +1243,9 @@ static void handle_rx(struct vhost_net *net)
+>>>               vhost_log_write(vq, vq_log, log, vhost_len,
+>>>                       vq->iov, in);
+>>>           total_len += vhost_len;
+>>> -        if (unlikely(vhost_exceeds_weight(++recv_pkts, total_len))) {
+>>> -            vhost_poll_queue(&vq->poll);
+>>> -            goto out;
+>>> -        }
+>>> -    }
+>>> -    if (unlikely(busyloop_intr))
+>>> +    } while (!(next_round = vhost_exceeds_weight(++recv_pkts, 
+>>> total_len)));
+>>> +
+>>> +    if (unlikely(busyloop_intr || next_round))
+>>>           vhost_poll_queue(&vq->poll);
+>>>       else
+>>>           vhost_net_enable_vq(net, vq);
+>>
+>> I'm afraid with this addition the code is too much like spagetty. What
+>> does next_round mean?  Just that we are breaking out of loop?
+>
+>
+> Yes, we can have a better name of course.
+>
+>
+>> That is
+>> what goto is for...  Either let's have for(;;) with goto/break to get
+>> outside or a while loop with a condition.  Both is just unreadable.
+>>
+>> All these checks in 3 places are exactly the same on all paths and they
+>> are slow path. Why don't we put this in a function?
+>
+>
+> The point I think is, we want the weight to be checked in both fast 
+> path and slow path.
+>
+>
+>> E.g. like the below.
+>> Warning: completely untested.
+>>
+>> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+>>
+>> ---
+>>
+>> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+>> index df51a35cf537..a0f89a504cd9 100644
+>> --- a/drivers/vhost/net.c
+>> +++ b/drivers/vhost/net.c
+>> @@ -761,6 +761,23 @@ static int vhost_net_build_xdp(struct 
+>> vhost_net_virtqueue *nvq,
+>>       return 0;
+>>   }
+>>   +/* Returns true if caller needs to go back and re-read the ring. */
+>> +static bool empty_ring(struct vhost_net *net, struct vhost_virtqueue 
+>> *vq,
+>> +               int pkts, size_t total_len, bool busyloop_intr)
+>> +{
+>> +    if (unlikely(busyloop_intr)) {
+>> +        vhost_poll_queue(&vq->poll);
+>> +    } else if (unlikely(vhost_enable_notify(&net->dev, vq))) {
+>> +        /* They have slipped one in meanwhile: check again. */
+>> +        vhost_disable_notify(&net->dev, vq);
+>> +        if (!vhost_exceeds_weight(pkts, total_len))
+>> +            return true;
+>> +        vhost_poll_queue(&vq->poll);
+>> +    }
+>> +    /* Nothing new?  Wait for eventfd to tell us they refilled. */
+>> +    return false;
+>> +}
+>
+>
+> Ring empy is not the only places that needs care. E.g for RX, we need 
+> care about overrun and when userspace is consuming the packet in the 
+> same time. So there's no need to toggle vq notification in those two.
+>
+>
+>> +
+>>   static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
+>>   {
+>>       struct vhost_net_virtqueue *nvq = &net->vqs[VHOST_NET_VQ_TX];
+>> @@ -790,15 +807,10 @@ static void handle_tx_copy(struct vhost_net 
+>> *net, struct socket *sock)
+>>           /* On error, stop handling until the next kick. */
+>>           if (unlikely(head < 0))
+>>               break;
+>> -        /* Nothing new?  Wait for eventfd to tell us they refilled. */
+>>           if (head == vq->num) {
+>> -            if (unlikely(busyloop_intr)) {
+>> -                vhost_poll_queue(&vq->poll);
+>> -            } else if (unlikely(vhost_enable_notify(&net->dev,
+>> -                                vq))) {
+>> -                vhost_disable_notify(&net->dev, vq);
+>> +            if (unlikely(empty_ring(net, vq, ++sent_pkts,
+>> +                        total_len, busyloop_intr)))
+>>                   continue;
+>> -            }
+>>               break;
+>>           }
+>>   @@ -886,14 +898,10 @@ static void handle_tx_zerocopy(struct 
+>> vhost_net *net, struct socket *sock)
+>>           /* On error, stop handling until the next kick. */
+>>           if (unlikely(head < 0))
+>>               break;
+>> -        /* Nothing new?  Wait for eventfd to tell us they refilled. */
+>>           if (head == vq->num) {
+>> -            if (unlikely(busyloop_intr)) {
+>> -                vhost_poll_queue(&vq->poll);
+>> -            } else if (unlikely(vhost_enable_notify(&net->dev, vq))) {
+>> -                vhost_disable_notify(&net->dev, vq);
+>> +            if (unlikely(empty_ring(net, vq, ++sent_pkts,
+>> +                        total_len, busyloop_intr)))
+>>                   continue;
+>> -            }
+>>               break;
+>>           }
+>>   @@ -1163,18 +1171,10 @@ static void handle_rx(struct vhost_net *net)
+>>           /* On error, stop handling until the next kick. */
+>>           if (unlikely(headcount < 0))
+>>               goto out;
+>> -        /* OK, now we need to know about added descriptors. */
+>>           if (!headcount) {
+>> -            if (unlikely(busyloop_intr)) {
+>> -                vhost_poll_queue(&vq->poll);
+>> -            } else if (unlikely(vhost_enable_notify(&net->dev, vq))) {
+>> -                /* They have slipped one in as we were
+>> -                 * doing that: check again. */
+>> -                vhost_disable_notify(&net->dev, vq);
+>> -                continue;
+>> -            }
+>> -            /* Nothing new?  Wait for eventfd to tell us
+>> -             * they refilled. */
+>> +            if (unlikely(empty_ring(net, vq, ++recv_pkts,
+>> +                        total_len, busyloop_intr)))
+>> +                    continue;
+>>               goto out;
+>>           }
+>>           busyloop_intr = false;
+>
+> The patch misses several other continue that need cares and there's 
+> another call of vhost_exceeds_weight() at the end of the loop.
+>
+> So instead of duplicating check everywhere like:
+>
+> for (;;) {
+>     if (condition_x) {
+>         if (empty_ring())
+>             continue;
+>         break;
+>     }
+>     if (condition_y) {
+>         if (empty_ring());
+>             continue;
+>         break;
+>     }
+>     if (condition_z) {
+>         if (empty_ring())
+>             continue;
+>         break;
+>     }
+>
+> }
+>
+> What this patch did:
+>
+> do {
+>    if (condition_x)
+>     continue;
+>    if (condition_y)
+>     continue;
+>    if (condition_z)
+>     continue;
+> } while(!need_break())
+>
+> is much more compact and easier to read?
+>
+> Thanks
 
-In order to have an enforceable promise he must have paid the owner 
-something for that promise, otherwise it is an illusory promise and will 
-not be enforced by the court.
 
-"Promising" to fulfill a pre-existing duty is not sufficient payment 
-(consideration) either. One pre-existing duty we all have is to follow 
-laws. Promising to not violate someone's copyright is not valid 
-consideration as it is a pre-existing duty.
+Hi Michael:
 
-Before the license grant the free-taker has the following "rights" to 
-the work:
-Nothing.
+Any more comments?
 
-After the license grant he has the following permissions regarding the 
-work:
-(Whatever the license says).
-
-And for that he has paid the copyright owner: nothing.
-
-No valid consideration, no contract, any "promise" made in the license 
-text is illusory: it cannot be relied upon (including the "irrevocable" 
-clause in the GPLv3: that clause is _inoperative_ from the perspective 
-of a free-licensee vs the owner).
-
-(Additionally, consideration, to be valid, must be bargained for. 
-Tendering unwanted "consideration" is no consideration at all, thus the 
-"fame is payment enough" argument from the dicta of a 9th circuit case 
-is of no value when the licensor did not specifically bargain for such 
-in exchange. You cannot hand the owner something after the fact and 
-declare it valid consideration)
-
-You can revoke. You can do so for any reason or for no reason at all .
-
-
-
-The FSF and SFLC swear that you can bite the hand that feeds you for 
-free. They are incorrect and purposefully deceiving you in order to 
-safeguard their movement against the men who actually did the work to 
-create the corpus it rests upon.
-
-
-
-Note: If you would like a nice expansive legal paper to read on this 
-issue, Sapna Kumar's paper is good: 
-https://scholarship.law.duke.edu/faculty_scholarship/1857/
-If that is too formal and you prefer a stream of consciousness message 
-board fight on this issue, the LKML has you covered: 
-https://lkml.org/lkml/2019/5/3/698  (and it covers the 9th circuit 
-Artifex case and 9th circuit Artistic License case which some people 
-will try to make you think invalidates your proprietary rights)
-If you want a book, to have and to hold, that recognizes this: 
-https://www.amazon.com/Open-Source-Licensing-Software-Intellectual/dp/0131487876
-If a paper by some mere lawyers isn't good enough, a law professor's 
-take on the subject might be more you style: 
-https://papers.ssrn.com/sol3/papers.cfm?abstract_id=243237
-
-Yes, the GPL is revocable from free licensees. Yes they will fight you 
-in court if you revoke from someone who cares, so when you are thinking 
-of revocation: 1) properly register your copyrights ... 3) Then revoke 
-from an entity domiciled in a property-friendly circuit that isn't going 
-to simply invalidate the idea of contracts requiring actual valid 
-consideration (IE: do not revoke from someone in the 9th circuit as your 
-first course of action: revoke from an entity in another circuit)
-
-(Also note: Do not send a cease-and-desist letter off the bat: the 
-entity can then rush to the court house to seek a hearing regarding his 
-rights to the work. You don't want to be in a race-to-the-courthouse 
-situation and not even know it)
-
-Part 0) and 2) are :Get [an] experienced copyright attorney(s) who is 
-well familiar with the leanings of the various federal circuits so you 
-can formulate a proper strategy. The 9th circuit loves "Big Tech" and 
-doesn't much care for the formalities of law, and if requiring 
-consideration to actually exist regarding copyright licenses for them to 
-be mutually enforceable contracts gets in the way of California's Tech 
-industry: guess how they're going to rule in a "new insightful 
-groundbreaking finding".
-
-
-On 2019-01-27 13:23, rhkramer@gmail.com wrote:
-> On Sunday, January 27, 2019 06:47:05 AM Ben Finney wrote:
->> Howdy all,
->> 
->> Recently in this forum, some concerns have been raised about works
->> covered by GNU GPL. In particular, whether a recipient of a work,
->> received under conditions of the GNU GPL, can have the freedoms of the
->> GNU GPL later withdrawn in that same work.
->> 
->> To reassure those who might worry whether they can reply on the 
->> freedom
->> granted in a work, it is worth reading the GNU FAQ document for the 
->> GNU
->> GPL at the Free Software Foundation:
->> 
->>     [For any GNU GPL-licensed work,] the public already has the right 
->> to
->>     use the program under the GPL, and this right cannot be withdrawn.
->> 
->> 
->> <URL:https://www.gnu.org/licenses/gpl-faq.en.html#CanDeveloperThirdParty>
->> 
->> The same answer is in the FAQ specifically for the GNU GPL version 2.0
->> <URL:https://www.gnu.org/licenses/old-licenses/gpl-2.0-faq.html#CanDevelope
->> rThirdParty>.
->> 
->> You can read more in the Software Freedom Conservancy's document
->> _Copyleft and the GNU General Public License: A Comprehensive Tutorial
->> and Guide_, specifically in §7.4 \u201cGPLv2 Irrevocability\u201d. 
->> That concludes:
->> 
->>     Whether as a matter of a straightforward contractual obligation, 
->> or
->>     as a matter of promissory estoppel, a contributor\u2019s attempt 
->> to
->>     revoke a copyright license grant and then enforce their copyright
->>     against a user is highly unlikely to succeed.
->> 
->> 
->> <URL:https://copyleft.org/guide/comprehensive-gpl-guidech8.html#x11-540007
->> .4>
->> 
->> In other words: Any copyright holder can *say* they wish to
->> retroactively revoke the GNU GPL to some party. However, unless that
->> party has violated the conditions of the GNU GPL grant they originally
->> received, there does not appear to be any enforcible threat of
->> revocation that would succeed.
->> 
->> I hope these, along with the many court cases world-wide that have
->> tested the GNU GPL and found it to be enforcible, can reassure those
->> considering whether a particular copyright holder's whim can revoke 
->> the
->> freedoms guaranteed in a GNU GPL-covered work. I'd say there's nothing
->> to worry about from those threats.
-> 
-> I don't disagree with what is stated here (but I have a headache and 
-> didn't
-> read it carefully), but, even without reading carefully, I believe that 
-> the
-> original author of a package could do something like create further
-> modifications to the code and create a non-free version of the code.
-> 
-> Assuming that is correct, people using (or basing modifications) on the
-> (presumably) older free version could continue to use and develop based 
-> on
-> that, but would not have rights to that new non-free version.
-
+Thanks
 
