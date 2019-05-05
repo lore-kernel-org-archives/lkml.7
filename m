@@ -2,166 +2,128 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEDAC46460
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 03:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9227BC04AAA
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 03:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFAD22087E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 03:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 597632087E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 03:32:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNSaL0iU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ljiQ50td"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbfEEDbl (ORCPT
+        id S1727601AbfEEDcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 23:31:41 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34505 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfEEDbk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 23:31:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c13so4726278pgt.1;
-        Sat, 04 May 2019 20:31:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zkpxz+bEVJim4pTUs/VL14wDtnfj/pMmqSrNj8K7mhg=;
-        b=bNSaL0iUEkpv/cfyuXJBFxaS+pwPz5m6gm04nrZ4dKHfuNqANXIwiWIUAnqY/YOjyK
-         DfwdwpinZJao09utvZS8sN+PLV7Bmpk9KXvg/z9spovwImGoJGhrEXT01nDl44Vr+5Ec
-         zToqvcRsJ1DKMe/u4vJoG2v23hUUrWfmn10yTdoBzXos2zFQZHkDIDZ1MXv7FQzTspJW
-         D+AfmZURVuOp7E3F3dprACtAG5StMi+XlC3FLoP0St1qAYQbY/P/4quq8jHRbLfZeS8T
-         /nXvtcwA9XSM1Iud7xABryx1i5ASq88feG7eCV1nF9miKPhg4qXIXtG7fJJg+jM3GTTw
-         WtUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zkpxz+bEVJim4pTUs/VL14wDtnfj/pMmqSrNj8K7mhg=;
-        b=RH1iXs4yvcdM7t7Ix/p1YTuC/t7BC9qb2ZL2Yz1tQw6/OIVnOQNNcn2D2KqEwPJwSe
-         u14fpqE/m0sgRCZ8pG0DdFrpbAaDGRhV+N+LkIPZDhA+0dFoquP7ZDxQsebkOoBhCYJz
-         8QtOZ9fxlVLouioKI4KXsWPAmoq4ZV6wFM6sapx24X+K4we8y8/9xHF6zfgy/6TQNrJb
-         7XaSm+ikyhH8q/zI/Mnjx3Qa2ekFeXCQ6vHVx6zVsI7gDyVdvnpJvNpQ1uuPRVBkBUBz
-         pg91sDWrvhgmHqWFQwfROuAkijYCU9AHGVvENRsCos0zzCeRzSQGlHz9o0nM79mycp+4
-         EFfw==
-X-Gm-Message-State: APjAAAU2vYXCJ+tn2L92777xk+2awfD7fmPgNZqGiiPUxrloa4AHieKA
-        kRg0brsRPP07g2NdcvGhFvDHeOX2
-X-Google-Smtp-Source: APXvYqxXgktIUMCC3hbPZMaqaPBL/9R6BJGeXpDugLmJfMUqqyiJd5f/vi3BLd9J2nLIhsrkqLbEgw==
-X-Received: by 2002:a63:750c:: with SMTP id q12mr22629407pgc.133.1557027099550;
-        Sat, 04 May 2019 20:31:39 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j6sm8379049pfe.107.2019.05.04.20.31.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 20:31:38 -0700 (PDT)
-Subject: Re: [PATCH 5.0 00/32] 5.0.13-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190504102452.523724210@linuxfoundation.org>
- <20190505030515.txopqluki6mc2px2@xps.therub.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <4913833a-5b46-20d0-4dce-3e6d46a7a498@roeck-us.net>
-Date:   Sat, 4 May 2019 20:31:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190505030515.txopqluki6mc2px2@xps.therub.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Sat, 4 May 2019 23:32:01 -0400
+Received: from mail-eopbgr20067.outbound.protection.outlook.com ([40.107.2.67]:7394
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726524AbfEEDcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 23:32:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6mRpMsbd2ECkI5XqAmmm/Zo5WsjadPqWFJytnNcIp+I=;
+ b=ljiQ50tdcX5x2ByQp5VTXSOzuN6NZwgboS6NsCsiUoqKYgZ9qJvthsjQjahEOhVmVgyfuELWCV+m5LWaBSafRRPgxxYNuX4k4AteJf4REYoiI3xcbkjQm74tJwH7mbw5FvkvnrWHiSghj6FagbmdzmksGrpnramcZHM+QhA/faA=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3788.eurprd04.prod.outlook.com (52.134.72.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.12; Sun, 5 May 2019 03:31:55 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e8ca:4f6b:e43:c170%3]) with mapi id 15.20.1856.012; Sun, 5 May 2019
+ 03:31:55 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "eha@deif.com" <eha@deif.com>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        "peda@axentia.se" <peda@axentia.se>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] i2c: imx: Use __maybe_unused instead of #if CONFIG_PM
+Thread-Topic: [PATCH] i2c: imx: Use __maybe_unused instead of #if CONFIG_PM
+Thread-Index: AQHVAvMW5SvMlMIW0UqHU1fqWG2/GA==
+Date:   Sun, 5 May 2019 03:31:55 +0000
+Message-ID: <1557026820-29428-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR04CA0083.apcprd04.prod.outlook.com
+ (2603:1096:202:15::27) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c9540aff-ad98-4d8d-db10-08d6d10a38a7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3788;
+x-ms-traffictypediagnostic: DB3PR0402MB3788:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-microsoft-antispam-prvs: <DB3PR0402MB378857C27D412E423ABB9F15F5370@DB3PR0402MB3788.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 00286C0CA6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(136003)(376002)(346002)(39860400002)(199004)(189003)(53936002)(7736002)(6486002)(6506007)(386003)(2501003)(2616005)(26005)(316002)(7416002)(73956011)(66446008)(64756008)(66556008)(66476007)(66946007)(3846002)(6116002)(50226002)(186003)(8936002)(81166006)(81156014)(8676002)(68736007)(5660300002)(71190400001)(86362001)(71200400001)(110136005)(2201001)(4326008)(25786009)(6436002)(36756003)(2906002)(486006)(478600001)(99286004)(14454004)(476003)(6512007)(66066001)(14444005)(256004)(52116002)(102836004)(305945005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3788;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: HPBTnNEugpty74EITfg67+mf6/dreXESJNSkpDbEon4gPF1Ax6kLqNRsfpPqPTnF9s5pBRgiFYVDSc7IPSErh35hWTF+waF/UO9uMwe6PDUxYQLyUdnLSJlkRy7jYkmCZsgBeUW5MzZD7tWoV+xc0jO6o9ZuoZpx+slpB6rjoZGRUPTKnHJ9KnPgbZlVIGvTceFPcW04RYhRmpjZmsDOHrGugOW2szfnz5rMWmmkiDTkj7hAda30dA0GhyEV8CTUcvcdUqTopGXcCaRFFn6CdpH61qyIGnioRc8u/SH8cNW9Jy6n2GpLimNPFR6eGzbEfyYqGECeP+R+IPKoqpGr2wY6mKMIv2N7Ui519ZDIko+WlkzSHbj/WjE8X8sRWjDi1kAP+xYLPSmIbI3KvuZwq1sQ1zw3+CwS9boI7J6C/qE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9540aff-ad98-4d8d-db10-08d6d10a38a7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2019 03:31:55.3479
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3788
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/19 8:05 PM, Dan Rue wrote:
-> On Sat, May 04, 2019 at 12:24:45PM +0200, Greg Kroah-Hartman wrote:
->> This is the start of the stable review cycle for the 5.0.13 release.
->> There are 32 patches in this series, all will be posted as a response
->> to this one.  If anyone has any issues with these being applied, please
->> let me know.
->>
->> Responses should be made by Mon 06 May 2019 10:24:23 AM UTC.
->> Anything received after that time might be too late.
-> 
-> Results from Linaro’s test farm.
-> Regressions detected.
-> 
-
-Confusing. What are the regressions ? Below it says that there are none.
-
-Guenter
-
-> Summary
-> ------------------------------------------------------------------------
-> 
-> kernel: 5.0.13-rc1
-> git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-> git branch: linux-5.0.y
-> git commit: c6bd3efdcefd68cc590853c50594a9fc971d93cd
-> git describe: v5.0.12-33-gc6bd3efdcefd
-> Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.0-oe/build/v5.0.12-33-gc6bd3efdcefd
-> 
-> No regressions (compared to build v5.0.11-102-g17f93022a8c9)
-> 
-> No fixes (compared to build v5.0.11-102-g17f93022a8c9)
-> 
-> Ran 25060 total tests in the following environments and test suites.
-> 
-> Environments
-> --------------
-> - dragonboard-410c
-> - hi6220-hikey
-> - i386
-> - juno-r2
-> - qemu_arm
-> - qemu_arm64
-> - qemu_i386
-> - qemu_x86_64
-> - x15
-> - x86
-> 
-> Test Suites
-> -----------
-> * build
-> * install-android-platform-tools-r2600
-> * kselftest
-> * libgpiod
-> * libhugetlbfs
-> * ltp-cap_bounds-tests
-> * ltp-commands-tests
-> * ltp-containers-tests
-> * ltp-cpuhotplug-tests
-> * ltp-cve-tests
-> * ltp-dio-tests
-> * ltp-fcntl-locktests-tests
-> * ltp-filecaps-tests
-> * ltp-fs_bind-tests
-> * ltp-fs_perms_simple-tests
-> * ltp-fsx-tests
-> * ltp-hugetlb-tests
-> * ltp-io-tests
-> * ltp-ipc-tests
-> * ltp-math-tests
-> * ltp-mm-tests
-> * ltp-nptl-tests
-> * ltp-pty-tests
-> * ltp-sched-tests
-> * ltp-securebits-tests
-> * ltp-syscalls-tests
-> * ltp-timers-tests
-> * perf
-> * spectre-meltdown-checker-test
-> * v4l2-compliance
-> * kvm-unit-tests
-> * ltp-fs-tests
-> * ltp-open-posix-tests
-> * kselftest-vsyscall-mode-native
-> * kselftest-vsyscall-mode-none
-> 
-
+VXNlIF9fbWF5YmVfdW51c2VkIGZvciBydW50aW1lIFBNIHJlbGF0ZWQgZnVuY3Rpb25zIGluc3Rl
+YWQNCm9mICNpZiBDT05GSUdfUE0gdG8gc2ltcGx5IHRoZSBjb2RlLg0KDQpTaWduZWQtb2ZmLWJ5
+OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCi0tLQ0KIGRyaXZlcnMvaTJjL2J1
+c3Nlcy9pMmMtaW14LmMgfCAxMSArKystLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2Vy
+dGlvbnMoKyksIDggZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9idXNz
+ZXMvaTJjLWlteC5jIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1pbXguYw0KaW5kZXggZmQ3MGIx
+MS4uYjFiOGI5MyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtaW14LmMNCisr
+KyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtaW14LmMNCkBAIC0xMjIwLDggKzEyMjAsNyBAQCBz
+dGF0aWMgaW50IGkyY19pbXhfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQog
+CXJldHVybiAwOw0KIH0NCiANCi0jaWZkZWYgQ09ORklHX1BNDQotc3RhdGljIGludCBpMmNfaW14
+X3J1bnRpbWVfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQorc3RhdGljIGludCBfX21heWJl
+X3VudXNlZCBpMmNfaW14X3J1bnRpbWVfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQogew0K
+IAlzdHJ1Y3QgaW14X2kyY19zdHJ1Y3QgKmkyY19pbXggPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsN
+CiANCkBAIC0xMjMwLDcgKzEyMjksNyBAQCBzdGF0aWMgaW50IGkyY19pbXhfcnVudGltZV9zdXNw
+ZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCiAJcmV0dXJuIDA7DQogfQ0KIA0KLXN0YXRpYyBpbnQg
+aTJjX2lteF9ydW50aW1lX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQorc3RhdGljIGludCBf
+X21heWJlX3VudXNlZCBpMmNfaW14X3J1bnRpbWVfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikN
+CiB7DQogCXN0cnVjdCBpbXhfaTJjX3N0cnVjdCAqaTJjX2lteCA9IGRldl9nZXRfZHJ2ZGF0YShk
+ZXYpOw0KIAlpbnQgcmV0Ow0KQEAgLTEyNDYsMTcgKzEyNDUsMTMgQEAgc3RhdGljIGNvbnN0IHN0
+cnVjdCBkZXZfcG1fb3BzIGkyY19pbXhfcG1fb3BzID0gew0KIAlTRVRfUlVOVElNRV9QTV9PUFMo
+aTJjX2lteF9ydW50aW1lX3N1c3BlbmQsDQogCQkJICAgaTJjX2lteF9ydW50aW1lX3Jlc3VtZSwg
+TlVMTCkNCiB9Ow0KLSNkZWZpbmUgSTJDX0lNWF9QTV9PUFMgKCZpMmNfaW14X3BtX29wcykNCi0j
+ZWxzZQ0KLSNkZWZpbmUgSTJDX0lNWF9QTV9PUFMgTlVMTA0KLSNlbmRpZiAvKiBDT05GSUdfUE0g
+Ki8NCiANCiBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBpMmNfaW14X2RyaXZlciA9IHsN
+CiAJLnByb2JlID0gaTJjX2lteF9wcm9iZSwNCiAJLnJlbW92ZSA9IGkyY19pbXhfcmVtb3ZlLA0K
+IAkuZHJpdmVyID0gew0KIAkJLm5hbWUgPSBEUklWRVJfTkFNRSwNCi0JCS5wbSA9IEkyQ19JTVhf
+UE1fT1BTLA0KKwkJLnBtID0gJmkyY19pbXhfcG1fb3BzLA0KIAkJLm9mX21hdGNoX3RhYmxlID0g
+aTJjX2lteF9kdF9pZHMsDQogCX0sDQogCS5pZF90YWJsZSA9IGlteF9pMmNfZGV2dHlwZSwNCi0t
+IA0KMi43LjQNCg0K
