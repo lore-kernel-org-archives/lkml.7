@@ -2,117 +2,67 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4162C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 22:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE4CC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 22:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE3E20B7C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 22:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CBD0208C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 22:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557094204;
+	bh=B51JwvzAS8KjLbX2+CvQYy1DE8ma31YveSrYcGQ8Blc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=kQNjnvf5OBxjBd/XELqXAp4+d00CpLq7cTPB5duiqdVL23MobhEflrQogTkqhh/ob
+	 DAFBCThNXM5vpTKSLumzD7/Ia/Y7UaIrAbNKNCJF+aFyBqnIuMq9PB5/Ytzt2xAMU8
+	 GIZYOV1Ijj85gvtcAD7gFdj0jROv83RedbOFw6i4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfEEWHP (ORCPT
+        id S1727939AbfEEWKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 18:07:15 -0400
-Received: from rcdn-iport-9.cisco.com ([173.37.86.80]:12805 "EHLO
-        rcdn-iport-9.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727949AbfEEWHM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 18:07:12 -0400
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0CaBADJXc9c/4wNJK1lHAEBAQQBAQc?=
- =?us-ascii?q?EAQGBZYIRgToBMiisaocTEINZgRSCCCM4EwEDAQEEAQECAQJtKIZKgT8SgyK?=
- =?us-ascii?q?CC6sfiGOBRRSBHoZ4hFYXgX+BEYNQhA2GGQSLE4g2k2kJggtWkWMnbpRaLYt?=
- =?us-ascii?q?ulRGBZiGBVjMaCBsVgyeCGxeOPx8DMI5tglIBAQ?=
-X-IronPort-AV: E=Sophos;i="5.60,435,1549929600"; 
-   d="scan'208";a="469175710"
-Received: from alln-core-7.cisco.com ([173.36.13.140])
-  by rcdn-iport-9.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 05 May 2019 22:07:08 +0000
-Received: from tusi.cisco.com (tusi.cisco.com [172.24.98.27])
-        by alln-core-7.cisco.com (8.15.2/8.15.2) with ESMTP id x45M76dt003095;
-        Sun, 5 May 2019 22:07:07 GMT
-From:   Ruslan Babayev <ruslan@babayev.com>
-To:     linux@armlinux.org.uk, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, mika.westerberg@linux.intel.com,
-        wsa@the-dreams.de
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, xe-linux-external@cisco.com
-Subject: [PATCH net-next 1/2] i2c: acpi: export i2c_acpi_find_adapter_by_handle
-Date:   Sun,  5 May 2019 15:05:22 -0700
-Message-Id: <20190505220524.37266-2-ruslan@babayev.com>
-X-Mailer: git-send-email 2.17.1
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 172.24.98.27, tusi.cisco.com
-X-Outbound-Node: alln-core-7.cisco.com
+        Sun, 5 May 2019 18:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726905AbfEEWKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 18:10:02 -0400
+Subject: Re: [git pull] vfs.git fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557094202;
+        bh=B51JwvzAS8KjLbX2+CvQYy1DE8ma31YveSrYcGQ8Blc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=kXmMdUkRZ708+6Dxuw5AQnoN2G03rr3b63aEsYDBC314/7bZ8F9jHyr5LAzfuLWhu
+         4BpbpebhtgoDTwuPXbWUbZCoGoR4n3ljPjvyPjYXt+DOAzetAWtwI2P+kwRMfngbq6
+         Lbxxq0xIQcBlJzbYT4U8EC/duBkHR+2CKaKC+13U=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190505021841.GZ23075@ZenIV.linux.org.uk>
+References: <20190505021841.GZ23075@ZenIV.linux.org.uk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190505021841.GZ23075@ZenIV.linux.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+X-PR-Tracked-Commit-Id: 4e9036042fedaffcd868d7f7aa948756c48c637d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 51987affd626b8e4ce9f4c65e1950cb9159f0f58
+Message-Id: <155709420201.22198.11773671266787398222.pr-tracker-bot@kernel.org>
+Date:   Sun, 05 May 2019 22:10:02 +0000
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows drivers to lookup i2c adapters on ACPI based systems similar to
-of_get_i2c_adapter_by_node() with DT based systems.
+The pull request you sent on Sun, 5 May 2019 03:18:46 +0100:
 
-Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
-Cc: xe-linux-external@cisco.com
----
- drivers/i2c/i2c-core-acpi.c | 3 ++-
- include/linux/i2c.h         | 6 ++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index 272800692088..964687534754 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -337,7 +337,7 @@ static int i2c_acpi_find_match_device(struct device *dev, void *data)
- 	return ACPI_COMPANION(dev) == data;
- }
- 
--static struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
-+struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
- {
- 	struct device *dev;
- 
-@@ -345,6 +345,7 @@ static struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
- 			      i2c_acpi_find_match_adapter);
- 	return dev ? i2c_verify_adapter(dev) : NULL;
- }
-+EXPORT_SYMBOL_GPL(i2c_acpi_find_adapter_by_handle);
- 
- static struct i2c_client *i2c_acpi_find_client_by_adev(struct acpi_device *adev)
- {
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 383510b4f083..24859a26f167 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -33,6 +33,7 @@
- #include <linux/rtmutex.h>
- #include <linux/irqdomain.h>		/* for Host Notify IRQ */
- #include <linux/of.h>		/* for struct device_node */
-+#include <linux/acpi.h>		/* for acpi_handle */
- #include <linux/swab.h>		/* for swab16 */
- #include <uapi/linux/i2c.h>
- 
-@@ -977,6 +978,7 @@ bool i2c_acpi_get_i2c_resource(struct acpi_resource *ares,
- u32 i2c_acpi_find_bus_speed(struct device *dev);
- struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
- 				       struct i2c_board_info *info);
-+struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle);
- #else
- static inline bool i2c_acpi_get_i2c_resource(struct acpi_resource *ares,
- 					     struct acpi_resource_i2c_serialbus **i2c)
-@@ -992,6 +994,10 @@ static inline struct i2c_client *i2c_acpi_new_device(struct device *dev,
- {
- 	return NULL;
- }
-+struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
-+{
-+	return NULL;
-+}
- #endif /* CONFIG_ACPI */
- 
- #endif /* _LINUX_I2C_H */
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/51987affd626b8e4ce9f4c65e1950cb9159f0f58
+
+Thank you!
+
 -- 
-2.17.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
