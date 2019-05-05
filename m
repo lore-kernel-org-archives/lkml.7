@@ -2,62 +2,98 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFA2C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89793C04AAC
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E07E20578
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F5C2208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557083356;
+	bh=4a9Bj+P7pYzppgR+XAGFwmOPU9FoP0E5RLD7Tb28gb4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wubv/Z1FPK7/tlOxR1tKnBHDmS/8UHloCv4tSjV1UuFG2W/okk+zzmh+UNTv59gj8
+	 JdPxHhtYI/h6g8sC3D21u7vXYUQ+6FgFMsCx5BaL5mMSBUFY4AnrGKPj9sxzyhvYdV
+	 MwQ/PNilaCZvzqRBIhvu76BtuEqLtOm+NAWiChK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbfEETCV (ORCPT
+        id S1727740AbfEETJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 15:02:21 -0400
-Received: from ms.lwn.net ([45.79.88.28]:60644 "EHLO ms.lwn.net"
+        Sun, 5 May 2019 15:09:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfEETCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 15:02:21 -0400
-Received: from localhost.localdomain (localhost [127.0.0.1])
+        id S1726636AbfEETJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 15:09:15 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 770E42E6;
-        Sun,  5 May 2019 19:02:20 +0000 (UTC)
-Date:   Sun, 5 May 2019 13:02:19 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/27] Include linux x86 docs into Sphinx TOC tree
-Message-ID: <20190505130219.29bd72f8@lwn.net>
-In-Reply-To: <20190502070633.9809-1-changbin.du@gmail.com>
-References: <20190502070633.9809-1-changbin.du@gmail.com>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FF26206DF;
+        Sun,  5 May 2019 19:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557083354;
+        bh=4a9Bj+P7pYzppgR+XAGFwmOPU9FoP0E5RLD7Tb28gb4=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=D97UXnrnl0AtsC0B9sGMYTCi2lvpOjaFrNdwax0Dusj+M5yd1rJPPmIGj3bggQ3PD
+         NqFrYWxbzKaKC4GXIkC/qQAjOkwobNOG5PDLv6E9d/BNtVUsqe527bpb2iMKD9m/m6
+         rPYFSzx/50c+g0aTKCzUU+khEMLJbg4gr2WUCzwU=
+Date:   Sun, 5 May 2019 21:09:09 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Rik van Riel <riel@surriel.com>
+cc:     Sebastian Gottschall <s.gottschall@newmedia-net.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Nicolai Stange <nstange@suse.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        stable@vger.kernel.org, Jiri Kosina <jikos@jikos.cz>
+Subject: Re: [PATCH] x86/fpu: Remove the _GPL from the kernel_fpu_begin/end()
+ export
+In-Reply-To: <86b8d81d760ac1f6e622f1c873a5f9aad7862734.camel@surriel.com>
+Message-ID: <nycvar.YFH.7.76.1905052106550.17054@cbobk.fhfr.pm>
+References: <761345df6285930339aced868ebf8ec459091383.1556807897.git.luto@kernel.org>  <20190502154043.gfv4iplcvzjz3mc6@linutronix.de>  <nycvar.YFH.7.76.1905032044250.10635@cbobk.fhfr.pm>  <20190504004747.GA107909@gmail.com>  <2238f6ed-9338-903c-760c-6200e73b1599@newmedia-net.de>
+ <86b8d81d760ac1f6e622f1c873a5f9aad7862734.camel@surriel.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  2 May 2019 15:06:06 +0800
-Changbin Du <changbin.du@gmail.com> wrote:
+On Sun, 5 May 2019, Rik van Riel wrote:
 
-> The kernel now uses Sphinx to generate intelligent and beautiful documentation
-> from reStructuredText files. I converted all of the Linux x86 docs to rst
-> format in this serias.
+> > Using fpu code in kernel space in a kernel module is a derived work of 
+> > the kernel itself? dont get me wrong, but this is absurd. i mean you 
+> > limit the use of cpu instructions. the use of cpu instructions should 
+> > be free of any licensing issue. i would even argument you are 
+> > violating the license of the cpu ower given to the kernel by executing 
+> > it, by restricting its use for no reason
 > 
-> For you to preview, please visit below url:
-> http://www.bytemem.com:8080/kernel-doc/index.html
+> Using FPU code in kernel space in a kernel module does not require the 
+> use of kernel_fpu_begin/end().
 > 
-> Thank you!
+> The kernel module could simply disable preemption, save the FPU 
+> registers, use the FPU, restore the FPU registers, and reenable 
+> preemption.
 
-So which tree was this generated against?  I was gearing up to try it
-out, but it doesn't really want to apply to docs-next...
+That means the module basically reimplemented kernel_fpu_begin/end() in 
+its whole (not getting the further optimizations implemented by the 
+kernel, sure). And therefore I sort of don't see the point of "hiding" it.
 
 Thanks,
 
-jon
+-- 
+Jiri Kosina
+SUSE Labs
+
