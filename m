@@ -2,108 +2,128 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDBEC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 20:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C324C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 20:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6383F206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 20:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF95F204EC
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 20:20:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="WgHyk+Wv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfEEUFJ (ORCPT
+        id S1727767AbfEEUUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 16:05:09 -0400
-Received: from smtp.infotech.no ([82.134.31.41]:43751 "EHLO smtp.infotech.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727615AbfEEUFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 16:05:08 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp.infotech.no (Postfix) with ESMTP id 4051120423D;
-        Sun,  5 May 2019 22:05:06 +0200 (CEST)
-X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
-Received: from smtp.infotech.no ([127.0.0.1])
-        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Fv7CIxAIjNDX; Sun,  5 May 2019 22:04:59 +0200 (CEST)
-Received: from [192.168.10.165] (c56B33E56.static.as2116.net [86.62.179.86])
-        by smtp.infotech.no (Postfix) with ESMTPA id E8A17204152;
-        Sun,  5 May 2019 22:04:58 +0200 (CEST)
-Reply-To: dgilbert@interlog.com
-Subject: Re: [PATCH 21/24] sg: switch to SPDX tags
-To:     Christoph Hellwig <hch@lst.de>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     Hannes Reinecke <hare@suse.de>, Lee Duncan <lduncan@suse.com>,
-        Chris Leech <cleech@redhat.com>, Willem Riede <osst@riede.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        =?UTF-8?Q?Kai_M=c3=a4kisara?= <Kai.Makisara@kolumbus.fi>,
-        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
-        osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <20190501161417.32592-1-hch@lst.de>
- <20190501161417.32592-22-hch@lst.de>
-From:   Douglas Gilbert <dgilbert@interlog.com>
-Message-ID: <4285486a-b30c-300c-e794-e74999b15fb2@interlog.com>
-Date:   Sun, 5 May 2019 22:04:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 5 May 2019 16:20:18 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37113 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfEEUUR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 16:20:17 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2138C886BF;
+        Mon,  6 May 2019 08:20:15 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1557087615;
+        bh=vATUAoEO7QEhNVmEPL+O/0zdtf8Mmb4iZycPsuNK0o8=;
+        h=From:To:CC:Subject:Date:References;
+        b=WgHyk+WvZoLfwP3WXz3ohPi4CAZg3P0T537uuoQE2o0pGKcpe8iOHgsD+Cc8dog8N
+         mSKHAPJQaNTfmAKBsXkxd7f4qUYHVLpbK9asuVu8CYjESLQMPYZgGYQa0TxHrWSAPh
+         YsykJEGGueOA/+A8idfoQCeE9QUbdMhCBT1Tk9CXxr9uf/3izZ8ABF0N9QxgIH2N1K
+         Jo/QctoRuZ8dMkCGrwsp0DvVfg/TuI3Sd5cxNz4ImM5goDvXuldRokipiJgXfvNdnB
+         xCxFEN5985J47kLQa8PPK6a6wEw+XIF1BfBSdEU985vWlhip4IOTsG4B5PR0FGU3em
+         IHBOHrJ9QKmaA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5ccf457f0001>; Mon, 06 May 2019 08:20:15 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Mon, 6 May 2019 08:20:15 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Mon, 6 May 2019 08:20:15 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     David Miller <davem@davemloft.net>
+CC:     "jon.maloy@ericsson.com" <jon.maloy@ericsson.com>,
+        "ying.xue@windriver.com" <ying.xue@windriver.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tipc: Avoid copying bytes beyond the supplied data
+Thread-Topic: [PATCH] tipc: Avoid copying bytes beyond the supplied data
+Thread-Index: AQHVAJSPla9XQI+X40m6eIT6p/LBgg==
+Date:   Sun, 5 May 2019 20:20:14 +0000
+Message-ID: <306471ba2dc54014a77b090d2cf6a7c7@svr-chch-ex1.atlnz.lc>
+References: <20190502031004.7125-1-chris.packham@alliedtelesis.co.nz>
+ <20190504.004449.945185836330139212.davem@davemloft.net>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190501161417.32592-22-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-01 6:14 p.m., Christoph Hellwig wrote:
-> Use the the GPLv2+ SPDX tag instead of verbose boilerplate text.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-
-This scripts/checkpatch.pl noise seems to be related to the patch below:
-
-$ scripts/checkpatch.pl /tmp/t.patch
-Traceback (most recent call last):
-   File "scripts/spdxcheck.py", line 6, in <module>
-     from ply import lex, yacc
-ImportError: No module named ply
-total: 0 errors, 0 warnings, 98 lines checked
-
-That happens both in the mkp/scsi/5.2/scsi-queue and the latest linux-stable
-trees.
-
-
-BTW Are C++ comments (as used in this patch) now permitted in lk code?
-
-Doug Gilbert
-
-> ---
->   drivers/scsi/sg.c | 7 +------
->   1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-> index d3f15319b9b3..bcdc28e5ede7 100644
-> --- a/drivers/scsi/sg.c
-> +++ b/drivers/scsi/sg.c
-> @@ -1,3 +1,4 @@
-> +// SPDX-License-Identifier: GPL-2.0+
->   /*
->    *  History:
->    *  Started: Aug 9 by Lawrence Foard (entropy@world.std.com),
-> @@ -8,12 +9,6 @@
->    *        Copyright (C) 1992 Lawrence Foard
->    * Version 2 and 3 extensions to driver:
->    *        Copyright (C) 1998 - 2014 Douglas Gilbert
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2, or (at your option)
-> - * any later version.
-> - *
->    */
->   
->   static int sg_version_num = 30536;	/* 2 digits for each component */
-> 
-
+On 4/05/19 4:45 PM, David Miller wrote:=0A=
+> From: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+> Date: Thu,  2 May 2019 15:10:04 +1200=0A=
+> =0A=
+>> TLV_SET is called with a data pointer and a len parameter that tells us=
+=0A=
+>> how many bytes are pointed to by data. When invoking memcpy() we need=0A=
+>> to careful to only copy len bytes.=0A=
+>>=0A=
+>> Previously we would copy TLV_LENGTH(len) bytes which would copy an extra=
+=0A=
+>> 4 bytes past the end of the data pointer which newer GCC versions=0A=
+>> complain about.=0A=
+>>=0A=
+>>   In file included from test.c:17:=0A=
+>>   In function 'TLV_SET',=0A=
+>>       inlined from 'test' at test.c:186:5:=0A=
+>>   /usr/include/linux/tipc_config.h:317:3:=0A=
+>>   warning: 'memcpy' forming offset [33, 36] is out of the bounds [0, 32]=
+=0A=
+>>   of object 'bearer_name' with type 'char[32]' [-Warray-bounds]=0A=
+>>       memcpy(TLV_DATA(tlv_ptr), data, tlv_len);=0A=
+>>       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=0A=
+>>   test.c: In function 'test':=0A=
+>>   test.c::161:10: note:=0A=
+>>   'bearer_name' declared here=0A=
+>>       char bearer_name[TIPC_MAX_BEARER_NAME];=0A=
+>>            ^~~~~~~~~~~=0A=
+>>=0A=
+>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+> =0A=
+> But now the pad bytes at the end are uninitialized.=0A=
+> =0A=
+> The whole idea is that the encapsulating TLV object has to be rounded=0A=
+> up in size based upon the given 'len' for the data.=0A=
+> =0A=
+=0A=
+TLV_LENGTH() does not account for any padding bytes due to the =0A=
+alignment. TLV_SPACE() does but that wasn't used in the code before my =0A=
+change.=0A=
+=0A=
+Are you suggesting something like this=0A=
+=0A=
+=0A=
+-        if (len && data)=0A=
+-               memcpy(TLV_DATA(tlv_ptr), data, tlv_len);=0A=
++        if (len && data) {=0A=
++               memcpy(TLV_DATA(tlv_ptr), data, len);=0A=
++               memset(TLV_DATA(tlv_ptr) + len, 0, TLV_SPACE(len) - =0A=
+TLV_LENGTH(len));=0A=
++        }=0A=
+=0A=
+=0A=
