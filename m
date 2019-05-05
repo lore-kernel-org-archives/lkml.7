@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3840BC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30044C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09F7D2082F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E262082F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="SlGCuapU"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="pt5WGi1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfEENEf (ORCPT
+        id S1727824AbfEENEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 09:04:35 -0400
-Received: from onstation.org ([52.200.56.107]:46338 "EHLO onstation.org"
+        Sun, 5 May 2019 09:04:47 -0400
+Received: from onstation.org ([52.200.56.107]:46308 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727367AbfEENEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 09:04:30 -0400
+        id S1725873AbfEENE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 09:04:29 -0400
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id E664445025;
+        by onstation.org (Postfix) with ESMTPSA id 2277045022;
         Sun,  5 May 2019 13:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1557061469;
-        bh=VobKfXF3wCh1U9MUc0on+2Lzz9kJHqbfrswL48/mVfU=;
+        s=default; t=1557061468;
+        bh=sGlSBjHftfwOgvvuBwru4w8kk00JyEYDfBL01HyJH/Y=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=SlGCuapUmo0Uruqd3/6TH/mk/NE/d1k767QquWY2HjwUKZuTJ1O7QX9tinWIjpndd
-         SrkmFX96GK89YEYpqXHDsfkCzCG0a4qqghWCQs5kbYL33JQp5tJmrqk5e7xvi9ncYq
-         RvoAk5nfeHa8bFOYl0V0MrWn7Omjnkw5CZZtHT48=
+        b=pt5WGi1Z8KUX64ISCSkt1WKNQEY18wuCJTF+88XXVe8imE3yj9HzhwbJcOPkRcACw
+         tL3VJ0BOvJuhKEzGwK5eeXscax9DEt/bWxwu57cQ6PrvKFzjXHxtiyll9lgMhXNynf
+         D7GAp7WMt+dtSBgEMjwy2Jt/h4MOtWWP/lmxIqOo=
 From:   Brian Masney <masneyb@onstation.org>
 To:     robdclark@gmail.com, sean@poorly.run,
         dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         freedreno@lists.freedesktop.org, airlied@linux.ie, daniel@ffwll.ch,
         linux-kernel@vger.kernel.org, linus.walleij@linaro.org
-Subject: [PATCH RFC 6/6] ARM: dts: qcom: msm8974-hammerhead: add support for display
-Date:   Sun,  5 May 2019 09:04:13 -0400
-Message-Id: <20190505130413.32253-7-masneyb@onstation.org>
+Subject: [PATCH RFC 4/6] ARM: dts: msm8974: add display support
+Date:   Sun,  5 May 2019 09:04:11 -0400
+Message-Id: <20190505130413.32253-5-masneyb@onstation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190505130413.32253-1-masneyb@onstation.org>
 References: <20190505130413.32253-1-masneyb@onstation.org>
@@ -53,73 +53,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add initial support for the display found on the LG Nexus 5 (hammerhead)
-phone.
+Add the MDP5, DSI and DSI PHY blocks for the display found on the
+msm8974 SoCs. This is based on work from msm8916.dtsi and Jonathan
+Marek.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
-See the cover letter on this patch series for details about the issue
-that I'm running into with this board.
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 132 ++++++++++++++++++++++++++++
+ 1 file changed, 132 insertions(+)
 
- .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index b7cf4b1019e9..749226e18ab5 100644
---- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -500,6 +500,51 @@
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 45b5c8ef0374..3f613c5b95a1 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -3,6 +3,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8974.h>
++#include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+ #include <dt-bindings/clock/qcom,rpmcc.h>
+ #include <dt-bindings/reset/qcom,gcc-msm8974.h>
+ #include <dt-bindings/gpio/gpio.h>
+@@ -1085,6 +1086,137 @@
+ 				};
  			};
  		};
- 	};
 +
-+	mdss@fd900000 {
-+		status = "ok";
++		mdss: mdss@fd900000 {
++			status = "disabled";
 +
-+		mdp@fd900000 {
-+			status = "ok";
-+		};
++			compatible = "qcom,mdss";
++			reg = <0xfd900000 0x100>,
++			      <0xfd924000 0x1000>;
++			reg-names = "mdss_phys",
++			            "vbif_phys";
 +
-+		dsi@fd922800 {
-+			status = "ok";
++			power-domains = <&mmcc MDSS_GDSC>;
 +
-+			vdda-supply = <&pm8941_l2>;
-+			vdd-supply = <&pm8941_lvs3>;
-+			vddio-supply = <&pm8941_l12>;
++			clocks = <&mmcc MDSS_AHB_CLK>,
++			         <&mmcc MDSS_AXI_CLK>,
++			         <&mmcc MDSS_VSYNC_CLK>;
++			clock-names = "iface",
++			              "bus",
++			              "vsync";
++
++			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
++
++			interrupt-controller;
++			#interrupt-cells = <1>;
 +
 +			#address-cells = <1>;
-+			#size-cells = <0>;
++			#size-cells = <1>;
++			ranges;
 +
-+			ports {
-+				port@1 {
-+					endpoint {
-+						remote-endpoint = <&panel_in>;
-+						data-lanes = <0 1 2 3>;
++			mdp: mdp@fd900000 {
++				status = "disabled";
++
++				compatible = "qcom,mdp5";
++				reg = <0xfd900100 0x22000>;
++				reg-names = "mdp_phys";
++
++				interrupt-parent = <&mdss>;
++				interrupts = <0 0>;
++
++				clocks = <&mmcc MDSS_AHB_CLK>,
++					 <&mmcc MDSS_AXI_CLK>,
++					 <&mmcc MDSS_MDP_CLK>,
++					 <&mmcc MDSS_VSYNC_CLK>;
++				clock-names = "iface",
++				              "bus",
++				              "core",
++				              "vsync";
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						mdp5_intf1_out: endpoint {
++							remote-endpoint = <&dsi0_in>;
++						};
 +					};
 +				};
 +			};
 +
-+			panel: panel@0 {
-+				reg = <0>;
-+				compatible = "lg,acx467akm-7";
++			dsi0: dsi@fd922800 {
++				status = "disabled";
 +
-+				port {
-+					panel_in: endpoint {
-+						remote-endpoint = <&dsi0_out>;
++				compatible = "qcom,mdss-dsi-ctrl";
++				reg = <0xfd922800 0x1f8>;
++				reg-names = "dsi_ctrl";
++
++				interrupt-parent = <&mdss>;
++				interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
++
++				assigned-clocks = <&mmcc BYTE0_CLK_SRC>,
++				                  <&mmcc PCLK0_CLK_SRC>;
++				assigned-clock-parents = <&dsi_phy0 0>,
++				                         <&dsi_phy0 1>;
++
++				clocks = <&mmcc MDSS_MDP_CLK>,
++				         <&mmcc MDSS_AHB_CLK>,
++				         <&mmcc MDSS_AXI_CLK>,
++				         <&mmcc MDSS_BYTE0_CLK>,
++				         <&mmcc MDSS_PCLK0_CLK>,
++				         <&mmcc MDSS_ESC0_CLK>,
++				         <&mmcc MMSS_MISC_AHB_CLK>;
++				clock-names = "mdp_core",
++				              "iface",
++				              "bus",
++				              "byte",
++				              "pixel",
++				              "core",
++				              "core_mmss";
++
++				phys = <&dsi_phy0>;
++				phy-names = "dsi-phy";
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						dsi0_in: endpoint {
++							remote-endpoint = <&mdp5_intf1_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++						dsi0_out: endpoint {
++						};
 +					};
 +				};
 +			};
-+		};
 +
-+		dsi-phy@fd922a00 {
-+			status = "ok";
++			dsi_phy0: dsi-phy@fd922a00 {
++				status = "disabled";
 +
-+			vddio-supply = <&pm8941_l12>;
++				compatible = "qcom,dsi-phy-28nm-hpm";
++				reg = <0xfd922a00 0xd4>,
++				      <0xfd922b00 0x280>,
++				      <0xfd922d80 0x30>;
++				reg-names = "dsi_pll",
++				            "dsi_phy",
++				            "dsi_phy_regulator";
++
++				#clock-cells = <1>;
++				#phy-cells = <0>;
++				qcom,dsi-phy-index = <0>;
++
++				clocks = <&mmcc MDSS_AHB_CLK>;
++				clock-names = "iface";
++			};
 +		};
-+	};
- };
+ 	};
  
- &spmi_bus {
+ 	smd {
 -- 
 2.20.1
 
