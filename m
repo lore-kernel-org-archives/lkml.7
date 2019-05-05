@@ -2,95 +2,95 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267A5C04AAB
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 18:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD56C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 18:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF91208C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 18:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA7C2087F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 18:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uj3KNREh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfJNYorh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfEES0B (ORCPT
+        id S1727896AbfEESci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 14:26:01 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41838 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbfEES0A (ORCPT
+        Sun, 5 May 2019 14:32:38 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38668 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfEESci (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 14:26:00 -0400
-Received: by mail-lf1-f68.google.com with SMTP id d8so7567467lfb.8;
-        Sun, 05 May 2019 11:25:59 -0700 (PDT)
+        Sun, 5 May 2019 14:32:38 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b1so9619232otp.5
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 11:32:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+SH/ILRpdDMLy/Mnf4wxN3xCvxrnc9XArokvPdEhwiQ=;
-        b=uj3KNREhRy1l43c9gvpdMfH0J68XrkiOTfDYnqnTCjLaAeVEKBs8TquPO4jJ3lK5g6
-         JDNC2/7pIEugqYhaxrTZZ6jCwiAKNpayQH1wccwapifHEt1kfQs6EzByGnab03Ggdu9h
-         yILdC4FPOvfT/pZLzeMz2zuZOLyifdBnk6wRvmTPgL0X3wjkQ+3UdmU4BRyOChg8+nlU
-         1hrqJDTb0kKQv6oAIY/3F0kUeU0aS/xgUXueOXcbO+CjYeSfhF5FSa8BPqvHdw8eHBIV
-         YEh8H3o2qu3KuZv1gq0NTyB7HInSa5PyuaXIjYqycTH9uCe3p8O3Tj1YYD9alCrgPpQf
-         uQug==
+        h=from:to:cc:subject:date:message-id;
+        bh=ilroapXDZkcgk5LucRhth9os/NqqUQEKzo0yx1KZYRo=;
+        b=RfJNYorhTyUqNvcB2b+P3AIoGlP6lRmXUAHZ/CiZ869NeU+SlkD5290+FQTO/nyu5p
+         bGHEKeQc11KCQ3rocBVuUrZxWHaTD2KZdj7t3tzUqJgcbATTm7/stJdnLfyo7vY3MIFL
+         wjan400FVTh7y42DzJCuoFx/FCn6aNgXGP3ZpZa97ADiRw7NQEe/6j6oFm7h7PPIsxkT
+         PVl/X8F8xgFWhAstmGfad4YWEhYeLF8eHPgqv4nn3yr2Cw2y9Ydm9Ne3xDb4hinpt5nY
+         JQ7KMM/DrrXSOHdl/ojgYH7YpwQntQcYL3ifw7PD+GrAm0AE1ZmtPO4a/kBfx2FI32K8
+         hDTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+SH/ILRpdDMLy/Mnf4wxN3xCvxrnc9XArokvPdEhwiQ=;
-        b=jD8xWDNOum2SR3cPxfZxwpWeKTo0phIGf1oWvLZcCJAcr8q+3ET1Y/KJeX6tLRcLkm
-         3GZGkqfU67uWTOA2GV9eYMZnIiBqH1/96SSC9+fIeU5vCQ1xCM2elbHU6D0VcID9EAlL
-         jpPxQ81uenMiHuk8vqQPbSZWbVVo4C9hVwUdlznkq0ywI2z1o7klZF8mV1oQ+Cs09COU
-         SnErTs6p1uHUycpxUvSWqvCersERiMAROYUFCRPXkCyg5sJHY7NJ0PbqQzrcYSttAzF2
-         /4PX+f+hLMpT039LU4ax+ZcYSPkQqhD7vs5pWoTHVAGtN6Kn4JZuKj3YOpn3XFblzewx
-         i16w==
-X-Gm-Message-State: APjAAAWfuwOIOFVe2kTV0UQOEGMJ+zZOixf60McieXGlcXhsqtTWIMW2
-        UxlKHQE8Oy6HOdZ5PIVIJEn1kMGhMZnIzAhdRd+farco
-X-Google-Smtp-Source: APXvYqxp1p7JTGfU1QWu2LRuzXvKIzTLAQZRFufEeKKRfFLRgIe5Vrpa/2UEjyVTDNyD9z/lB5aRA/GrHWu/N/Jvlr8=
-X-Received: by 2002:ac2:4893:: with SMTP id x19mr10668455lfc.109.1557080758612;
- Sun, 05 May 2019 11:25:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190504094549.10021-1-carmeli.tamir@gmail.com>
- <20190504094549.10021-2-carmeli.tamir@gmail.com> <20190504134503.GA16963@bombadil.infradead.org>
-In-Reply-To: <20190504134503.GA16963@bombadil.infradead.org>
-From:   Tamir Carmeli <carmeli.tamir@gmail.com>
-Date:   Sun, 5 May 2019 21:25:21 +0300
-Message-ID: <CAKxm1-H9cgym_RQ-oLcZWEPpyUf5NrZPt_Zu3U=mpU=E38SbvQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Use list.h instead of file_system_type next
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ilroapXDZkcgk5LucRhth9os/NqqUQEKzo0yx1KZYRo=;
+        b=Y7yT7XReGfRUOmn1gXuHXExiRqRJ1TCtJp+J9/rCBDjs1YcXu/BHtnm8iHLjjFTdjd
+         /amF1HlX047N/9slDyXdnzTPe7BgFKhXqAw39KEYdMAHJPxZSWGncDVt/8Uo5I8pu2qZ
+         02dVbPq8ZK14T5NIyJU0AfSVA/2SuAJYkItoLnnl8VbMS6voH/n1nIEAygnoHlMll7a6
+         +11ztWHIQqU2rPprSwruuH0YS6DJ0i3aAFc+hJFkMLN5KLBOFoqHu0E3Kx7l6eJ64CD1
+         rankPdj9qkX4BfNP8PuDIpxFrhl4/FlIYPj5ElACJ7tyvoVNA5vVh12I40uPr1OFS45l
+         8X4A==
+X-Gm-Message-State: APjAAAVi3MlLcfb3CsuSBsxasLsMGocFt6XCY8NNZ3JLNiTEGRu2zu/A
+        r/62HRmiPZp8Vukqvm6K1tI=
+X-Google-Smtp-Source: APXvYqzUwAaGV2anjaIH0cjG/BmFIT9iKjLTsohmrgbffWRrshQbNhsG8W/KaReY7S3ntgA9POplAg==
+X-Received: by 2002:a9d:4d03:: with SMTP id n3mr10942297otf.121.1557081157299;
+        Sun, 05 May 2019 11:32:37 -0700 (PDT)
+Received: from madhuleo ([2605:6000:1023:606d:2897:6cea:c841:53a2])
+        by smtp.gmail.com with ESMTPSA id e9sm4093787otf.48.2019.05.05.11.32.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 05 May 2019 11:32:36 -0700 (PDT)
+From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Subject: [PATCH] Staging: kpc2000: Cleanup in kpc_dma_transfer()
+Date:   Sun,  5 May 2019 13:32:30 -0500
+Message-Id: <20190505183230.24505-1-madhumithabiw@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I just found it weird that there is a proprietary implementation of a
-linked list while surely the kernel already offers well established
-data structures.
-IMO, the current code is a bit hard to understand, especially the
-addition of a new struct to the list in the line "*p = fs" after
-find_filesystem returned the last member.
-Correct, I'm not familiar with all the use cases of the code.
+Remove unnecessary typecast in kzalloc function. In addition to that
+replace kzalloc(sizeof(*acd)) over kzalloc(sizeof(struct aio_cb_data))
+to maintain Linux kernel style.
 
-I'm not sure that XArray is a good choice since there is no notion of
-an index attached to the pointer, it's really just a linked list of
-pointers.
-Tell me if you think there is any way to improve my suggestion.
-Thanks for you attention.
+Issue suggested by Coccinelle.
 
+Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
+---
+ drivers/staging/kpc2000/kpc_dma/fileops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Sat, May 4, 2019 at 4:45 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Sat, May 04, 2019 at 05:45:48AM -0400, Carmeli Tamir wrote:
-> > Changed file_system_type next field to list_head and refactored
-> > the code to use list.h functions.
->
-> What might be interesting is getting rid of this list and using an XArray
-> instead.  This would be a more in-depth change; getting rid of the rwlock
-> in favour of using RCU accesses for the read-side and the xa_lock for
-> write accesses to the filesystem list.
+diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
+index 5741d2b49a7d..c24329affd3a 100644
+--- a/drivers/staging/kpc2000/kpc_dma/fileops.c
++++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
+@@ -57,7 +57,7 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
+ 	
+ 	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_transfer(priv = [%p], kcb = [%p], iov_base = [%p], iov_len = %ld) ldev = [%p]\n", priv, kcb, (void*)iov_base, iov_len, ldev);
+ 	
+-	acd = (struct aio_cb_data *) kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
++	acd = kzalloc(sizeof(*acd), GFP_KERNEL);
+ 	if (!acd){
+ 		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for for the aio data\n");
+ 		return -ENOMEM;
+-- 
+2.17.1
+
