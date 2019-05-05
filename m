@@ -2,57 +2,61 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 971F3C04AAC
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01EAC04AAC
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3BA208C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C36208C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557069955;
-	bh=fIqjOlxzOgrK3zCqzNMKHZNwuH1rod6mWG8P0cloWxM=;
+	s=default; t=1557070750;
+	bh=x5pvTT0YfjwpIeJljFGVaOyqST+4wd9cZ02Kih+mMgw=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=O16jFhd5176m8VOvJJA0xRGyy5nelHV8PHSGCDj3bXwzBe+yUk76J4PCdGpx5YjM8
-	 /lcrd7lM9Zoh1QS7gHtZkwH+lLIS44A0Q+pgRKnDPmjh2hQiSMMa0pbs0PE/7MU5b4
-	 qt0KZOntD99FEksPTNWP03l27LnesB/LLNlyu2rc=
+	b=CwhgKKZl03k/y8Ey+wOD38lTU9eRB2+4ghp3/devlF6p3m3Tm/P5Bl29gVQ7PsZCo
+	 JnhZIUJJ6ao9j8Vj53HnuGA7yMRoKXTxik3Oo6oz215U9GZWGp8sP6hTUUAC3Zc7XR
+	 PXdqXS3Sl8ZVpy9N9jVN8zl4Q+5NPI1WhPm1QqSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfEEPZy (ORCPT
+        id S1727770AbfEEPjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 11:25:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36776 "EHLO mail.kernel.org"
+        Sun, 5 May 2019 11:39:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727343AbfEEPZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 11:25:54 -0400
+        id S1726905AbfEEPjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 11:39:09 -0400
 Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF8822082F;
-        Sun,  5 May 2019 15:25:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88997206DF;
+        Sun,  5 May 2019 15:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557069952;
-        bh=fIqjOlxzOgrK3zCqzNMKHZNwuH1rod6mWG8P0cloWxM=;
+        s=default; t=1557070748;
+        bh=x5pvTT0YfjwpIeJljFGVaOyqST+4wd9cZ02Kih+mMgw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pRmC2HWrd/lZWHHUHXLFkAaXe4zbBbq5NxOp6N+4yOF2QuRYcAKTRETfTnRgp1R+z
-         jMDwuTNeDamVvVLr3ghaeETGH4RIkrkd1uyg6l3cAZXicvv+om3W/guQIVKzMHh4Dz
-         dq/XpnujkJA/IP0b40jHsXS13rkqkJJ7jSxS53KQ=
-Date:   Sun, 5 May 2019 16:25:46 +0100
+        b=cbbgoCrc1p21k3S4ympnovRb9UwA9gY2sKrCeLJ6naLJ46AhAAb9UbespVun4u4PJ
+         i9Q5TwAyWOZ3JjTn0uh6TmU//BuFLoKDtNweNjN7s6ghGW+IZceJJ8YLKGlEkgndBW
+         k1fuib3ycTjNlO5AXIrNicND8WcvnkLAIChiCUsM=
+Date:   Sun, 5 May 2019 16:39:01 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        maxime.ripard@bootlin.com, wens@csie.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH 6/7] iio: adc: sun4i-gpadc-iio: add support for H6
- thermal sensor
-Message-ID: <20190505162546.634bae93@archlinux>
-In-Reply-To: <20190503072813.2719-7-tiny.windzz@gmail.com>
-References: <20190503072813.2719-1-tiny.windzz@gmail.com>
-        <20190503072813.2719-7-tiny.windzz@gmail.com>
+To:     Philippe Schenker <dev@pschenker.ch>
+Cc:     linux-iio@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] iio: stmpe-adc: Remove unnecessary assignment
+Message-ID: <20190505163901.2cc9dec9@archlinux>
+In-Reply-To: <20190503135725.9959-1-dev@pschenker.ch>
+References: <20190503135725.9959-1-dev@pschenker.ch>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,146 +66,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  3 May 2019 03:28:12 -0400
-Yangtao Li <tiny.windzz@gmail.com> wrote:
+On Fri,  3 May 2019 15:57:23 +0200
+Philippe Schenker <dev@pschenker.ch> wrote:
 
-> This patch adds support for the H6 ths sensor.
+> From: Philippe Schenker <philippe.schenker@toradex.com>
 > 
-> TODO: calibrate thermal sensor by using information from sid.
+> Remove unnecessary assignment. This could potentially cause an issue, if
+> the wait function runs into a timeout. Furthermore is this assignment also
+> not there in stmpe_read_temp()
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-This and the patches before it that I haven't comment on look fine to me.
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+This would probably have benefited from a statement that *val is set
+twice currently. Good find.
 
-thanks,
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
+
+Thanks,
 
 Jonathan
+
 > ---
->  drivers/iio/adc/sun4i-gpadc-iio.c | 65 +++++++++++++++++++++++++++++++
->  include/linux/mfd/sun4i-gpadc.h   |  9 +++++
->  2 files changed, 74 insertions(+)
 > 
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-> index f24eb76d65c0..9b6fc592f54c 100644
-> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -120,6 +120,20 @@ static const struct gpadc_data sun8i_a33_gpadc_data = {
->  	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
->  };
+>  drivers/iio/adc/stmpe-adc.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
+> index 37f4b74a5d32..87141177fbda 100644
+> --- a/drivers/iio/adc/stmpe-adc.c
+> +++ b/drivers/iio/adc/stmpe-adc.c
+> @@ -78,8 +78,6 @@ static int stmpe_read_voltage(struct stmpe_adc *info,
+>  	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_CAPT,
+>  			STMPE_ADC_CH(info->channel));
 >  
-> +static int sun50i_gpadc_disable(struct sun4i_gpadc_iio *info);
-> +static int sun50i_gpadc_enable(struct sun4i_gpadc_iio *info);
-> +
-> +static const struct gpadc_data sun50i_h6_gpadc_data = {
-> +	.temp_offset = -2809,
-> +	.temp_scale = -67,
-> +	.has_bus_clk = true,
-> +	.has_bus_rst = true,
-> +	.gpadc_enable = sun50i_gpadc_enable,
-> +	.gpadc_disable = sun50i_gpadc_disable,
-> +	.sensor_count = 2,
-> +	.temp_data_base = SUN50I_H6_GPADC_TEMP_DATA,
-> +};
-> +
->  struct sun4i_sensor_tzd {
->  	struct sun4i_gpadc_iio          *info;
->  	struct thermal_zone_device      *tzd;
-> @@ -452,6 +466,53 @@ static int sun4i_gpadc_enable(struct sun4i_gpadc_iio *info)
->  	return 0;
->  }
->  
-> +static int sun50i_gpadc_enable(struct sun4i_gpadc_iio *info)
-> +{
-> +	int ret, val;
-> +
-> +	ret = reset_control_deassert(info->reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(info->bus_clk);
-> +	if (ret)
-> +		goto assert_reset;
-> +
-> +	/*
-> +	 * clkin = 24MHz
-> +	 * T acquire = clkin / (SUN50I_GPADC_CTRL0_T_ACQ + 1)
-> +	 *           = 20us
-> +	 */
-> +	regmap_write(info->regmap, SUN4I_GPADC_CTRL0,
-> +		     SUN50I_GPADC_CTRL0_T_ACQ(479));
-> +	/* average over 4 samples */
-> +	regmap_write(info->regmap, SUN50I_H6_GPADC_CTRL3,
-> +		     SUN4I_GPADC_CTRL3_FILTER_EN |
-> +		     SUN4I_GPADC_CTRL3_FILTER_TYPE(1));
-> +	/* period = (SUN50I_GPADC_TPR_TEMP_PERIOD + 1) * 4096 / clkin; ~10ms */
-> +	regmap_write(info->regmap, SUN50I_GPADC_TPR,
-> +		     SUN50I_GPADC_TPR_TEMP_PERIOD(58));
-> +	/* TODO: calibrate ths */
-> +	/* enable sensor */
-> +	val = GENMASK(info->data->sensor_count - 1, 0);
-> +	regmap_write(info->regmap, SUN4I_GPADC_CTRL1, val);
-> +
-> +	return 0;
-> +
-> +assert_reset:
-> +	reset_control_assert(info->reset);
-> +
-> +	return ret;
-> +}
-> +
-> +static int sun50i_gpadc_disable(struct sun4i_gpadc_iio *info)
-> +{
-> +	clk_disable_unprepare(info->bus_clk);
-> +	reset_control_assert(info->reset);
-> +
-> +	return 0;
-> +}
-> +
->  static int sun4i_gpadc_runtime_suspend(struct device *dev)
->  {
->  	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
-> @@ -546,6 +607,10 @@ static const struct of_device_id sun4i_gpadc_of_id[] = {
->  		.compatible = "allwinner,sun8i-a33-ths",
->  		.data = &sun8i_a33_gpadc_data,
->  	},
-> +	{
-> +		.compatible = "allwinner,sun50i-h6-ths",
-> +		.data = &sun50i_h6_gpadc_data,
-> +	},
->  	{ /* sentinel */ }
->  };
->  
-> diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
-> index 139872c2e0fe..f505013e9c0d 100644
-> --- a/include/linux/mfd/sun4i-gpadc.h
-> +++ b/include/linux/mfd/sun4i-gpadc.h
-> @@ -19,6 +19,9 @@
->  #define SUN4I_GPADC_CTRL0_FS_DIV(x)			((GENMASK(3, 0) & (x)) << 16)
->  #define SUN4I_GPADC_CTRL0_T_ACQ(x)			(GENMASK(15, 0) & (x))
->  
-> +/* TP_CTRL0 bits for sun50i SOCs */
-> +#define SUN50I_GPADC_CTRL0_T_ACQ(x)			((GENMASK(15, 0) & (x)) << 16)
-> +
->  #define SUN4I_GPADC_CTRL1				0x04
->  
->  #define SUN4I_GPADC_CTRL1_STYLUS_UP_DEBOUNCE(x)		((GENMASK(7, 0) & (x)) << 12)
-> @@ -49,6 +52,9 @@
->  #define SUN4I_GPADC_CTRL2_PRE_MEA_EN			BIT(24)
->  #define SUN4I_GPADC_CTRL2_PRE_MEA_THRE_CNT(x)		(GENMASK(23, 0) & (x))
->  
-> +#define SUN50I_GPADC_TPR				0x08
-> +#define SUN50I_GPADC_TPR_TEMP_PERIOD(x)			((GENMASK(19, 0) & (x)) << 12)
-> +
->  #define SUN4I_GPADC_CTRL3				0x0c
->  
->  #define SUN4I_GPADC_CTRL3_FILTER_EN			BIT(2)
-> @@ -84,6 +90,9 @@
->  #define SUN4I_GPADC_TEMP_DATA				0x20
->  #define SUN4I_GPADC_DATA				0x24
->  
-> +#define SUN50I_H6_GPADC_CTRL3				0x30
-> +#define SUN50I_H6_GPADC_TEMP_DATA			0xc0
-> +
->  #define SUN4I_GPADC_IRQ_FIFO_DATA			0
->  #define SUN4I_GPADC_IRQ_TEMP_DATA			1
+> -	*val = info->value;
+> -
+>  	ret = wait_for_completion_interruptible_timeout
+>  		(&info->completion, STMPE_ADC_TIMEOUT);
 >  
 
