@@ -3,38 +3,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D00C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 214B3C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E78208C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22B8208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfEEOBN (ORCPT
+        id S1728105AbfEEOBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 10:01:13 -0400
-Received: from shell.v3.sk ([90.176.6.54]:55699 "EHLO shell.v3.sk"
+        Sun, 5 May 2019 10:01:23 -0400
+Received: from shell.v3.sk ([90.176.6.54]:55766 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727928AbfEEOBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 10:01:05 -0400
+        id S1728033AbfEEOBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 10:01:18 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 2AB51103B0D;
-        Sun,  5 May 2019 16:01:02 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id 88B67103D28;
+        Sun,  5 May 2019 16:01:15 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id gDN4k7d2-d6Q; Sun,  5 May 2019 16:00:40 +0200 (CEST)
+        with ESMTP id BzPkkFwr6Ws4; Sun,  5 May 2019 16:00:55 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 862D5103D28;
-        Sun,  5 May 2019 16:00:39 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id 20144103D2E;
+        Sun,  5 May 2019 16:00:45 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id XI1YjrdYj3JR; Sun,  5 May 2019 16:00:36 +0200 (CEST)
+        with ESMTP id xZax8ZjLiQLA; Sun,  5 May 2019 16:00:41 +0200 (CEST)
 Received: from nedofet.lan (ip-89-102-31-34.net.upcbroadband.cz [89.102.31.34])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 7A093103D25;
-        Sun,  5 May 2019 16:00:35 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 476F3103D30;
+        Sun,  5 May 2019 16:00:39 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org
@@ -47,9 +47,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         jacopo mondi <jacopo@jmondi.org>,
         Sakari Ailus <sakari.ailus@iki.fi>,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v5 01/10] media: dt-bindings: marvell,mmp2-ccic: Add Marvell MMP2 camera
-Date:   Sun,  5 May 2019 16:00:22 +0200
-Message-Id: <20190505140031.9636-2-lkundrak@v3.sk>
+Subject: [PATCH v5 08/10] [media] marvell-ccic/mmp: add devicetree support
+Date:   Sun,  5 May 2019 16:00:29 +0200
+Message-Id: <20190505140031.9636-9-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190505140031.9636-1-lkundrak@v3.sk>
 References: <20190505140031.9636-1-lkundrak@v3.sk>
@@ -60,91 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Marvell MMP2 camera host interface.
+The platform data is actually not used anywhere (along with the CSI
+support) and should be safe to remove.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
 ---
-Changes since v4:
-- s/Nust/Must/
-- Documented required endpoint properties; bus-type, hsync-active,
-  vsync-active and pclk-sample.
+Changes since v1:
+- s/This are/These are/ in a comment
 
-Changes since v3:
-- Dropped the video-interfaces.txt reference
-- Clarify "clocks", "clock-names" and "clock-output-names" descriptions
-- Refer to other documentation by full path
+ .../media/platform/marvell-ccic/mmp-driver.c  | 36 ++++++++++++++-----
+ 1 file changed, 27 insertions(+), 9 deletions(-)
 
-Changes since v2:
-- Added #clock-cells, clock-names, port
-
- .../bindings/media/marvell,mmp2-ccic.txt      | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/marvell,mmp2-=
-ccic.txt
-
-diff --git a/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.tx=
-t b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-new file mode 100644
-index 0000000000000..7ec2c8c8a3b98
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/marvell,mmp2-ccic.txt
-@@ -0,0 +1,50 @@
-+Marvell MMP2 camera host interface
+diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
+edia/platform/marvell-ccic/mmp-driver.c
+index 8f1d2a972bc9f..54c2dd8c29d82 100644
+--- a/drivers/media/platform/marvell-ccic/mmp-driver.c
++++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
+@@ -19,6 +19,8 @@
+ #include <media/v4l2-device.h>
+ #include <linux/platform_data/media/mmp-camera.h>
+ #include <linux/device.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/gpio.h>
+ #include <linux/io.h>
+@@ -196,6 +198,9 @@ static void mmpcam_calc_dphy(struct mcam_camera *mcam=
+)
+ 	struct device *dev =3D &cam->pdev->dev;
+ 	unsigned long tx_clk_esc;
+=20
++	if (!pdata)
++		return;
 +
-+Required properties:
-+ - compatible: Should be "marvell,mmp2-ccic".
-+ - reg: Register base and size.
-+ - interrupts: The interrupt number.
-+ - #clock-cells: Must be 0.
-+
-+Optional properties:
-+ - clocks: Reference to the input clock as specified by
-+           Documentation/devicetree/bindings/clock/clock-bindings.txt.
-+ - clock-names: Names of the clocks used; "axi" for the AXI bus interfac=
-e,
-+                "func" for the peripheral clock and "phy" for the parall=
-el
-+                video bus interface.
-+ - clock-output-names: Optional clock source for sensors. Shall be "mclk=
-".
-+
-+Required subnodes:
-+ - port: The parallel bus interface port with a single endpoint linked t=
-o
-+         the sensor's endpoint as described in
-+         Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Required endpoint properties:
-+ - bus-type: data bus type, <5> or <6> for Parallel or Bt.656 respective=
-ly
-+ - pclk-sample: pixel clock polarity
-+ - hsync-active: horizontal synchronization polarity (only required for
-+   parallel bus)
-+ - vsync-active: vertical synchronization polarity (only required for
-+   parallel bus)
-+
-+Example:
-+
-+	camera0: camera@d420a000 {
-+		compatible =3D "marvell,mmp2-ccic";
-+		reg =3D <0xd420a000 0x800>;
-+		interrupts =3D <42>;
-+		clocks =3D <&soc_clocks MMP2_CLK_CCIC0>;
-+		clock-names =3D "axi";
-+		#clock-cells =3D <0>;
-+		clock-output-names =3D "mclk";
-+
-+		port {
-+			camera0_0: endpoint {
-+				remote-endpoint =3D <&ov7670_0>;
-+                                bus-type =3D <5>;      /* Parallel */
-+                                hsync-active =3D <1>;  /* Active high */
-+                                vsync-active =3D <1>;  /* Active high */
-+                                pclk-sample =3D <0>;   /* Falling */
-+			};
-+		};
-+	};
+ 	/*
+ 	 * If CSI2_DPHY3 is calculated dynamically,
+ 	 * pdata->lane_clk should be already set
+@@ -314,10 +319,6 @@ static int mmpcam_probe(struct platform_device *pdev=
+)
+ 	struct mmp_camera_platform_data *pdata;
+ 	int ret;
+=20
+-	pdata =3D pdev->dev.platform_data;
+-	if (!pdata)
+-		return -ENODEV;
+-
+ 	cam =3D devm_kzalloc(&pdev->dev, sizeof(*cam), GFP_KERNEL);
+ 	if (cam =3D=3D NULL)
+ 		return -ENOMEM;
+@@ -330,17 +331,29 @@ static int mmpcam_probe(struct platform_device *pde=
+v)
+ 	mcam->calc_dphy =3D mmpcam_calc_dphy;
+ 	mcam->dev =3D &pdev->dev;
+ 	mcam->use_smbus =3D 0;
+-	mcam->mclk_src =3D pdata->mclk_src;
+-	mcam->mclk_div =3D pdata->mclk_div;
+-	mcam->bus_type =3D pdata->bus_type;
+-	mcam->dphy =3D pdata->dphy;
++	pdata =3D pdev->dev.platform_data;
++	if (pdata) {
++		mcam->mclk_src =3D pdata->mclk_src;
++		mcam->mclk_div =3D pdata->mclk_div;
++		mcam->bus_type =3D pdata->bus_type;
++		mcam->dphy =3D pdata->dphy;
++		mcam->lane =3D pdata->lane;
++	} else {
++		/*
++		 * These are values that used to be hardcoded in mcam-core and
++		 * work well on a OLPC XO 1.75 with a parallel bus sensor.
++		 * If it turns out other setups make sense, the values should
++		 * be obtained from the device tree.
++		 */
++		mcam->mclk_src =3D 3;
++		mcam->mclk_div =3D 2;
++	}
+ 	if (mcam->bus_type =3D=3D V4L2_MBUS_CSI2_DPHY) {
+ 		cam->mipi_clk =3D devm_clk_get(mcam->dev, "mipi");
+ 		if ((IS_ERR(cam->mipi_clk) && mcam->dphy[2] =3D=3D 0))
+ 			return PTR_ERR(cam->mipi_clk);
+ 	}
+ 	mcam->mipi_enabled =3D false;
+-	mcam->lane =3D pdata->lane;
+ 	mcam->chip_id =3D MCAM_ARMADA610;
+ 	mcam->buffer_mode =3D B_DMA_sg;
+ 	strscpy(mcam->bus_info, "platform:mmp-camera", sizeof(mcam->bus_info));
+@@ -475,6 +488,10 @@ static int mmpcam_resume(struct platform_device *pde=
+v)
+=20
+ #endif
+=20
++static const struct of_device_id mmpcam_of_match[] =3D {
++	{ .compatible =3D "marvell,mmp2-ccic", },
++	{},
++};
+=20
+ static struct platform_driver mmpcam_driver =3D {
+ 	.probe		=3D mmpcam_probe,
+@@ -485,6 +502,7 @@ static struct platform_driver mmpcam_driver =3D {
+ #endif
+ 	.driver =3D {
+ 		.name	=3D "mmp-camera",
++		.of_match_table =3D of_match_ptr(mmpcam_of_match),
+ 	}
+ };
+=20
 --=20
 2.21.0
 
