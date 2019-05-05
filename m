@@ -2,97 +2,97 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4227C04AAC
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 12:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942CAC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 12:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78AE7208CA
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 12:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557058002;
-	bh=i8IgdodhDZT8g5eCpvqZfSm1dEue2uSu7hzNSi3wo/g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=y/VmUcQqvkivqppgED2YNnaUHocv2HQZq4SQXs9uXncI2djH1rzT1k9u5evOZSzG7
-	 qRzxEPmmOcZooJSYNCyB0kDoSzrwwCXf/f5dp6UYMkMXox3raeu+St/pFAcIa6dkAO
-	 gez/0Cr+PjghbGWvckJgLPvwvLIBh+WnXGdT9j8A=
+	by mail.kernel.org (Postfix) with ESMTP id 61FCF2082F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 12:07:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vJRd3Mvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfEEMGl (ORCPT
+        id S1727550AbfEEMHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 08:06:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbfEEMGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 08:06:41 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 308212087F;
-        Sun,  5 May 2019 12:06:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557058000;
-        bh=i8IgdodhDZT8g5eCpvqZfSm1dEue2uSu7hzNSi3wo/g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cpZ1S1/AQ9rhuyjtEZDYnx4L2bY5l9lFvyP+OW+7a0LxVtFerBDlbkXXPdc8nm0pO
-         0w1eRFNiSnFirzFkNkn7/dSeBJR7EOvvIqcJu8C2mFiBjGAFURigZcIhvu6MBT/OYb
-         LCTDsoVGfOsfiXXlsWj4a8En2538tmbAQ72bj31M=
-Date:   Sun, 5 May 2019 13:06:34 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     =?UTF-8?B?Sm/Do28=?= Seckler <joaoseckler@gmail.com>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com,
-        stefan.popa@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH] staging: iio: adt7316: match parenthesis alignment
-Message-ID: <20190505130634.4bd56579@archlinux>
-In-Reply-To: <20190429175939.2jvt4qwrtbmpvhl6@smtp.gmail.com>
-References: <20190429175939.2jvt4qwrtbmpvhl6@smtp.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 5 May 2019 08:07:55 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40793 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfEEMHy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 08:07:54 -0400
+Received: by mail-qk1-f194.google.com with SMTP id w20so307073qka.7
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 05:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:user-agent:cc:references:in-reply-to
+         :mime-version:content-transfer-encoding:message-id;
+        bh=fhuMdr4ue4iw0OKDysFq+M/gteJlPKUxyQ/+TugYxZc=;
+        b=vJRd3MvwNmSOrCLcrDcIljtWX9H0ynnxZc4g+tPCp/jLIlqyMcdBXH33uMLzWuY1ku
+         /nt2ZoGJ64nSeHp96eaIkwugNmtEytYWhNNLaP1VigR5MV4Oy7JxUs5MK9xI92EPb6ie
+         YMEkPGHXDu9ksd82Ng1p54cO671m+1QoUDhOFpObvtgSxtYnP+oi5THC9XGZ85aavy22
+         xtT6WyV8TAG1nNFhTdG/37AJd5Bmc4Kn6q98SzjyojTXBZv3Wircu4XRSzbu4zIf39RL
+         ufUWpeEWl5jFTp+fXV16uWDaT/wmgsyDnMQk0yzyVqV8ZZ71N7B3oa0TiJLScjW6Og9i
+         Yc2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:user-agent:cc:references
+         :in-reply-to:mime-version:content-transfer-encoding:message-id;
+        bh=fhuMdr4ue4iw0OKDysFq+M/gteJlPKUxyQ/+TugYxZc=;
+        b=Vm3Wfkq8ebxkt7eLP4qFVUSHZtA+63gXBM73O5VGfTK/BxbQG7WP1yxnEswY5rrGvA
+         5iudNfDav9uh3S6P6KMxMMRv34QuoC2Xa7i3D731RizYf2qz+GWUIqn0eEWWNCyC+Z67
+         FckSRz7GoCc+qGvO04UdZUsgIe69Q2li/g3VUCqEXpcz/C3KbKlCtgCEss0A4cHaBive
+         tk2RJOmPg0zgHYBzhCYkSYkKHlIcJRMjXC2IsJsotip7Gxg6u+xj3WM8z/wFkZkYwK9O
+         i/K/cnr9Aq4y5jvHn1O5znfstbFO0hAcnylx6K2WPb9ISYJFWZljqURNY8pl/0MObi07
+         MmoQ==
+X-Gm-Message-State: APjAAAWpQ1zJ06JmO5/5SGRP1DRYAaaBBR7wbmgAgzZR2Yi2oJwy93IV
+        u8UNSl4OGgyaO+NaAM/+JiI=
+X-Google-Smtp-Source: APXvYqwMOMguo6xj2k36egfwJjuFFroW1TYees+7IQAUVkgp+24keO7Tz+fO1l7Wx+vzKBRUytOQqw==
+X-Received: by 2002:a37:b7c1:: with SMTP id h184mr15125541qkf.153.1557058074003;
+        Sun, 05 May 2019 05:07:54 -0700 (PDT)
+Received: from s19.localnet (pool-173-49-117-165.phlapa.east.verizon.net. [173.49.117.165])
+        by smtp.gmail.com with ESMTPSA id r189sm4419943qkf.61.2019.05.05.05.07.52
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 05 May 2019 05:07:53 -0700 (PDT)
+From:   rhkramer@gmail.com
+To:     vsnsdualce2@redchan.it
+Subject: Re: Can a recipients rights under GNU GPL be revoked? - Bradley M. Kuhn is not an attorney (he should go get his JD and get licensed).
+Date:   Sun, 5 May 2019 08:07:51 -0400
+User-Agent: KMail/1.13.7 (Linux/3.2.0-5-amd64; KDE/4.8.4; x86_64; ; )
+Cc:     debian-user@lists.debian.org, linux-kernel@vger.kernel.org,
+        Ivan Ivanov <qmastery16@gmail.com>, mailinglists@mattcrews.com,
+        jhasler@newsguy.com, scdbackup@gmx.net, richard@walnut.gen.nz,
+        curty@free.fr, jmtd@debian.org, mick.crane@gmail.com,
+        tomas@tuxteam.de, steve@einval.com, joe@jretrading.com,
+        rms@gnu.org, esr@thyrsus.com
+References: <60c1b08305c5326e3503f51d81622541@redchan.it>
+In-Reply-To: <60c1b08305c5326e3503f51d81622541@redchan.it>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Message-Id: <201905050807.51462.rhkramer@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Apr 2019 14:59:40 -0300
-Jo=C3=A3o Seckler <joaoseckler@gmail.com> wrote:
+On Sunday, May 05, 2019 12:51:15 AM vsnsdualce2@redchan.it wrote:
+> Bar rules do not allow lawyers to serve under a non-lawyer
+> in
+> an organization, and the organization was essentially a pro-bono law
+> firm
+> (which really needed a attorney in it's ranks...)
 
-> This patch solves the following checkpatch.pl message:
-> CHECK: Alignment should match open parenthesis.
-> This makes the file more compliant with the preferred coding style for
-> the Linux kernel.
->=20
-> Signed-off-by: Jo=C3=A3o Seckler <joaoseckler@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+That's interesting, but (off the point of this email exchange), it puzzles me 
+-- many corporations headed by non-lawyers have lawyers on staff, so I'm 
+guessing that the statement you made applies only to organizations like law 
+firms, or, the lawyers on the staff of a non-law corporation are in something at 
+least a little different than the normal employer / employee relationship.
 
-Thanks,
+(PS: I stand corrected on Kuhn being a lawyer -- thanks for the correction.)
 
-Jonathan
-
-> ---
->  drivers/staging/iio/addac/adt7316.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/staging/iio/addac/adt7316.c b/drivers/staging/iio/ad=
-dac/adt7316.c
-> index b6a65ee8d558..37ce563cb0e1 100644
-> --- a/drivers/staging/iio/addac/adt7316.c
-> +++ b/drivers/staging/iio/addac/adt7316.c
-> @@ -2154,7 +2154,7 @@ int adt7316_probe(struct device *dev, struct adt731=
-6_bus *bus,
->  		chip->dac_bits =3D 8;
-> =20
->  	chip->ldac_pin =3D devm_gpiod_get_optional(dev, "adi,ldac",
-> -						GPIOD_OUT_LOW);
-> +						 GPIOD_OUT_LOW);
->  	if (IS_ERR(chip->ldac_pin)) {
->  		ret =3D PTR_ERR(chip->ldac_pin);
->  		dev_err(dev, "Failed to request ldac GPIO: %d\n", ret);
-
+Now I have to debate (with myself) whether to prune the cc list -- I forget 
+the original post -- was it really this widespread?
