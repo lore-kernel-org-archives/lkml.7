@@ -2,170 +2,145 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B83AC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F2DC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB521208C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:47:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="vd2uRRSb"
+	by mail.kernel.org (Postfix) with ESMTP id A4A36208C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfEEIr2 (ORCPT
+        id S1727598AbfEEIxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 04:47:28 -0400
-Received: from mail-eopbgr130040.outbound.protection.outlook.com ([40.107.13.40]:2373
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725873AbfEEIr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 04:47:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YNiPbiKvG7sc8mfwtkCxIBS/s1hGV/4jVXQOz6oGqwM=;
- b=vd2uRRSbbKu6m0HvyK39sUDYrErM9mZF/PVDvlw9CGiUT1GCwLXmn0tScr5x4E8QEaQKQA/lQRwAsGK5iDzSeslJVpdUSMyg42SzIfqkufnY08jcNkfp1UlqsU5Ec5vh8sPQS3B/r96EsSW0AIqGoyQjseM6zhed3VZxrc24C20=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB5726.eurprd04.prod.outlook.com (20.178.127.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Sun, 5 May 2019 08:47:21 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525%4]) with mapi id 15.20.1856.012; Sun, 5 May 2019
- 08:47:21 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [EXT] Re: [PATCH v2 08/15] dt-bindings: spi: imx: add i.mx6ul to
- state errata fixed
-Thread-Topic: [EXT] Re: [PATCH v2 08/15] dt-bindings: spi: imx: add i.mx6ul to
- state errata fixed
-Thread-Index: AQHU/AbdFQmcRuAKXkaLI1VIJjs4JKZXcSqAgATPDJA=
-Date:   Sun, 5 May 2019 08:47:21 +0000
-Message-ID: <VI1PR04MB45436B23E821F02C43502D6489370@VI1PR04MB4543.eurprd04.prod.outlook.com>
-References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
- <1556265512-9130-9-git-send-email-yibin.gong@nxp.com>
- <20190502065939.nyejomrsowhy6xox@pengutronix.de>
-In-Reply-To: <20190502065939.nyejomrsowhy6xox@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 02b9b252-5656-4069-7b6a-08d6d13649d0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5726;
-x-ms-traffictypediagnostic: VI1PR04MB5726:
-x-ms-exchange-purlcount: 2
-x-microsoft-antispam-prvs: <VI1PR04MB5726228FDED2E3FD4AA2318D89370@VI1PR04MB5726.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 00286C0CA6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(376002)(366004)(346002)(136003)(199004)(189003)(66476007)(26005)(966005)(86362001)(76176011)(33656002)(71200400001)(53936002)(7696005)(99286004)(54906003)(110136005)(316002)(76116006)(66446008)(3846002)(6116002)(14454004)(2906002)(71190400001)(102836004)(486006)(256004)(478600001)(6506007)(186003)(45080400002)(11346002)(476003)(446003)(6246003)(7416002)(305945005)(66066001)(66556008)(73956011)(66946007)(7736002)(64756008)(81156014)(8676002)(8936002)(81166006)(66574012)(6436002)(5660300002)(229853002)(68736007)(25786009)(52536014)(74316002)(6306002)(55016002)(9686003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5726;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ghO9q0RUs6b75rFcaautwLcgop2NAXoYbsrt0+S2R5pA/Vu9nCjaykMTWs8dPpMUszXegteHkXuQTefN26guBLDgSa6z2VLfPr+twMgTKGZwJ5h2RZIIK7wTs3Mh6XlSVuPa66nI917T6AW5ptk5qPBFukDwOnfJzPIaPcIbYEUCtz3jYue1uPuMxhMkak/3fQQQL1Qav9nZN2yDg0tuFI5mV89D4Ih5cLmDB351mIlBeZB1N0sKjnOwUNyBwrpn5dCAOhKFbBFt4G5kJEtlDjNw2Awm/tqd1wL5l7tg/KchDYotQrCjPIVWYBA+r5FU7koT+MK4R4zkr7pmsavBIzfijEyFgesEjthEWIi8mKiRnc8Mu8YYGSs0MVXFJWeCOseeFGGy6EVp3lxKcm4qSuNnA8Bi48iaFEeXLEbVWhU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 5 May 2019 04:53:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50262 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727388AbfEEIxd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 04:53:33 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x458qBo9143243
+        for <linux-kernel@vger.kernel.org>; Sun, 5 May 2019 04:53:32 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s9raq747a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 04:53:32 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Sun, 5 May 2019 09:53:29 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 5 May 2019 09:53:26 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x458rPKe63242432
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 5 May 2019 08:53:25 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7928852052;
+        Sun,  5 May 2019 08:53:25 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 9E0295204F;
+        Sun,  5 May 2019 08:53:24 +0000 (GMT)
+Date:   Sun, 5 May 2019 11:53:23 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Helge Deller <deller@gmx.de>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org
+Subject: Re: DISCONTIGMEM is deprecated
+References: <20190419094335.GJ18914@techsingularity.net>
+ <20190419140521.GI7751@bombadil.infradead.org>
+ <20190419142835.GM18914@techsingularity.net>
+ <9e7b80a9-b90e-ac04-8b30-b2f285cd4432@gmx.de>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02b9b252-5656-4069-7b6a-08d6d13649d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2019 08:47:21.5242
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5726
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9e7b80a9-b90e-ac04-8b30-b2f285cd4432@gmx.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19050508-0012-0000-0000-0000031878B9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050508-0013-0000-0000-00002150EEE3
+Message-Id: <20190505085322.GH15755@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-05_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=796 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905050080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Fri, Apr 26, 2019 at 08:05:51AM +0000, Robin Gong wrote:
-> > ERR009165 fixed from i.mx6ul, add it to show the errata fixed.
-> >
-> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > index 2d32641..32c4263d 100644
-> > --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > @@ -10,6 +10,8 @@ Required properties:
-> >    - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.M=
-X35
-> >    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.=
-MX51
-> >    - "fsl,imx53-ecspi" for SPI compatible with the one integrated on
-> > i.MX53 and later Soc
-> > +  - "fsl,imx6ul-ecspi" ERR009165 fixed on i.MX6UL and later Soc
-> > +
-> > + (https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2F=
-w
-> > +
-> ww.nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01
-> %7Cyi
-> > +
-> bin.gong%40nxp.com%7Cc36708a8219843ffe1d308d6cecbc512%7C686ea1d
-> 3bc2b
-> > +
-> 4c6fa92cd99c5c301635%7C0%7C1%7C636923771907346428&amp;sdata=3D9e
-> 8c8GK2
-> > + hSE90rzyArm8elog9dwNqn4Jeoeff79XwI4%3D&amp;reserved=3D0)
->=20
-> I wouldn't mention this errata in the binding documentation. Just state t=
-hat
-> fsl,imx6ul-ecspi is designed to be used on i.MX6UL. And that it might als=
-o be
-> used on later SoCs as a "fallback compatible" is a detail that is so comm=
-on that
-Eh...Maybe add one flag member in 'struct spi_imx_devtype_data' to state er=
-rata fixed
-is better?=20
-> I would expect it not being worth mentioning. So for me it would also be =
-OK to
-> drop "fsl,imx53-ecspi" from the list as this is only used like:
->=20
->         compatible =3D "fsl,imx53-ecspi", "fsl,imx51-ecspi";
+Hi,
 
->=20
-> (But note that I have no authority here.)
->=20
-> Best regards
-> Uwe
->=20
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig
-> |
-> Industrial Linux Solutions                 |
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fwww.pe
-> ngutronix.de%2F&amp;data=3D02%7C01%7Cyibin.gong%40nxp.com%7Cc36708
-> a8219843ffe1d308d6cecbc512%7C686ea1d3bc2b4c6fa92cd99c5c301635%7
-> C0%7C1%7C636923771907346428&amp;sdata=3DMcF9ueExCPpCq5Nxa6iJ9h53
-> 9d9fO4DIW2IaS90ZdpQ%3D&amp;reserved=3D0  |
+On Fri, Apr 19, 2019 at 10:08:31PM +0200, Helge Deller wrote:
+> On 19.04.19 16:28, Mel Gorman wrote:
+> > On Fri, Apr 19, 2019 at 07:05:21AM -0700, Matthew Wilcox wrote:
+> >> On Fri, Apr 19, 2019 at 10:43:35AM +0100, Mel Gorman wrote:
+> >>> DISCONTIG is essentially deprecated and even parisc plans to move to
+> >>> SPARSEMEM so there is no need to be fancy, this patch simply disables
+> >>> watermark boosting by default on DISCONTIGMEM.
+> >>
+> >> I don't think parisc is the only arch which uses DISCONTIGMEM for !NUMA
+> >> scenarios.  Grepping the arch/ directories shows:
+> >>
+> >> alpha (does support NUMA, but also non-NUMA DISCONTIGMEM)
+> >> arc (for supporting more than 1GB of memory)
+> >> ia64 (looks complicated ...)
+> >> m68k (for multiple chunks of memory)
+> >> mips (does support NUMA but also non-NUMA)
+> >> parisc (both NUMA and non-NUMA)
+> >>
+> >> I'm not sure that these architecture maintainers even know that DISCONTIGMEM
+> >> is deprecated.  Adding linux-arch to the cc.
+> >
+> > Poor wording then -- yes, DISCONTIGMEM is still used but look where it's
+> > used. I find it impossible to believe that any new arch would support
+> > DISCONTIGMEM or that DISCONTIGMEM would be selected when SPARSEMEM is
+> > available.`It's even more insane when you consider that SPARSEMEM can be
+> > extended to support VMEMMAP so that it has similar overhead to FLATMEM
+> > when mapping pfns to struct pages and vice-versa.
+> 
+> FYI, on parisc we will switch from DISCONTIGMEM to SPARSEMEM with kernel 5.2.
+> The patch was quite simple and it's currently in the for-next tree:
+> https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/commit/?h=for-next&id=281b718721a5e78288271d632731cea9697749f7
+
+A while ago I've sent a patch that removes ARCH_DISCARD_MEMBLOCK option [1]
+so the hunk below is not needed:
+
+diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
+index c8038165b81f..26c215570adf 100644
+--- a/arch/parisc/Kconfig
++++ b/arch/parisc/Kconfig
+@@ -36,6 +36,7 @@ config PARISC
+ 	select GENERIC_STRNCPY_FROM_USER
+ 	select SYSCTL_ARCH_UNALIGN_ALLOW
+ 	select SYSCTL_EXCEPTION_TRACE
++	select ARCH_DISCARD_MEMBLOCK
+ 	select HAVE_MOD_ARCH_SPECIFIC
+ 	select VIRT_TO_BUS
+ 	select MODULES_USE_ELF_RELA
+
+
+[1] https://lore.kernel.org/lkml/1556102150-32517-1-git-send-email-rppt@linux.ibm.com/
+ 
+> Helge
+> 
+
+-- 
+Sincerely yours,
+Mike.
+
