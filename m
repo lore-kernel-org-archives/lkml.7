@@ -2,267 +2,191 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D8FC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 10:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F967C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70C8208C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 10:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27FBE208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:00:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bmwh55uN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X83mj4oP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfEEK46 (ORCPT
+        id S1727526AbfEELAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 06:56:58 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33688 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbfEEK46 (ORCPT
+        Sun, 5 May 2019 07:00:12 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34095 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfEELAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 06:56:58 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s18so3022377wmh.0
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 03:56:56 -0700 (PDT)
+        Sun, 5 May 2019 07:00:12 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 96so1095132otf.1
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 04:00:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U57G786HwXPbJb/Ib81QEy3uYz8PAurJDjRMK8xtUPQ=;
-        b=Bmwh55uN0lL/ltGMMZpxKaCYsCmjwqSYSSlArfXH6iPdUKBaXq2lgEXBzqyQ93eD7O
-         AwDEOWl8IW0U5n4FnZGXY67xAtgo/utbV7tyiifhFjoN91w/nVlQR6jeGvyFFf0nznZ0
-         tzWNHoz31OosTX0VcZz+aXbnbJLtVGOMsb+ZRm3qhDLQCCXec5ZhhYcf69yYvgcONyRo
-         975ZvChv77pWNXjp78h//i65myxgRgExAuXZOKpQ5W7CYaPoHU4ggkr48Tm7wcXSLgTp
-         SmqLGleioQ5m8yoHr5uRU/y/uEOqiQ0nwYZbux2Rjym4LUcvQc3CC7Dhb4gilKpSgjDT
-         7Hqg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=48u/VFU7MSPTrTtzW+FiAouzgGejJVLdqdXTQOSxm6Q=;
+        b=X83mj4oP87IVJiRU3uDKZDoKixD41Te7Hv/YfMiEGHZsmMbsj9Xr6TodEtWLjluXaw
+         VcHq2mooYsLTVT23a2fYaeQjgKazcJnD8FR3HpovROQfRwpY2KwXQzRqWtCF1C2A5XgW
+         KbzisPbQmFPBKfHmO+jQFnCRl7TZIfpT5QkGRBhODdPec4lRhXWcUN4OC7Yd45DDT7Xx
+         8F7pip8k72cYqc+Q/IXcig+u7aim7vKW9s8nYbSgvJsFbSTkRTtxrUTkrX91xYG2AuPq
+         lqdkTPB+FGd91XKLxTE1G/LhfVoXO5pgp+VwyVNBJcob0SlZ0y2QmBrmUJyGTomPSrWr
+         Ce3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=U57G786HwXPbJb/Ib81QEy3uYz8PAurJDjRMK8xtUPQ=;
-        b=GDEfwZ1g/mfrOEwOYvFNB0jP4zTGHIL4OxDYEqsYCVhLHG0ZhtVQcRcSpuPjmxV5+/
-         Q9xs2bArSD3Q0uhqxvAxxe5LW/P2b+8U4BQcrfDbosRwOGgTxU9Hqvg2YmyiImOs3lw/
-         iOUr2qSiLddD2/aGZODLosfwEOVN6GzleXEzzdd9yE0rrFPKbqTSm+fP0RxUymMsaxrj
-         D2jaJAJGfx+zRhGYe5sT4cGqjWIcYimwiygdG+LnWwrOpO2U+xg3RcCgWLqDSbSo/wZN
-         ZOV6unGjCu84KsHQ3xfGt8dRcl+5+0wukKlPRIBX5DRga5OKDH09UEkEZBkhugPQx3Hs
-         HlEg==
-X-Gm-Message-State: APjAAAW7I4b7mg3wD7BU2kkW3BmMWU3fQGz/jbNGZL5TD7woCATPAtoa
-        im42Ud4AUs6D6QWBSk+0XaM=
-X-Google-Smtp-Source: APXvYqykvGgeXad5LmeBEju/OuMYnpe0CokSWBKSIGfqj7X57dYVvJFgYkY5JS0I5Gg/O0+K8pd8yQ==
-X-Received: by 2002:a1c:771a:: with SMTP id t26mr5108179wmi.14.1557053815499;
-        Sun, 05 May 2019 03:56:55 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5abb56.dynamic.kabel-deutschland.de. [95.90.187.86])
-        by smtp.gmail.com with ESMTPSA id s2sm6920574wmc.7.2019.05.05.03.56.54
+        bh=48u/VFU7MSPTrTtzW+FiAouzgGejJVLdqdXTQOSxm6Q=;
+        b=BBsXl+zPIRxbhQBdr4RzHQHuXjdaKcx4C7H1ecRYjEAslkQH5dHJQlYot8xmo5vZ+C
+         QSijHfBelqcPbWt4Ke0kw42yIVJ/AfdtONPZQpx/Rlv84ty0U+805hAwFvL8T56U2XWY
+         /WtSdgfF9XUVNPyx2c9nhZk1Su2xdBjzR2ODoqQfZXlbL0H5BW9CHMUEaY7pdN+9m58Z
+         +YCjPkjZeBgVEJBeRFuaFo1J9pCHBJn38yZub85yQ4uFHmjrv+zg15EdyjuhoB5n6B1J
+         UenMZjYJ87zUnnoyLRemxTld3g0YOjZ9A++DSysN2YpbzUUUV0kCGNX7hXGZ4hKXcBh8
+         M2LA==
+X-Gm-Message-State: APjAAAXWHbgU/bH/Mh8NeOI7uP/7eQZanwIHZWgkGrBag+BZVZUTFt2A
+        pLZ3DQkfNYPBVAlP7tAoqBZ4orMK
+X-Google-Smtp-Source: APXvYqxI1Rom9s4CD31U6I7xBB1IbV/3bMnpPiNiZ6WR7LJdc2WoUR9/nHxBgX8Kio6VE348lWQrfQ==
+X-Received: by 2002:a05:6830:10d5:: with SMTP id z21mr13211601oto.355.1557054011796;
+        Sun, 05 May 2019 04:00:11 -0700 (PDT)
+Received: from JosephdeMacBook-Pro.local ([205.204.117.8])
+        by smtp.gmail.com with ESMTPSA id h8sm2831445oti.64.2019.05.05.04.00.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 03:56:54 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8712: get rid of IS_MCAST
-Date:   Sun,  5 May 2019 12:56:42 +0200
-Message-Id: <20190505105642.8730-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Sun, 05 May 2019 04:00:10 -0700 (PDT)
+Subject: Re: [PATCH V3 2/2] ocfs2: add locking filter debugfs file
+To:     Gang He <ghe@suse.com>, mark@fasheh.com, jlbec@evilplan.org
+Cc:     linux-kernel@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        akpm@linux-foundation.org
+References: <20190505101316.17601-1-ghe@suse.com>
+From:   Joseph Qi <jiangqi903@gmail.com>
+Message-ID: <70129725-0a7e-64a5-9583-81e268e26c21@gmail.com>
+Date:   Sun, 5 May 2019 19:00:05 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190505101316.17601-1-ghe@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use is_multicast_ether_addr instead of custom IS_MCAST and remove
-the now unused IS_MCAST. All buffers are properly aligned.
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8712/rtl8712_xmit.c     |  2 +-
- drivers/staging/rtl8712/rtl871x_recv.c     | 14 +++++++-------
- drivers/staging/rtl8712/rtl871x_security.c |  4 ++--
- drivers/staging/rtl8712/rtl871x_xmit.c     | 12 ++++++------
- drivers/staging/rtl8712/wifi.h             | 11 -----------
- 5 files changed, 16 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/staging/rtl8712/rtl8712_xmit.c b/drivers/staging/rtl8712/rtl8712_xmit.c
-index 7574a4b569a4..307b0e292976 100644
---- a/drivers/staging/rtl8712/rtl8712_xmit.c
-+++ b/drivers/staging/rtl8712/rtl8712_xmit.c
-@@ -419,7 +419,7 @@ static void update_txdesc(struct xmit_frame *pxmitframe, uint *pmem, int sz)
- 	struct cmd_priv *pcmdpriv = &padapter->cmdpriv;
- #endif
- 	u8 blnSetTxDescOffset;
--	sint bmcst = IS_MCAST(pattrib->ra);
-+	bool bmcst = is_multicast_ether_addr(pattrib->ra);
- 	struct ht_priv *phtpriv = &pmlmepriv->htpriv;
- 	struct tx_desc txdesc_mp;
- 
-diff --git a/drivers/staging/rtl8712/rtl871x_recv.c b/drivers/staging/rtl8712/rtl871x_recv.c
-index 28f736913292..5298fe603437 100644
---- a/drivers/staging/rtl8712/rtl871x_recv.c
-+++ b/drivers/staging/rtl8712/rtl871x_recv.c
-@@ -151,7 +151,7 @@ sint r8712_recvframe_chkmic(struct _adapter *adapter,
- 	if (prxattrib->encrypt == _TKIP_) {
- 		/* calculate mic code */
- 		if (stainfo != NULL) {
--			if (IS_MCAST(prxattrib->ra)) {
-+			if (is_multicast_ether_addr(prxattrib->ra)) {
- 				iv = precvframe->u.hdr.rx_data +
- 				     prxattrib->hdrlen;
- 				idx = iv[3];
-@@ -180,12 +180,12 @@ sint r8712_recvframe_chkmic(struct _adapter *adapter,
- 			if (bmic_err) {
- 				if (prxattrib->bdecrypted)
- 					r8712_handle_tkip_mic_err(adapter,
--						(u8)IS_MCAST(prxattrib->ra));
-+						(u8)is_multicast_ether_addr(prxattrib->ra));
- 				res = _FAIL;
- 			} else {
- 				/* mic checked ok */
- 				if (!psecuritypriv->bcheck_grpkey &&
--				    IS_MCAST(prxattrib->ra))
-+				    is_multicast_ether_addr(prxattrib->ra))
- 					psecuritypriv->bcheck_grpkey = true;
- 			}
- 			recvframe_pull_tail(precvframe, 8);
-@@ -305,7 +305,7 @@ static sint sta2sta_data_frame(struct _adapter *adapter,
- 	u8 *mybssid  = get_bssid(pmlmepriv);
- 	u8 *myhwaddr = myid(&adapter->eeprompriv);
- 	u8 *sta_addr = NULL;
--	sint bmcast = IS_MCAST(pattrib->dst);
-+	bool bmcast = is_multicast_ether_addr(pattrib->dst);
- 
- 	if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
- 	    check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE)) {
-@@ -331,7 +331,7 @@ static sint sta2sta_data_frame(struct _adapter *adapter,
- 			/* For AP mode, if DA == MCAST, then BSSID should
- 			 * be also MCAST
- 			 */
--			if (!IS_MCAST(pattrib->bssid))
-+			if (!is_multicast_ether_addr(pattrib->bssid))
- 				return _FAIL;
- 		} else { /* not mc-frame */
- 			/* For AP mode, if DA is non-MCAST, then it must be
-@@ -373,7 +373,7 @@ static sint ap2sta_data_frame(struct _adapter *adapter,
- 	struct	mlme_priv *pmlmepriv = &adapter->mlmepriv;
- 	u8 *mybssid  = get_bssid(pmlmepriv);
- 	u8 *myhwaddr = myid(&adapter->eeprompriv);
--	sint bmcast = IS_MCAST(pattrib->dst);
-+	bool bmcast = is_multicast_ether_addr(pattrib->dst);
- 
- 	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE) &&
- 	    check_fwstate(pmlmepriv, _FW_LINKED)) {
-@@ -532,7 +532,7 @@ static sint validate_recv_data_frame(struct _adapter *adapter,
- 
- 	if (pattrib->privacy) {
- 		GET_ENCRY_ALGO(psecuritypriv, psta, pattrib->encrypt,
--			       IS_MCAST(pattrib->ra));
-+			       is_multicast_ether_addr(pattrib->ra));
- 		SET_ICE_IV_LEN(pattrib->iv_len, pattrib->icv_len,
- 			       pattrib->encrypt);
- 	} else {
-diff --git a/drivers/staging/rtl8712/rtl871x_security.c b/drivers/staging/rtl8712/rtl871x_security.c
-index f82645011d02..693008bba83e 100644
---- a/drivers/staging/rtl8712/rtl871x_security.c
-+++ b/drivers/staging/rtl8712/rtl871x_security.c
-@@ -665,7 +665,7 @@ u32 r8712_tkip_decrypt(struct _adapter *padapter, u8 *precvframe)
- 			length = ((union recv_frame *)precvframe)->
- 				 u.hdr.len - prxattrib->hdrlen -
- 				 prxattrib->iv_len;
--			if (IS_MCAST(prxattrib->ra)) {
-+			if (is_multicast_ether_addr(prxattrib->ra)) {
- 				idx = iv[3];
- 				prwskey = &psecuritypriv->XGrpKey[
- 					 ((idx >> 6) & 0x3) - 1].skey[0];
-@@ -1368,7 +1368,7 @@ u32 r8712_aes_decrypt(struct _adapter *padapter, u8 *precvframe)
- 		stainfo = r8712_get_stainfo(&padapter->stapriv,
- 					    &prxattrib->ta[0]);
- 		if (stainfo != NULL) {
--			if (IS_MCAST(prxattrib->ra)) {
-+			if (is_multicast_ether_addr(prxattrib->ra)) {
- 				iv = pframe + prxattrib->hdrlen;
- 				idx = iv[3];
- 				prwskey = &psecuritypriv->XGrpKey[
-diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
-index f6fe8ea12961..bfd5538a4652 100644
---- a/drivers/staging/rtl8712/rtl871x_xmit.c
-+++ b/drivers/staging/rtl8712/rtl871x_xmit.c
-@@ -181,7 +181,7 @@ sint r8712_update_attrib(struct _adapter *padapter, _pkt *pkt,
- 
- 	struct tx_cmd txdesc;
- 
--	sint bmcast;
-+	bool bmcast;
- 	struct sta_priv		*pstapriv = &padapter->stapriv;
- 	struct security_priv	*psecuritypriv = &padapter->securitypriv;
- 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
-@@ -257,7 +257,7 @@ sint r8712_update_attrib(struct _adapter *padapter, _pkt *pkt,
- 			}
- 		}
- 	}
--	bmcast = IS_MCAST(pattrib->ra);
-+	bmcast = is_multicast_ether_addr(pattrib->ra);
- 	/* get sta_info*/
- 	if (bmcast) {
- 		psta = r8712_get_bcmc_stainfo(padapter);
-@@ -353,7 +353,7 @@ static sint xmitframe_addmic(struct _adapter *padapter,
- 	struct	security_priv *psecuritypriv = &padapter->securitypriv;
- 	struct	xmit_priv *pxmitpriv = &padapter->xmitpriv;
- 	u8 priority[4] = {0x0, 0x0, 0x0, 0x0};
--	sint bmcst = IS_MCAST(pattrib->ra);
-+	bool bmcst = is_multicast_ether_addr(pattrib->ra);
- 
- 	if (pattrib->psta)
- 		stainfo = pattrib->psta;
-@@ -523,7 +523,7 @@ static sint make_wlanhdr(struct _adapter *padapter, u8 *hdr,
- 		/* Update Seq Num will be handled by f/w */
- 		{
- 			struct sta_info *psta;
--			sint bmcst = IS_MCAST(pattrib->ra);
-+			bool bmcst = is_multicast_ether_addr(pattrib->ra);
- 
- 			if (pattrib->psta) {
- 				psta = pattrib->psta;
-@@ -594,7 +594,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
- 	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
- 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
- 	u8 *pbuf_start;
--	sint bmcst = IS_MCAST(pattrib->ra);
-+	bool bmcst = is_multicast_ether_addr(pattrib->ra);
- 
- 	if (pattrib->psta == NULL)
- 		return _FAIL;
-@@ -903,7 +903,7 @@ sint r8712_xmit_classifier(struct _adapter *padapter,
- 	struct pkt_attrib *pattrib = &pxmitframe->attrib;
- 	struct sta_priv *pstapriv = &padapter->stapriv;
- 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
--	sint bmcst = IS_MCAST(pattrib->ra);
-+	bool bmcst = is_multicast_ether_addr(pattrib->ra);
- 
- 	if (pattrib->psta) {
- 		psta = pattrib->psta;
-diff --git a/drivers/staging/rtl8712/wifi.h b/drivers/staging/rtl8712/wifi.h
-index 77346debea03..1a5b966a167e 100644
---- a/drivers/staging/rtl8712/wifi.h
-+++ b/drivers/staging/rtl8712/wifi.h
-@@ -278,17 +278,6 @@ static inline unsigned char get_tofr_ds(unsigned char *pframe)
- 
- #define GetAddr4Ptr(pbuf)	((unsigned char *)((addr_t)(pbuf) + 24))
- 
--
--
--static inline int IS_MCAST(unsigned char *da)
--{
--	if ((*da) & 0x01)
--		return true;
--	else
--		return false;
--}
--
--
- static inline unsigned char *get_da(unsigned char *pframe)
- {
- 	unsigned char	*da;
--- 
-2.21.0
+On 19/5/5 18:13, Gang He wrote:
+> Add locking filter debugfs file, which is used to filter lock
+> resources dump from locking_state debugfs file.
+> We use d_filter_secs field to filter lock resources dump,
+> the default d_filter_secs(0) value filters nothing,
+> otherwise, only dump the last N seconds active lock resources.
+> This enhancement can avoid dumping lots of old records.
+> The d_filter_secs value can be changed via locking_filter file.
+> 
+> Compared with v2, ocfs2_dlm_init_debug() returns directly with
+> error when creating locking filter debugfs file is failed, since
+> ocfs2_dlm_shutdown_debug() will handle this failure perfectly.
+> Compared with v1, the main change is to add CONFIG_OCFS2_FS_STATS
+> macro definition judgment.
+> 
+> Signed-off-by: Gang He <ghe@suse.com>
 
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+
+> ---
+>  fs/ocfs2/dlmglue.c | 36 ++++++++++++++++++++++++++++++++++++
+>  fs/ocfs2/ocfs2.h   |  2 ++
+>  2 files changed, 38 insertions(+)
+> 
+> diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+> index dccf4136f8c1..fbe4562cf4fe 100644
+> --- a/fs/ocfs2/dlmglue.c
+> +++ b/fs/ocfs2/dlmglue.c
+> @@ -3006,6 +3006,8 @@ struct ocfs2_dlm_debug *ocfs2_new_dlm_debug(void)
+>  	kref_init(&dlm_debug->d_refcnt);
+>  	INIT_LIST_HEAD(&dlm_debug->d_lockres_tracking);
+>  	dlm_debug->d_locking_state = NULL;
+> +	dlm_debug->d_locking_filter = NULL;
+> +	dlm_debug->d_filter_secs = 0;
+>  out:
+>  	return dlm_debug;
+>  }
+> @@ -3104,11 +3106,33 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
+>  {
+>  	int i;
+>  	char *lvb;
+> +	u32 now, last = 0;
+>  	struct ocfs2_lock_res *lockres = v;
+> +	struct ocfs2_dlm_debug *dlm_debug =
+> +			((struct ocfs2_dlm_seq_priv *)m->private)->p_dlm_debug;
+>  
+>  	if (!lockres)
+>  		return -EINVAL;
+>  
+> +	if (dlm_debug->d_filter_secs) {
+> +		now = ktime_to_timespec(ktime_get()).tv_sec;
+> +#ifdef CONFIG_OCFS2_FS_STATS
+> +		if (lockres->l_lock_prmode.ls_last >
+> +		    lockres->l_lock_exmode.ls_last)
+> +			last = lockres->l_lock_prmode.ls_last;
+> +		else
+> +			last = lockres->l_lock_exmode.ls_last;
+> +#endif
+> +		/*
+> +		 * Use d_filter_secs field to filter lock resources dump,
+> +		 * the default d_filter_secs(0) value filters nothing,
+> +		 * otherwise, only dump the last N seconds active lock
+> +		 * resources.
+> +		 */
+> +		if ((now - last) > dlm_debug->d_filter_secs)
+> +			return 0;
+> +	}
+> +
+>  	seq_printf(m, "0x%x\t", OCFS2_DLM_DEBUG_STR_VERSION);
+>  
+>  	if (lockres->l_type == OCFS2_LOCK_TYPE_DENTRY)
+> @@ -3258,6 +3282,17 @@ static int ocfs2_dlm_init_debug(struct ocfs2_super *osb)
+>  		goto out;
+>  	}
+>  
+> +	dlm_debug->d_locking_filter = debugfs_create_u32("locking_filter",
+> +						0600,
+> +						osb->osb_debug_root,
+> +						&dlm_debug->d_filter_secs);
+> +	if (!dlm_debug->d_locking_filter) {
+> +		ret = -EINVAL;
+> +		mlog(ML_ERROR,
+> +		     "Unable to create locking filter debugfs file.\n");
+> +		goto out;
+> +	}
+> +
+>  	ocfs2_get_dlm_debug(dlm_debug);
+>  out:
+>  	return ret;
+> @@ -3269,6 +3304,7 @@ static void ocfs2_dlm_shutdown_debug(struct ocfs2_super *osb)
+>  
+>  	if (dlm_debug) {
+>  		debugfs_remove(dlm_debug->d_locking_state);
+> +		debugfs_remove(dlm_debug->d_locking_filter);
+>  		ocfs2_put_dlm_debug(dlm_debug);
+>  	}
+>  }
+> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+> index 8efa022684f4..f4da51099889 100644
+> --- a/fs/ocfs2/ocfs2.h
+> +++ b/fs/ocfs2/ocfs2.h
+> @@ -237,6 +237,8 @@ struct ocfs2_orphan_scan {
+>  struct ocfs2_dlm_debug {
+>  	struct kref d_refcnt;
+>  	struct dentry *d_locking_state;
+> +	struct dentry *d_locking_filter;
+> +	u32 d_filter_secs;
+>  	struct list_head d_lockres_tracking;
+>  };
+>  
+> 
