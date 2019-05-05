@@ -2,191 +2,154 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F967C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 453E8C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27FBE208C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:00:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X83mj4oP"
+	by mail.kernel.org (Postfix) with ESMTP id 1086B208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557054036;
+	bh=w/SHpRrllNxZj+LpY9Ds2dGsTQMBl30G2rqnKGez/T4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Er6ecZpXYZvSfanwB45fZO71aMhpBDGWm/2H/DaAie72AOzRTKJSr6rE2acwwd646
+	 9t5bw62lPIRw8NRB6GkMKtEv/iIQnTlgXVPo/dkCz40eLZoah5jI9nlKMFIO18Era7
+	 I7GGA45ww7cFCveqJz/o04DfGot4CudFfJnADPfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbfEELAM (ORCPT
+        id S1727608AbfEELAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 07:00:12 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34095 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfEELAM (ORCPT
+        Sun, 5 May 2019 07:00:34 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35663 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfEELAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 07:00:12 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 96so1095132otf.1
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 04:00:12 -0700 (PDT)
+        Sun, 5 May 2019 07:00:34 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y197so11731810wmd.0
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 04:00:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=48u/VFU7MSPTrTtzW+FiAouzgGejJVLdqdXTQOSxm6Q=;
-        b=X83mj4oP87IVJiRU3uDKZDoKixD41Te7Hv/YfMiEGHZsmMbsj9Xr6TodEtWLjluXaw
-         VcHq2mooYsLTVT23a2fYaeQjgKazcJnD8FR3HpovROQfRwpY2KwXQzRqWtCF1C2A5XgW
-         KbzisPbQmFPBKfHmO+jQFnCRl7TZIfpT5QkGRBhODdPec4lRhXWcUN4OC7Yd45DDT7Xx
-         8F7pip8k72cYqc+Q/IXcig+u7aim7vKW9s8nYbSgvJsFbSTkRTtxrUTkrX91xYG2AuPq
-         lqdkTPB+FGd91XKLxTE1G/LhfVoXO5pgp+VwyVNBJcob0SlZ0y2QmBrmUJyGTomPSrWr
-         Ce3Q==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Z1uv87Hd85BJyOY38lyMunc2g2dXrwR3xUyDwlq8FSQ=;
+        b=vBHqCx7zeF6tCDdWBlKWbfYmWgN3GQPo1pc+3953f8a6UN8QNkawsKKjmFQMeyfiw3
+         VGP2nFMoDHg7K+FJGUEJwbUFnc2Asx7aWoRVb2p358AKTEKdLa+JcXFH9T3ofNbfi+JS
+         3OHpvA207eyqDRFCNeJ0wPKRUY0KkzaIIJJ+5sBmAJMTw8FnCv+2w747NPOaQTqZEy/7
+         7Ql9kh3T4X19iesnSm5mEvPN0dOoK8TFfgQszutfWYrDMKe7J83GBnv3sXQKKd+MTiV4
+         v9aa+S+n58531Z3PF7Qn9BvIW/Gz1Fu7GnAw48N9ZW8oOGQ4SoRupH5yuiFcPV1o4BhM
+         lGaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=48u/VFU7MSPTrTtzW+FiAouzgGejJVLdqdXTQOSxm6Q=;
-        b=BBsXl+zPIRxbhQBdr4RzHQHuXjdaKcx4C7H1ecRYjEAslkQH5dHJQlYot8xmo5vZ+C
-         QSijHfBelqcPbWt4Ke0kw42yIVJ/AfdtONPZQpx/Rlv84ty0U+805hAwFvL8T56U2XWY
-         /WtSdgfF9XUVNPyx2c9nhZk1Su2xdBjzR2ODoqQfZXlbL0H5BW9CHMUEaY7pdN+9m58Z
-         +YCjPkjZeBgVEJBeRFuaFo1J9pCHBJn38yZub85yQ4uFHmjrv+zg15EdyjuhoB5n6B1J
-         UenMZjYJ87zUnnoyLRemxTld3g0YOjZ9A++DSysN2YpbzUUUV0kCGNX7hXGZ4hKXcBh8
-         M2LA==
-X-Gm-Message-State: APjAAAXWHbgU/bH/Mh8NeOI7uP/7eQZanwIHZWgkGrBag+BZVZUTFt2A
-        pLZ3DQkfNYPBVAlP7tAoqBZ4orMK
-X-Google-Smtp-Source: APXvYqxI1Rom9s4CD31U6I7xBB1IbV/3bMnpPiNiZ6WR7LJdc2WoUR9/nHxBgX8Kio6VE348lWQrfQ==
-X-Received: by 2002:a05:6830:10d5:: with SMTP id z21mr13211601oto.355.1557054011796;
-        Sun, 05 May 2019 04:00:11 -0700 (PDT)
-Received: from JosephdeMacBook-Pro.local ([205.204.117.8])
-        by smtp.gmail.com with ESMTPSA id h8sm2831445oti.64.2019.05.05.04.00.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 04:00:10 -0700 (PDT)
-Subject: Re: [PATCH V3 2/2] ocfs2: add locking filter debugfs file
-To:     Gang He <ghe@suse.com>, mark@fasheh.com, jlbec@evilplan.org
-Cc:     linux-kernel@vger.kernel.org, ocfs2-devel@oss.oracle.com,
-        akpm@linux-foundation.org
-References: <20190505101316.17601-1-ghe@suse.com>
-From:   Joseph Qi <jiangqi903@gmail.com>
-Message-ID: <70129725-0a7e-64a5-9583-81e268e26c21@gmail.com>
-Date:   Sun, 5 May 2019 19:00:05 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=Z1uv87Hd85BJyOY38lyMunc2g2dXrwR3xUyDwlq8FSQ=;
+        b=HA8o8+jpNYd3gpsnhLNS1iChatHD3cuFMcZWjR/SHcs5zjSmt6tgjqo3JzBm6+mz5h
+         mCDbCLZ0lfAqwyvBFBflcuPFgc8Dq0i2RPrZABRSqtt4b6LTQq9WcC1ErB1fjNSvAVT1
+         vPfr7+IY5Mx9eYx7PqyTfqduiMkUYtkYy55bHyEUv5tJFZ7pZ0x2JYJAHvndB1xcxB9I
+         hYWLwamBdGjhUT9BbYHtkaYP0PGRBLipaHdRUwVg0QPl5PbgbMamgME8POjVgYtEph02
+         IfF6uKmhBolUUOklq5sc3/luqaTbEJf0ZuvVjRM0X7Evo83RblKofxWMdDItelBQ6fWs
+         VKNg==
+X-Gm-Message-State: APjAAAVz8DP3LePXhdFcSQEINzUrNOAqv7y6e4RgsvCFoMFUqkKvcP1f
+        a0Xz7t4EpPH9/mabheHpeRtoN5L7
+X-Google-Smtp-Source: APXvYqwrJd0hHqMStqxU+nEOCMZw7gI3A5Fw0njpSZOKS5cDTN9zIxkew3XKn2oob7aK7EoMsd8hhw==
+X-Received: by 2002:a05:600c:d1:: with SMTP id u17mr5479950wmm.2.1557054032630;
+        Sun, 05 May 2019 04:00:32 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id j131sm10986788wmb.9.2019.05.05.04.00.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 05 May 2019 04:00:31 -0700 (PDT)
+Date:   Sun, 5 May 2019 13:00:29 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86 fix
+Message-ID: <20190505110029.GA87041@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190505101316.17601-1-ghe@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
+
+Please pull the latest x86-urgent-for-linus git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
+
+   # HEAD: b51ce3744f115850166f3d6c292b9c8cb849ad4f x86/mm/mem_encrypt: Disable all instrumentation for early SME setup
+
+Disable function tracing during early SME setup to fix a boot crash on 
+SME-enabled kernels running distro kernels (some of which have function 
+tracing enabled).
+
+  out-of-topic modifications in x86-urgent-for-linus:
+  -----------------------------------------------------
+  lib/Makefile                       # b51ce3744f11: x86/mm/mem_encrypt: Disable 
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Gary Hook (1):
+      x86/mm/mem_encrypt: Disable all instrumentation for early SME setup
 
 
-On 19/5/5 18:13, Gang He wrote:
-> Add locking filter debugfs file, which is used to filter lock
-> resources dump from locking_state debugfs file.
-> We use d_filter_secs field to filter lock resources dump,
-> the default d_filter_secs(0) value filters nothing,
-> otherwise, only dump the last N seconds active lock resources.
-> This enhancement can avoid dumping lots of old records.
-> The d_filter_secs value can be changed via locking_filter file.
-> 
-> Compared with v2, ocfs2_dlm_init_debug() returns directly with
-> error when creating locking filter debugfs file is failed, since
-> ocfs2_dlm_shutdown_debug() will handle this failure perfectly.
-> Compared with v1, the main change is to add CONFIG_OCFS2_FS_STATS
-> macro definition judgment.
-> 
-> Signed-off-by: Gang He <ghe@suse.com>
+ arch/x86/lib/Makefile | 12 ++++++++++++
+ lib/Makefile          | 11 +++++++++++
+ 2 files changed, 23 insertions(+)
 
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-
-> ---
->  fs/ocfs2/dlmglue.c | 36 ++++++++++++++++++++++++++++++++++++
->  fs/ocfs2/ocfs2.h   |  2 ++
->  2 files changed, 38 insertions(+)
-> 
-> diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
-> index dccf4136f8c1..fbe4562cf4fe 100644
-> --- a/fs/ocfs2/dlmglue.c
-> +++ b/fs/ocfs2/dlmglue.c
-> @@ -3006,6 +3006,8 @@ struct ocfs2_dlm_debug *ocfs2_new_dlm_debug(void)
->  	kref_init(&dlm_debug->d_refcnt);
->  	INIT_LIST_HEAD(&dlm_debug->d_lockres_tracking);
->  	dlm_debug->d_locking_state = NULL;
-> +	dlm_debug->d_locking_filter = NULL;
-> +	dlm_debug->d_filter_secs = 0;
->  out:
->  	return dlm_debug;
->  }
-> @@ -3104,11 +3106,33 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, void *v)
->  {
->  	int i;
->  	char *lvb;
-> +	u32 now, last = 0;
->  	struct ocfs2_lock_res *lockres = v;
-> +	struct ocfs2_dlm_debug *dlm_debug =
-> +			((struct ocfs2_dlm_seq_priv *)m->private)->p_dlm_debug;
->  
->  	if (!lockres)
->  		return -EINVAL;
->  
-> +	if (dlm_debug->d_filter_secs) {
-> +		now = ktime_to_timespec(ktime_get()).tv_sec;
-> +#ifdef CONFIG_OCFS2_FS_STATS
-> +		if (lockres->l_lock_prmode.ls_last >
-> +		    lockres->l_lock_exmode.ls_last)
-> +			last = lockres->l_lock_prmode.ls_last;
-> +		else
-> +			last = lockres->l_lock_exmode.ls_last;
-> +#endif
-> +		/*
-> +		 * Use d_filter_secs field to filter lock resources dump,
-> +		 * the default d_filter_secs(0) value filters nothing,
-> +		 * otherwise, only dump the last N seconds active lock
-> +		 * resources.
-> +		 */
-> +		if ((now - last) > dlm_debug->d_filter_secs)
-> +			return 0;
-> +	}
-> +
->  	seq_printf(m, "0x%x\t", OCFS2_DLM_DEBUG_STR_VERSION);
->  
->  	if (lockres->l_type == OCFS2_LOCK_TYPE_DENTRY)
-> @@ -3258,6 +3282,17 @@ static int ocfs2_dlm_init_debug(struct ocfs2_super *osb)
->  		goto out;
->  	}
->  
-> +	dlm_debug->d_locking_filter = debugfs_create_u32("locking_filter",
-> +						0600,
-> +						osb->osb_debug_root,
-> +						&dlm_debug->d_filter_secs);
-> +	if (!dlm_debug->d_locking_filter) {
-> +		ret = -EINVAL;
-> +		mlog(ML_ERROR,
-> +		     "Unable to create locking filter debugfs file.\n");
-> +		goto out;
-> +	}
-> +
->  	ocfs2_get_dlm_debug(dlm_debug);
->  out:
->  	return ret;
-> @@ -3269,6 +3304,7 @@ static void ocfs2_dlm_shutdown_debug(struct ocfs2_super *osb)
->  
->  	if (dlm_debug) {
->  		debugfs_remove(dlm_debug->d_locking_state);
-> +		debugfs_remove(dlm_debug->d_locking_filter);
->  		ocfs2_put_dlm_debug(dlm_debug);
->  	}
->  }
-> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
-> index 8efa022684f4..f4da51099889 100644
-> --- a/fs/ocfs2/ocfs2.h
-> +++ b/fs/ocfs2/ocfs2.h
-> @@ -237,6 +237,8 @@ struct ocfs2_orphan_scan {
->  struct ocfs2_dlm_debug {
->  	struct kref d_refcnt;
->  	struct dentry *d_locking_state;
-> +	struct dentry *d_locking_filter;
-> +	u32 d_filter_secs;
->  	struct list_head d_lockres_tracking;
->  };
->  
-> 
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index 140e61843a07..3cb3af51ec89 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -6,6 +6,18 @@
+ # Produces uninteresting flaky coverage.
+ KCOV_INSTRUMENT_delay.o	:= n
+ 
++# Early boot use of cmdline; don't instrument it
++ifdef CONFIG_AMD_MEM_ENCRYPT
++KCOV_INSTRUMENT_cmdline.o := n
++KASAN_SANITIZE_cmdline.o  := n
++
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_cmdline.o = -pg
++endif
++
++CFLAGS_cmdline.o := $(call cc-option, -fno-stack-protector)
++endif
++
+ inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
+ inat_tables_maps = $(srctree)/arch/x86/lib/x86-opcode-map.txt
+ quiet_cmd_inat_tables = GEN     $@
+diff --git a/lib/Makefile b/lib/Makefile
+index 3b08673e8881..18c2be516ab4 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -17,6 +17,17 @@ KCOV_INSTRUMENT_list_debug.o := n
+ KCOV_INSTRUMENT_debugobjects.o := n
+ KCOV_INSTRUMENT_dynamic_debug.o := n
+ 
++# Early boot use of cmdline, don't instrument it
++ifdef CONFIG_AMD_MEM_ENCRYPT
++KASAN_SANITIZE_string.o := n
++
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_string.o = -pg
++endif
++
++CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
++endif
++
+ lib-y := ctype.o string.o vsprintf.o cmdline.o \
+ 	 rbtree.o radix-tree.o timerqueue.o xarray.o \
+ 	 idr.o int_sqrt.o extable.o \
