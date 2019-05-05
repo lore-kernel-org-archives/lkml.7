@@ -2,106 +2,254 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5847C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 10:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3E7C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 10:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE042087F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 10:32:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=darbyshire-bryant.me.uk header.i=@darbyshire-bryant.me.uk header.b="IP+qS1Bn"
+	by mail.kernel.org (Postfix) with ESMTP id BA3932082F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 10:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfEEKcU (ORCPT
+        id S1727547AbfEEKiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 06:32:20 -0400
-Received: from mail-eopbgr140082.outbound.protection.outlook.com ([40.107.14.82]:11621
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725873AbfEEKcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 06:32:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=darbyshire-bryant.me.uk; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yei/+/M5/j2Pg6KMJoTCC7LbkU4bfvCBHzNTIa4qDhQ=;
- b=IP+qS1BnIdolu/+MovM7muTLvu1wbPNUi4uDjIJVb7UzEKBBiXom8tXLLIIcaKifoV3lzxBaKicJUKSww4T69BUbFentOTmWS+cuIHJNHWVw5ZUFgi4rpkamopjf36PFkEYP74itVg/CLe7a534o72875MDWxe86R1S0J5utaNY=
-Received: from AM4PR0302MB2739.eurprd03.prod.outlook.com (10.171.85.142) by
- AM4PR0302MB2659.eurprd03.prod.outlook.com (10.171.86.7) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Sun, 5 May 2019 10:32:15 +0000
-Received: from AM4PR0302MB2739.eurprd03.prod.outlook.com
- ([fe80::ed44:f56b:72e1:f766]) by AM4PR0302MB2739.eurprd03.prod.outlook.com
- ([fe80::ed44:f56b:72e1:f766%5]) with mapi id 15.20.1856.012; Sun, 5 May 2019
- 10:32:15 +0000
-From:   Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
-To:     Greg KH <greg@kroah.com>
-CC:     "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jhs@mojatatu.com" <jhs@mojatatu.com>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "shuah@kernel.org" <shuah@kernel.org>
-Subject: Re: [net-next v2] net: sched: Introduce act_ctinfo action
-Thread-Topic: [net-next v2] net: sched: Introduce act_ctinfo action
-Thread-Index: AQHVAyt/SC3QmOI5f0a3vJokwFo61aZcUsEAgAACgwA=
-Date:   Sun, 5 May 2019 10:32:15 +0000
-Message-ID: <B6426224-12CC-417B-9A38-6DDBE574A85C@darbyshire-bryant.me.uk>
-References: <CAM_iQpXnXyfLZ2+gjDufbdMrZLgtf9uKbzbUf50Xm-2Go7maVw@mail.gmail.com>
- <20190505101523.48425-1-ldir@darbyshire-bryant.me.uk>
- <20190505102314.GA12761@kroah.com>
-In-Reply-To: <20190505102314.GA12761@kroah.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ldir@darbyshire-bryant.me.uk; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2a02:c7f:1240:ee00::dc83]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a7efc574-f1e0-4f3d-db5e-08d6d144f10d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:AM4PR0302MB2659;
-x-ms-traffictypediagnostic: AM4PR0302MB2659:
-x-microsoft-antispam-prvs: <AM4PR0302MB2659B05C235B452A368A0C45C9370@AM4PR0302MB2659.eurprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:549;
-x-forefront-prvs: 00286C0CA6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(39830400003)(396003)(366004)(189003)(199004)(51914003)(25786009)(33656002)(99286004)(4326008)(66556008)(86362001)(76176011)(76116006)(91956017)(66446008)(64756008)(66946007)(66476007)(73956011)(6916009)(71190400001)(71200400001)(83716004)(8936002)(82746002)(68736007)(316002)(229853002)(74482002)(6116002)(14454004)(46003)(6486002)(6512007)(305945005)(508600001)(186003)(53936002)(8676002)(486006)(7736002)(54906003)(476003)(2616005)(2906002)(446003)(11346002)(5660300002)(6506007)(53546011)(6246003)(102836004)(6436002)(256004)(4744005)(81156014)(81166006)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR0302MB2659;H:AM4PR0302MB2739.eurprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: darbyshire-bryant.me.uk does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1Rq99rmCA8RVw8JReFskRNE2TiSJa3q+J9wWGwkZHY6I1RSG4I9rg9oMtMP5e6lJxT/N01bmCeDpRzwBaVztAuDeueHa3jPQYZRBRSIRS7OY8b+wDG2RocC/5kRlhA081+NdHRA0KqC77jOHys0jLBYG5kwvkFXDbErNZCNk3jPyT+i7mG1JvnRAvU3VqXYnuRibg2v7KnlGBV1Vuc9t2+dyn9nilo67+nuUkw5y6WqK9sKn2xvSO9QDdvnhe/5EZjLbWDTsYWmiSgB6D42q1KrJmpOs/4afGI2H43WuGfZGBByAh1jqCoJ732x6Vd4gFECf5qRtlzPb0qTFAO+JygKVEsbeknY+BoYElY/7B/unh22imwJj/H0sXY0UrSbpRxooKKrdVhgICFJ4pBvXozV4uMfLfRqBinMBXXcZBKg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B8741B9DAE7D6A46BAD3338B68FCB923@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: darbyshire-bryant.me.uk
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7efc574-f1e0-4f3d-db5e-08d6d144f10d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2019 10:32:15.0641
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9151708b-c553-406f-8e56-694f435154a4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0302MB2659
+        Sun, 5 May 2019 06:38:02 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55710 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbfEEKiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 06:38:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80E2E374;
+        Sun,  5 May 2019 03:38:01 -0700 (PDT)
+Received: from big-swifty.misterjones.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C3EE3F238;
+        Sun,  5 May 2019 03:38:00 -0700 (PDT)
+Date:   Sun, 05 May 2019 11:38:13 +0100
+Message-ID: <86lfzl9ofe.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Heyi Guo <guoheyi@huawei.com>
+Cc:     <linux-kernel@vger.kernel.org>,
+        wanghaibin 00208455 <wanghaibin.wang@huawei.com>,
+        kvmarm <kvmarm@lists.cs.columbia.edu>
+Subject: Re: ARM/gic-v4: deadlock occurred
+In-Reply-To: <9efe0260-4a84-7489-ecdd-2e9561599320@huawei.com>
+References: <9efe0260-4a84-7489-ecdd-2e9561599320@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gT24gNSBNYXkgMjAxOSwgYXQgMTE6MjMsIEdyZWcgS0ggPGdyZWdAa3JvYWguY29tPiB3
-cm90ZToNCj4gDQo+IE9uIFN1biwgTWF5IDA1LCAyMDE5IGF0IDEwOjE1OjQzQU0gKzAwMDAsIEtl
-dmluICdsZGlyJyBEYXJieXNoaXJlLUJyeWFudCB3cm90ZToNCj4+IC0tLSAvZGV2L251bGwNCj4+
-ICsrKyBiL25ldC9zY2hlZC9hY3RfY3RpbmZvLmMNCj4+IEBAIC0wLDAgKzEsNDA3IEBADQo+PiAr
-Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgV0lUSCBMaW51eC1zeXNjYWxsLW5v
-dGUNCj4gDQoNCkhleSBHcmVnLCB0aGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gSG93IGNhbiBh
-IC5jIGZpbGUsIGJ1cmllZCBpbiB0aGUga2VybmVsIHRyZWUsIGhhdmUgYSBMaW51eC1zeXNjYWxs
-LW5vdGUNCj4gZXhjZXB0aW9uIHRvIGl0Pw0KDQpCZWNhdXNlIEnigJltIGEgbW9yb24gYW5kIG5v
-Ym9keSBlbHNlIHNwb3R0ZWQgaXQuDQo+IA0KPiBBcmUgeW91IF9zdXJlXyB0aGF0IGlzIG9rPyAg
-VGhhdCBsaWNlbnNlIHNob3VsZCBvbmx5IGJlIGZvciBmaWxlcyBpbiB0aGUNCj4gdWFwaSBoZWFk
-ZXIgZGlyZWN0b3J5Lg0KDQpFeHBlY3QgYSB2MyBzaG9ydGx5LiAgSSBzaGFsbCB3ZWFyIHlvdXIg
-Y2hhc3Rpc2VtZW50IHdpdGggaG9ub3VyIDotKQ0KDQoNCkNoZWVycywNCg0KS2V2aW4gRC1CDQoN
-CmdwZzogMDEyQyBBQ0IyIDI4QzYgQzUzRSA5Nzc1ICA5MTIzIEIzQTIgMzg5QiA5REUyIDMzNEEN
-Cg0K
+[+ kvmarm]
+
+Hi Heyi,
+
+On Sun, 05 May 2019 03:26:18 +0100,
+Heyi Guo <guoheyi@huawei.com> wrote:
+> 
+> Hi folks,
+> 
+> We observed deadlocks after enabling GICv4 and PCI passthrough on
+> ARM64 virtual machines, when not pinning VCPU to physical CPU.
+> 
+> We observed below warnings after enabling lockdep debug in kernel:
+> 
+> [  362.847021] =====================================================
+> [  362.855643] WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
+> [  362.864840] 4.19.34+ #7 Tainted: G        W
+> [  362.872314] -----------------------------------------------------
+> [  362.881034] CPU 0/KVM/51468 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+> [  362.890504] 00000000659c1dc9 (fs_reclaim){+.+.}, at: fs_reclaim_acquire.part.22+0x0/0x48
+> [  362.901413]
+> [  362.901413] and this task is already holding:
+> [  362.912976] 000000007318873f (&dev->event_map.vlpi_lock){....}, at: its_irq_set_vcpu_affinity+0x134/0x638
+> [  362.928626] which would create a new lock dependency:
+> [  362.936837]  (&dev->event_map.vlpi_lock){....} -> (fs_reclaim){+.+.}
+> [  362.946449]
+> [  362.946449] but this new dependency connects a HARDIRQ-irq-safe lock:
+> [  362.960877]  (&irq_desc_lock_class){-.-.}
+> [  362.960880]
+> [  362.960880] ... which became HARDIRQ-irq-safe at:
+> [  362.981234]   lock_acquire+0xf0/0x258
+> [  362.988337]   _raw_spin_lock+0x54/0x90
+> [  362.995543]   handle_fasteoi_irq+0x2c/0x198
+> [  363.003205]   generic_handle_irq+0x34/0x50
+> [  363.010787]   __handle_domain_irq+0x68/0xc0
+> [  363.018500]   gic_handle_irq+0xf4/0x1e0
+> [  363.025913]   el1_irq+0xc8/0x180
+> [  363.032683]   _raw_spin_unlock_irq+0x40/0x60
+> [  363.040512]   finish_task_switch+0x98/0x258
+> [  363.048254]   __schedule+0x350/0xca8
+> [  363.055359]   schedule+0x40/0xa8
+> [  363.062098]   worker_thread+0xd8/0x410
+> [  363.069340]   kthread+0x134/0x138
+> [  363.076070]   ret_from_fork+0x10/0x18
+> [  363.083111]
+> [  363.083111] to a HARDIRQ-irq-unsafe lock:
+> [  363.095213]  (fs_reclaim){+.+.}
+> [  363.095216]
+> [  363.095216] ... which became HARDIRQ-irq-unsafe at:
+> [  363.114527] ...
+> [  363.114530]   lock_acquire+0xf0/0x258
+> [  363.126269]   fs_reclaim_acquire.part.22+0x3c/0x48
+> [  363.134206]   fs_reclaim_acquire+0x2c/0x38
+> [  363.141363]   kmem_cache_alloc_trace+0x44/0x368
+> [  363.148892]   acpi_os_map_iomem+0x9c/0x208
+> [  363.155934]   acpi_os_map_memory+0x28/0x38
+> [  363.162831]   acpi_tb_acquire_table+0x58/0x8c
+> [  363.170021]   acpi_tb_validate_table+0x34/0x58
+> [  363.177162]   acpi_tb_get_table+0x4c/0x90
+> [  363.183741]   acpi_get_table+0x94/0xc4
+> [  363.190020]   find_acpi_cpu_topology_tag+0x54/0x240
+> [  363.197404]   find_acpi_cpu_topology_package+0x28/0x38
+> [  363.204985]   init_cpu_topology+0xdc/0x1e4
+> [  363.211498]   smp_prepare_cpus+0x2c/0x108
+> [  363.217882]   kernel_init_freeable+0x130/0x508
+> [  363.224699]   kernel_init+0x18/0x118
+> [  363.230624]   ret_from_fork+0x10/0x18
+> [  363.236611]
+> [  363.236611] other info that might help us debug this:
+> [  363.236611]
+> [  363.251604] Chain exists of:
+> [  363.251604]   &irq_desc_lock_class --> &dev->event_map.vlpi_lock --> fs_reclaim
+> [  363.251604]
+> [  363.270508]  Possible interrupt unsafe locking scenario:
+> [  363.270508]
+> [  363.282238]        CPU0                    CPU1
+> [  363.289228]        ----                    ----
+> [  363.296189]   lock(fs_reclaim);
+> [  363.301726]                                local_irq_disable();
+> [  363.310122] lock(&irq_desc_lock_class);
+> [  363.319143] lock(&dev->event_map.vlpi_lock);
+> [  363.328617]   <Interrupt>
+> [  363.333713]     lock(&irq_desc_lock_class);
+> [  363.340414]
+> [  363.340414]  *** DEADLOCK ***
+> [  363.340414]
+> [  363.353682] 5 locks held by CPU 0/KVM/51468:
+> [  363.360412]  #0: 00000000eeb852a5 (&vdev->igate){+.+.}, at: vfio_pci_ioctl+0x2f8/0xed0
+> [  363.370915]  #1: 000000002ab491f7 (lock#9){+.+.}, at: irq_bypass_register_producer+0x6c/0x1d0
+> [  363.382139]  #2: 000000000d9fd5c6 (&its->its_lock){+.+.}, at: kvm_vgic_v4_set_forwarding+0xd0/0x188
+> [  363.396625]  #3: 00000000232bdc47 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x60/0xa0
+> [  363.408486]  #4: 000000007318873f (&dev->event_map.vlpi_lock){....}, at: its_irq_set_vcpu_affinity+0x134/0x638
+> 
+> 
+> Then we found that irq_set_vcpu_affinity() in kernel/irq/manage.c
+> aquires an antomic context by irq_get_desc_lock() at the beginning,
+> but in its_irq_set_vcpu_affinity()
+> (drivers/irqchip/irq-gic-v3-its.c) we are still using mutext_lock,
+> kcalloc, kfree, etc, which we think should be forbidden in atomic
+> context.
+> 
+> Though the issue is observed in 4.19.34, we don't find any related
+> fixes in the mainline yet.
+
+Thanks for the report. Given that you're the only users of GICv4,
+you're bound to find a number of these issues.
+
+Can you try the patch below and let me know whether it helps? This is
+the simplest thing I can think off to paper over the issue, but is
+isn't pretty, and I'm looking at possible alternatives (ideally, we'd
+be able to allocate the map outside of the irqdesc lock, but this
+requires some API change between KVM, the GICv4 layer and the ITS
+code).
+
+Note that I'm travelling for the next two weeks without access to my
+test rig, so I'm relying on you to test this stuff.
+
+Thanks,
+
+	M.
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 7577755bdcf4..18aa04b6a9f4 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -142,7 +142,7 @@ struct event_lpi_map {
+ 	u16			*col_map;
+ 	irq_hw_number_t		lpi_base;
+ 	int			nr_lpis;
+-	struct mutex		vlpi_lock;
++	raw_spinlock_t		vlpi_lock;
+ 	struct its_vm		*vm;
+ 	struct its_vlpi_map	*vlpi_maps;
+ 	int			nr_vlpis;
+@@ -1263,13 +1263,13 @@ static int its_vlpi_map(struct irq_data *d, struct its_cmd_info *info)
+ 	if (!info->map)
+ 		return -EINVAL;
+ 
+-	mutex_lock(&its_dev->event_map.vlpi_lock);
++	raw_spin_lock(&its_dev->event_map.vlpi_lock);
+ 
+ 	if (!its_dev->event_map.vm) {
+ 		struct its_vlpi_map *maps;
+ 
+ 		maps = kcalloc(its_dev->event_map.nr_lpis, sizeof(*maps),
+-			       GFP_KERNEL);
++			       GFP_ATOMIC);
+ 		if (!maps) {
+ 			ret = -ENOMEM;
+ 			goto out;
+@@ -1312,7 +1312,7 @@ static int its_vlpi_map(struct irq_data *d, struct its_cmd_info *info)
+ 	}
+ 
+ out:
+-	mutex_unlock(&its_dev->event_map.vlpi_lock);
++	raw_spin_unlock(&its_dev->event_map.vlpi_lock);
+ 	return ret;
+ }
+ 
+@@ -1322,7 +1322,7 @@ static int its_vlpi_get(struct irq_data *d, struct its_cmd_info *info)
+ 	u32 event = its_get_event_id(d);
+ 	int ret = 0;
+ 
+-	mutex_lock(&its_dev->event_map.vlpi_lock);
++	raw_spin_lock(&its_dev->event_map.vlpi_lock);
+ 
+ 	if (!its_dev->event_map.vm ||
+ 	    !its_dev->event_map.vlpi_maps[event].vm) {
+@@ -1334,7 +1334,7 @@ static int its_vlpi_get(struct irq_data *d, struct its_cmd_info *info)
+ 	*info->map = its_dev->event_map.vlpi_maps[event];
+ 
+ out:
+-	mutex_unlock(&its_dev->event_map.vlpi_lock);
++	raw_spin_unlock(&its_dev->event_map.vlpi_lock);
+ 	return ret;
+ }
+ 
+@@ -1344,7 +1344,7 @@ static int its_vlpi_unmap(struct irq_data *d)
+ 	u32 event = its_get_event_id(d);
+ 	int ret = 0;
+ 
+-	mutex_lock(&its_dev->event_map.vlpi_lock);
++	raw_spin_lock(&its_dev->event_map.vlpi_lock);
+ 
+ 	if (!its_dev->event_map.vm || !irqd_is_forwarded_to_vcpu(d)) {
+ 		ret = -EINVAL;
+@@ -1374,7 +1374,7 @@ static int its_vlpi_unmap(struct irq_data *d)
+ 	}
+ 
+ out:
+-	mutex_unlock(&its_dev->event_map.vlpi_lock);
++	raw_spin_unlock(&its_dev->event_map.vlpi_lock);
+ 	return ret;
+ }
+ 
+@@ -2436,7 +2436,7 @@ static struct its_device *its_create_device(struct its_node *its, u32 dev_id,
+ 	dev->event_map.col_map = col_map;
+ 	dev->event_map.lpi_base = lpi_base;
+ 	dev->event_map.nr_lpis = nr_lpis;
+-	mutex_init(&dev->event_map.vlpi_lock);
++	raw_spin_lock_init(&dev->event_map.vlpi_lock);
+ 	dev->device_id = dev_id;
+ 	INIT_LIST_HEAD(&dev->entry);
+ 
+
+-- 
+Jazz is not dead, it just smell funny.
