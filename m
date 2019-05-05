@@ -2,80 +2,144 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDA3C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 23:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DBCC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 23:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DEDE20675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 23:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11DA20B7C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 23:36:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BlVrgAae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfEEXCk (ORCPT
+        id S1728146AbfEEXgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 19:02:40 -0400
-Received: from mail.us.es ([193.147.175.20]:54866 "EHLO mail.us.es"
+        Sun, 5 May 2019 19:36:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:59403 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727615AbfEEXCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 19:02:40 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 888B411ED85
-        for <linux-kernel@vger.kernel.org>; Mon,  6 May 2019 01:02:38 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 777FCDA706
-        for <linux-kernel@vger.kernel.org>; Mon,  6 May 2019 01:02:38 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 70F99DA711; Mon,  6 May 2019 01:02:38 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 6C9F4DA707;
-        Mon,  6 May 2019 01:02:36 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Mon, 06 May 2019 01:02:36 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727615AbfEEXgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 19:36:16 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 481FC4265A31;
-        Mon,  6 May 2019 01:02:36 +0200 (CEST)
-Date:   Mon, 6 May 2019 01:02:35 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] netfilter: xt_hashlimit: use struct_size() helper
-Message-ID: <20190505230235.d4cvm33ktds4gpxp@salvia>
-References: <20190501220108.GA30487@embeddedor>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44y2Lj0pyRz9s4V;
+        Mon,  6 May 2019 09:36:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557099373;
+        bh=2eo3/udFwFVXzB0YToq6HBtLtJk/Mqr/teWpVUnKI8c=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BlVrgAaejFJs3m+ljd/B/QBlwIPz8UHhYOhzK9RXwFx92/khfjnhklyPm2QYvlnKD
+         jchf9XHkyBnHQfl4bcL8zNoBh6nWvnA5tmNzh7cdzoYZZCbuaOpBhpEDQqyY6kuH2j
+         pnxsXQF7GVGiWEw7DmtlhupcG+CVqf6sqpkxunzDvtXg3E+Z+KuB+hfAUGQ5TazxpM
+         ijqNYgdJkGoPubJKGJpDd3BvCHeyCXb/5B9FRiSkISQPfzalvqNOpcoU+ZgXfYcKj5
+         m//snEMuSV81b7H7qEMarRmPMxwh+FQ03S9WTpRcKpmnPw/YHBEBXHG8bmK27OHGh8
+         n9GQoSgU3sLWw==
+Date:   Mon, 6 May 2019 09:35:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Tarun Kanti DebBarma <tarun.kanti@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: linux-next: build failure after merge of the kbuild tree
+Message-ID: <20190506093553.29bae34c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190501220108.GA30487@embeddedor>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/dKOG3wgtOe87O4AvhMc3+p0"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 05:01:08PM -0500, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes, in particular in the
-> context in which this code is being used.
-> 
-> So, replace code of the following form:
-> 
-> sizeof(struct xt_hashlimit_htable) + sizeof(struct hlist_head) * size
-> 
-> with:
-> 
-> struct_size(hinfo, hash, size)
-> 
-> This code was detected with the help of Coccinelle.
+--Sig_/dKOG3wgtOe87O4AvhMc3+p0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Hi Masahiro,
+
+After merging the kbuild tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
+
+In file included from include/linux/module.h:18,
+                 from drivers/clocksource/timer-ti-dm.c:40:
+drivers/clocksource/timer-ti-dm.c:973:26: error: expected ',' or ';' before=
+ 'DRIVER_NAME'
+ MODULE_ALIAS("platform:" DRIVER_NAME);
+                          ^~~~~~~~~~~
+include/linux/moduleparam.h:26:47: note: in definition of macro '__MODULE_I=
+NFO'
+   =3D __MODULE_INFO_PREFIX __stringify(tag) "=3D" info
+                                               ^~~~
+include/linux/module.h:164:30: note: in expansion of macro 'MODULE_INFO'
+ #define MODULE_ALIAS(_alias) MODULE_INFO(alias, _alias)
+                              ^~~~~~~~~~~
+drivers/clocksource/timer-ti-dm.c:973:1: note: in expansion of macro 'MODUL=
+E_ALIAS'
+ MODULE_ALIAS("platform:" DRIVER_NAME);
+ ^~~~~~~~~~~~
+
+Caused by commit
+
+  6a26793a7891 ("moduleparam: Save information about built-in modules in se=
+parate file")
+
+DRIVER_NAME is not defined and this kbuild tree change has exposed it.
+It has been this way since commit
+
+  df28472a1b28 ("ARM: OMAP: dmtimer: platform driver")
+
+=46rom v3.2-rc1 in 2011.
+
+I have applied the following patch for today.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 6 May 2019 09:26:24 +1000
+Subject: [PATCH] arm: omap: remove unused MODULE_ALIAS from timer-ti-dm.c
+
+DRIVER_NAME has never been defined, so this cannot have ever been used.
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/clocksource/timer-ti-dm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-=
+ti-dm.c
+index ee8ec5a8cb16..b357bd56ba63 100644
+--- a/drivers/clocksource/timer-ti-dm.c
++++ b/drivers/clocksource/timer-ti-dm.c
+@@ -970,5 +970,5 @@ module_platform_driver(omap_dm_timer_driver);
+=20
+ MODULE_DESCRIPTION("OMAP Dual-Mode Timer Driver");
+ MODULE_LICENSE("GPL");
+-MODULE_ALIAS("platform:" DRIVER_NAME);
++// MODULE_ALIAS("platform:" DRIVER_NAME);
+ MODULE_AUTHOR("Texas Instruments Inc");
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/dKOG3wgtOe87O4AvhMc3+p0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzPc1kACgkQAVBC80lX
+0Gxr1Af8DKZ9JrIfv7exUvhT8Rcv4g4bDS9JEsr7MXHdqV9DckXWJWm1AKuUtdtr
+mV4dDMj/P9xuQ6eJJWxXC9VM8nA5Z/GCgj/+BJaSZdQrcZjE3Q+keaef/yZH9bNG
+BpCn2dtVLqXtMphYL5gCR3AZ/MZMr+/pZVcLH5P048In7Y/4nvSUCuuIzOnDJSJ1
+cKbDrOaBC4zzfYemVRvUOFMfxgvC2NnZDtfnAuK9tUxLDCe+ROzVl7s4ABoMTm1X
+IsLDl65ver+SXOsSp3AXtx6xdGXAdeGl9Mv+uamTsOEEQSYhgAwh68cG2Ag5MBKD
+E0KSY5kgeu5BPcnSvK7h2BvFRuSmZQ==
+=1jHs
+-----END PGP SIGNATURE-----
+
+--Sig_/dKOG3wgtOe87O4AvhMc3+p0--
