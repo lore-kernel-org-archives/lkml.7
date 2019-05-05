@@ -2,290 +2,144 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60E1C04AAA
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 01:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5DBC04AAA
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 01:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6423C20700
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 01:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7ED20675
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 01:53:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="jVKKTnN7"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="sQp6UxKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727344AbfEEBvI (ORCPT
+        id S1727404AbfEEBx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 21:51:08 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:43600 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbfEEBvI (ORCPT
+        Sat, 4 May 2019 21:53:56 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38719 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbfEEBxz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 21:51:08 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x451odLI015095;
-        Sun, 5 May 2019 10:50:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x451odLI015095
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557021040;
-        bh=HxqhNXUccAGwVFV55EiI+BIgzu6GPW9Pcu4RFLUIwGU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jVKKTnN7gGX/4LSR3iRCFynUZdWVlCDnHoTLXzAMIIAih28B7Dk4CYmbP1QjZNjwK
-         FlZA+eGMERiBUNMpJIadPgl78bHf3XZFHAzM6+EDEZGlk2kJ+g0XGE00kLszfPch3O
-         qe2PwWhG7tf6MGfKGRf3hBJTG9nvqQidLwCpB/YhgYQd71k0366+OpztwVoM2mmIIh
-         l2vT55WKslfF2TvAWTbFnQEe6M4pGfwYKOUWlcRcS6CDfcDMpPrfrl+W4aluo5pi2J
-         K4hhvjcXil40UG0fThPCXIF/qu9adtILlOHALWjbWjirGnYmiSZseBt51DOKcvRDeN
-         vGnA0LBBJQ3AQ==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id n23so3409518uap.13;
-        Sat, 04 May 2019 18:50:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAWrbyAobuHjl7nfNgbgLM6rOD76Sv2vOO372wb4zDjKQ6AnU7ww
-        0Vwehnsu6oDqw/ptwkPGLpV7iqFCYWBSqDro+jQ=
-X-Google-Smtp-Source: APXvYqyto4ywW4Iezc4YOr2mUelBO4Me/wMnxNfrtcwB3XD3vHe4ZMaidSA58I9jVgOGsG83g8VowvGi+NCqMERjTtU=
-X-Received: by 2002:ab0:2bd8:: with SMTP id s24mr9344582uar.121.1557021038230;
- Sat, 04 May 2019 18:50:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190504121213.183203-1-joel@joelfernandes.org>
-In-Reply-To: <20190504121213.183203-1-joel@joelfernandes.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 5 May 2019 10:50:02 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASkvm0t02DykwOxB0R6h0-j83sU01c1+ERZHp-A23R23w@mail.gmail.com>
-Message-ID: <CAK7LNASkvm0t02DykwOxB0R6h0-j83sU01c1+ERZHp-A23R23w@mail.gmail.com>
-Subject: Re: [PATCH v2] kheaders: Move from proc to sysfs
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        atish patra <atishp04@gmail.com>, bpf@vger.kernel.org,
-        Brendan Gregg <bgregg@netflix.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?UTF-8?Q?Micha=C5=82_Gregorczyk?= <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 4 May 2019 21:53:55 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 10so4868047pfo.5
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 18:53:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=km6nvMFOsSwfEhLerIzEth+9iCizOTyYju+loT0I83o=;
+        b=sQp6UxKr7uhqm11eKXZj0r3ycIeOua2uD3eP6V4NK0AXF1W2EmzjfumW2bnGLWFtAJ
+         02gmAu84af2WuLRdtuBKwWutQ1aQVLK0I8tjBJrTFG2WVYU6xM37A5vJIBbCnyBDiuXC
+         c2qjhB8MFx55OR/93NWkh8x1wyktKmAF8nWIcmRbA2FD4BQhWY//XHZEdeQtyK3VBTXx
+         T+VxBESrQFR+qWyryt1JDNIzmdKssaGjLhMg2hHsXTcVgdK0dAf2bz3W+f+NPJ08jDbL
+         qbufY2a42LT3n5T80W3XIFXa2Nb7XQtzkkH8wzhJz0qEXNkmEb96gmHyOKXOBOzf6nPM
+         JHmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=km6nvMFOsSwfEhLerIzEth+9iCizOTyYju+loT0I83o=;
+        b=Sf/yXFWy+RLbSkCRovktJJ1mQeV/LQLnuAZL74rY6QLAMcGabAP2EltGAQh78VqKCO
+         B4JVIDjrXnLj3TNiQXf8SGJSV0u2gZxI7NX9+/A4MXKRceX9tJJAi3l511WIjkI+dL5c
+         /P39l8DJxImNrewUMmU/qO5++ZoKZgS/Jk0bNOquC1D6N7wZ4pcFl6DIU9Fs5vRtK7Ka
+         UYWcaV+HLECKQCdb1t+EiF2XmpVx7LLKYJbuNyO+ryJJ29PrY2EHupBTHDX0VZTxtgQ3
+         28onoy04ownaUf594un4N/HF4AVrO+H6AYyvf+BoggHKkbzlD9Pf2koCVv2rmeU6TaOZ
+         vtJg==
+X-Gm-Message-State: APjAAAXmyQH3Cr5IEK3zX7ZOqNhSlCWRBReMfCKnGeryIT1JtujTz1+p
+        XWU6+z/9gptZHr6Pc74RzgGa0Q==
+X-Google-Smtp-Source: APXvYqyQtLpEoifSX/2dZlgVV/Kt/1fOK6SLnyj8gwJqY1dF3VPwiE14cIMt3z4H60jzjadH4YDE3w==
+X-Received: by 2002:a65:6688:: with SMTP id b8mr21704064pgw.81.1557021235040;
+        Sat, 04 May 2019 18:53:55 -0700 (PDT)
+Received: from always-ThinkPad-T480.bytedance.net ([61.120.150.76])
+        by smtp.gmail.com with ESMTPSA id b77sm14112877pfj.99.2019.05.04.18.53.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 04 May 2019 18:53:54 -0700 (PDT)
+From:   zhenwei pi <pizhenwei@bytedance.com>
+To:     amit@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, pizhenwei@bytedance.com
+Subject: [PATCH] virtio_console: remove vq buf while unpluging port
+Date:   Sun,  5 May 2019 09:53:42 +0800
+Message-Id: <1557021222-5133-1-git-send-email-pizhenwei@bytedance.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 4, 2019 at 9:26 PM Joel Fernandes (Google)
-<joel@joelfernandes.org> wrote:
->
-> The kheaders archive consisting of the kernel headers used for compiling
-> bpf programs is in /proc. However there is concern that moving it here
-> will make it permanent. Let us move it to /sys/kernel as discussed [1].
->
-> [1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
->
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
-> This patch applies on top of the previous patch that was applied to the
-> driver tree:
-> https://lore.kernel.org/patchwork/patch/1067310/
->
-> v1->v2: Fixed some kconfig nits (Masami).
+A bug can be easily reproduced:
+Host# cat guest-agent.xml
+<channel type="unix">
+  <source mode="bind" path="/var/lib/libvirt/qemu/stretch.agent"/>
+  <target type="virtio" name="org.qemu.guest_agent.0" state="connected"/>
+</channel>
+Host# virsh attach-device instance guest-agent.xml
+Host# virsh detach-device instance guest-agent.xml
+Host# virsh attach-device instance guest-agent.xml
 
+and guest report: virtio-ports vport0p1: Error allocating inbufs
 
-My name is Masahiro, just in case.
+The reason is that the port is unplugged and the vq buf still remained.
+So, fix two cases in this patch:
+1, fix memory leak with attach-device/detach-device.
+2, fix logic bug with attach-device/detach-device/attach-device.
 
+Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
+---
+ drivers/char/virtio_console.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
->
->  init/Kconfig                                | 16 ++++-----
->  kernel/Makefile                             |  4 +--
->  kernel/{gen_ikh_data.sh => gen_kheaders.sh} |  2 +-
->  kernel/kheaders.c                           | 40 +++++++++------------
->  4 files changed, 26 insertions(+), 36 deletions(-)
->  rename kernel/{gen_ikh_data.sh => gen_kheaders.sh} (98%)
->
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 26a364a95b57..c3661991b089 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -579,15 +579,13 @@ config IKCONFIG_PROC
->           This option enables access to the kernel configuration file
->           through /proc/config.gz.
->
-> -config IKHEADERS_PROC
-> -       tristate "Enable kernel header artifacts through /proc/kheaders.tar.xz"
-> -       depends on PROC_FS
-> -       help
-> -         This option enables access to the kernel header and other artifacts that
-> -         are generated during the build process. These can be used to build eBPF
-> -         tracing programs, or similar programs.  If you build the headers as a
-> -         module, a module called kheaders.ko is built which can be loaded on-demand
-> -         to get access to the headers.
-> +config IKHEADERS
-> +       tristate "Enable kernel headers through /sys/kernel/kheaders.tar.xz"
+diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+index fbeb719..f6e37f4 100644
+--- a/drivers/char/virtio_console.c
++++ b/drivers/char/virtio_console.c
+@@ -251,6 +251,7 @@ struct port {
+ 
+ /* This is the very early arch-specified put chars function. */
+ static int (*early_put_chars)(u32, const char *, int);
++static void remove_vq(struct virtqueue *vq);
+ 
+ static struct port *find_port_by_vtermno(u32 vtermno)
+ {
+@@ -1550,6 +1551,9 @@ static void unplug_port(struct port *port)
+ 	}
+ 
+ 	remove_port_data(port);
++	spin_lock_irq(&port->inbuf_lock);
++	remove_vq(port->in_vq);
++	spin_unlock_irq(&port->inbuf_lock);
+ 
+ 	/*
+ 	 * We should just assume the device itself has gone off --
+@@ -1945,17 +1949,22 @@ static const struct file_operations portdev_fops = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++static void remove_vq(struct virtqueue *vq)
++{
++	struct port_buffer *buf;
++
++	flush_bufs(vq, true);
++	while ((buf = virtqueue_detach_unused_buf(vq)))
++		free_buf(buf, true);
++}
++
+ static void remove_vqs(struct ports_device *portdev)
+ {
+ 	struct virtqueue *vq;
+ 
+-	virtio_device_for_each_vq(portdev->vdev, vq) {
+-		struct port_buffer *buf;
++	virtio_device_for_each_vq(portdev->vdev, vq)
++		remove_vq(vq);
+ 
+-		flush_bufs(vq, true);
+-		while ((buf = virtqueue_detach_unused_buf(vq)))
+-			free_buf(buf, true);
+-	}
+ 	portdev->vdev->config->del_vqs(portdev->vdev);
+ 	kfree(portdev->in_vqs);
+ 	kfree(portdev->out_vqs);
+-- 
+2.7.4
 
-
-In v1, I suggested to change "depends on PROC_FS"
-to "depends on SYSFS".
-
-fs/sysfs/ must be compiled to make this feature work.
-
-
-
-
-> +       help
-> +         This option enables access to the in-kernel headers that are generated during
-> +         the build process. These can be used to build eBPF tracing programs,
-> +         or similar programs.  If you build the headers as a module, a module called
-
-
-While you are touching the help,
-could you make the number of spaces
-between sentences consistent?
-
-
-Thanks.
-
-
-
-> +         kheaders.ko is built which can be loaded on-demand to get access to headers.
->
->  config LOG_BUF_SHIFT
->         int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
-> diff --git a/kernel/Makefile b/kernel/Makefile
-> index 12399614c350..b32a558fae2f 100644
-> --- a/kernel/Makefile
-> +++ b/kernel/Makefile
-> @@ -70,7 +70,7 @@ obj-$(CONFIG_UTS_NS) += utsname.o
->  obj-$(CONFIG_USER_NS) += user_namespace.o
->  obj-$(CONFIG_PID_NS) += pid_namespace.o
->  obj-$(CONFIG_IKCONFIG) += configs.o
-> -obj-$(CONFIG_IKHEADERS_PROC) += kheaders.o
-> +obj-$(CONFIG_IKHEADERS) += kheaders.o
->  obj-$(CONFIG_SMP) += stop_machine.o
->  obj-$(CONFIG_KPROBES_SANITY_TEST) += test_kprobes.o
->  obj-$(CONFIG_AUDIT) += audit.o auditfilter.o
-> @@ -126,7 +126,7 @@ $(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
->  $(obj)/kheaders.o: $(obj)/kheaders_data.tar.xz
->
->  quiet_cmd_genikh = CHK     $(obj)/kheaders_data.tar.xz
-> -cmd_genikh = $(srctree)/kernel/gen_ikh_data.sh $@
-> +cmd_genikh = $(srctree)/kernel/gen_kheaders.sh $@
->  $(obj)/kheaders_data.tar.xz: FORCE
->         $(call cmd,genikh)
->
-> diff --git a/kernel/gen_ikh_data.sh b/kernel/gen_kheaders.sh
-> similarity index 98%
-> rename from kernel/gen_ikh_data.sh
-> rename to kernel/gen_kheaders.sh
-> index 591a94f7b387..581b83534587 100755
-> --- a/kernel/gen_ikh_data.sh
-> +++ b/kernel/gen_kheaders.sh
-> @@ -2,7 +2,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->
->  # This script generates an archive consisting of kernel headers
-> -# for CONFIG_IKHEADERS_PROC.
-> +# for CONFIG_IKHEADERS.
->  set -e
->  spath="$(dirname "$(readlink -f "$0")")"
->  kroot="$spath/.."
-> diff --git a/kernel/kheaders.c b/kernel/kheaders.c
-> index 70ae6052920d..6a16f8f6898d 100644
-> --- a/kernel/kheaders.c
-> +++ b/kernel/kheaders.c
-> @@ -8,9 +8,8 @@
->
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> -#include <linux/proc_fs.h>
-> +#include <linux/kobject.h>
->  #include <linux/init.h>
-> -#include <linux/uaccess.h>
->
->  /*
->   * Define kernel_headers_data and kernel_headers_data_end, within which the
-> @@ -31,39 +30,32 @@ extern char kernel_headers_data;
->  extern char kernel_headers_data_end;
->
->  static ssize_t
-> -ikheaders_read_current(struct file *file, char __user *buf,
-> -                     size_t len, loff_t *offset)
-> +ikheaders_read(struct file *file,  struct kobject *kobj,
-> +              struct bin_attribute *bin_attr,
-> +              char *buf, loff_t off, size_t len)
->  {
-> -       return simple_read_from_buffer(buf, len, offset,
-> -                                      &kernel_headers_data,
-> -                                      &kernel_headers_data_end -
-> -                                      &kernel_headers_data);
-> +       memcpy(buf, &kernel_headers_data + off, len);
-> +       return len;
->  }
->
-> -static const struct file_operations ikheaders_file_ops = {
-> -       .read = ikheaders_read_current,
-> -       .llseek = default_llseek,
-> +static struct bin_attribute kheaders_attr __ro_after_init = {
-> +       .attr = {
-> +               .name = "kheaders.tar.xz",
-> +               .mode = S_IRUGO,
-> +       },
-> +       .read = &ikheaders_read,
->  };
->
->  static int __init ikheaders_init(void)
->  {
-> -       struct proc_dir_entry *entry;
-> -
-> -       /* create the current headers file */
-> -       entry = proc_create("kheaders.tar.xz", S_IRUGO, NULL,
-> -                           &ikheaders_file_ops);
-> -       if (!entry)
-> -               return -ENOMEM;
-> -
-> -       proc_set_size(entry,
-> -                     &kernel_headers_data_end -
-> -                     &kernel_headers_data);
-> -       return 0;
-> +       kheaders_attr.size = (&kernel_headers_data_end -
-> +                             &kernel_headers_data);
-> +       return sysfs_create_bin_file(kernel_kobj, &kheaders_attr);
->  }
->
->  static void __exit ikheaders_cleanup(void)
->  {
-> -       remove_proc_entry("kheaders.tar.xz", NULL);
-> +       sysfs_remove_bin_file(kernel_kobj, &kheaders_attr);
->  }
->
->  module_init(ikheaders_init);
-> --
-> 2.21.0.1020.gf2820cf01a-goog
-
-
-
---
-Best Regards
-
-Masahiro Yamada
