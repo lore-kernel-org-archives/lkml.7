@@ -1,121 +1,169 @@
 Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	URIBL_DBL_ABUSE_MALW,URIBL_SBL,URIBL_SBL_A autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3000FC04AAB
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 02:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B103C04AAA
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 03:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F187B206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 02:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B44A206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 03:00:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rUq+Wp9y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZH5WKxUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfEEC4n (ORCPT
+        id S1727522AbfEEDAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 22:56:43 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:53136 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfEEC4m (ORCPT
+        Sat, 4 May 2019 23:00:47 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:52411 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbfEEDAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 22:56:42 -0400
-Received: by mail-it1-f193.google.com with SMTP id q65so13881518itg.2;
-        Sat, 04 May 2019 19:56:42 -0700 (PDT)
+        Sat, 4 May 2019 23:00:47 -0400
+Received: by mail-it1-f194.google.com with SMTP id q65so13887458itg.2
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2019 20:00:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aD/Gm+CX3+Z7BmmDX+1y9aRBjxNWSf+dT672hCgTCVs=;
-        b=rUq+Wp9y1MgW6fdnk71WLB4qb92QYsLfTuqHFkBWXXaU9PeuyCD/lBhj4c/zbuVwP1
-         RiABLKXpZz9VgPLz6JaCh9Ue2YQG9rebxqFPuRz+ycaWTcoIFN95hzPJiTaf3HaUCgr4
-         3Q7+sJK1cPvbseiHOyR9brzhPdTexjbt4f7xvBiWPQGc6MWfgUrZfaE1HvGXY5DYBNA3
-         lxOq424tbimdEnnfABCult7GBtYbqWck+dHYiD5IlBU1yssvULZ/sDJqDpbhJWNvzAkA
-         YDxc7OIbf7WbeyeMMMU9lzkottKnFwABui7Kp/x0DOuRGni3p/TSifAbkvmY23gbG4Dk
-         pSeA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=G4iZWqtZZ7jaci6ZyuRTiU8FosRtJL9T3C24CbNPhlY=;
+        b=ZH5WKxUQjYoswCUP0rGzjMRNhjJaoSeXvrVs0vo9HEU34HqZqS+Lzm/Ij2O8R/hat4
+         Bh95fMA385Ifimnjvzf0511kh7Az/NSce8NuLGd4c9NRjMvgDhpWfLkEz350lHWs8Kku
+         ymf5+Rw/Oj8S5IZ8+C13H+MrICUkIrHpL+sGcuotUWj8fDxa2ztL/7/zmvgco7jo14td
+         TGREzpCodtgMkq0CeiWYxQoxIYh5i9lrQmf3xIBbvx5k1Bj8L23yw2+iw0QusKz1jQ4k
+         SFYdqMuC95PVO5lRe5v6QqAMla3kQATpF6c8+x6iOsAArT2JJ3pk/osTqZlPClBDlrqg
+         WRyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aD/Gm+CX3+Z7BmmDX+1y9aRBjxNWSf+dT672hCgTCVs=;
-        b=gKpvambmoa0vOaPLt16l4iUo8SrEt1/NUV/9OAKiAPSUlZLgdtLb8ZI4cB8raxAeVj
-         Su1onZabGXF+cBUhoItWGdw/cgwfYADMZCEmX9kqlENpP9IRjSITJoWIPeJbUqZsr8xL
-         cU1CA/yCFZdMLtIdmCp0z8kUZKdI49ZbwGmVDSDRjLcbGurwJkbAojseqcyIXevEaITd
-         zkLXjSI4bqe71s4PV88wc6bjgPVPQd0ULPlIMWbicqGcKAuNc18xTP9e2dOilPdWOouS
-         LaaokudNOlfXtxcvMRXW1extW6HtkKRUX7M5DzdcLvccLcA5nIghz1YMCAQc3Dtm1DzF
-         Mm/g==
-X-Gm-Message-State: APjAAAUNeNQ6/zer63lL4RoHWAbEGgyaNAEP0JHyKHd5eGhMyM0C12Mz
-        v6ZFzFbpm9UgLCpWwdK662E=
-X-Google-Smtp-Source: APXvYqypP7+LRoGgQ5rc59oLeXUDNoXMuaJ/ZZ5Ar2OJXdC2+hoYu2dhqhulBaSB6xktongz9iiPJg==
-X-Received: by 2002:a24:ad0a:: with SMTP id c10mr12845511itf.142.1557025001785;
-        Sat, 04 May 2019 19:56:41 -0700 (PDT)
-Received: from ?IPv6:2601:282:800:fd80:d454:80ae:df0a:3c? ([2601:282:800:fd80:d454:80ae:df0a:3c])
-        by smtp.googlemail.com with ESMTPSA id n22sm2405080ioj.74.2019.05.04.19.56.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 04 May 2019 19:56:41 -0700 (PDT)
-Subject: Re: [PATCH v2] net: route: Fix vrf dst_entry ref count false
- increasing
-To:     linmiaohe <linmiaohe@huawei.com>, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     mousuanming <mousuanming@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>
-References: <1a4c0c31-e74c-5167-0668-328dd342005e@huawei.com>
- <dd325420-37ae-f731-1ea8-01f630820af0@gmail.com>
- <d20b12f2-129a-7055-6dec-075523458b21@huawei.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <7702f04c-648d-eed1-d6eb-20132012d29f@gmail.com>
-Date:   Sat, 4 May 2019 20:56:39 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=G4iZWqtZZ7jaci6ZyuRTiU8FosRtJL9T3C24CbNPhlY=;
+        b=MyHOdF9vORLWl1+kuenCx3P4PtXBm49ldVjSYxhUiI/FEcO6jllwWRaUoIu1tu7S9n
+         TBkE5ay544Bl/6QHDTVIigJJ15EnOIfHVZuMf+4h1yFQbXgudf8WxGWs3O5Yf7lopVkA
+         k3C8h3FWz54JWi0HVDD9baXfMD7iOHZ3ajKJfiQ/7YqCXOjeLkFgokt5PLKmg8ZA3zvo
+         jPr1SMK1bc9mFMDTm2ImOF6jPGGje2/QVVvXDBkt4QfPy7tR395A0UVmPD8dre6ugu68
+         /ne3ZISZTlUa5E806DBjDFN6bgmSW36VpyUXwAseOqKVGhlcytFs5RjHRK3xtxnfR264
+         D6QQ==
+X-Gm-Message-State: APjAAAWrRVSce2j33dL1Vbhx2FjKjyWEcJ6iny8g+FGhZuj3xVeW9n+b
+        RNLII0uVysoeWSApF35zCBu1BA==
+X-Google-Smtp-Source: APXvYqyYWCy5AxS36kOFSkhDGuEAf4IuOHM4EqWDiGEliobQ3oKdmwmlZDfQJe2XK2uJh4P+E48sRg==
+X-Received: by 2002:a02:950a:: with SMTP id y10mr14019876jah.26.1557025246360;
+        Sat, 04 May 2019 20:00:46 -0700 (PDT)
+Received: from localhost (c-75-72-120-115.hsd1.mn.comcast.net. [75.72.120.115])
+        by smtp.gmail.com with ESMTPSA id x74sm3291803itb.33.2019.05.04.20.00.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 May 2019 20:00:45 -0700 (PDT)
+Date:   Sat, 4 May 2019 22:00:44 -0500
+From:   Dan Rue <dan.rue@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/23] 4.19.40-stable review
+Message-ID: <20190505030044.q3dlgd5bhfx5txmf@xps.therub.org>
+Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+References: <20190504102451.512405835@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <d20b12f2-129a-7055-6dec-075523458b21@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190504102451.512405835@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/19 8:11 PM, linmiaohe wrote:
+On Sat, May 04, 2019 at 12:25:02PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.40 release.
+> There are 23 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> 
-> On 2019/5/4 22:59, David Ahern wrote:
->> On 5/4/19 7:13 AM, linmiaohe wrote:
->>> From: Suanming.Mou <mousuanming@huawei.com>
->>>
->>> When config ip in default vrf same as the ip in specified
->>> vrf, fib_lookup will return the route from table local
->>> even if the in device is an enslaved l3mdev. Then the
->>
->> you need to move the local rule with a preference of 0 after the l3mdev
->> rule.
->>
->>
-> 
-> Move the local rule after l3mdev rule can get rid of this problem. And
-> even if this happend, we can delete the same ip address in default vrf
-> to fix it.
-> But I think maybe it's still a problem because other rule with default
-> vrf out device holds the specified vrf device. It looks unreasonable.
-> 
-> Many Thanks.
-> 
+> Responses should be made by Mon 06 May 2019 10:24:19 AM UTC.
+> Anything received after that time might be too late.
 
-VRF is implemented using policy routing. If you do not move the local
-rule below the l3mdev rule, you are doing a lookup in the local table
-first, then vrf table, then main table. Doing the local table first can
-result in false hits - like the case of duplicate IP addresses in
-default VRF and a VRF. In short, it is just wrong.
 
-Looking at the VRF documentation in the kernel tree I do see such a
-comment is missing, but I do mention in all of the VRF tutorials such as
-this one (see slide 79):
+Results from Linaro’s test farm.
+Regressions detected.
 
-http://schd.ws/hosted_files/ossna2017/fe/vrf-tutorial-oss.pdf
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.19.40-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-4.19.y
+git commit: b0d6421bd85515e878edcf33121a818666df7749
+git describe: v4.19.39-24-gb0d6421bd855
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.39-24-gb0d6421bd855
+
+No regressions (compared to build v4.19.38-73-gdb2d00a74567)
+
+No fixes (compared to build v4.19.38-73-gdb2d00a74567)
+
+Ran 25058 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
