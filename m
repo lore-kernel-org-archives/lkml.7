@@ -2,159 +2,174 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4CBC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CBFC46470
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0EF72082F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:33:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuITCgG6"
+	by mail.kernel.org (Postfix) with ESMTP id 9566820B7C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfEEIdz (ORCPT
+        id S1727367AbfEEIlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 04:33:55 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40587 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbfEEIdz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 04:33:55 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u17so5111179pfn.7
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 01:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kW9cFc3oY5uX+D8x24aFAh/eOz8mR3Xa9rRR63JZ7FE=;
-        b=KuITCgG6/MhcfWssqPO3bh4jADeh50kro0pY96IQauUkNWsThVozk9ys5p+dcOYwyk
-         xwkzNvUt/n1oYXOYf5pizL8KYVMREQoY+bGgOeUNNEAqigQ7Dx06y/PeHwLKw+5NT8VC
-         l5TWteBtOGzDt2FhoaOGoOoV5oXtDb4Mqu8NIW5kvl1SuMBQ4UwmNTq17kVZxMgQEtCb
-         17Mi8Uq/EgLF3bRG7ZRjUfyyGOHjXe9UKRi3N9YCYyfNG0+88V85skr71ZGuw95SPl3G
-         NpfqgdSXps2WinCzVPZ7AHysSmMZok4/SErNO+49d+jCKzPobSxXF+Oy2FavG7nAbUNF
-         o0bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kW9cFc3oY5uX+D8x24aFAh/eOz8mR3Xa9rRR63JZ7FE=;
-        b=QF4n1t/gdRfDkluI7hlECP7REEbvEh0Ux0cFrcCxiYAaZCN7a6xNsty4ORlPVYojqY
-         YfWZ/894xzdh/AvRIWrFf6ce6ZEnKDcY4QvTn3rD+/CHyyjRPMGSiN3q/r4R1Imfceiq
-         0VX0VEE+H1evilewBDbQhqQPa38XMwfVEn4Dmz/iJ69TD+/iwwzxw9pXWSwlylJtvccA
-         kbqHM9PW1fKTTsxPlhSYfjrrlzljHR1JqFISKPFNAoHv7D+BNPm8drmQAIdHoi2qZksB
-         oCctXG05RvmltLK+KPgAijFCzOEiPH5Pynm9EFIi0VKAEVFoxWUw0jqRMxKXO7Jwmsnw
-         evZQ==
-X-Gm-Message-State: APjAAAUIsb58dUT+e/3x/RuYA9as81eaGFikaPwNhv7TfUbO7I9jqVxq
-        DkbM1hIavtU1HwnfqOd8mKU=
-X-Google-Smtp-Source: APXvYqzQWdVsmMjhZY/tvLi3osuocNfeof5yskb0ufl3rA4pCMJgpak0r9V5hbbW1cvYD589up1mBQ==
-X-Received: by 2002:a63:360e:: with SMTP id d14mr23610439pga.188.1557045234544;
-        Sun, 05 May 2019 01:33:54 -0700 (PDT)
-Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id a18sm9013664pff.6.2019.05.05.01.33.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 01:33:53 -0700 (PDT)
-From:   Nadav Amit <nadav.amit@gmail.com>
-X-Google-Original-From: Nadav Amit <namit@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Nadav Amit <namit@vmware.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>
-Subject: [PATCH] x86/mm: Initialize pgd cache during mm initialization
-Date:   Sat,  4 May 2019 18:11:24 -0700
-Message-Id: <20190505011124.39692-1-namit@vmware.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 5 May 2019 04:41:13 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:41073 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725873AbfEEIlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 04:41:13 -0400
+Received: from [192.168.0.2] (ip5f5bd373.dynamic.kabel-deutschland.de [95.91.211.115])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id E1D46604E3678;
+        Sun,  5 May 2019 10:41:09 +0200 (CEST)
+Subject: Re: failed to set xfermode (err_mask=0x40): READ LOG DMA EXT failed,
+ trying PIO
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+To:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>
+Cc:     linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <f7cef1cf-69d0-82e7-7902-fee56c19577a@molgen.mpg.de>
+Message-ID: <89898e39-787c-ad82-26bf-cd03ce16a75c@molgen.mpg.de>
+Date:   Sun, 5 May 2019 10:41:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <f7cef1cf-69d0-82e7-7902-fee56c19577a@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Poking-mm initialization might require to duplicate the PGD in early
-stage. Initialize the PGD cache earlier to prevent boot failures.
+Dear Linux folks,
 
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: 4fc19708b165 ("x86/alternatives: Initialize temporary mm for patching")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Nadav Amit <namit@vmware.com>
----
- arch/x86/include/asm/pgtable.h |  1 +
- arch/x86/mm/pgtable.c          | 10 ++++++----
- init/main.c                    |  1 +
- 3 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 6b6bfdfe83aa..9635662e1163 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -1027,6 +1027,7 @@ static inline int pgd_none(pgd_t pgd)
- 
- extern int direct_gbpages;
- void init_mem_mapping(void);
-+void pgd_cache_init(void);
- void early_alloc_pgt_buf(void);
- extern void memblock_find_dma_reserve(void);
- 
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 3dbf440d4114..1f67b1e15bf6 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -373,14 +373,14 @@ static void pgd_prepopulate_user_pmd(struct mm_struct *mm,
- 
- static struct kmem_cache *pgd_cache;
- 
--static int __init pgd_cache_init(void)
-+void __init pgd_cache_init(void)
- {
- 	/*
- 	 * When PAE kernel is running as a Xen domain, it does not use
- 	 * shared kernel pmd. And this requires a whole page for pgd.
- 	 */
- 	if (!SHARED_KERNEL_PMD)
--		return 0;
-+		return;
- 
- 	/*
- 	 * when PAE kernel is not running as a Xen domain, it uses
-@@ -390,9 +390,7 @@ static int __init pgd_cache_init(void)
- 	 */
- 	pgd_cache = kmem_cache_create("pgd_cache", PGD_SIZE, PGD_ALIGN,
- 				      SLAB_PANIC, NULL);
--	return 0;
- }
--core_initcall(pgd_cache_init);
- 
- static inline pgd_t *_pgd_alloc(void)
- {
-@@ -420,6 +418,10 @@ static inline void _pgd_free(pgd_t *pgd)
- }
- #else
- 
-+void __init pgd_cache_init(void)
-+{
-+}
-+
- static inline pgd_t *_pgd_alloc(void)
- {
- 	return (pgd_t *)__get_free_pages(PGALLOC_GFP, PGD_ALLOCATION_ORDER);
-diff --git a/init/main.c b/init/main.c
-index 949eed8015ec..7fac4ac2fede 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -537,6 +537,7 @@ static void __init mm_init(void)
- 	init_espfix_bsp();
- 	/* Should be run after espfix64 is set up. */
- 	pti_init();
-+	pgd_cache_init();
- }
- 
- void __init __weak arch_call_rest_init(void)
--- 
-2.17.1
+On 01.05.19 11:34, Paul Menzel wrote:
 
+> On an MSI B350M MORTAR (MS-7A37) with all firmwares, and the AHCI SSD 
+> Crucial MX500, *sometimes* boot and resume are delayed by four to five 
+> seconds, and the log contains the message *failed to set xfermode*.
+> 
+>> [    0.474150] ata9: SATA link up 6.0 Gbps (SStatus 133 SControl 0)
+>> [    0.474267] microcode: Microcode Update Driver: v2.2.
+>> [    0.474294] AVX2 version of gcm_enc/dec engaged.
+>> [    0.474295] AES CTR mode by8 optimization enabled
+>> [    0.474304] ata9.00: supports DRM functions and may not be fully accessible
+>> [    0.474368] ata9.00: ATA-10: CT1000MX500SSD4, M3CR020, max UDMA/133
+>> [    0.474370] ata9.00: 1953525168 sectors, multi 1: LBA48 NCQ (depth 32), AA
+>> [    0.474569] ata9.00: READ LOG DMA EXT failed, trying PIO
+>> [    0.474571] ata9.00: failed to get Identify Device Data, Emask 0x40
+>> [    0.474572] ata9.00: ATA Identify Device Log not supported
+>> [    0.474573] ata9.00: Security Log not supported
+>> [    0.474576] ata9.00: failed to set xfermode (err_mask=0x40)
+>> [    0.493193] sched_clock: Marking stable (504159603, -10991650)->(615393192, -122225239)
+>> [    0.493768] registered taskstats version 1
+>> [    0.493770] Loading compiled-in X.509 certificates
+>> [    0.497894] Loaded X.509 cert 'Build time autogenerated kernel key: 4682756457c0b7b167f0b726943cf53ade93bd78'
+>> [    0.497984] zswap: loaded using pool lzo/zbud
+>> [    0.498237] kmemleak: Kernel memory leak detector initialized
+>> [    0.498243] kmemleak: Automatic memory scanning thread started
+>> [    0.506469] Key type big_key registered
+>> [    0.508864]   Magic number: 11:580:189
+>> [    0.508914] acpi device:48: hash matches
+>> [    0.508922] acpi device:1b: hash matches
+>> [    0.509017] rtc_cmos 00:02: setting system clock to 2019-03-29T17:09:41 UTC (1553879381)
+>> [    0.509485] After kernel_init_freeable
+>> [    1.364358] tsc: Refined TSC clocksource calibration: 3499.982 MHz
+>> [    1.364370] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x32734013f67, max_idle_ns: 440795323134 ns
+>> [    1.364419] clocksource: Switched to clocksource tsc
+>> [    5.593141] ata9: SATA link up 6.0 Gbps (SStatus 133 SControl 0)
+>> [    5.593270] ata9.00: supports DRM functions and may not be fully accessible
+>> [    5.594006] ata9.00: supports DRM functions and may not be fully accessible
+>> [    5.594600] ata9.00: configured for UDMA/133
+>> [    5.595893] scsi 8:0:0:0: Direct-Access     ATA      CT1000MX500SSD4  020  PQ: 0 ANSI: 5
+>> [    5.596611] sd 8:0:0:0: [sda] 1953525168 512-byte logical blocks: (1.00 TB/932 GiB)
+>> [    5.596613] sd 8:0:0:0: [sda] 4096-byte physical blocks
+>> [    5.596626] sd 8:0:0:0: [sda] Write Protect is off
+>> [    5.596629] sd 8:0:0:0: [sda] Mode Sense: 00 3a 00 00
+>> [    5.596650] sd 8:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+>> [    5.596837] sd 8:0:0:0: Attached scsi generic sg0 type 0
+>> [    5.597329]  sda: sda1 sda2 sda3
+>> [    5.599079] sd 8:0:0:0: [sda] Attached SCSI disk
+> 
+> This happens with all Linux kernel versions – tested since 4.14. 
+> Searching for this error on the Web, several people seem to be affected 
+> with different boards and drives [1].
+> 
+> In a lot of those reports, I also see the message *Security Log not 
+> supported*.
+> 
+> Do you have an idea, why this is only happening sometimes? Is it likely 
+> a drive firmware issue? As it affects several vendors, can Linux work 
+> around this problem (if it can be pinpointed)?
+
+The first error seems to be `READ LOG DMA EXT failed, trying PIO`. The 
+code looks like below [2].
+
+> retry:
+>         ata_tf_init(dev, &tf);
+>         if (dev->dma_mode && ata_id_has_read_log_dma_ext(dev->id) &&
+>             !(dev->horkage & ATA_HORKAGE_NO_DMA_LOG)) {
+>                 tf.command = ATA_CMD_READ_LOG_DMA_EXT;
+>                 tf.protocol = ATA_PROT_DMA;
+>                 dma = true;
+>         } else {
+>                 tf.command = ATA_CMD_READ_LOG_EXT;
+>                 tf.protocol = ATA_PROT_PIO;
+>                 dma = false;
+>         }
+>         tf.lbal = log;
+>         tf.lbam = page;
+>         tf.nsect = sectors;
+>         tf.hob_nsect = sectors >> 8;
+>         tf.flags |= ATA_TFLAG_ISADDR | ATA_TFLAG_LBA48 | ATA_TFLAG_DEVICE;
+> 
+>         err_mask = ata_exec_internal(dev, &tf, NULL, DMA_FROM_DEVICE,
+>                                      buf, sectors * ATA_SECT_SIZE, 0);
+> 
+>         if (err_mask && dma) {
+>                 dev->horkage |= ATA_HORKAGE_NO_DMA_LOG;
+>                 ata_dev_warn(dev, "READ LOG DMA EXT failed, trying PIO\n");
+>                 goto retry;
+>         }
+> 
+>         DPRINTK("EXIT, err_mask=%x\n", err_mask);
+>         return err_mask;
+
+So when trying PIO, that also seems to fail, and the error mask 0x40 is 
+propagated up.
+
+> enum ata_completion_errors {
+>         AC_ERR_DEV              = (1 << 0), /* device reported error */
+>         AC_ERR_HSM              = (1 << 1), /* host state machine violation */
+>         AC_ERR_TIMEOUT          = (1 << 2), /* timeout */
+>         AC_ERR_MEDIA            = (1 << 3), /* media error */
+>         AC_ERR_ATA_BUS          = (1 << 4), /* ATA bus error */
+>         AC_ERR_HOST_BUS         = (1 << 5), /* host bus error */
+>         AC_ERR_SYSTEM           = (1 << 6), /* system error */
+>         AC_ERR_INVALID          = (1 << 7), /* invalid argument */
+>         AC_ERR_OTHER            = (1 << 8), /* unknown */
+>         AC_ERR_NODEV_HINT       = (1 << 9), /* polling device detection hint */
+>         AC_ERR_NCQ              = (1 << 10), /* marker for offending NCQ qc */
+> };
+
+So 0x40 is AC_ERR_HOST_BUS, right? Any idea, what might cause this?
+
+Would it be helpful to enable the debug messages?
+
+     #undef ATA_DEBUG                /* debugging output */
+
+
+Kind regards,
+
+Paul
+
+
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=195895[2]: 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/ata/libata-core.c?id=1daa0449d287a109b93c4516914eddeff4baff65#n2075
+[3]: 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/libata.h?id=1daa0449d287a109b93c4516914eddeff4baff65#n508
