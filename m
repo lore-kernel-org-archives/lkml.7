@@ -6,37 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6509FC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EA8C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204E42054F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB71A206A3
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbfEEVbo (ORCPT
+        id S1727924AbfEEViR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 17:31:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56614 "EHLO
+        Sun, 5 May 2019 17:38:17 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56681 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfEEVbn (ORCPT
+        with ESMTP id S1726905AbfEEViR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 17:31:43 -0400
+        Sun, 5 May 2019 17:38:17 -0400
 Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
         (Exim 4.76)
         (envelope-from <colin.king@canonical.com>)
-        id 1hNOjQ-0007uz-Ax; Sun, 05 May 2019 21:31:36 +0000
+        id 1hNOpq-0008GD-Hz; Sun, 05 May 2019 21:38:14 +0000
 From:   Colin King <colin.king@canonical.com>
-To:     Felix Fietkau <nbd@nbd.name>, Roy Luo <royluo@google.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
+To:     "David S . Miller" <davem@davemloft.net>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] mt76: fix less than zero check on a u8 variable
-Date:   Sun,  5 May 2019 22:31:35 +0100
-Message-Id: <20190505213135.3895-1-colin.king@canonical.com>
+Subject: [PATCH][next] net: mvpp2: cls: fix less than zero check on a u32 variable
+Date:   Sun,  5 May 2019 22:38:14 +0100
+Message-Id: <20190505213814.4220-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -48,37 +45,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-The signed return from the call to get_omac_idx is being assigned to the
-u8 variable mac_idx and then checked for a negative error condition
-which is always going to be false. Fix this by assigning the return to
-the int variable ret and checking this instead.
+The signed return from the call to mvpp2_cls_c2_port_flow_index is being
+assigned to the u32 variable c2.index and then checked for a negative
+error condition which is always going to be false. Fix this by assigning
+the return to the int variable index and checking this instead.
 
 Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: 04b8e65922f6 ("mt76: add mac80211 driver for MT7615 PCIe-based chipsets")
+Fixes: 90b509b39ac9 ("net: mvpp2: cls: Add Classification offload support")
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-index 80e6b211f60b..460d90d5ed6d 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
-@@ -77,11 +77,12 @@ static int mt7615_add_interface(struct ieee80211_hw *hw,
- 		goto out;
- 	}
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+index 4989fb13244f..c10bc257f571 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+@@ -1029,12 +1029,14 @@ static int mvpp2_port_c2_tcam_rule_add(struct mvpp2_port *port,
+ 	struct flow_action_entry *act;
+ 	struct mvpp2_cls_c2_entry c2;
+ 	u8 qh, ql, pmap;
++	int index;
  
--	mvif->omac_idx = get_omac_idx(vif->type, dev->omac_mask);
--	if (mvif->omac_idx < 0) {
-+	ret = get_omac_idx(vif->type, dev->omac_mask);
-+	if (ret < 0) {
- 		ret = -ENOSPC;
- 		goto out;
- 	}
-+	mvif->omac_idx = ret;
+ 	memset(&c2, 0, sizeof(c2));
  
- 	/* TODO: DBDC support. Use band 0 and wmm 0 for now */
- 	mvif->band_idx = 0;
+-	c2.index = mvpp2_cls_c2_port_flow_index(port, rule->loc);
+-	if (c2.index < 0)
++	index = mvpp2_cls_c2_port_flow_index(port, rule->loc);
++	if (index < 0)
+ 		return -EINVAL;
++	c2.index = index;
+ 
+ 	act = &rule->flow->action.entries[0];
+ 
 -- 
 2.20.1
 
