@@ -2,118 +2,146 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF61FC04AAA
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 01:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C74CC04AAA
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 01:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C298205C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 01:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58CAA20651
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 01:08:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="nBSFLaGg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfEEBHh (ORCPT
+        id S1727279AbfEEBIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 May 2019 21:07:37 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:45242 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726278AbfEEBHg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 May 2019 21:07:36 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TQtyQw-_1557018451;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TQtyQw-_1557018451)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 05 May 2019 09:07:31 +0800
-Subject: Re: [PATCH v2] fs: ocfs: fix spelling mistake "hearbeating" ->
- "heartbeat"
-To:     ChenGang <cg.chen@huawei.com>, mark@fasheh.com, jlbec@evilplan.org,
-        jiangqi903@gmail.com
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        ocfs2-devel@oss.oracle.com,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <1556855636-121101-1-git-send-email-cg.chen@huawei.com>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-Message-ID: <071ee914-17a8-5e3e-ab49-ac4bdad5eaed@linux.alibaba.com>
-Date:   Sun, 5 May 2019 09:07:40 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1556855636-121101-1-git-send-email-cg.chen@huawei.com>
-Content-Type: text/plain; charset=utf-8
+        Sat, 4 May 2019 21:08:38 -0400
+Received: from mail-eopbgr710083.outbound.protection.outlook.com ([40.107.71.83]:36787
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726278AbfEEBIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 May 2019 21:08:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=orZs3O3BaZQDmQRTYv4pic/RGzfv+FsAx+sQwymyu5o=;
+ b=nBSFLaGgUoI4QZR5lwGu1ZyOzsrSsPV4lH/k/psHOpqjHoYejpqrxoPNvkwVEogahcFvZWcDSaXJPKx6m0RrSZmKBEMk4RFxuDrEEhwsuZuuQnZ+eXd+zZGugP+G5FyNhz593VE7BlceLqsqmVEnChVS46k1rEVrl7331oV1EYY=
+Received: from MN2PR12MB3344.namprd12.prod.outlook.com (20.178.241.74) by
+ MN2PR12MB2926.namprd12.prod.outlook.com (20.179.81.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Sun, 5 May 2019 01:07:52 +0000
+Received: from MN2PR12MB3344.namprd12.prod.outlook.com
+ ([fe80::c93d:cf5d:3f72:aff6]) by MN2PR12MB3344.namprd12.prod.outlook.com
+ ([fe80::c93d:cf5d:3f72:aff6%2]) with mapi id 15.20.1856.012; Sun, 5 May 2019
+ 01:07:52 +0000
+From:   "Quan, Evan" <Evan.Quan@amd.com>
+To:     Andrea Righi <andrea.righi@canonical.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>
+CC:     Rex Zhu <rex.zhu@amd.com>, "Wu, Hersen" <hersenxs.wu@amd.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] drm/amd/powerplay: remove spurious semicolon
+Thread-Topic: [PATCH] drm/amd/powerplay: remove spurious semicolon
+Thread-Index: AQHVAdEKQ51jUGmH00WSfzevZzq9P6ZbuNkQ
+Date:   Sun, 5 May 2019 01:07:51 +0000
+Message-ID: <MN2PR12MB33445E9A79721CB1D990835AE4370@MN2PR12MB3344.namprd12.prod.outlook.com>
+References: <20190503165535.GA30964@xps-13>
+In-Reply-To: <20190503165535.GA30964@xps-13>
+Accept-Language: en-US, zh-CN
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Evan.Quan@amd.com; 
+x-originating-ip: [210.13.97.164]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d02e8d07-92ec-449c-5556-08d6d0f6191b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:MN2PR12MB2926;
+x-ms-traffictypediagnostic: MN2PR12MB2926:
+x-microsoft-antispam-prvs: <MN2PR12MB29265CF11616C298AACF74C7E4370@MN2PR12MB2926.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:243;
+x-forefront-prvs: 00286C0CA6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(366004)(376002)(39860400002)(13464003)(189003)(199004)(55016002)(52536014)(229853002)(72206003)(14454004)(68736007)(14444005)(256004)(7736002)(486006)(11346002)(446003)(81166006)(478600001)(53936002)(6436002)(4326008)(476003)(2906002)(6116002)(3846002)(54906003)(110136005)(25786009)(316002)(66066001)(9686003)(33656002)(6636002)(53546011)(8936002)(6246003)(74316002)(102836004)(186003)(6506007)(305945005)(81156014)(8676002)(26005)(99286004)(76176011)(7696005)(66446008)(66476007)(66556008)(64756008)(86362001)(76116006)(66946007)(73956011)(5660300002)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB2926;H:MN2PR12MB3344.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 0TDGos69B20hWmr7FI6oEU4zIVFlbMRSbGYLKXg/jCW8quQtCfVqSdcf9occcm3agWCKFFRs5GC9NJ9IdW+EhOmMez9HIALo/jkJ23+sDRTZTyJNVIIElffHT5DAGrde3buroKYWnYtAIocHdS1YRIzLY64SehdAaRDgdXYUX/HWDwEk63llc3SjPccQAB6auN91A99IHqZM+vYC6Lkeu9e7X6zIpSQHHkkcr0EZt2nPcXpwG1us4ziXChu9CzNr8DgMKBQL+zA03ZkhLN8SHV/VtR45ul86/hat86RQyvIHojnwAPyv9zVsP3NKPJEphBN/9ERsqC+HzC2IbnT2Wkr4mbnW9xGub4991Uie0pjzq3QvNxcZhHWjhOUWvSKesnmdOJdbA2H4QbOulNgpMCcuVdLMNyn7IeD2Xi2Z7eU=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d02e8d07-92ec-449c-5556-08d6d0f6191b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2019 01:07:51.9536
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB2926
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 19/5/3 11:53, ChenGang wrote:
-> There are some spelling mistakes in ocfs, fix it.
-
-s/ocfs/ocfs2
-
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-> 
-> Signed-off-by: ChenGang <cg.chen@huawei.com>
-> ---
->  fs/ocfs2/cluster/heartbeat.c | 2 +-
->  fs/ocfs2/cluster/quorum.c    | 2 +-
->  fs/ocfs2/cluster/tcp.c       | 2 +-
->  fs/ocfs2/dlm/dlmmaster.c     | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/ocfs2/cluster/heartbeat.c b/fs/ocfs2/cluster/heartbeat.c
-> index f3c20b2..e4e7df1 100644
-> --- a/fs/ocfs2/cluster/heartbeat.c
-> +++ b/fs/ocfs2/cluster/heartbeat.c
-> @@ -1198,7 +1198,7 @@ static int o2hb_do_disk_heartbeat(struct o2hb_region *reg)
->  	if (atomic_read(&reg->hr_steady_iterations) != 0) {
->  		if (atomic_dec_and_test(&reg->hr_unsteady_iterations)) {
->  			printk(KERN_NOTICE "o2hb: Unable to stabilize "
-> -			       "heartbeart on region %s (%s)\n",
-> +			       "heartbeat on region %s (%s)\n",
->  			       config_item_name(&reg->hr_item),
->  			       reg->hr_dev_name);
->  			atomic_set(&reg->hr_steady_iterations, 0);
-> diff --git a/fs/ocfs2/cluster/quorum.c b/fs/ocfs2/cluster/quorum.c
-> index af2e747..792132f 100644
-> --- a/fs/ocfs2/cluster/quorum.c
-> +++ b/fs/ocfs2/cluster/quorum.c
-> @@ -89,7 +89,7 @@ static void o2quo_fence_self(void)
->  	};
->  }
->  
-> -/* Indicate that a timeout occurred on a hearbeat region write. The
-> +/* Indicate that a timeout occurred on a heartbeat region write. The
->   * other nodes in the cluster may consider us dead at that time so we
->   * want to "fence" ourselves so that we don't scribble on the disk
->   * after they think they've recovered us. This can't solve all
-> diff --git a/fs/ocfs2/cluster/tcp.c b/fs/ocfs2/cluster/tcp.c
-> index e9f236a..7a43c04 100644
-> --- a/fs/ocfs2/cluster/tcp.c
-> +++ b/fs/ocfs2/cluster/tcp.c
-> @@ -1776,7 +1776,7 @@ static void 	(struct o2nm_node *node, int node_num,
->  		(msecs_to_jiffies(o2net_reconnect_delay()) + 1);
->  
->  	if (node_num != o2nm_this_node()) {
-> -		/* believe it or not, accept and node hearbeating testing
-> +		/* believe it or not, accept and node heartbeating testing
->  		 * can succeed for this node before we got here.. so
->  		 * only use set_nn_state to clear the persistent error
->  		 * if that hasn't already happened */
-> diff --git a/fs/ocfs2/dlm/dlmmaster.c b/fs/ocfs2/dlm/dlmmaster.c
-> index 826f056..41b80d5 100644
-> --- a/fs/ocfs2/dlm/dlmmaster.c
-> +++ b/fs/ocfs2/dlm/dlmmaster.c
-> @@ -2176,7 +2176,7 @@ static void dlm_assert_master_worker(struct dlm_work_item *item, void *data)
->   * think that $RECOVERY is currently mastered by a dead node.  If so,
->   * we wait a short time to allow that node to get notified by its own
->   * heartbeat stack, then check again.  All $RECOVERY lock resources
-> - * mastered by dead nodes are purged when the hearbeat callback is
-> + * mastered by dead nodes are purged when the heartbeat callback is
->   * fired, so we can know for sure that it is safe to continue once
->   * the node returns a live node or no node.  */
->  static int dlm_pre_master_reco_lockres(struct dlm_ctxt *dlm,
-> 
+UmV2aWV3ZWQtYnk6IEV2YW4gUXVhbiA8ZXZhbi5xdWFuQGFtZC5jb20+DQoNCj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmVhIFJpZ2hpIDxhbmRyZWEucmlnaGlAY2Fu
+b25pY2FsLmNvbT4NCj4gU2VudDogMjAxOcTqNdTCNMjVIDA6NTYNCj4gVG86IERldWNoZXIsIEFs
+ZXhhbmRlciA8QWxleGFuZGVyLkRldWNoZXJAYW1kLmNvbT47IEtvZW5pZywgQ2hyaXN0aWFuDQo+
+IDxDaHJpc3RpYW4uS29lbmlnQGFtZC5jb20+OyBaaG91LCBEYXZpZChDaHVuTWluZykNCj4gPERh
+dmlkMS5aaG91QGFtZC5jb20+DQo+IENjOiBSZXggWmh1IDxyZXguemh1QGFtZC5jb20+OyBXdSwg
+SGVyc2VuIDxoZXJzZW54cy53dUBhbWQuY29tPjsNCj4gUXVhbiwgRXZhbiA8RXZhbi5RdWFuQGFt
+ZC5jb20+OyBhbWQtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsgZHJpLQ0KPiBkZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVj
+dDogW1BBVENIXSBkcm0vYW1kL3Bvd2VycGxheTogcmVtb3ZlIHNwdXJpb3VzIHNlbWljb2xvbg0K
+PiANCj4gW0NBVVRJT046IEV4dGVybmFsIEVtYWlsXQ0KPiANCj4gUmVtb3ZlIHVubmVjZXNzYXJ5
+IHNlbWljb2xvbnMgYXQgdGhlIGVuZCBvZiBsaW5lLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5k
+cmVhIFJpZ2hpIDxhbmRyZWEucmlnaGlAY2Fub25pY2FsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJz
+L2dwdS9kcm0vYW1kL3Bvd2VycGxheS9hbWRfcG93ZXJwbGF5LmMgICAgICAgICB8IDggKysrKy0t
+LS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9hbWQvcG93ZXJwbGF5L2h3bWdyL2hhcmR3YXJlbWFuYWdl
+ci5jIHwgMiArLQ0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDUgZGVsZXRp
+b25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9wb3dlcnBsYXkv
+YW1kX3Bvd2VycGxheS5jDQo+IGIvZHJpdmVycy9ncHUvZHJtL2FtZC9wb3dlcnBsYXkvYW1kX3Bv
+d2VycGxheS5jDQo+IGluZGV4IDNmNzNmN2NkMThiOS4uMTA1MmY1MTE5MDg3IDEwMDY0NA0KPiAt
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL3Bvd2VycGxheS9hbWRfcG93ZXJwbGF5LmMNCj4gKysr
+IGIvZHJpdmVycy9ncHUvZHJtL2FtZC9wb3dlcnBsYXkvYW1kX3Bvd2VycGxheS5jDQo+IEBAIC0x
+MzA0LDcgKzEzMDQsNyBAQCBzdGF0aWMgaW50IHBwX25vdGlmeV9zbXVfZW5hYmxlX3B3ZSh2b2lk
+DQo+ICpoYW5kbGUpDQo+IA0KPiAgICAgICAgIGlmIChod21nci0+aHdtZ3JfZnVuYy0+c211c19u
+b3RpZnlfcHdlID09IE5VTEwpIHsNCj4gICAgICAgICAgICAgICAgIHByX2luZm9fcmF0ZWxpbWl0
+ZWQoIiVzIHdhcyBub3QgaW1wbGVtZW50ZWQuXG4iLCBfX2Z1bmNfXyk7DQo+IC0gICAgICAgICAg
+ICAgICByZXR1cm4gLUVJTlZBTDs7DQo+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsN
+Cj4gICAgICAgICB9DQo+IA0KPiAgICAgICAgIG11dGV4X2xvY2soJmh3bWdyLT5zbXVfbG9jayk7
+DQo+IEBAIC0xMzQxLDcgKzEzNDEsNyBAQCBzdGF0aWMgaW50IHBwX3NldF9taW5fZGVlcF9zbGVl
+cF9kY2VmY2xrKHZvaWQNCj4gKmhhbmRsZSwgdWludDMyX3QgY2xvY2spDQo+IA0KPiAgICAgICAg
+IGlmIChod21nci0+aHdtZ3JfZnVuYy0+c2V0X21pbl9kZWVwX3NsZWVwX2RjZWZjbGsgPT0gTlVM
+TCkgew0KPiAgICAgICAgICAgICAgICAgcHJfZGVidWcoIiVzIHdhcyBub3QgaW1wbGVtZW50ZWQu
+XG4iLCBfX2Z1bmNfXyk7DQo+IC0gICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDs7DQo+ICsg
+ICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gICAgICAgICB9DQo+IA0KPiAgICAgICAg
+IG11dGV4X2xvY2soJmh3bWdyLT5zbXVfbG9jayk7DQo+IEBAIC0xMzYwLDcgKzEzNjAsNyBAQCBz
+dGF0aWMgaW50IHBwX3NldF9oYXJkX21pbl9kY2VmY2xrX2J5X2ZyZXEodm9pZA0KPiAqaGFuZGxl
+LCB1aW50MzJfdCBjbG9jaykNCj4gDQo+ICAgICAgICAgaWYgKGh3bWdyLT5od21ncl9mdW5jLT5z
+ZXRfaGFyZF9taW5fZGNlZmNsa19ieV9mcmVxID09IE5VTEwpIHsNCj4gICAgICAgICAgICAgICAg
+IHByX2RlYnVnKCIlcyB3YXMgbm90IGltcGxlbWVudGVkLlxuIiwgX19mdW5jX18pOw0KPiAtICAg
+ICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7Ow0KPiArICAgICAgICAgICAgICAgcmV0dXJuIC1F
+SU5WQUw7DQo+ICAgICAgICAgfQ0KPiANCj4gICAgICAgICBtdXRleF9sb2NrKCZod21nci0+c211
+X2xvY2spOw0KPiBAQCAtMTM3OSw3ICsxMzc5LDcgQEAgc3RhdGljIGludCBwcF9zZXRfaGFyZF9t
+aW5fZmNsa19ieV9mcmVxKHZvaWQNCj4gKmhhbmRsZSwgdWludDMyX3QgY2xvY2spDQo+IA0KPiAg
+ICAgICAgIGlmIChod21nci0+aHdtZ3JfZnVuYy0+c2V0X2hhcmRfbWluX2ZjbGtfYnlfZnJlcSA9
+PSBOVUxMKSB7DQo+ICAgICAgICAgICAgICAgICBwcl9kZWJ1ZygiJXMgd2FzIG5vdCBpbXBsZW1l
+bnRlZC5cbiIsIF9fZnVuY19fKTsNCj4gLSAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOzsN
+Cj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOw0KPiAgICAgICAgIH0NCj4gDQo+ICAg
+ICAgICAgbXV0ZXhfbG9jaygmaHdtZ3ItPnNtdV9sb2NrKTsNCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9hbWQvcG93ZXJwbGF5L2h3bWdyL2hhcmR3YXJlbWFuYWdlci5jDQo+IGIvZHJp
+dmVycy9ncHUvZHJtL2FtZC9wb3dlcnBsYXkvaHdtZ3IvaGFyZHdhcmVtYW5hZ2VyLmMNCj4gaW5k
+ZXggYzFjNTFjMTE1ZTU3Li43MGY3ZjQ3YTJmY2YgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1
+L2RybS9hbWQvcG93ZXJwbGF5L2h3bWdyL2hhcmR3YXJlbWFuYWdlci5jDQo+ICsrKyBiL2RyaXZl
+cnMvZ3B1L2RybS9hbWQvcG93ZXJwbGF5L2h3bWdyL2hhcmR3YXJlbWFuYWdlci5jDQo+IEBAIC03
+Niw3ICs3Niw3IEBAIGludCBwaG1fc2V0X3Bvd2VyX3N0YXRlKHN0cnVjdCBwcF9od21nciAqaHdt
+Z3IsDQo+IGludCBwaG1fZW5hYmxlX2R5bmFtaWNfc3RhdGVfbWFuYWdlbWVudChzdHJ1Y3QgcHBf
+aHdtZ3IgKmh3bWdyKSAgew0KPiAgICAgICAgIHN0cnVjdCBhbWRncHVfZGV2aWNlICphZGV2ID0g
+TlVMTDsNCj4gLSAgICAgICBpbnQgcmV0ID0gLUVJTlZBTDs7DQo+ICsgICAgICAgaW50IHJldCA9
+IC1FSU5WQUw7DQo+ICAgICAgICAgUEhNX0ZVTkNfQ0hFQ0soaHdtZ3IpOw0KPiAgICAgICAgIGFk
+ZXYgPSBod21nci0+YWRldjsNCj4gDQo+IC0tDQo+IDIuMjAuMQ0KDQo=
