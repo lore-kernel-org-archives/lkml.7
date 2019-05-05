@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188B5C04AAD
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75773C04AAF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54622087F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F57920B7C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbfEEL6i (ORCPT
+        id S1727841AbfEEL6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 07:58:38 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56850 "EHLO
+        Sun, 5 May 2019 07:58:39 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56902 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727710AbfEEL63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 07:58:29 -0400
+        id S1727784AbfEEL6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 07:58:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 046DC168F;
-        Sun,  5 May 2019 04:58:29 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A6E71993;
+        Sun,  5 May 2019 04:58:36 -0700 (PDT)
 Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E4943F5C1;
-        Sun,  5 May 2019 04:58:27 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82F2B3F5C1;
+        Sun,  5 May 2019 04:58:34 -0700 (PDT)
 From:   Qais Yousef <qais.yousef@arm.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -34,9 +34,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
         Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH 3/7] sched: fair.h: add a new cfs_rq_tg_path()
-Date:   Sun,  5 May 2019 12:57:28 +0100
-Message-Id: <20190505115732.9844-4-qais.yousef@arm.com>
+Subject: [PATCH 7/7] sched: export the newly added tracepoints
+Date:   Sun,  5 May 2019 12:57:32 +0100
+Message-Id: <20190505115732.9844-8-qais.yousef@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190505115732.9844-1-qais.yousef@arm.com>
 References: <20190505115732.9844-1-qais.yousef@arm.com>
@@ -45,50 +45,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new function will be used in later patches when introducing the new
-PELT tracepoints.
+So that external modules can hook into them and extract the info they
+need. Since these new tracepoints have no events associated with them
+exporting these tracepoints make them useful for external modules to
+perform testing and debugging. There's no other way otherwise to access
+them.
 
 Signed-off-by: Qais Yousef <qais.yousef@arm.com>
 ---
- kernel/sched/fair.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ kernel/sched/core.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/sched/fair.h b/kernel/sched/fair.h
-index 04c5c8c0e477..aa57e3cb2eaa 100644
---- a/kernel/sched/fair.h
-+++ b/kernel/sched/fair.h
-@@ -31,6 +31,18 @@ static inline struct cfs_rq *group_cfs_rq(struct sched_entity *grp)
- 	return grp->my_q;
- }
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 4778c48a7fda..1841a4e9918e 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -22,6 +22,14 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/sched.h>
  
-+static inline void cfs_rq_tg_path(struct cfs_rq *cfs_rq, char *path, int len)
-+{
-+	int l = path ? len : 0;
++/*
++ * Export tracepoints that act as a bare tracehook (ie: have no trace event
++ * associated with them) to allow external modules to probe them.
++ */
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_load_rq);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_load_se);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_overutilized);
 +
-+	if (cfs_rq && task_group_is_autogroup(cfs_rq->tg))
-+		autogroup_path(cfs_rq->tg, path, l);
-+	else if (cfs_rq && cfs_rq->tg->css.cgroup)
-+		cgroup_path(cfs_rq->tg->css.cgroup, path, l);
-+	else if (path)
-+		strcpy(path, "(null)");
-+}
-+
- static inline bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
- {
- 	struct rq *rq = rq_of(cfs_rq);
-@@ -173,6 +185,12 @@ static inline struct cfs_rq *group_cfs_rq(struct sched_entity *grp)
- 	return NULL;
- }
+ DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
  
-+static inline void cfs_rq_tg_path(struct cfs_rq *cfs_rq, char *path, int len)
-+{
-+	if (path)
-+		strcpy(path, "(null)");
-+}
-+
- static inline bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
- {
- 	return true;
+ #if defined(CONFIG_SCHED_DEBUG) && defined(CONFIG_JUMP_LABEL)
 -- 
 2.17.1
 
