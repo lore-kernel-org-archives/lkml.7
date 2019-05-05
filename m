@@ -2,98 +2,102 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FE5C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A2FC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0E520578
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C8020651
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:51:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWm6HyL6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbfEETng (ORCPT
+        id S1727854AbfEETvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 15:43:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfEETnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 15:43:35 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B577F20578;
-        Sun,  5 May 2019 19:43:34 +0000 (UTC)
-Date:   Sun, 5 May 2019 15:43:33 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Viktor Rosendahl <viktor.rosendahl@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] ftrace: Implement fs notification for
- preempt/irqsoff tracers
-Message-ID: <20190505154333.56f3a187@oasis.local.home>
-In-Reply-To: <20190504164710.GA55790@google.com>
-References: <20190501203650.29548-1-viktor.rosendahl@gmail.com>
-        <20190501203650.29548-2-viktor.rosendahl@gmail.com>
-        <20190504164710.GA55790@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 5 May 2019 15:51:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34945 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbfEETvX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 15:51:23 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w12so1089575wrp.2;
+        Sun, 05 May 2019 12:51:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pWv2bFsADdBbZMiNuoGFOaXbQXtQ9Pgo1BAcL/o+Zwo=;
+        b=YWm6HyL6RFTAtxtxfXbxaRqZABKfoTPBuvHTsj7l6HD6NDAckXhO5YUWeD2CPsQsDs
+         2SORFQdZY22LHDKdS799NgNrGjnfGz4jkYuJzvVyqgnb9FeFiWx7+/hFrzTOQ8D8ziUk
+         hRbSstlZwzGwiA+YKwT0hkvyE6pXfTclxtH7d3fKFsIHhXOsNjfNb/bhdEXv1yHhN3yT
+         tiXN593D1BhK4bKRc0okphmla5V+xJ/qEz62lTBZlpndrOO0hiAB/aG7Y0LZi54f5hBn
+         exFcz4F3dGACfHj1bHK5gNqUvTVh+Fv3ZmxMRjkx/omcAiAdJKQ2wvGkHv0AhFD6Ytld
+         aWTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pWv2bFsADdBbZMiNuoGFOaXbQXtQ9Pgo1BAcL/o+Zwo=;
+        b=kbF6M8duV1o88RUJg0tfgy02CP4fNMnulZhjp/45e/cJ3tKS8QQ2VII0iySjqdOxMa
+         hZ+OTdDaCB3t+yKHaERGn3zCEvrnzWWbJ+18pr76l0HYCT4owxV4f/pgwd2ElVieywjf
+         acuDbsKjC+rdwVxsnDdl0/DgTiwdVl0NwhAnT13ozaiK/srlpeN3RVNGuqOf+BJ9RA1t
+         EPAQEZ2kVenXvBvHYSOKEfdohwEA9X2ZT7dMvpWC9vZdXauwpkEOXrFbXq4VzZIEvlis
+         H+liJLWWFMst9AMlYK0OMMQydQpi7XGG8ddjzdT7yORmpRw4mowyCN8GQmMFo220zIqU
+         KXIQ==
+X-Gm-Message-State: APjAAAWS89Vkf5HsXptfm6iHjwSv+JTtnLhxltMzGjNiGSF3UWPEJj+1
+        b7K6Ka34qDcyrOihySh7g5Xyya44iwA=
+X-Google-Smtp-Source: APXvYqyvFtzWaIQnTOq7UkvPKuIt7nxbEUOVKPSPVuIJcbY5zUHXtDtphPFMio46ZFNPVTAS6YRNsw==
+X-Received: by 2002:a5d:6a03:: with SMTP id m3mr10871317wru.135.1557085881549;
+        Sun, 05 May 2019 12:51:21 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd4:5700:d9a7:917c:8564:c504? (p200300EA8BD45700D9A7917C8564C504.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:d9a7:917c:8564:c504])
+        by smtp.googlemail.com with ESMTPSA id z5sm18998739wre.70.2019.05.05.12.51.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 05 May 2019 12:51:20 -0700 (PDT)
+Subject: Re: [PATCH] net: phy: sfp: enable i2c-bus detection on ACPI based
+ systems
+To:     Ruslan Babayev <ruslan@babayev.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     xe-linux-external@cisco.com,
+        "David S. Miller" <davem@davemloft.net>, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20190505193435.3248-1-ruslan@babayev.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <085da32a-8c3a-bf91-38b0-4802375ae414@gmail.com>
+Date:   Sun, 5 May 2019 21:51:15 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190505193435.3248-1-ruslan@babayev.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 4 May 2019 12:47:10 -0400
-Joel Fernandes <joel@joelfernandes.org> wrote:
-
- 
-> I agree with the general idea, but I don't really like how it is done in the
-> patch.
-
-+1
-
+On 05.05.2019 21:34, Ruslan Babayev wrote:
+> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+> Cc: xe-linux-external@cisco.com
+> ---
+>  drivers/i2c/i2c-core-acpi.c |  3 ++-
+>  drivers/net/phy/sfp.c       | 33 +++++++++++++++++++++++++--------
+>  include/linux/i2c.h         |  6 ++++++
+>  3 files changed, 33 insertions(+), 9 deletions(-)
 > 
-> We do have a notification mechanism already in the form of trace_pipe. Can we
-> not improve that in some way to be notified of a new trace data? In theory,
-> the trace_pipe does fit into the description in the documentation: "Reads
-> from this file will block until new data is retrieved"
-> 
-> More comment below:
-> 
-> 
+Regarding the formal part:
+- It should be [PATCH net-next]
+- Commit description is missing (scripts/checkpatch.pl should have complained)
 
-> > +	config PREEMPTIRQ_FSNOTIFY
-> > +	bool "Generate fsnotify events for the latency tracers"
-> > +	default n
-> > +	depends on (IRQSOFF_TRACER || PREEMPT_TRACER) && FSNOTIFY
-> > +	help
-> > +	  This option will enable the generation of fsnotify events for the
-> > +	  trace file. This makes it possible for userspace to be notified about
-> > +	  modification of /sys/kernel/debug/tracing/trace through the inotify
-> > +	  interface.  
-> 
-> Does this have to be a CONFIG option? If prefer if the code automatically
-> does the notification and it is always enabled. I don't see any drawbacks of
-> that.
-
-I mentioned that anything it needs to be an option.
-
-
-> > +#ifdef CONFIG_PREEMPTIRQ_FSNOTIFY
-> > +
-> > +static void trace_notify_workfn(struct work_struct *work)  
-> [snip]
-> 
-> I prefer if this facility is available to other tracers as well such as
-> the wakeup tracer which is similar in output (check
-> Documentation/trace/ftrace.txt). I believe this should be a generic trace
-> facility, and not tracer specific.
-
-
-For what it's worth, I agree with everything Joel just stated.
-
-Thanks,
-
--- Steve
+And maybe it would be better to split exporting i2c_acpi_find_adapter_by_handle
+and extending sfp.c to two patches. If Wolfram acks the i2c patch, then I think
+the series could go through the netdev tree. Eventually up to David.
