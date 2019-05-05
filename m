@@ -3,92 +3,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EE8C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF31EC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9F6208C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE000208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbfEELEf (ORCPT
+        id S1727739AbfEELFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 07:04:35 -0400
-Received: from foss.arm.com ([217.140.101.70]:56028 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727404AbfEELEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 07:04:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C9F8374;
-        Sun,  5 May 2019 04:04:30 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBC4D3F238;
-        Sun,  5 May 2019 04:04:26 -0700 (PDT)
-Date:   Sun, 5 May 2019 12:04:24 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Michal Gregorczyk <michalgr@live.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
-Message-ID: <20190505110423.u7g3f2viovvgzbtn@e107158-lin.cambridge.arm.com>
-References: <20190502204958.7868-1-joel@joelfernandes.org>
- <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
- <20190503134935.GA253329@google.com>
+        Sun, 5 May 2019 07:05:34 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:60131 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727507AbfEELFe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 07:05:34 -0400
+X-UUID: de3c011c907f4acf891405518ae8bad3-20190505
+X-UUID: de3c011c907f4acf891405518ae8bad3-20190505
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 172973483; Sun, 05 May 2019 19:05:26 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sun, 5 May
+ 2019 19:05:24 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Sun, 5 May 2019 19:05:22 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Jitao Shi <jitao.shi@mediatek.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
+        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>
+Subject: [PATCH v2 0/2] add dsi pwm0 node for mt8183
+Date:   Sun, 5 May 2019 19:05:15 +0800
+Message-ID: <20190505110517.965-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190503134935.GA253329@google.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/03/19 09:49, Joel Fernandes wrote:
-> On Fri, May 03, 2019 at 01:12:34PM +0100, Qais Yousef wrote:
-> > Hi Joel
-> > 
-> > On 05/02/19 16:49, Joel Fernandes (Google) wrote:
-> > > The eBPF based opensnoop tool fails to read the file path string passed
-> > > to the do_sys_open function. This is because it is a pointer to
-> > > userspace address and causes an -EFAULT when read with
-> > > probe_kernel_read. This is not an issue when running the tool on x86 but
-> > > is an issue on arm64. This patch adds a new bpf function call based
-> > 
-> > I just did an experiment and if I use Android 4.9 kernel I indeed fail to see
-> > PATH info when running opensnoop. But if I run on 5.1-rc7 opensnoop behaves
-> > correctly on arm64.
-> > 
-> > My guess either a limitation that was fixed on later kernel versions or Android
-> > kernel has some strict option/modifications that make this fail?
-> 
-> Thanks a lot for checking, yes I was testing 4.9 kernel with this patch (pixel 3).
-> 
-> I am not sure what has changed since then, but I still think it is a good
-> idea to make the code more robust against such future issues anyway. In
-> particular, we learnt with extensive discussions that user/kernel pointers
-> are not necessarily distinguishable purely based on their address.
+Changes since v1:
+ - remove "mediatek,mt8173-dsi" from dsi node.
 
-Yes I wasn't arguing against that. But the commit message is misleading or
-needs more explanation at least. I tried 4.9.y stable and arm64 worked on that
-too. Why do you think it's an arm64 problem?
+This patch is based on v5.1-rc1 and these patches:
+http://lists.infradead.org/pipermail/linux-mediatek/2019-March/017963.html
+https://patchwork.kernel.org/patch/10856987/
+https://patchwork.kernel.org/cover/10879001/
+https://patchwork.kernel.org/cover/10846677/
+https://patchwork.kernel.org/patch/10893519/
 
---
-Qais Yousef
+Jitao Shi (2):
+  arm64: dts: mt8183: add dsi node
+  arm64: dts: mt8183: add pwm0 node
+
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 35 ++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+
+-- 
+2.21.0
+
