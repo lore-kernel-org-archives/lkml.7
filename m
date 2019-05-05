@@ -6,59 +6,71 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96D0C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 17:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAE7C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 17:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C024720675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 17:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 093DB20675
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 17:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbfEERdy (ORCPT
+        id S1728100AbfEEReN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 13:33:54 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:52994 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfEERdx (ORCPT
+        Sun, 5 May 2019 13:34:13 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:36628 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfEEReN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 13:33:53 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 58E2014DA6480;
-        Sun,  5 May 2019 10:33:53 -0700 (PDT)
-Date:   Sun, 05 May 2019 10:33:52 -0700 (PDT)
-Message-Id: <20190505.103352.552893412554706513.davem@davemloft.net>
-To:     christophe.leroy@c-s.fr
-Cc:     leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] net: ucc_geth - fix Oops when changing number of
- buffers in the ring
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <ba66f38ff44b95e82925fd0500eb32fe03895496.1556889892.git.christophe.leroy@c-s.fr>
-References: <ba66f38ff44b95e82925fd0500eb32fe03895496.1556889892.git.christophe.leroy@c-s.fr>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Sun, 5 May 2019 13:34:13 -0400
+Received: from marcel-macpro.fritz.box (p4FF9FD9B.dip0.t-ipconnect.de [79.249.253.155])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 3F8BBCEE02;
+        Sun,  5 May 2019 19:42:26 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH v3 1/2] Bluetooth: hci_qca: Rename STATE_<flags> to
+ QCA_<flags>
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190429232131.183049-1-mka@chromium.org>
+Date:   Sun, 5 May 2019 19:34:12 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 05 May 2019 10:33:53 -0700 (PDT)
+Message-Id: <A544D15F-0CBC-4E8D-A585-26F6B886C1FD@holtmann.org>
+References: <20190429232131.183049-1-mka@chromium.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
-Date: Fri,  3 May 2019 13:33:23 +0000 (UTC)
+Hi Matthias,
 
-> When changing the number of buffers in the RX ring while the interface
-> is running, the following Oops is encountered due to the new number
-> of buffers being taken into account immediately while their allocation
-> is done when opening the device only.
- ...
-> This patch forbids the modification of the number of buffers in the
-> ring while the interface is running.
+> Rename STATE_IN_BAND_SLEEP_ENABLED to QCA_IBS_ENABLED. The constant
+> represents a flag (multiple flags can be set at once), not a unique
+> state of the controller or driver.
 > 
-> Fixes: ac421852b3a0 ("ucc_geth: add ethtool support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Also make the flag an enum value instead of a pre-processor constant
+> (more flags will be added to the enum group by another patch).
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v3:
+> - rename STATE_IN_BAND_SLEEP_ENABLED to QCA_IBS_ENABLED
+> 
+> Changes in v2:
+> - don't use BIT()
+> - change to enum type
+> - updated commit message
+> ---
+> drivers/bluetooth/hci_qca.c | 15 ++++++++-------
+> 1 file changed, 8 insertions(+), 7 deletions(-)
 
-Applied and queued up for -stable.
+patch has been applied to bluetooth-next tree.
+
+Regards
+
+Marcel
+
