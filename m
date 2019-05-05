@@ -2,110 +2,97 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325EEC04AB0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4227C04AAC
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 12:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0411E20B7C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 11:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AE7208CA
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 12:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557058002;
+	bh=i8IgdodhDZT8g5eCpvqZfSm1dEue2uSu7hzNSi3wo/g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=y/VmUcQqvkivqppgED2YNnaUHocv2HQZq4SQXs9uXncI2djH1rzT1k9u5evOZSzG7
+	 qRzxEPmmOcZooJSYNCyB0kDoSzrwwCXf/f5dp6UYMkMXox3raeu+St/pFAcIa6dkAO
+	 gez/0Cr+PjghbGWvckJgLPvwvLIBh+WnXGdT9j8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfEEL6w (ORCPT
+        id S1727327AbfEEMGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 07:58:52 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56890 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727765AbfEEL6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 07:58:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 452481715;
-        Sun,  5 May 2019 04:58:34 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BED303F5C1;
-        Sun,  5 May 2019 04:58:32 -0700 (PDT)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH 6/7] sched: Add sched_overutilized tracepoint
-Date:   Sun,  5 May 2019 12:57:31 +0100
-Message-Id: <20190505115732.9844-7-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190505115732.9844-1-qais.yousef@arm.com>
-References: <20190505115732.9844-1-qais.yousef@arm.com>
+        Sun, 5 May 2019 08:06:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbfEEMGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 08:06:41 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 308212087F;
+        Sun,  5 May 2019 12:06:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557058000;
+        bh=i8IgdodhDZT8g5eCpvqZfSm1dEue2uSu7hzNSi3wo/g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cpZ1S1/AQ9rhuyjtEZDYnx4L2bY5l9lFvyP+OW+7a0LxVtFerBDlbkXXPdc8nm0pO
+         0w1eRFNiSnFirzFkNkn7/dSeBJR7EOvvIqcJu8C2mFiBjGAFURigZcIhvu6MBT/OYb
+         LCTDsoVGfOsfiXXlsWj4a8En2538tmbAQ72bj31M=
+Date:   Sun, 5 May 2019 13:06:34 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     =?UTF-8?B?Sm/Do28=?= Seckler <joaoseckler@gmail.com>
+Cc:     lars@metafoo.de, Michael.Hennerich@analog.com,
+        stefan.popa@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
+        gregkh@linuxfoundation.org, linux-iio@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH] staging: iio: adt7316: match parenthesis alignment
+Message-ID: <20190505130634.4bd56579@archlinux>
+In-Reply-To: <20190429175939.2jvt4qwrtbmpvhl6@smtp.gmail.com>
+References: <20190429175939.2jvt4qwrtbmpvhl6@smtp.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new tracepoint allows us to track the changes in overutilized
-status.
+On Mon, 29 Apr 2019 14:59:40 -0300
+Jo=C3=A3o Seckler <joaoseckler@gmail.com> wrote:
 
-Overutilized status is associated with EAS. It indicates that the system
-is in high performance state. EAS is disabled when the system is in this
-state since there's not much energy savings while high performance tasks
-are pushing the system to the limit and it's better to default to the
-spreading behavior of the scheduler.
+> This patch solves the following checkpatch.pl message:
+> CHECK: Alignment should match open parenthesis.
+> This makes the file more compliant with the preferred coding style for
+> the Linux kernel.
+>=20
+> Signed-off-by: Jo=C3=A3o Seckler <joaoseckler@gmail.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-This tracepoint helps understanding and debugging the conditions under
-which this happens.
+Thanks,
 
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
----
- include/trace/events/sched.h | 4 ++++
- kernel/sched/fair.c          | 7 ++++++-
- 2 files changed, 10 insertions(+), 1 deletion(-)
+Jonathan
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 0933c08cfc7e..d27733d9aed6 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -600,6 +600,10 @@ DECLARE_TRACE(sched_load_se,
- 	TP_PROTO(int cpu, const char *path, struct sched_entity *se),
- 	TP_ARGS(cpu, path, se));
- 
-+DECLARE_TRACE(sched_overutilized,
-+	TP_PROTO(int overutilized),
-+	TP_ARGS(overutilized));
-+
- #endif /* _TRACE_SCHED_H */
- 
- /* This part must be outside protection */
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 3fd306079b57..75403918e158 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4965,8 +4965,10 @@ static inline bool cpu_overutilized(int cpu)
- 
- static inline void update_overutilized_status(struct rq *rq)
- {
--	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu))
-+	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu)) {
- 		WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
-+		trace_sched_overutilized(1);
-+	}
- }
- #else
- static inline void update_overutilized_status(struct rq *rq) { }
-@@ -8330,8 +8332,11 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
- 
- 		/* Update over-utilization (tipping point, U >= 0) indicator */
- 		WRITE_ONCE(rd->overutilized, sg_status & SG_OVERUTILIZED);
-+
-+		trace_sched_overutilized(!!(sg_status & SG_OVERUTILIZED));
- 	} else if (sg_status & SG_OVERUTILIZED) {
- 		WRITE_ONCE(env->dst_rq->rd->overutilized, SG_OVERUTILIZED);
-+		trace_sched_overutilized(1);
- 	}
- }
- 
--- 
-2.17.1
+> ---
+>  drivers/staging/iio/addac/adt7316.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/staging/iio/addac/adt7316.c b/drivers/staging/iio/ad=
+dac/adt7316.c
+> index b6a65ee8d558..37ce563cb0e1 100644
+> --- a/drivers/staging/iio/addac/adt7316.c
+> +++ b/drivers/staging/iio/addac/adt7316.c
+> @@ -2154,7 +2154,7 @@ int adt7316_probe(struct device *dev, struct adt731=
+6_bus *bus,
+>  		chip->dac_bits =3D 8;
+> =20
+>  	chip->ldac_pin =3D devm_gpiod_get_optional(dev, "adi,ldac",
+> -						GPIOD_OUT_LOW);
+> +						 GPIOD_OUT_LOW);
+>  	if (IS_ERR(chip->ldac_pin)) {
+>  		ret =3D PTR_ERR(chip->ldac_pin);
+>  		dev_err(dev, "Failed to request ldac GPIO: %d\n", ret);
 
