@@ -2,395 +2,147 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502EEC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 22:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE92C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 22:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3090206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 22:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F46206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 22:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u+LONwYP"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BTAfr/Y6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbfEEWjZ (ORCPT
+        id S1727994AbfEEWkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 18:39:25 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41968 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727325AbfEEWjY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 18:39:24 -0400
-Received: by mail-io1-f68.google.com with SMTP id a17so1412360iot.8
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 15:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hqFM/Wnq0mI8eL9g6ojj89KNP8W9tnprH3vIcrFeQ8Y=;
-        b=u+LONwYPypoJolNI8+EhbnQUCSxnTRqvvSb3iZd7OJLlxgfqIFDYtJlG0m1p2MZuU7
-         ezDDYpL0pqil5pCtMZ8T6S3ogYgFcKDimuanybNx2czPj+6V/qeRTuyPY46ib4uKV1L5
-         SreijyFwrL6olKGmns+Lo4q6poKBIsYD/WYuTDm6XHybA7E6qKLcbogz0oFKSN4JxvtO
-         aTt6pm6D0LvEDB87Ybju7fZGUiQy+gpyIzZAoPBdsbud2P3Pq+Kwn+ozEF9MT5Xfm55z
-         F0CYU/RdF2kDTL3Pmw9+249DNK7Ht9Mf6CkI5GsqGHC5ml/jjKA/KBqGBeqIspWQ0J8Z
-         Ki2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=hqFM/Wnq0mI8eL9g6ojj89KNP8W9tnprH3vIcrFeQ8Y=;
-        b=n2MG+m54NYKx3TnZ60AqJyVSDlfNAtQwnLS44ew3RrJT6GnNLeynN2uBLJcVlwsA7z
-         +bAQ2kNKSCsvNTOaWGgL4823ID/MIqQrlr+Q7AsQgcFCaAPR1Hf+Q4In/0XGBwUjlGym
-         qhUJop8PAys+fW+C6o7mYWevPEO42VT6kTWiUFqkbXyJvvcLin4L9RgFc1Y691E+/wis
-         fXMBE+NLDV2Rfl+t+fnpR7Dodm4SbDECOQ16r8+fA9x6a96AI9DCJ28FtNQplh4OJ8n2
-         otBvdrb5NH/0ezxPUx+F97lrfN5TDP3oGorLoMSScVCWpi+wUpgbo2mV9ltbx1zBTOmx
-         t5sQ==
-X-Gm-Message-State: APjAAAUNeFuuxduXEcxDSMKUD4VCXTsnjYWXfkSjpBZdqQfrJdmVFPd7
-        UWYJArW/WAjFSIPeSYhMqA==
-X-Google-Smtp-Source: APXvYqxOOZq1zbRVkNDx1wKnJbRCC2gBcehT7cmp/LIxvgcdn3y30vW/qBE8CJQ/zUeQ1fXSqQNwuA==
-X-Received: by 2002:a5d:84d9:: with SMTP id z25mr15523216ior.301.1557095963509;
-        Sun, 05 May 2019 15:39:23 -0700 (PDT)
-Received: from localhost.localdomain ([92.117.170.52])
-        by smtp.gmail.com with ESMTPSA id 140sm4364180itv.44.2019.05.05.15.39.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 15:39:22 -0700 (PDT)
-From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Viktor Rosendahl <viktor.rosendahl@gmail.com>
-Subject: Re: [PATCH v2 1/4] ftrace: Implement fs notification for preempt/irqsoff tracers
-Date:   Mon,  6 May 2019 00:39:15 +0200
-Message-Id: <20190505223915.4569-1-viktor.rosendahl@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190504164710.GA55790@google.com>
-References: <20190504164710.GA55790@google.com>
+        Sun, 5 May 2019 18:40:43 -0400
+Received: from ozlabs.org ([203.11.71.1]:59239 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727325AbfEEWkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 18:40:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44y16b4Prlz9s4Y;
+        Mon,  6 May 2019 08:40:39 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557096040;
+        bh=VsNBxC9WW9P/x5YaMgRvsuVTWQiQsb7AYnmIvAb6hVY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BTAfr/Y6H6Le9EVnumuOGl65RqSh0Vizu3Wl0LPKEjbtKVokRitcbJigjJeyGyaDz
+         ipe7QhspM0gQnz3nTEfxKv/gyN51ZSn1ZyQIjkJQawLef6N6iW6PGXjHkTx7lbkgZi
+         IH0WYkGJaxmxciCryETOjcxxN9jKyDTTbwFXQ4SzA8Oays2wfCr03Sg1kq1Jy+xuxV
+         zfbYmoNbgWE2YaEtFZRvq4y/mzm3JK+s7WtxLztmfgv6IviXC3Z/0Ra/j8e70vwftC
+         28wbD0kDDBXp3QvhEEv4F1S69/cDPhSgPv0TcVrrBWFEdyRMAECO/p94fGUXCA0vZF
+         IznuHSYEcLpmA==
+Date:   Mon, 6 May 2019 08:40:36 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        "G, Manjunath Kondaiah" <manjugk@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: linux-next: build failure after merge of the kbuild tree
+Message-ID: <20190506084036.5b6f9118@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/NzQYtNnh15ga6P8Xh8q/xgA"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/19 6:47 PM, Joel Fernandes wrote:
-> On Wed, May 01, 2019 at 10:36:47PM +0200, Viktor Rosendahl wrote:
->> immediately after each other in spite of the fact that the
->> preempt/irqsoff tracers operate in overwrite mode.
->>
->> Signed-off-by: Viktor Rosendahl <viktor.rosendahl@gmail.com>
->
-> I agree with the general idea, but I don't really like how it is done in the
-> patch.
->
+--Sig_/NzQYtNnh15ga6P8Xh8q/xgA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Can you explain more precisely what you agree with?
+Hi Masahiro,
 
-The general idea of being able to trace bursts of latencies?
+After merging the kbuild tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-Or the slightly more specific idea of notifying user space when
-/sys/kernel/debug/tracing/trace has new data, and let user space do the rest?
+In file included from include/linux/module.h:18,
+                 from arch/arm/plat-omap/dma.c:28:
+arch/arm/plat-omap/dma.c:1452:26: error: expected ',' or ';' before 'DRIVER=
+_NAME'
+ MODULE_ALIAS("platform:" DRIVER_NAME);
+                          ^~~~~~~~~~~
+include/linux/moduleparam.h:26:47: note: in definition of macro '__MODULE_I=
+NFO'
+   =3D __MODULE_INFO_PREFIX __stringify(tag) "=3D" info
+                                               ^~~~
+include/linux/module.h:164:30: note: in expansion of macro 'MODULE_INFO'
+ #define MODULE_ALIAS(_alias) MODULE_INFO(alias, _alias)
+                              ^~~~~~~~~~~
+arch/arm/plat-omap/dma.c:1452:1: note: in expansion of macro 'MODULE_ALIAS'
+ MODULE_ALIAS("platform:" DRIVER_NAME);
+ ^~~~~~~~~~~~
 
-> We do have a notification mechanism already in the form of trace_pipe. Can we
-> not improve that in some way to be notified of a new trace data? In theory,
-> the trace_pipe does fit into the description in the documentation: "Reads
-> from this file will block until new data is retrieved"
->
+Presumably caused by commit
 
-I am not quite sure what kind of solution you are after here. Could you be more
-specific?
+  6a26793a7891 ("moduleparam: Save information about built-in modules in se=
+parate file")
 
-I think that it would be weird if we used trace_pipe to send a message with
-the meaning "new data is available in the trace file". To me this would seem
-like (re)inventing a special purpose alternative to inotify.
+(since that is the only change from Friday, I thnk)
 
-Another option would be to allow the user to consume the the latency traces
-directly from trace_pipe, without using the trace file. This would make sense
-to me and would indeed be a much better solution. If somebody is able to make
-such an implementation I am all for it.
+DRIVER_NAME is not defined and this kbuild tree change has exposed it.  It =
+has been this way since commit
 
-However, I do not know how to do this. I believe that it would lead towards a
-significant rewrite of the latency tracers, probably also how the ftrace
-buffering works.
+  f31cc9622d75 ("OMAP: DMA: Convert DMA library into platform driver")
 
-My solution is clearly a hack but it has the benefits of requiring quite
-small and straightforward changes to the kernel and the really ugly things are
-then done in user space.
+=46rom v2.6.38-rc1 in 2012.
 
->>
->> +	config PREEMPTIRQ_FSNOTIFY
+I have applied the following patch for today.
 
-> Does this have to be a CONFIG option? If prefer if the code automatically
-> does the notification and it is always enabled. I don't see any drawbacks of
-> that.
->
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 6 May 2019 08:35:02 +1000
+Subject: [PATCH] arm: omap: remove unused MODULE_ALIAS from dma.c
 
-I was just thinking that sending fsnotify events to a sysfs file is a bit off
-the beaten track and I figured that some people would like to opt out.
+DRIVER_NAME has nevern been defined, so this cannot have ever been used.
 
-It can of course be changed so that it is always enabled when a tracer that
-requires it is enabled, if there is general agreement on this point.
-
->> +
->>  config SCHED_TRACER
->>  	bool "Scheduling Latency Tracer"
->>  	select GENERIC_TRACER
->> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
->> index ca1ee656d6d8..ebefb8d4e072 100644
->> --- a/kernel/trace/trace.c
->> +++ b/kernel/trace/trace.c
->> @@ -44,6 +44,8 @@
->>  #include <linux/trace.h>
->>  #include <linux/sched/clock.h>
->>  #include <linux/sched/rt.h>
->> +#include <linux/fsnotify.h>
->> +#include <linux/workqueue.h>
->>
->>  #include "trace.h"
->>  #include "trace_output.h"
->> @@ -8191,6 +8193,32 @@ static __init void create_trace_instances(struct dentry *d_tracer)
->>  		return;
->>  }
->>
->> +#ifdef CONFIG_PREEMPTIRQ_FSNOTIFY
->> +
->> +static void trace_notify_workfn(struct work_struct *work)
-> [snip]
->
-> I prefer if this facility is available to other tracers as well such as
-> the wakeup tracer which is similar in output (check
-> Documentation/trace/ftrace.txt). I believe this should be a generic trace
-> facility, and not tracer specific.
->
-
-This should be possible.
-
-If we stick with the fsnotify idea, it's possible to move the functions for it
-to trace.c and to use it also from other tracers.
-
-It is also possible to do a few small adjustments to the latency-collector and
-to rename it the trace-collector, so that it can work for the wakeup case also.
-The random sleep games probably don't make sense for the wakeup case but it's
-already now a command line option.
-
-Below is a suggestion for how to make the facility more generic and usable by
-by both preempt/irqsoff and wakeup.
-
-best regards,
-
-Viktor
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- kernel/trace/Kconfig              | 11 +++++++
- kernel/trace/trace.c              | 50 +++++++++++++++++++++++++++++--
- kernel/trace/trace.h              | 15 ++++++++++
- kernel/trace/trace_irqsoff.c      |  5 ++++
- kernel/trace/trace_sched_wakeup.c |  7 ++++-
- 5 files changed, 85 insertions(+), 3 deletions(-)
+ arch/arm/plat-omap/dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 8bd1d6d001d7..ca6a63004adf 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -244,6 +244,17 @@ config SCHED_TRACER
- 	  This tracer tracks the latency of the highest priority task
- 	  to be scheduled in, starting from the point it has woken up.
- 
-+config TRACE_FSNOTIFY
-+	bool "Generate fsnotify events for the trace file"
-+	default n
-+	depends on (IRQSOFF_TRACER || PREEMPT_TRACER || SCHED_TRACER)
-+	depends on FSNOTIFY
-+	help
-+	  This option will enable the generation of fsnotify events for the
-+	  trace file. This makes it possible for userspace to be notified about
-+	  modification of /sys/kernel/debug/tracing/trace through the inotify
-+	  interface.
-+
- config HWLAT_TRACER
- 	bool "Tracer to detect hardware latencies (like SMIs)"
- 	select GENERIC_TRACER
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ca1ee656d6d8..1640fd302e9a 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -44,6 +44,8 @@
- #include <linux/trace.h>
- #include <linux/sched/clock.h>
- #include <linux/sched/rt.h>
-+#include <linux/fsnotify.h>
-+#include <linux/workqueue.h>
- 
- #include "trace.h"
- #include "trace_output.h"
-@@ -8191,6 +8193,50 @@ static __init void create_trace_instances(struct dentry *d_tracer)
- 		return;
- }
- 
-+#ifdef CONFIG_TRACE_FSNOTIFY
-+
-+static struct workqueue_struct *notify_wq;
-+
-+static void trace_notify_workfn(struct work_struct *work)
-+{
-+	struct trace_array *tr = container_of(work, struct trace_array,
-+					      notify_work);
-+	fsnotify(tr->d_trace->d_inode, FS_MODIFY, tr->d_trace->d_inode,
-+		 FSNOTIFY_EVENT_INODE, NULL, 0);
-+}
-+
-+static void trace_create_trace_file(struct trace_array *tr,
-+				    struct dentry *d_tracer)
-+{
-+	/* For notify we need to init the work structure and save the pointer */
-+	INIT_WORK(&tr->notify_work, trace_notify_workfn);
-+	tr->d_trace = trace_create_file("trace", 0644, d_tracer, tr,
-+					&tracing_fops);
-+}
-+
-+static __init void trace_file_notify_init(void)
-+{
-+	notify_wq = alloc_workqueue("irqsoff_notify_wq",
-+				    WQ_UNBOUND | WQ_HIGHPRI, 0);
-+	if (!notify_wq)
-+		pr_err("Unable to allocate irqsoff_notify_wq");
-+}
-+
-+void trace_file_notify(struct trace_array *tr)
-+{
-+	if (likely(notify_wq))
-+		queue_work(notify_wq, &tr->notify_work);
-+}
-+
-+#else /* !CONFIG_TRACE_FSNOTIFY */
-+
-+#define trace_create_trace_file(tr, d_tracer) \
-+	trace_create_file("trace", 0644, d_tracer, tr, &tracing_fops)
-+
-+#define trace_file_notify_init() do {} while (0)
-+
-+#endif /* !CONFIG_TRACE_FSNOTIFY */
-+
- static void
- init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- {
-@@ -8209,8 +8255,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 	trace_create_file("trace_options", 0644, d_tracer,
- 			  tr, &tracing_iter_fops);
- 
--	trace_create_file("trace", 0644, d_tracer,
--			  tr, &tracing_fops);
-+	trace_create_trace_file(tr, d_tracer);
- 
- 	trace_create_file("trace_pipe", 0444, d_tracer,
- 			  tr, &tracing_pipe_fops);
-@@ -8415,6 +8460,7 @@ static __init int tracer_init_tracefs(void)
- {
- 	struct dentry *d_tracer;
- 
-+	trace_file_notify_init();
- 	trace_access_lock_init();
- 
- 	d_tracer = tracing_init_dentry();
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index d80cee49e0eb..46f20c9bcf36 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -17,6 +17,7 @@
- #include <linux/compiler.h>
- #include <linux/trace_seq.h>
- #include <linux/glob.h>
-+#include <linux/workqueue.h>
- 
- #ifdef CONFIG_FTRACE_SYSCALLS
- #include <asm/unistd.h>		/* For NR_SYSCALLS	     */
-@@ -302,6 +303,10 @@ struct trace_array {
- 	struct dentry		*options;
- 	struct dentry		*percpu_dir;
- 	struct dentry		*event_dir;
-+#ifdef CONFIG_TRACE_FSNOTIFY
-+	struct dentry		*d_trace;
-+	struct work_struct	notify_work;
-+#endif
- 	struct trace_options	*topts;
- 	struct list_head	systems;
- 	struct list_head	events;
-@@ -774,6 +779,16 @@ int trace_pid_write(struct trace_pid_list *filtered_pids,
- 		    struct trace_pid_list **new_pid_list,
- 		    const char __user *ubuf, size_t cnt);
- 
-+#ifdef CONFIG_TRACE_FSNOTIFY
-+
-+void trace_file_notify(struct trace_array *tr);
-+
-+#else /* !CONFIG_TRACE_FSNOTIFY */
-+
-+#define trace_file_notify(tr) do {} while (0)
-+
-+#endif /* !CONFIG_TRACE_FSNOTIFY */
-+
- #ifdef CONFIG_TRACER_MAX_TRACE
- void update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu,
- 		   void *cond_data);
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index a745b0cee5d3..911bb635fb4e 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -323,6 +323,7 @@ check_critical_timing(struct trace_array *tr,
- 	u64 T0, T1, delta;
- 	unsigned long flags;
- 	int pc;
-+	bool notify = false;
- 
- 	T0 = data->preempt_timestamp;
- 	T1 = ftrace_now(cpu);
-@@ -353,6 +354,7 @@ check_critical_timing(struct trace_array *tr,
- 	if (likely(!is_tracing_stopped())) {
- 		tr->max_latency = delta;
- 		update_max_tr_single(tr, current, cpu);
-+		notify = true;
- 	}
- 
- 	max_sequence++;
-@@ -364,6 +366,9 @@ check_critical_timing(struct trace_array *tr,
- 	data->critical_sequence = max_sequence;
- 	data->preempt_timestamp = ftrace_now(cpu);
- 	__trace_function(tr, CALLER_ADDR0, parent_ip, flags, pc);
-+
-+	if (unlikely(notify))
-+		trace_file_notify(tr);
- }
- 
- static nokprobe_inline void
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index 743b2b520d34..c87e901108b9 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -437,6 +437,8 @@ probe_wakeup_sched_switch(void *ignore, bool preempt,
- 	long disabled;
- 	int cpu;
- 	int pc;
-+	bool report = false;
-+	struct trace_array *tr = wakeup_trace;
- 
- 	tracing_record_cmdline(prev);
- 
-@@ -481,7 +483,8 @@ probe_wakeup_sched_switch(void *ignore, bool preempt,
- 	T1 = ftrace_now(cpu);
- 	delta = T1-T0;
- 
--	if (!report_latency(wakeup_trace, delta))
-+	report = report_latency(wakeup_trace, delta);
-+	if (!report)
- 		goto out_unlock;
- 
- 	if (likely(!is_tracing_stopped())) {
-@@ -495,6 +498,8 @@ probe_wakeup_sched_switch(void *ignore, bool preempt,
- 	local_irq_restore(flags);
- out:
- 	atomic_dec(&per_cpu_ptr(wakeup_trace->trace_buffer.data, cpu)->disabled);
-+	if (unlikely(report))
-+		trace_file_notify(tr);
- }
- 
- static void __wakeup_reset(struct trace_array *tr)
--- 
-2.17.1
+diff --git a/arch/arm/plat-omap/dma.c b/arch/arm/plat-omap/dma.c
+index d4012d6c0dcb..4c6d9f4b43b7 100644
+--- a/arch/arm/plat-omap/dma.c
++++ b/arch/arm/plat-omap/dma.c
+@@ -1449,7 +1449,7 @@ static void __exit omap_system_dma_exit(void)
+=20
+ MODULE_DESCRIPTION("OMAP SYSTEM DMA DRIVER");
+ MODULE_LICENSE("GPL");
+-MODULE_ALIAS("platform:" DRIVER_NAME);
++// MODULE_ALIAS("platform:" DRIVER_NAME);
+ MODULE_AUTHOR("Texas Instruments Inc");
+=20
+ /*
+--=20
+2.20.1
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/NzQYtNnh15ga6P8Xh8q/xgA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzPZmQACgkQAVBC80lX
+0GyDwAf/SgYmPrtTF8+iUUauV0KdwI6l+a4qYYskl9tAgfH/axW6hQVf26j0aIic
+55u/4T7IXQjAec6jxmv7XDxr2DVxh2P5T3SdSXk8cK8lwCRhSMsVi+IewcHerYaN
+4Ckfh+oXYu90R9I+CjduPY8hKerB+90BUPHcW9fbNHO24iiuI+K+rYGzV1q5RuJV
+AhYau2ZgLUg+yUcc6g7waN4LDdiop1yClQP8oF5wwavQk8jaIQGGJDO6cmejJ8U6
+AUlYQePyun88mHa8Sk55h5NOxA1YWkygNHYEn+coQnjtGiVDc9pvbqK6Y0w7UeIo
+H7kh7+4X7CJf3wQ9QpGpq8mA8OtuTw==
+=k50I
+-----END PGP SIGNATURE-----
+
+--Sig_/NzQYtNnh15ga6P8Xh8q/xgA--
