@@ -2,145 +2,102 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F2DC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAC1C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A36208C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6922C2087F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:53:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cjQiXbqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfEEIxe (ORCPT
+        id S1727635AbfEEIxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 04:53:34 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50262 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727388AbfEEIxd (ORCPT
+        Sun, 5 May 2019 04:53:36 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43913 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727601AbfEEIxf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 04:53:33 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x458qBo9143243
-        for <linux-kernel@vger.kernel.org>; Sun, 5 May 2019 04:53:32 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s9raq747a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 04:53:32 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Sun, 5 May 2019 09:53:29 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 5 May 2019 09:53:26 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x458rPKe63242432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 5 May 2019 08:53:25 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7928852052;
-        Sun,  5 May 2019 08:53:25 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.112])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 9E0295204F;
-        Sun,  5 May 2019 08:53:24 +0000 (GMT)
-Date:   Sun, 5 May 2019 11:53:23 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Helge Deller <deller@gmx.de>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org
-Subject: Re: DISCONTIGMEM is deprecated
-References: <20190419094335.GJ18914@techsingularity.net>
- <20190419140521.GI7751@bombadil.infradead.org>
- <20190419142835.GM18914@techsingularity.net>
- <9e7b80a9-b90e-ac04-8b30-b2f285cd4432@gmx.de>
+        Sun, 5 May 2019 04:53:35 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e108so8932450ote.10
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 01:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=daDeBA8D0turtah81O0f+d3JFTWpkur5O2h2PhMenYM=;
+        b=cjQiXbqV0dxlXQar/ns7jLS7PVkX3h9rzrH2aED7GoiJW53AIYSX0bdhsDfRUscDTv
+         MRIFJysAUWsYhyIiE8qQ2dsPPPNoBOkrHrxJOkCVxHFhUyrbj7BS+Go+fE+s+4Z5yOfD
+         XWbmkcv8XQL45FPMJa7ugnn43gXmKwMcMvEGrQ9tVtZKWFKh+LUFugDMA2WOyAw+hNuD
+         hDHwA0OMZmuZm7DWuBdqx378xiFJ08nWtrtWXbrmTFdV9S1qs4v1w1XClGvIBBRHSGHU
+         8shBZPBvvkywFCUFs82J5tUS0DG3NlQx8t3yUDCmo/z/Ufbuzo3E0sIDBDjrcgVT3u9K
+         hYtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=daDeBA8D0turtah81O0f+d3JFTWpkur5O2h2PhMenYM=;
+        b=Dmu36IA9wEFMOkLlaY4263nfXfNzCUhIft8K0frO4JzAUt2eKjswcJNrLQ+U2xs5OQ
+         EoJWBxIt0JmVe8L2Z7XgLZLw0FyjeG6cjCoMFZfvuCxoR1VOImIrVJy1TRRPw9Edbmzv
+         oAiJXtz9ciTgvCm649NGVnCRqtLg/f0tymSNQpGCAWJlyEsAKuy0ZSWihPPeRZcckUVf
+         GYV+ABtr/IHrydJsUB9rDmUxdfS/jR/mbbpL6xfeXnCef0NXfAnjBpTU4FgIdCUcboDP
+         mNCgwPmW+MikEjGzPfczEQQgtzTcuhXZ/l+4lNox5bRbfMoypDWUf7NJawG9zkLEyIRA
+         F18Q==
+X-Gm-Message-State: APjAAAWyNQ1XezrkqIZXwodZtUPE8TQcYVlKsHweJTrF9L6rENtyZcDF
+        WGqT+CC1hGeyA8zN4vXSDgUcxfQDXiv6Azp5T1GSWA==
+X-Google-Smtp-Source: APXvYqxypsOxhisCL6iasTk+odHglTg1kI9HqYO7/GE2rZoa/z93b/55YRTHsWPdk7tMeM8b63vWVC0FMrDHpW0TAtM=
+X-Received: by 2002:a9d:5612:: with SMTP id e18mr12667305oti.109.1557046414651;
+ Sun, 05 May 2019 01:53:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e7b80a9-b90e-ac04-8b30-b2f285cd4432@gmx.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19050508-0012-0000-0000-0000031878B9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050508-0013-0000-0000-00002150EEE3
-Message-Id: <20190505085322.GH15755@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-05_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=796 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905050080
+References: <20190504102451.512405835@linuxfoundation.org> <20190505030044.q3dlgd5bhfx5txmf@xps.therub.org>
+ <20190505070854.GA3895@kroah.com>
+In-Reply-To: <20190505070854.GA3895@kroah.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sun, 5 May 2019 14:23:22 +0530
+Message-ID: <CA+G9fYv668HB5nZSn_drMd5cLhfH7GP0NxDsF88wtp3MUAMimA@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/23] 4.19.40-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Fri, Apr 19, 2019 at 10:08:31PM +0200, Helge Deller wrote:
-> On 19.04.19 16:28, Mel Gorman wrote:
-> > On Fri, Apr 19, 2019 at 07:05:21AM -0700, Matthew Wilcox wrote:
-> >> On Fri, Apr 19, 2019 at 10:43:35AM +0100, Mel Gorman wrote:
-> >>> DISCONTIG is essentially deprecated and even parisc plans to move to
-> >>> SPARSEMEM so there is no need to be fancy, this patch simply disables
-> >>> watermark boosting by default on DISCONTIGMEM.
-> >>
-> >> I don't think parisc is the only arch which uses DISCONTIGMEM for !NUMA
-> >> scenarios.  Grepping the arch/ directories shows:
-> >>
-> >> alpha (does support NUMA, but also non-NUMA DISCONTIGMEM)
-> >> arc (for supporting more than 1GB of memory)
-> >> ia64 (looks complicated ...)
-> >> m68k (for multiple chunks of memory)
-> >> mips (does support NUMA but also non-NUMA)
-> >> parisc (both NUMA and non-NUMA)
-> >>
-> >> I'm not sure that these architecture maintainers even know that DISCONTIGMEM
-> >> is deprecated.  Adding linux-arch to the cc.
+On Sun, 5 May 2019 at 12:38, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Sat, May 04, 2019 at 10:00:44PM -0500, Dan Rue wrote:
+> > On Sat, May 04, 2019 at 12:25:02PM +0200, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 4.19.40 release.
+> > > There are 23 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, plea=
+se
+> > > let me know.
+> > >
+> > > Responses should be made by Mon 06 May 2019 10:24:19 AM UTC.
+> > > Anything received after that time might be too late.
 > >
-> > Poor wording then -- yes, DISCONTIGMEM is still used but look where it's
-> > used. I find it impossible to believe that any new arch would support
-> > DISCONTIGMEM or that DISCONTIGMEM would be selected when SPARSEMEM is
-> > available.`It's even more insane when you consider that SPARSEMEM can be
-> > extended to support VMEMMAP so that it has similar overhead to FLATMEM
-> > when mapping pfns to struct pages and vice-versa.
-> 
-> FYI, on parisc we will switch from DISCONTIGMEM to SPARSEMEM with kernel 5.2.
-> The patch was quite simple and it's currently in the for-next tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git/commit/?h=for-next&id=281b718721a5e78288271d632731cea9697749f7
+> >
+> > Results from Linaro=E2=80=99s test farm.
+> > Regressions detected.
+>
+> Really?  Where?
 
-A while ago I've sent a patch that removes ARCH_DISCARD_MEMBLOCK option [1]
-so the hunk below is not needed:
+Not really.
+selftest: net: msg_zerocopy.sh is an intermittent failure on qemu_i386 devi=
+ce.
+We could ignore this failure as known issues.
 
-diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-index c8038165b81f..26c215570adf 100644
---- a/arch/parisc/Kconfig
-+++ b/arch/parisc/Kconfig
-@@ -36,6 +36,7 @@ config PARISC
- 	select GENERIC_STRNCPY_FROM_USER
- 	select SYSCTL_ARCH_UNALIGN_ALLOW
- 	select SYSCTL_EXCEPTION_TRACE
-+	select ARCH_DISCARD_MEMBLOCK
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select VIRT_TO_BUS
- 	select MODULES_USE_ELF_RELA
-
-
-[1] https://lore.kernel.org/lkml/1556102150-32517-1-git-send-email-rppt@linux.ibm.com/
- 
-> Helge
-> 
-
--- 
-Sincerely yours,
-Mike.
-
+- Naresh
