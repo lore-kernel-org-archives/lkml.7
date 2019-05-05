@@ -2,128 +2,91 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C324C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 20:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165CBC04AAB
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 20:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF95F204EC
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 20:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="WgHyk+Wv"
+	by mail.kernel.org (Postfix) with ESMTP id E3437206A3
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 20:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfEEUUS (ORCPT
+        id S1727806AbfEEUbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 16:20:18 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:37113 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbfEEUUR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 16:20:17 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        Sun, 5 May 2019 16:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726905AbfEEUbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 16:31:51 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2138C886BF;
-        Mon,  6 May 2019 08:20:15 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1557087615;
-        bh=vATUAoEO7QEhNVmEPL+O/0zdtf8Mmb4iZycPsuNK0o8=;
-        h=From:To:CC:Subject:Date:References;
-        b=WgHyk+WvZoLfwP3WXz3ohPi4CAZg3P0T537uuoQE2o0pGKcpe8iOHgsD+Cc8dog8N
-         mSKHAPJQaNTfmAKBsXkxd7f4qUYHVLpbK9asuVu8CYjESLQMPYZgGYQa0TxHrWSAPh
-         YsykJEGGueOA/+A8idfoQCeE9QUbdMhCBT1Tk9CXxr9uf/3izZ8ABF0N9QxgIH2N1K
-         Jo/QctoRuZ8dMkCGrwsp0DvVfg/TuI3Sd5cxNz4ImM5goDvXuldRokipiJgXfvNdnB
-         xCxFEN5985J47kLQa8PPK6a6wEw+XIF1BfBSdEU985vWlhip4IOTsG4B5PR0FGU3em
-         IHBOHrJ9QKmaA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5ccf457f0001>; Mon, 06 May 2019 08:20:15 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Mon, 6 May 2019 08:20:15 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Mon, 6 May 2019 08:20:15 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     David Miller <davem@davemloft.net>
-CC:     "jon.maloy@ericsson.com" <jon.maloy@ericsson.com>,
-        "ying.xue@windriver.com" <ying.xue@windriver.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tipc: Avoid copying bytes beyond the supplied data
-Thread-Topic: [PATCH] tipc: Avoid copying bytes beyond the supplied data
-Thread-Index: AQHVAJSPla9XQI+X40m6eIT6p/LBgg==
-Date:   Sun, 5 May 2019 20:20:14 +0000
-Message-ID: <306471ba2dc54014a77b090d2cf6a7c7@svr-chch-ex1.atlnz.lc>
-References: <20190502031004.7125-1-chris.packham@alliedtelesis.co.nz>
- <20190504.004449.945185836330139212.davem@davemloft.net>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ADEB20651;
+        Sun,  5 May 2019 20:31:47 +0000 (UTC)
+Date:   Sun, 5 May 2019 16:31:45 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, atishp04@gmail.com,
+        bpf@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>, dancol@google.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dietmar.eggemann@arm.com, duyuchao <yuchao.du@unisoc.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        =?UTF-8?B?TWljaGHFgg==?= Gregorczyk <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Olof Johansson <olof@lixom.net>, qais.yousef@arm.com,
+        rdunlap@infradead.org, Shuah Khan <shuah@kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>, yhs@fb.com
+Subject: Re: [PATCH v2] kheaders: Move from proc to sysfs
+Message-ID: <20190505163145.45f77e44@oasis.local.home>
+In-Reply-To: <20190505132623.GA3076@localhost>
+References: <20190504121213.183203-1-joel@joelfernandes.org>
+        <20190504122158.GA23535@kroah.com>
+        <20190504123650.GA229151@google.com>
+        <20190505091030.GA25646@kroah.com>
+        <20190505132623.GA3076@localhost>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/05/19 4:45 PM, David Miller wrote:=0A=
-> From: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
-> Date: Thu,  2 May 2019 15:10:04 +1200=0A=
-> =0A=
->> TLV_SET is called with a data pointer and a len parameter that tells us=
-=0A=
->> how many bytes are pointed to by data. When invoking memcpy() we need=0A=
->> to careful to only copy len bytes.=0A=
->>=0A=
->> Previously we would copy TLV_LENGTH(len) bytes which would copy an extra=
-=0A=
->> 4 bytes past the end of the data pointer which newer GCC versions=0A=
->> complain about.=0A=
->>=0A=
->>   In file included from test.c:17:=0A=
->>   In function 'TLV_SET',=0A=
->>       inlined from 'test' at test.c:186:5:=0A=
->>   /usr/include/linux/tipc_config.h:317:3:=0A=
->>   warning: 'memcpy' forming offset [33, 36] is out of the bounds [0, 32]=
-=0A=
->>   of object 'bearer_name' with type 'char[32]' [-Warray-bounds]=0A=
->>       memcpy(TLV_DATA(tlv_ptr), data, tlv_len);=0A=
->>       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=0A=
->>   test.c: In function 'test':=0A=
->>   test.c::161:10: note:=0A=
->>   'bearer_name' declared here=0A=
->>       char bearer_name[TIPC_MAX_BEARER_NAME];=0A=
->>            ^~~~~~~~~~~=0A=
->>=0A=
->> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
-> =0A=
-> But now the pad bytes at the end are uninitialized.=0A=
-> =0A=
-> The whole idea is that the encapsulating TLV object has to be rounded=0A=
-> up in size based upon the given 'len' for the data.=0A=
-> =0A=
-=0A=
-TLV_LENGTH() does not account for any padding bytes due to the =0A=
-alignment. TLV_SPACE() does but that wasn't used in the code before my =0A=
-change.=0A=
-=0A=
-Are you suggesting something like this=0A=
-=0A=
-=0A=
--        if (len && data)=0A=
--               memcpy(TLV_DATA(tlv_ptr), data, tlv_len);=0A=
-+        if (len && data) {=0A=
-+               memcpy(TLV_DATA(tlv_ptr), data, len);=0A=
-+               memset(TLV_DATA(tlv_ptr) + len, 0, TLV_SPACE(len) - =0A=
-TLV_LENGTH(len));=0A=
-+        }=0A=
-=0A=
-=0A=
+On Sun, 5 May 2019 13:26:23 +0000
+Joel Fernandes <joel@joelfernandes.org> wrote:
+
+> On Sun, May 05, 2019 at 11:10:30AM +0200, Greg KH wrote:
+> > On Sat, May 04, 2019 at 08:36:50AM -0400, Joel Fernandes wrote:  
+> > > > But, you should change S_IRUGO to the correct octal number, checkpatch
+> > > > should have barfed on this change.  
+> > > 
+> > > fixed, below is the updated patch inline, thanks!  
+> > 
+> > Please resend as a "real" submission, doing so in this format is a bit
+> > more difficult to apply.  
+> 
+> git am --scissors can do it, but no problem I will send as a formal
+> submission. Thanks a lot.
+>
+
+True, but a lot of us depend on scripts to pull in patches from our
+INBOX. Which is why we like them to stay with the standard format.
+
+-- Steve
