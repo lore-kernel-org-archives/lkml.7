@@ -2,123 +2,76 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3814AC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FDEC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF835205F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:04:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8faVjn6"
+	by mail.kernel.org (Postfix) with ESMTP id E5A3D205F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfEEVEG (ORCPT
+        id S1727999AbfEEVQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 17:04:06 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37033 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727295AbfEEVEF (ORCPT
+        Sun, 5 May 2019 17:16:31 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56518 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727765AbfEEVQa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 17:04:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a12so4569717wrn.4;
-        Sun, 05 May 2019 14:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vMH6xa5vG6EX8XBbkBtYslMnAs8BsmMKlqexgkDh3Cs=;
-        b=j8faVjn6syF+DgTvcVgaIDAdVkn3kt2ga79YG6xUEfEFy7/IuqkS2r3LXCH6M2Tdni
-         vWcShVeoYYblirt7e2oD8i+8WQu6vONcLhRCKxZb7fJECezRixXdTfbs7qk/ah26kScC
-         jZYIpudnlqSqcHksltZUlvRo9sZ6qd25zLQmbCgpnY/06MO0CCt0/SPoh6LK7hPRZ8Yb
-         duKE5eDstjAcVDdzi0vs1jPupE/z89eXDFGoaF745ZOQDsQowauDnw5L7sF4FKCwd9dU
-         0YR4AOYWDI56WP3fx0eD1e/3oRxGCCc6tKluMaSpcpfgkMJVOZhmZlDBIDgV8w421Uw6
-         aFTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vMH6xa5vG6EX8XBbkBtYslMnAs8BsmMKlqexgkDh3Cs=;
-        b=R11AW+2WIaWxPqUL6ZUXeV0rs6cuI/OBg8KgrvS3s7tC6YzA+AvCGwSSCsYoA3x+iW
-         eenkEzw9aIRZ5lJPJ6Kv0Wk18dw3x1t4IgGtOBmqB2ieRLqCzOs6OCKUCa5irbupiQR9
-         781DfqfeuRl+lufzEusT5M51RiXC6Ud4XHneS2p3JPd+DFuHw0J/5D36hilrRpPynpeS
-         2r89w8sqimAkSy23NZ/pw2jKYu0LSerguyCKuBQvVur6PdV2fPQYIEDaUKWscFCXYx5k
-         R9JrADI3mw0rKyTvbBieMYqBX26CMXS4GKCRCEvipaCDOXoQVQtFleGGo2UQ0620SJ5S
-         JN4g==
-X-Gm-Message-State: APjAAAUUMlZl7NyMi4tcEctH48U1Z2wEhK/wJCh5/z/qoUFrUQa7b+fu
-        L0uYmum/rto4qkPRESKtegQS0srK/4g=
-X-Google-Smtp-Source: APXvYqymDn4fVEB+cwMS7cUK24mGREV7v/jmrInqcZtfqPTQeDh/HqGXGn8YEoadCIsftPLvfLg46g==
-X-Received: by 2002:adf:f349:: with SMTP id e9mr6890179wrp.71.1557090243564;
-        Sun, 05 May 2019 14:04:03 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd4:5700:d9a7:917c:8564:c504? (p200300EA8BD45700D9A7917C8564C504.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:d9a7:917c:8564:c504])
-        by smtp.googlemail.com with ESMTPSA id 15sm12990276wmx.23.2019.05.05.14.04.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 14:04:02 -0700 (PDT)
-Subject: Re: [PATCH 2/2] net: phy: sfp: enable i2c-bus detection on ACPI based
- systems
-To:     Ruslan Babayev <ruslan@babayev.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     xe-linux-external@cisco.com,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190505193435.3248-1-ruslan@babayev.com>
- <20190505205140.17052-2-ruslan@babayev.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <468586e7-4ebf-1156-ed61-4c5dca0c0e63@gmail.com>
-Date:   Sun, 5 May 2019 23:03:57 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 5 May 2019 17:16:30 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hNOUh-0006yv-SY; Sun, 05 May 2019 21:16:24 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] brcmfmac: remove redundant u32 comparison with less than zero
+Date:   Sun,  5 May 2019 22:16:23 +0100
+Message-Id: <20190505211623.3153-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190505205140.17052-2-ruslan@babayev.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.05.2019 22:51, Ruslan Babayev wrote:
-> Lookup I2C adapter using the "i2c-bus" device property on ACPI based
-> systems similar to how it's done with DT.
-> 
-> An example DSD describing an SFP on an ACPI based system:
-> 
-> Device (SFP0)
-> {
->     Name (_HID, "PRP0001")
->     Name (_DSD, Package ()
->     {
->         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->         Package () {
->             Package () { "compatible", "sff,sfp" },
->             Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
->         },
->     })
-> }
-> 
-> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
-> Cc: xe-linux-external@cisco.com
-> ---
->  drivers/net/phy/sfp.c | 33 +++++++++++++++++++++++++--------
->  1 file changed, 25 insertions(+), 8 deletions(-)
-> 
-If we have a patch series touching more than one sub-system a typical
-approach is:
-- Send series to all persons / lists being responsible for the affected
-  subsystems
-- Maintainers will agree through which tree the series will go
-- Maintainers of the other subsystems will ACK their respective patches
-  of the series
+From: Colin Ian King <colin.king@canonical.com>
 
-I just received patch 2/2. The complete series (cover letter + two patches)
-should have gone to i2c and phylib maintainers + lists.
+The check for the u32 variable idx being less than zero is
+always false and is redundant. Remove it.
 
-As an additional hint regarding the commit message:
-I suppose you added this code to support a specific device. Wouldn't hurt
-if you mention which device it is.
+Addresses-Coverity: ("Unsigned compared against 0")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
+index 9d1f9ff25bfa..e874dddc7b7f 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/msgbuf.c
+@@ -375,7 +375,7 @@ brcmf_msgbuf_get_pktid(struct device *dev, struct brcmf_msgbuf_pktids *pktids,
+ 	struct brcmf_msgbuf_pktid *pktid;
+ 	struct sk_buff *skb;
+ 
+-	if (idx < 0 || idx >= pktids->array_size) {
++	if (idx >= pktids->array_size) {
+ 		brcmf_err("Invalid packet id %d (max %d)\n", idx,
+ 			  pktids->array_size);
+ 		return NULL;
+-- 
+2.20.1
+
