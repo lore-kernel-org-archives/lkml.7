@@ -2,108 +2,121 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA70C04AAC
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57790C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A9E208C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7E1208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfEEOns (ORCPT
+        id S1727767AbfEEOqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 10:43:48 -0400
-Received: from bout01.mta.xmission.com ([166.70.11.15]:45475 "EHLO
-        bout01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727325AbfEEOns (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 10:43:48 -0400
-Received: from mx01.mta.xmission.com ([166.70.13.211])
-        by bout01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <sbauer@plzdonthack.me>)
-        id 1hNIMc-00042t-7p; Sun, 05 May 2019 08:43:38 -0600
-Received: from plesk14-shared.xmission.com ([166.70.198.161] helo=plesk14.xmission.com)
-        by mx01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <sbauer@plzdonthack.me>)
-        id 1hNIMb-0007j9-Kk; Sun, 05 May 2019 08:43:38 -0600
-Received: from hacktheplanet (c-68-50-23-202.hsd1.in.comcast.net [68.50.23.202])
-        by plesk14.xmission.com (Postfix) with ESMTPSA id E6B3C1C5B9A;
-        Sun,  5 May 2019 14:43:36 +0000 (UTC)
-Date:   Sun, 5 May 2019 10:43:30 -0400
-From:   Scott Bauer <sbauer@plzdonthack.me>
-To:     David Kozub <zub@linux.fjfi.cvut.cz>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Message-ID: <20190505144330.GB1030@hacktheplanet>
-References: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
- <20190501134917.GC24132@infradead.org>
- <alpine.LRH.2.21.1905032058110.30331@linux.fjfi.cvut.cz>
+        Sun, 5 May 2019 10:46:16 -0400
+Received: from foss.arm.com ([217.140.101.70]:59214 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727325AbfEEOqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 10:46:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B972374;
+        Sun,  5 May 2019 07:46:15 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF2D63F575;
+        Sun,  5 May 2019 07:46:11 -0700 (PDT)
+Date:   Sun, 5 May 2019 15:46:08 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Michal Gregorczyk <michalgr@live.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        duyuchao <yuchao.du@unisoc.com>,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org
+Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
+Message-ID: <20190505144608.u3vsxyz5huveuskx@e107158-lin.cambridge.arm.com>
+References: <20190502204958.7868-1-joel@joelfernandes.org>
+ <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
+ <20190503134935.GA253329@google.com>
+ <20190505110423.u7g3f2viovvgzbtn@e107158-lin.cambridge.arm.com>
+ <20190505132949.GB3076@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.1905032058110.30331@linux.fjfi.cvut.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-XM-SPF: eid=1hNIMb-0007j9-Kk;;;mid=<20190505144330.GB1030@hacktheplanet>;;;hst=mx01.mta.xmission.com;;;ip=166.70.198.161;;;frm=sbauer@plzdonthack.me;;;spf=none
-X-SA-Exim-Connect-IP: 166.70.198.161
-X-SA-Exim-Mail-From: sbauer@plzdonthack.me
-Subject: Re: [PATCH 0/3] block: sed-opal: add support for shadow MBR done
- flag and write
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on mx01.mta.xmission.com)
+In-Reply-To: <20190505132949.GB3076@localhost>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 10:32:19PM +0200, David Kozub wrote:
-> On Wed, 1 May 2019, Christoph Hellwig wrote:
-> 
-> > > I successfully tested toggling the MBR done flag and writing the shadow MBR
-> > > using some tools I hacked together[4] with a Samsung SSD 850 EVO drive.
+On 05/05/19 13:29, Joel Fernandes wrote:
+> On Sun, May 05, 2019 at 12:04:24PM +0100, Qais Yousef wrote:
+> > On 05/03/19 09:49, Joel Fernandes wrote:
+> > > On Fri, May 03, 2019 at 01:12:34PM +0100, Qais Yousef wrote:
+> > > > Hi Joel
+> > > > 
+> > > > On 05/02/19 16:49, Joel Fernandes (Google) wrote:
+> > > > > The eBPF based opensnoop tool fails to read the file path string passed
+> > > > > to the do_sys_open function. This is because it is a pointer to
+> > > > > userspace address and causes an -EFAULT when read with
+> > > > > probe_kernel_read. This is not an issue when running the tool on x86 but
+> > > > > is an issue on arm64. This patch adds a new bpf function call based
+> > > > 
+> > > > I just did an experiment and if I use Android 4.9 kernel I indeed fail to see
+> > > > PATH info when running opensnoop. But if I run on 5.1-rc7 opensnoop behaves
+> > > > correctly on arm64.
+> > > > 
+> > > > My guess either a limitation that was fixed on later kernel versions or Android
+> > > > kernel has some strict option/modifications that make this fail?
+> > > 
+> > > Thanks a lot for checking, yes I was testing 4.9 kernel with this patch (pixel 3).
+> > > 
+> > > I am not sure what has changed since then, but I still think it is a good
+> > > idea to make the code more robust against such future issues anyway. In
+> > > particular, we learnt with extensive discussions that user/kernel pointers
+> > > are not necessarily distinguishable purely based on their address.
 > > 
-> > Can you submit the tool to util-linux so that we get it into distros?
+> > Yes I wasn't arguing against that. But the commit message is misleading or
+> > needs more explanation at least. I tried 4.9.y stable and arm64 worked on that
+> > too. Why do you think it's an arm64 problem?
 > 
-> There is already Scott's sed-opal-temp[1] and a fork by Jonas that adds
-> support for older version of these new IOCTLs[2]. There was already some
-> discussion of getting that to util-linux.[3]
-> 
-> While I like my hack, sed-opal-temp can do much more (my tool supports just
-> the few things I actually use). But there are two things which sed-opal-temp
-> currently lacks which my hack has:
-> 
-> * It can use a PBKDF2 hash (salted by disk serial number) of the password
->   rather than the password directly. This makes it compatible with sedutil
->   and I think it's also better practice (as firmware can contain many
->   surprises).
-> 
-> * It contains a 'PBA' (pre-boot authorization) tool. A tool intended to be
->   run from shadow mbr that asks for a password and uses it to unlock all
->   disks and set shadow mbr done flag, so after restart the computer boots
->   into the real OS.
-> 
-> @Scott: What are your plans with sed-opal-temp? If you want I can update
-> Jonas' patches to the adapted IOCTLs. What are your thoughts on PW hashing
-> and a PBA tool?
+> Well it is broken on at least on at least one arm64 device and the patch I
+> sent fixes it. We know that the bpf is using wrong kernel API so why not fix
+> it? Are you saying we should not fix it like in this patch? Or do you have
+> another fix in mind?
 
-I will accept any and all patches to sed opal tooling, I am not picky. I will
-also give up maintainership of it is someone else feels they can (rightfully
-so) do a better job.
+Again I have no issue with the new API. But the claim that it's a fix for
+a broken arm64 is a big stretch. AFAICT you don't understand the root cause of
+why copy_to_user_inatomic() fails in your case. Given that Android 4.9 has
+its own patches on top of 4.9 stable, it might be something that was introduced
+in one of these patches that breaks opensnoop, and by making it use the new API
+you might be simply working around the problem. All I can see is that vanilla
+4.9 stable works on arm64.
 
-Jon sent me a patch for the tool that will deal with writing to the shadow MBR,
-so once we know these patches are going in i'll pull that patch into the tool.
+So I am happy about introducing the new API but not happy with the commit
+message or the explanation given in it. Unless you can investigate the root
+cause and relate how this fixes it (and not workaround a problem you're
+specifically having) I think it's better to introduce this patch as a generic
+new API that is more robust to handle reading __user data in BPF and drop
+reference to opensnoop failures. They raise more questions and the real
+intention of this patch anyway is to provide the new correct way for BPF
+programs to read __user data regardless opensnoop fails or not AFAIU.
 
-Then I guess that leaves PBKDF2 which I don't think will be too hard to pull in.
+Cheers
 
-With regard to your PBA tool, is that actually being run post-uefi/pre-linux?
-IE are we writing your tool into the SMBR and that's what is being run on bootup?
-
-Jon, if you think it's a good idea can you ask David if Revanth or you wants
-to take over the tooling? Or if anyone else here wants to own it then let me know.
-
+--
+Qais Yousef
