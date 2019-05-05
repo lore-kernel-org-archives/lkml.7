@@ -2,366 +2,176 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2C0C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 04:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826ABC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 05:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CFB120675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 04:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B008920675
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 05:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="ZkM7nTTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfEEEUc (ORCPT
+        id S1726636AbfEEFAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 00:20:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54576 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726895AbfEEEUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 00:20:31 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3572430832CB;
-        Sun,  5 May 2019 04:20:31 +0000 (UTC)
-Received: from [10.72.12.197] (ovpn-12-197.pek2.redhat.com [10.72.12.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5ACA51001E80;
-        Sun,  5 May 2019 04:20:26 +0000 (UTC)
-Subject: Re: [PATCH net] vhost_net: fix possible infinite loop
-From:   Jason Wang <jasowang@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ppandit@redhat.com
-References: <1556177599-56248-1-git-send-email-jasowang@redhat.com>
- <20190425131021-mutt-send-email-mst@kernel.org>
- <f4b4ff70-d64f-c3fb-fe2e-97ef6c55bda0@redhat.com>
-Message-ID: <999ef863-2994-e0c0-fbb1-a6e92de3fd24@redhat.com>
-Date:   Sun, 5 May 2019 12:20:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 5 May 2019 01:00:07 -0400
+Received: from mx1.cock.li ([185.10.68.5]:60651 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725814AbfEEFAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 01:00:07 -0400
+X-Greylist: delayed 527 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 May 2019 01:00:05 EDT
 MIME-Version: 1.0
-In-Reply-To: <f4b4ff70-d64f-c3fb-fe2e-97ef6c55bda0@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Sun, 05 May 2019 04:20:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
+        t=1557031875; bh=I2FCNmKK327bFSGvkmTu/8fw2JSN3TtQWsMD6AuP8w0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZkM7nTTLiE2shejN5xCCMnCuCC3XaQ5JGBDl9ju9ynAnsCYHLtc+eV2ORRJ11ksXm
+         9IQ/hJfxrpZzjx3X5cXqJqXx1DaCuxeEpQHRcemqV/FipOX+YFP88QM8rLv1fGvhfj
+         rRgJhDIwkUV9m2fRjpP5juUm/DHl87njhsUaInIEOf4eB5ovWlEL8rXq5hXXS7uc+X
+         ZZl7HDPFgi930bAo5+9q+EUBR1SOuWjazFUJjj7SWR+u60/aYtc9xFkunlagwPorqc
+         L95oW27MZjVCsEniJ7cKlT0nEN5hSyFlfIWYZ4X9rDtDpP6lYlTh4i/gbG7lGxd1iZ
+         hplrntcj/ztpQ==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 05 May 2019 04:51:15 +0000
+From:   vsnsdualce2@redchan.it
+To:     rhkramer@gmail.com
+Cc:     debian-user@lists.debian.org, linux-kernel@vger.kernel.org,
+        Ivan Ivanov <qmastery16@gmail.com>, mailinglists@mattcrews.com,
+        jhasler@newsguy.com, scdbackup@gmx.net, richard@walnut.gen.nz,
+        curty@free.fr, jmtd@debian.org, mick.crane@gmail.com,
+        tomas@tuxteam.de, steve@einval.com, joe@jretrading.com,
+        rms@gnu.org, esr@thyrsus.com
+Subject: Re: Can a recipients rights under GNU GPL be revoked? - Bradley M.
+ Kuhn is not an attorney (he should go get his JD and get licensed).
+Message-ID: <60c1b08305c5326e3503f51d81622541@redchan.it>
+X-Sender: vsnsdualce2@redchan.it
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> of the GPL.  (And Bradley Kuhn is a lawyer -- my older mind can't 
+> remember if
+> he was the lawyer who argued (and lost) a previous free software case 
+> (don't
+> remember the details) in front of the US Supreme Court.  (Sometimes 
+> referred
 
-On 2019/4/26 下午3:35, Jason Wang wrote:
->
-> On 2019/4/26 上午1:52, Michael S. Tsirkin wrote:
->> On Thu, Apr 25, 2019 at 03:33:19AM -0400, Jason Wang wrote:
->>> When the rx buffer is too small for a packet, we will discard the vq
->>> descriptor and retry it for the next packet:
->>>
->>> while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
->>>                           &busyloop_intr))) {
->>> ...
->>>     /* On overrun, truncate and discard */
->>>     if (unlikely(headcount > UIO_MAXIOV)) {
->>>         iov_iter_init(&msg.msg_iter, READ, vq->iov, 1, 1);
->>>         err = sock->ops->recvmsg(sock, &msg,
->>>                      1, MSG_DONTWAIT | MSG_TRUNC);
->>>         pr_debug("Discarded rx packet: len %zd\n", sock_len);
->>>         continue;
->>>     }
->>> ...
->>> }
->>>
->>> This makes it possible to trigger a infinite while..continue loop
->>> through the co-opreation of two VMs like:
->>>
->>> 1) Malicious VM1 allocate 1 byte rx buffer and try to slow down the
->>>     vhost process as much as possible e.g using indirect descriptors or
->>>     other.
->>> 2) Malicious VM2 generate packets to VM1 as fast as possible
->>>
->>> Fixing this by checking against weight at the end of RX and TX
->>> loop. This also eliminate other similar cases when:
->>>
->>> - userspace is consuming the packets in the meanwhile
->>> - theoretical TOCTOU attack if guest moving avail index back and forth
->>>    to hit the continue after vhost find guest just add new buffers
->>>
->>> This addresses CVE-2019-3900.
->>>
->>> Fixes: d8316f3991d20 ("vhost: fix total length when packets are too 
->>> short")
->> I agree this is the real issue.
->>
->>> Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
->> This is just a red herring imho. We can stick this on any vhost patch :)
->>
->>> Signed-off-by: Jason Wang <jasowang@redhat.com>
->>> ---
->>>   drivers/vhost/net.c | 41 +++++++++++++++++++++--------------------
->>>   1 file changed, 21 insertions(+), 20 deletions(-)
->>>
->>> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
->>> index df51a35..fb46e6b 100644
->>> --- a/drivers/vhost/net.c
->>> +++ b/drivers/vhost/net.c
->>> @@ -778,8 +778,9 @@ static void handle_tx_copy(struct vhost_net 
->>> *net, struct socket *sock)
->>>       int err;
->>>       int sent_pkts = 0;
->>>       bool sock_can_batch = (sock->sk->sk_sndbuf == INT_MAX);
->>> +    bool next_round = false;
->>>   -    for (;;) {
->>> +    do {
->>>           bool busyloop_intr = false;
->>>             if (nvq->done_idx == VHOST_NET_BATCH)
->>> @@ -845,11 +846,10 @@ static void handle_tx_copy(struct vhost_net 
->>> *net, struct socket *sock)
->>>           vq->heads[nvq->done_idx].id = cpu_to_vhost32(vq, head);
->>>           vq->heads[nvq->done_idx].len = 0;
->>>           ++nvq->done_idx;
->>> -        if (vhost_exceeds_weight(++sent_pkts, total_len)) {
->>> -            vhost_poll_queue(&vq->poll);
->>> -            break;
->>> -        }
->>> -    }
->>> +    } while (!(next_round = vhost_exceeds_weight(++sent_pkts, 
->>> total_len)));
->>> +
->>> +    if (next_round)
->>> +        vhost_poll_queue(&vq->poll);
->>>         vhost_tx_batch(net, nvq, sock, &msg);
->>>   }
->>> @@ -873,8 +873,9 @@ static void handle_tx_zerocopy(struct vhost_net 
->>> *net, struct socket *sock)
->>>       struct vhost_net_ubuf_ref *uninitialized_var(ubufs);
->>>       bool zcopy_used;
->>>       int sent_pkts = 0;
->>> +    bool next_round = false;
->>>   -    for (;;) {
->>> +    do {
->>>           bool busyloop_intr;
->>>             /* Release DMAs done buffers first */
->>> @@ -951,11 +952,10 @@ static void handle_tx_zerocopy(struct 
->>> vhost_net *net, struct socket *sock)
->>>           else
->>>               vhost_zerocopy_signal_used(net, vq);
->>>           vhost_net_tx_packet(net);
->>> -        if (unlikely(vhost_exceeds_weight(++sent_pkts, total_len))) {
->>> -            vhost_poll_queue(&vq->poll);
->>> -            break;
->>> -        }
->>> -    }
->>> +    } while (!(next_round = vhost_exceeds_weight(++sent_pkts, 
->>> total_len)));
->>> +
->>> +    if (next_round)
->>> +        vhost_poll_queue(&vq->poll);
->>>   }
->>>     /* Expects to be always run from workqueue - which acts as
->>> @@ -1134,6 +1134,7 @@ static void handle_rx(struct vhost_net *net)
->>>       struct iov_iter fixup;
->>>       __virtio16 num_buffers;
->>>       int recv_pkts = 0;
->>> +    bool next_round = false;
->>>         mutex_lock_nested(&vq->mutex, VHOST_NET_VQ_RX);
->>>       sock = vq->private_data;
->>> @@ -1153,8 +1154,11 @@ static void handle_rx(struct vhost_net *net)
->>>           vq->log : NULL;
->>>       mergeable = vhost_has_feature(vq, VIRTIO_NET_F_MRG_RXBUF);
->>>   -    while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
->>> -                              &busyloop_intr))) {
->>> +    do {
->>> +        sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
->>> +                              &busyloop_intr);
->>> +        if (!sock_len)
->>> +            break;
->>>           sock_len += sock_hlen;
->>>           vhost_len = sock_len + vhost_hlen;
->>>           headcount = get_rx_bufs(vq, vq->heads + nvq->done_idx,
->>> @@ -1239,12 +1243,9 @@ static void handle_rx(struct vhost_net *net)
->>>               vhost_log_write(vq, vq_log, log, vhost_len,
->>>                       vq->iov, in);
->>>           total_len += vhost_len;
->>> -        if (unlikely(vhost_exceeds_weight(++recv_pkts, total_len))) {
->>> -            vhost_poll_queue(&vq->poll);
->>> -            goto out;
->>> -        }
->>> -    }
->>> -    if (unlikely(busyloop_intr))
->>> +    } while (!(next_round = vhost_exceeds_weight(++recv_pkts, 
->>> total_len)));
->>> +
->>> +    if (unlikely(busyloop_intr || next_round))
->>>           vhost_poll_queue(&vq->poll);
->>>       else
->>>           vhost_net_enable_vq(net, vq);
->>
->> I'm afraid with this addition the code is too much like spagetty. What
->> does next_round mean?  Just that we are breaking out of loop?
->
->
-> Yes, we can have a better name of course.
->
->
->> That is
->> what goto is for...  Either let's have for(;;) with goto/break to get
->> outside or a while loop with a condition.  Both is just unreadable.
->>
->> All these checks in 3 places are exactly the same on all paths and they
->> are slow path. Why don't we put this in a function?
->
->
-> The point I think is, we want the weight to be checked in both fast 
-> path and slow path.
->
->
->> E.g. like the below.
->> Warning: completely untested.
->>
->> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->>
->> ---
->>
->> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
->> index df51a35cf537..a0f89a504cd9 100644
->> --- a/drivers/vhost/net.c
->> +++ b/drivers/vhost/net.c
->> @@ -761,6 +761,23 @@ static int vhost_net_build_xdp(struct 
->> vhost_net_virtqueue *nvq,
->>       return 0;
->>   }
->>   +/* Returns true if caller needs to go back and re-read the ring. */
->> +static bool empty_ring(struct vhost_net *net, struct vhost_virtqueue 
->> *vq,
->> +               int pkts, size_t total_len, bool busyloop_intr)
->> +{
->> +    if (unlikely(busyloop_intr)) {
->> +        vhost_poll_queue(&vq->poll);
->> +    } else if (unlikely(vhost_enable_notify(&net->dev, vq))) {
->> +        /* They have slipped one in meanwhile: check again. */
->> +        vhost_disable_notify(&net->dev, vq);
->> +        if (!vhost_exceeds_weight(pkts, total_len))
->> +            return true;
->> +        vhost_poll_queue(&vq->poll);
->> +    }
->> +    /* Nothing new?  Wait for eventfd to tell us they refilled. */
->> +    return false;
->> +}
->
->
-> Ring empy is not the only places that needs care. E.g for RX, we need 
-> care about overrun and when userspace is consuming the packet in the 
-> same time. So there's no need to toggle vq notification in those two.
->
->
->> +
->>   static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
->>   {
->>       struct vhost_net_virtqueue *nvq = &net->vqs[VHOST_NET_VQ_TX];
->> @@ -790,15 +807,10 @@ static void handle_tx_copy(struct vhost_net 
->> *net, struct socket *sock)
->>           /* On error, stop handling until the next kick. */
->>           if (unlikely(head < 0))
->>               break;
->> -        /* Nothing new?  Wait for eventfd to tell us they refilled. */
->>           if (head == vq->num) {
->> -            if (unlikely(busyloop_intr)) {
->> -                vhost_poll_queue(&vq->poll);
->> -            } else if (unlikely(vhost_enable_notify(&net->dev,
->> -                                vq))) {
->> -                vhost_disable_notify(&net->dev, vq);
->> +            if (unlikely(empty_ring(net, vq, ++sent_pkts,
->> +                        total_len, busyloop_intr)))
->>                   continue;
->> -            }
->>               break;
->>           }
->>   @@ -886,14 +898,10 @@ static void handle_tx_zerocopy(struct 
->> vhost_net *net, struct socket *sock)
->>           /* On error, stop handling until the next kick. */
->>           if (unlikely(head < 0))
->>               break;
->> -        /* Nothing new?  Wait for eventfd to tell us they refilled. */
->>           if (head == vq->num) {
->> -            if (unlikely(busyloop_intr)) {
->> -                vhost_poll_queue(&vq->poll);
->> -            } else if (unlikely(vhost_enable_notify(&net->dev, vq))) {
->> -                vhost_disable_notify(&net->dev, vq);
->> +            if (unlikely(empty_ring(net, vq, ++sent_pkts,
->> +                        total_len, busyloop_intr)))
->>                   continue;
->> -            }
->>               break;
->>           }
->>   @@ -1163,18 +1171,10 @@ static void handle_rx(struct vhost_net *net)
->>           /* On error, stop handling until the next kick. */
->>           if (unlikely(headcount < 0))
->>               goto out;
->> -        /* OK, now we need to know about added descriptors. */
->>           if (!headcount) {
->> -            if (unlikely(busyloop_intr)) {
->> -                vhost_poll_queue(&vq->poll);
->> -            } else if (unlikely(vhost_enable_notify(&net->dev, vq))) {
->> -                /* They have slipped one in as we were
->> -                 * doing that: check again. */
->> -                vhost_disable_notify(&net->dev, vq);
->> -                continue;
->> -            }
->> -            /* Nothing new?  Wait for eventfd to tell us
->> -             * they refilled. */
->> +            if (unlikely(empty_ring(net, vq, ++recv_pkts,
->> +                        total_len, busyloop_intr)))
->> +                    continue;
->>               goto out;
->>           }
->>           busyloop_intr = false;
->
-> The patch misses several other continue that need cares and there's 
-> another call of vhost_exceeds_weight() at the end of the loop.
->
-> So instead of duplicating check everywhere like:
->
-> for (;;) {
->     if (condition_x) {
->         if (empty_ring())
->             continue;
->         break;
->     }
->     if (condition_y) {
->         if (empty_ring());
->             continue;
->         break;
->     }
->     if (condition_z) {
->         if (empty_ring())
->             continue;
->         break;
->     }
->
-> }
->
-> What this patch did:
->
-> do {
->    if (condition_x)
->     continue;
->    if (condition_y)
->     continue;
->    if (condition_z)
->     continue;
-> } while(!need_break())
->
-> is much more compact and easier to read?
->
-> Thanks
+rhkramer@gmail.com:
+Bradley M. Kuhn is not an attorney, which is why he had to step down as 
+head
+of his organization and hire a lawyer to head the organization
+in his place: Bar rules do not allow lawyers to serve under a non-lawyer 
+in
+an organization, and the organization was essentially a pro-bono law 
+firm
+(which really needed a attorney in it's ranks...)
+
+https://en.wikipedia.org/wiki/Bradley_M._Kuhn
+
+Yes the "oh I just stepped down because we need a woman to head this 
+organization
+now" claim he makes is, in fact, disingenuous. What they needed is a 
+lawyer in
+the organization: and the lawyer could not be directed by non-lawyers.
+
+http://ebb.org/bkuhn/
+> Kuhn holds a summa cum laude B.S. in Computer Science from Loyola 
+> University in Maryland, and an M.S. in Computer Science from the 
+> University of Cincinnati.
+
+http://ebb.org/bkuhn/resume/
+No J.D., No law license.
 
 
-Hi Michael:
+I have both.
 
-Any more comments?
+I don't want to drag someone down, but I had to correct your mistake.
+Once he applies to law school, gets his degree, and later his license 
+I'm sure he will correct his as well.
 
-Thanks
 
+On 2019-01-28 00:35, rhkramer@gmail.com wrote:
+> On Sunday, January 27, 2019 07:24:17 PM rhkramer@gmail.com wrote:
+>> Resending to the list -- I didn't notice that Ivan had sent this to me
+>> only, and my reply, of course, then went to him only.
+>> 
+>> On Sunday, January 27, 2019 10:06:46 AM Ivan Ivanov wrote:
+>> > Yes: The linux devs can rescind their license grant. GPLv2 is a bare
+>> > license and is revocable by the grantor. Search for "vsnsdualce" "gpl"
+>> > online to find his messages which prove that, he is a lawyer and has
+>> > investigated this subject very well. I am CC'ing him in case you'd
+>> > like to request more information. So if you didn't like the Code of
+>> > Conduct covertly accepted behind the scenes against your will, and
+>> > maybe some other questionable political decisions in technical
+>> > projects
+> 
+> ...
+> 
+>> I *might* go read some of the stuff by vsnsdualce, but the Weboob 
+>> situation
+>> is not an example of a (free or GPL) license being rescinded.  (You 
+>> didn't
+>> quite say it was, but one could infer that is what you are trying to 
+>> say
+>> by its inclusion in the same paragraph.)
+> 
+> Ok, I went and read a few things by "vsnsdualce" re the GPL, in 
+> particular:
+> 
+> http://readlist.com/lists/gentoo.org/gentoo-user/42/213256.html
+> 
+> And from that, I went to:
+> 
+> https://copyleft.org/guide/comprehensive-gpl-guidech8.html#x11-540007.4
+> 
+> It seems clear that this is one of those things that I talked about in 
+> my
+> previous last paragraph (the aside, still quoted below) -- vsnsdualce 
+> is
+> stating his opinion / taking a position that is in opposition to the 
+> postions
+> / opinions of other lawyers.
+> 
+> I don't know how far he is willing to go to try to confirm his 
+> position, but
+> until a court case or something similar (and probably appeals) decides 
+> the
+> issue, there are two opinions.
+> 
+> If I had to guess / be which would prevail, I would bet on the side of
+> copyleft.org who, in a way are the successors (mcow) to the original 
+> author(s)
+> of the GPL.  (And Bradley Kuhn is a lawyer -- my older mind can't 
+> remember if
+> he was the lawyer who argued (and lost) a previous free software case 
+> (don't
+> remember the details) in front of the US Supreme Court.  (Sometimes 
+> referred
+> to as "the supremes", but they don't really sing that well (well, to be 
+> fair,
+> I guess I never heard them sing ;-)
+> 
+> Even if he was the guy that lost that case (I'm fairly sure it was 
+> someone
+> else), he is certainly a very experienced lawyer, and very familiar 
+> with the
+> issues around this license.  I would trust his opinion more that I 
+> would
+> "vsnsdualce"'s.
+> 
+> ...
+> 
+>> 
+>> Just another aside: One of my takes on lawyers is that they interpret 
+>> laws
+>> and take legal positions for various reasons, often to further their 
+>> own
+>> or their client's interests, and then are willing to fight the legal
+>> battle that may ensue.  A lawyer expressing an opinion does not make 
+>> that
+>> opinion correct / legal.
