@@ -2,89 +2,82 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9801BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EFAC46470
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 592AE2087F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557083581;
-	bh=vFRleH5x3XYIjIaPO4Mdt89X8FFdmsfdaCjM+ZfIqLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PzSdfp3MSvvLfMwV8vXgz5M8t0NOvgbNgHlT3dNw7AxZ1XfKbVj543jYvUHjqk9cn
-	 182fW50aKK2rrOgU/uavCGm5OSPIcUlgqaEJTvNnhjiUov61eEbjmsUUmDOPRprIRn
-	 uutv+O5Kw8GrmkWNNPnrkeD4e2szn5fEHNA/E25k=
+	by mail.kernel.org (Postfix) with ESMTP id EA4E3208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbfEETNA (ORCPT
+        id S1727803AbfEETdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 15:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfEETNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 15:13:00 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 381AC206DF;
-        Sun,  5 May 2019 19:12:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557083579;
-        bh=vFRleH5x3XYIjIaPO4Mdt89X8FFdmsfdaCjM+ZfIqLo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kFTP1rZGukRBFgJTmJg4OBBHtq9UuvpfpWszjrmZyEUqsQGiJNtapxDFs94sWPUHS
-         CyOoAMbcMgWppgcu1SF+7XgwqTcASCOoPMMoONcPTBbmsmEEEcpeWYX26QGj9vj3ef
-         +6ACtal3eByCJwnZfCJBZ8VMTmMD+rh1+fIFEKMk=
-Date:   Sun, 5 May 2019 15:12:58 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Roger Pau Monne <roger.pau@citrix.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, xen-devel@lists.xenproject.org,
-        linux-block@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] xen-blkfront: switch kcalloc to kvcalloc for large array
- allocation
-Message-ID: <20190505191258.GB1747@sasha-vm>
-References: <20190503150401.15904-1-roger.pau@citrix.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190503150401.15904-1-roger.pau@citrix.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 5 May 2019 15:33:24 -0400
+Received: from alln-iport-2.cisco.com ([173.37.142.89]:7735 "EHLO
+        alln-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfEETdX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 15:33:23 -0400
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 May 2019 15:33:23 EDT
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AzBQC4N89c/49dJa1lHgEGBwaBZYI?=
+ =?us-ascii?q?RgToBMiizfRCEbYIIIzgTAQMBAQQBAQIBAm0ohXhSKYEVE4MiggurFzOIY4F?=
+ =?us-ascii?q?FFIEehniEVheBf4ERg1CKJgSTSZNpCYILVpFjJ26UWi2IY5gcgWYhgVYzGgg?=
+ =?us-ascii?q?bFYMnkHEfAzCRPwEB?=
+X-IronPort-AV: E=Sophos;i="5.60,435,1549929600"; 
+   d="scan'208";a="269719874"
+Received: from rcdn-core-7.cisco.com ([173.37.93.143])
+  by alln-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 05 May 2019 19:26:17 +0000
+Received: from tusi.cisco.com (tusi.cisco.com [172.24.98.27])
+        by rcdn-core-7.cisco.com (8.15.2/8.15.2) with ESMTP id x45JQGbL023060;
+        Sun, 5 May 2019 19:26:16 GMT
+From:   Ruslan Babayev <ruslan@babayev.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     xe-linux-external@cisco.com, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] iio: dac: ds4422/ds4424 drop of_node check
+Date:   Sun,  5 May 2019 12:24:36 -0700
+Message-Id: <20190505192438.2644-1-ruslan@babayev.com>
+X-Mailer: git-send-email 2.17.1
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 172.24.98.27, tusi.cisco.com
+X-Outbound-Node: rcdn-core-7.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 05:04:01PM +0200, Roger Pau Monne wrote:
->There's no reason to request physically contiguous memory for those
->allocations.
->
->Reported-by: Ian Jackson <ian.jackson@citrix.com>
->Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
->---
+The driver doesn't actually rely on any DT properties. Removing this
+check makes it usable on ACPI based platforms.
 
-You really don't want this scissor line here, git will trim all your
-message content below it.
+Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+Cc: xe-linux-external@cisco.com
+---
+ drivers/iio/dac/ds4424.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
---
-Thanks,
-Sasha
+diff --git a/drivers/iio/dac/ds4424.c b/drivers/iio/dac/ds4424.c
+index 883a47562055..2b3ba1a66fe8 100644
+--- a/drivers/iio/dac/ds4424.c
++++ b/drivers/iio/dac/ds4424.c
+@@ -236,12 +236,6 @@ static int ds4424_probe(struct i2c_client *client,
+ 	indio_dev->dev.of_node = client->dev.of_node;
+ 	indio_dev->dev.parent = &client->dev;
+ 
+-	if (!client->dev.of_node) {
+-		dev_err(&client->dev,
+-				"Not found DT.\n");
+-		return -ENODEV;
+-	}
+-
+ 	data->vcc_reg = devm_regulator_get(&client->dev, "vcc");
+ 	if (IS_ERR(data->vcc_reg)) {
+ 		dev_err(&client->dev,
+-- 
+2.17.1
 
->Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
->Cc: Juergen Gross <jgross@suse.com>
->Cc: Stefano Stabellini <sstabellini@kernel.org>
->Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
->Cc: Jens Axboe <axboe@kernel.dk>
->Cc: xen-devel@lists.xenproject.org
->Cc: linux-block@vger.kernel.org
->Cc: stable@vger.kernel.org
->---
