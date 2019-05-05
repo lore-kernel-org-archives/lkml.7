@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47910C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB2CC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18BCC206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB26B206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:49:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n+LYGa2f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ba/H+rWB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfEEPsy (ORCPT
+        id S1727824AbfEEPsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 11:48:54 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36055 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbfEEPsk (ORCPT
+        Sun, 5 May 2019 11:48:38 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37761 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbfEEPsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 11:48:40 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y8so8815037ljd.3;
-        Sun, 05 May 2019 08:48:39 -0700 (PDT)
+        Sun, 5 May 2019 11:48:35 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 132so1305305ljj.4;
+        Sun, 05 May 2019 08:48:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wi5NVXtnZHEtDn7otTZBfkTlrRUfXOAkjzzEUQJdYMk=;
-        b=n+LYGa2fvFpQYMARku/Km7h+eVqpSaLzrG470CuZ8vVI6Guu8iwFZ8UmezKhJUSwHL
-         zBBeBMfzacKKVz+y5FuO0awvQurOYBLdJqc3sqRlySLQJxfVexTX5W9FNTXT/CAZbAH0
-         x0k76YEH4xE91JgN24i82LkB4lE5LuvSvj60ZTqh+9amRcosJraA3XgPTHw2QGUrGGkD
-         raj84BJ0JyDI4eJGZc05xi09r0xbHGYcXA0vH2vQVsfsgFeUHZcpDVLswPgyPlKDUcCN
-         E8xst00y3i/X8BcM2iFBRtcPNS1uSgdQwgyoS97kavoyWnqBfKEKSTNOn0DLJBeXBUGR
-         IseA==
+        bh=T/oDDLfoDfhOy7WyChIuVkS7IKV9TMbU7wV4adCUitI=;
+        b=ba/H+rWBrC18tHiXQYrajDMZMMGPeJb4pLyaiKprUqi1TD4zH8W4z+RAWNDjuaB6J0
+         YnmETdEGdm3uHhpxgFVECrfnqLpxQf3hiwCMUkkubqG+9dxFFpiKs0YqRCmezhM7BA3s
+         rF5eSj3w8GSQ2Y9VY3fMp0RPBBYDwbWYpAD7HRB1xuQ4vMEnbeAzxrSk/obZNrjb/Pka
+         o7NiL5Rpt0OJ5ykYrWxTxiP9OMmNYIQrb62Ec7hK6PBq+G9i7+EI5TNazyPqu75m6jCz
+         gmUTu7snuVy5xGHs1MLnKxdeMJvwVW/4QF2NrA+CJIlEHreZD8ajLnQcvLndaCZIGMfE
+         lceQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wi5NVXtnZHEtDn7otTZBfkTlrRUfXOAkjzzEUQJdYMk=;
-        b=SdB/nIVtUYALtiNYT/DUatNlcqknebU3gl65FlfcaCBGcUkyKa803ZZLJG2HRNRGHi
-         T3HwlQHCPmhtP354ZpWp32iE+oOqKEEoVZ3twZBimX4m4enGZ3tsnk0iFB0u0qwE2+9B
-         Ny+BgNBrRL4D4weQBY9Btjjn2Flye+o+qz0F1xBWZaJ1V/qfM2yAwqF4BpL+62O6YigE
-         SFBLHcZ4KBnN9vHrn7b5EJP04NgvgQAj3Rm2d/mOY4K6RLheTz65llnbnW9pEfSS9sLP
-         C3zBxiJZly8kwq2zcAxLOEY0TwnKaT5GGXvOt8PPFLK0SF70ivpQk79SKiHThB6wTodW
-         oe3Q==
-X-Gm-Message-State: APjAAAUewEhVP04Mftl+DQSshToOqDo5otCZdoSvZ371q3Zjt8TDRENp
-        xebD5HVg5guCa3lNz8T/QlLo46F2
-X-Google-Smtp-Source: APXvYqxRXVl7+hnxXsniJgdMRxAbjb6hsLVKmm9zT540i7EqW7fqSBISBINAJ6D+gUtFs5YC5FHLTg==
-X-Received: by 2002:a2e:9546:: with SMTP id t6mr11047359ljh.51.1557071318863;
-        Sun, 05 May 2019 08:48:38 -0700 (PDT)
+        bh=T/oDDLfoDfhOy7WyChIuVkS7IKV9TMbU7wV4adCUitI=;
+        b=e50jqGnDTXReoGVQGEpUI/sZsepXmCo1YCs6jLB4S6Ma+e9umDyNVx05ZHmueET8ix
+         CQxuVfbwYtyyIR7dynHqU3A88lVgX9Ct3QhQCJgOn5D/KMnJfyHUcOl9WyHw6GAZ591T
+         Wtk6WGzEf+TH77hhlpu9EMuDsjBzn/Srpn08TN3YVjX/GwxhED0aRN7yUiwhp8udTPZz
+         SPbNqv3RRONUANCulUgcZT+fzeXplzEXmrnAXF7Yzcn+24rlPpPSpAUmlek58XPBGN1c
+         btlXVkhiUPbaqoOC4D8QYiB8wydtKncn0wM0rYbvUYY+mAbmN/PlRfNPHA6WZVVbLbDl
+         PAog==
+X-Gm-Message-State: APjAAAVeWdK/GYm/xbNVsa6jDy5VzqQ36glML1ICa8HedGh4vs02V0z9
+        oZSRAsvnXt3lDawu+u5s1jY=
+X-Google-Smtp-Source: APXvYqy/jC22w3xG4JOm82UjunnBQ+qPoZTI7WGZxLQeKPk1HJ6uAeweoQplRcz7YkjRoAmSM9bcAw==
+X-Received: by 2002:a2e:498:: with SMTP id a24mr11003675ljf.34.1557071313317;
+        Sun, 05 May 2019 08:48:33 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id d16sm1595278lfi.75.2019.05.05.08.48.37
+        by smtp.gmail.com with ESMTPSA id d16sm1595278lfi.75.2019.05.05.08.48.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 08:48:38 -0700 (PDT)
+        Sun, 05 May 2019 08:48:31 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -67,9 +67,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 6/6] regulator: max77620: Support Maxim 77663
-Date:   Sun,  5 May 2019 18:43:25 +0300
-Message-Id: <20190505154325.30026-7-digetx@gmail.com>
+Subject: [PATCH v4 1/6] dt-bindings: mfd: max77620: Add compatible for Maxim 77663
+Date:   Sun,  5 May 2019 18:43:20 +0300
+Message-Id: <20190505154325.30026-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190505154325.30026-1-digetx@gmail.com>
 References: <20190505154325.30026-1-digetx@gmail.com>
@@ -80,67 +80,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Maxim 77663.
+Maxim 77663 has a few minor differences in regards to hardware interface
+and available capabilities by comparing it with 77620 and 20024 models,
+hence re-use 77620 device-tree binding for the 77663.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/regulator/max77620-regulator.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mfd/max77620.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
-index 0ad91a7f9cb9..0ec9f81fe74a 100644
---- a/drivers/regulator/max77620-regulator.c
-+++ b/drivers/regulator/max77620-regulator.c
-@@ -761,6 +761,24 @@ static struct max77620_regulator_info max20024_regs_info[MAX77620_NUM_REGS] = {
- 	RAIL_LDO(LDO8, ldo8, "in-ldo7-8", N, 800000, 3950000, 50000),
- };
+diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+index 9c16d51cc15b..b75283787ba1 100644
+--- a/Documentation/devicetree/bindings/mfd/max77620.txt
++++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+@@ -4,7 +4,8 @@ Required properties:
+ -------------------
+ - compatible: Must be one of
+ 		"maxim,max77620"
+-		"maxim,max20024".
++		"maxim,max20024"
++		"maxim,max77663"
+ - reg: I2C device address.
  
-+static struct max77620_regulator_info max77663_regs_info[MAX77620_NUM_REGS] = {
-+	RAIL_SD(SD0, sd0, "in-sd0", SD0, 600000, 3387500, 12500, 0xFF, NONE),
-+	RAIL_SD(SD1, sd1, "in-sd1", SD1, 800000, 1587500, 12500, 0xFF, NONE),
-+	RAIL_SD(SD2, sd2, "in-sd2", SDX, 600000, 3787500, 12500, 0xFF, NONE),
-+	RAIL_SD(SD3, sd3, "in-sd3", SDX, 600000, 3787500, 12500, 0xFF, NONE),
-+	RAIL_SD(SD4, sd4, "in-sd4", SDX, 600000, 3787500, 12500, 0xFF, NONE),
-+
-+	RAIL_LDO(LDO0, ldo0, "in-ldo0-1", N, 800000, 2375000, 25000),
-+	RAIL_LDO(LDO1, ldo1, "in-ldo0-1", N, 800000, 2375000, 25000),
-+	RAIL_LDO(LDO2, ldo2, "in-ldo2",   P, 800000, 3950000, 50000),
-+	RAIL_LDO(LDO3, ldo3, "in-ldo3-5", P, 800000, 3950000, 50000),
-+	RAIL_LDO(LDO4, ldo4, "in-ldo4-6", P, 800000, 1587500, 12500),
-+	RAIL_LDO(LDO5, ldo5, "in-ldo3-5", P, 800000, 3950000, 50000),
-+	RAIL_LDO(LDO6, ldo6, "in-ldo4-6", P, 800000, 3950000, 50000),
-+	RAIL_LDO(LDO7, ldo7, "in-ldo7-8", N, 800000, 3950000, 50000),
-+	RAIL_LDO(LDO8, ldo8, "in-ldo7-8", N, 800000, 3950000, 50000),
-+};
-+
- static int max77620_regulator_probe(struct platform_device *pdev)
- {
- 	struct max77620_chip *max77620_chip = dev_get_drvdata(pdev->dev.parent);
-@@ -785,9 +803,14 @@ static int max77620_regulator_probe(struct platform_device *pdev)
- 	case MAX77620:
- 		rinfo = max77620_regs_info;
- 		break;
--	default:
-+	case MAX20024:
- 		rinfo = max20024_regs_info;
- 		break;
-+	case MAX77663:
-+		rinfo = max77663_regs_info;
-+		break;
-+	default:
-+		return -EINVAL;
- 	}
+ Optional properties:
+@@ -105,6 +106,7 @@ Optional properties:
+ Here supported time periods by device in microseconds are as follows:
+ MAX77620 supports 40, 80, 160, 320, 640, 1280, 2560 and 5120 microseconds.
+ MAX20024 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
++MAX77663 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
  
- 	config.regmap = pmic->rmap;
-@@ -881,6 +904,7 @@ static const struct dev_pm_ops max77620_regulator_pm_ops = {
- static const struct platform_device_id max77620_regulator_devtype[] = {
- 	{ .name = "max77620-pmic", },
- 	{ .name = "max20024-pmic", },
-+	{ .name = "max77663-pmic", },
- 	{},
- };
- MODULE_DEVICE_TABLE(platform, max77620_regulator_devtype);
+ -maxim,power-ok-control: configure map power ok bit
+ 			1: Enables POK(Power OK) to control nRST_IO and GPIO1
 -- 
 2.21.0
 
