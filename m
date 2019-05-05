@@ -2,185 +2,98 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4FEC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FE5C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B009E2087F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0E520578
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfEETgQ (ORCPT
+        id S1727847AbfEETng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 15:36:16 -0400
-Received: from alln-iport-3.cisco.com ([173.37.142.90]:49322 "EHLO
-        alln-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbfEETgQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 15:36:16 -0400
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0D7AACDOs9c/4MNJK1lGwEBAQEDAQE?=
- =?us-ascii?q?BBwMBAQGBZYIRgToBMiizfRCEbYIIIzgTAQMBAQQBAQIBAm0ohXhSKYEVARK?=
- =?us-ascii?q?DIoILqxMzhAYBhFyBRRSBHoZ4hFYXgX+BEYNQiiYEixOINpNpCYILVpFjJ26?=
- =?us-ascii?q?UWQGMG5URgWYhgVYzGggbFYMnghsXjWgBVh8DMJE/AQE?=
-X-IronPort-AV: E=Sophos;i="5.60,435,1549929600"; 
-   d="scan'208";a="272787660"
-Received: from alln-core-1.cisco.com ([173.36.13.131])
-  by alln-iport-3.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 05 May 2019 19:36:14 +0000
-Received: from tusi.cisco.com (tusi.cisco.com [172.24.98.27])
-        by alln-core-1.cisco.com (8.15.2/8.15.2) with ESMTP id x45JaDEM006541;
-        Sun, 5 May 2019 19:36:14 GMT
-From:   Ruslan Babayev <ruslan@babayev.com>
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     xe-linux-external@cisco.com,
-        "David S. Miller" <davem@davemloft.net>, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH] net: phy: sfp: enable i2c-bus detection on ACPI based systems
-Date:   Sun,  5 May 2019 12:34:34 -0700
-Message-Id: <20190505193435.3248-1-ruslan@babayev.com>
-X-Mailer: git-send-email 2.17.1
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 172.24.98.27, tusi.cisco.com
-X-Outbound-Node: alln-core-1.cisco.com
+        Sun, 5 May 2019 15:43:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726636AbfEETnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 15:43:35 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B577F20578;
+        Sun,  5 May 2019 19:43:34 +0000 (UTC)
+Date:   Sun, 5 May 2019 15:43:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Viktor Rosendahl <viktor.rosendahl@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] ftrace: Implement fs notification for
+ preempt/irqsoff tracers
+Message-ID: <20190505154333.56f3a187@oasis.local.home>
+In-Reply-To: <20190504164710.GA55790@google.com>
+References: <20190501203650.29548-1-viktor.rosendahl@gmail.com>
+        <20190501203650.29548-2-viktor.rosendahl@gmail.com>
+        <20190504164710.GA55790@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
-Cc: xe-linux-external@cisco.com
----
- drivers/i2c/i2c-core-acpi.c |  3 ++-
- drivers/net/phy/sfp.c       | 33 +++++++++++++++++++++++++--------
- include/linux/i2c.h         |  6 ++++++
- 3 files changed, 33 insertions(+), 9 deletions(-)
+On Sat, 4 May 2019 12:47:10 -0400
+Joel Fernandes <joel@joelfernandes.org> wrote:
 
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index 272800692088..964687534754 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -337,7 +337,7 @@ static int i2c_acpi_find_match_device(struct device *dev, void *data)
- 	return ACPI_COMPANION(dev) == data;
- }
  
--static struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
-+struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
- {
- 	struct device *dev;
- 
-@@ -345,6 +345,7 @@ static struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
- 			      i2c_acpi_find_match_adapter);
- 	return dev ? i2c_verify_adapter(dev) : NULL;
- }
-+EXPORT_SYMBOL_GPL(i2c_acpi_find_adapter_by_handle);
- 
- static struct i2c_client *i2c_acpi_find_client_by_adev(struct acpi_device *adev)
- {
-diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
-index d4635c2178d1..7a6c8df8899b 100644
---- a/drivers/net/phy/sfp.c
-+++ b/drivers/net/phy/sfp.c
-@@ -9,6 +9,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-+#include <linux/acpi.h>
- #include <linux/phy.h>
- #include <linux/platform_device.h>
- #include <linux/rtnetlink.h>
-@@ -1783,6 +1784,7 @@ static int sfp_probe(struct platform_device *pdev)
- {
- 	const struct sff_data *sff;
- 	struct sfp *sfp;
-+	struct i2c_adapter *i2c = NULL;
- 	bool poll = false;
- 	int irq, err, i;
- 
-@@ -1801,7 +1803,6 @@ static int sfp_probe(struct platform_device *pdev)
- 	if (pdev->dev.of_node) {
- 		struct device_node *node = pdev->dev.of_node;
- 		const struct of_device_id *id;
--		struct i2c_adapter *i2c;
- 		struct device_node *np;
- 
- 		id = of_match_node(sfp_of_match, node);
-@@ -1818,14 +1819,30 @@ static int sfp_probe(struct platform_device *pdev)
- 
- 		i2c = of_find_i2c_adapter_by_node(np);
- 		of_node_put(np);
--		if (!i2c)
--			return -EPROBE_DEFER;
--
--		err = sfp_i2c_configure(sfp, i2c);
--		if (err < 0) {
--			i2c_put_adapter(i2c);
--			return err;
-+	} else if (ACPI_COMPANION(&pdev->dev)) {
-+		struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-+		struct fwnode_handle *fw = acpi_fwnode_handle(adev);
-+		struct fwnode_reference_args args;
-+		struct acpi_handle *acpi_handle;
-+		int ret;
-+
-+		ret = acpi_node_get_property_reference(fw, "i2c-bus", 0, &args);
-+		if (ACPI_FAILURE(ret) || !is_acpi_device_node(args.fwnode)) {
-+			dev_err(&pdev->dev, "missing 'i2c-bus' property\n");
-+			return -ENODEV;
- 		}
-+
-+		acpi_handle = ACPI_HANDLE_FWNODE(args.fwnode);
-+		i2c = i2c_acpi_find_adapter_by_handle(acpi_handle);
-+	}
-+
-+	if (!i2c)
-+		return -EPROBE_DEFER;
-+
-+	err = sfp_i2c_configure(sfp, i2c);
-+	if (err < 0) {
-+		i2c_put_adapter(i2c);
-+		return err;
- 	}
- 
- 	for (i = 0; i < GPIO_MAX; i++)
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 383510b4f083..24859a26f167 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -33,6 +33,7 @@
- #include <linux/rtmutex.h>
- #include <linux/irqdomain.h>		/* for Host Notify IRQ */
- #include <linux/of.h>		/* for struct device_node */
-+#include <linux/acpi.h>		/* for acpi_handle */
- #include <linux/swab.h>		/* for swab16 */
- #include <uapi/linux/i2c.h>
- 
-@@ -977,6 +978,7 @@ bool i2c_acpi_get_i2c_resource(struct acpi_resource *ares,
- u32 i2c_acpi_find_bus_speed(struct device *dev);
- struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
- 				       struct i2c_board_info *info);
-+struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle);
- #else
- static inline bool i2c_acpi_get_i2c_resource(struct acpi_resource *ares,
- 					     struct acpi_resource_i2c_serialbus **i2c)
-@@ -992,6 +994,10 @@ static inline struct i2c_client *i2c_acpi_new_device(struct device *dev,
- {
- 	return NULL;
- }
-+struct i2c_adapter *i2c_acpi_find_adapter_by_handle(acpi_handle handle)
-+{
-+	return NULL;
-+}
- #endif /* CONFIG_ACPI */
- 
- #endif /* _LINUX_I2C_H */
--- 
-2.17.1
+> I agree with the general idea, but I don't really like how it is done in the
+> patch.
 
++1
+
+> 
+> We do have a notification mechanism already in the form of trace_pipe. Can we
+> not improve that in some way to be notified of a new trace data? In theory,
+> the trace_pipe does fit into the description in the documentation: "Reads
+> from this file will block until new data is retrieved"
+> 
+> More comment below:
+> 
+> 
+
+> > +	config PREEMPTIRQ_FSNOTIFY
+> > +	bool "Generate fsnotify events for the latency tracers"
+> > +	default n
+> > +	depends on (IRQSOFF_TRACER || PREEMPT_TRACER) && FSNOTIFY
+> > +	help
+> > +	  This option will enable the generation of fsnotify events for the
+> > +	  trace file. This makes it possible for userspace to be notified about
+> > +	  modification of /sys/kernel/debug/tracing/trace through the inotify
+> > +	  interface.  
+> 
+> Does this have to be a CONFIG option? If prefer if the code automatically
+> does the notification and it is always enabled. I don't see any drawbacks of
+> that.
+
+I mentioned that anything it needs to be an option.
+
+
+> > +#ifdef CONFIG_PREEMPTIRQ_FSNOTIFY
+> > +
+> > +static void trace_notify_workfn(struct work_struct *work)  
+> [snip]
+> 
+> I prefer if this facility is available to other tracers as well such as
+> the wakeup tracer which is similar in output (check
+> Documentation/trace/ftrace.txt). I believe this should be a generic trace
+> facility, and not tracer specific.
+
+
+For what it's worth, I agree with everything Joel just stated.
+
+Thanks,
+
+-- Steve
