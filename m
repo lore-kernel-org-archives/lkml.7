@@ -7,97 +7,91 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCBEC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8539BC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93CD9208CA
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538BF208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:23:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FuSnj//f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ErIf4xe5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbfEENWd (ORCPT
+        id S1727897AbfEENXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 09:22:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37665 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbfEENWc (ORCPT
+        Sun, 5 May 2019 09:23:13 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34574 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfEENXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 09:22:32 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g3so5297227pfi.4
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 06:22:32 -0700 (PDT)
+        Sun, 5 May 2019 09:23:12 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b3so5306912pfd.1
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 06:23:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=TdBBbUZ0RxPdEUkWNKneikj6T2F+pAawD9gH2hw+dsY=;
-        b=FuSnj//f/UTrafYQ3ex+zWM9aPxdrU3RgOaAtbF1TaXWKUnHy+4Kx/8pVAPs3/pDao
-         2OAKtKa2Uze4wAJpHKqgGy0l0o7EULWM32NuCN9B2RQ+ZZpdbu58Yb8ZRJ+HV6Grm1uj
-         uZ28vvmQDhV42QBbLW27Eevi3Rbg+inztCZHPX3QdtqE+fMJYqLAh8QNzO26/rNGgcNa
-         2p11Gjb0q1xL0NDg+zIjYHU6GMFQDTgXctGr5QCYc6S9A4AI/855Tf8kiaK4kGVBI+xZ
-         UgLW3LqlCoogn6TZH5gXm7PKO1ZLd/ANs5t5Nxie0LLQ2gwyIPZS1gFeoBLL9fmDMQmn
-         2cgA==
+        bh=UQqO8W5D4CT+ksezNayfRuTwaSX+rCT5sHrxvCqimbQ=;
+        b=ErIf4xe5fYpYMe9INM/qc3CEZIKoHTj2S6l6oBe8RS67eQBWDRYdt4hEmdCw8t0sjw
+         5/YpbgsP41BrjdBgFBp1Rj59pK35ihXEg+8rlc4bmDXvxmDjwtsMmRPwpJ7HPxiBX7ME
+         o9xfWE+s8WnAVUK7xTRq+H3vK+xcRH5DyJnMncw5gzlbz/WoBc8i3N9ueniTl2tiLz+E
+         YK2hz41eW+XLFltiOtDNUFdM+IvHYGxkoyTdYZW1gss48sqzrD+wSRTpyoOQb1SoA0WD
+         Y7QUnk1OJjTGoI5T3E5QiA4mq7LQ4i3U9yPZnmfkpuytGIOy74QepzjiDJzE7xP/e9ag
+         QouA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TdBBbUZ0RxPdEUkWNKneikj6T2F+pAawD9gH2hw+dsY=;
-        b=Ezl3uRtH8EvVStxjtu2kNn01wiHqitRGGPk5/dAC/LSxdk8uWq1YhkXjCvX3pbyO9n
-         AikVd1ISHlip/zGtzZ99KtnaD+29qKkk5M2BWj4WwNhyHyZiMFQvSKSwoEAyf4CiOEpU
-         ZTJwCXSnsGx0Wfqfk1NrmIQ8noDAGCOv7HIbKbDAv2SGSZHAiI3nr6axyNnwN3U70yFm
-         n4oQmhWY0fWsA0oFC3DsvtJAPgYyZUEh2yozCwm0dIDsteciu8bx1JFhSDv4mS6oKnF7
-         aw3dS8DESs8GWFEDT0EyJX+I6BS+HP98GgTUKeoTcEgBRu3rfFQrillI4avR8l076tk8
-         lY4A==
-X-Gm-Message-State: APjAAAUR0/QFORJhb3ZtH5j2wgdITUjHAEpQANsbHdf7tu/80OO8GnBI
-        zgRXOu31bTJ28L+Bnitm9wU=
-X-Google-Smtp-Source: APXvYqyiHDaKTbuRvF2+8D6TYGwy7w+BRqstD1lqEVH3ao6IO8qV8Avl+NZ0nUC14CrQ2z9STXjZzA==
-X-Received: by 2002:a63:da14:: with SMTP id c20mr9828991pgh.191.1557062551816;
-        Sun, 05 May 2019 06:22:31 -0700 (PDT)
+        bh=UQqO8W5D4CT+ksezNayfRuTwaSX+rCT5sHrxvCqimbQ=;
+        b=VzZSH59+ZZUFq6xFry+RP1AHL/U7urRkI96BhTBYqWZm79+ckukHMqzvdcn8A/3tq3
+         lZ7CTLXRC8tKwEmeqbt3vgpsynLEUzmoo7IpaWZxhEEF3LXVtfB5/5bO12kUK3/6ekLZ
+         1RDVnizdYXGk8u33cRpd172QUkrQ8HxxRa0JGQrm63dOHJZSurKwmjuUTAKDQReXSwQQ
+         IJH9SmbT9uLW48VCoCDbd9XRmYbT1NTXpyc5qXHbapW4IB5iZ140Atl9L7HJneeImVnG
+         92q1zv8oLS4TFkqXg0m9JAS94bTPMggVZNyPcQeGCPmy5LvmM74qORQ8HiyHZzfKdzSl
+         tN/A==
+X-Gm-Message-State: APjAAAWUMBuPAFPsu5BZ29sxTnOiLHfEWcR3RoydRrdBrHBrZqutStlu
+        EROm9jhbTUKHekOrxwbeBr8=
+X-Google-Smtp-Source: APXvYqxVvYTOatU5SYFHrVIYPqWoVVEyDux3Fe5NTaerGxjib46XgBej05B7sQf8FaoM8/jz0YdViQ==
+X-Received: by 2002:aa7:8d98:: with SMTP id i24mr26015539pfr.8.1557062592276;
+        Sun, 05 May 2019 06:23:12 -0700 (PDT)
 Received: from localhost.localdomain ([103.87.56.229])
-        by smtp.gmail.com with ESMTPSA id z7sm9206851pgh.81.2019.05.05.06.22.28
+        by smtp.gmail.com with ESMTPSA id a26sm10312709pfl.177.2019.05.05.06.23.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 06:22:31 -0700 (PDT)
+        Sun, 05 May 2019 06:23:11 -0700 (PDT)
 From:   Vatsala Narang <vatsalanarang@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     hadess@hadess.net, hdegoede@redhat.com, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org, julia.lawall@lip6.fr,
         Vatsala Narang <vatsalanarang@gmail.com>
-Subject: [PATCH v2 5/6] staging: rtl8723bs: core: Fix variable constant comparisons.
-Date:   Sun,  5 May 2019 18:52:12 +0530
-Message-Id: <20190505132212.4458-1-vatsalanarang@gmail.com>
+Subject: [PATCH v2 6/6] staging: rtl8723bs: core: Move logical operator to previous line.
+Date:   Sun,  5 May 2019 18:52:53 +0530
+Message-Id: <20190505132253.4516-1-vatsalanarang@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Swap the terms of comparisons whenever the constant comes first to get
-rid of checkpatch warning.
+Move logical operator to previous line to get rid of checkpatch warning.
 
 Signed-off-by: Vatsala Narang <vatsalanarang@gmail.com>
 ---
- drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-index a8ceaa9f8718..0b5bd047a552 100644
+index 0b5bd047a552..b5e355de1199 100644
 --- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
 +++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-@@ -1276,7 +1276,7 @@ unsigned int OnAssocReq(struct adapter *padapter, union recv_frame *precv_frame)
- 			status = _STATS_FAILURE_;
- 	}
+@@ -5656,9 +5656,9 @@ static u8 chk_ap_is_alive(struct adapter *padapter, struct sta_info *psta)
+ 	);
+ 	#endif
  
--	if (_STATS_SUCCESSFUL_ != status)
-+	if (status != _STATS_SUCCESSFUL_)
- 		goto OnAssocReqFail;
- 
- 	/*  check if the supported rate is ok */
-@@ -1372,7 +1372,7 @@ unsigned int OnAssocReq(struct adapter *padapter, union recv_frame *precv_frame)
- 		wpa_ie_len = 0;
- 	}
- 
--	if (_STATS_SUCCESSFUL_ != status)
-+	if (status != _STATS_SUCCESSFUL_)
- 		goto OnAssocReqFail;
- 
- 	pstat->flags &= ~(WLAN_STA_WPS | WLAN_STA_MAYBE_WPS);
+-	if ((sta_rx_data_pkts(psta) == sta_last_rx_data_pkts(psta))
+-		&& sta_rx_beacon_pkts(psta) == sta_last_rx_beacon_pkts(psta)
+-		&& sta_rx_probersp_pkts(psta) == sta_last_rx_probersp_pkts(psta)
++	if ((sta_rx_data_pkts(psta) == sta_last_rx_data_pkts(psta)) &&
++	    sta_rx_beacon_pkts(psta) == sta_last_rx_beacon_pkts(psta) &&
++	     sta_rx_probersp_pkts(psta) == sta_last_rx_probersp_pkts(psta)
+ 	) {
+ 		ret = false;
+ 	} else {
 -- 
 2.17.1
 
