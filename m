@@ -3,38 +3,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210BEC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5671AC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1DC0208C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A58208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbfEEOBs (ORCPT
+        id S1727961AbfEEOBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 10:01:48 -0400
-Received: from shell.v3.sk ([90.176.6.54]:55759 "EHLO shell.v3.sk"
+        Sun, 5 May 2019 10:01:04 -0400
+Received: from shell.v3.sk ([90.176.6.54]:55699 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727928AbfEEOBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 10:01:16 -0400
+        id S1726397AbfEEOBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 10:01:01 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id D2BE7103B0D;
-        Sun,  5 May 2019 16:01:13 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id 52347103D2F;
+        Sun,  5 May 2019 16:00:57 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id yw9AFyKl-U0e; Sun,  5 May 2019 16:00:53 +0200 (CEST)
+        with ESMTP id Yhr0dDZ7rP2U; Sun,  5 May 2019 16:00:44 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 64163103D29;
-        Sun,  5 May 2019 16:00:43 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id BDCAD103D25;
+        Sun,  5 May 2019 16:00:40 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 5MsybriK81eC; Sun,  5 May 2019 16:00:39 +0200 (CEST)
+        with ESMTP id rR14XGBvRG76; Sun,  5 May 2019 16:00:37 +0200 (CEST)
 Received: from nedofet.lan (ip-89-102-31-34.net.upcbroadband.cz [89.102.31.34])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 32C6B103D2C;
-        Sun,  5 May 2019 16:00:38 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 78DA5103D29;
+        Sun,  5 May 2019 16:00:36 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org
@@ -47,9 +47,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         jacopo mondi <jacopo@jmondi.org>,
         Sakari Ailus <sakari.ailus@iki.fi>,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v5 06/10] [media] marvell-ccic/mmp: enable clock before accessing registers
-Date:   Sun,  5 May 2019 16:00:27 +0200
-Message-Id: <20190505140031.9636-7-lkundrak@v3.sk>
+Subject: [PATCH v5 03/10] [media] marvell-ccic: don't generate EOF on parallel bus
+Date:   Sun,  5 May 2019 16:00:24 +0200
+Message-Id: <20190505140031.9636-4-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190505140031.9636-1-lkundrak@v3.sk>
 References: <20190505140031.9636-1-lkundrak@v3.sk>
@@ -60,36 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The access to REG_CLKCTRL or REG_CTRL1 without the clock enabled hangs
-the machine. Enable the clock first.
+The commit 05fed81625bf ("[media] marvell-ccic: add MIPI support for
+marvell-ccic driver") that claimed to add CSI2 turned on C0_EOF_VSYNC for
+parallel bus without a very good explanation.
 
+That broke camera on OLPC XO-1.75 which precisely uses a sensor on a
+parallel bus. Revert that chunk.
+
+Tested on an OLPC XO-1.75.
+
+Fixes: 05fed81625bf755cc67c5864cdfd18b69ea828d1
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- drivers/media/platform/marvell-ccic/mmp-driver.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/platform/marvell-ccic/mcam-core.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
-edia/platform/marvell-ccic/mmp-driver.c
-index a1b1d66e34cd9..352e67fc10621 100644
---- a/drivers/media/platform/marvell-ccic/mmp-driver.c
-+++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
-@@ -144,6 +144,7 @@ static int mmpcam_power_up(struct mcam_camera *mcam)
-  * Turn on power and clocks to the controller.
-  */
- 	mmpcam_power_up_ctlr(cam);
-+	mcam_clk_enable(mcam);
- /*
-  * Provide power to the sensor.
-  */
-@@ -157,8 +158,6 @@ static int mmpcam_power_up(struct mcam_camera *mcam)
- 	gpio_set_value(pdata->sensor_reset_gpio, 1); /* reset is active low */
- 	mdelay(5);
-=20
--	mcam_clk_enable(mcam);
--
- 	return 0;
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/me=
+dia/platform/marvell-ccic/mcam-core.c
+index d97f39bde9bd6..d24e5b7a3bc52 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.c
++++ b/drivers/media/platform/marvell-ccic/mcam-core.c
+@@ -792,12 +792,6 @@ static void mcam_ctlr_image(struct mcam_camera *cam)
+ 	 * Make sure it knows we want to use hsync/vsync.
+ 	 */
+ 	mcam_reg_write_mask(cam, REG_CTRL0, C0_SIF_HVSYNC, C0_SIFM_MASK);
+-	/*
+-	 * This field controls the generation of EOF(DVP only)
+-	 */
+-	if (cam->bus_type !=3D V4L2_MBUS_CSI2_DPHY)
+-		mcam_reg_set_bit(cam, REG_CTRL0,
+-				C0_EOF_VSYNC | C0_VEDGE_CTRL);
  }
+=20
 =20
 --=20
 2.21.0
