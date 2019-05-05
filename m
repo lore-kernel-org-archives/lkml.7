@@ -2,97 +2,83 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C69C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6509FC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C262054F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:23:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hBPEOQSO"
+	by mail.kernel.org (Postfix) with ESMTP id 204E42054F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:31:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfEEVXu (ORCPT
+        id S1727961AbfEEVbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 17:23:50 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33267 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbfEEVXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 17:23:49 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44xzPt1tD4z9s5c;
-        Mon,  6 May 2019 07:23:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557091426;
-        bh=YA/FcEGzJdyHad6E/Sm0uJk7a32AdcrEnIvIoxm8LMQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hBPEOQSOO28rV9xpDmcnRfMMoj8naqJ1axba+f15/qlpqSFCmx/3OGY7aaiIcCEHH
-         vX81kbxBgembkki2rOfN6caeDA09pRFzTfHNqpB2NMFKASIm0rheBW7ZmdnMTf1I8R
-         4wWZRgRRgIrlwdxrhryWAMr+ubGlwxRwsaybNdYOrC/GnZBGGQ93y1Ar6i56OYn/U+
-         vqZvtB4/Ec1NALk9YZmp8q6L4oLC+rLyXLxCxT0QwQKJ8vdItbdOuEKU4698piXK0v
-         796wPdi73LcGdcHmSyEY8PlhvaqVU3mYg81dei93F7rPJGgATTrhnN4sDJheH3CwiK
-         eymxjlbyPwuIg==
-Date:   Mon, 6 May 2019 07:23:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Ahern <dsahern@gmail.com>
-Subject: linux-next: Fixes tag needs some work in the net tree
-Message-ID: <20190506072334.5eeb8858@canb.auug.org.au>
+        Sun, 5 May 2019 17:31:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56614 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfEEVbn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 17:31:43 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hNOjQ-0007uz-Ax; Sun, 05 May 2019 21:31:36 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Felix Fietkau <nbd@nbd.name>, Roy Luo <royluo@google.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] mt76: fix less than zero check on a u8 variable
+Date:   Sun,  5 May 2019 22:31:35 +0100
+Message-Id: <20190505213135.3895-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/iIoaWuLbT45b0W=22c.g9UB"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/iIoaWuLbT45b0W=22c.g9UB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Colin Ian King <colin.king@canonical.com>
 
-Hi all,
+The signed return from the call to get_omac_idx is being assigned to the
+u8 variable mac_idx and then checked for a negative error condition
+which is always going to be false. Fix this by assigning the return to
+the int variable ret and checking this instead.
 
-In commit
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 04b8e65922f6 ("mt76: add mac80211 driver for MT7615 PCIe-based chipsets")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/wireless/mediatek/mt76/mt7615/main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-  64c6f4bbca74 ("neighbor: Reset gc_entries counter if new entry is release=
-d before insert")
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/main.c b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+index 80e6b211f60b..460d90d5ed6d 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/main.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/main.c
+@@ -77,11 +77,12 @@ static int mt7615_add_interface(struct ieee80211_hw *hw,
+ 		goto out;
+ 	}
+ 
+-	mvif->omac_idx = get_omac_idx(vif->type, dev->omac_mask);
+-	if (mvif->omac_idx < 0) {
++	ret = get_omac_idx(vif->type, dev->omac_mask);
++	if (ret < 0) {
+ 		ret = -ENOSPC;
+ 		goto out;
+ 	}
++	mvif->omac_idx = ret;
+ 
+ 	/* TODO: DBDC support. Use band 0 and wmm 0 for now */
+ 	mvif->band_idx = 0;
+-- 
+2.20.1
 
-Fixes tag
-
-  Fixes: 58956317c8d ("neighbor: Improve garbage collection")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/iIoaWuLbT45b0W=22c.g9UB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzPVFYACgkQAVBC80lX
-0GzgSQf/c6OvVDblN1/YNpJhV/j2sx2hjoI5gDJX3J2y1AR+2+BPmP/SDRL3ZJmM
-8ukm5AsBNqrIeYWlM9sSzjOoQd8DSvyviJcvXJRdGU8aHothh+5LYNcgYGY4/D9J
-JU0czzAObzpo7I5+/Wlse7k1qwqWHTLJLc7QbUbMihagc++flkjUP1XO+eOeT7qo
-QSHTveRrhX+E0nF6WLanSEVsMeofWf+ANI44cy9GyI68/ElhTT4Pk6G0rgEPtnp3
-E2Ct31QNroLOdwVHevUmYTBEW0zP0bRjCALxIi4MJvSlp8FmEgO6QEAhmzImDtW0
-706zq/XALUR8RVfwZJq7AFf5HU9ofg==
-=QLd4
------END PGP SIGNATURE-----
-
---Sig_/iIoaWuLbT45b0W=22c.g9UB--
