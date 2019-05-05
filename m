@@ -2,174 +2,64 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CBFC46470
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0416C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9566820B7C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CF2208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfEEIlN (ORCPT
+        id S1727472AbfEEIpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 04:41:13 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:41073 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725873AbfEEIlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 04:41:13 -0400
-Received: from [192.168.0.2] (ip5f5bd373.dynamic.kabel-deutschland.de [95.91.211.115])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id E1D46604E3678;
-        Sun,  5 May 2019 10:41:09 +0200 (CEST)
-Subject: Re: failed to set xfermode (err_mask=0x40): READ LOG DMA EXT failed,
- trying PIO
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-To:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>
-Cc:     linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <f7cef1cf-69d0-82e7-7902-fee56c19577a@molgen.mpg.de>
-Message-ID: <89898e39-787c-ad82-26bf-cd03ce16a75c@molgen.mpg.de>
-Date:   Sun, 5 May 2019 10:41:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Sun, 5 May 2019 04:45:11 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:57924 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfEEIpL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 04:45:11 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x458iRrd026524;
+        Sun, 5 May 2019 17:44:27 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp);
+ Sun, 05 May 2019 17:44:27 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x458iMmj026500
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Sun, 5 May 2019 17:44:26 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: KASAN: use-after-free Read in add_uevent_var
+To:     syzbot <syzbot+6da9575ba2db4da91831@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com
+References: <000000000000559435058813dc8d@google.com>
+Cc:     airlied@linux.ie, dmitry.torokhov@gmail.com,
+        dri-devel@lists.freedesktop.org, hpa@zytor.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, patrik.r.jakobsson@gmail.com,
+        rydberg@bitmath.org, tglx@linutronix.de, wsa@the-dreams.de,
+        x86@kernel.org
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <75593427-4777-93ef-a141-5327a8afe75d@I-love.SAKURA.ne.jp>
+Date:   Sun, 5 May 2019 17:44:22 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <f7cef1cf-69d0-82e7-7902-fee56c19577a@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <000000000000559435058813dc8d@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Linux folks,
+This seems to be triggered by "pkg/report: skip printk and other printing functions " on syzbot side.
+The fix should be "kobject: Don't trigger kobject_uevent(KOBJ_REMOVE) twice." in linux-next.git.
 
+#syz dup: KASAN: use-after-free Read in string
 
-On 01.05.19 11:34, Paul Menzel wrote:
-
-> On an MSI B350M MORTAR (MS-7A37) with all firmwares, and the AHCI SSD 
-> Crucial MX500, *sometimes* boot and resume are delayed by four to five 
-> seconds, and the log contains the message *failed to set xfermode*.
-> 
->> [    0.474150] ata9: SATA link up 6.0 Gbps (SStatus 133 SControl 0)
->> [    0.474267] microcode: Microcode Update Driver: v2.2.
->> [    0.474294] AVX2 version of gcm_enc/dec engaged.
->> [    0.474295] AES CTR mode by8 optimization enabled
->> [    0.474304] ata9.00: supports DRM functions and may not be fully accessible
->> [    0.474368] ata9.00: ATA-10: CT1000MX500SSD4, M3CR020, max UDMA/133
->> [    0.474370] ata9.00: 1953525168 sectors, multi 1: LBA48 NCQ (depth 32), AA
->> [    0.474569] ata9.00: READ LOG DMA EXT failed, trying PIO
->> [    0.474571] ata9.00: failed to get Identify Device Data, Emask 0x40
->> [    0.474572] ata9.00: ATA Identify Device Log not supported
->> [    0.474573] ata9.00: Security Log not supported
->> [    0.474576] ata9.00: failed to set xfermode (err_mask=0x40)
->> [    0.493193] sched_clock: Marking stable (504159603, -10991650)->(615393192, -122225239)
->> [    0.493768] registered taskstats version 1
->> [    0.493770] Loading compiled-in X.509 certificates
->> [    0.497894] Loaded X.509 cert 'Build time autogenerated kernel key: 4682756457c0b7b167f0b726943cf53ade93bd78'
->> [    0.497984] zswap: loaded using pool lzo/zbud
->> [    0.498237] kmemleak: Kernel memory leak detector initialized
->> [    0.498243] kmemleak: Automatic memory scanning thread started
->> [    0.506469] Key type big_key registered
->> [    0.508864]   Magic number: 11:580:189
->> [    0.508914] acpi device:48: hash matches
->> [    0.508922] acpi device:1b: hash matches
->> [    0.509017] rtc_cmos 00:02: setting system clock to 2019-03-29T17:09:41 UTC (1553879381)
->> [    0.509485] After kernel_init_freeable
->> [    1.364358] tsc: Refined TSC clocksource calibration: 3499.982 MHz
->> [    1.364370] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x32734013f67, max_idle_ns: 440795323134 ns
->> [    1.364419] clocksource: Switched to clocksource tsc
->> [    5.593141] ata9: SATA link up 6.0 Gbps (SStatus 133 SControl 0)
->> [    5.593270] ata9.00: supports DRM functions and may not be fully accessible
->> [    5.594006] ata9.00: supports DRM functions and may not be fully accessible
->> [    5.594600] ata9.00: configured for UDMA/133
->> [    5.595893] scsi 8:0:0:0: Direct-Access     ATA      CT1000MX500SSD4  020  PQ: 0 ANSI: 5
->> [    5.596611] sd 8:0:0:0: [sda] 1953525168 512-byte logical blocks: (1.00 TB/932 GiB)
->> [    5.596613] sd 8:0:0:0: [sda] 4096-byte physical blocks
->> [    5.596626] sd 8:0:0:0: [sda] Write Protect is off
->> [    5.596629] sd 8:0:0:0: [sda] Mode Sense: 00 3a 00 00
->> [    5.596650] sd 8:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
->> [    5.596837] sd 8:0:0:0: Attached scsi generic sg0 type 0
->> [    5.597329]  sda: sda1 sda2 sda3
->> [    5.599079] sd 8:0:0:0: [sda] Attached SCSI disk
-> 
-> This happens with all Linux kernel versions – tested since 4.14. 
-> Searching for this error on the Web, several people seem to be affected 
-> with different boards and drives [1].
-> 
-> In a lot of those reports, I also see the message *Security Log not 
-> supported*.
-> 
-> Do you have an idea, why this is only happening sometimes? Is it likely 
-> a drive firmware issue? As it affects several vendors, can Linux work 
-> around this problem (if it can be pinpointed)?
-
-The first error seems to be `READ LOG DMA EXT failed, trying PIO`. The 
-code looks like below [2].
-
-> retry:
->         ata_tf_init(dev, &tf);
->         if (dev->dma_mode && ata_id_has_read_log_dma_ext(dev->id) &&
->             !(dev->horkage & ATA_HORKAGE_NO_DMA_LOG)) {
->                 tf.command = ATA_CMD_READ_LOG_DMA_EXT;
->                 tf.protocol = ATA_PROT_DMA;
->                 dma = true;
->         } else {
->                 tf.command = ATA_CMD_READ_LOG_EXT;
->                 tf.protocol = ATA_PROT_PIO;
->                 dma = false;
->         }
->         tf.lbal = log;
->         tf.lbam = page;
->         tf.nsect = sectors;
->         tf.hob_nsect = sectors >> 8;
->         tf.flags |= ATA_TFLAG_ISADDR | ATA_TFLAG_LBA48 | ATA_TFLAG_DEVICE;
-> 
->         err_mask = ata_exec_internal(dev, &tf, NULL, DMA_FROM_DEVICE,
->                                      buf, sectors * ATA_SECT_SIZE, 0);
-> 
->         if (err_mask && dma) {
->                 dev->horkage |= ATA_HORKAGE_NO_DMA_LOG;
->                 ata_dev_warn(dev, "READ LOG DMA EXT failed, trying PIO\n");
->                 goto retry;
->         }
-> 
->         DPRINTK("EXIT, err_mask=%x\n", err_mask);
->         return err_mask;
-
-So when trying PIO, that also seems to fail, and the error mask 0x40 is 
-propagated up.
-
-> enum ata_completion_errors {
->         AC_ERR_DEV              = (1 << 0), /* device reported error */
->         AC_ERR_HSM              = (1 << 1), /* host state machine violation */
->         AC_ERR_TIMEOUT          = (1 << 2), /* timeout */
->         AC_ERR_MEDIA            = (1 << 3), /* media error */
->         AC_ERR_ATA_BUS          = (1 << 4), /* ATA bus error */
->         AC_ERR_HOST_BUS         = (1 << 5), /* host bus error */
->         AC_ERR_SYSTEM           = (1 << 6), /* system error */
->         AC_ERR_INVALID          = (1 << 7), /* invalid argument */
->         AC_ERR_OTHER            = (1 << 8), /* unknown */
->         AC_ERR_NODEV_HINT       = (1 << 9), /* polling device detection hint */
->         AC_ERR_NCQ              = (1 << 10), /* marker for offending NCQ qc */
-> };
-
-So 0x40 is AC_ERR_HOST_BUS, right? Any idea, what might cause this?
-
-Would it be helpful to enable the debug messages?
-
-     #undef ATA_DEBUG                /* debugging output */
-
-
-Kind regards,
-
-Paul
-
-
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=195895[2]: 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/ata/libata-core.c?id=1daa0449d287a109b93c4516914eddeff4baff65#n2075
-[3]: 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/libata.h?id=1daa0449d287a109b93c4516914eddeff4baff65#n508
