@@ -4,61 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBCEC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2AFC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48A7206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4741206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:33:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="tzLDfizm"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="M+OUTlMv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfEEN3x (ORCPT
+        id S1727864AbfEENdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 09:29:53 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44832 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbfEEN3x (ORCPT
+        Sun, 5 May 2019 09:33:46 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44197 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfEENdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 09:29:53 -0400
-Received: by mail-qt1-f196.google.com with SMTP id f24so1459554qtk.11
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 06:29:52 -0700 (PDT)
+        Sun, 5 May 2019 09:33:46 -0400
+Received: by mail-qt1-f195.google.com with SMTP id f24so1465468qtk.11
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 06:33:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=FVTuUgZ01YXadVlQNhQr7mpUWbZJ7nrRUcoMljAwu28=;
-        b=tzLDfizmuuEN3EDvcf4XM9cDHdXUAph2dIe3y0AZVgDhm7k8YTzTOql13AmZkoNXKP
-         AdCkfE28TAUSfc7fRLSsuFb3zmW6oEMhF4Dyq+V+iStvd+QmTT9k+wNARfJYuLEpOqnW
-         axxDCHA6jsB8j5nxPE3uCbG2ICPQV6whjfJYo=
+        bh=8vh9GzL6Z3TESI/K8Xe7IDmt4lW4rJ2TS6d8Gg9f4ec=;
+        b=M+OUTlMvvZ88jH6CNuww2buF0wxPz/6/FyF26etHaJ7ads1jgfn2rS5KA/IggKuCiu
+         d5PlVyD6rNhxPiGnCzrrAbPGJkW2aSWXx8nKyGn3XiIe97TXbZnZWcH2GqnTn7P1eY4s
+         Hhs3bavkmsu1/D4xik3PSsJGHYede+vjcqdQo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FVTuUgZ01YXadVlQNhQr7mpUWbZJ7nrRUcoMljAwu28=;
-        b=bQ1hVNA5c+M/TxYGKT5LxLiDI0oFGjpQrieJTXx+7uvIEoXWH7nmog1jLl/uwpCuN3
-         06izN/jfMyxgnLlfinyhw6p7vF9dtO9LXfqKxbXlXvG8B96Uf+8ZhgSxdEaXiqHrmljh
-         fdxK9ViOi25P8+lxCRxETLcEt+8QENA9urNfzhR3oJA7n3m5xaYL0k047e8UFUITts6b
-         eMpOYy20h5CITpGSjMPuSGJV/br7Q94HAPqhHLa9aV90oNq4wFhfhPTosjIsRLNWTMRH
-         0RbYTodk2kvihVL2Xp5MVVG9NZuumACz615HJwGTaZ+PCDEobWSPhBcHfu0fidL9UYpl
-         r9NQ==
-X-Gm-Message-State: APjAAAXORuDV3jXMZiIamvgpdp8uZ9eLCdG9OoRPGiDkBdto0je2zTEG
-        Qxx1YNcKHXJXh2xrw6rS+E0wyA==
-X-Google-Smtp-Source: APXvYqxRHi3AtOdmdImJITLNqF3AOrukJ4LuJFrE1MGsQVdKmdye4qeaGuBt0En+CU5rxu8BpWFWPQ==
-X-Received: by 2002:a05:6214:242:: with SMTP id k2mr17039582qvt.168.1557062992107;
-        Sun, 05 May 2019 06:29:52 -0700 (PDT)
+        bh=8vh9GzL6Z3TESI/K8Xe7IDmt4lW4rJ2TS6d8Gg9f4ec=;
+        b=hb5Lr7jm0gCSi97+KUCcpxz5HB0jhgrwXqRXLpO9lRjdiUwm5yyjsAp1QO2fkFXe4p
+         U8tSHBVcLmZoqH2rAH+DLlVbJu9hRyRXcIckQbBR82ahtr40QGcZXaSfG4y7vOy2onzq
+         gVU7qHp1pDWvFnEHez7BL2KHj5yz6Sckb0IIvgalGTKcNc8cawbBSFRx6/iWg4CXM+Db
+         YouXLokWdMJ+FnCvzJEtfAx+dUezr/1kdo9sN/nk7BRPnf1xw0Cbi/ihyuUJ3A6lnHVC
+         tc1RslSbOhsuYwqNCjbuXaxOBG7m9e47E1Hxm9o0SkW9Zt5fpTruN1EK0ukX5KJWOEV6
+         sMDA==
+X-Gm-Message-State: APjAAAWuyqB5YDy0IwKgllg0xlIOx4NHW8dZVBRsxUSXnZKBgOF/Y1B5
+        uAubfuhie9lP1qqI9+rp8bMWFA==
+X-Google-Smtp-Source: APXvYqwZvrE19A+Oum63yFFoi2lvqbKSvPQtjx3rBN2iVToNB0C1ZrwrxK4w7/ddQ64WYLVkAEJcdg==
+X-Received: by 2002:ac8:6b11:: with SMTP id w17mr4479401qts.285.1557063225078;
+        Sun, 05 May 2019 06:33:45 -0700 (PDT)
 Received: from localhost (c-73-216-90-110.hsd1.va.comcast.net. [73.216.90.110])
-        by smtp.gmail.com with ESMTPSA id k53sm4815370qtb.65.2019.05.05.06.29.51
+        by smtp.gmail.com with ESMTPSA id o55sm6298213qtj.14.2019.05.05.06.33.43
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 May 2019 06:29:51 -0700 (PDT)
-Date:   Sun, 5 May 2019 13:29:49 +0000
+        Sun, 05 May 2019 06:33:44 -0700 (PDT)
+Date:   Sun, 5 May 2019 13:33:42 +0000
 From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Michal Gregorczyk <michalgr@live.com>,
         Adrian Ratiu <adrian.ratiu@collabora.com>,
         Mohammad Husain <russoue@gmail.com>,
+        Qais Yousef <qais.yousef@arm.com>,
         Srinivas Ramana <sramana@codeaurora.org>,
         duyuchao <yuchao.du@unisoc.com>,
         Manjo Raja Rao <linux@manojrajarao.com>,
@@ -70,63 +71,57 @@ Cc:     linux-kernel@vger.kernel.org,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Peter Ziljstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org
+        Ingo Molnar <mingo@redhat.com>,
+        Network Development <netdev@vger.kernel.org>
 Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
-Message-ID: <20190505132949.GB3076@localhost>
+Message-ID: <20190505133342.GC3076@localhost>
 References: <20190502204958.7868-1-joel@joelfernandes.org>
- <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
- <20190503134935.GA253329@google.com>
- <20190505110423.u7g3f2viovvgzbtn@e107158-lin.cambridge.arm.com>
+ <CAADnVQ+CPXKv_fryOxnDXjCLmWxor2j+WBFvPtG-Tcyr=hzRpQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190505110423.u7g3f2viovvgzbtn@e107158-lin.cambridge.arm.com>
+In-Reply-To: <CAADnVQ+CPXKv_fryOxnDXjCLmWxor2j+WBFvPtG-Tcyr=hzRpQ@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 05, 2019 at 12:04:24PM +0100, Qais Yousef wrote:
-> On 05/03/19 09:49, Joel Fernandes wrote:
-> > On Fri, May 03, 2019 at 01:12:34PM +0100, Qais Yousef wrote:
-> > > Hi Joel
-> > > 
-> > > On 05/02/19 16:49, Joel Fernandes (Google) wrote:
-> > > > The eBPF based opensnoop tool fails to read the file path string passed
-> > > > to the do_sys_open function. This is because it is a pointer to
-> > > > userspace address and causes an -EFAULT when read with
-> > > > probe_kernel_read. This is not an issue when running the tool on x86 but
-> > > > is an issue on arm64. This patch adds a new bpf function call based
-> > > 
-> > > I just did an experiment and if I use Android 4.9 kernel I indeed fail to see
-> > > PATH info when running opensnoop. But if I run on 5.1-rc7 opensnoop behaves
-> > > correctly on arm64.
-> > > 
-> > > My guess either a limitation that was fixed on later kernel versions or Android
-> > > kernel has some strict option/modifications that make this fail?
-> > 
-> > Thanks a lot for checking, yes I was testing 4.9 kernel with this patch (pixel 3).
-> > 
-> > I am not sure what has changed since then, but I still think it is a good
-> > idea to make the code more robust against such future issues anyway. In
-> > particular, we learnt with extensive discussions that user/kernel pointers
-> > are not necessarily distinguishable purely based on their address.
+On Sun, May 05, 2019 at 12:19:42AM -0700, Alexei Starovoitov wrote:
+> On Thu, May 2, 2019 at 1:50 PM Joel Fernandes (Google)
+> <joel@joelfernandes.org> wrote:
+> >
+> > The eBPF based opensnoop tool fails to read the file path string passed
+> > to the do_sys_open function. This is because it is a pointer to
+> > userspace address and causes an -EFAULT when read with
+> > probe_kernel_read. This is not an issue when running the tool on x86 but
+> > is an issue on arm64. This patch adds a new bpf function call based
+> > which calls the recently proposed probe_user_read function [1].
+> > Using this function call from opensnoop fixes the issue on arm64.
+> >
+> > [1] https://lore.kernel.org/patchwork/patch/1051588/
+> ...
+> > +BPF_CALL_3(bpf_probe_read_user, void *, dst, u32, size, const void *, unsafe_ptr)
+> > +{
+> > +       int ret;
+> > +
+> > +       ret = probe_user_read(dst, unsafe_ptr, size);
+> > +       if (unlikely(ret < 0))
+> > +               memset(dst, 0, size);
+> > +
+> > +       return ret;
+> > +}
 > 
-> Yes I wasn't arguing against that. But the commit message is misleading or
-> needs more explanation at least. I tried 4.9.y stable and arm64 worked on that
-> too. Why do you think it's an arm64 problem?
+> probe_user_read() doesn't exist in bpf-next
+> therefore this patch has to wait for the next merge window.
+> At the same time we would need to introduce
+> bpf_probe_read_kernel() and introduce a load time warning
+> for existing bpf_probe_read(), so we can deprecate it eventually.
 
-Well it is broken on at least on at least one arm64 device and the patch I
-sent fixes it. We know that the bpf is using wrong kernel API so why not fix
-it? Are you saying we should not fix it like in this patch? Or do you have
-another fix in mind?
+Ok I will update it accordingly. Agreed. thanks,
 
-thanks.
+ - Joel
 
-
-> 
-> --
-> Qais Yousef
