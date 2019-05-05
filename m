@@ -2,94 +2,109 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA4DC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 09:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A809DC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 09:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF88B208C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 09:10:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557047435;
-	bh=zBg2pFMN76OQLZ+8aW/TaJ4v4QpsKZHAAe6slSNkSOA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HWc8WljHsPsP3j9NQ1CWdMH57Kk1Y+i5YbEb8lQZheKJ9Qug0MMHT4VLlZy9dGDPD
-	 869LheRdas9KXFHktVnWf0d7ZvE625nv7mGRPDt9xgNA2FMG5LM29QgHIx7lFN+IAh
-	 mtTxtMv5JJGmslDpg4RqMP4O0FMbhDQzPNrOJhpw=
+	by mail.kernel.org (Postfix) with ESMTP id 816D62082F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 09:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbfEEJKe (ORCPT
+        id S1727544AbfEEJMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 05:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39264 "EHLO mail.kernel.org"
+        Sun, 5 May 2019 05:12:00 -0400
+Received: from mga06.intel.com ([134.134.136.31]:59396 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbfEEJKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 05:10:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9EDB2082F;
-        Sun,  5 May 2019 09:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557047433;
-        bh=zBg2pFMN76OQLZ+8aW/TaJ4v4QpsKZHAAe6slSNkSOA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0rdPKiSD3hDZaAO2Dle047AelS9XacX0duJjsXcjNgF3P1o2ucrL2vugZYZHpFnPr
-         rieeOFFuYmxEthgUnLy+4Oe88iTS610NFs2I2e4tClmQ0KznSo2ykaZ2T0kOqSx8Os
-         XtREL1U7LepT9tSyuUBA8d4yrwYYC2EpwgTQbcXo=
-Date:   Sun, 5 May 2019 11:10:30 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, atishp04@gmail.com,
-        bpf@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, dancol@google.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dietmar.eggemann@arm.com, duyuchao <yuchao.du@unisoc.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?utf-8?Q?Micha=C5=82?= Gregorczyk <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Olof Johansson <olof@lixom.net>, qais.yousef@arm.com,
-        rdunlap@infradead.org, Shuah Khan <shuah@kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>, yhs@fb.com
-Subject: Re: [PATCH v2] kheaders: Move from proc to sysfs
-Message-ID: <20190505091030.GA25646@kroah.com>
-References: <20190504121213.183203-1-joel@joelfernandes.org>
- <20190504122158.GA23535@kroah.com>
- <20190504123650.GA229151@google.com>
+        id S1726310AbfEEJL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 05:11:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 May 2019 02:11:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,433,1549958400"; 
+   d="scan'208";a="141452821"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
+  by orsmga006.jf.intel.com with ESMTP; 05 May 2019 02:11:58 -0700
+Subject: Re: [ext4] 345c0dbf3a: xfstests.ext4.303.fail
+To:     Theodore Ts'o <tytso@mit.edu>, LKML <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, lkp@01.org
+References: <20190426094708.GA20480@shao2-debian>
+ <20190426162810.GA9835@mit.edu>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <e2f687d1-2386-05d3-dc79-67ac1ba81a0e@intel.com>
+Date:   Sun, 5 May 2019 17:12:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190504123650.GA229151@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190426162810.GA9835@mit.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 04, 2019 at 08:36:50AM -0400, Joel Fernandes wrote:
-> > But, you should change S_IRUGO to the correct octal number, checkpatch
-> > should have barfed on this change.
-> 
-> fixed, below is the updated patch inline, thanks!
 
-Please resend as a "real" submission, doing so in this format is a bit
-more difficult to apply.
+On 4/27/19 12:28 AM, Theodore Ts'o wrote:
+> On Fri, Apr 26, 2019 at 05:47:09PM +0800, kernel test robot wrote:
+>> FYI, we noticed the following commit (built with gcc-7):
+>>
+>> commit: 345c0dbf3a30872d9b204db96b5857cd00808cae ("ext4: protect journal inode's blocks using block_validity")
+>> https://git.kernel.org/cgit/linux/kernel/git/tytso/ext4.git dev
+>>
+>> in testcase: xfstests
+>> with following parameters:
+>>
+>> 	disk: 4HDD
+>> 	fs: ext4
+>> 	test: ext4-run
+> Hi, I'm not able to reproduce this.
 
-thanks,
 
-greg k-h
+Thanks for your input, we found the test result of ext4/303 is not 
+stable on this commit, but it's no problem on v5.1-rc7.
+
+
+>
+> TESTRUNID: tytso-20190426093752
+> KERNEL:    kernel 5.1.0-rc3-xfstests-00007-g345c0dbf3a30 #921 SMP Fri Apr 26 09:36:55 EDT 2019 x86_64
+> CMDLINE:   -c 4k -g auto
+> CPUS:      2
+> MEM:       7680
+>
+> ext4/4k: 462 tests, 43 skipped, 4271 seconds
+> Totals: 419 tests, 43 skipped, 0 failures, 0 errors, 4249s
+>
+> Ran: ext4/001 ext4/002 ext4/003 ext4/004 ext4/005 ext4/020 ext4/021 ext4/022 ext4/023 ext4/024 ext4/025 ext4/026 ext4/027 ext4/028 ext4/029 ext4/030 ext4/031 ext4/032 ext4/033 ext4/034 ext4/271 ext4/301 ext4/302 ext4/303 ext4/305 ext4/306 ext4/307 ext4/308 generic/001 generic/002 generic/003 ....
+>
+> Given some of the failures, especially this one:
+
+
+Yes, it's our fault, we have fixed it.
+
+Best Regards,
+Rong Chen
+
+
+>
+>> ext4/307	- output mismatch (see /lkp/benchmarks/xfstests/results//ext4/307.out.bad)
+>>      --- tests/ext4/307.out	2019-04-25 09:04:55.000000000 +0800
+>>      +++ /lkp/benchmarks/xfstests/results//ext4/307.out.bad	2019-04-26 13:15:02.522490198 +0800
+>>      @@ -1,6 +1,7 @@
+>>       QA output created by 307
+>>       
+>>       Run fsstress
+>>      +./tests/ext4/307: line 34: gawk: command not found
+>>       Allocate donor file
+>>       Perform compacting
+>>       Check data
+>>      ...
+>>      (Run 'diff -u /lkp/benchmarks/xfstests/tests/ext4/307.out /lkp/benchmarks/xfstests/results//ext4/307.out.bad'  to see the entire diff)
+> I'm very much wondering whether your VM has gotten corrupted or hasn't
+> been correctly set up?
+>
+> 					- Ted
