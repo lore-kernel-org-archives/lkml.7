@@ -3,37 +3,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE93C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331B3C04AAB
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 22:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8EF206A3
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 21:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046D7208C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 22:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfEEVuZ (ORCPT
+        id S1727984AbfEEWB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 17:50:25 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56846 "EHLO
+        Sun, 5 May 2019 18:01:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56926 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfEEVuZ (ORCPT
+        with ESMTP id S1726905AbfEEWBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 17:50:25 -0400
+        Sun, 5 May 2019 18:01:25 -0400
 Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
         (Exim 4.76)
         (envelope-from <colin.king@canonical.com>)
-        id 1hNP1Y-0000Xw-70; Sun, 05 May 2019 21:50:20 +0000
+        id 1hNPCE-00019B-T5; Sun, 05 May 2019 22:01:23 +0000
 From:   Colin King <colin.king@canonical.com>
-To:     Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] taprio: add null check on sched_nest to avoid potential null pointer dereference
-Date:   Sun,  5 May 2019 22:50:19 +0100
-Message-Id: <20190505215019.4639-1-colin.king@canonical.com>
+Subject: [PATCH] io_uring: fix shadowed variable ret return code being not checked
+Date:   Sun,  5 May 2019 23:01:22 +0100
+Message-Id: <20190505220122.5024-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -45,31 +44,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-The call to nla_nest_start_noflag can return a null pointer and currently
-this is not being checked and this can lead to a null pointer dereference
-when the null pointer sched_nest is passed to function nla_nest_end. Fix
-this by adding in a null pointer check.
+Currently variable ret is declared in a while-loop code block that
+shadows another variable ret. When an error occurs in the while-loop
+the error return in ret is not being set in the outer code block and
+so the error check on ret is always going to be checking on the wrong
+ret variable resulting in check that is always going to be true and
+a premature return occurs.
 
-Addresses-Coverity: ("Dereference null return value")
-Fixes: a3d43c0d56f1 ("taprio: Add support adding an admin schedule")
+Fix this by removing the declaration of the inner while-loop variable
+ret so that shadowing does not occur.
+
+Addresses-Coverity: ("'Constant' variable guards dead code")
+Fixes: 6b06314c47e1 ("io_uring: add file set registration")
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- net/sched/sch_taprio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/io_uring.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
-index 539677120b9f..9ecfb8f5902a 100644
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -1087,6 +1087,8 @@ static int taprio_dump(struct Qdisc *sch, struct sk_buff *skb)
- 		goto done;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 452e35357865..50f965060ef1 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2363,7 +2363,6 @@ static int io_sqe_files_scm(struct io_ring_ctx *ctx)
+ 	left = ctx->nr_user_files;
+ 	while (left) {
+ 		unsigned this_files = min_t(unsigned, left, SCM_MAX_FD);
+-		int ret;
  
- 	sched_nest = nla_nest_start_noflag(skb, TCA_TAPRIO_ATTR_ADMIN_SCHED);
-+	if (!sched_nest)
-+		goto options_error;
- 
- 	if (dump_schedule(skb, admin))
- 		goto admin_error;
+ 		ret = __io_sqe_files_scm(ctx, this_files, total);
+ 		if (ret)
 -- 
 2.20.1
 
