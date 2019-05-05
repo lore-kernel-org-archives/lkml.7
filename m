@@ -2,172 +2,160 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4843C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC85FC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB9D2087F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9778F2087F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:55:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pxGvWvx2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfEEIyE convert rfc822-to-8bit (ORCPT
+        id S1727681AbfEEIzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 04:54:04 -0400
-Received: from prv1-mh.provo.novell.com ([137.65.248.33]:55932 "EHLO
-        prv1-mh.provo.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbfEEIyE (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:6:1>);
-        Sun, 5 May 2019 04:54:04 -0400
-Received: from INET-PRV1-MTA by prv1-mh.provo.novell.com
-        with Novell_GroupWise; Sun, 05 May 2019 02:54:03 -0600
-Message-Id: <5CCEA4A5020000F900063FA7@prv1-mh.provo.novell.com>
-X-Mailer: Novell GroupWise Internet Agent 18.1.0 
-Date:   Sun, 05 May 2019 02:53:57 -0600
-From:   "Gang He" <ghe@suse.com>
-To:     <jlbec@evilplan.org>, <mark@fasheh.com>, <jiangqi903@gmail.com>
-Cc:     <akpm@linux-foundation.org>, <ocfs2-devel@oss.oracle.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 2/2] ocfs2: add locking filter debugfs file
-References: <20190429083353.1410-1-ghe@suse.com>
- <f65e80e4-c99c-c84f-30c1-65991aec4da7@gmail.com>
-In-Reply-To: <f65e80e4-c99c-c84f-30c1-65991aec4da7@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Content-Disposition: inline
+        Sun, 5 May 2019 04:55:44 -0400
+Received: from mail-eopbgr150052.outbound.protection.outlook.com ([40.107.15.52]:25422
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726359AbfEEIzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 04:55:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gtw9rkS4XkmSK27kW0TiDuGbcg6kX7qePi8cV4olgic=;
+ b=pxGvWvx2P4O71jBVMmyzklk2+rreT/XiDNes2zVyNh1T4OOR+7pCA34mMEoXXceDpBZu6VoJfZN3S6t3UwIhFCzaxh6R9lrTiX33NSU+5vponkMvFdZUaTMgcGNhdl51tgNbXO6b4Re2ykEMToUXKsf19pt3JDTykagAz7RPGaE=
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
+ VI1PR04MB4350.eurprd04.prod.outlook.com (52.134.122.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Sun, 5 May 2019 08:55:38 +0000
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5d07:911b:18e1:1525]) by VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5d07:911b:18e1:1525%4]) with mapi id 15.20.1856.012; Sun, 5 May 2019
+ 08:55:38 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [EXT] Re: [PATCH v2 08/15] dt-bindings: spi: imx: add i.mx6ul to
+ state errata fixed
+Thread-Topic: [EXT] Re: [PATCH v2 08/15] dt-bindings: spi: imx: add i.mx6ul to
+ state errata fixed
+Thread-Index: AQHU/AbdFQmcRuAKXkaLI1VIJjs4JKZWut6AgAV7GBA=
+Date:   Sun, 5 May 2019 08:55:38 +0000
+Message-ID: <VI1PR04MB45436CE1F6856137F586C94389370@VI1PR04MB4543.eurprd04.prod.outlook.com>
+References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
+ <1556265512-9130-9-git-send-email-yibin.gong@nxp.com>
+ <20190501200711.GA31231@bogus>
+In-Reply-To: <20190501200711.GA31231@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9c654712-0d58-4ea7-d6e5-08d6d13771dd
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4350;
+x-ms-traffictypediagnostic: VI1PR04MB4350:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR04MB435007B2BBF58D3B67C27A8189370@VI1PR04MB4350.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:291;
+x-forefront-prvs: 00286C0CA6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(39860400002)(136003)(396003)(199004)(189003)(71190400001)(71200400001)(25786009)(5660300002)(86362001)(6436002)(3846002)(7696005)(76176011)(99286004)(316002)(14444005)(26005)(256004)(186003)(8936002)(54906003)(6116002)(446003)(11346002)(8676002)(45080400002)(478600001)(81156014)(6506007)(102836004)(81166006)(14454004)(66066001)(476003)(486006)(68736007)(229853002)(2906002)(33656002)(6916009)(52536014)(4326008)(305945005)(9686003)(7736002)(7416002)(6246003)(74316002)(53936002)(6306002)(66556008)(64756008)(66446008)(66476007)(66946007)(73956011)(55016002)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4350;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BShK2GJlGnquBxCC/1dsZeujCYySQfrCvAoJ8l6/bRpFDA3GK9yjSG8RakpZS/pa7YWFm+n+dXL4R+iVmW5kBJv/0PnSkdlidMOAFMztlTZoWpG6372P5u5T5hj/ksFyyzTR8JG4O7d2zDF8NEgFdPD3wc3Bs6xSnwGnobwOk5V88/S//hXZSdqBa4TmWzv0Pwb5YU4Z3t5zMqGVGMVFP3H9JjhG3uqoSE0Lqqxxazka0myJV4giNT9o3ImDwmsSB9/HTGLaMELhrEZchLHibO1cy7+dUzOrEmfXysUQJNudmnRDw5AlVZwnC1ZJw21KjCWD+8Ow6cZT3GhdCFT09L/i2NjowSp0oCpKwnpA/ieaVRMiBGi5zaaH2almmgza5t49mQrNkIHZp610FZ1hTgcDxsEGT8VybruW0HFRvF8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c654712-0d58-4ea7-d6e5-08d6d13771dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2019 08:55:38.2283
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4350
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
->>> On 2019/5/5 at 14:54, in message
-<f65e80e4-c99c-c84f-30c1-65991aec4da7@gmail.com>, Joseph Qi
-<jiangqi903@gmail.com> wrote:
-> Hi Gang,
-> 
-> On 19/4/29 16:33, Gang He wrote:
->> Add locking filter debugfs file, which is used to filter lock
->> resources dump from locking_state debugfs file.
->> We use d_filter_secs field to filter lock resources dump,
->> the default d_filter_secs(0) value filters nothing,
->> otherwise, only dump the last N seconds active lock resources.
->> This enhancement can avoid dumping lots of old records.
->> The d_filter_secs value can be changed via locking_filter file.
->> 
->> Compared with v1, the main change is to add CONFIG_OCFS2_FS_STATS
->> macro definition judgment.
->> 
->> Signed-off-by: Gang He <ghe@suse.com>
->> ---
->>  fs/ocfs2/dlmglue.c | 38 ++++++++++++++++++++++++++++++++++++++
->>  fs/ocfs2/ocfs2.h   |  2 ++
->>  2 files changed, 40 insertions(+)
->> 
->> diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
->> index dccf4136f8c1..554d37d52510 100644
->> --- a/fs/ocfs2/dlmglue.c
->> +++ b/fs/ocfs2/dlmglue.c
->> @@ -3006,6 +3006,8 @@ struct ocfs2_dlm_debug *ocfs2_new_dlm_debug(void)
->>  	kref_init(&dlm_debug->d_refcnt);
->>  	INIT_LIST_HEAD(&dlm_debug->d_lockres_tracking);
->>  	dlm_debug->d_locking_state = NULL;
->> +	dlm_debug->d_locking_filter = NULL;
->> +	dlm_debug->d_filter_secs = 0;
->>  out:
->>  	return dlm_debug;
->>  }
->> @@ -3104,11 +3106,33 @@ static int ocfs2_dlm_seq_show(struct seq_file *m, 
-> void *v)
->>  {
->>  	int i;
->>  	char *lvb;
->> +	u32 now, last = 0;
->>  	struct ocfs2_lock_res *lockres = v;
->> +	struct ocfs2_dlm_debug *dlm_debug =
->> +			((struct ocfs2_dlm_seq_priv *)m->private)->p_dlm_debug;
->>  
->>  	if (!lockres)
->>  		return -EINVAL;
->>  
->> +	if (dlm_debug->d_filter_secs) {
->> +		now = ktime_to_timespec(ktime_get()).tv_sec;
->> +#ifdef CONFIG_OCFS2_FS_STATS
->> +		if (lockres->l_lock_prmode.ls_last >
->> +		    lockres->l_lock_exmode.ls_last)
->> +			last = lockres->l_lock_prmode.ls_last;
->> +		else
->> +			last = lockres->l_lock_exmode.ls_last;
->> +#endif
->> +		/*
->> +		 * Use d_filter_secs field to filter lock resources dump,
->> +		 * the default d_filter_secs(0) value filters nothing,
->> +		 * otherwise, only dump the last N seconds active lock
->> +		 * resources.
->> +		 */
->> +		if ((now - last) > dlm_debug->d_filter_secs)
->> +			return 0;
->> +	}
->> +
->>  	seq_printf(m, "0x%x\t", OCFS2_DLM_DEBUG_STR_VERSION);
->>  
->>  	if (lockres->l_type == OCFS2_LOCK_TYPE_DENTRY)
->> @@ -3258,6 +3282,19 @@ static int ocfs2_dlm_init_debug(struct ocfs2_super 
-> *osb)
->>  		goto out;
->>  	}
->>  
->> +	dlm_debug->d_locking_filter = debugfs_create_u32("locking_filter",
->> +						0600,
->> +						osb->osb_debug_root,
->> +						&dlm_debug->d_filter_secs);
->> +	if (!dlm_debug->d_locking_filter) {
->> +		ret = -EINVAL;
->> +		mlog(ML_ERROR,
->> +		     "Unable to create locking filter debugfs file.\n");
->> +		debugfs_remove(dlm_debug->d_locking_state);
->> +		dlm_debug->d_locking_state = NULL;
-> 
-> Or we can just leave this cleanup for ocfs2_dlm_shutdown_debug()?
-Yes, it looks more concise to delete these two lines code, then let ocfs2_dlm_shutdown_debug()
-function to handle the cleanup in case failure.
-
-Thanks
-Gang
-
-> 
-> Thanks,
-> Joseph
-> 
->> +		goto out;
->> +	}
->> +
->>  	ocfs2_get_dlm_debug(dlm_debug);
->>  out:
->>  	return ret;
->> @@ -3269,6 +3306,7 @@ static void ocfs2_dlm_shutdown_debug(struct 
-> ocfs2_super *osb)
->>  
->>  	if (dlm_debug) {
->>  		debugfs_remove(dlm_debug->d_locking_state);
->> +		debugfs_remove(dlm_debug->d_locking_filter);
->>  		ocfs2_put_dlm_debug(dlm_debug);
->>  	}
->>  }
->> diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
->> index 8efa022684f4..f4da51099889 100644
->> --- a/fs/ocfs2/ocfs2.h
->> +++ b/fs/ocfs2/ocfs2.h
->> @@ -237,6 +237,8 @@ struct ocfs2_orphan_scan {
->>  struct ocfs2_dlm_debug {
->>  	struct kref d_refcnt;
->>  	struct dentry *d_locking_state;
->> +	struct dentry *d_locking_filter;
->> +	u32 d_filter_secs;
->>  	struct list_head d_lockres_tracking;
->>  };
->>  
->> 
+> On Fri, Apr 26, 2019 at 08:05:51AM +0000, Robin Gong wrote:
+> > ERR009165 fixed from i.mx6ul, add it to show the errata fixed.
+> >
+> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> > b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> > index 2d32641..32c4263d 100644
+> > --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> > +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> > @@ -10,6 +10,8 @@ Required properties:
+> >    - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.M=
+X35
+> >    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.=
+MX51
+> >    - "fsl,imx53-ecspi" for SPI compatible with the one integrated on
+> > i.MX53 and later Soc
+> > +  - "fsl,imx6ul-ecspi" ERR009165 fixed on i.MX6UL and later Soc
+> > +
+> > + (https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2F=
+w
+> > +
+> ww.nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01
+> %7Cyi
+> > +
+> bin.gong%40nxp.com%7C1eb9b302759b4af6fbe408d6ce709b8b%7C686ea1d
+> 3bc2b
+> > +
+> 4c6fa92cd99c5c301635%7C0%7C1%7C636923380371230101&amp;sdata=3D%
+> 2BxM9fN
+> > + 6aEFkNlY5KU9qNiqqFMuDEfqGNrzADDiPO9gQ%3D&amp;reserved=3D0)
+>=20
+> What about other i.MX6 chips?
+I only state in the cover letter of this patch set, for i.mx6q/dl/sl/sx sti=
+ll need this
+errata which is fixed i.mx chips after i.mx6ul including i.mx6ull,i.mx8m,i.=
+mx8mm.
+I'll double confirm again and describe it clearly in commit log in v3.
+>=20
+> Seems like this is missing some fallbacks. The binding doc should make it=
+ clear
+> what are all valid combinations of compatible strings.
+In another Uwe's comment, I'm thinking move such errata information into sp=
+i
+driver level which makes binding doc clear. What do you think?
+>=20
+> >    - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on
+> > i.MX8M
+> >  - reg : Offset and length of the register set for the device
+> >  - interrupts : Should contain CSPI/eCSPI interrupt
+> > --
+> > 2.7.4
+> >
