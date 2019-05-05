@@ -2,117 +2,126 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5049C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF7AC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87AAD208C2
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:45:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557071112;
-	bh=aKwSsB4VIQvPHjNpyepX94dwCojn4YcW4pPdu085lpA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iHmjKTS2z9J7xvAUXspGN0t/UWaXMq0rh8jtGhfVnCWn5JeKNKOO6l9g+7bUp3zOY
-	 l8JdQXawP551Kj0sen5vpfZWqUrDOTxlJQEABZW6PEI1khRbfA7Vq0C1IbtGz45q2R
-	 QoMgn3Aqw51urlmhcdPS1P8hvks/J08fe56zW5zk=
+	by mail.kernel.org (Postfix) with ESMTP id 4637C208CA
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:48:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5ljalxi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfEEPpK (ORCPT
+        id S1727699AbfEEPse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 11:45:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbfEEPpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 11:45:10 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B11FA206DF;
-        Sun,  5 May 2019 15:45:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557071109;
-        bh=aKwSsB4VIQvPHjNpyepX94dwCojn4YcW4pPdu085lpA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0LZ8f5LyLX20WKafPP0af88glvklQ1x0J0Jve8bY4nJCqS9IyvDajjpokrGH3LdVt
-         +h1+08XmvOD2KobcKuiqSatQjSlPfOdnfVwZWlZnyukPLprLaQkxFC8O1M/49pfaFZ
-         5suhRhYTipcXVWcq6OvfsC/8fdhP0DI17yQOKFFs=
-Date:   Sun, 5 May 2019 16:45:03 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Philippe Schenker <dev@pschenker.ch>
-Cc:     linux-iio@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] iio: stmpe-adc: Enable all stmpe-adc interrupts
- just once
-Message-ID: <20190505164503.030d6687@archlinux>
-In-Reply-To: <20190503135725.9959-3-dev@pschenker.ch>
-References: <20190503135725.9959-1-dev@pschenker.ch>
-        <20190503135725.9959-3-dev@pschenker.ch>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 5 May 2019 11:48:34 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45586 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfEEPsd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 11:48:33 -0400
+Received: by mail-lj1-f193.google.com with SMTP id w12so8990985ljh.12;
+        Sun, 05 May 2019 08:48:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BlEG9NIkB+2QxScurVzvzhb4UAYd8wqCw9tKjxEGmJQ=;
+        b=Z5ljalxiS8q/cLjSGutusocESg6ENqIF3poRf0yJOfDEkDl0ZBxIYovnL4Wb9CwcUp
+         o7LMaEE14rnCOzLnDCIjefX6rQWpgp76lRN9yFZ9072J/5AdRhvRx2O4Z9+M2sXccDjC
+         7SNgfPR0iXoQVd392+b17D02toIX3hnYof0/m6HZD037jav3zl6/VtyJA1zC2GkDSnUX
+         bnpxSnBlg5LMveEg+GBdwhtfmfAApRxc8JhGFPUvr47YlP9/UQCE9H8n93yb2C8m6Y1V
+         mmMbNRF134Zjoms6dU/4NzZ/kqZhMwnveZRKrqrdJhjD4PotyPRGHJ0kYkJwxD6KFRPW
+         +4Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BlEG9NIkB+2QxScurVzvzhb4UAYd8wqCw9tKjxEGmJQ=;
+        b=nYpnJyjDAuYTif36J7PNQn8TM9LEjdRDtShfizeatSTPLKCIMZbNTzaCqnwDexzv+C
+         OjhXxaiD1TBYY1QZttoJmt4mdu7bWdy5bRLXnjqdYnLntP3BnQU+fZolXYtIyJKLwsPn
+         J8IeEoig3j8e3OobVRSHyX4sVYxImV1g+F2sqILHu75JGeq8EYom2oEJZ2EVP5CNXERD
+         AQK7tlXr1VQIV5AAoAHcwpmGaFEDyMUaoBvx3rJY4VsoJFz0NM2jpcKLLDgqQ4CvG/H4
+         sDt9iZpwfDQGnz4y24LNx7iE6rzLpl9Ab0JyrBbQMmc950cfpaaSHM6NF2vfcJ+HsJOh
+         TjZA==
+X-Gm-Message-State: APjAAAVRuKiPirSHiaNh7NU4wzKKUWOysGQ21htrNA8WR4lkiGTyVhVF
+        QqBxz21fLYqccWZNEW+aWSk=
+X-Google-Smtp-Source: APXvYqxgEFFvRre94LLBuNrR+odXfimmP7OXvMOrD2Vr34gtNHuQQ0eq3glKVrQd9gHS4vmGxltDgg==
+X-Received: by 2002:a2e:9002:: with SMTP id h2mr3205865ljg.164.1557071311388;
+        Sun, 05 May 2019 08:48:31 -0700 (PDT)
+Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.gmail.com with ESMTPSA id d16sm1595278lfi.75.2019.05.05.08.48.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 05 May 2019 08:48:30 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Mallikarjun Kasoju <mkasoju@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] Add support for Maxim 77663 MFD
+Date:   Sun,  5 May 2019 18:43:19 +0300
+Message-Id: <20190505154325.30026-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  3 May 2019 15:57:25 +0200
-Philippe Schenker <dev@pschenker.ch> wrote:
+Hello,
 
-> From: Philippe Schenker <philippe.schenker@toradex.com>
-> 
-> This commit will enable the interrupts of all channels handled by this
-> driver only once in the probe function.
-> 
-> This will improve performance because one byte less has to be written over
-> i2c on each read out of the adc. On the fastest ADC mode this will improve
-> read out speed by 15%.
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Makes sense. I'll pick this up once patch 2 discussion is sorted.
+This series adds support for the Maxim 77663 chip that provides PMIC, RTC,
+GPIO and watchdog timer functionality. The hardware is very similar to the
+Maxim 77620/20024 hardware units that are already supported by the kernel,
+hence we will reuse the existing drivers for 77663. The GPIO, regulator,
+RTC and watchdog timer functionality was tested on a Nexus 7 tablet that
+has the Max77663 chip, everything is working perfectly fine. I'm looking
+at upstreaming support for that tablet device and Max77663 is one of the
+core components that are currently missing in the upstream kernel.
 
-Jonathan
+Changelog:
 
-> 
-> ---
-> 
->  drivers/iio/adc/stmpe-adc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
-> index baa41ffc0d76..427c890c6e7d 100644
-> --- a/drivers/iio/adc/stmpe-adc.c
-> +++ b/drivers/iio/adc/stmpe-adc.c
-> @@ -72,9 +72,6 @@ static int stmpe_read_voltage(struct stmpe_adc *info,
->  		return -EINVAL;
->  	}
->  
-> -	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_EN,
-> -			STMPE_ADC_CH(info->channel));
-> -
->  	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_CAPT,
->  			STMPE_ADC_CH(info->channel));
->  
-> @@ -328,6 +325,9 @@ static int stmpe_adc_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_EN,
-> +			~(norequest_mask & 0xFF));
-> +
->  	return devm_iio_device_register(&pdev->dev, indio_dev);
->  }
->  
+v4: Addressed review comments from Rob Herring to v3 by making use of
+    generic "system-power-controller" property and making couple other
+    minor cosmetic changes. Added Mark's Brown a-b to the regulator-patch.
+
+v3: Dropped "Support device-tree properly" patch since turned out that
+    I2C core takes care of the device-tree matching and I wasn't aware of
+    it.
+
+v2: Added PINCTRL sub-device to Max77663 MFD as it looks compatible with
+    77620.
+
+    Added new "maxim,system-power-controller" OF property.
+
+    Patch "Support device-tree properly" now doesn't remove driver's
+    "id_table" since potentially it could have some use in the downstream
+    kernel forks and it doesn't hurt to keep it around.
+
+Dmitry Osipenko (6):
+  dt-bindings: mfd: max77620: Add compatible for Maxim 77663
+  dt-bindings: mfd: max77620: Add system-power-controller property
+  mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
+  mfd: max77620: Support Maxim 77663
+  mfd: max77620: Provide system power-off functionality
+  regulator: max77620: Support Maxim 77663
+
+ .../devicetree/bindings/mfd/max77620.txt      |  9 +-
+ drivers/mfd/max77620.c                        | 87 ++++++++++++++++++-
+ drivers/regulator/max77620-regulator.c        | 26 +++++-
+ include/linux/mfd/max77620.h                  |  5 +-
+ 4 files changed, 122 insertions(+), 5 deletions(-)
+
+-- 
+2.21.0
 
