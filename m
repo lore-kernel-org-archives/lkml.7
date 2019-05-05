@@ -2,39 +2,39 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB45C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB33C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6601920C01
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A2C208C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfEEOBA (ORCPT
+        id S1727991AbfEEOBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 10:01:00 -0400
-Received: from shell.v3.sk ([90.176.6.54]:55686 "EHLO shell.v3.sk"
+        Sun, 5 May 2019 10:01:08 -0400
+Received: from shell.v3.sk ([90.176.6.54]:55710 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727608AbfEEOA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 10:00:58 -0400
+        id S1727608AbfEEOBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 10:01:03 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 20F5D103D2B;
-        Sun,  5 May 2019 16:00:54 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id 1E532103D25;
+        Sun,  5 May 2019 16:00:59 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 7HvPXnoqFyKA; Sun,  5 May 2019 16:00:41 +0200 (CEST)
+        with ESMTP id dqIgvJsipZHb; Sun,  5 May 2019 16:00:46 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id E7582103D34;
-        Sun,  5 May 2019 16:00:39 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id E81DB103D27;
+        Sun,  5 May 2019 16:00:41 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id dP3ery7n7N2b; Sun,  5 May 2019 16:00:36 +0200 (CEST)
+        with ESMTP id Agye__H3dehs; Sun,  5 May 2019 16:00:37 +0200 (CEST)
 Received: from nedofet.lan (ip-89-102-31-34.net.upcbroadband.cz [89.102.31.34])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id E7FF3103D27;
-        Sun,  5 May 2019 16:00:35 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTPSA id E78C5103D2A;
+        Sun,  5 May 2019 16:00:36 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org
@@ -47,9 +47,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         jacopo mondi <jacopo@jmondi.org>,
         Sakari Ailus <sakari.ailus@iki.fi>,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v5 02/10] [media] marvell-ccic: fix DMA s/g desc number calculation
-Date:   Sun,  5 May 2019 16:00:23 +0200
-Message-Id: <20190505140031.9636-3-lkundrak@v3.sk>
+Subject: [PATCH v5 04/10] Revert "[media] marvell-ccic: reset ccic phy when stop streaming for stability"
+Date:   Sun,  5 May 2019 16:00:25 +0200
+Message-Id: <20190505140031.9636-5-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190505140031.9636-1-lkundrak@v3.sk>
 References: <20190505140031.9636-1-lkundrak@v3.sk>
@@ -60,60 +60,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
-left dma_desc_nent unset. It previously contained the number of DMA
-descriptors as returned from dma_map_sg().
+This accesses the clock registers directly and thus is going to stay in t=
+he
+way of making the driver devicetree friendly.
 
-We can now (since the commit referred to above) obtain the same value fro=
-m
-the sg_table and drop dma_desc_nent altogether.
+No boards seems to actually use this. If it's somehow actually needed it
+needs to be done differently.
 
-Tested on OLPC XO-1.75 machine. Doesn't affect the OLPC XO-1's Cafe
-driver, since that one doesn't do DMA.
-
-Fixes: d790b7eda953df474f470169ebdf111c02fa7a2d
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+This reverts commit 7c269f454e7a51b151d94f99344120efa1cd0acb.
 ---
- drivers/media/platform/marvell-ccic/mcam-core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../media/platform/marvell-ccic/mcam-core.c   |  6 -----
+ .../media/platform/marvell-ccic/mcam-core.h   |  2 --
+ .../media/platform/marvell-ccic/mmp-driver.c  | 25 -------------------
+ 3 files changed, 33 deletions(-)
 
 diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/me=
 dia/platform/marvell-ccic/mcam-core.c
-index f1b301810260a..d97f39bde9bd6 100644
+index d24e5b7a3bc52..1b879035948c5 100644
 --- a/drivers/media/platform/marvell-ccic/mcam-core.c
 +++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-@@ -200,7 +200,6 @@ struct mcam_vb_buffer {
- 	struct list_head queue;
- 	struct mcam_dma_desc *dma_desc;	/* Descriptor virtual address */
- 	dma_addr_t dma_desc_pa;		/* Descriptor physical address */
--	int dma_desc_nent;		/* Number of mapped descriptors */
- };
-=20
- static inline struct mcam_vb_buffer *vb_to_mvb(struct vb2_v4l2_buffer *v=
-b)
-@@ -608,9 +607,11 @@ static void mcam_dma_contig_done(struct mcam_camera =
-*cam, int frame)
- static void mcam_sg_next_buffer(struct mcam_camera *cam)
- {
- 	struct mcam_vb_buffer *buf;
-+	struct sg_table *sg_table;
-=20
- 	buf =3D list_first_entry(&cam->buffers, struct mcam_vb_buffer, queue);
- 	list_del_init(&buf->queue);
-+	sg_table =3D vb2_dma_sg_plane_desc(&buf->vb_buf.vb2_buf, 0);
+@@ -1154,12 +1154,6 @@ static void mcam_vb_stop_streaming(struct vb2_queu=
+e *vq)
+ 	if (cam->state !=3D S_STREAMING)
+ 		return;
+ 	mcam_ctlr_stop_dma(cam);
+-	/*
+-	 * Reset the CCIC PHY after stopping streaming,
+-	 * otherwise, the CCIC may be unstable.
+-	 */
+-	if (cam->ctlr_reset)
+-		cam->ctlr_reset(cam);
  	/*
- 	 * Very Bad Not Good Things happen if you don't clear
- 	 * C1_DESC_ENA before making any descriptor changes.
-@@ -618,7 +619,7 @@ static void mcam_sg_next_buffer(struct mcam_camera *c=
+ 	 * VB2 reclaims the buffers, so we need to forget
+ 	 * about them.
+diff --git a/drivers/media/platform/marvell-ccic/mcam-core.h b/drivers/me=
+dia/platform/marvell-ccic/mcam-core.h
+index ad8955f9f0a17..a3a097a45e78b 100644
+--- a/drivers/media/platform/marvell-ccic/mcam-core.h
++++ b/drivers/media/platform/marvell-ccic/mcam-core.h
+@@ -116,7 +116,6 @@ struct mcam_camera {
+ 	int mclk_src;	/* which clock source the mclk derives from */
+ 	int mclk_div;	/* Clock Divider Value for MCLK */
+=20
+-	int ccic_id;
+ 	enum v4l2_mbus_type bus_type;
+ 	/* MIPI support */
+ 	/* The dphy config value, allocated in board file
+@@ -137,7 +136,6 @@ struct mcam_camera {
+ 	int (*plat_power_up) (struct mcam_camera *cam);
+ 	void (*plat_power_down) (struct mcam_camera *cam);
+ 	void (*calc_dphy) (struct mcam_camera *cam);
+-	void (*ctlr_reset) (struct mcam_camera *cam);
+=20
+ 	/*
+ 	 * Everything below here is private to the mcam core and
+diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/m=
+edia/platform/marvell-ccic/mmp-driver.c
+index af76eb6377735..8d982c4aae0d8 100644
+--- a/drivers/media/platform/marvell-ccic/mmp-driver.c
++++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
+@@ -105,7 +105,6 @@ static struct mmp_camera *mmpcam_find_device(struct p=
+latform_device *pdev)
+ #define CPU_SUBSYS_PMU_BASE	0xd4282800
+ #define REG_CCIC_DCGCR		0x28	/* CCIC dyn clock gate ctrl reg */
+ #define REG_CCIC_CRCR		0x50	/* CCIC clk reset ctrl reg	*/
+-#define REG_CCIC2_CRCR		0xf4	/* CCIC2 clk reset ctrl reg	*/
+=20
+ static void mcam_clk_enable(struct mcam_camera *mcam)
+ {
+@@ -183,28 +182,6 @@ static void mmpcam_power_down(struct mcam_camera *mc=
 am)
- 	mcam_reg_clear_bit(cam, REG_CTRL1, C1_DESC_ENA);
- 	mcam_reg_write(cam, REG_DMA_DESC_Y, buf->dma_desc_pa);
- 	mcam_reg_write(cam, REG_DESC_LEN_Y,
--			buf->dma_desc_nent*sizeof(struct mcam_dma_desc));
-+			sg_table->nents*sizeof(struct mcam_dma_desc));
- 	mcam_reg_write(cam, REG_DESC_LEN_U, 0);
- 	mcam_reg_write(cam, REG_DESC_LEN_V, 0);
- 	mcam_reg_set_bit(cam, REG_CTRL1, C1_DESC_ENA);
+ 	mcam_clk_disable(mcam);
+ }
+=20
+-static void mcam_ctlr_reset(struct mcam_camera *mcam)
+-{
+-	unsigned long val;
+-	struct mmp_camera *cam =3D mcam_to_cam(mcam);
+-
+-	if (mcam->ccic_id) {
+-		/*
+-		 * Using CCIC2
+-		 */
+-		val =3D ioread32(cam->power_regs + REG_CCIC2_CRCR);
+-		iowrite32(val & ~0x2, cam->power_regs + REG_CCIC2_CRCR);
+-		iowrite32(val | 0x2, cam->power_regs + REG_CCIC2_CRCR);
+-	} else {
+-		/*
+-		 * Using CCIC1
+-		 */
+-		val =3D ioread32(cam->power_regs + REG_CCIC_CRCR);
+-		iowrite32(val & ~0x2, cam->power_regs + REG_CCIC_CRCR);
+-		iowrite32(val | 0x2, cam->power_regs + REG_CCIC_CRCR);
+-	}
+-}
+-
+ /*
+  * calc the dphy register values
+  * There are three dphy registers being used.
+@@ -352,11 +329,9 @@ static int mmpcam_probe(struct platform_device *pdev=
+)
+ 	mcam =3D &cam->mcam;
+ 	mcam->plat_power_up =3D mmpcam_power_up;
+ 	mcam->plat_power_down =3D mmpcam_power_down;
+-	mcam->ctlr_reset =3D mcam_ctlr_reset;
+ 	mcam->calc_dphy =3D mmpcam_calc_dphy;
+ 	mcam->dev =3D &pdev->dev;
+ 	mcam->use_smbus =3D 0;
+-	mcam->ccic_id =3D pdev->id;
+ 	mcam->mclk_min =3D pdata->mclk_min;
+ 	mcam->mclk_src =3D pdata->mclk_src;
+ 	mcam->mclk_div =3D pdata->mclk_div;
 --=20
 2.21.0
 
