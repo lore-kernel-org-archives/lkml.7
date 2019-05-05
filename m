@@ -2,102 +2,108 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A2FC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDBEC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 20:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3C8020651
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 19:51:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWm6HyL6"
+	by mail.kernel.org (Postfix) with ESMTP id 6383F206DF
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 20:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfEETvY (ORCPT
+        id S1727854AbfEEUFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 15:51:24 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34945 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbfEETvX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 15:51:23 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w12so1089575wrp.2;
-        Sun, 05 May 2019 12:51:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pWv2bFsADdBbZMiNuoGFOaXbQXtQ9Pgo1BAcL/o+Zwo=;
-        b=YWm6HyL6RFTAtxtxfXbxaRqZABKfoTPBuvHTsj7l6HD6NDAckXhO5YUWeD2CPsQsDs
-         2SORFQdZY22LHDKdS799NgNrGjnfGz4jkYuJzvVyqgnb9FeFiWx7+/hFrzTOQ8D8ziUk
-         hRbSstlZwzGwiA+YKwT0hkvyE6pXfTclxtH7d3fKFsIHhXOsNjfNb/bhdEXv1yHhN3yT
-         tiXN593D1BhK4bKRc0okphmla5V+xJ/qEz62lTBZlpndrOO0hiAB/aG7Y0LZi54f5hBn
-         exFcz4F3dGACfHj1bHK5gNqUvTVh+Fv3ZmxMRjkx/omcAiAdJKQ2wvGkHv0AhFD6Ytld
-         aWTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pWv2bFsADdBbZMiNuoGFOaXbQXtQ9Pgo1BAcL/o+Zwo=;
-        b=kbF6M8duV1o88RUJg0tfgy02CP4fNMnulZhjp/45e/cJ3tKS8QQ2VII0iySjqdOxMa
-         hZ+OTdDaCB3t+yKHaERGn3zCEvrnzWWbJ+18pr76l0HYCT4owxV4f/pgwd2ElVieywjf
-         acuDbsKjC+rdwVxsnDdl0/DgTiwdVl0NwhAnT13ozaiK/srlpeN3RVNGuqOf+BJ9RA1t
-         EPAQEZ2kVenXvBvHYSOKEfdohwEA9X2ZT7dMvpWC9vZdXauwpkEOXrFbXq4VzZIEvlis
-         H+liJLWWFMst9AMlYK0OMMQydQpi7XGG8ddjzdT7yORmpRw4mowyCN8GQmMFo220zIqU
-         KXIQ==
-X-Gm-Message-State: APjAAAWS89Vkf5HsXptfm6iHjwSv+JTtnLhxltMzGjNiGSF3UWPEJj+1
-        b7K6Ka34qDcyrOihySh7g5Xyya44iwA=
-X-Google-Smtp-Source: APXvYqyvFtzWaIQnTOq7UkvPKuIt7nxbEUOVKPSPVuIJcbY5zUHXtDtphPFMio46ZFNPVTAS6YRNsw==
-X-Received: by 2002:a5d:6a03:: with SMTP id m3mr10871317wru.135.1557085881549;
-        Sun, 05 May 2019 12:51:21 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd4:5700:d9a7:917c:8564:c504? (p200300EA8BD45700D9A7917C8564C504.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:d9a7:917c:8564:c504])
-        by smtp.googlemail.com with ESMTPSA id z5sm18998739wre.70.2019.05.05.12.51.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 12:51:20 -0700 (PDT)
-Subject: Re: [PATCH] net: phy: sfp: enable i2c-bus detection on ACPI based
- systems
-To:     Ruslan Babayev <ruslan@babayev.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     xe-linux-external@cisco.com,
-        "David S. Miller" <davem@davemloft.net>, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20190505193435.3248-1-ruslan@babayev.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <085da32a-8c3a-bf91-38b0-4802375ae414@gmail.com>
-Date:   Sun, 5 May 2019 21:51:15 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Sun, 5 May 2019 16:05:09 -0400
+Received: from smtp.infotech.no ([82.134.31.41]:43751 "EHLO smtp.infotech.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727615AbfEEUFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 16:05:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp.infotech.no (Postfix) with ESMTP id 4051120423D;
+        Sun,  5 May 2019 22:05:06 +0200 (CEST)
+X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
+Received: from smtp.infotech.no ([127.0.0.1])
+        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Fv7CIxAIjNDX; Sun,  5 May 2019 22:04:59 +0200 (CEST)
+Received: from [192.168.10.165] (c56B33E56.static.as2116.net [86.62.179.86])
+        by smtp.infotech.no (Postfix) with ESMTPA id E8A17204152;
+        Sun,  5 May 2019 22:04:58 +0200 (CEST)
+Reply-To: dgilbert@interlog.com
+Subject: Re: [PATCH 21/24] sg: switch to SPDX tags
+To:     Christoph Hellwig <hch@lst.de>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     Hannes Reinecke <hare@suse.de>, Lee Duncan <lduncan@suse.com>,
+        Chris Leech <cleech@redhat.com>, Willem Riede <osst@riede.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?Q?Kai_M=c3=a4kisara?= <Kai.Makisara@kolumbus.fi>,
+        linux-scsi@vger.kernel.org, open-iscsi@googlegroups.com,
+        osst-users@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <20190501161417.32592-1-hch@lst.de>
+ <20190501161417.32592-22-hch@lst.de>
+From:   Douglas Gilbert <dgilbert@interlog.com>
+Message-ID: <4285486a-b30c-300c-e794-e74999b15fb2@interlog.com>
+Date:   Sun, 5 May 2019 22:04:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190505193435.3248-1-ruslan@babayev.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190501161417.32592-22-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.05.2019 21:34, Ruslan Babayev wrote:
-> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
-> Cc: xe-linux-external@cisco.com
-> ---
->  drivers/i2c/i2c-core-acpi.c |  3 ++-
->  drivers/net/phy/sfp.c       | 33 +++++++++++++++++++++++++--------
->  include/linux/i2c.h         |  6 ++++++
->  3 files changed, 33 insertions(+), 9 deletions(-)
+On 2019-05-01 6:14 p.m., Christoph Hellwig wrote:
+> Use the the GPLv2+ SPDX tag instead of verbose boilerplate text.
 > 
-Regarding the formal part:
-- It should be [PATCH net-next]
-- Commit description is missing (scripts/checkpatch.pl should have complained)
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-And maybe it would be better to split exporting i2c_acpi_find_adapter_by_handle
-and extending sfp.c to two patches. If Wolfram acks the i2c patch, then I think
-the series could go through the netdev tree. Eventually up to David.
+This scripts/checkpatch.pl noise seems to be related to the patch below:
+
+$ scripts/checkpatch.pl /tmp/t.patch
+Traceback (most recent call last):
+   File "scripts/spdxcheck.py", line 6, in <module>
+     from ply import lex, yacc
+ImportError: No module named ply
+total: 0 errors, 0 warnings, 98 lines checked
+
+That happens both in the mkp/scsi/5.2/scsi-queue and the latest linux-stable
+trees.
+
+
+BTW Are C++ comments (as used in this patch) now permitted in lk code?
+
+Doug Gilbert
+
+> ---
+>   drivers/scsi/sg.c | 7 +------
+>   1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+> index d3f15319b9b3..bcdc28e5ede7 100644
+> --- a/drivers/scsi/sg.c
+> +++ b/drivers/scsi/sg.c
+> @@ -1,3 +1,4 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+>   /*
+>    *  History:
+>    *  Started: Aug 9 by Lawrence Foard (entropy@world.std.com),
+> @@ -8,12 +9,6 @@
+>    *        Copyright (C) 1992 Lawrence Foard
+>    * Version 2 and 3 extensions to driver:
+>    *        Copyright (C) 1998 - 2014 Douglas Gilbert
+> - *
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License as published by
+> - * the Free Software Foundation; either version 2, or (at your option)
+> - * any later version.
+> - *
+>    */
+>   
+>   static int sg_version_num = 30536;	/* 2 digits for each component */
+> 
+
