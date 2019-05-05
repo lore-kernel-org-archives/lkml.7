@@ -2,121 +2,133 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57790C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47146C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7E1208C0
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A6A208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 14:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfEEOqQ (ORCPT
+        id S1727773AbfEEOs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 10:46:16 -0400
-Received: from foss.arm.com ([217.140.101.70]:59214 "EHLO foss.arm.com"
+        Sun, 5 May 2019 10:48:57 -0400
+Received: from 0.ictbs.com ([203.137.112.168]:50019 "EHLO 0.ictbs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727325AbfEEOqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 10:46:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B972374;
-        Sun,  5 May 2019 07:46:15 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF2D63F575;
-        Sun,  5 May 2019 07:46:11 -0700 (PDT)
-Date:   Sun, 5 May 2019 15:46:08 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Michal Gregorczyk <michalgr@live.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
-Message-ID: <20190505144608.u3vsxyz5huveuskx@e107158-lin.cambridge.arm.com>
-References: <20190502204958.7868-1-joel@joelfernandes.org>
- <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
- <20190503134935.GA253329@google.com>
- <20190505110423.u7g3f2viovvgzbtn@e107158-lin.cambridge.arm.com>
- <20190505132949.GB3076@localhost>
+        id S1727565AbfEEOs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 10:48:57 -0400
+Received: by hq.local (Postfix, from userid 1000)
+        id 380E46641B; Sun,  5 May 2019 16:48:52 +0200 (CEST)
+Date:   Sun, 5 May 2019 16:48:52 +0200
+From:   Victor Bravo <1905@spmblk.com>
+To:     Arend Van Spriel <arend.vanspriel@broadcom.com>
+Cc:     Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH RFC] brcmfmac: sanitize DMI strings
+Message-ID: <20190505144852.addbdluel7edoevm@localhost>
+References: <20190504162633.ldrz2nqfocg55grb@localhost>
+ <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
+ <20190504194440.4zcxjrtj2aft3ka4@localhost>
+ <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190505132949.GB3076@localhost>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/19 13:29, Joel Fernandes wrote:
-> On Sun, May 05, 2019 at 12:04:24PM +0100, Qais Yousef wrote:
-> > On 05/03/19 09:49, Joel Fernandes wrote:
-> > > On Fri, May 03, 2019 at 01:12:34PM +0100, Qais Yousef wrote:
-> > > > Hi Joel
-> > > > 
-> > > > On 05/02/19 16:49, Joel Fernandes (Google) wrote:
-> > > > > The eBPF based opensnoop tool fails to read the file path string passed
-> > > > > to the do_sys_open function. This is because it is a pointer to
-> > > > > userspace address and causes an -EFAULT when read with
-> > > > > probe_kernel_read. This is not an issue when running the tool on x86 but
-> > > > > is an issue on arm64. This patch adds a new bpf function call based
-> > > > 
-> > > > I just did an experiment and if I use Android 4.9 kernel I indeed fail to see
-> > > > PATH info when running opensnoop. But if I run on 5.1-rc7 opensnoop behaves
-> > > > correctly on arm64.
-> > > > 
-> > > > My guess either a limitation that was fixed on later kernel versions or Android
-> > > > kernel has some strict option/modifications that make this fail?
-> > > 
-> > > Thanks a lot for checking, yes I was testing 4.9 kernel with this patch (pixel 3).
-> > > 
-> > > I am not sure what has changed since then, but I still think it is a good
-> > > idea to make the code more robust against such future issues anyway. In
-> > > particular, we learnt with extensive discussions that user/kernel pointers
-> > > are not necessarily distinguishable purely based on their address.
-> > 
-> > Yes I wasn't arguing against that. But the commit message is misleading or
-> > needs more explanation at least. I tried 4.9.y stable and arm64 worked on that
-> > too. Why do you think it's an arm64 problem?
-> 
-> Well it is broken on at least on at least one arm64 device and the patch I
-> sent fixes it. We know that the bpf is using wrong kernel API so why not fix
-> it? Are you saying we should not fix it like in this patch? Or do you have
-> another fix in mind?
+Sanitize DMI strings in brcmfmac driver to make resulting filenames
+contain only safe characters. This version replaces all non-printable
+characters incl. delete (0-31, 127-255), spaces and slashes with
+underscores.
 
-Again I have no issue with the new API. But the claim that it's a fix for
-a broken arm64 is a big stretch. AFAICT you don't understand the root cause of
-why copy_to_user_inatomic() fails in your case. Given that Android 4.9 has
-its own patches on top of 4.9 stable, it might be something that was introduced
-in one of these patches that breaks opensnoop, and by making it use the new API
-you might be simply working around the problem. All I can see is that vanilla
-4.9 stable works on arm64.
+This change breaks backward compatibility, but adds control over strings
+passed to firmware loader and compatibility with CONFIG_EXTRA_FIRMWARE
+which doesn't support spaces in filenames.
 
-So I am happy about introducing the new API but not happy with the commit
-message or the explanation given in it. Unless you can investigate the root
-cause and relate how this fixes it (and not workaround a problem you're
-specifically having) I think it's better to introduce this patch as a generic
-new API that is more robust to handle reading __user data in BPF and drop
-reference to opensnoop failures. They raise more questions and the real
-intention of this patch anyway is to provide the new correct way for BPF
-programs to read __user data regardless opensnoop fails or not AFAIU.
+Signed-off-by: Victor Bravo <1905@spmblk.com>
 
-Cheers
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
+index 7535cb0d4ac0..fa654ce7172b 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
+@@ -23,6 +23,14 @@
+ /* The DMI data never changes so we can use a static buf for this */
+ static char dmi_board_type[128];
+ 
++/* Array of 128 bits representing 7-bit characters allowed in DMI strings. */
++static unsigned char brcmf_dmi_allowed_chars[] = {
++	0x00, 0x00, 0x00, 0x00, 0xfe, 0x7f, 0xff, 0xff,
++	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f
++};
++
++#define BRCMF_DMI_SAFE_CHAR '_'
++
+ struct brcmf_dmi_data {
+ 	u32 chip;
+ 	u32 chiprev;
+@@ -43,10 +51,6 @@ static const struct brcmf_dmi_data meegopad_t08_data = {
+ 	BRCM_CC_43340_CHIP_ID, 2, "meegopad-t08"
+ };
+ 
+-static const struct brcmf_dmi_data pov_tab_p1006w_data = {
+-	BRCM_CC_43340_CHIP_ID, 2, "pov-tab-p1006w-data"
+-};
+-
+ static const struct dmi_system_id dmi_platform_data[] = {
+ 	{
+ 		/* Match for the GPDwin which unfortunately uses somewhat
+@@ -85,20 +89,18 @@ static const struct dmi_system_id dmi_platform_data[] = {
+ 		},
+ 		.driver_data = (void *)&meegopad_t08_data,
+ 	},
+-	{
+-		/* Point of View TAB-P1006W-232 */
+-		.matches = {
+-			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Insyde"),
+-			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "BayTrail"),
+-			/* Note 105b is Foxcon's USB/PCI vendor id */
+-			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "105B"),
+-			DMI_EXACT_MATCH(DMI_BOARD_NAME, "0E57"),
+-		},
+-		.driver_data = (void *)&pov_tab_p1006w_data,
+-	},
+ 	{}
+ };
+ 
++void brcmf_dmi_sanitize(char *dst, const unsigned char *allowed, char safe)
++{
++	while (*dst) {
++		if ((*dst < 0) || !(allowed[*dst / 8] & (1 << (*dst % 8))))
++			*dst = safe;
++		dst++;
++	}
++}
++
+ void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
+ {
+ 	const struct dmi_system_id *match;
+@@ -126,6 +128,9 @@ void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
+ 	if (sys_vendor && product_name) {
+ 		snprintf(dmi_board_type, sizeof(dmi_board_type), "%s-%s",
+ 			 sys_vendor, product_name);
++		brcmf_dmi_sanitize(dmi_board_type,
++				   brcmf_dmi_allowed_chars,
++				   BRCMF_DMI_SAFE_CHAR);
+ 		settings->board_type = dmi_board_type;
+ 	}
+ }
 
---
-Qais Yousef
