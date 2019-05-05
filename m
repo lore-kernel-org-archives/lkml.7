@@ -2,137 +2,197 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_DBL_MALWARE,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5D7C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 18:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FADC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 18:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5EA20644
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 18:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1725F20644
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 18:15:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=upb.ro header.i=@upb.ro header.b="gxNrrnDy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XB7irQfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfEESOx (ORCPT
+        id S1728011AbfEESPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 14:14:53 -0400
-Received: from mail-sender220.upb.ro ([141.85.13.220]:43770 "EHLO mx.upb.ro"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727628AbfEESOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 14:14:44 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mx.upb.ro (Postfix) with ESMTP id 670D3B561907;
-        Sun,  5 May 2019 21:09:09 +0300 (EEST)
-Received: from mx.upb.ro ([127.0.0.1])
-        by localhost (mx.upb.ro [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id nxcrwICMlK8C; Sun,  5 May 2019 21:09:07 +0300 (EEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mx.upb.ro (Postfix) with ESMTP id 85AD7B561905;
-        Sun,  5 May 2019 21:09:07 +0300 (EEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mx.upb.ro 85AD7B561905
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=upb.ro;
-        s=96342B8A-77E4-11E5-BA93-D93D0963A2DF; t=1557079747;
-        bh=41JtH8Jj+flgBl1Ace2G9ACZKkR6R2qzxrWS7tbCzkI=;
-        h=From:To:Date:Message-Id:MIME-Version;
-        b=gxNrrnDyGxRCJYo3F4IeNmnQITIvgNxRP/eNeirCG5vTK+48UTG5d7k/IyOK/KG0f
-         K/yUty3ppo8QwqyhSvq1VhfVtSN6FFcNn2nIvYuOm1Egtok9HdpeTHgypraw+7tACV
-         NXlrouPWvqXmy5qqSZ52WbrxDZY+W/nUHFFwDi/A=
-X-Virus-Scanned: amavisd-new at upb.ro
-Received: from mx.upb.ro ([127.0.0.1])
-        by localhost (mx.upb.ro [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id q7M68MvjV5-S; Sun,  5 May 2019 21:09:07 +0300 (EEST)
-Received: from localhost.localdomain (unknown [188.25.87.154])
-        by mx.upb.ro (Postfix) with ESMTPSA id 5D3BDB5618E0;
-        Sun,  5 May 2019 21:09:07 +0300 (EEST)
-From:   Radu Pirea <radu_nicolae.pirea@upb.ro>
-To:     Radu Pirea <radu_nicolae.pirea@upb.ro>,
-        Richard Genoud <richard.genoud@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 1/2] dt-bindings: mfd: atmel-usart: add DMA bindings for USART in SPI mode
-Date:   Sun,  5 May 2019 21:06:45 +0300
-Message-Id: <20190505180646.1442-2-radu_nicolae.pirea@upb.ro>
+        Sun, 5 May 2019 14:15:17 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42228 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727539AbfEESPR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 14:15:17 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y10so2684249lji.9;
+        Sun, 05 May 2019 11:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VJTdj68AX8XR91X53wIUO5fTIgKG5aH64DtycYbKgjs=;
+        b=XB7irQfpOf47d2cF8NMxp/UBxlEUBEKZcOlVY3J3m5iUCGB7Prb/N5Gi34ksXJtJ8j
+         EefJQpRheGwfk/u4zSQtBqhcYq7qYAh/fx4z77NOMeaTb21WZ/OWgJJgpuYYBD+KsDAy
+         8vZveQedfv5xbQz6D0t8Z255PrzArrL7EPXyV5HeAl1qgtKBsZv18YJJEs8scB8nMmBQ
+         QdDqRmDFqht+QMC/xOB13KQxD3EdSglar7Guo9/SkeUvqauCHDpAU0NxyM0Wvwcxwrlr
+         Fgw7mQoxe/laHw15VEUGbY//hFHOWi2yLpSu4EhCSkB8FIrRRSlqkw3TCZPIyAF9aSBZ
+         3g3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VJTdj68AX8XR91X53wIUO5fTIgKG5aH64DtycYbKgjs=;
+        b=IiXG8+k/H7zXgAPqHgchbOw68QzVp9B+uUiuXLqgZG+59pbjpQQxBNLIuaYlO4Bel/
+         3+5j90SNCpY2wathBlJGMEj9Bu2tYIpqLSsDVGyswlL+SBaVyC1JRBmmkyWHcYvLCsu2
+         DVz/P+02YpaJ5bBmaxT1HRSXzG/Icvu5yBNO3gc82YIlsvmFGwAP6arDHkRPzveQMpvU
+         IU7psUbQV6pnDEFn0eGpOQaDvaZ6q5JQHBugNpkZY+Wx8GqYwaidXhjn5OgIxYOSpk4u
+         pIwSdCWX9Yrrzz1gFI4Vlf1dPZWaQ/6nlnOWWjR4l1MBkVjYdKb99cNxuXfiQmhvcjFe
+         lGJg==
+X-Gm-Message-State: APjAAAUc8YIuHgwJ9dAPgCazsOYE9+upN9jXKEIqu28g22oDAfNdL+hZ
+        Mowg7NkvbIRI0iDQG+wqU3U=
+X-Google-Smtp-Source: APXvYqxivTnYsW+r+l52S92wmJ/MK51g6QTS5X8M376mSNk0V66QKMVEsuxVib/9nXB7KSib4lpMnQ==
+X-Received: by 2002:a05:651c:155:: with SMTP id c21mr11517731ljd.10.1557080114204;
+        Sun, 05 May 2019 11:15:14 -0700 (PDT)
+Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.gmail.com with ESMTPSA id a3sm788218ljk.28.2019.05.05.11.15.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 05 May 2019 11:15:13 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dmaengine: tegra-apb: Handle DMA_PREP_INTERRUPT flag properly
+Date:   Sun,  5 May 2019 21:12:35 +0300
+Message-Id: <20190505181235.14798-1-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190505180646.1442-1-radu_nicolae.pirea@upb.ro>
-References: <20190505180646.1442-1-radu_nicolae.pirea@upb.ro>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bindings for DMA are now common for both drivers of the USART
-IP.
+The DMA_PREP_INTERRUPT flag means that descriptor's callback should be
+invoked upon transfer completion and that's it. For some reason driver
+completely disables the hardware interrupt handling, leaving channel in
+unusable state if transfer is issued with the flag being unset. Note
+that there are no occurrences in the relevant drivers that do not set
+the flag, hence this patch doesn't fix any actual bug and merely fixes
+potential problem.
 
-The node given as an example for USART in SPI mode has been updated in
-order to include DMA bindings.
-
-Signed-off-by: Radu Pirea <radu_nicolae.pirea@upb.ro>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- .../devicetree/bindings/mfd/atmel-usart.txt   | 20 ++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/dma/tegra20-apb-dma.c | 41 ++++++++++++++++++++++++-----------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/atmel-usart.txt b/Docu=
-mentation/devicetree/bindings/mfd/atmel-usart.txt
-index 7f0cd72f47d2..699fd3c9ace8 100644
---- a/Documentation/devicetree/bindings/mfd/atmel-usart.txt
-+++ b/Documentation/devicetree/bindings/mfd/atmel-usart.txt
-@@ -17,17 +17,24 @@ Required properties for USART in SPI mode:
- - cs-gpios: chipselects (internal cs not supported)
- - atmel,usart-mode : Must be <AT91_USART_MODE_SPI> (found in dt-bindings=
-/mfd/at91-usart.h)
-=20
-+Optional properties in serial and SPI mode:
-+- dma bindings for dma transfer:
-+	- dmas: DMA specifier, consisting of a phandle to DMA controller node,
-+		memory peripheral interface and USART DMA channel ID, FIFO configurati=
-on.
-+		The order of DMA channels is fixed. The first DMA channel must be TX
-+		associated channel and the second one must be RX associated channel.
-+		Refer to dma.txt and atmel-dma.txt for details.
-+	- dma-names: "tx" for TX channel.
-+		     "rx" for RX channel.
-+		     The order of dma-names is also fixed. The first name must be "tx"
-+		     and the second one must be "rx" as in the examples below.
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index cf462b1abc0b..29d972b7546f 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -561,6 +561,9 @@ static void tegra_dma_abort_all(struct tegra_dma_channel *tdc)
+ 			dma_desc->dma_status = DMA_ERROR;
+ 			list_add_tail(&dma_desc->node, &tdc->free_dma_desc);
+ 
++			if (dma_desc->cb_count < 0)
++				continue;
 +
- Optional properties in serial mode:
- - atmel,use-dma-rx: use of PDC or DMA for receiving data
- - atmel,use-dma-tx: use of PDC or DMA for transmitting data
- - {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI=
-/DCD line respectively.
-   It will use specified PIO instead of the peripheral function pin for t=
-he USART feature.
-   If unsure, don't specify this property.
--- add dma bindings for dma transfer:
--	- dmas: DMA specifier, consisting of a phandle to DMA controller node,
--		memory peripheral interface and USART DMA channel ID, FIFO configurati=
-on.
--		Refer to dma.txt and atmel-dma.txt for details.
--	- dma-names: "rx" for RX channel, "tx" for TX channel.
- - atmel,fifo-size: maximum number of data the RX and TX FIFOs can store =
-for FIFO
-   capable USARTs.
- - rs485-rts-delay, rs485-rx-during-tx, linux,rs485-enabled-at-boot-time:=
- see rs485.txt
-@@ -81,5 +88,8 @@ Example:
- 		interrupts =3D <12 IRQ_TYPE_LEVEL_HIGH 5>;
- 		clocks =3D <&usart0_clk>;
- 		clock-names =3D "usart";
-+		dmas =3D <&dma0 2 AT91_DMA_CFG_PER_ID(3)>,
-+		       <&dma0 2 (AT91_DMA_CFG_PER_ID(4) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
-+		dma-names =3D "tx", "rx";
- 		cs-gpios =3D <&pioB 3 0>;
- 	};
---=20
+ 			/* Add in cb list if it is not there. */
+ 			if (!dma_desc->cb_count)
+ 				list_add_tail(&dma_desc->cb_node,
+@@ -616,9 +619,13 @@ static void handle_once_dma_done(struct tegra_dma_channel *tdc,
+ 	if (sgreq->last_sg) {
+ 		dma_desc->dma_status = DMA_COMPLETE;
+ 		dma_cookie_complete(&dma_desc->txd);
+-		if (!dma_desc->cb_count)
+-			list_add_tail(&dma_desc->cb_node, &tdc->cb_desc);
+-		dma_desc->cb_count++;
++		if (dma_desc->cb_count >= 0) {
++			if (!dma_desc->cb_count)
++				list_add_tail(&dma_desc->cb_node,
++					      &tdc->cb_desc);
++
++			dma_desc->cb_count++;
++		}
+ 		list_add_tail(&dma_desc->node, &tdc->free_dma_desc);
+ 	}
+ 	list_add_tail(&sgreq->node, &tdc->free_sg_req);
+@@ -645,9 +652,11 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
+ 		dma_desc->bytes_requested;
+ 
+ 	/* Callback need to be call */
+-	if (!dma_desc->cb_count)
+-		list_add_tail(&dma_desc->cb_node, &tdc->cb_desc);
+-	dma_desc->cb_count++;
++	if (dma_desc->cb_count >= 0) {
++		if (!dma_desc->cb_count)
++			list_add_tail(&dma_desc->cb_node, &tdc->cb_desc);
++		dma_desc->cb_count++;
++	}
+ 
+ 	/* If not last req then put at end of pending list */
+ 	if (!list_is_last(&sgreq->node, &tdc->pending_sg_req)) {
+@@ -802,7 +811,7 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+ 		dma_desc  = list_first_entry(&tdc->cb_desc,
+ 					typeof(*dma_desc), cb_node);
+ 		list_del(&dma_desc->cb_node);
+-		dma_desc->cb_count = 0;
++		dma_desc->cb_count = -1;
+ 	}
+ 	spin_unlock_irqrestore(&tdc->lock, flags);
+ 	return 0;
+@@ -988,8 +997,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+ 		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
+ 	}
+ 
+-	if (flags & DMA_PREP_INTERRUPT)
+-		csr |= TEGRA_APBDMA_CSR_IE_EOC;
++	csr |= TEGRA_APBDMA_CSR_IE_EOC;
+ 
+ 	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
+ 
+@@ -1000,11 +1008,15 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+ 	}
+ 	INIT_LIST_HEAD(&dma_desc->tx_list);
+ 	INIT_LIST_HEAD(&dma_desc->cb_node);
+-	dma_desc->cb_count = 0;
+ 	dma_desc->bytes_requested = 0;
+ 	dma_desc->bytes_transferred = 0;
+ 	dma_desc->dma_status = DMA_IN_PROGRESS;
+ 
++	if (flags & DMA_PREP_INTERRUPT)
++		dma_desc->cb_count = 0;
++	else
++		dma_desc->cb_count = -1;
++
+ 	/* Make transfer requests */
+ 	for_each_sg(sgl, sg, sg_len, i) {
+ 		u32 len, mem;
+@@ -1131,8 +1143,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+ 		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
+ 	}
+ 
+-	if (flags & DMA_PREP_INTERRUPT)
+-		csr |= TEGRA_APBDMA_CSR_IE_EOC;
++	csr |= TEGRA_APBDMA_CSR_IE_EOC;
+ 
+ 	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
+ 
+@@ -1144,7 +1155,11 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+ 
+ 	INIT_LIST_HEAD(&dma_desc->tx_list);
+ 	INIT_LIST_HEAD(&dma_desc->cb_node);
+-	dma_desc->cb_count = 0;
++
++	if (flags & DMA_PREP_INTERRUPT)
++		dma_desc->cb_count = 0;
++	else
++		dma_desc->cb_count = -1;
+ 
+ 	dma_desc->bytes_transferred = 0;
+ 	dma_desc->bytes_requested = buf_len;
+-- 
 2.21.0
 
