@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33118C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 17:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EA2C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 17:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08AC52087F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 17:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E792087F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 17:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbfEERtO (ORCPT
+        id S1727883AbfEERtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 13:49:14 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:53224 "EHLO
+        Sun, 5 May 2019 13:49:22 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:53232 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfEERtN (ORCPT
+        with ESMTP id S1726081AbfEERtT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 13:49:13 -0400
+        Sun, 5 May 2019 13:49:19 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3F41914DA770F;
-        Sun,  5 May 2019 10:49:13 -0700 (PDT)
-Date:   Sun, 05 May 2019 10:49:12 -0700 (PDT)
-Message-Id: <20190505.104912.1247842313501822570.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0C11914DA7712;
+        Sun,  5 May 2019 10:49:19 -0700 (PDT)
+Date:   Sun, 05 May 2019 10:49:18 -0700 (PDT)
+Message-Id: <20190505.104918.2058001310823108564.davem@davemloft.net>
 To:     yuehaibing@huawei.com
-Cc:     jakub.kicinski@netronome.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH net-next] netdevsim: Make nsim_num_vf static
+Cc:     igor.russkikh@aquantia.com, dmitry.bogdanov@aquantia.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next] net: aquantia: Make aq_ndev_driver_name static
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190504081207.22764-1-yuehaibing@huawei.com>
-References: <20190504081207.22764-1-yuehaibing@huawei.com>
+In-Reply-To: <20190504095755.32556-1-yuehaibing@huawei.com>
+References: <20190504095755.32556-1-yuehaibing@huawei.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 05 May 2019 10:49:13 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 05 May 2019 10:49:19 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
-Date: Sat, 4 May 2019 16:12:07 +0800
+Date: Sat, 4 May 2019 17:57:55 +0800
 
 > Fix sparse warning:
 > 
-> drivers/net/netdevsim/bus.c:253:5: warning:
->  symbol 'nsim_num_vf' was not declared. Should it be static?
+> drivers/net/ethernet/aquantia/atlantic/aq_main.c:26:12:
+>  warning: symbol 'aq_ndev_driver_name' was not declared. Should it be static?
 > 
 > Reported-by: Hulk Robot <hulkci@huawei.com>
 > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
