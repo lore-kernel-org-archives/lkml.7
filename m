@@ -2,160 +2,97 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC85FC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E406EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 09:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9778F2087F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 08:55:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pxGvWvx2"
+	by mail.kernel.org (Postfix) with ESMTP id ACA2120B7C
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 09:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557046962;
+	bh=quk9nqi0AdVHX2kkxfLOs0bkhqVerto33aMUVix2Yzo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vl1qrRV2EWGbpPHi89gEpjYNHcMS871E2BbZowi1++GbLe7ekIWGyr88go1cEMFqT
+	 /dFG4uK5lhwHzR/FHRN6qre97kaE0AHTTTTl8YzR6vFngjmFzh9kM9tJwuTnyTupk2
+	 wau6/e9/4NYaIdnrEPBCE2U7BSGWMWAXdp2qaJoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfEEIzo (ORCPT
+        id S1727479AbfEEJCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 04:55:44 -0400
-Received: from mail-eopbgr150052.outbound.protection.outlook.com ([40.107.15.52]:25422
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726359AbfEEIzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 04:55:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gtw9rkS4XkmSK27kW0TiDuGbcg6kX7qePi8cV4olgic=;
- b=pxGvWvx2P4O71jBVMmyzklk2+rreT/XiDNes2zVyNh1T4OOR+7pCA34mMEoXXceDpBZu6VoJfZN3S6t3UwIhFCzaxh6R9lrTiX33NSU+5vponkMvFdZUaTMgcGNhdl51tgNbXO6b4Re2ykEMToUXKsf19pt3JDTykagAz7RPGaE=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB4350.eurprd04.prod.outlook.com (52.134.122.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Sun, 5 May 2019 08:55:38 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525%4]) with mapi id 15.20.1856.012; Sun, 5 May 2019
- 08:55:38 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [EXT] Re: [PATCH v2 08/15] dt-bindings: spi: imx: add i.mx6ul to
- state errata fixed
-Thread-Topic: [EXT] Re: [PATCH v2 08/15] dt-bindings: spi: imx: add i.mx6ul to
- state errata fixed
-Thread-Index: AQHU/AbdFQmcRuAKXkaLI1VIJjs4JKZWut6AgAV7GBA=
-Date:   Sun, 5 May 2019 08:55:38 +0000
-Message-ID: <VI1PR04MB45436CE1F6856137F586C94389370@VI1PR04MB4543.eurprd04.prod.outlook.com>
-References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
- <1556265512-9130-9-git-send-email-yibin.gong@nxp.com>
- <20190501200711.GA31231@bogus>
-In-Reply-To: <20190501200711.GA31231@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9c654712-0d58-4ea7-d6e5-08d6d13771dd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4350;
-x-ms-traffictypediagnostic: VI1PR04MB4350:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR04MB435007B2BBF58D3B67C27A8189370@VI1PR04MB4350.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:291;
-x-forefront-prvs: 00286C0CA6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(39860400002)(136003)(396003)(199004)(189003)(71190400001)(71200400001)(25786009)(5660300002)(86362001)(6436002)(3846002)(7696005)(76176011)(99286004)(316002)(14444005)(26005)(256004)(186003)(8936002)(54906003)(6116002)(446003)(11346002)(8676002)(45080400002)(478600001)(81156014)(6506007)(102836004)(81166006)(14454004)(66066001)(476003)(486006)(68736007)(229853002)(2906002)(33656002)(6916009)(52536014)(4326008)(305945005)(9686003)(7736002)(7416002)(6246003)(74316002)(53936002)(6306002)(66556008)(64756008)(66446008)(66476007)(66946007)(73956011)(55016002)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4350;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BShK2GJlGnquBxCC/1dsZeujCYySQfrCvAoJ8l6/bRpFDA3GK9yjSG8RakpZS/pa7YWFm+n+dXL4R+iVmW5kBJv/0PnSkdlidMOAFMztlTZoWpG6372P5u5T5hj/ksFyyzTR8JG4O7d2zDF8NEgFdPD3wc3Bs6xSnwGnobwOk5V88/S//hXZSdqBa4TmWzv0Pwb5YU4Z3t5zMqGVGMVFP3H9JjhG3uqoSE0Lqqxxazka0myJV4giNT9o3ImDwmsSB9/HTGLaMELhrEZchLHibO1cy7+dUzOrEmfXysUQJNudmnRDw5AlVZwnC1ZJw21KjCWD+8Ow6cZT3GhdCFT09L/i2NjowSp0oCpKwnpA/ieaVRMiBGi5zaaH2almmgza5t49mQrNkIHZp610FZ1hTgcDxsEGT8VybruW0HFRvF8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 5 May 2019 05:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726397AbfEEJCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 05:02:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 358782087F;
+        Sun,  5 May 2019 09:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557046960;
+        bh=quk9nqi0AdVHX2kkxfLOs0bkhqVerto33aMUVix2Yzo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BEc4VgwQtcwFurNMjmIkYAGP9WWUGuuFYmgQnogViOS+2rGZLvhgG4yypKyRxMgU4
+         HzVvadyPPhzySBEPBIUSlYdN9P0o1t1S+BJVoBl0qqJN7jkhf4uorshxSkpSyG25zz
+         R+2wqp6rMai+k6T1Xb94TdaVnRdTX5xKIZ5UZ0yc=
+Date:   Sun, 5 May 2019 11:02:36 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.19 00/23] 4.19.40-stable review
+Message-ID: <20190505090236.GA24937@kroah.com>
+References: <20190504102451.512405835@linuxfoundation.org>
+ <20190505030044.q3dlgd5bhfx5txmf@xps.therub.org>
+ <20190505070854.GA3895@kroah.com>
+ <CA+G9fYv668HB5nZSn_drMd5cLhfH7GP0NxDsF88wtp3MUAMimA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c654712-0d58-4ea7-d6e5-08d6d13771dd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2019 08:55:38.2283
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4350
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYv668HB5nZSn_drMd5cLhfH7GP0NxDsF88wtp3MUAMimA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Fri, Apr 26, 2019 at 08:05:51AM +0000, Robin Gong wrote:
-> > ERR009165 fixed from i.mx6ul, add it to show the errata fixed.
+On Sun, May 05, 2019 at 02:23:22PM +0530, Naresh Kamboju wrote:
+> On Sun, 5 May 2019 at 12:38, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 > >
-> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
+> > On Sat, May 04, 2019 at 10:00:44PM -0500, Dan Rue wrote:
+> > > On Sat, May 04, 2019 at 12:25:02PM +0200, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 4.19.40 release.
+> > > > There are 23 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > >
+> > > > Responses should be made by Mon 06 May 2019 10:24:19 AM UTC.
+> > > > Anything received after that time might be too late.
+> > >
+> > >
+> > > Results from Linaro’s test farm.
+> > > Regressions detected.
 > >
-> > diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > index 2d32641..32c4263d 100644
-> > --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > @@ -10,6 +10,8 @@ Required properties:
-> >    - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.M=
-X35
-> >    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.=
-MX51
-> >    - "fsl,imx53-ecspi" for SPI compatible with the one integrated on
-> > i.MX53 and later Soc
-> > +  - "fsl,imx6ul-ecspi" ERR009165 fixed on i.MX6UL and later Soc
-> > +
-> > + (https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2F=
-w
-> > +
-> ww.nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01
-> %7Cyi
-> > +
-> bin.gong%40nxp.com%7C1eb9b302759b4af6fbe408d6ce709b8b%7C686ea1d
-> 3bc2b
-> > +
-> 4c6fa92cd99c5c301635%7C0%7C1%7C636923380371230101&amp;sdata=3D%
-> 2BxM9fN
-> > + 6aEFkNlY5KU9qNiqqFMuDEfqGNrzADDiPO9gQ%3D&amp;reserved=3D0)
->=20
-> What about other i.MX6 chips?
-I only state in the cover letter of this patch set, for i.mx6q/dl/sl/sx sti=
-ll need this
-errata which is fixed i.mx chips after i.mx6ul including i.mx6ull,i.mx8m,i.=
-mx8mm.
-I'll double confirm again and describe it clearly in commit log in v3.
->=20
-> Seems like this is missing some fallbacks. The binding doc should make it=
- clear
-> what are all valid combinations of compatible strings.
-In another Uwe's comment, I'm thinking move such errata information into sp=
-i
-driver level which makes binding doc clear. What do you think?
->=20
-> >    - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on
-> > i.MX8M
-> >  - reg : Offset and length of the register set for the device
-> >  - interrupts : Should contain CSPI/eCSPI interrupt
-> > --
-> > 2.7.4
-> >
+> > Really?  Where?
+> 
+> Not really.
+> selftest: net: msg_zerocopy.sh is an intermittent failure on qemu_i386 device.
+
+Is that a test problem, or a qemu problem?
+
+> We could ignore this failure as known issues.
+
+It wasn't listed in the report, or did I miss it?
+
