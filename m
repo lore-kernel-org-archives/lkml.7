@@ -2,176 +2,289 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826ABC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 05:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBF7C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 05:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B008920675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 05:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E11D20675
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 05:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="ZkM7nTTL"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hkizsgTe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfEEFAH (ORCPT
+        id S1727087AbfEEFCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 01:00:07 -0400
-Received: from mx1.cock.li ([185.10.68.5]:60651 "EHLO cock.li"
+        Sun, 5 May 2019 01:02:16 -0400
+Received: from mail-eopbgr130089.outbound.protection.outlook.com ([40.107.13.89]:7189
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725814AbfEEFAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 01:00:07 -0400
-X-Greylist: delayed 527 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 May 2019 01:00:05 EDT
+        id S1725814AbfEEFCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 01:02:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mL8c1wp2SdDJZThoH10q4Y4BLAXZi6NDdzG59TV9bD4=;
+ b=hkizsgTe/Ss1uh6h/b2eZ3jrpgv/XJxSIYtU8inyngu2aoBzhBHB57kwMP4fMtH6umfNfvI9P+cKWqoa3E38R0SpyEuWNLu9PfSPfeNSl+sbNU0pNbmQlk5mMKdY0kpOWlVO+yb9xl89phb9zUASomygbxue1YpVTH9Ux2WO5c0=
+Received: from VI1PR04MB5135.eurprd04.prod.outlook.com (20.177.50.160) by
+ VI1PR04MB3086.eurprd04.prod.outlook.com (10.170.228.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Sun, 5 May 2019 05:02:05 +0000
+Received: from VI1PR04MB5135.eurprd04.prod.outlook.com
+ ([fe80::a986:98cc:25cc:ace0]) by VI1PR04MB5135.eurprd04.prod.outlook.com
+ ([fe80::a986:98cc:25cc:ace0%6]) with mapi id 15.20.1856.012; Sun, 5 May 2019
+ 05:02:05 +0000
+From:   Po Liu <po.liu@nxp.com>
+To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     "Y.b. Lu" <yangbo.lu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Leo Li <leoyang.li@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
+        Po Liu <po.liu@nxp.com>
+Subject: [PATCH v1] timer:clock:ptp: add support the dynamic posix clock alarm
+ set for ptp
+Thread-Topic: [PATCH v1] timer:clock:ptp: add support the dynamic posix clock
+ alarm set for ptp
+Thread-Index: AQHVAv+uAw38mip9iECrS0NFEcaAmQ==
+Date:   Sun, 5 May 2019 05:02:05 +0000
+Message-ID: <1557032106-28041-1-git-send-email-Po.Liu@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 1.8.3.1
+x-clientproxiedby: HK2PR02CA0203.apcprd02.prod.outlook.com
+ (2603:1096:201:20::15) To VI1PR04MB5135.eurprd04.prod.outlook.com
+ (2603:10a6:803:5a::32)
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=po.liu@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 607b9a46-1526-4465-f003-08d6d116d10b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB3086;
+x-ms-traffictypediagnostic: VI1PR04MB3086:
+x-microsoft-antispam-prvs: <VI1PR04MB3086AFDF98784DD04AF5361A92370@VI1PR04MB3086.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 00286C0CA6
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(136003)(376002)(346002)(199004)(189003)(476003)(4720700003)(68736007)(6486002)(14454004)(53936002)(2616005)(66066001)(4326008)(6506007)(386003)(7736002)(6436002)(486006)(73956011)(66946007)(3846002)(99286004)(186003)(6116002)(26005)(66556008)(66476007)(66446008)(64756008)(6512007)(8936002)(81166006)(86362001)(81156014)(2501003)(102836004)(8676002)(2201001)(316002)(71200400001)(71190400001)(36756003)(25786009)(2906002)(5660300002)(54906003)(50226002)(14444005)(256004)(52116002)(110136005)(305945005)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3086;H:VI1PR04MB5135.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: zKYOu3T2gBIwgO4bwj7gXHbRSoDhYCEc6EOsuataDVy/yw4a0up0K5auLxXIk+BZi7fKx+yf0enOqmmexGpZ1WCFZUPEAV0dHbRWy2u3lkApgb8eLDYDAs6Qaow+e3EbXEjiAtxYRm5W6ptRc2QtzBmokb55f9o9lFbF4rZDyQGOMJ9eJGW/lvCCOtzsadlqukjjzfloSvsbgOXpEcv2RjQcLB1oqGV2qfVGP+cD60KBPIeLwz0MxiHLPhD9YYrc3I1iy7tRtP19HZeW+nSiSlfhO2KnaZV2X6M5z17qVSxohFLPwYJoZ5u/oeD7mU3IkrjYp3TVGvP0sz4dB0SM0q1nn3H3IT4E5gGgwatR31uretluTF2BrXF1I+c5BypS1xe+8d8YSY1jA1WdRYbOqREF7Lb5qYD/ozXuEe780f0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1557031875; bh=I2FCNmKK327bFSGvkmTu/8fw2JSN3TtQWsMD6AuP8w0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ZkM7nTTLiE2shejN5xCCMnCuCC3XaQ5JGBDl9ju9ynAnsCYHLtc+eV2ORRJ11ksXm
-         9IQ/hJfxrpZzjx3X5cXqJqXx1DaCuxeEpQHRcemqV/FipOX+YFP88QM8rLv1fGvhfj
-         rRgJhDIwkUV9m2fRjpP5juUm/DHl87njhsUaInIEOf4eB5ovWlEL8rXq5hXXS7uc+X
-         ZZl7HDPFgi930bAo5+9q+EUBR1SOuWjazFUJjj7SWR+u60/aYtc9xFkunlagwPorqc
-         L95oW27MZjVCsEniJ7cKlT0nEN5hSyFlfIWYZ4X9rDtDpP6lYlTh4i/gbG7lGxd1iZ
-         hplrntcj/ztpQ==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 05 May 2019 04:51:15 +0000
-From:   vsnsdualce2@redchan.it
-To:     rhkramer@gmail.com
-Cc:     debian-user@lists.debian.org, linux-kernel@vger.kernel.org,
-        Ivan Ivanov <qmastery16@gmail.com>, mailinglists@mattcrews.com,
-        jhasler@newsguy.com, scdbackup@gmx.net, richard@walnut.gen.nz,
-        curty@free.fr, jmtd@debian.org, mick.crane@gmail.com,
-        tomas@tuxteam.de, steve@einval.com, joe@jretrading.com,
-        rms@gnu.org, esr@thyrsus.com
-Subject: Re: Can a recipients rights under GNU GPL be revoked? - Bradley M.
- Kuhn is not an attorney (he should go get his JD and get licensed).
-Message-ID: <60c1b08305c5326e3503f51d81622541@redchan.it>
-X-Sender: vsnsdualce2@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 607b9a46-1526-4465-f003-08d6d116d10b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2019 05:02:05.1383
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> of the GPL.  (And Bradley Kuhn is a lawyer -- my older mind can't 
-> remember if
-> he was the lawyer who argued (and lost) a previous free software case 
-> (don't
-> remember the details) in front of the US Supreme Court.  (Sometimes 
-> referred
-
-rhkramer@gmail.com:
-Bradley M. Kuhn is not an attorney, which is why he had to step down as 
-head
-of his organization and hire a lawyer to head the organization
-in his place: Bar rules do not allow lawyers to serve under a non-lawyer 
-in
-an organization, and the organization was essentially a pro-bono law 
-firm
-(which really needed a attorney in it's ranks...)
-
-https://en.wikipedia.org/wiki/Bradley_M._Kuhn
-
-Yes the "oh I just stepped down because we need a woman to head this 
-organization
-now" claim he makes is, in fact, disingenuous. What they needed is a 
-lawyer in
-the organization: and the lawyer could not be directed by non-lawyers.
-
-http://ebb.org/bkuhn/
-> Kuhn holds a summa cum laude B.S. in Computer Science from Loyola 
-> University in Maryland, and an M.S. in Computer Science from the 
-> University of Cincinnati.
-
-http://ebb.org/bkuhn/resume/
-No J.D., No law license.
-
-
-I have both.
-
-I don't want to drag someone down, but I had to correct your mistake.
-Once he applies to law school, gets his degree, and later his license 
-I'm sure he will correct his as well.
-
-
-On 2019-01-28 00:35, rhkramer@gmail.com wrote:
-> On Sunday, January 27, 2019 07:24:17 PM rhkramer@gmail.com wrote:
->> Resending to the list -- I didn't notice that Ivan had sent this to me
->> only, and my reply, of course, then went to him only.
->> 
->> On Sunday, January 27, 2019 10:06:46 AM Ivan Ivanov wrote:
->> > Yes: The linux devs can rescind their license grant. GPLv2 is a bare
->> > license and is revocable by the grantor. Search for "vsnsdualce" "gpl"
->> > online to find his messages which prove that, he is a lawyer and has
->> > investigated this subject very well. I am CC'ing him in case you'd
->> > like to request more information. So if you didn't like the Code of
->> > Conduct covertly accepted behind the scenes against your will, and
->> > maybe some other questionable political decisions in technical
->> > projects
-> 
-> ...
-> 
->> I *might* go read some of the stuff by vsnsdualce, but the Weboob 
->> situation
->> is not an example of a (free or GPL) license being rescinded.  (You 
->> didn't
->> quite say it was, but one could infer that is what you are trying to 
->> say
->> by its inclusion in the same paragraph.)
-> 
-> Ok, I went and read a few things by "vsnsdualce" re the GPL, in 
-> particular:
-> 
-> http://readlist.com/lists/gentoo.org/gentoo-user/42/213256.html
-> 
-> And from that, I went to:
-> 
-> https://copyleft.org/guide/comprehensive-gpl-guidech8.html#x11-540007.4
-> 
-> It seems clear that this is one of those things that I talked about in 
-> my
-> previous last paragraph (the aside, still quoted below) -- vsnsdualce 
-> is
-> stating his opinion / taking a position that is in opposition to the 
-> postions
-> / opinions of other lawyers.
-> 
-> I don't know how far he is willing to go to try to confirm his 
-> position, but
-> until a court case or something similar (and probably appeals) decides 
-> the
-> issue, there are two opinions.
-> 
-> If I had to guess / be which would prevail, I would bet on the side of
-> copyleft.org who, in a way are the successors (mcow) to the original 
-> author(s)
-> of the GPL.  (And Bradley Kuhn is a lawyer -- my older mind can't 
-> remember if
-> he was the lawyer who argued (and lost) a previous free software case 
-> (don't
-> remember the details) in front of the US Supreme Court.  (Sometimes 
-> referred
-> to as "the supremes", but they don't really sing that well (well, to be 
-> fair,
-> I guess I never heard them sing ;-)
-> 
-> Even if he was the guy that lost that case (I'm fairly sure it was 
-> someone
-> else), he is certainly a very experienced lawyer, and very familiar 
-> with the
-> issues around this license.  I would trust his opinion more that I 
-> would
-> "vsnsdualce"'s.
-> 
-> ...
-> 
->> 
->> Just another aside: One of my takes on lawyers is that they interpret 
->> laws
->> and take legal positions for various reasons, often to further their 
->> own
->> or their client's interests, and then are willing to fight the legal
->> battle that may ensue.  A lawyer expressing an opinion does not make 
->> that
->> opinion correct / legal.
+Q3VycmVudCBrZXJuZWwgY29kZSBkbyBub3Qgc3VwcG9ydCB0aGUgZHluYW1pYyBwb3NpeCBjbG9j
+ayBhbGFybSBzZXQuDQpUaGlzIGNvZGUgd291bGQgc3VwcG9ydCBpdCBieSB0aGUgcG9zaXggdGlt
+ZXIgc3RydWN0dXJlLg0KDQozMTkgIGNvbnN0IHN0cnVjdCBrX2Nsb2NrIGNsb2NrX3Bvc2l4X2R5
+bmFtaWMgPSB7DQoNCjMyMCAgICAgICAgIC5jbG9ja19nZXRyZXMgICA9IHBjX2Nsb2NrX2dldHJl
+cywNCjMyMSAgICAgICAgIC5jbG9ja19zZXQgICAgICA9IHBjX2Nsb2NrX3NldHRpbWUsDQozMjIg
+ICAgICAgICAuY2xvY2tfZ2V0ICAgICAgPSBwY19jbG9ja19nZXR0aW1lLA0KMzIzICAgICAgICAg
+LmNsb2NrX2FkaiAgICAgID0gcGNfY2xvY2tfYWRqdGltZSwNCjMyNCArICAgICAgIC50aW1lcl9j
+cmVhdGUgICA9IHBjX3RpbWVyX2NyZWF0ZSwNCjMyNSArICAgICAgIC50aW1lcl9kZWwgICAgICA9
+IHBjX3RpbWVyX2RlbGV0ZSwNCjMyNiArICAgICAgIC50aW1lcl9zZXQgICAgICA9IHBjX3RpbWVy
+X3NldCwNCjMyNyArICAgICAgIC50aW1lcl9hcm0gICAgICA9IHBjX3RpbWVyX2FybSwNCn0NCg0K
+VGhpcyB3b24ndCBjaGFuZ2UgdGhlIHVzZXIgc3BhY2Ugc3lzdGVtIGNhbGwgY29kZS4gTm9ybWFs
+bHkgdGhlIHVzZXINCnNwYWNlIHNldCBhbGFybSBieSB0aW1lcl9jcmVhdGUoKSBhbmQgdGltZXJf
+c2V0dGltZSgpLiBSZWZlcmVuY2UgY29kZQ0KYXJlIHRvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL3B0
+cC90ZXN0cHRwLmMuDQoNClNvbWUgY2FzZSByZXF1aXJpbmcgcHJvdmlkaW5nIHRoZSBhbGFybSBz
+ZXQgZm9yIHVzZXIgc3BhY2UgYnkgcHRwIGNsb2NrLg0KDQpTaWduZWQtb2ZmLWJ5OiBQbyBMaXUg
+PFBvLkxpdUBueHAuY29tPg0KLS0tDQogZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2Vu
+ZXRjL2VuZXRjX3B0cC5jIHwgIDEgKw0KIGRyaXZlcnMvcHRwL3B0cF9jbG9jay5jICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8IDM5ICsrKysrKysrKysrKysrLQ0KIGRyaXZlcnMvcHRwL3B0cF9x
+b3JpcS5jICAgICAgICAgICAgICAgICAgICAgICAgICB8IDQ0ICsrKysrKysrKysrKysrKysrDQog
+aW5jbHVkZS9saW51eC9mc2wvcHRwX3FvcmlxLmggICAgICAgICAgICAgICAgICAgIHwgIDMgKysN
+CiBpbmNsdWRlL2xpbnV4L3Bvc2l4LWNsb2NrLmggICAgICAgICAgICAgICAgICAgICAgfCAgMyAr
+LQ0KIGluY2x1ZGUvbGludXgvcHRwX2Nsb2NrX2tlcm5lbC5oICAgICAgICAgICAgICAgICB8ICA1
+ICstDQoga2VybmVsL3RpbWUvcG9zaXgtY2xvY2suYyAgICAgICAgICAgICAgICAgICAgICAgIHwg
+NjAgKysrKysrKysrKysrKysrKysrKysrKysrDQogNyBmaWxlcyBjaGFuZ2VkLCAxNTIgaW5zZXJ0
+aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVy
+bmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19wdHAuYyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2Zy
+ZWVzY2FsZS9lbmV0Yy9lbmV0Y19wdHAuYw0KaW5kZXggOGMxNDk3ZS4uMzVlMmYyYSAxMDA2NDQN
+Ci0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9lbmV0Yy9lbmV0Y19wdHAuYw0K
+KysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2VuZXRjL2VuZXRjX3B0cC5jDQpA
+QCAtMjEsNiArMjEsNyBAQA0KIAkuZ2V0dGltZTY0CT0gcHRwX3FvcmlxX2dldHRpbWUsDQogCS5z
+ZXR0aW1lNjQJPSBwdHBfcW9yaXFfc2V0dGltZSwNCiAJLmVuYWJsZQkJPSBwdHBfcW9yaXFfZW5h
+YmxlLA0KKwkuYWxhcm0JCT0gcHRwX3FvcmlxX2FsYXJtLA0KIH07DQogDQogc3RhdGljIGludCBl
+bmV0Y19wdHBfcHJvYmUoc3RydWN0IHBjaV9kZXYgKnBkZXYsDQpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9wdHAvcHRwX2Nsb2NrLmMgYi9kcml2ZXJzL3B0cC9wdHBfY2xvY2suYw0KaW5kZXggNzliZDEw
+Mi4uNzJkMDZhOCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcHRwL3B0cF9jbG9jay5jDQorKysgYi9k
+cml2ZXJzL3B0cC9wdHBfY2xvY2suYw0KQEAgLTIzLDcgKzIzLDkgQEANCiAjaW5jbHVkZSA8bGlu
+dXgvaW5pdC5oPg0KICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4NCiAjaW5jbHVkZSA8bGludXgv
+bW9kdWxlLmg+DQorI2luY2x1ZGUgPGxpbnV4L3NjaGVkL3Rhc2suaD4NCiAjaW5jbHVkZSA8bGlu
+dXgvcG9zaXgtY2xvY2suaD4NCisjaW5jbHVkZSA8bGludXgvcG9zaXgtdGltZXJzLmg+DQogI2lu
+Y2x1ZGUgPGxpbnV4L3Bwc19rZXJuZWwuaD4NCiAjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KICNp
+bmNsdWRlIDxsaW51eC9zeXNjYWxscy5oPg0KQEAgLTE2NiwxMiArMTY4LDMxIEBAIHN0YXRpYyBp
+bnQgcHRwX2Nsb2NrX2FkanRpbWUoc3RydWN0IHBvc2l4X2Nsb2NrICpwYywgc3RydWN0IF9fa2Vy
+bmVsX3RpbWV4ICp0eCkNCiAJcmV0dXJuIGVycjsNCiB9DQogDQorc3RhdGljIGludCBwdHBfY2xv
+Y2tfYWxhcm0oc3RydWN0IHBvc2l4X2Nsb2NrICpwYywga3RpbWVfdCBleHBpcmVzLA0KKwkJCSAg
+IGJvb2wgYWJzb2x1dGUsIHN0cnVjdCBrX2l0aW1lciAqdGltcikNCit7DQorCXN0cnVjdCBwdHBf
+Y2xvY2sgKnB0cCA9IGNvbnRhaW5lcl9vZihwYywgc3RydWN0IHB0cF9jbG9jaywgY2xvY2spOw0K
+KwlzdHJ1Y3QgcHRwX2Nsb2NrX2luZm8gKm9wczsNCisNCisJb3BzID0gcHRwLT5pbmZvOw0KKwlp
+ZiAoIW9wcykNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlpZiAoIW9wcy0+YWxhcm0pDQorCQly
+ZXR1cm4gLUVJTlZBTDsNCisNCisJb3BzLT5hbGFybShvcHMsIGV4cGlyZXMsIGFic29sdXRlLCB0
+aW1yKTsNCisNCisJcmV0dXJuIDA7DQorfQ0KKw0KIHN0YXRpYyBzdHJ1Y3QgcG9zaXhfY2xvY2tf
+b3BlcmF0aW9ucyBwdHBfY2xvY2tfb3BzID0gew0KIAkub3duZXIJCT0gVEhJU19NT0RVTEUsDQog
+CS5jbG9ja19hZGp0aW1lCT0gcHRwX2Nsb2NrX2FkanRpbWUsDQogCS5jbG9ja19nZXR0aW1lCT0g
+cHRwX2Nsb2NrX2dldHRpbWUsDQogCS5jbG9ja19nZXRyZXMJPSBwdHBfY2xvY2tfZ2V0cmVzLA0K
+IAkuY2xvY2tfc2V0dGltZQk9IHB0cF9jbG9ja19zZXR0aW1lLA0KKwkuY2xvY2tfYWxhcm0JPSBw
+dHBfY2xvY2tfYWxhcm0sDQogCS5pb2N0bAkJPSBwdHBfaW9jdGwsDQogCS5vcGVuCQk9IHB0cF9v
+cGVuLA0KIAkucG9sbAkJPSBwdHBfcG9sbCwNCkBAIC0zMjQsNiArMzQ1LDIwIEBAIGludCBwdHBf
+Y2xvY2tfdW5yZWdpc3RlcihzdHJ1Y3QgcHRwX2Nsb2NrICpwdHApDQogfQ0KIEVYUE9SVF9TWU1C
+T0wocHRwX2Nsb2NrX3VucmVnaXN0ZXIpOw0KIA0KK2ludCBhbGFybV90aW1lcl9ldmVudChzdHJ1
+Y3Qga19pdGltZXIgKnRpbXIsIGludCBzaV9wcml2YXRlKQ0KK3sNCisJaW50IHJldCA9IC0xOw0K
+Kw0KKwl0aW1yLT5zaWdxLT5pbmZvLnNpX3N5c19wcml2YXRlID0gc2lfcHJpdmF0ZTsNCisNCisJ
+cmN1X3JlYWRfbG9jaygpOw0KKwlyZXQgPSBzZW5kX3NpZ3F1ZXVlKHRpbXItPnNpZ3EsIHRpbXIt
+Pml0X3BpZCwgUElEVFlQRV9QSUQpOw0KKwlyY3VfcmVhZF91bmxvY2soKTsNCisNCisJLyogSWYg
+d2UgZmFpbGVkIHRvIHNlbmQgdGhlIHNpZ25hbCB0aGUgdGltZXIgc3RvcHMuICovDQorCXJldHVy
+biByZXQgPiAwOw0KK30NCisNCiB2b2lkIHB0cF9jbG9ja19ldmVudChzdHJ1Y3QgcHRwX2Nsb2Nr
+ICpwdHAsIHN0cnVjdCBwdHBfY2xvY2tfZXZlbnQgKmV2ZW50KQ0KIHsNCiAJc3RydWN0IHBwc19l
+dmVudF90aW1lIGV2dDsNCkBAIC0zMzEsOCArMzY2LDEwIEBAIHZvaWQgcHRwX2Nsb2NrX2V2ZW50
+KHN0cnVjdCBwdHBfY2xvY2sgKnB0cCwgc3RydWN0IHB0cF9jbG9ja19ldmVudCAqZXZlbnQpDQog
+CXN3aXRjaCAoZXZlbnQtPnR5cGUpIHsNCiANCiAJY2FzZSBQVFBfQ0xPQ0tfQUxBUk06DQorCQlp
+ZiAoIWV2ZW50LT50aW1yKQ0KKwkJCWJyZWFrOw0KKwkJYWxhcm1fdGltZXJfZXZlbnQoZXZlbnQt
+PnRpbXIsIDApOw0KIAkJYnJlYWs7DQotDQogCWNhc2UgUFRQX0NMT0NLX0VYVFRTOg0KIAkJZW5x
+dWV1ZV9leHRlcm5hbF90aW1lc3RhbXAoJnB0cC0+dHNldnEsIGV2ZW50KTsNCiAJCXdha2VfdXBf
+aW50ZXJydXB0aWJsZSgmcHRwLT50c2V2X3dxKTsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3B0cC9w
+dHBfcW9yaXEuYyBiL2RyaXZlcnMvcHRwL3B0cF9xb3JpcS5jDQppbmRleCA1Mzc3NTM2Li5jZTE0
+ZDQ0IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9wdHAvcHRwX3FvcmlxLmMNCisrKyBiL2RyaXZlcnMv
+cHRwL3B0cF9xb3JpcS5jDQpAQCAtMTYzLDEwICsxNjMsMTUgQEAgaXJxcmV0dXJuX3QgcHRwX3Fv
+cmlxX2lzcihpbnQgaXJxLCB2b2lkICpwcml2KQ0KIA0KIAlpZiAoaXJxcyAmIEFMTTIpIHsNCiAJ
+CWFjayB8PSBBTE0yOw0KKwkJaWYgKCFwdHBfcW9yaXEtPnRpbXIpIHsNCisJCQlwdHBfcW9yaXEt
+PmFsYXJtX3ZhbHVlID0gMDsNCisJCQlwdHBfcW9yaXEtPmFsYXJtX2ludGVydmFsID0gMDsNCisJ
+CX0NCiAJCWlmIChwdHBfcW9yaXEtPmFsYXJtX3ZhbHVlKSB7DQogCQkJZXZlbnQudHlwZSA9IFBU
+UF9DTE9DS19BTEFSTTsNCiAJCQlldmVudC5pbmRleCA9IDA7DQogCQkJZXZlbnQudGltZXN0YW1w
+ID0gcHRwX3FvcmlxLT5hbGFybV92YWx1ZTsNCisJCQlldmVudC50aW1yID0gcHRwX3FvcmlxLT50
+aW1yOw0KIAkJCXB0cF9jbG9ja19ldmVudChwdHBfcW9yaXEtPmNsb2NrLCAmZXZlbnQpOw0KIAkJ
+fQ0KIAkJaWYgKHB0cF9xb3JpcS0+YWxhcm1faW50ZXJ2YWwpIHsNCkBAIC0zNDEsNiArMzQ2LDQ0
+IEBAIGludCBwdHBfcW9yaXFfZW5hYmxlKHN0cnVjdCBwdHBfY2xvY2tfaW5mbyAqcHRwLA0KIH0N
+CiBFWFBPUlRfU1lNQk9MX0dQTChwdHBfcW9yaXFfZW5hYmxlKTsNCiANCitpbnQgcHRwX3Fvcmlx
+X2FsYXJtKHN0cnVjdCBwdHBfY2xvY2tfaW5mbyAqcHRwLCBrdGltZV90IGV4cGlyZXMsDQorCQkg
+ICAgYm9vbCBhYnNvbHV0ZSwgc3RydWN0IGtfaXRpbWVyICp0aW1yKQ0KK3sNCisJdTY0IG5zLCBu
+b3c7DQorCXUzMiBsbywgaGksIG1hc2s7DQorDQorCXN0cnVjdCBwdHBfcW9yaXEgKnB0cF9xb3Jp
+cSA9IGNvbnRhaW5lcl9vZihwdHAsIHN0cnVjdCBwdHBfcW9yaXEsIGNhcHMpOw0KKwlzdHJ1Y3Qg
+cHRwX3FvcmlxX3JlZ2lzdGVycyAqcmVncyA9ICZwdHBfcW9yaXEtPnJlZ3M7DQorDQorCWlmICgh
+dGltcikNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlub3cgPSB0bXJfY250X3JlYWQocHRwX3Fv
+cmlxKTsNCisJaWYgKCFhYnNvbHV0ZSkNCisJCW5zID0gbm93ICsga3RpbWVfdG9fbnMoZXhwaXJl
+cyk7DQorCWVsc2UgaWYgKGt0aW1lX3RvX25zKGV4cGlyZXMpIDwgbm93KQ0KKwkJbnMgPSBub3c7
+DQorCWVsc2UNCisJCW5zID0ga3RpbWVfdG9fbnMoZXhwaXJlcyk7DQorDQorCWhpID0gbnMgPj4g
+MzI7DQorCWxvID0gbnMgJiAweGZmZmZmZmZmOw0KKwlwdHBfcW9yaXEtPndyaXRlKCZyZWdzLT5h
+bGFybV9yZWdzLT50bXJfYWxhcm0yX2wsIGxvKTsNCisJcHRwX3FvcmlxLT53cml0ZSgmcmVncy0+
+YWxhcm1fcmVncy0+dG1yX2FsYXJtMl9oLCBoaSk7DQorDQorCXNwaW5fbG9jaygmcHRwX3Fvcmlx
+LT5sb2NrKTsNCisJbWFzayA9IHB0cF9xb3JpcS0+cmVhZCgmcmVncy0+Y3RybF9yZWdzLT50bXJf
+dGVtYXNrKTsNCisJbWFzayB8PSBBTE0yRU47DQorCXB0cF9xb3JpcS0+d3JpdGUoJnJlZ3MtPmN0
+cmxfcmVncy0+dG1yX3RlbWFzaywgbWFzayk7DQorCXNwaW5fdW5sb2NrKCZwdHBfcW9yaXEtPmxv
+Y2spOw0KKw0KKwlwdHBfcW9yaXEtPmFsYXJtX3ZhbHVlID0gbnM7DQorCXB0cF9xb3JpcS0+YWxh
+cm1faW50ZXJ2YWwgPSBrdGltZV90b19ucyh0aW1yLT5pdF9pbnRlcnZhbCk7DQorDQorCXB0cF9x
+b3JpcS0+dGltciA9IHRpbXI7DQorCXJldHVybiAwOw0KK30NCisNCiBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IHB0cF9jbG9ja19pbmZvIHB0cF9xb3JpcV9jYXBzID0gew0KIAkub3duZXIJCT0gVEhJU19N
+T0RVTEUsDQogCS5uYW1lCQk9ICJxb3JpcSBwdHAgY2xvY2siLA0KQEAgLTM1NSw2ICszOTgsNyBA
+QCBpbnQgcHRwX3FvcmlxX2VuYWJsZShzdHJ1Y3QgcHRwX2Nsb2NrX2luZm8gKnB0cCwNCiAJLmdl
+dHRpbWU2NAk9IHB0cF9xb3JpcV9nZXR0aW1lLA0KIAkuc2V0dGltZTY0CT0gcHRwX3FvcmlxX3Nl
+dHRpbWUsDQogCS5lbmFibGUJCT0gcHRwX3FvcmlxX2VuYWJsZSwNCisJLmFsYXJtCQk9IHB0cF9x
+b3JpcV9hbGFybSwNCiB9Ow0KIA0KIC8qKg0KZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvZnNs
+L3B0cF9xb3JpcS5oIGIvaW5jbHVkZS9saW51eC9mc2wvcHRwX3FvcmlxLmgNCmluZGV4IDk5MmJm
+OWYuLjI5MjhkZjQgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L2ZzbC9wdHBfcW9yaXEuaA0K
+KysrIGIvaW5jbHVkZS9saW51eC9mc2wvcHRwX3FvcmlxLmgNCkBAIC0xNDMsNiArMTQzLDcgQEAg
+c3RydWN0IHB0cF9xb3JpcSB7DQogCXNwaW5sb2NrX3QgbG9jazsgLyogcHJvdGVjdHMgcmVncyAq
+Lw0KIAlzdHJ1Y3QgcHRwX2Nsb2NrICpjbG9jazsNCiAJc3RydWN0IHB0cF9jbG9ja19pbmZvIGNh
+cHM7DQorCXN0cnVjdCBrX2l0aW1lciAqdGltcjsNCiAJc3RydWN0IHJlc291cmNlICpyc3JjOw0K
+IAlzdHJ1Y3QgZGVudHJ5ICpkZWJ1Z2ZzX3Jvb3Q7DQogCXN0cnVjdCBkZXZpY2UgKmRldjsNCkBA
+IC0xOTAsNiArMTkxLDggQEAgaW50IHB0cF9xb3JpcV9pbml0KHN0cnVjdCBwdHBfcW9yaXEgKnB0
+cF9xb3JpcSwgdm9pZCBfX2lvbWVtICpiYXNlLA0KIGludCBwdHBfcW9yaXFfZ2V0dGltZShzdHJ1
+Y3QgcHRwX2Nsb2NrX2luZm8gKnB0cCwgc3RydWN0IHRpbWVzcGVjNjQgKnRzKTsNCiBpbnQgcHRw
+X3FvcmlxX3NldHRpbWUoc3RydWN0IHB0cF9jbG9ja19pbmZvICpwdHAsDQogCQkgICAgICBjb25z
+dCBzdHJ1Y3QgdGltZXNwZWM2NCAqdHMpOw0KK2ludCBwdHBfcW9yaXFfYWxhcm0oc3RydWN0IHB0
+cF9jbG9ja19pbmZvICpwdHAsIGt0aW1lX3QgZXhwaXJlcywNCisJCSAgICBib29sIGFic29sdXRl
+LCBzdHJ1Y3Qga19pdGltZXIgKnRpbXIpOw0KIGludCBwdHBfcW9yaXFfZW5hYmxlKHN0cnVjdCBw
+dHBfY2xvY2tfaW5mbyAqcHRwLA0KIAkJICAgICBzdHJ1Y3QgcHRwX2Nsb2NrX3JlcXVlc3QgKnJx
+LCBpbnQgb24pOw0KICNpZmRlZiBDT05GSUdfREVCVUdfRlMNCmRpZmYgLS1naXQgYS9pbmNsdWRl
+L2xpbnV4L3Bvc2l4LWNsb2NrLmggYi9pbmNsdWRlL2xpbnV4L3Bvc2l4LWNsb2NrLmgNCmluZGV4
+IDE4Njc0ZDcuLjgwY2MyMTQgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L3Bvc2l4LWNsb2Nr
+LmgNCisrKyBiL2luY2x1ZGUvbGludXgvcG9zaXgtY2xvY2suaA0KQEAgLTU5LDcgKzU5LDggQEAg
+c3RydWN0IHBvc2l4X2Nsb2NrX29wZXJhdGlvbnMgew0KIA0KIAlpbnQgICgqY2xvY2tfc2V0dGlt
+ZSkoc3RydWN0IHBvc2l4X2Nsb2NrICpwYywNCiAJCQkgICAgICBjb25zdCBzdHJ1Y3QgdGltZXNw
+ZWM2NCAqdHMpOw0KLQ0KKwlpbnQgICgqY2xvY2tfYWxhcm0pKHN0cnVjdCBwb3NpeF9jbG9jayAq
+cGMsIGt0aW1lX3QgZXhwaXJlcywNCisJCQkgICAgYm9vbCBhYnNvbHV0ZSwgc3RydWN0IGtfaXRp
+bWVyICp0aW1yKTsNCiAJLyoNCiAJICogT3B0aW9uYWwgY2hhcmFjdGVyIGRldmljZSBtZXRob2Rz
+Og0KIAkgKi8NCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3B0cF9jbG9ja19rZXJuZWwuaCBi
+L2luY2x1ZGUvbGludXgvcHRwX2Nsb2NrX2tlcm5lbC5oDQppbmRleCA3MTIxYmJlLi5iNTFmNjRi
+IDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9wdHBfY2xvY2tfa2VybmVsLmgNCisrKyBiL2lu
+Y2x1ZGUvbGludXgvcHRwX2Nsb2NrX2tlcm5lbC5oDQpAQCAtMjQsNyArMjQsNyBAQA0KICNpbmNs
+dWRlIDxsaW51eC9kZXZpY2UuaD4NCiAjaW5jbHVkZSA8bGludXgvcHBzX2tlcm5lbC5oPg0KICNp
+bmNsdWRlIDxsaW51eC9wdHBfY2xvY2suaD4NCi0NCisjaW5jbHVkZSA8bGludXgvcG9zaXgtdGlt
+ZXJzLmg+DQogDQogc3RydWN0IHB0cF9jbG9ja19yZXF1ZXN0IHsNCiAJZW51bSB7DQpAQCAtMTQ4
+LDYgKzE0OCw4IEBAIHN0cnVjdCBwdHBfY2xvY2tfaW5mbyB7DQogCWludCAoKmdldGNyb3NzdHN0
+YW1wKShzdHJ1Y3QgcHRwX2Nsb2NrX2luZm8gKnB0cCwNCiAJCQkgICAgICBzdHJ1Y3Qgc3lzdGVt
+X2RldmljZV9jcm9zc3RzdGFtcCAqY3RzKTsNCiAJaW50ICgqc2V0dGltZTY0KShzdHJ1Y3QgcHRw
+X2Nsb2NrX2luZm8gKnAsIGNvbnN0IHN0cnVjdCB0aW1lc3BlYzY0ICp0cyk7DQorCWludCAoKmFs
+YXJtKShzdHJ1Y3QgcHRwX2Nsb2NrX2luZm8gKnAsIGt0aW1lX3QgZXhwaXJlcywNCisJCSAgICAg
+Ym9vbCBhYnNvbHV0ZSwgc3RydWN0IGtfaXRpbWVyICp0aW1yKTsNCiAJaW50ICgqZW5hYmxlKShz
+dHJ1Y3QgcHRwX2Nsb2NrX2luZm8gKnB0cCwNCiAJCSAgICAgIHN0cnVjdCBwdHBfY2xvY2tfcmVx
+dWVzdCAqcmVxdWVzdCwgaW50IG9uKTsNCiAJaW50ICgqdmVyaWZ5KShzdHJ1Y3QgcHRwX2Nsb2Nr
+X2luZm8gKnB0cCwgdW5zaWduZWQgaW50IHBpbiwNCkBAIC0xODAsNiArMTgyLDcgQEAgc3RydWN0
+IHB0cF9jbG9ja19ldmVudCB7DQogCQl1NjQgdGltZXN0YW1wOw0KIAkJc3RydWN0IHBwc19ldmVu
+dF90aW1lIHBwc190aW1lczsNCiAJfTsNCisJc3RydWN0IGtfaXRpbWVyICp0aW1yOw0KIH07DQog
+DQogI2lmIElTX1JFQUNIQUJMRShDT05GSUdfUFRQXzE1ODhfQ0xPQ0spDQpkaWZmIC0tZ2l0IGEv
+a2VybmVsL3RpbWUvcG9zaXgtY2xvY2suYyBiL2tlcm5lbC90aW1lL3Bvc2l4LWNsb2NrLmMNCmlu
+ZGV4IGVjOTYwYmIuLmFjMjVkMTcgMTAwNjQ0DQotLS0gYS9rZXJuZWwvdGltZS9wb3NpeC1jbG9j
+ay5jDQorKysgYi9rZXJuZWwvdGltZS9wb3NpeC1jbG9jay5jDQpAQCAtOCw2ICs4LDcgQEANCiAj
+aW5jbHVkZSA8bGludXgvZXhwb3J0Lmg+DQogI2luY2x1ZGUgPGxpbnV4L2ZpbGUuaD4NCiAjaW5j
+bHVkZSA8bGludXgvcG9zaXgtY2xvY2suaD4NCisjaW5jbHVkZSA8bGludXgvcG9zaXgtdGltZXJz
+Lmg+DQogI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCiAjaW5jbHVkZSA8bGludXgvc3lzY2FsbHMu
+aD4NCiAjaW5jbHVkZSA8bGludXgvdWFjY2Vzcy5oPg0KQEAgLTMxNCw5ICszMTUsNjggQEAgc3Rh
+dGljIGludCBwY19jbG9ja19zZXR0aW1lKGNsb2NraWRfdCBpZCwgY29uc3Qgc3RydWN0IHRpbWVz
+cGVjNjQgKnRzKQ0KIAlyZXR1cm4gZXJyOw0KIH0NCiANCitzdGF0aWMgdm9pZCBwY190aW1lcl9h
+cm0oc3RydWN0IGtfaXRpbWVyICp0aW1yLCBrdGltZV90IGV4cGlyZXMsDQorCQkJIGJvb2wgYWJz
+b2x1dGUsIGJvb2wgc2lnZXZfbm9uZSkNCit7DQorCXN0cnVjdCBwb3NpeF9jbG9ja19kZXNjIGNk
+Ow0KKwlpbnQgZXJyOw0KKw0KKwllcnIgPSBnZXRfY2xvY2tfZGVzYyh0aW1yLT5pdF9jbG9jaywg
+JmNkKTsNCisJaWYgKGVycikNCisJCXJldHVybjsNCisNCisJY2QuY2xrLT5vcHMuY2xvY2tfYWxh
+cm0oY2QuY2xrLCBleHBpcmVzLCBhYnNvbHV0ZSwgdGltcik7DQorfQ0KKw0KK3N0YXRpYyBpbnQg
+cGNfdGltZXJfc2V0KHN0cnVjdCBrX2l0aW1lciAqdGltciwgaW50IGZsYWdzLA0KKwkJCXN0cnVj
+dCBpdGltZXJzcGVjNjQgKm5ld19zZXR0aW5nLA0KKwkJCXN0cnVjdCBpdGltZXJzcGVjNjQgKm9s
+ZF9zZXR0aW5nKQ0KK3sNCisJY29uc3Qgc3RydWN0IGtfY2xvY2sgKmtjID0gdGltci0+a2Nsb2Nr
+Ow0KKwlib29sIHNpZ2V2X25vbmU7DQorCWt0aW1lX3QgZXhwaXJlczsNCisNCisJaWYgKG9sZF9z
+ZXR0aW5nKQ0KKwkJcHJfZXJyKCJvbGRfc2V0dGluZyBub3Qgc3VwcG9ydCFcbiIpOw0KKw0KKwkv
+KiBQcmV2ZW50IHJlYXJtaW5nIGJ5IGNsZWFyaW5nIHRoZSBpbnRlcnZhbCAqLw0KKwl0aW1yLT5p
+dF9pbnRlcnZhbCA9IDA7DQorDQorCXRpbXItPml0X2FjdGl2ZSA9IDA7DQorCXRpbXItPml0X3Jl
+cXVldWVfcGVuZGluZyA9ICh0aW1yLT5pdF9yZXF1ZXVlX3BlbmRpbmcgKyAyKSAmDQorCQl+UkVR
+VUVVRV9QRU5ESU5HOw0KKwl0aW1yLT5pdF9vdmVycnVuX2xhc3QgPSAwOw0KKw0KKwkvKiBTd2l0
+Y2ggb2ZmIHRoZSB0aW1lciB3aGVuIGl0X3ZhbHVlIGlzIHplcm8gKi8NCisJaWYgKCFuZXdfc2V0
+dGluZy0+aXRfdmFsdWUudHZfc2VjICYmICFuZXdfc2V0dGluZy0+aXRfdmFsdWUudHZfbnNlYykN
+CisJCXJldHVybiAwOw0KKw0KKwl0aW1yLT5pdF9pbnRlcnZhbCA9IHRpbWVzcGVjNjRfdG9fa3Rp
+bWUobmV3X3NldHRpbmctPml0X2ludGVydmFsKTsNCisJZXhwaXJlcyA9IHRpbWVzcGVjNjRfdG9f
+a3RpbWUobmV3X3NldHRpbmctPml0X3ZhbHVlKTsNCisJc2lnZXZfbm9uZSA9IHRpbXItPml0X3Np
+Z2V2X25vdGlmeSA9PSBTSUdFVl9OT05FOw0KKw0KKwlrYy0+dGltZXJfYXJtKHRpbXIsIGV4cGly
+ZXMsIGZsYWdzICYgVElNRVJfQUJTVElNRSwgc2lnZXZfbm9uZSk7DQorCXRpbXItPml0X2FjdGl2
+ZSA9ICFzaWdldl9ub25lOw0KKwlyZXR1cm4gMDsNCit9DQorDQorc3RhdGljIGludCBwY190aW1l
+cl9jcmVhdGUoc3RydWN0IGtfaXRpbWVyICpuZXdfdGltZXIpDQorew0KKwlyZXR1cm4gMDsNCit9
+DQorDQorc3RhdGljIGludCBwY190aW1lcl9kZWxldGUoc3RydWN0IGtfaXRpbWVyICpuZXdfdGlt
+ZXIpDQorew0KKwlyZXR1cm4gMDsNCit9DQorDQogY29uc3Qgc3RydWN0IGtfY2xvY2sgY2xvY2tf
+cG9zaXhfZHluYW1pYyA9IHsNCiAJLmNsb2NrX2dldHJlcwk9IHBjX2Nsb2NrX2dldHJlcywNCiAJ
+LmNsb2NrX3NldAk9IHBjX2Nsb2NrX3NldHRpbWUsDQogCS5jbG9ja19nZXQJPSBwY19jbG9ja19n
+ZXR0aW1lLA0KIAkuY2xvY2tfYWRqCT0gcGNfY2xvY2tfYWRqdGltZSwNCisJLnRpbWVyX2NyZWF0
+ZQk9IHBjX3RpbWVyX2NyZWF0ZSwNCisJLnRpbWVyX2RlbAk9IHBjX3RpbWVyX2RlbGV0ZSwNCisJ
+LnRpbWVyX3NldAk9IHBjX3RpbWVyX3NldCwNCisJLnRpbWVyX2FybQk9IHBjX3RpbWVyX2FybSwN
+CiB9Ow0KLS0gDQoxLjguMy4xDQoNCg==
