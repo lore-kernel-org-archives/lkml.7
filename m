@@ -2,102 +2,117 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D2CC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5049C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F4E206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:40:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2VLRGUWQ"
+	by mail.kernel.org (Postfix) with ESMTP id 87AAD208C2
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 15:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557071112;
+	bh=aKwSsB4VIQvPHjNpyepX94dwCojn4YcW4pPdu085lpA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iHmjKTS2z9J7xvAUXspGN0t/UWaXMq0rh8jtGhfVnCWn5JeKNKOO6l9g+7bUp3zOY
+	 l8JdQXawP551Kj0sen5vpfZWqUrDOTxlJQEABZW6PEI1khRbfA7Vq0C1IbtGz45q2R
+	 QoMgn3Aqw51urlmhcdPS1P8hvks/J08fe56zW5zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfEEPkW (ORCPT
+        id S1727719AbfEEPpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 11:40:22 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48434 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfEEPkW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 11:40:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rT3xoMkezWbZrfZ/DsjT+vdesqGpf6yK3V9dQLDcRU4=; b=2VLRGUWQ2FCcbKWWqIpsP6xggD
-        tsCxva7g5DxwtN9Pbh4lbWUE4OqUzpkHePp8whFW6sUCGOga90chTiktQXP5vQSN1TVfkRvYmKwyA
-        /s90nUJkzCOjfHFghuHMYNleFXeb53wbT75DNmiOeXNJv4voqeqCIidGDem35d6LhZFI7MZiQDAwB
-        MhujOGq6BZ7Jw4KttruEP33AqHrAeLReIbR2oYgtEqgz5DjN3evjutC/XIqxnuyQqRsuzMwoF8IXJ
-        OuEtKMC4uCZVvkSmyIn765oKGeBFjEYggQXnipshazsAm+TYu7fgLvPJl0Z06tXo7c85iPrvt5BDN
-        ZEmp1UMA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hNJFS-0002vP-6i; Sun, 05 May 2019 15:40:19 +0000
-Subject: Re: [next PATCH] usb: mtu3: fix up undefined reference to
- usb_debug_root
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <2b79c411c5d07a6846967c41803b328e300df8c6.1557035810.git.chunfeng.yun@mediatek.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <493f7e77-2c84-9812-2c27-760496610522@infradead.org>
-Date:   Sun, 5 May 2019 08:40:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 5 May 2019 11:45:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726524AbfEEPpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 11:45:10 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B11FA206DF;
+        Sun,  5 May 2019 15:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557071109;
+        bh=aKwSsB4VIQvPHjNpyepX94dwCojn4YcW4pPdu085lpA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0LZ8f5LyLX20WKafPP0af88glvklQ1x0J0Jve8bY4nJCqS9IyvDajjpokrGH3LdVt
+         +h1+08XmvOD2KobcKuiqSatQjSlPfOdnfVwZWlZnyukPLprLaQkxFC8O1M/49pfaFZ
+         5suhRhYTipcXVWcq6OvfsC/8fdhP0DI17yQOKFFs=
+Date:   Sun, 5 May 2019 16:45:03 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Philippe Schenker <dev@pschenker.ch>
+Cc:     linux-iio@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] iio: stmpe-adc: Enable all stmpe-adc interrupts
+ just once
+Message-ID: <20190505164503.030d6687@archlinux>
+In-Reply-To: <20190503135725.9959-3-dev@pschenker.ch>
+References: <20190503135725.9959-1-dev@pschenker.ch>
+        <20190503135725.9959-3-dev@pschenker.ch>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <2b79c411c5d07a6846967c41803b328e300df8c6.1557035810.git.chunfeng.yun@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/19 11:02 PM, Chunfeng Yun wrote:
-> When CONFIG_USB is not set, and CONFIG_USB_GADGET is set,
-> there is an issue:
-> 
-> ld:
-> drivers/usb/mtu3/mtu3_debugfs.o: in function 'ssusb_debugfs_create_root':
-> mtu3_debugfs.c:(.text+0xba3): undefined reference to 'usb_debug_root'
-> 
-> usb_debug_root is only built when CONFIG_USB is enabled, so here drop it
-> and use NULL instead.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+On Fri,  3 May 2019 15:57:25 +0200
+Philippe Schenker <dev@pschenker.ch> wrote:
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> From: Philippe Schenker <philippe.schenker@toradex.com>
+> 
+> This commit will enable the interrupts of all channels handled by this
+> driver only once in the probe function.
+> 
+> This will improve performance because one byte less has to be written over
+> i2c on each read out of the adc. On the fastest ADC mode this will improve
+> read out speed by 15%.
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Makes sense. I'll pick this up once patch 2 discussion is sorted.
 
-Thanks.
+Jonathan
 
+> 
 > ---
->  drivers/usb/mtu3/mtu3_debugfs.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/usb/mtu3/mtu3_debugfs.c b/drivers/usb/mtu3/mtu3_debugfs.c
-> index c96e5dab0a48..3ed666f94dd9 100644
-> --- a/drivers/usb/mtu3/mtu3_debugfs.c
-> +++ b/drivers/usb/mtu3/mtu3_debugfs.c
-> @@ -528,8 +528,7 @@ void ssusb_dr_debugfs_init(struct ssusb_mtk *ssusb)
+>  drivers/iio/adc/stmpe-adc.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
+> index baa41ffc0d76..427c890c6e7d 100644
+> --- a/drivers/iio/adc/stmpe-adc.c
+> +++ b/drivers/iio/adc/stmpe-adc.c
+> @@ -72,9 +72,6 @@ static int stmpe_read_voltage(struct stmpe_adc *info,
+>  		return -EINVAL;
+>  	}
 >  
->  void ssusb_debugfs_create_root(struct ssusb_mtk *ssusb)
->  {
-> -	ssusb->dbgfs_root =
-> -		debugfs_create_dir(dev_name(ssusb->dev), usb_debug_root);
-> +	ssusb->dbgfs_root = debugfs_create_dir(dev_name(ssusb->dev), NULL);
+> -	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_EN,
+> -			STMPE_ADC_CH(info->channel));
+> -
+>  	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_CAPT,
+>  			STMPE_ADC_CH(info->channel));
+>  
+> @@ -328,6 +325,9 @@ static int stmpe_adc_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_EN,
+> +			~(norequest_mask & 0xFF));
+> +
+>  	return devm_iio_device_register(&pdev->dev, indio_dev);
 >  }
 >  
->  void ssusb_debugfs_remove_root(struct ssusb_mtk *ssusb)
-> 
 
-
--- 
-~Randy
