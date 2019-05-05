@@ -2,126 +2,112 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2AFC004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98E4C004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4741206DF
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B14C2082F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 13:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="M+OUTlMv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgG8rQgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbfEENdq (ORCPT
+        id S1727883AbfEENiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 09:33:46 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44197 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbfEENdq (ORCPT
+        Sun, 5 May 2019 09:38:24 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46517 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfEENiX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 09:33:46 -0400
-Received: by mail-qt1-f195.google.com with SMTP id f24so1465468qtk.11
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 06:33:45 -0700 (PDT)
+        Sun, 5 May 2019 09:38:23 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t187so974705pgb.13
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 06:38:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8vh9GzL6Z3TESI/K8Xe7IDmt4lW4rJ2TS6d8Gg9f4ec=;
-        b=M+OUTlMvvZ88jH6CNuww2buF0wxPz/6/FyF26etHaJ7ads1jgfn2rS5KA/IggKuCiu
-         d5PlVyD6rNhxPiGnCzrrAbPGJkW2aSWXx8nKyGn3XiIe97TXbZnZWcH2GqnTn7P1eY4s
-         Hhs3bavkmsu1/D4xik3PSsJGHYede+vjcqdQo=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=goF1yaebOYWv1y2Ep4TYXxP5lSNWUf6+vHv7mxyRHEs=;
+        b=kgG8rQgYGYWi/oPgc+XqO6Msm3UldSBs7fcxn/6oX0InkfAbBfrU+Za173U7cZkRAk
+         9f7nKY7F/n/v3x+1g3RXYvZgjwC8PjNL0Hhq5Au8dbf1XttvrCZOfr+RmS7dV8UnP5eh
+         ScbBXy+PXWW4s5MkWaODHzIkFfCovQhFijbW4S29Y9wdl3nWFX/jKuN4/VXr0B93QYyD
+         YWTz/O537KFx66xpUzKlLJGhk9vJ+8UeX2QOkOHOZcMK1MZcSxzrkPg/QrAWcU/vJ8Rn
+         1pHEmoAV7IPoHa2x4Fs+r/V7J1tu6h9ZzVqpGSixtv/zzmpOy0HNTaYxugsRqIK/P5Nw
+         ytoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8vh9GzL6Z3TESI/K8Xe7IDmt4lW4rJ2TS6d8Gg9f4ec=;
-        b=hb5Lr7jm0gCSi97+KUCcpxz5HB0jhgrwXqRXLpO9lRjdiUwm5yyjsAp1QO2fkFXe4p
-         U8tSHBVcLmZoqH2rAH+DLlVbJu9hRyRXcIckQbBR82ahtr40QGcZXaSfG4y7vOy2onzq
-         gVU7qHp1pDWvFnEHez7BL2KHj5yz6Sckb0IIvgalGTKcNc8cawbBSFRx6/iWg4CXM+Db
-         YouXLokWdMJ+FnCvzJEtfAx+dUezr/1kdo9sN/nk7BRPnf1xw0Cbi/ihyuUJ3A6lnHVC
-         tc1RslSbOhsuYwqNCjbuXaxOBG7m9e47E1Hxm9o0SkW9Zt5fpTruN1EK0ukX5KJWOEV6
-         sMDA==
-X-Gm-Message-State: APjAAAWuyqB5YDy0IwKgllg0xlIOx4NHW8dZVBRsxUSXnZKBgOF/Y1B5
-        uAubfuhie9lP1qqI9+rp8bMWFA==
-X-Google-Smtp-Source: APXvYqwZvrE19A+Oum63yFFoi2lvqbKSvPQtjx3rBN2iVToNB0C1ZrwrxK4w7/ddQ64WYLVkAEJcdg==
-X-Received: by 2002:ac8:6b11:: with SMTP id w17mr4479401qts.285.1557063225078;
-        Sun, 05 May 2019 06:33:45 -0700 (PDT)
-Received: from localhost (c-73-216-90-110.hsd1.va.comcast.net. [73.216.90.110])
-        by smtp.gmail.com with ESMTPSA id o55sm6298213qtj.14.2019.05.05.06.33.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 May 2019 06:33:44 -0700 (PDT)
-Date:   Sun, 5 May 2019 13:33:42 +0000
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Network Development <netdev@vger.kernel.org>
-Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
-Message-ID: <20190505133342.GC3076@localhost>
-References: <20190502204958.7868-1-joel@joelfernandes.org>
- <CAADnVQ+CPXKv_fryOxnDXjCLmWxor2j+WBFvPtG-Tcyr=hzRpQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQ+CPXKv_fryOxnDXjCLmWxor2j+WBFvPtG-Tcyr=hzRpQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=goF1yaebOYWv1y2Ep4TYXxP5lSNWUf6+vHv7mxyRHEs=;
+        b=go3ChxnQrBIznZcDTUYKIJP6TjZME+0dq0orHMjBseaXwQJkrWEYtDeP8EZginAFlu
+         sR7fqeUv+D/57vCbBCArqvJgdJvzuFTqDwmz08unWY6RbwpRQzR6wiMLnIeyvV4DO2JK
+         r1RJAHXmVdu8D35s83b85RC8az8J5T6xc9twHYpOrjpAYpkLybMW6YZ0Vz1uFUGIEct7
+         7j3uvmgicPr41Ll/dwa1k/XNe6GnhEajEGhRPy/qCr1eivxRLfzPRiBiRT+zdmhKxpDc
+         X3v7NopdPhY8YUEGE43dUSgAUrU3ybzqGJWhgQ+z/QKD+Xe6cQqITqNy+KqJDC3qy9zg
+         JJUA==
+X-Gm-Message-State: APjAAAWKuowfHrQx+z1yXVJqxdUxqED9a0BN2pxfAtodLTvgKtkuRNWg
+        5aJgYsbaTDBRY8G12rVd/Tg=
+X-Google-Smtp-Source: APXvYqyPXpGnMquhBiNm0BKzznw7APQHQhBJhGgNlY2s2F6kL1OIAfc8AU+EyXZVzhRiLiI+7jirPA==
+X-Received: by 2002:a63:4006:: with SMTP id n6mr25172507pga.424.1557063503288;
+        Sun, 05 May 2019 06:38:23 -0700 (PDT)
+Received: from izt4n3nohp3b5a1z8j8uuaz.localdomain ([149.129.49.136])
+        by smtp.gmail.com with ESMTPSA id p63sm765519pfb.70.2019.05.05.06.38.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 05 May 2019 06:38:22 -0700 (PDT)
+From:   Chengguang Xu <cgxu519@gmail.com>
+To:     ebiederm@xmission.com, jannh@google.com, serge@hallyn.com,
+        christian@brauner.io, keescook@chromium.org
+Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@gmail.com>
+Subject: [PATCH] ns: modify function comment for projid
+Date:   Sun,  5 May 2019 21:38:00 +0800
+Message-Id: <1557063480-4469-1-git-send-email-cgxu519@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 05, 2019 at 12:19:42AM -0700, Alexei Starovoitov wrote:
-> On Thu, May 2, 2019 at 1:50 PM Joel Fernandes (Google)
-> <joel@joelfernandes.org> wrote:
-> >
-> > The eBPF based opensnoop tool fails to read the file path string passed
-> > to the do_sys_open function. This is because it is a pointer to
-> > userspace address and causes an -EFAULT when read with
-> > probe_kernel_read. This is not an issue when running the tool on x86 but
-> > is an issue on arm64. This patch adds a new bpf function call based
-> > which calls the recently proposed probe_user_read function [1].
-> > Using this function call from opensnoop fixes the issue on arm64.
-> >
-> > [1] https://lore.kernel.org/patchwork/patch/1051588/
-> ...
-> > +BPF_CALL_3(bpf_probe_read_user, void *, dst, u32, size, const void *, unsafe_ptr)
-> > +{
-> > +       int ret;
-> > +
-> > +       ret = probe_user_read(dst, unsafe_ptr, size);
-> > +       if (unlikely(ret < 0))
-> > +               memset(dst, 0, size);
-> > +
-> > +       return ret;
-> > +}
-> 
-> probe_user_read() doesn't exist in bpf-next
-> therefore this patch has to wait for the next merge window.
-> At the same time we would need to introduce
-> bpf_probe_read_kernel() and introduce a load time warning
-> for existing bpf_probe_read(), so we can deprecate it eventually.
+Some function comments about projid are described
+as uid, so fix it.
 
-Ok I will update it accordingly. Agreed. thanks,
+Signed-off-by: Chengguang Xu <cgxu519@gmail.com>
+---
+ kernel/user_namespace.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
- - Joel
+diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
+index 923414a246e9..6e917fc072d0 100644
+--- a/kernel/user_namespace.c
++++ b/kernel/user_namespace.c
+@@ -516,8 +516,8 @@ EXPORT_SYMBOL(from_kgid_munged);
+  *	@ns:  User namespace that the projid is in
+  *	@projid: Project identifier
+  *
+- *	Maps a user-namespace uid pair into a kernel internal kuid,
+- *	and returns that kuid.
++ *	Maps a user-namespace projid pair into a kernel internal kprojid,
++ *	and returns that kprojid.
+  *
+  *	When there is no mapping defined for the user-namespace projid
+  *	pair INVALID_PROJID is returned.  Callers are expected to test
+@@ -526,7 +526,7 @@ EXPORT_SYMBOL(from_kgid_munged);
+  */
+ kprojid_t make_kprojid(struct user_namespace *ns, projid_t projid)
+ {
+-	/* Map the uid to a global kernel uid */
++	/* Map the projid to a global kernel projid */
+ 	return KPROJIDT_INIT(map_id_down(&ns->projid_map, projid));
+ }
+ EXPORT_SYMBOL(make_kprojid);
+@@ -545,7 +545,7 @@ EXPORT_SYMBOL(make_kprojid);
+  */
+ projid_t from_kprojid(struct user_namespace *targ, kprojid_t kprojid)
+ {
+-	/* Map the uid from a global kernel uid */
++	/* Map the projid from a global kernel projid */
+ 	return map_id_up(&targ->projid_map, __kprojid_val(kprojid));
+ }
+ EXPORT_SYMBOL(from_kprojid);
+-- 
+2.17.2
 
