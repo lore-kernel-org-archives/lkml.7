@@ -2,175 +2,267 @@ Return-Path: <SRS0=t9Bv=TF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F55C004C9
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 10:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D8FC004C9
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 10:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7F0C2082F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 10:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C70C8208C0
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 May 2019 10:56:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MSzGsq6C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bmwh55uN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfEEKvm (ORCPT
+        id S1727404AbfEEK46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 06:51:42 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43061 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbfEEKvm (ORCPT
+        Sun, 5 May 2019 06:56:58 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33688 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfEEK46 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 06:51:42 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x45AotAX3629706
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Sun, 5 May 2019 03:50:55 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x45AotAX3629706
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1557053456;
-        bh=8TPIZylbEnLDqrVeEidBlaV2naJ2/HoZTlL2u/51r9o=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=MSzGsq6C0HMwtF/+3/URebRqu0S8LHOHvZVJRwIqltZsyXGo4IHRAfFki+aspiBjq
-         o/pJ32X1H179QYZE2KtE2DgMjiZh12qwl/0iFNwza/omkKAEkxlNXuMXqhfsVLwg6r
-         Yf18n/nslmrKAjhEtzyKhZVeRUTMAEKHbMZDbA0k4OWSVxcSm884BO+11Z6FyYy1vM
-         LALHiZck7yyYpaE1CV5vFmVNg/DNpUZLNwc9xDTrgMG4OSQM0L1qP/NbJIsQjbazqE
-         TwUN7vyBTkB8f2mx/LAtB8Zq1KlCGI2a97ww68DwwD+NLyG97aQycKFBCdIr8HFU9N
-         LM5DnZpIWAlog==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x45AonSx3629697;
-        Sun, 5 May 2019 03:50:49 -0700
-Date:   Sun, 5 May 2019 03:50:49 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nadav Amit <tipbot@zytor.com>
-Message-ID: <tip-ef5f22b4e5caf7e5ac12b28d4c9566c95d709ba5@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, sfr@canb.auug.org.au,
-        peterz@infradead.org, tglx@linutronix.de, namit@vmware.com,
-        torvalds@linux-foundation.org, hpa@zytor.com, lkp@intel.com,
-        rick.p.edgecombe@intel.com, nadav.amit@gmail.com,
-        dave.hansen@linux.intel.com, bp@alien8.de, mingo@kernel.org,
-        riel@surriel.com, luto@kernel.org
-Reply-To: riel@surriel.com, luto@kernel.org, nadav.amit@gmail.com,
-          dave.hansen@linux.intel.com, mingo@kernel.org, bp@alien8.de,
-          lkp@intel.com, rick.p.edgecombe@intel.com, namit@vmware.com,
-          tglx@linutronix.de, peterz@infradead.org,
-          linux-kernel@vger.kernel.org, sfr@canb.auug.org.au,
-          hpa@zytor.com, torvalds@linux-foundation.org
-In-Reply-To: <20190505011124.39692-1-namit@vmware.com>
-References: <20190505011124.39692-1-namit@vmware.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/mm] x86/mm: Initialize PGD cache during mm initialization
-Git-Commit-ID: ef5f22b4e5caf7e5ac12b28d4c9566c95d709ba5
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Sun, 5 May 2019 06:56:58 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s18so3022377wmh.0
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 03:56:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U57G786HwXPbJb/Ib81QEy3uYz8PAurJDjRMK8xtUPQ=;
+        b=Bmwh55uN0lL/ltGMMZpxKaCYsCmjwqSYSSlArfXH6iPdUKBaXq2lgEXBzqyQ93eD7O
+         AwDEOWl8IW0U5n4FnZGXY67xAtgo/utbV7tyiifhFjoN91w/nVlQR6jeGvyFFf0nznZ0
+         tzWNHoz31OosTX0VcZz+aXbnbJLtVGOMsb+ZRm3qhDLQCCXec5ZhhYcf69yYvgcONyRo
+         975ZvChv77pWNXjp78h//i65myxgRgExAuXZOKpQ5W7CYaPoHU4ggkr48Tm7wcXSLgTp
+         SmqLGleioQ5m8yoHr5uRU/y/uEOqiQ0nwYZbux2Rjym4LUcvQc3CC7Dhb4gilKpSgjDT
+         7Hqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U57G786HwXPbJb/Ib81QEy3uYz8PAurJDjRMK8xtUPQ=;
+        b=GDEfwZ1g/mfrOEwOYvFNB0jP4zTGHIL4OxDYEqsYCVhLHG0ZhtVQcRcSpuPjmxV5+/
+         Q9xs2bArSD3Q0uhqxvAxxe5LW/P2b+8U4BQcrfDbosRwOGgTxU9Hqvg2YmyiImOs3lw/
+         iOUr2qSiLddD2/aGZODLosfwEOVN6GzleXEzzdd9yE0rrFPKbqTSm+fP0RxUymMsaxrj
+         D2jaJAJGfx+zRhGYe5sT4cGqjWIcYimwiygdG+LnWwrOpO2U+xg3RcCgWLqDSbSo/wZN
+         ZOV6unGjCu84KsHQ3xfGt8dRcl+5+0wukKlPRIBX5DRga5OKDH09UEkEZBkhugPQx3Hs
+         HlEg==
+X-Gm-Message-State: APjAAAW7I4b7mg3wD7BU2kkW3BmMWU3fQGz/jbNGZL5TD7woCATPAtoa
+        im42Ud4AUs6D6QWBSk+0XaM=
+X-Google-Smtp-Source: APXvYqykvGgeXad5LmeBEju/OuMYnpe0CokSWBKSIGfqj7X57dYVvJFgYkY5JS0I5Gg/O0+K8pd8yQ==
+X-Received: by 2002:a1c:771a:: with SMTP id t26mr5108179wmi.14.1557053815499;
+        Sun, 05 May 2019 03:56:55 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5abb56.dynamic.kabel-deutschland.de. [95.90.187.86])
+        by smtp.gmail.com with ESMTPSA id s2sm6920574wmc.7.2019.05.05.03.56.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 05 May 2019 03:56:54 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, florian.c.schilhabel@googlemail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8712: get rid of IS_MCAST
+Date:   Sun,  5 May 2019 12:56:42 +0200
+Message-Id: <20190505105642.8730-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  ef5f22b4e5caf7e5ac12b28d4c9566c95d709ba5
-Gitweb:     https://git.kernel.org/tip/ef5f22b4e5caf7e5ac12b28d4c9566c95d709ba5
-Author:     Nadav Amit <nadav.amit@gmail.com>
-AuthorDate: Sat, 4 May 2019 18:11:24 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Sun, 5 May 2019 12:43:13 +0200
+Use is_multicast_ether_addr instead of custom IS_MCAST and remove
+the now unused IS_MCAST. All buffers are properly aligned.
 
-x86/mm: Initialize PGD cache during mm initialization
-
-Poking-mm initialization might require to duplicate the PGD in early
-stage. Initialize the PGD cache earlier to prevent boot failures.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 4fc19708b165 ("x86/alternatives: Initialize temporary mm for patching")
-Link: http://lkml.kernel.org/r/20190505011124.39692-1-namit@vmware.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- arch/x86/include/asm/pgtable.h |  1 +
- arch/x86/mm/pgtable.c          | 10 ++++++----
- init/main.c                    |  1 +
- 3 files changed, 8 insertions(+), 4 deletions(-)
+ drivers/staging/rtl8712/rtl8712_xmit.c     |  2 +-
+ drivers/staging/rtl8712/rtl871x_recv.c     | 14 +++++++-------
+ drivers/staging/rtl8712/rtl871x_security.c |  4 ++--
+ drivers/staging/rtl8712/rtl871x_xmit.c     | 12 ++++++------
+ drivers/staging/rtl8712/wifi.h             | 11 -----------
+ 5 files changed, 16 insertions(+), 27 deletions(-)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 702db5904753..d488b3053330 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -1010,6 +1010,7 @@ static inline int pgd_none(pgd_t pgd)
+diff --git a/drivers/staging/rtl8712/rtl8712_xmit.c b/drivers/staging/rtl8712/rtl8712_xmit.c
+index 7574a4b569a4..307b0e292976 100644
+--- a/drivers/staging/rtl8712/rtl8712_xmit.c
++++ b/drivers/staging/rtl8712/rtl8712_xmit.c
+@@ -419,7 +419,7 @@ static void update_txdesc(struct xmit_frame *pxmitframe, uint *pmem, int sz)
+ 	struct cmd_priv *pcmdpriv = &padapter->cmdpriv;
+ #endif
+ 	u8 blnSetTxDescOffset;
+-	sint bmcst = IS_MCAST(pattrib->ra);
++	bool bmcst = is_multicast_ether_addr(pattrib->ra);
+ 	struct ht_priv *phtpriv = &pmlmepriv->htpriv;
+ 	struct tx_desc txdesc_mp;
  
- extern int direct_gbpages;
- void init_mem_mapping(void);
-+void pgd_cache_init(void);
- void early_alloc_pgt_buf(void);
- extern void memblock_find_dma_reserve(void);
+diff --git a/drivers/staging/rtl8712/rtl871x_recv.c b/drivers/staging/rtl8712/rtl871x_recv.c
+index 28f736913292..5298fe603437 100644
+--- a/drivers/staging/rtl8712/rtl871x_recv.c
++++ b/drivers/staging/rtl8712/rtl871x_recv.c
+@@ -151,7 +151,7 @@ sint r8712_recvframe_chkmic(struct _adapter *adapter,
+ 	if (prxattrib->encrypt == _TKIP_) {
+ 		/* calculate mic code */
+ 		if (stainfo != NULL) {
+-			if (IS_MCAST(prxattrib->ra)) {
++			if (is_multicast_ether_addr(prxattrib->ra)) {
+ 				iv = precvframe->u.hdr.rx_data +
+ 				     prxattrib->hdrlen;
+ 				idx = iv[3];
+@@ -180,12 +180,12 @@ sint r8712_recvframe_chkmic(struct _adapter *adapter,
+ 			if (bmic_err) {
+ 				if (prxattrib->bdecrypted)
+ 					r8712_handle_tkip_mic_err(adapter,
+-						(u8)IS_MCAST(prxattrib->ra));
++						(u8)is_multicast_ether_addr(prxattrib->ra));
+ 				res = _FAIL;
+ 			} else {
+ 				/* mic checked ok */
+ 				if (!psecuritypriv->bcheck_grpkey &&
+-				    IS_MCAST(prxattrib->ra))
++				    is_multicast_ether_addr(prxattrib->ra))
+ 					psecuritypriv->bcheck_grpkey = true;
+ 			}
+ 			recvframe_pull_tail(precvframe, 8);
+@@ -305,7 +305,7 @@ static sint sta2sta_data_frame(struct _adapter *adapter,
+ 	u8 *mybssid  = get_bssid(pmlmepriv);
+ 	u8 *myhwaddr = myid(&adapter->eeprompriv);
+ 	u8 *sta_addr = NULL;
+-	sint bmcast = IS_MCAST(pattrib->dst);
++	bool bmcast = is_multicast_ether_addr(pattrib->dst);
  
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 7bd01709a091..c8177045b7d4 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -373,14 +373,14 @@ static void pgd_prepopulate_user_pmd(struct mm_struct *mm,
+ 	if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) ||
+ 	    check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE)) {
+@@ -331,7 +331,7 @@ static sint sta2sta_data_frame(struct _adapter *adapter,
+ 			/* For AP mode, if DA == MCAST, then BSSID should
+ 			 * be also MCAST
+ 			 */
+-			if (!IS_MCAST(pattrib->bssid))
++			if (!is_multicast_ether_addr(pattrib->bssid))
+ 				return _FAIL;
+ 		} else { /* not mc-frame */
+ 			/* For AP mode, if DA is non-MCAST, then it must be
+@@ -373,7 +373,7 @@ static sint ap2sta_data_frame(struct _adapter *adapter,
+ 	struct	mlme_priv *pmlmepriv = &adapter->mlmepriv;
+ 	u8 *mybssid  = get_bssid(pmlmepriv);
+ 	u8 *myhwaddr = myid(&adapter->eeprompriv);
+-	sint bmcast = IS_MCAST(pattrib->dst);
++	bool bmcast = is_multicast_ether_addr(pattrib->dst);
  
- static struct kmem_cache *pgd_cache;
+ 	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE) &&
+ 	    check_fwstate(pmlmepriv, _FW_LINKED)) {
+@@ -532,7 +532,7 @@ static sint validate_recv_data_frame(struct _adapter *adapter,
  
--static int __init pgd_cache_init(void)
-+void __init pgd_cache_init(void)
+ 	if (pattrib->privacy) {
+ 		GET_ENCRY_ALGO(psecuritypriv, psta, pattrib->encrypt,
+-			       IS_MCAST(pattrib->ra));
++			       is_multicast_ether_addr(pattrib->ra));
+ 		SET_ICE_IV_LEN(pattrib->iv_len, pattrib->icv_len,
+ 			       pattrib->encrypt);
+ 	} else {
+diff --git a/drivers/staging/rtl8712/rtl871x_security.c b/drivers/staging/rtl8712/rtl871x_security.c
+index f82645011d02..693008bba83e 100644
+--- a/drivers/staging/rtl8712/rtl871x_security.c
++++ b/drivers/staging/rtl8712/rtl871x_security.c
+@@ -665,7 +665,7 @@ u32 r8712_tkip_decrypt(struct _adapter *padapter, u8 *precvframe)
+ 			length = ((union recv_frame *)precvframe)->
+ 				 u.hdr.len - prxattrib->hdrlen -
+ 				 prxattrib->iv_len;
+-			if (IS_MCAST(prxattrib->ra)) {
++			if (is_multicast_ether_addr(prxattrib->ra)) {
+ 				idx = iv[3];
+ 				prwskey = &psecuritypriv->XGrpKey[
+ 					 ((idx >> 6) & 0x3) - 1].skey[0];
+@@ -1368,7 +1368,7 @@ u32 r8712_aes_decrypt(struct _adapter *padapter, u8 *precvframe)
+ 		stainfo = r8712_get_stainfo(&padapter->stapriv,
+ 					    &prxattrib->ta[0]);
+ 		if (stainfo != NULL) {
+-			if (IS_MCAST(prxattrib->ra)) {
++			if (is_multicast_ether_addr(prxattrib->ra)) {
+ 				iv = pframe + prxattrib->hdrlen;
+ 				idx = iv[3];
+ 				prwskey = &psecuritypriv->XGrpKey[
+diff --git a/drivers/staging/rtl8712/rtl871x_xmit.c b/drivers/staging/rtl8712/rtl871x_xmit.c
+index f6fe8ea12961..bfd5538a4652 100644
+--- a/drivers/staging/rtl8712/rtl871x_xmit.c
++++ b/drivers/staging/rtl8712/rtl871x_xmit.c
+@@ -181,7 +181,7 @@ sint r8712_update_attrib(struct _adapter *padapter, _pkt *pkt,
+ 
+ 	struct tx_cmd txdesc;
+ 
+-	sint bmcast;
++	bool bmcast;
+ 	struct sta_priv		*pstapriv = &padapter->stapriv;
+ 	struct security_priv	*psecuritypriv = &padapter->securitypriv;
+ 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
+@@ -257,7 +257,7 @@ sint r8712_update_attrib(struct _adapter *padapter, _pkt *pkt,
+ 			}
+ 		}
+ 	}
+-	bmcast = IS_MCAST(pattrib->ra);
++	bmcast = is_multicast_ether_addr(pattrib->ra);
+ 	/* get sta_info*/
+ 	if (bmcast) {
+ 		psta = r8712_get_bcmc_stainfo(padapter);
+@@ -353,7 +353,7 @@ static sint xmitframe_addmic(struct _adapter *padapter,
+ 	struct	security_priv *psecuritypriv = &padapter->securitypriv;
+ 	struct	xmit_priv *pxmitpriv = &padapter->xmitpriv;
+ 	u8 priority[4] = {0x0, 0x0, 0x0, 0x0};
+-	sint bmcst = IS_MCAST(pattrib->ra);
++	bool bmcst = is_multicast_ether_addr(pattrib->ra);
+ 
+ 	if (pattrib->psta)
+ 		stainfo = pattrib->psta;
+@@ -523,7 +523,7 @@ static sint make_wlanhdr(struct _adapter *padapter, u8 *hdr,
+ 		/* Update Seq Num will be handled by f/w */
+ 		{
+ 			struct sta_info *psta;
+-			sint bmcst = IS_MCAST(pattrib->ra);
++			bool bmcst = is_multicast_ether_addr(pattrib->ra);
+ 
+ 			if (pattrib->psta) {
+ 				psta = pattrib->psta;
+@@ -594,7 +594,7 @@ sint r8712_xmitframe_coalesce(struct _adapter *padapter, _pkt *pkt,
+ 	struct xmit_priv	*pxmitpriv = &padapter->xmitpriv;
+ 	struct pkt_attrib	*pattrib = &pxmitframe->attrib;
+ 	u8 *pbuf_start;
+-	sint bmcst = IS_MCAST(pattrib->ra);
++	bool bmcst = is_multicast_ether_addr(pattrib->ra);
+ 
+ 	if (pattrib->psta == NULL)
+ 		return _FAIL;
+@@ -903,7 +903,7 @@ sint r8712_xmit_classifier(struct _adapter *padapter,
+ 	struct pkt_attrib *pattrib = &pxmitframe->attrib;
+ 	struct sta_priv *pstapriv = &padapter->stapriv;
+ 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+-	sint bmcst = IS_MCAST(pattrib->ra);
++	bool bmcst = is_multicast_ether_addr(pattrib->ra);
+ 
+ 	if (pattrib->psta) {
+ 		psta = pattrib->psta;
+diff --git a/drivers/staging/rtl8712/wifi.h b/drivers/staging/rtl8712/wifi.h
+index 77346debea03..1a5b966a167e 100644
+--- a/drivers/staging/rtl8712/wifi.h
++++ b/drivers/staging/rtl8712/wifi.h
+@@ -278,17 +278,6 @@ static inline unsigned char get_tofr_ds(unsigned char *pframe)
+ 
+ #define GetAddr4Ptr(pbuf)	((unsigned char *)((addr_t)(pbuf) + 24))
+ 
+-
+-
+-static inline int IS_MCAST(unsigned char *da)
+-{
+-	if ((*da) & 0x01)
+-		return true;
+-	else
+-		return false;
+-}
+-
+-
+ static inline unsigned char *get_da(unsigned char *pframe)
  {
- 	/*
- 	 * When PAE kernel is running as a Xen domain, it does not use
- 	 * shared kernel pmd. And this requires a whole page for pgd.
- 	 */
- 	if (!SHARED_KERNEL_PMD)
--		return 0;
-+		return;
- 
- 	/*
- 	 * when PAE kernel is not running as a Xen domain, it uses
-@@ -390,9 +390,7 @@ static int __init pgd_cache_init(void)
- 	 */
- 	pgd_cache = kmem_cache_create("pgd_cache", PGD_SIZE, PGD_ALIGN,
- 				      SLAB_PANIC, NULL);
--	return 0;
- }
--core_initcall(pgd_cache_init);
- 
- static inline pgd_t *_pgd_alloc(void)
- {
-@@ -420,6 +418,10 @@ static inline void _pgd_free(pgd_t *pgd)
- }
- #else
- 
-+void __init pgd_cache_init(void)
-+{
-+}
-+
- static inline pgd_t *_pgd_alloc(void)
- {
- 	return (pgd_t *)__get_free_pages(PGALLOC_GFP, PGD_ALLOCATION_ORDER);
-diff --git a/init/main.c b/init/main.c
-index 95dd9406ee31..1d1cb8f10cad 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -537,6 +537,7 @@ static void __init mm_init(void)
- 	init_espfix_bsp();
- 	/* Should be run after espfix64 is set up. */
- 	pti_init();
-+	pgd_cache_init();
- }
- 
- void __init __weak arch_call_rest_init(void)
+ 	unsigned char	*da;
+-- 
+2.21.0
+
