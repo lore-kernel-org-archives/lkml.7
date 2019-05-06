@@ -2,145 +2,148 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB65FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838FEC04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8D242087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5705B206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="kh3j8pze"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="S6iea+gw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbfEFT5A (ORCPT
+        id S1726700AbfEFT5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:57:00 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44831 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfEFT5A (ORCPT
+        Mon, 6 May 2019 15:57:15 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40207 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfEFT5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:57:00 -0400
-Received: by mail-qt1-f193.google.com with SMTP id f24so5885095qtk.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 12:56:59 -0700 (PDT)
+        Mon, 6 May 2019 15:57:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id u17so7324116pfn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 12:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=IapbnG17HnRAI+fgjIuaulp9CMBvFm3VLGbRmGWF4E0=;
-        b=kh3j8pzeyTDmGdBdKT2t6wK4qJrWUxjJXhSIbeCddOyLk5cEpXkW4F9N9u/+Cu+JYe
-         CcD+9uc4Qg7Zmm+P86rKLNxNIuzFyN0OzWfKQtI2x4PixE0FH3kFcVFuPlLo/Ompqdu9
-         w7+GVG9UeA0IbgDDhWr88xyWm4uNLGrNLbYpVGiEWxcRPBo++VUOVJcu47sjlyVVwUeI
-         /0fW1+foLI2m//cXq3yGitHMCceBcv6YhtnWyMBhfj3Qw3RiebMP5Bu1VTQl8/Uonzn0
-         1GwiYltb3AemZiK8e09/6Yi5+nA1kCdB43L1rD1DxX+XJ+3W+eo5S6qX5BUXHAcD2WAl
-         qG1A==
+         :content-disposition:in-reply-to:user-agent;
+        bh=CLvXgkmEF2HuuDRz+thRTXD1OtlI2uKzA2+jsYBonhs=;
+        b=S6iea+gwnFA7+UtQ38F/1k2BteEzmNzXl+aCRycK15pGhNFpdyCe6rhOEQHexmbGnQ
+         e2CB8RFbWcPDfBoW2UNpy6UNA1V6tEYjkD1QsWLAowhee9HO2z/IKHMNWHNqjuT8lG2x
+         O75FFPOK/kakEUTjZK1qAzPGXtVUQXnbi1kU4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=IapbnG17HnRAI+fgjIuaulp9CMBvFm3VLGbRmGWF4E0=;
-        b=PQh54ZZcwTCAP/Fwl60FuRmDJl0TOFVrYzrmZEJuuTM8LWVy2UZaAp+mCJq/WB5FIK
-         wFVj69yamsACVKi1CiDFZmYk8u8NpoI7OlgZNXdMB+7UXjWGE6xNKEAHXg3B8X3/woPB
-         5bewdKzrjsvTy/X8vE7NUvKi04r8XgLhTWHAX4kyBBALH7FbLSAtjBoh+ejzNmZhDq1w
-         MoBtu9rk7F4G27IS2zFnt7XRL0Lst+tgQy7iHZvZnugmU0F5q1+KvnnhbPsUfNKEtpIM
-         e827sYscdnArxH3yXwmufooMAiFkxum3b6sThfLwyw4ZxiSXrNkbhS58obB4kF80eKg7
-         pa2g==
-X-Gm-Message-State: APjAAAUibRP/Mg1BVXyePawEhcFkKbhtEZYmUgPdUyPdjLful/kWOiEt
-        DiU6YctflzL6y4pHUoB5oL28Ug==
-X-Google-Smtp-Source: APXvYqxjdKr8Wo1ZXFmZHUCUSuh1O7kFe1C0/S4S/tUB/aC2ePJCp7gcnSCWSFy1sqGqg62USpuzhA==
-X-Received: by 2002:a0c:9ac8:: with SMTP id k8mr22216670qvf.132.1557172619424;
-        Mon, 06 May 2019 12:56:59 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id h7sm5794217qkk.27.2019.05.06.12.56.57
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CLvXgkmEF2HuuDRz+thRTXD1OtlI2uKzA2+jsYBonhs=;
+        b=U3ZgTkN8cKqFm1zDUijod13IarJWue3WO2TPMLjio5tkcfY+X1JVNQIot7CO91B91M
+         Z4hbf7ynvqWpIoPt7hL9D0fVuKrRosftMHrMI26J/dxAQEKgia06x974md/3JuUFUdT8
+         qjKMIIY5qSHc9zsusc9v7Q1+2JvJF13m1Hgf1+8L6u9iZKtSlAX6ZQHglzWiAuWOnq0n
+         MimDRc6Ckw11LUCTIOkvgD9fp9E0QmWJH4jAxgKsn5gS3iUB5FWlfkpvB0MT5+ZsTsrU
+         quJv6oQhz5dK4YYCIe+Qn2yOD3MZpdztQCdvylZ2yqEJiD1RA2xPO5e7rkW1Q3bzQ41b
+         bxDQ==
+X-Gm-Message-State: APjAAAVEdqwR08oPF7dcoo0bDrG+UlfHFihikSVdxITPMs3URZOsPIpa
+        KKBhcaxJX/R7fH+fnCfgK1G90w==
+X-Google-Smtp-Source: APXvYqynLDYXDnI9TexIDiiHv8fM/e64HKHfby9Od5eT6nRpjknFGCFcb8PzLIcX0Va+gYVKgmJsnA==
+X-Received: by 2002:aa7:8b8b:: with SMTP id r11mr35947156pfd.130.1557172633764;
+        Mon, 06 May 2019 12:57:13 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 128sm13713965pgb.47.2019.05.06.12.57.12
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 12:56:58 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hNjjN-0007sr-Dg; Mon, 06 May 2019 16:56:57 -0300
-Date:   Mon, 6 May 2019 16:56:57 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     jglisse@redhat.com
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
-Message-ID: <20190506195657.GA30261@ziepe.ca>
-References: <20190411181314.19465-1-jglisse@redhat.com>
+        Mon, 06 May 2019 12:57:12 -0700 (PDT)
+Date:   Mon, 6 May 2019 15:57:11 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Michal Gregorczyk <michalgr@live.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        duyuchao <yuchao.du@unisoc.com>,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        bpf@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>, netdev@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>
+Subject: Re: [PATCH v2 1/4] bpf: Add support for reading user pointers
+Message-ID: <20190506195711.GA48323@google.com>
+References: <20190506183116.33014-1-joel@joelfernandes.org>
+ <3c6b312c-5763-0d9c-7c2c-436ee41f9be1@iogearbox.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190411181314.19465-1-jglisse@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <3c6b312c-5763-0d9c-7c2c-436ee41f9be1@iogearbox.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 02:13:13PM -0400, jglisse@redhat.com wrote:
-> From: Jérôme Glisse <jglisse@redhat.com>
+On Mon, May 06, 2019 at 09:11:19PM +0200, Daniel Borkmann wrote:
+> On 05/06/2019 08:31 PM, Joel Fernandes (Google) wrote:
+> > The eBPF based opensnoop tool fails to read the file path string passed
+> > to the do_sys_open function. This is because it is a pointer to
+> > userspace address and causes an -EFAULT when read with
+> > probe_kernel_read. This is not an issue when running the tool on x86 but
+> > is an issue on arm64. This patch adds a new bpf function call based
+> > which calls the recently proposed probe_user_read function [1].
+> > Using this function call from opensnoop fixes the issue on arm64.
+> > 
+> > [1] https://lore.kernel.org/patchwork/patch/1051588/
+> > 
+> > Cc: Michal Gregorczyk <michalgr@live.com>
+> > Cc: Adrian Ratiu <adrian.ratiu@collabora.com>
+> > Cc: Mohammad Husain <russoue@gmail.com>
+> > Cc: Qais Yousef <qais.yousef@arm.com>
+> > Cc: Srinivas Ramana <sramana@codeaurora.org>
+> > Cc: duyuchao <yuchao.du@unisoc.com>
+> > Cc: Manjo Raja Rao <linux@manojrajarao.com>
+> > Cc: Karim Yaghmour <karim.yaghmour@opersys.com>
+> > Cc: Tamir Carmeli <carmeli.tamir@gmail.com>
+> > Cc: Yonghong Song <yhs@fb.com>
+> > Cc: Alexei Starovoitov <ast@kernel.org>
+> > Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: Peter Ziljstra <peterz@infradead.org>
+> > Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: kernel-team@android.com
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > ---
+> > Masami, could you carry these patches in the series where are you add
+> > probe_user_read function?
+> > 
+> > Previous submissions is here:
+> > https://lore.kernel.org/patchwork/patch/1069552/
+> > v1->v2: split tools uapi sync into separate commit, added deprecation
+> > warning for old bpf_probe_read function.
 > 
-> Just fixed Kconfig and build when ODP was not enabled, other than that
-> this is the same as v3. Here is previous cover letter:
-> 
-> Git tree with all prerequisite:
-> https://cgit.freedesktop.org/~glisse/linux/log/?h=rdma-odp-hmm-v4
-> 
-> This patchset convert RDMA ODP to use HMM underneath this is motivated
-> by stronger code sharing for same feature (share virtual memory SVM or
-> Share Virtual Address SVA) and also stronger integration with mm code to
-> achieve that. It depends on HMM patchset posted for inclusion in 5.2 [2]
-> and [3].
-> 
-> It has been tested with pingpong test with -o and others flags to test
-> different size/features associated with ODP.
-> 
-> Moreover they are some features of HMM in the works like peer to peer
-> support, fast CPU page table snapshot, fast IOMMU mapping update ...
-> It will be easier for RDMA devices with ODP to leverage those if they
-> use HMM underneath.
-> 
-> Quick summary of what HMM is:
->     HMM is a toolbox for device driver to implement software support for
->     Share Virtual Memory (SVM). Not only it provides helpers to mirror a
->     process address space on a device (hmm_mirror). It also provides
->     helper to allow to use device memory to back regular valid virtual
->     address of a process (any valid mmap that is not an mmap of a device
->     or a DAX mapping). They are two kinds of device memory. Private memory
->     that is not accessible to CPU because it does not have all the expected
->     properties (this is for all PCIE devices) or public memory which can
->     also be access by CPU without restriction (with OpenCAPI or CCIX or
->     similar cache-coherent and atomic inter-connect).
-> 
->     Device driver can use each of HMM tools separatly. You do not have to
->     use all the tools it provides.
-> 
-> For RDMA device i do not expect a need to use the device memory support
-> of HMM. This device memory support is geared toward accelerator like GPU.
-> 
-> 
-> You can find a branch [1] with all the prerequisite in. This patch is on
-> top of rdma-next with the HMM patchset [2] and mmu notifier patchset [3]
-> applied on top of it.
-> 
-> [1] https://cgit.freedesktop.org/~glisse/linux/log/?h=rdma-odp-hmm-v4
-> [2] https://lkml.org/lkml/2019/4/3/1032
-> [3] https://lkml.org/lkml/2019/3/26/900
+> Please properly submit this series to bpf tree once the base
+> infrastructure from Masami is upstream.
 
-Jerome, please let me know if these dependent series are merged during
-the first week of the merge window.
+Could you clarify what do you mean by "properly submit this series to bpf
+tree" mean? bpf@vger.kernel.org is CC'd.
 
-This patch has been tested and could go along next week if the
-dependencies are met.
+> This series here should
+> also fix up all current probe read usage under samples/bpf/ and
+> tools/testing/selftests/bpf/.
 
-Thanks,
-Jason
+Ok. Agreed, will do that.
+
+thanks,
+
+- Joel
+
