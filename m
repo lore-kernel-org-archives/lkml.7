@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDFEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A832C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02CD921479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1B4B20C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154114;
-	bh=nbI5ePKhv8cFWSMceQ/hjDVXYk8xugU+JZQZBEFbqSg=;
+	s=default; t=1557154116;
+	bh=p6RVOtZfYnh8+vutVexuQSUaNn8ATx66Mk/NyeUR5gk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IolO2SrYiARIppwAZkAf1Fao88Q7reH5Xvs9L7jS347cgO7CUstjIUyTgdZLso8C1
-	 5q7DNQrmsbQpzAcqx2CnbvxjdwExIb5S69tQVe7T8dOSy4y6Qdl5B/SRHkhzBoQ2H1
-	 lfEWwn1NVKinR40rSWCeULbVRFfOh+1cs+PGVHsA=
+	b=eT0tkD9Icm3ji+kdIbAEvMz94ZMR5q4vP+jWxzPm1hKdxO6NiY39KgGXdlZy0G+iv
+	 /FzqJSwN7EHVHM1DbgQANMRczRP/qiDRQflsYbWZ+sEdwWepprpIrzArU17EIsc+na
+	 Vas0QxBtE/XMEQN8DJf14WO/V+axBgOwl1ct3deY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbfEFOsc (ORCPT
+        id S1729487AbfEFOse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48898 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:48:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728367AbfEFOsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:48:30 -0400
+        id S1729178AbfEFOsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:48:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B99C72053B;
-        Mon,  6 May 2019 14:48:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A9A20C01;
+        Mon,  6 May 2019 14:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154109;
-        bh=nbI5ePKhv8cFWSMceQ/hjDVXYk8xugU+JZQZBEFbqSg=;
+        s=default; t=1557154111;
+        bh=p6RVOtZfYnh8+vutVexuQSUaNn8ATx66Mk/NyeUR5gk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tg4eV/a3QqUY//BqjWX/ywr7XZYd1vIyEh60BOCWxwN65N1ncD5yfrdBdEf5Nhxrq
-         fv6WSwqRvI34LXmLwsl46YZLM3y1FgupQccBdoRVUHht/Wx+ppLTi8y3YqmYcaQi5z
-         tZ7wleAvCQORrCrClEhu6RG9cBfytMHBsfeoHsCU=
+        b=GlrGXug/rXVYeU5FIYFpCbloHD7aZQtwrJce2SoMP5Y+qGtJNQvqFGQNyVbwh5ugo
+         0zPNoRtMGPO1874BpRqRN1pcRTQ46UZmD97hGE0S5ZUA84bKyQRkLfP2IImmcPXdFS
+         El06vZ7vMAWrWQykBVZdU7jKuSGA4iper7aHL3Bw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Bauer <scott.bauer@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 4.9 08/62] x86/suspend: fix false positive KASAN warning on suspend/resume
-Date:   Mon,  6 May 2019 16:32:39 +0200
-Message-Id: <20190506143051.808617470@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 09/62] kasan: turn on -fsanitize-address-use-after-scope
+Date:   Mon,  6 May 2019 16:32:40 +0200
+Message-Id: <20190506143051.888762392@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -63,146 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Andrey Ryabinin <aryabinin@virtuozzo.com>
 
-commit b53f40db59b27b62bc294c30506b02a0cae47e0b upstream.
+commit c5caf21ab0cf884ef15b25af234f620e4a233139 upstream.
 
-Resuming from a suspend operation is showing a KASAN false positive
-warning:
+In the upcoming gcc7 release, the -fsanitize=kernel-address option at
+first implied new -fsanitize-address-use-after-scope option.  This would
+cause link errors on older kernels because they don't have two new
+functions required for use-after-scope support.  Therefore, gcc7 changed
+default to -fno-sanitize-address-use-after-scope.
 
-  BUG: KASAN: stack-out-of-bounds in unwind_get_return_address+0x11d/0x130 at addr ffff8803867d7878
-  Read of size 8 by task pm-suspend/7774
-  page:ffffea000e19f5c0 count:0 mapcount:0 mapping:          (null) index:0x0
-  flags: 0x2ffff0000000000()
-  page dumped because: kasan: bad access detected
-  CPU: 0 PID: 7774 Comm: pm-suspend Tainted: G    B           4.9.0-rc7+ #8
-  Hardware name: Gigabyte Technology Co., Ltd. Z170X-UD5/Z170X-UD5-CF, BIOS F5 03/07/2016
-  Call Trace:
-    dump_stack+0x63/0x82
-    kasan_report_error+0x4b4/0x4e0
-    ? acpi_hw_read_port+0xd0/0x1ea
-    ? kfree_const+0x22/0x30
-    ? acpi_hw_validate_io_request+0x1a6/0x1a6
-    __asan_report_load8_noabort+0x61/0x70
-    ? unwind_get_return_address+0x11d/0x130
-    unwind_get_return_address+0x11d/0x130
-    ? unwind_next_frame+0x97/0xf0
-    __save_stack_trace+0x92/0x100
-    save_stack_trace+0x1b/0x20
-    save_stack+0x46/0xd0
-    ? save_stack_trace+0x1b/0x20
-    ? save_stack+0x46/0xd0
-    ? kasan_kmalloc+0xad/0xe0
-    ? kasan_slab_alloc+0x12/0x20
-    ? acpi_hw_read+0x2b6/0x3aa
-    ? acpi_hw_validate_register+0x20b/0x20b
-    ? acpi_hw_write_port+0x72/0xc7
-    ? acpi_hw_write+0x11f/0x15f
-    ? acpi_hw_read_multiple+0x19f/0x19f
-    ? memcpy+0x45/0x50
-    ? acpi_hw_write_port+0x72/0xc7
-    ? acpi_hw_write+0x11f/0x15f
-    ? acpi_hw_read_multiple+0x19f/0x19f
-    ? kasan_unpoison_shadow+0x36/0x50
-    kasan_kmalloc+0xad/0xe0
-    kasan_slab_alloc+0x12/0x20
-    kmem_cache_alloc_trace+0xbc/0x1e0
-    ? acpi_get_sleep_type_data+0x9a/0x578
-    acpi_get_sleep_type_data+0x9a/0x578
-    acpi_hw_legacy_wake_prep+0x88/0x22c
-    ? acpi_hw_legacy_sleep+0x3c7/0x3c7
-    ? acpi_write_bit_register+0x28d/0x2d3
-    ? acpi_read_bit_register+0x19b/0x19b
-    acpi_hw_sleep_dispatch+0xb5/0xba
-    acpi_leave_sleep_state_prep+0x17/0x19
-    acpi_suspend_enter+0x154/0x1e0
-    ? trace_suspend_resume+0xe8/0xe8
-    suspend_devices_and_enter+0xb09/0xdb0
-    ? printk+0xa8/0xd8
-    ? arch_suspend_enable_irqs+0x20/0x20
-    ? try_to_freeze_tasks+0x295/0x600
-    pm_suspend+0x6c9/0x780
-    ? finish_wait+0x1f0/0x1f0
-    ? suspend_devices_and_enter+0xdb0/0xdb0
-    state_store+0xa2/0x120
-    ? kobj_attr_show+0x60/0x60
-    kobj_attr_store+0x36/0x70
-    sysfs_kf_write+0x131/0x200
-    kernfs_fop_write+0x295/0x3f0
-    __vfs_write+0xef/0x760
-    ? handle_mm_fault+0x1346/0x35e0
-    ? do_iter_readv_writev+0x660/0x660
-    ? __pmd_alloc+0x310/0x310
-    ? do_lock_file_wait+0x1e0/0x1e0
-    ? apparmor_file_permission+0x18/0x20
-    ? security_file_permission+0x73/0x1c0
-    ? rw_verify_area+0xbd/0x2b0
-    vfs_write+0x149/0x4a0
-    SyS_write+0xd9/0x1c0
-    ? SyS_read+0x1c0/0x1c0
-    entry_SYSCALL_64_fastpath+0x1e/0xad
-  Memory state around the buggy address:
-   ffff8803867d7700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-   ffff8803867d7780: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  >ffff8803867d7800: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f4
-                                                                  ^
-   ffff8803867d7880: f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00 00 00
-   ffff8803867d7900: 00 00 00 f1 f1 f1 f1 04 f4 f4 f4 f3 f3 f3 f3 00
+Now the kernel has everything required for that feature since commit
+828347f8f9a5 ("kasan: support use-after-scope detection").  So, to make it
+work, we just have to enable use-after-scope in CFLAGS.
 
-KASAN instrumentation poisons the stack when entering a function and
-unpoisons it when exiting the function.  However, in the suspend path,
-some functions never return, so their stack never gets unpoisoned,
-resulting in stale KASAN shadow data which can cause later false
-positive warnings like the one above.
-
-Reported-by: Scott Bauer <scott.bauer@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: http://lkml.kernel.org/r/1481207977-28654-1-git-send-email-aryabinin@virtuozzo.com
+Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/acpi/wakeup_64.S |    9 +++++++++
- mm/kasan/kasan.c                 |    9 ++++++++-
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ scripts/Makefile.kasan |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kernel/acpi/wakeup_64.S
-+++ b/arch/x86/kernel/acpi/wakeup_64.S
-@@ -109,6 +109,15 @@ ENTRY(do_suspend_lowlevel)
- 	movq	pt_regs_r14(%rax), %r14
- 	movq	pt_regs_r15(%rax), %r15
+--- a/scripts/Makefile.kasan
++++ b/scripts/Makefile.kasan
+@@ -29,6 +29,8 @@ else
+     endif
+ endif
  
-+#ifdef CONFIG_KASAN
-+	/*
-+	 * The suspend path may have poisoned some areas deeper in the stack,
-+	 * which we now need to unpoison.
-+	 */
-+	movq	%rsp, %rdi
-+	call	kasan_unpoison_task_stack_below
-+#endif
++CFLAGS_KASAN += $(call cc-option, -fsanitize-address-use-after-scope)
 +
- 	xorl	%eax, %eax
- 	addq	$8, %rsp
- 	FRAME_END
---- a/mm/kasan/kasan.c
-+++ b/mm/kasan/kasan.c
-@@ -80,7 +80,14 @@ void kasan_unpoison_task_stack(struct ta
- /* Unpoison the stack for the current task beyond a watermark sp value. */
- asmlinkage void kasan_unpoison_task_stack_below(const void *watermark)
- {
--	__kasan_unpoison_stack(current, watermark);
-+	/*
-+	 * Calculate the task stack base address.  Avoid using 'current'
-+	 * because this function is called by early resume code which hasn't
-+	 * yet set up the percpu register (%gs).
-+	 */
-+	void *base = (void *)((unsigned long)watermark & ~(THREAD_SIZE - 1));
-+
-+	kasan_unpoison_shadow(base, watermark - base);
- }
+ CFLAGS_KASAN_NOSANITIZE := -fno-builtin
  
- /*
+ endif
 
 
