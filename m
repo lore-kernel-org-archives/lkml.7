@@ -2,52 +2,54 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BA4C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8E9C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED7B2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE43520C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153992;
-	bh=QBSunIwk2sq53lut5q3wAM4APzM6eYRPvuu1yZg2/pM=;
+	s=default; t=1557153998;
+	bh=jt2Wjvys7LVUP9B3WLdw1zC71qSfk0vFWyALeThIUho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pGGOVr7O29Wi10is/c9pGShUmdXsMSO0UpmXPYmfC4FFs2Zt7ZSZPpFJvbkppkQKe
-	 7QudddY0Bz9LWVAejVGlXtxLFoIwf/7n7D0z2Z3Umkf6nzRffk7kvHSmHz2XRcHiRZ
-	 Gdj0UPBXphzCK+1FXHQMfJ0TZGXuxDZRk8o/Www0=
+	b=cTz27CZnAb5a7Rukd12Ad7Ymn+Slj4EbYxrYJUa5taWKXr8ifOGhX/0RwgUvncaRQ
+	 V3ZKkukSVm4GUADHwYjJE7Jw7OUpFoeg4/nndOmu5QXD8K8Zl3kRDvFzHbdkKGqTN4
+	 QiShwpwhWarBjljzmm6Jjm0/t+REcbgFfdmD/Cfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbfEFOqb (ORCPT
+        id S1729180AbfEFOqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:46:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44268 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:46:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729124AbfEFOq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:46:26 -0400
+        id S1727489AbfEFOqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:46:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF03F20C01;
-        Mon,  6 May 2019 14:46:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C7CB2087F;
+        Mon,  6 May 2019 14:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153985;
-        bh=QBSunIwk2sq53lut5q3wAM4APzM6eYRPvuu1yZg2/pM=;
+        s=default; t=1557153993;
+        bh=jt2Wjvys7LVUP9B3WLdw1zC71qSfk0vFWyALeThIUho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xE4O6QLzQbo4ct55Y42pfYb/u1WU1B0ZdSeQDf+iGB471UCSXBuU0CG4zjVh1yUlx
-         4XVmYFijagFaVu6facf1y86XWxOdlTyeu6i9WRIlaFehD3C1lM9+MLADHMoaaNkjGD
-         H7ldTo36Jtz0L//iNnnAjddLMwQ061h882dqddas=
+        b=H9vTBwzJCBRxLmi3SlUKt1NTyys+B4bzsLRKJI6lUHsArLrbtm4R+1refwjabWmqV
+         19VPh0ZVarGLJBzYWkgDXPwLy0+RxVYg0UZoSCH/vvVhowB/ZbAAFUEVWw4OoTlF+b
+         4C9zu5scacHFqT3d6DrfzPTHltcnK+5CCuQWrkL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 4.14 70/75] selinux: never allow relabeling on context mounts
-Date:   Mon,  6 May 2019 16:33:18 +0200
-Message-Id: <20190506143059.606606075@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Long Li <longli@microsoft.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 46/75] scsi: storvsc: Fix calculation of sub-channel count
+Date:   Mon,  6 May 2019 16:32:54 +0200
+Message-Id: <20190506143057.377252559@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -60,85 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Mosnacek <omosnace@redhat.com>
+[ Upstream commit 382e06d11e075a40b4094b6ef809f8d4bcc7ab2a ]
 
-commit a83d6ddaebe541570291205cb538e35ad4ff94f9 upstream.
+When the number of sub-channels offered by Hyper-V is >= the number of CPUs
+in the VM, calculate the correct number of sub-channels.  The current code
+produces one too many.
 
-In the SECURITY_FS_USE_MNTPOINT case we never want to allow relabeling
-files/directories, so we should never set the SBLABEL_MNT flag. The
-'special handling' in selinux_is_sblabel_mnt() is only intended for when
-the behavior is set to SECURITY_FS_USE_GENFS.
+This scenario arises only when the number of CPUs is artificially
+restricted (for example, with maxcpus=<n> on the kernel boot line), because
+Hyper-V normally offers a sub-channel count < number of CPUs.  While the
+current code doesn't break, the extra sub-channel is unbalanced across the
+CPUs (for example, a total of 5 channels on a VM with 4 CPUs).
 
-While there, make the logic in selinux_is_sblabel_mnt() more explicit
-and add a BUILD_BUG_ON() to make sure that introducing a new
-SECURITY_FS_USE_* forces a review of the logic.
-
-Fixes: d5f3a5f6e7e7 ("selinux: add security in-core xattr support for pstore and debugfs")
-Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-Reviewed-by: Stephen Smalley <sds@tycho.nsa.gov>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Long Li <longli@microsoft.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/hooks.c |   40 +++++++++++++++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 9 deletions(-)
+ drivers/scsi/storvsc_drv.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -471,16 +471,10 @@ static int may_context_mount_inode_relab
- 	return rc;
- }
- 
--static int selinux_is_sblabel_mnt(struct super_block *sb)
-+static int selinux_is_genfs_special_handling(struct super_block *sb)
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index beb585ddc07d..5adeb1e4b186 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -658,13 +658,22 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
+ static void  handle_multichannel_storage(struct hv_device *device, int max_chns)
  {
--	struct superblock_security_struct *sbsec = sb->s_security;
--
--	return sbsec->behavior == SECURITY_FS_USE_XATTR ||
--		sbsec->behavior == SECURITY_FS_USE_TRANS ||
--		sbsec->behavior == SECURITY_FS_USE_TASK ||
--		sbsec->behavior == SECURITY_FS_USE_NATIVE ||
--		/* Special handling. Genfs but also in-core setxattr handler */
--		!strcmp(sb->s_type->name, "sysfs") ||
-+	/* Special handling. Genfs but also in-core setxattr handler */
-+	return	!strcmp(sb->s_type->name, "sysfs") ||
- 		!strcmp(sb->s_type->name, "pstore") ||
- 		!strcmp(sb->s_type->name, "debugfs") ||
- 		!strcmp(sb->s_type->name, "tracefs") ||
-@@ -490,6 +484,34 @@ static int selinux_is_sblabel_mnt(struct
- 		  !strcmp(sb->s_type->name, "cgroup2")));
- }
+ 	struct storvsc_device *stor_device;
+-	int num_cpus = num_online_cpus();
+ 	int num_sc;
+ 	struct storvsc_cmd_request *request;
+ 	struct vstor_packet *vstor_packet;
+ 	int ret, t;
  
-+static int selinux_is_sblabel_mnt(struct super_block *sb)
-+{
-+	struct superblock_security_struct *sbsec = sb->s_security;
-+
+-	num_sc = ((max_chns > num_cpus) ? num_cpus : max_chns);
 +	/*
-+	 * IMPORTANT: Double-check logic in this function when adding a new
-+	 * SECURITY_FS_USE_* definition!
++	 * If the number of CPUs is artificially restricted, such as
++	 * with maxcpus=1 on the kernel boot line, Hyper-V could offer
++	 * sub-channels >= the number of CPUs. These sub-channels
++	 * should not be created. The primary channel is already created
++	 * and assigned to one CPU, so check against # CPUs - 1.
 +	 */
-+	BUILD_BUG_ON(SECURITY_FS_USE_MAX != 7);
++	num_sc = min((int)(num_online_cpus() - 1), max_chns);
++	if (!num_sc)
++		return;
 +
-+	switch (sbsec->behavior) {
-+	case SECURITY_FS_USE_XATTR:
-+	case SECURITY_FS_USE_TRANS:
-+	case SECURITY_FS_USE_TASK:
-+	case SECURITY_FS_USE_NATIVE:
-+		return 1;
-+
-+	case SECURITY_FS_USE_GENFS:
-+		return selinux_is_genfs_special_handling(sb);
-+
-+	/* Never allow relabeling on context mounts */
-+	case SECURITY_FS_USE_MNTPOINT:
-+	case SECURITY_FS_USE_NONE:
-+	default:
-+		return 0;
-+	}
-+}
-+
- static int sb_finish_set_opts(struct super_block *sb)
- {
- 	struct superblock_security_struct *sbsec = sb->s_security;
+ 	stor_device = get_out_stor_device(device);
+ 	if (!stor_device)
+ 		return;
+-- 
+2.20.1
+
 
 
