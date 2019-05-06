@@ -2,120 +2,101 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2471C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE2AC04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B24B20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1ADD205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:27:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRJaOhUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfEFP1d (ORCPT
+        id S1726990AbfEFP1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:27:33 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45292 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726414AbfEFP1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:27:32 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 60A73F152B13A524385D;
-        Mon,  6 May 2019 23:27:30 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 6 May 2019
- 23:27:22 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <andrew@lunn.ch>,
-        <vivien.didelot@gmail.com>, <f.fainelli@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] net: dsa: Fix error cleanup path in dsa_init_module
-Date:   Mon, 6 May 2019 23:25:29 +0800
-Message-ID: <20190506152529.6292-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 6 May 2019 11:27:41 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44764 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfEFP1k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 11:27:40 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z16so6611990pgv.11;
+        Mon, 06 May 2019 08:27:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zpDGMHGZGjU57Bv5cyzy6qLIvEc4KUp16pqAv3K1HCE=;
+        b=PRJaOhUdl8up0EP2C9y8sbEe9zfMOVTxZ99qI6BPT4zPbcfSlAklbujOETZxlKWCVg
+         YcGBpK/OVR0ZC9+kwfmrodZVNvAI3l+vyUshBb5a3Z/ZloWAvhwiNrYfrHuiYg4MPcmA
+         frRhWqSx5WZnigUeZ7Ho8vx/kKJ1g+ReFyfW2hKDK/ELGQKm7ZOBGNwA6BZSg7Hfqbpi
+         wYGXiHlIYzbIQpUGTc5WSaiJrkxZPrdkhI2X9neBz0ocaeDRYyn5i3261nRowsTIBuo1
+         dQrZrRcrz3cusIwgCl2vhEpBLWwpzYGWZMVCgBZDkAbZYLii92tPP5CMPCailnB37dMq
+         bhpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zpDGMHGZGjU57Bv5cyzy6qLIvEc4KUp16pqAv3K1HCE=;
+        b=GWffhkvSI9Jq++cufevIXH+saAvJ3GrcZFrWCBGR1Kju9a2FYmiQ5uTevuhxSrSBoK
+         GTvT+VICsQgGVM2euwtgrOCvjXtuoVmkuMlyBMtm8mR1Hq6sUAY6Jcm2SJqVuOrwlYzc
+         89XjO6sf/Jr+PFwHxeOq50BAefn3SkmTJOSyEaxA8uz8UR6Wc8AO4Ll5rvxK7voQd0i6
+         r9sozJ6IOI4mNcoA2bSJnDQHlrizmTfjMg/MqQdUfqnNG6WZZ8NUaUlvsVNB1TJVfdb5
+         oiEfc/KzzNvrJk23LA7udgbXYxbNbt5RST23g4/yY/n6M2+4P9ueu+u8vc9xuWC/jDOo
+         JaIA==
+X-Gm-Message-State: APjAAAXrUKIaJzCTBRgMYsTPbznDcMS2wu402PJrU/iQoOj/35dtiVXM
+        CE0c2qa9AKeSrvOFkAGlyXc=
+X-Google-Smtp-Source: APXvYqyE4gMn2Det1yuOE/78XSA9nJCiYD/DRFnTJuXZDxupA9qvfOdc/+GihwJd1vTwAFHlOuM3BQ==
+X-Received: by 2002:a65:64ca:: with SMTP id t10mr32751484pgv.177.1557156459247;
+        Mon, 06 May 2019 08:27:39 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n13sm3065030pgh.6.2019.05.06.08.27.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 08:27:38 -0700 (PDT)
+Date:   Mon, 6 May 2019 08:27:36 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     "Angus Ainslie (Purism)" <angus@akkea.ca>, angus.ainslie@puri.sm,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] usb: typec: tcpm: Clear the fault status register
+Message-ID: <20190506152736.GA29049@roeck-us.net>
+References: <20190506140830.25376-1-angus@akkea.ca>
+ <20190506140830.25376-4-angus@akkea.ca>
+ <CAOMZO5C6XQUWBi39jKeVJg3Jj6auB0mF3h8bWMYZ_prXwgc9Fg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5C6XQUWBi39jKeVJg3Jj6auB0mF3h8bWMYZ_prXwgc9Fg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BUG: unable to handle kernel paging request at ffffffffa01c5430
-PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bc5067 PTE 0
-Oops: 0000 [#1
-CPU: 0 PID: 6159 Comm: modprobe Not tainted 5.1.0+ #33
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:raw_notifier_chain_register+0x16/0x40
-Code: 63 f8 66 90 e9 5d ff ff ff 90 90 90 90 90 90 90 90 90 90 90 55 48 8b 07 48 89 e5 48 85 c0 74 1c 8b 56 10 3b 50 10 7e 07 eb 12 <39> 50 10 7c 0d 48 8d 78 08 48 8b 40 08 48 85 c0 75 ee 48 89 46 08
-RSP: 0018:ffffc90001c33c08 EFLAGS: 00010282
-RAX: ffffffffa01c5420 RBX: ffffffffa01db420 RCX: 4fcef45928070a8b
-RDX: 0000000000000000 RSI: ffffffffa01db420 RDI: ffffffffa01b0068
-RBP: ffffc90001c33c08 R08: 000000003e0a33d0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000094443661 R12: ffff88822c320700
-R13: ffff88823109be80 R14: 0000000000000000 R15: ffffc90001c33e78
-FS:  00007fab8bd08540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa01c5430 CR3: 00000002297ea000 CR4: 00000000000006f0
-Call Trace:
- register_netdevice_notifier+0x43/0x250
- ? 0xffffffffa01e0000
- dsa_slave_register_notifier+0x13/0x70 [dsa_core
- ? 0xffffffffa01e0000
- dsa_init_module+0x2e/0x1000 [dsa_core
- do_one_initcall+0x6c/0x3cc
- ? do_init_module+0x22/0x1f1
- ? rcu_read_lock_sched_held+0x97/0xb0
- ? kmem_cache_alloc_trace+0x325/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+On Mon, May 06, 2019 at 12:11:41PM -0300, Fabio Estevam wrote:
+> Hi Angus,
+> 
+> On Mon, May 6, 2019 at 11:10 AM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
+> >
+> > If the fault status register doesn't get cleared then
+> > the ptn5110 interrupt gets stuck on. As the fault register gets
+> > set everytime the ptn5110 powers on the interrupt is always stuck.
+> >
+> > Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+> 
+> Since this is a bug fix, I would suggest adding a Fixes tag and Cc
+> stable if appropriate.
+> 
+> I would also put this patch as the first one in the series, so that it
+> can be easily applied to older stable trees.
 
-Cleanup allocated resourses if there are errors,
-otherwise it will trgger memleak.
+Unfortunately there is an added tcpm_log() ... and I am opposed to exporting
+that.
 
-Fixes: c9eb3e0f8701 ("net: dsa: Add support for learning FDB through notification")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/dsa/dsa.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/net/dsa/dsa.c b/net/dsa/dsa.c
-index 36de4f2..cb080ef 100644
---- a/net/dsa/dsa.c
-+++ b/net/dsa/dsa.c
-@@ -344,15 +344,22 @@ static int __init dsa_init_module(void)
- 
- 	rc = dsa_slave_register_notifier();
- 	if (rc)
--		return rc;
-+		goto register_notifier_fail;
- 
- 	rc = dsa_legacy_register();
- 	if (rc)
--		return rc;
-+		goto legacy_register_fail;
- 
- 	dev_add_pack(&dsa_pack_type);
- 
- 	return 0;
-+
-+legacy_register_fail:
-+	dsa_slave_unregister_notifier();
-+register_notifier_fail:
-+	destroy_workqueue(dsa_owq);
-+
-+	return rc;
- }
- module_init(dsa_init_module);
- 
--- 
-1.8.3.1
-
-
+Guenter
