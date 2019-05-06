@@ -6,58 +6,59 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B697BC04AAE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E4CC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802F620830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7305820830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l2L8hf9l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r/h/kNCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbfEFHHd (ORCPT
+        id S1726265AbfEFHIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:07:33 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36224 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfEFHHd (ORCPT
+        Mon, 6 May 2019 03:08:54 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44361 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfEFHIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:07:33 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y8so9884928ljd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 00:07:31 -0700 (PDT)
+        Mon, 6 May 2019 03:08:54 -0400
+Received: by mail-lf1-f67.google.com with SMTP id n134so6510182lfn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 00:08:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CwhE2uGZiLqXEkI99lHZnisKdDy8+j12/x0rEBhmeMM=;
-        b=l2L8hf9litttSO44g7UtX5hvurVX6oUBgrgVujLll+Rl/TJbvf3yhbIMo9EhmEZ9Rk
-         Wa2kzhcPXWJ1bcoLMsvfOY2kCOo0Dp9p+w3OEZsKkK4mKLpsiY1e935zU70ZGM5BvbjH
-         WQHijhdwJToIsiTpW66nmXUpeAGgGsTgL2YH9b3xSEgDX996kJl1VxdiNLu3a54gq9y8
-         s6bqhRSSGn90aGEWOpIXvBqEf1+xLT9YdV6OpKZyCSTnbF8IYG0R1/R/nVPrV3mzSSUr
-         r+RrzSE2Cwn8yJsRl+MCGGc+Nv8WEiF/H4gRbUC007pQnjF5URyBaMLARwq1JvbYca1w
-         IVkQ==
+        bh=1ckxUK0EUtxo/rY9pVfkfhX61lQYjZP3T6ZijSk+Xis=;
+        b=r/h/kNCyuv2LvDzVu1yxK2Pm9OQBmhjtYxX3feYYLTgvRpNmfmIv3nnqgAboDR0p0E
+         B2Rw1gnv2ZURIXNuRQtBE/9IZ3ViUqrugMcI+kGblYdzsYaPm1H471eRPgzRnX+xdBDu
+         dbCZroaZtjew5vv0xcxC4b0ofWDB8YT8OA6yQCUyyI+jdhtx76GNqhTsAip/WQ7mLI3X
+         baWB6qrwoWrac+JVW+frSKfR3417U0+pNBq7bU1IjZ0+PDbrWX/PyUh1cMCj1Ma6g/eF
+         aQXzDs+MTOJeL6OShLSE/c2sKBInacUOLjcAGdio5C2LJU3cxx3RIlsh+Su4juviTVcf
+         6z7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CwhE2uGZiLqXEkI99lHZnisKdDy8+j12/x0rEBhmeMM=;
-        b=Gf8fI3m5PYsP6vFqYULNrggym38/mg65ePEplTolbvn3inJSBqbMi4eDBqPTlwrLjU
-         QvLiwrNp0np3HTsiOL5787lSWR22e0DXVyO1aWMysJqdsgfz6Wk9z6tc3bKavCYrB0U0
-         zV9vhR/Ep2vQrqLCWbIYBYDK3Ucpl7SfUIsOZYChReMthj2B9EBwX4ZvzkIHEMR4Wr+g
-         eJb7ME2T4XeFqox1YpiRzG3O9YI4Z853jY3q7vG/Xa1eeU+laOS7trriOe+1ofjH8qbW
-         fs8EXRw+o6xOtvWNyDvMiYDFJSYyH3rRxyUhBWc/rlbLySFc31vahNML1m5eWFAcah1c
-         YQcw==
-X-Gm-Message-State: APjAAAVGbpROGidI9QXoa1+rLn/gAywBTL7NIMtdxPJFy8aJoarJxxWy
-        tEoJUUGU1nqzaUKrwyd87yCfZOxZBz/5E0PnOJj9xQ==
-X-Google-Smtp-Source: APXvYqy5QhAAjdwvG22vzOX8m6OHCd2VKpL1I6A8CX0v3BiwyS6su6YLuw04TDhpCSaHEIZ/H1RuHvzvAIH2QzK179o=
-X-Received: by 2002:a2e:834d:: with SMTP id l13mr13133044ljh.97.1557126451228;
- Mon, 06 May 2019 00:07:31 -0700 (PDT)
+        bh=1ckxUK0EUtxo/rY9pVfkfhX61lQYjZP3T6ZijSk+Xis=;
+        b=DqTxWTbK+hVjC7IfR0/IjF8dYVWO2Qk2SiE5KQpd3KUYshXSCcHtJj9JfITnUrDFnF
+         ud22wnUJVeOkqXRm2HYHPKICl6PCwvC3oHu2XBCDHKuQWfBJYfwtKc4rFx/QXl+o70Nx
+         1E+xafMasN81q44Nx8zVKvlwx3rQ8AM/7sZnKbdWz+fiEtCNZFVr/eRCBVjcvctWrmPz
+         xObh2byTIkUcWF3A2Vk8FzP1Ss0SHCzShQ0Mj4355fnfw3fz8GbeaLK2zxW3jN39IFYX
+         HnsilxTdcJN4d+h5FrTpXYM6D7/nIIj4c799u0DReykQOPKJWabHYnA1Vq2wpmRIgur9
+         QCHw==
+X-Gm-Message-State: APjAAAUg76equnGOTxETaCHZbGryI39EuFJ8cY/aU327ZCeMMM7Tublc
+        DItbfVbFT1I0DLXssyRxjaIMMKzq1nYRtSm5QyqiLm+U
+X-Google-Smtp-Source: APXvYqzCc/OSjn4pYKPp9j7dsjoSNEmMF6+y2Uv/KDTK9i/yRnI7v8HdczB/oMXqR5l+25NY5pgqs0RUm+/PLM5ihP0=
+X-Received: by 2002:ac2:5381:: with SMTP id g1mr11913523lfh.130.1557126532214;
+ Mon, 06 May 2019 00:08:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190505130413.32253-1-masneyb@onstation.org> <20190505130413.32253-5-masneyb@onstation.org>
-In-Reply-To: <20190505130413.32253-5-masneyb@onstation.org>
+References: <20190505130413.32253-1-masneyb@onstation.org> <20190505130413.32253-6-masneyb@onstation.org>
+In-Reply-To: <20190505130413.32253-6-masneyb@onstation.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 6 May 2019 09:07:19 +0200
-Message-ID: <CACRpkdY_SwZMudmKaC90Q8O4OnhjVLeGN2ZU29xGw3FGG3uYiQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/6] ARM: dts: msm8974: add display support
+Date:   Mon, 6 May 2019 09:08:40 +0200
+Message-ID: <CACRpkdZ608b7+mh8Ln9N7EdGQmu2YNdZqRzoYjwfZXtcWqFE5g@mail.gmail.com>
+Subject: Re: [PATCH RFC 5/6] ARM: dts: qcom: msm8974-hammerhead: add support
+ for backlight
 To:     Brian Masney <masneyb@onstation.org>
 Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
         "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
@@ -73,14 +74,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, May 5, 2019 at 3:04 PM Brian Masney <masneyb@onstation.org> wrote:
 
-> Add the MDP5, DSI and DSI PHY blocks for the display found on the
-> msm8974 SoCs. This is based on work from msm8916.dtsi and Jonathan
-> Marek.
+> Add necessary device tree nodes for the main LCD backlight.
 >
 > Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-From my limited understanding it looks good:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+> This requires this series that I submitted to the LED / backlight
+> subsystem:
+> https://lore.kernel.org/lkml/20190424092505.6578-1-masneyb@onstation.org/
+> It's received 3 {Reviewed,Acked}-Bys, and has no outstanding change
+> requests, so I expect it'll be merged soon.
+
+If the DT bindings are ACKed and reviewed we can merge DTS
+files using it IMO.
 
 Yours,
 Linus Walleij
