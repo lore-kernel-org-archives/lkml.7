@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E7FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180ACC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4EDE20C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E35552087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153666;
-	bh=PTzDf0Og633U/AmIb2Xsav2KKdCIJsvNOeaTc+NXz+E=;
+	s=default; t=1557153673;
+	bh=uzE4VR4HRlm7d0oPV9h7NAz0AP5E+Uj+eaq3Q2ozYtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f1DDDKSrnDxZuPt3OmQTnDfLZQBpSA2lZMIEYOCCbXqBaCPbWzyEUgK/vQajSz1EN
-	 jaSq+QWeMzudavo35LBheaG7Nfa4xqToI3oTgRUCYjLBwkUy0g7yKYjl/1DDBBTff3
-	 qMig2DkFVBPXXU9xebwUCayAHJcrU3+iq9o9x8eQ=
+	b=bAVNwikdThASxgXP7Cn2EzFYuyXNtijTem6KYh9M8TpQi0+HCBydw5FO1bQhpWDlN
+	 md8duh55ar2nVvYdsN7b5jm9Um4QK2a7Xs6zkYYb+hoYKeUGcvReL80WUOEdkFd2TB
+	 Y4IUY7i6n0FGuwWm3OsFW2WsC8y/zwJCBNBPPRBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbfEFOlF (ORCPT
+        id S1728184AbfEFOlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34798 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:41:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727160AbfEFOlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:02 -0400
+        id S1727417AbfEFOlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:41:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30FAA21019;
-        Mon,  6 May 2019 14:41:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 463382087F;
+        Mon,  6 May 2019 14:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153661;
-        bh=PTzDf0Og633U/AmIb2Xsav2KKdCIJsvNOeaTc+NXz+E=;
+        s=default; t=1557153668;
+        bh=uzE4VR4HRlm7d0oPV9h7NAz0AP5E+Uj+eaq3Q2ozYtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ep1/uSk8LBII85U6Wb1DM87GSrY8YVa0G22dOzQKM6JDHMZkmCZtMIECzXqJDscCT
-         RY1PTi8as4gLwiLnI2piuYLVZ5Wi57F1pH5pNM1KUvIwpTM08lceKr66MxjsJF/tUf
-         Dh1SZk13uNJICUFDrTtwxE+yKKmKqyw7C5v9Vr2s=
+        b=XP971QCOULhxtfl1gvNBnh4IDdXAX1Gg3OMATAFs+lfKYjBDvVA/bQno0GZokPysV
+         gwihPSpknXTjSp7wpa62ggpA5ot/5MOIruT/hCu1ik/DoJ8lLJ+8T9Bv4pWapkFYSQ
+         hqAXAt+n37yLGUswo7c1XpRoJrQjML9loVHcKmdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 49/99] HID: input: add mapping for Assistant key
-Date:   Mon,  6 May 2019 16:32:22 +0200
-Message-Id: <20190506143058.514065653@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
+        Hannes Reinecke <hare@suse.de>,
+        NetApp RDAC team <ng-eseries-upstream-maintainers@netapp.com>,
+        Christophe Varoqui <christophe.varoqui@opensvc.com>,
+        "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        SCSI ML <linux-scsi@vger.kernel.org>,
+        DM ML <dm-devel@redhat.com>,
+        Xose Vazquez Perez <xose.vazquez@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 51/99] scsi: core: add new RDAC LENOVO/DE_Series device
+Date:   Mon,  6 May 2019 16:32:24 +0200
+Message-Id: <20190506143058.699453486@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -60,31 +67,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ce856634af8cda3490947df8ac1ef5843e6356af ]
+[ Upstream commit 1cb1d2c64e812928fe0a40b8f7e74523d0283dbe ]
 
-According to HUTRR89 usage 0x1cb from the consumer page was assigned to
-allow launching desktop-aware assistant application, so let's add the
-mapping.
+Blacklist "Universal Xport" LUN. It's used for in-band storage array
+management.  Also add model to the rdac dh family.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Cc: Martin Wilck <mwilck@suse.com>
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: NetApp RDAC team <ng-eseries-upstream-maintainers@netapp.com>
+Cc: Christophe Varoqui <christophe.varoqui@opensvc.com>
+Cc: James E.J. Bottomley <jejb@linux.vnet.ibm.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: SCSI ML <linux-scsi@vger.kernel.org>
+Cc: DM ML <dm-devel@redhat.com>
+Signed-off-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
+Reviewed-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/scsi_devinfo.c | 1 +
+ drivers/scsi/scsi_dh.c      | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index a3916e58dbf5..e649940e065d 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -982,6 +982,7 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x1b8: map_key_clear(KEY_VIDEO);		break;
- 		case 0x1bc: map_key_clear(KEY_MESSENGER);	break;
- 		case 0x1bd: map_key_clear(KEY_INFO);		break;
-+		case 0x1cb: map_key_clear(KEY_ASSISTANT);	break;
- 		case 0x201: map_key_clear(KEY_NEW);		break;
- 		case 0x202: map_key_clear(KEY_OPEN);		break;
- 		case 0x203: map_key_clear(KEY_CLOSE);		break;
+diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
+index c4cbfd07b916..a08ff3bd6310 100644
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -238,6 +238,7 @@ static struct {
+ 	{"NETAPP", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"LSI", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"ENGENIO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
++	{"LENOVO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"SMSC", "USB 2 HS-CF", NULL, BLIST_SPARSELUN | BLIST_INQUIRY_36},
+ 	{"SONY", "CD-ROM CDU-8001", NULL, BLIST_BORKEN},
+ 	{"SONY", "TSL", NULL, BLIST_FORCELUN},		/* DDS3 & DDS4 autoloaders */
+diff --git a/drivers/scsi/scsi_dh.c b/drivers/scsi/scsi_dh.c
+index 5a58cbf3a75d..c14006ac98f9 100644
+--- a/drivers/scsi/scsi_dh.c
++++ b/drivers/scsi/scsi_dh.c
+@@ -75,6 +75,7 @@ static const struct scsi_dh_blist scsi_dh_blist[] = {
+ 	{"NETAPP", "INF-01-00",		"rdac", },
+ 	{"LSI", "INF-01-00",		"rdac", },
+ 	{"ENGENIO", "INF-01-00",	"rdac", },
++	{"LENOVO", "DE_Series",		"rdac", },
+ 	{NULL, NULL,			NULL },
+ };
+ 
 -- 
 2.20.1
 
