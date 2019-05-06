@@ -2,124 +2,136 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC82C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3E0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E80E2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:28:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557178107;
-	bh=k1Jv58Df73YZhzI+gHs65MvR/WrxoEvI2Or//tv2pU0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:List-ID:
-	 From;
-	b=U91EsOpZ9PdF5xB4bi45bY4Ud1YqTpEusZhuXtYO/Iag9bqiYWMDea665/4rzheo0
-	 HdJHt4FLT6vcWLnpDTKdhjwHoYTag6BZk6qjW7pyjtLUi3Zt0352X9yY4/FRD12mGS
-	 oGPQn8A/UktTfT5VDlabuY9F2rrU3SmShLlqFDmk=
+	by mail.kernel.org (Postfix) with ESMTP id A462C2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:29:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="EzEITD7W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726844AbfEFV2V (ORCPT
+        id S1726602AbfEFV3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 17:28:21 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46804 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfEFV03 (ORCPT
+        Mon, 6 May 2019 17:29:35 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:12930 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbfEFV3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 17:26:29 -0400
-Received: by mail-io1-f66.google.com with SMTP id m14so12404034ion.13
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 14:26:29 -0700 (PDT)
+        Mon, 6 May 2019 17:29:34 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Woojung.Huh@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Woojung.Huh@microchip.com";
+  x-sender="Woojung.Huh@microchip.com"; x-conformance=spf_only;
+  x-record-type="v=spf1"; x-record-text="v=spf1 mx
+  a:ushub1.microchip.com a:smtpout.microchip.com
+  a:mx1.microchip.iphmx.com a:mx2.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Woojung.Huh@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Woojung.Huh@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,439,1549954800"; 
+   d="scan'208";a="33461632"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 06 May 2019 14:29:33 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.49) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Mon, 6 May 2019 14:29:33 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :reply-to:organization;
-        bh=uD3OvFcls30SXN52XBWKTLWJTDIBIfXTSrwZineFKm8=;
-        b=KecmMkSm4FviQCmpyzZxmkmq2BMwIBwlT88l0HgP2+BvRj59UQXrDOs8IYfkN2NV18
-         z/rn5EhcU1sBKCvRigWnhrxzNFbeB7KdLawnGtrFue+pdaLBYP2mndyo1EEmmNF5J+sr
-         11+BCO1E5X/ZbKRZ+kwIYxacG05SMEatZsQf0dxWwqHBhKqyojTDEEbletySXrnIlJLX
-         INEIJmmHxeWDub0y4VQzzmfevcLsxTg/atg01QfyN2oDlxVCx5KgHoyVLJiExjuv1iUd
-         PAwhNk/Re09DW6iZ/jD6wMfHdng6AA1343MxIDBV+m2xfGwjlb1kXnlIqIPvRZO7WWCY
-         Decw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:reply-to:organization;
-        bh=uD3OvFcls30SXN52XBWKTLWJTDIBIfXTSrwZineFKm8=;
-        b=XkU63/xQRRqkBYN2H/QYJ5vfmSsP3s3iMsSS3d62pZ1gthcWRshbWJvXcxvLBYcCT2
-         hb6IBDB5WYnAYwVovcm5cfxF1ut2fXjTYVFBmeYzM/YTUC8irrug14U5/PiwKw8fHT+T
-         05sH+/mKF5Jt0rbvdTDz4Z8Zrasv5RTLMjiKocIkFT3dyIVDC88ZpSOkh1e2r7uxaQci
-         MMksxJ+Rq+OtRbxI5C3YvsfUtls1J1rWSc9Errl3wAm1Ms9tkuCzdXOdcodqEnMsiw1T
-         dRpa5WCvpXsO3aZBOfvDJaqwP2rFexV4FOeaMwY2ENjHeu41Yc7fGsuV2KlieAXRl8g0
-         7+vg==
-X-Gm-Message-State: APjAAAVML9aol75qyi9UR5Jab8FO8iROWc4qZ7UqvemG+cUrFQJTosU9
-        2Bpkp0WEEspQQXmdmhl1HDk=
-X-Google-Smtp-Source: APXvYqxwTwgCTCgpqv1CAKqVgRMZWKuAfo1e0dt4pkBhrUMJpVdB56kGPlIqrucA5XhwJ6uXz75CwA==
-X-Received: by 2002:a5d:990d:: with SMTP id x13mr2219388iol.248.1557177988794;
-        Mon, 06 May 2019 14:26:28 -0700 (PDT)
-Received: from nuc8.lan (h69-131-112-51.cntcnh.dsl.dynamic.tds.net. [69.131.112.51])
-        by smtp.gmail.com with ESMTPSA id v25sm4268009ioh.81.2019.05.06.14.26.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 14:26:28 -0700 (PDT)
-From:   Len Brown <lenb@kernel.org>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>
-Subject: [PATCH 03/22] x86 smpboot: Rename match_die() to match_pkg()
-Date:   Mon,  6 May 2019 17:25:58 -0400
-Message-Id: <44a39ba11153106d2b029d9cffee1b062bdbce4b.1557177585.git.len.brown@intel.com>
-X-Mailer: git-send-email 2.18.0-rc0
-In-Reply-To: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1557177585.git.len.brown@intel.com>
-References: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1557177585.git.len.brown@intel.com>
-Reply-To: Len Brown <lenb@kernel.org>
-Organization: Intel Open Source Technology Center
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bz4unriP6vkqt6KG0HTVxImRo2Alxmy+fyKM0lqVdYU=;
+ b=EzEITD7WFSU/qUi7DUDxXpXxWdolCW2/9zqRd0keoaX5xgJKkIhHdZc6xNlMhi+2zld1cDL09rJUTLODWBtdurAYnfo2jEh8HT2/6Ujm76HUJXX5Xv/SXjnM2XK9p3LWiK0d4XPLJf037An0DwTvGKK/OOf9Yejak6+osxfcxoc=
+Received: from DM5PR1101MB2139.namprd11.prod.outlook.com (10.174.104.136) by
+ DM5PR1101MB2090.namprd11.prod.outlook.com (10.174.104.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Mon, 6 May 2019 21:29:18 +0000
+Received: from DM5PR1101MB2139.namprd11.prod.outlook.com
+ ([fe80::dcb0:6ce:8f02:9d65]) by DM5PR1101MB2139.namprd11.prod.outlook.com
+ ([fe80::dcb0:6ce:8f02:9d65%3]) with mapi id 15.20.1856.012; Mon, 6 May 2019
+ 21:29:18 +0000
+From:   <Woojung.Huh@microchip.com>
+To:     <ynezz@true.cz>, <netdev@vger.kernel.org>, <davem@davemloft.net>,
+        <steve.glendinning@shawell.net>, <UNGLinuxDriver@microchip.com>
+CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <frowand.list@gmail.com>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
+        <maxime.ripard@bootlin.com>, <linux-usb@vger.kernel.org>
+Subject: RE: [PATCH net-next v2 4/4] net: usb: smsc: fix warning reported by
+ kbuild test robot
+Thread-Topic: [PATCH net-next v2 4/4] net: usb: smsc: fix warning reported by
+ kbuild test robot
+Thread-Index: AQHVBFKA7+FmJGtDekycg4kDQT61q6ZenKEg
+Date:   Mon, 6 May 2019 21:29:18 +0000
+Message-ID: <DM5PR1101MB21399FAD9C7E072F24207C14E7300@DM5PR1101MB2139.namprd11.prod.outlook.com>
+References: <1557177887-30446-1-git-send-email-ynezz@true.cz>
+ <1557177887-30446-5-git-send-email-ynezz@true.cz>
+In-Reply-To: <1557177887-30446-5-git-send-email-ynezz@true.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [47.19.18.123]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8d876469-f074-4f84-2d07-08d6d269e596
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR1101MB2090;
+x-ms-traffictypediagnostic: DM5PR1101MB2090:
+x-microsoft-antispam-prvs: <DM5PR1101MB2090F33ADC151AA37234D676E7300@DM5PR1101MB2090.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0029F17A3F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(366004)(346002)(39860400002)(189003)(199004)(33656002)(7696005)(86362001)(229853002)(316002)(110136005)(14444005)(8676002)(256004)(72206003)(54906003)(478600001)(99286004)(52536014)(6636002)(76176011)(81166006)(6246003)(66476007)(7416002)(64756008)(55016002)(66446008)(66556008)(73956011)(66946007)(9686003)(4326008)(53936002)(8936002)(25786009)(6116002)(3846002)(6436002)(76116006)(68736007)(486006)(71200400001)(71190400001)(66574012)(66066001)(305945005)(14454004)(7736002)(81156014)(446003)(11346002)(476003)(5660300002)(6506007)(26005)(2501003)(74316002)(102836004)(2906002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR1101MB2090;H:DM5PR1101MB2139.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jfM9JAw2WI01RYvQnbkGVl+fT2Qv4vi2ZotEaqeI8rnn+PU/Rthha5IDTxTGuh/SXtT+3Lm1unHb99oZISHDh9HtTCrN1/IGXWWOWXUKnSgyZdOvhcMjYFWMc7j0AI6QhjTytPmrUEfV4bRB0FAPeaXyBOpxsMA+GyjRqqSPnneGcjDjqcqTMMwrpuhXMzoyIW1+NMIrmqpK9Mk+jLHdA785025OSNOooBtTiv6SllFi5TGrBbL3Ugr8EdRxdMxBFu2bTbqRNvTVFFSyNJqSgLtTkba6xFgZn7MUXUm36tZ1AmHZkTaVNgOwKwaWzhHS1C6pg+csCJLo0t/5KCvCgKT0rwIaqwK0pWAe6lf6Bzw2PNW1KDD8ab7thAPMmnuYzft3skhfze1jqs+cy9W1tX8zAPY1ETJSZYOO+584lp0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d876469-f074-4f84-2d07-08d6d269e596
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 21:29:18.3226
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2090
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Len Brown <len.brown@intel.com>
-
-Syntax only, no functional or semantic change.
-
-This routine matches packages, not die, so name it thus.
-
-Signed-off-by: Len Brown <len.brown@intel.com>
----
- arch/x86/kernel/smpboot.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index ce1a67b70168..3f8bbfb26c18 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -455,7 +455,7 @@ static bool match_llc(struct cpuinfo_x86 *c, struct cpuinfo_x86 *o)
-  * multicore group inside a NUMA node.  If this happens, we will
-  * discard the MC level of the topology later.
-  */
--static bool match_die(struct cpuinfo_x86 *c, struct cpuinfo_x86 *o)
-+static bool match_pkg(struct cpuinfo_x86 *c, struct cpuinfo_x86 *o)
- {
- 	if (c->phys_proc_id == o->phys_proc_id)
- 		return true;
-@@ -546,7 +546,7 @@ void set_cpu_sibling_map(int cpu)
- 	for_each_cpu(i, cpu_sibling_setup_mask) {
- 		o = &cpu_data(i);
- 
--		if ((i == cpu) || (has_mp && match_die(c, o))) {
-+		if ((i == cpu) || (has_mp && match_pkg(c, o))) {
- 			link_mask(topology_core_cpumask, cpu, i);
- 
- 			/*
-@@ -570,7 +570,7 @@ void set_cpu_sibling_map(int cpu)
- 			} else if (i != cpu && !c->booted_cores)
- 				c->booted_cores = cpu_data(i).booted_cores;
- 		}
--		if (match_die(c, o) && !topology_same_node(c, o))
-+		if (match_pkg(c, o) && !topology_same_node(c, o))
- 			x86_has_numa_in_package = true;
- 	}
- 
--- 
-2.18.0-rc0
-
+PiBUaGlzIHBhdGNoIGZpeGVzIGZvbGxvd2luZyB3YXJuaW5nIHJlcG9ydGVkIGJ5IGtidWlsZCB0
+ZXN0IHJvYm90Og0KPiANCj4gIEluIGZ1bmN0aW9uIOKAmG1lbWNweeKAmSwNCj4gICAgICBpbmxp
+bmVkIGZyb20g4oCYc21zYzc1eHhfaW5pdF9tYWNfYWRkcmVzc+KAmSBhdCBkcml2ZXJzL25ldC91
+c2Ivc21zYzc1eHguYzo3Nzg6MywNCj4gICAgICBpbmxpbmVkIGZyb20g4oCYc21zYzc1eHhfYmlu
+ZOKAmSBhdCBkcml2ZXJzL25ldC91c2Ivc21zYzc1eHguYzoxNTAxOjI6DQo+ICAuL2luY2x1ZGUv
+bGludXgvc3RyaW5nLmg6MzU1Ojk6IHdhcm5pbmc6IGFyZ3VtZW50IDIgbnVsbCB3aGVyZSBub24t
+bnVsbCBleHBlY3RlZCBbLVdub25udWxsXQ0KPiAgICByZXR1cm4gX19idWlsdGluX21lbWNweShw
+LCBxLCBzaXplKTsNCj4gICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4NCj4g
+IGRyaXZlcnMvbmV0L3VzYi9zbXNjNzV4eC5jOiBJbiBmdW5jdGlvbiDigJhzbXNjNzV4eF9iaW5k
+4oCZOg0KPiAgLi9pbmNsdWRlL2xpbnV4L3N0cmluZy5oOjM1NTo5OiBub3RlOiBpbiBhIGNhbGwg
+dG8gYnVpbHQtaW4gZnVuY3Rpb24g4oCYX19idWlsdGluX21lbWNweeKAmQ0KPiANCj4gSSd2ZSBy
+ZXBsYWNlZCB0aGUgb2ZmZW5kaW5nIG1lbWNweSB3aXRoIGV0aGVyX2FkZHJfY29weSwgYmVjYXVz
+ZSBJJ20NCj4gMTAwJSBzdXJlLCB0aGF0IG9mX2dldF9tYWNfYWRkcmVzcyBjYW4ndCByZXR1cm4g
+TlVMTCBhcyBpdCByZXR1cm5zIHZhbGlkDQo+IHBvaW50ZXIgb3IgRVJSX1BUUiBlbmNvZGVkIHZh
+bHVlLCBub3RoaW5nIGVsc2UuDQo+IA0KPiBJJ20gaGVzaXRhbnQgdG8ganVzdCBjaGFuZ2UgSVNf
+RVJSIGludG8gSVNfRVJSX09SX05VTEwgY2hlY2ssIGFzIHRoaXMNCj4gd291bGQgbWFrZSB0aGUg
+d2FybmluZyBkaXNhcHBlYXIgYWxzbywgYnV0IGl0IHdvdWxkIGJlIGNvbmZ1c2luZyB0bw0KPiBj
+aGVjayBmb3IgaW1wb3NzaWJsZSByZXR1cm4gdmFsdWUganVzdCB0byBtYWtlIGEgY29tcGlsZXIg
+aGFwcHkuDQo+IA0KPiBGaXhlczogYWRmYjNjYjJjNTJlICgibmV0OiB1c2I6IHN1cHBvcnQgb2Zf
+Z2V0X21hY19hZGRyZXNzIG5ldyBFUlJfUFRSIGVycm9yIikNCj4gUmVwb3J0ZWQtYnk6IGtidWls
+ZCB0ZXN0IHJvYm90IDxsa3BAaW50ZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBQZXRyIMWgdGV0
+aWFyIDx5bmV6ekB0cnVlLmN6Pg0KPiAtLS0NCg0KUmV2aWV3ZWQtYnk6IFdvb2p1bmcgSHVoIDx3
+b29qdW5nLmh1aEBtaWNyb2NoaXAuY29tPg0KDQo=
