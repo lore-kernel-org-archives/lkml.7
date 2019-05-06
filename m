@@ -2,50 +2,57 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D55C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449F6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45A22087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1516321019
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153278;
-	bh=fYja5YEqxlIi+F2InbfJ4sXF1rtqSCG6qdaYpXY8Nww=;
+	s=default; t=1557153281;
+	bh=mM1dMY4wEQFHJP5ZF0f4aj7mhZdeDuWVVaAbt1qSCq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xER0iN6S5B1mJgvp7q03tJwntY6mTXi3+7HWiMVdWc8NynLY676Jr1777x/EcNR6K
-	 C0q9hvXfSw0tdeGvBGozK1SmrqbYL/DJkwJf6bEfjQYeFMtTs4M7J/+fe7ZqTZoC60
-	 SGmtAXNEulZ0pUYbsy/Cva6c7m0oZMpLDt6VYPWI=
+	b=cJwStVEKevrXatSvoHJaP/41MxwyLvHAaFfk2huVqzhrdTjIsUyvWssPsYzTIK+ek
+	 c1LXwclfKnRTQDSDpMKSa0m1ppkHBSZ7PQ8fEDnOSI74fCNhH1iqmY6ODuMVHCXd20
+	 2Id0m/EK44R4KwPma9SvYa31fclze5BtWfiyEVYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfEFOeh (ORCPT
+        id S1726715AbfEFOek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:34:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54252 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:34:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726644AbfEFOed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:34:33 -0400
+        id S1726699AbfEFOeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:34:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0FB121019;
-        Mon,  6 May 2019 14:34:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5F6921019;
+        Mon,  6 May 2019 14:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153272;
-        bh=fYja5YEqxlIi+F2InbfJ4sXF1rtqSCG6qdaYpXY8Nww=;
+        s=default; t=1557153277;
+        bh=mM1dMY4wEQFHJP5ZF0f4aj7mhZdeDuWVVaAbt1qSCq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XYxneP3qkCBsUXxkTScowswUsLpUXSqc04r0jFHMgKM22em7kcLJiaLq3vqTBPX01
-         YvSQc+LJLfUQW4QOb1ihA8QWo2pCFB0Ta+XRKntGmgouCL+LtowGphIUkgjAIz1dyY
-         cUxGClwOXeALYDBTY/gmA098/3d99ddsbzghaOD0=
+        b=ggR59tEC3sACZyIHZclP7J5neyG2FuBnOcCVioA+wdct/6pGh971kZ4J2cgHjnyL1
+         tAc443aVQmLp9e4o+zobno9cMK52EdHgRZKvm4d+B6OZlk5/vSGxNX4f0IftHFGNOO
+         L44hXNNR9kPZ5njuwjj9ZTdkgfu7zY7yYrFO/JYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+7634edaea4d0b341c625@syzkaller.appspotmail.com
-Subject: [PATCH 5.0 019/122] USB: core: Fix bug caused by duplicate interface PM usage counter
-Date:   Mon,  6 May 2019 16:31:17 +0200
-Message-Id: <20190506143056.477314436@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Evan Green <evgreen@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 5.0 029/122] rtc: cros-ec: Fail suspend/resume if wake IRQ cant be configured
+Date:   Mon,  6 May 2019 16:31:27 +0200
+Message-Id: <20190506143057.381838909@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -58,211 +65,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+[ Upstream commit d6752e185c3168771787a02dc6a55f32260943cc ]
 
-commit c2b71462d294cf517a0bc6e4fd6424d7cee5596f upstream.
+If we encounter a failure during suspend where this RTC was programmed
+to wakeup the system from suspend, but that wakeup couldn't be
+configured because the system didn't support wakeup interrupts, we'll
+run into the following warning:
 
-The syzkaller fuzzer reported a bug in the USB hub driver which turned
-out to be caused by a negative runtime-PM usage counter.  This allowed
-a hub to be runtime suspended at a time when the driver did not expect
-it.  The symptom is a WARNING issued because the hub's status URB is
-submitted while it is already active:
+	Unbalanced IRQ 166 wake disable
+	WARNING: CPU: 7 PID: 3071 at kernel/irq/manage.c:669 irq_set_irq_wake+0x108/0x278
 
-	URB 0000000031fb463e submitted while active
-	WARNING: CPU: 0 PID: 2917 at drivers/usb/core/urb.c:363
+This happens because the suspend process isn't aborted when the RTC
+fails to configure the wakeup IRQ. Instead, we continue suspending the
+system and then another suspend callback fails the suspend process and
+"unwinds" the previously suspended drivers by calling their resume
+callbacks. When we get back to resuming this RTC driver, we'll call
+disable_irq_wake() on an IRQ that hasn't been configured for wake.
 
-The negative runtime-PM usage count was caused by an unfortunate
-design decision made when runtime PM was first implemented for USB.
-At that time, USB class drivers were allowed to unbind from their
-interfaces without balancing the usage counter (i.e., leaving it with
-a positive count).  The core code would take care of setting the
-counter back to 0 before allowing another driver to bind to the
-interface.
+Let's just fail suspend/resume here if we can't configure the system to
+wake and the user has chosen to wakeup with this device. This fixes this
+warning and makes the code more robust in case there are systems out
+there that can't wakeup from suspend on this line but the user has
+chosen to do so.
 
-Later on when runtime PM was implemented for the entire kernel, the
-opposite decision was made: Drivers were required to balance their
-runtime-PM get and put calls.  In order to maintain backward
-compatibility, however, the USB subsystem adapted to the new
-implementation by keeping an independent usage counter for each
-interface and using it to automatically adjust the normal usage
-counter back to 0 whenever a driver was unbound.
-
-This approach involves duplicating information, but what is worse, it
-doesn't work properly in cases where a USB class driver delays
-decrementing the usage counter until after the driver's disconnect()
-routine has returned and the counter has been adjusted back to 0.
-Doing so would cause the usage counter to become negative.  There's
-even a warning about this in the USB power management documentation!
-
-As it happens, this is exactly what the hub driver does.  The
-kick_hub_wq() routine increments the runtime-PM usage counter, and the
-corresponding decrement is carried out by hub_event() in the context
-of the hub_wq work-queue thread.  This work routine may sometimes run
-after the driver has been unbound from its interface, and when it does
-it causes the usage counter to go negative.
-
-It is not possible for hub_disconnect() to wait for a pending
-hub_event() call to finish, because hub_disconnect() is called with
-the device lock held and hub_event() acquires that lock.  The only
-feasible fix is to reverse the original design decision: remove the
-duplicate interface-specific usage counter and require USB drivers to
-balance their runtime PM gets and puts.  As far as I know, all
-existing drivers currently do this.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+7634edaea4d0b341c625@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Benson Leung <bleung@chromium.org>
+Cc: Guenter Roeck <groeck@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Acked-By: Benson Leung <bleung@chromium.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- Documentation/driver-api/usb/power-management.rst |   14 +++++++++-----
- drivers/usb/core/driver.c                         |   13 -------------
- drivers/usb/storage/realtek_cr.c                  |   13 +++++--------
- include/linux/usb.h                               |    2 --
- 4 files changed, 14 insertions(+), 28 deletions(-)
+ drivers/rtc/rtc-cros-ec.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/Documentation/driver-api/usb/power-management.rst
-+++ b/Documentation/driver-api/usb/power-management.rst
-@@ -370,11 +370,15 @@ autosuspend the interface's device.  Whe
- then the interface is considered to be idle, and the kernel may
- autosuspend the device.
+diff --git a/drivers/rtc/rtc-cros-ec.c b/drivers/rtc/rtc-cros-ec.c
+index e5444296075e..4d6bf9304ceb 100644
+--- a/drivers/rtc/rtc-cros-ec.c
++++ b/drivers/rtc/rtc-cros-ec.c
+@@ -298,7 +298,7 @@ static int cros_ec_rtc_suspend(struct device *dev)
+ 	struct cros_ec_rtc *cros_ec_rtc = dev_get_drvdata(&pdev->dev);
  
--Drivers need not be concerned about balancing changes to the usage
--counter; the USB core will undo any remaining "get"s when a driver
--is unbound from its interface.  As a corollary, drivers must not call
--any of the ``usb_autopm_*`` functions after their ``disconnect``
--routine has returned.
-+Drivers must be careful to balance their overall changes to the usage
-+counter.  Unbalanced "get"s will remain in effect when a driver is
-+unbound from its interface, preventing the device from going into
-+runtime suspend should the interface be bound to a driver again.  On
-+the other hand, drivers are allowed to achieve this balance by calling
-+the ``usb_autopm_*`` functions even after their ``disconnect`` routine
-+has returned -- say from within a work-queue routine -- provided they
-+retain an active reference to the interface (via ``usb_get_intf`` and
-+``usb_put_intf``).
+ 	if (device_may_wakeup(dev))
+-		enable_irq_wake(cros_ec_rtc->cros_ec->irq);
++		return enable_irq_wake(cros_ec_rtc->cros_ec->irq);
  
- Drivers using the async routines are responsible for their own
- synchronization and mutual exclusion.
---- a/drivers/usb/core/driver.c
-+++ b/drivers/usb/core/driver.c
-@@ -473,11 +473,6 @@ static int usb_unbind_interface(struct d
- 		pm_runtime_disable(dev);
- 	pm_runtime_set_suspended(dev);
- 
--	/* Undo any residual pm_autopm_get_interface_* calls */
--	for (r = atomic_read(&intf->pm_usage_cnt); r > 0; --r)
--		usb_autopm_put_interface_no_suspend(intf);
--	atomic_set(&intf->pm_usage_cnt, 0);
--
- 	if (!error)
- 		usb_autosuspend_device(udev);
- 
-@@ -1633,7 +1628,6 @@ void usb_autopm_put_interface(struct usb
- 	int			status;
- 
- 	usb_mark_last_busy(udev);
--	atomic_dec(&intf->pm_usage_cnt);
- 	status = pm_runtime_put_sync(&intf->dev);
- 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
- 			__func__, atomic_read(&intf->dev.power.usage_count),
-@@ -1662,7 +1656,6 @@ void usb_autopm_put_interface_async(stru
- 	int			status;
- 
- 	usb_mark_last_busy(udev);
--	atomic_dec(&intf->pm_usage_cnt);
- 	status = pm_runtime_put(&intf->dev);
- 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
- 			__func__, atomic_read(&intf->dev.power.usage_count),
-@@ -1684,7 +1677,6 @@ void usb_autopm_put_interface_no_suspend
- 	struct usb_device	*udev = interface_to_usbdev(intf);
- 
- 	usb_mark_last_busy(udev);
--	atomic_dec(&intf->pm_usage_cnt);
- 	pm_runtime_put_noidle(&intf->dev);
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(usb_autopm_put_interface_no_suspend);
-@@ -1715,8 +1707,6 @@ int usb_autopm_get_interface(struct usb_
- 	status = pm_runtime_get_sync(&intf->dev);
- 	if (status < 0)
- 		pm_runtime_put_sync(&intf->dev);
--	else
--		atomic_inc(&intf->pm_usage_cnt);
- 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
- 			__func__, atomic_read(&intf->dev.power.usage_count),
- 			status);
-@@ -1750,8 +1740,6 @@ int usb_autopm_get_interface_async(struc
- 	status = pm_runtime_get(&intf->dev);
- 	if (status < 0 && status != -EINPROGRESS)
- 		pm_runtime_put_noidle(&intf->dev);
--	else
--		atomic_inc(&intf->pm_usage_cnt);
- 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
- 			__func__, atomic_read(&intf->dev.power.usage_count),
- 			status);
-@@ -1775,7 +1763,6 @@ void usb_autopm_get_interface_no_resume(
- 	struct usb_device	*udev = interface_to_usbdev(intf);
+@@ -309,7 +309,7 @@ static int cros_ec_rtc_resume(struct device *dev)
+ 	struct cros_ec_rtc *cros_ec_rtc = dev_get_drvdata(&pdev->dev);
  
- 	usb_mark_last_busy(udev);
--	atomic_inc(&intf->pm_usage_cnt);
- 	pm_runtime_get_noresume(&intf->dev);
+ 	if (device_may_wakeup(dev))
+-		disable_irq_wake(cros_ec_rtc->cros_ec->irq);
++		return disable_irq_wake(cros_ec_rtc->cros_ec->irq);
+ 
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(usb_autopm_get_interface_no_resume);
---- a/drivers/usb/storage/realtek_cr.c
-+++ b/drivers/usb/storage/realtek_cr.c
-@@ -763,18 +763,16 @@ static void rts51x_suspend_timer_fn(stru
- 		break;
- 	case RTS51X_STAT_IDLE:
- 	case RTS51X_STAT_SS:
--		usb_stor_dbg(us, "RTS51X_STAT_SS, intf->pm_usage_cnt:%d, power.usage:%d\n",
--			     atomic_read(&us->pusb_intf->pm_usage_cnt),
-+		usb_stor_dbg(us, "RTS51X_STAT_SS, power.usage:%d\n",
- 			     atomic_read(&us->pusb_intf->dev.power.usage_count));
- 
--		if (atomic_read(&us->pusb_intf->pm_usage_cnt) > 0) {
-+		if (atomic_read(&us->pusb_intf->dev.power.usage_count) > 0) {
- 			usb_stor_dbg(us, "Ready to enter SS state\n");
- 			rts51x_set_stat(chip, RTS51X_STAT_SS);
- 			/* ignore mass storage interface's children */
- 			pm_suspend_ignore_children(&us->pusb_intf->dev, true);
- 			usb_autopm_put_interface_async(us->pusb_intf);
--			usb_stor_dbg(us, "RTS51X_STAT_SS 01, intf->pm_usage_cnt:%d, power.usage:%d\n",
--				     atomic_read(&us->pusb_intf->pm_usage_cnt),
-+			usb_stor_dbg(us, "RTS51X_STAT_SS 01, power.usage:%d\n",
- 				     atomic_read(&us->pusb_intf->dev.power.usage_count));
- 		}
- 		break;
-@@ -807,11 +805,10 @@ static void rts51x_invoke_transport(stru
- 	int ret;
- 
- 	if (working_scsi(srb)) {
--		usb_stor_dbg(us, "working scsi, intf->pm_usage_cnt:%d, power.usage:%d\n",
--			     atomic_read(&us->pusb_intf->pm_usage_cnt),
-+		usb_stor_dbg(us, "working scsi, power.usage:%d\n",
- 			     atomic_read(&us->pusb_intf->dev.power.usage_count));
- 
--		if (atomic_read(&us->pusb_intf->pm_usage_cnt) <= 0) {
-+		if (atomic_read(&us->pusb_intf->dev.power.usage_count) <= 0) {
- 			ret = usb_autopm_get_interface(us->pusb_intf);
- 			usb_stor_dbg(us, "working scsi, ret=%d\n", ret);
- 		}
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -200,7 +200,6 @@ usb_find_last_int_out_endpoint(struct us
-  * @dev: driver model's view of this device
-  * @usb_dev: if an interface is bound to the USB major, this will point
-  *	to the sysfs representation for that device.
-- * @pm_usage_cnt: PM usage counter for this interface
-  * @reset_ws: Used for scheduling resets from atomic context.
-  * @resetting_device: USB core reset the device, so use alt setting 0 as
-  *	current; needs bandwidth alloc after reset.
-@@ -257,7 +256,6 @@ struct usb_interface {
- 
- 	struct device dev;		/* interface specific device info */
- 	struct device *usb_dev;
--	atomic_t pm_usage_cnt;		/* usage counter for autosuspend */
- 	struct work_struct reset_ws;	/* for resets in atomic context */
- };
- #define	to_usb_interface(d) container_of(d, struct usb_interface, dev)
+-- 
+2.20.1
+
 
 
