@@ -2,400 +2,394 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42030C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BE2C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC16214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80781206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:39:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aVWkUTtS"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="UUMKtV5P";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="OuvE92r8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfEFVjW (ORCPT
+        id S1726616AbfEFVj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 17:39:22 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40470 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfEFVjV (ORCPT
+        Mon, 6 May 2019 17:39:27 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:38404 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726046AbfEFVj0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 17:39:21 -0400
-Received: by mail-oi1-f195.google.com with SMTP id r136so2126140oie.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 14:39:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D+8V7Z255WHR3aDRjQfE3zqVDLLUIFowL9J2ewqF3uc=;
-        b=aVWkUTtSxlnDVN100scj9XMwQxSG8ZhDja3UAtj00dQdQD50oyE04crg/nHGPCn0MK
-         HMHYUNRyItf4p42FljU6Q9agZCHaGZBoirW2QWVPfnDaLGnFoMXd1C2k4yp04N6BB3xE
-         TTuFxsczAkeRm/b9Ns33b0zdmhBXeo4hMIKQRnmjPjyS77s3gkVz3uWZa/2XtXQ9Ye6b
-         tMyvFP5ydziX/inV0I6MvEwZkr/V7cTzmVW1Jqnd/nvIjZhsLfA+R6YpO95+XIv6Tr5Z
-         u+cMJ+Gg+D20DLzly4PCfV2v+D3Z+Kf7n+sRSLxh4CidCE2onJqLymUrdFBtL1OBcUXS
-         9dKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D+8V7Z255WHR3aDRjQfE3zqVDLLUIFowL9J2ewqF3uc=;
-        b=bRx48gCXlrYxbnzFc7+i/mt9so2oxr964c7dyW9UVcRXtWfXR8L2tLwpUSCyfKRbqM
-         y5oNOM7STjyrx1qfd/b+SHYgr9oscJROo1LiO2r+cUxw6pAAnPF3ezXDbBtOHPM7zJj8
-         vhBGwUC+vgrEvtZwqGp/2cgUuN6vBc2qs7ehhBD1k6jZlIGEeG2QgBZkq9UagV5sIUb5
-         9ly6rqnIET5zmYO1dUqmS5WHz76wb0+uZMIpI/wmVape/tqpPdGEt1+1SIrIoYRuTRoM
-         S1mjogudKgDaFx9q38gXm6HeL3pfsAJwXiYTuvz8opOA7r1+TQ9xnTmpYiRjYG2MwLvv
-         63DQ==
-X-Gm-Message-State: APjAAAVbuMQQLHR4YmWr5idWhOO2BkDGlpRTGBvA5n08yFfQP9XBpjOZ
-        18ZrBHnjC3aiJp8Zs9yxAKdq9dInz01dpTy6/KHs/w==
-X-Google-Smtp-Source: APXvYqxk1y/aSoL3k9InreH9OjK0qBaF8oyd9b1nFYNmzkPrm0O7IKf+9GJ2Kblbw6InkvLcShf2qZKH3TrUe/qY/H8=
-X-Received: by 2002:aca:a84d:: with SMTP id r74mr212520oie.44.1557178759908;
- Mon, 06 May 2019 14:39:19 -0700 (PDT)
+        Mon, 6 May 2019 17:39:26 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x46LMcvW030572;
+        Mon, 6 May 2019 14:39:08 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=wCGwyONsuLpSnz5AgCakeXaeo8I033+OMSsNNBXhFG4=;
+ b=UUMKtV5PDGF/B6Tc826Ab6bICCLbKYca6gRHyKi+IKUcjzvO3MUDsQOI9MZvtrYaLLqy
+ bksvoyd72A/sI/eWQeIr+jkorwcqNBUzemFxD2ZUfeRRLNHSTEf53Lrbhdpd2jJ45XZ1
+ 2xqQDfwbH9ZSJqRf3vdHPbgOmc4Bcz127zw= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 2s96d9xksc-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 06 May 2019 14:39:08 -0700
+Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
+ ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 6 May 2019 14:38:58 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 6 May 2019 14:38:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wCGwyONsuLpSnz5AgCakeXaeo8I033+OMSsNNBXhFG4=;
+ b=OuvE92r8QA9wvUbw7URg7jQ6F0jzvTk1Lj7f1RUXypSpdMDjoS/eB4Sv6kvpT3JjpC5A33IgeYZRw+PIXtC9lL9v0lQGZM/odbmcGv8wonWOh7Xrd6872avikzLpPF7O+J5Dc96rJy/2g6bVqyCn2VSoDovF35fLXAxjh1A3/0Q=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1437.namprd15.prod.outlook.com (10.173.234.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.11; Mon, 6 May 2019 21:38:56 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15%11]) with mapi id 15.20.1856.012; Mon, 6 May 2019
+ 21:38:56 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Jiri Olsa <jolsa@kernel.org>
+CC:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 07/12] perf script: Pad dso name for --call-trace
+Thread-Topic: [PATCH 07/12] perf script: Pad dso name for --call-trace
+Thread-Index: AQHVAYjr0qNMvZQyn0Whx89yRppmGaZepSIA
+Date:   Mon, 6 May 2019 21:38:55 +0000
+Message-ID: <8385E7AF-756B-4113-9388-BD81D0F58374@fb.com>
+References: <20190503081841.1908-1-jolsa@kernel.org>
+ <20190503081841.1908-8-jolsa@kernel.org>
+In-Reply-To: <20190503081841.1908-8-jolsa@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.8)
+x-originating-ip: [2620:10d:c090:200::1:f96e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c3f9e4f7-6752-4b90-7fe0-08d6d26b3dd9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1437;
+x-ms-traffictypediagnostic: MWHPR15MB1437:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MWHPR15MB1437E98F321C60AD016B8F88B3300@MWHPR15MB1437.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:243;
+x-forefront-prvs: 0029F17A3F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(376002)(346002)(396003)(366004)(189003)(199004)(99286004)(6916009)(6436002)(5660300002)(486006)(68736007)(229853002)(102836004)(6486002)(4326008)(86362001)(76176011)(6246003)(316002)(256004)(7736002)(54906003)(53936002)(53546011)(305945005)(82746002)(8936002)(81156014)(6506007)(478600001)(476003)(2906002)(14454004)(2616005)(6512007)(81166006)(57306001)(6306002)(11346002)(66446008)(64756008)(25786009)(71200400001)(71190400001)(966005)(66556008)(446003)(46003)(6116002)(36756003)(66476007)(73956011)(66946007)(8676002)(76116006)(33656002)(83716004)(186003)(7416002)(50226002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1437;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ImB5P1TACHkjk/h8sSJdC7ye2CS3ZlvM3FLa6CscII9aErIqjPZ2nerAWZMhrPATFEHIvB9A+TAslnbC0fjCmMro53LU87piCT4uY9LbIblgzan6El/LvK6rQUIu3+1Ws+SsK5ktSQesWsJZEt/4ey8GVlnbAwFLbCtjtQk2bcQ7XJY58CCMNyw2LRCxr0It8+dZeS9jdcc8XbNiNe9uF1OKucBVdvmJAY532v7Wk4a/fcC/4WCWHxo1laMrjxtJnQPMnA3YgzEbUUPDnvs8Bygl+was+f0AW+Po5snm1B+5XyFBachIZGAATlLz6cQDjJwEdpJ+Ax55Q/s8MIpAbgzZISguGYIlkMarLofcC/ZPjMVHB6m3lBardHOFqMud5rWlt+Mzn/el2xQVB2J/YbePUCpiXq4EYd77oTnraho=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <005008AB34FA934395AA0AF6B0D15FDF@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-13-brendanhiggins@google.com> <20190502110220.GD12416@kroah.com>
- <CAFd5g47t=EdLKFCT=CnPkrM2z0nDVo24Gz4j0VxFOJbARP37Lg@mail.gmail.com>
- <a49c5088-a821-210c-66de-f422536f5b01@gmail.com> <CAFd5g44iWRchQKdJYtjRtPY6e-6e0eXpKXXsx5Ooi6sWE474KA@mail.gmail.com>
- <1a5f3c44-9fa9-d423-66bf-45255a90c468@gmail.com> <CAFd5g45RYm+zfdJXnyp2KZZH5ojfOzy++aq+4zBeE5VDu6WgEw@mail.gmail.com>
- <052fa196-4ea9-8384-79b7-fe6bacc0ee82@gmail.com> <CAFd5g47aY-CL+d7DfiyTidY4aAVY+eg1TM1UJ4nYqKSfHOi-0w@mail.gmail.com>
- <63f63c7c-6185-5e64-b338-6a5e7fb9e27c@gmail.com>
-In-Reply-To: <63f63c7c-6185-5e64-b338-6a5e7fb9e27c@gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 6 May 2019 14:39:08 -0700
-Message-ID: <CAFd5g46=ZU58uJ=Qhs3soBzJjzJKJFY0_uzZ7fe1CxPfJioNOA@mail.gmail.com>
-Subject: Re: [PATCH v2 12/17] kunit: tool: add Python wrappers for running
- KUnit tests
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        shuah <shuah@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Felix Guo <felixguoxiuping@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3f9e4f7-6752-4b90-7fe0-08d6d26b3dd9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 21:38:55.8450
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1437
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060168
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 5/3/19 4:14 PM, Brendan Higgins wrote:
-> >> On 5/2/19 10:36 PM, Brendan Higgins wrote:
-> >>> On Thu, May 2, 2019 at 6:45 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>>>
-> >>>> On 5/2/19 4:45 PM, Brendan Higgins wrote:
-> >>>>> On Thu, May 2, 2019 at 2:16 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>>>>>
-> >>>>>> On 5/2/19 11:07 AM, Brendan Higgins wrote:
-> >>>>>>> On Thu, May 2, 2019 at 4:02 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >>>>>>>>
-> >>>>>>>> On Wed, May 01, 2019 at 04:01:21PM -0700, Brendan Higgins wrote:
-> >>>>>>>>> From: Felix Guo <felixguoxiuping@gmail.com>
-> >>>>>>>>>
-> >>>>>>>>> The ultimate goal is to create minimal isolated test binaries; in the
-> >>>>>>>>> meantime we are using UML to provide the infrastructure to run tests, so
-> >>>>>>>>> define an abstract way to configure and run tests that allow us to
-> >>>>>>>>> change the context in which tests are built without affecting the user.
-> >>>>>>>>> This also makes pretty and dynamic error reporting, and a lot of other
-> >>>>>>>>> nice features easier.
-> >>>>>>>>>
-> >>>>>>>>> kunit_config.py:
-> >>>>>>>>>   - parse .config and Kconfig files.
-> >>>>>>>>>
-> >>>>>>>>> kunit_kernel.py: provides helper functions to:
-> >>>>>>>>>   - configure the kernel using kunitconfig.
-> >>>>>>>>>   - build the kernel with the appropriate configuration.
-> >>>>>>>>>   - provide function to invoke the kernel and stream the output back.
-> >>>>>>>>>
-> >>>>>>>>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
-> >>>>>>>>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> >>>>>>>>
-> >>>>>>>> Ah, here's probably my answer to my previous logging format question,
-> >>>>>>>> right?  What's the chance that these wrappers output stuff in a standard
-> >>>>>>>> format that test-framework-tools can already parse?  :)
-> >>>>>
-> >>>>> To be clear, the test-framework-tools format we are talking about is
-> >>>>> TAP13[1], correct?
-> >>>>
-> >>>> I'm not sure what the test community prefers for a format.  I'll let them
-> >>>> jump in and debate that question.
-> >>>>
-> >>>>
-> >>>>>
-> >>>>> My understanding is that is what kselftest is being converted to use.
-> >>>>>
-> >>>>>>>
-> >>>>>>> It should be pretty easy to do. I had some patches that pack up the
-> >>>>>>> results into a serialized format for a presubmit service; it should be
-> >>>>>>> pretty straightforward to take the same logic and just change the
-> >>>>>>> output format.
-> >>>>>>
-> >>>>>> When examining and trying out the previous versions of the patch I found
-> >>>>>> the wrappers useful to provide information about how to control and use
-> >>>>>> the tests, but I had no interest in using the scripts as they do not
-> >>>>>> fit in with my personal environment and workflow.
-> >>>>>>
-> >>>>>> In the previous versions of the patch, these helper scripts are optional,
-> >>>>>> which is good for my use case.  If the helper scripts are required to
-> >>>>>
-> >>>>> They are still optional.
-> >>>>>
-> >>>>>> get the data into the proper format then the scripts are not quite so
-> >>>>>> optional, they become the expected environment.  I think the proper
-> >>>>>> format should exist without the helper scripts.
-> >>>>>
-> >>>>> That's a good point. A couple things,
-> >>>>>
-> >>>>> First off, supporting TAP13, either in the kernel or the wrapper
-> >>>>> script is not hard, but I don't think that is the real issue that you
-> >>>>> raise.
-> >>>>>
-> >>>>> If your only concern is that you will always be able to have human
-> >>>>> readable KUnit results printed to the kernel log, that is a guarantee
-> >>>>> I feel comfortable making. Beyond that, I think it is going to take a
-> >>>>> long while before I would feel comfortable guaranteeing anything about
-> >>>>> how will KUnit work, what kind of data it will want to expose, and how
-> >>>>> it will be organized. I think the wrapper script provides a nice
-> >>>>> facade that I can maintain, can mediate between the implementation
-> >>>>> details and the user, and can mediate between the implementation
-> >>>>> details and other pieces of software that might want to consume
-> >>>>> results.
-> >>>>>
-> >>>>> [1] https://testanything.org/tap-version-13-specification.html
-> >>>>
-> >>>> My concern is based on a focus on my little part of the world
-> >>>> (which in _previous_ versions of the patch series was the devicetree
-> >>>> unittest.c tests being converted to use the kunit infrastructure).
-> >>>> If I step back and think of the entire kernel globally I may end
-> >>>> up with a different conclusion - but I'm going to remain myopic
-> >>>> for this email.
-> >>>>
-> >>>> I want the test results to be usable by me and my fellow
-> >>>> developers.  I prefer that the test results be easily accessible
-> >>>> (current printk() implementation means that kunit messages are
-> >>>> just as accessible as the current unittest.c printk() output).
-> >>>> If the printk() output needs to be filtered through a script
-> >>>> to generate the actual test results then that is sub-optimal
-> >>>> to me.  It is one more step added to my workflow.  And
-> >>>> potentially with an embedded target a major pain to get a
-> >>>> data file (the kernel log file) transferred from a target
-> >>>> to my development host.
-> >>>
-> >>> That's fair. If that is indeed your only concern, then I don't think
-> >>> the wrapper script will ever be an issue for you. You will always be
-> >>> able to execute a given test the old fashioned/manual way, and the
-> >>> wrapper script only summarizes results, it does not change the
-> >>> contents.
-> >>>
-> >>>>
-> >>>> I want a reported test failure to be easy to trace back to the
-> >>>> point in the source where the failure is reported.  With printk()
-> >>>> the search is a simple grep for the failure message.  If the
-> >>>> failure message has been processed by a script, and then the
-> >>>> failure reported to me in an email, then I may have to look
-> >>>> at the script to reverse engineer how the original failure
-> >>>> message was transformed into the message that was reported
-> >>>> to me in the email.  Then I search for the point in the
-> >>>> source where the failure is reported.  So a basic task has
-> >>>> just become more difficult and time consuming.
-> >>>
-> >>> That seems to be a valid concern. I would reiterate that you shouldn't
-> >>> be concerned by any processing done by the wrapper script itself, but
-> >>> the reality is that depending on what happens with automated
-> >>> testing/presubmit/CI other people might end up parsing and
-> >>> transforming test results - it might happen, it might not.
-> >>
-> >> You seem to be missing my point.
-> >>
-> >> Greg asked that the output be in a standard format.
-> >>
-> >> You replied that the standard format could be created by the wrapper script.
-> >
-> > I thought Greg originally meant that that is how it could be done when
-> > he first commented on this patch, so I was agreeing and elaborating.
-> > Nevertheless, it seems you and Greg are now in agreement on this
-> > point, so I won't argue it further.
-> >
-> >>
-> >> Now you say that "it might happen, it might not".  In other words the output
-> >> may or may not end up in the standard format.
-> >
-> > Sorry, that was in reference to your concern about getting an email in
-> > a different format than what the tool that you use generates. It
-> > wasn't a statement about what I was or wasn't going to do in regards
-> > to supporting a standard format.
-> >
-> >>
-> >> As Greg points out in comments to patch 12:
-> >>
-> >>   "The core of kunit should also log the messages in this format as well,
-> >>   and not rely on the helper scripts as Frank points out, not everyone
-> >>   will use/want them.  Might as well make it easy for everyone to always
-> >>   do the right thing and not force it to always be added in later."
-> >>
-> >> I am requesting that the original message be in the standard format.  Of
-> >> course anyone is free to transform the messages in later processing, no
-> >> big deal.
-> >
-> > My mistake, I thought that was a concern of yours.
-> >
-> > In any case, it sounds like you and Greg are in agreement on the core
-> > libraries generating the output in TAP13, so I won't argue that point
-> > further.
-> >
-> > ## Analysis of using TAP13
->
-> I have never looked at TAP version 13 in any depth at all, so do not consider
-> me to be any sort of expert.
->
-> My entire TAP knowledge is based on:
->
->   https://testanything.org/tap-version-13-specification.html
->
-> and the pull request to create the TAP version 14 specification:
->
->    https://github.com/TestAnything/testanything.github.io/pull/36/files
->
-> You can see the full version 14 document in the submitter's repo:
->
->   $ git clone https://github.com/isaacs/testanything.github.io.git
->   $ cd testanything.github.io
->   $ git checkout tap14
->   $ ls tap-version-14-specification.md
->
-> My understanding is the the version 14 specification is not trying to
-> add new features, but instead capture what is already implemented in
-> the wild.
->
->
-> > One of my earlier concerns was that TAP13 is a bit over constrained
-> > for what I would like to output from the KUnit core. It only allows
-> > data to be output as either:
-> >  - test number
-> >  - ok/not ok with single line description
-> >  - directive
-> >  - diagnostics
-> >  - YAML block
-> >
-> > The test number must become before a set of ok/not ok lines, and does
-> > not contain any additional information. One annoying thing about this
-> > is it doesn't provide any kind of nesting or grouping.
->
-> Greg's response mentions ktest (?) already does nesting.
 
-I think we are talking about kselftest.
 
-> Version 14 allows nesting through subtests.  I have not looked at what
-> ktest does, so I do not know if it uses subtest, or something else.
+> On May 3, 2019, at 1:18 AM, Jiri Olsa <jolsa@kernel.org> wrote:
+>=20
+> Padding dso name for --call-trace so we don't have the
+> indent screwed by different dso name lengths, as now
+> for kernel there's also bpf code displayed.
+>=20
+>  # perf-with-kcore record pt -e intel_pt//ku -- sleep 1
+>  # perf-core/perf-with-kcore script pt --call-trace
+>=20
+> Before:
+>           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms])       =
+                           kretprobe_perf_func
+>           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms])       =
+                               trace_call_bpf
+>           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms])       =
+                                   __x86_indirect_thunk_rax
+>           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms])       =
+                                       __x86_indirect_thunk_rax
+>           sleep 36660 [016] 1057036.806464725: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return)                                                     bpf_get_=
+current_pid_tgid
+>           sleep 36660 [016] 1057036.806464725: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return)                                                     bpf_ktim=
+e_get_ns
+>           sleep 36660 [016] 1057036.806464725: ([kernel.kallsyms])       =
+                                               __x86_indirect_thunk_rax
+>           sleep 36660 [016] 1057036.806464725: ([kernel.kallsyms])       =
+                                                   __x86_indirect_thunk_rax
+>           sleep 36660 [016] 1057036.806465045: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return)                                                     __htab_m=
+ap_lookup_elem
+>           sleep 36660 [016] 1057036.806465366: ([kernel.kallsyms])       =
+                                               memcmp
+>           sleep 36660 [016] 1057036.806465687: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return)                                                     bpf_prob=
+e_read
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])       =
+                                               probe_kernel_read
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])       =
+                                                   __check_object_size
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])       =
+                                                       check_stack_object
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])       =
+                                                   copy_user_enhanced_fast_=
+string
+>           sleep 36660 [016] 1057036.806465687: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return)                                                     bpf_prob=
+e_read
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])       =
+                                               probe_kernel_read
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])       =
+                                                   __check_object_size
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])       =
+                                                       check_stack_object
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])       =
+                                                   copy_user_enhanced_fast_=
+string
+>           sleep 36660 [016] 1057036.806466008: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return)                                                     bpf_get_=
+current_uid_gid
+>           sleep 36660 [016] 1057036.806466008: ([kernel.kallsyms])       =
+                                               from_kgid
+>           sleep 36660 [016] 1057036.806466008: ([kernel.kallsyms])       =
+                                               from_kuid
+>           sleep 36660 [016] 1057036.806466008: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return)                                                     bpf_perf=
+_event_output
+>           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms])       =
+                                               perf_event_output
+>           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms])       =
+                                                   perf_prepare_sample
+>           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms])       =
+                                                       perf_misc_flags
+>           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms])       =
+                                                           __x86_indirect_t=
+hunk_rax
+>           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms])       =
+                                                               __x86_indire=
+ct_thunk_rax
+>           sleep 36660 [016] 1057036.806466328: ([kvm])                   =
+                                               kvm_is_in_guest
+>           sleep 36660 [016] 1057036.806466649: ([kernel.kallsyms])       =
+                                                       __perf_event_header_=
+_init_id.isra.0
+>           sleep 36660 [016] 1057036.806466649: ([kernel.kallsyms])       =
+                                                   perf_output_begin
+>=20
+> After:
+>           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]        =
+               )                kretprobe_perf_func
+>           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]        =
+               )                    trace_call_bpf
+>           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]        =
+               )                        __x86_indirect_thunk_rax
+>           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]        =
+               )                            __x86_indirect_thunk_rax
+>           sleep 36660 [016] 1057036.806464725: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return  )                                bpf_get_current_pid_tgid
+>           sleep 36660 [016] 1057036.806464725: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return  )                                bpf_ktime_get_ns
+>           sleep 36660 [016] 1057036.806464725: ([kernel.kallsyms]        =
+               )                                    __x86_indirect_thunk_ra=
+x
+>           sleep 36660 [016] 1057036.806464725: ([kernel.kallsyms]        =
+               )                                        __x86_indirect_thun=
+k_rax
+>           sleep 36660 [016] 1057036.806465045: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return  )                                __htab_map_lookup_elem
+>           sleep 36660 [016] 1057036.806465366: ([kernel.kallsyms]        =
+               )                                    memcmp
+>           sleep 36660 [016] 1057036.806465687: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return  )                                bpf_probe_read
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]        =
+               )                                    probe_kernel_read
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]        =
+               )                                        __check_object_size
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]        =
+               )                                            check_stack_obj=
+ect
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]        =
+               )                                        copy_user_enhanced_=
+fast_string
+>           sleep 36660 [016] 1057036.806465687: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return  )                                bpf_probe_read
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]        =
+               )                                    probe_kernel_read
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]        =
+               )                                        __check_object_size
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]        =
+               )                                            check_stack_obj=
+ect
+>           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]        =
+               )                                        copy_user_enhanced_=
+fast_string
+>           sleep 36660 [016] 1057036.806466008: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return  )                                bpf_get_current_uid_gid
+>           sleep 36660 [016] 1057036.806466008: ([kernel.kallsyms]        =
+               )                                    from_kgid
+>           sleep 36660 [016] 1057036.806466008: ([kernel.kallsyms]        =
+               )                                    from_kuid
+>           sleep 36660 [016] 1057036.806466008: (bpf_prog_da4fe6b3d2c29b25=
+_trace_return  )                                bpf_perf_event_output
+>           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]        =
+               )                                    perf_event_output
+>           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]        =
+               )                                        perf_prepare_sample
+>           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]        =
+               )                                            perf_misc_flags
+>           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]        =
+               )                                                __x86_indir=
+ect_thunk_rax
+>           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]        =
+               )                                                    __x86_i=
+ndirect_thunk_rax
+>=20
+> Link: http://lkml.kernel.org/n/tip-99g9rg4p20a1o99vr0nkjhq8@git.kernel.or=
+g
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+> tools/include/linux/kernel.h  |  1 +
+> tools/lib/vsprintf.c          | 19 +++++++++++++++++++
+> tools/perf/builtin-script.c   |  1 +
+> tools/perf/util/map.c         |  6 ++++++
+> tools/perf/util/symbol_conf.h |  1 +
+> 5 files changed, 28 insertions(+)
+>=20
+> diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.h
+> index 857d9e22826e..cba226948a0c 100644
+> --- a/tools/include/linux/kernel.h
+> +++ b/tools/include/linux/kernel.h
+> @@ -102,6 +102,7 @@
+>=20
+> int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
+> int scnprintf(char * buf, size_t size, const char * fmt, ...);
+> +int scnprintf_pad(char * buf, size_t size, const char * fmt, ...);
+>=20
+> #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array=
+(arr))
+>=20
+> diff --git a/tools/lib/vsprintf.c b/tools/lib/vsprintf.c
+> index e08ee147eab4..149a15013b23 100644
+> --- a/tools/lib/vsprintf.c
+> +++ b/tools/lib/vsprintf.c
+> @@ -23,3 +23,22 @@ int scnprintf(char * buf, size_t size, const char * fm=
+t, ...)
+>=20
+>        return (i >=3D ssize) ? (ssize - 1) : i;
+> }
+> +
+> +int scnprintf_pad(char * buf, size_t size, const char * fmt, ...)
+> +{
+> +	ssize_t ssize =3D size;
+> +	va_list args;
+> +	int i;
 
-Oh nice! That is new in version 14. I can use that.
+nit: I guess we can avoid mixing int, ssize_t and size_t here?
 
-> > There is one ok/not ok line per test and it may have a short
-> > description of the test immediately after 'ok' or 'not ok'; this is
-> > problematic because it wants the first thing you say about a test to
-> > be after you know whether it passes or not.
->
-> I think you could output a diagnostic line that says a test is starting.
-> This is important to me because printk() errors and warnings that are
-> related to a test can be output by a subsystem other than the subsystem
-> that I am testing.  If there is no marker at the start of the test
-> then there is no way to attribute the printk()s to the test.
 
-I agree.
+> +
+> +	va_start(args, fmt);
+> +	i =3D vsnprintf(buf, size, fmt, args);
+> +	va_end(args);
+> +
+> +	if (i < (int) size) {
+> +		for (; i < (int) size; i++)
+> +			buf[i] =3D ' ';
+> +		buf[i] =3D 0x0;
+> +	}
+> +
+> +	return (i >=3D ssize) ? (ssize - 1) : i;
+> +}
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 61cfd8f70989..7adaa6c63a0b 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -3297,6 +3297,7 @@ static int parse_call_trace(const struct option *op=
+t __maybe_unused,
+> 	parse_output_fields(NULL, "-ip,-addr,-event,-period,+callindent", 0);
+> 	itrace_parse_synth_opts(opt, "cewp", 0);
+> 	symbol_conf.nanosecs =3D true;
+> +	symbol_conf.pad_output_len_dso =3D 50;
+> 	return 0;
+> }
+>=20
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index ee71efb9db62..c3fbd6e556b0 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -405,6 +405,7 @@ size_t map__fprintf(struct map *map, FILE *fp)
+>=20
+> size_t map__fprintf_dsoname(struct map *map, FILE *fp)
+> {
+> +	char buf[PATH_MAX];
 
-Technically conforms with the spec, and kselftest does that, but is
-also not part of the spec. Well, it *is* specified if you use
-subtests. I think the right approach is to make each
-"kunit_module/test suite" a test, and all the test cases will be
-subtests.
+nit: PATH_MAX vs. 50 is a little weird.=20
 
-> > Directives are just a way to specify skipped tests and TODOs.
-> >
-> > Diagnostics seem useful, it looks like you can put whatever
-> > information in them and print them out at anytime. It looks like a lot
-> > of kselftests emit a lot of data this way.
-> >
-> > The YAML block seems to be the way that they prefer users to emit data
-> > beyond number of tests run and whether a test passed or failed. I
-> > could express most things I want to express in terms of YAML, but it
-> > is not the nicest format for displaying a lot of data like
-> > expectations, missed function calls, and other things which have a
-> > natural concise representation. Nevertheless, YAML readability is
-> > mostly a problem who won't be using the wrapper scripts.
->
-> The examples in specification V13 and V14 look very simple and very
-> readable to me.  (And I am not a fan of YAML.)
->
->
-> > My biggest
-> > problem with the YAML block is that you can only have one, and TAP
-> > specifies that it must come after the corresponding ok/not ok line,
-> > which again has the issue that you have to hold on to a lot of
-> > diagnostic data longer than you ideally would. Another downside is
-> > that I now have to write a YAML serializer for the kernel.
->
-> If a test generates diagnostic data, then I would expect that to be
-> the direct result of a test failure.  So the test can output the
-> "not ok" line, then immediately output the YAML block.  I do not
-> see a need for stashing YAML output ahead of time.
->
-> If diagnostic data is generated before the test can determine
-> success or failure, then it can be output as diagnostic data
-> instead of stashing it for later.
+> 	const char *dsoname =3D "[unknown]";
+>=20
+> 	if (map && map->dso) {
+> @@ -414,6 +415,11 @@ size_t map__fprintf_dsoname(struct map *map, FILE *f=
+p)
+> 			dsoname =3D map->dso->name;
+> 	}
+>=20
+> +	if (symbol_conf.pad_output_len_dso) {
+> +		scnprintf_pad(buf, symbol_conf.pad_output_len_dso, "%s", dsoname);
+> +		dsoname =3D buf;
+> +	}
+> +
+> 	return fprintf(fp, "%s", dsoname);
+> }
+>=20
+> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.=
+h
+> index 6c55fa6fccec..382ba63fc554 100644
+> --- a/tools/perf/util/symbol_conf.h
+> +++ b/tools/perf/util/symbol_conf.h
+> @@ -69,6 +69,7 @@ struct symbol_conf {
+> 			*tid_list;
+> 	const char	*symfs;
+> 	int		res_sample;
+> +	int		pad_output_len_dso;
+> };
+>=20
+> extern struct symbol_conf symbol_conf;
+> --=20
+> 2.20.1
+>=20
 
-Cool, that's what I am thinking I am going to do - I just wanted to
-make sure people were okay with this approach. I mean, I think that is
-what kselftest does.
-
-We can hold off on the YAML stuff for now then.
-
-> > ## Here is what I propose for this patchset:
-> >
-> >  - Print out test number range at the beginning of each test suite.
-> >  - Print out log lines as soon as they happen as diagnostics.
-> >  - Print out the lines that state whether a test passes or fails as a
-> > ok/not ok line.
-> >
-> > This would be technically conforming with TAP13 and is consistent with
-> > what some kselftests have done.
-> >
-> > ## To be done in a future patchset:
-> >
-> > Add a YAML serializer and print out some logs containing structured
-> > data (like expectation failures, unexpected function calls, etc) in
-> > YAML blocks.
->
-> YAML serializer sounds like not needed complexity.
->
-> >
-> > Does this sound reasonable? I will go ahead and start working on this,
-> > but feel free to give me feedback on the overall idea in the meantime.
-> >
-> > Cheers
-
-Thanks!
