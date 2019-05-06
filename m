@@ -2,88 +2,110 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880C9C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7260EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE9E2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D42F205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557154929;
+	bh=BW+VHU0loTzVm3SELTlzuflSSzXdyuYxgBH/Rf5wt48=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hWoch51Ozt5nTYcy72Zqs1FVG844dpvFMeNKc0s3KXAH8xSB8/AWSSjeiPFGtbzDe
+	 k5BZK3a+CXs1wByhrUG4VXF6mizf1YCid+TPkB8R4P6EQseEZJWg4shUIgERZuU3C/
+	 VTxDKVkJ3k4wMIZvIgDr3ci3dlJW6C4+bTfNfs9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfEFPCF (ORCPT
+        id S1727875AbfEFPCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:02:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42864 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728086AbfEFOks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:40:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DECADAEAE;
-        Mon,  6 May 2019 14:40:47 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+        Mon, 6 May 2019 11:02:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34404 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727628AbfEFOkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:40:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E8DF20449;
+        Mon,  6 May 2019 14:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557153648;
+        bh=BW+VHU0loTzVm3SELTlzuflSSzXdyuYxgBH/Rf5wt48=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EsUYE9YGptHA+vKQ+bTEm2KoI9mnyuQcQa2dIIR6u6b5XfdJNye33JyCNebOSdJgI
+         P8oY3Zp+m7Zgl6u7ZeB1hic+e0HomJlZIjCdIbov8Ntg0P8ddCpbwQZfdpOlbztG5M
+         CK6A1EH90XFJGJs6WOb2QGVUuz2Vr3x/zl1RBosc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     phil@raspberrypi.org, dan.carpenter@oracle.com,
-        stefan.wahren@i2se.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
-Subject: [PATCH v2 3/3] staging: vchiq: make wait events interruptible
-Date:   Mon,  6 May 2019 16:40:30 +0200
-Message-Id: <20190506144030.29056-4-nsaenzjulienne@suse.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 44/99] jffs2: fix use-after-free on symlink traversal
+Date:   Mon,  6 May 2019 16:32:17 +0200
+Message-Id: <20190506143058.026866233@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190506144030.29056-1-nsaenzjulienne@suse.de>
-References: <20190506144030.29056-1-nsaenzjulienne@suse.de>
+In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
+References: <20190506143053.899356316@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The killable version of wait_event() is meant to be used on situations
-where it should not fail at all costs, but still have the convenience of
-being able to kill it if really necessary. Wait events in VCHIQ doesn't
-fit this criteria, as it's mainly used as an interface to V4L2 and ALSA
-devices.
+[ Upstream commit 4fdcfab5b5537c21891e22e65996d4d0dd8ab4ca ]
 
-Fixes: 852b2876a8a8 ("staging: vchiq: rework remove_event handling")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+free the symlink body after the same RCU delay we have for freeing the
+struct inode itself, so that traversal during RCU pathwalk wouldn't step
+into freed memory.
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../vc04_services/interface/vchiq_arm/vchiq_core.c     | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ fs/jffs2/readinode.c | 5 -----
+ fs/jffs2/super.c     | 5 ++++-
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-index 50189223f05b..9676f83dcf78 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.c
-@@ -425,13 +425,21 @@ remote_event_create(wait_queue_head_t *wq, struct remote_event *event)
- 	init_waitqueue_head(wq);
+diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
+index 389ea53ea487..bccfc40b3a74 100644
+--- a/fs/jffs2/readinode.c
++++ b/fs/jffs2/readinode.c
+@@ -1414,11 +1414,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
+ 
+ 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
+ 
+-	if (f->target) {
+-		kfree(f->target);
+-		f->target = NULL;
+-	}
+-
+ 	fds = f->dents;
+ 	while(fds) {
+ 		fd = fds;
+diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
+index bb6ae387469f..05d892c79339 100644
+--- a/fs/jffs2/super.c
++++ b/fs/jffs2/super.c
+@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
+ static void jffs2_i_callback(struct rcu_head *head)
+ {
+ 	struct inode *inode = container_of(head, struct inode, i_rcu);
+-	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
++	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
++
++	kfree(f->target);
++	kmem_cache_free(jffs2_inode_cachep, f);
  }
  
-+/*
-+ * All the event waiting routines in VCHIQ used a custom semaphore
-+ * implementation that filtered most signals. This achieved a behaviour similar
-+ * to the "killable" family of functions. While cleaning up this code all the
-+ * routines where switched to the "interruptible" family of functions, as the
-+ * former was deemed unjustified and the use "killable" set all VCHIQ's
-+ * threads in D state.
-+ */
- static inline int
- remote_event_wait(wait_queue_head_t *wq, struct remote_event *event)
- {
- 	if (!event->fired) {
- 		event->armed = 1;
- 		dsb(sy);
--		if (wait_event_killable(*wq, event->fired)) {
-+		if (wait_event_interruptible(*wq, event->fired)) {
- 			event->armed = 0;
- 			return 0;
- 		}
+ static void jffs2_destroy_inode(struct inode *inode)
 -- 
-2.21.0
+2.20.1
+
+
 
