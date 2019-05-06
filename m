@@ -2,193 +2,189 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B14C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95D1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097382053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9953C2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwpGHEEa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCg9ZanY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfEFRIx (ORCPT
+        id S1726885AbfEFRJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:08:53 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:40454 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfEFRIw (ORCPT
+        Mon, 6 May 2019 13:09:40 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45966 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbfEFRJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:08:52 -0400
-Received: by mail-it1-f195.google.com with SMTP id g71so6017212ita.5;
-        Mon, 06 May 2019 10:08:51 -0700 (PDT)
+        Mon, 6 May 2019 13:09:40 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i21so6748333pgi.12;
+        Mon, 06 May 2019 10:09:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+zAOIWhESqGIGUXIxvhr5jCceYW4d7dPv26f0+6ppZQ=;
-        b=FwpGHEEaQHeypZ6YAHiRFR4DLy25S5IYuo/+PhOatl65HSuOM6neo4+oD42BsbKY22
-         PE8q+knMcEXRiblfp+jUayBhft3AmqPSCfQnS/AFyPDC1LeScEfaZFiP/b8p23S9wnWQ
-         XDEHt29RnBBjFp8AcFZHcV9JRDJnSr3A9mkzCHyKFApkZ+tbAPIIiEmyE6vPcRx6BTKy
-         LMLmpwdRpxhCy7RJrSkJAwSSGrdJh6SbrUz7Y5uHlxJnD8WTxaq/sif7JEZSa/oyc/PS
-         2pUgDlVyOafIoHUHqVIxTodpMM/BW9ZEf4Y0EDRgG6makqDW5vHA2eC6AL9CN07e0I8y
-         aR2g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PJ5Vy1fvJOMCfsNlZt9kLkloUoOWT4WJb6tP7nNpgzI=;
+        b=uCg9ZanY5YS3ptCxOrBuUCjZAvjpv9NNZKCZwZpHEdiCjrwL+vnSUjKfMCs2DJiCXs
+         pgLr5jyCxBSDqdDbTcz6QjWyLM+KJanKZVm+QbrgCchpw3I25EciN+RG4wxs7PiT2Es0
+         ++YKwZevPTxRUHbMkEdBzFYh+5NHDR6br81moXZY1gBqV+zDqakrrY5ekgIqR2b9DyCu
+         elmPrXKuH8nVCS9uZTEWdItHxZ9ym/sruHKQhTnfv7P3+Ko+cbp7TT+fYZ7lPSmlYOzw
+         5NRZOEjyel32nIKWctOM7u0Vi/UXgZjmNCGpOYaTe2EIsBqwL4K/zdLVNz6A11hQShi0
+         Jd1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+zAOIWhESqGIGUXIxvhr5jCceYW4d7dPv26f0+6ppZQ=;
-        b=nZw2vLhsyHvVTLpYTxMm5yxDJ1hEBsdved8q4qbarFq4iiH8cKVwtJN0BuU69ojuMl
-         CPwFhNZd7YRiz7Joe+tHErpm0bYTuR93YOkDlaVODOo/Fq0zO/xCEEpXjbEPL5vjLzRC
-         xeyIncA18Q19NsG2KGKbVUEM942JDe5cgp8dFSV8xr84H7yV/Mm5c8IldmzrLx/bq5Ri
-         owkP+GWY5MyvCCOPCulmVMIjQXk9qEsA0No2lrJMaO5i8aZ2DVw/woBeaAnz1h2e13Uh
-         KA+CpkwKe+J6mf0WQss0vmc2lmsbz7AoxaW6wZ5OliEV1UmuUpwg5psQkGdvWedNaMs8
-         fD+Q==
-X-Gm-Message-State: APjAAAUoF1psoLupfAWlzvARwyyQGB6Z4ZECOeED72sNTYGPxuobWe0A
-        B7TUqV2eSxxYrUzGBOLSg/A8vaXpsZoX+9+ObKU=
-X-Google-Smtp-Source: APXvYqwzdk3uznrvfpSXElhPh2UUfM29ZywDM63ZfmZvhTlO1uPQKUyZEirrHpdzDW34btdGM9Fpy+0MKV6HS6aBk6k=
-X-Received: by 2002:a24:93c2:: with SMTP id y185mr18158143itd.95.1557162531449;
- Mon, 06 May 2019 10:08:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PJ5Vy1fvJOMCfsNlZt9kLkloUoOWT4WJb6tP7nNpgzI=;
+        b=qkWwSmQRcamYZSxLNjp9w/Ks1DdNWDoucugesB0XjMze90pUVMsQXf2UClht+kAuLM
+         iah6xLFt+IR+Ihx+IgtnJZVfb9CZeg2TmAr+9sj1HBiN985mJosrDtigQiSxwSWEI2GR
+         x5dt5xQvf43c9obAeSGhCuz5e6PL3bcnVAEnbV7PQWTFejXsIYw5uG63ui90RYIJBS+l
+         /Z997MbbCYb5hKi+S7/VIHZmsarr+sdIDAeJYQjI/Gxdmj2vKUf3F9ns5lEen8N5eG+d
+         5pMyJsbnHtJyGDV9lILCwVrE0GI5FlXltD+Ub2FfURZIWFaebAuqeMKOhpD3KtyLFxQD
+         Lbeg==
+X-Gm-Message-State: APjAAAUfJKgc1Va09ScoY4LPepCxtMzKYoh6KtZGUYlvQrBXdPKsqQn5
+        7GbnvWKtdogFNwU7apW5Ud4=
+X-Google-Smtp-Source: APXvYqxeD3Fk3xGdhGPsF+4N81pTgqKo/gdUwCLyybMHlPhc1dJ4LhVGomO+AeIMwfSsDWV6TDxcZA==
+X-Received: by 2002:a63:c50c:: with SMTP id f12mr33112898pgd.71.1557162579234;
+        Mon, 06 May 2019 10:09:39 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id h13sm11045680pgk.55.2019.05.06.10.09.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 06 May 2019 10:09:38 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     x86@kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v3 00/27] Include linux x86 docs into Sphinx TOC tree
+Date:   Tue,  7 May 2019 01:08:56 +0800
+Message-Id: <20190506170923.7117-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190503072813.2719-1-tiny.windzz@gmail.com> <20190503072813.2719-2-tiny.windzz@gmail.com>
- <20190505162215.3594f77d@archlinux> <20190506122807.4u323iys74jddcet@flea> <282ccf0979e6c58effd0e177917bdf824c32f64e.camel@aosc.io>
-In-Reply-To: <282ccf0979e6c58effd0e177917bdf824c32f64e.camel@aosc.io>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Tue, 7 May 2019 01:08:39 +0800
-Message-ID: <CAEExFWusPoxtkGCoA+3gXq69cXZEfjZW+UpHW_0UfrcjpLmaXg@mail.gmail.com>
-Subject: Re: [PATCH 1/7] iio: adc: sun4i-gpadc: rework for support multiple
- thermal sensor
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, lars@metafoo.de,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 12:52 AM Icenowy Zheng <icenowy@aosc.io> wrote:
->
-> =E5=9C=A8 2019-05-06=E4=B8=80=E7=9A=84 14:28 +0200=EF=BC=8CMaxime Ripard=
-=E5=86=99=E9=81=93=EF=BC=9A
-> > Hi,
-> >
-> > On Sun, May 05, 2019 at 04:22:15PM +0100, Jonathan Cameron wrote:
-> > > On Fri,  3 May 2019 03:28:07 -0400
-> > > Yangtao Li <tiny.windzz@gmail.com> wrote:
-> > >
-> > > > For some SOCs, there are more than one thermal sensor, and there
-> > > > are
-> > > > currently four sensors on the A80. So we need to do some work in
-> > > > order
-> > > > to support multiple thermal sensors:
-> > > >
-> > > >   1) add sensor_count in gpadc_data.
-> > > >   2) introduce sun4i_sensor_tzd in sun4i_gpadc_iio, to support
-> > > > multiple
-> > > >      thermal_zone_device and distinguish between different
-> > > > sensors.
-> > > >   3) modify read temperature and initialization function.
-> > >
-> > > This comment doesn't mention the devm change. If it had it would
-> > > have
-> > > raised immediate alarm bells.
-> > >
-> > > I'm also not keen on the web of pointers that this driver is
-> > > steadily
-> > > evolving.  I can't immediately see how to reduce that complexity
-> > > however.
-> >
-> > So I might be responsible for that, and looking back, this has been a
-> > mistake.
-> >
-> > This driver was initally put together to support a controller found
-> > in
-> > older (A10 up to A31) Allwinner SoCs. This controller had an ADC
-> > driver that could be operated as a touchscreen controller, and was
-> > providing a CPU temperature sensor and a general purpose ADC.
-> >
-> > However, we already had a driver for that controller in drivers/input
-> > to report the CPU temperature, and the one in IIO was introduced to
-> > support the general purpose ADC (and the CPU temperature). The long
-> > term goal was to add the touchscreen feature as well eventually so
-> > that we could remove the one in drivers/input. That didn't happen.
-> >
-> > At the same time, the Allwinner hardware slowly evolved to remove the
-> > touchscreen and ADC features, and only keep the CPU temperature
-> > readout. It then evolved further on to support multiple temperatures
-> > (for different clusters, the GPU, and so on).
-> >
-> > So, today, we're in a situation where I was pushing everything into
-> > that IIO drivers since there was similiraties between all the
-> > generations, but the fact that we have to support so many odd cases
-> > (DT bindings compatibility, controllers with and without ADC, etc)
-> > that it becomes a real mess.
-> >
-> > And that mess isn't really used by anybody, since we want to have the
-> > touchscreen.
-> >
-> > There's only one SoC that is supported only by that driver, which is
-> > the A33 that only had a CPU temperature readout, and is still pretty
-> > similar to the latest SoC from Allwinner (that is supported by this
-> > series).
-> >
-> > I guess, for everyone's sanity and in order to not stall this
-> > further,
-> > it would just be better to create an hwmon driver for the A33 (and
-> > onwards, including the H6) for the SoC that just have the temperature
-> > readout feature. And for the older SoC, we just keep the older driver
-> > under input/. Once the A33 is supported, we'll remove the driver in
-> > IIO (and the related bits in drivers/mfd).
+Hi all,
 
-a hwmon driver or a thermal driver=EF=BC=9F
+The kernel now uses Sphinx to generate intelligent and beautiful documentation
+from reStructuredText files. I converted all of the Linux x86 docs to rst
+format in this serias.
 
->
-> I think a thermal driver is better.
+For you to preview, please visit below url:
+http://www.bytemem.com:8080/kernel-doc/index.html
 
-This is what I hope to see a few months ago.
+Thank you!
 
->
-> Other SoCs' thermal sensor drivers are all thermal drivers.
->
-> >
-> > Armbian already has a driver for that they never upstreamed iirc, so
-> > it might be a good starting point, and we would add the support for
-> > the H6. How does that sound?
->
-> I think the developer abandoned to upstream it because of the previous
-> problem ;-)
->
-> Maybe it can be taken and add A33&H6 support.
+v3: rebase to docs-next branch.
+v2: resolve comments from Mauro and Borislav.
 
-If OK, I am going to start some thermal driver work this weekend.  : )
+Changbin Du (27):
+  Documentation: add Linux x86 docs to Sphinx TOC tree
+  Documentation: x86: convert boot.txt to reST
+  Documentation: x86: convert topology.txt to reST
+  Documentation: x86: convert exception-tables.txt to reST
+  Documentation: x86: convert kernel-stacks to reST
+  Documentation: x86: convert entry_64.txt to reST
+  Documentation: x86: convert earlyprintk.txt to reST
+  Documentation: x86: convert zero-page.txt to reST
+  Documentation: x86: convert tlb.txt to reST
+  Documentation: x86: convert mtrr.txt to reST
+  Documentation: x86: convert pat.txt to reST
+  Documentation: x86: convert protection-keys.txt to reST
+  Documentation: x86: convert intel_mpx.txt to reST
+  Documentation: x86: convert amd-memory-encryption.txt to reST
+  Documentation: x86: convert pti.txt to reST
+  Documentation: x86: convert microcode.txt to reST
+  Documentation: x86: convert resctrl_ui.txt to reST
+  Documentation: x86: convert orc-unwinder.txt to reST
+  Documentation: x86: convert usb-legacy-support.txt to reST
+  Documentation: x86: convert i386/IO-APIC.txt to reST
+  Documentation: x86: convert x86_64/boot-options.txt to reST
+  Documentation: x86: convert x86_64/uefi.txt to reST
+  Documentation: x86: convert x86_64/mm.txt to reST
+  Documentation: x86: convert x86_64/5level-paging.txt to reST
+  Documentation: x86: convert x86_64/fake-numa-for-cpusets to reST
+  Documentation: x86: convert x86_64/cpu-hotplug-spec to reST
+  Documentation: x86: convert x86_64/machinecheck to reST
 
-Cheers,
-Yangtao
+ Documentation/index.rst                       |   1 +
+ ...cryption.txt => amd-memory-encryption.rst} |  13 +-
+ Documentation/x86/{boot.txt => boot.rst}      | 530 ++++++----
+ .../x86/{earlyprintk.txt => earlyprintk.rst}  | 122 +--
+ .../x86/{entry_64.txt => entry_64.rst}        |  12 +-
+ ...eption-tables.txt => exception-tables.rst} | 247 ++---
+ .../x86/i386/{IO-APIC.txt => IO-APIC.rst}     |  28 +-
+ Documentation/x86/i386/index.rst              |  10 +
+ Documentation/x86/index.rst                   |  30 +
+ .../x86/{intel_mpx.txt => intel_mpx.rst}      | 120 +--
+ .../x86/{kernel-stacks => kernel-stacks.rst}  |  20 +-
+ .../x86/{microcode.txt => microcode.rst}      |  62 +-
+ Documentation/x86/mtrr.rst                    | 354 +++++++
+ Documentation/x86/mtrr.txt                    | 329 -------
+ .../{orc-unwinder.txt => orc-unwinder.rst}    |  27 +-
+ Documentation/x86/pat.rst                     | 242 +++++
+ Documentation/x86/pat.txt                     | 230 -----
+ ...rotection-keys.txt => protection-keys.rst} |  33 +-
+ Documentation/x86/{pti.txt => pti.rst}        |  17 +-
+ .../x86/{resctrl_ui.txt => resctrl_ui.rst}    | 916 ++++++++++--------
+ Documentation/x86/{tlb.txt => tlb.rst}        |  30 +-
+ .../x86/{topology.txt => topology.rst}        |  92 +-
+ ...acy-support.txt => usb-legacy-support.rst} |  40 +-
+ .../{5level-paging.txt => 5level-paging.rst}  |  16 +-
+ Documentation/x86/x86_64/boot-options.rst     | 335 +++++++
+ Documentation/x86/x86_64/boot-options.txt     | 278 ------
+ ...{cpu-hotplug-spec => cpu-hotplug-spec.rst} |   5 +-
+ ...-for-cpusets => fake-numa-for-cpusets.rst} |  25 +-
+ Documentation/x86/x86_64/index.rst            |  16 +
+ .../x86_64/{machinecheck => machinecheck.rst} |  12 +-
+ Documentation/x86/x86_64/mm.rst               | 161 +++
+ Documentation/x86/x86_64/mm.txt               | 153 ---
+ .../x86/x86_64/{uefi.txt => uefi.rst}         |  30 +-
+ Documentation/x86/zero-page.rst               |  45 +
+ Documentation/x86/zero-page.txt               |  40 -
+ 35 files changed, 2561 insertions(+), 2060 deletions(-)
+ rename Documentation/x86/{amd-memory-encryption.txt => amd-memory-encryption.rst} (94%)
+ rename Documentation/x86/{boot.txt => boot.rst} (73%)
+ rename Documentation/x86/{earlyprintk.txt => earlyprintk.rst} (51%)
+ rename Documentation/x86/{entry_64.txt => entry_64.rst} (95%)
+ rename Documentation/x86/{exception-tables.txt => exception-tables.rst} (64%)
+ rename Documentation/x86/i386/{IO-APIC.txt => IO-APIC.rst} (93%)
+ create mode 100644 Documentation/x86/i386/index.rst
+ create mode 100644 Documentation/x86/index.rst
+ rename Documentation/x86/{intel_mpx.txt => intel_mpx.rst} (75%)
+ rename Documentation/x86/{kernel-stacks => kernel-stacks.rst} (92%)
+ rename Documentation/x86/{microcode.txt => microcode.rst} (81%)
+ create mode 100644 Documentation/x86/mtrr.rst
+ delete mode 100644 Documentation/x86/mtrr.txt
+ rename Documentation/x86/{orc-unwinder.txt => orc-unwinder.rst} (93%)
+ create mode 100644 Documentation/x86/pat.rst
+ delete mode 100644 Documentation/x86/pat.txt
+ rename Documentation/x86/{protection-keys.txt => protection-keys.rst} (83%)
+ rename Documentation/x86/{pti.txt => pti.rst} (96%)
+ rename Documentation/x86/{resctrl_ui.txt => resctrl_ui.rst} (68%)
+ rename Documentation/x86/{tlb.txt => tlb.rst} (81%)
+ rename Documentation/x86/{topology.txt => topology.rst} (74%)
+ rename Documentation/x86/{usb-legacy-support.txt => usb-legacy-support.rst} (53%)
+ rename Documentation/x86/x86_64/{5level-paging.txt => 5level-paging.rst} (91%)
+ create mode 100644 Documentation/x86/x86_64/boot-options.rst
+ delete mode 100644 Documentation/x86/x86_64/boot-options.txt
+ rename Documentation/x86/x86_64/{cpu-hotplug-spec => cpu-hotplug-spec.rst} (88%)
+ rename Documentation/x86/x86_64/{fake-numa-for-cpusets => fake-numa-for-cpusets.rst} (85%)
+ create mode 100644 Documentation/x86/x86_64/index.rst
+ rename Documentation/x86/x86_64/{machinecheck => machinecheck.rst} (92%)
+ create mode 100644 Documentation/x86/x86_64/mm.rst
+ delete mode 100644 Documentation/x86/x86_64/mm.txt
+ rename Documentation/x86/x86_64/{uefi.txt => uefi.rst} (79%)
+ create mode 100644 Documentation/x86/zero-page.rst
+ delete mode 100644 Documentation/x86/zero-page.txt
 
->
-> >
-> > Sorry for wasting everybody's time on this.
-> >
-> > Maxime
-> >
-> > --
-> > Maxime Ripard, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+-- 
+2.20.1
+
