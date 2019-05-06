@@ -2,51 +2,53 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B221C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0306C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CDFB21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC712053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153737;
-	bh=HxP6j9eOxPuAu3PNxMhnaWz0ZlCmBnUYcwZkays1naA=;
+	s=default; t=1557153740;
+	bh=dYAR+56rfCQTG+8PwkjszVHZrJs3ahZJ1jkOKhVtUmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUAeRZOZA50NFszE5YSZ8QekAMwd2aN52o0VTNJhsIjGBD9ts+cyASSND0Rn04Ad0
-	 nP5giob+/kQrbC3jg+//F7su/l/DtlcGO3QZY0XWWq9e3dRWk8gdkHfky/ZetWn0Fq
-	 6eR1wumsjYmWS5XjoPFm3dgt+xXGQIcB/ZFediN0=
+	b=f/Frcm06C9++zAH9EkOhalAZEUhqeiWzO5FOkeVRpGU0mVjUeWKpZGMCQ8q/Lwukh
+	 Kbs/KvpoE0zeI393H9ZVvzLoeVdp9g58nq8efDOunZCGIn1OpcrHWpMOGI8NG4aGdN
+	 lNKiLlPzMAEnSwN9z+yywzNMRErlE/2vXapyjRns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbfEFOmP (ORCPT
+        id S1728454AbfEFOmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36842 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:42:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728425AbfEFOmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:42:12 -0400
+        id S1728438AbfEFOmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 853E7214AE;
-        Mon,  6 May 2019 14:42:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1466521655;
+        Mon,  6 May 2019 14:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153731;
-        bh=HxP6j9eOxPuAu3PNxMhnaWz0ZlCmBnUYcwZkays1naA=;
+        s=default; t=1557153734;
+        bh=dYAR+56rfCQTG+8PwkjszVHZrJs3ahZJ1jkOKhVtUmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u7JkXTvhTDoqMFDLENcnSNL6mQ2UxZdiV3SzDJMqQwIngTlkB9iTQ8Quc40Ldmm7g
-         8mWUZxxybjH7iCJBhKuN9V/hd4ugp30/8qG+kkTe+GoRzvTmgOgh+Jwl78nQO68eG9
-         0kj9+dQskPg1kJcoofj+lZ1PLiREVpqtE+zU0Zq8=
+        b=ud0eZPkpY8vp/UPTsn/G9I4JiFTAo8XkvVtzrPVvNPnCpWilf56TlMcm9EoPooYtz
+         BPcUaWZK4+qWl8rlKexa7qwmn2kYalSaUyho+VnFvyDpVbcAsSGj+z7pN1KoaHbmV/
+         YM0qhN+dQ9hgs/O3WfERnlkqfUGUvnRODr5+nrDM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 76/99] staging: iio: adt7316: fix the dac write calculation
-Date:   Mon,  6 May 2019 16:32:49 +0200
-Message-Id: <20190506143101.024824746@linuxfoundation.org>
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 59/99] net: hns: Fix WARNING when remove HNS driver with SMMU enabled
+Date:   Mon,  6 May 2019 16:32:32 +0200
+Message-Id: <20190506143059.406126696@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -59,54 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Fertic <jeremyfertic@gmail.com>
+[ Upstream commit 8601a99d7c0256b7a7fdd1ab14cf6c1f1dfcadc6 ]
 
-commit 78accaea117c1ae878774974fab91ac4a0b0e2b0 upstream.
+When enable SMMU, remove HNS driver will cause a WARNING:
 
-The lsb calculation is not masking the correct bits from the user input.
-Subtract 1 from (1 << offset) to correctly set up the mask to be applied
-to user input.
+[  141.924177] WARNING: CPU: 36 PID: 2708 at drivers/iommu/dma-iommu.c:443 __iommu_dma_unmap+0xc0/0xc8
+[  141.954673] Modules linked in: hns_enet_drv(-)
+[  141.963615] CPU: 36 PID: 2708 Comm: rmmod Tainted: G        W         5.0.0-rc1-28723-gb729c57de95c-dirty #32
+[  141.983593] Hardware name: Huawei D05/D05, BIOS Hisilicon D05 UEFI Nemo 1.8 RC0 08/31/2017
+[  142.000244] pstate: 60000005 (nZCv daif -PAN -UAO)
+[  142.009886] pc : __iommu_dma_unmap+0xc0/0xc8
+[  142.018476] lr : __iommu_dma_unmap+0xc0/0xc8
+[  142.027066] sp : ffff000013533b90
+[  142.033728] x29: ffff000013533b90 x28: ffff8013e6983600
+[  142.044420] x27: 0000000000000000 x26: 0000000000000000
+[  142.055113] x25: 0000000056000000 x24: 0000000000000015
+[  142.065806] x23: 0000000000000028 x22: ffff8013e66eee68
+[  142.076499] x21: ffff8013db919800 x20: 0000ffffefbff000
+[  142.087192] x19: 0000000000001000 x18: 0000000000000007
+[  142.097885] x17: 000000000000000e x16: 0000000000000001
+[  142.108578] x15: 0000000000000019 x14: 363139343a70616d
+[  142.119270] x13: 6e75656761705f67 x12: 0000000000000000
+[  142.129963] x11: 00000000ffffffff x10: 0000000000000006
+[  142.140656] x9 : 1346c1aa88093500 x8 : ffff0000114de4e0
+[  142.151349] x7 : 6662666578303d72 x6 : ffff0000105ffec8
+[  142.162042] x5 : 0000000000000000 x4 : 0000000000000000
+[  142.172734] x3 : 00000000ffffffff x2 : ffff0000114de500
+[  142.183427] x1 : 0000000000000000 x0 : 0000000000000035
+[  142.194120] Call trace:
+[  142.199030]  __iommu_dma_unmap+0xc0/0xc8
+[  142.206920]  iommu_dma_unmap_page+0x20/0x28
+[  142.215335]  __iommu_unmap_page+0x40/0x60
+[  142.223399]  hnae_unmap_buffer+0x110/0x134
+[  142.231639]  hnae_free_desc+0x6c/0x10c
+[  142.239177]  hnae_fini_ring+0x14/0x34
+[  142.246540]  hnae_fini_queue+0x2c/0x40
+[  142.254080]  hnae_put_handle+0x38/0xcc
+[  142.261619]  hns_nic_dev_remove+0x54/0xfc [hns_enet_drv]
+[  142.272312]  platform_drv_remove+0x24/0x64
+[  142.280552]  device_release_driver_internal+0x17c/0x20c
+[  142.291070]  driver_detach+0x4c/0x90
+[  142.298259]  bus_remove_driver+0x5c/0xd8
+[  142.306148]  driver_unregister+0x2c/0x54
+[  142.314037]  platform_driver_unregister+0x10/0x18
+[  142.323505]  hns_nic_dev_driver_exit+0x14/0xf0c [hns_enet_drv]
+[  142.335248]  __arm64_sys_delete_module+0x214/0x25c
+[  142.344891]  el0_svc_common+0xb0/0x10c
+[  142.352430]  el0_svc_handler+0x24/0x80
+[  142.359968]  el0_svc+0x8/0x7c0
+[  142.366104] ---[ end trace 60ad1cd58e63c407 ]---
 
-The lsb register stores its value starting at the bit 7 position.
-adt7316_store_DAC() currently assumes the value is at the other end of the
-register. Shift the lsb value before storing it in a new variable lsb_reg,
-and write this variable to the lsb register.
+The tx ring buffer map when xmit and unmap when xmit done. So in
+hnae_init_ring() did not map tx ring buffer, but in hnae_fini_ring()
+have a unmap operation for tx ring buffer, which is already unmapped
+when xmit done, than cause this WARNING.
 
-Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
-Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The hnae_alloc_buffers() is called in hnae_init_ring(),
+so the hnae_free_buffers() should be in hnae_fini_ring(), not in
+hnae_free_desc().
 
+In hnae_fini_ring(), adds a check is_rx_ring() as in hnae_init_ring().
+When the ring buffer is tx ring, adds a piece of code to ensure that
+the tx ring is unmap.
+
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/iio/addac/adt7316.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns/hnae.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/iio/addac/adt7316.c
-+++ b/drivers/staging/iio/addac/adt7316.c
-@@ -1447,7 +1447,7 @@ static ssize_t adt7316_show_DAC(struct a
- static ssize_t adt7316_store_DAC(struct adt7316_chip_info *chip,
- 		int channel, const char *buf, size_t len)
+diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c b/drivers/net/ethernet/hisilicon/hns/hnae.c
+index 79d03f8ee7b1..c7fa97a7e1f4 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hnae.c
++++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
+@@ -150,7 +150,6 @@ static int hnae_alloc_buffers(struct hnae_ring *ring)
+ /* free desc along with its attached buffer */
+ static void hnae_free_desc(struct hnae_ring *ring)
  {
--	u8 msb, lsb, offset;
-+	u8 msb, lsb, lsb_reg, offset;
- 	u16 data;
- 	int ret;
- 
-@@ -1465,9 +1465,13 @@ static ssize_t adt7316_store_DAC(struct
- 		return -EINVAL;
- 
- 	if (chip->dac_bits > 8) {
--		lsb = data & (1 << offset);
-+		lsb = data & ((1 << offset) - 1);
-+		if (chip->dac_bits == 12)
-+			lsb_reg = lsb << ADT7316_DA_12_BIT_LSB_SHIFT;
-+		else
-+			lsb_reg = lsb << ADT7316_DA_10_BIT_LSB_SHIFT;
- 		ret = chip->bus.write(chip->bus.client,
--			ADT7316_DA_DATA_BASE + channel * 2, lsb);
-+			ADT7316_DA_DATA_BASE + channel * 2, lsb_reg);
- 		if (ret)
- 			return -EIO;
- 	}
+-	hnae_free_buffers(ring);
+ 	dma_unmap_single(ring_to_dev(ring), ring->desc_dma_addr,
+ 			 ring->desc_num * sizeof(ring->desc[0]),
+ 			 ring_to_dma_dir(ring));
+@@ -183,6 +182,9 @@ static int hnae_alloc_desc(struct hnae_ring *ring)
+ /* fini ring, also free the buffer for the ring */
+ static void hnae_fini_ring(struct hnae_ring *ring)
+ {
++	if (is_rx_ring(ring))
++		hnae_free_buffers(ring);
++
+ 	hnae_free_desc(ring);
+ 	kfree(ring->desc_cb);
+ 	ring->desc_cb = NULL;
+-- 
+2.20.1
+
 
 
