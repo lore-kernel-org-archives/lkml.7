@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAC9C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98E2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A782053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726492087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153895;
-	bh=utfewn1MIskGsmLGWeguWKXzFKSiPaM4WMgoN56daQY=;
+	s=default; t=1557153902;
+	bh=0sCxsk4ZhCr/cOB8EqI0wCflLdcv00pT061/03t1zBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d/qT40LXPriemQd+6wgtPlFZdPkRyCjGWnbikU/WfHrbTQwZ0Ikz1ug3U99CpG/4G
-	 smXpbiq4pzwoCi0H3idPCRZnS9XKMdi5yJLJD4958OjhEaQ6HQzJiykQ1HnThMwOFv
-	 Y3IyrOJFVTw6+Yz+Yxrqi/9JA74nLZaoGNbDk9k0=
+	b=JPh2n3Gcv4alr3FHEFZcXf9uxsQLzRRX54VNqq4MoWtmqFlaf2776pinTBtQZaxhZ
+	 o0ERo6Y9wY6ErJ13i3T8pCRCPA+xFjvnfoE1+zGuh1aD+bdQ8403kgtQx3cFBcQFmu
+	 kbBuVb7HaHtSgR0NWXYuT4lTW/XfAp8D1OioEyew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfEFOoy (ORCPT
+        id S1728880AbfEFOpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:44:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41264 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:45:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbfEFOot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:49 -0400
+        id S1728873AbfEFOoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56F942053B;
-        Mon,  6 May 2019 14:44:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A944B20C01;
+        Mon,  6 May 2019 14:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153888;
-        bh=utfewn1MIskGsmLGWeguWKXzFKSiPaM4WMgoN56daQY=;
+        s=default; t=1557153894;
+        bh=0sCxsk4ZhCr/cOB8EqI0wCflLdcv00pT061/03t1zBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tu+gW2AF83mWJ8M9REw0znLxsNgHt7ugnq1hdXvC8UBawI1D4wjzt9SMo44T8EC8V
-         6XK4IUiNuWRAPsU2o/fGj94504ptEHi1qXXVieHPjHlE1NIyJ0zb9mw28ympuvlc3T
-         X8BLbzmkkHx5A/VQq9QjPQkDlV6QFWnIRaAuxgNE=
+        b=xDOlpuXkZgEfWBtR+YWZzcMCLX9C3175dUlwFVjyShZMfK8XbYU0BZZtBMRmis6my
+         gK9vLTqgsFG3MM5FEJ2qUSh+zVK/BzvrgLlpPwhW7nbI35d7K+q9XIgfenbjs3wDGJ
+         32sk8WtxLH59MXSjdyk9rLixaRhnoh/1xM8kgfL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <niveditas98@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 33/75] igb: Fix WARN_ONCE on runtime suspend
-Date:   Mon,  6 May 2019 16:32:41 +0200
-Message-Id: <20190506143056.206611104@linuxfoundation.org>
+Subject: [PATCH 4.14 35/75] bonding: show full hw address in sysfs for slave entries
+Date:   Mon,  6 May 2019 16:32:43 +0200
+Message-Id: <20190506143056.396926948@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -62,153 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dabb8338be533c18f50255cf39ff4f66d4dabdbe ]
+[ Upstream commit 18bebc6dd3281955240062655a4df35eef2c46b3 ]
 
-The runtime_suspend device callbacks are not supposed to save
-configuration state or change the power state. Commit fb29f76cc566
-("igb: Fix an issue that PME is not enabled during runtime suspend")
-changed the driver to not save configuration state during runtime
-suspend, however the driver callback still put the device into a
-low-power state. This causes a warning in the pci pm core and results in
-pci_pm_runtime_suspend not calling pci_save_state or pci_finish_runtime_suspend.
+Bond expects ethernet hwaddr for its slave, but it can be longer than 6
+bytes - infiniband interface for example.
 
-Fix this by not changing the power state either, leaving that to pci pm
-core, and make the same change for suspend callback as well.
+ # cat /sys/devices/<skipped>/net/ib0/address
+ 80:00:02:08:fe:80:00:00:00:00:00:00:7c:fe:90:03:00:be:5d:e1
 
-Also move a couple of defines into the appropriate header file instead
-of inline in the .c file.
+ # cat /sys/devices/<skipped>/net/ib0/bonding_slave/perm_hwaddr
+ 80:00:02:08:fe:80
 
-Fixes: fb29f76cc566 ("igb: Fix an issue that PME is not enabled during runtime suspend")
-Signed-off-by: Arvind Sankar <niveditas98@gmail.com>
-Reviewed-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+So print full hwaddr in sysfs "bonding_slave/perm_hwaddr" as well.
+
+Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/intel/igb/e1000_defines.h    |  2 +
- drivers/net/ethernet/intel/igb/igb_main.c     | 57 +++----------------
- 2 files changed, 10 insertions(+), 49 deletions(-)
+ drivers/net/bonding/bond_sysfs_slave.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/e1000_defines.h b/drivers/net/ethernet/intel/igb/e1000_defines.h
-index 1de82f247312..d258a75c934b 100644
---- a/drivers/net/ethernet/intel/igb/e1000_defines.h
-+++ b/drivers/net/ethernet/intel/igb/e1000_defines.h
-@@ -214,6 +214,8 @@
- /* enable link status from external LINK_0 and LINK_1 pins */
- #define E1000_CTRL_SWDPIN0  0x00040000  /* SWDPIN 0 value */
- #define E1000_CTRL_SWDPIN1  0x00080000  /* SWDPIN 1 value */
-+#define E1000_CTRL_ADVD3WUC 0x00100000  /* D3 WUC */
-+#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000 /* PHY PM enable */
- #define E1000_CTRL_SDP0_DIR 0x00400000  /* SDP0 Data direction */
- #define E1000_CTRL_SDP1_DIR 0x00800000  /* SDP1 Data direction */
- #define E1000_CTRL_RST      0x04000000  /* Global reset */
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 8892ea5cbb01..71b235f935d9 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -7934,9 +7934,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	struct e1000_hw *hw = &adapter->hw;
- 	u32 ctrl, rctl, status;
- 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
--#ifdef CONFIG_PM
--	int retval = 0;
--#endif
-+	bool wake;
+diff --git a/drivers/net/bonding/bond_sysfs_slave.c b/drivers/net/bonding/bond_sysfs_slave.c
+index 7d16c51e6913..641a532b67cb 100644
+--- a/drivers/net/bonding/bond_sysfs_slave.c
++++ b/drivers/net/bonding/bond_sysfs_slave.c
+@@ -55,7 +55,9 @@ static SLAVE_ATTR_RO(link_failure_count);
  
- 	rtnl_lock();
- 	netif_device_detach(netdev);
-@@ -7949,14 +7947,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	igb_clear_interrupt_scheme(adapter);
- 	rtnl_unlock();
- 
--#ifdef CONFIG_PM
--	if (!runtime) {
--		retval = pci_save_state(pdev);
--		if (retval)
--			return retval;
--	}
--#endif
--
- 	status = rd32(E1000_STATUS);
- 	if (status & E1000_STATUS_LU)
- 		wufc &= ~E1000_WUFC_LNKC;
-@@ -7973,10 +7963,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 		}
- 
- 		ctrl = rd32(E1000_CTRL);
--		/* advertise wake from D3Cold */
--		#define E1000_CTRL_ADVD3WUC 0x00100000
--		/* phy power management enable */
--		#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000
- 		ctrl |= E1000_CTRL_ADVD3WUC;
- 		wr32(E1000_CTRL, ctrl);
- 
-@@ -7990,12 +7976,15 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 		wr32(E1000_WUFC, 0);
- 	}
- 
--	*enable_wake = wufc || adapter->en_mng_pt;
--	if (!*enable_wake)
-+	wake = wufc || adapter->en_mng_pt;
-+	if (!wake)
- 		igb_power_down_link(adapter);
- 	else
- 		igb_power_up_link(adapter);
- 
-+	if (enable_wake)
-+		*enable_wake = wake;
-+
- 	/* Release control of h/w to f/w.  If f/w is AMT enabled, this
- 	 * would have already happened in close and is redundant.
- 	 */
-@@ -8038,22 +8027,7 @@ static void igb_deliver_wake_packet(struct net_device *netdev)
- 
- static int __maybe_unused igb_suspend(struct device *dev)
+ static ssize_t perm_hwaddr_show(struct slave *slave, char *buf)
  {
--	int retval;
--	bool wake;
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	retval = __igb_shutdown(pdev, &wake, 0);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 0);
+-	return sprintf(buf, "%pM\n", slave->perm_hwaddr);
++	return sprintf(buf, "%*phC\n",
++		       slave->dev->addr_len,
++		       slave->perm_hwaddr);
  }
+ static SLAVE_ATTR_RO(perm_hwaddr);
  
- static int __maybe_unused igb_resume(struct device *dev)
-@@ -8124,22 +8098,7 @@ static int __maybe_unused igb_runtime_idle(struct device *dev)
- 
- static int __maybe_unused igb_runtime_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	int retval;
--	bool wake;
--
--	retval = __igb_shutdown(pdev, &wake, 1);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 1);
- }
- 
- static int __maybe_unused igb_runtime_resume(struct device *dev)
 -- 
 2.20.1
 
