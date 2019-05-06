@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2E3C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D56214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7AD21655
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153723;
-	bh=XHfRqNPamAIh+JBrPyP1AVVMI9BBXbcniQkJsMVsSHU=;
+	s=default; t=1557153724;
+	bh=d7uNJrLitMhqX15euf0F9ce9ER6b9bWi/IESkGcFvrc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XYSNTPRSNjDROArgMM0P1ijDruCG0tIXTRjVfRu+GAbW/OGIW6NJXeWIMHjPC3qKp
-	 AEe0WAZHPNXcqSGVyE43O6oVv8o5Ojpw75H+WGmFOLJjIjuOCNPwV6WQHDZQabRa0Q
-	 qcSBbZXHlDvyAdZrJ+hpaXDLo4e/ZDoEebtSjoPg=
+	b=TenaruepFWPlJkAectWbT+JtMDhWrtlIe4My32IKXBB1ounIyuBzsuv3xBHkElEPj
+	 2cF5bN9yhaamPhmjzse7BlfQ4W7YlSHRpj3ShwgghEKNMSM7nh3FdzESJvkIy7pbim
+	 eQJsdGsv80PWTbKLlIz4KGQW7/OZ5t0FSzV18mY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbfEFOmB (ORCPT
+        id S1726911AbfEFOmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:42:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36454 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:42:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbfEFOl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:59 -0400
+        id S1728391AbfEFOmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69BD521479;
-        Mon,  6 May 2019 14:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0590C21655;
+        Mon,  6 May 2019 14:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153718;
-        bh=XHfRqNPamAIh+JBrPyP1AVVMI9BBXbcniQkJsMVsSHU=;
+        s=default; t=1557153721;
+        bh=d7uNJrLitMhqX15euf0F9ce9ER6b9bWi/IESkGcFvrc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=id0u6tFkxAx06jhSzr3fwtHpExRzjmu1WsOuTziCbzF40TAnQHXVRDTnDKU7N8O1R
-         Kqr5GCBlXOTlPoyRMyfGFTGAWgPSS7yXRCpmYLYM4OqwsFuQi4lYzPA3Y4CIzPhecl
-         utSqsKjmyIuRw9DNLEJ95Xy+nHWfRphmhZhgbooA=
+        b=EiOoc9oEGZJnFUU07hNIo8Kcc6plUpNvqjj1BsOAAKaeKK4aGKzUabA1tkOd7YRGx
+         Ww4VnDzSEbwKLforv5kxvg6Ek/sf7dAnW4fcEgQREmQdioh4eW2WztOKAXP/hVQFK5
+         94MOSZ+HOVQfgV7Nr9rU88x7wdmRTKz+xZy0FBg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 71/99] Bluetooth: btusb: request wake pin with NOAUTOEN
-Date:   Mon,  6 May 2019 16:32:44 +0200
-Message-Id: <20190506143100.581802215@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.19 72/99] Bluetooth: mediatek: fix up an error path to restore bdev->tx_state
+Date:   Mon,  6 May 2019 16:32:45 +0200
+Message-Id: <20190506143100.662019009@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -60,46 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-commit 771acc7e4a6e5dba779cb1a7fd851a164bc81033 upstream.
+commit 77f328dbc6cf42f22c691a164958a5452142a542 upstream.
 
-Badly-designed systems might have (for example) active-high wake pins
-that default to high (e.g., because of external pull ups) until they
-have an active firmware which starts driving it low.  This can cause an
-interrupt storm in the time between request_irq() and disable_irq().
+Restore bdev->tx_state with clearing bit BTMTKUART_TX_WAIT_VND_EVT
+when there is an error on waiting for the corresponding event.
 
-We don't support shared interrupts here, so let's just pre-configure the
-interrupt to avoid auto-enabling it.
-
-Fixes: fd913ef7ce61 ("Bluetooth: btusb: Add out-of-band wakeup support")
-Fixes: 5364a0b4f4be ("arm64: dts: rockchip: move QCA6174A wakeup pin into its USB node")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 7237c4c9ec92 ("Bluetooth: mediatek: Add protocol support for MediaTek serial devices")
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/btusb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bluetooth/btmtkuart.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -2888,6 +2888,7 @@ static int btusb_config_oob_wake(struct
- 		return 0;
+--- a/drivers/bluetooth/btmtkuart.c
++++ b/drivers/bluetooth/btmtkuart.c
+@@ -115,11 +115,13 @@ static int mtk_hci_wmt_sync(struct hci_d
+ 				  TASK_INTERRUPTIBLE, HCI_INIT_TIMEOUT);
+ 	if (err == -EINTR) {
+ 		bt_dev_err(hdev, "Execution of wmt command interrupted");
++		clear_bit(BTMTKUART_TX_WAIT_VND_EVT, &bdev->tx_state);
+ 		return err;
  	}
  
-+	irq_set_status_flags(irq, IRQ_NOAUTOEN);
- 	ret = devm_request_irq(&hdev->dev, irq, btusb_oob_wake_handler,
- 			       0, "OOB Wake-on-BT", data);
- 	if (ret) {
-@@ -2902,7 +2903,6 @@ static int btusb_config_oob_wake(struct
+ 	if (err) {
+ 		bt_dev_err(hdev, "Execution of wmt command timed out");
++		clear_bit(BTMTKUART_TX_WAIT_VND_EVT, &bdev->tx_state);
+ 		return -ETIMEDOUT;
  	}
  
- 	data->oob_wake_irq = irq;
--	disable_irq(irq);
- 	bt_dev_info(hdev, "OOB Wake-on-BT configured at IRQ %u", irq);
- 	return 0;
- }
 
 
