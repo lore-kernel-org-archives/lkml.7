@@ -2,53 +2,53 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD7FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D0EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042AB2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C866F205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154893;
-	bh=TfJ5KHkL1zHX9fsEI4Y7iL8punVmYs3scVECbtPu8WE=;
+	s=default; t=1557154899;
+	bh=UBYKuLsospr/zmWzsA2yY1uhFNal94oqsxalEMlrnfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y/yVrZEGlzupuGwLHO9IyaQ9UTnv3iurJ3tmXdUXZMFRdKdL9BV6RxmzDWOxuYh+N
-	 cgHsQImzLujT94xWHrkAWOWoDhU8sqplynaAPfErvpyK2hPvAW3GXc9Iw5hZy9RbQB
-	 8zPeHtnAte8LH2duf+aAMFgY8ZcXVTvt2326HvlM=
+	b=cwhmUXNwQC1YtO/ljNDOtDhsuMLl1CdFBsRWVhjpJze1Jvr+KB+r0pn2ATwz/k0Bg
+	 1P/OyZrP3lpcmyoGwXgvxOhrHcl4CZKPxZtSFvcAzEtLPidVKKS1yUyCtrqWK+SE7U
+	 pWdmZzvGUWfvmHOL1jhSrNOmU/6ng5Z/AMmlqSgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfEFOlS (ORCPT
+        id S1728176AbfEFOlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:41:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:41:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfEFOlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:15 -0400
+        id S1727160AbfEFOlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:41:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A158E20449;
-        Mon,  6 May 2019 14:41:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDC5020449;
+        Mon,  6 May 2019 14:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153675;
-        bh=TfJ5KHkL1zHX9fsEI4Y7iL8punVmYs3scVECbtPu8WE=;
+        s=default; t=1557153666;
+        bh=UBYKuLsospr/zmWzsA2yY1uhFNal94oqsxalEMlrnfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XrDSLfdzcwyW4F0KjEoo3Ug3PB9sfvAlNmJxMJgB3RaZ9NkGXTO9tMjG7bFdoCjda
-         QF08ErTb7QhkN+hes2186FjZtVmRhHGVZy15l8/Ow6VWTLqDmfxIOf5kMfy9g9eJRS
-         MUGwI7l9MBOjiKK575uO71i32h5pSA/b6TFJkwQc=
+        b=DgNqBEQPVWxu6a59KMJ5FzRcy/zRjsr3fkX3VVNQ/TdGpXTPwuZJ80pucjDlGg8Dr
+         JpOpTIIfR0aKD+ZIgXaqYO0X4IiDgs4XbfJns4jVD5Ww9kqNy3PW7Fh+bArKh3Zl73
+         Lfmwb2kTA/cjN4YuohDXvy3dCUYuVtngHDwUPOLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mukesh Ojha <mojha@codeaurora.org>,
-        Peng Hao <peng.hao2@zte.com.cn>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        stable@vger.kernel.org, Louis Taylor <louis@kragniz.eu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 53/99] arm/mach-at91/pm : fix possible object reference leak
-Date:   Mon,  6 May 2019 16:32:26 +0200
-Message-Id: <20190506143058.874499949@linuxfoundation.org>
+Subject: [PATCH 4.19 50/99] vfio/pci: use correct format characters
+Date:   Mon,  6 May 2019 16:32:23 +0200
+Message-Id: <20190506143058.607139543@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,49 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ba5e60c9b75dec92d4c695b928f69300b17d7686 ]
+[ Upstream commit 426b046b748d1f47e096e05bdcc6fb4172791307 ]
 
-of_find_device_by_node() takes a reference to the struct device
-when it finds a match via get_device. When returning error we should
-call put_device.
+When compiling with -Wformat, clang emits the following warnings:
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+drivers/vfio/pci/vfio_pci.c:1601:5: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                ^~~~~~
+
+drivers/vfio/pci/vfio_pci.c:1601:13: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                        ^~~~~~
+
+drivers/vfio/pci/vfio_pci.c:1601:21: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                                ^~~~~~~~~
+
+drivers/vfio/pci/vfio_pci.c:1601:32: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                                           ^~~~~~~~~
+
+drivers/vfio/pci/vfio_pci.c:1605:5: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                ^~~~~~
+
+drivers/vfio/pci/vfio_pci.c:1605:13: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                        ^~~~~~
+
+drivers/vfio/pci/vfio_pci.c:1605:21: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                                ^~~~~~~~~
+
+drivers/vfio/pci/vfio_pci.c:1605:32: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                                           ^~~~~~~~~
+The types of these arguments are unconditionally defined, so this patch
+updates the format character to the correct ones for unsigned ints.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/378
+Signed-off-by: Louis Taylor <louis@kragniz.eu>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/pm.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/vfio/pci/vfio_pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 32fae4dbd63b..0921e2c10edf 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -594,13 +594,13 @@ static int __init at91_pm_backup_init(void)
- 
- 	np = of_find_compatible_node(NULL, NULL, "atmel,sama5d2-securam");
- 	if (!np)
--		goto securam_fail;
-+		goto securam_fail_no_ref_dev;
- 
- 	pdev = of_find_device_by_node(np);
- 	of_node_put(np);
- 	if (!pdev) {
- 		pr_warn("%s: failed to find securam device!\n", __func__);
--		goto securam_fail;
-+		goto securam_fail_no_ref_dev;
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index cddb453a1ba5..6cf00d9f512b 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -1443,11 +1443,11 @@ static void __init vfio_pci_fill_ids(void)
+ 		rc = pci_add_dynid(&vfio_pci_driver, vendor, device,
+ 				   subvendor, subdevice, class, class_mask, 0);
+ 		if (rc)
+-			pr_warn("failed to add dynamic id [%04hx:%04hx[%04hx:%04hx]] class %#08x/%08x (%d)\n",
++			pr_warn("failed to add dynamic id [%04x:%04x[%04x:%04x]] class %#08x/%08x (%d)\n",
+ 				vendor, device, subvendor, subdevice,
+ 				class, class_mask, rc);
+ 		else
+-			pr_info("add [%04hx:%04hx[%04hx:%04hx]] class %#08x/%08x\n",
++			pr_info("add [%04x:%04x[%04x:%04x]] class %#08x/%08x\n",
+ 				vendor, device, subvendor, subdevice,
+ 				class, class_mask);
  	}
- 
- 	sram_pool = gen_pool_get(&pdev->dev, NULL);
-@@ -623,6 +623,8 @@ static int __init at91_pm_backup_init(void)
- 	return 0;
- 
- securam_fail:
-+	put_device(&pdev->dev);
-+securam_fail_no_ref_dev:
- 	iounmap(pm_data.sfrbu);
- 	pm_data.sfrbu = NULL;
- 	return ret;
 -- 
 2.20.1
 
