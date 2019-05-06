@@ -2,95 +2,136 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6A3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8204CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29CFC2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:00:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="A/lSskv2"
+	by mail.kernel.org (Postfix) with ESMTP id 5C2412082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfEFVAb (ORCPT
+        id S1726457AbfEFVEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 17:00:31 -0400
-Received: from mail-qt1-f169.google.com ([209.85.160.169]:37322 "EHLO
-        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfEFVAb (ORCPT
+        Mon, 6 May 2019 17:04:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40564 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726118AbfEFVEH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 17:00:31 -0400
-Received: by mail-qt1-f169.google.com with SMTP id o7so4598651qtp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 14:00:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=3wJRQ6VKWRxL27a5QxEQoOQCJUnNTmSip3XDWhvdBaQ=;
-        b=A/lSskv2O+Uy1ln/4WsjLObJSCsYlFzGzAWfWBpCgQp9nJ+T99/ChlO5vaAVXQQYq1
-         kDaLE662WickGYjmxtVJdcvsq7kbFg4eC4W16FIdZCN7C2VGClGEdQDMahn3ZhHRkxpz
-         xIiZn7TZq4GQZTSQxsdL3I9hj6RlHCaA9RvYcxeBBfDIV/gJAtL4IGK1GyNFw5ACccvr
-         cZ2eUhhH0dV8ZgUOM7Un1kQSqKXNjDsZnpU1zGcN0N71PRXpRelhx4MLGkHG5W9T6Npv
-         y9Wtzcv1SgLUUVHhBJVhRcCciD8eRu8h4dAs/HDyUMOPXIM1H+KtNqfsI1DVDUYMxByn
-         pMyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=3wJRQ6VKWRxL27a5QxEQoOQCJUnNTmSip3XDWhvdBaQ=;
-        b=c9Cjiv+70TyTQQNvXvfCJTDStQbK8pLstFNXS1C4QTd+LFmeXYnrkfuZxqkgxZXhKz
-         XLSWrEAQ2VWTPb+HUilNq+rIyt27WubolLlSnl5riMVkIxVua75hQggLb3IqqF7+argu
-         omwZTLWmKE9LIbJW3+QJ8+TGjFSRgUksxztC2YDY5ZdIZ9Qzy/W0ZY6+d6raWrdVRmTd
-         b0ECK53ER0h+r2QYEY8MKGzLcMfViLCYUPUDeECQyYPb99cNRnGxGy/aJJE9FJxGV2Qy
-         OFsLYISTIf9dcYGKA1pPgQWPwxtCqtGNcp2u6X/A307B/6V2e0IQJhFm4/vbmopXZb0Q
-         Fp/g==
-X-Gm-Message-State: APjAAAVoc6u8QMU+l1woVBqOJQwaGplcf8aBGN6d8fvPp2fOX1TgRAMc
-        z7gHdUYArp/KNBzUft5Pa/EuYQ==
-X-Google-Smtp-Source: APXvYqx/0CijmHQT5nAegd8Iq3bmLEJ/dSOVuelYyGhdUDs4JSPE3rCKI5bh09sk4kBRUcTwpfs8uA==
-X-Received: by 2002:ac8:743:: with SMTP id k3mr20214481qth.207.1557176430476;
-        Mon, 06 May 2019 14:00:30 -0700 (PDT)
-Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id 67sm5934254qtc.29.2019.05.06.14.00.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 06 May 2019 14:00:30 -0700 (PDT)
-Date:   Mon, 6 May 2019 14:00:22 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        oss-drivers@netronome.com, linux-kernel@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, valdis@vt.edu
-Subject: Re: netronome/nfp/bpf/jit.c cannot be build with -O3
-Message-ID: <20190506140022.188d2b84@cakuba.hsd1.ca.comcast.net>
-In-Reply-To: <673b885183fb64f1cbb3ed2387524077@natalenko.name>
-References: <673b885183fb64f1cbb3ed2387524077@natalenko.name>
-Organization: Netronome Systems, Ltd.
+        Mon, 6 May 2019 17:04:07 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46L2PmO040301
+        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 17:04:06 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sauje2bhp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 17:04:06 -0400
+Received: from localhost
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
+        Mon, 6 May 2019 22:04:05 +0100
+Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 6 May 2019 22:04:01 +0100
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x46L41cZ55902416
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 May 2019 21:04:01 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E67C96A04F;
+        Mon,  6 May 2019 21:04:00 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED8976A04D;
+        Mon,  6 May 2019 21:03:59 +0000 (GMT)
+Received: from [9.85.231.108] (unknown [9.85.231.108])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  6 May 2019 21:03:59 +0000 (GMT)
+Subject: Re: [PATCH] iio: dps310: Add pressure sensing capability
+To:     Jonathan Cameron <jic23@kernel.org>, Joel Stanley <joel@jms.id.au>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Hartmut Knaack <knaack.h@gmx.de>
+References: <1556721787-28500-1-git-send-email-eajames@linux.ibm.com>
+ <CACPK8Xc2uwPwouto4Xg8fA0OAMJ3eP6kYjKcp9Bf4R90t1NdBg@mail.gmail.com>
+ <20190505130951.08be3104@archlinux>
+From:   Eddie James <eajames@linux.ibm.com>
+Date:   Mon, 6 May 2019 16:03:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190505130951.08be3104@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19050621-8235-0000-0000-00000E9033D4
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011062; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01199565; UDB=6.00629334; IPR=6.00980441;
+ MB=3.00026761; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-06 21:04:04
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050621-8236-0000-0000-00004573788C
+Message-Id: <5225a66b-cda3-7cf3-358c-0703fef86f01@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 06 May 2019 21:40:07 +0200, Oleksandr Natalenko wrote:
-> Hi.
-> 
-> Obligatory disclaimer: building the kernel with -O3 is a non-standard 
-> thing done via this patch [1], but I've asked people in #kernelnewbies, 
-> and it was suggested that the issue should be still investigated.
-> 
-> So, with v5.1 kernel release I cannot build the kernel with -O3 anymore. 
-> It fails as shown below:
 
-Any chance you could try different compiler versions?  The code in
-question does not look too unusual.  Could you try if removing
-FIELD_FIT() on line 326 makes a difference?
+On 5/5/19 7:09 AM, Jonathan Cameron wrote:
+> On Fri, 3 May 2019 02:34:30 +0000
+> Joel Stanley <joel@jms.id.au> wrote:
+>
+>> Hi Eddie,
+>>
+>> On Wed, 1 May 2019 at 14:43, Eddie James <eajames@linux.ibm.com> wrote:
+>>> The DPS310 supports measurement of pressure, so support that in the
+>>> driver. Use background measurement like the temperature sensing and
+>>> default to lowest precision and lowest measurement rate.
+>> Upstream didn't accept my patch as they wanted it to support pressure
+>> in addition to temperature first. I didn't ever get around to doing
+>> that.
+>>
+>> I suggest you send my original patch and device tree binding along
+>> with this one as a series.
+
+
+The dps310 is already in the upstream witherspoon dts somehow :)
+
+
+>>
+>> Cheers,
+>>
+>> Joel
+> Exactly as Joel says. Note there were some other minor bits and pieces
+> in the last review I can find of Joel's driver that will also need
+> tidying up..
+>
+> Great to see this driver making progress.
+
+
+Thanks Joel and Jonathan, my mistake as I didn't base the patch on 
+linux-next. I have submitted the series with a few cleanup changes for 
+Joel's patch.
+
+
+Thanks!
+
+Eddie
+
+>
+> Thanks,
+>
+> Jonathan
+>
+
