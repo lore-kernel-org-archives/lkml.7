@@ -2,51 +2,52 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E999C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E95C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4083C214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6B020C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154173;
-	bh=TuVGRc68xIZZTSO2/CHG8WH11dqToIKgEEmX1gid7eo=;
+	s=default; t=1557154178;
+	bh=cG4eyvIm3aEMvOrch0WPnjdSg7uiNgxHqGSDdESzVdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U62oF1mLywrvmDsQcCgiMA13ItOmoZmCAqPRYU9P8fkumDV+xCp5QcxS0ME0pxQLu
-	 wn0tUY5P9pH7mQFENEbSIppRQ+ssC6udPojyG7eMzkN7ND7xc2eA52+4+GT/a44bm/
-	 W4a/1+iMhju7UTRDsTvK6L4jBXIGjZtu21RwaeyM=
+	b=eN4nMFNaUdNtGg/oeC2h4x2Ieh7qZo78av5qC3Ia8JeCn/qGQCra1mpknCCRop3ZB
+	 UG3Eqpy7yz/Yb6r+HsOHGpE2r/eM/HtQXX8XWTziTZX+ud9YMu5jBZnvDUxwUseYG/
+	 CFbdUtTImjb5REdmcI788a3dcvCl1BYEAXVz9cIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbfEFOtb (ORCPT
+        id S1729580AbfEFOth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:49:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51106 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:49:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729188AbfEFOt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:49:29 -0400
+        id S1728996AbfEFOte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:49:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C8B1216C8;
-        Mon,  6 May 2019 14:49:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 943D620C01;
+        Mon,  6 May 2019 14:49:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154167;
-        bh=TuVGRc68xIZZTSO2/CHG8WH11dqToIKgEEmX1gid7eo=;
+        s=default; t=1557154174;
+        bh=cG4eyvIm3aEMvOrch0WPnjdSg7uiNgxHqGSDdESzVdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AGy+GswJESYASoDHMtc+kIUU+6fjWwd92/YgOlupbQdJLbk/3nd5NtbwblqQX651W
-         xfg+eyKjbRALlWXuOOscjXkkmnq1AbjcgjscNjfe9Fjt7EjvWZ09IE2d/Xwh6KHgSQ
-         H89wixfBlUY1x1xJWv5qLdMvs5kSZyfL1Q4J5vpo=
+        b=SBam7aFTLxRraYqQTFGHKY4D9oDbF0G+pR6HQ0vBiF5xuQIjRADjtbgq1lSkPZ30H
+         E3qURpN/tJ+V5qhpyGIF+RTSyAGsS4CJ4xM/y/QbeZItmg9fw+P+2KWD7dv1JMGq+x
+         34FGtdQeCEokSDAgCKjWfd46R3WJNXNMYQmGY+dk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.9 62/62] media: v4l2: i2c: ov7670: Fix PLL bypass register values
-Date:   Mon,  6 May 2019 16:33:33 +0200
-Message-Id: <20190506143056.814272949@linuxfoundation.org>
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 39/62] net: stmmac: dont log oversized frames
+Date:   Mon,  6 May 2019 16:33:10 +0200
+Message-Id: <20190506143054.515453885@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -59,82 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+[ Upstream commit 057a0c5642a2ff2db7c421cdcde34294a23bf37b ]
 
-commit 61da76beef1e4f0b6ba7be4f8d0cf0dac7ce1f55 upstream.
+This is log is harmful as it can trigger multiple times per packet. Delete
+it.
 
-The following commits:
-commit f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
-commit 04ee6d92047e ("[media] media: ov7670: add possibility to bypass pll for ov7675")
-introduced the ability to bypass PLL multiplier and use input clock (xvclk)
-as pixel clock output frequency for ov7675 sensor.
-
-PLL is bypassed using register DBLV[7:6], according to ov7670 and ov7675
-sensor manuals. Macros used to set DBLV register seem wrong in the
-driver, as their values do not match what reported in the datasheet.
-
-Fix by changing DBLV_* macros to use bits [7:6] and set bits [3:0] to
-default 0x0a reserved value (according to datasheets).
-
-While at there, remove a write to DBLV register in
-"ov7675_set_framerate()" that over-writes the previous one to the same
-register that takes "info->pll_bypass" flag into account instead of setting PLL
-multiplier to 4x unconditionally.
-
-And, while at there, since "info->pll_bypass" is only used in
-set/get_framerate() functions used by ov7675 only, it is not necessary
-to check for the device id at probe time to make sure that when using
-ov7670 "info->pll_bypass" is set to false.
-
-Fixes: f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov7670.c |   16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/norm_desc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/media/i2c/ov7670.c
-+++ b/drivers/media/i2c/ov7670.c
-@@ -155,10 +155,10 @@ MODULE_PARM_DESC(debug, "Debug level (0-
- #define REG_GFIX	0x69	/* Fix gain control */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
+index fd78406e2e9a..01f8f2e94c0f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
+@@ -95,8 +95,6 @@ static int ndesc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ 		return dma_own;
  
- #define REG_DBLV	0x6b	/* PLL control an debugging */
--#define   DBLV_BYPASS	  0x00	  /* Bypass PLL */
--#define   DBLV_X4	  0x01	  /* clock x4 */
--#define   DBLV_X6	  0x10	  /* clock x6 */
--#define   DBLV_X8	  0x11	  /* clock x8 */
-+#define   DBLV_BYPASS	  0x0a	  /* Bypass PLL */
-+#define   DBLV_X4	  0x4a	  /* clock x4 */
-+#define   DBLV_X6	  0x8a	  /* clock x6 */
-+#define   DBLV_X8	  0xca	  /* clock x8 */
- 
- #define REG_REG76	0x76	/* OV's name */
- #define   R76_BLKPCOR	  0x80	  /* Black pixel correction enable */
-@@ -833,7 +833,7 @@ static int ov7675_set_framerate(struct v
- 	if (ret < 0)
- 		return ret;
- 
--	return ov7670_write(sd, REG_DBLV, DBLV_X4);
-+	return 0;
- }
- 
- static void ov7670_get_framerate_legacy(struct v4l2_subdev *sd,
-@@ -1578,11 +1578,7 @@ static int ov7670_probe(struct i2c_clien
- 		if (config->clock_speed)
- 			info->clock_speed = config->clock_speed;
- 
--		/*
--		 * It should be allowed for ov7670 too when it is migrated to
--		 * the new frame rate formula.
--		 */
--		if (config->pll_bypass && id->driver_data != MODEL_OV7670)
-+		if (config->pll_bypass)
- 			info->pll_bypass = true;
- 
- 		if (config->pclk_hb_disable)
+ 	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
+-		pr_warn("%s: Oversized frame spanned multiple buffers\n",
+-			__func__);
+ 		stats->rx_length_errors++;
+ 		return discard_frame;
+ 	}
+-- 
+2.20.1
+
 
 
