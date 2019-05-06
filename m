@@ -2,144 +2,61 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E970C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC15C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E742206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:53:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kv7aGbZw"
+	by mail.kernel.org (Postfix) with ESMTP id C6AFA2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfEFNxO (ORCPT
+        id S1726400AbfEFNyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 09:53:14 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40771 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfEFNxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 09:53:13 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d31so6498163pgl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 06:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DfsikH3ADmgNVGOW8dVHffAJXBPBy/1Drd0IdtpjjJ8=;
-        b=kv7aGbZwowOP86IiNXKGTzv02HGdI2dS555U/AmH12LgQOZnKLK39c4sVdRuufn96A
-         qthFKSfdn7G60uj86be1sn6Yz08bEym7ZdQPS1mHAwXca2PX4G4xwzBsumjfQSNalrzf
-         yL5bwTZ9P03pKULjLPyCJCemso/1RN2dFNxsJkh8Db8dDQ4uyTu4XB2OtIwgRdUtOIbE
-         AyYkrbplUjKWiH4tJjgIH/K5mFuPdBD8NVSdZa64NURA8ieEyhpOBhaJlBUr1GIoMIGp
-         v2ptbSyS2qLsf62uamUc0COAt9buSU1YrXxFbkm18U+53rgjezb09axtZoHwZgv8hVgU
-         L1Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DfsikH3ADmgNVGOW8dVHffAJXBPBy/1Drd0IdtpjjJ8=;
-        b=DnQ2LYhQXIBacN8qhPs4rK0vXG61iJIzmvwe86TF9Qvm9o7fbOjiD+wrlJAam9KXPh
-         iaWIjanRNzwZxmQWySf1LUPX1vQL9PQ9l2J/vH0GsBRBuc9xEZVD73wK97/QvgGRP8Gc
-         0KZ59DeYiEpyDtpzt0SO0EiiHhowClA0j5FCEOph0AMOmF7FKKpFZ7tlYTEhganeanJs
-         CafwjVzq1MO5BD7GJmyEZjSJhAn3O6FNiDXrWV5r+IZmSpwR7OYFRkZNr6p6VU9r6k4n
-         hcDz9JfxhYkQE5A85uktst4+nKL0OKlv0rItvo8TbxCGLuH10w08qlIzogLv+I8cE6Tc
-         9yGA==
-X-Gm-Message-State: APjAAAUROAYkghETbikcwDCyeJ3VZRi+kS/L0npzA972apAXrmmZ85R/
-        VsQPwX36lRSCuD0ZxLLAO+tvPwOsqU3KNiwG27zj7Q==
-X-Google-Smtp-Source: APXvYqz1fgwxD3Q1L0PJp0GBoiDCnAmVuD+UduBO6dKustad4HqnmYC98uMKFLNp2x7D5yl19BVMVIT9EGy2Pg34Ktk=
-X-Received: by 2002:aa7:9116:: with SMTP id 22mr33262822pfh.165.1557150792655;
- Mon, 06 May 2019 06:53:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1556630205.git.andreyknvl@google.com> <8e20df035de677029b3f970744ba2d35e2df1db3.1556630205.git.andreyknvl@google.com>
- <20190503165113.GJ55449@arrakis.emea.arm.com>
-In-Reply-To: <20190503165113.GJ55449@arrakis.emea.arm.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 6 May 2019 15:53:01 +0200
-Message-ID: <CAAeHK+wCyCa-5=bPNwfivP6sEODOXKE1bPjcjc2y_T4rN+-6gA@mail.gmail.com>
-Subject: Re: [PATCH v14 08/17] mm, arm64: untag user pointers in get_vaddr_frames
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Mon, 6 May 2019 09:54:07 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38669 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbfEFNyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 09:54:07 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 44yPNY0bjTz9s7T; Mon,  6 May 2019 23:54:05 +1000 (AEST)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: 6be6a8de1b55e719e3f95894910743719065d6a1
+X-Patchwork-Hint: ignore
+In-Reply-To: <20190504070430.57008-1-weiyongjun1@huawei.com>
+To:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>, Kuehling@google.com,
-        Felix <Felix.Kuehling@amd.com>, Deucher@google.com,
-        Alexander <Alexander.Deucher@amd.com>, Koenig@google.com,
-        Christian <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Alastair D'Silva <alastair@d-silva.org>
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, kernel-janitors@vger.kernel.org,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] ocxl: Fix return value check in afu_ioctl()
+Message-Id: <44yPNY0bjTz9s7T@ozlabs.org>
+Date:   Mon,  6 May 2019 23:54:05 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 6:51 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> On Tue, Apr 30, 2019 at 03:25:04PM +0200, Andrey Konovalov wrote:
-> > This patch is a part of a series that extends arm64 kernel ABI to allow to
-> > pass tagged user pointers (with the top byte set to something else other
-> > than 0x00) as syscall arguments.
-> >
-> > get_vaddr_frames uses provided user pointers for vma lookups, which can
-> > only by done with untagged pointers. Instead of locating and changing
-> > all callers of this function, perform untagging in it.
-> >
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > ---
-> >  mm/frame_vector.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/mm/frame_vector.c b/mm/frame_vector.c
-> > index c64dca6e27c2..c431ca81dad5 100644
-> > --- a/mm/frame_vector.c
-> > +++ b/mm/frame_vector.c
-> > @@ -46,6 +46,8 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
-> >       if (WARN_ON_ONCE(nr_frames > vec->nr_allocated))
-> >               nr_frames = vec->nr_allocated;
-> >
-> > +     start = untagged_addr(start);
-> > +
-> >       down_read(&mm->mmap_sem);
-> >       locked = 1;
-> >       vma = find_vma_intersection(mm, start, start + 1);
->
-> Is this some buffer that the user may have malloc'ed? I got lost when
-> trying to track down the provenience of this buffer.
+On Sat, 2019-05-04 at 07:04:30 UTC, Wei Yongjun wrote:
+> In case of error, the function eventfd_ctx_fdget() returns ERR_PTR() and
+> never returns NULL. The NULL test in the return value check should be
+> replaced with IS_ERR().
+> 
+> This issue was detected by using the Coccinelle software.
+> 
+> Fixes: 060146614643 ("ocxl: move event_fd handling to frontend")
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> Acked-by: Alastair D'Silva <alastair@d-silva.org>
+> Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-The caller that I found when I was looking at this:
+Applied to powerpc next, thanks.
 
-drivers/gpu/drm/exynos/exynos_drm_g2d.c:482
-exynos_g2d_set_cmdlist_ioctl()->g2d_map_cmdlist_gem()->g2d_userptr_get_dma_addr()->get_vaddr_frames()
+https://git.kernel.org/powerpc/c/6be6a8de1b55e719e3f9589491074371
 
->
-> --
-> Catalin
+cheers
