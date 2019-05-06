@@ -2,117 +2,127 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F35EBC004C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39319C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7C8205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0628C2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JO3wJxv7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfEFCvp (ORCPT
+        id S1726603AbfEFCwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 22:51:45 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46890 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726156AbfEFCuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 22:50:20 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C426A8DC97BF788801BE;
-        Mon,  6 May 2019 10:50:18 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 6 May 2019 10:50:12 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <nhorman@redhat.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 09/12] net: hns3: optimize the barrier using when cleaning TX BD
-Date:   Mon, 6 May 2019 10:48:49 +0800
-Message-ID: <1557110932-683-10-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557110932-683-1-git-send-email-tanhuazhong@huawei.com>
-References: <1557110932-683-1-git-send-email-tanhuazhong@huawei.com>
+        Sun, 5 May 2019 22:52:34 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37089 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbfEFCwe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 22:52:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id g3so5951451pfi.4;
+        Sun, 05 May 2019 19:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CsgcPbm3Dp5JXoSh6cvFY36zj5G0VmTyOZ3CnWwDI0U=;
+        b=JO3wJxv7ihXzs3bR3FH/sFfOzk3+azqzgyvUlBgXAbzXnxJ2p4TqNGLH3AUe+wHlPP
+         UpDU9Sz+9FYm4VtfkJ0TQziNXcMZDhCGAk8NWRMGM91f2LlEmDBCavjTt4GMvhrCR407
+         WjtXli8JR0Tzl9L577vmPz8WkVjRj/LQLoWGsNIFIx+biBxEXTar+iqgd5Neeqru5vP5
+         su6S2hOhTUAqVJfI+K4/Xd30QRpy+jCpecfObGyUBtMxufZAm7iX4N51BeOiqxyMIKUY
+         I83adWEKVydKz+mjXxpyh86hXy6Ofh7j1CDGLIpQOGXoVmICmb3gocaYIGA6fnftHax7
+         a36Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CsgcPbm3Dp5JXoSh6cvFY36zj5G0VmTyOZ3CnWwDI0U=;
+        b=d+4KXWMbjvUHB1JJH3DyhNRsSaN7bMjpX3fooSn0Rcw19xy9k6kUZZu4d4Z1/4TPwG
+         Gvd9VZaTblgX0M+jzIAC/NCUKgzaiqhd8gCodBsTA45V+S9DUGLXvfiEcyvgrLTk6BYh
+         ycmA8u8rL4ayVHK4bkgduR6p48WlMCwml5dO5oq3bHzHAsUdyaMq3exFEL8WiIl3jKK8
+         W6bAgjEnA2HRRtciByy4h00lfy5pvbTp5bbKdB+q46OtL2alOL2HVTWSr7pdtnfpkckG
+         iNpEmatElKmmpXkmYzS9UscHWMmugoGiZveQSH/u5dXIDAilnYQ/eKYxNP/F9nGAPdJZ
+         alyw==
+X-Gm-Message-State: APjAAAXK5foP/WGNnfooDhak02KZ03EPtDG2PevzwGMZ1oc3YP6bFnbp
+        wpOovSfWUcr4dMP2sx1tkR4=
+X-Google-Smtp-Source: APXvYqy/Ta/53RuTG1MXgCarkn5vcAY72jk48KgAoascbD1BMXj8NzzrPpyGX4sZAu3WCC4E2NguPA==
+X-Received: by 2002:a65:6205:: with SMTP id d5mr29513098pgv.61.1557111153399;
+        Sun, 05 May 2019 19:52:33 -0700 (PDT)
+Received: from [192.168.1.38] (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
+        by smtp.gmail.com with ESMTPSA id q80sm19364518pfa.66.2019.05.05.19.52.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 05 May 2019 19:52:32 -0700 (PDT)
+Subject: Re: [PATCH V9 4/4] USB: serial: f81232: implement break control
+To:     Johan Hovold <johan@kernel.org>
+Cc:     peter_hong@fintek.com.tw, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+References: <1556587352-19500-1-git-send-email-hpeter+linux_kernel@gmail.com>
+ <1556587352-19500-4-git-send-email-hpeter+linux_kernel@gmail.com>
+ <20190503065917.GA26546@localhost>
+From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+Message-ID: <84cff579-79bd-9456-aa85-cb4510d916ed@gmail.com>
+Date:   Mon, 6 May 2019 10:52:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190503065917.GA26546@localhost>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+Hi Johan,
 
-Currently, a barrier is used when cleaning each TX BD, which may
-cause performance degradation.
+Johan Hovold 於 2019/5/3 下午 02:59 寫道:
+>> @@ -519,6 +530,7 @@ static int f81232_port_disable(struct usb_serial_port *port)
+>>   static void f81232_set_termios(struct tty_struct *tty,
+>>   		struct usb_serial_port *port, struct ktermios *old_termios)
+>>   {
+>> +	struct f81232_private *priv = usb_get_serial_port_data(port);
+>>   	u8 new_lcr = 0;
+>>   	int status = 0;
+>>   	speed_t baudrate;
+>> @@ -572,11 +584,16 @@ static void f81232_set_termios(struct tty_struct *tty,
+>>   		break;
+>>   	}
+>>   
+>> +	mutex_lock(&priv->lock);
+>> +
+>> +	new_lcr |= (priv->shadow_lcr & UART_LCR_SBC);
+>>   	status = f81232_set_register(port, LINE_CONTROL_REGISTER, new_lcr);
+>>   	if (status) {
+>>   		dev_err(&port->dev, "%s failed to set LCR: %d\n",
+>>   			__func__, status);
+>>   	}
+>> +
+>> +	mutex_unlock(&priv->lock);
+> 
+> You forgot to update shadow_lcr here so the line settings would be
+> corrupted (e.g set to 5 bit words) whenever a break is signalled.
+> 
+> Did you not test this version of the patch?
+> 
+> I added the missing update, but please test the code that's in my
+> usb-next branch in a minute and confirm everything works as expected.
+> 
 
-This patch optimizes it to use one barrier when cleaning TX BD
-each round.
+Thanks for mention and patch the lost parts. I had only tested the
+break signal and forgot to test full LCR. I'll add it to my test items
+and it tested well on new usb-next branch after your fix.
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 29 +++++++++++++------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+BTW, Should I disable break control when port close ?
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 21eac68..25d607c 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2186,20 +2186,25 @@ static void hns3_reuse_buffer(struct hns3_enet_ring *ring, int i)
- 	ring->desc[i].rx.bd_base_info = 0;
- }
- 
--static void hns3_nic_reclaim_one_desc(struct hns3_enet_ring *ring, int *bytes,
--				      int *pkts)
-+static void hns3_nic_reclaim_desc(struct hns3_enet_ring *ring, int head,
-+				  int *bytes, int *pkts)
- {
- 	int ntc = ring->next_to_clean;
- 	struct hns3_desc_cb *desc_cb;
- 
--	desc_cb = &ring->desc_cb[ntc];
--	(*pkts) += (desc_cb->type == DESC_TYPE_SKB);
--	(*bytes) += desc_cb->length;
--	/* desc_cb will be cleaned, after hnae3_free_buffer_detach*/
--	hns3_free_buffer_detach(ring, ntc);
-+	while (head != ntc) {
-+		desc_cb = &ring->desc_cb[ntc];
-+		(*pkts) += (desc_cb->type == DESC_TYPE_SKB);
-+		(*bytes) += desc_cb->length;
-+		/* desc_cb will be cleaned, after hnae3_free_buffer_detach */
-+		hns3_free_buffer_detach(ring, ntc);
- 
--	if (++ntc == ring->desc_num)
--		ntc = 0;
-+		if (++ntc == ring->desc_num)
-+			ntc = 0;
-+
-+		/* Issue prefetch for next Tx descriptor */
-+		prefetch(&ring->desc_cb[ntc]);
-+	}
- 
- 	/* This smp_store_release() pairs with smp_load_acquire() in
- 	 * ring_space called by hns3_nic_net_xmit.
-@@ -2244,11 +2249,7 @@ void hns3_clean_tx_ring(struct hns3_enet_ring *ring)
- 
- 	bytes = 0;
- 	pkts = 0;
--	while (head != ring->next_to_clean) {
--		hns3_nic_reclaim_one_desc(ring, &bytes, &pkts);
--		/* Issue prefetch for next Tx descriptor */
--		prefetch(&ring->desc_cb[ring->next_to_clean]);
--	}
-+	hns3_nic_reclaim_desc(ring, head, &bytes, &pkts);
- 
- 	ring->tqp_vector->tx_group.total_bytes += bytes;
- 	ring->tqp_vector->tx_group.total_packets += pkts;
+Thanks.
+
 -- 
-2.7.4
-
+With Best Regards,
+Peter Hong
