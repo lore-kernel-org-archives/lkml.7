@@ -2,57 +2,66 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73C0C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713D1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7E52053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5872053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154275;
-	bh=mD1NqaD5euBlUloinWF4XRlqylg13UT0Nd0kdHVl4MM=;
+	s=default; t=1557154283;
+	bh=Vf+Oi+UXeaHWJTVPpcwLAAZULekpmxnbFQWuSxpavCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nvD+gN1JBaedQuKEIuZ+4w9ypvLI1GUu3EBvO888lXaQy2rXtk+uNdHLMHsWLZrGq
-	 3ru0G1Z4G1Vol+kA1+jsx71qhM+H9kJnV5omUQEzuEdtIxu2UyhA7XMah5AMxBQdQV
-	 rsbmVZBKoMW4YPgdQtV2LDRKNE4duEIqndJ4DULY=
+	b=WID5aNg8frsv15kIJZaGSdL5NiOwIMBr1QU9HZIf/wz35AFlr9SfRkbbLFATUeL06
+	 68mCtK/2NdAuUoiULeHQVeDuUbENrSU1Z1yuZLO41A+BDZFAraU+ZiHWw0urVyHqom
+	 ep5cdb7G45Ex2xCTOzzvB6KaTS7GPra6HYWTiYAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729323AbfEFOtI (ORCPT
+        id S1729584AbfEFOvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:49:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49782 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:51:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729574AbfEFOtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:49:05 -0400
+        id S1727143AbfEFOtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:49:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E757216B7;
-        Mon,  6 May 2019 14:48:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B987B2053B;
+        Mon,  6 May 2019 14:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154133;
-        bh=mD1NqaD5euBlUloinWF4XRlqylg13UT0Nd0kdHVl4MM=;
+        s=default; t=1557154144;
+        bh=Vf+Oi+UXeaHWJTVPpcwLAAZULekpmxnbFQWuSxpavCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15HpYY/UBMKWha1pj33H8J/FyrtX6+QlsyyIimLHpxuJCgAiyTEMWGNS7uSmbP5b/
-         FdoFnfPsAW3WdBU5vf4YjOHuSHFAEl4eJuViinMGE/oLkcf73ZKZrJEPjJjwlVAVcH
-         dXR/TqsYI24d4QI4DXPcEziXTMH94mcONXmMf75s=
+        b=Zpv5bQLQsIm7R0jQ5mc8WGsDijuON17SZAsAm4ZAppmfemALvMB+WmOFEWtuT4I4l
+         3Cnw9/D94F+R6WFKstjGROCw+FG+jYa5QizEH4sLnWNYrN4QGdZaRV2rD1spG1TEA0
+         XkqnT8c3KIDbvmWB1vJfTEmezdTrgeMHulygYoQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        kbuild test robot <lkp@intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 50/62] sh: fix multiple function definition build errors
-Date:   Mon,  6 May 2019 16:33:21 +0200
-Message-Id: <20190506143055.605073394@linuxfoundation.org>
+        =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Pu Wen <puwen@hygon.cn>,
+        Stephane Eranian <eranian@google.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.9 54/62] perf/x86/amd: Update generic hardware cache events for Family 17h
+Date:   Mon,  6 May 2019 16:33:25 +0200
+Message-Id: <20190506143056.041319166@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -65,57 +74,273 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit acaf892ecbf5be7710ae05a61fd43c668f68ad95 ]
+From: Kim Phillips <kim.phillips@amd.com>
 
-Many of the sh CPU-types have their own plat_irq_setup() and
-arch_init_clk_ops() functions, so these same (empty) functions in
-arch/sh/boards/of-generic.c are not needed and cause build errors.
+commit 0e3b74e26280f2cf8753717a950b97d424da6046 upstream.
 
-If there is some case where these empty functions are needed, they can
-be retained by marking them as "__weak" while at the same time making
-builds that do not need them succeed.
+Add a new amd_hw_cache_event_ids_f17h assignment structure set
+for AMD families 17h and above, since a lot has changed.  Specifically:
 
-Fixes these build errors:
+L1 Data Cache
 
-arch/sh/boards/of-generic.o: In function `plat_irq_setup':
-(.init.text+0x134): multiple definition of `plat_irq_setup'
-arch/sh/kernel/cpu/sh2/setup-sh7619.o:(.init.text+0x30): first defined here
-arch/sh/boards/of-generic.o: In function `arch_init_clk_ops':
-(.init.text+0x118): multiple definition of `arch_init_clk_ops'
-arch/sh/kernel/cpu/sh2/clock-sh7619.o:(.init.text+0x0): first defined here
+The data cache access counter remains the same on Family 17h.
 
-Link: http://lkml.kernel.org/r/9ee4e0c5-f100-86a2-bd4d-1d3287ceab31@infradead.org
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+For DC misses, PMCx041's definition changes with Family 17h,
+so instead we use the L2 cache accesses from L1 data cache
+misses counter (PMCx060,umask=0xc8).
+
+For DC hardware prefetch events, Family 17h breaks compatibility
+for PMCx067 "Data Prefetcher", so instead, we use PMCx05a "Hardware
+Prefetch DC Fills."
+
+L1 Instruction Cache
+
+PMCs 0x80 and 0x81 (32-byte IC fetches and misses) are backward
+compatible on Family 17h.
+
+For prefetches, we remove the erroneous PMCx04B assignment which
+counts how many software data cache prefetch load instructions were
+dispatched.
+
+LL - Last Level Cache
+
+Removing PMCs 7D, 7E, and 7F assignments, as they do not exist
+on Family 17h, where the last level cache is L3.  L3 counters
+can be accessed using the existing AMD Uncore driver.
+
+Data TLB
+
+On Intel machines, data TLB accesses ("dTLB-loads") are assigned
+to counters that count load/store instructions retired.  This
+is inconsistent with instruction TLB accesses, where Intel
+implementations report iTLB misses that hit in the STLB.
+
+Ideally, dTLB-loads would count higher level dTLB misses that hit
+in lower level TLBs, and dTLB-load-misses would report those
+that also missed in those lower-level TLBs, therefore causing
+a page table walk.  That would be consistent with instruction
+TLB operation, remove the redundancy between dTLB-loads and
+L1-dcache-loads, and prevent perf from producing artificially
+low percentage ratios, i.e. the "0.01%" below:
+
+        42,550,869      L1-dcache-loads
+        41,591,860      dTLB-loads
+             4,802      dTLB-load-misses          #    0.01% of all dTLB cache hits
+         7,283,682      L1-dcache-stores
+         7,912,392      dTLB-stores
+               310      dTLB-store-misses
+
+On AMD Families prior to 17h, the "Data Cache Accesses" counter is
+used, which is slightly better than load/store instructions retired,
+but still counts in terms of individual load/store operations
+instead of TLB operations.
+
+So, for AMD Families 17h and higher, this patch assigns "dTLB-loads"
+to a counter for L1 dTLB misses that hit in the L2 dTLB, and
+"dTLB-load-misses" to a counter for L1 DTLB misses that caused
+L2 DTLB misses and therefore also caused page table walks.  This
+results in a much more accurate view of data TLB performance:
+
+        60,961,781      L1-dcache-loads
+             4,601      dTLB-loads
+               963      dTLB-load-misses          #   20.93% of all dTLB cache hits
+
+Note that for all AMD families, data loads and stores are combined
+in a single accesses counter, so no 'L1-dcache-stores' are reported
+separately, and stores are counted with loads in 'L1-dcache-loads'.
+
+Also note that the "% of all dTLB cache hits" string is misleading
+because (a) "dTLB cache": although TLBs can be considered caches for
+page tables, in this context, it can be misinterpreted as data cache
+hits because the figures are similar (at least on Intel), and (b) not
+all those loads (technically accesses) technically "hit" at that
+hardware level.  "% of all dTLB accesses" would be more clear/accurate.
+
+Instruction TLB
+
+On Intel machines, 'iTLB-loads' measure iTLB misses that hit in the
+STLB, and 'iTLB-load-misses' measure iTLB misses that also missed in
+the STLB and completed a page table walk.
+
+For AMD Family 17h and above, for 'iTLB-loads' we replace the
+erroneous instruction cache fetches counter with PMCx084
+"L1 ITLB Miss, L2 ITLB Hit".
+
+For 'iTLB-load-misses' we still use PMCx085 "L1 ITLB Miss,
+L2 ITLB Miss", but set a 0xff umask because without it the event
+does not get counted.
+
+Branch Predictor (BPU)
+
+PMCs 0xc2 and 0xc3 continue to be valid across all AMD Families.
+
+Node Level Events
+
+Family 17h does not have a PMCx0e9 counter, and corresponding counters
+have not been made available publicly, so for now, we mark them as
+unsupported for Families 17h and above.
+
+Reference:
+
+  "Open-Source Register Reference For AMD Family 17h Processors Models 00h-2Fh"
+  Released 7/17/2018, Publication #56255, Revision 3.03:
+  https://www.amd.com/system/files/TechDocs/56255_OSRR.pdf
+
+[ mingo: tidied up the line breaks. ]
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Cc: <stable@vger.kernel.org> # v4.9+
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Liška <mliska@suse.cz>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org
+Fixes: e40ed1542dd7 ("perf/x86: Add perf support for AMD family-17h processors")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/sh/boards/of-generic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/events/amd/core.c |  111 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 108 insertions(+), 3 deletions(-)
 
-diff --git a/arch/sh/boards/of-generic.c b/arch/sh/boards/of-generic.c
-index 1fb6d5714bae..fd00566677c9 100644
---- a/arch/sh/boards/of-generic.c
-+++ b/arch/sh/boards/of-generic.c
-@@ -180,10 +180,10 @@ static struct sh_machine_vector __initmv sh_of_generic_mv = {
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -112,6 +112,110 @@ static __initconst const u64 amd_hw_cach
+  },
+ };
  
- struct sh_clk_ops;
++static __initconst const u64 amd_hw_cache_event_ids_f17h
++				[PERF_COUNT_HW_CACHE_MAX]
++				[PERF_COUNT_HW_CACHE_OP_MAX]
++				[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
++[C(L1D)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0040, /* Data Cache Accesses */
++		[C(RESULT_MISS)]   = 0xc860, /* L2$ access from DC Miss */
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0xff5a, /* h/w prefetch DC Fills */
++		[C(RESULT_MISS)]   = 0,
++	},
++},
++[C(L1I)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0080, /* Instruction cache fetches  */
++		[C(RESULT_MISS)]   = 0x0081, /* Instruction cache misses   */
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++},
++[C(LL)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++},
++[C(DTLB)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0xff45, /* All L2 DTLB accesses */
++		[C(RESULT_MISS)]   = 0xf045, /* L2 DTLB misses (PT walks) */
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++},
++[C(ITLB)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0084, /* L1 ITLB misses, L2 ITLB hits */
++		[C(RESULT_MISS)]   = 0xff85, /* L1 ITLB misses, L2 misses */
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++},
++[C(BPU)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x00c2, /* Retired Branch Instr.      */
++		[C(RESULT_MISS)]   = 0x00c3, /* Retired Mispredicted BI    */
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++},
++[C(NODE)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++},
++};
++
+ /*
+  * AMD Performance Monitor K7 and later, up to and including Family 16h:
+  */
+@@ -731,9 +835,10 @@ __init int amd_pmu_init(void)
+ 		x86_pmu.amd_nb_constraints = 0;
+ 	}
  
--void __init arch_init_clk_ops(struct sh_clk_ops **ops, int idx)
-+void __init __weak arch_init_clk_ops(struct sh_clk_ops **ops, int idx)
- {
+-	/* Events are common for all AMDs */
+-	memcpy(hw_cache_event_ids, amd_hw_cache_event_ids,
+-	       sizeof(hw_cache_event_ids));
++	if (boot_cpu_data.x86 >= 0x17)
++		memcpy(hw_cache_event_ids, amd_hw_cache_event_ids_f17h, sizeof(hw_cache_event_ids));
++	else
++		memcpy(hw_cache_event_ids, amd_hw_cache_event_ids, sizeof(hw_cache_event_ids));
+ 
+ 	return 0;
  }
- 
--void __init plat_irq_setup(void)
-+void __init __weak plat_irq_setup(void)
- {
- }
--- 
-2.20.1
-
 
 
