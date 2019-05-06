@@ -2,143 +2,189 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7355C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638AFC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8265D20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 349832087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfEFJFo (ORCPT
+        id S1726466AbfEFJGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:05:44 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:57312 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfEFJFn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:05:43 -0400
-Received: from ramsan ([84.194.111.163])
-        by laurent.telenet-ops.be with bizsmtp
-        id 8x5h200053XaVaC01x5hY4; Mon, 06 May 2019 11:05:41 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hNZZ6-0002Cn-Va; Mon, 06 May 2019 11:05:40 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hNZZ6-00018j-TI; Mon, 06 May 2019 11:05:40 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [git pull] m68k updates for 5.2
-Date:   Mon,  6 May 2019 11:05:39 +0200
-Message-Id: <20190506090539.4338-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 6 May 2019 05:06:18 -0400
+Received: from 0.ictbs.com ([203.137.112.168]:58978 "EHLO 0.ictbs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbfEFJGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 05:06:18 -0400
+Received: by hq.local (Postfix, from userid 1000)
+        id 3284766429; Mon,  6 May 2019 11:06:09 +0200 (CEST)
+Date:   Mon, 6 May 2019 11:06:09 +0200
+From:   Victor Bravo <1905@spmblk.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Arend Van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] brcmfmac: sanitize DMI strings v2
+Message-ID: <20190506090609.msudhncj7e5vdtzw@localhost>
+References: <20190504162633.ldrz2nqfocg55grb@localhost>
+ <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
+ <20190504194440.4zcxjrtj2aft3ka4@localhost>
+ <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+ <20190505150355.3fbng4ny34x255vk@localhost>
+ <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Hi Linus,
+On Mon, May 06, 2019 at 10:13:38AM +0200, Hans de Goede wrote:
+> Hi,
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+Hi,
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+> On 05-05-19 17:03, Victor Bravo wrote:
+> > Sanitize DMI strings in brcmfmac driver to make resulting filenames
+> > contain only safe characters. This version replaces all non-printable
+> > characters incl. delete (0-31, 127-255), spaces and slashes with
+> > underscores.
+> > 
+> > This change breaks backward compatibility, but adds control over strings
+> > passed to firmware loader and compatibility with CONFIG_EXTRA_FIRMWARE
+> > which doesn't support spaces in filenames.
+> > 
+> > Changes from v1: don't revert fresh commit by someone else
+> > 
+> > Signed-off-by: Victor Bravo <1905@spmblk.com>
+> 
+> Thank you for the patch, but I'm sorry to say this patch cannot go in as is,
+> because it will break existing systems.
+> 
+> If you look here:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/brcm
+> 
+> You will see a file named: "brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt" there, which
+> has a space in its name (and which works fine).
 
-are available in the Git repository at:
+Thanks for the updates. Spaces are actually a problem as files with spaces
+don't work when built-in with CONFIG_EXTRA_FIRMWARE (which is used with
+non-modular kernel containing brcmfmac driver).
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v5.2-tag1
+If the DMI string contains slashes, they will cause problems
+for obvious reasons too.
 
-for you to fetch changes up to fdd20ec8786ab2950439c7e78871618f7e51f18b:
+> I'm fine with doing some sanitizing of the strings, but replacing spaces with _
+> breaks existing use-cases (will cause a regression for them) and a space is absolutely
+> a valid character in a filename and the firmware-loader can deal with this just fine.
+> 
+> If the code for building firmwares into the kernel cannot deal with spaces then IMHO
+> that code should be fixed instead. Have you looked into fixing that?
 
-  Documentation/features/time: Mark m68k having modern-timekeeping (2019-05-06 10:58:37 +0200)
+Yes, but updating CONFIG_EXTRA_FIRMWARE to support spaces because of
+this looks much like fixing systemd-caused unitialized urandom reads on
+kernel side. Do you really think it's a good idea to propose that in
+this case?
 
-----------------------------------------------------------------
-m68k updates for v5.2
+> As for your T100HA example from earlier in this thread, the brcmfmac driver now
+> also supports getting the firmware from a special EFI nvram variable, which the
+> T100HA sets, so you do not need to provide a nvram file on the T100HA and things
+> will still work.
 
-  - Drop arch_gettimeoffset and adopt clocksource API,
-  - Defconfig updates.
+I don't really get this. Can you please suggest how do I make the driver
+use something different than "brcmfmac43340-sdio.txt" or
+"brcmfmac43340-sdio.ASUSTeK COMPUTER INC.-T100HAN.txt" on T100HAN?
 
-Note that the top commit is not in linux-next, as I only realized we
-forgot to update the Documentation just before I prepared this pull
-request.
+> > diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
+> > index 7535cb0d4ac0..84571e09b465 100644
+> > --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
+> > +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
+> > @@ -23,6 +23,14 @@
+> >   /* The DMI data never changes so we can use a static buf for this */
+> >   static char dmi_board_type[128];
+> > +/* Array of 128 bits representing 7-bit characters allowed in DMI strings. */
+> > +static unsigned char brcmf_dmi_allowed_chars[] = {
+> > +	0x00, 0x00, 0x00, 0x00, 0xfe, 0x7f, 0xff, 0xff,
+> > +	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f
+> > +};
+> > +
+> > +#define BRCMF_DMI_SAFE_CHAR '_'
+> > +
+> >   struct brcmf_dmi_data {
+> >   	u32 chip;
+> >   	u32 chiprev;
+> > @@ -99,6 +107,15 @@ static const struct dmi_system_id dmi_platform_data[] = {
+> >   	{}
+> >   };
+> > +void brcmf_dmi_sanitize(char *dst, const unsigned char *allowed, char safe)
+> > +{
+> > +	while (*dst) {
+> > +		if ((*dst < 0) || !(allowed[*dst / 8] & (1 << (*dst % 8))))
+> 
+> At a first look I have no clue what this code is doing and I honestly do not feel
+> like figuring it out, this is clever, but IMHO not readable.
 
-Thanks for pulling!
+Understood. The cluless part actually checks corresponding bit
+in allowed array, which is a bit mask describing what characters
+are allowed or not.
 
-----------------------------------------------------------------
-Finn Thain (14):
-      m68k: Call timer_interrupt() with interrupts disabled
-      m68k: mac: Fix VIA timer counter accesses
-      m68k: apollo, q40, sun3, sun3x: Remove arch_gettimeoffset implementations
-      m68k: Drop ARCH_USES_GETTIMEOFFSET
-      m68k: amiga: Convert to clocksource API
-      m68k: atari: Convert to clocksource API
-      m68k: bvme6000: Convert to clocksource API
-      m68k: hp300: Convert to clocksource API
-      m68k: hp300: Handle timer counter overflow
-      m68k: mac: Convert to clocksource API
-      m68k: mvme147: Convert to clocksource API
-      m68k: mvme147: Handle timer counter overflow
-      m68k: mvme16x: Convert to clocksource API
-      m68k: mvme16x: Handle timer counter overflow
+> Please just write this as if (*dst < 0x21 || (*dst > foo && < bar) || etc,
+> so that a human can actually see in one look what the code is doing.
+> 
+> You may want to wait for Arend to give his opinion before changing this though,
+> maybe he likes the code as is.
+> 
+> Also note that that should be < 0x20 of course, since we need to preserve spaces
+> as is to avoid a regression.
 
-Geert Uytterhoeven (2):
-      m68k: defconfig: Update defconfigs for v5.1-rc1
-      Documentation/features/time: Mark m68k having modern-timekeeping
+This has been already discussed, spaces are a problem. There even was an
+opinion that adding the code that doesn't bother with spaces and slashes
+might be a regression as well.
 
- .../time/modern-timekeeping/arch-support.txt       |   2 +-
- arch/m68k/Kconfig                                  |   1 -
- arch/m68k/amiga/cia.c                              |   9 ++
- arch/m68k/amiga/config.c                           |  49 +++++--
- arch/m68k/apollo/config.c                          |   7 -
- arch/m68k/atari/ataints.c                          |   4 +-
- arch/m68k/atari/config.c                           |   2 -
- arch/m68k/atari/time.c                             |  70 +++++++---
- arch/m68k/bvme6000/config.c                        |  77 +++++++----
- arch/m68k/configs/amiga_defconfig                  |  14 +-
- arch/m68k/configs/apollo_defconfig                 |  14 +-
- arch/m68k/configs/atari_defconfig                  |  14 +-
- arch/m68k/configs/bvme6000_defconfig               |  14 +-
- arch/m68k/configs/hp300_defconfig                  |  14 +-
- arch/m68k/configs/mac_defconfig                    |  14 +-
- arch/m68k/configs/multi_defconfig                  |  14 +-
- arch/m68k/configs/mvme147_defconfig                |  14 +-
- arch/m68k/configs/mvme16x_defconfig                |  14 +-
- arch/m68k/configs/q40_defconfig                    |  14 +-
- arch/m68k/configs/sun3_defconfig                   |  14 +-
- arch/m68k/configs/sun3x_defconfig                  |  14 +-
- arch/m68k/hp300/config.c                           |   1 -
- arch/m68k/hp300/time.c                             |  73 ++++++++---
- arch/m68k/hp300/time.h                             |   1 -
- arch/m68k/include/asm/mvme147hw.h                  |   2 +-
- arch/m68k/mac/config.c                             |   3 -
- arch/m68k/mac/via.c                                | 146 ++++++++++++++-------
- arch/m68k/mvme147/config.c                         |  73 +++++++----
- arch/m68k/mvme16x/config.c                         |  97 ++++++++++----
- arch/m68k/q40/config.c                             |   9 --
- arch/m68k/q40/q40ints.c                            |  19 +--
- arch/m68k/sun3/config.c                            |   2 -
- arch/m68k/sun3/intersil.c                          |   7 -
- arch/m68k/sun3/sun3ints.c                          |   3 +
- arch/m68k/sun3x/config.c                           |   1 -
- arch/m68k/sun3x/time.c                             |  21 ++-
- arch/m68k/sun3x/time.h                             |   1 -
- 37 files changed, 518 insertions(+), 330 deletions(-)
+Regards,
 
-Gr{oetje,eeting}s,
+v.
 
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> 
+> 
+> > +			*dst = safe;
+> > +		dst++;
+> > +	}
+> > +}
+> > +
+> >   void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
+> >   {
+> >   	const struct dmi_system_id *match;
+> > @@ -126,6 +143,9 @@ void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
+> >   	if (sys_vendor && product_name) {
+> >   		snprintf(dmi_board_type, sizeof(dmi_board_type), "%s-%s",
+> >   			 sys_vendor, product_name);
+> > +		brcmf_dmi_sanitize(dmi_board_type,
+> > +				   brcmf_dmi_allowed_chars,
+> > +				   BRCMF_DMI_SAFE_CHAR);
+> >   		settings->board_type = dmi_board_type;
+> >   	}
+> >   }
+> > 
+> 
