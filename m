@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBA2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA2AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E46E721479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A293420C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153366;
-	bh=+e1npYX2hzN0yu/0Pk81Mb6G/TcQHqkXK7Xqe5KdvZ4=;
+	s=default; t=1557153369;
+	bh=FJitW7mp+HLHTOIXtA5/0CxI/c+h9quKMYWP1/nyVyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1+1JL0C3pgWTTUBjly5vRVJ8xNDLIwOOogUU8gEPBrQBuns8dww/E6kPDyoTJezV1
-	 tky3PzKkV0ewV1mMTD6BaKp6KgS24xHNhhP30lH0aC1XdyjO56W52qFOHRYuwUqpCp
-	 Pv/av9Qfi9wagWnorZVE1gE5ub1VqjgLnFCHOyVk=
+	b=e6J9V/HvgPyAQV2QU5dnIZZDWYCeHtKWVroDnEe+dQz0A96Dlydu/5uh1k6R6Y7jp
+	 +2czD4mhXmB+eDl+AJbSA/X7TjPcEr9cvMheSCnU014x9PkVVxZ2U03i07mmkQnSRV
+	 kf0MoldjU6BgvN7uSnQIfY+NyOPYXp1kGzKcT5ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfEFOgE (ORCPT
+        id S1727088AbfEFOgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:36:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56262 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:36:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727073AbfEFOgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:36:01 -0400
+        id S1727080AbfEFOgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:36:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B414214AE;
-        Mon,  6 May 2019 14:35:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFE3821479;
+        Mon,  6 May 2019 14:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153360;
-        bh=+e1npYX2hzN0yu/0Pk81Mb6G/TcQHqkXK7Xqe5KdvZ4=;
+        s=default; t=1557153363;
+        bh=FJitW7mp+HLHTOIXtA5/0CxI/c+h9quKMYWP1/nyVyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ugGyTS04idOsANf5ziMBw2iLxtmf1YGJrLAGtJ5qx9vV4hLka8H052u5aTGB0rYFj
-         i1AECH2gwvusl37KPNncbSf56aPm5fGIgl8Wf+DfLvICZKAaNq7p2x2QQAaEtMtAiw
-         qgnFi69TPeisK6QY7CzVdqv2H6O+DWeQM0NvddTY=
+        b=bmCU/qlX6FdkuskaLGhsgQffQe+2JCAekzA9A7+2X9hdjFY6ab1ks9Xpkjazpn6nV
+         OuY4F44wmLiIv8SwfxZYr1V/j4QhigMSDuCDLBaobK7FBEzhT9ul6/SbEQfBiC12ws
+         V3JuM2NRtwqroNkWjiSSpbw5UJx+3D4fMFRJPURE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 060/122] rtc: da9063: set uie_unsupported when relevant
-Date:   Mon,  6 May 2019 16:31:58 +0200
-Message-Id: <20190506143100.390537986@linuxfoundation.org>
+Subject: [PATCH 5.0 061/122] HID: input: add mapping for Assistant key
+Date:   Mon,  6 May 2019 16:31:59 +0200
+Message-Id: <20190506143100.462503352@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -63,40 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 882c5e552ffd06856de42261460f46e18319d259 ]
+[ Upstream commit ce856634af8cda3490947df8ac1ef5843e6356af ]
 
-The DA9063AD doesn't support alarms on any seconds and its granularity is
-the minute. Set uie_unsupported in that case.
+According to HUTRR89 usage 0x1cb from the consumer page was assigned to
+allow launching desktop-aware assistant application, so let's add the
+mapping.
 
-Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/rtc/rtc-da9063.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/hid/hid-input.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/rtc/rtc-da9063.c b/drivers/rtc/rtc-da9063.c
-index b4e054c64bad..69b54e5556c0 100644
---- a/drivers/rtc/rtc-da9063.c
-+++ b/drivers/rtc/rtc-da9063.c
-@@ -480,6 +480,13 @@ static int da9063_rtc_probe(struct platform_device *pdev)
- 	da9063_data_to_tm(data, &rtc->alarm_time, rtc);
- 	rtc->rtc_sync = false;
- 
-+	/*
-+	 * TODO: some models have alarms on a minute boundary but still support
-+	 * real hardware interrupts. Add this once the core supports it.
-+	 */
-+	if (config->rtc_data_start != RTC_SEC)
-+		rtc->rtc_dev->uie_unsupported = 1;
-+
- 	irq_alarm = platform_get_irq_byname(pdev, "ALARM");
- 	ret = devm_request_threaded_irq(&pdev->dev, irq_alarm, NULL,
- 					da9063_alarm_event,
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index 59a5608b8dc0..ff92a7b2fc89 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -995,6 +995,7 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x1b8: map_key_clear(KEY_VIDEO);		break;
+ 		case 0x1bc: map_key_clear(KEY_MESSENGER);	break;
+ 		case 0x1bd: map_key_clear(KEY_INFO);		break;
++		case 0x1cb: map_key_clear(KEY_ASSISTANT);	break;
+ 		case 0x201: map_key_clear(KEY_NEW);		break;
+ 		case 0x202: map_key_clear(KEY_OPEN);		break;
+ 		case 0x203: map_key_clear(KEY_CLOSE);		break;
 -- 
 2.20.1
 
