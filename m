@@ -2,132 +2,132 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EDEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB1AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E0521479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411D5214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557153769;
+	bh=b1+zedKg8zdeP7otKTiu/0hB8d4eiwI693m/aSnw4sM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oWJSS3TbTXT3Aux2f+cJM2U98m4wyQZZdF2TRnX9AwGPd9C8nSMyh8A4YdNok5xhF
+	 Z4AqdKG+SJnZdC9Nbw/hAjr9DNJT6cprpVjFbne/UWvYNuSkSWEctwVkYs7+doX0kK
+	 0DehGovXmeih40MaUqs3MmZ6IQi6MbD4jxoVDLrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfEFOmo (ORCPT
+        id S1728561AbfEFOms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:42:44 -0400
-Received: from mga14.intel.com ([192.55.52.115]:16244 "EHLO mga14.intel.com"
+        Mon, 6 May 2019 10:42:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728524AbfEFOml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:42:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 07:42:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
-   d="scan'208";a="140532081"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga008.jf.intel.com with ESMTP; 06 May 2019 07:42:38 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hNepA-0006aJ-R8; Mon, 06 May 2019 17:42:36 +0300
-Date:   Mon, 6 May 2019 17:42:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- net-next tree
-Message-ID: <20190506144236.GL9224@smile.fi.intel.com>
-References: <20190506204303.0d0082d7@canb.auug.org.au>
+        id S1727799AbfEFOmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 417DD20C01;
+        Mon,  6 May 2019 14:42:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557153765;
+        bh=b1+zedKg8zdeP7otKTiu/0hB8d4eiwI693m/aSnw4sM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tjyAIhkommLJaSRaw1xxvtR5nHIq4KQbw9+gx8S6UwTYCIXC4W2Yn2fo/zpL9Y/js
+         Wu+7DuNwtimQSi1TFnstDMEthKgf2uv+dS2ht8qvjlamO1UWATqriYfj+qf+B2iz61
+         a0cMakTw2fJgkhfOtjQj98rCUs3+mzvJErGoUR3E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andi Shyti <andi@etezian.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 87/99] Input: stmfts - acknowledge that setting brightness is a blocking call
+Date:   Mon,  6 May 2019 16:33:00 +0200
+Message-Id: <20190506143101.843299779@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
+References: <20190506143053.899356316@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506204303.0d0082d7@canb.auug.org.au>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 08:43:03PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the akpm-current tree got a conflict in:
-> 
->   lib/Makefile
-> 
-> between commit:
-> 
->   554aae35007e ("lib: Add support for generic packing operations")
-> 
-> from the net-next tree and commit:
-> 
->   1a1e7f563bd5 ("lib: Move mathematic helpers to separate folder")
-> 
-> from the akpm-current tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Seems correct to me.
-Thanks!
+commit 937c4e552fd1174784045684740edfcea536159d upstream.
 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc lib/Makefile
-> index 83d7df2661ff,4eeb814eee2e..000000000000
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@@ -17,20 -17,9 +17,20 @@@ KCOV_INSTRUMENT_list_debug.o := 
->   KCOV_INSTRUMENT_debugobjects.o := n
->   KCOV_INSTRUMENT_dynamic_debug.o := n
->   
->  +# Early boot use of cmdline, don't instrument it
->  +ifdef CONFIG_AMD_MEM_ENCRYPT
->  +KASAN_SANITIZE_string.o := n
->  +
->  +ifdef CONFIG_FUNCTION_TRACER
->  +CFLAGS_REMOVE_string.o = -pg
->  +endif
->  +
->  +CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
->  +endif
->  +
->   lib-y := ctype.o string.o vsprintf.o cmdline.o \
->   	 rbtree.o radix-tree.o timerqueue.o xarray.o \
-> - 	 idr.o int_sqrt.o extable.o \
-> + 	 idr.o extable.o \
->   	 sha1.o chacha.o irq_regs.o argv_split.o \
->   	 flex_proportions.o ratelimit.o show_mem.o \
->   	 is_single_threaded.o plist.o decompress.o kobject_uevent.o \
-> @@@ -120,8 -110,6 +122,7 @@@ obj-$(CONFIG_DEBUG_LIST) += list_debug.
->   obj-$(CONFIG_DEBUG_OBJECTS) += debugobjects.o
->   
->   obj-$(CONFIG_BITREVERSE) += bitrev.o
->  +obj-$(CONFIG_PACKING)	+= packing.o
-> - obj-$(CONFIG_RATIONAL)	+= rational.o
->   obj-$(CONFIG_CRC_CCITT)	+= crc-ccitt.o
->   obj-$(CONFIG_CRC16)	+= crc16.o
->   obj-$(CONFIG_CRC_T10DIF)+= crc-t10dif.o
+We need to turn regulators on and off when switching brightness, and
+that may block, therefore we have to set stmfts_brightness_set() as
+LED's brightness_set_blocking() method.
 
+Fixes: 78bcac7b2ae1 ("Input: add support for the STMicroelectronics FingerTip touchscreen")
+Acked-by: Andi Shyti <andi@etezian.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+---
+ drivers/input/touchscreen/stmfts.c |   30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
--- 
-With Best Regards,
-Andy Shevchenko
+--- a/drivers/input/touchscreen/stmfts.c
++++ b/drivers/input/touchscreen/stmfts.c
+@@ -106,27 +106,29 @@ struct stmfts_data {
+ 	bool running;
+ };
+ 
+-static void stmfts_brightness_set(struct led_classdev *led_cdev,
++static int stmfts_brightness_set(struct led_classdev *led_cdev,
+ 					enum led_brightness value)
+ {
+ 	struct stmfts_data *sdata = container_of(led_cdev,
+ 					struct stmfts_data, led_cdev);
+ 	int err;
+ 
+-	if (value == sdata->led_status || !sdata->ledvdd)
+-		return;
+-
+-	if (!value) {
+-		regulator_disable(sdata->ledvdd);
+-	} else {
+-		err = regulator_enable(sdata->ledvdd);
+-		if (err)
+-			dev_warn(&sdata->client->dev,
+-				 "failed to disable ledvdd regulator: %d\n",
+-				 err);
++	if (value != sdata->led_status && sdata->ledvdd) {
++		if (!value) {
++			regulator_disable(sdata->ledvdd);
++		} else {
++			err = regulator_enable(sdata->ledvdd);
++			if (err) {
++				dev_warn(&sdata->client->dev,
++					 "failed to disable ledvdd regulator: %d\n",
++					 err);
++				return err;
++			}
++		}
++		sdata->led_status = value;
+ 	}
+ 
+-	sdata->led_status = value;
++	return 0;
+ }
+ 
+ static enum led_brightness stmfts_brightness_get(struct led_classdev *led_cdev)
+@@ -608,7 +610,7 @@ static int stmfts_enable_led(struct stmf
+ 	sdata->led_cdev.name = STMFTS_DEV_NAME;
+ 	sdata->led_cdev.max_brightness = LED_ON;
+ 	sdata->led_cdev.brightness = LED_OFF;
+-	sdata->led_cdev.brightness_set = stmfts_brightness_set;
++	sdata->led_cdev.brightness_set_blocking = stmfts_brightness_set;
+ 	sdata->led_cdev.brightness_get = stmfts_brightness_get;
+ 
+ 	err = devm_led_classdev_register(&sdata->client->dev, &sdata->led_cdev);
 
 
