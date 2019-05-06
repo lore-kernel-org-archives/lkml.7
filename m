@@ -2,106 +2,130 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789A3C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877ADC004C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E23120675
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:39:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pPpZrOV0"
+	by mail.kernel.org (Postfix) with ESMTP id 5BFC620675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726095AbfEFBjU (ORCPT
+        id S1726236AbfEFBla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 21:39:20 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43927 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfEFBjU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 21:39:20 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c6so664799pfa.10
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 18:39:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=JnMFVu4wG6faIR55N/V0ef2Ggzg3pOTpOa+bU+giIdA=;
-        b=pPpZrOV0xJUaK06EYeWzHDY4I+FJnsONT6Vr481I6lJmgGyIib41MYNuzddSKkCYKI
-         vD7bBYHTPYeWV8T4+Kc0E24eGwmvDWTJCqCUQytv7T4PnKhxshXCvG3W5SwTHyREg59Z
-         g4kbCfw/reTNNTcmFwkbqFCktToibvqKr1n17maBDp6Kmck0fP3/Il0/LDMe+AN+9pNj
-         136VPkg5ZZ4TYPc+XX7Lmw2FDiPsy5n6KAJSaWI+ZeoqAcF79B2LkykrZ9RJO3rSPpUs
-         HqojSdxKADSR+9CbGMXCAGnFH4nQi4YLCatANEhvzqD69YvKdQYtQaflj6f+2ydf2HFq
-         xipQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JnMFVu4wG6faIR55N/V0ef2Ggzg3pOTpOa+bU+giIdA=;
-        b=iG8RDX7xkAAOIs+OykpmMvpMzxfuTDLXJOkDI4EYrwgLRvC6KO12kUq5N486cfwKE5
-         lx+rQtOv9UaLX/taT+CAVcJbmlDjmTRXxdtCm/0q/Xp2R81IcZKrZ6ho2WzqmOciuawa
-         QWFm8yjvKtWIyIUtDnmjL6tIbz9EatptZcuQJIjoNZTUHGNRqYMLUwys1QM+13v6MxpJ
-         Ia9RfnCsaK3c/xcHPJJLLUmlBCBpmj9fF5AChLEdwjIEKc0VFUjztqskFmMa06fYr1N6
-         7EZfgV4MbsI+H5iSSdMTqPKIIam0jjr5K8s4Uih4bftsGSw9nQDomM/IrYgj6J7cETyp
-         6AGg==
-X-Gm-Message-State: APjAAAXVBAIisj0aQX82L4KOLZrNiNt576OxGemlZTHrlIU9g30BuA9y
-        qgTwEX90sHpdtRypMJMe91hwtFn8
-X-Google-Smtp-Source: APXvYqwDMcOIvu3Z5kYmWHSV3z5T0e1BlDS77cuyy76sEadvykgpuEg439vnpFC4ugkMn3qHjFM4iA==
-X-Received: by 2002:a62:27c2:: with SMTP id n185mr28919046pfn.51.1557106759484;
-        Sun, 05 May 2019 18:39:19 -0700 (PDT)
-Received: from izt4n3nohp3b5a1z8j8uuaz.localdomain ([149.129.49.136])
-        by smtp.gmail.com with ESMTPSA id b18sm547418pfp.32.2019.05.05.18.39.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 18:39:18 -0700 (PDT)
-From:   Chengguang Xu <cgxu519@gmail.com>
-To:     jack@suse.com
-Cc:     linux-kernel@vger.kernel.org, Chengguang Xu <cgxu519@gmail.com>
-Subject: [PATCH] quota: add dqi_dirty_list description to comment of Dquot List Management
-Date:   Mon,  6 May 2019 09:39:03 +0800
-Message-Id: <1557106743-19157-1-git-send-email-cgxu519@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sun, 5 May 2019 21:41:30 -0400
+Received: from mga04.intel.com ([192.55.52.120]:62134 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725786AbfEFBl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 21:41:29 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 May 2019 18:41:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,435,1549958400"; 
+   d="scan'208";a="146639249"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga008.fm.intel.com with ESMTP; 05 May 2019 18:41:24 -0700
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        Tom Murphy <murphyt7@tcd.ie>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [RFC 6/7] iommu/vt-d: convert the intel iommu driver to the
+ dma-iommu ops api
+To:     Tom Murphy <tmurphy@arista.com>
+References: <20190504132327.27041-1-tmurphy@arista.com>
+ <20190504132327.27041-7-tmurphy@arista.com>
+ <602b77a2-9c68-ad14-b64f-904a7ff27a15@linux.intel.com>
+ <CAPL0++57nyLYP1fq=-6zvNS0z_iCqjWLbQ1MsG5F60ODkmRCQQ@mail.gmail.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <2419e94d-bfdb-e70d-bbfd-425671886e99@linux.intel.com>
+Date:   Mon, 6 May 2019 09:34:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAPL0++57nyLYP1fq=-6zvNS0z_iCqjWLbQ1MsG5F60ODkmRCQQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Actually there are four lists for dquot management, so add
-the description of dqui_dirty_list to comment.
+Hi,
 
-Signed-off-by: Chengguang Xu <cgxu519@gmail.com>
----
- fs/quota/dquot.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+On 5/6/19 1:03 AM, Tom Murphy wrote:
+> On Sun, May 5, 2019 at 3:44 AM Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+>> Hi,
+>>
+>> On 5/4/19 9:23 PM, Tom Murphy wrote:
+>>> static int intel_iommu_add_device(struct device *dev)
+>>>    {
+>>> +     struct dmar_domain *dmar_domain;
+>>> +     struct iommu_domain *domain;
+>>>        struct intel_iommu *iommu;
+>>>        struct iommu_group *group;
+>>> -     struct iommu_domain *domain;
+>>> +     dma_addr_t base;
+>>>        u8 bus, devfn;
+>>>
+>>>        iommu = device_to_iommu(dev, &bus, &devfn);
+>>> @@ -4871,9 +4514,12 @@ static int intel_iommu_add_device(struct device *dev)
+>>>        if (IS_ERR(group))
+>>>                return PTR_ERR(group);
+>>>
+>>> +     base = IOVA_START_PFN << VTD_PAGE_SHIFT;
+>>>        domain = iommu_get_domain_for_dev(dev);
+>>> +     dmar_domain = to_dmar_domain(domain);
+>>>        if (domain->type == IOMMU_DOMAIN_DMA)
+>>> -             dev->dma_ops = &intel_dma_ops;
+>>> +             iommu_setup_dma_ops(dev, base,
+>>> +                             __DOMAIN_MAX_ADDR(dmar_domain->gaw) - base);
+>> I didn't find the implementation of iommu_setup_dma_ops() in this
+>> series. Will the iova resource be initialized in this function?
+> Ah sorry, I should've mentioned this is based on the
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-iommu-ops.3
+> branch with the "iommu/vt-d: Delegate DMA domain to generic iommu" and
+> "iommu/amd: Convert the AMD iommu driver to the dma-iommu api" patch
+> sets applied.
+> 
+>> If so, will this block iommu_group_create_direct_mappings() which
+>> reserves and maps the reserved iova ranges.
+> The reserved regions will be reserved by the
+> iova_reserve_iommu_regions function instead:
+> (https://github.com/torvalds/linux/blob/6203838dec05352bc357625b1e9ba0a10d3bca35/drivers/iommu/dma-iommu.c#L238
+> )
+> iommu_setup_dma_ops calls iommu_dma_init_domain which calls
+> iova_reserve_iommu_regions.
+> iommu_group_create_direct_mappings will still execute normally but it
+> won't be able to call the intel_iommu_apply_resv_region function
+> because it's been removed in this patchset.
+> This shouldn't change any behavior and the same regions should be reserved.
+> 
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index fc20e06c56ba..6a236bdaef89 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -223,9 +223,9 @@ static void put_quota_format(struct quota_format_type *fmt)
- 
- /*
-  * Dquot List Management:
-- * The quota code uses three lists for dquot management: the inuse_list,
-- * free_dquots, and dquot_hash[] array. A single dquot structure may be
-- * on all three lists, depending on its current state.
-+ * The quota code uses four lists for dquot management: the inuse_list,
-+ * free_dquots, dqi_dirty_list, and dquot_hash[] array. A single dquot
-+ * structure may be on some of those lists, depending on its current state.
-  *
-  * All dquots are placed to the end of inuse_list when first created, and this
-  * list is used for invalidate operation, which must look at every dquot.
-@@ -236,6 +236,10 @@ static void put_quota_format(struct quota_format_type *fmt)
-  * dqstats.free_dquots gives the number of dquots on the list. When
-  * dquot is invalidated it's completely released from memory.
-  *
-+ * Dirty dquots are added to the dqi_dirty_list of quota_info when mark
-+ * dirtied, and this list is searched when writeback diry dquots to
-+ * quota file.
-+ *
-  * Dquots with a specific identity (device, type and id) are placed on
-  * one of the dquot_hash[] hash chains. The provides an efficient search
-  * mechanism to locate a specific dquot.
--- 
-2.17.2
+Okay, I understand it now. Thanks for the explanation.
 
+Best regards,
+Lu Baolu
