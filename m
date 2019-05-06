@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577B3C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3714C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD672053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BC2B2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155298;
-	bh=uRb8ykUe4lfq9vzpe4eOUZS8zfUF0zSisKB5pGNPltA=;
+	s=default; t=1557155307;
+	bh=rHNcloRpi8MdqFrW1AsHD5SGdgV/ZC5FEWmrzJklROM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xuMo67LbTtOMSBWlZsmor3Ip/d5GJlBYuMUcn/sY7GvvxYfa0oFj6zxWQ2DydIeed
-	 TIhKg9ScbybzN7YBCPt0ANwcJ/Q9Vg1wx856eiOMSG6iofds8mJFDmHh0GLjdFHWYC
-	 2M3kV0Wz8Tv2BoVbF/HGyXjTUiJVfQGGkR9SGYtY=
+	b=rECzhsmqr57nkiiOiiEh53EnzBTN3ztSs6pWf3ZIn7cxBUuFFYGDZExKuBP69Ojzo
+	 G6YiRl9ClzORFtbW6UUJRm//Ht23tkNMyYA2MCmXXdf5KvZqcnYZr6NSpeewp0HOxz
+	 IOvLtW2BIJasQUIhfayWaB4egxc47LzPU8U6tjNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfEFOgj (ORCPT
+        id S1727164AbfEFOg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:36:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:36:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727178AbfEFOgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:36:33 -0400
+        id S1727148AbfEFOgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:36:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E4E5204EC;
-        Mon,  6 May 2019 14:36:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABC19214AE;
+        Mon,  6 May 2019 14:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153392;
-        bh=uRb8ykUe4lfq9vzpe4eOUZS8zfUF0zSisKB5pGNPltA=;
+        s=default; t=1557153381;
+        bh=rHNcloRpi8MdqFrW1AsHD5SGdgV/ZC5FEWmrzJklROM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bhpOug18DdQw51jcxux5rX/Cp6R9t4PYYlI8TVBZCmOP2MEBvMTymLxeExVLC1m8c
-         5Ds7fvF6IP+UsCVNeMyAVf4fAMo93faj4Vd5DYJcH77uPBZ5JQP6S2HwWxdAyX+Om5
-         iR2ovtdU2u18Umyn7CspnBryN5jb6yBL5Cyd5TNY=
+        b=2pAuwVG0H3c4LHhTw/WdInxCAqJOJzb1RdmcrHN4XodGpIcaRISnxfFFMPGvg3P0B
+         r4HgXRiBuvE8fNgyVYmhtIAlbkER8tPTbUsSi4vdvnwlFqkCtol4QiBB+GeM9BC/jX
+         dCSjukyh3te87EDRexMnfWoNrnS8EoQHQj6+DzBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
+        Wei Li <liwei391@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 071/122] net: hns: fix ICMP6 neighbor solicitation messages discard problem
-Date:   Mon,  6 May 2019 16:32:09 +0200
-Message-Id: <20190506143101.315991526@linuxfoundation.org>
+Subject: [PATCH 5.0 067/122] arm64: fix wrong check of on_sdei_stack in nmi context
+Date:   Mon,  6 May 2019 16:32:05 +0200
+Message-Id: <20190506143100.998182603@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,85 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f058e46855dcbc28edb2ed4736f38a71fd19cadb ]
+[ Upstream commit 1c41860864c8ae0387ef7d44f0000e99cbb2e06d ]
 
-ICMP6 neighbor solicitation messages will be discard by the Hip06
-chips, because of not setting forwarding pool. Enable promisc mode
-has the same problem.
+When doing unwind_frame() in the context of pseudo nmi (need enable
+CONFIG_ARM64_PSEUDO_NMI), reaching the bottom of the stack (fp == 0,
+pc != 0), function on_sdei_stack() will return true while the sdei acpi
+table is not inited in fact. This will cause a "NULL pointer dereference"
+oops when going on.
 
-This patch fix the wrong forwarding table configs for the multicast
-vague matching when enable promisc mode, and add forwarding pool
-for the forwarding table.
-
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Julien Thierry <julien.thierry@arm.com>
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- .../ethernet/hisilicon/hns/hns_dsaf_main.c    | 33 +++++++++++++++----
- 1 file changed, 27 insertions(+), 6 deletions(-)
+ arch/arm64/kernel/sdei.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-index ac55db065f16..f5ff07cb2b72 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-@@ -2750,6 +2750,17 @@ int hns_dsaf_get_regs_count(void)
- 	return DSAF_DUMP_REGS_NUM;
- }
+diff --git a/arch/arm64/kernel/sdei.c b/arch/arm64/kernel/sdei.c
+index 5ba4465e44f0..ea94cf8f9dc6 100644
+--- a/arch/arm64/kernel/sdei.c
++++ b/arch/arm64/kernel/sdei.c
+@@ -94,6 +94,9 @@ static bool on_sdei_normal_stack(unsigned long sp, struct stack_info *info)
+ 	unsigned long low = (unsigned long)raw_cpu_read(sdei_stack_normal_ptr);
+ 	unsigned long high = low + SDEI_STACK_SIZE;
  
-+static int hns_dsaf_get_port_id(u8 port)
-+{
-+	if (port < DSAF_SERVICE_NW_NUM)
-+		return port;
++	if (!low)
++		return false;
 +
-+	if (port >= DSAF_BASE_INNER_PORT_NUM)
-+		return port - DSAF_BASE_INNER_PORT_NUM + DSAF_SERVICE_NW_NUM;
-+
-+	return -EINVAL;
-+}
-+
- static void set_promisc_tcam_enable(struct dsaf_device *dsaf_dev, u32 port)
- {
- 	struct dsaf_tbl_tcam_ucast_cfg tbl_tcam_ucast = {0, 1, 0, 0, 0x80};
-@@ -2815,23 +2826,33 @@ static void set_promisc_tcam_enable(struct dsaf_device *dsaf_dev, u32 port)
- 	memset(&temp_key, 0x0, sizeof(temp_key));
- 	mask_entry.addr[0] = 0x01;
- 	hns_dsaf_set_mac_key(dsaf_dev, &mask_key, mask_entry.in_vlan_id,
--			     port, mask_entry.addr);
-+			     0xf, mask_entry.addr);
- 	tbl_tcam_mcast.tbl_mcast_item_vld = 1;
- 	tbl_tcam_mcast.tbl_mcast_old_en = 0;
+ 	if (sp < low || sp >= high)
+ 		return false;
  
--	if (port < DSAF_SERVICE_NW_NUM) {
--		mskid = port;
--	} else if (port >= DSAF_BASE_INNER_PORT_NUM) {
--		mskid = port - DSAF_BASE_INNER_PORT_NUM + DSAF_SERVICE_NW_NUM;
--	} else {
-+	/* set MAC port to handle multicast */
-+	mskid = hns_dsaf_get_port_id(port);
-+	if (mskid == -EINVAL) {
- 		dev_err(dsaf_dev->dev, "%s,pnum(%d)error,key(%#x:%#x)\n",
- 			dsaf_dev->ae_dev.name, port,
- 			mask_key.high.val, mask_key.low.val);
- 		return;
- 	}
-+	dsaf_set_bit(tbl_tcam_mcast.tbl_mcast_port_msk[mskid / 32],
-+		     mskid % 32, 1);
+@@ -111,6 +114,9 @@ static bool on_sdei_critical_stack(unsigned long sp, struct stack_info *info)
+ 	unsigned long low = (unsigned long)raw_cpu_read(sdei_stack_critical_ptr);
+ 	unsigned long high = low + SDEI_STACK_SIZE;
  
-+	/* set pool bit map to handle multicast */
-+	mskid = hns_dsaf_get_port_id(port_num);
-+	if (mskid == -EINVAL) {
-+		dev_err(dsaf_dev->dev,
-+			"%s, pool bit map pnum(%d)error,key(%#x:%#x)\n",
-+			dsaf_dev->ae_dev.name, port_num,
-+			mask_key.high.val, mask_key.low.val);
-+		return;
-+	}
- 	dsaf_set_bit(tbl_tcam_mcast.tbl_mcast_port_msk[mskid / 32],
- 		     mskid % 32, 1);
++	if (!low)
++		return false;
 +
- 	memcpy(&temp_key, &mask_key, sizeof(mask_key));
- 	hns_dsaf_tcam_mc_cfg_vague(dsaf_dev, entry_index, &tbl_tcam_data_mc,
- 				   (struct dsaf_tbl_tcam_data *)(&mask_key),
+ 	if (sp < low || sp >= high)
+ 		return false;
+ 
 -- 
 2.20.1
 
