@@ -4,143 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54909C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA11C46460
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198262054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="2TpzhU0D"
+	by mail.kernel.org (Postfix) with ESMTP id 33D862054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557154601;
+	bh=dSgiSJOkgwKJOQchPPXosPfklzC3ZKRtMnVJZJRghE0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IL7KPLce8pFFoHzImxrwX8Kq5vSnYUOiABKLOWWUVIwvzC4Nc8EU5E6UDvadStru/
+	 rdyhwDQtUJX6ZJSquaJN2ERIlTG2GRtTtu9woOytTUnPrw+HKtIxiDPCpJH/i51Plu
+	 v3TLWo6PjOPrR/8VDioBc6H6W/oO5bIb2+jxuVvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfEFO4c (ORCPT
+        id S1728291AbfEFOpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:56:32 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:15765 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727183AbfEFO4a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:56:30 -0400
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,438,1549954800"; 
-   d="scan'208";a="29265660"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 06 May 2019 07:56:28 -0700
-Received: from NAM01-BY2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.108) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Mon, 6 May 2019 07:56:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UgL7A2/gQwOPkAdBNZtGTIvXAtszUuckM0WBOYMb9D0=;
- b=2TpzhU0D4z5cl/9jHMxudEQAOheVh6LENxZXUGZuZiS+w5ciPgOYd67EcwbwoaSGxrX74xXBagCifYrUPOBEJ/mNmK9kXCKqWJApsQ2mequf063lXhmShbgafiqqB2+AsI1PCrv6K20BfldBKCUaKA38mDG7yzm9m0iaSuulN18=
-Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
- BN6PR11MB4049.namprd11.prod.outlook.com (10.255.130.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Mon, 6 May 2019 14:56:22 +0000
-Received: from BN6PR11MB1842.namprd11.prod.outlook.com
- ([fe80::35b3:7af:7216:8808]) by BN6PR11MB1842.namprd11.prod.outlook.com
- ([fe80::35b3:7af:7216:8808%10]) with mapi id 15.20.1856.012; Mon, 6 May 2019
- 14:56:22 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <broonie@kernel.org>
-CC:     <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <Tudor.Ambarus@microchip.com>
-Subject: [PATCH] spi: atmel-quadspi: void return type for atmel_qspi_init()
-Thread-Topic: [PATCH] spi: atmel-quadspi: void return type for
- atmel_qspi_init()
-Thread-Index: AQHVBBveYXVMmUTDqUy6OCq0Aik9PQ==
-Date:   Mon, 6 May 2019 14:56:22 +0000
-Message-ID: <20190506145606.5060-1-tudor.ambarus@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM0PR06CA0010.eurprd06.prod.outlook.com
- (2603:10a6:208:ab::23) To BN6PR11MB1842.namprd11.prod.outlook.com
- (2603:10b6:404:101::18)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.9.5
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1fbee562-3924-4a36-828e-08d6d23300ee
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BN6PR11MB4049;
-x-ms-traffictypediagnostic: BN6PR11MB4049:
-x-microsoft-antispam-prvs: <BN6PR11MB40490F614FA653512F73C92FF0300@BN6PR11MB4049.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:655;
-x-forefront-prvs: 0029F17A3F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(346002)(39860400002)(136003)(189003)(199004)(68736007)(52116002)(5640700003)(6506007)(386003)(102836004)(66066001)(99286004)(186003)(26005)(2501003)(14444005)(53936002)(107886003)(5660300002)(256004)(2906002)(8676002)(1730700003)(81156014)(81166006)(36756003)(8936002)(14454004)(7736002)(305945005)(25786009)(6512007)(2351001)(50226002)(72206003)(478600001)(66446008)(64756008)(73956011)(66946007)(66476007)(66556008)(1076003)(6436002)(6486002)(6916009)(4326008)(6116002)(71190400001)(71200400001)(54906003)(486006)(316002)(3846002)(476003)(86362001)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB4049;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: U+6t+hrsJuz/S/s2rg5KcBjgMrTvAnkvi81gEyEnTN1m4FmEPqO7y3arLkmmOvwSMNr7FAwP5nuHmpxGT1exeHeMVJTfZ+JK0lOkaWWzF6P5CGhFszMMWonjPunkpzxP7VVqv8bjafzJ13GA7gAFW8ldfxLlCKW2rYZsmP34PpSAbFpFZyjTrXv03/3zScB+3NsASmkpaMlNqOvOhQDQqcWK3NBhzmDbBwWt8FWjo1o5mVRNiqHdJpChmbMMIFdKo29dQwuSL9Y/ECUoOghAb7Wq7iTjIKHo5Wg8qL/5bY7Mb2ONQIr1r7Ee9yoPioiBWJ3ciAq9wuSB/Esgu3xPf2gXRvApwumBcKHOvLsYYAFhMTEo9HI1gQ+V1tF+WBSaeRr/VIOlr+plqWeeKsz/aOlt7Kfp99WZOd8FPkaTqdI=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 6 May 2019 10:45:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728879AbfEFOpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 055E72053B;
+        Mon,  6 May 2019 14:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557153899;
+        bh=dSgiSJOkgwKJOQchPPXosPfklzC3ZKRtMnVJZJRghE0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QPPXc3aPzHA+HGC5f3ACERaVAv3tpkcRbnLKKdR4U+7j/gCwzYSKsFPxHTF6+m0yl
+         mXNBq3VDJNwqJ/nCSiCDl9pE109zEFmWMTbygQzyUJvbNLCc/4jvaktgbeR4d9pzb4
+         n9XhiVv/5VGwLzA6/PdgsjyKWY2S4uKkaL0vwibA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 37/75] net: stmmac: dont overwrite discard_frame status
+Date:   Mon,  6 May 2019 16:32:45 +0200
+Message-Id: <20190506143056.578889905@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
+References: <20190506143053.287515952@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1fbee562-3924-4a36-828e-08d6d23300ee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 14:56:22.5794
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB4049
-X-OriginatorOrg: microchip.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogVHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29tPg0KDQpjb21t
-aXQgMmQzMGFjNWVkNjMzICgibXRkOiBzcGktbm9yOiBhdG1lbC1xdWFkc3BpOiBVc2Ugc3BpLW1l
-bSBpbnRlcmZhY2UgZm9yIGF0bWVsLXF1YWRzcGkgZHJpdmVyIikNCnJlbW92ZWQgdGhlIGVycm9y
-IHBhdGggZnJvbSBhdG1lbF9xc3BpX2luaXQoKSwgYnV0IG5vdCBjaGFuZ2VkIHRoZQ0KZnVuY3Rp
-b24ncyByZXR1cm4gdHlwZS4gU2V0IHZvaWQgcmV0dXJuIHR5cGUgZm9yIGF0bWVsX3FzcGlfaW5p
-dCgpLg0KDQpTaWduZWQtb2ZmLWJ5OiBUdWRvciBBbWJhcnVzIDx0dWRvci5hbWJhcnVzQG1pY3Jv
-Y2hpcC5jb20+DQotLS0NCiBkcml2ZXJzL3NwaS9hdG1lbC1xdWFkc3BpLmMgfCAxMiArKysrLS0t
-LS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQ0K
-DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zcGkvYXRtZWwtcXVhZHNwaS5jIGIvZHJpdmVycy9zcGkv
-YXRtZWwtcXVhZHNwaS5jDQppbmRleCA5ZjI0ZDVmMGI0MzEuLjYwYWE1YjM4MmU1OCAxMDA2NDQN
-Ci0tLSBhL2RyaXZlcnMvc3BpL2F0bWVsLXF1YWRzcGkuYw0KKysrIGIvZHJpdmVycy9zcGkvYXRt
-ZWwtcXVhZHNwaS5jDQpAQCAtNDA1LDcgKzQwNSw3IEBAIHN0YXRpYyBpbnQgYXRtZWxfcXNwaV9z
-ZXR1cChzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQ0KIAlyZXR1cm4gMDsNCiB9DQogDQotc3RhdGlj
-IGludCBhdG1lbF9xc3BpX2luaXQoc3RydWN0IGF0bWVsX3FzcGkgKmFxKQ0KK3N0YXRpYyB2b2lk
-IGF0bWVsX3FzcGlfaW5pdChzdHJ1Y3QgYXRtZWxfcXNwaSAqYXEpDQogew0KIAkvKiBSZXNldCB0
-aGUgUVNQSSBjb250cm9sbGVyICovDQogCXdyaXRlbF9yZWxheGVkKFFTUElfQ1JfU1dSU1QsIGFx
-LT5yZWdzICsgUVNQSV9DUik7DQpAQCAtNDE2LDggKzQxNiw2IEBAIHN0YXRpYyBpbnQgYXRtZWxf
-cXNwaV9pbml0KHN0cnVjdCBhdG1lbF9xc3BpICphcSkNCiANCiAJLyogRW5hYmxlIHRoZSBRU1BJ
-IGNvbnRyb2xsZXIgKi8NCiAJd3JpdGVsX3JlbGF4ZWQoUVNQSV9DUl9RU1BJRU4sIGFxLT5yZWdz
-ICsgUVNQSV9DUik7DQotDQotCXJldHVybiAwOw0KIH0NCiANCiBzdGF0aWMgaXJxcmV0dXJuX3Qg
-YXRtZWxfcXNwaV9pbnRlcnJ1cHQoaW50IGlycSwgdm9pZCAqZGV2X2lkKQ0KQEAgLTUzNiw5ICs1
-MzQsNyBAQCBzdGF0aWMgaW50IGF0bWVsX3FzcGlfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
-ZSAqcGRldikNCiAJaWYgKGVycikNCiAJCWdvdG8gZGlzYWJsZV9xc3BpY2s7DQogDQotCWVyciA9
-IGF0bWVsX3FzcGlfaW5pdChhcSk7DQotCWlmIChlcnIpDQotCQlnb3RvIGRpc2FibGVfcXNwaWNr
-Ow0KKwlhdG1lbF9xc3BpX2luaXQoYXEpOw0KIA0KIAllcnIgPSBzcGlfcmVnaXN0ZXJfY29udHJv
-bGxlcihjdHJsKTsNCiAJaWYgKGVycikNCkBAIC01ODYsOCArNTgyLDggQEAgc3RhdGljIGludCBf
-X21heWJlX3VudXNlZCBhdG1lbF9xc3BpX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQogDQog
-CWNsa19wcmVwYXJlX2VuYWJsZShhcS0+cGNsayk7DQogCWNsa19wcmVwYXJlX2VuYWJsZShhcS0+
-cXNwaWNrKTsNCi0NCi0JcmV0dXJuIGF0bWVsX3FzcGlfaW5pdChhcSk7DQorCWF0bWVsX3FzcGlf
-aW5pdChhcSk7DQorCXJldHVybiAwOw0KIH0NCiANCiBzdGF0aWMgU0lNUExFX0RFVl9QTV9PUFMo
-YXRtZWxfcXNwaV9wbV9vcHMsIGF0bWVsX3FzcGlfc3VzcGVuZCwNCi0tIA0KMi45LjUNCg0K
+[ Upstream commit 1b746ce8b397e58f9e40ce5c63b7198de6930482 ]
+
+If we have error bits set, the discard_frame status will get overwritten
+by checksum bit checks, which might set the status back to good one.
+Fix by checking the COE status only if the frame is good.
+
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/stmicro/stmmac/enh_desc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+index acd65a4f94d4..cdfe9a350ac0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+@@ -231,9 +231,10 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ 	 * It doesn't match with the information reported into the databook.
+ 	 * At any rate, we need to understand if the CSUM hw computation is ok
+ 	 * and report this info to the upper layers. */
+-	ret = enh_desc_coe_rdes0(!!(rdes0 & RDES0_IPC_CSUM_ERROR),
+-				 !!(rdes0 & RDES0_FRAME_TYPE),
+-				 !!(rdes0 & ERDES0_RX_MAC_ADDR));
++	if (likely(ret == good_frame))
++		ret = enh_desc_coe_rdes0(!!(rdes0 & RDES0_IPC_CSUM_ERROR),
++					 !!(rdes0 & RDES0_FRAME_TYPE),
++					 !!(rdes0 & ERDES0_RX_MAC_ADDR));
+ 
+ 	if (unlikely(rdes0 & RDES0_DRIBBLING))
+ 		x->dribbling_bit++;
+-- 
+2.20.1
+
+
+
