@@ -2,106 +2,134 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14BFC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DEEC04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB452087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D0E205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:02:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="I8H0Zyd/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cz5Eejok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfEFRBl (ORCPT
+        id S1727020AbfEFRCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:01:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38032 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbfEFRBi (ORCPT
+        Mon, 6 May 2019 13:02:20 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:32890 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726517AbfEFRCT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:01:38 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 10so7093663pfo.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 10:01:38 -0700 (PDT)
+        Mon, 6 May 2019 13:02:19 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h17so775231pgv.0;
+        Mon, 06 May 2019 10:02:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8NEZr+lKEciEtlqvodjs9s9WnuQgHUyLTCz6jchZs+U=;
-        b=I8H0Zyd/6abn7dp3fZUDD5BAADvTaLKVYQyECZWLsA+qoSdkJoPxMGWvXMYSmE+/5G
-         HzeDykXqLtteyK90RTj5aDi0qjBFqibsa+GjQowv7CvI4t4HoQ0B+whnCgg6mnRxPAmq
-         rvEHs/YNkC5QnX8Er4iEBGvy+hpKN/5FlJYqk=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qy+Uvnt48sjAfiUPJQkldDmklRLHRIc2GGNrnTuoC0Q=;
+        b=Cz5Eejokd6UGPW9qdjFeTimi9ZTg0DcaFj32df9nbInXYCObQYSCoEkyAChntWZ5H+
+         E5FD/xoLySqtV06cAIB523RuTsFNGsmeMHQuQ4PFZrzOzU3NjbnNgPM1zDbIHwE0ras+
+         1fmQJDHy3FiA3btWdLmfXNWo+a5ebrpr1qHcEfK+w6CNAlPW69DoCwB9JXNyTOoYKBxk
+         +OS7iAiP5ajY19lxbGlrIJAPdtFbDNLsHIqsP2I8eRLJD7+kC4JzLqaj9TJW5LHMsclL
+         dDnaa9ZXEAz4Kdq300KGoFHfc4fXwki4OiMKZks27JiVbmI/Pb1QUsVRpUoaN3SuOPEj
+         mdTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=8NEZr+lKEciEtlqvodjs9s9WnuQgHUyLTCz6jchZs+U=;
-        b=i+MUjFo7n63nUmxWCA37C+fjx/0fS6ABg0iSBS/H34igZvQ1E+9ariFBbj4rrv+hAE
-         7SE/HDKp80ZELbQQBGHDh/hkfyHxAFcpeJSWublIk9hoUlYL0O7ayvxhViRLik7hbJeM
-         x9PU1YQkcKV1xSjCMH5xrw1fVl4Mm8lu5EOmh9c+9e8QfOivq4MoxTkQj1kJweZ9ETOZ
-         80jFDrjoTaYm1jATD33+2UPzFnfHrs1hP4cRpr4Z508JKA/ax+7JSsYsXofpQ2OI74Uv
-         QzYDzba8U2ruYE96WV7twP1iFK1efQc1+WrfvBOUhrGCUO/H1Z4YFDKVnkE2rOoiPR/c
-         fsGQ==
-X-Gm-Message-State: APjAAAWoVtFOmFPn+c1Nq7axCxLabPuXd+aT6LAEPYlCWI7POFlWpewA
-        6IsN/oljFhVwYrPDC8uQEosstg==
-X-Google-Smtp-Source: APXvYqyWFjkQJYyagZNhe7lr3N8EEii7ANc4xZeB7K2J92cARdpf2QgOrjQVLq3JRa2QaZrvfBcu2Q==
-X-Received: by 2002:a63:165f:: with SMTP id 31mr33584426pgw.321.1557162098028;
-        Mon, 06 May 2019 10:01:38 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id l23sm4555644pgh.68.2019.05.06.10.01.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 10:01:37 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Trac Hoang <trac.hoang@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH 2/2] mmc: sdhci-iproc: Set NO_HISPD bit to fix HS50 data hold time problem
-Date:   Mon,  6 May 2019 10:01:15 -0700
-Message-Id: <20190506170115.10840-3-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190506170115.10840-1-scott.branden@broadcom.com>
-References: <20190506170115.10840-1-scott.branden@broadcom.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qy+Uvnt48sjAfiUPJQkldDmklRLHRIc2GGNrnTuoC0Q=;
+        b=L5tvZ2Jz0X0aOIyjcstpAshBjy3QO/40YkqunZid3CkDKJnTVT/eqnCu9tAX48J0S+
+         w3n5R2/i03f5OYbz396iyywXYmybLXnayAPNREYIVOPydQkGGKAYI1LHddKou1lz0IfB
+         jarJGAJqC6EBMlPvX+qBeZhEPvuU/loyHkZaP0s/mVavjuGnQvLDYHVBtJG8sJZnliuC
+         gFQVweCC1NPn8tXfIOal/wwhsAUTmdcMzQWVavwpD/W0lkZyQJI9LPOY0QL7fjj1FHxh
+         nvgAl3r5s39Aw1s7f28G6F9lUQZ3alwtNAMRYvIYRv2QEFT1F7ZBNg0dGUovCZl82b8H
+         PWIA==
+X-Gm-Message-State: APjAAAVsLx43oasMudwEIEejfLhlhUPz+TcY+ulAzd4i4wviwXz9ojtb
+        x4zDqPd7QoVVQRBoPVstNIr10HGPbFreEa8X5uQ=
+X-Google-Smtp-Source: APXvYqzyPYN8ElDG7RR+MU74p733KZu/WFf/OnvpHRT8RjSxRlE0QQwZSM9VxyhJNbI6zJ2HAwg5yMapk+3YEKzN6XQ=
+X-Received: by 2002:a62:479b:: with SMTP id p27mr35842131pfi.111.1557162138865;
+ Mon, 06 May 2019 10:02:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <1557155792-2703-1-git-send-email-kernel@probst.it>
+ <CAH2r5mtdpOvcE25P2UuNFpOwsNyFiBWRQELQFui+FJGVOOBV8w@mail.gmail.com> <20190506165658.GA168433@jra4>
+In-Reply-To: <20190506165658.GA168433@jra4>
+From:   Steve French <smfrench@gmail.com>
+Date:   Mon, 6 May 2019 12:02:07 -0500
+Message-ID: <CAH2r5msK6yNNm_QbdsFZuB5uS0iNRuqe8gSDKvVAiR0N6E3MWg@mail.gmail.com>
+Subject: Re: [PATCH] cifs: fix strcat buffer overflow in smb21_set_oplock_level()
+To:     Jeremy Allison <jra@samba.org>
+Cc:     Christoph Probst <kernel@probst.it>,
+        Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trac Hoang <trac.hoang@broadcom.com>
+We could always switch it to strncpy :)
 
-The iproc host eMMC/SD controller hold time does not meet the
-specification in the HS50 mode.  This problem can be mitigated
-by disabling the HISPD bit; thus forcing the controller output
-data to be driven on the falling clock edges rather than the
-rising clock edges.
+In any case - he is correct, it is better than what was there because
+we should not strcat unless the array were locked across the whole
+function
 
-Fixes: f5f968f2371c ("mmc: sdhci-iproc: suppress spurious interrupt with Multiblock read")
-Signed-off-by: Trac Hoang <trac.hoang@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- drivers/mmc/host/sdhci-iproc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Mon, May 6, 2019 at 11:57 AM Jeremy Allison <jra@samba.org> wrote:
+>
+> On Mon, May 06, 2019 at 11:53:44AM -0500, Steve French via samba-technical wrote:
+> > I think strcpy is clearer - but I don't think it can overflow since if
+> > R, W or W were written to "message" then cinode->oplock would be
+> > non-zero so we would never strcap "None"
+>
+> Ahem. In Samba we have :
+>
+> lib/util/safe_string.h:#define strcpy(dest,src) __ERROR__XX__NEVER_USE_STRCPY___;
+>
+> Maybe you should do likewise :-).
+>
+> > On Mon, May 6, 2019 at 10:26 AM Christoph Probst <kernel@probst.it> wrote:
+> > >
+> > > Change strcat to strcpy in the "None" case as it is never valid to append
+> > > "None" to any other message. It may also overflow char message[5], in a
+> > > race condition on cinode if cinode->oplock is unset by another thread
+> > > after "RHW" or "RH" had been written to message.
+> > >
+> > > Signed-off-by: Christoph Probst <kernel@probst.it>
+> > > ---
+> > >  fs/cifs/smb2ops.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+> > > index c36ff0d..5fd5567 100644
+> > > --- a/fs/cifs/smb2ops.c
+> > > +++ b/fs/cifs/smb2ops.c
+> > > @@ -2936,7 +2936,7 @@ smb21_set_oplock_level(struct cifsInodeInfo *cinode, __u32 oplock,
+> > >                 strcat(message, "W");
+> > >         }
+> > >         if (!cinode->oplock)
+> > > -               strcat(message, "None");
+> > > +               strcpy(message, "None");
+> > >         cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
+> > >                  &cinode->vfs_inode);
+> > >  }
+> > > --
+> > > 2.1.4
+> > >
+> >
+> >
+> > --
+> > Thanks,
+> >
+> > Steve
+> >
 
-diff --git a/drivers/mmc/host/sdhci-iproc.c b/drivers/mmc/host/sdhci-iproc.c
-index 9d4071c41c94..2feb4ef32035 100644
---- a/drivers/mmc/host/sdhci-iproc.c
-+++ b/drivers/mmc/host/sdhci-iproc.c
-@@ -220,7 +220,8 @@ static const struct sdhci_iproc_data iproc_cygnus_data = {
- 
- static const struct sdhci_pltfm_data sdhci_iproc_pltfm_data = {
- 	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
--		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12,
-+		  SDHCI_QUIRK_MULTIBLOCK_READ_ACMD12 |
-+		  SDHCI_QUIRK_NO_HISPD_BIT,
- 	.quirks2 = SDHCI_QUIRK2_ACMD23_BROKEN,
- 	.ops = &sdhci_iproc_ops,
- };
+
+
 -- 
-2.17.1
+Thanks,
 
+Steve
