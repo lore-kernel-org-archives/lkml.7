@@ -2,202 +2,111 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550E0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A457FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3102C2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9512053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfEFPFu (ORCPT
+        id S1727512AbfEFPF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:05:50 -0400
-Received: from foss.arm.com ([217.140.101.70]:52592 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727551AbfEFOiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:38:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A8ACA78;
-        Mon,  6 May 2019 07:38:16 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12D6A3F575;
-        Mon,  6 May 2019 07:38:14 -0700 (PDT)
-Date:   Mon, 6 May 2019 15:38:12 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 4/7] sched: Add sched_load_rq tracepoint
-Message-ID: <20190506143811.tvvvguz3erptdb3k@e107158-lin.cambridge.arm.com>
-References: <20190505115732.9844-1-qais.yousef@arm.com>
- <20190505115732.9844-5-qais.yousef@arm.com>
- <20190506090859.GK2606@hirez.programming.kicks-ass.net>
+        Mon, 6 May 2019 11:05:56 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36982 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbfEFPFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 11:05:46 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w37so15661216edw.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 08:05:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EG9y7f+OaOLQCxmo5YAdYV2d8wQYYdrdIyT2YfdhqrA=;
+        b=F+4/Jl6/lvGeT+SS7vPjh+1b/nWrFBsxvd5B0DDbfxbrSS/DXDDTUUdplsPBDkiU9b
+         eHfG880v3EXk5/Puc8CtNV/4iCqMvwle6VBUsAsEed+STfBUZBk+KFcnonnwNgU/J1k4
+         UQ/NUbdxENW3ZMoOQ6AMDUfK3bzFY2WhDwiaE02NZfgWUbosa6HvaUgDzB/AkSCODn0/
+         xMIQXIKa9HvlFwSNs2wh8Zm+OSvKzPbNyWdIDqQO80GKSowsoevKXiXQ9BL+4OKipJOj
+         Yp4FRY5CewaBdha6ZLVG0TsyOkCmss6twrF9fuK4y3lAprCz5RdXzJY6/7DdcMCBOcMJ
+         w/kw==
+X-Gm-Message-State: APjAAAUG1IaxOoO47HdCHj0aXKLeru1tQR0gwMV9x1X09Wnu988gRfam
+        PaEDpRDOeHpubL5Nx3ojLPmHUQ==
+X-Google-Smtp-Source: APXvYqwG7U8NKXeMCYsnsKEeNFfADW0dBrFnKXzISgYtUcSEK+XfEplGea/2X6qLq5ujIDfyCx/gVw==
+X-Received: by 2002:a50:9007:: with SMTP id b7mr25564744eda.194.1557155144500;
+        Mon, 06 May 2019 08:05:44 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id b42sm2996983edd.83.2019.05.06.08.05.43
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 08:05:43 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
+ critclk_systems DMI table
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Semyon Verchenko <semverchenko@factor-ts.ru>
+References: <20190429150135.15070-1-hdegoede@redhat.com>
+ <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
+ <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com>
+ <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <568ba27d-a6a5-b158-bab1-f22cd8ccb34e@redhat.com>
+Date:   Mon, 6 May 2019 17:05:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190506090859.GK2606@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/19 11:08, Peter Zijlstra wrote:
-> On Sun, May 05, 2019 at 12:57:29PM +0100, Qais Yousef wrote:
+Hi,
+
+On 06-05-19 16:59, Andy Shevchenko wrote:
+> On Mon, May 6, 2019 at 5:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi,
+>>
+>> On 06-05-19 14:38, Andy Shevchenko wrote:
+>>> On Mon, Apr 29, 2019 at 6:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>
+>>>> The Lex 3I380D industrial PC has 4 ethernet controllers on board
+>>>> which need pmc_plt_clk0 - 3 to function, add it to the critclk_systems
+>>>> DMI table, so that drivers/clk/x86/clk-pmc-atom.c will mark the clocks
+>>>> as CLK_CRITICAL and they will not get turned off.
+>>>>
+>>>
+>>> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>>> supposedly to go via CLK tree.
+>>>
+>>> P.S. If you want it through PDx86, I need immutable branch / tag from CLK.
+>>
+>> Stephen added the patches this depends on to his fixes branch, so they
+>> are in the 5.1 / Torvald's master branch, since we are now in the 5.2 merge
+>> window, you should be able to cleanly apply this directly.
 > 
-> > +/*
-> > + * Following tracepoints are not exported in tracefs and provide hooking
-> > + * mechanisms only for testing and debugging purposes.
-> > + */
-> > +DECLARE_TRACE(sched_load_rq,
-> > +	TP_PROTO(int cpu, const char *path, struct sched_avg *avg),
-> > +	TP_ARGS(cpu, path, avg));
-> > +
-> 
-> > +DECLARE_TRACE(sched_load_se,
-> > +       TP_PROTO(int cpu, const char *path, struct sched_entity *se),
-> > +       TP_ARGS(cpu, path, se));
-> > +
-> 
-> > +DECLARE_TRACE(sched_overutilized,
-> > +       TP_PROTO(int overutilized),
-> > +       TP_ARGS(overutilized));
-> 
-> This doesn't generate any actual userspace because of the lack of
-> DEFINE_EVENT() ?
+> We don't do back merges, so, our base is v5.1-rc1. Does it mean the
+> commit in question is in v5.1-rc1?
+> AFAICS it was appeared in v5.1-rc5.
 
-Documentation/trace/tracepoints.rst suggests using DEFINE_TRACE(). But using
-that causes compilation errors because of some magic that is being redefined.
-Not doing DEFINE_TRACE() gave the intended effect according to the document, so
-I assumed it's outdated.
+Ah, I see, my bad.
 
+Stephen can you pick up this patch and the
+"[PATCH 1/1] Add several Beckhoff Automation boards to critclk_systems DMI table"
+patch then?
 
-kernel/sched/core.c:27:1: note: in expansion of macro ‘DEFINE_TRACE’
- DEFINE_TRACE(sched_overutilized);
- ^~~~~~~~~~~~
-./include/linux/tracepoint.h:287:20: note: previous definition of ‘__tracepoint_sched_overutilized’ was here
-  struct tracepoint __tracepoint_##name     \
-                    ^
-./include/linux/tracepoint.h:293:2: note: in expansion of macro ‘DEFINE_TRACE_FN’
-  DEFINE_TRACE_FN(name, NULL, NULL);
-  ^~~~~~~~~~~~~~~
-./include/trace/define_trace.h:67:2: note: in expansion of macro ‘DEFINE_TRACE’
-  DEFINE_TRACE(name)
-  ^~~~~~~~~~~~
-./include/trace/events/sched.h:603:1: note: in expansion of macro ‘DECLARE_TRACE’
- DECLARE_TRACE(sched_overutilized,
- ^~~~~~~~~~~~~
+Regards,
 
+Hans
 
-DEFINE_EVENT() is only used with TRACE_EVENT() so certainly we don't want it
-here.
-
-> 
-> > diff --git a/kernel/sched/sched_tracepoints.h b/kernel/sched/sched_tracepoints.h
-> > new file mode 100644
-> > index 000000000000..f4ded705118e
-> > --- /dev/null
-> > +++ b/kernel/sched/sched_tracepoints.h
-> > @@ -0,0 +1,39 @@
-> 
-> Like with the other newly introduced header files, this one is lacking
-> the normal include guard.
-
-I was going to add them but then when I looked in sched.h and autogroup.h they
-had none. So I thought the convention is to not use guard here.
-
-I will add it.
-
-> 
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Scheduler tracepoints that are probe-able only and aren't exported ABI in
-> > + * tracefs.
-> > + */
-> > +
-> > +#include <trace/events/sched.h>
-> > +
-> > +#define SCHED_TP_PATH_LEN		64
-> > +
-> > +
-> > +static __always_inline void sched_tp_load_cfs_rq(struct cfs_rq *cfs_rq)
-> > +{
-> > +	if (trace_sched_load_rq_enabled()) {
-> > +		int cpu = cpu_of(rq_of(cfs_rq));
-> > +		char path[SCHED_TP_PATH_LEN];
-> > +
-> > +		cfs_rq_tg_path(cfs_rq, path, SCHED_TP_PATH_LEN);
-> > +		trace_sched_load_rq(cpu, path, &cfs_rq->avg);
-> > +	}
-> > +}
-> > +
-> > +static __always_inline void sched_tp_load_rt_rq(struct rq *rq)
-> > +{
-> > +	if (trace_sched_load_rq_enabled()) {
-> > +		int cpu = cpu_of(rq);
-> > +
-> > +		trace_sched_load_rq(cpu, NULL, &rq->avg_rt);
-> > +	}
-> > +}
-> > +
-> > +static __always_inline void sched_tp_load_dl_rq(struct rq *rq)
-> > +{
-> > +	if (trace_sched_load_rq_enabled()) {
-> > +		int cpu = cpu_of(rq);
-> > +
-> > +		trace_sched_load_rq(cpu, NULL, &rq->avg_dl);
-> > +	}
-> > +}
-> 
-> > +static __always_inline void sched_tp_load_se(struct sched_entity *se)
-> > +{
-> > +       if (trace_sched_load_se_enabled()) {
-> > +               struct cfs_rq *gcfs_rq = group_cfs_rq(se);
-> > +               struct cfs_rq *cfs_rq = cfs_rq_of(se);
-> > +               char path[SCHED_TP_PATH_LEN];
-> > +               int cpu = cpu_of(rq_of(cfs_rq));
-> > +
-> > +               cfs_rq_tg_path(gcfs_rq, path, SCHED_TP_PATH_LEN);
-> > +               trace_sched_load_se(cpu, path, se);
-> > +       }
-> > +}
-> 
-> These functions really should be called trace_*()
-
-I can rename the wrappers to trace_pelt_load_rq() or sched_trace_pelt_load_rq()
-as Steve was suggesting.
-
-I assume you're okay with the name of the tracepoints and your comment was
-about the wrapper above only? ie: sched_load_rq vs pelt_rq.
-
-> 
-> Also; I _really_ hate how fat they are. Why can't we do simple straight
-
-We can create a percpu variable instead of pushing the path on the stack. But
-this might fail if the trancepoint is called in a preempt enabled path. Also
-having the percpu variable always hanging when these mostly disabled is ugly.
-
-Maybe there's a better way to handle extracting this path info without copying
-it here. Let me see if I can improve on this.
-
-> forward things like:
-> 
-> 	trace_pelt_cfq(cfq);
-> 	trace_pelt_rq(rq);
-> 	trace_pelt_se(se);
-> 
-> And then have the thing attached to the event do the fat bits like
-> extract the path and whatnot.
-
-Thanks
-
---
-Qais Yousef
