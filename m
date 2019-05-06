@@ -2,115 +2,193 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56107C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B14C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321C0205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097382053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:08:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwpGHEEa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfEFRGs (ORCPT
+        id S1726750AbfEFRIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:06:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbfEFRGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:06:47 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 994A7206A3;
-        Mon,  6 May 2019 17:06:44 +0000 (UTC)
-Date:   Mon, 6 May 2019 13:06:43 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Message-ID: <20190506130643.62c35eeb@gandalf.local.home>
-In-Reply-To: <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
-References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
-        <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
-        <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
-        <20190502185225.0cdfc8bc@gandalf.local.home>
-        <20190502193129.664c5b2e@gandalf.local.home>
-        <20190502195052.0af473cf@gandalf.local.home>
-        <20190503092959.GB2623@hirez.programming.kicks-ass.net>
-        <20190503092247.20cc1ff0@gandalf.local.home>
-        <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
-        <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
-        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
-        <20190506095631.6f71ad7c@gandalf.local.home>
-        <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 6 May 2019 13:08:53 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:40454 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbfEFRIw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 13:08:52 -0400
+Received: by mail-it1-f195.google.com with SMTP id g71so6017212ita.5;
+        Mon, 06 May 2019 10:08:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+zAOIWhESqGIGUXIxvhr5jCceYW4d7dPv26f0+6ppZQ=;
+        b=FwpGHEEaQHeypZ6YAHiRFR4DLy25S5IYuo/+PhOatl65HSuOM6neo4+oD42BsbKY22
+         PE8q+knMcEXRiblfp+jUayBhft3AmqPSCfQnS/AFyPDC1LeScEfaZFiP/b8p23S9wnWQ
+         XDEHt29RnBBjFp8AcFZHcV9JRDJnSr3A9mkzCHyKFApkZ+tbAPIIiEmyE6vPcRx6BTKy
+         LMLmpwdRpxhCy7RJrSkJAwSSGrdJh6SbrUz7Y5uHlxJnD8WTxaq/sif7JEZSa/oyc/PS
+         2pUgDlVyOafIoHUHqVIxTodpMM/BW9ZEf4Y0EDRgG6makqDW5vHA2eC6AL9CN07e0I8y
+         aR2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+zAOIWhESqGIGUXIxvhr5jCceYW4d7dPv26f0+6ppZQ=;
+        b=nZw2vLhsyHvVTLpYTxMm5yxDJ1hEBsdved8q4qbarFq4iiH8cKVwtJN0BuU69ojuMl
+         CPwFhNZd7YRiz7Joe+tHErpm0bYTuR93YOkDlaVODOo/Fq0zO/xCEEpXjbEPL5vjLzRC
+         xeyIncA18Q19NsG2KGKbVUEM942JDe5cgp8dFSV8xr84H7yV/Mm5c8IldmzrLx/bq5Ri
+         owkP+GWY5MyvCCOPCulmVMIjQXk9qEsA0No2lrJMaO5i8aZ2DVw/woBeaAnz1h2e13Uh
+         KA+CpkwKe+J6mf0WQss0vmc2lmsbz7AoxaW6wZ5OliEV1UmuUpwg5psQkGdvWedNaMs8
+         fD+Q==
+X-Gm-Message-State: APjAAAUoF1psoLupfAWlzvARwyyQGB6Z4ZECOeED72sNTYGPxuobWe0A
+        B7TUqV2eSxxYrUzGBOLSg/A8vaXpsZoX+9+ObKU=
+X-Google-Smtp-Source: APXvYqwzdk3uznrvfpSXElhPh2UUfM29ZywDM63ZfmZvhTlO1uPQKUyZEirrHpdzDW34btdGM9Fpy+0MKV6HS6aBk6k=
+X-Received: by 2002:a24:93c2:: with SMTP id y185mr18158143itd.95.1557162531449;
+ Mon, 06 May 2019 10:08:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190503072813.2719-1-tiny.windzz@gmail.com> <20190503072813.2719-2-tiny.windzz@gmail.com>
+ <20190505162215.3594f77d@archlinux> <20190506122807.4u323iys74jddcet@flea> <282ccf0979e6c58effd0e177917bdf824c32f64e.camel@aosc.io>
+In-Reply-To: <282ccf0979e6c58effd0e177917bdf824c32f64e.camel@aosc.io>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Tue, 7 May 2019 01:08:39 +0800
+Message-ID: <CAEExFWusPoxtkGCoA+3gXq69cXZEfjZW+UpHW_0UfrcjpLmaXg@mail.gmail.com>
+Subject: Re: [PATCH 1/7] iio: adc: sun4i-gpadc: rework for support multiple
+ thermal sensor
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, lars@metafoo.de,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019 09:17:19 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Tue, May 7, 2019 at 12:52 AM Icenowy Zheng <icenowy@aosc.io> wrote:
+>
+> =E5=9C=A8 2019-05-06=E4=B8=80=E7=9A=84 14:28 +0200=EF=BC=8CMaxime Ripard=
+=E5=86=99=E9=81=93=EF=BC=9A
+> > Hi,
+> >
+> > On Sun, May 05, 2019 at 04:22:15PM +0100, Jonathan Cameron wrote:
+> > > On Fri,  3 May 2019 03:28:07 -0400
+> > > Yangtao Li <tiny.windzz@gmail.com> wrote:
+> > >
+> > > > For some SOCs, there are more than one thermal sensor, and there
+> > > > are
+> > > > currently four sensors on the A80. So we need to do some work in
+> > > > order
+> > > > to support multiple thermal sensors:
+> > > >
+> > > >   1) add sensor_count in gpadc_data.
+> > > >   2) introduce sun4i_sensor_tzd in sun4i_gpadc_iio, to support
+> > > > multiple
+> > > >      thermal_zone_device and distinguish between different
+> > > > sensors.
+> > > >   3) modify read temperature and initialization function.
+> > >
+> > > This comment doesn't mention the devm change. If it had it would
+> > > have
+> > > raised immediate alarm bells.
+> > >
+> > > I'm also not keen on the web of pointers that this driver is
+> > > steadily
+> > > evolving.  I can't immediately see how to reduce that complexity
+> > > however.
+> >
+> > So I might be responsible for that, and looking back, this has been a
+> > mistake.
+> >
+> > This driver was initally put together to support a controller found
+> > in
+> > older (A10 up to A31) Allwinner SoCs. This controller had an ADC
+> > driver that could be operated as a touchscreen controller, and was
+> > providing a CPU temperature sensor and a general purpose ADC.
+> >
+> > However, we already had a driver for that controller in drivers/input
+> > to report the CPU temperature, and the one in IIO was introduced to
+> > support the general purpose ADC (and the CPU temperature). The long
+> > term goal was to add the touchscreen feature as well eventually so
+> > that we could remove the one in drivers/input. That didn't happen.
+> >
+> > At the same time, the Allwinner hardware slowly evolved to remove the
+> > touchscreen and ADC features, and only keep the CPU temperature
+> > readout. It then evolved further on to support multiple temperatures
+> > (for different clusters, the GPU, and so on).
+> >
+> > So, today, we're in a situation where I was pushing everything into
+> > that IIO drivers since there was similiraties between all the
+> > generations, but the fact that we have to support so many odd cases
+> > (DT bindings compatibility, controllers with and without ADC, etc)
+> > that it becomes a real mess.
+> >
+> > And that mess isn't really used by anybody, since we want to have the
+> > touchscreen.
+> >
+> > There's only one SoC that is supported only by that driver, which is
+> > the A33 that only had a CPU temperature readout, and is still pretty
+> > similar to the latest SoC from Allwinner (that is supported by this
+> > series).
+> >
+> > I guess, for everyone's sanity and in order to not stall this
+> > further,
+> > it would just be better to create an hwmon driver for the A33 (and
+> > onwards, including the H6) for the SoC that just have the temperature
+> > readout feature. And for the older SoC, we just keep the older driver
+> > under input/. Once the A33 is supported, we'll remove the driver in
+> > IIO (and the related bits in drivers/mfd).
 
-> So what is it that doesn't actually work? I've looked at the patch
-> even more, and I can't for the life of me see how it wouldn't work.
-> 
-> Of course, I didn't test any of the actual ftrace parts, since I
-> short-circuited them intentionally with the above test function hack.
-> I have no idea what the semantics for those
-> ftrace_location(ip)/is_ftrace_caller(ip) cases are supposed to be, I
-> only tested that yes, the infrastructure clearly emulates a call
-> instruction.
+a hwmon driver or a thermal driver=EF=BC=9F
 
-Can you try booting with:
+>
+> I think a thermal driver is better.
 
-CONFIG_KPROBE_EVENTS=y
-CONFIG_UPROBE_EVENTS=y
-CONFIG_DYNAMIC_EVENTS=y
-CONFIG_PROBE_EVENTS=y
-CONFIG_DYNAMIC_FTRACE=y
-CONFIG_DYNAMIC_FTRACE_WITH_REGS=y
-CONFIG_FUNCTION_PROFILER=y
-CONFIG_FTRACE_MCOUNT_RECORD=y
-CONFIG_FTRACE_SELFTEST=y
-CONFIG_FTRACE_STARTUP_TEST=y
-CONFIG_TRACEPOINT_BENCHMARK=y
-CONFIG_RING_BUFFER_BENCHMARK=y
-CONFIG_RING_BUFFER_STARTUP_TEST=y
+This is what I hope to see a few months ago.
 
+>
+> Other SoCs' thermal sensor drivers are all thermal drivers.
+>
+> >
+> > Armbian already has a driver for that they never upstreamed iirc, so
+> > it might be a good starting point, and we would add the support for
+> > the H6. How does that sound?
+>
+> I think the developer abandoned to upstream it because of the previous
+> problem ;-)
+>
+> Maybe it can be taken and add A33&H6 support.
 
-And see if it boots?
+If OK, I am going to start some thermal driver work this weekend.  : )
 
--- Steve
+Cheers,
+Yangtao
+
+>
+> >
+> > Sorry for wasting everybody's time on this.
+> >
+> > Maxime
+> >
+> > --
+> > Maxime Ripard, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
