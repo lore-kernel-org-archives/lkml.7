@@ -2,69 +2,92 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D73C46460
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F4CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3349B2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAC12053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:50:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STLGVkk9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbfEFOux (ORCPT
+        id S1729418AbfEFOu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:50:53 -0400
-Received: from gate.crashing.org ([63.228.1.57]:56032 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726346AbfEFOtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:49:14 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x46EmgOD026749;
-        Mon, 6 May 2019 09:48:42 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x46Emeop026748;
-        Mon, 6 May 2019 09:48:40 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Mon, 6 May 2019 09:48:40 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 00/10] implement DYNAMIC_DEBUG_RELATIVE_POINTERS
-Message-ID: <20190506144840.GZ8599@gate.crashing.org>
-References: <20190409212517.7321-1-linux@rasmusvillemoes.dk> <1afb0702-3cc5-ba4f-2bdd-604d9da2b846@rasmusvillemoes.dk> <20190506070544.GA66463@gmail.com> <25dfde77-fdad-0b99-75ec-4ba480058970@rasmusvillemoes.dk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25dfde77-fdad-0b99-75ec-4ba480058970@rasmusvillemoes.dk>
-User-Agent: Mutt/1.4.2.3i
+        Mon, 6 May 2019 10:50:58 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38756 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfEFOu5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:50:57 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a59so6492682pla.5;
+        Mon, 06 May 2019 07:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Yft7gFfFtwWc/a4cPI5/imyDvpQ6B50i8MJ8FHJY3Qs=;
+        b=STLGVkk9q3xG5XzEWIxDxCWzi7LbMYZk/zsgVLMCL4xGBxj0aS+nJAMPhJvVrh8ZZ5
+         tyWv/Cdqs+zOFxlkBgEgmvES139xCjiWTbeLWMB3i50jOyxm88aFFEbIjm0HVnFlaXhr
+         Bz7CDYehYQXVOmPoOXvPc+bfDchq+uKGmgI70iI3yk2t+/ElBy27YV3T8059gbL8drxm
+         phfRyQ8OlvTTKYppdrvKlcl0xpcJHkktMY3ianUgMFAOTO6mKeK1HgkSZOGGvK4yShTf
+         WucVDLAwRYwYS9sGY2k9EiifogAt7NurM4daSspYuJxu5lKI6qUrhWMlaF6hiGtgZRF3
+         k+3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yft7gFfFtwWc/a4cPI5/imyDvpQ6B50i8MJ8FHJY3Qs=;
+        b=UTKMdhpF5waoK3jN85LSv3dXPKBnArZNd+uPIRzwS5Rr7YF17MUuZTINPgsS9Kymjy
+         f4g0GBh4VrB3sadraIl1yTkH3Mi5KdU9A5ln/4O3zHYmxy1YcvBg+jOBy8DXSyokJ/pe
+         mXHtF5iWrbn71QOk2Z57MdlvacYOTo5Rl6a1/l8UN1lSKvtxylUMkSxanH0/gE5GRdGl
+         NAdZjR/6CwmCmyPLfpm+/XfThSHh1/ry0Ffo8/T7VbIzYylkpCanqQbmnCBSMFDe+I4H
+         ecr9zh8AVP7WHVs0LQ9ZOFznQXoB/7Br11WL4TBd62t8o+ce9pYgNvP81hkJhZ59gE9w
+         4HNA==
+X-Gm-Message-State: APjAAAUz6ZvDbzxOzlCzDCWOWehtOVM4BsGX2FHgPaRZwVJYUV68gMKW
+        XtR0J/hs6wnItLBIFpPGU6AH1cK653NWJbJEugdXw7HKu1lTkw==
+X-Google-Smtp-Source: APXvYqy8wpf4YDDJWESxP3aiIHocm0jQsnFWNLQ3cd6ry01eg907GSjDg7den4prkFMH+wV8/3Jw0LpLJV0BD5ifkqY=
+X-Received: by 2002:a17:902:758b:: with SMTP id j11mr33334728pll.87.1557154256970;
+ Mon, 06 May 2019 07:50:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190506232200.1acfe572@canb.auug.org.au>
+In-Reply-To: <20190506232200.1acfe572@canb.auug.org.au>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 6 May 2019 17:50:45 +0300
+Message-ID: <CAHp75VcbWN+--XSepr3Ea48cnfY3h7=TpmM2sEt0rJLZ_QX2rA@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the drivers-x86 tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 09:34:55AM +0200, Rasmus Villemoes wrote:
-> I _am_ bending the C rules a bit with the "extern some_var; asm
-> volatile(".section some_section\nsome_var: blabla");". I should probably
-> ask on the gcc list whether this way of defining a local symbol in
-> inline assembly and referring to it from C is supposed to work, or it
-> just happens to work by chance.
+On Mon, May 6, 2019 at 4:22 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Commit
+>
+>   cc86bb923508 ("platform/x86: thinkpad_acpi: fix spelling mistake "capabilites" -> "capabilities"")
+>
+> is missing a Signed-off-by from its committer.
 
-It only works by chance.  There is no way GCC can know the asm needs
-that variable.  If you make it (or its address) an input of the asm it
-should work as far as I can see?  (Need exact code to analyse it exactly).
+It's fixed now, thanks!
+
+>
+> --
+> Cheers,
+> Stephen Rothwell
 
 
-Segher
+
+-- 
+With Best Regards,
+Andy Shevchenko
