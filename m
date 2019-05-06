@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1763BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA18C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D38202053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 622222053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154605;
-	bh=RlmniEJwBXOW+NjN3pyjmupFRydJ9KjlAVSH+e0+/Do=;
+	s=default; t=1557154611;
+	bh=Gf/gTgeIoE4zABm9pswI2HzfvG1pzYaXciTyOVoaJ0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WMe/KHOxVR/tqmzpjPI4pMfxDbJtduSXwyhzzB4bj/c6XPkiKdeLFDMHrXA+YkEA4
-	 AITPjwY2+sU3qtepbeQXpz6alKe72RKeJo6wFJ93C5oALnd9YdDg6cw80L8ReEZ4e+
-	 IZWMlrRF69aRiVc2OqiZR0As8Xa4IQmVn1jdeChQ=
+	b=eArl57CQiQB9bs8xHtEwYsf4YcCbMuaUDvB1DpBcvgu6ZSGxXNUU+/HYR15eTAZKs
+	 0brmyKa7qtEW9Bkwcw/rAoaLER2ddEX5FNwnpU6829aQ2wlnbhmdi74p4AXiaKOG+6
+	 cyTxD88BT02vooR96I6x+vjr264SCzsxCIFAncfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfEFO4o (ORCPT
+        id S1728895AbfEFO4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41454 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:56:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728466AbfEFOo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:57 -0400
+        id S1728178AbfEFOow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F7C12087F;
-        Mon,  6 May 2019 14:44:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01EFD2053B;
+        Mon,  6 May 2019 14:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153896;
-        bh=RlmniEJwBXOW+NjN3pyjmupFRydJ9KjlAVSH+e0+/Do=;
+        s=default; t=1557153891;
+        bh=Gf/gTgeIoE4zABm9pswI2HzfvG1pzYaXciTyOVoaJ0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KAqJ48Qm5OInN9+OP/4VUlhW68/37tAQz/IDAaGgatjPI4mFKQZw67HkV1bri1V30
-         eTaSny+mWKnNjQDsnF82g25wSe/KmLDa4V1fw8t46VNn7SXf2SZNO21ZnteP3WY2I6
-         sfPcfrnab+e0wgs7r00BXmanWRt7UkG40hHMA3XQ=
+        b=0d6L+0RIfi8iJEzx874/Z4aQxKt6ZXAIQAID6deLoxAQGa7e/lIJwEuYir5Bf+pdB
+         2E1RUN/lYo+bN/is30vdyjT+pyBJ1dN6IQU/Q7cZyw3DrTT8dqzpu2w33WmzZY6WU6
+         n7E8TjF4gzuZl4/8wFh7VRxTwwXBotwIca/fQ6GY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Omri Kahalon <omrik@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 36/75] net: stmmac: ratelimit RX error logs
-Date:   Mon,  6 May 2019 16:32:44 +0200
-Message-Id: <20190506143056.491057244@linuxfoundation.org>
+Subject: [PATCH 4.14 34/75] net/mlx5: E-Switch, Fix esw manager vport indication for more vport commands
+Date:   Mon,  6 May 2019 16:32:42 +0200
+Message-Id: <20190506143056.299952048@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -60,49 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 972c9be784e077bc56472c78243e0326e525b689 ]
+[ Upstream commit eca4a928585ac08147e5cc8e2111ecbc6279ee31 ]
 
-Ratelimit RX error logs.
+Traditionally, the PF (Physical Function) which resides on vport 0 was
+the E-switch manager. Since the ECPF (Embedded CPU Physical Function),
+which resides on vport 0xfffe, was introduced as the E-Switch manager,
+the assumption that the E-switch manager is on vport 0 is incorrect.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Since the eswitch code already uses the actual vport value, all we
+need is to always set other_vport=1.
+
+Signed-off-by: Omri Kahalon <omrik@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index ecf3f8c1bc0e..0f85e540001f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3413,9 +3413,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 			 *  ignored
- 			 */
- 			if (frame_len > priv->dma_buf_sz) {
--				netdev_err(priv->dev,
--					   "len %d larger than size (%d)\n",
--					   frame_len, priv->dma_buf_sz);
-+				if (net_ratelimit())
-+					netdev_err(priv->dev,
-+						   "len %d larger than size (%d)\n",
-+						   frame_len, priv->dma_buf_sz);
- 				priv->dev->stats.rx_length_errors++;
- 				break;
- 			}
-@@ -3473,9 +3474,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 			} else {
- 				skb = rx_q->rx_skbuff[entry];
- 				if (unlikely(!skb)) {
--					netdev_err(priv->dev,
--						   "%s: Inconsistent Rx chain\n",
--						   priv->dev->name);
-+					if (net_ratelimit())
-+						netdev_err(priv->dev,
-+							   "%s: Inconsistent Rx chain\n",
-+							   priv->dev->name);
- 					priv->dev->stats.rx_dropped++;
- 					break;
- 				}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index d2914116af8e..090d54275a7d 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -79,8 +79,7 @@ static int arm_vport_context_events_cmd(struct mlx5_core_dev *dev, u16 vport,
+ 		 opcode, MLX5_CMD_OP_MODIFY_NIC_VPORT_CONTEXT);
+ 	MLX5_SET(modify_nic_vport_context_in, in, field_select.change_event, 1);
+ 	MLX5_SET(modify_nic_vport_context_in, in, vport_number, vport);
+-	if (vport)
+-		MLX5_SET(modify_nic_vport_context_in, in, other_vport, 1);
++	MLX5_SET(modify_nic_vport_context_in, in, other_vport, 1);
+ 	nic_vport_ctx = MLX5_ADDR_OF(modify_nic_vport_context_in,
+ 				     in, nic_vport_context);
+ 
+@@ -108,8 +107,7 @@ static int modify_esw_vport_context_cmd(struct mlx5_core_dev *dev, u16 vport,
+ 	MLX5_SET(modify_esw_vport_context_in, in, opcode,
+ 		 MLX5_CMD_OP_MODIFY_ESW_VPORT_CONTEXT);
+ 	MLX5_SET(modify_esw_vport_context_in, in, vport_number, vport);
+-	if (vport)
+-		MLX5_SET(modify_esw_vport_context_in, in, other_vport, 1);
++	MLX5_SET(modify_esw_vport_context_in, in, other_vport, 1);
+ 	return mlx5_cmd_exec(dev, in, inlen, out, sizeof(out));
+ }
+ 
 -- 
 2.20.1
 
