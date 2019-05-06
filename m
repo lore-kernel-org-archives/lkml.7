@@ -2,138 +2,107 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE15C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56AAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5AAF205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DB10205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:11:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gQBED0wb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5OZvw01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfEFQLg (ORCPT
+        id S1726955AbfEFQLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:11:36 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38497 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfEFQLg (ORCPT
+        Mon, 6 May 2019 12:11:44 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37631 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbfEFQLo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:11:36 -0400
-Received: by mail-qk1-f196.google.com with SMTP id a64so2345134qkg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:11:35 -0700 (PDT)
+        Mon, 6 May 2019 12:11:44 -0400
+Received: by mail-qt1-f193.google.com with SMTP id o7so3376698qtp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5D+9uGXmpcgmf1cygG1Z2A4baVhwlej9er6BryKLtzE=;
-        b=gQBED0wbfVpPD9V5NE6jRxR+fbZ9zEBhqIPMuIH9Tle/h9M/E6x/Iz+Eq33oUBvZK9
-         xGuMr6L1Lso4wNT+R01q/x4bzb6kbbMuMwYnZ+5FDqY0EkC3EN/ifqCBKrwJ9T9hvYcD
-         38j6qNxe4HQecJfCRZzdtFbNqOPc13M5kbtwSZtSIvGf/rDrK/RIuALyjYrz4pPYP/qq
-         AWyhAZ/2G5zz2OEgHd2dFYNppk7PhucOD4abLlviyAwYb7dxZG2YggrJ0mpEj7vkyruE
-         Q0EFaXqx9EJ/M7s2X2sMe6RBG+e8ekCW0TmJ2CdLouVNcerBHRNxPhWIXNzwW17xTaF/
-         8QNQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=rcnpY/WIFVK/FPBCViUfADoM+sRIp6prt/atWTfqvXk=;
+        b=e5OZvw01SDZXkXWSaqStHn7dXe8ak/ryKAdyZsXZUBmRNtmMsCAebrTHuvU2uPMOXd
+         09Mvl5yhsqg49QlDf2sRLYeGhpvwDZrXEWN0YpJveouDezc2PAfIgYT9R+iJ0on1jk38
+         krCrIeZLgHRBPPPTCbTLvxB+RIbjG/t/X66E9kpOC8Dj45bOq6QtcrrkBF9/vvEN8bCN
+         rwjj+pAK51mxrvy0LJ2jyzggxufpi3wauSSTvrfibQieeGD/cJIsVHHIRtBp/4IjIy3I
+         sZgxXbpfifcwraWl6N7jyxMx4oYsbgvvhvjin+hVNTYfKNrIf7uBDZJ76lDc+ueU6OgN
+         cSew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5D+9uGXmpcgmf1cygG1Z2A4baVhwlej9er6BryKLtzE=;
-        b=mTtMv272gPsm6yT9U6Tbtxc+irCNBlHelgfitSlfSA0o/+ng7khxAhushux0AFW6Cr
-         UXp27TkOZqw0xXk+oIldJGq6yNvYmvYoo8Z335uY47KS3tOQ4ZZL5XP1caGngGknuYTe
-         vDrvtDH/P5QThGX8aIuteNbITYMFaI+U4R7SJ0eWVnpQ/N1XfhfWeI3RYW0Xa8cPdwbo
-         8WRHMrzWAYC80rz3tLOMwhFHhp5vL8UEvUV2JtWen8bHoI/JxP0fDu1a21WWTvrbIua2
-         zyG4TiQUwzATZmuSda4c17Q5JlDwhLMV1MNb+IPiN6WCeiXLAx6gQFSbhy9CvTA5RD4q
-         vePA==
-X-Gm-Message-State: APjAAAUlBuql5hDobVAhAaq5ZH4A0jZyiAF5463qluuwpV6ya4sEx5gC
-        vopHOs/h6vD0U6gyN+Atzdn6JA==
-X-Google-Smtp-Source: APXvYqzVAmcTE1iEovsBofvY0k4QnpA8kI/dtcV+b++BNUlSdwH29yEL3TH+F4HAHF/kOYQUnFPMKQ==
-X-Received: by 2002:a37:404b:: with SMTP id n72mr20486940qka.98.1557159095116;
-        Mon, 06 May 2019 09:11:35 -0700 (PDT)
-Received: from ovpn-121-162.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id q56sm8483468qtk.72.2019.05.06.09.11.33
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=rcnpY/WIFVK/FPBCViUfADoM+sRIp6prt/atWTfqvXk=;
+        b=o4MjZsAmlqq6neIzigzQLmLtsflEuq3SilsqNfTRDRVfJ0IFNToXFyfgthjKoN54RG
+         8BvYNQo3FAuagH7mynQdHtLQ9hMY6FMbQvF37PS6pq23aSae6wOttNfEdEt1XMaRZZ+3
+         NHNq2EaSbtqwDBuE0ZmYEvRp/NbAQw15nOGVMLQ1Mwb0idHP7Xfbme/189se23OLkIdN
+         UXz/476eR17/avdJBK7srzF4n9B20KZzgOXQQhucgGWOLnqEOVeySGHHXmjtVMVEo3kc
+         wBBAfJ4V4ny3iajAP1t3IPVqTPvSRjtAIBscChPpf0OR+DDQJn60VmovVIheSChiMRwq
+         7jeA==
+X-Gm-Message-State: APjAAAWiIahpJXQBdzCab88J4GDuZzwFkTSXKwEZlVp91MzfCCwhR/Xk
+        wAHWF657iu0BQ3Li+1HOI2U=
+X-Google-Smtp-Source: APXvYqzEUboErIzwlyiC2jvb9AsaZw5lakCa05FDLeg4NZvw/mxX3oYLHazDmD6OWVGqaAWWDsiErA==
+X-Received: by 2002:ac8:26e4:: with SMTP id 33mr21675911qtp.388.1557159103213;
+        Mon, 06 May 2019 09:11:43 -0700 (PDT)
+Received: from llong.remote.csb (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 11sm6429783qtp.88.2019.05.06.09.11.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 09:11:34 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     jroedel@suse.de
-Cc:     tmurphy@arista.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] iommu/amd: fix a null-ptr-deref in map_sg()
-Date:   Mon,  6 May 2019 12:10:25 -0400
-Message-Id: <20190506161025.36744-1-cai@lca.pw>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Mon, 06 May 2019 09:11:42 -0700 (PDT)
+Subject: Re: [GIT PULL] locking changes for v5.2
+To:     Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190506085014.GA130963@gmail.com>
+From:   Waiman Long <longman9394@gmail.com>
+Message-ID: <a5ee37fe-bdcf-2da7-4f02-6d64b4dcd2d3@gmail.com>
+Date:   Mon, 6 May 2019 12:11:41 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190506085014.GA130963@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 1a1079011da3 ("iommu/amd: Flush not present cache in
-iommu_map_page") added domain_flush_np_cache() in map_sg() which
-triggered a crash below during boot. sg_next() could return NULL if
-sg_is_last() is true, so after for_each_sg(sglist, s, nelems, i), "s"
-could be NULL which ends up deferencing a NULL pointer later here,
+On 5/6/19 4:50 AM, Ingo Molnar wrote:
+> Linus,
+>
+> Please pull the latest locking-core-for-linus git tree from:
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-core-for-linus
+>
+>    # HEAD: d671002be6bdd7f77a771e23bf3e95d1f16775e6 locking/lockdep: Remove unnecessary unlikely()
+>
+> [ Dependency note: this tree depends on commits also in the RCU tree, 
+>   please disregard this pull request if you weren't able to pull the RCU 
+>   tree for some reason. ]
+>
+> Here are the locking changes in this cycle:
+>
+>  - rwsem unification and simpler micro-optimizations to prepare for more 
+>    intrusive (and more lucrative) scalability improvements in v5.3
+>    (Waiman Long)
 
-domain_flush_np_cache(domain, s->dma_address, s->dma_length);
+Is it possible to pull in also my "locking/rwsem: Prevent decrement of
+reader count before  increment" patch for 5.2? The rests can wait until 5.3.
 
-BUG: kernel NULL pointer dereference, address: 0000000000000018
-PGD 0 P4D 0
-Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN NOPTI
-CPU: 8 PID: 659 Comm: kworker/8:1 Tainted: G    B
-5.1.0-rc7-next-20190506+ #20
-Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40
-01/25/2019
-Workqueue: events work_for_cpu_fn
-RIP: 0010:map_sg+0x297/0x2e0
-Call Trace:
- scsi_dma_map+0xc6/0x160
- pqi_raid_submit_scsi_cmd_with_io_request+0x3b4/0x470 [smartpqi]
- pqi_scsi_queue_command+0x791/0xdd0 [smartpqi]
- scsi_queue_rq+0x79c/0x1200
- blk_mq_dispatch_rq_list+0x4dc/0xb70
- blk_mq_sched_dispatch_requests+0x2e1/0x310
- __blk_mq_run_hw_queue+0x128/0x200
- __blk_mq_delay_run_hw_queue+0x2b7/0x2d0
- blk_mq_run_hw_queue+0x127/0x1d0
- blk_mq_sched_insert_request+0x25c/0x320
- __scsi_scan_target+0x14d/0x790
- scsi_scan_target+0x115/0x120
- sas_rphy_add+0x1d1/0x280 [scsi_transport_sas]
- pqi_add_sas_device+0x187/0x1e0 [smartpqi]
- pqi_update_device_list+0x1227/0x1460 [smartpqi]
- pqi_update_scsi_devices+0x755/0x1980 [smartpqi]
- pqi_scan_scsi_devices+0x57/0xf0 [smartpqi]
- pqi_ctrl_init+0x149e/0x14df [smartpqi]
- pqi_pci_probe.cold.49+0x808/0x818 [smartpqi]
- local_pci_probe+0x7a/0xc0
- work_for_cpu_fn+0x2e/0x50
- process_one_work+0x522/0xa10
- worker_thread+0x363/0x5b0
- kthread+0x1d2/0x1f0
- ret_from_fork+0x22/0x40
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/iommu/amd_iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 867f8b155000..908f5618fb5c 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2578,7 +2578,8 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
- 		s->dma_length   = s->length;
- 	}
- 
--	domain_flush_np_cache(domain, s->dma_address, s->dma_length);
-+	if (s)
-+		domain_flush_np_cache(domain, s->dma_address, s->dma_length);
- 
- 	return nelems;
- 
--- 
-2.20.1 (Apple Git-117)
+Thanks,
+Longman
 
