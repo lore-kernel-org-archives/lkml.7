@@ -2,254 +2,99 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6414C04AAE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA895C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF692082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:16:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ucsc.edu header.i=@ucsc.edu header.b="O/PZC2uA"
+	by mail.kernel.org (Postfix) with ESMTP id 92E7C20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:48:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725890AbfEFFQ1 (ORCPT
+        id S1725890AbfEFFs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 01:16:27 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34872 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbfEFFQ1 (ORCPT
+        Mon, 6 May 2019 01:48:57 -0400
+Received: from ms01.santannapisa.it ([193.205.80.98]:57922 "EHLO
+        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfEFFs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 01:16:27 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w12so2029696wrp.2
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 22:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ucsc.edu; s=ucsc-google-2018;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jCh6x+ORi5EWv/IlypawahbbvpnK5RHTjISz62KuNKg=;
-        b=O/PZC2uANw4749yGxquasq82LLBwHsDNYDcytpi8MLvw8XUUWK3lDggrfpWl+FsV8S
-         dNE8ALd6B+SRamBl6n6yaRzROVtPN6QRl7VO46g0bAmW+VBC7rBQ6TGbgOrLifoEBOiN
-         aRSWUOFgTXgqNsYEjgN+golZVOJBQmJY+/EvLNRTdOIfdxsYsmyv8XvdoZW/WNTlRKn8
-         mLs8j003f2pqKvF8mfTL/Ra55S8bp9iLinYFxkxzCN5htz+REXwUZ2wmhrmf3KQzzYO5
-         QNLo+eJRbPgU/clyxPb03HGxYzpQRmMb8ZuKCJPVjj9/Hme17ypQ7+IEuu6ZlidXCIu+
-         yNng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jCh6x+ORi5EWv/IlypawahbbvpnK5RHTjISz62KuNKg=;
-        b=AfeLOBaNP2fzPnZzrgE1O1AiqglqJJgHpcMnQekfL32ycvvTinewCJuy4fW8nOprc0
-         fcxDA2ETJZRY36Sse3UjVi8B1n+f5/bUZQ6/i1XAAiP+JYzbXo1hb5Xfx7qhAwytHBxz
-         zkDEDTSFCYeusLPGMhk6vkTZOfe/GSiQwbaFSiJ1SvjFYVVOf7XkIUpRhN7wJn1scsGa
-         N0M2hvCDFf+NHDDZpVOj4giGhZ6S+QDQ8FZHS+0HRLWftJVOVz1QXRKNb8wJNIqxRD1/
-         figZ87Z3uWv8djr6XjuZ+j4UcI6ptS6aarW9mTaiSMgIyzte8WAd7C7pOoZDUGwZo1Kj
-         TQFA==
-X-Gm-Message-State: APjAAAULXaaNJBTjCIO46aYmY1iItPALPSS7lQZCxGRi9vte+1AXpcUn
-        DgZ1tXI9RJHJ437wcpvWbtUCshZp7zjiKiFptCcUOg==
-X-Google-Smtp-Source: APXvYqyNBjTLPxpA6Ti+erKMILGxw3zCHWCnIs8szraaRWWeF0H22yGhvqPUwRnLS1VQrUjg0jMvJ6T198uU1y8ou64=
-X-Received: by 2002:adf:f9c5:: with SMTP id w5mr91669wrr.26.1557119784614;
- Sun, 05 May 2019 22:16:24 -0700 (PDT)
+        Mon, 6 May 2019 01:48:57 -0400
+X-Greylist: delayed 3600 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 May 2019 01:48:55 EDT
+Received: from [151.41.47.232] (account l.abeni@santannapisa.it HELO sweethome.home-life.hub)
+  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
+  with ESMTPSA id 138841006; Mon, 06 May 2019 06:48:53 +0200
+From:   Luca Abeni <luca.abeni@santannapisa.it>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+        luca abeni <luca.abeni@santannapisa.it>
+Subject: [RFC PATCH 0/6] Capacity awareness for SCHED_DEADLINE
+Date:   Mon,  6 May 2019 06:48:30 +0200
+Message-Id: <20190506044836.2914-1-luca.abeni@santannapisa.it>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190425052152.6571-1-hlitz@ucsc.edu> <66434cc7-2bac-dd10-6edc-4560e6a0f89f@intel.com>
- <F305CAB7-F566-40D7-BC91-E88DE821520B@javigon.com> <a1df8967-2169-1c43-c55a-e2144fa53b9a@intel.com>
- <CAJbgVnWsHQRpEPkd77E6u0hoW5jKQaOGR-3dW9+drGNq_JYpfA@mail.gmail.com>
- <139AF16B-E69C-4AA5-A9AC-38576BB9BD4B@javigon.com> <CAJbgVnWTRWZB_Dc7F1cvtgWdYPCbJ_aJJ_mas01m51+8siHvHA@mail.gmail.com>
- <b7c03f26-90bb-ffd6-e744-6daf3bbe348d@intel.com>
-In-Reply-To: <b7c03f26-90bb-ffd6-e744-6daf3bbe348d@intel.com>
-From:   Heiner Litz <hlitz@ucsc.edu>
-Date:   Sun, 5 May 2019 22:16:13 -0700
-Message-ID: <CAJbgVnU3-ed42CBtPv7SWdtA=__bNcSPhiXwobuVKek2-BFBig@mail.gmail.com>
-Subject: Re: [PATCH] lightnvm: pblk: Introduce hot-cold data separation
-To:     Igor Konopko <igor.j.konopko@intel.com>
-Cc:     =?UTF-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>,
-        =?UTF-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
-        Hans Holmberg <hans.holmberg@cnexlabs.com>,
-        linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Igor, Javier,
+From: luca abeni <luca.abeni@santannapisa.it>
 
-both of you are right. Here is what I came up with after some more thinking=
-.
+The SCHED_DEADLINE scheduling policy currently has some issues with
+asymmetric CPU capacity architectures (such as ARM big.LITTLE).
+In particular, the admission control mechanism does not work correctly
+(because it considers all cores to have the same speed of the fastest
+core), and the scheduler does not consider the cores' speed when
+migrating tasks. 
 
-We can avoid the races in 2. and 3. with the following two invariants:
-I1: If we have a GC line with seq_id X, only garbage collect from
-lines older than X (this addresses 2.)
-I2: Guarantee that the open GC line always has a smaller seq_id than
-all open user lines (this addresses 3)
+This patchset fixes the issues by explicitly considering the cores'
+capacities in the admission control mechanism and in tasks' migration.
 
-We can enforce I2 by adding a minor seq_id. The major sequence id is
-only incremented when allocating a user line. Whenever a GC line is
-allocated we read the current major seq_id (open user line) and
-increment the minor seq_id. This allows us to order all GC lines
-before the open user line during recovery.
+In particular, the scheduler is improved so that "heavyweight tasks"
+(processes or threads having a runtime that on LITTLE cores becomes
+larger than the relative deadline) are scheduled on big cores. This
+allows respecting deadlines that are missed by the current scheduler.
 
-Problem with this approach:
-Consider the following example: There exist user lines U0, U1, U2
-(where 0,1,2 are seq_ids) and a non-empty GC5 line (with seq_id 5). If
-we now do only sequential writes all user lines will be overwritten
-without GC being required. As a result, data will now reside on U6,
-U7, U8. If we now need to GC we cannot because of I1.
-Solution: We cannot fast-forward the GC line's seq_id because it
-contains old data, so pad the GC line with zeros, close it and open a
-new GC9 line.
+Moreover, the migration logic is modified so that "lightweight tasks"
+(processes or threads having a runtime that on LITTLE cores is still
+smaller than the relative deadline) are scheduled on LITTLE cores
+when possible. This allows saving some energy without missing deadlines. 
+ 
 
-Generality:
-This approach extends to schemes that use e.g. hot, warm, cold open
-lines (adding a minor_minor_seq_id)
+luca abeni (6):
+  sched/dl: Improve deadline admission control for asymmetric CPU
+    capacities
+  sched/dl: Capacity-aware migrations
+  sched/dl: Try better placement even for deadline tasks that do not
+    block
+  sched/dl: Improve capacity-aware wakeup
+  sched/dl: If the task does not fit anywhere, select the fastest core
+  sched/dl: Try not to select a too fast core
 
-Heiner
+ drivers/base/arch_topology.c   |  1 +
+ include/linux/sched.h          |  1 +
+ include/linux/sched/topology.h |  3 ++
+ kernel/sched/core.c            |  2 +
+ kernel/sched/cpudeadline.c     | 53 ++++++++++++++++++++++--
+ kernel/sched/deadline.c        | 76 ++++++++++++++++++++++++++++------
+ kernel/sched/sched.h           | 16 +++++--
+ kernel/sched/topology.c        |  9 ++++
+ 8 files changed, 143 insertions(+), 18 deletions(-)
 
+-- 
+2.20.1
 
-On Thu, May 2, 2019 at 2:08 AM Igor Konopko <igor.j.konopko@intel.com> wrot=
-e:
->
->
->
-> On 01.05.2019 22:20, Heiner Litz wrote:
-> > Javier, Igor,
-> > you are correct. The problem exists if we have a power loss and we
-> > have an open gc and an open user line and both contain the same LBA.
-> > In that case, I think we need to care about the 4 scenarios:
-> >
-> > 1. user_seq_id > gc_seq_id and user_write after gc_write: No issue
-> > 2. user_seq_id > gc_seq_id and gc_write > user_write: Cannot happen,
-> > open user lines are not gc'ed
->
-> Maybe it would be just a theoretical scenario, but I'm not seeing any
-> reason why this cannot happen in pblk implementation:
-> Let assume that user line X+1 is opened when GC line X is already open
-> and the user line is closed when GC line X is still in use. Then GC
-> quickly choose user line X+1 as a GC victim and we are hitting 2nd case.
->
-> > 3. gc_seq_id > user_seq_id and user_write after gc_write: RACE
-> > 4. gc_seq_id > user_seq_id and gc_write after user_write: No issue
-> >
-> > To address 3.) we can do the following:
-> > Whenever a gc line is opened, determine all open user lines and store
-> > them in a field of pblk_line. When choosing a victim for GC, ignore
-> > those lines.
->
-> Your solution sounds right, but I would extend this based on my previous
-> comment to 2nd case by sth like: during opening new user data also add
-> this line ID to this "blacklist" for the GC selection.
->
-> Igor
->
-> >
-> > Let me know if that sounds good and I will send a v2
-> > Heiner
-> >
-> > On Tue, Apr 30, 2019 at 11:19 PM Javier Gonz=C3=A1lez <javier@javigon.c=
-om> wrote:
-> >>
-> >>> On 26 Apr 2019, at 18.23, Heiner Litz <hlitz@ucsc.edu> wrote:
-> >>>
-> >>> Nice catch Igor, I hadn't thought of that.
-> >>>
-> >>> Nevertheless, here is what I think: In the absence of a flush we don'=
-t
-> >>> need to enforce ordering so we don't care about recovering the older
-> >>> gc'ed write. If we completed a flush after the user write, we should
-> >>> have already invalidated the gc mapping and hence will not recover it=
-.
-> >>> Let me know if I am missing something.
-> >>
-> >> I think that this problem is orthogonal to a flush on the user path. F=
-or example
-> >>
-> >>     - Write to LBA0 + completion to host
-> >>     - [=E2=80=A6]
-> >>     - GC LBA0
-> >>     - Write to LBA0 + completion to host
-> >>     - fsync() + completion
-> >>     - Power Failure
-> >>
-> >> When we power up and do recovery in the current implementation, you
-> >> might get the old LBA0 mapped correctly in the L2P table.
-> >>
-> >> If we enforce ID ordering for GC lines this problem goes away as we ca=
-n
-> >> continue ordering lines based on ID and then recovering sequentially.
-> >>
-> >> Thoughts?
-> >>
-> >> Thanks,
-> >> Javier
-> >>
-> >>>
-> >>> On Fri, Apr 26, 2019 at 6:46 AM Igor Konopko <igor.j.konopko@intel.co=
-m> wrote:
-> >>>> On 26.04.2019 12:04, Javier Gonz=C3=A1lez wrote:
-> >>>>>> On 26 Apr 2019, at 11.11, Igor Konopko <igor.j.konopko@intel.com> =
-wrote:
-> >>>>>>
-> >>>>>> On 25.04.2019 07:21, Heiner Litz wrote:
-> >>>>>>> Introduce the capability to manage multiple open lines. Maintain =
-one line
-> >>>>>>> for user writes (hot) and a second line for gc writes (cold). As =
-user and
-> >>>>>>> gc writes still utilize a shared ring buffer, in rare cases a mul=
-ti-sector
-> >>>>>>> write will contain both gc and user data. This is acceptable, as =
-on a
-> >>>>>>> tested SSD with minimum write size of 64KB, less than 1% of all w=
-rites
-> >>>>>>> contain both hot and cold sectors.
-> >>>>>>
-> >>>>>> Hi Heiner
-> >>>>>>
-> >>>>>> Generally I really like this changes, I was thinking about sth sim=
-ilar since a while, so it is very good to see that patch.
-> >>>>>>
-> >>>>>> I have a one question related to this patch, since it is not very =
-clear for me - how you ensure the data integrity in following scenarios:
-> >>>>>> -we have open line X for user data and line Y for GC
-> >>>>>> -GC writes LBA=3DN to line Y
-> >>>>>> -user writes LBA=3DN to line X
-> >>>>>> -we have power failure when both line X and Y were not written com=
-pletely
-> >>>>>> -during pblk creation we are executing OOB metadata recovery
-> >>>>>> And here is the question, how we distinguish whether LBA=3DN from =
-line Y or LBA=3DN from line X is the valid one?
-> >>>>>> Line X and Y might have seq_id either descending or ascending - th=
-is would create two possible scenarios too.
-> >>>>>>
-> >>>>>> Thanks
-> >>>>>> Igor
-> >>>>>
-> >>>>> You are right, I think this is possible in the current implementati=
-on.
-> >>>>>
-> >>>>> We need an extra constrain so that we only GC lines above the GC li=
-ne
-> >>>>> ID. This way, when we order lines on recovery, we can guarantee
-> >>>>> consistency. This means potentially that we would need several open
-> >>>>> lines for GC to avoid padding in case this constrain forces to choo=
-se a
-> >>>>> line with an ID higher than the GC line ID.
-> >>>>>
-> >>>>> What do you think?
-> >>>>
-> >>>> I'm not sure yet about your approach, I need to think and analyze th=
-is a
-> >>>> little more.
-> >>>>
-> >>>> I also believe that probably we need to ensure that current user dat=
-a
-> >>>> line seq_id is always above the current GC line seq_id or sth like t=
-hat.
-> >>>> We cannot also then GC any data from the lines which are still open,=
- but
-> >>>> I believe that this is a case even right now.
-> >>>>
-> >>>>> Thanks,
-> >>>>> Javier
