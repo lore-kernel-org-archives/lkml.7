@@ -2,198 +2,112 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC486C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D2BC04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA4432082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6A720830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:42:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hBHK5Dj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbfEFGlO (ORCPT
+        id S1726095AbfEFGmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 02:41:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42966 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725830AbfEFGlN (ORCPT
+        Mon, 6 May 2019 02:42:50 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37193 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfEFGmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 02:41:13 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x466cebw032015
-        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 02:41:12 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2safjbrkjr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:41:12 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Mon, 6 May 2019 07:41:10 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 6 May 2019 07:41:07 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x466f6CU51445868
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 May 2019 06:41:06 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E228952065;
-        Mon,  6 May 2019 06:41:05 +0000 (GMT)
-Received: from [9.145.46.119] (unknown [9.145.46.119])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4AA8D5205A;
-        Mon,  6 May 2019 06:41:05 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v2 1/7] s390: vfio-ap: wait for queue empty on queue reset
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
- <1556918073-13171-2-git-send-email-akrowiak@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Mon, 6 May 2019 08:41:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 6 May 2019 02:42:49 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 132so2323264ljj.4
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 23:42:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kczJA0awqdoA0ORNL2OLUesgvZQuju/puNenMWJZnJs=;
+        b=hBHK5Dj/+/9RsrxgVMPxDHF5voi9VNs/bZnK1MrhfA5lRcvYi8EcaPEpzJJoRFgcWH
+         FQJflnlMcwe2e3kkppMG1fo6drZtZRQbBnksEnmbh8gH5QOEXbW3b7XQQtbYxwgxhnp9
+         Rce783IBgTTRdV/F6GubWOA84+TIGZ7/FsRSHGJGDfg+xZwAFPIr/eU11xaaQkKSowP1
+         Vu5qbCwMJFJgVAb0efR3AzhWlvTxfwe7CNjYhJdNu0MRABXOI0ogu2gYN1ZHd47DXKFV
+         wid9EQsKj70NWtlibFyZO0c3pO813bWgyW++V7EGfh6TrgVPItwvH25k9VonTp6uzApT
+         6sVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kczJA0awqdoA0ORNL2OLUesgvZQuju/puNenMWJZnJs=;
+        b=VC4XPqrRZpNzw/dueaESLzkJBmrZDQecYgSdJhsxilvqwiV0J4xDhSpSZ8DAGwpIfM
+         uO3/kzJxXpDcyhT88VO8PllEoNqt/LjSeIqOozX+lFsBL6ZjRZ0UhFhVniPlS+zeb7ir
+         JNbjbzm9PDL+kswAIVv8FcRDse6L0Jj1Qjvur/dkVXDq6AeeHKPsi++yY4ocZNwDuyRH
+         AVZylEOXDLjVIdHUAVsqF0cLIOAh+av49cQn6pUXIZYLOOk0r1Tcf3mgfOjzUCKjcfq/
+         09NNVPY5wapkslVkfpw/NmjVDlq6wuIvnBJCAtT2InHCKUk1pzsaJP0dCxXcMLtrHjk5
+         0ffQ==
+X-Gm-Message-State: APjAAAVx6QXkscEBR8owLXrhXB3FCa2R4H0jqSz7eGaAX7/L9hxQIu8l
+        3MqziCPvsfVtqczZQa74Yq0zw6dnJv+hjaRFRG63JA==
+X-Google-Smtp-Source: APXvYqzECzkqvuxznKULj5aWJNaUw2MEkVcg4fgbtysnQxn5pELNdiFkFl5c+9+UvZ55+uPDQ5wZRCiIcbF2LmUHVLU=
+X-Received: by 2002:a2e:988e:: with SMTP id b14mr12222773ljj.126.1557124967799;
+ Sun, 05 May 2019 23:42:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1556918073-13171-2-git-send-email-akrowiak@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050606-0012-0000-0000-00000318B306
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050606-0013-0000-0000-000021512AA5
-Message-Id: <0bdb1655-4c4e-1982-a842-9dfc7c02a576@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905060056
+References: <20190505130413.32253-1-masneyb@onstation.org>
+In-Reply-To: <20190505130413.32253-1-masneyb@onstation.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 6 May 2019 08:42:36 +0200
+Message-ID: <CACRpkda=JTfKC4z=1Gmt1BE5adwd8XGZ4ERTgapWX_BN9TFESw@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/6] ARM: qcom: initial Nexus 5 display support
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        freedreno@lists.freedesktop.org, Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/05/2019 23:14, Tony Krowiak wrote:
-> Refactors the AP queue reset function to wait until the queue is empty
-> after the PQAP(ZAPQ) instruction is executed to zero out the queue as
-> required by the AP architecture.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->   drivers/s390/crypto/vfio_ap_ops.c | 35 ++++++++++++++++++++++++++++++++---
->   1 file changed, 32 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 900b9cf20ca5..b88a2a2ba075 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -271,6 +271,32 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
->   	return 0;
->   }
->   
-> +static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned long apqi)
-> +{
-> +	struct ap_queue_status status;
-> +	ap_qid_t qid = AP_MKQID(apid, apqi);
-> +	int retry = 5;
-> +
-> +	do {
-> +		status = ap_tapq(qid, NULL);
-> +		switch (status.response_code) {
-> +		case AP_RESPONSE_NORMAL:
-> +			if (status.queue_empty)
-> +				return;
-> +			msleep(20);
+On Sun, May 5, 2019 at 3:04 PM Brian Masney <masneyb@onstation.org> wrote:
 
-NIT: 	Fall through ?
+> mdp5_get_scanoutpos() and mdp5_get_vblank_counter() both return 0, which
+> is causing this stack trace to be dumped into the system log several
+> times:
+>
+>     WARNING: CPU: 0 PID: 5 at drivers/gpu/drm/drm_atomic_helper.c:1430 drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290
+>     [CRTC:49:crtc-0] vblank wait timed out
+>     Modules linked in:
+>     CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.1.0-rc6-next-20190426-00006-g35c0d32a96e1-dirty #191
+>     Hardware name: Generic DT based system
+>     Workqueue: events deferred_probe_work_func
+>     [<c031229c>] (unwind_backtrace) from [<c030d5ac>] (show_stack+0x10/0x14)
+>     [<c030d5ac>] (show_stack) from [<c0ac134c>] (dump_stack+0x78/0x8c)
+>     [<c0ac134c>] (dump_stack) from [<c0321660>] (__warn.part.3+0xb8/0xd4)
+>     [<c0321660>] (__warn.part.3) from [<c03216e0>] (warn_slowpath_fmt+0x64/0x88)
+>     [<c03216e0>] (warn_slowpath_fmt) from [<c0761a0c>] (drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290)
+>     [<c0761a0c>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c07b0a98>] (mdp5_complete_commit+0x14/0x40)
+>     [<c07b0a98>] (mdp5_complete_commit) from [<c07ddb80>] (msm_atomic_commit_tail+0xa8/0x140)
+>     [<c07ddb80>] (msm_atomic_commit_tail) from [<c0763304>] (commit_tail+0x40/0x6c)
+>     [<c07633f4>] (drm_atomic_helper_commit) from [<c07667f0>] (restore_fbdev_mode_atomic+0x168/0x1d4)
 
-> +			break;
-> +		case AP_RESPONSE_RESET_IN_PROGRESS:
-> +		case AP_RESPONSE_BUSY:
-> +			msleep(20);
-> +			break;
-> +		default:
-> +			pr_warn("%s: tapq err %02x: %04lx.%02lx may not be empty\n",
-> +				__func__, status.response_code, apid, apqi);
+I recently merged this patch:
+https://cgit.freedesktop.org/drm/drm-misc/commit/?id=b3198c38f02d54a5e964258a2180d502abe6eaf0
 
-I do not thing the warning sentence is appropriate:
-The only possible errors here are if the AP is not available due to AP 
-checkstop, deconfigured AP or invalid APQN.
+I noticed that DSI is sometimes way slower than a monitor, even  in HS mode.
+On the MCDE this happened on the first screen update, which was slower
+than 50ms.
 
+Check if your vblanks are simply slow, try bumping this timeout even higher,
+I spent weeks finding this issue which boils down to an assumption that
+the vblank will be fired from something like a monitor at 50 or 60 HZ
+~20 ms so 50ms seemed like a good timeout at the time.
 
-> +			return;
-> +		}
-> +	} while (--retry);
-> +}
-> +
->   /**
->    * assign_adapter_store
->    *
-> @@ -790,15 +816,18 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
->   	return NOTIFY_OK;
->   }
->   
-> -static int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
-> -				    unsigned int retry)
-> +int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
->   {
->   	struct ap_queue_status status;
-> +	int retry = 5;
->   
->   	do {
->   		status = ap_zapq(AP_MKQID(apid, apqi));
->   		switch (status.response_code) {
->   		case AP_RESPONSE_NORMAL:
-> +			vfio_ap_mdev_wait_for_qempty(apid, apqi);
-> +			return 0;
-> +		case AP_RESPONSE_DECONFIGURED:
+On a DSI display this is dubious, absolutely in LP mode, and even
+in HS mode.
 
-Since you modify the switch, you can return for all the following cases:
-AP_RESPONSE_DECONFIGURE
-..._CHECKSTOP
-..._INVALID_APQN
-
-
-And you should wait for qempty on AP_RESET_IN_PROGRESS along with 
-AP_RESPONSE_NORMAL
-
->   			return 0;
->   		case AP_RESPONSE_RESET_IN_PROGRESS:
->   		case AP_RESPONSE_BUSY:
-
-While at modifying this function, the AP_RESPONSE_BUSY is not a valid 
-code for ZAPQ, you can remove this.
-
-> @@ -824,7 +853,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
->   			     matrix_mdev->matrix.apm_max + 1) {
->   		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
->   				     matrix_mdev->matrix.aqm_max + 1) {
-> -			ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
-> +			ret = vfio_ap_mdev_reset_queue(apid, apqi);
-
-IMHO, since you are at changing this call, passing the apqn as parameter 
-would be a good simplification.
-
-
-
->   			/*
->   			 * Regardless whether a queue turns out to be busy, or
->   			 * is not operational, we need to continue resetting
-
-Depends on why the reset failed, but this is out of scope.
-
-> 
-
-
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
-
+Yours,
+Linus Walleij
