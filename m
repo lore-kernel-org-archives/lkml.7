@@ -2,95 +2,133 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C862DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95B5C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7D7206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:30:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LwG+Z+Iy"
+	by mail.kernel.org (Postfix) with ESMTP id C087321530
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbfEFXaZ (ORCPT
+        id S1726403AbfEFXai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 19:30:25 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:15211 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfEFXaY (ORCPT
+        Mon, 6 May 2019 19:30:38 -0400
+Received: from www62.your-server.de ([213.133.104.62]:49720 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfEFXah (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 19:30:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd0c36d0000>; Mon, 06 May 2019 16:29:49 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 May 2019 16:30:23 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 May 2019 16:30:23 -0700
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 May
- 2019 23:30:23 +0000
-From:   <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 0/5] mm/hmm: HMM documentation updates and code fixes
-Date:   Mon, 6 May 2019 16:29:37 -0700
-Message-ID: <20190506232942.12623-1-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 6 May 2019 19:30:37 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hNmkx-0007So-C5; Tue, 07 May 2019 01:10:47 +0200
+Received: from [178.199.41.31] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hNmkx-00061k-4J; Tue, 07 May 2019 01:10:47 +0200
+Subject: Re: [PATCH v2 1/4] bpf: Add support for reading user pointers
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Michal Gregorczyk <michalgr@live.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        duyuchao <yuchao.du@unisoc.com>,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        bpf@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>, netdev@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>
+References: <20190506183116.33014-1-joel@joelfernandes.org>
+ <3c6b312c-5763-0d9c-7c2c-436ee41f9be1@iogearbox.net>
+ <20190506195711.GA48323@google.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <7e0d07af-79ad-5ff3-74ce-c12b0b9b78cd@iogearbox.net>
+Date:   Tue, 7 May 2019 01:10:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557185389; bh=mta6lvER55pJmKi6odFyptVYcK5PuHqcwXSPKJWVRbY=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:X-Originating-IP:
-         X-ClientProxiedBy:Content-Transfer-Encoding:Content-Type;
-        b=LwG+Z+IypCu/9CAOnvaVu10/3zZeMNdtntNmkP+Wy9zH5AuV3pgXklp6x/VXDiVk1
-         pYvpjypSdkVh+WcZIQl+58wbS96p8vDHAzxD53/XRb2U9b4AlIFACrbdgXXSMbmnvl
-         xpdZT8dE2iQqRPBgOxKL0bTLcpPJPsvtIFtqXSRzkEDD4DGXZbqaX07jX+hb6GIAQN
-         cxBONRH7a7Avcam0YtnIBN7ysG+Wky5nPcDfovDeHcqrKL8eg5BY/URsbjy5RxzqWp
-         Kkhxv8o3+AM1C6szZ4TDWZ846ybHWGxTpOPVMHMXGwT92Iqani0qWBab2YbsrOO5D7
-         Wknzcx03wK0qg==
+In-Reply-To: <20190506195711.GA48323@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25441/Mon May  6 10:04:24 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ralph Campbell <rcampbell@nvidia.com>
+On 05/06/2019 09:57 PM, Joel Fernandes wrote:
+> On Mon, May 06, 2019 at 09:11:19PM +0200, Daniel Borkmann wrote:
+>> On 05/06/2019 08:31 PM, Joel Fernandes (Google) wrote:
+>>> The eBPF based opensnoop tool fails to read the file path string passed
+>>> to the do_sys_open function. This is because it is a pointer to
+>>> userspace address and causes an -EFAULT when read with
+>>> probe_kernel_read. This is not an issue when running the tool on x86 but
+>>> is an issue on arm64. This patch adds a new bpf function call based
+>>> which calls the recently proposed probe_user_read function [1].
+>>> Using this function call from opensnoop fixes the issue on arm64.
+>>>
+>>> [1] https://lore.kernel.org/patchwork/patch/1051588/
+>>>
+>>> Cc: Michal Gregorczyk <michalgr@live.com>
+>>> Cc: Adrian Ratiu <adrian.ratiu@collabora.com>
+>>> Cc: Mohammad Husain <russoue@gmail.com>
+>>> Cc: Qais Yousef <qais.yousef@arm.com>
+>>> Cc: Srinivas Ramana <sramana@codeaurora.org>
+>>> Cc: duyuchao <yuchao.du@unisoc.com>
+>>> Cc: Manjo Raja Rao <linux@manojrajarao.com>
+>>> Cc: Karim Yaghmour <karim.yaghmour@opersys.com>
+>>> Cc: Tamir Carmeli <carmeli.tamir@gmail.com>
+>>> Cc: Yonghong Song <yhs@fb.com>
+>>> Cc: Alexei Starovoitov <ast@kernel.org>
+>>> Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+>>> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+>>> Cc: Peter Ziljstra <peterz@infradead.org>
+>>> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+>>> Cc: Steven Rostedt <rostedt@goodmis.org>
+>>> Cc: Kees Cook <keescook@chromium.org>
+>>> Cc: kernel-team@android.com
+>>> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>>> ---
+>>> Masami, could you carry these patches in the series where are you add
+>>> probe_user_read function?
+>>>
+>>> Previous submissions is here:
+>>> https://lore.kernel.org/patchwork/patch/1069552/
+>>> v1->v2: split tools uapi sync into separate commit, added deprecation
+>>> warning for old bpf_probe_read function.
+>>
+>> Please properly submit this series to bpf tree once the base
+>> infrastructure from Masami is upstream.
+> 
+> Could you clarify what do you mean by "properly submit this series to bpf
+> tree" mean? bpf@vger.kernel.org is CC'd.
 
-I hit a use after free bug in hmm_free() with KASAN and then couldn't
-stop myself from cleaning up a bunch of documentation and coding style
-changes. So the first two patches are clean ups, the last three are
-the fixes.
+Yeah, send the BPF series to bpf@vger.kernel.org once Masami's patches have
+hit mainline, and we'll then route yours as fixes the usual path through
+bpf tree.
 
-Ralph Campbell (5):
-  mm/hmm: Update HMM documentation
-  mm/hmm: Clean up some coding style and comments
-  mm/hmm: Use mm_get_hmm() in hmm_range_register()
-  mm/hmm: hmm_vma_fault() doesn't always call hmm_range_unregister()
-  mm/hmm: Fix mm stale reference use in hmm_free()
+>> This series here should
+>> also fix up all current probe read usage under samples/bpf/ and
+>> tools/testing/selftests/bpf/.
+> 
+> Ok. Agreed, will do that.
 
- Documentation/vm/hmm.rst | 139 ++++++++++++++++++-----------------
- include/linux/hmm.h      |  84 ++++++++++------------
- mm/hmm.c                 | 151 ++++++++++++++++-----------------------
- 3 files changed, 174 insertions(+), 200 deletions(-)
-
---=20
-2.20.1
-
+Great, thanks!
+Daniel
