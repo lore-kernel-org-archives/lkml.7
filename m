@@ -2,52 +2,53 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8C9C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3D8C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55DA2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA522054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154972;
-	bh=0WuF+D2yCs80sYyHzl0SOws7YVOTsya/H5HvtWRlPXQ=;
+	s=default; t=1557154984;
+	bh=zxlYefP47DFqSGibVPrbuROJZDuq76+KTbQaLHVeOiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i2qEXKp3DtUDxr8nogZMpMEfUfd7ZrlMeRDL6MlXt01jthGHjYUSzN5sK6yGofW2H
-	 B5ee7EJJFwNpuNhuDlOfV0YmYyIqYUuN4m+yOD75jncMhUIq0NRtix1edlhu/2kNon
-	 +VpRs6Boh35pS+WJpKNVU7fyMzgx8tlZEs4LNqZE=
+	b=K5Ha3N4jfo4RL565QVvbIoK/rTwLXoBxnTnsCrLmZTjr+Cp02Es3DngsSrN4m5xyL
+	 hvpU8mYe9kV9NajQd2IAhvBaYrsDUQotFo1GheByFk9mfA0T8416UfgDbv9ZtOmoBi
+	 ecrRalvRIS+IGzEKJwtBQEqHdvdsh2MsS3TcZuyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfEFOkO (ORCPT
+        id S1727943AbfEFOkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:40:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33374 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:40:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727209AbfEFOkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:40:11 -0400
+        id S1727465AbfEFOj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:39:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F908206A3;
-        Mon,  6 May 2019 14:40:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FC70214AE;
+        Mon,  6 May 2019 14:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153610;
-        bh=0WuF+D2yCs80sYyHzl0SOws7YVOTsya/H5HvtWRlPXQ=;
+        s=default; t=1557153597;
+        bh=zxlYefP47DFqSGibVPrbuROJZDuq76+KTbQaLHVeOiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TAMNtVrSmomEKUQRgg2RjFkCZ7/qQe8EZEQ/yYnFoAObSqVXpUC3zMeoWHfv5EJG7
-         NlfKlCoV0tywG16GjWnRKUzHaKAwNpOiFLmq56u+Uc2b0ckaGxxLwBsO66pRbiLVTb
-         eBdta2LZqwxgGDDZnbLZHzQVeEcf8JPjQpIBuTcw=
+        b=nbl1vEb0bPdaLmgc2jbr0KjpDlZYeJQu58yMOW3V8XtLvjlrTDOIogCg2UNKBTNDE
+         7IMBiNPVzdA1L89j9lolJKl6Bc/IYh0UfaJWP95sUP0dl8qoLVPj4rBBHb4tMiHUdY
+         tPdu24gSBdBoSEQLiUmpX6qBYOwkRVf9WmFs7W3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 31/99] reset: meson-audio-arb: Fix missing .owner setting of reset_controller_dev
-Date:   Mon,  6 May 2019 16:32:04 +0200
-Message-Id: <20190506143056.773249251@linuxfoundation.org>
+        stable@vger.kernel.org, Jim Broadus <jbroadus@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.19 08/99] i2c: Allow recovery of the initial IRQ by an I2C client device.
+Date:   Mon,  6 May 2019 16:31:41 +0200
+Message-Id: <20190506143054.617663858@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -60,32 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 13e8a05b922457761ddef39cfff6231bd4ed9eef ]
+From: Jim Broadus <jbroadus@gmail.com>
 
-Set .owner to prevent module unloading while being used.
+commit 93b6604c5a669d84e45fe5129294875bf82eb1ff upstream.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Fixes: d903779b58be ("reset: meson: add meson audio arb driver")
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+A previous change allowed I2C client devices to discover new IRQs upon
+reprobe by clearing the IRQ in i2c_device_remove. However, if an IRQ was
+assigned in i2c_new_device, that information is lost.
+
+For example, the touchscreen and trackpad devices on a Dell Inspiron laptop
+are I2C devices whose IRQs are defined by ACPI extended IRQ types. The
+client device structures are initialized during an ACPI walk. After
+removing the i2c_hid device, modprobe fails.
+
+This change caches the initial IRQ value in i2c_new_device and then resets
+the client device IRQ to the initial value in i2c_device_remove.
+
+Fixes: 6f108dd70d30 ("i2c: Clear client->irq in i2c_device_remove")
+Signed-off-by: Jim Broadus <jbroadus@gmail.com>
+Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+[wsa: this is an easy to backport fix for the regression. We will
+refactor the code to handle irq assignments better in general.]
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/reset/reset-meson-audio-arb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/i2c-core-base.c |    9 +++++----
+ include/linux/i2c.h         |    1 +
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/reset/reset-meson-audio-arb.c b/drivers/reset/reset-meson-audio-arb.c
-index 91751617b37a..c53a2185a039 100644
---- a/drivers/reset/reset-meson-audio-arb.c
-+++ b/drivers/reset/reset-meson-audio-arb.c
-@@ -130,6 +130,7 @@ static int meson_audio_arb_probe(struct platform_device *pdev)
- 	arb->rstc.nr_resets = ARRAY_SIZE(axg_audio_arb_reset_bits);
- 	arb->rstc.ops = &meson_audio_arb_rstc_ops;
- 	arb->rstc.of_node = dev->of_node;
-+	arb->rstc.owner = THIS_MODULE;
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -430,7 +430,7 @@ static int i2c_device_remove(struct devi
+ 	dev_pm_clear_wake_irq(&client->dev);
+ 	device_init_wakeup(&client->dev, false);
  
- 	/*
- 	 * Enable general :
--- 
-2.20.1
-
+-	client->irq = 0;
++	client->irq = client->init_irq;
+ 
+ 	return status;
+ }
+@@ -741,10 +741,11 @@ i2c_new_device(struct i2c_adapter *adap,
+ 	client->flags = info->flags;
+ 	client->addr = info->addr;
+ 
+-	client->irq = info->irq;
+-	if (!client->irq)
+-		client->irq = i2c_dev_irq_from_resources(info->resources,
++	client->init_irq = info->irq;
++	if (!client->init_irq)
++		client->init_irq = i2c_dev_irq_from_resources(info->resources,
+ 							 info->num_resources);
++	client->irq = client->init_irq;
+ 
+ 	strlcpy(client->name, info->type, sizeof(client->name));
+ 
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -333,6 +333,7 @@ struct i2c_client {
+ 	char name[I2C_NAME_SIZE];
+ 	struct i2c_adapter *adapter;	/* the adapter we sit on	*/
+ 	struct device dev;		/* the device structure		*/
++	int init_irq;			/* irq set at initialization	*/
+ 	int irq;			/* irq issued by device		*/
+ 	struct list_head detected;
+ #if IS_ENABLED(CONFIG_I2C_SLAVE)
 
 
