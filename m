@@ -2,94 +2,117 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7DFC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E57DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCB620830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557161345;
-	bh=A2ZU/b3h0mxlEc0X8cpHPYUJ57458AgZno287cDLTqc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lb2tavpU17EEX86ZWpFmngqotMCRf7eaOiAD4vwri1V2tfll4516wfxrXnmQ9/OSw
-	 UrxvlGpHvDHjIjrA/Bopjtva6kKtAgMnVnQJiOmQo1n+T85YDRI+n6Ru1v2J1HqwsU
-	 OsYcSV2PVJhTKWuOzO+KRxOFVGlIaSlKqHSEVjPM=
+	by mail.kernel.org (Postfix) with ESMTP id 63BCB20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfEFQtE (ORCPT
+        id S1726646AbfEFQuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:49:04 -0400
-Received: from mga14.intel.com ([192.55.52.115]:25683 "EHLO mga14.intel.com"
+        Mon, 6 May 2019 12:50:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32938 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbfEFQtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:49:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 09:49:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
-   d="scan'208";a="230002448"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga001.jf.intel.com with ESMTP; 06 May 2019 09:49:01 -0700
-Date:   Mon, 6 May 2019 10:43:25 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Maxim Levitsky <mlevitsk@redhat.com>, Fam Zheng <fam@euphon.net>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jens Axboe <axboe@fb.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Amnon Ilan <ailan@redhat.com>, John Ferlan <jferlan@redhat.com>
-Subject: Re: [PATCH v2 00/10] RFC: NVME MDEV
-Message-ID: <20190506164325.GB2219@localhost.localdomain>
-References: <20190502114801.23116-1-mlevitsk@redhat.com>
- <20190503121838.GA21041@lst.de>
- <e8f6981863bdbba89adcba1c430083e68546ac1a.camel@redhat.com>
- <20190506125752.GA5288@lst.de>
+        id S1725883AbfEFQuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 12:50:20 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C2BB07E43D;
+        Mon,  6 May 2019 16:50:19 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B47F75EDE4;
+        Mon,  6 May 2019 16:50:10 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon,  6 May 2019 18:50:19 +0200 (CEST)
+Date:   Mon, 6 May 2019 18:50:09 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>, jack@suse.com,
+        Waiman Long <longman@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) !=
+ current) with fsfreeze (4.19.25-rt16)
+Message-ID: <20190506165009.GA28959@redhat.com>
+References: <20190326093421.GA29508@localhost.localdomain>
+ <20190419085627.GI4742@localhost.localdomain>
+ <20190430125130.uw7mhdnsoqr2v3gf@linutronix.de>
+ <20190430132811.GB2589@hirez.programming.kicks-ass.net>
+ <20190501170953.GB2650@hirez.programming.kicks-ass.net>
+ <20190502100932.GA7323@redhat.com>
+ <20190502114258.GB7323@redhat.com>
+ <20190503145059.GC2606@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190506125752.GA5288@lst.de>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <20190503145059.GC2606@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 06 May 2019 16:50:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 05:57:52AM -0700, Christoph Hellwig wrote:
-> > However, similar to the (1), when the driver will support the devices with
-> > hardware based passthrough, it will have to dedicate a bunch of queues to the
-> > guest, configure them with the appropriate PASID, and then let the guest useA
-> > these queues directly.
-> 
-> We will not let you abuse the nvme queues for anything else.  We had
-> that discussion with the mellanox offload and it not only unsafe but
-> also adds way to much crap to the core nvme code for corner cases.
-> 
-> Or to put it into another way:  unless your paravirt interface requires
-> zero specific changes to the core nvme code it is not acceptable at all.
+On 05/03, Peter Zijlstra wrote:
+>
+> -static void lockdep_sb_freeze_release(struct super_block *sb)
+> -{
+> -	int level;
+> -
+> -	for (level = SB_FREEZE_LEVELS - 1; level >= 0; level--)
+> -		percpu_rwsem_release(sb->s_writers.rw_sem + level, 0, _THIS_IP_);
+> -}
+> -
+> -/*
+> - * Tell lockdep we are holding these locks before we call ->unfreeze_fs(sb).
+> - */
+> -static void lockdep_sb_freeze_acquire(struct super_block *sb)
+> -{
+> -	int level;
+> -
+> -	for (level = 0; level < SB_FREEZE_LEVELS; ++level)
+> -		percpu_rwsem_acquire(sb->s_writers.rw_sem + level, 0, _THIS_IP_);
+> +	percpu_down_write_non_owner(sb->s_writers.rw_sem + level-1);
+>  }
 
-I agree we shouldn't specialize generic queues for this, but I think
-it is worth revisiting driver support for assignable hardware resources
-iff the specification defines it.
+I'd suggest to not change fs/super.c, keep these helpers, and even not introduce
+xxx_write_non_owner().
 
-Until then, you can always steer processes to different queues by
-assigning them to different CPUs.
+freeze_super() takes other locks, it calls sync_filesystem(), freeze_fs(), lockdep
+should know that this task holds SB_FREEZE_XXX locks for writing.
+
+
+> @@ -80,14 +83,8 @@ int __percpu_down_read(struct percpu_rw_
+>  	 * and reschedule on the preempt_enable() in percpu_down_read().
+>  	 */
+>  	preempt_enable_no_resched();
+> -
+> -	/*
+> -	 * Avoid lockdep for the down/up_read() we already have them.
+> -	 */
+> -	__down_read(&sem->rw_sem);
+> +	wait_event(sem->waiters, !atomic_read(&sem->block));
+>  	this_cpu_inc(*sem->read_count);
+
+Argh, this looks racy :/
+
+Suppose that sem->block == 0 when wait_event() is called, iow the writer released
+the lock.
+
+Now suppose that this __percpu_down_read() races with another percpu_down_write().
+The new writer can set sem->block == 1 and call readers_active_check() in between,
+after wait_event() and before this_cpu_inc(*sem->read_count).
+
+Oleg.
+
