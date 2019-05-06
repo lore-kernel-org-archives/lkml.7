@@ -2,53 +2,52 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC35C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4529C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 444552053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872342053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154750;
-	bh=SqD8OrZ7/sr4F+8A2XazlG09XH1CvAtt77rj9BDVjYU=;
+	s=default; t=1557154755;
+	bh=x1SGsy91AKrsrjIUaUkvzSRneNijMtxzmwlNUSfBJuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kqWYtwTvks6q0qtPrbdN8WaWRpY8pniGr99bCQGQk9ow6ajvX9i/gCcAFG6B/WCQO
-	 JkocsRg9iLaX28bowot6mii83Q332Jgo1/J/8nnVPp2Q/zytAUickH17uYETYxp3Yy
-	 ZAyeEMrJxFtb2rwGrbOtldjkmpPAvTTQfoCWcCHc=
+	b=p98roxO82gRD2NcA3/X2YZsZ9DlWqR5XOLV3iCGAe0UwzFOgj4aeOZ/3mnlKqOBIX
+	 sdIcYxTf+Dso8ma7rw4QlO1BxOvpDfiIAMzpCWGT0k+I9wgrGYm6NAMeScBFTsZFHS
+	 JQS19UMzXErIGCrMFsPDJDxLm+hA/9PRT2r1KO9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbfEFO7J (ORCPT
+        id S1727899AbfEFOnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:59:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:43:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727909AbfEFOnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:19 -0400
+        id S1728612AbfEFOnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E185C21655;
-        Mon,  6 May 2019 14:43:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C6862087F;
+        Mon,  6 May 2019 14:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153799;
-        bh=SqD8OrZ7/sr4F+8A2XazlG09XH1CvAtt77rj9BDVjYU=;
+        s=default; t=1557153787;
+        bh=x1SGsy91AKrsrjIUaUkvzSRneNijMtxzmwlNUSfBJuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YbqLv5ux0jyHBfwfog0ceFq+0q7ZCovlrQgovLqUcFqqeDSFdNhl0Yaol13rhnx3F
-         Dwu9N47ONQAafuG4Dz/Vi0RlZMBnHE5jpCk5nYGOt5x+DLb5Smpv9NTu8rLI3RzhIb
-         YT0F39v2Wm52PsTFUDZP3tiXy+qbVkCTtd4lzleA=
+        b=kTYlneADmzO0tcUX+12AKStfRJghZqiwf3Qr+LGsi4+fN+atm7Am36EYrjcnz0HNh
+         /SFErvoCqAdu9NePD39LClmoVz+t854i8TbwNmR5pg6gBom4FxHdyhpevOYbFRqory
+         UPMb26/EWrcTp0cGzhxMMRQuPelkDW9TVB12/5Z0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, Pu Wen <puwen@hygon.cn>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.19 93/99] x86/mce: Improve error message when kernel cannot recover, p2
-Date:   Mon,  6 May 2019 16:33:06 +0200
-Message-Id: <20190506143102.288742394@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 65/99] xsysace: Fix error handling in ace_setup
+Date:   Mon,  6 May 2019 16:32:38 +0200
+Message-Id: <20190506143100.027909452@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,50 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Luck <tony.luck@intel.com>
+[ Upstream commit 47b16820c490149c2923e8474048f2c6e7557cab ]
 
-commit 41f035a86b5b72a4f947c38e94239d20d595352a upstream.
+If xace hardware reports a bad version number, the error handling code
+in ace_setup() calls put_disk(), followed by queue cleanup. However, since
+the disk data structure has the queue pointer set, put_disk() also
+cleans and releases the queue. This results in blk_cleanup_queue()
+accessing an already released data structure, which in turn may result
+in a crash such as the following.
 
-In
+[   10.681671] BUG: Kernel NULL pointer dereference at 0x00000040
+[   10.681826] Faulting instruction address: 0xc0431480
+[   10.682072] Oops: Kernel access of bad area, sig: 11 [#1]
+[   10.682251] BE PAGE_SIZE=4K PREEMPT Xilinx Virtex440
+[   10.682387] Modules linked in:
+[   10.682528] CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.0.0-rc6-next-20190218+ #2
+[   10.682733] NIP:  c0431480 LR: c043147c CTR: c0422ad8
+[   10.682863] REGS: cf82fbe0 TRAP: 0300   Tainted: G        W          (5.0.0-rc6-next-20190218+)
+[   10.683065] MSR:  00029000 <CE,EE,ME>  CR: 22000222  XER: 00000000
+[   10.683236] DEAR: 00000040 ESR: 00000000
+[   10.683236] GPR00: c043147c cf82fc90 cf82ccc0 00000000 00000000 00000000 00000002 00000000
+[   10.683236] GPR08: 00000000 00000000 c04310bc 00000000 22000222 00000000 c0002c54 00000000
+[   10.683236] GPR16: 00000000 00000001 c09aa39c c09021b0 c09021dc 00000007 c0a68c08 00000000
+[   10.683236] GPR24: 00000001 ced6d400 ced6dcf0 c0815d9c 00000000 00000000 00000000 cedf0800
+[   10.684331] NIP [c0431480] blk_mq_run_hw_queue+0x28/0x114
+[   10.684473] LR [c043147c] blk_mq_run_hw_queue+0x24/0x114
+[   10.684602] Call Trace:
+[   10.684671] [cf82fc90] [c043147c] blk_mq_run_hw_queue+0x24/0x114 (unreliable)
+[   10.684854] [cf82fcc0] [c04315bc] blk_mq_run_hw_queues+0x50/0x7c
+[   10.685002] [cf82fce0] [c0422b24] blk_set_queue_dying+0x30/0x68
+[   10.685154] [cf82fcf0] [c0423ec0] blk_cleanup_queue+0x34/0x14c
+[   10.685306] [cf82fd10] [c054d73c] ace_probe+0x3dc/0x508
+[   10.685445] [cf82fd50] [c052d740] platform_drv_probe+0x4c/0xb8
+[   10.685592] [cf82fd70] [c052abb0] really_probe+0x20c/0x32c
+[   10.685728] [cf82fda0] [c052ae58] driver_probe_device+0x68/0x464
+[   10.685877] [cf82fdc0] [c052b500] device_driver_attach+0xb4/0xe4
+[   10.686024] [cf82fde0] [c052b5dc] __driver_attach+0xac/0xfc
+[   10.686161] [cf82fe00] [c0528428] bus_for_each_dev+0x80/0xc0
+[   10.686314] [cf82fe30] [c0529b3c] bus_add_driver+0x144/0x234
+[   10.686457] [cf82fe50] [c052c46c] driver_register+0x88/0x15c
+[   10.686610] [cf82fe60] [c09de288] ace_init+0x4c/0xac
+[   10.686742] [cf82fe80] [c0002730] do_one_initcall+0xac/0x330
+[   10.686888] [cf82fee0] [c09aafd0] kernel_init_freeable+0x34c/0x478
+[   10.687043] [cf82ff30] [c0002c6c] kernel_init+0x18/0x114
+[   10.687188] [cf82ff40] [c000f2f0] ret_from_kernel_thread+0x14/0x1c
+[   10.687349] Instruction dump:
+[   10.687435] 3863ffd4 4bfffd70 9421ffd0 7c0802a6 93c10028 7c9e2378 93e1002c 38810008
+[   10.687637] 7c7f1b78 90010034 4bfffc25 813f008c <81290040> 75290100 4182002c 80810008
+[   10.688056] ---[ end trace 13c9ff51d41b9d40 ]---
 
-  c7d606f560e4 ("x86/mce: Improve error message when kernel cannot recover")
+Fix the problem by setting the disk queue pointer to NULL before calling
+put_disk(). A more comprehensive fix might be to rearrange the code
+to check the hardware version before initializing data structures,
+but I don't know if this would have undesirable side effects, and
+it would increase the complexity of backporting the fix to older kernels.
 
-a case was added for a machine check caused by a DATA access to poison
-memory from the kernel. A case should have been added also for an
-uncorrectable error during an instruction fetch in the kernel.
-
-Add that extra case so the error message now reads:
-
-  mce: [Hardware Error]: Machine check: Instruction fetch error in kernel
-
-Fixes: c7d606f560e4 ("x86/mce: Improve error message when kernel cannot recover")
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Pu Wen <puwen@hygon.cn>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190225205940.15226-1-tony.luck@intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 74489a91dd43a ("Add support for Xilinx SystemACE CompactFlash interface")
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mcheck/mce-severity.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/block/xsysace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kernel/cpu/mcheck/mce-severity.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce-severity.c
-@@ -165,6 +165,11 @@ static struct severity {
- 		SER, MASK(MCI_STATUS_OVER|MCI_UC_SAR|MCI_ADDR|MCACOD, MCI_UC_SAR|MCI_ADDR|MCACOD_DATA),
- 		KERNEL
- 		),
-+	MCESEV(
-+		PANIC, "Instruction fetch error in kernel",
-+		SER, MASK(MCI_STATUS_OVER|MCI_UC_SAR|MCI_ADDR|MCACOD, MCI_UC_SAR|MCI_ADDR|MCACOD_INSTR),
-+		KERNEL
-+		),
- #endif
- 	MCESEV(
- 		PANIC, "Action required: unknown MCACOD",
+diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
+index c24589414c75..0f36db0cf74a 100644
+--- a/drivers/block/xsysace.c
++++ b/drivers/block/xsysace.c
+@@ -1063,6 +1063,8 @@ static int ace_setup(struct ace_device *ace)
+ 	return 0;
+ 
+ err_read:
++	/* prevent double queue cleanup */
++	ace->gd->queue = NULL;
+ 	put_disk(ace->gd);
+ err_alloc_disk:
+ 	blk_cleanup_queue(ace->queue);
+-- 
+2.20.1
+
 
 
