@@ -2,355 +2,253 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561B5C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0C0C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19ECF205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A482087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:35:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MehMSNyz"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oFoSAFGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfEFBI0 (ORCPT
+        id S1726046AbfEFBfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 21:08:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33910 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfEFBIZ (ORCPT
+        Sun, 5 May 2019 21:35:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44866 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbfEFBfI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 21:08:25 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f7so4750125wrq.1;
-        Sun, 05 May 2019 18:08:23 -0700 (PDT)
+        Sun, 5 May 2019 21:35:08 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y13so5851801pfm.11
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 18:35:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=FKTE+cin9FPr9rrkGNck3/B4OfvJ0E5J1uTuf06jUr0=;
-        b=MehMSNyzIm3kJejGtxa1wWUuqoTT5OAVQGn9fTLAIffKTMQLBF+NbfWEbor8EuslcC
-         iKIUF7ahkSIa0y41I/OT2kD80+GkBhtk6K2pgRrn/MZ/yhlbHjxNzQ18tcsjL7FLesi3
-         NIDBLxN3V1n3LbdkMPhK7bNofEyByqeo2kskg2ITd0exWD4zcfnmRcrbBjXzu8bT10mP
-         iG/EoXIRB+GTn9xlUjGOpfoz6aiJ1cHN7cBONIbwtl9AtnYXG8hGJGAwd83FLyPV0Wfh
-         zz0Zu1d6FOH09WUcPgP1PJCXTyXem9vReqgvI/WuWToBVwAvoaShiMej0L3KtAo8YXkX
-         rNMQ==
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1bZS6QNu3Og8dmYIBYZs/QPsWGTr16uK5TDgJ7mlBd8=;
+        b=oFoSAFGkkSQZQTESShUDzd5h4YLrcvOJdgh2qNjtweZWVbz4UktLQhSdeAspAMd9U/
+         9NJgdIdcsPyU/TTbjbkYnrhMgXTxjumbAEVOlaUk9ApBJvgVUtSIB3BOrRpc9Ku/Z4Zz
+         zpRlsjxL8HyX0+HAb4Qa9MLSm7jH8m2SJUKE4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FKTE+cin9FPr9rrkGNck3/B4OfvJ0E5J1uTuf06jUr0=;
-        b=T72BjtYgZAJzcuKWp+EUEwxsVNiFzAdyPEaLb8IA/7DIF39IiSVhTSMuApvplI6hyK
-         pi4sIlt1bGdexV1Yqt0eGZiXg2dQuIuASW4Yms5K/rHmqBZM2QJ590sglAzN/+nIe21t
-         nOzE7ndqw7m5j8vBsu36ZeRd+qhmwMNrmNiLTJt0OIMUHXe+zSXDWd7PP0zjETB20jEN
-         0uErjCZqO1h+cWZ3Pp0dbTR2FlcLK2az7084WDx9BMRkza/3WDOuZt52eGDMeM9Hmkj8
-         bZP0KDsaeUi+FMb0cJlBWCeDp6ftCvQkv+FkAuM89G0r662lDhkFKwlOJVRufetNJSCt
-         EQ7g==
-X-Gm-Message-State: APjAAAWhHIKCrY2ClEKusGhHLtaVFl8egnIsefXx1F8u2j0d8yx3dj0x
-        bTV0Ku0xaXqV+rl6/kdIchM=
-X-Google-Smtp-Source: APXvYqzUAV/YDoSG4WtLzgy5WotRZ7dUv3Ed9/JUh+5zCDDk/CuWb3I8YDOI/iPHXky47Z359+REAg==
-X-Received: by 2002:adf:f383:: with SMTP id m3mr2298118wro.164.1557104902871;
-        Sun, 05 May 2019 18:08:22 -0700 (PDT)
-Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
-        by smtp.gmail.com with ESMTPSA id z5sm20955384wre.70.2019.05.05.18.08.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 18:08:22 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     shawnguo@kernel.org
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH] ARM: dts: Introduce the NXP LS1021A-TSN board
-Date:   Mon,  6 May 2019 04:08:00 +0300
-Message-Id: <20190506010800.2433-1-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1bZS6QNu3Og8dmYIBYZs/QPsWGTr16uK5TDgJ7mlBd8=;
+        b=EkHNAfJZbeIn+2SWAfuUE/5ZB1uuV7Ev8bizLhwj3taLafAp0AccrC77CWFhoeroSD
+         Q3PKB1x+HMztwy9w6UUeSkPh+Mbn0i3B8H8t13TykV9tIhQlZz0/DLpTYq2qVf96Sfc5
+         +I82HwMsdLSM9sJctu/InFomJBgheaizm2EbgDKOPUXk38h1Uuh4cKi9ZR8AAqMVHT3D
+         iuUTi0OuDicKspm7KWj2/7vhGGKmPKGmb8ft0fsT0P+zs3efmGEnNTaJsYTZa1kV2pvl
+         P10kQbLDFvpzXecRsDjlzSz1xQxUif/fx7DH47GHBm0U05SlKU5avW7DyJiJkO4Tc2wk
+         D2zQ==
+X-Gm-Message-State: APjAAAWuOzaItp4dw5ASZdAHmlyyDr0LXGxOLA+4Ps35fyiGrZAHpDG/
+        z+v93BIrOhSsJroFviZ4QhQXfpBOva4=
+X-Google-Smtp-Source: APXvYqyMqjH1rv8o1a5MG6lttWXnrtTTnVkW2pdmDmafQmbF4Z2cWekbCd1pLswsBkrlxyLONtca4g==
+X-Received: by 2002:a62:46c7:: with SMTP id o68mr30726847pfi.54.1557106507313;
+        Sun, 05 May 2019 18:35:07 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id m131sm15649677pga.3.2019.05.05.18.35.01
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 05 May 2019 18:35:05 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, atishp04@gmail.com,
+        bpf@vger.kernel.org, Brendan Gregg <bgregg@netflix.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>, dancol@google.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dietmar.eggemann@arm.com, duyuchao <yuchao.du@unisoc.com>,
+        gregkh@linuxfoundation.org, Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        =?UTF-8?q?Micha=C5=82=20Gregorczyk?= <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Olof Johansson <olof@lixom.net>, qais.yousef@arm.com,
+        rdunlap@infradead.org, Shuah Khan <shuah@kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>, yhs@fb.com
+Subject: [PATCH v3] kheaders: Move from proc to sysfs
+Date:   Sun,  5 May 2019 21:34:56 -0400
+Message-Id: <20190506013456.86061-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LS1021A-TSN is a development board built by VVDN/Argonboards in
-partnership with NXP.
+The kheaders archive consisting of the kernel headers used for compiling
+bpf programs is in /proc. However there is concern that moving it here
+will make it permanent. Let us move it to /sys/kernel as discussed [1].
 
-It features the LS1021A SoC and the first-generation SJA1105T Ethernet
-switch for prototyping implementations of a subset of IEEE 802.1 TSN
-standards.
+[1] https://lore.kernel.org/patchwork/patch/1067310/#1265969
 
-It has two regular Ethernet ports and four switched, TSN-capable ports.
-
-It also features:
-- One Arduino header
-- One expansion header
-- Two USB 3.0 ports
-- One mini PCIe slot
-- One SATA interface
-- Accelerometer, gyroscope, temperature sensors
-
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- arch/arm/boot/dts/Makefile        |   3 +-
- arch/arm/boot/dts/ls1021a-tsn.dts | 238 ++++++++++++++++++++++++++++++
- 2 files changed, 240 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/ls1021a-tsn.dts
+This patch applies on top of the previous patch that was applied to the
+driver tree:
+https://lore.kernel.org/patchwork/patch/1067310/
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f4f5aeaf3298..529f0150f6b4 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -593,7 +593,8 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
- dtb-$(CONFIG_SOC_LS1021A) += \
- 	ls1021a-moxa-uc-8410a.dtb \
- 	ls1021a-qds.dtb \
--	ls1021a-twr.dtb
-+	ls1021a-twr.dtb \
-+	ls1021a-tsn.dtb
- dtb-$(CONFIG_SOC_VF610) += \
- 	vf500-colibri-eval-v3.dtb \
- 	vf610-bk4.dtb \
-diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
-new file mode 100644
-index 000000000000..5269486699bd
---- /dev/null
-+++ b/arch/arm/boot/dts/ls1021a-tsn.dts
-@@ -0,0 +1,238 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright 2016-2018 NXP Semiconductors
-+ * Copyright 2019 Vladimir Oltean <olteanv@gmail.com>
-+ */
-+
-+/dts-v1/;
-+#include "ls1021a.dtsi"
-+
-+/ {
-+	model = "NXP LS1021A-TSN Board";
-+
-+	sys_mclk: clock-mclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24576000>;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg_3p3v: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "3P3V";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+		reg_2p5v: regulator@1 {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "2P5V";
-+			regulator-min-microvolt = <2500000>;
-+			regulator-max-microvolt = <2500000>;
-+			regulator-always-on;
-+		};
-+	};
-+};
-+
-+&enet0 {
-+	tbi-handle = <&tbi0>;
-+	phy-handle = <&sgmii_phy2>;
-+	phy-mode = "sgmii";
-+	status = "ok";
-+};
-+
-+&enet1 {
-+	tbi-handle = <&tbi1>;
-+	phy-handle = <&sgmii_phy1>;
-+	phy-mode = "sgmii";
-+	status = "ok";
-+};
-+
-+/* RGMII delays added via PCB traces */
-+&enet2 {
-+	phy-mode = "rgmii";
-+	status = "ok";
-+	fixed-link {
-+		speed = <1000>;
-+		full-duplex;
-+	};
-+};
-+
-+&dspi0 {
-+	bus-num = <0>;
-+	status = "ok";
-+
-+	/* ADG704BRMZ 1:4 mux/demux */
-+	tsn_switch: sja1105@1 {
-+		reg = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nxp,sja1105t";
-+		/* 12 MHz */
-+		spi-max-frequency = <12000000>;
-+		/* Sample data on trailing clock edge */
-+		spi-cpha;
-+		fsl,spi-cs-sck-delay = <1000>;
-+		fsl,spi-sck-cs-delay = <1000>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				/* ETH5 written on chassis */
-+				label = "swp5";
-+				phy-handle = <&rgmii_phy6>;
-+				phy-mode = "rgmii-id";
-+				reg = <0>;
-+			};
-+			port@1 {
-+				/* ETH2 written on chassis */
-+				label = "swp2";
-+				phy-handle = <&rgmii_phy3>;
-+				phy-mode = "rgmii-id";
-+				reg = <1>;
-+			};
-+			port@2 {
-+				/* ETH3 written on chassis */
-+				label = "swp3";
-+				phy-handle = <&rgmii_phy4>;
-+				phy-mode = "rgmii-id";
-+				reg = <2>;
-+			};
-+			port@3 {
-+				/* ETH4 written on chassis */
-+				phy-handle = <&rgmii_phy5>;
-+				label = "swp4";
-+				phy-mode = "rgmii-id";
-+				reg = <3>;
-+			};
-+			port@4 {
-+				/* Internal port connected to eth2 */
-+				ethernet = <&enet2>;
-+				phy-mode = "rgmii";
-+				reg = <4>;
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&mdio0 {
-+	/* AR8031 */
-+	sgmii_phy1: ethernet-phy@1 {
-+		reg = <0x1>;
-+	};
-+	/* AR8031 */
-+	sgmii_phy2: ethernet-phy@2 {
-+		reg = <0x2>;
-+	};
-+	/* BCM5464 */
-+	rgmii_phy3: ethernet-phy@3 {
-+		reg = <0x3>;
-+	};
-+	rgmii_phy4: ethernet-phy@4 {
-+		reg = <0x4>;
-+	};
-+	rgmii_phy5: ethernet-phy@5 {
-+		reg = <0x5>;
-+	};
-+	rgmii_phy6: ethernet-phy@6 {
-+		reg = <0x6>;
-+	};
-+	/* SGMII PCS for enet0 */
-+	tbi0: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
-+	/* SGMII PCS for enet1 */
-+	tbi1: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&i2c0 {
-+	status = "ok";
-+
-+	/* 3 axis accelerometer */
-+	accelerometer@1e {
-+		compatible = "fsl,fxls8471";
-+		reg = <0x1e>;
-+		position = <0>;
-+	};
-+	/* Gyroscope is at 0x20 but not supported */
-+	/* Audio codec (SAI2) */
-+	codec@2a {
-+		#sound-dai-cells = <0>;
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x2a>;
-+		VDDA-supply = <&reg_3p3v>;
-+		VDDIO-supply = <&reg_2p5v>;
-+		clocks = <&sys_mclk>;
-+	};
-+	/* Current sensing circuit for 1V VDDCORE PMIC rail */
-+	current-sensor@44 {
-+		compatible = "ti,ina220";
-+		reg = <0x44>;
-+		shunt-resistor = <1000>;
-+	};
-+	/* Current sensing circuit for 12V VCC rail */
-+	current-sensor@45 {
-+		compatible = "ti,ina220";
-+		reg = <0x45>;
-+		shunt-resistor = <1000>;
-+	};
-+	/* Thermal monitor - case */
-+	temperature-sensor@48 {
-+		compatible = "national,lm75";
-+		reg = <0x48>;
-+	};
-+	/* Thermal monitor - chip */
-+	temperature-sensor@4c {
-+		compatible = "ti,tmp451";
-+		reg = <0x4c>;
-+	};
-+	/* 4-channel ADC */
-+	adc@49 {
-+		compatible = "ad7924";
-+		reg = <0x49>;
-+	};
-+};
-+
-+&ifc {
-+	status = "disabled";
-+};
-+
-+&esdhc {
-+	status = "ok";
-+};
-+
-+&uart0 {
-+	status = "ok";
-+};
-+
-+&lpuart0 {
-+	status = "ok";
-+};
-+
-+&lpuart3 {
-+	status = "ok";
-+};
-+
-+&sai2 {
-+	status = "ok";
-+};
-+
-+&sata {
-+	status = "ok";
-+};
+v2->v3: Fixed sysfs file mode nit (Greg).
+v1->v2: Fixed some kconfig nits.
+
+ init/Kconfig                                | 16 ++++-----
+ kernel/Makefile                             |  4 +--
+ kernel/{gen_ikh_data.sh => gen_kheaders.sh} |  2 +-
+ kernel/kheaders.c                           | 40 +++++++++------------
+ 4 files changed, 26 insertions(+), 36 deletions(-)
+ rename kernel/{gen_ikh_data.sh => gen_kheaders.sh} (98%)
+
+diff --git a/init/Kconfig b/init/Kconfig
+index 26a364a95b57..c3661991b089 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -579,15 +579,13 @@ config IKCONFIG_PROC
+ 	  This option enables access to the kernel configuration file
+ 	  through /proc/config.gz.
+ 
+-config IKHEADERS_PROC
+-	tristate "Enable kernel header artifacts through /proc/kheaders.tar.xz"
+-	depends on PROC_FS
+-	help
+-	  This option enables access to the kernel header and other artifacts that
+-	  are generated during the build process. These can be used to build eBPF
+-	  tracing programs, or similar programs.  If you build the headers as a
+-	  module, a module called kheaders.ko is built which can be loaded on-demand
+-	  to get access to the headers.
++config IKHEADERS
++	tristate "Enable kernel headers through /sys/kernel/kheaders.tar.xz"
++	help
++	  This option enables access to the in-kernel headers that are generated during
++	  the build process. These can be used to build eBPF tracing programs,
++	  or similar programs.  If you build the headers as a module, a module called
++	  kheaders.ko is built which can be loaded on-demand to get access to headers.
+ 
+ config LOG_BUF_SHIFT
+ 	int "Kernel log buffer size (16 => 64KB, 17 => 128KB)"
+diff --git a/kernel/Makefile b/kernel/Makefile
+index 12399614c350..b32a558fae2f 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -70,7 +70,7 @@ obj-$(CONFIG_UTS_NS) += utsname.o
+ obj-$(CONFIG_USER_NS) += user_namespace.o
+ obj-$(CONFIG_PID_NS) += pid_namespace.o
+ obj-$(CONFIG_IKCONFIG) += configs.o
+-obj-$(CONFIG_IKHEADERS_PROC) += kheaders.o
++obj-$(CONFIG_IKHEADERS) += kheaders.o
+ obj-$(CONFIG_SMP) += stop_machine.o
+ obj-$(CONFIG_KPROBES_SANITY_TEST) += test_kprobes.o
+ obj-$(CONFIG_AUDIT) += audit.o auditfilter.o
+@@ -126,7 +126,7 @@ $(obj)/config_data.gz: $(KCONFIG_CONFIG) FORCE
+ $(obj)/kheaders.o: $(obj)/kheaders_data.tar.xz
+ 
+ quiet_cmd_genikh = CHK     $(obj)/kheaders_data.tar.xz
+-cmd_genikh = $(srctree)/kernel/gen_ikh_data.sh $@
++cmd_genikh = $(srctree)/kernel/gen_kheaders.sh $@
+ $(obj)/kheaders_data.tar.xz: FORCE
+ 	$(call cmd,genikh)
+ 
+diff --git a/kernel/gen_ikh_data.sh b/kernel/gen_kheaders.sh
+similarity index 98%
+rename from kernel/gen_ikh_data.sh
+rename to kernel/gen_kheaders.sh
+index 591a94f7b387..581b83534587 100755
+--- a/kernel/gen_ikh_data.sh
++++ b/kernel/gen_kheaders.sh
+@@ -2,7 +2,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ # This script generates an archive consisting of kernel headers
+-# for CONFIG_IKHEADERS_PROC.
++# for CONFIG_IKHEADERS.
+ set -e
+ spath="$(dirname "$(readlink -f "$0")")"
+ kroot="$spath/.."
+diff --git a/kernel/kheaders.c b/kernel/kheaders.c
+index 70ae6052920d..8f69772af77b 100644
+--- a/kernel/kheaders.c
++++ b/kernel/kheaders.c
+@@ -8,9 +8,8 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/proc_fs.h>
++#include <linux/kobject.h>
+ #include <linux/init.h>
+-#include <linux/uaccess.h>
+ 
+ /*
+  * Define kernel_headers_data and kernel_headers_data_end, within which the
+@@ -31,39 +30,32 @@ extern char kernel_headers_data;
+ extern char kernel_headers_data_end;
+ 
+ static ssize_t
+-ikheaders_read_current(struct file *file, char __user *buf,
+-		      size_t len, loff_t *offset)
++ikheaders_read(struct file *file,  struct kobject *kobj,
++	       struct bin_attribute *bin_attr,
++	       char *buf, loff_t off, size_t len)
+ {
+-	return simple_read_from_buffer(buf, len, offset,
+-				       &kernel_headers_data,
+-				       &kernel_headers_data_end -
+-				       &kernel_headers_data);
++	memcpy(buf, &kernel_headers_data + off, len);
++	return len;
+ }
+ 
+-static const struct file_operations ikheaders_file_ops = {
+-	.read = ikheaders_read_current,
+-	.llseek = default_llseek,
++static struct bin_attribute kheaders_attr __ro_after_init = {
++	.attr = {
++		.name = "kheaders.tar.xz",
++		.mode = 0444,
++	},
++	.read = &ikheaders_read,
+ };
+ 
+ static int __init ikheaders_init(void)
+ {
+-	struct proc_dir_entry *entry;
+-
+-	/* create the current headers file */
+-	entry = proc_create("kheaders.tar.xz", S_IRUGO, NULL,
+-			    &ikheaders_file_ops);
+-	if (!entry)
+-		return -ENOMEM;
+-
+-	proc_set_size(entry,
+-		      &kernel_headers_data_end -
+-		      &kernel_headers_data);
+-	return 0;
++	kheaders_attr.size = (&kernel_headers_data_end -
++			      &kernel_headers_data);
++	return sysfs_create_bin_file(kernel_kobj, &kheaders_attr);
+ }
+ 
+ static void __exit ikheaders_cleanup(void)
+ {
+-	remove_proc_entry("kheaders.tar.xz", NULL);
++	sysfs_remove_bin_file(kernel_kobj, &kheaders_attr);
+ }
+ 
+ module_init(ikheaders_init);
 -- 
-2.17.1
-
+2.21.0.1020.gf2820cf01a-goog
