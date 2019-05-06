@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7C9C04AB0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA9CC04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8902C2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BEC12087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbfEFFtM (ORCPT
+        id S1726250AbfEFFtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 01:49:12 -0400
+        Mon, 6 May 2019 01:49:08 -0400
 Received: from ms01.santannapisa.it ([193.205.80.98]:57922 "EHLO
         mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfEFFtI (ORCPT
+        with ESMTP id S1725840AbfEFFtE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 01:49:08 -0400
+        Mon, 6 May 2019 01:49:04 -0400
 X-Greylist: delayed 3600 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 May 2019 01:48:55 EDT
 Received: from [151.41.47.232] (account l.abeni@santannapisa.it HELO sweethome.home-life.hub)
   by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
-  with ESMTPSA id 138841011; Mon, 06 May 2019 06:49:01 +0200
+  with ESMTPSA id 138841009; Mon, 06 May 2019 06:48:59 +0200
 From:   Luca Abeni <luca.abeni@santannapisa.it>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -41,9 +41,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Patrick Bellasi <patrick.bellasi@arm.com>,
         Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
         luca abeni <luca.abeni@santannapisa.it>
-Subject: [RFC PATCH 5/6] sched/dl: If the task does not fit anywhere, select the fastest core
-Date:   Mon,  6 May 2019 06:48:35 +0200
-Message-Id: <20190506044836.2914-6-luca.abeni@santannapisa.it>
+Subject: [RFC PATCH 3/6] sched/dl: Try better placement even for deadline tasks that do not block
+Date:   Mon,  6 May 2019 06:48:33 +0200
+Message-Id: <20190506044836.2914-4-luca.abeni@santannapisa.it>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190506044836.2914-1-luca.abeni@santannapisa.it>
 References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
@@ -56,55 +56,167 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: luca abeni <luca.abeni@santannapisa.it>
 
-When a task has a remaining runtime that cannot be served within the
-scheduling deadline by anyone of the idle cores, the task is doomed
-to miss its deadline (this can happen, because the admission control
-only guarantees a bounded tardiness, not the hard respect of all
-deadlines). In this case, try to select the fastest idle core, to
-minimize the tardiness.
+Currently, the scheduler tries to find a proper placement for
+SCHED_DEADLINE tasks when they are pushed out of a core or when
+they wake up. Hence, if there is a single SCHED_DEADLINE task
+that never blocks and wakes up, such a task is never migrated to
+an appropriate CPU core, but continues to execute on its original
+core.
+
+This commit addresses the issue by trying to migrate a SCHED_DEADLINE
+task (searching for an appropriate CPU core) the first time it is
+throttled.
 
 Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
 ---
- kernel/sched/cpudeadline.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ include/linux/sched.h   |  1 +
+ kernel/sched/deadline.c | 53 ++++++++++++++++++++++++++++++++++++-----
+ kernel/sched/sched.h    |  2 ++
+ 3 files changed, 50 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
-index 111dd9ac837b..2a4ac7b529b7 100644
---- a/kernel/sched/cpudeadline.c
-+++ b/kernel/sched/cpudeadline.c
-@@ -123,7 +123,7 @@ static inline int dl_task_fit(const struct sched_dl_entity *dl_se,
- 	}
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 863f70843875..5e322c8a94e0 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -560,6 +560,7 @@ struct sched_dl_entity {
+ 	unsigned int			dl_yielded        : 1;
+ 	unsigned int			dl_non_contending : 1;
+ 	unsigned int			dl_overrun	  : 1;
++	unsigned int			dl_adjust	  : 1;
  
- 	if (c)
--		*c = cap;
-+		*c = arch_scale_cpu_capacity(NULL, cpu);
+ 	/*
+ 	 * Bandwidth enforcement timer. Each -deadline task has its
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 3436f3d8fa8f..db471889196b 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -515,6 +515,7 @@ static inline bool need_pull_dl_task(struct rq *rq, struct task_struct *prev)
+ 	return dl_task(prev);
+ }
  
- 	if ((rel_deadline * cap) >> SCHED_CAPACITY_SHIFT < rem_runtime)
- 		return 0;
-@@ -146,14 +146,22 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
++static DEFINE_PER_CPU(struct callback_head, dl_migrate_head);
+ static DEFINE_PER_CPU(struct callback_head, dl_push_head);
+ static DEFINE_PER_CPU(struct callback_head, dl_pull_head);
  
- 	if (later_mask &&
- 	    cpumask_and(later_mask, cp->free_cpus, &p->cpus_allowed)) {
--		int cpu;
-+		int cpu, max_cpu = -1;
-+		u64 max_cap = 0;
+@@ -1149,6 +1150,32 @@ static u64 grub_reclaim(u64 delta, struct rq *rq, struct sched_dl_entity *dl_se)
+ 	return (delta * u_act) >> BW_SHIFT;
+ }
  
- 		for_each_cpu(cpu, later_mask) {
- 			u64 cap;
- 
- 			if (!dl_task_fit(&p->dl, cpu, &cap))
- 				cpumask_clear_cpu(cpu, later_mask);
++#ifdef CONFIG_SMP
++static int find_later_rq(struct task_struct *task);
 +
-+			if (cap > max_cap) {
-+				max_cap = cap;
-+				max_cpu = cpu;
-+			}
- 		}
-+		if (cpumask_empty(later_mask) && max_cap)
-+			cpumask_set_cpu(max_cpu, later_mask);
++static void migrate_dl_task(struct rq *rq)
++{
++	struct task_struct *t = rq->migrating_task;
++	struct sched_dl_entity *dl_se = &t->dl;
++	int cpu = find_later_rq(t);
++
++	if ((cpu != -1) && (cpu != rq->cpu)) {
++		struct rq *later_rq;
++
++		later_rq = cpu_rq(cpu);
++
++		double_lock_balance(rq, later_rq);
++		sub_running_bw(&t->dl, &rq->dl);
++		sub_rq_bw(&t->dl, &rq->dl);
++		set_task_cpu(t, later_rq->cpu);
++		add_rq_bw(&t->dl, &later_rq->dl);
++		add_running_bw(&t->dl, &later_rq->dl);
++		double_unlock_balance(rq, later_rq);
++	}
++	rq->migrating_task = NULL;
++	dl_se->dl_adjust = 0;
++}
++#endif
+ /*
+  * Update the current task's runtime statistics (provided it is still
+  * a -deadline task and has not been removed from the dl_rq).
+@@ -1223,8 +1250,17 @@ static void update_curr_dl(struct rq *rq)
+ 			dl_se->dl_overrun = 1;
  
- 		if (!cpumask_empty(later_mask))
- 			return 1;
+ 		__dequeue_task_dl(rq, curr, 0);
+-		if (unlikely(dl_se->dl_boosted || !start_dl_timer(curr)))
++		if (unlikely(dl_se->dl_boosted || !start_dl_timer(curr))) {
+ 			enqueue_task_dl(rq, curr, ENQUEUE_REPLENISH);
++#ifdef CONFIG_SMP
++		} else if (dl_se->dl_adjust) {
++			if (rq->migrating_task == NULL) {
++				queue_balance_callback(rq, &per_cpu(dl_migrate_head, rq->cpu), migrate_dl_task);
++				rq->migrating_task = current;
++			} else
++				printk_deferred("Throttled task before migratin g the previous one???\n");
++#endif
++		}
+ 
+ 		if (!is_leftmost(curr, &rq->dl))
+ 			resched_curr(rq);
+@@ -1573,13 +1609,12 @@ static void yield_task_dl(struct rq *rq)
+ 
+ #ifdef CONFIG_SMP
+ 
+-static int find_later_rq(struct task_struct *task);
+-
+ static int
+ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
+ {
+ 	struct task_struct *curr;
+ 	struct rq *rq;
++	bool het;
+ 
+ 	if (sd_flag != SD_BALANCE_WAKE)
+ 		goto out;
+@@ -1591,6 +1626,7 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
+ 
+ 	rcu_read_lock();
+ 	curr = READ_ONCE(rq->curr); /* unlocked access */
++	het = static_branch_unlikely(&sched_asym_cpucapacity);
+ 
+ 	/*
+ 	 * If we are dealing with a -deadline task, we must
+@@ -1604,15 +1640,17 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
+ 	if ((unlikely(dl_task(curr)) &&
+ 	    (curr->nr_cpus_allowed < 2 ||
+ 	     !dl_entity_preempt(&p->dl, &curr->dl)) &&
+-	    (p->nr_cpus_allowed > 1)) ||
+-	    static_branch_unlikely(&sched_asym_cpucapacity)) {
++	    (p->nr_cpus_allowed > 1)) || het) {
+ 		int target = find_later_rq(p);
+ 
+ 		if (target != -1 &&
+ 				(dl_time_before(p->dl.deadline,
+ 					cpu_rq(target)->dl.earliest_dl.curr) ||
+-				(cpu_rq(target)->dl.dl_nr_running == 0)))
++				(cpu_rq(target)->dl.dl_nr_running == 0))) {
++			if (het && (target != cpu))
++				p->dl.dl_adjust = 1;
+ 			cpu = target;
++		}
+ 	}
+ 	rcu_read_unlock();
+ 
+@@ -2369,6 +2407,9 @@ static void switched_to_dl(struct rq *rq, struct task_struct *p)
+ 		else
+ 			resched_curr(rq);
+ 	}
++
++	if (static_branch_unlikely(&sched_asym_cpucapacity))
++		p->dl.dl_adjust = 1;
+ }
+ 
+ /*
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index e5f9fd3aee80..1a8f75338ac2 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -963,6 +963,8 @@ struct rq {
+ 
+ 	/* This is used to determine avg_idle's max value */
+ 	u64			max_idle_balance_cost;
++
++	struct task_struct	*migrating_task;
+ #endif
+ 
+ #ifdef CONFIG_IRQ_TIME_ACCOUNTING
 -- 
 2.20.1
 
