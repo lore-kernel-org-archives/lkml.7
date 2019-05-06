@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A9BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F28BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E175A2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7032054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154583;
-	bh=+52cvG3pHsqSgjG/lMIyF9g7CcFQcev64IC0EDoxeF4=;
+	s=default; t=1557154588;
+	bh=wSF1rZpdzAqgbTHCypVuZXS9cGeEhisqDgsiN6qgusU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LRBzPRuymq4hia2KJN9UyzGdtyVKGqfuwUpDzbowFA+8OUeDZwRa+u/rwPpK7VKSy
-	 GrxD60GwHeGmOCCThpGv0q9n2EzjUdasUNt7ItPFGpr+6IgHizBZJPxs3BnbyOGuRW
-	 MM3ftbmnzp+UcKnzU1F0YKnqUcuMKynsZDeiiXf4=
+	b=mFFiGtOPDeV2N1+R8B4IRJmwd8VpuzbviQLPvzccQn78Fl5OLkol8mY2KVrVzqqHS
+	 wBL4FkPUrWstLPThHXZ56Eg4B+1vU32taTKlQlqfEnUht12JU69mAxT5eb6DghPNY5
+	 r4t53lOMGCz04hSchuWSrWCUdAp+7mjUEBLBUX34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfEFO4V (ORCPT
+        id S1728907AbfEFOpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727693AbfEFOpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:45:13 -0400
+        id S1728322AbfEFOpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 308972053B;
-        Mon,  6 May 2019 14:45:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CF872053B;
+        Mon,  6 May 2019 14:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153912;
-        bh=+52cvG3pHsqSgjG/lMIyF9g7CcFQcev64IC0EDoxeF4=;
+        s=default; t=1557153904;
+        bh=wSF1rZpdzAqgbTHCypVuZXS9cGeEhisqDgsiN6qgusU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GR3V8/rU8/PU3cnjxg5ANjKW5PYeZSKLNIv0rvveMxazpwtNpMgFN1oWKr1SgbhUX
-         2O5q9A/UKPP5EyAN9BxYWdpZS4BSur8glMLSSDjpdV8WJt/WAtWNghcn5eZXbA3apA
-         LpWpYxqYqYOSUBHBGITlQzYwu9slp8WPh/BeIrC4=
+        b=baFHLNX81uP8QvuMDRKzb9Taa96OhrT+oTX310atOI0y7hsPUYef9pgLufvVth3zL
+         SrBj7RPKkOE9YMXuhxdAPygAWLnYj+OHEjsWyZ90PtuC62g0Xt89st+yn4GJMW6d72
+         nL2+ubcVWgZs0KRC+7vugSe8czVybrocArxN6BZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 41/75] debugfs: fix use-after-free on symlink traversal
-Date:   Mon,  6 May 2019 16:32:49 +0200
-Message-Id: <20190506143056.946616088@linuxfoundation.org>
+Subject: [PATCH 4.14 39/75] net: stmmac: dont log oversized frames
+Date:   Mon,  6 May 2019 16:32:47 +0200
+Message-Id: <20190506143056.761302074@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -59,52 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 93b919da64c15b90953f96a536e5e61df896ca57 ]
+[ Upstream commit 057a0c5642a2ff2db7c421cdcde34294a23bf37b ]
 
-symlink body shouldn't be freed without an RCU delay.  Switch debugfs to
-->destroy_inode() and use of call_rcu(); free both the inode and symlink
-body in the callback.  Similar to solution for bpf, only here it's even
-more obvious that ->evict_inode() can be dropped.
+This is log is harmful as it can trigger multiple times per packet. Delete
+it.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/debugfs/inode.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/norm_desc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index ccfe1e1cb6bc..f4df6feec271 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -170,19 +170,24 @@ static int debugfs_show_options(struct seq_file *m, struct dentry *root)
- 	return 0;
- }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
+index db4cee57bb24..66c17bab5997 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
+@@ -91,8 +91,6 @@ static int ndesc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ 		return dma_own;
  
--static void debugfs_evict_inode(struct inode *inode)
-+static void debugfs_i_callback(struct rcu_head *head)
- {
--	truncate_inode_pages_final(&inode->i_data);
--	clear_inode(inode);
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	if (S_ISLNK(inode->i_mode))
- 		kfree(inode->i_link);
-+	free_inode_nonrcu(inode);
-+}
-+
-+static void debugfs_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, debugfs_i_callback);
- }
- 
- static const struct super_operations debugfs_super_operations = {
- 	.statfs		= simple_statfs,
- 	.remount_fs	= debugfs_remount,
- 	.show_options	= debugfs_show_options,
--	.evict_inode	= debugfs_evict_inode,
-+	.destroy_inode	= debugfs_destroy_inode,
- };
- 
- static struct vfsmount *debugfs_automount(struct path *path)
+ 	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
+-		pr_warn("%s: Oversized frame spanned multiple buffers\n",
+-			__func__);
+ 		stats->rx_length_errors++;
+ 		return discard_frame;
+ 	}
 -- 
 2.20.1
 
