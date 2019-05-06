@@ -2,101 +2,81 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79806C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDC4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 423712087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0749205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155879;
-	bh=zk2JnfKBU3rV00PnBLjkT50Qu1WKEQZM9GkFQ0r2KdQ=;
+	s=default; t=1557155885;
+	bh=hXF5sMm+J+SLI4BOSS6PkmcTtKR/2EwVYeRZ89Dqmmc=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=qRXrjrfpR4FoQOdjkLfqlMWSWUpaAZ5Wq3WdmY77uNxAYr55Vb51IjYrttYjXupAo
-	 7zSty85z10zosTX2nbaG/gbTU6mGj8pYpPZj+eIq+reYgHHscxdfBEayi1h6YNZomc
-	 v/EZNQ2YeZN6RLOHgRMHXZVjAmNqnocHE5PY30F4=
+	b=t9KwQ4jwomLSG8JJh/g1tQNVwbWBGPJ2vrDonx6T5f7AtH+rVx9m8FJy0PEqFtwf2
+	 ukXp+p2f0yoYnxbO/H4f83/Bw9+YWdLAomZaJfupOgGJfBSPi5/gAlQKLnNfsfZrUI
+	 4hoL0N8NnVEl5ORP8B4STgGzHjAgyig3e44F0PVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfEFPR6 (ORCPT
+        id S1726866AbfEFPSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbfEFPR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:17:57 -0400
-Received: from [192.168.1.28] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC77D2053B;
-        Mon,  6 May 2019 15:17:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557155876;
-        bh=zk2JnfKBU3rV00PnBLjkT50Qu1WKEQZM9GkFQ0r2KdQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=wqJGCqHl8Va68JIvzms/Yve+Ty2KsrATKfsJ3Nn81ipVwaUQQw7Jt9Kzz6ipVO4TC
-         WGnvuhEzlrtUILGMR2lToT4dMyV3sjSYGBXH1XhaIY2T/QoVKfu/B6ydI2vUnf51sa
-         ERIO4Bn6eh8n+/lQWlrlpqB9Z0paBGAaoOl4smHE=
-Subject: Re: [PATCH 4/4] arm64: dts: stratix10: Add SDMMC EDAC node
-To:     thor.thayer@linux.intel.com, bp@alien8.de, mchehab@kernel.org,
-        james.morse@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1556030197-24534-1-git-send-email-thor.thayer@linux.intel.com>
- <1556030197-24534-5-git-send-email-thor.thayer@linux.intel.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <bfbc2ce8-675e-fba0-5d01-cc0c9e76895d@kernel.org>
-Date:   Mon, 6 May 2019 10:17:54 -0500
+        Mon, 6 May 2019 11:18:03 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38038 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfEFPSD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 11:18:03 -0400
+Received: by mail-it1-f195.google.com with SMTP id q19so20442781itk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 08:18:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+pQydGOg4OcYDbNXBsQRT4Lvzf+ksqu8jt9++8oyYp8=;
+        b=AZ9OASulQopNJAz/g6esfXYRGTB3j58sn9wd3Ww8ryDcz06MhO9qArg58Dib9dxzuI
+         JHYxRfgi3aSjdur/8P5G5FjZzIndaDKGaVe5QlWe93g8xCeIhxs+lJpwgDLlg57cZnor
+         MknrBcs0iOB3+Dh38qnXZKsEm5zx8YDk7kow0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+pQydGOg4OcYDbNXBsQRT4Lvzf+ksqu8jt9++8oyYp8=;
+        b=T8yXAJupjZEMM/BryGP5qz/ZjCFbdqO3hEZp86opiiui8FMa1GuktY4FN/E+XJFn6y
+         jKPcdLKJLM8G0QNe149GuMz+EOQD3y//yJ6Ax2XBPw+x99Ta7a6rP2fjEKnl3xS80or/
+         FlAX0hFyqXcpMXnKbI3kFD2TU5a+354dOstCiAv1nPPjFi1BctNzr7yk9Y5YzSAPUe7w
+         QeMEEADAee29jRxqaXGh2A7bkna6ym7roQw0kXRhwFVx3/cQEwy0+M/dWJ35tm8HuYt8
+         1KB7VtiEbPGIWu1TTgjVWMwmjdXfGbfdMYElqqAyu4beVtIBwCqkpyEyREkCRrcnz4pr
+         vt2A==
+X-Gm-Message-State: APjAAAV6TM1NblWEyEK71CppaVA85b8FyPxiwbaEM2UfZCF+CnsPNFMj
+        nc3Vhj6NtneI+AsCV86AlhpuPQ==
+X-Google-Smtp-Source: APXvYqyPd66l+UgLY2N+cihkt4KtQKbB3decdpUkRANIYDmWD7+aar3uFt3aYwaCclD5MjkbHOTi1A==
+X-Received: by 2002:a05:660c:111:: with SMTP id w17mr17449225itj.62.1557155882202;
+        Mon, 06 May 2019 08:18:02 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id i72sm8735324itc.11.2019.05.06.08.18.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 08:18:01 -0700 (PDT)
+Subject: Re: [PATCH] selftests: add sleep between detach and usbip list -l
+To:     Greg KH <greg@kroah.com>
+Cc:     valentina.manea.m@gmail.com, shuah@kernel.org,
+        linux-usb@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20190502194740.15344-1-skhan@linuxfoundation.org>
+ <20190505091356.GB25646@kroah.com>
+ <ed0a3115-ee5a-97b6-b69c-073c9595d734@linuxfoundation.org>
+ <20190506151540.GA12755@kroah.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <b1bf8113-75a1-40dc-daf9-4411c3e87cfe@linuxfoundation.org>
+Date:   Mon, 6 May 2019 09:18:00 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1556030197-24534-5-git-send-email-thor.thayer@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190506151540.GA12755@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -104,40 +84,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/6/19 9:15 AM, Greg KH wrote:
+> On Mon, May 06, 2019 at 08:47:15AM -0600, Shuah Khan wrote:
+>> On 5/5/19 3:13 AM, Greg KH wrote:
+>>> On Thu, May 02, 2019 at 01:47:40PM -0600, Shuah Khan wrote:
+>>>> Add a sleep between detach and check for exportable devices to avoid
+>>>> the following segfault from libc-2.27.so
+>>>>
+>>>> [ 6268.136108] usbip[5565]: segfault at 0 ip 00007f2a947bddfd sp 00007ffd1a8705e8 error 4 in libc-2.27.so[7f2a94703000+1e7000]
+>>>>
+>>>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>>>> ---
+>>>>    tools/testing/selftests/drivers/usb/usbip/usbip_test.sh | 4 ++++
+>>>>    1 file changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/tools/testing/selftests/drivers/usb/usbip/usbip_test.sh b/tools/testing/selftests/drivers/usb/usbip/usbip_test.sh
+>>>> index 128f0ab24307..beacf24a8df7 100755
+>>>> --- a/tools/testing/selftests/drivers/usb/usbip/usbip_test.sh
+>>>> +++ b/tools/testing/selftests/drivers/usb/usbip/usbip_test.sh
+>>>> @@ -171,10 +171,14 @@ echo "Detach invalid port tests - expect invalid port error message";
+>>>>    src/usbip detach -p 100;
+>>>>    echo "=============================================================="
+>>>> +# let detach complete. Avoid segfaults from libc-2.27.so
+>>>> +sleep 3;
+>>>
+>>> That feels very "arbitrary", why do we "know" it will take at most 3
+>>> seconds?  I guess there's not much else we can do here except maybe
+>>> somehow watch sysfs until the device is really gone?
+>>>
+>>
+>> Yeah. Number 3 is somewhat arbitrary. It helps the host process the
+>> detach request from the client and update the sysfs. Detach returns
+>> as soon as client side is done, and the test is running the next
+>> command on the host side. If I were run these commands manually, it
+>> gives enough settling time. I am looking for a quick way to allow
+>> settling time in this automated test.
+> 
+> Ok, you might want to document that you know it's a random number :)
+> 
 
+Okay. Will do. I will send v2. :)
 
-On 4/23/19 9:36 AM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> Add the Stratix10 SDMMC EDAC node.
-> 
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> index 2e3863ee12b3..91fed85cf8e5 100644
-> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-> @@ -67,6 +67,17 @@
->  				clock-frequency = <25000000>;
->  			};
->  		};
-> +
-> +		eccmgr {
-> +			sdmmca-ecc@ff8c8c00 {
-> +				compatible = "altr,socfpga-s10-sdmmc-ecc",
-> +					     "altr,socfpga-sdmmc-ecc";
-> +				reg = <0xff8c8c00 0x100>;
-> +				altr,ecc-parent = <&mmc>;
-> +				interrupts = <14 4>,
-> +					     <15 4>;
-> +			};
-> +		};
->  	};
->  };
->  
-> 
-
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+thanks,
+-- Shuah
