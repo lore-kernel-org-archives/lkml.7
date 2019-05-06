@@ -2,107 +2,157 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582F3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E8FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5D4206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153568;
-	bh=7ZemQmt0cOHyrYretRO4V8+S59a+oJa/34ZCLJ348R4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FD7F3Xb/CIVW7w2lpFEkAOrkNUO7QqhcCFVtPnvIgG/tCgND2eF7d4SMjySAwXxq7
-	 Swlv2a9niacKN0J/9+Kk96aL5fShrLq1122fweUTubQb/gJtAQNwkk8kAcJqtbURa9
-	 BsunQXQr66GHE+SlvfJtw4Hk9MX+oaCQrwAXxd3E=
+	by mail.kernel.org (Postfix) with ESMTP id 83122206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbfEFOj1 (ORCPT
+        id S1727848AbfEFOje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:39:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727269AbfEFOjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:39:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8024620449;
-        Mon,  6 May 2019 14:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153564;
-        bh=7ZemQmt0cOHyrYretRO4V8+S59a+oJa/34ZCLJ348R4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G8SHdiaGs4luT3zZ8lj79CjyyswutJcN+o0iW9eDcElZMHp1ps61tR5EyLyFHtbk8
-         j9pIZLvH88LT2C9Tf+G/6VSqpOr1tZzkf7m1JuLS3T9LHlD6n9cf9QAdZcXpA31SGS
-         BGtdD5uk8qOefLhmkgquUIMfDB9OYAcTXTNb6Bw8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 14/99] USB: w1 ds2490: Fix bug caused by improper use of altsetting array
-Date:   Mon,  6 May 2019 16:31:47 +0200
-Message-Id: <20190506143055.162493902@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
-References: <20190506143053.899356316@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 6 May 2019 10:39:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42448 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727825AbfEFOj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:39:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1E63DAC94;
+        Mon,  6 May 2019 14:39:26 +0000 (UTC)
+Date:   Mon, 6 May 2019 16:39:24 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Joao Moreira <jmoreira@suse.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michael Matz <matz@suse.de>, Nicolai Stange <nstange@suse.de>,
+        Petr Mladek <pmladek@suse.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>
+Subject: Re: [PATCH v3 0/9] klp-convert livepatch build tooling
+In-Reply-To: <20190503142900.GB24094@redhat.com>
+Message-ID: <alpine.LSU.2.21.1905061628250.19850@pobox.suse.cz>
+References: <20190412212654.GA21627@redhat.com> <alpine.LSU.2.21.1904161323230.17836@pobox.suse.cz> <20190503142900.GB24094@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+On Fri, 3 May 2019, Joe Lawrence wrote:
 
-commit c114944d7d67f24e71562fcfc18d550ab787e4d4 upstream.
+> On Tue, Apr 16, 2019 at 01:37:13PM +0200, Miroslav Benes wrote:
+> >
+> > [ ... snip ... ]
+> >
+> > Quick look, but it seems quite similar to the problem we had with
+> > apply_alternatives(). See arch/x86/kernel/livepatch.c and the commit which
+> > introduced it.
+> 
+> That was an interesting diversion :)  I think I grok the idea as:
+> 
+> The kernel supports a few different code-patching methods:
+> 
+>   - SMP locks
+>   - alternatives
+>   - paravirt
+>   - jump labels
+> 
+> and we need to ensure that they do not prematurely operate on unresolved
+> klp-relocations.  The solution that led to arch/x86/kernel/livepatch.c
+> introduces "klp.arch" sections that rename such klp-relocations *and*
+> their associated special section data structures.  Processing is then
+> deferred until after a relevant klp_object is loaded.
 
-The syzkaller USB fuzzer spotted a slab-out-of-bounds bug in the
-ds2490 driver.  This bug is caused by improper use of the altsetting
-array in the usb_interface structure (the array's entries are not
-always stored in numerical order), combined with a naive assumption
-that all interfaces probed by the driver will have the expected number
-of altsettings.
-
-The bug can be fixed by replacing references to the possibly
-non-existent intf->altsetting[alt] entry with the guaranteed-to-exist
-intf->cur_altsetting entry.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/w1/masters/ds2490.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
---- a/drivers/w1/masters/ds2490.c
-+++ b/drivers/w1/masters/ds2490.c
-@@ -1016,15 +1016,15 @@ static int ds_probe(struct usb_interface
- 	/* alternative 3, 1ms interrupt (greatly speeds search), 64 byte bulk */
- 	alt = 3;
- 	err = usb_set_interface(dev->udev,
--		intf->altsetting[alt].desc.bInterfaceNumber, alt);
-+		intf->cur_altsetting->desc.bInterfaceNumber, alt);
- 	if (err) {
- 		dev_err(&dev->udev->dev, "Failed to set alternative setting %d "
- 			"for %d interface: err=%d.\n", alt,
--			intf->altsetting[alt].desc.bInterfaceNumber, err);
-+			intf->cur_altsetting->desc.bInterfaceNumber, err);
- 		goto err_out_clear;
- 	}
+Correct.
  
--	iface_desc = &intf->altsetting[alt];
-+	iface_desc = intf->cur_altsetting;
- 	if (iface_desc->desc.bNumEndpoints != NUM_EP-1) {
- 		pr_info("Num endpoints=%d. It is not DS9490R.\n",
- 			iface_desc->desc.bNumEndpoints);
+> > I think, we should do the same for jump labels. Add
+> > jump_label_apply_nops() from module_finalize() to
+> > arch_klp_init_object_loaded() and convert jump_table ELF section so its
+> > processing is delayed.
+> 
+> Nod.  Tthat sounds about right.  There may be some more work yet in the
+> static keys API as well, but I'm not 100%.
+> 
+> > Which leads me another TODO... klp-convert does not convert even
+> > .altinstructions and .parainstructions sections, so it has that problem as
+> > well. If I remember, it was on Josh's TODO list when he first introduced
+> > klp-convert. See cover.1477578530.git.jpoimboe@redhat.com.
+> 
+> In the RFC, Josh highlights a somewhat difficult problem regarding these
+> special sections -- how to associate these special section data
+> structures and their relocations to a specific klp_object.
+> 
+> If I understand his suggestion, he proposed annotating livepatch module
+> replacement functions as to stuff them into specially named ELF sections
+> (which would include the klp_object name) and then bypass the existing
+> livepatch registration API.  No minor change.
+>
+> With that in mind, I'm starting to think of a game plan for klp-convert
+> like:
+> 
+>   - phase 1: detect /abort unsupported sections
+> 
+>   - phase 2: manual annotations in livepatch modules (like
+>              KLP_MODULE_RELOC / SYMPOS, but for special sections) so
+>              that klp-convert can start building "klp.arch" sections
+> 
+>   - phase 3: livepatch API change above to support somewhat more
+>              automatic generation of phase 2 annotations
 
+Looks good to me. First, I'd focus on something which covers (hopefully) a 
+vast majority cases and then we can do the rest. So yes, this seems to be 
+a good plan.
 
+> > And of course we should look at the other supported architectures and
+> > their module_finalize() functions. I have it on my TODO list somewhere,
+> > but you know how it works with those :/. I am sure there are more hidden
+> > surprises there.
+> 
+> Hmm, well powerpc and s390 do appear to have processing for special
+> sections as well ... but for the moment, I'm going to focus on x86 as
+> that seems like enough work for now :)
+
+Yes, please :).
+ 
+> > > Detection
+> > > ---------
+> > >
+> > > I can post ("livepatch/klp-convert: abort on static key conversion")
+> > > here as a follow commit if it looks reasonable and folks wish to review
+> > > it... or we can try and tackle static keys before merging klp-convert.
+> >
+> > Good idea. I'd rather fix it, but I think it could be a lot of work, so
+> > something like this patch seems to be a good idea.
+> 
+> I'm thinking of adding this in a commit so klp-convert can intercept
+> these sections:
+> 
+>   static bool is_section_supported(char *sname)
+>   {
+>           if (strcmp(sname, ".rela.altinstructions") == 0)
+>                   return false;
+>           if (strcmp(sname, ".rela.parainstructions") == 0)
+>                   return false;
+>           if (strcmp(sname, ".rela__jump_table") == 0)
+>                   return false;
+>           return true;
+>   }
+> 
+> Right now my v4 collection has a bunch of small fixups and nitpick
+> corrections.  It feels like a good resting place for now before
+> embarking on special section support, what do you think?
+
+Yes.
+
+Thanks
+Miroslav
