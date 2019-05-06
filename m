@@ -2,312 +2,127 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2262BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DF6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA25206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2287D20675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:22:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cur3fFT1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLVoOWMM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbfEFMSa (ORCPT
+        id S1726175AbfEFMWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 08:18:30 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51322 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbfEFMSa (ORCPT
+        Mon, 6 May 2019 08:22:52 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37738 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfEFMWv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 08:18:30 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x46CIHYN054299;
-        Mon, 6 May 2019 07:18:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557145097;
-        bh=jJLwQd3pFIHe34zU3i/HHRq/I7L/8S7gmJI9jaq1Ak0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cur3fFT11+6EFknbuA+EvjsN3DZ1qZ5CEN5Tqfhw8/iOy2GwYXZGy+7eFAN5UrbaC
-         n9o7eWReaHuSerzF98IYPhV1R8Um6CwK0XlBPCWkUmwAGku09ieT/6kD2rDsxR9j0o
-         8qObBJl7aX84/RK3KsOAhEWfjIOJa0Y6DyNUgTOA=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x46CIHDL016244
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 May 2019 07:18:17 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 6 May
- 2019 07:18:17 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 6 May 2019 07:18:16 -0500
-Received: from [10.250.67.168] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x46CIG0r043691;
-        Mon, 6 May 2019 07:18:16 -0500
-Subject: Re: [PATCH v3 2/2] RISC-V: sifive_l2_cache: Add L2 cache controller
- driver for SiFive SoCs
-To:     Yash Shah <yash.shah@sifive.com>,
-        <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <palmer@sifive.com>
-CC:     <paul.walmsley@sifive.com>, <linux-kernel@vger.kernel.org>,
-        <aou@eecs.berkeley.edu>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <sachin.ghadi@sifive.com>
-References: <1557139720-12384-1-git-send-email-yash.shah@sifive.com>
- <1557139720-12384-3-git-send-email-yash.shah@sifive.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <d36b7a74-0d08-0143-b479-45f760c347ba@ti.com>
-Date:   Mon, 6 May 2019 08:18:17 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 6 May 2019 08:22:51 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e6so6391084pgc.4;
+        Mon, 06 May 2019 05:22:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PwfLp6D54bZUS8f0UxR3vu8Buzj/gb/Y+B4s3U4Ap1I=;
+        b=DLVoOWMMYuCzhsYqdOG7eJJHzAU/0h3zN3lcCvIPlRo9tZjvJqXHKdBfmV3PUx4Q/T
+         sTVKOWZ+VS9YDF1eiX4gTrMeiMqEZcBLcNua64unZoyW8N9HbyW/XHm6vrrX40thigVo
+         w75ZkCEVu39VzuCCsPOFG7NaPKpoANQqbV+Fy8feaOxx8dx4mvzG3pxpACQivlYLz9BS
+         xzNERBI4V8PthY9yBYbSGFLalBNOU6/mrYOSf5w8OqPHBgQg/bpT4g/0+e1XGKz45Mfr
+         3Sqr57tkvnvLxyiEwlU2MxOb9qW/pOxTz3EG144SIJhPstsDUMjrTtNfXXuLJMhwrRgI
+         /c2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PwfLp6D54bZUS8f0UxR3vu8Buzj/gb/Y+B4s3U4Ap1I=;
+        b=nS8HWk7+MLFt7yTFhwuVim847aaBRlg2seb7PVHA/1yyD+gbokrb1q/SPj8VWahdMB
+         BbZ8fXsFX5yyxfXbDVAZV34OsD2hxA3gnvDMIAqUEfQ6K8Oc83I4f/4MEAujDwEx06Vr
+         oKg4+5KRDZPAWMyYPSohvFQFdshjUcQE2ewkIF1FrImRHXgIzgSNqllodbp3aOqu2Ng1
+         053Mf/frHS3OygUC3Q3Ik+jNlmUhp/obh2yV0pF6E2dYjYQCFJB6PSCpfms0/W0xJYC6
+         qtFHCbaraUpQrVvWndZ0i8jOCzkboqPmNB/ZDddUPc6O203RdQjJJJWWg5QJXEQQ5MEe
+         3osw==
+X-Gm-Message-State: APjAAAVGN/zQN4TlWOO+feyKgE9j00xNhvOZhEAMd1ZD6sB0KZzmwIhN
+        1wWXR+9ygb+HXurScJLXH6x9LcjsopIaEHwZRLE=
+X-Google-Smtp-Source: APXvYqx+1aqdahcbOQfkAGi/MjA14HI/uopLzP8/SRGyhyFEpk3iYg1WTCuSr98e/dDVq7oa4WsRymRbB68xWKZYXs8=
+X-Received: by 2002:aa7:884b:: with SMTP id k11mr32683031pfo.49.1557145371156;
+ Mon, 06 May 2019 05:22:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1557139720-12384-3-git-send-email-yash.shah@sifive.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190424181543.GA31200@embeddedor> <CAGXu5jKRO45m1TRDPA09sv0j+cZCC8e1w+oQty4YfOttKP3FYA@mail.gmail.com>
+ <13ba6003-ff33-4e5b-b88e-ef93bc68dc48@www.fastmail.com> <e1199dfe-86fe-0e42-74c7-15adf0b54406@embeddedor.com>
+In-Reply-To: <e1199dfe-86fe-0e42-74c7-15adf0b54406@embeddedor.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 6 May 2019 15:22:40 +0300
+Message-ID: <CAHp75Vep5tYDrcgNWFepj-GgbaCcRbHcDHyQ4mD=+yX7Jftt+Q@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Mark expected switch fall-throughs
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Kees Cook <keescook@chromium.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/19 6:48 AM, Yash Shah wrote:
-> The driver currently supports only SiFive FU540-C000 platform.
-> 
-> The initial version of L2 cache controller driver includes:
-> - Initial configuration reporting at boot up.
-> - Support for ECC related functionality.
-> 
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  arch/riscv/include/asm/sifive_l2_cache.h |  16 +++
->  arch/riscv/mm/Makefile                   |   1 +
->  arch/riscv/mm/sifive_l2_cache.c          | 175 +++++++++++++++++++++++++++++++
->  3 files changed, 192 insertions(+)
->  create mode 100644 arch/riscv/include/asm/sifive_l2_cache.h
->  create mode 100644 arch/riscv/mm/sifive_l2_cache.c
-> 
-> diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
-> new file mode 100644
-> index 0000000..04f6748
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/sifive_l2_cache.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * SiFive L2 Cache Controller header file
-> + *
-> + */
-> +
-> +#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
-> +#define _ASM_RISCV_SIFIVE_L2_CACHE_H
-> +
-> +extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
-> +extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
-> +
-> +#define SIFIVE_L2_ERR_TYPE_CE 0
-> +#define SIFIVE_L2_ERR_TYPE_UE 1
-> +
-> +#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
-> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-> index eb22ab4..1523ee5 100644
-> --- a/arch/riscv/mm/Makefile
-> +++ b/arch/riscv/mm/Makefile
-> @@ -3,3 +3,4 @@ obj-y += fault.o
->  obj-y += extable.o
->  obj-y += ioremap.o
->  obj-y += cacheflush.o
-> +obj-y += sifive_l2_cache.o
-> diff --git a/arch/riscv/mm/sifive_l2_cache.c b/arch/riscv/mm/sifive_l2_cache.c
-> new file mode 100644
-> index 0000000..4eb6461
-> --- /dev/null
-> +++ b/arch/riscv/mm/sifive_l2_cache.c
-> @@ -0,0 +1,175 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * SiFive L2 cache controller Driver
-> + *
-> + * Copyright (C) 2018-2019 SiFive, Inc.
-> + *
-> + */
-> +#include <linux/debugfs.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_address.h>
-> +#include <asm/sifive_l2_cache.h>
-> +
-> +#define SIFIVE_L2_DIRECCFIX_LOW 0x100
-> +#define SIFIVE_L2_DIRECCFIX_HIGH 0x104
-> +#define SIFIVE_L2_DIRECCFIX_COUNT 0x108
-> +
-> +#define SIFIVE_L2_DATECCFIX_LOW 0x140
-> +#define SIFIVE_L2_DATECCFIX_HIGH 0x144
-> +#define SIFIVE_L2_DATECCFIX_COUNT 0x148
-> +
-> +#define SIFIVE_L2_DATECCFAIL_LOW 0x160
-> +#define SIFIVE_L2_DATECCFAIL_HIGH 0x164
-> +#define SIFIVE_L2_DATECCFAIL_COUNT 0x168
-> +
-> +#define SIFIVE_L2_CONFIG 0x00
-> +#define SIFIVE_L2_WAYENABLE 0x08
-> +#define SIFIVE_L2_ECCINJECTERR 0x40
-> +
-> +#define SIFIVE_L2_MAX_ECCINTR 3
-> +
-> +static void __iomem *l2_base;
-> +static int g_irq[SIFIVE_L2_MAX_ECCINTR];
-> +
-> +enum {
-> +	DIR_CORR = 0,
-> +	DATA_CORR,
-> +	DATA_UNCORR,
-> +};
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +static struct dentry *sifive_test;
-> +
-> +static ssize_t l2_write(struct file *file, const char __user *data,
-> +			size_t count, loff_t *ppos)
-> +{
-> +	unsigned int val;
-> +
-> +	if (kstrtouint_from_user(data, count, 0, &val))
-> +		return -EINVAL;
-> +	if ((val >= 0 && val < 0xFF) || (val >= 0x10000 && val < 0x100FF))
+On Wed, May 1, 2019 at 11:44 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+>
+>
+> On 4/24/19 7:55 PM, ibm-acpi@hmh.eng.br wrote:
+> > On Wed, Apr 24, 2019, at 16:05, Kees Cook wrote:
+> >> On Wed, Apr 24, 2019 at 11:15 AM Gustavo A. R. Silva
+> >> <gustavo@embeddedor.com> wrote:
+> >>>
+> >>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> >>> cases where we are expecting to fall through.
+> >>>
+> >>> This patch fixes the following warnings:
+> >>>
+>
+> [..]
+>
+> >>>
+> >>> Warning level 3 was used: -Wimplicit-fallthrough=3
+> >>>
+> >>> Notice that, in this particular case, the code comments are modified
+> >>> in accordance with what GCC is expecting to find.
+> >>>
+> >>> This patch is part of the ongoing efforts to enable
+> >>> -Wimplicit-fallthrough.
+> >>>
+> >>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> >>
+> >> Reviewed-by: Kees Cook <keescook@chromium.org>
+> >
+> > Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> >
+>
+> Thank you both, Kees and Henrique.
+>
+> Friendly ping:
+>
+> Who can take this?
 
-I'm guessing bit 16 is the enable and the lower 8 are some kind of
-region to enable the error? This is probably a bad interface, it looks
-useful for testing but doesn't provide any debugging info useful for
-running systems. Do you really want userspace to be able to do this?
+Pushed to my review and testing queue, thanks!
 
-Andrew
+>
+> Thanks
+> --
+> Gustavo
 
-> +		writel(val, l2_base + SIFIVE_L2_ECCINJECTERR);
-> +	else
-> +		return -EINVAL;
-> +	return count;
-> +}
-> +
-> +static const struct file_operations l2_fops = {
-> +	.owner = THIS_MODULE,
-> +	.open = simple_open,
-> +	.write = l2_write
-> +};
-> +
-> +static void setup_sifive_debug(void)
-> +{
-> +	sifive_test = debugfs_create_dir("sifive_l2_cache", NULL);
-> +
-> +	debugfs_create_file("sifive_debug_inject_error", 0200,
-> +			    sifive_test, NULL, &l2_fops);
-> +}
-> +#endif
-> +
-> +static void l2_config_read(void)
-> +{
-> +	u32 regval, val;
-> +
-> +	regval = readl(l2_base + SIFIVE_L2_CONFIG);
-> +	val = regval & 0xFF;
-> +	pr_info("L2CACHE: No. of Banks in the cache: %d\n", val);
-> +	val = (regval & 0xFF00) >> 8;
-> +	pr_info("L2CACHE: No. of ways per bank: %d\n", val);
-> +	val = (regval & 0xFF0000) >> 16;
-> +	pr_info("L2CACHE: Sets per bank: %llu\n", (uint64_t)1 << val);
-> +	val = (regval & 0xFF000000) >> 24;
-> +	pr_info("L2CACHE: Bytes per cache block: %llu\n", (uint64_t)1 << val);
-> +
-> +	regval = readl(l2_base + SIFIVE_L2_WAYENABLE);
-> +	pr_info("L2CACHE: Index of the largest way enabled: %d\n", regval);
-> +}
-> +
-> +static const struct of_device_id sifive_l2_ids[] = {
-> +	{ .compatible = "sifive,fu540-c000-ccache" },
-> +	{ /* end of table */ },
-> +};
-> +
-> +static ATOMIC_NOTIFIER_HEAD(l2_err_chain);
-> +
-> +int register_sifive_l2_error_notifier(struct notifier_block *nb)
-> +{
-> +	return atomic_notifier_chain_register(&l2_err_chain, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(register_sifive_l2_error_notifier);
-> +
-> +int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
-> +{
-> +	return atomic_notifier_chain_unregister(&l2_err_chain, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(unregister_sifive_l2_error_notifier);
-> +
-> +static irqreturn_t l2_int_handler(int irq, void *device)
-> +{
-> +	unsigned int regval, add_h, add_l;
-> +
-> +	if (irq == g_irq[DIR_CORR]) {
-> +		add_h = readl(l2_base + SIFIVE_L2_DIRECCFIX_HIGH);
-> +		add_l = readl(l2_base + SIFIVE_L2_DIRECCFIX_LOW);
-> +		pr_err("L2CACHE: DirError @ 0x%08X.%08X\n", add_h, add_l);
-> +		regval = readl(l2_base + SIFIVE_L2_DIRECCFIX_COUNT);
-> +		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
-> +					   "DirECCFix");
-> +	}
-> +	if (irq == g_irq[DATA_CORR]) {
-> +		add_h = readl(l2_base + SIFIVE_L2_DATECCFIX_HIGH);
-> +		add_l = readl(l2_base + SIFIVE_L2_DATECCFIX_LOW);
-> +		pr_err("L2CACHE: DataError @ 0x%08X.%08X\n", add_h, add_l);
-> +		regval = readl(l2_base + SIFIVE_L2_DATECCFIX_COUNT);
-> +		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_CE,
-> +					   "DatECCFix");
-> +	}
-> +	if (irq == g_irq[DATA_UNCORR]) {
-> +		add_h = readl(l2_base + SIFIVE_L2_DATECCFAIL_HIGH);
-> +		add_l = readl(l2_base + SIFIVE_L2_DATECCFAIL_LOW);
-> +		pr_err("L2CACHE: DataFail @ 0x%08X.%08X\n", add_h, add_l);
-> +		regval = readl(l2_base + SIFIVE_L2_DATECCFAIL_COUNT);
-> +		atomic_notifier_call_chain(&l2_err_chain, SIFIVE_L2_ERR_TYPE_UE,
-> +					   "DatECCFail");
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +int __init sifive_l2_init(void)
-> +{
-> +	struct device_node *np;
-> +	struct resource res;
-> +	int i, rc;
-> +
-> +	np = of_find_matching_node(NULL, sifive_l2_ids);
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	if (of_address_to_resource(np, 0, &res))
-> +		return -ENODEV;
-> +
-> +	l2_base = ioremap(res.start, resource_size(&res));
-> +	if (!l2_base)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < SIFIVE_L2_MAX_ECCINTR; i++) {
-> +		g_irq[i] = irq_of_parse_and_map(np, i);
-> +		rc = request_irq(g_irq[i], l2_int_handler, 0, "l2_ecc", NULL);
-> +		if (rc) {
-> +			pr_err("L2CACHE: Could not request IRQ %d\n", g_irq[i]);
-> +			return rc;
-> +		}
-> +	}
-> +
-> +	l2_config_read();
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +	setup_sifive_debug();
-> +#endif
-> +	return 0;
-> +}
-> +device_initcall(sifive_l2_init);
-> 
+
+
+--
+With Best Regards,
+Andy Shevchenko
