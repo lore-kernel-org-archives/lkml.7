@@ -2,53 +2,54 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A715BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC786C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ABA721479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3D8214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153939;
-	bh=gayqogWeaoXwcCQx1yzFUiUarQ1AJbH0Dw+KMKkYVXU=;
+	s=default; t=1557153942;
+	bh=Gfz5SuMiQYFQ9FCIzFIRVKwRpwoXaR0bKvkx1HYVjfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sHMjQmEGdfUrKs0aijrv609OA59ZLJHM0OIEDb1h5zB9vfJmyfQ8S1Dyihk6cA6T6
-	 AA/wyMpl1WYfKTVu02g6bVoYqfvvnCl5JWCMnWorRLlAwU4Kb8nFf5ORc8Z0Qp3Jqi
-	 lSxLRxHO0aotmMRd9F950eE+0ELoAIB8GaFaxnEA=
+	b=LzlBkPgc1+uSI68Q/T0RFKwO+Ln4tddXFEqTalwVjc7RcYK2cqxk534BocqaOdq9R
+	 YsUDknvs73CfDHAGnMTioFmBEPIJRAxkvOlNJhptdLTTsBzT8zdD6JecvkQH3kT9+K
+	 zIbexUUzUGQYRUI9iNiOqZq0OC3QTcmftAg+iutA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfEFOph (ORCPT
+        id S1728981AbfEFOpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:45:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728965AbfEFOpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:45:34 -0400
+        id S1726767AbfEFOpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 578EB20C01;
-        Mon,  6 May 2019 14:45:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED5D720C01;
+        Mon,  6 May 2019 14:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153933;
-        bh=gayqogWeaoXwcCQx1yzFUiUarQ1AJbH0Dw+KMKkYVXU=;
+        s=default; t=1557153937;
+        bh=Gfz5SuMiQYFQ9FCIzFIRVKwRpwoXaR0bKvkx1HYVjfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BWXP0P+ZD7O522BqpcL+EdAAYCBJG+k5zqemkLCd+qF/srNk4AfkV2mNIzBg2LLNy
-         9vIaMYRJJVPwWM47uXL1g3bhPqLVCTlzO7CNiiUjOmtS2aip6GGpW435cTUnfae5Wj
-         JmEXsM2dQs1Rw036C9oOTb5tzA39jkhqQC5DB/Z0=
+        b=O7Gk+dA2S9ot67QaC0yNsLCB//3+frclxJC/9+wjmArFIQajO+nch2sbkQqtJMdFI
+         F0ww9saJ65q15P8SSaqIHRNKVvAG30mxXIgiumRkouTxAQFhkZPvSuUMAkijTR2tN8
+         gsz7G2+e91x0yFZJ1J36XIRlIrIEY+wBAtvWPIL4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Louis Taylor <louis@kragniz.eu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yufen Yu <yuyufen@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 44/75] vfio/pci: use correct format characters
-Date:   Mon,  6 May 2019 16:32:52 +0200
-Message-Id: <20190506143057.210575988@linuxfoundation.org>
+Subject: [PATCH 4.14 53/75] hugetlbfs: fix memory leak for resv_map
+Date:   Mon,  6 May 2019 16:33:01 +0200
+Message-Id: <20190506143058.043892554@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -61,79 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 426b046b748d1f47e096e05bdcc6fb4172791307 ]
+[ Upstream commit 58b6e5e8f1addd44583d61b0a03c0f5519527e35 ]
 
-When compiling with -Wformat, clang emits the following warnings:
+When mknod is used to create a block special file in hugetlbfs, it will
+allocate an inode and kmalloc a 'struct resv_map' via resv_map_alloc().
+inode->i_mapping->private_data will point the newly allocated resv_map.
+However, when the device special file is opened bd_acquire() will set
+inode->i_mapping to bd_inode->i_mapping.  Thus the pointer to the
+allocated resv_map is lost and the structure is leaked.
 
-drivers/vfio/pci/vfio_pci.c:1601:5: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                ^~~~~~
+Programs to reproduce:
+        mount -t hugetlbfs nodev hugetlbfs
+        mknod hugetlbfs/dev b 0 0
+        exec 30<> hugetlbfs/dev
+        umount hugetlbfs/
 
-drivers/vfio/pci/vfio_pci.c:1601:13: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                        ^~~~~~
+resv_map structures are only needed for inodes which can have associated
+page allocations.  To fix the leak, only allocate resv_map for those
+inodes which could possibly be associated with page allocations.
 
-drivers/vfio/pci/vfio_pci.c:1601:21: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                ^~~~~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1601:32: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                           ^~~~~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:5: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                ^~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:13: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                        ^~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:21: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                ^~~~~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:32: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                           ^~~~~~~~~
-The types of these arguments are unconditionally defined, so this patch
-updates the format character to the correct ones for unsigned ints.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Link: http://lkml.kernel.org/r/20190401213101.16476-1-mike.kravetz@oracle.com
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Reported-by: Yufen Yu <yuyufen@huawei.com>
+Suggested-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/hugetlbfs/inode.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 695b9d1a1aae..6f5cc67e343e 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -1443,11 +1443,11 @@ static void __init vfio_pci_fill_ids(void)
- 		rc = pci_add_dynid(&vfio_pci_driver, vendor, device,
- 				   subvendor, subdevice, class, class_mask, 0);
- 		if (rc)
--			pr_warn("failed to add dynamic id [%04hx:%04hx[%04hx:%04hx]] class %#08x/%08x (%d)\n",
-+			pr_warn("failed to add dynamic id [%04x:%04x[%04x:%04x]] class %#08x/%08x (%d)\n",
- 				vendor, device, subvendor, subdevice,
- 				class, class_mask, rc);
- 		else
--			pr_info("add [%04hx:%04hx[%04hx:%04hx]] class %#08x/%08x\n",
-+			pr_info("add [%04x:%04x[%04x:%04x]] class %#08x/%08x\n",
- 				vendor, device, subvendor, subdevice,
- 				class, class_mask);
- 	}
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index eb6f3de29f69..dd28a9b287da 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -730,11 +730,17 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 					umode_t mode, dev_t dev)
+ {
+ 	struct inode *inode;
+-	struct resv_map *resv_map;
++	struct resv_map *resv_map = NULL;
+ 
+-	resv_map = resv_map_alloc();
+-	if (!resv_map)
+-		return NULL;
++	/*
++	 * Reserve maps are only needed for inodes that can have associated
++	 * page allocations.
++	 */
++	if (S_ISREG(mode) || S_ISLNK(mode)) {
++		resv_map = resv_map_alloc();
++		if (!resv_map)
++			return NULL;
++	}
+ 
+ 	inode = new_inode(sb);
+ 	if (inode) {
+@@ -766,8 +772,10 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 			break;
+ 		}
+ 		lockdep_annotate_inode_mutex_key(inode);
+-	} else
+-		kref_put(&resv_map->refs, resv_map_release);
++	} else {
++		if (resv_map)
++			kref_put(&resv_map->refs, resv_map_release);
++	}
+ 
+ 	return inode;
+ }
 -- 
 2.20.1
 
