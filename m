@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0B7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EF1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1FE21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C941D21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153946;
-	bh=YFjcCRz1LcmuYwDUcw7LQBICT55MkdrKd0g0k9SqRv8=;
+	s=default; t=1557153949;
+	bh=QoyRgNmTdAJPWL9A22hSP/JtEszVw69vNRYFpH7L4QA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A8MMIhDsVQBsb+/0B4KYe6g7nW7Vp6bTdnboqJpcVG6P+8x3IJGoS4tWA41D83APp
-	 2yhHyxR+s2LouE909iqU/VuNu/GSVO9Q/mYYgtEPLK7kx9XZZUdfIornVHs6qGrqoa
-	 dfY0dD8X3SeW9w+ghdpWeOWfEtIJNOdjNmcEZrSQ=
+	b=gcqKnra/m2v5poOD8ME3ZIkNgEfUpe8zQCJXJv4O/QT5b274tw/EaP5LJdyF6FRfj
+	 EMJxTUM3w/KPU6xWt2pIBQH57rQdYevTk8QmOVOw2xfRu/qF5bGuH+Qhyjnm3eMUWl
+	 InO463vMUmd+JpzIPTNZrNyctaKnn8kMc5VUAdWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbfEFOpp (ORCPT
+        id S1729005AbfEFOps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:45:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42632 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:45:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbfEFOpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:45:40 -0400
+        id S1728337AbfEFOpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B048214AF;
-        Mon,  6 May 2019 14:45:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBEB821479;
+        Mon,  6 May 2019 14:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153940;
-        bh=YFjcCRz1LcmuYwDUcw7LQBICT55MkdrKd0g0k9SqRv8=;
+        s=default; t=1557153945;
+        bh=QoyRgNmTdAJPWL9A22hSP/JtEszVw69vNRYFpH7L4QA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oWcmln2UoKWzABiGWx9mFNe9wVW7FAEU/8BJJX+snpTnFxc8iuMHCA/692lT2Qav3
-         6aPgUcEvdzfRBMt2H9CzQjadIDE1A3+m0o+0HONzlrQr5wZKwZXooxO3MzHONyhKjr
-         cYgUFVsat1cKR/ayxV/GpCD8ZoGZSPFKhN9+7g5o=
+        b=ye21rSUSvgUTXPKG6U4CTpmPN2eyMJ3lkicHOWJUkMAueJ5V9uH8oTgndFFq4pZrl
+         mcLyal0hZqt7kroTff7pLmZ9cqRzoHAMwh2Z1yHFbeOsUINnPaqAimPuTG5H1j/YIk
+         gwGdVNt3kMz8wn+bfAL9gf+G8p4l5YVlslrmIRFg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        kbuild test robot <lkp@intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 54/75] sh: fix multiple function definition build errors
-Date:   Mon,  6 May 2019 16:33:02 +0200
-Message-Id: <20190506143058.139297460@linuxfoundation.org>
+Subject: [PATCH 4.14 56/75] ARM: orion: dont use using 64-bit DMA masks
+Date:   Mon,  6 May 2019 16:33:04 +0200
+Message-Id: <20190506143058.334427540@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -65,55 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit acaf892ecbf5be7710ae05a61fd43c668f68ad95 ]
+[ Upstream commit cd92d74d67c811dc22544430b9ac3029f5bd64c5 ]
 
-Many of the sh CPU-types have their own plat_irq_setup() and
-arch_init_clk_ops() functions, so these same (empty) functions in
-arch/sh/boards/of-generic.c are not needed and cause build errors.
+clang warns about statically defined DMA masks from the DMA_BIT_MASK
+macro with length 64:
 
-If there is some case where these empty functions are needed, they can
-be retained by marking them as "__weak" while at the same time making
-builds that do not need them succeed.
+arch/arm/plat-orion/common.c:625:29: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+                .coherent_dma_mask      = DMA_BIT_MASK(64),
+                                          ^~~~~~~~~~~~~~~~
+include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
+ #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
 
-Fixes these build errors:
+The ones in orion shouldn't really be 64 bit masks, so changing them
+to what the driver can support avoids the warning.
 
-arch/sh/boards/of-generic.o: In function `plat_irq_setup':
-(.init.text+0x134): multiple definition of `plat_irq_setup'
-arch/sh/kernel/cpu/sh2/setup-sh7619.o:(.init.text+0x30): first defined here
-arch/sh/boards/of-generic.o: In function `arch_init_clk_ops':
-(.init.text+0x118): multiple definition of `arch_init_clk_ops'
-arch/sh/kernel/cpu/sh2/clock-sh7619.o:(.init.text+0x0): first defined here
-
-Link: http://lkml.kernel.org/r/9ee4e0c5-f100-86a2-bd4d-1d3287ceab31@infradead.org
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/boards/of-generic.c | 4 ++--
+ arch/arm/plat-orion/common.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/sh/boards/of-generic.c b/arch/sh/boards/of-generic.c
-index 4feb7c86f4ac..5e83ea12303b 100644
---- a/arch/sh/boards/of-generic.c
-+++ b/arch/sh/boards/of-generic.c
-@@ -180,10 +180,10 @@ static struct sh_machine_vector __initmv sh_of_generic_mv = {
- 
- struct sh_clk_ops;
- 
--void __init arch_init_clk_ops(struct sh_clk_ops **ops, int idx)
-+void __init __weak arch_init_clk_ops(struct sh_clk_ops **ops, int idx)
- {
- }
- 
--void __init plat_irq_setup(void)
-+void __init __weak plat_irq_setup(void)
- {
- }
+diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
+index a2399fd66e97..1e970873439c 100644
+--- a/arch/arm/plat-orion/common.c
++++ b/arch/arm/plat-orion/common.c
+@@ -622,7 +622,7 @@ static struct platform_device orion_xor0_shared = {
+ 	.resource	= orion_xor0_shared_resources,
+ 	.dev            = {
+ 		.dma_mask               = &orion_xor_dmamask,
+-		.coherent_dma_mask      = DMA_BIT_MASK(64),
++		.coherent_dma_mask      = DMA_BIT_MASK(32),
+ 		.platform_data          = &orion_xor0_pdata,
+ 	},
+ };
+@@ -683,7 +683,7 @@ static struct platform_device orion_xor1_shared = {
+ 	.resource	= orion_xor1_shared_resources,
+ 	.dev            = {
+ 		.dma_mask               = &orion_xor_dmamask,
+-		.coherent_dma_mask      = DMA_BIT_MASK(64),
++		.coherent_dma_mask      = DMA_BIT_MASK(32),
+ 		.platform_data          = &orion_xor1_pdata,
+ 	},
+ };
 -- 
 2.20.1
 
