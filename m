@@ -2,182 +2,265 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13649C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF1FC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03502082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C7A208C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:15:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="LXNoBYkb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfEFINo (ORCPT
+        id S1726162AbfEFIPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:13:44 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34733 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbfEFINn (ORCPT
+        Mon, 6 May 2019 04:15:31 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44178 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfEFIPb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:13:43 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w35so12673630edd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:13:41 -0700 (PDT)
+        Mon, 6 May 2019 04:15:31 -0400
+Received: by mail-ed1-f67.google.com with SMTP id b8so14315524edm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:15:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CgA574CEJUyil6PdSfm+CiXAoxf1SzuGdXnnNoWNl1U=;
+        b=LXNoBYkb3H6wjTb6PsrLYVWdf+1y7bTPVr+79MioMc3S5CRBEFrChC/z84GhOXyFX2
+         mgYl7H2gOi6lRHhpw4K2fPCBpT7z8+veN5tyUYKismFDiupLjJkl6STUeqtC6cEXVg0J
+         bItUahTqUA5bMGpaWUdQdqXi5KEQmgA1Yvgi0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QNvN8OqIbd2dPdzBBPVcOe2NRqEy3Q9v/swnK/nbM9Q=;
-        b=uDuhUQHXlh3ogpsEmNyzxg4bSVCXcE7VUxSWImU/DG2MK4KJMsN/r6woM3chXU6gCi
-         Bkv8Kj2wRc/U9B9sLWtaWsBblUlpSs53IIYxeYA++EABo7NMkomP9j31wJaGWMSKrBrj
-         tMFjvhve8a2p4osp5h4cRO3AvnNpUiVsBTyx94P6z0Wfiaqjp/k41wJ5L/idH0kIGYfb
-         vZUPutSQg5335TKzOyhFWlducvf7iToIh2ACdO4Znscc1BMZjrPVuQvsVeFJbqJ/tRWD
-         CmZMxxoohbOeF6Buc+X9tL3OdZ8IacEgCUhf8psioyCrgrrDCW9MDExAQKmxo29vu01r
-         sYeQ==
-X-Gm-Message-State: APjAAAVE6nL5FDFX7/CMIMWqdFKf4VNqkQUke7iZEZ916LZCBa4tZOzn
-        PM5TSJRKmvVj0sEiaT6fesczoJbxjLQ=
-X-Google-Smtp-Source: APXvYqw67dt/5kqRfhyvR2PWuu6bLBz4NWBrEcYKuCB2vbs72gHOr5g5FWhIaIT8SBagdj86Q71UXg==
-X-Received: by 2002:aa7:d9cb:: with SMTP id v11mr2912156eds.159.1557130420772;
-        Mon, 06 May 2019 01:13:40 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id k37sm2886520edb.11.2019.05.06.01.13.39
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 01:13:39 -0700 (PDT)
-Subject: Re: [PATCH RFC] brcmfmac: sanitize DMI strings v2
-To:     Victor Bravo <1905@spmblk.com>,
-        Arend Van Spriel <arend.vanspriel@broadcom.com>
-Cc:     Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org
-References: <20190504162633.ldrz2nqfocg55grb@localhost>
- <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
- <20190504194440.4zcxjrtj2aft3ka4@localhost>
- <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <20190505150355.3fbng4ny34x255vk@localhost>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
-Date:   Mon, 6 May 2019 10:13:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=CgA574CEJUyil6PdSfm+CiXAoxf1SzuGdXnnNoWNl1U=;
+        b=jiXT4CmlRtsMcPeLXxFwQGuOUdHpO9VTn4uKErHp7YYgdG16CewrFz5D3BQ9JovFvK
+         Cao8uKLjJ5W5e9RIgsXTVImpT+xmdnhnDNi8wHk3010Q3yX5krxkqj8lP0xgj83NGqW4
+         6jRGvASq1Vw6+Mbkicgvtc+B9mj8Jw5JMA6LubY67c6XNAz3mydFAZwcPnkbaewtXOlb
+         PDMig90hL4ars0jwdOaxfjLjpbM7LLETif1jvyZf9+av0C50ciz0K5tkP9WXy5ssivWK
+         kVux2UFliagdZFyQhwHXPoHKfksTlIOQTACKhI+cNiXKeh+Jt83fR6yqtAQMHLULbuOS
+         pp8g==
+X-Gm-Message-State: APjAAAUFyo+eOW32eY15oGlG9Z1OBu3hmtGon9+k4KELNmVJC/BWHLiG
+        xB1TyvfNQhenE00MhU6yW5XSWQ==
+X-Google-Smtp-Source: APXvYqwQzci4CzAt1hv76RhquWevhv9YOIOYXWvvzNasgLPCS6zryt/MyGP7qFkHIk+8F9R1qcCz8g==
+X-Received: by 2002:a17:906:5855:: with SMTP id h21mr17802926ejs.264.1557130528261;
+        Mon, 06 May 2019 01:15:28 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id z32sm2838526edz.85.2019.05.06.01.15.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 01:15:27 -0700 (PDT)
+Date:   Mon, 6 May 2019 10:15:25 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     syzbot <syzbot+6da9575ba2db4da91831@syzkaller.appspotmail.com>
+Cc:     airlied@linux.ie, dmitry.torokhov@gmail.com,
+        dri-devel@lists.freedesktop.org, hpa@zytor.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, patrik.r.jakobsson@gmail.com,
+        rydberg@bitmath.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, wsa@the-dreams.de, x86@kernel.org
+Subject: Re: KASAN: use-after-free Read in add_uevent_var
+Message-ID: <20190506081525.GD17751@phenom.ffwll.local>
+Mail-Followup-To: syzbot <syzbot+6da9575ba2db4da91831@syzkaller.appspotmail.com>,
+        airlied@linux.ie, dmitry.torokhov@gmail.com,
+        dri-devel@lists.freedesktop.org, hpa@zytor.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, patrik.r.jakobsson@gmail.com, rydberg@bitmath.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        wsa@the-dreams.de, x86@kernel.org
+References: <000000000000559435058813dc8d@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190505150355.3fbng4ny34x255vk@localhost>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000559435058813dc8d@google.com>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 05-05-19 17:03, Victor Bravo wrote:
-> Sanitize DMI strings in brcmfmac driver to make resulting filenames
-> contain only safe characters. This version replaces all non-printable
-> characters incl. delete (0-31, 127-255), spaces and slashes with
-> underscores.
+On Sat, May 04, 2019 at 11:16:05AM -0700, syzbot wrote:
+> Hello,
 > 
-> This change breaks backward compatibility, but adds control over strings
-> passed to firmware loader and compatibility with CONFIG_EXTRA_FIRMWARE
-> which doesn't support spaces in filenames.
+> syzbot found the following crash on:
 > 
-> Changes from v1: don't revert fresh commit by someone else
+> HEAD commit:    a4ccb5f9 Merge tag 'drm-fixes-2019-05-03' of git://anongit..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1205d570a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=2bd0da4b8de0b004
+> dashboard link: https://syzkaller.appspot.com/bug?extid=6da9575ba2db4da91831
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> userspace arch: i386
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1769f62ca00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=167ae984a00000
 > 
-> Signed-off-by: Victor Bravo <1905@spmblk.com>
-
-Thank you for the patch, but I'm sorry to say this patch cannot go in as is,
-because it will break existing systems.
-
-If you look here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/brcm
-
-You will see a file named: "brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt" there, which
-has a space in its name (and which works fine).
-
-I'm fine with doing some sanitizing of the strings, but replacing spaces with _
-breaks existing use-cases (will cause a regression for them) and a space is absolutely
-a valid character in a filename and the firmware-loader can deal with this just fine.
-
-If the code for building firmwares into the kernel cannot deal with spaces then IMHO
-that code should be fixed instead. Have you looked into fixing that?
-
-As for your T100HA example from earlier in this thread, the brcmfmac driver now
-also supports getting the firmware from a special EFI nvram variable, which the
-T100HA sets, so you do not need to provide a nvram file on the T100HA and things
-will still work.
-
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
-> index 7535cb0d4ac0..84571e09b465 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
-> @@ -23,6 +23,14 @@
->   /* The DMI data never changes so we can use a static buf for this */
->   static char dmi_board_type[128];
->   
-> +/* Array of 128 bits representing 7-bit characters allowed in DMI strings. */
-> +static unsigned char brcmf_dmi_allowed_chars[] = {
-> +	0x00, 0x00, 0x00, 0x00, 0xfe, 0x7f, 0xff, 0xff,
-> +	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f
-> +};
-> +
-> +#define BRCMF_DMI_SAFE_CHAR '_'
-> +
->   struct brcmf_dmi_data {
->   	u32 chip;
->   	u32 chiprev;
-> @@ -99,6 +107,15 @@ static const struct dmi_system_id dmi_platform_data[] = {
->   	{}
->   };
->   
-> +void brcmf_dmi_sanitize(char *dst, const unsigned char *allowed, char safe)
-> +{
-> +	while (*dst) {
-> +		if ((*dst < 0) || !(allowed[*dst / 8] & (1 << (*dst % 8))))
-
-At a first look I have no clue what this code is doing and I honestly do not feel
-like figuring it out, this is clever, but IMHO not readable.
-
-Please just write this as if (*dst < 0x21 || (*dst > foo && < bar) || etc,
-so that a human can actually see in one look what the code is doing.
-
-You may want to wait for Arend to give his opinion before changing this though,
-maybe he likes the code as is.
-
-Also note that that should be < 0x20 of course, since we need to preserve spaces
-as is to avoid a regression.
-
-Regards,
-
-Hans
-
-
-
-
-
-> +			*dst = safe;
-> +		dst++;
-> +	}
-> +}
-> +
->   void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
->   {
->   	const struct dmi_system_id *match;
-> @@ -126,6 +143,9 @@ void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
->   	if (sys_vendor && product_name) {
->   		snprintf(dmi_board_type, sizeof(dmi_board_type), "%s-%s",
->   			 sys_vendor, product_name);
-> +		brcmf_dmi_sanitize(dmi_board_type,
-> +				   brcmf_dmi_allowed_chars,
-> +				   BRCMF_DMI_SAFE_CHAR);
->   		settings->board_type = dmi_board_type;
->   	}
->   }
+> The bug was bisected to:
 > 
+> commit 0a1c7959acd9674a0e4e59f911f3e5fbf25fd693
+> Author: Wolfram Sang <wsa@the-dreams.de>
+> Date:   Wed May 17 15:22:18 2017 +0000
+> 
+>     gpu: drm: tc35876x: move header file out of I2C realm
+
+Bisect seems to have gone off the rails. No idea where or why.
+-Daniel
+
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=138fe12ca00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=104fe12ca00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=178fe12ca00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+6da9575ba2db4da91831@syzkaller.appspotmail.com
+> Fixes: 0a1c7959acd9 ("gpu: drm: tc35876x: move header file out of I2C
+> realm")
+> 
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000005502
+> RDX: 0000000000000000 RSI: 00000000080daf20 RDI: 00000000080f0f84
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> ==================================================================
+> BUG: KASAN: use-after-free in string+0x208/0x230 lib/vsprintf.c:606
+> Read of size 1 at addr ffff8880a55aa200 by task syz-executor222/7839
+> 
+> CPU: 1 PID: 7839 Comm: syz-executor222 Not tainted 5.1.0-rc7+ #98
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+>  kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+>  __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:129
+>  string+0x208/0x230 lib/vsprintf.c:606
+>  vsnprintf+0xbfc/0x1af0 lib/vsprintf.c:2396
+>  add_uevent_var+0x14d/0x310 lib/kobject_uevent.c:661
+>  input_dev_uevent+0x163/0x890 drivers/input/input.c:1594
+>  dev_uevent+0x312/0x580 drivers/base/core.c:1180
+>  kobject_uevent_env+0x487/0x1030 lib/kobject_uevent.c:549
+>  kobject_uevent+0x20/0x26 lib/kobject_uevent.c:638
+>  kobject_cleanup lib/kobject.c:649 [inline]
+>  kobject_release lib/kobject.c:691 [inline]
+>  kref_put include/linux/kref.h:67 [inline]
+>  kobject_put.cold+0x177/0x2ec lib/kobject.c:708
+>  put_device+0x20/0x30 drivers/base/core.c:2205
+>  input_put_device include/linux/input.h:349 [inline]
+>  evdev_free+0x51/0x70 drivers/input/evdev.c:369
+>  device_release+0x7d/0x210 drivers/base/core.c:1064
+>  kobject_cleanup lib/kobject.c:662 [inline]
+>  kobject_release lib/kobject.c:691 [inline]
+>  kref_put include/linux/kref.h:67 [inline]
+>  kobject_put.cold+0x28f/0x2ec lib/kobject.c:708
+>  cdev_default_release+0x41/0x50 fs/char_dev.c:607
+>  kobject_cleanup lib/kobject.c:662 [inline]
+>  kobject_release lib/kobject.c:691 [inline]
+>  kref_put include/linux/kref.h:67 [inline]
+>  kobject_put.cold+0x28f/0x2ec lib/kobject.c:708
+>  cdev_put.part.0+0x39/0x50 fs/char_dev.c:368
+>  cdev_put+0x20/0x30 fs/char_dev.c:366
+>  __fput+0x6df/0x8d0 fs/file_table.c:281
+>  ____fput+0x16/0x20 fs/file_table.c:309
+>  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+>  exit_task_work include/linux/task_work.h:22 [inline]
+>  do_exit+0x90a/0x2fa0 kernel/exit.c:876
+>  do_group_exit+0x135/0x370 kernel/exit.c:980
+>  __do_sys_exit_group kernel/exit.c:991 [inline]
+>  __se_sys_exit_group kernel/exit.c:989 [inline]
+>  __ia32_sys_exit_group+0x44/0x50 kernel/exit.c:989
+>  do_syscall_32_irqs_on arch/x86/entry/common.c:326 [inline]
+>  do_fast_syscall_32+0x281/0xc98 arch/x86/entry/common.c:397
+>  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+> RIP: 0023:0xf7ff7849
+> Code: 85 d2 74 02 89 0a 5b 5d c3 8b 04 24 c3 8b 14 24 c3 8b 3c 24 c3 90 90
+> 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90
+> 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+> RSP: 002b:00000000fff2db8c EFLAGS: 00000292 ORIG_RAX: 00000000000000fc
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000080f1298
+> RDX: 0000000000000000 RSI: 00000000080daf1c RDI: 00000000080f12a0
+> RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> 
+> Allocated by task 7839:
+>  save_stack+0x45/0xd0 mm/kasan/common.c:75
+>  set_track mm/kasan/common.c:87 [inline]
+>  __kasan_kmalloc mm/kasan/common.c:497 [inline]
+>  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
+>  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:511
+>  __do_kmalloc mm/slab.c:3727 [inline]
+>  __kmalloc_track_caller+0x158/0x740 mm/slab.c:3742
+>  kstrndup+0x5f/0xf0 mm/util.c:96
+>  uinput_dev_setup+0x1d4/0x310 drivers/input/misc/uinput.c:475
+>  uinput_ioctl_handler.isra.0+0x12b8/0x1cc0 drivers/input/misc/uinput.c:886
+>  uinput_compat_ioctl+0x70/0x90 drivers/input/misc/uinput.c:1062
+>  __do_compat_sys_ioctl fs/compat_ioctl.c:1052 [inline]
+>  __se_compat_sys_ioctl fs/compat_ioctl.c:998 [inline]
+>  __ia32_compat_sys_ioctl+0x197/0x620 fs/compat_ioctl.c:998
+>  do_syscall_32_irqs_on arch/x86/entry/common.c:326 [inline]
+>  do_fast_syscall_32+0x281/0xc98 arch/x86/entry/common.c:397
+>  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+> 
+> Freed by task 7839:
+>  save_stack+0x45/0xd0 mm/kasan/common.c:75
+>  set_track mm/kasan/common.c:87 [inline]
+>  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
+>  kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
+>  __cache_free mm/slab.c:3499 [inline]
+>  kfree+0xcf/0x230 mm/slab.c:3822
+>  uinput_destroy_device+0xf8/0x250 drivers/input/misc/uinput.c:311
+>  uinput_ioctl_handler.isra.0+0x886/0x1cc0 drivers/input/misc/uinput.c:882
+>  uinput_compat_ioctl+0x70/0x90 drivers/input/misc/uinput.c:1062
+>  __do_compat_sys_ioctl fs/compat_ioctl.c:1052 [inline]
+>  __se_compat_sys_ioctl fs/compat_ioctl.c:998 [inline]
+>  __ia32_compat_sys_ioctl+0x197/0x620 fs/compat_ioctl.c:998
+>  do_syscall_32_irqs_on arch/x86/entry/common.c:326 [inline]
+>  do_fast_syscall_32+0x281/0xc98 arch/x86/entry/common.c:397
+>  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+> 
+> The buggy address belongs to the object at ffff8880a55aa200
+>  which belongs to the cache kmalloc-32 of size 32
+> The buggy address is located 0 bytes inside of
+>  32-byte region [ffff8880a55aa200, ffff8880a55aa220)
+> The buggy address belongs to the page:
+> page:ffffea0002956a80 count:1 mapcount:0 mapping:ffff8880aa4001c0
+> index:0xffff8880a55aafc1
+> flags: 0x1fffc0000000200(slab)
+> raw: 01fffc0000000200 ffffea0002949e88 ffffea00029482c8 ffff8880aa4001c0
+> raw: ffff8880a55aafc1 ffff8880a55aa000 0000000100000039 0000000000000000
+> page dumped because: kasan: bad access detected
+> 
+> Memory state around the buggy address:
+>  ffff8880a55aa100: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+>  ffff8880a55aa180: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+> > ffff8880a55aa200: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+>                    ^
+>  ffff8880a55aa280: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+>  ffff8880a55aa300: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+> ==================================================================
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
