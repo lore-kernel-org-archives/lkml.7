@@ -2,95 +2,107 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9426CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 766DFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57FAF206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:08:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="X5o5thvU"
+	by mail.kernel.org (Postfix) with ESMTP id 4EF8E206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:15:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfEFNIW (ORCPT
+        id S1726241AbfEFNPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 09:08:22 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43675 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbfEFNIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 09:08:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44yNMk3gkdz9s9N;
-        Mon,  6 May 2019 23:08:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557148098;
-        bh=G8r3qCd5HjzKUThew6yjTIbb6IoPOhqODEolin4V6Uc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=X5o5thvUAr9nZKDdmhgpzCd7DuISdJStUy5EpE8JuLxMrf/n8nAv+NSQj/Cis5UAu
-         6bdHnE0TcX1R6HYt+XrVumF3spOZDRpYPnXcTjBFRiBNTktuIxUTnFYqwks03S6vmx
-         msFve+EfgIzxRnBrdZ5DwGDylcgkd7znRYMnt7x9/XK5YMTtEUEmpVD8x4+Pd1vtZM
-         81WrxpRbuu0NY24zWyR0nKWT7z1Gdp6kQsm0yZhd9Rzbn4wUDDmSm/8VM+2ho3/0ME
-         KANPsc4nRY0jHbAW+WHcVWNK1u4RMQKj/iCnhB/36UU2M0LgRq2YQazXmp6LFDXLqH
-         5wJhxuQz6/jVQ==
-Date:   Mon, 6 May 2019 23:08:15 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kristian Evensen <kristian.evensen@gmail.com>
-Subject: linux-next: Fixes tag needs some work in the netfilter tree
-Message-ID: <20190506230816.22452c4d@canb.auug.org.au>
+        Mon, 6 May 2019 09:15:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55776 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725886AbfEFNPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 09:15:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 391F7AF08;
+        Mon,  6 May 2019 13:15:40 +0000 (UTC)
+Date:   Mon, 6 May 2019 15:15:39 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: [PATCH 1/2] eeprom: ee1004: Move selected page detection to a
+ separate function
+Message-ID: <20190506151539.69ee75e8@endymion>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/2dh7rGdDwXTz/NoDbDAJsn7"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2dh7rGdDwXTz/NoDbDAJsn7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+No functional change, this is in preparation for future needs.
 
-Hi all,
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/misc/eeprom/ee1004.c |   31 +++++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
 
-n commit
+--- linux-5.0.orig/drivers/misc/eeprom/ee1004.c	2019-05-06 11:23:14.833319076 +0200
++++ linux-5.0/drivers/misc/eeprom/ee1004.c	2019-05-06 11:56:58.478375343 +0200
+@@ -57,6 +57,24 @@ MODULE_DEVICE_TABLE(i2c, ee1004_ids);
+ 
+ /*-------------------------------------------------------------------------*/
+ 
++static int ee1004_get_current_page(void)
++{
++	int err;
++
++	err = i2c_smbus_read_byte(ee1004_set_page[0]);
++	if (err == -ENXIO) {
++		/* Nack means page 1 is selected */
++		return 1;
++	}
++	if (err < 0) {
++		/* Anything else is a real error, bail out */
++		return err;
++	}
++
++	/* Ack means page 0 is selected, returned value meaningless */
++	return 0;
++}
++
+ static ssize_t ee1004_eeprom_read(struct i2c_client *client, char *buf,
+ 				  unsigned int offset, size_t count)
+ {
+@@ -190,17 +208,10 @@ static int ee1004_probe(struct i2c_clien
+ 	}
+ 
+ 	/* Remember current page to avoid unneeded page select */
+-	err = i2c_smbus_read_byte(ee1004_set_page[0]);
+-	if (err == -ENXIO) {
+-		/* Nack means page 1 is selected */
+-		ee1004_current_page = 1;
+-	} else if (err < 0) {
+-		/* Anything else is a real error, bail out */
++	err = ee1004_get_current_page();
++	if (err < 0)
+ 		goto err_clients;
+-	} else {
+-		/* Ack means page 0 is selected, returned value meaningless */
+-		ee1004_current_page = 0;
+-	}
++	ee1004_current_page = err;
+ 	dev_dbg(&client->dev, "Currently selected page: %d\n",
+ 		ee1004_current_page);
+ 	mutex_unlock(&ee1004_bus_lock);
 
-  4ff6d55abba3 ("netfilter: ctnetlink: Resolve conntrack L3-protocol flush =
-regression")
 
-Fixes tag
-
-  Fixes: 59c08c69c278 ("netfilter: ctnetlink: Support L3 protocol-filter
-
-has these problem(s):
-
-  - Please do not split Fixes tags over more than one line.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/2dh7rGdDwXTz/NoDbDAJsn7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzQMcAACgkQAVBC80lX
-0Gxu7AgAjLH7b+D21AAun/ybz1JFuzbsjqUZM2urJFjKvGkFqvqIZMR+BiQ3NaR7
-RIKpUH3MUVVj1GrbA+eOCZiaWhL9yy59hZrLAdwJZO51NUdq1Z0Y+XuZaBEQjRR4
-kgqHjbteAMiY5EzrN2P5V/AMXg+nhcCROEAnINc0UfJHIVSw4YOxfry32DleYWbE
-ATfk0UL++vCIzF+FJE26g2zErza3vizazroIoUsQjdhkp2IaY6QrO0oewCx/pGpM
-Fbtgry3PpQY25AdVJyhKyOEIlIILKNKWB6S5NazFHXJ6NJcxU+R6uE7OjWfOUIFm
-3nBErmWA1Hh16rdIxL+f+CDKrYOrMg==
-=mrha
------END PGP SIGNATURE-----
-
---Sig_/2dh7rGdDwXTz/NoDbDAJsn7--
+-- 
+Jean Delvare
+SUSE L3 Support
