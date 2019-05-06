@@ -2,108 +2,93 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE5FC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A900C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9943206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC5EE206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfEFHlN (ORCPT
+        id S1726349AbfEFHmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:41:13 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34121 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfEFHlN (ORCPT
+        Mon, 6 May 2019 03:42:04 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:51185 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbfEFHmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:41:13 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1hNYFH-00044r-HR; Mon, 06 May 2019 09:41:07 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1hNYFH-0007AF-12; Mon, 06 May 2019 09:41:07 +0200
-Date:   Mon, 6 May 2019 09:41:07 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Chuanhua Han <chuanhua.han@nxp.com>
-Cc:     shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, festevam@gmail.com, linux-imx@nxp.com,
-        wsa+renesas@sang-engineering.com, u.kleine-koenig@pengutronix.de,
-        eha@deif.com, linux@rempel-privat.de, l.stach@pengutronix.de,
-        peda@axentia.se, sumit.batra@nxp.com
-Subject: Re: [PATCH 2/2] arm64: dts: fsl: ls1046a: Add the guts node in dts
-Message-ID: <20190506074106.eqa7xhktn2vlmtio@pengutronix.de>
-References: <20190430044719.30720-1-chuanhua.han@nxp.com>
- <20190430044719.30720-2-chuanhua.han@nxp.com>
+        Mon, 6 May 2019 03:42:04 -0400
+X-Originating-IP: 90.88.149.145
+Received: from bootlin.com (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 2A5101BF215;
+        Mon,  6 May 2019 07:42:01 +0000 (UTC)
+Date:   Mon, 6 May 2019 09:42:00 +0200
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] net: mvpp2: cls: fix less than zero check on a
+ u32 variable
+Message-ID: <20190506094200.580ddaf2@bootlin.com>
+In-Reply-To: <20190505213814.4220-1-colin.king@canonical.com>
+References: <20190505213814.4220-1-colin.king@canonical.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190430044719.30720-2-chuanhua.han@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:38:31 up 48 days, 18:49, 81 users,  load average: 1.08, 1.22,
- 1.26
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 12:47:19PM +0800, Chuanhua Han wrote:
-> For NXP ls1046a SoC, the i2c clock needs to be configured with the
-> appropriate bit of RCW, so we add the guts node (GUTS/DCFG global
-> utilities block) for the driver to read.
+Hi Colin,
+
+On Sun,  5 May 2019 22:38:14 +0100
+Colin King <colin.king@canonical.com> wrote:
+
+>From: Colin Ian King <colin.king@canonical.com>
+>
+>The signed return from the call to mvpp2_cls_c2_port_flow_index is being
+>assigned to the u32 variable c2.index and then checked for a negative
+>error condition which is always going to be false. Fix this by assigning
+>the return to the int variable index and checking this instead.
+>
+>Addresses-Coverity: ("Unsigned compared against 0")
+>Fixes: 90b509b39ac9 ("net: mvpp2: cls: Add Classification offload support")
+>Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>---
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c | 6 ++++--
+> 1 file changed, 4 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+>index 4989fb13244f..c10bc257f571 100644
+>--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+>+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+>@@ -1029,12 +1029,14 @@ static int mvpp2_port_c2_tcam_rule_add(struct mvpp2_port *port,
+> 	struct flow_action_entry *act;
+> 	struct mvpp2_cls_c2_entry c2;
+> 	u8 qh, ql, pmap;
+>+	int index;
 > 
-> Signed-off-by: Sumit Batra <sumit.batra@nxp.com>
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
+> 	memset(&c2, 0, sizeof(c2));
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> index 373310e4c0ea..f88599df18bb 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> @@ -205,6 +205,11 @@
->  			status = "disabled";
->  		};
->  
-> +		guts: global-utilities@1ee0000 {
-> +			compatible = "fsl,qoriq-device-config";
-> +			reg = <0x0 0x1ee0000 0x0 0x1000>;
-> +		};
+>-	c2.index = mvpp2_cls_c2_port_flow_index(port, rule->loc);
+>-	if (c2.index < 0)
+>+	index = mvpp2_cls_c2_port_flow_index(port, rule->loc);
+>+	if (index < 0)
+> 		return -EINVAL;
+>+	c2.index = index;
+> 
+> 	act = &rule->flow->action.entries[0];
+> 
 
-According to Documentation/devicetree/bindings/soc/fsl/guts.txt we have
-the following compatibles:
+Thanks for the fix, my bad.
 
-        "fsl,qoriq-device-config-1.0"
-        "fsl,qoriq-device-config-2.0"
-        "fsl,<chip>-device-config"
-        "fsl,<chip>-guts"
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-"fsl,qoriq-device-config" is none of them and I don't think you should
-give this SoC specific thing a generic compatible.
-"fsl,ls1046a-device-config" would be better.
-
-Sascha
-
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Maxime
