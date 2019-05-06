@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2235CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2162EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8F872053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51282053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154067;
-	bh=Nq5g+FcXcN8sgE2vPPqNBhPp7NQ0UqVZLrGtpsz1Z/M=;
+	s=default; t=1557154069;
+	bh=VpXZ2qRJDONYeoNioZ39WcxB9mBuRiXlSs2Ja4DeRZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rbCkHVsQlsROFtwhEhnIS4lzUGPHv7LfM4RtrBG4M5lDhgVQdoHWApzrcbsDgNwkU
-	 nvBYqPiXXMY5SlzsLsEBMo47z+KYSHOxmZMZuj7BlQEuMqrhcJZbFIPXSfAhQpyH4j
-	 WBX/0ZURuhNFJv0NJC10AFq2JD1/0KteI93ZVdkI=
+	b=Kd6DnXDa8YmcNrx9qGRkEI/h3xL56mlgFZYY7v1ELyeHhcWvimC07O6ZbcVq6s6TN
+	 GKud0Pj1V6IRvU/kKpU+8qc/8L2aR5dOrsqoPpVsUhCXLq+pMrfVJx6wN0K572xv19
+	 wKBA9+te/oJcd6ohT0+eR1rPTJzVf9UPihPzS9wU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbfEFOrp (ORCPT
+        id S1729371AbfEFOrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:47:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47148 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727976AbfEFOrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:43 -0400
+        id S1728858AbfEFOrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4FE720578;
-        Mon,  6 May 2019 14:47:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E16120578;
+        Mon,  6 May 2019 14:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154062;
-        bh=Nq5g+FcXcN8sgE2vPPqNBhPp7NQ0UqVZLrGtpsz1Z/M=;
+        s=default; t=1557154065;
+        bh=VpXZ2qRJDONYeoNioZ39WcxB9mBuRiXlSs2Ja4DeRZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fbPrj21wxJ8HhX0oG/ftApsmfkDlkU8Jgm4Y6DD4krHsQ57iKxbWI6ZFQmV3Qn0Ee
-         Uf5gzhVlathHlAuTB2XNPl7ye7+ZwpW4jQ9+BhDs2Yk1oBiDg9vQD76gplievKUyHI
-         oT3lV3vvUOianDX12LT8ZeMTi3OBY+PU+6tnFroA=
+        b=gMX9A+XYjnJZ23dZBaELbqhk9Vwqbzb/0VYGU+JSiQvCkJt3iWTQwvPIe20c73c2D
+         HE3OIkvoQOIb0aqeCELkJH/ktyVJiz/DaFfJv5B/jTXGvQ1ONjKfr4DME/Ti1JCH0c
+         Aw5Sn8nqD47/ghpiYfeTD9PA+/NUhNVTac737nxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 23/62] USB: w1 ds2490: Fix bug caused by improper use of altsetting array
-Date:   Mon,  6 May 2019 16:32:54 +0200
-Message-Id: <20190506143053.056065786@linuxfoundation.org>
+        stable@vger.kernel.org, Malte Leip <malte@leip.net>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 4.9 24/62] usb: usbip: fix isoc packet num validation in get_pipe
+Date:   Mon,  6 May 2019 16:32:55 +0200
+Message-Id: <20190506143053.143577311@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -59,50 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Malte Leip <malte@leip.net>
 
-commit c114944d7d67f24e71562fcfc18d550ab787e4d4 upstream.
+commit c409ca3be3c6ff3a1eeb303b191184e80d412862 upstream.
 
-The syzkaller USB fuzzer spotted a slab-out-of-bounds bug in the
-ds2490 driver.  This bug is caused by improper use of the altsetting
-array in the usb_interface structure (the array's entries are not
-always stored in numerical order), combined with a naive assumption
-that all interfaces probed by the driver will have the expected number
-of altsettings.
+Change the validation of number_of_packets in get_pipe to compare the
+number of packets to a fixed maximum number of packets allowed, set to
+be 1024. This number was chosen due to it being used by other drivers as
+well, for example drivers/usb/host/uhci-q.c
 
-The bug can be fixed by replacing references to the possibly
-non-existent intf->altsetting[alt] entry with the guaranteed-to-exist
-intf->cur_altsetting entry.
+Background/reason:
+The get_pipe function in stub_rx.c validates the number of packets in
+isochronous mode and aborts with an error if that number is too large,
+in order to prevent malicious input from possibly triggering large
+memory allocations. This was previously done by checking whether
+pdu->u.cmd_submit.number_of_packets is bigger than the number of packets
+that would be needed for pdu->u.cmd_submit.transfer_buffer_length bytes
+if all except possibly the last packet had maximum length, given by
+usb_endpoint_maxp(epd) *  usb_endpoint_maxp_mult(epd). This leads to an
+error if URBs with packets shorter than the maximum possible length are
+submitted, which is allowed according to
+Documentation/driver-api/usb/URB.rst and occurs for example with the
+snd-usb-audio driver.
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
+Fixes: c6688ef9f297 ("usbip: fix stub_rx: harden CMD_SUBMIT path to handle malicious input")
+Signed-off-by: Malte Leip <malte@leip.net>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/w1/masters/ds2490.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/usbip/stub_rx.c      |   12 +++---------
+ drivers/usb/usbip/usbip_common.h |    7 +++++++
+ 2 files changed, 10 insertions(+), 9 deletions(-)
 
---- a/drivers/w1/masters/ds2490.c
-+++ b/drivers/w1/masters/ds2490.c
-@@ -1039,15 +1039,15 @@ static int ds_probe(struct usb_interface
- 	/* alternative 3, 1ms interrupt (greatly speeds search), 64 byte bulk */
- 	alt = 3;
- 	err = usb_set_interface(dev->udev,
--		intf->altsetting[alt].desc.bInterfaceNumber, alt);
-+		intf->cur_altsetting->desc.bInterfaceNumber, alt);
- 	if (err) {
- 		dev_err(&dev->udev->dev, "Failed to set alternative setting %d "
- 			"for %d interface: err=%d.\n", alt,
--			intf->altsetting[alt].desc.bInterfaceNumber, err);
-+			intf->cur_altsetting->desc.bInterfaceNumber, err);
- 		goto err_out_clear;
+--- a/drivers/usb/usbip/stub_rx.c
++++ b/drivers/usb/usbip/stub_rx.c
+@@ -383,16 +383,10 @@ static int get_pipe(struct stub_device *
  	}
  
--	iface_desc = &intf->altsetting[alt];
-+	iface_desc = intf->cur_altsetting;
- 	if (iface_desc->desc.bNumEndpoints != NUM_EP-1) {
- 		pr_info("Num endpoints=%d. It is not DS9490R.\n",
- 			iface_desc->desc.bNumEndpoints);
+ 	if (usb_endpoint_xfer_isoc(epd)) {
+-		/* validate packet size and number of packets */
+-		unsigned int maxp, packets, bytes;
+-
+-		maxp = usb_endpoint_maxp(epd);
+-		maxp *= usb_endpoint_maxp_mult(epd);
+-		bytes = pdu->u.cmd_submit.transfer_buffer_length;
+-		packets = DIV_ROUND_UP(bytes, maxp);
+-
++		/* validate number of packets */
+ 		if (pdu->u.cmd_submit.number_of_packets < 0 ||
+-		    pdu->u.cmd_submit.number_of_packets > packets) {
++		    pdu->u.cmd_submit.number_of_packets >
++		    USBIP_MAX_ISO_PACKETS) {
+ 			dev_err(&sdev->udev->dev,
+ 				"CMD_SUBMIT: isoc invalid num packets %d\n",
+ 				pdu->u.cmd_submit.number_of_packets);
+--- a/drivers/usb/usbip/usbip_common.h
++++ b/drivers/usb/usbip/usbip_common.h
+@@ -136,6 +136,13 @@ extern struct device_attribute dev_attr_
+ #define USBIP_DIR_OUT	0x00
+ #define USBIP_DIR_IN	0x01
+ 
++/*
++ * Arbitrary limit for the maximum number of isochronous packets in an URB,
++ * compare for example the uhci_submit_isochronous function in
++ * drivers/usb/host/uhci-q.c
++ */
++#define USBIP_MAX_ISO_PACKETS 1024
++
+ /**
+  * struct usbip_header_basic - data pertinent to every request
+  * @command: the usbip request type
 
 
