@@ -2,171 +2,132 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9427BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EDEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6919D214C6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153761;
-	bh=6uI36CmgJ0/VrUNZlPf6wESC6TuMMxW77eB9pdUVEBI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FNgSGx91CH25Degrr9od4TtkevwI4zwDQaxKscNbGIq8EKuaTUptzZMmHGP5z6QJz
-	 XC0myuzDzzH6e4zrWC01yPQZP6RlI17XwpHUJpOWP9930jyAEXImQBLUAUstrucSu9
-	 Gjd+4i4QVmLQp8kMY6HdsZepmwfbpc12e7YKtmMM=
+	by mail.kernel.org (Postfix) with ESMTP id A3E0521479
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfEFOmk (ORCPT
+        id S1728552AbfEFOmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37594 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:42:44 -0400
+Received: from mga14.intel.com ([192.55.52.115]:16244 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728510AbfEFOmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:42:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60B4821479;
-        Mon,  6 May 2019 14:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153757;
-        bh=6uI36CmgJ0/VrUNZlPf6wESC6TuMMxW77eB9pdUVEBI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JjP5Kk3R9mpZX1x/J3wg16ewNSy3nMKthLBr8vGdwXyVImFYSUTGjg6Z2jqHqRwJ8
-         972kMMbfXIrQQZKqp43L4RSt1Hxurfmjqs/Rg1NYGZvk/4C2khmWDLAh7RMBmSIxkv
-         qClsB223JzrxGRQ074byLfuqK/fbcUuysLGVTrJI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Yuval Avnery <yuvalav@mellanox.com>,
-        Daniel Jurgens <danielj@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 85/99] IB/core: Destroy QP if XRC QP fails
-Date:   Mon,  6 May 2019 16:32:58 +0200
-Message-Id: <20190506143101.688736872@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
-References: <20190506143053.899356316@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728524AbfEFOml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 07:42:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
+   d="scan'208";a="140532081"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga008.jf.intel.com with ESMTP; 06 May 2019 07:42:38 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hNepA-0006aJ-R8; Mon, 06 May 2019 17:42:36 +0300
+Date:   Mon, 6 May 2019 17:42:36 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the
+ net-next tree
+Message-ID: <20190506144236.GL9224@smile.fi.intel.com>
+References: <20190506204303.0d0082d7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506204303.0d0082d7@canb.auug.org.au>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuval Avnery <yuvalav@mellanox.com>
+On Mon, May 06, 2019 at 08:43:03PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the akpm-current tree got a conflict in:
+> 
+>   lib/Makefile
+> 
+> between commit:
+> 
+>   554aae35007e ("lib: Add support for generic packing operations")
+> 
+> from the net-next tree and commit:
+> 
+>   1a1e7f563bd5 ("lib: Move mathematic helpers to separate folder")
+> 
+> from the akpm-current tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
 
-commit 535005ca8e5e71918d64074032f4b9d4fef8981e upstream.
+Seems correct to me.
+Thanks!
 
-The open-coded variant missed destroy of SELinux created QP, reuse already
-existing ib_detroy_qp() call and use this opportunity to clean
-ib_create_qp() from double prints and unclear exit paths.
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc lib/Makefile
+> index 83d7df2661ff,4eeb814eee2e..000000000000
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@@ -17,20 -17,9 +17,20 @@@ KCOV_INSTRUMENT_list_debug.o := 
+>   KCOV_INSTRUMENT_debugobjects.o := n
+>   KCOV_INSTRUMENT_dynamic_debug.o := n
+>   
+>  +# Early boot use of cmdline, don't instrument it
+>  +ifdef CONFIG_AMD_MEM_ENCRYPT
+>  +KASAN_SANITIZE_string.o := n
+>  +
+>  +ifdef CONFIG_FUNCTION_TRACER
+>  +CFLAGS_REMOVE_string.o = -pg
+>  +endif
+>  +
+>  +CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
+>  +endif
+>  +
+>   lib-y := ctype.o string.o vsprintf.o cmdline.o \
+>   	 rbtree.o radix-tree.o timerqueue.o xarray.o \
+> - 	 idr.o int_sqrt.o extable.o \
+> + 	 idr.o extable.o \
+>   	 sha1.o chacha.o irq_regs.o argv_split.o \
+>   	 flex_proportions.o ratelimit.o show_mem.o \
+>   	 is_single_threaded.o plist.o decompress.o kobject_uevent.o \
+> @@@ -120,8 -110,6 +122,7 @@@ obj-$(CONFIG_DEBUG_LIST) += list_debug.
+>   obj-$(CONFIG_DEBUG_OBJECTS) += debugobjects.o
+>   
+>   obj-$(CONFIG_BITREVERSE) += bitrev.o
+>  +obj-$(CONFIG_PACKING)	+= packing.o
+> - obj-$(CONFIG_RATIONAL)	+= rational.o
+>   obj-$(CONFIG_CRC_CCITT)	+= crc-ccitt.o
+>   obj-$(CONFIG_CRC16)	+= crc16.o
+>   obj-$(CONFIG_CRC_T10DIF)+= crc-t10dif.o
 
-Reported-by: Parav Pandit <parav@mellanox.com>
-Fixes: d291f1a65232 ("IB/core: Enforce PKey security on QPs")
-Signed-off-by: Yuval Avnery <yuvalav@mellanox.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/infiniband/core/verbs.c |   41 +++++++++++++++++++++++-----------------
- 1 file changed, 24 insertions(+), 17 deletions(-)
 
---- a/drivers/infiniband/core/verbs.c
-+++ b/drivers/infiniband/core/verbs.c
-@@ -1087,8 +1087,8 @@ struct ib_qp *ib_open_qp(struct ib_xrcd
- }
- EXPORT_SYMBOL(ib_open_qp);
- 
--static struct ib_qp *ib_create_xrc_qp(struct ib_qp *qp,
--		struct ib_qp_init_attr *qp_init_attr)
-+static struct ib_qp *create_xrc_qp(struct ib_qp *qp,
-+				   struct ib_qp_init_attr *qp_init_attr)
- {
- 	struct ib_qp *real_qp = qp;
- 
-@@ -1103,10 +1103,10 @@ static struct ib_qp *ib_create_xrc_qp(st
- 
- 	qp = __ib_open_qp(real_qp, qp_init_attr->event_handler,
- 			  qp_init_attr->qp_context);
--	if (!IS_ERR(qp))
--		__ib_insert_xrcd_qp(qp_init_attr->xrcd, real_qp);
--	else
--		real_qp->device->destroy_qp(real_qp);
-+	if (IS_ERR(qp))
-+		return qp;
-+
-+	__ib_insert_xrcd_qp(qp_init_attr->xrcd, real_qp);
- 	return qp;
- }
- 
-@@ -1137,10 +1137,8 @@ struct ib_qp *ib_create_qp(struct ib_pd
- 		return qp;
- 
- 	ret = ib_create_qp_security(qp, device);
--	if (ret) {
--		ib_destroy_qp(qp);
--		return ERR_PTR(ret);
--	}
-+	if (ret)
-+		goto err;
- 
- 	qp->real_qp    = qp;
- 	qp->qp_type    = qp_init_attr->qp_type;
-@@ -1153,8 +1151,15 @@ struct ib_qp *ib_create_qp(struct ib_pd
- 	INIT_LIST_HEAD(&qp->sig_mrs);
- 	qp->port = 0;
- 
--	if (qp_init_attr->qp_type == IB_QPT_XRC_TGT)
--		return ib_create_xrc_qp(qp, qp_init_attr);
-+	if (qp_init_attr->qp_type == IB_QPT_XRC_TGT) {
-+		struct ib_qp *xrc_qp = create_xrc_qp(qp, qp_init_attr);
-+
-+		if (IS_ERR(xrc_qp)) {
-+			ret = PTR_ERR(xrc_qp);
-+			goto err;
-+		}
-+		return xrc_qp;
-+	}
- 
- 	qp->event_handler = qp_init_attr->event_handler;
- 	qp->qp_context = qp_init_attr->qp_context;
-@@ -1181,11 +1186,8 @@ struct ib_qp *ib_create_qp(struct ib_pd
- 
- 	if (qp_init_attr->cap.max_rdma_ctxs) {
- 		ret = rdma_rw_init_mrs(qp, qp_init_attr);
--		if (ret) {
--			pr_err("failed to init MR pool ret= %d\n", ret);
--			ib_destroy_qp(qp);
--			return ERR_PTR(ret);
--		}
-+		if (ret)
-+			goto err;
- 	}
- 
- 	/*
-@@ -1198,6 +1200,11 @@ struct ib_qp *ib_create_qp(struct ib_pd
- 				 device->attrs.max_sge_rd);
- 
- 	return qp;
-+
-+err:
-+	ib_destroy_qp(qp);
-+	return ERR_PTR(ret);
-+
- }
- EXPORT_SYMBOL(ib_create_qp);
- 
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
