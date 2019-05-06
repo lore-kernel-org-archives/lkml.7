@@ -2,104 +2,120 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAA0C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3E0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E192087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A652F20578
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfEFPx6 (ORCPT
+        id S1726892AbfEFP7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:53:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:3346 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbfEFPx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:53:58 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7C482306D334;
-        Mon,  6 May 2019 15:53:57 +0000 (UTC)
-Received: from jsavitz.bos.com (dhcp-17-161.bos.redhat.com [10.18.17.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3793560BEC;
-        Mon,  6 May 2019 15:53:48 +0000 (UTC)
-From:   Joel Savitz <jsavitz@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Joel Savitz <jsavitz@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3] fs/proc: add VmTaskSize field to /proc/$$/status
-Date:   Mon,  6 May 2019 11:53:43 -0400
-Message-Id: <1557158023-23021-1-git-send-email-jsavitz@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 06 May 2019 15:53:58 +0000 (UTC)
+        Mon, 6 May 2019 11:59:01 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55684 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726413AbfEFP7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 11:59:01 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B0D711A05372C52917E0;
+        Mon,  6 May 2019 23:58:57 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 6 May 2019
+ 23:58:50 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <vishal@chelsio.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] cxgb4: Fix error path in cxgb4_init_module
+Date:   Mon, 6 May 2019 23:57:54 +0800
+Message-ID: <20190506155754.42464-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is currently no easy and architecture-independent way to find the
-lowest unusable virtual address available to a process without
-brute-force calculation. This patch allows a user to easily retrieve
-this value via /proc/<pid>/status.
+BUG: unable to handle kernel paging request at ffffffffa016a270
+PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bbd067 PTE 0
+Oops: 0000 [#1
+CPU: 0 PID: 6134 Comm: modprobe Not tainted 5.1.0+ #33
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:atomic_notifier_chain_register+0x24/0x60
+Code: 1f 80 00 00 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 fb e8 ae b4 38 01 48 8b 53 38 48 8d 4b 38 48 85 d2 74 20 45 8b 44 24 10 <44> 3b 42 10 7e 08 eb 13 44 39 42 10 7c 0d 48 8d 4a 08 48 8b 52 08
+RSP: 0018:ffffc90000e2bc60 EFLAGS: 00010086
+RAX: 0000000000000292 RBX: ffffffff83467240 RCX: ffffffff83467278
+RDX: ffffffffa016a260 RSI: ffffffff83752140 RDI: ffffffff83467240
+RBP: ffffc90000e2bc70 R08: 0000000000000000 R09: 0000000000000001
+R10: 0000000000000000 R11: 00000000014fa61f R12: ffffffffa01c8260
+R13: ffff888231091e00 R14: 0000000000000000 R15: ffffc90000e2be78
+FS:  00007fbd8d7cd540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa016a270 CR3: 000000022c7e3000 CR4: 00000000000006f0
+Call Trace:
+ register_inet6addr_notifier+0x13/0x20
+ cxgb4_init_module+0x6c/0x1000 [cxgb4
+ ? 0xffffffffa01d7000
+ do_one_initcall+0x6c/0x3cc
+ ? do_init_module+0x22/0x1f1
+ ? rcu_read_lock_sched_held+0x97/0xb0
+ ? kmem_cache_alloc_trace+0x325/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Using this patch, any program that previously needed to waste cpu cycles
-recalculating a non-sensitive process-dependent value already known to
-the kernel can now be optimized to use this mechanism.
+If pci_register_driver fails, register inet6addr_notifier is
+pointless. This patch fix the error path in cxgb4_init_module.
 
-Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+Fixes: b5a02f503caa ("cxgb4 : Update ipv6 address handling api")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- Documentation/filesystems/proc.txt | 2 ++
- fs/proc/task_mmu.c                 | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-index 66cad5c86171..1c6a912e3975 100644
---- a/Documentation/filesystems/proc.txt
-+++ b/Documentation/filesystems/proc.txt
-@@ -187,6 +187,7 @@ read the file /proc/PID/status:
-   VmLib:      1412 kB
-   VmPTE:        20 kb
-   VmSwap:        0 kB
-+  VmTaskSize:	137438953468 kB
-   HugetlbPages:          0 kB
-   CoreDumping:    0
-   THP_enabled:	  1
-@@ -263,6 +264,7 @@ Table 1-2: Contents of the status files (as of 4.19)
-  VmPTE                       size of page table entries
-  VmSwap                      amount of swap used by anonymous private data
-                              (shmem swap usage is not included)
-+ VmTaskSize                  lowest unusable address in process virtual memory
-  HugetlbPages                size of hugetlb memory portions
-  CoreDumping                 process's memory is currently being dumped
-                              (killing the process may lead to a corrupted core)
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 95ca1fe7283c..0af7081f7b19 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -74,6 +74,8 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
- 	seq_put_decimal_ull_width(m,
- 		    " kB\nVmPTE:\t", mm_pgtables_bytes(mm) >> 10, 8);
- 	SEQ_PUT_DEC(" kB\nVmSwap:\t", swap);
-+	seq_put_decimal_ull_width(m,
-+		    " kB\nVmTaskSize:\t", mm->task_size >> 10, 8);
- 	seq_puts(m, " kB\n");
- 	hugetlb_report_usage(m, mm);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index 89179e3..4bc0c35 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -6161,15 +6161,24 @@ static int __init cxgb4_init_module(void)
+ 
+ 	ret = pci_register_driver(&cxgb4_driver);
+ 	if (ret < 0)
+-		debugfs_remove(cxgb4_debugfs_root);
++		goto err_pci;
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	if (!inet6addr_registered) {
+-		register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
+-		inet6addr_registered = true;
++		ret = register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
++		if (ret)
++			pci_unregister_driver(&cxgb4_driver);
++		else
++			inet6addr_registered = true;
+ 	}
+ #endif
+ 
++	if (ret == 0)
++		return ret;
++
++err_pci:
++	debugfs_remove(cxgb4_debugfs_root);
++
+ 	return ret;
  }
+ 
 -- 
-2.18.1
+1.8.3.1
+
 
