@@ -2,104 +2,96 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41706C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881F6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0913B2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154531;
-	bh=UukgufM9/vhDOz0WdQ0i3a4zD1CH0CaTiYFaHkKz0a0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v11wYkFai+iARqVrTJpLKzIEVRQDrSisrKz6hw5scotvruzm5U/PcGrSBJS1usoeJ
-	 Crd2EDk4RxNcFRW8ILrJc7gUF9XVJ49iVshgBBBRkV7pZClgCPBBeEBH5JCiQHZvpC
-	 ivEwfiW9/zIXbLlKCOj4ee/CFFtf7xWvlAcK8p7g=
+	by mail.kernel.org (Postfix) with ESMTP id 59C0A2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbfEFOza (ORCPT
+        id S1728887AbfEFOzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43072 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:55:37 -0400
+Received: from relay.sw.ru ([185.231.240.75]:34188 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727188AbfEFOpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:45:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C33A2053B;
-        Mon,  6 May 2019 14:45:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153953;
-        bh=UukgufM9/vhDOz0WdQ0i3a4zD1CH0CaTiYFaHkKz0a0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gqRHk5pzU1/0oRxA1xWoRtIJR59vmOW+t2rSsmjnp2qKNaghmtrKWc0p2b1GEHC/R
-         9bms3BFw8L2+NIqQCoAtIe5BbeUUf2FJYuEwj1VAvaZ7vSaU35mzv7h7nncGdaoe45
-         VosjWsVorUVSOlznIQASShhsjxjH7j6nd2zCPKqI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
+        id S1728341AbfEFOze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:55:34 -0400
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hNf1e-0004AM-FZ; Mon, 06 May 2019 17:55:30 +0300
+Subject: Re: [PATCH 4.9 09/62] kasan: turn on
+ -fsanitize-address-use-after-scope
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 59/75] Bluetooth: btusb: request wake pin with NOAUTOEN
-Date:   Mon,  6 May 2019 16:33:07 +0200
-Message-Id: <20190506143058.626686512@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
-References: <20190506143053.287515952@linuxfoundation.org>
-User-Agent: quilt/0.66
+References: <20190506143051.102535767@linuxfoundation.org>
+ <20190506143051.888762392@linuxfoundation.org>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <6636d7cf-03fe-e253-f981-e07d75858b33@virtuozzo.com>
+Date:   Mon, 6 May 2019 17:55:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190506143051.888762392@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
-
-commit 771acc7e4a6e5dba779cb1a7fd851a164bc81033 upstream.
-
-Badly-designed systems might have (for example) active-high wake pins
-that default to high (e.g., because of external pull ups) until they
-have an active firmware which starts driving it low.  This can cause an
-interrupt storm in the time between request_irq() and disable_irq().
-
-We don't support shared interrupts here, so let's just pre-configure the
-interrupt to avoid auto-enabling it.
-
-Fixes: fd913ef7ce61 ("Bluetooth: btusb: Add out-of-band wakeup support")
-Fixes: 5364a0b4f4be ("arm64: dts: rockchip: move QCA6174A wakeup pin into its USB node")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/bluetooth/btusb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -2893,6 +2893,7 @@ static int btusb_config_oob_wake(struct
- 		return 0;
- 	}
- 
-+	irq_set_status_flags(irq, IRQ_NOAUTOEN);
- 	ret = devm_request_irq(&hdev->dev, irq, btusb_oob_wake_handler,
- 			       0, "OOB Wake-on-BT", data);
- 	if (ret) {
-@@ -2907,7 +2908,6 @@ static int btusb_config_oob_wake(struct
- 	}
- 
- 	data->oob_wake_irq = irq;
--	disable_irq(irq);
- 	bt_dev_info(hdev, "OOB Wake-on-BT configured at IRQ %u", irq);
- 	return 0;
- }
 
 
+On 5/6/19 5:32 PM, Greg Kroah-Hartman wrote:
+> From: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> 
+> commit c5caf21ab0cf884ef15b25af234f620e4a233139 upstream.
+> 
+> In the upcoming gcc7 release, the -fsanitize=kernel-address option at
+> first implied new -fsanitize-address-use-after-scope option.  This would
+> cause link errors on older kernels because they don't have two new
+> functions required for use-after-scope support.  Therefore, gcc7 changed
+> default to -fno-sanitize-address-use-after-scope.
+> 
+> Now the kernel has everything required for that feature since commit
+> 828347f8f9a5 ("kasan: support use-after-scope detection").  So, to make it
+> work, we just have to enable use-after-scope in CFLAGS.
+> 
+> Link: http://lkml.kernel.org/r/1481207977-28654-1-git-send-email-aryabinin@virtuozzo.com
+> Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Acked-by: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Alexander Potapenko <glider@google.com>
+> Cc: Andrey Konovalov <andreyknvl@google.com>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  scripts/Makefile.kasan |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> --- a/scripts/Makefile.kasan
+> +++ b/scripts/Makefile.kasan
+> @@ -29,6 +29,8 @@ else
+>      endif
+>  endif
+>  
+> +CFLAGS_KASAN += $(call cc-option, -fsanitize-address-use-after-scope)
+> +
+>  CFLAGS_KASAN_NOSANITIZE := -fno-builtin
+>  
+>  endif
+> 
+> 
+
+This shouldn't be in the -stable.
