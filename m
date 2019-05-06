@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB68C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 048CBC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281652054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09352053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154825;
-	bh=NPJ3DpwJTS2Oi6ThWQAWVDa3v0iLtAEYsoJkBu8Lgrs=;
+	s=default; t=1557154834;
+	bh=eyFQyilBY65uHC4KqCfyG7XQzSgs6BspptZVvJr2wYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YlSqb3mdBm1aY5nd7G/BnCBu2ZrfrYfB02zAsrNPnZ7P5FbsJqSy1D3wvrCAdPcoE
-	 awvgOBPbIRtuSDfi/fOL9RuMSaClTpZuT7hCHF+pErmtkjiwtwqxjT2enl6+yvxq0U
-	 vDW3v5rMv8gNCZbBiQQkSwD14M9ehqOMffcLqAzs=
+	b=EHMpZQ5h/iRSUtdDBmBIgSJHa7LOW7XS0pTR7xjpTykaejGZqOL8iulbhOMmVw4ec
+	 xCrVo/CawqTESsv1fNnioJew01lQcfMApOrgWeyTodsuJdR4KqzZFKRmf+aZpS62vI
+	 vod2mceDBZN8UoD9zwI69NqlzdqBPKbXzac8kCVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfEFPAY (ORCPT
+        id S1728422AbfEFOmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:00:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36984 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:42:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727684AbfEFOmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:42:17 -0400
+        id S1728407AbfEFOmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A80C021019;
-        Mon,  6 May 2019 14:42:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E52A206A3;
+        Mon,  6 May 2019 14:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153737;
-        bh=NPJ3DpwJTS2Oi6ThWQAWVDa3v0iLtAEYsoJkBu8Lgrs=;
+        s=default; t=1557153726;
+        bh=eyFQyilBY65uHC4KqCfyG7XQzSgs6BspptZVvJr2wYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nFsMehdv5qjdgdIhvqPn2QeuCXe1bKRMKMlvcOPQ8Shc0w/BXvPjeHNMk8OjJo8Xy
-         aOcMUnsisFtO8s1Pqzk5uq+NZz0QIkgQvU3jFab2b4mSKj/eNhWtbBdrcgtCiaI9x/
-         CsoXMKMvDqo7yzgzFf9kX1x2Y/vVIey2LMda04NY=
+        b=nJJCDNEF0YmTQPhsf7pXhMj9PndiyLKtI+Fm4lNkbHtqTQeOFXs8E9HvJf+BNf09/
+         OICN1pLLpdmyyRHapXWbi2+k9Mtf2UGCOUxMaaVgxxuRb+2f+qFyWluf/qN/t+/Mua
+         zZsaLxj2w+8xB4vwSu/uQ1Uba/mTrbWSo0Jn1Q4M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Mike Christie <mchristi@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 77/99] scsi: RDMA/srpt: Fix a credit leak for aborted commands
-Date:   Mon,  6 May 2019 16:32:50 +0200
-Message-Id: <20190506143101.095873136@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 74/99] staging: iio: adt7316: allow adt751x to use internal vref for all dacs
+Date:   Mon,  6 May 2019 16:32:47 +0200
+Message-Id: <20190506143100.836033993@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -65,49 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Jeremy Fertic <jeremyfertic@gmail.com>
 
-commit 40ca8757291ca7a8775498112d320205b2a2e571 upstream.
+commit 10bfe7cc1739c22f0aa296b39e53f61e9e3f4d99 upstream.
 
-Make sure that the next time a response is sent to the initiator that the
-credit it had allocated for the aborted request gets freed.
+With adt7516/7/9, internal vref is available for dacs a and b, dacs c and
+d, or all dacs. The driver doesn't currently support internal vref for all
+dacs. Change the else if to an if so both bits are checked rather than
+just one or the other.
 
-Cc: Doug Ledford <dledford@redhat.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Nicholas Bellinger <nab@linux-iscsi.org>
-Cc: Mike Christie <mchristi@redhat.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Fixes: 131e6abc674e ("target: Add TFO->abort_task for aborted task resources release") # v3.15
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
+Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/ulp/srpt/ib_srpt.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/staging/iio/addac/adt7316.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-+++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-@@ -2793,8 +2793,19 @@ static void srpt_queue_tm_rsp(struct se_
- 	srpt_queue_response(cmd);
- }
- 
-+/*
-+ * This function is called for aborted commands if no response is sent to the
-+ * initiator. Make sure that the credits freed by aborting a command are
-+ * returned to the initiator the next time a response is sent by incrementing
-+ * ch->req_lim_delta.
-+ */
- static void srpt_aborted_task(struct se_cmd *cmd)
- {
-+	struct srpt_send_ioctx *ioctx = container_of(cmd,
-+				struct srpt_send_ioctx, cmd);
-+	struct srpt_rdma_ch *ch = ioctx->ch;
-+
-+	atomic_inc(&ch->req_lim_delta);
- }
- 
- static int srpt_queue_status(struct se_cmd *cmd)
+--- a/drivers/staging/iio/addac/adt7316.c
++++ b/drivers/staging/iio/addac/adt7316.c
+@@ -1086,7 +1086,7 @@ static ssize_t adt7316_store_DAC_interna
+ 		ldac_config = chip->ldac_config & (~ADT7516_DAC_IN_VREF_MASK);
+ 		if (data & 0x1)
+ 			ldac_config |= ADT7516_DAC_AB_IN_VREF;
+-		else if (data & 0x2)
++		if (data & 0x2)
+ 			ldac_config |= ADT7516_DAC_CD_IN_VREF;
+ 	} else {
+ 		ret = kstrtou8(buf, 16, &data);
 
 
