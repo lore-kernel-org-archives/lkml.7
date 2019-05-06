@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544BCC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E90C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F782087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE30D20449
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153862;
-	bh=dzrOXZbco1FmGzdetEwjy6ELyX7X8qMIhoOzU6aD92k=;
+	s=default; t=1557153866;
+	bh=R0OHY4dDdSHj3imxbYEZ9us7NW27oCdlDlgR1jrtXm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pCmPep2qia5fBLMrwlfYsUhzG4kXB/Swt3JbGMjxjcD/XmdUOE84uzQNYtD5fjNbs
-	 3DnFRz8S8xAIHga3+ReCXm+eErmJSSGvxt3JoWGmgABoIOaA41ZE1xDZ2yZfdgT/Hr
-	 a2E67MT/I9nF6Y4q9xW7JbanQFIYDU8WxaPWmlVc=
+	b=Y1QgsN68pv/gXfhLTs8ObDHyaFcQ0Zq5aQP73jX6YXrbAai034NBaN0bPgI0ogQIY
+	 /2VNdVbdOK45bqY/20rL/spuOeMaK/OlDDiP0BnE08aQPss/340PdQOGLz+ohGSivx
+	 R2d2Iet9BXGW5g35AhQhy2KNqHcTE+Xf8VdS4fck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfEFOoV (ORCPT
+        id S1728788AbfEFOoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:44:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40486 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:44:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbfEFOoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:18 -0400
+        id S1727259AbfEFOoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DFD621019;
-        Mon,  6 May 2019 14:44:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB11721019;
+        Mon,  6 May 2019 14:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153858;
-        bh=dzrOXZbco1FmGzdetEwjy6ELyX7X8qMIhoOzU6aD92k=;
+        s=default; t=1557153863;
+        bh=R0OHY4dDdSHj3imxbYEZ9us7NW27oCdlDlgR1jrtXm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sR+mQFijn+vUOaUkd8uz+hi0L7DdCBzLf7ttCsWwL5KU/z6RHPbBF3FYICLaNrwsG
-         Q6u7BkYYQS4AYV7AlchXCEYGdWSAQsp4YTNvvau/WnDppgTbXeBx5LfnagbkZo1Nep
-         6cjjCwsR4VBP3ojKsxYGgdxeNegyPozxy5naO73s=
+        b=z+JK/ZYJRDR4GR6Ohj/Y8bvZtNLOLtWI7e0/viRlbtfOeJSTflWjep+DbkU2vgZBL
+         ZBKNa6Pd8Un0gCS9Qg/MHhzM0YGjqUT4BBpNJDVATO5y+373PVJ/qWRCNdo2PUJwVk
+         ge1se20w5isIa8AO3+pf6CMaPGUQRsqyM9GD2AKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 22/75] USB: core: Fix unterminated string returned by usb_string()
-Date:   Mon,  6 May 2019 16:32:30 +0200
-Message-Id: <20190506143055.172531958@linuxfoundation.org>
+        stable@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Robert Kolchmeyer <rkolchmeyer@google.com>
+Subject: [PATCH 4.14 24/75] mm: do not stall register_shrinker()
+Date:   Mon,  6 May 2019 16:32:32 +0200
+Message-Id: <20190506143055.350550574@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -59,49 +66,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Minchan Kim <minchan@kernel.org>
 
-commit c01c348ecdc66085e44912c97368809612231520 upstream.
+commit e496612c5130567fc9d5f1969ca4b86665aa3cbb upstream.
 
-Some drivers (such as the vub300 MMC driver) expect usb_string() to
-return a properly NUL-terminated string, even when an error occurs.
-(In fact, vub300's probe routine doesn't bother to check the return
-code from usb_string().)  When the driver goes on to use an
-unterminated string, it leads to kernel errors such as
-stack-out-of-bounds, as found by the syzkaller USB fuzzer.
+Shakeel Butt reported he has observed in production systems that the job
+loader gets stuck for 10s of seconds while doing a mount operation.  It
+turns out that it was stuck in register_shrinker() because some
+unrelated job was under memory pressure and was spending time in
+shrink_slab().  Machines have a lot of shrinkers registered and jobs
+under memory pressure have to traverse all of those memcg-aware
+shrinkers and affect unrelated jobs which want to register their own
+shrinkers.
 
-An out-of-range string index argument is not at all unlikely, given
-that some devices don't provide string descriptors and therefore list
-0 as the value for their string indexes.  This patch makes
-usb_string() return a properly terminated empty string along with the
--EINVAL error code when an out-of-range index is encountered.
+To solve the issue, this patch simply bails out slab shrinking if it is
+found that someone wants to register a shrinker in parallel.  A downside
+is it could cause unfair shrinking between shrinkers.  However, it
+should be rare and we can add compilcated logic if we find it's not
+enough.
 
-And since a USB string index is a single-byte value, indexes >= 256
-are just as invalid as values of 0 or below.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
+[akpm@linux-foundation.org: tweak code comment]
+Link: http://lkml.kernel.org/r/20171115005602.GB23810@bbox
+Link: http://lkml.kernel.org/r/1511481899-20335-1-git-send-email-minchan@kernel.org
+Signed-off-by: Minchan Kim <minchan@kernel.org>
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Reported-by: Shakeel Butt <shakeelb@google.com>
+Tested-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Anshuman Khandual <khandual@linux.vnet.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[rkolchmeyer: Backported to 4.14: adjusted context]
+Signed-off-by: Robert Kolchmeyer <rkolchmeyer@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/message.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ mm/vmscan.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -818,9 +818,11 @@ int usb_string(struct usb_device *dev, i
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -502,6 +502,15 @@ static unsigned long shrink_slab(gfp_t g
+ 			sc.nid = 0;
  
- 	if (dev->state == USB_STATE_SUSPENDED)
- 		return -EHOSTUNREACH;
--	if (size <= 0 || !buf || !index)
-+	if (size <= 0 || !buf)
- 		return -EINVAL;
- 	buf[0] = 0;
-+	if (index <= 0 || index >= 256)
-+		return -EINVAL;
- 	tbuf = kmalloc(256, GFP_NOIO);
- 	if (!tbuf)
- 		return -ENOMEM;
+ 		freed += do_shrink_slab(&sc, shrinker, nr_scanned, nr_eligible);
++		/*
++		 * Bail out if someone want to register a new shrinker to
++		 * prevent the regsitration from being stalled for long periods
++		 * by parallel ongoing shrinking.
++		 */
++		if (rwsem_is_contended(&shrinker_rwsem)) {
++			freed = freed ? : 1;
++			break;
++		}
+ 	}
+ 
+ 	up_read(&shrinker_rwsem);
 
 
