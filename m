@@ -2,93 +2,111 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-12.4 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D0EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D337C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB403206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0814A2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfEFLaC convert rfc822-to-8bit (ORCPT
+        id S1726147AbfEFLq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 07:30:02 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47301 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfEFLaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 07:30:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44yLBG6Z5qz9s9T;
-        Mon,  6 May 2019 21:29:58 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, aneesh.kumar@linux.ibm.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/15] powerpc/mm: convert Book3E 64 to pte_fragment
-In-Reply-To: <0076ad26-9d0e-e408-3521-b8e17669bb04@c-s.fr>
-References: <cover.1556293738.git.christophe.leroy@c-s.fr> <c440b242da6de3823c4ef51f35f38405bbd51430.1556293738.git.christophe.leroy@c-s.fr> <0076ad26-9d0e-e408-3521-b8e17669bb04@c-s.fr>
-Date:   Mon, 06 May 2019 21:29:55 +1000
-Message-ID: <8736lryg5o.fsf@concordia.ellerman.id.au>
+        Mon, 6 May 2019 07:46:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40624 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725856AbfEFLq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 07:46:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EC0B1AEB3;
+        Mon,  6 May 2019 11:46:57 +0000 (UTC)
+Date:   Mon, 6 May 2019 13:46:51 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Tony Luck <tony.luck@intel.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] RAS updates for 5.2
+Message-ID: <20190506114651.GG6094@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
+Hi Linus,
 
-> Le 26/04/2019 à 17:58, Christophe Leroy a écrit :
->> Book3E 64 is the only subarch not using pte_fragment. In order
->> to allow refactorisation, this patch converts it to pte_fragment.
->> 
->> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/include/asm/mmu_context.h       |  6 -----
->>   arch/powerpc/include/asm/nohash/64/mmu.h     |  4 +++-
->>   arch/powerpc/include/asm/nohash/64/pgalloc.h | 33 ++++++++++------------------
->>   arch/powerpc/mm/Makefile                     |  4 ++--
->>   arch/powerpc/mm/mmu_context.c                |  2 +-
->>   5 files changed, 18 insertions(+), 31 deletions(-)
->> 
-> [...]
->
->> diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
->> index 3c1bd9fa23cd..138c772d58d1 100644
->> --- a/arch/powerpc/mm/Makefile
->> +++ b/arch/powerpc/mm/Makefile
->> @@ -9,6 +9,7 @@ CFLAGS_REMOVE_slb.o = $(CC_FLAGS_FTRACE)
->>   
->>   obj-y				:= fault.o mem.o pgtable.o mmap.o \
->>   				   init_$(BITS).o pgtable_$(BITS).o \
->> +				   pgtable-frag.o \
->>   				   init-common.o mmu_context.o drmem.o
->>   obj-$(CONFIG_PPC_MMU_NOHASH)	+= mmu_context_nohash.o tlb_nohash.o \
->>   				   tlb_nohash_low.o
->> @@ -17,8 +18,7 @@ hash64-$(CONFIG_PPC_NATIVE)	:= hash_native_64.o
->>   obj-$(CONFIG_PPC_BOOK3E_64)   += pgtable-book3e.o
->>   obj-$(CONFIG_PPC_BOOK3S_64)	+= pgtable-hash64.o hash_utils_64.o slb.o \
->>   				   $(hash64-y) mmu_context_book3s64.o \
->> -				   pgtable-book3s64.o pgtable-frag.o
->> -obj-$(CONFIG_PPC32)		+= pgtable-frag.o
->> +				   pgtable-book3s64.o
->
-> Looks like the removal of pgtable-frag.o for CONFIG_PPC_BOOK3S_64 didn't 
-> survive the merge.
+please pull this branch
 
-Hmm, I don't remember having problems there but clearly something went
-wrong.
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
 
-> Will send a patch to fix that.
+to receive the latest RAS updates:
 
-Thanks.
+- Support for varying MCA bank numbers per CPU: this is in preparation for
+  future CPU enablement (Yazen Ghannam)
 
-cheers
+- MCA banks read race fix (Tony Luck)
+
+- Facility to filter MCEs which should not be logged (Yazen Ghannam)
+
+- The usual round of cleanups and fixes
+
+Thx.
+
+---
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
+
+for you to fetch changes up to 71a84402b93e5fbd8f817f40059c137e10171788:
+
+  x86/MCE/AMD: Don't report L1 BTB MCA errors on some family 17h models (2019-04-23 18:16:07 +0200)
+
+----------------------------------------------------------------
+Borislav Petkov (1):
+      x86/mce: Remove mce_report_event()
+
+Tony Luck (2):
+      MAINTAINERS: Fix file pattern for X86 MCE INFRASTRUCTURE
+      x86/mce: Fix machine_check_poll() tests for error types
+
+WANG Chao (1):
+      RAS/CEC: Increment cec_entered under the mutex lock
+
+Yazen Ghannam (4):
+      x86/MCE: Group AMD function prototypes in <asm/mce.h>
+      x86/mce: Handle varying MCA bank counts
+      x86/MCE: Add an MCE-record filtering function
+      x86/MCE/AMD: Don't report L1 BTB MCA errors on some family 17h models
+
+YueHaibing (1):
+      x86/mce: Fix debugfs_simple_attr.cocci warnings
+
+ MAINTAINERS                        |   2 +-
+ arch/x86/include/asm/mce.h         |  25 ++++-----
+ arch/x86/kernel/cpu/mce/amd.c      |  52 ++++++++++++++-----
+ arch/x86/kernel/cpu/mce/core.c     | 102 +++++++++++++++++++++----------------
+ arch/x86/kernel/cpu/mce/genpool.c  |   3 ++
+ arch/x86/kernel/cpu/mce/inject.c   |  14 ++---
+ arch/x86/kernel/cpu/mce/internal.h |   9 ++++
+ drivers/edac/mce_amd.c             |   4 +-
+ drivers/ras/cec.c                  |   4 +-
+ 9 files changed, 132 insertions(+), 83 deletions(-)
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah, HRB 21284 (AG Nürnberg)
