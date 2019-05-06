@@ -2,52 +2,52 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B89C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA4FC04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0AD2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D852053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154458;
-	bh=tAAMd8ksSORD7xo79uXBjUZ6rAkU2i5mjbWmX+5dxc0=;
+	s=default; t=1557154465;
+	bh=sHy/FoXKHRlDm12wEPwDLFBNoQwXGl5GzK/ulLVo4Qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K/iN8XDHHr7MJgL58uFpo+2LzbMyk0P6LlGLLCVkypp5GH7FFQpF3JwYueKCXdYFT
-	 Upy/yydfWb/OWUGvwW5TCVBeZqObcXMCrwk8gNTGs5zRHhWT81Gt/7r5AwAynV518R
-	 tcctsZ6VXbWuXdk7O1qeAO5yKwALtzy9OaGHnL5o=
+	b=XmSKZpNwG7CYTCZZ5UyS+1xaUce+DZ6Q8ehPnKkC0mFlB/fCI1PFWRZsqZbe3lXNU
+	 RXbLVirw7yqThnjZ7FzJOuQ3pLB9jTEshNt6bWOp/VmsyJekyKW9oOEJFtEtP9MDM3
+	 9awcwK+o0COBWePxX8u6UiIAN5LotwF6vmkexT0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfEFOqy (ORCPT
+        id S1728914AbfEFOqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:46:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45142 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729205AbfEFOqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:46:50 -0400
+        id S1728182AbfEFOqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:46:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E12D2087F;
-        Mon,  6 May 2019 14:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12D9220C01;
+        Mon,  6 May 2019 14:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154009;
-        bh=tAAMd8ksSORD7xo79uXBjUZ6rAkU2i5mjbWmX+5dxc0=;
+        s=default; t=1557154001;
+        bh=sHy/FoXKHRlDm12wEPwDLFBNoQwXGl5GzK/ulLVo4Qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cytvEtt5mEHnPdZvySzj7jRVOMP73nA+Fjf8dGbKIcaKMjKKU1DUCxt+LqTyjFcVj
-         Z043q2tNFSRlynPw0D87mS+Sx/Z/FiKviW+ZyEOh/lZ5SmmsoFqEMP797n+ab50HUD
-         hZhlSlNmaKQ1GJ+Yk4HuccwaN1/doffGyhqthS18=
+        b=XAeOa06Y9zRLo+2DFBuHT+c+SQRC3d2pKh1r49y2xM0OEyjVRFfap1W0Ks7Sr+U8t
+         NYePu7UGP2Y0k+LSimvkemJ0MuOneEHE1ACyKkrcB34+dIbqPk3fWXq4OtKfk6k6J6
+         jXoU+jXTIW/0QladpVedSev1baLcxyizxZmHEynY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 49/75] net: hns: Fix probabilistic memory overwrite when HNS driver initialized
-Date:   Mon,  6 May 2019 16:32:57 +0200
-Message-Id: <20190506143057.668046061@linuxfoundation.org>
+        stable@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.14 75/75] media: v4l2: i2c: ov7670: Fix PLL bypass register values
+Date:   Mon,  6 May 2019 16:33:23 +0200
+Message-Id: <20190506143100.156710696@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -60,92 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c0b0984426814f3a9251873b689e67d34d8ccd84 ]
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-When reboot the system again and again, may cause a memory
-overwrite.
+commit 61da76beef1e4f0b6ba7be4f8d0cf0dac7ce1f55 upstream.
 
-[   15.638922] systemd[1]: Reached target Swap.
-[   15.667561] tun: Universal TUN/TAP device driver, 1.6
-[   15.676756] Bridge firewalling registered
-[   17.344135] Unable to handle kernel paging request at virtual address 0000000200000040
-[   17.352179] Mem abort info:
-[   17.355007]   ESR = 0x96000004
-[   17.358105]   Exception class = DABT (current EL), IL = 32 bits
-[   17.364112]   SET = 0, FnV = 0
-[   17.367209]   EA = 0, S1PTW = 0
-[   17.370393] Data abort info:
-[   17.373315]   ISV = 0, ISS = 0x00000004
-[   17.377206]   CM = 0, WnR = 0
-[   17.380214] user pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
-[   17.386926] [0000000200000040] pgd=0000000000000000
-[   17.391878] Internal error: Oops: 96000004 [#1] SMP
-[   17.396824] CPU: 23 PID: 95 Comm: kworker/u130:0 Tainted: G            E     4.19.25-1.2.78.aarch64 #1
-[   17.414175] Hardware name: Huawei TaiShan 2280 /BC11SPCD, BIOS 1.54 08/16/2018
-[   17.425615] Workqueue: events_unbound async_run_entry_fn
-[   17.435151] pstate: 00000005 (nzcv daif -PAN -UAO)
-[   17.444139] pc : __mutex_lock.isra.1+0x74/0x540
-[   17.453002] lr : __mutex_lock.isra.1+0x3c/0x540
-[   17.461701] sp : ffff000100d9bb60
-[   17.469146] x29: ffff000100d9bb60 x28: 0000000000000000
-[   17.478547] x27: 0000000000000000 x26: ffff802fb8945000
-[   17.488063] x25: 0000000000000000 x24: ffff802fa32081a8
-[   17.497381] x23: 0000000000000002 x22: ffff801fa2b15220
-[   17.506701] x21: ffff000009809000 x20: ffff802fa23a0888
-[   17.515980] x19: ffff801fa2b15220 x18: 0000000000000000
-[   17.525272] x17: 0000000200000000 x16: 0000000200000000
-[   17.534511] x15: 0000000000000000 x14: 0000000000000000
-[   17.543652] x13: ffff000008d95db8 x12: 000000000000000d
-[   17.552780] x11: ffff000008d95d90 x10: 0000000000000b00
-[   17.561819] x9 : ffff000100d9bb90 x8 : ffff802fb89d6560
-[   17.570829] x7 : 0000000000000004 x6 : 00000004a1801d05
-[   17.579839] x5 : 0000000000000000 x4 : 0000000000000000
-[   17.588852] x3 : ffff802fb89d5a00 x2 : 0000000000000000
-[   17.597734] x1 : 0000000200000000 x0 : 0000000200000000
-[   17.606631] Process kworker/u130:0 (pid: 95, stack limit = 0x(____ptrval____))
-[   17.617438] Call trace:
-[   17.623349]  __mutex_lock.isra.1+0x74/0x540
-[   17.630927]  __mutex_lock_slowpath+0x24/0x30
-[   17.638602]  mutex_lock+0x50/0x60
-[   17.645295]  drain_workqueue+0x34/0x198
-[   17.652623]  __sas_drain_work+0x7c/0x168
-[   17.659903]  sas_drain_work+0x60/0x68
-[   17.666947]  hisi_sas_scan_finished+0x30/0x40 [hisi_sas_main]
-[   17.676129]  do_scsi_scan_host+0x70/0xb0
-[   17.683534]  do_scan_async+0x20/0x228
-[   17.690586]  async_run_entry_fn+0x4c/0x1d0
-[   17.697997]  process_one_work+0x1b4/0x3f8
-[   17.705296]  worker_thread+0x54/0x470
+The following commits:
+commit f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
+commit 04ee6d92047e ("[media] media: ov7670: add possibility to bypass pll for ov7675")
+introduced the ability to bypass PLL multiplier and use input clock (xvclk)
+as pixel clock output frequency for ov7675 sensor.
 
-Every time the call trace is not the same, but the overwrite address
-is always the same:
-Unable to handle kernel paging request at virtual address 0000000200000040
+PLL is bypassed using register DBLV[7:6], according to ov7670 and ov7675
+sensor manuals. Macros used to set DBLV register seem wrong in the
+driver, as their values do not match what reported in the datasheet.
 
-The root cause is, when write the reg XGMAC_MAC_TX_LF_RF_CONTROL_REG,
-didn't use the io_base offset.
+Fix by changing DBLV_* macros to use bits [7:6] and set bits [3:0] to
+default 0x0a reserved value (according to datasheets).
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+While at there, remove a write to DBLV register in
+"ov7675_set_framerate()" that over-writes the previous one to the same
+register that takes "info->pll_bypass" flag into account instead of setting PLL
+multiplier to 4x unconditionally.
+
+And, while at there, since "info->pll_bypass" is only used in
+set/get_framerate() functions used by ov7675 only, it is not necessary
+to check for the device id at probe time to make sure that when using
+ov7670 "info->pll_bypass" is set to false.
+
+Fixes: f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/ov7670.c |   16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
-index 51e7e9f5af49..70de7b5d28af 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
-@@ -129,7 +129,7 @@ static void hns_xgmac_lf_rf_control_init(struct mac_driver *mac_drv)
- 	dsaf_set_bit(val, XGMAC_UNIDIR_EN_B, 0);
- 	dsaf_set_bit(val, XGMAC_RF_TX_EN_B, 1);
- 	dsaf_set_field(val, XGMAC_LF_RF_INSERT_M, XGMAC_LF_RF_INSERT_S, 0);
--	dsaf_write_reg(mac_drv, XGMAC_MAC_TX_LF_RF_CONTROL_REG, val);
-+	dsaf_write_dev(mac_drv, XGMAC_MAC_TX_LF_RF_CONTROL_REG, val);
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -158,10 +158,10 @@ MODULE_PARM_DESC(debug, "Debug level (0-
+ #define REG_GFIX	0x69	/* Fix gain control */
+ 
+ #define REG_DBLV	0x6b	/* PLL control an debugging */
+-#define   DBLV_BYPASS	  0x00	  /* Bypass PLL */
+-#define   DBLV_X4	  0x01	  /* clock x4 */
+-#define   DBLV_X6	  0x10	  /* clock x6 */
+-#define   DBLV_X8	  0x11	  /* clock x8 */
++#define   DBLV_BYPASS	  0x0a	  /* Bypass PLL */
++#define   DBLV_X4	  0x4a	  /* clock x4 */
++#define   DBLV_X6	  0x8a	  /* clock x6 */
++#define   DBLV_X8	  0xca	  /* clock x8 */
+ 
+ #define REG_REG76	0x76	/* OV's name */
+ #define   R76_BLKPCOR	  0x80	  /* Black pixel correction enable */
+@@ -837,7 +837,7 @@ static int ov7675_set_framerate(struct v
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return ov7670_write(sd, REG_DBLV, DBLV_X4);
++	return 0;
  }
  
- /**
--- 
-2.20.1
-
+ static void ov7670_get_framerate_legacy(struct v4l2_subdev *sd,
+@@ -1601,11 +1601,7 @@ static int ov7670_probe(struct i2c_clien
+ 		if (config->clock_speed)
+ 			info->clock_speed = config->clock_speed;
+ 
+-		/*
+-		 * It should be allowed for ov7670 too when it is migrated to
+-		 * the new frame rate formula.
+-		 */
+-		if (config->pll_bypass && id->driver_data != MODEL_OV7670)
++		if (config->pll_bypass)
+ 			info->pll_bypass = true;
+ 
+ 		if (config->pclk_hb_disable)
 
 
