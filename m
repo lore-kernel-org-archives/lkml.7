@@ -2,107 +2,122 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB9FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF39C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64476205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19299205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfEFPYs (ORCPT
+        id S1726896AbfEFPYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 6 May 2019 11:24:51 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:56963 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfEFPYs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 May 2019 11:24:48 -0400
-Received: from 0.ictbs.com ([203.137.112.168]:33899 "EHLO 0.ictbs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbfEFPYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:24:47 -0400
-Received: by hq.local (Postfix, from userid 1000)
-        id 6287766429; Mon,  6 May 2019 17:24:41 +0200 (CEST)
-Date:   Mon, 6 May 2019 17:24:41 +0200
-From:   Victor Bravo <1905@spmblk.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Arend Van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] brcmfmac: sanitize DMI strings v2
-Message-ID: <20190506152441.ifjcdi73elxuq5it@localhost>
-References: <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
- <20190504194440.4zcxjrtj2aft3ka4@localhost>
- <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <20190505150355.3fbng4ny34x255vk@localhost>
- <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
- <20190506090609.msudhncj7e5vdtzw@localhost>
- <70677dff-4336-28d5-7ab9-7ba7c3d74ebc@redhat.com>
- <20190506102032.3ximjecado4mz62j@localhost>
- <fb07ae01-4cca-98e7-1c2d-dfdf44909900@redhat.com>
- <87d0kvvkej.fsf@codeaurora.org>
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E8B6F3C00C6;
+        Mon,  6 May 2019 17:24:43 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id t12YR46iAR7u; Mon,  6 May 2019 17:24:37 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id C2C1B3C004C;
+        Mon,  6 May 2019 17:24:36 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 6 May 2019
+ 17:24:36 +0200
+Date:   Mon, 6 May 2019 17:24:33 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Simon Horman <horms@verge.net.au>
+CC:     Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "George G . Davis" <george_davis@mentor.com>,
+        Andy Lowe <andy_lowe@mentor.com>,
+        <linux-renesas-soc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Helge Deller <deller@gmx.de>,
+        Michael Neuling <mikey@neuling.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Philip Yang <Philip.Yang@amd.com>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        Borislav Petkov <bp@suse.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH 1/6] serial: sh-sci: Reveal ptrval in dev_dbg
+Message-ID: <20190506152433.GA22769@vmlxhi-102.adit-jv.com>
+References: <20190504004258.23574-1-erosca@de.adit-jv.com>
+ <20190504004258.23574-2-erosca@de.adit-jv.com>
+ <20190506134700.ya565idfzzc3enbm@verge.net.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <87d0kvvkej.fsf@codeaurora.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190506134700.ya565idfzzc3enbm@verge.net.au>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 03:26:28PM +0300, Kalle Valo wrote:
-> Hans de Goede <hdegoede@redhat.com> writes:
+On Mon, May 06, 2019 at 03:47:05PM +0200, Simon Horman wrote:
+> On Sat, May 04, 2019 at 02:42:53AM +0200, Eugeniu Rosca wrote:
+> > Starting with v4.15-rc2 commit ad67b74d2469d9 ("printk: hash addresses
+> > printed with %p"), enabling debug prints in sh-sci.c would generate
+> > output like below confusing the users who try to sneak into the
+> > internals of the driver:
+> > 
+> > sh-sci e6e88000.serial: sci_request_dma: TX: got channel (____ptrval____)
+> > sh-sci e6e88000.serial: sci_request_dma: mapped 4096@(____ptrval____) to 0x00000006798bf000
+> > sh-sci e6e88000.serial: sci_request_dma: RX: got channel (____ptrval____)
+> > sh-sci e6e88000.serial: sci_dma_tx_work_fn: (____ptrval____): 0...2, cookie 2
+> > 
+> > There are two possible fixes for that:
+> >  - get rid of '%p' prints if they don't reveal any useful information
+> >  - s/%p/%px/, since it is unlikely we have any concerns leaking the
+> >    pointer values when running a debug/non-production kernel
 > 
-> > If we're going to do some filtering, then I suggest we play it safe and also
-> > disallow other chars which may be used as a separator somewhere, specifically
-> > ':' and ','.
-> >
-> > Currently upstream linux-firmware has these files which rely on the DMI
-> > matching:
-> >
-> > brcmfmac4330-sdio.Prowise-PT301.txt
-> > brcmfmac43430-sdio.Hampoo-D2D3_Vi8A1.txt
-> > brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt
-> >
-> > The others are either part of the DMI override table for devices with unsuitable
-> > DMI strings like "Default String"; or are device-tree based.
-> >
-> > So as long as we don't break those 3 (or break the ONDA one but get a symlink
-> > in place) we can sanitize a bit more then just non-printable and '/'.
-> >
-> > Kalle, Arend, what is your opinion on this?
-> >
-> > Note I do not expect the ONDA V80 Plus to have a lot of Linux users,
-> > but it definitely has some.
+> I am concerned that this may expose information in circumstances
+> where it is undesirable. Is it generally accepted practice to
+> use %px in conjunction with dev_dbg() ?
 > 
-> To me having spaces in filenames is a bad idea, but on the other hand we
-> do have the "don't break existing setups" rule, so it's not so simple. I
-> vote for not allowing spaces, I think that's the best for the long run,
-> but don't know what Arend thinks.
+> ...
 
-I have found a fresh judicate on this:
-https://lkml.org/lkml/2018/12/22/221
+Below commits performed a similar s/%p/%px/ update in debug context:
 
-It seems clear that we have to support at least spaces for some time
-(maybe wih separate config option which will be deprecated but on by
-defaut until old files are considered gone).
+Authors (CC-ed)   Commit         Subject
+----------------------------------------
+Christophe Leroy  b18f0ae92b0a1d ("powerpc/prom: fix early DEBUG messages")
+Helge Deller      3847dab7742186 ("parisc: Add alternative coding infrastructure")
+Michael Neuling   51c3c62b58b357 ("powerpc: Avoid code patching freed init sections")
+Kuninori Morimoto dabdbe3ae0cb9a ("ASoC: rsnd: don't use %p for dev_dbg()")
+Philip Yang       fa7e65147e5dca ("drm/amdkfd: use %px to print user space address instead of %p")
+Matthew Wilcox    68c1f08203f2b0 ("lib/list_debug.c: print unmangled addresses")
+Borislav Petkov   0e6c16c652cada ("x86/alternative: Print unadorned pointers")
+Darrick J. Wong   c96900435fa9fd ("xfs: use %px for data pointers when debugging")
+Helge Deller      04903c06b4854d ("parisc: Show unhashed HPA of Dino chip")
 
-> Maybe we could do some kind of fallback mechanism, like first trying the
-> sanitised filename and if that's not found then we try the old filename
-> with spaces? And if that old filename works we print a big fat warning
-> that the user should update the file and that the old "filename with
-> spaces" support is going away soon?
+To quote Matthew, with respect to any debug prints:
+If an attacker can force this message to be printed, we've already lost.
 
-In case of parametric sanitizing function, this might be achievable
-by sanitizing using "final" character set first, and falling back
-to "compatible" character set on file not found. So this may actually
-bring another requirement on the sanitizing function.
+In any case, I won't be affected much if the change is not accepted,
+since it doesn't resolve any major issue on my end. Thanks!
 
-Regards,
-v.
+-- 
+Best Regards,
+Eugeniu.
