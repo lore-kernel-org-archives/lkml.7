@@ -2,119 +2,105 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8035FC04AAE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88967C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC25205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE542087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:48:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557128911;
+	bh=iQO0ec/SG8F94JY1m2ekvJVK/YDQDW2J6E5HGRzg3Gg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZhoNEk6Tc8ftS+lYu2VN/HDKCc6cjoG4uilBJoDVx2yYk5YFy5LwzsOW2W/eAVWqB
+	 cz3JkuEcymCLDH2/xMBA/r/u0x4vOiYT5pazf2+mD/eVdELsICupfcpDJPUwy0sj6X
+	 5u83i/6Aca/8gUZow4r1XfQGSpwSndnEdb5DC4G4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfEFHsM (ORCPT
+        id S1726497AbfEFHsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:48:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53992 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726438AbfEFHsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:48:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C5F40AE27;
-        Mon,  6 May 2019 07:48:09 +0000 (UTC)
-Date:   Mon, 6 May 2019 09:48:09 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Mon, 6 May 2019 03:48:30 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38812 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbfEFHs3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 03:48:29 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f2so8999243wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 00:48:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lOMmC2TdPGvudZ5zd3K88q7Hkn2nNBdEod9TPs+T1As=;
+        b=Slaf58rRFMPspfJPXpmTfLlvwHidotLOMxhyQjova1O4DpsmA/t1EGlinnwrWNjZEa
+         WGXX51gARplly5SfcaxFi1xynREwymrx2nkYqsnw8tXplC1Jed+eZEL89EAMgspKPkx4
+         VMPvROYT21z9Gfa2hf4YEkbEZMzU64Pnrvx0w/E2NvCgLPuXS/Ce2M5vuYhuVd2j+r4u
+         wKFhmjQwd8VN5pi1cR7+4kAfj/k4clFbyCNw4CyQnrW+2UniB1kSivgEVBjU7pyF37Mw
+         fisW2RubkyT9oK8pxfLjs06SlLs2nGZsRfxwfbOxUCSoy1gKnwLXV46GP1FupbieOKBi
+         gikA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lOMmC2TdPGvudZ5zd3K88q7Hkn2nNBdEod9TPs+T1As=;
+        b=JMiROAXIpqN116FgQYW3sOd9Jc+AlzrpCbhsquEUmWoTjBVnHxWr34+3u8TdCiRcgw
+         Dt23TdjFSFBUH2Mu76eawRiOXzyQxS/wn84gpR9yLvZrGDWgESThYmjosloSsV9P6ppB
+         scZn7YcQh0SZj5e++iK8Vb6DCmQUwIrRbV9D38FszuOf2rOtXvMIcp2psmMltKIkcKrl
+         VBTLJcaUN3esYEnC+7Iol1b6xFqsadGy1aOqsa6Mc+xGqXdhtW3+ZpFZIKPjAvaxni/S
+         DQn5cYdh67eRv3WKVl+G/uj1mMJxpZiltcklyyvVbWMe6viw3Pc/46348Y/M7SQXTTKK
+         WTZg==
+X-Gm-Message-State: APjAAAWgXZOJzXazibBWgbHna81klJ04GzoQCpr5v11eWuUuGAF7k+qP
+        bBza2c+CqXmMi+EShWXsgks=
+X-Google-Smtp-Source: APXvYqyxnM3H0RW7VAjyrnVoeQuJS4dJsfRQz2+6D0KPmo/7z1/mSm31TtogRWgjeRvZ41viotGPaw==
+X-Received: by 2002:a1c:4602:: with SMTP id t2mr15129112wma.120.1557128907723;
+        Mon, 06 May 2019 00:48:27 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id u11sm16796834wrg.35.2019.05.06.00.48.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 00:48:27 -0700 (PDT)
+Date:   Mon, 6 May 2019 09:48:24 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Baron <jbaron@akamai.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] RFC: console: hack up console_trylock more
-Message-ID: <20190506074809.huawsdaynyci5kwz@pathway.suse.cz>
-References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
- <20190503151437.dc2ty2mnddabrz4r@pathway.suse.cz>
- <CAKMK7uF8AD6033_tJw1Y7VsAXb6OD_syZtG3a-JM2g9eEb-P9g@mail.gmail.com>
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 00/10] implement DYNAMIC_DEBUG_RELATIVE_POINTERS
+Message-ID: <20190506074824.GA40476@gmail.com>
+References: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
+ <1afb0702-3cc5-ba4f-2bdd-604d9da2b846@rasmusvillemoes.dk>
+ <20190506070544.GA66463@gmail.com>
+ <25dfde77-fdad-0b99-75ec-4ba480058970@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKMK7uF8AD6033_tJw1Y7VsAXb6OD_syZtG3a-JM2g9eEb-P9g@mail.gmail.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <25dfde77-fdad-0b99-75ec-4ba480058970@rasmusvillemoes.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-05-06 09:11:37, Daniel Vetter wrote:
-> On Fri, May 3, 2019 at 5:14 PM Petr Mladek <pmladek@suse.com> wrote:
-> > On Thu 2019-05-02 16:16:43, Daniel Vetter wrote:
-> > > console_trylock, called from within printk, can be called from pretty
-> > > much anywhere. Including try_to_wake_up. Note that this isn't common,
-> > > usually the box is in pretty bad shape at that point already. But it
-> > > really doesn't help when then lockdep jumps in and spams the logs,
-> > > potentially obscuring the real backtrace we're really interested in.
-> > > One case I've seen (slightly simplified backtrace):
-> > >
-> > >  Call Trace:
-> > >   <IRQ>
-> > >   console_trylock+0xe/0x60
-> > >   vprintk_emit+0xf1/0x320
-> > >   printk+0x4d/0x69
-> > >   __warn_printk+0x46/0x90
-> > >   native_smp_send_reschedule+0x2f/0x40
-> > >   check_preempt_curr+0x81/0xa0
-> > >   ttwu_do_wakeup+0x14/0x220
-> > >   try_to_wake_up+0x218/0x5f0
-> > >   pollwake+0x6f/0x90
-> > >   credit_entropy_bits+0x204/0x310
-> > >   add_interrupt_randomness+0x18f/0x210
-> > >   handle_irq+0x67/0x160
-> > >   do_IRQ+0x5e/0x130
-> > >   common_interrupt+0xf/0xf
-> > >   </IRQ>
-> > >
-> > > This alone isn't a problem, but the spinlock in the semaphore is also
-> > > still held while waking up waiters (up() -> __up() -> try_to_wake_up()
-> > > callchain), which then closes the runqueue vs. semaphore.lock loop,
-> > > and upsets lockdep, which issues a circular locking splat to dmesg.
-> > > Worse it upsets developers, since we don't want to spam dmesg with
-> > > clutter when the machine is dying already.
-> > >
-> > > Fix this by creating a __down_trylock which only trylocks the
-> > > semaphore.lock. This isn't correct in full generality, but good enough
-> > > for console_lock:
-> > >
-> > > - there's only ever one console_lock holder, we won't fail spuriously
-> > >   because someone is doing a down() or up() while there's still room
-> > >   (unlike other semaphores with count > 1).
-> > >
-> > > - console_unlock() has one massive retry loop, which will catch anyone
-> > >   who races the trylock against the up(). This makes sure that no
-> > >   printk lines will get lost. Making the trylock more racy therefore
-> > >   has no further impact.
-> >
-> > To be honest, I do not see how this could solve the problem.
-> >
-> > The circular dependency is still there. If the new __down_trylock()
-> > succeeds then console_unlock() will get called in the same context
-> > and it will still need to call up() -> try_to_wake_up().
-> >
-> > Note that there are many other console_lock() callers that might
-> > happen in parallel and might appear in the wait queue.
-> 
-> Hm right. It's very rare we hit this in our CI and I don't know how to
-> repro otherwise, so just threw this out at the wall to see if it
-> sticks. I'll try and come up with a new trick then.
 
-Single messages are printed from scheduler via printk_deferred().
-WARN() might be solved by introducing printk deferred context,
-see the per-cpu variable printk_context.
+* Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
 
-Best Regards,
-Petr
+> I _am_ bending the C rules a bit with the "extern some_var; asm 
+> volatile(".section some_section\nsome_var: blabla");". I should 
+> probably ask on the gcc list whether this way of defining a local 
+> symbol in inline assembly and referring to it from C is supposed to 
+> work, or it just happens to work by chance.
+
+Doing that would be rather useful I think.
+
+Thanks,
+
+	Ingo
