@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3812AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29D8C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACF7216B7
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8671E21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153527;
-	bh=luxcchwmTr4VCseNkfX0/CRcoosS6msjZjL/UkEuihc=;
+	s=default; t=1557153530;
+	bh=uu0EMjhOToFcA+5jmlzRFDtcC1h61DsUoHuGmibseAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAw3jNvllxrCKOac2s8GVJoJcn06SAH7mE+9Jfod1HXJHJaNXvJL/1cXwPZQTeWkD
-	 E7plpp5XMmI+hR7OQgjEkcr1fsFmbLz3NbaEtD1l6kiBOVFGY2ui0NXAnJGgwxC7OU
-	 UHTysxvA9jx35fqSIaQwP80Mvls18OQbLWiwI5dE=
+	b=mkLAOxZqKRzd45f1KI2F7SLEbDzEAHBB8l2Oe600TqOa/7p5K/UqF1UaI3OCmo5dd
+	 Wv4myF3Clhs/gDzYbUcqFYr0TBrMV+mjNy5icSCCXyMw+Pt97Zy1RYHyNrmCUlFA0X
+	 /Y2O+qoC+RI/DPxTFL3xVvl7EflNavzbQOPAS2/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfEFOiq (ORCPT
+        id S1727687AbfEFOit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:38:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59962 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:38:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727664AbfEFOim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:38:42 -0400
+        id S1726679AbfEFOir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:38:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86A1A20449;
-        Mon,  6 May 2019 14:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C787421479;
+        Mon,  6 May 2019 14:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153522;
-        bh=luxcchwmTr4VCseNkfX0/CRcoosS6msjZjL/UkEuihc=;
+        s=default; t=1557153527;
+        bh=uu0EMjhOToFcA+5jmlzRFDtcC1h61DsUoHuGmibseAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mZIWvaEnadRt5dHUc/vhgfWjIn+9OkdULG/QzHSm/FlJp6lqj+SIJxllcWkIHZ8ML
-         1TTVpZlS9v69BA3PHTfTwKah5AOnYV94QpygkkkvgjNjeoa/8P2vqCGGVJhXkB68ru
-         14kProw2wr2F5G3uuojsCmRJRrKw3PqC3C02FCl8=
+        b=Tp2THbaIpJ25MmAB23bkb5Pw68P4/cqFLSqA1uMvJCRn3DUnE11F8Y3UsS2rxTmRA
+         Z+nyOT88PMqkGLh16CfPpDtDbw9YWeT3+2nPZunF2NiXYyGnB4TXu7OyCaUYMp1bio
+         g83MRQkszaV5IeRNP/FUR4LliwUh58APw7DvQzb4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nadav Amit <namit@vmware.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.0 120/122] x86/mm/tlb: Revert "x86/mm: Align TLB invalidation info"
-Date:   Mon,  6 May 2019 16:32:58 +0200
-Message-Id: <20190506143105.135228379@linuxfoundation.org>
+        stable@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.0 122/122] media: v4l2: i2c: ov7670: Fix PLL bypass register values
+Date:   Mon,  6 May 2019 16:33:00 +0200
+Message-Id: <20190506143105.263885603@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -66,49 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-commit 780e0106d468a2962b16b52fdf42898f2639e0a0 upstream.
+commit 61da76beef1e4f0b6ba7be4f8d0cf0dac7ce1f55 upstream.
 
-Revert the following commit:
+The following commits:
+commit f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
+commit 04ee6d92047e ("[media] media: ov7670: add possibility to bypass pll for ov7675")
+introduced the ability to bypass PLL multiplier and use input clock (xvclk)
+as pixel clock output frequency for ov7675 sensor.
 
-  515ab7c41306: ("x86/mm: Align TLB invalidation info")
+PLL is bypassed using register DBLV[7:6], according to ov7670 and ov7675
+sensor manuals. Macros used to set DBLV register seem wrong in the
+driver, as their values do not match what reported in the datasheet.
 
-I found out (the hard way) that under some .config options (notably L1_CACHE_SHIFT=7)
-and compiler combinations this on-stack alignment leads to a 320 byte
-stack usage, which then triggers a KASAN stack warning elsewhere.
+Fix by changing DBLV_* macros to use bits [7:6] and set bits [3:0] to
+default 0x0a reserved value (according to datasheets).
 
-Using 320 bytes of stack space for a 40 byte structure is ludicrous and
-clearly not right.
+While at there, remove a write to DBLV register in
+"ov7675_set_framerate()" that over-writes the previous one to the same
+register that takes "info->pll_bypass" flag into account instead of setting PLL
+multiplier to 4x unconditionally.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Acked-by: Nadav Amit <namit@vmware.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 515ab7c41306 ("x86/mm: Align TLB invalidation info")
-Link: http://lkml.kernel.org/r/20190416080335.GM7905@worktop.programming.kicks-ass.net
-[ Minor changelog edits. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+And, while at there, since "info->pll_bypass" is only used in
+set/get_framerate() functions used by ov7675 only, it is not necessary
+to check for the device id at probe time to make sure that when using
+ov7670 "info->pll_bypass" is set to false.
+
+Fixes: f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/mm/tlb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/ov7670.c |   16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -731,7 +731,7 @@ void flush_tlb_mm_range(struct mm_struct
- {
- 	int cpu;
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -160,10 +160,10 @@ MODULE_PARM_DESC(debug, "Debug level (0-
+ #define REG_GFIX	0x69	/* Fix gain control */
  
--	struct flush_tlb_info info __aligned(SMP_CACHE_BYTES) = {
-+	struct flush_tlb_info info = {
- 		.mm = mm,
- 		.stride_shift = stride_shift,
- 		.freed_tables = freed_tables,
+ #define REG_DBLV	0x6b	/* PLL control an debugging */
+-#define   DBLV_BYPASS	  0x00	  /* Bypass PLL */
+-#define   DBLV_X4	  0x01	  /* clock x4 */
+-#define   DBLV_X6	  0x10	  /* clock x6 */
+-#define   DBLV_X8	  0x11	  /* clock x8 */
++#define   DBLV_BYPASS	  0x0a	  /* Bypass PLL */
++#define   DBLV_X4	  0x4a	  /* clock x4 */
++#define   DBLV_X6	  0x8a	  /* clock x6 */
++#define   DBLV_X8	  0xca	  /* clock x8 */
+ 
+ #define REG_SCALING_XSC	0x70	/* Test pattern and horizontal scale factor */
+ #define   TEST_PATTTERN_0 0x80
+@@ -863,7 +863,7 @@ static int ov7675_set_framerate(struct v
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return ov7670_write(sd, REG_DBLV, DBLV_X4);
++	return 0;
+ }
+ 
+ static void ov7670_get_framerate_legacy(struct v4l2_subdev *sd,
+@@ -1801,11 +1801,7 @@ static int ov7670_probe(struct i2c_clien
+ 		if (config->clock_speed)
+ 			info->clock_speed = config->clock_speed;
+ 
+-		/*
+-		 * It should be allowed for ov7670 too when it is migrated to
+-		 * the new frame rate formula.
+-		 */
+-		if (config->pll_bypass && id->driver_data != MODEL_OV7670)
++		if (config->pll_bypass)
+ 			info->pll_bypass = true;
+ 
+ 		if (config->pclk_hb_disable)
 
 
