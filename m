@@ -2,103 +2,70 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D3FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3625AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD422053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154487;
-	bh=hNMILTvkYrpnJHXR3XQLza2zTz1EDv6P8yTCQHmpAkw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4Ozv+98T40vIBXfRWPQ1mIkQT9GhcLzUfEXgxDzG0ySBUornwtdUZkd7zkk/TQBO
-	 fru8JZmTZH9YtV4MZzOhyKdMDR/glsl+szY8wmtAV8gvoAXPNURRTkWcYOzyBx5UHA
-	 y3pc3xVhTGE5ZuY26G3GFfv66zB7vCAqeYmVCyko=
+	by mail.kernel.org (Postfix) with ESMTP id DF0E82053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbfEFOqa (ORCPT
+        id S1728645AbfEFOqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:46:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44084 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726894AbfEFOqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729111AbfEFOqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 May 2019 10:46:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 825D520C01;
+        by mail.kernel.org (Postfix) with ESMTPSA id 9798C2053B;
         Mon,  6 May 2019 14:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153980;
-        bh=hNMILTvkYrpnJHXR3XQLza2zTz1EDv6P8yTCQHmpAkw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Qcn84Zb73cU87jnaZLtax6tm+8AtFVBlMZLBqccRr7+piODyof8ku/CkycuvutBX
-         0AiBdr/UasCMMlEgMnjm57fZ+TwvxD+4FF+P2iLkaLW4HlSEXkp/GnMXBmwbqU8Ytd
-         cJq/thG7flnwWlHX7gwEX8zFhQgI7uD0X90z2AOw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 68/75] Input: snvs_pwrkey - initialize necessary driver data before enabling IRQ
-Date:   Mon,  6 May 2019 16:33:16 +0200
-Message-Id: <20190506143059.407155755@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
-References: <20190506143053.287515952@linuxfoundation.org>
-User-Agent: quilt/0.66
+Date:   Mon, 6 May 2019 10:46:18 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 4/7] sched: Add sched_load_rq tracepoint
+Message-ID: <20190506104618.2fa49e13@gandalf.local.home>
+In-Reply-To: <20190506144200.z4s63nm7untol2tr@e107158-lin.cambridge.arm.com>
+References: <20190505115732.9844-1-qais.yousef@arm.com>
+        <20190505115732.9844-5-qais.yousef@arm.com>
+        <20190506090859.GK2606@hirez.programming.kicks-ass.net>
+        <20190506095239.08577b3e@gandalf.local.home>
+        <20190506144200.z4s63nm7untol2tr@e107158-lin.cambridge.arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <anson.huang@nxp.com>
+On Mon, 6 May 2019 15:42:00 +0100
+Qais Yousef <qais.yousef@arm.com> wrote:
 
-commit bf2a7ca39fd3ab47ef71c621a7ee69d1813b1f97 upstream.
+> I can control that for the wrappers I'm introducing. But the actual tracepoint
+> get the 'trace_' part prepended automatically by the macros.
+> 
+> ie DECLARE_TRACE(pelt_rq, ...) will automatically generate a function called
+> trace_pelt_se(...)
+> 
+> Or am I missing something?
 
-SNVS IRQ is requested before necessary driver data initialized,
-if there is a pending IRQ during driver probe phase, kernel
-NULL pointer panic will occur in IRQ handler. To avoid such
-scenario, just initialize necessary driver data before enabling
-IRQ. This patch is inspired by NXP's internal kernel tree.
+No trace comes from the trace points.
 
-Fixes: d3dc6e232215 ("input: keyboard: imx: add snvs power key driver")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+So basically, we are going back to having tracepoints without
+associated trace events. Which basically is just saying "we want trace
+events here, but don't want an API". Of course, we can create a module
+that can attach to them and create the trace events as well.
 
----
- drivers/input/keyboard/snvs_pwrkey.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I'm not a big fan of this, but I'll let Peter decide.
 
---- a/drivers/input/keyboard/snvs_pwrkey.c
-+++ b/drivers/input/keyboard/snvs_pwrkey.c
-@@ -156,6 +156,9 @@ static int imx_snvs_pwrkey_probe(struct
- 		return error;
- 	}
- 
-+	pdata->input = input;
-+	platform_set_drvdata(pdev, pdata);
-+
- 	error = devm_request_irq(&pdev->dev, pdata->irq,
- 			       imx_snvs_pwrkey_interrupt,
- 			       0, pdev->name, pdev);
-@@ -171,9 +174,6 @@ static int imx_snvs_pwrkey_probe(struct
- 		return error;
- 	}
- 
--	pdata->input = input;
--	platform_set_drvdata(pdev, pdata);
--
- 	device_init_wakeup(&pdev->dev, pdata->wakeup);
- 
- 	return 0;
-
-
+-- Steve
