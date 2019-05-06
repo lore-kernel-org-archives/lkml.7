@@ -2,138 +2,161 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0E3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27693C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE522053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154313;
-	bh=aSyAWG8LsqQfGujCDwDQLGJGjglE3ZS5g8PrN4g0IvI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mEnCkveals+mHEqx1IlnJVAtxX57Ua7C6vAGQJynmbHtTet4QtiiXPVE5Kli1gF/N
-	 EVXeq5QP0DwmNEbs9dQoCBUFO8SRc7kRU8vRfcsgCXEwNvvvOVgxb4kQPXbIXtplNT
-	 DuoljoJiDRVhC/MsNLpYj+7lqGrWIQ/rdWwq8+v8=
+	by mail.kernel.org (Postfix) with ESMTP id F27A6205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729614AbfEFOvv (ORCPT
+        id S1729494AbfEFOsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:51:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:48:38 -0400
+Received: from mga17.intel.com ([192.55.52.151]:60780 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729526AbfEFOsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:48:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 949AF216C8;
-        Mon,  6 May 2019 14:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154130;
-        bh=aSyAWG8LsqQfGujCDwDQLGJGjglE3ZS5g8PrN4g0IvI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cunBraeAQ/QBf4mTaPliKhNsisu/C9clktfTB6HnC9sRFVvbauRL3pdh1u9M2ypv5
-         BFhaidS2tmmN1k/1nKUeibxq+JEgocfbhjhYGRjjKybR3Vfqm0Del7X7CZ4ymZYSqq
-         c0CPd3KOhZrdn2TCHbqG2JxxWkqdNlYoeP8oDPxw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yufen Yu <yuyufen@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 49/62] hugetlbfs: fix memory leak for resv_map
-Date:   Mon,  6 May 2019 16:33:20 +0200
-Message-Id: <20190506143055.514093182@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
-References: <20190506143051.102535767@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729476AbfEFOsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:48:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 07:48:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
+   d="scan'208";a="343986368"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 06 May 2019 07:48:32 -0700
+Received: from slaugust-mobl.amr.corp.intel.com (unknown [10.254.21.102])
+        by linux.intel.com (Postfix) with ESMTP id 63339580238;
+        Mon,  6 May 2019 07:48:31 -0700 (PDT)
+Subject: Re: [alsa-devel] [RFC PATCH 5/7] soundwire: add debugfs support
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com, joe@perches.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
+ <20190504010030.29233-6-pierre-louis.bossart@linux.intel.com>
+ <20190504070301.GD9770@kroah.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <a9e1c3d2-fe29-1683-9253-b66034c62010@linux.intel.com>
+Date:   Mon, 6 May 2019 09:48:30 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190504070301.GD9770@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 58b6e5e8f1addd44583d61b0a03c0f5519527e35 ]
 
-When mknod is used to create a block special file in hugetlbfs, it will
-allocate an inode and kmalloc a 'struct resv_map' via resv_map_alloc().
-inode->i_mapping->private_data will point the newly allocated resv_map.
-However, when the device special file is opened bd_acquire() will set
-inode->i_mapping to bd_inode->i_mapping.  Thus the pointer to the
-allocated resv_map is lost and the structure is leaked.
+>> @@ -136,6 +139,8 @@ static int sdw_delete_slave(struct device *dev, void *data)
+>>   void sdw_delete_bus_master(struct sdw_bus *bus)
+>>   {
+>>   	sdw_sysfs_bus_exit(bus);
+>> +	if (bus->debugfs)
+>> +		sdw_bus_debugfs_exit(bus->debugfs);
+> 
+> No need to check, just call it.
 
-Programs to reproduce:
-        mount -t hugetlbfs nodev hugetlbfs
-        mknod hugetlbfs/dev b 0 0
-        exec 30<> hugetlbfs/dev
-        umount hugetlbfs/
-
-resv_map structures are only needed for inodes which can have associated
-page allocations.  To fix the leak, only allocate resv_map for those
-inodes which could possibly be associated with page allocations.
-
-Link: http://lkml.kernel.org/r/20190401213101.16476-1-mike.kravetz@oracle.com
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Reported-by: Yufen Yu <yuyufen@huawei.com>
-Suggested-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/hugetlbfs/inode.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 001487b230b5..4acc677ac8fb 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -746,11 +746,17 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
- 					umode_t mode, dev_t dev)
- {
- 	struct inode *inode;
--	struct resv_map *resv_map;
-+	struct resv_map *resv_map = NULL;
- 
--	resv_map = resv_map_alloc();
--	if (!resv_map)
--		return NULL;
-+	/*
-+	 * Reserve maps are only needed for inodes that can have associated
-+	 * page allocations.
-+	 */
-+	if (S_ISREG(mode) || S_ISLNK(mode)) {
-+		resv_map = resv_map_alloc();
-+		if (!resv_map)
-+			return NULL;
-+	}
- 
- 	inode = new_inode(sb);
- 	if (inode) {
-@@ -782,8 +788,10 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
- 			break;
- 		}
- 		lockdep_annotate_inode_mutex_key(inode);
--	} else
--		kref_put(&resv_map->refs, resv_map_release);
-+	} else {
-+		if (resv_map)
-+			kref_put(&resv_map->refs, resv_map_release);
-+	}
- 
- 	return inode;
- }
--- 
-2.20.1
+That was on my todo list, will remove.
 
 
+>> +struct sdw_bus_debugfs {
+>> +	struct sdw_bus *bus;
+> 
+> Why do you need to save this pointer?
+> 
+>> +	struct dentry *fs;
+> 
+> This really is all you need to have around, right?
 
+will check.
+
+>> +struct dentry *sdw_bus_debugfs_get_root(struct sdw_bus_debugfs *d)
+>> +{
+>> +	if (d)
+>> +		return d->fs;
+>> +	return NULL;
+>> +}
+>> +EXPORT_SYMBOL(sdw_bus_debugfs_get_root);
+> 
+> _GPL()?
+
+Oops, that's a big miss. will fix, thanks for spotting this.
+
+> 
+> But why is this exported at all?  No one calls this function.
+
+I will have to check.
+
+> 
+>> +struct sdw_slave_debugfs {
+>> +	struct sdw_slave *slave;
+> 
+> Same question as above, why do you need this pointer?
+
+will check.
+
+> 
+> And meta-comment, if you _EVER_ save off a pointer to a reference
+> counted object (like this and the above one), you HAVE to grab a
+> reference to it, otherwise it can go away at any point in time as that
+> is the point of reference counted objects.
+> 
+> So even if you do need/want this, you have to properly handle the
+> reference count by incrementing/decrementing it as needed.
+
+good comment, thank you for the guidance.
+
+>> +struct sdw_slave_debugfs *sdw_slave_debugfs_init(struct sdw_slave *slave)
+>> +{
+>> +	struct sdw_bus_debugfs *master;
+>> +	struct sdw_slave_debugfs *d;
+>> +	char name[32];
+>> +
+>> +	master = slave->bus->debugfs;
+>> +	if (!master)
+>> +		return NULL;
+>> +
+>> +	d = kzalloc(sizeof(*d), GFP_KERNEL);
+>> +	if (!d)
+>> +		return NULL;
+>> +
+>> +	/* create the debugfs slave-name */
+>> +	snprintf(name, sizeof(name), "%s", dev_name(&slave->dev));
+>> +	d->fs = debugfs_create_dir(name, master->fs);
+>> +	if (IS_ERR_OR_NULL(d->fs)) {
+>> +		dev_err(&slave->dev, "slave debugfs root creation failed\n");
+>> +		goto err;
+>> +	}
+> 
+> You never care about the return value of a debugfs call.  I have a 100+
+> patch series stripping all of this out of the kernel, please don't force
+> me to add another one to it :)
+> 
+> Just call debugfs and move on, you can always put the return value of
+> one call into another one just fine, and your function logic should
+> never change if debugfs returns an error or not, you do not care.
+
+Yes, it's agreed that we should not depend on debugfs or fail here. will 
+fix, no worries.
+
+>
+>> +void sdw_debugfs_init(void)
+>> +{
+>> +	sdw_debugfs_root = debugfs_create_dir("soundwire", NULL);
+>> +	if (IS_ERR_OR_NULL(sdw_debugfs_root)) {
+>> +		pr_warn("SoundWire: Failed to create debugfs directory\n");
+>> +		sdw_debugfs_root = NULL;
+>> +		return;
+> 
+> Same here, just call the function and return.
+
+yep, will do.
