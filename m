@@ -2,103 +2,127 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482C8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537D2C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E7020830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557172182;
-	bh=N+qCpPipwaspF17fBy5LbpphIyDHNUlHNnmZs/BQbzQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GsalOZW+9FmIgb3wEtpvPSR4s1ARn2KS/2ZJXqUJAcC5bQ8jQcDPEngamzR2clSZw
-	 3fIhNdzqV9rZGetu8JYoJG4LBsaHG2KrR27Ljkej3gscKv43ZXinDXc1oQ8/gbfwX0
-	 z+jDSPCp+hCy3PTFi2qr9bmnBMeajJrskbqvm5jU=
+	by mail.kernel.org (Postfix) with ESMTP id 26552214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:50:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mAg8m7rS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfEFTtl (ORCPT
+        id S1726526AbfEFTuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:49:41 -0400
-Received: from mail-wr1-f49.google.com ([209.85.221.49]:45471 "EHLO
-        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfEFTtk (ORCPT
+        Mon, 6 May 2019 15:50:24 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42057 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfEFTuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:49:40 -0400
-Received: by mail-wr1-f49.google.com with SMTP id s15so18816597wra.12
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 12:49:39 -0700 (PDT)
+        Mon, 6 May 2019 15:50:23 -0400
+Received: by mail-qk1-f193.google.com with SMTP id d4so2417168qkc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 12:50:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=66mlbL0CrJ7/fuI7SCKRUurSoskawyn/TvebHqiOTt8=;
-        b=FlXDTIis0m0j5kLiizL/QvH7mk4IWpAx57X9RljhmJQn1jHHcX2QlV1+UCcX/kOqXy
-         4jsJbJQANImituAVQ+nE5tOHnBMqPG7ibCwL4IILpy4hTszYW3kr1X2AEBfhJluyssZL
-         mNHUHFxT7GF8O++hCAdk2cYRiMKDPMlh+0Lh65cBhlSqO8y9Jv6gv1eeQYtwQenwSRcc
-         zjzw6zjabhucP+ZT0ZrnbsbIRkAtL/HqH98Egt0TdItAWYknFxwiYBt8YQ15do5I+MKj
-         Q8JRGsl4WNrhvwE/YVnQA75k8ZA9ltrM9IkssX5sbVf9Q6neS/Q2kUww1edOF4kt/eCn
-         1yvA==
+        bh=ESsJ96JGC0CvnjgihpL/0kogE+VQksbbiyHqcPsgGyM=;
+        b=mAg8m7rSPAxM5D+1qNjO71dhsXUrQSGF8zaXxmrvN1W1e7B7fEhL/nFNC4QmlTH5S/
+         9FjLthJrMSnJTSlBNmAzOuj+WEEEHBw1j3jchmVO404WkT8GTT4n4WekZCWvQcvu4KOF
+         mx0V5cfxdymPVb2Ruxoza7w5KItB51NAJ5xivBL7H4fj5rRig8CXPXI75f55CKvkZyYC
+         Gs093sJb6bHKcKo1jSkGyp2Pk8c68+e+QijlfKiUVNZuBsCjguF+Uc/8jtTaC+sffP6g
+         22gO2vicgInFZL3gRZwFvB6M65AQIPZr/G+9s6iQjRuVRTS6fQK5LrCRIMT4SjvjNieX
+         MViA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=66mlbL0CrJ7/fuI7SCKRUurSoskawyn/TvebHqiOTt8=;
-        b=BTWMpTI0zOzSOYQXUNSDhbUSYQuXBFIj2p/J08i7BGxJUqz6vcwZB7i5e+cEV7AQDC
-         jmljIAIvPg8w9QmI18cBCWZGSBHkj+GCYCo3iC3npQmasfmgWul984RhuqR7SG+p8TcW
-         DMNP1R3QRcsMd5eg01sEHpJmRMr7PZztHXLXr545DUblP56qtte5nL0hSLdghaQt0zxw
-         H4F3tZ6FMdXNrYJqQTNbSEVjbBf0VOIJmMC2dop5hgljc9IUCzye6RKwn+/rhdJGo+3u
-         ZHRQpVQ2IfDyqQpprzUqFb2E7inubSf8wKnxwpka/GowpVcTTDWhhDNxPnci0iTuivi3
-         aouA==
-X-Gm-Message-State: APjAAAUGBWSu8/yNQwWIzlWLCv2wsIxDjzYzsf0Z7rKZilDWQqVtR2oF
-        xgcv2wxItHAp83zZBQKX0qpyvwZF
-X-Google-Smtp-Source: APXvYqz01qngGuY0hCwslSWQ48ISnDoheCvFT6fhoee9EhzVYjJ1GRWVZHVliPnRFQd9b70DWVN9Vw==
-X-Received: by 2002:adf:fe49:: with SMTP id m9mr1443607wrs.73.1557172179285;
-        Mon, 06 May 2019 12:49:39 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id a11sm8221615wmm.35.2019.05.06.12.49.38
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ESsJ96JGC0CvnjgihpL/0kogE+VQksbbiyHqcPsgGyM=;
+        b=WOgP19QurriZ7giH6BK+HmzRv5X7+E0/dFe2mNMlZ5z8EJyzp2rZkAkf4P9TM2U1+r
+         XvKd3Ep/6iA6a79IPXpYpvfZwjQOw4IfR0ouitpuYk8d9o9DKowyHf7rITvu3t48+2T9
+         WvNFkOV1fpvpllGVSz5bHTMTQYZdZg+SIdVO05SyBkpEgcauyesrdLm2L66SaanMfU6x
+         mhtQpDvW0CeRqLo2WR7Vr+Tk6sPprZgfsKFeVp+l04WJLYNW+4DNCCE5ddgtqrvMkU3u
+         sOY9lWiOtgd7iZAXLjuB9D3u/4nDBJ88MWuWI7rr+pXSMcImIYxh/i8FSSXWJe3mFjpg
+         L4Yw==
+X-Gm-Message-State: APjAAAUEkBHTJn5zs1ZmAtOl0ymseJJZwOlHbRdofxcI7qeSd8YOTJSO
+        TrqwilKpKKCA5IuSNcBuiW3hvQ==
+X-Google-Smtp-Source: APXvYqweK3T+QR6CpnWc0KpWvE878/YztoCohPUsZDawCWkz4P9i6ckWrJvxSZLqhWTPckszjgD1bg==
+X-Received: by 2002:a05:620a:16b4:: with SMTP id s20mr10803976qkj.34.1557172222493;
+        Mon, 06 May 2019 12:50:22 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id o44sm9303175qto.36.2019.05.06.12.50.21
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 12:49:38 -0700 (PDT)
-Date:   Mon, 6 May 2019 21:49:36 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Len Brown <lenb@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, linux-kernel@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Len Brown <len.brown@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 17/18] perf/x86/intel/rapl: Support multi-die/package
-Message-ID: <20190506194936.GA23707@gmail.com>
-References: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1556657368.git.len.brown@intel.com>
- <da7518106ce152367457c014bc91281925ee9576.1556657368.git.len.brown@intel.com>
- <20190506114819.GA24079@gmail.com>
- <CAJvTdKnZhyk_aWjQP_dtnNjvV75MvXBEmXUjH=K0hu2Kb77pYQ@mail.gmail.com>
+        Mon, 06 May 2019 12:50:21 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hNjcy-0007kq-Cs; Mon, 06 May 2019 16:50:20 -0300
+Date:   Mon, 6 May 2019 16:50:20 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v15 13/17] IB, arm64: untag user pointers in
+ ib_uverbs_(re)reg_mr()
+Message-ID: <20190506195020.GD6201@ziepe.ca>
+References: <cover.1557160186.git.andreyknvl@google.com>
+ <66d044ab9445dcf36a96205a109458ac23f38b73.1557160186.git.andreyknvl@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJvTdKnZhyk_aWjQP_dtnNjvV75MvXBEmXUjH=K0hu2Kb77pYQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <66d044ab9445dcf36a96205a109458ac23f38b73.1557160186.git.andreyknvl@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Len Brown <lenb@kernel.org> wrote:
-
-> On Mon, May 6, 2019 at 7:48 AM Ingo Molnar <mingo@kernel.org> wrote:
+On Mon, May 06, 2019 at 06:30:59PM +0200, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow to
+> pass tagged user pointers (with the top byte set to something else other
+> than 0x00) as syscall arguments.
 > 
-> > > -     unsigned int pkgid = topology_logical_package_id(cpu);
-> > > +     unsigned int pkgid = topology_logical_die_id(cpu);
+> ib_uverbs_(re)reg_mr() use provided user pointers for vma lookups (through
+> e.g. mlx4_get_umem_mr()), which can only by done with untagged pointers.
 > 
-> > There's many such instances left in this series, please review the whole
-> > patchset for such problems.
+> Untag user pointers in these functions.
 > 
-> I agree, the legacy names make the code read as if it were a bug, even
-> when it is correct.
-> I'll refresh the series with some re-names to make the end result ready clearly.
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>  drivers/infiniband/core/uverbs_cmd.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Thanks a lot!
+I think this is OK.. We should really get it tested though.. Leon?
 
-	Ingo
+Jason
