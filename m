@@ -2,100 +2,94 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2F5C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0CCC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EAA420830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90822082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:47:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ehWHs0Fv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbfEFGpk (ORCPT
+        id S1726156AbfEFGr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 02:45:40 -0400
-Received: from mga03.intel.com ([134.134.136.65]:14674 "EHLO mga03.intel.com"
+        Mon, 6 May 2019 02:47:58 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:6640 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725813AbfEFGpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 02:45:40 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 May 2019 23:45:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,437,1549958400"; 
-   d="scan'208";a="171109728"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 05 May 2019 23:45:34 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 06 May 2019 09:45:34 +0300
-Date:   Mon, 6 May 2019 09:45:34 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Furquan Shaikh <furquan@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>, mh@mike.franken.de,
-        Lukas Wunner <lukas@wunner.de>, Takashi Iwai <tiwai@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>, ckellner@redhat.com,
-        Jiri Slaby <jslaby@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Robert Moore <robert.moore@intel.com>
-Subject: Re: [REGRESSION 5.0.8] Dell thunderbolt dock broken (xhci_hcd and
- thunderbolt)
-Message-ID: <20190506064534.GG2895@lahna.fi.intel.com>
-References: <s5hsgu0ihyg.wl-tiwai@suse.de>
- <EksOpJxc6GB@mike.franken.de>
- <20190430090021.GF26516@lahna.fi.intel.com>
- <CAJZ5v0j_fYqtMv07C-V_9fCJ6=1ec3GjvT2M7PXVNSbZpoM67Q@mail.gmail.com>
- <20190502114839.GC24696@kroah.com>
- <CAEGmHFFGpUmK1VitkUxqXL29dBrKwbceT0pEOeR_7+_4+eLzvA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEGmHFFGpUmK1VitkUxqXL29dBrKwbceT0pEOeR_7+_4+eLzvA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        id S1725813AbfEFGr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 02:47:57 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44yCwl3zzfz9tyfk;
+        Mon,  6 May 2019 08:47:51 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=ehWHs0Fv; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id L6RKIRyhBNiy; Mon,  6 May 2019 08:47:51 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44yCwl2w1gz9tyfj;
+        Mon,  6 May 2019 08:47:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1557125271; bh=igwDhWLswk58Ekrh/smeT3jyFCd7faNWM1HhbOhpVEU=;
+        h=From:Subject:To:Cc:Date:From;
+        b=ehWHs0Fv4Nt5isF2Jzpfy9wn0WCyCmMMkP7UK4T+/hT1wRMz9s1jOD9OH+fFzN1GF
+         ATdDRQmWTPGYLoBknw/ehsGHlhCm0ELguMd6WlRocytOZDslw9YXl3Sd560xhSTwHs
+         bE3vUQLem7bS0y5PqopTtkoDbIGIFaNuZYrPTpMQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D50678B824;
+        Mon,  6 May 2019 08:47:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Q5XfMSvK9bY9; Mon,  6 May 2019 08:47:55 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.6])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9E78E8B74F;
+        Mon,  6 May 2019 08:47:55 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 9D7716728F; Mon,  6 May 2019 06:47:55 +0000 (UTC)
+Message-Id: <c37bcf93f1e661ba2a5ee69d67786d9ae6520ccd.1557125247.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/mm: fix redundant inclusion of pgtable-frag.o in
+ Makefile
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon,  6 May 2019 06:47:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 04:35:02PM -0700, Furquan Shaikh wrote:
-> Thanks for reporting the issue and apologize for the breakage. When I
-> pushed the patch, my understanding was that the device drivers do not
-> depend on stale GPE events to take any action.
-> 
-> I am curious to understand the behavior for the thunderbolt device
-> since I do not have one to test with. The failure seems to be a result
-> of either having a edge-triggered interrupt or a pulse interrupt which
-> indicates some kind of ready condition to the kernel driver. All the
-> runtime GPEs seem to be initialized as part of acpi_init before ACPI
-> bus is scanned. So, is this some special kind of requirement for
-> thunderbolt that requires GPE enabled before the device can actually
-> be probed. And so the GPEs going active before being enabled are then
-> used as a way to call into ACPI Method to enable something which is
-> essential for probing of device?
+The patch identified below added pgtable-frag.o to obj-y
+but some merge witchery kept it also for obj-CONFIG_PPC_BOOK3S_64
 
-IIRC the idea is that when you boot with a TBT device connected (this is
-only for the BIOS assisted/ACPI enumeration mode) the Thunderbolt host
-router (the device with PCIe switch + xHCI + NHI) is configured in two
-phases. The basic configuration is done in the ASL code that then waits
-for a synchronization event (signal) from the SMI hotplug handler that
-allows it to continue. The GPE which can be either edge or level is then
-used to call the SMI hotplug handler to initialize the host router and
-its resources properly.
+This patch clears the duplication.
 
-If this is not done the PCI stack finds the host router half-configured
-causing the failure.
+Fixes: 737b434d3d55 ("powerpc/mm: convert Book3E 64 to pte_fragment")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/mm/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
 
-> The other question I have is given that handling of GPE events that
-> were active before being enabled is required at least for some set of
-> devices (e.g. thunderbolt), what is a good way to solve the original
-> problem that was being addressed by the patch being reverted i.e.
-> stale events resulting in spurious wakes on wakeup GPEs. One way I can
-> think of is clearing the status of GPEs when they are setup for
-> wake(acpi_setup_gpe_for_wake). What do you think?
+diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
+index 7a7527116c3a..0f499db315d6 100644
+--- a/arch/powerpc/mm/Makefile
++++ b/arch/powerpc/mm/Makefile
+@@ -12,7 +12,6 @@ obj-y				:= fault.o mem.o pgtable.o mmap.o \
+ obj-$(CONFIG_PPC_MMU_NOHASH)	+= nohash/
+ obj-$(CONFIG_PPC_BOOK3S_32)	+= book3s32/
+ obj-$(CONFIG_PPC_BOOK3S_64)	+= book3s64/
+-obj-$(CONFIG_PPC_BOOK3S_64)	+= pgtable-frag.o
+ obj-$(CONFIG_NEED_MULTIPLE_NODES) += numa.o
+ obj-$(CONFIG_PPC_MM_SLICES)	+= slice.o
+ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+-- 
+2.13.3
 
-Sounds good to me.
