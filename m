@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B784C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B221C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8F4214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CDFB21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153734;
-	bh=cn+2FD0hR4u+vhdiujClravFnuCzalJNM2MzRT4xiNE=;
+	s=default; t=1557153737;
+	bh=HxP6j9eOxPuAu3PNxMhnaWz0ZlCmBnUYcwZkays1naA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LJtQfpBx7aoBNU+UhWMK9K9FMhEPAbRG9qUcyWDeNU49QY7V9rgD29+LIWXJQXkP7
-	 /z/NjE2yKNzYwrzlYRLwk/c4Oe3fVAlWwapj/iwQfUXJ8cEUEgQ9I9k/iMtxdHgkWu
-	 dxs7B9XbbJeOZdxBqrRoeWx3w7sGZZunANIjpgxM=
+	b=EUAeRZOZA50NFszE5YSZ8QekAMwd2aN52o0VTNJhsIjGBD9ts+cyASSND0Rn04Ad0
+	 nP5giob+/kQrbC3jg+//F7su/l/DtlcGO3QZY0XWWq9e3dRWk8gdkHfky/ZetWn0Fq
+	 6eR1wumsjYmWS5XjoPFm3dgt+xXGQIcB/ZFediN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbfEFOmM (ORCPT
+        id S1728443AbfEFOmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:42:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36792 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727642AbfEFOmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:42:10 -0400
+        id S1728425AbfEFOmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D02FF21479;
-        Mon,  6 May 2019 14:42:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 853E7214AE;
+        Mon,  6 May 2019 14:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153729;
-        bh=cn+2FD0hR4u+vhdiujClravFnuCzalJNM2MzRT4xiNE=;
+        s=default; t=1557153731;
+        bh=HxP6j9eOxPuAu3PNxMhnaWz0ZlCmBnUYcwZkays1naA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QlONo4od21gvQTjUFB+6jBdV/aoQ9kwcGGL1z3YU7png5bkevGPeT1KG752PnlrJM
-         CVcSAZf/83lmgn1NRLJhjBEUR36CbOGq9uSGelv50UtTnFqtGCgjKEncC1kCa5aU49
-         zvyFtxRC1bdMKLfPkJKO1wQZ6dmF5gCxdOHDy/nQ=
+        b=u7JkXTvhTDoqMFDLENcnSNL6mQ2UxZdiV3SzDJMqQwIngTlkB9iTQ8Quc40Ldmm7g
+         8mWUZxxybjH7iCJBhKuN9V/hd4ugp30/8qG+kkTe+GoRzvTmgOgh+Jwl78nQO68eG9
+         0kj9+dQskPg1kJcoofj+lZ1PLiREVpqtE+zU0Zq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 75/99] staging: iio: adt7316: fix the dac read calculation
-Date:   Mon,  6 May 2019 16:32:48 +0200
-Message-Id: <20190506143100.921216815@linuxfoundation.org>
+Subject: [PATCH 4.19 76/99] staging: iio: adt7316: fix the dac write calculation
+Date:   Mon,  6 May 2019 16:32:49 +0200
+Message-Id: <20190506143101.024824746@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,13 +61,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jeremy Fertic <jeremyfertic@gmail.com>
 
-commit 45130fb030aec26ac28b4bb23344901df3ec3b7f upstream.
+commit 78accaea117c1ae878774974fab91ac4a0b0e2b0 upstream.
 
-The calculation of the current dac value is using the wrong bits of the
-dac lsb register. Create two macros to shift the lsb register value into
-lsb position, depending on whether the dac is 10 or 12 bit. Initialize
-data to 0 so, with an 8 bit dac, the msb register value can be bitwise
-ORed with data.
+The lsb calculation is not masking the correct bits from the user input.
+Subtract 1 from (1 << offset) to correctly set up the mask to be applied
+to user input.
+
+The lsb register stores its value starting at the bit 7 position.
+adt7316_store_DAC() currently assumes the value is at the other end of the
+register. Shift the lsb value before storing it in a new variable lsb_reg,
+and write this variable to the lsb register.
 
 Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
 Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
@@ -75,41 +78,35 @@ Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/iio/addac/adt7316.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/staging/iio/addac/adt7316.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 --- a/drivers/staging/iio/addac/adt7316.c
 +++ b/drivers/staging/iio/addac/adt7316.c
-@@ -47,6 +47,8 @@
- #define ADT7516_MSB_AIN3		0xA
- #define ADT7516_MSB_AIN4		0xB
- #define ADT7316_DA_DATA_BASE		0x10
-+#define ADT7316_DA_10_BIT_LSB_SHIFT	6
-+#define ADT7316_DA_12_BIT_LSB_SHIFT	4
- #define ADT7316_DA_MSB_DATA_REGS	4
- #define ADT7316_LSB_DAC_A		0x10
- #define ADT7316_MSB_DAC_A		0x11
-@@ -1408,7 +1410,7 @@ static IIO_DEVICE_ATTR(ex_analog_temp_of
- static ssize_t adt7316_show_DAC(struct adt7316_chip_info *chip,
- 		int channel, char *buf)
+@@ -1447,7 +1447,7 @@ static ssize_t adt7316_show_DAC(struct a
+ static ssize_t adt7316_store_DAC(struct adt7316_chip_info *chip,
+ 		int channel, const char *buf, size_t len)
  {
--	u16 data;
-+	u16 data = 0;
- 	u8 msb, lsb, offset;
+-	u8 msb, lsb, offset;
++	u8 msb, lsb, lsb_reg, offset;
+ 	u16 data;
  	int ret;
  
-@@ -1433,7 +1435,11 @@ static ssize_t adt7316_show_DAC(struct a
- 	if (ret)
- 		return -EIO;
+@@ -1465,9 +1465,13 @@ static ssize_t adt7316_store_DAC(struct
+ 		return -EINVAL;
  
--	data = (msb << offset) + (lsb & ((1 << offset) - 1));
-+	if (chip->dac_bits == 12)
-+		data = lsb >> ADT7316_DA_12_BIT_LSB_SHIFT;
-+	else if (chip->dac_bits == 10)
-+		data = lsb >> ADT7316_DA_10_BIT_LSB_SHIFT;
-+	data |= msb << offset;
- 
- 	return sprintf(buf, "%d\n", data);
- }
+ 	if (chip->dac_bits > 8) {
+-		lsb = data & (1 << offset);
++		lsb = data & ((1 << offset) - 1);
++		if (chip->dac_bits == 12)
++			lsb_reg = lsb << ADT7316_DA_12_BIT_LSB_SHIFT;
++		else
++			lsb_reg = lsb << ADT7316_DA_10_BIT_LSB_SHIFT;
+ 		ret = chip->bus.write(chip->bus.client,
+-			ADT7316_DA_DATA_BASE + channel * 2, lsb);
++			ADT7316_DA_DATA_BASE + channel * 2, lsb_reg);
+ 		if (ret)
+ 			return -EIO;
+ 	}
 
 
