@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64624C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DF5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 362B9205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC16F2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154058;
-	bh=DosLYsdqqwnMkYfm9X+s9Msj92hI9YNM9I/2sCXWpPs=;
+	s=default; t=1557154063;
+	bh=X/bvWcZjlXeIMLrwmuCEXq0NPlqn86uuGONRxZlPlzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2KAPwmkjm5UdcXAnvEwiB31pGfxKcUkRt7VZJqYrJlmqk5A4Mx2eV2wqLRlkWWONF
-	 yI1AH+liZBsrtfmEzEvsejgqwZxYY0IC8rGRHZY7giHj5JW4ps+Hw/eSgNgCj/OPmJ
-	 gUaB9snnrsw9k4exMOS2IVT+NuESdEhXSCxqI324=
+	b=C49JaMbpzF2HYh1zHVGFwsUqrQhdaVYEDndFhLI9lr+LOn5kUOSGdbwK2OnfxTl5D
+	 NucvqlGq7YInGJCF6qw5/OgJq3XrTNEiLF18e55gRGJHs7cjQwjJkzKnjZZnPSs6pU
+	 CHnTeFeIx2dWFcDfli9taejfvUiob6XrU2+mE+94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbfEFOrh (ORCPT
+        id S1729363AbfEFOrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46704 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:47:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728440AbfEFOr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:29 -0400
+        id S1728468AbfEFOrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03FCD2087F;
-        Mon,  6 May 2019 14:47:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F3662087F;
+        Mon,  6 May 2019 14:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154048;
-        bh=DosLYsdqqwnMkYfm9X+s9Msj92hI9YNM9I/2sCXWpPs=;
+        s=default; t=1557154059;
+        bh=X/bvWcZjlXeIMLrwmuCEXq0NPlqn86uuGONRxZlPlzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZVo2hrr2zwpZg0P0kBGUkkVHI+b156Idwx/bl1KZAmX93dyToc5zEORYzG9Y4dPxm
-         dZMkZW4yZPcd3aYaUGLtFsyPHQaBxMYylWQYbJ3G0AoYGggPefUVyswee2zlEmtVo6
-         HZsX/wJF0KmUva2uddeMkbm4g20le2Va50nGCk/I=
+        b=LWCfcaBCAoxEhG3nMIIwfsRJh3EKmYj3WnvQNTbHLe6E+xfkiR1o6LNBORBHlSA7o
+         E3RFXwlAX1RVf0gxd8156FWMlXBCFfoPzYP6/u9+V6I1CUhv7tetnsrGlkcJlONmlO
+         zaRcOItPppVqaDXKT94RaIjPLhTXk0hxeGdJkJyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 4.9 19/62] arm64: mm: print out correct page table entries
-Date:   Mon,  6 May 2019 16:32:50 +0200
-Message-Id: <20190506143052.725394517@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 22/62] USB: yurex: Fix protection fault after device removal
+Date:   Mon,  6 May 2019 16:32:53 +0200
+Message-Id: <20190506143052.974180184@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -61,134 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kristina Martsenko <kristina.martsenko@arm.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 67ce16ec15ce9d97d3d85e72beabbc5d7017193e upstream.
+commit ef61eb43ada6c1d6b94668f0f514e4c268093ff3 upstream.
 
-When we take a fault that can't be handled, we print out the page table
-entries associated with the faulting address. In some cases we currently
-print out the wrong entries. For a faulting TTBR1 address, we sometimes
-print out TTBR0 table entries instead, and for a faulting TTBR0 address
-we sometimes print out TTBR1 table entries. Fix this by choosing the
-tables based on the faulting address.
+The syzkaller USB fuzzer found a general-protection-fault bug in the
+yurex driver.  The fault occurs when a device has been unplugged; the
+driver's interrupt-URB handler logs an error message referring to the
+device by name, after the device has been unregistered and its name
+deallocated.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Kristina Martsenko <kristina.martsenko@arm.com>
-[will: zero-extend addrs to 64-bit, don't walk swapper w/ TTBR0 addr]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+This problem is caused by the fact that the interrupt URB isn't
+cancelled until the driver's private data structure is released, which
+can happen long after the device is gone.  The cure is to make sure
+that the interrupt URB is killed before yurex_disconnect() returns;
+this is exactly the sort of thing that usb_poison_urb() was meant for.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/system_misc.h |    2 -
- arch/arm64/mm/fault.c                |   36 ++++++++++++++++++++++++-----------
- 2 files changed, 26 insertions(+), 12 deletions(-)
+ drivers/usb/misc/yurex.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/include/asm/system_misc.h
-+++ b/arch/arm64/include/asm/system_misc.h
-@@ -40,7 +40,7 @@ void hook_debug_fault_code(int nr, int (
- 			   int sig, int code, const char *name);
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -324,6 +324,7 @@ static void yurex_disconnect(struct usb_
+ 	usb_deregister_dev(interface, &yurex_class);
  
- struct mm_struct;
--extern void show_pte(struct mm_struct *mm, unsigned long addr);
-+extern void show_pte(unsigned long addr);
- extern void __show_regs(struct pt_regs *);
- 
- extern void (*arm_pm_restart)(enum reboot_mode reboot_mode, const char *cmd);
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -79,18 +79,33 @@ static inline int notify_page_fault(stru
- #endif
- 
- /*
-- * Dump out the page tables associated with 'addr' in mm 'mm'.
-+ * Dump out the page tables associated with 'addr' in the currently active mm.
-  */
--void show_pte(struct mm_struct *mm, unsigned long addr)
-+void show_pte(unsigned long addr)
- {
-+	struct mm_struct *mm;
- 	pgd_t *pgd;
- 
--	if (!mm)
-+	if (addr < TASK_SIZE) {
-+		/* TTBR0 */
-+		mm = current->active_mm;
-+		if (mm == &init_mm) {
-+			pr_alert("[%016lx] user address but active_mm is swapper\n",
-+				 addr);
-+			return;
-+		}
-+	} else if (addr >= VA_START) {
-+		/* TTBR1 */
- 		mm = &init_mm;
-+	} else {
-+		pr_alert("[%016lx] address between user and kernel address ranges\n",
-+			 addr);
-+		return;
-+	}
- 
- 	pr_alert("pgd = %p\n", mm->pgd);
- 	pgd = pgd_offset(mm, addr);
--	pr_alert("[%08lx] *pgd=%016llx", addr, pgd_val(*pgd));
-+	pr_alert("[%016lx] *pgd=%016llx", addr, pgd_val(*pgd));
- 
- 	do {
- 		pud_t *pud;
-@@ -176,8 +191,8 @@ static bool is_el1_instruction_abort(uns
- /*
-  * The kernel tried to access some page that wasn't present.
-  */
--static void __do_kernel_fault(struct mm_struct *mm, unsigned long addr,
--			      unsigned int esr, struct pt_regs *regs)
-+static void __do_kernel_fault(unsigned long addr, unsigned int esr,
-+			      struct pt_regs *regs)
- {
- 	/*
- 	 * Are we prepared to handle this kernel fault?
-@@ -194,7 +209,7 @@ static void __do_kernel_fault(struct mm_
- 		 (addr < PAGE_SIZE) ? "NULL pointer dereference" :
- 		 "paging request", addr);
- 
--	show_pte(mm, addr);
-+	show_pte(addr);
- 	die("Oops", regs, esr);
- 	bust_spinlocks(0);
- 	do_exit(SIGKILL);
-@@ -216,7 +231,7 @@ static void __do_user_fault(struct task_
- 		pr_info("%s[%d]: unhandled %s (%d) at 0x%08lx, esr 0x%03x\n",
- 			tsk->comm, task_pid_nr(tsk), inf->name, sig,
- 			addr, esr);
--		show_pte(tsk->mm, addr);
-+		show_pte(addr);
- 		show_regs(regs);
- 	}
- 
-@@ -232,7 +247,6 @@ static void __do_user_fault(struct task_
- static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *regs)
- {
- 	struct task_struct *tsk = current;
--	struct mm_struct *mm = tsk->active_mm;
- 	const struct fault_info *inf;
- 
- 	/*
-@@ -243,7 +257,7 @@ static void do_bad_area(unsigned long ad
- 		inf = esr_to_fault_info(esr);
- 		__do_user_fault(tsk, addr, esr, inf->sig, inf->code, regs);
- 	} else
--		__do_kernel_fault(mm, addr, esr, regs);
-+		__do_kernel_fault(addr, esr, regs);
- }
- 
- #define VM_FAULT_BADMAP		0x010000
-@@ -454,7 +468,7 @@ retry:
- 	return 0;
- 
- no_context:
--	__do_kernel_fault(mm, addr, esr, regs);
-+	__do_kernel_fault(addr, esr, regs);
- 	return 0;
- }
- 
+ 	/* prevent more I/O from starting */
++	usb_poison_urb(dev->urb);
+ 	mutex_lock(&dev->io_mutex);
+ 	dev->interface = NULL;
+ 	mutex_unlock(&dev->io_mutex);
 
 
