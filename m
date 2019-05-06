@@ -2,105 +2,238 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED17C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 142E7C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE7320830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D9D20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QZmNCGD8"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ccyfvfXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbfEFMFb (ORCPT
+        id S1726190AbfEFMIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 08:05:31 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33685 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfEFMFa (ORCPT
+        Mon, 6 May 2019 08:08:04 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:17731 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfEFMID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 08:05:30 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y3so6284019plp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 05:05:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=OlDYrQagoRRgIUanTTiaH0xI7ydpH4Phsvkhb6Hldvk=;
-        b=QZmNCGD8utu44MaRa3SN0Q0GcNmFA99KuHhZxTOd2VZMnVKc59yjcdQ/pRtA57LPED
-         tnD9fTyyuHB439p746gDr0wxz8EYTiLTZyxVPqEqRVXl0aJttq/xKBHLPNGsJI94+UTw
-         oRNDEWKsskTZyOpdFjppaLtL/JmS/Suj2k7T9nGi1PBfbDv3eKtg7vQ9JLDXK8qwmFxn
-         tlC5BvDMHGqYwksGbUV9PT6PFNgD3ag1yScw2DFJHR+QLPcEgaj/9/PZ9r3gugaKhoi6
-         j7jgIZJPDbotWYsn3ZwlWCyxp2A96hsPxfVvqg0zGFR0QFOTc77kRJb/TL5X7ASQDUl+
-         eRpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=OlDYrQagoRRgIUanTTiaH0xI7ydpH4Phsvkhb6Hldvk=;
-        b=Syt/qYKaV5IehZMFZs91lAagVODBOQOfgLT6k+NHvWLwPbM2x+wZtu7P7i3SvKsJSV
-         q7w80XTNNJ2y0Igu+5QuTqHUyUmCaSxWZ8gjUVbN3bGAdWGHkh4ZxYwwP4wRGJPmCVBb
-         TthZdwT57UoBi+EePm+dJDt7HXUyeyYwM6Pvr28dBIsRUIw4/FMQznWuAxklpV4xYa3q
-         ltgHyluXNStJtOQs1cRUoEFhqtJlFylTABUuonw+pqvAN6xSAsR4rTLFu0RWt13na/Qp
-         8sE+neVTOPjwhE7+kspEq3OYfiojOD5GIB6lqWJb4IMgFrs8toUJdMiPpgkAKKwOBkEt
-         kNoA==
-X-Gm-Message-State: APjAAAXJF0dOHVOlWXcq9Tnou3HbEr6XFVVrBJoUQ1AjPo8gUrSg7+c4
-        hKgXES2nIrEyAQuyQbALIFxM
-X-Google-Smtp-Source: APXvYqxAN92qtTThzTYGnaJj3GjkLg+pVGzJHyzT5l3HLI6BdbkS+ocPCrKkEwXf1Pjbn44N2iNjcg==
-X-Received: by 2002:a17:902:183:: with SMTP id b3mr31792924plb.267.1557144330073;
-        Mon, 06 May 2019 05:05:30 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:611b:55a4:e119:3b84:2d86:5b07])
-        by smtp.gmail.com with ESMTPSA id q17sm26482318pfi.185.2019.05.06.05.05.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 05:05:29 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     heiko@sntech.de
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ezequiel@collabora.com, tom@vamrs.com, dev@vamrs.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 2/2] arm64: dts: rockchip: Enable SPI1 on Ficus
-Date:   Mon,  6 May 2019 17:34:58 +0530
-Message-Id: <20190506120458.25842-2-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190506120458.25842-1-manivannan.sadhasivam@linaro.org>
-References: <20190506120458.25842-1-manivannan.sadhasivam@linaro.org>
+        Mon, 6 May 2019 08:08:03 -0400
+X-Greylist: delayed 35296 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 May 2019 08:08:01 EDT
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x46C7rhM000674;
+        Mon, 6 May 2019 21:07:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x46C7rhM000674
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557144474;
+        bh=h56McuLhI6nc4Saug3GmC8OGRtsjQtrIJHBkjGjXFuc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ccyfvfXd4Y+bvXMreZmZn5Kgd5ZubYBEJlL3ESlc0ytBY58/HW+sLtgtkkiGPzubA
+         PBSolkZuynCHCse3pcSQUWLtoxfypo3X2G9lFL0YCa+9cOyOFFr8Z/y0jLE/91IM54
+         qrYVnqKZlLfRjkQ7RjAJod9JcKLG9CKAt4SRV2+dbQ8nBcXVRJj1BUJEwFvv7M+jEd
+         86aA0jy5lzpJPXEfuUwnWX2B63Pa7jShxOWBUYULKlPt0hNuIANmp8kbd41KBDivCO
+         I0Y8YWNKjgySwCnHLAvNfs/WfKuKT4uNxyS6DhfqDyybH7CZGec7+51fPLo1sqywY8
+         6n6qOuQyyD65A==
+X-Nifty-SrcIP: [209.85.222.53]
+Received: by mail-ua1-f53.google.com with SMTP id l17so4544174uar.4;
+        Mon, 06 May 2019 05:07:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAVnB2l+tbREyucbFnckMY4q3SQ3wC1UzuH2/09SMTEAWWNwawje
+        sPRszoUmfpU26Lyi5gKEXkUGmMQ9hgCViKz3vwQ=
+X-Google-Smtp-Source: APXvYqxBJq1DLxJZ7TPjTm97VhmF4y3b7Tz0dM50BTxVHb4OvPNDRJsTGoSV8f04wzgtuU22+FpWG3iDqv9gKTYemGY=
+X-Received: by 2002:ab0:2bd8:: with SMTP id s24mr12566251uar.121.1557144472913;
+ Mon, 06 May 2019 05:07:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190506094609.08e930f2@canb.auug.org.au> <CAK7LNASH4CuVBjfEJsT+aBx4aLrj9j2=aOD3B4f9+Tdcm=x2pg@mail.gmail.com>
+ <20190506033151.GB2649@windriver.com>
+In-Reply-To: <20190506033151.GB2649@windriver.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 6 May 2019 21:07:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS=D96B_OgnRu-NK0-G+y8itvhe3qvwfYxZUCSqdC0gEA@mail.gmail.com>
+Message-ID: <CAK7LNAS=D96B_OgnRu-NK0-G+y8itvhe3qvwfYxZUCSqdC0gEA@mail.gmail.com>
+Subject: Re: Fwd: linux-next: build failure after merge of the kbuild tree
+To:     Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable SPI1 exposed on both Low and High speed expansion connectors
-of Ficus. SPI1 has 3 different chip selects wired as below:
+Hi Paul,
 
-CS0 - Serial Flash (unpopulated)
-CS1 - Low Speed expansion
-CS2 - High Speed expansion
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Mon, May 6, 2019 at 12:34 PM Paul Gortmaker
+<paul.gortmaker@windriver.com> wrote:
+>
+> [Fwd: linux-next: build failure after merge of the kbuild tree] On 06/05/2019 (Mon 11:19) Masahiro Yamada wrote:
+>
+> > Hi Paul,
+> >
+> > In today's linux-next build testing,
+> > more "make ... explicitly non-modular"
+> > candidates showed up.
+> >
+>
+> Hi Masahiro,
+>
+> I am not 100% clear on what you are asking me.  There are lots and lots
+> of these in the kernel.... many fixed, and many remain unfortunately.
+>
+> > arch/arm/plat-omap/dma.c
+> > drivers/clocksource/timer-ti-dm.c
+> > drivers/mfd/omap-usb-host.c
+> > drivers/mfd/omap-usb-tll.c
+>
+> None of these are "new".  I just checked, and I have had patches for all
+> these for a long time, in my personal queue, found by my audits.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-index 027d428917b8..9baa378fc770 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
-@@ -146,6 +146,12 @@
- 	};
- };
- 
-+&spi1 {
-+	/* On both Low speed and High speed expansion */
-+	cs-gpios = <0>, <&gpio4 6 0>, <&gpio4 7 0>;
-+	status = "okay";
-+};
-+
- &usbdrd_dwc3_0 {
- 	dr_mode = "host";
- };
+
+OK, I saw many patches from you
+addressing this issue,
+so I just thought you might be motivated to
+fix them.
+
+Anyway, I have a reason to fix them
+because a patch in my tree is causing build errors.
+
+So, I will do something for them
+if you do not have a plan to send patches soon.
+
+Thanks.
+
+
+
+> > Would you send patches?
+>
+> It isn't that simple.  I wish it was.  Some subsystem maintainers are
+> glad to take the patches, and some think they are a waste of time and
+> reject them immediately.  Some I've sent just simply get "crickets".
+>
+> What that means is, that I need to look at each maintainer's
+> requirements, and ensure the patch and commit log are matching
+> expectatins - I will not just spam out hundreds of patches across all
+> subsystems.  Anyone who has spent considerable time in linux development
+> knows that is a recipe for failure.
+>
+> So I need to work across each subsystem - one at a time, with their
+> individual maintainer requirements in mind, and if you look at git
+> history, you will see that has been what I've tried to do when I had
+> free time to work on fixing these across the whole linux tree.
+>
+> But fortunately, none of these represent a CVE/security issue, so I've
+> never had a reason to try and pretend there was any reason for an
+> immediate fix/merge - they just represent a better attention to detail
+> in the code we merge and support that I'd like to see happen tree-wide.
+>
+> I appreciate that you are also interested in seeing all these fixed, and
+> I also wish they could all be solved in one version, but unfortunately I
+> don't think that is pragmatic.  So in the meantime, I will continue to
+> chip away at things when we are early in the dev cycle and not starting
+> the two week merge window, as we are just now.
+>
+> Thanks,
+> Paul.
+> --
+>
+> >
+> > I think EXPORT_SYMBOL_GPL() in omap-usb-tll.c
+> > are also unnecessary.
+> >
+> > Thanks.
+> >
+> >
+> >
+> > ---------- Forwarded message ---------
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Mon, May 6, 2019 at 8:51 AM
+> > Subject: linux-next: build failure after merge of the kbuild tree
+> > To: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Cc: Linux Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel
+> > Mailing List <linux-kernel@vger.kernel.org>, Alexey Gladkov
+> > <gladkov.alexey@gmail.com>, Keshava Munegowda <keshava_mgowda@ti.com>,
+> > Samuel Ortiz <sameo@linux.intel.com>
+> >
+> >
+> > Hi Masahiro,
+> >
+> > After merging the kbuild tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> >
+> > In file included from include/linux/module.h:18,
+> >                  from drivers/mfd/omap-usb-tll.c:21:
+> > drivers/mfd/omap-usb-tll.c:462:26: error: expected ',' or ';' before
+> > 'USBHS_DRIVER_NAME'
+> >  MODULE_ALIAS("platform:" USBHS_DRIVER_NAME);
+> >                           ^~~~~~~~~~~~~~~~~
+> > include/linux/moduleparam.h:26:47: note: in definition of macro '__MODULE_INFO'
+> >    = __MODULE_INFO_PREFIX __stringify(tag) "=" info
+> >                                                ^~~~
+> > include/linux/module.h:164:30: note: in expansion of macro 'MODULE_INFO'
+> >  #define MODULE_ALIAS(_alias) MODULE_INFO(alias, _alias)
+> >                               ^~~~~~~~~~~
+> > drivers/mfd/omap-usb-tll.c:462:1: note: in expansion of macro 'MODULE_ALIAS'
+> >  MODULE_ALIAS("platform:" USBHS_DRIVER_NAME);
+> >  ^~~~~~~~~~~~
+> >
+> > Caused by commit
+> >
+> >   6a26793a7891 ("moduleparam: Save information about built-in modules
+> > in separate file")
+> >
+> > USBHS_DRIVER_NAME is not defined and this kbuild tree change has
+> > exposed it. It has been this way since commit
+> >
+> >   16fa3dc75c22 ("mfd: omap-usb-tll: HOST TLL platform driver")
+> >
+> > From v3.7-rc1 in 2012.
+> >
+> > I have applied the following patch for today.
+> >
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Mon, 6 May 2019 09:39:14 +1000
+> > Subject: [PATCH] mfd: omap: remove unused MODULE_ALIAS from omap-usb-tll.c
+> >
+> > USBHS_DRIVER_NAME has never been defined, so this cannot have ever
+> > been used.
+> >
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/mfd/omap-usb-tll.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/mfd/omap-usb-tll.c b/drivers/mfd/omap-usb-tll.c
+> > index 446713dbee27..1cc8937e8bec 100644
+> > --- a/drivers/mfd/omap-usb-tll.c
+> > +++ b/drivers/mfd/omap-usb-tll.c
+> > @@ -459,7 +459,7 @@ EXPORT_SYMBOL_GPL(omap_tll_disable);
+> >
+> >  MODULE_AUTHOR("Keshava Munegowda <keshava_mgowda@ti.com>");
+> >  MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
+> > -MODULE_ALIAS("platform:" USBHS_DRIVER_NAME);
+> > +// MODULE_ALIAS("platform:" USBHS_DRIVER_NAME);
+> >  MODULE_LICENSE("GPL v2");
+> >  MODULE_DESCRIPTION("usb tll driver for TI OMAP EHCI and OHCI controllers");
+> >
+> > --
+> > 2.20.1
+> >
+> > --
+> > Cheers,
+> > Stephen Rothwell
+> >
+> >
+> > --
+> > Best Regards
+> > Masahiro Yamada
+>
+>
+
+
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
