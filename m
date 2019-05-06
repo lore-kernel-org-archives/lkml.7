@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B88C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB57C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5788E2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9732053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155020;
-	bh=LOD1V+6gL9WXMN4zviTvrNZvb9jMmiuHBYDaYzfhRek=;
+	s=default; t=1557155025;
+	bh=JjMQHWf7en1JnPMl25Brc/ONJrEvJ0JAbONFCKfVaBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e6dvldqLGAwNAxQ2ERMSPAHsBjLw4J+06OjKXEUg8ov8A7xfpXUArr5JdFIeJzWt+
-	 3v3ZPMUB8JT3+WhtZuQQB0TP9GHesdjPFqYHmKTqvxhgCpxK4euTVJqPKGmCYmsadP
-	 f7OVD8QrAoIOwkdbiLjyVGHEr8J4D4q9jNt6sJfE=
+	b=H3OQELKCS85ijpLscJyK6RrvfZUy/O69lNndqHpoQW9LWFi3k6SwWaJlAMXPJzqTq
+	 64Wxu/PBdvi5qbilcze0H0JUVFNDW4xkXhDBZ5kFg0/26FFiMqYH4L2BXCmGam06+a
+	 u1iu86ysArN8S7tbT5R+UncSnyCzS2MFwudcLg/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfEFPDj (ORCPT
+        id S1727840AbfEFOjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:03:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60892 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:39:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbfEFOjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:39:33 -0400
+        id S1727269AbfEFOj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:39:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D2B420449;
-        Mon,  6 May 2019 14:39:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16D4B20449;
+        Mon,  6 May 2019 14:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153572;
-        bh=LOD1V+6gL9WXMN4zviTvrNZvb9jMmiuHBYDaYzfhRek=;
+        s=default; t=1557153567;
+        bh=JjMQHWf7en1JnPMl25Brc/ONJrEvJ0JAbONFCKfVaBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iKe/uUfMvchltE1WK3EfMFpKbKCG9q/poYt7wPd59nN9hAd5bLwehScCAZFkyHeEI
-         D+Iy8VvlspI8BRybzNt/gRTO0v1UnCWgIIivmoYaNB14MVWvGexI5H1lM+Bpd+UODD
-         9hR6avPTnZ+sDMLhg7MGJ0aGxP2knzCidtC5zB0w=
+        b=cs69r2no0cBGDMuysKcEeHQAPk0ay2F5OvLSuda7xOlGHRFkYHycRpe+XL0k6pZ/y
+         xxzO52zjF3amFZZwlTvwg4EUcJwRx/9Po9IFmiUfLDOnPmXKaiq/6Dhq7eXd/lPh7O
+         08IxZqylUfMZK6yTekg0KQujgtOw9e37KEBAkA5k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 17/99] USB: core: Fix unterminated string returned by usb_string()
-Date:   Mon,  6 May 2019 16:31:50 +0200
-Message-Id: <20190506143055.445051058@linuxfoundation.org>
+        syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 15/99] USB: dummy-hcd: Fix failure to give back unlinked URBs
+Date:   Mon,  6 May 2019 16:31:48 +0200
+Message-Id: <20190506143055.255269547@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,47 +61,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alan Stern <stern@rowland.harvard.edu>
 
-commit c01c348ecdc66085e44912c97368809612231520 upstream.
+commit fc834e607ae3d18e1a20bca3f9a2d7f52ea7a2be upstream.
 
-Some drivers (such as the vub300 MMC driver) expect usb_string() to
-return a properly NUL-terminated string, even when an error occurs.
-(In fact, vub300's probe routine doesn't bother to check the return
-code from usb_string().)  When the driver goes on to use an
-unterminated string, it leads to kernel errors such as
-stack-out-of-bounds, as found by the syzkaller USB fuzzer.
+The syzkaller USB fuzzer identified a failure mode in which dummy-hcd
+would never give back an unlinked URB.  This causes usb_kill_urb() to
+hang, leading to WARNINGs and unkillable threads.
 
-An out-of-range string index argument is not at all unlikely, given
-that some devices don't provide string descriptors and therefore list
-0 as the value for their string indexes.  This patch makes
-usb_string() return a properly terminated empty string along with the
--EINVAL error code when an out-of-range index is encountered.
+In dummy-hcd, all URBs are given back by the dummy_timer() routine as
+it scans through the list of pending URBS.  Failure to give back URBs
+can be caused by failure to start or early exit from the scanning
+loop.  The code currently has two such pathways: One is triggered when
+an unsupported bus transfer speed is encountered, and the other by
+exhausting the simulated bandwidth for USB transfers during a frame.
 
-And since a USB string index is a single-byte value, indexes >= 256
-are just as invalid as values of 0 or below.
+This patch removes those two paths, thereby allowing all unlinked URBs
+to be given back in a timely manner.  It adds a check for the bus
+speed when the gadget first starts running, so that dummy_timer() will
+never thereafter encounter an unsupported speed.  And it prevents the
+loop from exiting as soon as the total bandwidth has been used up (the
+scanning loop continues, giving back unlinked URBs as they are found,
+but not transferring any more data).
+
+Thanks to Andrey Konovalov for manually running the syzkaller fuzzer
+to help track down the source of the bug.
 
 Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com
 CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/message.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/udc/dummy_hcd.c |   19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -820,9 +820,11 @@ int usb_string(struct usb_device *dev, i
+--- a/drivers/usb/gadget/udc/dummy_hcd.c
++++ b/drivers/usb/gadget/udc/dummy_hcd.c
+@@ -979,8 +979,18 @@ static int dummy_udc_start(struct usb_ga
+ 	struct dummy_hcd	*dum_hcd = gadget_to_dummy_hcd(g);
+ 	struct dummy		*dum = dum_hcd->dum;
  
- 	if (dev->state == USB_STATE_SUSPENDED)
- 		return -EHOSTUNREACH;
--	if (size <= 0 || !buf || !index)
-+	if (size <= 0 || !buf)
+-	if (driver->max_speed == USB_SPEED_UNKNOWN)
++	switch (g->speed) {
++	/* All the speeds we support */
++	case USB_SPEED_LOW:
++	case USB_SPEED_FULL:
++	case USB_SPEED_HIGH:
++	case USB_SPEED_SUPER:
++		break;
++	default:
++		dev_err(dummy_dev(dum_hcd), "Unsupported driver max speed %d\n",
++				driver->max_speed);
  		return -EINVAL;
- 	buf[0] = 0;
-+	if (index <= 0 || index >= 256)
-+		return -EINVAL;
- 	tbuf = kmalloc(256, GFP_NOIO);
- 	if (!tbuf)
- 		return -ENOMEM;
++	}
+ 
+ 	/*
+ 	 * SLAVE side init ... the layer above hardware, which
+@@ -1784,9 +1794,10 @@ static void dummy_timer(struct timer_lis
+ 		/* Bus speed is 500000 bytes/ms, so use a little less */
+ 		total = 490000;
+ 		break;
+-	default:
++	default:	/* Can't happen */
+ 		dev_err(dummy_dev(dum_hcd), "bogus device speed\n");
+-		return;
++		total = 0;
++		break;
+ 	}
+ 
+ 	/* FIXME if HZ != 1000 this will probably misbehave ... */
+@@ -1828,7 +1839,7 @@ restart:
+ 
+ 		/* Used up this frame's bandwidth? */
+ 		if (total <= 0)
+-			break;
++			continue;
+ 
+ 		/* find the gadget's ep for this request (if configured) */
+ 		address = usb_pipeendpoint (urb->pipe);
 
 
