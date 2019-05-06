@@ -2,400 +2,155 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74749C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F8AC04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A0F2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4BF206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:45:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lC7Et1u9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfEFHme (ORCPT
+        id S1726321AbfEFHp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:42:34 -0400
-Received: from mga01.intel.com ([192.55.52.88]:3528 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbfEFHmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:42:33 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 00:42:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,437,1549958400"; 
-   d="asc'?scan'208";a="297412604"
-Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
-  by orsmga004.jf.intel.com with ESMTP; 06 May 2019 00:42:26 -0700
-Date:   Mon, 6 May 2019 15:41:58 +0800
-From:   Zhenyu Wang <zhenyuw@linux.intel.com>
-To:     "Zhao, Yan Y" <yan.y.zhao@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
-        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
-        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
-        changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, alex.williamson@redhat.com,
-        eskultet@redhat.com, dgilbert@redhat.com, cohuck@redhat.com,
-        kevin.tian@intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
-        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
-Subject: Re: [PATCH v2 2/2] drm/i915/gvt: export mdev device version to sysfs
- for Intel vGPU
-Message-ID: <20190506074158.GU12913@zhen-hp.sh.intel.com>
-Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
-References: <20190506014514.3555-1-yan.y.zhao@intel.com>
- <20190506015102.3691-1-yan.y.zhao@intel.com>
- <20190506032032.GP12913@zhen-hp.sh.intel.com>
+        Mon, 6 May 2019 03:45:27 -0400
+Received: from mail-eopbgr40056.outbound.protection.outlook.com ([40.107.4.56]:14247
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725917AbfEFHp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 03:45:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qq3dtTTogPg7jiLJB6fd+rGvKWzQRDNJAeQaDU14Y+M=;
+ b=lC7Et1u9pCWYxst17oo75e2E+GY6db0nrcLcR4oZrOHzDNJYa0YyuZ/fO0od9KGavtkGtNwwxuv7amd4eydxAT8WfmZRmqxJLRI5s87npyTotSl0lcgLGpAcuOjZvX8yoC4Z76Mdk2GLLOuB68lOGw6l27HsQunJkzyX2Aduca4=
+Received: from AM6PR04MB4357.eurprd04.prod.outlook.com (52.135.167.33) by
+ AM6PR04MB5414.eurprd04.prod.outlook.com (20.178.92.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Mon, 6 May 2019 07:44:44 +0000
+Received: from AM6PR04MB4357.eurprd04.prod.outlook.com
+ ([fe80::f062:7002:6318:780b]) by AM6PR04MB4357.eurprd04.prod.outlook.com
+ ([fe80::f062:7002:6318:780b%2]) with mapi id 15.20.1856.012; Mon, 6 May 2019
+ 07:44:44 +0000
+From:   Chuanhua Han <chuanhua.han@nxp.com>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "eha@deif.com" <eha@deif.com>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "peda@axentia.se" <peda@axentia.se>,
+        Sumit Batra <sumit.batra@nxp.com>
+Subject: RE: [EXT] Re: [PATCH 2/2] arm64: dts: fsl: ls1046a: Add the guts node
+ in dts
+Thread-Topic: [EXT] Re: [PATCH 2/2] arm64: dts: fsl: ls1046a: Add the guts
+ node in dts
+Thread-Index: AQHU/w+WdcCQP8nmx0uhj1EM4V4JRKZdwAKAgAAAiDA=
+Date:   Mon, 6 May 2019 07:44:43 +0000
+Message-ID: <AM6PR04MB4357FB81536B39AF58BAD79B97300@AM6PR04MB4357.eurprd04.prod.outlook.com>
+References: <20190430044719.30720-1-chuanhua.han@nxp.com>
+ <20190430044719.30720-2-chuanhua.han@nxp.com>
+ <20190506074106.eqa7xhktn2vlmtio@pengutronix.de>
+In-Reply-To: <20190506074106.eqa7xhktn2vlmtio@pengutronix.de>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=chuanhua.han@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b4d16648-90de-4bea-be00-08d6d1f6b487
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB5414;
+x-ms-traffictypediagnostic: AM6PR04MB5414:
+x-ms-exchange-purlcount: 1
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-microsoft-antispam-prvs: <AM6PR04MB54145219DA268BC346252E3497300@AM6PR04MB5414.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0029F17A3F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(366004)(39860400002)(396003)(13464003)(199004)(189003)(71200400001)(6916009)(102836004)(71190400001)(53936002)(86362001)(6436002)(6246003)(6506007)(45080400002)(53546011)(966005)(14454004)(478600001)(68736007)(54906003)(7696005)(33656002)(76176011)(99286004)(316002)(14444005)(25786009)(256004)(4326008)(66066001)(2906002)(66476007)(55016002)(486006)(9686003)(6306002)(66446008)(64756008)(66556008)(74316002)(11346002)(446003)(8936002)(8676002)(7416002)(44832011)(81156014)(81166006)(229853002)(76116006)(5660300002)(52536014)(3846002)(6116002)(476003)(26005)(186003)(7736002)(66946007)(73956011)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5414;H:AM6PR04MB4357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: EWqWdSQY47Lgg9DcFv6AVokHigDrbQu+QwWHRPS3SaVKmABxlwm3ZX1YqMj0QPXIOix+eQJLyv9mYXzMj6AYGZ9DBp93QJhwoh9ssciS4BHJ6D0aTMnXTuJTRg1K6T9SJP2kuxA/nOkr1tIpyaWkxkSRLJibVny9Tsl0NBCMmFmLemSOQKAXkSByGSC7R8siiY0mtPCOvCyl+HFMmqArhfoGBprAnZFRCed+bCTaIkOlmof9Ljpqs/e5p3T0ZJrdkyI9B3+bAgMcKVS3C7zfJUQ4D5J5nUOVUdaXFnTnWDmkNINvFEO1F2lEzbWiarCuku6xzwiUpkBAHHyEvVKUjzqnp3I+VZd+xD2yy7xUwf5kUZSEYYUwE1b6qIok0IkTAb+ySS4t/dZJMJxITNidmLLi+k2rrUDxfN7l4v+BisA=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="88pBQ1/6ie/nQzMF"
-Content-Disposition: inline
-In-Reply-To: <20190506032032.GP12913@zhen-hp.sh.intel.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4d16648-90de-4bea-be00-08d6d1f6b487
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 07:44:43.9948
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5414
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---88pBQ1/6ie/nQzMF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019.05.06 11:20:32 +0800, Zhenyu Wang wrote:
-> On 2019.05.05 21:51:02 -0400, Yan Zhao wrote:
-> > This feature implements the version attribute for Intel's vGPU mdev
-> > devices.
-> >=20
-> > version attribute is rw.
-> > It's used to check device compatibility for two mdev devices.
-> > version string format and length are private for vendor driver. vendor
-> > driver is able to define them freely.
-> >=20
-> > For Intel vGPU of gen8 and gen9, the mdev device version
-> > consists of 3 fields: "vendor id" + "device id" + "mdev type".
-> >=20
-> > Reading from a vGPU's version attribute, a string is returned in below
-> > format: <vendor id>-<device id>-<mdev type>. e.g.
-> > 8086-193b-i915-GVTg_V5_2.
-> >=20
-> > Writing a string to a vGPU's version attribute will trigger GVT to check
-> > whether a vGPU identified by the written string is compatible with
-> > current vGPU owning this version attribute. errno is returned if the two
-> > vGPUs are incompatible. The length of written string is returned in
-> > compatible case.
-> >=20
-> > For other platforms, and for GVT not supporting vGPU live migration
-> > feature, errnos are returned when read/write of mdev devices' version
-> > attributes.
-> >=20
-> > For old GVT versions where no version attributes exposed in sysfs, it is
-> > regarded as not supporting vGPU live migration.
-> >=20
-> > For future platforms, besides the current 2 fields in vendor proprietary
-> > part, more fields may be added to identify Intel vGPU well for live
-> > migration purpose.
-> >=20
-> > v2:
-> > 1. removed 32 common part of version string
-> > (Alex Williamson)
-> > 2. do not register version attribute for GVT not supporting live
-> > migration.(Cornelia Huck)
-> > 3. for platforms out of gen8, gen9, return -EINVAL --> -ENODEV for
-> > incompatible. (Cornelia Huck)
-> >=20
-> > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > Cc: Erik Skultety <eskultet@redhat.com>
-> > Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-> > Cc: Cornelia Huck <cohuck@redhat.com>
-> > Cc: "Tian, Kevin" <kevin.tian@intel.com>
-> > Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> > Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
-> > c: Neo Jia <cjia@nvidia.com>
-> > Cc: Kirti Wankhede <kwankhede@nvidia.com>
-> >=20
-> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > ---
-> >  drivers/gpu/drm/i915/gvt/Makefile         |  2 +-
-> >  drivers/gpu/drm/i915/gvt/device_version.c | 87 +++++++++++++++++++++++
-> >  drivers/gpu/drm/i915/gvt/gvt.c            | 51 +++++++++++++
-> >  drivers/gpu/drm/i915/gvt/gvt.h            |  6 ++
-> >  4 files changed, 145 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/gpu/drm/i915/gvt/device_version.c
-> >=20
-> > diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/g=
-vt/Makefile
-> > index 271fb46d4dd0..54e209a23899 100644
-> > --- a/drivers/gpu/drm/i915/gvt/Makefile
-> > +++ b/drivers/gpu/drm/i915/gvt/Makefile
-> > @@ -3,7 +3,7 @@ GVT_DIR :=3D gvt
-> >  GVT_SOURCE :=3D gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o f=
-irmware.o \
-> >  	interrupt.o gtt.o cfg_space.o opregion.o mmio.o display.o edid.o \
-> >  	execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o deb=
-ugfs.o \
-> > -	fb_decoder.o dmabuf.o page_track.o
-> > +	fb_decoder.o dmabuf.o page_track.o device_version.o
-> > =20
-> >  ccflags-y				+=3D -I$(src) -I$(src)/$(GVT_DIR)
-> >  i915-y					+=3D $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
-> > diff --git a/drivers/gpu/drm/i915/gvt/device_version.c b/drivers/gpu/dr=
-m/i915/gvt/device_version.c
-> > new file mode 100644
-> > index 000000000000..bd4cdcbdba95
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/i915/gvt/device_version.c
-> > @@ -0,0 +1,87 @@
-> > +/*
-> > + * Copyright(c) 2011-2017 Intel Corporation. All rights reserved.
-> > + *
-> > + * Permission is hereby granted, free of charge, to any person obtaini=
-ng a
-> > + * copy of this software and associated documentation files (the "Soft=
-ware"),
-> > + * to deal in the Software without restriction, including without limi=
-tation
-> > + * the rights to use, copy, modify, merge, publish, distribute, sublic=
-ense,
-> > + * and/or sell copies of the Software, and to permit persons to whom t=
-he
-> > + * Software is furnished to do so, subject to the following conditions:
-> > + *
-> > + * The above copyright notice and this permission notice (including th=
-e next
-> > + * paragraph) shall be included in all copies or substantial portions =
-of the
-> > + * Software.
-> > + *
-> > + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXP=
-RESS OR
-> > + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABI=
-LITY,
-> > + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT =
-SHALL
-> > + * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES O=
-R OTHER
-> > + * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARI=
-SING FROM,
-> > + * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALI=
-NGS IN THE
-> > + * SOFTWARE.
-> > + *
-> > + * Authors:
-> > + *    Yan Zhao <yan.y.zhao@intel.com>
-> > + */
-> > +#include <linux/vfio.h>
-> > +#include "i915_drv.h"
-> > +
-> > +static bool is_compatible(const char *self, const char *remote)
-> > +{
-> > +	if (strlen(remote) !=3D strlen(self))
-> > +		return false;
-> > +
-> > +	return (strncmp(self, remote, strlen(self))) ? false : true;
-> > +}
-> > +
-> > +ssize_t intel_gvt_get_vfio_device_version_len(struct drm_i915_private =
-*dev_priv)
-> > +{
-> > +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-> > +		return -ENODEV;
-> > +
-> > +	return PAGE_SIZE;
-> > +}
-> > +
-> > +ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *dev=
-_priv,
-> > +		char *buf, const char *mdev_type)
-> > +{
-> > +	int cnt =3D 0, ret =3D 0;
-> > +	const char *str =3D NULL;
-> > +
->=20
-> > +	/* currently only gen8 & gen9 are supported */
-> > +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-> > +		return -ENODEV;
-> > +
-> > +	/* vendor id + device id + mdev type */
-> > +	/* vendor id */
-> > +	cnt =3D snprintf(buf, 5, "%04x", PCI_VENDOR_ID_INTEL);
-> > +	buf +=3D cnt;
-> > +	ret +=3D cnt;
-> > +
-> > +	/* device id */
-> > +	cnt =3D snprintf(buf, 6, "-%04x", INTEL_DEVID(dev_priv));
-> > +	buf +=3D cnt;
-> > +	ret +=3D cnt;
-> > +
-> > +	/* mdev type */
-> > +	str =3D mdev_type;
-> > +	cnt =3D snprintf(buf, strlen(str) + 3, "-%s\n", mdev_type);
-> > +	buf +=3D cnt;
-> > +	ret +=3D cnt;
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *d=
-ev_priv,
-> > +		const char *self, const char *remote)
-> > +{
-> > +
-> > +	/* currently only gen8 & gen9 are supported */
-> > +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-> > +		return -ENODEV;
-> > +
-> > +	if (!is_compatible(self, remote))
-> > +		return -EINVAL;
-> > +
-> > +	return 0;
-> > +}
-> > diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/=
-gvt.c
-> > index 43f4242062dd..19f16eec5a4c 100644
-> > --- a/drivers/gpu/drm/i915/gvt/gvt.c
-> > +++ b/drivers/gpu/drm/i915/gvt/gvt.c
-> > @@ -105,14 +105,65 @@ static ssize_t description_show(struct kobject *k=
-obj, struct device *dev,
-> >  		       type->weight);
-> >  }
-> > =20
-> > +#ifdef GVT_MIGRATION_VERSION
->=20
-> No extra define.
->=20
-> > +static ssize_t version_show(struct kobject *kobj, struct device *dev,
-> > +		char *buf)
-> > +{
-> > +	struct drm_i915_private *i915 =3D kdev_to_i915(dev);
-> > +	const char *mdev_type =3D kobject_name(kobj);
-> > +
-> > +	return intel_gvt_get_vfio_device_version(i915, buf, mdev_type);
-> > +}
-> > +
-> > +static ssize_t version_store(struct kobject *kobj, struct device *dev,
-> > +		const char *buf, size_t count)
-> > +{
-> > +	char *remote =3D NULL, *self =3D NULL;
-> > +	int len, ret =3D 0;
-> > +	struct drm_i915_private *i915 =3D kdev_to_i915(dev);
-> > +	const char *mdev_type =3D kobject_name(kobj);
-> > +
-> > +	len =3D intel_gvt_get_vfio_device_version_len(i915);
-> > +	if (len < 0)
-> > +		return len;
-> > +
-> > +	self =3D kmalloc(len, GFP_KERNEL);
-> > +	if (!self)
-> > +		return -ENOMEM;
-> > +
-> > +	ret =3D intel_gvt_get_vfio_device_version(i915, self, mdev_type);
-> > +	if (ret < 0)
-> > +		goto out;
-> > +
-> > +	remote =3D kstrndup(buf, count, GFP_KERNEL);
-> > +	if (!remote) {
-> > +		ret =3D -ENOMEM;
-> > +		goto out;
-> > +	}
->=20
-> Please make device version as attribute for vgpu instead of allocating me=
-mory
-> everytime to generate it.
->
-
-Seems this is attribute for mdev type instead of instance, I was wrong
-to take it as vgpu instance attribute, so we could add it for vgpu type
-definition for device with migration.
-
-> > +
-> > +	ret =3D intel_gvt_check_vfio_device_version(i915, self, remote);
-> > +
-> > +out:
-> > +	kfree(self);
-> > +	kfree(remote);
-> > +	return (ret < 0 ? ret : count);
-> > +}
-> > +#endif
-> > +
-> >  static MDEV_TYPE_ATTR_RO(available_instances);
-> >  static MDEV_TYPE_ATTR_RO(device_api);
-> >  static MDEV_TYPE_ATTR_RO(description);
-> > +#ifdef GVT_MIGRATION_VERSION
-> > +static MDEV_TYPE_ATTR_RW(version);
-> > +#endif
->=20
-> Don't need extra define.
->=20
-> > =20
-> >  static struct attribute *gvt_type_attrs[] =3D {
-> >  	&mdev_type_attr_available_instances.attr,
-> >  	&mdev_type_attr_device_api.attr,
-> >  	&mdev_type_attr_description.attr,
-> > +#ifdef GVT_MIGRATION_VERSION
-> > +	&mdev_type_attr_version.attr,
-> > +#endif
-> >  	NULL,
-> >  };
->=20
-> I think you need another group of attrs for type that could support
-> migration, it will be assigned during host init for current platform
-> with driver support. So just add new group of attrs for like
-> gvt_migration_type_attrs[] with version.
->=20
-> > =20
-> > diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/=
-gvt.h
-> > index f5a328b5290a..4062f6b26acf 100644
-> > --- a/drivers/gpu/drm/i915/gvt/gvt.h
-> > +++ b/drivers/gpu/drm/i915/gvt/gvt.h
-> > @@ -687,6 +687,12 @@ void intel_gvt_debugfs_remove_vgpu(struct intel_vg=
-pu *vgpu);
-> >  int intel_gvt_debugfs_init(struct intel_gvt *gvt);
-> >  void intel_gvt_debugfs_clean(struct intel_gvt *gvt);
-> > =20
-> > +ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *i91=
-5,
-> > +		char *buf, const char *mdev_type);
-> > +ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *d=
-ev_priv,
-> > +		const char *self, const char *remote);
-> > +ssize_t
-> > +intel_gvt_get_vfio_device_version_len(struct drm_i915_private *dev_pri=
-v);
-> > =20
-> >  #include "trace.h"
-> >  #include "mpt.h"
-> > --=20
-> > 2.17.1
-> >=20
->=20
-> --=20
-> Open Source Technology Center, Intel ltd.
->=20
-> $gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
-
-
-
---=20
-Open Source Technology Center, Intel ltd.
-
-$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
-
---88pBQ1/6ie/nQzMF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXM/lRgAKCRCxBBozTXgY
-J3mgAJ9uaM8nSoJ+1omd5e5I3D1cnYvX8QCgnY9Ykxd8jrvcrOFLXU7FoBiZgA0=
-=1h40
------END PGP SIGNATURE-----
-
---88pBQ1/6ie/nQzMF--
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2FzY2hhIEhhdWVyIDxz
+LmhhdWVyQHBlbmd1dHJvbml4LmRlPg0KPiBTZW50OiAyMDE5xOo11MI2yNUgMTU6NDENCj4gVG86
+IENodWFuaHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5jb20+DQo+IENjOiBzaGF3bmd1b0BrZXJu
+ZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsN
+Cj4gbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+
+IGxpbnV4LWkyY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGZlc3RldmFtQGdtYWlsLmNv
+bTsgZGwtbGludXgtaW14DQo+IDxsaW51eC1pbXhAbnhwLmNvbT47IHdzYStyZW5lc2FzQHNhbmct
+ZW5naW5lZXJpbmcuY29tOw0KPiB1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU7IGVoYUBk
+ZWlmLmNvbTsgbGludXhAcmVtcGVsLXByaXZhdC5kZTsNCj4gbC5zdGFjaEBwZW5ndXRyb25peC5k
+ZTsgcGVkYUBheGVudGlhLnNlOyBTdW1pdCBCYXRyYQ0KPiA8c3VtaXQuYmF0cmFAbnhwLmNvbT4N
+Cj4gU3ViamVjdDogW0VYVF0gUmU6IFtQQVRDSCAyLzJdIGFybTY0OiBkdHM6IGZzbDogbHMxMDQ2
+YTogQWRkIHRoZSBndXRzIG5vZGUgaW4NCj4gZHRzDQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwN
+Cj4gDQo+IE9uIFR1ZSwgQXByIDMwLCAyMDE5IGF0IDEyOjQ3OjE5UE0gKzA4MDAsIENodWFuaHVh
+IEhhbiB3cm90ZToNCj4gPiBGb3IgTlhQIGxzMTA0NmEgU29DLCB0aGUgaTJjIGNsb2NrIG5lZWRz
+IHRvIGJlIGNvbmZpZ3VyZWQgd2l0aCB0aGUNCj4gPiBhcHByb3ByaWF0ZSBiaXQgb2YgUkNXLCBz
+byB3ZSBhZGQgdGhlIGd1dHMgbm9kZSAoR1VUUy9EQ0ZHIGdsb2JhbA0KPiA+IHV0aWxpdGllcyBi
+bG9jaykgZm9yIHRoZSBkcml2ZXIgdG8gcmVhZC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFN1
+bWl0IEJhdHJhIDxzdW1pdC5iYXRyYUBueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENodWFu
+aHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJtNjQv
+Ym9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kgfCA1ICsrKysrDQo+ID4gIDEgZmls
+ZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQ2YS5kdHNpDQo+ID4gYi9hcmNoL2FybTY0
+L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQ2YS5kdHNpDQo+ID4gaW5kZXggMzczMzEwZTRj
+MGVhLi5mODg1OTlkZjE4YmIgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWxzMTA0NmEuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+ZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kNCj4gPiBAQCAtMjA1LDYgKzIwNSwxMSBAQA0KPiA+
+ICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICAgICAgICAg
+ICAgICAgfTsNCj4gPg0KPiA+ICsgICAgICAgICAgICAgZ3V0czogZ2xvYmFsLXV0aWxpdGllc0Ax
+ZWUwMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wscW9y
+aXEtZGV2aWNlLWNvbmZpZyI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDAg
+MHgxZWUwMDAwIDB4MCAweDEwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgfTsNCj4gDQo+IEFjY29y
+ZGluZyB0byBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9ndXRzLnR4
+dCB3ZSBoYXZlIHRoZQ0KPiBmb2xsb3dpbmcgY29tcGF0aWJsZXM6DQo+IA0KPiAgICAgICAgICJm
+c2wscW9yaXEtZGV2aWNlLWNvbmZpZy0xLjAiDQo+ICAgICAgICAgImZzbCxxb3JpcS1kZXZpY2Ut
+Y29uZmlnLTIuMCINCj4gICAgICAgICAiZnNsLDxjaGlwPi1kZXZpY2UtY29uZmlnIg0KPiAgICAg
+ICAgICJmc2wsPGNoaXA+LWd1dHMiDQo+IA0KPiAiZnNsLHFvcmlxLWRldmljZS1jb25maWciIGlz
+IG5vbmUgb2YgdGhlbSBhbmQgSSBkb24ndCB0aGluayB5b3Ugc2hvdWxkIGdpdmUgdGhpcw0KPiBT
+b0Mgc3BlY2lmaWMgdGhpbmcgYSBnZW5lcmljIGNvbXBhdGlibGUuDQo+ICJmc2wsbHMxMDQ2YS1k
+ZXZpY2UtY29uZmlnIiB3b3VsZCBiZSBiZXR0ZXIuDQp5ZXMsIHlvdSBhcmUgcmlnaHQsSSB3aWxs
+IG1vZGlmeSBpdCANCj4gDQo+IFNhc2NoYQ0KPiANCj4gDQo+IC0tDQo+IFBlbmd1dHJvbml4IGUu
+Sy4gICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+IHwNCj4gSW5kdXN0cmlhbCBMaW51eCBT
+b2x1dGlvbnMgICAgICAgICAgICAgICAgIHwNCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJv
+dGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZ3d3cucGUNCj4gbmd1dHJvbml4
+LmRlJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NjaHVhbmh1YS5oYW4lNDBueHAuY29tJTdDMTM5DQo+
+IDIzZmUxN2ExZDQ2ZGFkN2U3MDhkNmQxZjYzZjQxJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTlj
+NWMzMDE2MzUNCj4gJTdDMCU3QzAlN0M2MzY5MjcyNTI4ODU0NTgzNDQmYW1wO3NkYXRhPVJMZURp
+Q3RMSlJZek9aUTRQOENOOGcNCj4gaFRVR05GJTJGS0ElMkZUJTJGdExTQ3JnRWFFJTNEJmFtcDty
+ZXNlcnZlZD0wICB8DQo+IFBlaW5lciBTdHIuIDYtOCwgMzExMzcgSGlsZGVzaGVpbSwgR2VybWFu
+eSB8IFBob25lOiArNDktNTEyMS0yMDY5MTctMA0KPiB8DQo+IEFtdHNnZXJpY2h0IEhpbGRlc2hl
+aW0sIEhSQSAyNjg2ICAgICAgICAgICB8IEZheDoNCj4gKzQ5LTUxMjEtMjA2OTE3LTU1NTUgfA0K
