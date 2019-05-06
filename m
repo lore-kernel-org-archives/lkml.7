@@ -2,190 +2,266 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F5CC04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DA9C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1902082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557135083;
-	bh=ohEk3Mjmd5Jsei+A/3V9wX1D8v9dgEMwZhUdVU0q0Tc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=YQbiKGJEXEeqrh2Rc4Tq0N8MzKlQ6DMO12PVCNz08W+RTrq09W2LqLPxwdXrsw5UU
-	 V842dWwCkmJmLWGLjySYMaorpfpw9NOVb+tmobSI1Fr36+cAY9UpQ9C05qNQeCc+I3
-	 UPIY/9vjv+tumD/l2UCBU6Q9XdPHV6lX2/Phm4dg=
+	by mail.kernel.org (Postfix) with ESMTP id 5A301208C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfEFJbU (ORCPT
+        id S1726298AbfEFJd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:31:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41769 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfEFJbU (ORCPT
+        Mon, 6 May 2019 05:33:27 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35522 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfEFJdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:31:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c12so16330436wrt.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:31:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=jtRFjy/ehRAYk//LfsI+2USZzRiCd7GC507WcuG6cc4=;
-        b=UFaUSzZKG/jnxKSFfWj1nOjpXy5SuG3q30YGpMx2iSti0UAACL0LINWH2jjPvXg/BM
-         UTmzGdJua3Xh+1bMezhsKScY6Kx3emYbaP50oquNLFsja6iZBAbvul1zSWfQns30FxeI
-         OWoNZTy7pVTCjx7eT5NsmZM3bDCK5/dGVlCrwP7sjCJvs+4TrDqA7sK4i5pZ/pxnBqoG
-         zyAIP6uZ2DE5A/rJvcxSWICsQUWTWmfcGQFhY9K+JamelKfsPvde/9tMvlGrDU7VlQWz
-         sH1jfV64wFu4bdhbQvRA+mQH99XsiYmfw/mmN2063lk7PGa7AKzIPjrDZwS88416LVxI
-         PCKg==
+        Mon, 6 May 2019 05:33:25 -0400
+Received: by mail-ed1-f68.google.com with SMTP id p26so14596481edr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:33:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=jtRFjy/ehRAYk//LfsI+2USZzRiCd7GC507WcuG6cc4=;
-        b=r4YH5dnJxkyxzArJAWaSIH5XXRE6UYGH7NB2ffCORZRJGo4yIUJ1EEY8Isn+Y4pfsn
-         s1ARCQRtYue4XahRcl9gMDvgWfHSQiGxEuGnhFxEqH1EUTvjK4WgNlR3vqNCkePpH8s7
-         5WZmifrjEwBBYQv8fAA7JoNuooYbcX7vkLMb5z6BT2APmhz+o0v3lTCu0GWbiHqnok6W
-         Kvi4A+oSW5a1sqy0E1Wn7m49zK+uT+Odf9EzCfAzPGcZKXSyLthiw+LgN7eB+tk5N2F4
-         yMQBchd5MfY7poTASC4H2KwZsMM64daNt0WixtI/WAA6Inn4eUym2fZLk3bA9mMnWumZ
-         vsRw==
-X-Gm-Message-State: APjAAAVQqVnEPjfTYD1SpaWsCRwi7cda46CZpL6OruzBSuXKOTmRi+qz
-        Bjq3fWbLOS+c+dr6ZYO4CEI=
-X-Google-Smtp-Source: APXvYqyqyJjvKE3f1MF4k0J6gibvL6wj1hkzMkP5RDvwZ0qcuYRSXDn1DiKJPVAnTvUpw5cnsTVEQQ==
-X-Received: by 2002:adf:eac6:: with SMTP id o6mr7399170wrn.222.1557135078459;
-        Mon, 06 May 2019 02:31:18 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id f6sm8804992wmh.13.2019.05.06.02.31.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 02:31:17 -0700 (PDT)
-Date:   Mon, 6 May 2019 11:31:15 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/apic change for v5.2
-Message-ID: <20190506093115.GA48027@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=G0XYBH52ucBUD953mXrmSQQF5BnxjfabJRIahkcnQTg=;
+        b=GhYFJzn5N+4Ly4Z4ZW4zo9LDQpjKKwU1EPG0PTrEcoRsRvrrO6wt1GfUz/oTBxGvZM
+         X6HRniKGOFukRpbwDuR4VhF7/uaGslHlr8D4XDMi0ney1hMIAjrCqHqPjhuZTBfrRcnU
+         B9nmlqpfPUgjFRquzjHQUMn8MEPFdm3IT+9JfcnyqA7VusPzdSupQX3G15vR36eDE/No
+         aN0xX0CRr/tuXXpG8FsI0A0G8eHwMWX7su4bZNFlA/npKcVB7nPI4thLbWGnkMEz/N/c
+         wxR/tLckkjut8Zhmh7mSnCXPZPLKHZPkDMKUeBQqZKdN8GRulhyoTJF5gDsLya6L9MfJ
+         pjIA==
+X-Gm-Message-State: APjAAAVuhv+1++QC/Naig0n0pAx6DH4ZtyFUVPCIWpIYpGbJg8kVHkus
+        1lvO6qbhiDVPRpVX5VeOrmqCueqVW8Q=
+X-Google-Smtp-Source: APXvYqyBYlSVwVv58BhbYj0+wirL+diFLAP8Rvk2Cv9EL+vNUW2t6UyC3DpIIV2WTBtx00vPFgD/3Q==
+X-Received: by 2002:a17:906:1343:: with SMTP id x3mr17834323ejb.218.1557135202165;
+        Mon, 06 May 2019 02:33:22 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id d28sm1465969ejl.83.2019.05.06.02.33.21
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 02:33:21 -0700 (PDT)
+Subject: Re: [PATCH RFC] brcmfmac: sanitize DMI strings v2
+To:     Victor Bravo <1905@spmblk.com>
+Cc:     Arend Van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org
+References: <20190504162633.ldrz2nqfocg55grb@localhost>
+ <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
+ <20190504194440.4zcxjrtj2aft3ka4@localhost>
+ <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+ <20190505150355.3fbng4ny34x255vk@localhost>
+ <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
+ <20190506090609.msudhncj7e5vdtzw@localhost>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <70677dff-4336-28d5-7ab9-7ba7c3d74ebc@redhat.com>
+Date:   Mon, 6 May 2019 11:33:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190506090609.msudhncj7e5vdtzw@localhost>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Hi,
 
-Please pull the latest x86-apic-for-linus git tree from:
+On 06-05-19 11:06, Victor Bravo wrote:
+> On Mon, May 06, 2019 at 10:13:38AM +0200, Hans de Goede wrote:
+>> Hi,
+> 
+> Hi,
+> 
+>> On 05-05-19 17:03, Victor Bravo wrote:
+>>> Sanitize DMI strings in brcmfmac driver to make resulting filenames
+>>> contain only safe characters. This version replaces all non-printable
+>>> characters incl. delete (0-31, 127-255), spaces and slashes with
+>>> underscores.
+>>>
+>>> This change breaks backward compatibility, but adds control over strings
+>>> passed to firmware loader and compatibility with CONFIG_EXTRA_FIRMWARE
+>>> which doesn't support spaces in filenames.
+>>>
+>>> Changes from v1: don't revert fresh commit by someone else
+>>>
+>>> Signed-off-by: Victor Bravo <1905@spmblk.com>
+>>
+>> Thank you for the patch, but I'm sorry to say this patch cannot go in as is,
+>> because it will break existing systems.
+>>
+>> If you look here:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/brcm
+>>
+>> You will see a file named: "brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt" there, which
+>> has a space in its name (and which works fine).
+> 
+> Thanks for the updates. Spaces are actually a problem as files with spaces
+> don't work when built-in with CONFIG_EXTRA_FIRMWARE (which is used with
+> non-modular kernel containing brcmfmac driver).
+> 
+> If the DMI string contains slashes, they will cause problems
+> for obvious reasons too.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-apic-for-linus
+Right, as said I'm fine with sanitizing the names, so dropping e.g. / chars,
+but replacing space with _ will cause wifi to stop working on Onda V80 Plus devices and
+we have a clear no regressions policy in the kernel.
 
-   # HEAD: 6eb4f08293e971cb1b7b867c7fe994c244b91460 x86/apic: Unify duplicated local apic timer clockevent initialization
+>> I'm fine with doing some sanitizing of the strings, but replacing spaces with _
+>> breaks existing use-cases (will cause a regression for them) and a space is absolutely
+>> a valid character in a filename and the firmware-loader can deal with this just fine.
+>>
+>> If the code for building firmwares into the kernel cannot deal with spaces then IMHO
+>> that code should be fixed instead. Have you looked into fixing that?
+> 
+> Yes, but updating CONFIG_EXTRA_FIRMWARE to support spaces because of
+> this looks much like
 
-Contains a single commit which unifies the unnecessarily diverged 
-implementations of APIC timer initialization. As a result the max_delta 
-parameter is now consistently taken into account.
+<snip off-topic remark>
 
- Thanks,
+> Do you really think it's a good idea to propose that in
+> this case?
 
-	Ingo
+I think expecting spaces in filenames to just work is quite reasonable, after all
+its been a long time since we've left DOS-es 8.3 filename limitations.
 
------------------->
-Jacob Pan (1):
-      x86/apic: Unify duplicated local apic timer clockevent initialization
+Have you actually looked at how hard it would be to make filenames with spaces work
+with CONFIG_EXTRA_FIRMWARE ?
+
+No matter how you spin it, the space problem is a CONFIG_EXTRA_FIRMWARE bug, not an
+issue with the brcmfmac code.
+
+>> As for your T100HA example from earlier in this thread, the brcmfmac driver now
+>> also supports getting the firmware from a special EFI nvram variable, which the
+>> T100HA sets, so you do not need to provide a nvram file on the T100HA and things
+>> will still work.
+> 
+> I don't really get this. Can you please suggest how do I make the driver
+> use something different than "brcmfmac43340-sdio.txt" or
+> "brcmfmac43340-sdio.ASUSTeK COMPUTER INC.-T100HAN.txt" on T100HAN?
+
+If you leave out either file, then with a recent kernel you should see this
+brcm_info trigger:
+
+         brcmf_info("Using nvram EFI variable\n");
+
+So you should see this message when you do:
+
+dmesg | grep "Using nvram EFI variable"
+
+And the wifi on the T100HAN should just work, without needing to do any
+manual config / provide an nvram file in anyway.
+
+I always strive to make hardware just work with Linux and any UEFI x86 machine
+using brcmfmac which provides the necessary nvram EFI variable in its firmware
+should now just work when booting say a Fedora 30 livecd.
+
+The EFI nvram var support has been tested successfully on the following models:
+
+Acer Iconia Tab8 w1-8
+Acer One 10
+Asus T100CHI
+Asus T100HA
+Asus T100TA
+Asus T200TA
+Lenovo Mixx 2 8
+Lenovo Yoga2 tablet 10
+
+Regards,
+
+Hans
 
 
- arch/x86/kernel/apic/apic.c | 57 ++++++++++++++++++++++++---------------------
- 1 file changed, 31 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index b7bcdd781651..ab6af775f06c 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -802,6 +802,24 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
- 	return 0;
- }
- 
-+static int __init lapic_init_clockevent(void)
-+{
-+	if (!lapic_timer_frequency)
-+		return -1;
-+
-+	/* Calculate the scaled math multiplication factor */
-+	lapic_clockevent.mult = div_sc(lapic_timer_frequency/APIC_DIVISOR,
-+					TICK_NSEC, lapic_clockevent.shift);
-+	lapic_clockevent.max_delta_ns =
-+		clockevent_delta2ns(0x7FFFFFFF, &lapic_clockevent);
-+	lapic_clockevent.max_delta_ticks = 0x7FFFFFFF;
-+	lapic_clockevent.min_delta_ns =
-+		clockevent_delta2ns(0xF, &lapic_clockevent);
-+	lapic_clockevent.min_delta_ticks = 0xF;
-+
-+	return 0;
-+}
-+
- static int __init calibrate_APIC_clock(void)
- {
- 	struct clock_event_device *levt = this_cpu_ptr(&lapic_events);
-@@ -810,25 +828,21 @@ static int __init calibrate_APIC_clock(void)
- 	long delta, deltatsc;
- 	int pm_referenced = 0;
- 
--	/**
--	 * check if lapic timer has already been calibrated by platform
--	 * specific routine, such as tsc calibration code. if so, we just fill
-+	if (boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
-+		return 0;
-+
-+	/*
-+	 * Check if lapic timer has already been calibrated by platform
-+	 * specific routine, such as tsc calibration code. If so just fill
- 	 * in the clockevent structure and return.
- 	 */
--
--	if (boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER)) {
--		return 0;
--	} else if (lapic_timer_frequency) {
-+	if (!lapic_init_clockevent()) {
- 		apic_printk(APIC_VERBOSE, "lapic timer already calibrated %d\n",
--				lapic_timer_frequency);
--		lapic_clockevent.mult = div_sc(lapic_timer_frequency/APIC_DIVISOR,
--					TICK_NSEC, lapic_clockevent.shift);
--		lapic_clockevent.max_delta_ns =
--			clockevent_delta2ns(0x7FFFFF, &lapic_clockevent);
--		lapic_clockevent.max_delta_ticks = 0x7FFFFF;
--		lapic_clockevent.min_delta_ns =
--			clockevent_delta2ns(0xF, &lapic_clockevent);
--		lapic_clockevent.min_delta_ticks = 0xF;
-+			    lapic_timer_frequency);
-+		/*
-+		 * Direct calibration methods must have an always running
-+		 * local APIC timer, no need for broadcast timer.
-+		 */
- 		lapic_clockevent.features &= ~CLOCK_EVT_FEAT_DUMMY;
- 		return 0;
- 	}
-@@ -869,17 +883,8 @@ static int __init calibrate_APIC_clock(void)
- 	pm_referenced = !calibrate_by_pmtimer(lapic_cal_pm2 - lapic_cal_pm1,
- 					&delta, &deltatsc);
- 
--	/* Calculate the scaled math multiplication factor */
--	lapic_clockevent.mult = div_sc(delta, TICK_NSEC * LAPIC_CAL_LOOPS,
--				       lapic_clockevent.shift);
--	lapic_clockevent.max_delta_ns =
--		clockevent_delta2ns(0x7FFFFFFF, &lapic_clockevent);
--	lapic_clockevent.max_delta_ticks = 0x7FFFFFFF;
--	lapic_clockevent.min_delta_ns =
--		clockevent_delta2ns(0xF, &lapic_clockevent);
--	lapic_clockevent.min_delta_ticks = 0xF;
--
- 	lapic_timer_frequency = (delta * APIC_DIVISOR) / LAPIC_CAL_LOOPS;
-+	lapic_init_clockevent();
- 
- 	apic_printk(APIC_VERBOSE, "..... delta %ld\n", delta);
- 	apic_printk(APIC_VERBOSE, "..... mult: %u\n", lapic_clockevent.mult);
+>>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
+>>> index 7535cb0d4ac0..84571e09b465 100644
+>>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
+>>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
+>>> @@ -23,6 +23,14 @@
+>>>    /* The DMI data never changes so we can use a static buf for this */
+>>>    static char dmi_board_type[128];
+>>> +/* Array of 128 bits representing 7-bit characters allowed in DMI strings. */
+>>> +static unsigned char brcmf_dmi_allowed_chars[] = {
+>>> +	0x00, 0x00, 0x00, 0x00, 0xfe, 0x7f, 0xff, 0xff,
+>>> +	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f
+>>> +};
+>>> +
+>>> +#define BRCMF_DMI_SAFE_CHAR '_'
+>>> +
+>>>    struct brcmf_dmi_data {
+>>>    	u32 chip;
+>>>    	u32 chiprev;
+>>> @@ -99,6 +107,15 @@ static const struct dmi_system_id dmi_platform_data[] = {
+>>>    	{}
+>>>    };
+>>> +void brcmf_dmi_sanitize(char *dst, const unsigned char *allowed, char safe)
+>>> +{
+>>> +	while (*dst) {
+>>> +		if ((*dst < 0) || !(allowed[*dst / 8] & (1 << (*dst % 8))))
+>>
+>> At a first look I have no clue what this code is doing and I honestly do not feel
+>> like figuring it out, this is clever, but IMHO not readable.
+> 
+> Understood. The cluless part actually checks corresponding bit
+> in allowed array, which is a bit mask describing what characters
+> are allowed or not.
+> 
+>> Please just write this as if (*dst < 0x21 || (*dst > foo && < bar) || etc,
+>> so that a human can actually see in one look what the code is doing.
+>>
+>> You may want to wait for Arend to give his opinion before changing this though,
+>> maybe he likes the code as is.
+>>
+>> Also note that that should be < 0x20 of course, since we need to preserve spaces
+>> as is to avoid a regression.
+> 
+> This has been already discussed, spaces are a problem. There even was an
+> opinion that adding the code that doesn't bother with spaces and slashes
+> might be a regression as well.
+> 
+> Regards,
+> 
+> v.
+> 
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>>
+>>
+>>
+>>> +			*dst = safe;
+>>> +		dst++;
+>>> +	}
+>>> +}
+>>> +
+>>>    void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
+>>>    {
+>>>    	const struct dmi_system_id *match;
+>>> @@ -126,6 +143,9 @@ void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
+>>>    	if (sys_vendor && product_name) {
+>>>    		snprintf(dmi_board_type, sizeof(dmi_board_type), "%s-%s",
+>>>    			 sys_vendor, product_name);
+>>> +		brcmf_dmi_sanitize(dmi_board_type,
+>>> +				   brcmf_dmi_allowed_chars,
+>>> +				   BRCMF_DMI_SAFE_CHAR);
+>>>    		settings->board_type = dmi_board_type;
+>>>    	}
+>>>    }
+>>>
+>>
