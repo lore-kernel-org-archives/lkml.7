@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BC2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0970C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B964C2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F13205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154192;
-	bh=JoRzNY+QPvh8+dvdNwVECguMJzhCYTx+rNPGUizfYF0=;
+	s=default; t=1557154197;
+	bh=Ea4NEVL/9hflCxuATqbcHJbXEvm/SxyQpk8DoX9ueNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wXuzi5w0HXwNRLDkNzrMub1e/YdCtIx/k/L9Nx3NjeB45X3hq2OZKN+YhLjKVkSiY
-	 FEtXmS/Gn5ZyKvXUG2thEKjwYVNwhYmP9all3ioaqob+m9So36TU9VBzHaD3Smt+i9
-	 mgpOIRtD1NlwFi3nfmhpBAU844OxdosSJBELUwsU=
+	b=vqfKBb5sBNiOXgGeMQdBwRSQngkHC1Hf1ki9iKsegYLNbP2JWHWwNejThJXDWBbz7
+	 UJ5DrpVaspOO66gsbemxpa95CDZtn3aMOpngiXNUImrWw31CRX1ENL5OD2bhIVx7iu
+	 KeLntasZFeBuJ7B0dW2lDBqg2PJIOlpfLcIyTAME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729620AbfEFOtw (ORCPT
+        id S1727918AbfEFOt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:49:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51746 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:49:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729454AbfEFOtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:49:47 -0400
+        id S1729617AbfEFOtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:49:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 680632053B;
-        Mon,  6 May 2019 14:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 116DE205ED;
+        Mon,  6 May 2019 14:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154186;
-        bh=JoRzNY+QPvh8+dvdNwVECguMJzhCYTx+rNPGUizfYF0=;
+        s=default; t=1557154189;
+        bh=Ea4NEVL/9hflCxuATqbcHJbXEvm/SxyQpk8DoX9ueNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aAth1AGp+66LS46CPeRzJN45iqgsL2rESSkpuZ5anOJtIgUCW44MwMORFYgnjXa1J
-         p7qR5HiioiyfDQjuOaOAVDLk5scEppunL9vH+WHt6LJoMfiXSOOt6fKSdOCzx+f7/v
-         pjGLxAW9wyRsgZcd9UfFGD+j8kMhBzihTnIVWj4c=
+        b=pyvVh0G2sx9j3L4kJYgjR/wqT3hnVxs8f1aPbK9PEQdNO6Ev5UfStOEGw+LN09XK/
+         PC02V1b9WXoQxnD8pkyigCxHJOL40fWTYAwnL5SFRXMCIo2JMcQfmm/k6CK9+5+ea2
+         vmoVuJTRtGOfjKUOmHu8AXZJcWXANzS9IDt6N/To=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
-        Hannes Reinecke <hare@suse.de>,
-        NetApp RDAC team <ng-eseries-upstream-maintainers@netapp.com>,
-        Christophe Varoqui <christophe.varoqui@opensvc.com>,
-        "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        SCSI ML <linux-scsi@vger.kernel.org>,
-        DM ML <dm-devel@redhat.com>,
-        Xose Vazquez Perez <xose.vazquez@gmail.com>,
+        stable@vger.kernel.org, Omri Kahalon <omrik@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 44/62] scsi: core: add new RDAC LENOVO/DE_Series device
-Date:   Mon,  6 May 2019 16:33:15 +0200
-Message-Id: <20190506143055.010173706@linuxfoundation.org>
+Subject: [PATCH 4.9 35/62] net/mlx5: E-Switch, Fix esw manager vport indication for more vport commands
+Date:   Mon,  6 May 2019 16:33:06 +0200
+Message-Id: <20190506143054.123478938@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -67,51 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1cb1d2c64e812928fe0a40b8f7e74523d0283dbe ]
+[ Upstream commit eca4a928585ac08147e5cc8e2111ecbc6279ee31 ]
 
-Blacklist "Universal Xport" LUN. It's used for in-band storage array
-management.  Also add model to the rdac dh family.
+Traditionally, the PF (Physical Function) which resides on vport 0 was
+the E-switch manager. Since the ECPF (Embedded CPU Physical Function),
+which resides on vport 0xfffe, was introduced as the E-Switch manager,
+the assumption that the E-switch manager is on vport 0 is incorrect.
 
-Cc: Martin Wilck <mwilck@suse.com>
-Cc: Hannes Reinecke <hare@suse.de>
-Cc: NetApp RDAC team <ng-eseries-upstream-maintainers@netapp.com>
-Cc: Christophe Varoqui <christophe.varoqui@opensvc.com>
-Cc: James E.J. Bottomley <jejb@linux.vnet.ibm.com>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: SCSI ML <linux-scsi@vger.kernel.org>
-Cc: DM ML <dm-devel@redhat.com>
-Signed-off-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
-Reviewed-by: Martin Wilck <mwilck@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Since the eswitch code already uses the actual vport value, all we
+need is to always set other_vport=1.
+
+Signed-off-by: Omri Kahalon <omrik@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_devinfo.c | 1 +
- drivers/scsi/scsi_dh.c      | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
-index 282ea00d0f87..9d555b63d2e2 100644
---- a/drivers/scsi/scsi_devinfo.c
-+++ b/drivers/scsi/scsi_devinfo.c
-@@ -249,6 +249,7 @@ static struct {
- 	{"NETAPP", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
- 	{"LSI", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
- 	{"ENGENIO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
-+	{"LENOVO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
- 	{"SMSC", "USB 2 HS-CF", NULL, BLIST_SPARSELUN | BLIST_INQUIRY_36},
- 	{"SONY", "CD-ROM CDU-8001", NULL, BLIST_BORKEN},
- 	{"SONY", "TSL", NULL, BLIST_FORCELUN},		/* DDS3 & DDS4 autoloaders */
-diff --git a/drivers/scsi/scsi_dh.c b/drivers/scsi/scsi_dh.c
-index 375cede0c534..c9bc6f058424 100644
---- a/drivers/scsi/scsi_dh.c
-+++ b/drivers/scsi/scsi_dh.c
-@@ -75,6 +75,7 @@ static const struct scsi_dh_blist scsi_dh_blist[] = {
- 	{"NETAPP", "INF-01-00",		"rdac", },
- 	{"LSI", "INF-01-00",		"rdac", },
- 	{"ENGENIO", "INF-01-00",	"rdac", },
-+	{"LENOVO", "DE_Series",		"rdac", },
- 	{NULL, NULL,			NULL },
- };
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index da9246f6c31e..d1a3a35ba87b 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -92,8 +92,7 @@ static int arm_vport_context_events_cmd(struct mlx5_core_dev *dev, u16 vport,
+ 		 opcode, MLX5_CMD_OP_MODIFY_NIC_VPORT_CONTEXT);
+ 	MLX5_SET(modify_nic_vport_context_in, in, field_select.change_event, 1);
+ 	MLX5_SET(modify_nic_vport_context_in, in, vport_number, vport);
+-	if (vport)
+-		MLX5_SET(modify_nic_vport_context_in, in, other_vport, 1);
++	MLX5_SET(modify_nic_vport_context_in, in, other_vport, 1);
+ 	nic_vport_ctx = MLX5_ADDR_OF(modify_nic_vport_context_in,
+ 				     in, nic_vport_context);
+ 
+@@ -121,8 +120,7 @@ static int modify_esw_vport_context_cmd(struct mlx5_core_dev *dev, u16 vport,
+ 	MLX5_SET(modify_esw_vport_context_in, in, opcode,
+ 		 MLX5_CMD_OP_MODIFY_ESW_VPORT_CONTEXT);
+ 	MLX5_SET(modify_esw_vport_context_in, in, vport_number, vport);
+-	if (vport)
+-		MLX5_SET(modify_esw_vport_context_in, in, other_vport, 1);
++	MLX5_SET(modify_esw_vport_context_in, in, other_vport, 1);
+ 	return mlx5_cmd_exec(dev, in, inlen, out, sizeof(out));
+ }
  
 -- 
 2.20.1
