@@ -2,239 +2,186 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FF5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0094C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D778F2082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:22:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tbB2gyGN"
+	by mail.kernel.org (Postfix) with ESMTP id 8E9F220830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557138469;
+	bh=JsN3XUn/OEw+ppmk08ky2ye8AntLxGIS2FIWcjeh8Cs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Hew8GoDlan5zsiGV5c9qj2dUVGMhu7rNNi+FlBsKAwQBsxSRsqRCRnoK9gFX1DWfz
+	 XEMHU/TFF50zv//kvX//EQ4ENiKUK89Gr8svrLKb5ge/ilBW1XYqBk93XiTt2Lc+r1
+	 Hrigr9IHAR8sUwmNQcCqVXTGwicnPIHf32tIz0WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfEFKWI (ORCPT
+        id S1726328AbfEFK1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 06:22:08 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:43376 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfEFKWI (ORCPT
+        Mon, 6 May 2019 06:27:48 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36384 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfEFK1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 06:22:08 -0400
-Received: by mail-vs1-f67.google.com with SMTP id r10so2475205vsi.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 03:22:07 -0700 (PDT)
+        Mon, 6 May 2019 06:27:48 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n25so865449wmi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 03:27:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=15yx7MtUqn/+xeF8lyXnxNJGXo9XTsXUz0kkURkVktQ=;
-        b=tbB2gyGN+VxK1NdD2p24P6VIc6xzn8gPlgK0pRpZ9P6rehfSPSijfFjRFlwTsLAf3P
-         qjWgYB1LsK8GY50NAti/fi/4DYHpawpIzCr1Ha/R3a7S8a3QZG5qSEMymuaClGyKu/o9
-         jnmEcNFCh5Jz8GtpMke9WulWHbhY1cDj7+iQB9bScOQdGKhcKUaQ7Wz0FVKxAkvw/Yz1
-         CiunncwiYxIgWUFIzutmGGoz6g65Xk2F5h/yq1QJ01mJFcWzjrqL/cUa2BIMVSi0pkgc
-         gG8WSE8WbUPy2wbYkSxBYj5KuaXZ0Zgvf+KvIUuevcgIdrd5eT9JOEVeXZ0f1PqKNb5c
-         pUgQ==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=qfFFHRvbnzGcbJohPttiSpeh2kW+OlQVdh2SxkWyUcg=;
+        b=otIiTTtVajYND8+FmVObkD/A7KF8ZVGo1Zbpse9H32MkmZ1Qmqw2SKBgl2BrAXBDyU
+         lxTenf9YogFT2KLTtwfxxaqJ9oGHv9fnfXs77AKMmEI1ZRx1KcoBpELTr/laznah6fgT
+         MPlfQEFDKPwCEZbo9pPLYk4xvqFpMbXn4k0nLQPkEaxrY7G8SWRo/pNWnBFHgowXJBkM
+         bqVyQ3wqeP9XjKwS0nxgrkt7vkwI1AS/hI+Vnv4p5mIVePjgaWh8D/5nF81kGqp6Xfuk
+         JcsSE5cWUq4zAuVn08A2n+NWvrk1a453Q9bKpLrvFtAKCQPrlEVVTWL9cFJRWV9ZHJsF
+         zhXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=15yx7MtUqn/+xeF8lyXnxNJGXo9XTsXUz0kkURkVktQ=;
-        b=IEFWF3InLULYtOKlQazG+ChUmKxpfaEAy5Lgb9hN/XE+pKBu27kfGDg9pAdZLQVKKk
-         Org4/OURIgti6DgZgRrrchi8Y4TZ95HnI2mp4e+plfggwDL3DqnHX0UBcDO5WUEFA1Xt
-         N6XMptcxlOgFOG4Mv0vDCNnnYlVaFWZDR27yEA3DwHYdHhb1JSrPhM4tsNjuC3ke1YR8
-         RL38KhFHEQxLwzaowLNTWIfcMCF+6+0/Ys825F7i/wtImiT1RYGEz9FIWgpDJHLgGLOG
-         8fI+DZGLDuEoASMchOSaPwJTJk571aQDRTDKKfNrO2p2sfSkXeLGSP+AMP1ghl/SJhUc
-         Fciw==
-X-Gm-Message-State: APjAAAViDTKFhoNp1UtLBIzwHnwCGy6GBf0G9q/UXdHi/VykEYk08jQ2
-        C4bvUHuBg204i/dbX3poUEAzauFJCte4+gIaytk=
-X-Google-Smtp-Source: APXvYqwjpfh6/cfmZRALW9O23xgls7aD5vU1Dverg1s+NAvAhfXOmFhL5LHQDjX1FCBgKbmoRNPXEb+ZxHLBCFfOBzc=
-X-Received: by 2002:a67:32d0:: with SMTP id y199mr6033398vsy.236.1557138126960;
- Mon, 06 May 2019 03:22:06 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=qfFFHRvbnzGcbJohPttiSpeh2kW+OlQVdh2SxkWyUcg=;
+        b=li3QJ9pOss+/sJUZSQjJihZSbT6qV5eoHCV9w/md9xn209n65GypsPli6K2jZOq6aQ
+         mAlJg1iXF6qm0Mx7L8Uo+EfziDsRSpZcUiPFqAWuXzJeS78ivK+0GGUIBO2weulWzUsG
+         Puw8ucIQaU31aNHj7uoewVUoo8Rvmpe53q2PfwF5pwZhHPNhAscegGuXsujcv2A7gWZV
+         0Noy/cOLkvLX/icEixFS/E9+o9jKJ5oZwpBv8gz3AwH9kKY13ehxd8pZPNMWCrc7fDpA
+         s1hjr5PRQoID2pOHzypg1X9CptxBz/+VHAcXG5LCmaN21Q9HgImffsVco+CyYP4CbFJd
+         qjLg==
+X-Gm-Message-State: APjAAAX9Goj6Y/2ClKS1Sz5BZesuz9pcJTckcVd7wsSwFFa27O14bU8F
+        5j2KtW9bgnY8l0IZ38HY1aLp0Ubq
+X-Google-Smtp-Source: APXvYqwIGO3Mekh362kEZo8BVpeRaeVC2OasEyRfgqcEi+176KQ1mJuueVtnWOgez5ytxtpVmbuN0A==
+X-Received: by 2002:a1c:7c18:: with SMTP id x24mr4697689wmc.15.1557138465762;
+        Mon, 06 May 2019 03:27:45 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id o6sm22024818wre.60.2019.05.06.03.27.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 03:27:45 -0700 (PDT)
+Date:   Mon, 6 May 2019 12:27:42 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [GIT PULL] x86/irq changes for v5.2
+Message-ID: <20190506102742.GA119840@gmail.com>
 MIME-Version: 1.0
-References: <20190504135608.176687-1-jannh@google.com> <CAFCwf13x2TYDtu7UvzKrntzGL3bxB96kQEFrKDRdV0-h2qeL2g@mail.gmail.com>
-In-Reply-To: <CAFCwf13x2TYDtu7UvzKrntzGL3bxB96kQEFrKDRdV0-h2qeL2g@mail.gmail.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Mon, 6 May 2019 13:21:40 +0300
-Message-ID: <CAFCwf10oiXVzQP6sAVmuH2p7O+0eKVGqLPa6s144k0quQr0jhw@mail.gmail.com>
-Subject: Re: [PATCH] habanalabs: fix debugfs code
-To:     Jann Horn <jannh@google.com>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 1:15 PM Oded Gabbay <oded.gabbay@gmail.com> wrote:
->
-> On Sat, May 4, 2019 at 4:56 PM Jann Horn <jannh@google.com> wrote:
-> >
-> > This fixes multiple things in the habanalabs debugfs code, in particular:
-> >
-> >  - mmu_write() was unnecessarily verbose, copying around between multiple
-> >    buffers
-> >  - mmu_write() could write a user-specified, unbounded amount of userspace
-> >    memory into a kernel buffer (out-of-bounds write)
-> >  - multiple debugfs read handlers ignored the user-supplied count,
-> >    potentially corrupting out-of-bounds userspace data
-> >  - hl_device_read() was unnecessarily verbose
-> >  - hl_device_write() could read uninitialized stack memory
-> >  - multiple debugfs read handlers copied terminating null characters to
-> >    userspace
-> >
-> > Signed-off-by: Jann Horn <jannh@google.com>
-> > ---
-> > compile-tested only, so you might want to test this before applying the
-> > patch
-> >
-> >  drivers/misc/habanalabs/debugfs.c | 60 ++++++++++---------------------
-> >  1 file changed, 18 insertions(+), 42 deletions(-)
-> >
-> > diff --git a/drivers/misc/habanalabs/debugfs.c b/drivers/misc/habanalabs/debugfs.c
-> > index 974a87789bd86..17ba26422b297 100644
-> > --- a/drivers/misc/habanalabs/debugfs.c
-> > +++ b/drivers/misc/habanalabs/debugfs.c
-> > @@ -459,41 +459,31 @@ static ssize_t mmu_write(struct file *file, const char __user *buf,
-> >         struct hl_debugfs_entry *entry = s->private;
-> >         struct hl_dbg_device_entry *dev_entry = entry->dev_entry;
-> >         struct hl_device *hdev = dev_entry->hdev;
-> > -       char kbuf[MMU_KBUF_SIZE], asid_kbuf[MMU_ASID_BUF_SIZE],
-> > -               addr_kbuf[MMU_ADDR_BUF_SIZE];
-> > +       char kbuf[MMU_KBUF_SIZE];
-> >         char *c;
-> >         ssize_t rc;
-> >
-> >         if (!hdev->mmu_enable)
-> >                 return count;
-> >
-> > -       memset(kbuf, 0, sizeof(kbuf));
-> > -       memset(asid_kbuf, 0, sizeof(asid_kbuf));
-> > -       memset(addr_kbuf, 0, sizeof(addr_kbuf));
-> > -
-> > +       if (count > sizeof(kbuf) - 1)
-> > +               goto err;
-> >         if (copy_from_user(kbuf, buf, count))
-> >                 goto err;
-> > -
-> > -       kbuf[MMU_KBUF_SIZE - 1] = 0;
-> > +       kbuf[count] = 0;
-> >
-> >         c = strchr(kbuf, ' ');
-> >         if (!c)
-> >                 goto err;
-> > +       *c = '\0';
-> >
-> > -       memcpy(asid_kbuf, kbuf, c - kbuf);
-> > -
-> > -       rc = kstrtouint(asid_kbuf, 10, &dev_entry->mmu_asid);
-> > +       rc = kstrtouint(kbuf, 10, &dev_entry->mmu_asid);
-> >         if (rc)
-> >                 goto err;
-> >
-> > -       c = strstr(kbuf, " 0x");
-> > -       if (!c)
-> > +       if (strncmp(c+1, "0x", 2))
-> >                 goto err;
-> > -
-> > -       c += 3;
-> > -       memcpy(addr_kbuf, c, (kbuf + count) - c);
-> > -
-> > -       rc = kstrtoull(addr_kbuf, 16, &dev_entry->mmu_addr);
-> > +       rc = kstrtoull(c+3, 16, &dev_entry->mmu_addr);
-> >         if (rc)
-> >                 goto err;
-> >
-> > @@ -525,10 +515,8 @@ static ssize_t hl_data_read32(struct file *f, char __user *buf,
-> >         }
-> >
-> >         sprintf(tmp_buf, "0x%08x\n", val);
-> > -       rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
-> > -                       strlen(tmp_buf) + 1);
-> > -
-> > -       return rc;
-> > +       return simple_read_from_buffer(buf, count, ppos, tmp_buf,
-> > +                       strlen(tmp_buf));
-> >  }
-> >
-> >  static ssize_t hl_data_write32(struct file *f, const char __user *buf,
-> > @@ -559,7 +547,6 @@ static ssize_t hl_get_power_state(struct file *f, char __user *buf,
-> >         struct hl_dbg_device_entry *entry = file_inode(f)->i_private;
-> >         struct hl_device *hdev = entry->hdev;
-> >         char tmp_buf[200];
-> > -       ssize_t rc;
-> >         int i;
-> >
-> >         if (*ppos)
-> > @@ -574,10 +561,8 @@ static ssize_t hl_get_power_state(struct file *f, char __user *buf,
-> >
-> >         sprintf(tmp_buf,
-> >                 "current power state: %d\n1 - D0\n2 - D3hot\n3 - Unknown\n", i);
-> > -       rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
-> > -                       strlen(tmp_buf) + 1);
-> > -
-> > -       return rc;
-> > +       return simple_read_from_buffer(buf, count, ppos, tmp_buf,
-> > +                       strlen(tmp_buf));
-> >  }
-> >
-> >  static ssize_t hl_set_power_state(struct file *f, const char __user *buf,
-> > @@ -630,8 +615,8 @@ static ssize_t hl_i2c_data_read(struct file *f, char __user *buf,
-> >         }
-> >
-> >         sprintf(tmp_buf, "0x%02x\n", val);
-> > -       rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
-> > -                       strlen(tmp_buf) + 1);
-> > +       rc = simple_read_from_buffer(buf, count, ppos, tmp_buf,
-> > +                       strlen(tmp_buf));
-> >
-> >         return rc;
-> >  }
-> > @@ -720,18 +705,9 @@ static ssize_t hl_led2_write(struct file *f, const char __user *buf,
-> >  static ssize_t hl_device_read(struct file *f, char __user *buf,
-> >                                         size_t count, loff_t *ppos)
-> >  {
-> > -       char tmp_buf[200];
-> > -       ssize_t rc;
-> > -
-> > -       if (*ppos)
-> > -               return 0;
-> > -
-> > -       sprintf(tmp_buf,
-> > -               "Valid values: disable, enable, suspend, resume, cpu_timeout\n");
-> > -       rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
-> > -                       strlen(tmp_buf) + 1);
-> > -
-> > -       return rc;
-> > +       static const char *help =
-> > +               "Valid values: disable, enable, suspend, resume, cpu_timeout\n";
-> > +       return simple_read_from_buffer(buf, count, ppos, help, strlen(help));
-> >  }
-> >
-> >  static ssize_t hl_device_write(struct file *f, const char __user *buf,
-> > @@ -739,7 +715,7 @@ static ssize_t hl_device_write(struct file *f, const char __user *buf,
-> >  {
-> >         struct hl_dbg_device_entry *entry = file_inode(f)->i_private;
-> >         struct hl_device *hdev = entry->hdev;
-> > -       char data[30];
-> > +       char data[30] = {0};
-> >
-> >         /* don't allow partial writes */
-> >         if (*ppos != 0)
-> > --
-> > 2.21.0.1020.gf2820cf01a-goog
-> >
->
-> Thanks!
-> Will be applied to my -next branch
->
-> This patch is:
-> Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Linus,
 
-Sorry, I meant my -fixed branch, as these are definitely worth going into 5.2
-I think they can also be marked as stable for back-porting.
+Please pull the latest x86-irq-for-linus git tree from:
 
-Oded
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-irq-for-linus
+
+   # HEAD: 2c4645439e8f2f6e7c37f158feae6f6a82baa910 x86/irq: Fix outdated comments
+
+Here are the main changes in this tree:
+
+ - Introduce x86-64 IRQ/exception/debug stack guard pages to detect stack 
+   overflows immediately and deterministically.
+
+ - Clean up over a decade worth of cruft accumulated.
+
+The outcome of this feature should be more clear-cut faults/crashes when 
+any of the low level x86 CPU stacks overflow, instead of silent memory 
+corruption and sporadic failures much later on.
+
+
+  out-of-topic modifications in x86-irq-for-linus:
+  --------------------------------------------------
+  mm/slab.c                          # 80552f0f7aeb: mm/slab: Remove store_stacki
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Andy Lutomirski (4):
+      x86/dumpstack: Fix off-by-one errors in stack identification
+      x86/irq/64: Remove a hardcoded irq_stack_union access
+      x86/irq/64: Split the IRQ stack into its own pages
+      x86/irq/64: Remap the IRQ stack with guard pages
+
+Jiang Biao (1):
+      x86/irq: Fix outdated comments
+
+Qian Cai (1):
+      mm/slab: Remove store_stackinfo()
+
+Thomas Gleixner (27):
+      x86/irq/64: Limit IST stack overflow check to #DB stack
+      x86/irq/64: Sanitize the top/bottom confusion
+      x86/idt: Remove unused macro SISTG
+      x86/64: Remove stale CURRENT_MASK
+      x86/exceptions: Remove unused stack defines on 32bit
+      x86/exceptions: Make IST index zero based
+      x86/cpu_entry_area: Cleanup setup functions
+      x86/exceptions: Add structs for exception stacks
+      x86/cpu_entry_area: Prepare for IST guard pages
+      x86/cpu_entry_area: Provide exception stack accessor
+      x86/traps: Use cpu_entry_area instead of orig_ist
+      x86/irq/64: Use cpu entry area instead of orig_ist
+      x86/dumpstack/64: Use cpu_entry_area instead of orig_ist
+      x86/cpu: Prepare TSS.IST setup for guard pages
+      x86/cpu: Remove orig_ist array
+      x86/exceptions: Disconnect IST index and stack order
+      x86/exceptions: Enable IST guard pages
+      x86/exceptions: Split debug IST stack
+      x86/dumpstack/64: Speedup in_exception_stack()
+      x86/irq/32: Define IRQ_STACK_SIZE
+      x86/irq/32: Make irq stack a character array
+      x86/irq/32: Rename hard/softirq_stack to hard/softirq_stack_ptr
+      x86/irq/64: Rename irq_stack_ptr to hardirq_stack_ptr
+      x86/irq/32: Invoke irq_ctx_init() from init_IRQ()
+      x86/irq/32: Handle irq stack allocation failure proper
+      x86/irq/64: Init hardirq_stack_ptr during CPU hotplug
+      x86/irq/64: Remove stack overflow debug code
+
+
+ Documentation/x86/kernel-stacks       | 13 +++--
+ arch/x86/Kconfig                      |  2 +-
+ arch/x86/entry/entry_64.S             | 16 +++---
+ arch/x86/include/asm/cpu_entry_area.h | 69 ++++++++++++++++++++++--
+ arch/x86/include/asm/debugreg.h       |  2 -
+ arch/x86/include/asm/irq.h            |  6 +--
+ arch/x86/include/asm/irq_vectors.h    |  4 +-
+ arch/x86/include/asm/page_32_types.h  |  8 ++-
+ arch/x86/include/asm/page_64_types.h  | 16 +++---
+ arch/x86/include/asm/processor.h      | 43 ++++++---------
+ arch/x86/include/asm/smp.h            |  2 +-
+ arch/x86/include/asm/stackprotector.h |  6 +--
+ arch/x86/include/asm/stacktrace.h     |  2 +
+ arch/x86/kernel/asm-offsets_64.c      |  4 +-
+ arch/x86/kernel/cpu/common.c          | 60 ++++-----------------
+ arch/x86/kernel/dumpstack_32.c        |  8 +--
+ arch/x86/kernel/dumpstack_64.c        | 99 ++++++++++++++++++++++++-----------
+ arch/x86/kernel/head_64.S             |  2 +-
+ arch/x86/kernel/idt.c                 | 19 ++++---
+ arch/x86/kernel/irq_32.c              | 41 ++++++++-------
+ arch/x86/kernel/irq_64.c              | 89 +++++++++++++++----------------
+ arch/x86/kernel/irqinit.c             |  4 +-
+ arch/x86/kernel/nmi.c                 | 20 ++++++-
+ arch/x86/kernel/setup_percpu.c        |  5 --
+ arch/x86/kernel/smpboot.c             | 15 ++++--
+ arch/x86/kernel/vmlinux.lds.S         |  7 +--
+ arch/x86/mm/cpu_entry_area.c          | 64 +++++++++++++++-------
+ arch/x86/mm/fault.c                   |  3 +-
+ arch/x86/tools/relocs.c               |  2 +-
+ arch/x86/xen/smp_pv.c                 |  4 +-
+ arch/x86/xen/xen-head.S               | 10 ++--
+ drivers/xen/events/events_base.c      |  1 -
+ mm/slab.c                             | 48 +++--------------
+ 33 files changed, 377 insertions(+), 317 deletions(-)
