@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF91C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E8DC04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FDED205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23C3205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154040;
-	bh=FbLKEUl3KRNnMUhZoYAxYnUWvRn/WoNTy/4xfKgqgTc=;
+	s=default; t=1557154043;
+	bh=b4htW5DfEGMi9hOIptOK6giroC6eysaZT+46tVecKns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QPAibpKC1MNMWOBzDO4XWs9AslYr1/0SKdMpbQOd9l6FCOG8ULRW2qwHDcphzQi3K
-	 InpVpoIGYhcs3rTBNz4xaF1jxJfn++MKMpd0i1iW9I26+Gb833cFb59dkc0AlvAR0M
-	 YkAxGg9nqC50kunOGfUUE3YW6wiz/9E5kGIpgmYk=
+	b=I5ngT1hZLDPKXkgi8vImDOQvPYbzwqBCRgJsxSBtwLu7Q9tCslr+eQmwb9szB+yMZ
+	 M1eThgtfH88h2OZPXBh26moKXgC6phtzIm60qKxuci5YHxsYEth7+Li1g9lleNjjyh
+	 0Ly7pXA9woIrSG3Mcf/ZxhQWpnVa6bm0wmEZZl/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbfEFOrT (ORCPT
+        id S1729301AbfEFOrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46172 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:47:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729279AbfEFOrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:16 -0400
+        id S1728776AbfEFOrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BEB6214AE;
-        Mon,  6 May 2019 14:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F32620578;
+        Mon,  6 May 2019 14:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154035;
-        bh=FbLKEUl3KRNnMUhZoYAxYnUWvRn/WoNTy/4xfKgqgTc=;
+        s=default; t=1557154040;
+        bh=b4htW5DfEGMi9hOIptOK6giroC6eysaZT+46tVecKns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iUsUXaFajtpqNF0q1lCxj9XIrxofqh2XCdO6WpTr4XHRDWF/HI4uOUGGhXqvhr8NE
-         MfhqSQRfMMievXaY+F1BpGX+pRcZw4U6enDqD2TymUJ1sgh7BhcCfMlpYpWOLEjIx3
-         Ln85VIyPHfE0k+lc30UIlamnsD8VU+5Cnvu4rn5I=
+        b=ILPYOUYghjZetxqdqVBkkiadkrYrlgCvca2jvlZ+RgFTViY+LMoCdflUUztKENw/p
+         J+eH91KDQQLDMMPPNITvoMo82/h+vZxRVeUCIW9eMVYAxfKW6Br+QSzvZqgG7yGvQ2
+         +FokOwJnEjnSfo2LYgMKChi1w3UHeqBuZRXgxJNM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
         Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 4.9 14/62] kasan: add a prototype of task_struct to avoid warning
-Date:   Mon,  6 May 2019 16:32:45 +0200
-Message-Id: <20190506143052.314322038@linuxfoundation.org>
+Subject: [PATCH 4.9 16/62] kasan: remove redundant initialization of variable real_size
+Date:   Mon,  6 May 2019 16:32:47 +0200
+Message-Id: <20190506143052.471187212@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -65,30 +64,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 5be9b730b09c45c358bbfe7f51d254e306cccc07 upstream.
+commit 48c232395431c23d35cf3b4c5a090bd793316578 upstream.
 
-Add a prototype of task_struct to fix below warning on arm64.
+Variable real_size is initialized with a value that is never read, it is
+re-assigned a new value later on, hence the initialization is redundant
+and can be removed.
 
-  In file included from arch/arm64/kernel/probes/kprobes.c:19:0:
-  include/linux/kasan.h:81:132: error: 'struct task_struct' declared inside parameter list will not be visible outside of this definition or declaration [-Werror]
-   static inline void kasan_unpoison_task_stack(struct task_struct *task) {}
+Cleans up clang warning:
 
-As same as other types (kmem_cache, page, and vm_struct) this adds a
-prototype of task_struct data structure on top of kasan.h.
+  lib/test_kasan.c:422:21: warning: Value stored to 'real_size' during its initialization is never read
 
-[arnd] A related warning was fixed before, but now appears in a
-different line in the same file in v4.11-rc2.  The patch from Masami
-Hiramatsu still seems appropriate, so let's take his version.
-
-Fixes: 71af2ed5eeea ("kasan, sched/headers: Remove <linux/sched.h> from <linux/kasan.h>")
-Link: https://patchwork.kernel.org/patch/9569839/
-Link: http://lkml.kernel.org/r/20170313141517.3397802-1-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Alexander Potapenko <glider@google.com>
+Link: http://lkml.kernel.org/r/20180206144950.32457-1-colin.king@canonical.com
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Potapenko <glider@google.com>
 Cc: Dmitry Vyukov <dvyukov@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
@@ -96,18 +88,19 @@ Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/kasan.h |    1 +
- 1 file changed, 1 insertion(+)
+ lib/test_kasan.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/kasan.h
-+++ b/include/linux/kasan.h
-@@ -7,6 +7,7 @@
- struct kmem_cache;
- struct page;
- struct vm_struct;
-+struct task_struct;
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -355,7 +355,7 @@ static noinline void __init kasan_stack_
+ static noinline void __init ksize_unpoisons_memory(void)
+ {
+ 	char *ptr;
+-	size_t size = 123, real_size = size;
++	size_t size = 123, real_size;
  
- #ifdef CONFIG_KASAN
- 
+ 	pr_info("ksize() unpoisons the whole allocated chunk\n");
+ 	ptr = kmalloc(size, GFP_KERNEL);
 
 
