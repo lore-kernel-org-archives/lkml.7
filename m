@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E8FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C10AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E08206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E6E7214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153588;
-	bh=YfW38Wj8yAMLTXOz0TwUClnEogQ6Up7uCe3W6uiivCc=;
+	s=default; t=1557153592;
+	bh=Dy+I8rsDbFZauPhRvbkfbHNORIdzXayt9jJPqi/2LOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iDamRQM6AA5yyEHrWbHGxtL0XjocsLG5oLE8IKT2vJBUoimcoId9R4TrJr6n+8Go4
-	 T1Ir8CiOZgfERQBFK+dw/ynJHgQxmnPqtJj605zHXhMmSdgnUyKats/QD5vInr273h
-	 uoJ80Tzbmzb6x4pgIhYOKXQ+323dURe0JboTjFUw=
+	b=TIUK5WyA1LbYb2ZhlUG0H+jiwt1iNbp9f4vC8HBFxXhiQzAuVx2FSvXjlJzTjlAzU
+	 V9Whh6wHkCwGTHZjVd7PPydjEl6ZeYCA3Mxiujv6xW3/kg7I3XtYsYXkbffwT9EpMp
+	 a4ObtLKNIUvcNwMPLVoji1Ib46gcctJ+YGWkn+tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbfEFOjr (ORCPT
+        id S1727896AbfEFOjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:39:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32854 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:39:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726935AbfEFOjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:39:43 -0400
+        id S1727885AbfEFOjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:39:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C369B206A3;
-        Mon,  6 May 2019 14:39:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66BEE206A3;
+        Mon,  6 May 2019 14:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153583;
-        bh=YfW38Wj8yAMLTXOz0TwUClnEogQ6Up7uCe3W6uiivCc=;
+        s=default; t=1557153586;
+        bh=Dy+I8rsDbFZauPhRvbkfbHNORIdzXayt9jJPqi/2LOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jQgFPs0+3Pu9OrwMBcsQeR3AvvUN7W59f1illEcJxGWCzw0YKHQpyklnClL09hMK4
-         a31Z/NJE1CitvCFW6S64L8ypIuZLe/0fFVjcvYbw+brUOD2YsU3zcrDzXG2BDjtm2Z
-         dkHKXOQ2lgrij7ECQgyTvXxcuo4GofwQHLcb+B9c=
+        b=OJf14wEzfjize+4yc9N6IiaFEoef5Kp9UYCTR4pTYnVPruNY7qYvjrgxMlfy50336
+         h5CbXHseH+m2mWMFmEWI0XFsS/a6q0ZpVLISYe6YLx2ZeeGlm0pktaK1Sa30b3PD7Y
+         hIyU9gYJvBqiZNQL0vXqIZYgkRvb27qp+3cg8xUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4ece1a28b8f4730547c9@syzkaller.appspotmail.com,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 03/99] mac80211: dont attempt to rename ERR_PTR() debugfs dirs
-Date:   Mon,  6 May 2019 16:31:36 +0200
-Message-Id: <20190506143054.184704313@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.19 04/99] i2c: synquacer: fix enumeration of slave devices
+Date:   Mon,  6 May 2019 16:31:37 +0200
+Message-Id: <20190506143054.270143744@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -59,37 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 517879147493a5e1df6b89a50f708f1133fcaddb upstream.
+commit 95e0cf3caeb11e1b0398c747b5cfa12828263824 upstream.
 
-We need to dereference the directory to get its parent to
-be able to rename it, so it's clearly not safe to try to
-do this with ERR_PTR() pointers. Skip in this case.
+The I2C host driver for SynQuacer fails to populate the of_node and
+ACPI companion fields of the struct i2c_adapter it instantiates,
+resulting in enumeration of the subordinate I2C bus to fail.
 
-It seems that this is most likely what was causing the
-report by syzbot, but I'm not entirely sure as it didn't
-come with a reproducer this time.
-
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+4ece1a28b8f4730547c9@syzkaller.appspotmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 0d676a6c4390 ("i2c: add support for Socionext SynQuacer I2C controller")
+Cc: <stable@vger.kernel.org> # v4.19+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/debugfs_netdev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-synquacer.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/mac80211/debugfs_netdev.c
-+++ b/net/mac80211/debugfs_netdev.c
-@@ -838,7 +838,7 @@ void ieee80211_debugfs_rename_netdev(str
+--- a/drivers/i2c/busses/i2c-synquacer.c
++++ b/drivers/i2c/busses/i2c-synquacer.c
+@@ -602,6 +602,8 @@ static int synquacer_i2c_probe(struct pl
+ 	i2c->adapter = synquacer_i2c_ops;
+ 	i2c_set_adapdata(&i2c->adapter, i2c);
+ 	i2c->adapter.dev.parent = &pdev->dev;
++	i2c->adapter.dev.of_node = pdev->dev.of_node;
++	ACPI_COMPANION_SET(&i2c->adapter.dev, ACPI_COMPANION(&pdev->dev));
+ 	i2c->adapter.nr = pdev->id;
+ 	init_completion(&i2c->completion);
  
- 	dir = sdata->vif.debugfs_dir;
- 
--	if (!dir)
-+	if (IS_ERR_OR_NULL(dir))
- 		return;
- 
- 	sprintf(buf, "netdev:%s", sdata->name);
 
 
