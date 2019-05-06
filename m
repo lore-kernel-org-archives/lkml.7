@@ -2,172 +2,200 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773CBC04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DC5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D96B21726
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Gb958JLS"
+	by mail.kernel.org (Postfix) with ESMTP id F0A0F20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557138737;
+	bh=3JCJMc9zODDgLmmFccVN0ejlvOewwJV9G5errqUneAo=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Jcm4XCTL/WaJSPa1BwVx1B0kNU+ROF/7LaLVc6m0kRWel0/TAKxUPXkkMqbMhMpXw
+	 1raSrcHyl5mxX6jWCunHnV21BDgAHlRVYPquTDB1spELiMFuLtar3jBxQH5Sos/dEQ
+	 IhNpo7xX+Ly92KqkUntwBPCUyLQYoqWazdExa16g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfEFK3p (ORCPT
+        id S1726379AbfEFKcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 06:29:45 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:50735 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfEFK3o (ORCPT
+        Mon, 6 May 2019 06:32:15 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37515 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfEFKcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 06:29:44 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190506102942euoutp012eacdc1943ea17ba0cacb0147bc9a57b~cEUqB5GuQ2844528445euoutp01B
-        for <linux-kernel@vger.kernel.org>; Mon,  6 May 2019 10:29:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190506102942euoutp012eacdc1943ea17ba0cacb0147bc9a57b~cEUqB5GuQ2844528445euoutp01B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557138582;
-        bh=1Zxj4PqvwivxAPF6w95dS0sI9tHHMuUsGPtKoed7y/0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Gb958JLSKuhMoy6HkhEyV7Mk01thn6AleP6oKBL4N+STSSvS7jwSQOM7bbrbGkiAd
-         x6n6/Wvfg2z5A029EoR1LFALbIacRjHSO8Vw4YuzZ7ekiF5MYj8zHuki/Q4xbchSZI
-         8aGT53rbUCrNhT5jA3umZ7BFD8OjJNzngvq78aJw=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190506102941eucas1p13c11436a32f3a0770ad3be1a982a263b~cEUpIJWCm1056610566eucas1p1U;
-        Mon,  6 May 2019 10:29:41 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 73.4D.04377.59C00DC5; Mon,  6
-        May 2019 11:29:41 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190506102940eucas1p1ee62c58e1fc8ffa155cf1710baa82548~cEUoQxyBK0861308613eucas1p1x;
-        Mon,  6 May 2019 10:29:40 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190506102940eusmtrp112e35268797a7148d8ca48cce4162727~cEUoCo97o2720527205eusmtrp1N;
-        Mon,  6 May 2019 10:29:40 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-95-5cd00c95580a
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id D6.57.04140.49C00DC5; Mon,  6
-        May 2019 11:29:40 +0100 (BST)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190506102939eusmtip166c1968f0a5a51232c34544383386cf3~cEUnP8XUo0073300733eusmtip1L;
-        Mon,  6 May 2019 10:29:39 +0000 (GMT)
-Subject: Re: [PATCH v3 3/4] Documentation: devicetree: add PPMU events
- description
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, willy.mh.wolff.ml@gmail.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <97277857-666d-7720-9d85-19120c977682@partner.samsung.com>
-Date:   Mon, 6 May 2019 12:29:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Mon, 6 May 2019 06:32:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y5so14552993wma.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 03:32:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ynI90WlNjiUrk7TSctsvegrBgd0dj4yzlFdlx0swr1U=;
+        b=M7RmK4/Np4ooIlwTbdQlwikWtK+dYJaL9imrzICSUR1tx6mbLLyoVbWzodJ4SJ+rDx
+         PP9CXSnx+iK6O5xidu48tuFNotKb7RCA4Ou55HNvFZ4d128EcaGA5cMqXYaK72TIO0fl
+         Dy2AXZl+t6qsxkdVAdKJ0q8AAQAIGn2sawNRji2x5u/ZHibTen0dGjO094LheP3kGa1y
+         USV+dhZOvnzljl4GayeJ8kQf3Dfa4Ee4ElNgI4t7chhxSdiRqQ6WfTz5uIOc0+x7Raq4
+         AaqDPCIVp6riIoq0bzvgN2sJvZpsAR0D5h+KUuQ9t7xs9iY3zpoiF9xcaS0GCiwNKOJl
+         kI8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=ynI90WlNjiUrk7TSctsvegrBgd0dj4yzlFdlx0swr1U=;
+        b=AAUzLg20mNzFPNIVGwsQRG4QsLVo1fVUKD//dL7Ir55JGFe603Ma5Wl7zM/9OJPZNG
+         hJRZmVV7RseiEWUkHuIHthc8q2931nbCnSaa07tzYWrLK28X8iSyC6LNKnPZO7POp/pF
+         MaMz0jeD0ZThZ1T6qFqOn5YgjnQptC1YNEZq9U3vUoaQSGoWBei1FCnsVSfKY+jC2hQ/
+         qIYGICzAtO/CSmVxssWwY1+Z01Z54pvPQovpgpN24bWbDKlWG5Cx2se7yHOOFKNvZLQu
+         zND+QNbSHJGurI/WA16YFtg3inUqRyZG5IHkZud4FNwu74dIveH03ePqw+PZrYcvXKcj
+         6xBw==
+X-Gm-Message-State: APjAAAXYyT/pyqB7y/3GdntpHXa8i9cgzyMDWWZFMeBjXN4hU5PwapJS
+        bUdhZN1ukvRI6B7ciKiVGL8=
+X-Google-Smtp-Source: APXvYqxbz1p3fFcYVed8i8oIzYauNaj5AQtruiK/xWAtnM+nz9iZ7ntN7m9PRMeWD5zpKpuzqYVbjA==
+X-Received: by 2002:a05:600c:2283:: with SMTP id 3mr15395677wmf.125.1557138732056;
+        Mon, 06 May 2019 03:32:12 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id v18sm8475914wro.11.2019.05.06.03.32.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 03:32:11 -0700 (PDT)
+Date:   Mon, 6 May 2019 12:32:09 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/kdump changes for v5.2
+Message-ID: <20190506103209.GA124678@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJcm9Z6vYFHGyAZ+h3-kmSv6e=3NtO-fjJn3-QT0JoX+w@mail.gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUyNYRjHu8/z2lknd4d0iWkefaBNaD7cphkmzjeahtFw6FmikvOU900y
-        p6S3Fac6S2Veau3k5JRU3iu9rHJCq5QwpUYdTLEsSU9Ppm+/+7p//93/a7t5StvFePJhkdGi
-        IVIfLrBqurzul33ZFZfW4BWmpMXkTpaVIR0jAwzJq33OkNTeQYrY7SUcaYkb4oitt50hr6py
-        WDKcXItIlv2RihTX9nDkZscLFek+V8iSiQcVHKkZimfIz4YPaB3WWXItSFdp7uF0tqKLrK70
-        xlldSlkR0g3bFm5ld6n9Q8TwsGOiYfnafeqD1oEGOqrT5cSjpy+pWGRTJyJnHvAqmOj+xiUi
-        Na/FhQjSU5pp5TCC4ElsMSVbWjyM4OWtkH+JrxktjCIVIGhr/jGdcCC4bMpiZWs2DoLbb9s5
-        mefgRTBmNE0lKNzMQKs5fjLB8yz2hYqio7KjwZvAktbIyExjb0i8mzDF7ngnvKsrYRTHDRqz
-        +2iZnXEgpA1dmGpHYQ/o6stTKewF9xw5lPwW4HEOno3WskrtjdB56Q+n8Gz4XF82zQugKSOJ
-        VliC2ORrSOEz0Jt6ddpZAzX1Lxi5M4WXgrVquTJeD6WF40geA3aFToebUsEV0sszKWWsgQSj
-        VrGXQFlSq0rhuVBgMXFpSDDPWMw8YxnzjGXM/9/NR3QR8hBjpIhQUfKLFI/7SvoIKSYy1PfA
-        kQgbmvxxTX/qRypQ1e/91QjzSHDR5Hvbg7WM/ph0MqIaAU8JczT6/ufBWk2I/uQp0XBkryEm
-        XJSq0XyeFjw0p53e79biUH20eFgUo0TDv1sV7+wZi5LzjQ1xeYOPT7w9uyTzixDSV7fSmGAX
-        3Dnrho9Bhype33aQtQ91zYPbP/tVVg3mdp5v7y/v+bq+8c3cluptPWxKVDgN7r0lJu11o1d2
-        sXXP6JNPD5qGt5jrAvz9HS73db935AbM89m82jQWyKdqhFctTkGzMrOEdfELPJIenv/eJtDS
-        Qf1KH8og6f8CTulMDW0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRmVeSWpSXmKPExsVy+t/xu7pTeC7EGJyfqmWxccZ6VovrX56z
-        Wsw/co7Vov/xa2aL8+c3sFucbXrDbrHp8TVWi8u75rBZfO49wmgx4/w+Jou1R+6yWyy9fpHJ
-        4nbjCjaL/3t2sFscftPOavHtxCNGBwGPNfPWMHrsnHWX3WPTqk42j81L6j36tqxi9Pi8SS6A
-        LUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEvY/3z
-        EywFN3gq9h28xNzAuImri5GTQ0LAROL95LOsXYxcHEICSxklJl67yA6REJOYtG87lC0s8eda
-        FxtE0WtGiRfHVoAlhAVCJNbduwZmiwgoSvxumwY2iVngEqvE1m1NUGNbmCWmNhxk7GLk4GAT
-        0JPYsaoQpIFXwE1izYSTrCA2i4CKRNfWDjBbVCBC4sz7FSwQNYISJ2c+AbM5BQIlJrxpZQax
-        mQXMJOZtfghli0vcejKfCcKWl9j+dg7zBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN
-        9IoTc4tL89L1kvNzNzECI3vbsZ9bdjB2vQs+xCjAwajEw+uhdD5GiDWxrLgy9xCjBAezkghv
-        4rNzMUK8KYmVValF+fFFpTmpxYcYTYGem8gsJZqcD0w6eSXxhqaG5haWhubG5sZmFkrivB0C
-        B2OEBNITS1KzU1MLUotg+pg4OKUaGDeoRlxTe3Xhna9yipRq42r5gzyPJ6gXTHI/vzBq4s0z
-        LO/dDNcGsiyL5w72XpAq7FazRbG/7x/7lDLFZx4mlXPn7PhfYH7++7Hdn00mn43mVhe7PX/L
-        ba17Gt/3Tll347BZxO1nWUvNFCsYbvo9mFvJKHjjbrhFvaN25l1v1rSK7WGXZj05wqXEUpyR
-        aKjFXFScCACXdFxBAgMAAA==
-X-CMS-MailID: 20190506102940eucas1p1ee62c58e1fc8ffa155cf1710baa82548
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0
-References: <1555681688-19643-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190419134822eucas1p29c6eff0f500311749b33c4f556123cf0@eucas1p2.samsung.com>
-        <1555681688-19643-4-git-send-email-l.luba@partner.samsung.com>
-        <20190430223629.GA22317@bogus>
-        <1fd44623-4a59-f014-1ae9-a7cc605ad30f@partner.samsung.com>
-        <CAL_JsqJcm9Z6vYFHGyAZ+h3-kmSv6e=3NtO-fjJn3-QT0JoX+w@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Linus,
 
-On 5/2/19 10:24 PM, Rob Herring wrote:
-> On Thu, May 2, 2019 at 3:52 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> Hi Rob,
->>
->> On 5/1/19 12:36 AM, Rob Herring wrote:
->>> On Fri, Apr 19, 2019 at 03:48:07PM +0200, Lukasz Luba wrote:
->>>> Extend the documenation by events description with new 'event-data-type'
->>>> field. Add example how the event might be defined in DT.
->>>
->>> Why do we need event types in DT? We don't do this for other h/w such as
->>> ARM PMU.
->> In ARM PMU all the events are hard-coded into the driver code i.e. in v7
->> arch/arm/kernel/perf_event_v7.c
->> and are seen from perf. They are different type and for different
->> purpose. The Ecynos PPMU events are not seen in perf, they are
->> for internal monitoring and must not be reset by other actors like perf.
->> They are used by the 'bus drivers' to made some heuristics and tune the
->> internal settings, like frequency.
->>
->> Chanwoo has written PPMU driver which relies on DT definition.
->> The DT events are used by other DT devices by phandle.
-> 
-> How is that done? I don't see anything in the binding for that.
-Here are the DT devices and how they are pinned together:
-- declared devfreq events:
-https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-ppmu-common.dtsi
-- devfreq events pinned to the bus device:
-https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412-odroid-common.dtsi#L107
-- the bus device itself:
-https://elixir.bootlin.com/linux/latest/source/arch/arm/boot/dts/exynos4412.dtsi#L457
+Please pull the latest x86-kdump-for-linus git tree from:
 
-Regards,
-Lukasz
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-kdump-for-linus
 
-> 
-> Rob
-> 
-> 
+   # HEAD: b9ac3849af412fd3887d7652bdbabf29d2aecc16 x86/kdump: Fall back to reserve high crashkernel memory
+
+This tree includes two changes:
+
+ - Raise the crash kernel reservation limit from from ~896MB to ~4GB. 
+   Only very old (and already known-broken) kexec-tools is supposed to be 
+   affected by this negatively.
+
+ - Allow higher than 4GB crash kernel allocations when low allocations 
+   fail.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Dave Young (2):
+      x86/kdump: Have crashkernel=X reserve under 4G by default
+      x86/kdump: Fall back to reserve high crashkernel memory
+
+
+ Documentation/admin-guide/kernel-parameters.txt |  7 ++++--
+ arch/x86/kernel/setup.c                         | 32 +++++++++++++++----------
+ 2 files changed, 24 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 2b8ee90bb644..24d01648edeb 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -704,8 +704,11 @@
+ 			upon panic. This parameter reserves the physical
+ 			memory region [offset, offset + size] for that kernel
+ 			image. If '@offset' is omitted, then a suitable offset
+-			is selected automatically. Check
+-			Documentation/kdump/kdump.txt for further details.
++			is selected automatically.
++			[KNL, x86_64] select a region under 4G first, and
++			fall back to reserve region above 4G when '@offset'
++			hasn't been specified.
++			See Documentation/kdump/kdump.txt for further details.
+ 
+ 	crashkernel=range1:size1[,range2:size2,...][@offset]
+ 			[KNL] Same as above, but depends on the memory
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 3d872a527cd9..c15f362a2516 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -71,6 +71,7 @@
+ #include <linux/tboot.h>
+ #include <linux/jiffies.h>
+ #include <linux/mem_encrypt.h>
++#include <linux/sizes.h>
+ 
+ #include <linux/usb/xhci-dbgp.h>
+ #include <video/edid.h>
+@@ -448,18 +449,17 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ #ifdef CONFIG_KEXEC_CORE
+ 
+ /* 16M alignment for crash kernel regions */
+-#define CRASH_ALIGN		(16 << 20)
++#define CRASH_ALIGN		SZ_16M
+ 
+ /*
+  * Keep the crash kernel below this limit.  On 32 bits earlier kernels
+  * would limit the kernel to the low 512 MiB due to mapping restrictions.
+- * On 64bit, old kexec-tools need to under 896MiB.
+  */
+ #ifdef CONFIG_X86_32
+-# define CRASH_ADDR_LOW_MAX	(512 << 20)
+-# define CRASH_ADDR_HIGH_MAX	(512 << 20)
++# define CRASH_ADDR_LOW_MAX	SZ_512M
++# define CRASH_ADDR_HIGH_MAX	SZ_512M
+ #else
+-# define CRASH_ADDR_LOW_MAX	(896UL << 20)
++# define CRASH_ADDR_LOW_MAX	SZ_4G
+ # define CRASH_ADDR_HIGH_MAX	MAXMEM
+ #endif
+ 
+@@ -541,21 +541,27 @@ static void __init reserve_crashkernel(void)
+ 	}
+ 
+ 	/* 0 means: find the address automatically */
+-	if (crash_base <= 0) {
++	if (!crash_base) {
+ 		/*
+ 		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
+-		 * as old kexec-tools loads bzImage below that, unless
+-		 * "crashkernel=size[KMG],high" is specified.
++		 * crashkernel=x,high reserves memory over 4G, also allocates
++		 * 256M extra low memory for DMA buffers and swiotlb.
++		 * But the extra memory is not required for all machines.
++		 * So try low memory first and fall back to high memory
++		 * unless "crashkernel=size[KMG],high" is specified.
+ 		 */
+-		crash_base = memblock_find_in_range(CRASH_ALIGN,
+-						    high ? CRASH_ADDR_HIGH_MAX
+-							 : CRASH_ADDR_LOW_MAX,
+-						    crash_size, CRASH_ALIGN);
++		if (!high)
++			crash_base = memblock_find_in_range(CRASH_ALIGN,
++						CRASH_ADDR_LOW_MAX,
++						crash_size, CRASH_ALIGN);
++		if (!crash_base)
++			crash_base = memblock_find_in_range(CRASH_ALIGN,
++						CRASH_ADDR_HIGH_MAX,
++						crash_size, CRASH_ALIGN);
+ 		if (!crash_base) {
+ 			pr_info("crashkernel reservation failed - No suitable area found.\n");
+ 			return;
+ 		}
+-
+ 	} else {
+ 		unsigned long long start;
+ 
