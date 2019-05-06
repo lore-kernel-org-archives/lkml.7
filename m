@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52514C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D97C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E76020449
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07EF7214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153545;
-	bh=BKhbmqv6L6lntJ0v+ab+H4zgl/rxM7OzeccCAY5BKTA=;
+	s=default; t=1557153548;
+	bh=YWmIRXnPDSIST+5S/E+Jo9v990ZF95a3j597D5119sE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U0ntqtItNW9V1tctLNwYeVYybXOpVtDw2rjWqNIFG8aK8fSg1/nN8E8+B+6sSX5YG
-	 Tkay7JBp8nJFUyOPcdbCb9/OhYEbfK0vokDpzXPed7EdbNkiShuwnPpL1sA4SMNUrO
-	 L3AiwA8M2g+AUh030ASGSowzWeie78uSayZYTdqQ=
+	b=jVtC6z4L6hwdkrqRs3BEVN+lDcQgS1rLosK0qOx2Slp9R9rNIcxnNh+rg2N/0GemF
+	 TO3cOiYrjqObKBPHJynhckl+c/WYDWG4fR0GVXhyvit0xHwOoa1R65uUEWU/NPOH/e
+	 VpQSn/0NNtYuzAOjogIOAnBLt5YWGtmlZULc2Ubs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbfEFOjE (ORCPT
+        id S1726282AbfEFOjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:39:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60192 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:39:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbfEFOix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:38:53 -0400
+        id S1727722AbfEFOjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:39:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8CDE214AF;
-        Mon,  6 May 2019 14:38:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78A4D21479;
+        Mon,  6 May 2019 14:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153532;
-        bh=BKhbmqv6L6lntJ0v+ab+H4zgl/rxM7OzeccCAY5BKTA=;
+        s=default; t=1557153543;
+        bh=YWmIRXnPDSIST+5S/E+Jo9v990ZF95a3j597D5119sE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eEex5zyep3Il6EmGrJerD3x3YUsVqB/uxJDGZUwpf7ZNqrWaB95d6XCU5tfbBbC9/
-         uSdE2zkMpa0NYYh8vD1MtVM2PvdHZagMxn5Phty9bvDWmV7lJXRSvAwxOp9un2VLyl
-         zFhVqysVoluJUZIBB5PS5ecUW56Egc0sQqwFLO7E=
+        b=Ix10W4p6q1WIb5Zo+Fn34wIF+YhjyyWfF+f9GUrKDcujBxmtEYEpAkwk0NHLtXLax
+         zbx8ze43HXQFPBgYKoT91ffJgd7/4ARdiZ/zgAzY6sfuDIOmsMRcS20eu7ixH5Z49G
+         vsS2qrHVfN4ihsqA2cvVF8Oe3t8kS/v70ncijDxY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f7e65445a40d3e0e4ebf@syzkaller.appspotmail.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.0 103/122] KVM: lapic: Check for in-kernel LAPIC before deferencing apic pointer
-Date:   Mon,  6 May 2019 16:32:41 +0200
-Message-Id: <20190506143103.965452572@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Jurgens <danielj@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.0 107/122] IB/core: Fix potential memory leak while creating MAD agents
+Date:   Mon,  6 May 2019 16:32:45 +0200
+Message-Id: <20190506143104.203535744@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -62,48 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Daniel Jurgens <danielj@mellanox.com>
 
-commit b904cb8dff824b79233e82c078837627ebd52717 upstream.
+commit 6e88e672b69f0e627acdae74a527b730ea224b6b upstream.
 
-...to avoid dereferencing a null pointer when querying the per-vCPU
-timer advance.
+If the MAD agents isn't allowed to manage the subnet, or fails to register
+for the LSM notifier, the security context is leaked. Free the context in
+these cases.
 
-Fixes: 39497d7660d98 ("KVM: lapic: Track lapic timer advance per vCPU")
-Reported-by: syzbot+f7e65445a40d3e0e4ebf@syzkaller.appspotmail.com
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 47a2b338fe63 ("IB/core: Enforce security on management datagrams")
+Signed-off-by: Daniel Jurgens <danielj@mellanox.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Reported-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/lapic.c |    3 ---
- arch/x86/kvm/x86.c   |    3 ++-
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/infiniband/core/security.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1504,9 +1504,6 @@ void wait_lapic_expire(struct kvm_vcpu *
- 	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
- 	u64 guest_tsc, tsc_deadline, ns;
+--- a/drivers/infiniband/core/security.c
++++ b/drivers/infiniband/core/security.c
+@@ -710,16 +710,20 @@ int ib_mad_agent_security_setup(struct i
+ 						dev_name(&agent->device->dev),
+ 						agent->port_num);
+ 	if (ret)
+-		return ret;
++		goto free_security;
  
--	if (!lapic_in_kernel(vcpu))
--		return;
--
- 	if (apic->lapic_timer.expired_tscdeadline == 0)
- 		return;
+ 	agent->lsm_nb.notifier_call = ib_mad_agent_security_change;
+ 	ret = register_lsm_notifier(&agent->lsm_nb);
+ 	if (ret)
+-		return ret;
++		goto free_security;
  
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7886,7 +7886,8 @@ static int vcpu_enter_guest(struct kvm_v
- 	}
+ 	agent->smp_allowed = true;
+ 	agent->lsm_nb_reg = true;
+ 	return 0;
++
++free_security:
++	security_ib_free_security(agent->security);
++	return ret;
+ }
  
- 	trace_kvm_entry(vcpu->vcpu_id);
--	if (vcpu->arch.apic->lapic_timer.timer_advance_ns)
-+	if (lapic_in_kernel(vcpu) &&
-+	    vcpu->arch.apic->lapic_timer.timer_advance_ns)
- 		wait_lapic_expire(vcpu);
- 	guest_enter_irqoff();
- 
+ void ib_mad_agent_security_cleanup(struct ib_mad_agent *agent)
 
 
