@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5EEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD43C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0745420449
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E290C21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153790;
-	bh=JfTKtXFNOHSrgjA7GMHgaGf6E7mV96kS+hHxxaVNAnY=;
+	s=default; t=1557153793;
+	bh=ytfqBnHqYP60N8GffONt0227Pm/b+Gt+bZtPDt+d7I4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y7DlNmOGlX3ZKDH93sMUZhhAWYiDkn6UBA4UUm0CWwMU5+9dS6530ljbT6qWrwZvY
-	 O0/c6BbFJE4fPASuXy83djvciXsus/7yjP1pdlZ+iXrCy7jXYMGkupBhK5CKPVbGgL
-	 VmLQbRey1HA4OeVGlccssxrK1pmU+HPvzsNLtbLg=
+	b=FcLlWYAl3nsKyZipRn6OZfAcf0bJhy6+laqtmTphJ/ZuN/hxT5kcwkJ+4MoyOkE/U
+	 LCFapnP3tyGgSg4BB/shAijjlVRMCVq79psvPLvjVncyViKGJmweh6Hh8+Vp6G6Ex1
+	 e9H91kV3BGOuLBA5wVkad/bZUvVgKyiOnAMUKv7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbfEFOnI (ORCPT
+        id S1728621AbfEFOnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:43:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38302 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:43:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727549AbfEFOnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:03 -0400
+        id S1727862AbfEFOnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0DBF216C4;
-        Mon,  6 May 2019 14:43:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A67C21019;
+        Mon,  6 May 2019 14:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153782;
-        bh=JfTKtXFNOHSrgjA7GMHgaGf6E7mV96kS+hHxxaVNAnY=;
+        s=default; t=1557153785;
+        bh=ytfqBnHqYP60N8GffONt0227Pm/b+Gt+bZtPDt+d7I4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mEo6Uv+vhhP+yv1H/k/i8WnEh+YCekL5mVDU5LnMR/zrWMjprMbZuYSMMpox7+9Lu
-         7CCM2mLalWgYtCGVBgpr466I19rZqOXca+Q9XLtA8DhutBzPm4s+S4acFXFFJuInOL
-         EZiX4B1KiocoTE/Y8i/6b2K6Cz9RhHqvjkd6K97M=
+        b=OisGWg4xvmB/B6bSmSf1ge4k6VUezZUsVU7YavXWveMnZn7wMWjBrEa57wXgqK59S
+         P3Yx4Tvk1bknwq4qHkBLCJydFT44YcnI/8L86H8uHaZ2Em7sW4tori+T6LytnfOwDS
+         lKtkAioOuHbC4SVKUxUOtZBGNmxLb2JfV2THsYfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        kbuild test robot <lkp@intel.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Yufen Yu <yuyufen@huawei.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 63/99] hugetlbfs: fix memory leak for resv_map
-Date:   Mon,  6 May 2019 16:32:36 +0200
-Message-Id: <20190506143059.813682386@linuxfoundation.org>
+Subject: [PATCH 4.19 64/99] sh: fix multiple function definition build errors
+Date:   Mon,  6 May 2019 16:32:37 +0200
+Message-Id: <20190506143059.925452525@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -62,75 +65,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 58b6e5e8f1addd44583d61b0a03c0f5519527e35 ]
+[ Upstream commit acaf892ecbf5be7710ae05a61fd43c668f68ad95 ]
 
-When mknod is used to create a block special file in hugetlbfs, it will
-allocate an inode and kmalloc a 'struct resv_map' via resv_map_alloc().
-inode->i_mapping->private_data will point the newly allocated resv_map.
-However, when the device special file is opened bd_acquire() will set
-inode->i_mapping to bd_inode->i_mapping.  Thus the pointer to the
-allocated resv_map is lost and the structure is leaked.
+Many of the sh CPU-types have their own plat_irq_setup() and
+arch_init_clk_ops() functions, so these same (empty) functions in
+arch/sh/boards/of-generic.c are not needed and cause build errors.
 
-Programs to reproduce:
-        mount -t hugetlbfs nodev hugetlbfs
-        mknod hugetlbfs/dev b 0 0
-        exec 30<> hugetlbfs/dev
-        umount hugetlbfs/
+If there is some case where these empty functions are needed, they can
+be retained by marking them as "__weak" while at the same time making
+builds that do not need them succeed.
 
-resv_map structures are only needed for inodes which can have associated
-page allocations.  To fix the leak, only allocate resv_map for those
-inodes which could possibly be associated with page allocations.
+Fixes these build errors:
 
-Link: http://lkml.kernel.org/r/20190401213101.16476-1-mike.kravetz@oracle.com
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Reported-by: Yufen Yu <yuyufen@huawei.com>
-Suggested-by: Yufen Yu <yuyufen@huawei.com>
+arch/sh/boards/of-generic.o: In function `plat_irq_setup':
+(.init.text+0x134): multiple definition of `plat_irq_setup'
+arch/sh/kernel/cpu/sh2/setup-sh7619.o:(.init.text+0x30): first defined here
+arch/sh/boards/of-generic.o: In function `arch_init_clk_ops':
+(.init.text+0x118): multiple definition of `arch_init_clk_ops'
+arch/sh/kernel/cpu/sh2/clock-sh7619.o:(.init.text+0x0): first defined here
+
+Link: http://lkml.kernel.org/r/9ee4e0c5-f100-86a2-bd4d-1d3287ceab31@infradead.org
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/hugetlbfs/inode.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ arch/sh/boards/of-generic.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index a7fa037b876b..a3a3d256fb0e 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -741,11 +741,17 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
- 					umode_t mode, dev_t dev)
+diff --git a/arch/sh/boards/of-generic.c b/arch/sh/boards/of-generic.c
+index 26789ad28193..cb99df514a1c 100644
+--- a/arch/sh/boards/of-generic.c
++++ b/arch/sh/boards/of-generic.c
+@@ -175,10 +175,10 @@ static struct sh_machine_vector __initmv sh_of_generic_mv = {
+ 
+ struct sh_clk_ops;
+ 
+-void __init arch_init_clk_ops(struct sh_clk_ops **ops, int idx)
++void __init __weak arch_init_clk_ops(struct sh_clk_ops **ops, int idx)
  {
- 	struct inode *inode;
--	struct resv_map *resv_map;
-+	struct resv_map *resv_map = NULL;
+ }
  
--	resv_map = resv_map_alloc();
--	if (!resv_map)
--		return NULL;
-+	/*
-+	 * Reserve maps are only needed for inodes that can have associated
-+	 * page allocations.
-+	 */
-+	if (S_ISREG(mode) || S_ISLNK(mode)) {
-+		resv_map = resv_map_alloc();
-+		if (!resv_map)
-+			return NULL;
-+	}
- 
- 	inode = new_inode(sb);
- 	if (inode) {
-@@ -780,8 +786,10 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
- 			break;
- 		}
- 		lockdep_annotate_inode_mutex_key(inode);
--	} else
--		kref_put(&resv_map->refs, resv_map_release);
-+	} else {
-+		if (resv_map)
-+			kref_put(&resv_map->refs, resv_map_release);
-+	}
- 
- 	return inode;
+-void __init plat_irq_setup(void)
++void __init __weak plat_irq_setup(void)
+ {
  }
 -- 
 2.20.1
