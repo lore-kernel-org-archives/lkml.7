@@ -2,239 +2,124 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA64C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0984C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D0E2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B4F206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbfEFKpM (ORCPT
+        id S1726479AbfEFKqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 06:45:12 -0400
-Received: from relay.sw.ru ([185.231.240.75]:53854 "EHLO relay.sw.ru"
+        Mon, 6 May 2019 06:46:04 -0400
+Received: from foss.arm.com ([217.140.101.70]:48322 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfEFKpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 06:45:11 -0400
-Received: from [172.16.25.12] (helo=i7.sw.ru)
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hNb7J-0002zI-Ox; Mon, 06 May 2019 13:45:05 +0300
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        stable@vger.kernel.org
-Subject: [PATCH 1/2] ubsan: Fix nasty -Wbuiltin-declaration-mismatch GCC-9 warnings
-Date:   Mon,  6 May 2019 13:45:26 +0300
-Message-Id: <20190506104527.10724-1-aryabinin@virtuozzo.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <CAHk-=winPBAQwSr9onDoa_ejnV6uWhFiAuQSwd1X-B16vknyXw@mail.gmail.com>
-References: <CAHk-=winPBAQwSr9onDoa_ejnV6uWhFiAuQSwd1X-B16vknyXw@mail.gmail.com>
+        id S1725948AbfEFKqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 06:46:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D9A11374;
+        Mon,  6 May 2019 03:46:03 -0700 (PDT)
+Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0452C3F5AF;
+        Mon,  6 May 2019 03:46:02 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: Remove rq->load
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org
+References: <20190424084556.604-1-dietmar.eggemann@arm.com>
+Message-ID: <c76a9ece-bfc9-c9dc-a0e0-a41698f56f78@arm.com>
+Date:   Mon, 6 May 2019 12:46:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190424084556.604-1-dietmar.eggemann@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building lib/ubsan.c with gcc-9 results in a ton of nasty warnings
-like this one:
-    lib/ubsan.c warning: conflicting types for built-in function
-         ‘__ubsan_handle_negate_overflow’; expected ‘void(void *, void *)’ [-Wbuiltin-declaration-mismatch]
+Hi,
 
-The kernel's declarations of __ubsan_handle_*() often uses 'unsigned long'
-types in parameters while GCC these parameters as 'void *' types,
-hence the mismatch.
+On 4/24/19 10:45 AM, Dietmar Eggemann wrote:
+> The CFS class is the only one maintaining and using the CPU wide load
+> (rq->load(.weight)). The last use case of the CPU wide load in CFS's
+> set_next_entity() can be replaced by using the load of the CFS class
+> (rq->cfs.load(.weight)) instead.
+> 
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> ---
+>   kernel/sched/debug.c | 2 --
+>   kernel/sched/fair.c  | 7 ++-----
+>   kernel/sched/sched.h | 2 --
+>   3 files changed, 2 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+> index 8039d62ae36e..1148f43dbd42 100644
+> --- a/kernel/sched/debug.c
+> +++ b/kernel/sched/debug.c
+> @@ -656,8 +656,6 @@ do {									\
+>   	SEQ_printf(m, "  .%-30s: %Ld.%06ld\n", #x, SPLIT_NS(rq->x))
+>   
+>   	P(nr_running);
+> -	SEQ_printf(m, "  .%-30s: %lu\n", "load",
+> -		   rq->load.weight);
+>   	P(nr_switches);
+>   	P(nr_load_updates);
+>   	P(nr_uninterruptible);
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index a4d9e14bf138..73a6718f29cc 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -2682,8 +2682,6 @@ static void
+>   account_entity_enqueue(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>   {
+>   	update_load_add(&cfs_rq->load, se->load.weight);
+> -	if (!parent_entity(se))
+> -		update_load_add(&rq_of(cfs_rq)->load, se->load.weight);
+>   #ifdef CONFIG_SMP
+>   	if (entity_is_task(se)) {
+>   		struct rq *rq = rq_of(cfs_rq);
+> @@ -2699,8 +2697,6 @@ static void
+>   account_entity_dequeue(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>   {
+>   	update_load_sub(&cfs_rq->load, se->load.weight);
+> -	if (!parent_entity(se))
+> -		update_load_sub(&rq_of(cfs_rq)->load, se->load.weight);
+>   #ifdef CONFIG_SMP
+>   	if (entity_is_task(se)) {
+>   		account_numa_dequeue(rq_of(cfs_rq), task_of(se));
+> @@ -4096,7 +4092,8 @@ set_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>   	 * least twice that of our own weight (i.e. dont track it
+>   	 * when there are only lesser-weight tasks around):
+>   	 */
+> -	if (schedstat_enabled() && rq_of(cfs_rq)->load.weight >= 2*se->load.weight) {
+> +	if (schedstat_enabled() &&
+> +	    rq_of(cfs_rq)->cfs.load.weight >= 2*se->load.weight) {
+>   		schedstat_set(se->statistics.slice_max,
+>   			max((u64)schedstat_val(se->statistics.slice_max),
+>   			    se->sum_exec_runtime - se->prev_sum_exec_runtime));
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index efa686eeff26..e4059e81e99c 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -830,8 +830,6 @@ struct rq {
+>   	atomic_t nohz_flags;
+>   #endif /* CONFIG_NO_HZ_COMMON */
+>   
+> -	/* capture load from *all* tasks on this CPU: */
+> -	struct load_weight	load;
+>   	unsigned long		nr_load_updates;
+>   	u64			nr_switches;
 
-Fix this by using 'void *' to match GCC's declarations.
+Is there anything else I should do for this patch ?
 
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Fixes: c6d308534aef ("UBSAN: run-time undefined behavior sanity checker")
-Cc: <stable@vger.kernel.org>
----
- lib/ubsan.c | 49 +++++++++++++++++++++++--------------------------
- 1 file changed, 23 insertions(+), 26 deletions(-)
+Thanks,
 
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index e4162f59a81c..1e9e2ab25539 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -86,11 +86,13 @@ static bool is_inline_int(struct type_descriptor *type)
- 	return bits <= inline_bits;
- }
- 
--static s_max get_signed_val(struct type_descriptor *type, unsigned long val)
-+static s_max get_signed_val(struct type_descriptor *type, void *val)
- {
- 	if (is_inline_int(type)) {
- 		unsigned extra_bits = sizeof(s_max)*8 - type_bit_width(type);
--		return ((s_max)val) << extra_bits >> extra_bits;
-+		unsigned long ulong_val = (unsigned long)val;
-+
-+		return ((s_max)ulong_val) << extra_bits >> extra_bits;
- 	}
- 
- 	if (type_bit_width(type) == 64)
-@@ -99,15 +101,15 @@ static s_max get_signed_val(struct type_descriptor *type, unsigned long val)
- 	return *(s_max *)val;
- }
- 
--static bool val_is_negative(struct type_descriptor *type, unsigned long val)
-+static bool val_is_negative(struct type_descriptor *type, void *val)
- {
- 	return type_is_signed(type) && get_signed_val(type, val) < 0;
- }
- 
--static u_max get_unsigned_val(struct type_descriptor *type, unsigned long val)
-+static u_max get_unsigned_val(struct type_descriptor *type, void *val)
- {
- 	if (is_inline_int(type))
--		return val;
-+		return (unsigned long)val;
- 
- 	if (type_bit_width(type) == 64)
- 		return *(u64 *)val;
-@@ -116,7 +118,7 @@ static u_max get_unsigned_val(struct type_descriptor *type, unsigned long val)
- }
- 
- static void val_to_string(char *str, size_t size, struct type_descriptor *type,
--	unsigned long value)
-+			void *value)
- {
- 	if (type_is_int(type)) {
- 		if (type_bit_width(type) == 128) {
-@@ -163,8 +165,8 @@ static void ubsan_epilogue(unsigned long *flags)
- 	current->in_ubsan--;
- }
- 
--static void handle_overflow(struct overflow_data *data, unsigned long lhs,
--			unsigned long rhs, char op)
-+static void handle_overflow(struct overflow_data *data, void *lhs,
-+			void *rhs, char op)
- {
- 
- 	struct type_descriptor *type = data->type;
-@@ -191,8 +193,7 @@ static void handle_overflow(struct overflow_data *data, unsigned long lhs,
- }
- 
- void __ubsan_handle_add_overflow(struct overflow_data *data,
--				unsigned long lhs,
--				unsigned long rhs)
-+				void *lhs, void *rhs)
- {
- 
- 	handle_overflow(data, lhs, rhs, '+');
-@@ -200,23 +201,21 @@ void __ubsan_handle_add_overflow(struct overflow_data *data,
- EXPORT_SYMBOL(__ubsan_handle_add_overflow);
- 
- void __ubsan_handle_sub_overflow(struct overflow_data *data,
--				unsigned long lhs,
--				unsigned long rhs)
-+				void *lhs, void *rhs)
- {
- 	handle_overflow(data, lhs, rhs, '-');
- }
- EXPORT_SYMBOL(__ubsan_handle_sub_overflow);
- 
- void __ubsan_handle_mul_overflow(struct overflow_data *data,
--				unsigned long lhs,
--				unsigned long rhs)
-+				void *lhs, void *rhs)
- {
- 	handle_overflow(data, lhs, rhs, '*');
- }
- EXPORT_SYMBOL(__ubsan_handle_mul_overflow);
- 
- void __ubsan_handle_negate_overflow(struct overflow_data *data,
--				unsigned long old_val)
-+				void *old_val)
- {
- 	unsigned long flags;
- 	char old_val_str[VALUE_LENGTH];
-@@ -237,8 +236,7 @@ EXPORT_SYMBOL(__ubsan_handle_negate_overflow);
- 
- 
- void __ubsan_handle_divrem_overflow(struct overflow_data *data,
--				unsigned long lhs,
--				unsigned long rhs)
-+				void *lhs, void *rhs)
- {
- 	unsigned long flags;
- 	char rhs_val_str[VALUE_LENGTH];
-@@ -323,7 +321,7 @@ static void ubsan_type_mismatch_common(struct type_mismatch_data_common *data,
- }
- 
- void __ubsan_handle_type_mismatch(struct type_mismatch_data *data,
--				unsigned long ptr)
-+				void *ptr)
- {
- 	struct type_mismatch_data_common common_data = {
- 		.location = &data->location,
-@@ -332,12 +330,12 @@ void __ubsan_handle_type_mismatch(struct type_mismatch_data *data,
- 		.type_check_kind = data->type_check_kind
- 	};
- 
--	ubsan_type_mismatch_common(&common_data, ptr);
-+	ubsan_type_mismatch_common(&common_data, (unsigned long)ptr);
- }
- EXPORT_SYMBOL(__ubsan_handle_type_mismatch);
- 
- void __ubsan_handle_type_mismatch_v1(struct type_mismatch_data_v1 *data,
--				unsigned long ptr)
-+				void *ptr)
- {
- 
- 	struct type_mismatch_data_common common_data = {
-@@ -347,12 +345,12 @@ void __ubsan_handle_type_mismatch_v1(struct type_mismatch_data_v1 *data,
- 		.type_check_kind = data->type_check_kind
- 	};
- 
--	ubsan_type_mismatch_common(&common_data, ptr);
-+	ubsan_type_mismatch_common(&common_data, (unsigned long)ptr);
- }
- EXPORT_SYMBOL(__ubsan_handle_type_mismatch_v1);
- 
- void __ubsan_handle_vla_bound_not_positive(struct vla_bound_data *data,
--					unsigned long bound)
-+					void *bound)
- {
- 	unsigned long flags;
- 	char bound_str[VALUE_LENGTH];
-@@ -369,8 +367,7 @@ void __ubsan_handle_vla_bound_not_positive(struct vla_bound_data *data,
- }
- EXPORT_SYMBOL(__ubsan_handle_vla_bound_not_positive);
- 
--void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data,
--				unsigned long index)
-+void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data, void *index)
- {
- 	unsigned long flags;
- 	char index_str[VALUE_LENGTH];
-@@ -388,7 +385,7 @@ void __ubsan_handle_out_of_bounds(struct out_of_bounds_data *data,
- EXPORT_SYMBOL(__ubsan_handle_out_of_bounds);
- 
- void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data *data,
--					unsigned long lhs, unsigned long rhs)
-+					void *lhs, void *rhs)
- {
- 	unsigned long flags;
- 	struct type_descriptor *rhs_type = data->rhs_type;
-@@ -439,7 +436,7 @@ void __ubsan_handle_builtin_unreachable(struct unreachable_data *data)
- EXPORT_SYMBOL(__ubsan_handle_builtin_unreachable);
- 
- void __ubsan_handle_load_invalid_value(struct invalid_value_data *data,
--				unsigned long val)
-+				void *val)
- {
- 	unsigned long flags;
- 	char val_str[VALUE_LENGTH];
--- 
-2.21.0
-
+-- Dietmar
