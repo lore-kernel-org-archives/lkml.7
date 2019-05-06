@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81299C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4928FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CF721479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED06204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153436;
-	bh=cesPmuFn1E7+vUXpum+7UtF2uIjj3w2YGFlHKhA2WNQ=;
+	s=default; t=1557153441;
+	bh=GymqtUjs3yMq3S/YyM/ppiiHTpPg8oNOIbMQ1GKUQPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AxY2zxRo/dLT9LXTPFKytmmgc//Pn4tzYwcdSVK8Efpku41SCGHwg8245d8gLgoh6
-	 Apg6OEWy20SV2H38YA2sSfum+MbXWri1OINUnSxIbntDMpDJFkMFjW9Bs57iqsZZkW
-	 HM1QWSV2KutI3WuZa8dpPF/MErsytEpxtsIWULok=
+	b=nIjB1svfwa3DMlL2CWLDH1uiBW2iN158FIaS0BjAJTxukS7J6RCt1Y7UNdzWwLRmh
+	 /PlNJjRM6FCha9YvVG+cbi9lmSMBm4R0wjsLrKg014rVBI9PmVJv9CiEbJpmDOSBMW
+	 uIPukqwuHhreFetTRH6Jo+CmE0QEB7IuIsYZ0PjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfEFOhP (ORCPT
+        id S1727378AbfEFOhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:37:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57780 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:37:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbfEFOhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:37:10 -0400
+        id S1727347AbfEFOhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:37:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C14B204EC;
-        Mon,  6 May 2019 14:37:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AACD206A3;
+        Mon,  6 May 2019 14:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153429;
-        bh=cesPmuFn1E7+vUXpum+7UtF2uIjj3w2YGFlHKhA2WNQ=;
+        s=default; t=1557153434;
+        bh=GymqtUjs3yMq3S/YyM/ppiiHTpPg8oNOIbMQ1GKUQPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ah2TQDtZKKDGZjrVSfTKDhPmHtk+BxcI2OkzJMMHgKtNOisfPas2lWxTNSH9GcxUX
-         jXrJnCopguXHkr6cfhCYJSOsn2nnaZPKeqs9CDO7d4K7xyCC1JL1a1lOqCbWo5iikD
-         bK8iPx6R/G+gJTJ9K7YsiZqHanunvtzWZMduSfH4=
+        b=yNMQM3Ja04AFZabbTpqOjG1pFnoGmgAkhF3mtqsZzHVf2S8UL5Ep9w+ReYy5TekKI
+         t/70PUSxVROgHcxZxGUFehtUEKJWBOen1ixKmtkJ75pca4NVSdjSZie145/CGeCUu1
+         pZW6K0vKMVNeD9Mm4M0nAFfoYvfVPqvbMPqWtiKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 5.0 086/122] clk: qcom: Add missing freq for usb30_master_clk on 8998
-Date:   Mon,  6 May 2019 16:32:24 +0200
-Message-Id: <20190506143102.471371865@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.0 088/122] staging: iio: adt7316: allow adt751x to use internal vref for all dacs
+Date:   Mon,  6 May 2019 16:32:26 +0200
+Message-Id: <20190506143102.637545998@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -59,31 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jhugo@codeaurora.org>
+From: Jeremy Fertic <jeremyfertic@gmail.com>
 
-commit 0c8ff62504e3a667387e87889a259632c3199a86 upstream.
+commit 10bfe7cc1739c22f0aa296b39e53f61e9e3f4d99 upstream.
 
-The usb30_master_clk supports a 60Mhz frequency, but that is missing from
-the table of supported frequencies.  Add it.
+With adt7516/7/9, internal vref is available for dacs a and b, dacs c and
+d, or all dacs. The driver doesn't currently support internal vref for all
+dacs. Change the else if to an if so both bits are checked rather than
+just one or the other.
 
-Fixes: b5f5f525c547 (clk: qcom: Add MSM8998 Global Clock Control (GCC) driver)
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
+Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/qcom/gcc-msm8998.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/iio/addac/adt7316.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/clk/qcom/gcc-msm8998.c
-+++ b/drivers/clk/qcom/gcc-msm8998.c
-@@ -1112,6 +1112,7 @@ static struct clk_rcg2 ufs_axi_clk_src =
- 
- static const struct freq_tbl ftbl_usb30_master_clk_src[] = {
- 	F(19200000, P_XO, 1, 0, 0),
-+	F(60000000, P_GPLL0_OUT_MAIN, 10, 0, 0),
- 	F(120000000, P_GPLL0_OUT_MAIN, 5, 0, 0),
- 	F(150000000, P_GPLL0_OUT_MAIN, 4, 0, 0),
- 	{ }
+--- a/drivers/staging/iio/addac/adt7316.c
++++ b/drivers/staging/iio/addac/adt7316.c
+@@ -1079,7 +1079,7 @@ static ssize_t adt7316_store_DAC_interna
+ 		ldac_config = chip->ldac_config & (~ADT7516_DAC_IN_VREF_MASK);
+ 		if (data & 0x1)
+ 			ldac_config |= ADT7516_DAC_AB_IN_VREF;
+-		else if (data & 0x2)
++		if (data & 0x2)
+ 			ldac_config |= ADT7516_DAC_CD_IN_VREF;
+ 	} else {
+ 		ret = kstrtou8(buf, 16, &data);
 
 
