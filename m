@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6200C46470
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0E3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892DF20C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE522053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154311;
-	bh=cwAnhsjms5JETVrm8lBnIu77/bq24kiXauUNJlo/6dk=;
+	s=default; t=1557154313;
+	bh=aSyAWG8LsqQfGujCDwDQLGJGjglE3ZS5g8PrN4g0IvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JIl2FCfdOjt0SKQOOT84i8NTBbGxQgaOv9W6DAlFjsFozYTSXGPkZOH1fckvu+tKK
-	 k57LhzMLWhnTI5o8EiWv0TxcD/C1eZikU0cvsJn0SOK9ZsQjwSwlflg7BYKp1d1sGb
-	 UWjPVycB2TVZwBUypA+U9MP6YUuxG9k7LzI9U31o=
+	b=mEnCkveals+mHEqx1IlnJVAtxX57Ua7C6vAGQJynmbHtTet4QtiiXPVE5Kli1gF/N
+	 EVXeq5QP0DwmNEbs9dQoCBUFO8SRc7kRU8vRfcsgCXEwNvvvOVgxb4kQPXbIXtplNT
+	 DuoljoJiDRVhC/MsNLpYj+7lqGrWIQ/rdWwq8+v8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbfEFOst (ORCPT
+        id S1729614AbfEFOvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49384 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:51:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729508AbfEFOsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:48:42 -0400
+        id S1729526AbfEFOsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:48:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3D93216B7;
-        Mon,  6 May 2019 14:48:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 949AF216C8;
+        Mon,  6 May 2019 14:48:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154122;
-        bh=cwAnhsjms5JETVrm8lBnIu77/bq24kiXauUNJlo/6dk=;
+        s=default; t=1557154130;
+        bh=aSyAWG8LsqQfGujCDwDQLGJGjglE3ZS5g8PrN4g0IvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tq9bb0NuKroikxPBcGMse/5Igze2MiMaWh8K/yZ9b2NsbuEU+b1RpfQSJdlVBOBxd
-         74kJUE3BDe6UPNvoxM4d5glvchjRXRujSKf3qpUGzk9Y2CnEx/Rp3LgINPB38UFOB9
-         bRH65aTQGqUoNo/tmMWhbB//jtipN0HnAgUQum2A=
+        b=cunBraeAQ/QBf4mTaPliKhNsisu/C9clktfTB6HnC9sRFVvbauRL3pdh1u9M2ypv5
+         BFhaidS2tmmN1k/1nKUeibxq+JEgocfbhjhYGRjjKybR3Vfqm0Del7X7CZ4ymZYSqq
+         c0CPd3KOhZrdn2TCHbqG2JxxWkqdNlYoeP8oDPxw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liubin Shu <shuliubin@huawei.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yufen Yu <yuyufen@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 46/62] net: hns: fix KASAN: use-after-free in hns_nic_net_xmit_hw()
-Date:   Mon,  6 May 2019 16:33:17 +0200
-Message-Id: <20190506143055.229546324@linuxfoundation.org>
+Subject: [PATCH 4.9 49/62] hugetlbfs: fix memory leak for resv_map
+Date:   Mon,  6 May 2019 16:33:20 +0200
+Message-Id: <20190506143055.514093182@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -63,52 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3a39a12ad364a9acd1038ba8da67cd8430f30de4 ]
+[ Upstream commit 58b6e5e8f1addd44583d61b0a03c0f5519527e35 ]
 
-This patch is trying to fix the issue due to:
-[27237.844750] BUG: KASAN: use-after-free in hns_nic_net_xmit_hw+0x708/0xa18[hns_enet_drv]
+When mknod is used to create a block special file in hugetlbfs, it will
+allocate an inode and kmalloc a 'struct resv_map' via resv_map_alloc().
+inode->i_mapping->private_data will point the newly allocated resv_map.
+However, when the device special file is opened bd_acquire() will set
+inode->i_mapping to bd_inode->i_mapping.  Thus the pointer to the
+allocated resv_map is lost and the structure is leaked.
 
-After hnae_queue_xmit() in hns_nic_net_xmit_hw(), can be
-interrupted by interruptions, and than call hns_nic_tx_poll_one()
-to handle the new packets, and free the skb. So, when turn back to
-hns_nic_net_xmit_hw(), calling skb->len will cause use-after-free.
+Programs to reproduce:
+        mount -t hugetlbfs nodev hugetlbfs
+        mknod hugetlbfs/dev b 0 0
+        exec 30<> hugetlbfs/dev
+        umount hugetlbfs/
 
-This patch update tx ring statistics in hns_nic_tx_poll_one() to
-fix the bug.
+resv_map structures are only needed for inodes which can have associated
+page allocations.  To fix the leak, only allocate resv_map for those
+inodes which could possibly be associated with page allocations.
 
-Signed-off-by: Liubin Shu <shuliubin@huawei.com>
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/20190401213101.16476-1-mike.kravetz@oracle.com
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Reported-by: Yufen Yu <yuyufen@huawei.com>
+Suggested-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/hugetlbfs/inode.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index ad8681cf5ef0..f77578a5ea9d 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -375,8 +375,6 @@ netdev_tx_t hns_nic_net_xmit_hw(struct net_device *ndev,
- 	wmb(); /* commit all data before submit */
- 	assert(skb->queue_mapping < priv->ae_handle->q_num);
- 	hnae_queue_xmit(priv->ae_handle->qs[skb->queue_mapping], buf_num);
--	ring->stats.tx_pkts++;
--	ring->stats.tx_bytes += skb->len;
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 001487b230b5..4acc677ac8fb 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -746,11 +746,17 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 					umode_t mode, dev_t dev)
+ {
+ 	struct inode *inode;
+-	struct resv_map *resv_map;
++	struct resv_map *resv_map = NULL;
  
- 	return NETDEV_TX_OK;
+-	resv_map = resv_map_alloc();
+-	if (!resv_map)
+-		return NULL;
++	/*
++	 * Reserve maps are only needed for inodes that can have associated
++	 * page allocations.
++	 */
++	if (S_ISREG(mode) || S_ISLNK(mode)) {
++		resv_map = resv_map_alloc();
++		if (!resv_map)
++			return NULL;
++	}
  
-@@ -916,6 +914,9 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
- 		/* issue prefetch for next Tx descriptor */
- 		prefetch(&ring->desc_cb[ring->next_to_clean]);
- 	}
-+	/* update tx ring statistics. */
-+	ring->stats.tx_pkts += pkts;
-+	ring->stats.tx_bytes += bytes;
+ 	inode = new_inode(sb);
+ 	if (inode) {
+@@ -782,8 +788,10 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 			break;
+ 		}
+ 		lockdep_annotate_inode_mutex_key(inode);
+-	} else
+-		kref_put(&resv_map->refs, resv_map_release);
++	} else {
++		if (resv_map)
++			kref_put(&resv_map->refs, resv_map_release);
++	}
  
- 	NETIF_TX_UNLOCK(ndev);
- 
+ 	return inode;
+ }
 -- 
 2.20.1
 
