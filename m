@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E289C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E22C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D483821530
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F042421530
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153876;
-	bh=g3iyfsYRe4fyFJrL7Ypiv0BDUlg0xHMK1ccf3NZbu3o=;
+	s=default; t=1557153881;
+	bh=d9V7BZ2TONf1lKjTI4YgdsMSqaVto2zYZiqqP5HV9qA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uMQM1nFhKd97bsFrw0xBKXF+12cSZnMNRDiucOmd7Kkdfr0WaSr4bH4X1hvU34H6Q
-	 mWVlpHJzpSZk0qg3kh0LBV1jDicfwXPV4c+ccRAecA5iCVjsncjgnIwOWJKu6IGcQR
-	 xnb0ogrQySfDiD9+w8WP/tHZ3GaySL/XX6Z5Y1cQ=
+	b=ytUJlsp2OKbs0h7vhDF9SlXva1vmKoxEWpwMiadA0bywEMZaqkiMUH9SCZGQUzpiv
+	 jFQxLihUT3/5Fco2w/N2t5kDwJk7NEwxbjm7PLSr94LDh1n/Noy329sbmFrTzs7DJ9
+	 LfFAlMV7lsuGeUWX77Rg3lsy/lZu337bTISPdXFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbfEFOof (ORCPT
+        id S1728832AbfEFOoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:44:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40858 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:44:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727806AbfEFOod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:33 -0400
+        id S1727806AbfEFOog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A073C214AE;
-        Mon,  6 May 2019 14:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EBD1214C6;
+        Mon,  6 May 2019 14:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153873;
-        bh=g3iyfsYRe4fyFJrL7Ypiv0BDUlg0xHMK1ccf3NZbu3o=;
+        s=default; t=1557153875;
+        bh=d9V7BZ2TONf1lKjTI4YgdsMSqaVto2zYZiqqP5HV9qA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s/Y75ykF+tVGYhJh7L+f5lan2nbgZFg1r25akFg9MMX+YWwz3Dfb69jrTX9XY4i7Z
-         fAdVPkgtqHWfix/8/gTfv4mNroyV10hM51PwHZVOyQfsd7BPNoD/eIaDKW7VcXk1Ko
-         kJQghMCl76CCFI2eoYyDcAXtaFA3xhw3IvehcA2I=
+        b=dMYXdsajSxEX8GbbxpM9yLi7sJ1Y8CSmTKuzQp68H10EbmLh2rcY93JUxlvX/dyJW
+         /uL888DYFoPot2wi644rCez32k6v/6TmfIMR/Kl+KK5ym619tIONSu24JxLaTij171
+         ByaqGBf/bWmux2cH6h6/Ki3fHjTrNJEf8Vrz/Ynk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 28/75] rtc: sh: Fix invalid alarm warning for non-enabled alarm
-Date:   Mon,  6 May 2019 16:32:36 +0200
-Message-Id: <20190506143055.746685012@linuxfoundation.org>
+Subject: [PATCH 4.14 29/75] batman-adv: Reduce claim hash refcnt only for removed entry
+Date:   Mon,  6 May 2019 16:32:37 +0200
+Message-Id: <20190506143055.827893610@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -61,44 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 15d82d22498784966df8e4696174a16b02cc1052 ]
+[ Upstream commit 4ba104f468bbfc27362c393815d03aa18fb7a20f ]
 
-When no alarm has been programmed on RSK-RZA1, an error message is
-printed during boot:
+The batadv_hash_remove is a function which searches the hashtable for an
+entry using a needle, a hashtable bucket selection function and a compare
+function. It will lock the bucket list and delete an entry when the compare
+function matches it with the needle. It returns the pointer to the
+hlist_node which matches or NULL when no entry matches the needle.
 
-    rtc rtc0: invalid alarm value: 2019-03-14T255:255:255
+The batadv_bla_del_claim is not itself protected in anyway to avoid that
+any other function is modifying the hashtable between the search for the
+entry and the call to batadv_hash_remove. It can therefore happen that the
+entry either doesn't exist anymore or an entry was deleted which is not the
+same object as the needle. In such an situation, the reference counter (for
+the reference stored in the hashtable) must not be reduced for the needle.
+Instead the reference counter of the actually removed entry has to be
+reduced.
 
-sh_rtc_read_alarm_value() returns 0xff when querying a hardware alarm
-field that is not enabled.  __rtc_read_alarm() validates the received
-alarm values, and fills in missing fields when needed.
-While 0xff is handled fine for the year, month, and day fields, and
-corrected as considered being out-of-range, this is not the case for the
-hour, minute, and second fields, where -1 is expected for missing
-fields.
+Otherwise the reference counter will underflow and the object might be
+freed before all its references were dropped. The kref helpers reported
+this problem as:
 
-Fix this by returning -1 instead, as this value is handled fine for all
-fields.
+  refcount_t: underflow; use-after-free.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-sh.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/batman-adv/bridge_loop_avoidance.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/rtc/rtc-sh.c b/drivers/rtc/rtc-sh.c
-index 6c2d3989f967..9b6a927149a4 100644
---- a/drivers/rtc/rtc-sh.c
-+++ b/drivers/rtc/rtc-sh.c
-@@ -462,7 +462,7 @@ static int sh_rtc_set_time(struct device *dev, struct rtc_time *tm)
- static inline int sh_rtc_read_alarm_value(struct sh_rtc *rtc, int reg_off)
+diff --git a/net/batman-adv/bridge_loop_avoidance.c b/net/batman-adv/bridge_loop_avoidance.c
+index c3c848f64fdd..c761c0c233e4 100644
+--- a/net/batman-adv/bridge_loop_avoidance.c
++++ b/net/batman-adv/bridge_loop_avoidance.c
+@@ -803,6 +803,8 @@ static void batadv_bla_del_claim(struct batadv_priv *bat_priv,
+ 				 const u8 *mac, const unsigned short vid)
  {
- 	unsigned int byte;
--	int value = 0xff;	/* return 0xff for ignored values */
-+	int value = -1;			/* return -1 for ignored values */
+ 	struct batadv_bla_claim search_claim, *claim;
++	struct batadv_bla_claim *claim_removed_entry;
++	struct hlist_node *claim_removed_node;
  
- 	byte = readb(rtc->regbase + reg_off);
- 	if (byte & AR_ENB) {
+ 	ether_addr_copy(search_claim.addr, mac);
+ 	search_claim.vid = vid;
+@@ -813,10 +815,18 @@ static void batadv_bla_del_claim(struct batadv_priv *bat_priv,
+ 	batadv_dbg(BATADV_DBG_BLA, bat_priv, "%s(): %pM, vid %d\n", __func__,
+ 		   mac, batadv_print_vid(vid));
+ 
+-	batadv_hash_remove(bat_priv->bla.claim_hash, batadv_compare_claim,
+-			   batadv_choose_claim, claim);
+-	batadv_claim_put(claim); /* reference from the hash is gone */
++	claim_removed_node = batadv_hash_remove(bat_priv->bla.claim_hash,
++						batadv_compare_claim,
++						batadv_choose_claim, claim);
++	if (!claim_removed_node)
++		goto free_claim;
+ 
++	/* reference from the hash is gone */
++	claim_removed_entry = hlist_entry(claim_removed_node,
++					  struct batadv_bla_claim, hash_entry);
++	batadv_claim_put(claim_removed_entry);
++
++free_claim:
+ 	/* don't need the reference from hash_find() anymore */
+ 	batadv_claim_put(claim);
+ }
 -- 
 2.20.1
 
