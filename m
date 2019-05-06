@@ -2,177 +2,136 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C00C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8744EC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C502087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59E172087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:18:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sqUiKiFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfEFJRt (ORCPT
+        id S1726455AbfEFJSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:17:49 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:3051 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725851AbfEFJRs (ORCPT
+        Mon, 6 May 2019 05:18:15 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44507 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfEFJSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:17:48 -0400
-X-UUID: 498fe6acfc2e44d08bf73c54b228579e-20190506
-X-UUID: 498fe6acfc2e44d08bf73c54b228579e-20190506
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 429816069; Mon, 06 May 2019 17:17:40 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS33N2.mediatek.inc (172.27.4.76) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 6 May 2019 17:17:39 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 6 May 2019 17:17:38 +0800
-Message-ID: <1557134258.5345.5.camel@mtksdaap41>
-Subject: Re: [v2 3/3] drm/mediatek: add mipi_tx driver for mt8183
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "Ajay Kumar" <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        "Rahul Sharma" <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Russell King" <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <stonea168@163.com>
-Date:   Mon, 6 May 2019 17:17:38 +0800
-In-Reply-To: <20190416054217.75387-4-jitao.shi@mediatek.com>
-References: <20190416054217.75387-1-jitao.shi@mediatek.com>
-         <20190416054217.75387-4-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 6 May 2019 05:18:14 -0400
+Received: by mail-ot1-f66.google.com with SMTP id d10so5717025otp.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:18:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EuMXXHqqPef2GwgL+nQvKY3dmYnxYLGClh5z++gsDCE=;
+        b=sqUiKiFkHuS/zMcsXJp/YVQ9Xvsj9z1z6Qymcl2DruVbxk25BEUbeggocvbWAnhm5w
+         zafVtoeptdhmkmQVySQB3JwkXQHS6fLm2/wWTVMXU2RAbc2imQQv9+YkBVvD6ic2JuMI
+         1ikTcpdlA9VrSJ94GFL5FOP0BgugrA521QHxv3MHfGRZERmqFxPksbw8JgkSiOXb5kCz
+         NhICHik7i/u7iBVQPDnR6rVT2h+P/BC3GpK/7XThzUVtCWPANcl0bPo/9Evg9oejZRXN
+         F/kwBaILmSEdHFapwIeGtAxrGfQ7g/4sN7rpo+FU+AipihP/fGSchFlx5sCt7F6gjQZJ
+         akeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EuMXXHqqPef2GwgL+nQvKY3dmYnxYLGClh5z++gsDCE=;
+        b=qF5AkaCQXScdXcxc00vGKDny02WMqNgX8kRXJAxigFGwMD6zDukt7V5C+t0OEcbmbr
+         zC46bV957Wnq/D4nZN7TEfYtlVM+sgi91/uTJu/jpTvkukRYyq/lRcBhsCOHqRKQlBB1
+         yT8S0VWD/63ksFQ8I35whgdIognLNGSnyb94uJa9HHo0vvmWL0djWcuLcDskaVs5NwFa
+         bDKE3251v6TMVgU2fuirHZgntoUMQPfQlVXHWRkb5UHQKrmDL07weJH3W0HrwaUK936N
+         1xPO1R6mrbgM0YH32fZ0XJi1sgR9kngT3O4oiaWXuaMixrDBU4zMcn1I2GY6irn1YHuJ
+         yBPw==
+X-Gm-Message-State: APjAAAVNlVR/kUx8DjE3gG+1UMix6qKqAaQGkcrXIa3XRg0L85fHJ4nT
+        0sRNAnqamXsd4r+fGud+XFw1h4t2IJHX6I2eX5kYwg==
+X-Google-Smtp-Source: APXvYqwJ3xWdH/Lcmkx6YRG/BMIY9WxqPyKwUn5ZqoX3PeD8nyMheiZI5T1OFI6UXxsrrwGRwMbiUWxrFpDFumPm0yg=
+X-Received: by 2002:a9d:71de:: with SMTP id z30mr15637896otj.113.1557134293178;
+ Mon, 06 May 2019 02:18:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-16-brendanhiggins@google.com> <68f88e1c-d40f-9dad-7296-ab2b2303c575@kernel.org>
+In-Reply-To: <68f88e1c-d40f-9dad-7296-ab2b2303c575@kernel.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 6 May 2019 02:18:01 -0700
+Message-ID: <CAFd5g456XwQV2+iy=0K7AwBc5wbQDRL2DAJgMEsJBLtFdZ5erQ@mail.gmail.com>
+Subject: Re: [PATCH v2 15/17] MAINTAINERS: add entry for KUnit the unit
+ testing framework
+To:     shuah <shuah@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Shuah Khan <skhan@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
+On Fri, May 3, 2019 at 7:38 AM shuah <shuah@kernel.org> wrote:
+>
+> On 5/1/19 5:01 PM, Brendan Higgins wrote:
+> > Add myself as maintainer of KUnit, the Linux kernel's unit testing
+> > framework.
+> >
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > ---
+> >   MAINTAINERS | 10 ++++++++++
+> >   1 file changed, 10 insertions(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 5c38f21aee787..c78ae95c56b80 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -8448,6 +8448,16 @@ S:     Maintained
+> >   F:  tools/testing/selftests/
+> >   F:  Documentation/dev-tools/kselftest*
+> >
+> > +KERNEL UNIT TESTING FRAMEWORK (KUnit)
+> > +M:   Brendan Higgins <brendanhiggins@google.com>
+> > +L:   kunit-dev@googlegroups.com
+> > +W:   https://google.github.io/kunit-docs/third_party/kernel/docs/
+> > +S:   Maintained
+> > +F:   Documentation/kunit/
+> > +F:   include/kunit/
+> > +F:   kunit/
+> > +F:   tools/testing/kunit/
+> > +
+>
+> Please add kselftest mailing list to this entry, based on our
+> conversation on taking these patches through kselftest tree.
 
-On Tue, 2019-04-16 at 13:42 +0800, Jitao Shi wrote:
-> This patch add mt8183 mipi_tx driver.
-> And also support other chips that use the same binding and driver.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/Makefile             |   1 +
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.c        |   2 +
->  drivers/gpu/drm/mediatek/mtk_mipi_tx.h        |   1 +
->  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 154 ++++++++++++++++++
->  4 files changed, 158 insertions(+)
->  create mode 100644 drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
-> 
+Will do.
 
-[snip]
-
-> +
-> +static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
-> +{
-> +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
-> +	unsigned int txdiv, txdiv0;
-> +	u64 pcw;
-> +	int ret;
-> +
-> +	dev_dbg(mipi_tx->dev, "prepare: %u bps\n", mipi_tx->data_rate);
-> +
-> +	if (mipi_tx->data_rate >= 2000000000) {
-> +		txdiv = 1;
-> +		txdiv0 = 0;
-> +	} else if (mipi_tx->data_rate >= 1000000000) {
-> +		txdiv = 2;
-> +		txdiv0 = 1;
-> +	} else if (mipi_tx->data_rate >= 500000000) {
-> +		txdiv = 4;
-> +		txdiv0 = 2;
-> +	} else if (mipi_tx->data_rate > 250000000) {
-> +		txdiv = 8;
-> +		txdiv0 = 3;
-> +	} else if (mipi_tx->data_rate >= 125000000) {
-> +		txdiv = 16;
-> +		txdiv0 = 4;
-> +	} else {
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = clk_prepare_enable(mipi_tx->ref_clk);
-> +	if (ret < 0) {
-> +		dev_err(mipi_tx->dev,
-> +			"can't prepare and enable mipi_tx ref_clk %d\n", ret);
-> +		return ret;
-> +	}
-
-You enable the parent clock when prepare this clock here, this behavior
-looks strange. I think the flow should be:
-
-1. Parent clock prepare
-2. This clock prepare
-3. Parent clock enable
-4. This clock enable
-
-Maybe you should implement 'enable callback' so that parent clock would
-be already enabled.
-
-One question is, mipi_tx_pll is used by dsi driver, but I does not see
-dsi prepare_enable() mipi_tx_pll, how does this work?
-
-Regards,
-CK
-
-> +
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON4, RG_DSI_PLL_IBIAS);
-> +
-> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
-> +	usleep_range(30, 100);
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
-> +	pcw = div_u64(((u64)mipi_tx->data_rate * txdiv) << 24, 26000000);
-> +	writel(pcw, mipi_tx->regs + MIPITX_PLL_CON0);
-> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_POSDIV,
-> +				txdiv0 << 8);
-> +	usleep_range(1000, 2000);
-> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
-> +
-> +	return 0;
-> +}
-> +
-> +static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
-> +{
-> +	struct mtk_mipi_tx *mipi_tx = mtk_mipi_tx_from_clk_hw(hw);
-> +
-> +	dev_dbg(mipi_tx->dev, "unprepare\n");
-> +
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_CON1, RG_DSI_PLL_EN);
-> +
-> +	mtk_mipi_tx_set_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_ISO_EN);
-> +	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_PLL_PWR, AD_DSI_PLL_SDM_PWR_ON);
-> +	clk_disable_unprepare(mipi_tx->ref_clk);
-> +}
-> +
-
-
+Thanks!
