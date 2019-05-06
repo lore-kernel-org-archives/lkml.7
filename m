@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4032C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C630C04AAE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A678E20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58001208C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbfEFFtA (ORCPT
+        id S1726181AbfEFFtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 01:49:00 -0400
+        Mon, 6 May 2019 01:49:03 -0400
 Received: from ms01.santannapisa.it ([193.205.80.98]:57922 "EHLO
         mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfEFFtA (ORCPT
+        with ESMTP id S1726016AbfEFFtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 01:49:00 -0400
+        Mon, 6 May 2019 01:49:02 -0400
 X-Greylist: delayed 3600 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 May 2019 01:48:55 EDT
 Received: from [151.41.47.232] (account l.abeni@santannapisa.it HELO sweethome.home-life.hub)
   by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
-  with ESMTPSA id 138841007; Mon, 06 May 2019 06:48:55 +0200
+  with ESMTPSA id 138841008; Mon, 06 May 2019 06:48:58 +0200
 From:   Luca Abeni <luca.abeni@santannapisa.it>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -41,9 +41,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Patrick Bellasi <patrick.bellasi@arm.com>,
         Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
         luca abeni <luca.abeni@santannapisa.it>
-Subject: [RFC PATCH 1/6] sched/dl: Improve deadline admission control for asymmetric CPU capacities
-Date:   Mon,  6 May 2019 06:48:31 +0200
-Message-Id: <20190506044836.2914-2-luca.abeni@santannapisa.it>
+Subject: [RFC PATCH 2/6] sched/dl: Capacity-aware migrations
+Date:   Mon,  6 May 2019 06:48:32 +0200
+Message-Id: <20190506044836.2914-3-luca.abeni@santannapisa.it>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190506044836.2914-1-luca.abeni@santannapisa.it>
 References: <20190506044836.2914-1-luca.abeni@santannapisa.it>
@@ -56,193 +56,122 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: luca abeni <luca.abeni@santannapisa.it>
 
-Currently, the SCHED_DEADLINE admission control ensures that the
-sum of reserved CPU bandwidths is smaller than x * M, where the
-reserved CPU bandwidth of a SCHED_DEADLINE task is defined as the
-ratio between its runtime and its period, x is a user-definable
-percentage (95% by default, can be controlled through
-/proc/sys/kernel/sched_rt_{runtime,period}_us) and M is the number
-of CPU cores.
+Currently, the SCHED_DEADLINE scheduler uses a global EDF scheduling
+algorithm, migrating tasks to CPU cores without considering the core
+capacity and the task utilization. This works well on homogeneous
+systems (SCHED_DEADLINE tasks are guaranteed to have a bounded
+tardiness), but presents some issues on heterogeneous systems. For
+example, a SCHED_DEADLINE task might be migrated on a core that has not
+enough processing capacity to correctly serve the task (think about a
+task with runtime 70ms and period 100ms migrated to a core with
+processing capacity 0.5)
 
-This admission control works well (guaranteeing bounded tardiness
-for SCHED_DEADLINE tasks and non-starvation of non SCHED_DEADLINE
-tasks) for homogeneous systems (where all the CPU cores have the
-same computing capacity), but ends up over-allocating the CPU time
-in presence of less-powerful CPU cores.
-
-It can be easily shown how on asymmetric CPU capacity architectures
-(such as ARM big.LITTLE) SCHED_DEADLINE tasks can easily starve all the
-other tasks, making the system unusable.
-
-This commit fixes the issue by explicitly considering the cores'
-capacities in the admission test (where "M" is replaced by the sum
-of all the capacities of cores in the root domain).
+This commit is a first step to address the issue: When a task wakes
+up or migrates away from a CPU core, the scheduler tries to find an
+idle core having enough processing capacity to serve the task.
 
 Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
 ---
- drivers/base/arch_topology.c   |  1 +
- include/linux/sched/topology.h |  3 +++
- kernel/sched/core.c            |  2 ++
- kernel/sched/deadline.c        | 19 +++++++++++++------
- kernel/sched/sched.h           |  7 +++++--
- kernel/sched/topology.c        |  9 +++++++++
- 6 files changed, 33 insertions(+), 8 deletions(-)
+ kernel/sched/cpudeadline.c | 31 +++++++++++++++++++++++++++++--
+ kernel/sched/deadline.c    |  8 ++++++--
+ kernel/sched/sched.h       |  7 ++++++-
+ 3 files changed, 41 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index edfcf8d982e4..646d6d349d53 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -36,6 +36,7 @@ DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
- 
- void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
- {
-+	topology_update_cpu_capacity(cpu, per_cpu(cpu_scale, cpu), capacity);
- 	per_cpu(cpu_scale, cpu) = capacity;
+diff --git a/kernel/sched/cpudeadline.c b/kernel/sched/cpudeadline.c
+index 50316455ea66..d21f7905b9c1 100644
+--- a/kernel/sched/cpudeadline.c
++++ b/kernel/sched/cpudeadline.c
+@@ -110,6 +110,22 @@ static inline int cpudl_maximum(struct cpudl *cp)
+ 	return cp->elements[0].cpu;
  }
  
-diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-index 2bf680b42f3c..a4898e42f368 100644
---- a/include/linux/sched/topology.h
-+++ b/include/linux/sched/topology.h
-@@ -233,4 +233,7 @@ static inline int task_node(const struct task_struct *p)
- 	return cpu_to_node(task_cpu(p));
- }
- 
-+void topology_update_cpu_capacity(unsigned int cpu, unsigned long old,
-+				  unsigned long new);
++static inline int dl_task_fit(const struct sched_dl_entity *dl_se,
++			      int cpu, u64 *c)
++{
++	u64 cap = (arch_scale_cpu_capacity(NULL, cpu) * arch_scale_freq_capacity(cpu)) >> SCHED_CAPACITY_SHIFT;
++	s64 rel_deadline = dl_se->dl_deadline;
++	u64 rem_runtime  = dl_se->dl_runtime;
 +
- #endif /* _LINUX_SCHED_TOPOLOGY_H */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index d8456801caa3..a37bbb246802 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6271,6 +6271,7 @@ void set_rq_online(struct rq *rq)
- 			if (class->rq_online)
- 				class->rq_online(rq);
- 		}
-+		rq->rd->rd_capacity += arch_scale_cpu_capacity(NULL, cpu_of(rq));
- 	}
- }
++	if (c)
++		*c = cap;
++
++	if ((rel_deadline * cap) >> SCHED_CAPACITY_SHIFT < rem_runtime)
++		return 0;
++
++	return 1;
++}
++
+ /*
+  * cpudl_find - find the best (later-dl) CPU in the system
+  * @cp: the cpudl max-heap context
+@@ -125,8 +141,19 @@ int cpudl_find(struct cpudl *cp, struct task_struct *p,
  
-@@ -6286,6 +6287,7 @@ void set_rq_offline(struct rq *rq)
+ 	if (later_mask &&
+ 	    cpumask_and(later_mask, cp->free_cpus, &p->cpus_allowed)) {
+-		return 1;
+-	} else {
++		int cpu;
++
++		for_each_cpu(cpu, later_mask) {
++			u64 cap;
++
++			if (!dl_task_fit(&p->dl, cpu, &cap))
++				cpumask_clear_cpu(cpu, later_mask);
++		}
++
++		if (!cpumask_empty(later_mask))
++			return 1;
++	}
++	{
+ 		int best_cpu = cpudl_maximum(cp);
  
- 		cpumask_clear_cpu(rq->cpu, rq->rd->online);
- 		rq->online = 0;
-+		rq->rd->rd_capacity -= arch_scale_cpu_capacity(NULL, cpu_of(rq));
- 	}
- }
- 
+ 		WARN_ON(best_cpu != -1 && !cpu_present(best_cpu));
 diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 6a73e41a2016..5b981eeeb944 100644
+index 5b981eeeb944..3436f3d8fa8f 100644
 --- a/kernel/sched/deadline.c
 +++ b/kernel/sched/deadline.c
-@@ -63,6 +63,10 @@ static inline int dl_bw_cpus(int i)
+@@ -1584,6 +1584,9 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
+ 	if (sd_flag != SD_BALANCE_WAKE)
+ 		goto out;
  
- 	return cpus;
- }
-+static inline unsigned long rd_capacity(struct rq *rq)
-+{
-+	return rq->rd->rd_capacity;
-+}
- #else
- static inline struct dl_bw *dl_bw_of(int i)
- {
-@@ -73,6 +77,11 @@ static inline int dl_bw_cpus(int i)
- {
- 	return 1;
- }
++	if (dl_entity_is_special(&p->dl))
++		goto out;
 +
-+static inline unsigned long rd_capacity(struct rq *rq)
-+{
-+	return SCHED_CAPACITY_SCALE;
-+}
- #endif
+ 	rq = cpu_rq(cpu);
  
- static inline
-@@ -2535,13 +2544,13 @@ int sched_dl_overflow(struct task_struct *p, int policy,
- 	raw_spin_lock(&dl_b->lock);
- 	cpus = dl_bw_cpus(task_cpu(p));
- 	if (dl_policy(policy) && !task_has_dl_policy(p) &&
--	    !__dl_overflow(dl_b, cpus, 0, new_bw)) {
-+	    !__dl_overflow(dl_b, rd_capacity(task_rq(p)), 0, new_bw)) {
- 		if (hrtimer_active(&p->dl.inactive_timer))
- 			__dl_sub(dl_b, p->dl.dl_bw, cpus);
- 		__dl_add(dl_b, new_bw, cpus);
- 		err = 0;
- 	} else if (dl_policy(policy) && task_has_dl_policy(p) &&
--		   !__dl_overflow(dl_b, cpus, p->dl.dl_bw, new_bw)) {
-+		   !__dl_overflow(dl_b, rd_capacity(task_rq(p)), p->dl.dl_bw, new_bw)) {
- 		/*
- 		 * XXX this is slightly incorrect: when the task
- 		 * utilization decreases, we should delay the total
-@@ -2689,7 +2698,7 @@ int dl_task_can_attach(struct task_struct *p, const struct cpumask *cs_cpus_allo
- 	dl_b = dl_bw_of(dest_cpu);
- 	raw_spin_lock_irqsave(&dl_b->lock, flags);
- 	cpus = dl_bw_cpus(dest_cpu);
--	overflow = __dl_overflow(dl_b, cpus, 0, p->dl.dl_bw);
-+	overflow = __dl_overflow(dl_b, rd_capacity(cpu_rq(dest_cpu)), 0, p->dl.dl_bw);
- 	if (overflow) {
- 		ret = -EBUSY;
- 	} else {
-@@ -2734,13 +2743,11 @@ bool dl_cpu_busy(unsigned int cpu)
- 	unsigned long flags;
- 	struct dl_bw *dl_b;
- 	bool overflow;
--	int cpus;
+ 	rcu_read_lock();
+@@ -1598,10 +1601,11 @@ select_task_rq_dl(struct task_struct *p, int cpu, int sd_flag, int flags)
+ 	 * other hand, if it has a shorter deadline, we
+ 	 * try to make it stay here, it might be important.
+ 	 */
+-	if (unlikely(dl_task(curr)) &&
++	if ((unlikely(dl_task(curr)) &&
+ 	    (curr->nr_cpus_allowed < 2 ||
+ 	     !dl_entity_preempt(&p->dl, &curr->dl)) &&
+-	    (p->nr_cpus_allowed > 1)) {
++	    (p->nr_cpus_allowed > 1)) ||
++	    static_branch_unlikely(&sched_asym_cpucapacity)) {
+ 		int target = find_later_rq(p);
  
- 	rcu_read_lock_sched();
- 	dl_b = dl_bw_of(cpu);
- 	raw_spin_lock_irqsave(&dl_b->lock, flags);
--	cpus = dl_bw_cpus(cpu);
--	overflow = __dl_overflow(dl_b, cpus, 0, 0);
-+	overflow = __dl_overflow(dl_b, rd_capacity(cpu_rq(cpu)), 0, 0);
- 	raw_spin_unlock_irqrestore(&dl_b->lock, flags);
- 	rcu_read_unlock_sched();
- 
+ 		if (target != -1 &&
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 69114842d640..32d242694863 100644
+index 32d242694863..e5f9fd3aee80 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -305,10 +305,11 @@ void __dl_add(struct dl_bw *dl_b, u64 tsk_bw, int cpus)
- }
+@@ -2367,7 +2367,12 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
  
- static inline
--bool __dl_overflow(struct dl_bw *dl_b, int cpus, u64 old_bw, u64 new_bw)
-+bool __dl_overflow(struct dl_bw *dl_b, unsigned long cap, u64 old_bw, u64 new_bw)
+ static inline unsigned long cpu_bw_dl(struct rq *rq)
  {
- 	return dl_b->bw != -1 &&
--	       dl_b->bw * cpus < dl_b->total_bw - old_bw + new_bw;
-+	       (dl_b->bw * cap) >> SCHED_CAPACITY_SHIFT <
-+	       dl_b->total_bw - old_bw + new_bw;
+-	return (rq->dl.running_bw * SCHED_CAPACITY_SCALE) >> BW_SHIFT;
++	unsigned long res;
++
++	res = (rq->dl.running_bw * SCHED_CAPACITY_SCALE) >> BW_SHIFT;
++
++	return (res << SCHED_CAPACITY_SHIFT) /
++	       arch_scale_cpu_capacity(NULL, rq->cpu);
  }
  
- extern void dl_change_utilization(struct task_struct *p, u64 new_bw);
-@@ -785,6 +786,8 @@ struct root_domain {
- 	unsigned long		max_cpu_capacity;
- 	unsigned long		min_cpu_capacity;
- 
-+	unsigned long           rd_capacity;
-+
- 	/*
- 	 * NULL-terminated list of performance domains intersecting with the
- 	 * CPUs of the rd. Protected by RCU.
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index b1c4b68a4d17..1cd20a2e5bc8 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -2255,3 +2255,12 @@ void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
- 
- 	mutex_unlock(&sched_domains_mutex);
- }
-+
-+void topology_update_cpu_capacity(unsigned int cpu, unsigned long old,
-+				  unsigned long new)
-+{
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	rq->rd->rd_capacity -= old;
-+	rq->rd->rd_capacity += new;
-+}
+ static inline unsigned long cpu_util_dl(struct rq *rq)
 -- 
 2.20.1
 
