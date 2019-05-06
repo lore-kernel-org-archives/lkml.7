@@ -2,124 +2,131 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2A7C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0667C04AAE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFC5208C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557128267;
-	bh=O9OkPPpBPg790K1A+o+MZVmjuMDjdw7DIPnaoFKpXG8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fbV2Si4COBeH983GmPhjv0pB0X/fapg8hxC1KJFiPcfCjpWDM2H7hqpI3Py66mV39
-	 cWi740yfFWObIMkIX5EDr+urMgLMFJLw26MSIdzGFhl6TKs7BO4Qgrg6cuCM7op3to
-	 X3nLQeSyIak6p8DrhT31Be0+gD4ETFaYWIcjQkIo=
+	by mail.kernel.org (Postfix) with ESMTP id 9BEAB204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbfEFHhq (ORCPT
+        id S1726399AbfEFHhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:37:46 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38904 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfEFHho (ORCPT
+        Mon, 6 May 2019 03:37:48 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53807 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbfEFHhq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:37:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=q/JBvH8ocBJRDInrHMuqhLFgpwZ/1CDyM2bB8iVm+1Q=; b=q3BZziWWw5XKK40iJ4F4q0pNq
-        dfknWEHZk0VDTavM7TFIgK8W83a1x2Jhf/nad0JPZHvS2CrDs1F/LC1i1ooIUM5Ot2pyhCIR+u+iS
-        /BAVmbNBb5ZCqqOeD4URO3C0CtFyV12sT/c8PNyDDimdJepfmASvb/MM3dLJMH/eQPrPE=;
-Received: from kd111239184067.au-net.ne.jp ([111.239.184.67] helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        Mon, 6 May 2019 03:37:46 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hNYBs-0000s6-Az; Mon, 06 May 2019 07:37:36 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id CB81D440034; Mon,  6 May 2019 05:38:09 +0100 (BST)
-Date:   Mon, 6 May 2019 13:38:09 +0900
-From:   Mark Brown <broonie@kernel.org>
-To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        bjorn.andersson@linaro.org, vinod.koul@linaro.org,
-        niklas.cassel@linaro.org, khasim.mohammed@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/3] drivers: regulator: qcom: add PMS405 SPMI regulator
-Message-ID: <20190506043809.GL14916@sirena.org.uk>
-References: <a3c281d5-d30e-294f-71ab-957decde2ba0@linaro.org>
- <20190502023316.GS14916@sirena.org.uk>
- <dd15d784-f2a1-78c6-3543-69bbcc1143c4@linaro.org>
- <20190503062626.GE14916@sirena.org.uk>
- <229823c4-f5d4-4821-ded1-cc046dd0bd20@linaro.org>
+        (envelope-from <sha@pengutronix.de>)
+        id 1hNYBt-0003eJ-FE; Mon, 06 May 2019 09:37:37 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1hNYBr-00071K-1w; Mon, 06 May 2019 09:37:35 +0200
+Date:   Mon, 6 May 2019 09:37:35 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Chuanhua Han <chuanhua.han@nxp.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "eha@deif.com" <eha@deif.com>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "peda@axentia.se" <peda@axentia.se>,
+        Sumit Batra <sumit.batra@nxp.com>
+Subject: Re: [EXT] Re: [PATCH 1/2] i2c: imx: I2C Driver doesn't consider
+ I2C_IPGCLK_SEL RCW bit when using ls1046a SoC
+Message-ID: <20190506073735.ctzybytamu44pbvv@pengutronix.de>
+References: <20190430044719.30720-1-chuanhua.han@nxp.com>
+ <20190430125043.weqwzim4gpsvtkfe@pengutronix.de>
+ <AM6PR04MB43571B8D52C1FE9ED20DBA1D97360@AM6PR04MB4357.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Ahst0DKxuyFxAqHk"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <229823c4-f5d4-4821-ded1-cc046dd0bd20@linaro.org>
-X-Cookie: -- I have seen the FUN --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM6PR04MB43571B8D52C1FE9ED20DBA1D97360@AM6PR04MB4357.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:13:06 up 48 days, 18:23, 78 users,  load average: 1.12, 1.24,
+ 1.24
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, May 04, 2019 at 09:28:48AM +0000, Chuanhua Han wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Sascha Hauer <s.hauer@pengutronix.de>
+> > Sent: 2019年4月30日 20:51
+> > To: Chuanhua Han <chuanhua.han@nxp.com>
+> > Cc: shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org;
+> > mark.rutland@arm.com; linux-kernel@vger.kernel.org;
+> > linux-i2c@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; festevam@gmail.com; dl-linux-imx
+> > <linux-imx@nxp.com>; wsa+renesas@sang-engineering.com;
+> > u.kleine-koenig@pengutronix.de; eha@deif.com; linux@rempel-privat.de;
+> > l.stach@pengutronix.de; peda@axentia.se; Sumit Batra
+> > <sumit.batra@nxp.com>
+> > Subject: [EXT] Re: [PATCH 1/2] i2c: imx: I2C Driver doesn't consider
+> > I2C_IPGCLK_SEL RCW bit when using ls1046a SoC
+> > 
+> > Caution: EXT Email
+> > 
+> > On Tue, Apr 30, 2019 at 12:47:18PM +0800, Chuanhua Han wrote:
+> > > The current kernel driver does not consider I2C_IPGCLK_SEL (424 bit of
+> > > RCW) in deciding  i2c_clk_rate in function i2c_imx_set_clk() { 0
+> > > Platform clock/4, 1 Platform clock/2}.
+> > >
+> > > When using ls1046a SoC, this populates incorrect value in IBFD
+> > > register if I2C_IPGCLK_SEL = 0, which generates half of the desired Clock.
+> > >
+> > > Therefore, if ls1046a SoC is used, we need to set the i2c clock
+> > > according to the corresponding RCW.
+> > 
+> > So the clock driver reports the wrong clock. Please fix the clock driver then.
+> No, this is a problem with the i2c driver. It is not a problem with
+> the clock driver, so the i2c driver needs to be modified.
 
---Ahst0DKxuyFxAqHk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+So how does this RCW bit get evaluated? According to the reference
+manual only one clock goes to the i2c module (described as 1/2 Platform
+Clock) and the i2c module only takes one clock. So it seems there must
+be a /2 divider somewhere, either in each i2c module or somewhere
+outside. Can your IC guys tell you where it is?
 
-On Fri, May 03, 2019 at 10:29:42AM +0200, Jorge Ramirez wrote:
-> On 5/3/19 08:26, Mark Brown wrote:
-> > On Thu, May 02, 2019 at 01:30:48PM +0200, Jorge Ramirez wrote:
+One reason I suggested the clock driver is that the clock driver
+contains SoC specific code already, so it should be easier to integrate
+there.
 
-> > It seems a bit of a jump to add a new driver - it's just another
-> > descriptor and ops structure isn't it?  Though as ever with the Qualcomm
-> > stuff this driver is pretty baroque which doesn't entirely help though I
-> > think it's just another regulator type which there's already some
-> > handling for.
+Sascha
 
-> So how do we move this forward?
 
-> To sum up his regulator needs to be able to bypass accesses to
-> SPMI_COMMON_REG_VOLTAGE_RANGE and provide the range in some other way
-> hence the change below
-
-> I can't find a simpler solution than this since the function does now
-> what is supposed to do for all the regulator types supported in the driver
-
-The assumption that you need to have this regulator use functions that
-use and provide ranges is the very thing I'm trying to get you to
-change.  It looks like these regulators just need their own
-set_voltage_sel() and get_voltage_sel() then they can use the standard
-linear range mapping functions (and pobably the set_voltage_time_sel()
-needs fixing anyway for all the other regulators).
-
-There's already some conditional code in the probe function for handling
-different operations for the over current protection and SAW stuff, this
-looks like it should fit in reasonably well.  Usually this would be even
-easier as probe functions are just data driven but for some reason more
-than usual of this driver's data initializaiton is done dynamically.
-
---Ahst0DKxuyFxAqHk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzPujEACgkQJNaLcl1U
-h9AkRwf9GK2o9cZ1OLFJrB/8tsboZ5JASZWrWkJyQhXcVyS0lEb46C0dmGfdx0QC
-K7zSOESXrHeOCwevpiCnlpBRtc8pP4raU2rWA4VgE7c7zASR2CITmJOpBDyAkZ6z
-lLSC2Tj++glpX0avpR3ySlj0jPOSi2J5Ya3J8Waa3FQZmACUOuSBWRwidw27JZqE
-2ya2yxvRLHvqy8CFqTXPgW2tOnI++sKwNsbJj7dKSjCHPT4NjALwGHGevcSlxYvn
-z21RkjOTzCm2jtUPphaEbecZW1MJzcjX+lJD7Io0e3tVveT5RUhX2Vd0IbPzyXGp
-s5taJbNKU1udzdqgETiAHg711RKazw==
-=ojFG
------END PGP SIGNATURE-----
-
---Ahst0DKxuyFxAqHk--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
