@@ -2,99 +2,119 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01126C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E83C04AAE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1AF92082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F162082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:25:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q4sRowf0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfEFHZg (ORCPT
+        id S1726340AbfEFHZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:25:36 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46552 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725828AbfEFHZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:25:36 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B43233A4564CE369C6FA;
-        Mon,  6 May 2019 15:25:33 +0800 (CST)
-Received: from [127.0.0.1] (10.210.168.180) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Mon, 6 May 2019
- 15:25:30 +0800
-Subject: Re: [PATCH v2] perf vendor events arm64: Add Cortex-A57 and
- Cortex-A72 events
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20190502234704.7663-1-f.fainelli@gmail.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "moderated list:ARM PMU PROFILING AND DEBUGGING" 
-        <linux-arm-kernel@lists.infradead.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <5c04ebac-3e3c-fa53-d287-3a602a350091@huawei.com>
-Date:   Mon, 6 May 2019 08:25:21 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Mon, 6 May 2019 03:25:46 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39487 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfEFHZq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 03:25:46 -0400
+Received: by mail-qk1-f193.google.com with SMTP id z128so4665496qkb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 00:25:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pO57+WHM9icAQXA84tNTYrkL98PNEsC+5xBzFAyNyVg=;
+        b=Q4sRowf0YZqref5eztkLd8S7ufHGsFLRndJMSOMuqY3b4S0MmgjZiYllijIxccx3+i
+         d8qqm5j/vpnQrGZwJxPwwlWKsTrjEKWY6V1DThjLxMKK0nJ3OLFoyeqykRh4uzGe/OfR
+         dByViWZvEs33mHGK/JVSuWGgxQUZHf262x09TCQPzgdAysQkppKolZRuF8gPsb228h1n
+         iZNxlwS9hfyLFHgtVphlUl3yYDAaS0SGzHvmBgn3v+C0jrO4dnMBQekgtaTwTwxTYNQj
+         JDN9iFu/x6u/ntfRt42Z+55u5TsUjZFp48zR3MbdjmPhULajgsdi4kI1dK6BPdNnQTjK
+         OxHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pO57+WHM9icAQXA84tNTYrkL98PNEsC+5xBzFAyNyVg=;
+        b=COMMSIoOGRXSbjLlLkAOvjYbY7Dz89Mb4GdzKNiydKnNwQCKHUOMTXdE7rFtEcxNBF
+         HOUhtNFaGG+Qa3wina5F+sGRpdSlMhytEGnC/lxiQ5esYiS+S9Qg0M5ZK6dM8iAvVHfP
+         0p5nrsqGj8+2f9OzeIPkBSLiGztqWOphyj6gwd2KjSzyqWOsIbZ5uu1cokjO+vq39qdV
+         x8rdCdud0KJnliosvnqCQvbyhqXzB1DOxfe6ElZ5eNEh9/xpdISMgPPd4OmA4jKTd6tZ
+         UO2nK2CluD0W8bxvmaTXDeXw5akd/wE7Aoa0G7rJ/KyU6su34x9NaKo5sN7R0D8MgjYS
+         A5QQ==
+X-Gm-Message-State: APjAAAUiNqco3be/POi/ySJt5qcAdZoy/p5ew+H3BXsZPK0pYLxkc9e/
+        cMwrelH3F4qcDDnfD+wFFRi+E2ephzpTQf9OveeszA==
+X-Google-Smtp-Source: APXvYqzi6kaFJ7dpE+n+VOhA31cBwTt9A6DfQSW/RJ6FOD2P+M23nMnX4FFbt/nvMku6Ns54SMrMIRxJijtROfat5M4=
+X-Received: by 2002:a37:8843:: with SMTP id k64mr18569492qkd.8.1557127545107;
+ Mon, 06 May 2019 00:25:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190502234704.7663-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.168.180]
-X-CFilter-Loop: Reflected
+References: <1556114601-30936-1-git-send-email-fabien.dessenne@st.com>
+ <1556114601-30936-2-git-send-email-fabien.dessenne@st.com> <c445397b-36a7-3511-603a-e94ae6ddcf12@st.com>
+In-Reply-To: <c445397b-36a7-3511-603a-e94ae6ddcf12@st.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Mon, 6 May 2019 09:25:34 +0200
+Message-ID: <CA+M3ks6M7BC3VP-4O7suVucnYySJps4CxyAyVz_ra5EVDUzrag@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm/stm: ltdc: manage the get_irq probe defer case
+To:     Philippe CORNU <philippe.cornu@st.com>
+Cc:     Fabien DESSENNE <fabien.dessenne@st.com>,
+        Yannick FERTRE <yannick.fertre@st.com>,
+        Vincent ABRIOU <vincent.abriou@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/05/2019 00:47, Florian Fainelli wrote:
-> The Cortex-A57 and Cortex-A72 both support all ARMv8 recommended events
-> up to the RC_ST_SPEC (0x91) event with the exception of:
+Le ven. 26 avr. 2019 =C3=A0 14:30, Philippe CORNU <philippe.cornu@st.com> a=
+ =C3=A9crit :
 >
-> - L1D_CACHE_REFILL_INNER (0x44)
-> - L1D_CACHE_REFILL_OUTER (0x45)
-> - L1D_TLB_RD (0x4E)
-> - L1D_TLB_WR (0x4F)
-> - L2D_TLB_REFILL_RD (0x5C)
-> - L2D_TLB_REFILL_WR (0x5D)
-> - L2D_TLB_RD (0x5E)
-> - L2D_TLB_WR (0x5F)
-> - STREX_SPEC (0x6F)
+> Hi Fabien,
+> and thank you for your patch,
 >
-> Create an appropriate JSON file for mapping those events and update the
-> mapfile.csv for matching the Cortex-A57 and Cortex-A72 MIDR to that
-> file.
+> Acked-by: Philippe Cornu <philippe.cornu@st.com>
+>
+> Philippe :-)
+>
+> On 4/24/19 4:03 PM, Fabien Dessenne wrote:
+> > Manage the -EPROBE_DEFER error case for the ltdc IRQ.
+> >
+> > Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 
-I suppose you could have also created separate a72 and a57 folders, and 
-used a symbolic link for the json. That would have kept the folder 
-structure consistent and neat.
+Applied on drm-misc-next.
+Thanks,
+Benjamin
 
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Apart from the above:
-
-Reviewed-by: John Garry <john.garry@huawei.com>
-
-> ---
-> Changes in v2:
->
-> - added a shared directory for both Cortex-A57 and A72 (Will)
-> - removed unsupported ARMv8 v3 events (John)
->
->  .../arm/cortex-a57-a72/core-imp-def.json      | 179 ++++++++++++++++++
->  tools/perf/pmu-events/arch/arm64/mapfile.csv  |   2 +
->  2 files changed, 181 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
->
-> diff --git a/tools/perf/pmu-even
-
+> > ---
+> >   drivers/gpu/drm/stm/ltdc.c | 3 +++
+> >   1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+> > index 566b0d8..521ba83 100644
+> > --- a/drivers/gpu/drm/stm/ltdc.c
+> > +++ b/drivers/gpu/drm/stm/ltdc.c
+> > @@ -1174,6 +1174,9 @@ int ltdc_load(struct drm_device *ddev)
+> >
+> >       for (i =3D 0; i < MAX_IRQ; i++) {
+> >               irq =3D platform_get_irq(pdev, i);
+> > +             if (irq =3D=3D -EPROBE_DEFER)
+> > +                     goto err;
+> > +
+> >               if (irq < 0)
+> >                       continue;
+> >
+> >
