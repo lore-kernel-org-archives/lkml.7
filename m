@@ -2,126 +2,159 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DC4C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBACBC04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209A32053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4192053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557154642;
+	bh=PvMGcIzGodVGCabN5nBdrXrjvGtvvgJxi5wy5F9W0To=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fU0ROk6vqjB1xEPpPSBfcZ/vh6sdl4vd2po+VlCAYnlcGxCk3yLteIJZ68d1JkVjj
+	 tQoOoT66+2d0a0d98fjFNYO3yJY+G6pPjqzts4n1UwRTJ6S4xE5SN5+VhgmMMVECwR
+	 rvCwyPEHN32XzrtgE2LXnIpc1mMto2S95a/bDCWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfEFOo2 (ORCPT
+        id S1728447AbfEFO5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:44:28 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40414 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728774AbfEFOoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:22 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D69EB479F90414FF5DC2;
-        Mon,  6 May 2019 22:44:18 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 6 May 2019
- 22:44:10 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <g.nault@alphalink.fr>,
-        <jian.w.wen@oracle.com>, <edumazet@google.com>, <kafai@fb.com>,
-        <xiyou.wangcong@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] l2tp: Fix possible NULL pointer dereference
-Date:   Mon, 6 May 2019 22:44:04 +0800
-Message-ID: <20190506144404.25220-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 6 May 2019 10:57:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728789AbfEFOo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 573D8214C6;
+        Mon,  6 May 2019 14:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557153865;
+        bh=PvMGcIzGodVGCabN5nBdrXrjvGtvvgJxi5wy5F9W0To=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=d9cCHybp7oR9mOuvsEdq+g7WhPHoDoOuUXNtUG57PnrLgHy3ZLpNtcaLM2IWIIqqk
+         svU2wD/vlQRUkWi6Nth1rMPfJjomjJlYDpHQ6TudoE301zEjkXBVVSyBkQVdrQetyF
+         r238G8I1njN+8bwJt0PcHC4c2GBKp1GSx2C/D7pQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 25/75] nvme-loop: init nvmet_ctrl fatal_err_work when allocate
+Date:   Mon,  6 May 2019 16:32:33 +0200
+Message-Id: <20190506143055.469977437@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
+References: <20190506143053.287515952@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000128
-PGD 0 P4D 0
-Oops: 0000 [#1
-CPU: 0 PID: 5697 Comm: modprobe Tainted: G        W         5.1.0-rc7+ #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:__lock_acquire+0x53/0x10b0
-Code: 8b 1c 25 40 5e 01 00 4c 8b 6d 10 45 85 e4 0f 84 bd 06 00 00 44 8b 1d 7c d2 09 02 49 89 fe 41 89 d2 45 85 db 0f 84 47 02 00 00 <48> 81 3f a0 05 70 83 b8 00 00 00 00 44 0f 44 c0 83 fe 01 0f 86 3a
-RSP: 0018:ffffc90001c07a28 EFLAGS: 00010002
-RAX: 0000000000000000 RBX: ffff88822f038440 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000128
-RBP: ffffc90001c07a88 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000001
-R13: 0000000000000000 R14: 0000000000000128 R15: 0000000000000000
-FS:  00007fead0811540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000128 CR3: 00000002310da000 CR4: 00000000000006f0
-Call Trace:
- ? __lock_acquire+0x24e/0x10b0
- lock_acquire+0xdf/0x230
- ? flush_workqueue+0x71/0x530
- flush_workqueue+0x97/0x530
- ? flush_workqueue+0x71/0x530
- l2tp_exit_net+0x170/0x2b0 [l2tp_core
- ? l2tp_exit_net+0x93/0x2b0 [l2tp_core
- ops_exit_list.isra.6+0x36/0x60
- unregister_pernet_operations+0xb8/0x110
- unregister_pernet_device+0x25/0x40
- l2tp_init+0x55/0x1000 [l2tp_core
- ? 0xffffffffa018d000
- do_one_initcall+0x6c/0x3cc
- ? do_init_module+0x22/0x1f1
- ? rcu_read_lock_sched_held+0x97/0xb0
- ? kmem_cache_alloc_trace+0x325/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7fead031a839
-Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 1f f6 2c 00 f7 d8 64 89 01 48
-RSP: 002b:00007ffe8d9acca8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 0000560078398b80 RCX: 00007fead031a839
-RDX: 0000000000000000 RSI: 000056007659dc2e RDI: 0000000000000003
-RBP: 000056007659dc2e R08: 0000000000000000 R09: 0000560078398b80
-R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000000000
-R13: 00005600783a04a0 R14: 0000000000040000 R15: 0000560078398b80
-Modules linked in: l2tp_core(+) e1000 ip_tables ipv6 [last unloaded: l2tp_core
-CR2: 0000000000000128
----[ end trace 8322b2b8bf83f8e1
+[ Upstream commit d11de63f2b519f0a162b834013b6d3a46dbf3886 ]
 
-If alloc_workqueue fails in l2tp_init, l2tp_net_ops
-is unregistered on failure path. Then l2tp_exit_net
-is called which will flush NULL workqueue, this patch
-add a NULL check to fix it.
+After commit 4d43d395fe (workqueue: Try to catch flush_work() without
+INIT_WORK()), it can cause warning when delete nvme-loop device, trace
+like:
 
-Fixes: 67e04c29ec0d ("l2tp: unregister l2tp_net_ops on failure path")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+[   76.601272] Call Trace:
+[   76.601646]  ? del_timer+0x72/0xa0
+[   76.602156]  __cancel_work_timer+0x1ae/0x270
+[   76.602791]  cancel_work_sync+0x14/0x20
+[   76.603407]  nvmet_ctrl_free+0x1b7/0x2f0 [nvmet]
+[   76.604091]  ? free_percpu+0x168/0x300
+[   76.604652]  nvmet_sq_destroy+0x106/0x240 [nvmet]
+[   76.605346]  nvme_loop_destroy_admin_queue+0x30/0x60 [nvme_loop]
+[   76.606220]  nvme_loop_shutdown_ctrl+0xc3/0xf0 [nvme_loop]
+[   76.607026]  nvme_loop_delete_ctrl_host+0x19/0x30 [nvme_loop]
+[   76.607871]  nvme_do_delete_ctrl+0x75/0xb0
+[   76.608477]  nvme_sysfs_delete+0x7d/0xc0
+[   76.609057]  dev_attr_store+0x24/0x40
+[   76.609603]  sysfs_kf_write+0x4c/0x60
+[   76.610144]  kernfs_fop_write+0x19a/0x260
+[   76.610742]  __vfs_write+0x1c/0x60
+[   76.611246]  vfs_write+0xfa/0x280
+[   76.611739]  ksys_write+0x6e/0x120
+[   76.612238]  __x64_sys_write+0x1e/0x30
+[   76.612787]  do_syscall_64+0xbf/0x3a0
+[   76.613329]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+We fix it by moving fatal_err_work init to nvmet_alloc_ctrl(), which may
+more reasonable.
+
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/l2tp/l2tp_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvme/target/core.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
-index 52b5a27..e4dec03 100644
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -1735,7 +1735,8 @@ static __net_exit void l2tp_exit_net(struct net *net)
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 5fa7856f6b34..09a39f4aaf82 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -746,6 +746,15 @@ bool nvmet_host_allowed(struct nvmet_req *req, struct nvmet_subsys *subsys,
+ 		return __nvmet_host_allowed(subsys, hostnqn);
+ }
+ 
++static void nvmet_fatal_error_handler(struct work_struct *work)
++{
++	struct nvmet_ctrl *ctrl =
++			container_of(work, struct nvmet_ctrl, fatal_err_work);
++
++	pr_err("ctrl %d fatal error occurred!\n", ctrl->cntlid);
++	ctrl->ops->delete_ctrl(ctrl);
++}
++
+ u16 nvmet_alloc_ctrl(const char *subsysnqn, const char *hostnqn,
+ 		struct nvmet_req *req, u32 kato, struct nvmet_ctrl **ctrlp)
+ {
+@@ -785,6 +794,7 @@ u16 nvmet_alloc_ctrl(const char *subsysnqn, const char *hostnqn,
+ 
+ 	INIT_WORK(&ctrl->async_event_work, nvmet_async_event_work);
+ 	INIT_LIST_HEAD(&ctrl->async_events);
++	INIT_WORK(&ctrl->fatal_err_work, nvmet_fatal_error_handler);
+ 
+ 	memcpy(ctrl->subsysnqn, subsysnqn, NVMF_NQN_SIZE);
+ 	memcpy(ctrl->hostnqn, hostnqn, NVMF_NQN_SIZE);
+@@ -887,21 +897,11 @@ void nvmet_ctrl_put(struct nvmet_ctrl *ctrl)
+ 	kref_put(&ctrl->ref, nvmet_ctrl_free);
+ }
+ 
+-static void nvmet_fatal_error_handler(struct work_struct *work)
+-{
+-	struct nvmet_ctrl *ctrl =
+-			container_of(work, struct nvmet_ctrl, fatal_err_work);
+-
+-	pr_err("ctrl %d fatal error occurred!\n", ctrl->cntlid);
+-	ctrl->ops->delete_ctrl(ctrl);
+-}
+-
+ void nvmet_ctrl_fatal_error(struct nvmet_ctrl *ctrl)
+ {
+ 	mutex_lock(&ctrl->lock);
+ 	if (!(ctrl->csts & NVME_CSTS_CFS)) {
+ 		ctrl->csts |= NVME_CSTS_CFS;
+-		INIT_WORK(&ctrl->fatal_err_work, nvmet_fatal_error_handler);
+ 		schedule_work(&ctrl->fatal_err_work);
  	}
- 	rcu_read_unlock_bh();
- 
--	flush_workqueue(l2tp_wq);
-+	if (l2tp_wq)
-+		flush_workqueue(l2tp_wq);
- 	rcu_barrier();
- 
- 	for (hash = 0; hash < L2TP_HASH_SIZE_2; hash++)
+ 	mutex_unlock(&ctrl->lock);
 -- 
-1.8.3.1
+2.20.1
+
 
 
