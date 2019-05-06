@@ -2,136 +2,120 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3E0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB41C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A462C2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:29:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="EzEITD7W"
+	by mail.kernel.org (Postfix) with ESMTP id 73C882053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557178454;
+	bh=6ekGxk1cgLDq3WsKx5cmGBr/cNA9+TIZZTguJ/soLIg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=v4A923T5Vr7vxB5/PZeVQ/okF3tNZtedZoOkRZOjOIdCQbiacYiY0EalLfqGiw2Ji
+	 zSnsHr/ebSbMMNIo9jutcq8xVRQa7Yp6zhdQoD7dfj+YYzVcatfc9AN3OA+op81OUT
+	 b/vk7CmER16z+qpmWDzSOE9ntK1T9xUlUzhIWVus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfEFV3f (ORCPT
+        id S1726464AbfEFVeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 17:29:35 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:12930 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfEFV3e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 17:29:34 -0400
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Woojung.Huh@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Woojung.Huh@microchip.com";
-  x-sender="Woojung.Huh@microchip.com"; x-conformance=spf_only;
-  x-record-type="v=spf1"; x-record-text="v=spf1 mx
-  a:ushub1.microchip.com a:smtpout.microchip.com
-  a:mx1.microchip.iphmx.com a:mx2.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Woojung.Huh@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Woojung.Huh@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,439,1549954800"; 
-   d="scan'208";a="33461632"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 06 May 2019 14:29:33 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.49) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Mon, 6 May 2019 14:29:33 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bz4unriP6vkqt6KG0HTVxImRo2Alxmy+fyKM0lqVdYU=;
- b=EzEITD7WFSU/qUi7DUDxXpXxWdolCW2/9zqRd0keoaX5xgJKkIhHdZc6xNlMhi+2zld1cDL09rJUTLODWBtdurAYnfo2jEh8HT2/6Ujm76HUJXX5Xv/SXjnM2XK9p3LWiK0d4XPLJf037An0DwTvGKK/OOf9Yejak6+osxfcxoc=
-Received: from DM5PR1101MB2139.namprd11.prod.outlook.com (10.174.104.136) by
- DM5PR1101MB2090.namprd11.prod.outlook.com (10.174.104.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Mon, 6 May 2019 21:29:18 +0000
-Received: from DM5PR1101MB2139.namprd11.prod.outlook.com
- ([fe80::dcb0:6ce:8f02:9d65]) by DM5PR1101MB2139.namprd11.prod.outlook.com
- ([fe80::dcb0:6ce:8f02:9d65%3]) with mapi id 15.20.1856.012; Mon, 6 May 2019
- 21:29:18 +0000
-From:   <Woojung.Huh@microchip.com>
-To:     <ynezz@true.cz>, <netdev@vger.kernel.org>, <davem@davemloft.net>,
-        <steve.glendinning@shawell.net>, <UNGLinuxDriver@microchip.com>
-CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <frowand.list@gmail.com>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
-        <maxime.ripard@bootlin.com>, <linux-usb@vger.kernel.org>
-Subject: RE: [PATCH net-next v2 4/4] net: usb: smsc: fix warning reported by
- kbuild test robot
-Thread-Topic: [PATCH net-next v2 4/4] net: usb: smsc: fix warning reported by
- kbuild test robot
-Thread-Index: AQHVBFKA7+FmJGtDekycg4kDQT61q6ZenKEg
-Date:   Mon, 6 May 2019 21:29:18 +0000
-Message-ID: <DM5PR1101MB21399FAD9C7E072F24207C14E7300@DM5PR1101MB2139.namprd11.prod.outlook.com>
-References: <1557177887-30446-1-git-send-email-ynezz@true.cz>
- <1557177887-30446-5-git-send-email-ynezz@true.cz>
-In-Reply-To: <1557177887-30446-5-git-send-email-ynezz@true.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [47.19.18.123]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8d876469-f074-4f84-2d07-08d6d269e596
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR1101MB2090;
-x-ms-traffictypediagnostic: DM5PR1101MB2090:
-x-microsoft-antispam-prvs: <DM5PR1101MB2090F33ADC151AA37234D676E7300@DM5PR1101MB2090.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0029F17A3F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(366004)(346002)(39860400002)(189003)(199004)(33656002)(7696005)(86362001)(229853002)(316002)(110136005)(14444005)(8676002)(256004)(72206003)(54906003)(478600001)(99286004)(52536014)(6636002)(76176011)(81166006)(6246003)(66476007)(7416002)(64756008)(55016002)(66446008)(66556008)(73956011)(66946007)(9686003)(4326008)(53936002)(8936002)(25786009)(6116002)(3846002)(6436002)(76116006)(68736007)(486006)(71200400001)(71190400001)(66574012)(66066001)(305945005)(14454004)(7736002)(81156014)(446003)(11346002)(476003)(5660300002)(6506007)(26005)(2501003)(74316002)(102836004)(2906002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR1101MB2090;H:DM5PR1101MB2139.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jfM9JAw2WI01RYvQnbkGVl+fT2Qv4vi2ZotEaqeI8rnn+PU/Rthha5IDTxTGuh/SXtT+3Lm1unHb99oZISHDh9HtTCrN1/IGXWWOWXUKnSgyZdOvhcMjYFWMc7j0AI6QhjTytPmrUEfV4bRB0FAPeaXyBOpxsMA+GyjRqqSPnneGcjDjqcqTMMwrpuhXMzoyIW1+NMIrmqpK9Mk+jLHdA785025OSNOooBtTiv6SllFi5TGrBbL3Ugr8EdRxdMxBFu2bTbqRNvTVFFSyNJqSgLtTkba6xFgZn7MUXUm36tZ1AmHZkTaVNgOwKwaWzhHS1C6pg+csCJLo0t/5KCvCgKT0rwIaqwK0pWAe6lf6Bzw2PNW1KDD8ab7thAPMmnuYzft3skhfze1jqs+cy9W1tX8zAPY1ETJSZYOO+584lp0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 6 May 2019 17:34:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726046AbfEFVeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 17:34:12 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4953D20830
+        for <linux-kernel@vger.kernel.org>; Mon,  6 May 2019 21:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557178451;
+        bh=6ekGxk1cgLDq3WsKx5cmGBr/cNA9+TIZZTguJ/soLIg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hdhfOh66K1gA4j0VEG9xPa0LH1QlVqPUDFtnznYSEsbudy40JPhqU3EAZMsPSz9GN
+         8tnpeFT3qN9YZ1oYL/k9zghyzTiAUGiTz7ioKZEtSyrcGfmRqPp3G/7IsYJpxiCCuW
+         Did/vpksAzUaIydS2IcAxaDlTqcSLzS2jfj36A1U=
+Received: by mail-qt1-f174.google.com with SMTP id d13so16676971qth.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 14:34:11 -0700 (PDT)
+X-Gm-Message-State: APjAAAXA+nYlGj8+wbPN22MFqxw92xKbg86MJQSxlwTJnKb35qZx1pPh
+        72O+iaOYTqS0vvDRLnnlPHNO2AK+KSYU86trAA==
+X-Google-Smtp-Source: APXvYqym5WoCRfUO8WlubAy4abQU//cny0O18+/BpnPmj0RqU9av4V1NT47hZC4WHFVq/E0Uyx4rDVwImA2w5QX1g5s=
+X-Received: by 2002:ac8:3862:: with SMTP id r31mr5076391qtb.26.1557178450547;
+ Mon, 06 May 2019 14:34:10 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d876469-f074-4f84-2d07-08d6d269e596
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 21:29:18.3226
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1101MB2090
-X-OriginatorOrg: microchip.com
+References: <20190503174730.245762-1-dianders@chromium.org> <CAGXu5jL9cJ+8scZ+Cg9yqdc9+rb563xs-qVjXXuPRJYjNa4Y8w@mail.gmail.com>
+In-Reply-To: <CAGXu5jL9cJ+8scZ+Cg9yqdc9+rb563xs-qVjXXuPRJYjNa4Y8w@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 6 May 2019 16:33:59 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+NyMmRqOUehpPCo_PpnU7k+UmPGv0DUGH1uCb54WOtVA@mail.gmail.com>
+Message-ID: <CAL_Jsq+NyMmRqOUehpPCo_PpnU7k+UmPGv0DUGH1uCb54WOtVA@mail.gmail.com>
+Subject: Re: [PATCH] pstore/ram: Improve backward compatibility with older Chromebooks
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Julius Werner <jwerner@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBUaGlzIHBhdGNoIGZpeGVzIGZvbGxvd2luZyB3YXJuaW5nIHJlcG9ydGVkIGJ5IGtidWlsZCB0
-ZXN0IHJvYm90Og0KPiANCj4gIEluIGZ1bmN0aW9uIOKAmG1lbWNweeKAmSwNCj4gICAgICBpbmxp
-bmVkIGZyb20g4oCYc21zYzc1eHhfaW5pdF9tYWNfYWRkcmVzc+KAmSBhdCBkcml2ZXJzL25ldC91
-c2Ivc21zYzc1eHguYzo3Nzg6MywNCj4gICAgICBpbmxpbmVkIGZyb20g4oCYc21zYzc1eHhfYmlu
-ZOKAmSBhdCBkcml2ZXJzL25ldC91c2Ivc21zYzc1eHguYzoxNTAxOjI6DQo+ICAuL2luY2x1ZGUv
-bGludXgvc3RyaW5nLmg6MzU1Ojk6IHdhcm5pbmc6IGFyZ3VtZW50IDIgbnVsbCB3aGVyZSBub24t
-bnVsbCBleHBlY3RlZCBbLVdub25udWxsXQ0KPiAgICByZXR1cm4gX19idWlsdGluX21lbWNweShw
-LCBxLCBzaXplKTsNCj4gICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4NCj4g
-IGRyaXZlcnMvbmV0L3VzYi9zbXNjNzV4eC5jOiBJbiBmdW5jdGlvbiDigJhzbXNjNzV4eF9iaW5k
-4oCZOg0KPiAgLi9pbmNsdWRlL2xpbnV4L3N0cmluZy5oOjM1NTo5OiBub3RlOiBpbiBhIGNhbGwg
-dG8gYnVpbHQtaW4gZnVuY3Rpb24g4oCYX19idWlsdGluX21lbWNweeKAmQ0KPiANCj4gSSd2ZSBy
-ZXBsYWNlZCB0aGUgb2ZmZW5kaW5nIG1lbWNweSB3aXRoIGV0aGVyX2FkZHJfY29weSwgYmVjYXVz
-ZSBJJ20NCj4gMTAwJSBzdXJlLCB0aGF0IG9mX2dldF9tYWNfYWRkcmVzcyBjYW4ndCByZXR1cm4g
-TlVMTCBhcyBpdCByZXR1cm5zIHZhbGlkDQo+IHBvaW50ZXIgb3IgRVJSX1BUUiBlbmNvZGVkIHZh
-bHVlLCBub3RoaW5nIGVsc2UuDQo+IA0KPiBJJ20gaGVzaXRhbnQgdG8ganVzdCBjaGFuZ2UgSVNf
-RVJSIGludG8gSVNfRVJSX09SX05VTEwgY2hlY2ssIGFzIHRoaXMNCj4gd291bGQgbWFrZSB0aGUg
-d2FybmluZyBkaXNhcHBlYXIgYWxzbywgYnV0IGl0IHdvdWxkIGJlIGNvbmZ1c2luZyB0bw0KPiBj
-aGVjayBmb3IgaW1wb3NzaWJsZSByZXR1cm4gdmFsdWUganVzdCB0byBtYWtlIGEgY29tcGlsZXIg
-aGFwcHkuDQo+IA0KPiBGaXhlczogYWRmYjNjYjJjNTJlICgibmV0OiB1c2I6IHN1cHBvcnQgb2Zf
-Z2V0X21hY19hZGRyZXNzIG5ldyBFUlJfUFRSIGVycm9yIikNCj4gUmVwb3J0ZWQtYnk6IGtidWls
-ZCB0ZXN0IHJvYm90IDxsa3BAaW50ZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBQZXRyIMWgdGV0
-aWFyIDx5bmV6ekB0cnVlLmN6Pg0KPiAtLS0NCg0KUmV2aWV3ZWQtYnk6IFdvb2p1bmcgSHVoIDx3
-b29qdW5nLmh1aEBtaWNyb2NoaXAuY29tPg0KDQo=
+On Mon, May 6, 2019 at 4:10 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> From: Douglas Anderson <dianders@chromium.org>
+> Date: Fri, May 3, 2019 at 10:48 AM
+> To: Kees Cook, Anton Vorontsov
+> Cc: <linux-rockchip@lists.infradead.org>, <jwerner@chromium.org>,
+> <groeck@chromium.org>, <mka@chromium.org>, <briannorris@chromium.org>,
+> Douglas Anderson, Colin Cross, Tony Luck,
+> <linux-kernel@vger.kernel.org>
+>
+> > When you try to run an upstream kernel on an old ARM-based Chromebook
+> > you'll find that console-ramoops doesn't work.
+> >
+> > Old ARM-based Chromebooks, before <https://crrev.com/c/439792>
+> > ("ramoops: support upstream {console,pmsg,ftrace}-size properties")
+> > used to create a "ramoops" node at the top level that looked like:
+> >
+> > / {
+> >   ramoops {
+> >     compatible = "ramoops";
+> >     reg = <...>;
+> >     record-size = <...>;
+> >     dump-oops;
+> >   };
+> > };
+> >
+> > ...and these Chromebooks assumed that the downstream kernel would make
+> > console_size / pmsg_size match the record size.  The above ramoops
+> > node was added by the firmware so it's not easy to make any changes.
+> >
+> > Let's match the expected behavior, but only for those using the old
+> > backward-compatible way of working where ramoops is right under the
+> > root node.
+> >
+> > NOTE: if there are some out-of-tree devices that had ramoops at the
+> > top level, left everything but the record size as 0, and somehow
+> > doesn't want this behavior, we can try to add more conditions here.
+> >
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>
+> I like this; thanks! Rob is this okay by you? I just want to
+> double-check since it's part of the DT parsing logic.
+
+I'll leave it to you. It does fall into the case of supporting
+downstream bindings that weren't reviewed (IIRC reviewed maybe, but
+not accepted) which isn't great precedent. OTOH, it's a small change
+for a largish number of devices.
+
+Rob
