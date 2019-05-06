@@ -4,51 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CB7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C974C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7879B2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9BB214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154032;
-	bh=6OLcQgIjS7NVKbmeXUd0NWX6d9Ro1I2XL7AtRspSGts=;
+	s=default; t=1557154035;
+	bh=u6zsrgbc/lo1IdgqzPtxPGcokxb+8OIYqG41zIYwrbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ChCuMcbr7KrpplAER63W+bz0EM9jiQ0aqHNhrQn7IrIjLXgUqDPRQDdhQ6AakEkpG
-	 r/1FK1xpELX8SP2f2/BTc6EMDCCje3Beq2nKJrnEAvyA2no3xPeoj+W1uA4NGi8ZET
-	 n5uGCriIwPrjFzLwkIzuNW0rYxGzpzy/jc2aio5s=
+	b=kYRlqqqPg7mY+AtO+jWL3pdePKQ0M67Cuhzmy0HHvuKVCZI5GAP90N52zF22mxS8u
+	 VFO43JLpUm1EeHGpBlIT2kac2qUZGsq+6h1SEVlnz38cdnt3Wxavufh5IS4uMi67Oh
+	 kkjx9VoythStPT4g8SVbo862/H32tLVMzr14OLJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbfEFOrL (ORCPT
+        id S1729270AbfEFOrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:47:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45864 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:47:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729000AbfEFOrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:08 -0400
+        id S1727528AbfEFOrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F7382053B;
-        Mon,  6 May 2019 14:47:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C67642087F;
+        Mon,  6 May 2019 14:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154027;
-        bh=6OLcQgIjS7NVKbmeXUd0NWX6d9Ro1I2XL7AtRspSGts=;
+        s=default; t=1557154030;
+        bh=u6zsrgbc/lo1IdgqzPtxPGcokxb+8OIYqG41zIYwrbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z2cR26MMpEHiLRrSyPw+F+0hy3ZKAr1kr6KRjNU5xVXh+OX9Nn9ugz9dAxqZwr8iV
-         w590LGCo1gOsfsgn6pprgra1GmM60o/IaEZIa2BlnODTdk4/okalAj9FzTsbfQ0PNZ
-         8fn6h8+nInwDdLE0L24sgSiRfM6UANU5RerF2Iwg=
+        b=nsdh32KBGbQrwXpeOK1cArqwdsGr0EJXaj5pkRr+YXK8B5wt4ax/LzQwpXix9zwJK
+         j0s9bI9ongtjD3o5L7t3bX9u0MMVnXTvXYXJYKkFtDRWYxadwr7B8dYLhHaPKGOsY2
+         BplUvJnAarl7TXu/4sc9oYRVzanDC8dbb88+tyOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Dave Jones <davej@codemonkey.org.uk>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
         Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 4.9 11/62] mm/kasan: Switch to using __pa_symbol and lm_alias
-Date:   Mon,  6 May 2019 16:32:42 +0200
-Message-Id: <20190506143052.072825443@linuxfoundation.org>
+Subject: [PATCH 4.9 12/62] x86/unwind: Disable KASAN checks for non-current tasks
+Date:   Mon,  6 May 2019 16:32:43 +0200
+Message-Id: <20190506143052.148955125@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -61,80 +72,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@redhat.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 5c6a84a3f4558a6115fef1b59343c7ae56b3abc3 upstream.
+commit 84936118bdf37bda513d4a361c38181a216427e0 upstream.
 
-__pa_symbol is the correct API to find the physical address of symbols.
-Switch to it to allow for debugging APIs to work correctly. Other
-functions such as p*d_populate may call __pa internally. Ensure that the
-address passed is in the linear region by calling lm_alias.
+There are a handful of callers to save_stack_trace_tsk() and
+show_stack() which try to unwind the stack of a task other than current.
+In such cases, it's remotely possible that the task is running on one
+CPU while the unwinder is reading its stack from another CPU, causing
+the unwinder to see stack corruption.
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Tested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+These cases seem to be mostly harmless.  The unwinder has checks which
+prevent it from following bad pointers beyond the bounds of the stack.
+So it's not really a bug as long as the caller understands that
+unwinding another task will not always succeed.
+
+In such cases, it's possible that the unwinder may read a KASAN-poisoned
+region of the stack.  Account for that by using READ_ONCE_NOCHECK() when
+reading the stack of another task.
+
+Use READ_ONCE() when reading the stack of the current task, since KASAN
+warnings can still be useful for finding bugs in that case.
+
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Dave Jones <davej@codemonkey.org.uk>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Miroslav Benes <mbenes@suse.cz>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/4c575eb288ba9f73d498dfe0acde2f58674598f1.1483978430.git.jpoimboe@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/kasan/kasan_init.c |   15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/stacktrace.h |    5 ++++-
+ arch/x86/kernel/unwind_frame.c    |   20 ++++++++++++++++++--
+ 2 files changed, 22 insertions(+), 3 deletions(-)
 
---- a/mm/kasan/kasan_init.c
-+++ b/mm/kasan/kasan_init.c
-@@ -15,6 +15,7 @@
- #include <linux/kasan.h>
- #include <linux/kernel.h>
- #include <linux/memblock.h>
-+#include <linux/mm.h>
- #include <linux/pfn.h>
+--- a/arch/x86/include/asm/stacktrace.h
++++ b/arch/x86/include/asm/stacktrace.h
+@@ -55,13 +55,16 @@ extern int kstack_depth_to_print;
+ static inline unsigned long *
+ get_frame_pointer(struct task_struct *task, struct pt_regs *regs)
+ {
++	struct inactive_task_frame *frame;
++
+ 	if (regs)
+ 		return (unsigned long *)regs->bp;
  
- #include <asm/page.h>
-@@ -49,7 +50,7 @@ static void __init zero_pte_populate(pmd
- 	pte_t *pte = pte_offset_kernel(pmd, addr);
- 	pte_t zero_pte;
+ 	if (task == current)
+ 		return __builtin_frame_address(0);
  
--	zero_pte = pfn_pte(PFN_DOWN(__pa(kasan_zero_page)), PAGE_KERNEL);
-+	zero_pte = pfn_pte(PFN_DOWN(__pa_symbol(kasan_zero_page)), PAGE_KERNEL);
- 	zero_pte = pte_wrprotect(zero_pte);
+-	return (unsigned long *)((struct inactive_task_frame *)task->thread.sp)->bp;
++	frame = (struct inactive_task_frame *)task->thread.sp;
++	return (unsigned long *)READ_ONCE_NOCHECK(frame->bp);
+ }
+ #else
+ static inline unsigned long *
+--- a/arch/x86/kernel/unwind_frame.c
++++ b/arch/x86/kernel/unwind_frame.c
+@@ -6,6 +6,21 @@
  
- 	while (addr + PAGE_SIZE <= end) {
-@@ -69,7 +70,7 @@ static void __init zero_pmd_populate(pud
- 		next = pmd_addr_end(addr, end);
+ #define FRAME_HEADER_SIZE (sizeof(long) * 2)
  
- 		if (IS_ALIGNED(addr, PMD_SIZE) && end - addr >= PMD_SIZE) {
--			pmd_populate_kernel(&init_mm, pmd, kasan_zero_pte);
-+			pmd_populate_kernel(&init_mm, pmd, lm_alias(kasan_zero_pte));
- 			continue;
- 		}
++/*
++ * This disables KASAN checking when reading a value from another task's stack,
++ * since the other task could be running on another CPU and could have poisoned
++ * the stack in the meantime.
++ */
++#define READ_ONCE_TASK_STACK(task, x)			\
++({							\
++	unsigned long val;				\
++	if (task == current)				\
++		val = READ_ONCE(x);			\
++	else						\
++		val = READ_ONCE_NOCHECK(x);		\
++	val;						\
++})
++
+ unsigned long unwind_get_return_address(struct unwind_state *state)
+ {
+ 	unsigned long addr;
+@@ -14,7 +29,8 @@ unsigned long unwind_get_return_address(
+ 	if (unwind_done(state))
+ 		return 0;
  
-@@ -92,9 +93,9 @@ static void __init zero_pud_populate(pgd
- 		if (IS_ALIGNED(addr, PUD_SIZE) && end - addr >= PUD_SIZE) {
- 			pmd_t *pmd;
+-	addr = ftrace_graph_ret_addr(state->task, &state->graph_idx, *addr_p,
++	addr = READ_ONCE_TASK_STACK(state->task, *addr_p);
++	addr = ftrace_graph_ret_addr(state->task, &state->graph_idx, addr,
+ 				     addr_p);
  
--			pud_populate(&init_mm, pud, kasan_zero_pmd);
-+			pud_populate(&init_mm, pud, lm_alias(kasan_zero_pmd));
- 			pmd = pmd_offset(pud, addr);
--			pmd_populate_kernel(&init_mm, pmd, kasan_zero_pte);
-+			pmd_populate_kernel(&init_mm, pmd, lm_alias(kasan_zero_pte));
- 			continue;
- 		}
+ 	return __kernel_text_address(addr) ? addr : 0;
+@@ -48,7 +64,7 @@ bool unwind_next_frame(struct unwind_sta
+ 	if (unwind_done(state))
+ 		return false;
  
-@@ -135,11 +136,11 @@ void __init kasan_populate_zero_shadow(c
- 			 * puds,pmds, so pgd_populate(), pud_populate()
- 			 * is noops.
- 			 */
--			pgd_populate(&init_mm, pgd, kasan_zero_pud);
-+			pgd_populate(&init_mm, pgd, lm_alias(kasan_zero_pud));
- 			pud = pud_offset(pgd, addr);
--			pud_populate(&init_mm, pud, kasan_zero_pmd);
-+			pud_populate(&init_mm, pud, lm_alias(kasan_zero_pmd));
- 			pmd = pmd_offset(pud, addr);
--			pmd_populate_kernel(&init_mm, pmd, kasan_zero_pte);
-+			pmd_populate_kernel(&init_mm, pmd, lm_alias(kasan_zero_pte));
- 			continue;
- 		}
+-	next_bp = (unsigned long *)*state->bp;
++	next_bp = (unsigned long *)READ_ONCE_TASK_STACK(state->task,*state->bp);
  
+ 	/* make sure the next frame's data is accessible */
+ 	if (!update_stack_state(state, next_bp, FRAME_HEADER_SIZE))
 
 
