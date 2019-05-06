@@ -2,155 +2,219 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F8AC04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1909C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA4BF206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E7E206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:46:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lC7Et1u9"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="g+Rj6lZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfEFHp1 (ORCPT
+        id S1726404AbfEFHqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:45:27 -0400
-Received: from mail-eopbgr40056.outbound.protection.outlook.com ([40.107.4.56]:14247
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725917AbfEFHp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:45:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qq3dtTTogPg7jiLJB6fd+rGvKWzQRDNJAeQaDU14Y+M=;
- b=lC7Et1u9pCWYxst17oo75e2E+GY6db0nrcLcR4oZrOHzDNJYa0YyuZ/fO0od9KGavtkGtNwwxuv7amd4eydxAT8WfmZRmqxJLRI5s87npyTotSl0lcgLGpAcuOjZvX8yoC4Z76Mdk2GLLOuB68lOGw6l27HsQunJkzyX2Aduca4=
-Received: from AM6PR04MB4357.eurprd04.prod.outlook.com (52.135.167.33) by
- AM6PR04MB5414.eurprd04.prod.outlook.com (20.178.92.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.10; Mon, 6 May 2019 07:44:44 +0000
-Received: from AM6PR04MB4357.eurprd04.prod.outlook.com
- ([fe80::f062:7002:6318:780b]) by AM6PR04MB4357.eurprd04.prod.outlook.com
- ([fe80::f062:7002:6318:780b%2]) with mapi id 15.20.1856.012; Mon, 6 May 2019
- 07:44:44 +0000
-From:   Chuanhua Han <chuanhua.han@nxp.com>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "eha@deif.com" <eha@deif.com>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "peda@axentia.se" <peda@axentia.se>,
-        Sumit Batra <sumit.batra@nxp.com>
-Subject: RE: [EXT] Re: [PATCH 2/2] arm64: dts: fsl: ls1046a: Add the guts node
- in dts
-Thread-Topic: [EXT] Re: [PATCH 2/2] arm64: dts: fsl: ls1046a: Add the guts
- node in dts
-Thread-Index: AQHU/w+WdcCQP8nmx0uhj1EM4V4JRKZdwAKAgAAAiDA=
-Date:   Mon, 6 May 2019 07:44:43 +0000
-Message-ID: <AM6PR04MB4357FB81536B39AF58BAD79B97300@AM6PR04MB4357.eurprd04.prod.outlook.com>
-References: <20190430044719.30720-1-chuanhua.han@nxp.com>
- <20190430044719.30720-2-chuanhua.han@nxp.com>
- <20190506074106.eqa7xhktn2vlmtio@pengutronix.de>
-In-Reply-To: <20190506074106.eqa7xhktn2vlmtio@pengutronix.de>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=chuanhua.han@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b4d16648-90de-4bea-be00-08d6d1f6b487
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB5414;
-x-ms-traffictypediagnostic: AM6PR04MB5414:
-x-ms-exchange-purlcount: 1
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <AM6PR04MB54145219DA268BC346252E3497300@AM6PR04MB5414.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0029F17A3F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(366004)(39860400002)(396003)(13464003)(199004)(189003)(71200400001)(6916009)(102836004)(71190400001)(53936002)(86362001)(6436002)(6246003)(6506007)(45080400002)(53546011)(966005)(14454004)(478600001)(68736007)(54906003)(7696005)(33656002)(76176011)(99286004)(316002)(14444005)(25786009)(256004)(4326008)(66066001)(2906002)(66476007)(55016002)(486006)(9686003)(6306002)(66446008)(64756008)(66556008)(74316002)(11346002)(446003)(8936002)(8676002)(7416002)(44832011)(81156014)(81166006)(229853002)(76116006)(5660300002)(52536014)(3846002)(6116002)(476003)(26005)(186003)(7736002)(66946007)(73956011)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5414;H:AM6PR04MB4357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EWqWdSQY47Lgg9DcFv6AVokHigDrbQu+QwWHRPS3SaVKmABxlwm3ZX1YqMj0QPXIOix+eQJLyv9mYXzMj6AYGZ9DBp93QJhwoh9ssciS4BHJ6D0aTMnXTuJTRg1K6T9SJP2kuxA/nOkr1tIpyaWkxkSRLJibVny9Tsl0NBCMmFmLemSOQKAXkSByGSC7R8siiY0mtPCOvCyl+HFMmqArhfoGBprAnZFRCed+bCTaIkOlmof9Ljpqs/e5p3T0ZJrdkyI9B3+bAgMcKVS3C7zfJUQ4D5J5nUOVUdaXFnTnWDmkNINvFEO1F2lEzbWiarCuku6xzwiUpkBAHHyEvVKUjzqnp3I+VZd+xD2yy7xUwf5kUZSEYYUwE1b6qIok0IkTAb+ySS4t/dZJMJxITNidmLLi+k2rrUDxfN7l4v+BisA=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Mon, 6 May 2019 03:46:02 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46015 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbfEFHqB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 03:46:01 -0400
+Received: by mail-ed1-f65.google.com with SMTP id g57so14220879edc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 00:46:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=04n4bi/0il+bPmWqsIQ2e+x6fvuMJP2MziNsJbLuWN4=;
+        b=g+Rj6lZOq58m6EpuhkaGKAgELBYFqZayO0UVs6XuXjcKuZ9wZW696L0FAvqpvsC3Sz
+         5LdY6QKVhDTtVGSkx4p7OhAoLS9tQxxHKqNASJ6XRM523im0HjxD4QMpKJJbxL6qls2A
+         COWjAYliGJcM4AvajlOKV2UoIpFu9r95F/qBI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=04n4bi/0il+bPmWqsIQ2e+x6fvuMJP2MziNsJbLuWN4=;
+        b=IhZzFIyoOrub0Jcd9EjvTwrCDRWxtDC/eila+1wB+W9Gx2qoVMPfQ4jXoXquHGFNnk
+         5eMMIPTUWQj6daYk8OIcgViJ7Mv1Q6/9NOiQNUEBMMnMM45FF81zvaiaD9h+DpyluKO3
+         ZLP33mrrAS95Ydc6tyrnnxAXvdmPTKi7Jx+fbgXH9iVeKWS0/O/rAjBPv7KSSujlZsLd
+         mFHKcCp07AFJSJPJ2mmm0isQlUbXme6VOOYNdycFkI4UeT9bBWNKRNV8/FjDxpuepfyD
+         +yfdQkwXCc/BUZJ2Bgk5oBFMYmdHHjz5moqFy42L2gBy8GZN36WlscR+XMxevfE7q1Wt
+         G3dA==
+X-Gm-Message-State: APjAAAXP4kXu3EYsPwxdS2DoR37UeME/9RVyJsvJsgNd6bt+OVXqpzNe
+        p7xopgQ0NtqB+NHy/sL2gjruGw==
+X-Google-Smtp-Source: APXvYqzon9mPPFB9xFLuZ56pH3fApyh6Ek73kjZdssOe6Nvobk9Y3fKvc1cQgXfVibqPEzhGE6bNeA==
+X-Received: by 2002:a50:8bbb:: with SMTP id m56mr24893171edm.230.1557128759478;
+        Mon, 06 May 2019 00:45:59 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id z11sm1451872ejo.45.2019.05.06.00.45.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 00:45:58 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] RFC: console: hack up console_lock more v2
+Date:   Mon,  6 May 2019 09:45:53 +0200
+Message-Id: <20190506074553.21464-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
+References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4d16648-90de-4bea-be00-08d6d1f6b487
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 07:44:43.9948
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5414
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2FzY2hhIEhhdWVyIDxz
-LmhhdWVyQHBlbmd1dHJvbml4LmRlPg0KPiBTZW50OiAyMDE5xOo11MI2yNUgMTU6NDENCj4gVG86
-IENodWFuaHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5jb20+DQo+IENjOiBzaGF3bmd1b0BrZXJu
-ZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsN
-Cj4gbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+
-IGxpbnV4LWkyY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGZlc3RldmFtQGdtYWlsLmNv
-bTsgZGwtbGludXgtaW14DQo+IDxsaW51eC1pbXhAbnhwLmNvbT47IHdzYStyZW5lc2FzQHNhbmct
-ZW5naW5lZXJpbmcuY29tOw0KPiB1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU7IGVoYUBk
-ZWlmLmNvbTsgbGludXhAcmVtcGVsLXByaXZhdC5kZTsNCj4gbC5zdGFjaEBwZW5ndXRyb25peC5k
-ZTsgcGVkYUBheGVudGlhLnNlOyBTdW1pdCBCYXRyYQ0KPiA8c3VtaXQuYmF0cmFAbnhwLmNvbT4N
-Cj4gU3ViamVjdDogW0VYVF0gUmU6IFtQQVRDSCAyLzJdIGFybTY0OiBkdHM6IGZzbDogbHMxMDQ2
-YTogQWRkIHRoZSBndXRzIG5vZGUgaW4NCj4gZHRzDQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwN
-Cj4gDQo+IE9uIFR1ZSwgQXByIDMwLCAyMDE5IGF0IDEyOjQ3OjE5UE0gKzA4MDAsIENodWFuaHVh
-IEhhbiB3cm90ZToNCj4gPiBGb3IgTlhQIGxzMTA0NmEgU29DLCB0aGUgaTJjIGNsb2NrIG5lZWRz
-IHRvIGJlIGNvbmZpZ3VyZWQgd2l0aCB0aGUNCj4gPiBhcHByb3ByaWF0ZSBiaXQgb2YgUkNXLCBz
-byB3ZSBhZGQgdGhlIGd1dHMgbm9kZSAoR1VUUy9EQ0ZHIGdsb2JhbA0KPiA+IHV0aWxpdGllcyBi
-bG9jaykgZm9yIHRoZSBkcml2ZXIgdG8gcmVhZC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFN1
-bWl0IEJhdHJhIDxzdW1pdC5iYXRyYUBueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENodWFu
-aHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5jb20+DQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJtNjQv
-Ym9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kgfCA1ICsrKysrDQo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQ2YS5kdHNpDQo+ID4gYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQ2YS5kdHNpDQo+ID4gaW5kZXggMzczMzEwZTRj
-MGVhLi5mODg1OTlkZjE4YmIgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvZnNsLWxzMTA0NmEuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-ZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kNCj4gPiBAQCAtMjA1LDYgKzIwNSwxMSBAQA0KPiA+
-ICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICAgICAgICAg
-ICAgICAgfTsNCj4gPg0KPiA+ICsgICAgICAgICAgICAgZ3V0czogZ2xvYmFsLXV0aWxpdGllc0Ax
-ZWUwMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wscW9y
-aXEtZGV2aWNlLWNvbmZpZyI7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDAg
-MHgxZWUwMDAwIDB4MCAweDEwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgfTsNCj4gDQo+IEFjY29y
-ZGluZyB0byBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9ndXRzLnR4
-dCB3ZSBoYXZlIHRoZQ0KPiBmb2xsb3dpbmcgY29tcGF0aWJsZXM6DQo+IA0KPiAgICAgICAgICJm
-c2wscW9yaXEtZGV2aWNlLWNvbmZpZy0xLjAiDQo+ICAgICAgICAgImZzbCxxb3JpcS1kZXZpY2Ut
-Y29uZmlnLTIuMCINCj4gICAgICAgICAiZnNsLDxjaGlwPi1kZXZpY2UtY29uZmlnIg0KPiAgICAg
-ICAgICJmc2wsPGNoaXA+LWd1dHMiDQo+IA0KPiAiZnNsLHFvcmlxLWRldmljZS1jb25maWciIGlz
-IG5vbmUgb2YgdGhlbSBhbmQgSSBkb24ndCB0aGluayB5b3Ugc2hvdWxkIGdpdmUgdGhpcw0KPiBT
-b0Mgc3BlY2lmaWMgdGhpbmcgYSBnZW5lcmljIGNvbXBhdGlibGUuDQo+ICJmc2wsbHMxMDQ2YS1k
-ZXZpY2UtY29uZmlnIiB3b3VsZCBiZSBiZXR0ZXIuDQp5ZXMsIHlvdSBhcmUgcmlnaHQsSSB3aWxs
-IG1vZGlmeSBpdCANCj4gDQo+IFNhc2NoYQ0KPiANCj4gDQo+IC0tDQo+IFBlbmd1dHJvbml4IGUu
-Sy4gICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+IHwNCj4gSW5kdXN0cmlhbCBMaW51eCBT
-b2x1dGlvbnMgICAgICAgICAgICAgICAgIHwNCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJv
-dGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZ3d3cucGUNCj4gbmd1dHJvbml4
-LmRlJTJGJmFtcDtkYXRhPTAyJTdDMDElN0NjaHVhbmh1YS5oYW4lNDBueHAuY29tJTdDMTM5DQo+
-IDIzZmUxN2ExZDQ2ZGFkN2U3MDhkNmQxZjYzZjQxJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTlj
-NWMzMDE2MzUNCj4gJTdDMCU3QzAlN0M2MzY5MjcyNTI4ODU0NTgzNDQmYW1wO3NkYXRhPVJMZURp
-Q3RMSlJZek9aUTRQOENOOGcNCj4gaFRVR05GJTJGS0ElMkZUJTJGdExTQ3JnRWFFJTNEJmFtcDty
-ZXNlcnZlZD0wICB8DQo+IFBlaW5lciBTdHIuIDYtOCwgMzExMzcgSGlsZGVzaGVpbSwgR2VybWFu
-eSB8IFBob25lOiArNDktNTEyMS0yMDY5MTctMA0KPiB8DQo+IEFtdHNnZXJpY2h0IEhpbGRlc2hl
-aW0sIEhSQSAyNjg2ICAgICAgICAgICB8IEZheDoNCj4gKzQ5LTUxMjEtMjA2OTE3LTU1NTUgfA0K
+console_trylock, called from within printk, can be called from pretty
+much anywhere. Including try_to_wake_up. Note that this isn't common,
+usually the box is in pretty bad shape at that point already. But it
+really doesn't help when then lockdep jumps in and spams the logs,
+potentially obscuring the real backtrace we're really interested in.
+One case I've seen (slightly simplified backtrace):
+
+ Call Trace:
+  <IRQ>
+  console_trylock+0xe/0x60
+  vprintk_emit+0xf1/0x320
+  printk+0x4d/0x69
+  __warn_printk+0x46/0x90
+  native_smp_send_reschedule+0x2f/0x40
+  check_preempt_curr+0x81/0xa0
+  ttwu_do_wakeup+0x14/0x220
+  try_to_wake_up+0x218/0x5f0
+  pollwake+0x6f/0x90
+  credit_entropy_bits+0x204/0x310
+  add_interrupt_randomness+0x18f/0x210
+  handle_irq+0x67/0x160
+  do_IRQ+0x5e/0x130
+  common_interrupt+0xf/0xf
+  </IRQ>
+
+This alone isn't a problem, but the spinlock in the semaphore is also
+still held while waking up waiters (up() -> __up() -> try_to_wake_up()
+callchain), which then closes the runqueue vs. semaphore.lock loop,
+and upsets lockdep, which issues a circular locking splat to dmesg.
+Worse it upsets developers, since we don't want to spam dmesg with
+clutter when the machine is dying already.
+
+Fix this by creating a prinkt_safe_up() which calls wake_up_process
+outside of the spinlock. This isn't correct in full generality, but
+good enough for console_lock:
+
+- console_lock doesn't use interruptible or killable or timeout down()
+  calls, hence an up() is the only thing that can wake up a process.
+  Hence the process can't get woken and killed and reaped while we try
+  to wake it up too.
+
+- semaphore.c always updates the waiter list while under the spinlock,
+  so there's no other races. Specifically another process that races
+  with a quick console_lock/unlock while we've dropped the spinlock
+  already won't see our own waiter.
+
+Also cc'ing John Ogness since perhaps his printk rework fixes this all
+properly.
+
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+---
+v2: My first attempt at patching down_trylock didn't work (thanks to
+Petr for pointing out), now try to have a special up() that breaks the
+cycle.
+-Daniel
+---
+ include/linux/semaphore.h  |  1 +
+ kernel/locking/semaphore.c | 31 +++++++++++++++++++++++++++++++
+ kernel/printk/printk.c     |  2 +-
+ 3 files changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/semaphore.h b/include/linux/semaphore.h
+index 11c86fbfeb98..7e839c72809d 100644
+--- a/include/linux/semaphore.h
++++ b/include/linux/semaphore.h
+@@ -41,6 +41,7 @@ extern int __must_check down_interruptible(struct semaphore *sem);
+ extern int __must_check down_killable(struct semaphore *sem);
+ extern int __must_check down_trylock(struct semaphore *sem);
+ extern int __must_check down_timeout(struct semaphore *sem, long jiffies);
++extern void printk_safe_up(struct semaphore *sem);
+ extern void up(struct semaphore *sem);
+ 
+ #endif /* __LINUX_SEMAPHORE_H */
+diff --git a/kernel/locking/semaphore.c b/kernel/locking/semaphore.c
+index 561acdd39960..84675993dc59 100644
+--- a/kernel/locking/semaphore.c
++++ b/kernel/locking/semaphore.c
+@@ -197,6 +197,37 @@ struct semaphore_waiter {
+ 	bool up;
+ };
+ 
++/**
++ * printk_safe_up - release the semaphore in console_unlock
++ * @sem: the semaphore to release
++ *
++ * Release the semaphore.  Unlike mutexes, up() may be called from any
++ * context and even by tasks which have never called down().
++ *
++ * NOTE: This is a special version of up() for console_unlock only. It is only
++ * safe if there are no killable, interruptible or timing out down() calls.
++ */
++void printk_safe_up(struct semaphore *sem)
++{
++	unsigned long flags;
++	struct semaphore_waiter *waiter = NULL;
++
++	raw_spin_lock_irqsave(&sem->lock, flags);
++	if (likely(list_empty(&sem->wait_list))) {
++		sem->count++;
++	} else {
++		waiter = list_first_entry(&sem->wait_list,
++					  struct semaphore_waiter, list);
++		list_del(&waiter->list);
++		waiter->up = true;
++	}
++	raw_spin_unlock_irqrestore(&sem->lock, flags);
++
++	if (waiter)
++		wake_up_process(waiter->task);
++}
++EXPORT_SYMBOL(printk_safe_up);
++
+ /*
+  * Because this function is inlined, the 'state' parameter will be
+  * constant, and thus optimised away by the compiler.  Likewise the
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 02ca827b8fac..62303929afda 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -234,7 +234,7 @@ static void __up_console_sem(unsigned long ip)
+ 	mutex_release(&console_lock_dep_map, 1, ip);
+ 
+ 	printk_safe_enter_irqsave(flags);
+-	up(&console_sem);
++	printk_safe_up(&console_sem);
+ 	printk_safe_exit_irqrestore(flags);
+ }
+ #define up_console_sem() __up_console_sem(_RET_IP_)
+-- 
+2.20.1
+
