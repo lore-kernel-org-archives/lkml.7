@@ -2,59 +2,52 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9CEC04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 124CEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8A9206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE28214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153489;
-	bh=Ks4IhupySPKOGfhYMtULW/Pq6Zqh/yXRgg58Nf33rLI=;
+	s=default; t=1557153492;
+	bh=BaH+cTG8MNxmf2G1evFZX/hJl0oSG6msQP0eoWe5B9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mn6P60Q9rsmCRynDaIUvsQck1i9ZI4t1TeCy4XvWCmHBXubojHF4nqhl/rpNFFils
-	 GFHkIpwFvfT+qFEA3taftmLzd3dzlMZQpf54kkyYDWwAPiCD7fVwZHRVWrK9/iDHn9
-	 ey6agDBWkxgKnBLyGTDbBLtLGspvEOj4zvo84L94=
+	b=EE4CQ+UCdMYHp290hj+C60QQJJ/UIl+ccMVjFCgOI/WR9f2bXYfcWIPUIGS3d1PYR
+	 oRoitTWE8joibfs8oSOYIdJuFTxBUC0+m9sTMIJUMB1Q58Kfzw7+mJqgRFrZGeJi5M
+	 HtLc7UszNwAeqsYNR/VqPHRY46Br4U4Yb0GReQS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfEFOiH (ORCPT
+        id S1727539AbfEFOiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:38:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59078 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:38:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbfEFOiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:38:05 -0400
+        id S1727527AbfEFOiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:38:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE89E214AE;
-        Mon,  6 May 2019 14:38:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B1EE214C6;
+        Mon,  6 May 2019 14:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153484;
-        bh=Ks4IhupySPKOGfhYMtULW/Pq6Zqh/yXRgg58Nf33rLI=;
+        s=default; t=1557153487;
+        bh=BaH+cTG8MNxmf2G1evFZX/hJl0oSG6msQP0eoWe5B9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LXdlg9mPwwFrL2Tp6lzokVAgnj6vwJx8etb2tgnUDjKbK0w2VB44AAlJmrifXs55H
-         /bdKsTQXAICvdt+FvnHit9inqBxUwEdJM5e6yS3hS2wAVP5ByJlQwSORk2YHmMRY96
-         0Eyrfaw/8l3fYge6GLpcdCUhhD0ArhKdK0Ge9MrQ=
+        b=S9kZIG5APcdx2bczeVxadHxAvm5D9hbXvw/CKTZTjKfuYpBkrrMjON16RG53cDvrq
+         UK3moMNGA+zVinrWeOSzMQPF0HWaHR/m3PKrAWGlFbLFbV/SwITY5zR4jkxNcdipT6
+         G1pvvi4dYtu+sWaRlBywYGBb1bbvU5EGp/ARowds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Qian Cai <cai@lca.pw>, Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Avi Kivity <avi@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.0 075/122] kmemleak: powerpc: skip scanning holes in the .bss section
-Date:   Mon,  6 May 2019 16:32:13 +0200
-Message-Id: <20190506143101.613229428@linuxfoundation.org>
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.0 100/122] KVM: VMX: Save RSI to an unused output in the vCPU-run asm blob
+Date:   Mon,  6 May 2019 16:32:38 +0200
+Message-Id: <20190506143103.757242468@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -67,106 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 298a32b132087550d3fa80641ca58323c5dfd4d9 ]
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Commit 2d4f567103ff ("KVM: PPC: Introduce kvm_tmp framework") adds
-kvm_tmp[] into the .bss section and then free the rest of unused spaces
-back to the page allocator.
+commit f3689e3f17f064fd4cd5f0cb01ae2395c94f39d9 upstream.
 
-kernel_init
-  kvm_guest_init
-    kvm_free_tmp
-      free_reserved_area
-        free_unref_page
-          free_unref_page_prepare
+RSI is clobbered by the vCPU-run asm blob, but it's not marked as such,
+probably because GCC doesn't let you mark inputs as clobbered.  "Save"
+RSI to a dummy output so that GCC recognizes it as being clobbered.
 
-With DEBUG_PAGEALLOC=y, it will unmap those pages from kernel.  As the
-result, kmemleak scan will trigger a panic when it scans the .bss
-section with unmapped pages.
+Fixes: 773e8a0425c9 ("x86/kvm: use Enlightened VMCS when running on Hyper-V")
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This patch creates dedicated kmemleak objects for the .data, .bss and
-potentially .data..ro_after_init sections to allow partial freeing via
-the kmemleak_free_part() in the powerpc kvm_free_tmp() function.
-
-Link: http://lkml.kernel.org/r/20190321171917.62049-1-catalin.marinas@arm.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Reported-by: Qian Cai <cai@lca.pw>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Tested-by: Qian Cai <cai@lca.pw>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Avi Kivity <avi@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krcmar <rkrcmar@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/powerpc/kernel/kvm.c |  7 +++++++
- mm/kmemleak.c             | 16 +++++++++++-----
- 2 files changed, 18 insertions(+), 5 deletions(-)
+ arch/x86/kvm/vmx/vmx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
-index 683b5b3805bd..cd381e2291df 100644
---- a/arch/powerpc/kernel/kvm.c
-+++ b/arch/powerpc/kernel/kvm.c
-@@ -22,6 +22,7 @@
- #include <linux/kvm_host.h>
- #include <linux/init.h>
- #include <linux/export.h>
-+#include <linux/kmemleak.h>
- #include <linux/kvm_para.h>
- #include <linux/slab.h>
- #include <linux/of.h>
-@@ -712,6 +713,12 @@ static void kvm_use_magic_page(void)
- 
- static __init void kvm_free_tmp(void)
- {
-+	/*
-+	 * Inform kmemleak about the hole in the .bss section since the
-+	 * corresponding pages will be unmapped with DEBUG_PAGEALLOC=y.
-+	 */
-+	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
-+			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
- 	free_reserved_area(&kvm_tmp[kvm_tmp_index],
- 			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
- }
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 707fa5579f66..6c318f5ac234 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1529,11 +1529,6 @@ static void kmemleak_scan(void)
- 	}
- 	rcu_read_unlock();
- 
--	/* data/bss scanning */
--	scan_large_block(_sdata, _edata);
--	scan_large_block(__bss_start, __bss_stop);
--	scan_large_block(__start_ro_after_init, __end_ro_after_init);
--
- #ifdef CONFIG_SMP
- 	/* per-cpu sections scanning */
- 	for_each_possible_cpu(i)
-@@ -2071,6 +2066,17 @@ void __init kmemleak_init(void)
- 	}
- 	local_irq_restore(flags);
- 
-+	/* register the data/bss sections */
-+	create_object((unsigned long)_sdata, _edata - _sdata,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+	create_object((unsigned long)__bss_start, __bss_stop - __bss_start,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+	/* only register .data..ro_after_init if not within .data */
-+	if (__start_ro_after_init < _sdata || __end_ro_after_init > _edata)
-+		create_object((unsigned long)__start_ro_after_init,
-+			      __end_ro_after_init - __start_ro_after_init,
-+			      KMEMLEAK_GREY, GFP_ATOMIC);
-+
- 	/*
- 	 * This is the point where tracking allocations is safe. Automatic
- 	 * scanning is started during the late initcall. Add the early logged
--- 
-2.20.1
-
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6465,7 +6465,7 @@ static void __vmx_vcpu_run(struct kvm_vc
+ 		"xor %%edi, %%edi \n\t"
+ 		"xor %%ebp, %%ebp \n\t"
+ 		"pop  %%" _ASM_BP "; pop  %%" _ASM_DX " \n\t"
+-	      : ASM_CALL_CONSTRAINT
++	      : ASM_CALL_CONSTRAINT, "=S"((int){0})
+ 	      : "c"(vmx), "d"((unsigned long)HOST_RSP), "S"(evmcs_rsp),
+ 		[launched]"i"(offsetof(struct vcpu_vmx, __launched)),
+ 		[fail]"i"(offsetof(struct vcpu_vmx, fail)),
 
 
