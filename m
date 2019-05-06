@@ -2,53 +2,53 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14190C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC2EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4AA216C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4AD521655
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153324;
-	bh=pnmmx/EzFnoIEvx4yU9Paj26Jn+qVnWXJinaZ5xxo4k=;
+	s=default; t=1557153328;
+	bh=3GcbrGHkMX6rPWyyfZFHFlN5ULYIIE5qIZaKRc4no4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gy9az3qikJckd5eIWBWQS69cZ0MfiObkQoDQVHbfchFCc5V395lC3tX1G7xlxBAxA
-	 CCr4ZC8Z1g9d0OlTfAbupJm+FCNobsqKckIlYtiuRGYOWP91iRJplbq9SLuMQ+73+g
-	 o0d0sti/ZkZ6QQZj251XZO2Qx9JgTN4tMqr4fh7s=
+	b=KWARqxP8eGdOG3mrbHC38UkLxrEjjYZkdsihJaav2jl5ijKooT1FVolk37uM66BIc
+	 Eg9B6JY+Sdv7vkSKbFxg42r70YeIsstvydsQlIJvnw2kJcsseytoBqIUqAO2L0QoPP
+	 nUXmK14ncRdtvm2FBDCT2uXSGgZw/UezZq95bwUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfEFOfX (ORCPT
+        id S1726942AbfEFOf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:35:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55362 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:35:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbfEFOfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:35:20 -0400
+        id S1726373AbfEFOfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:35:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DF9C21019;
-        Mon,  6 May 2019 14:35:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D95921655;
+        Mon,  6 May 2019 14:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153319;
-        bh=pnmmx/EzFnoIEvx4yU9Paj26Jn+qVnWXJinaZ5xxo4k=;
+        s=default; t=1557153324;
+        bh=3GcbrGHkMX6rPWyyfZFHFlN5ULYIIE5qIZaKRc4no4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2P3HPq+2bhN4cPsNByB/3I1v6nhfCBnXd/8XF/HMuM57wOZndL8yn4PXZ9Y6Fw+j1
-         +GmwCynsea5Hnh97lul21PyiDRyYOm9SWmMbSRlA9HQh0bRO+xK4WQDmijKuCp/p/u
-         jTbTTzdiX+9ybxTHdmmwUxPdMsECPLuIYlKwU5v4=
+        b=dQX3omvSIJie/FN9u/OgJsDuGWtWEpne+HIvCmFNCyPMDXyeUxHA0FTDpD42/SPQQ
+         /rBGUXIn5BqbSKHirb1tuUbMR3UD4okJ1/Z0rRbxVxXG3z1mgXRc+gmNP11maApGvQ
+         VlYzo3CtUz/TewvxoDcC9ncvZya8J90kmlSF/n14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.0 023/122] KVM: lapic: Allow user to disable adaptive tuning of timer advancement
-Date:   Mon,  6 May 2019 16:31:21 +0200
-Message-Id: <20190506143056.836498988@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Leonidas P. Papadakos" <papadakospan@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 5.0 025/122] arm64: dts: rockchip: fix rk3328-roc-cc gmac2io tx/rx_delay
+Date:   Mon,  6 May 2019 16:31:23 +0200
+Message-Id: <20190506143057.015219799@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -61,114 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+[ Upstream commit 924726888f660b2a86382a5dd051ec9ca1b18190 ]
 
-commit c3941d9e0ccd48920e4811f133235b3597e5310b upstream.
+The rk3328-roc-cc board exhibits tx stability issues with large packets,
+as does the rock64 board, which was fixed with this patch
+https://patchwork.kernel.org/patch/10178969/
 
-The introduction of adaptive tuning of lapic timer advancement did not
-allow for the scenario where userspace would want to disable adaptive
-tuning but still employ timer advancement, e.g. for testing purposes or
-to handle a use case where adaptive tuning is unable to settle on a
-suitable time.  This is epecially pertinent now that KVM places a hard
-threshold on the maximum advancment time.
+A similar patch was merged for the rk3328-roc-cc here
+https://patchwork.kernel.org/patch/10804863/
+but it doesn't include the tx/rx_delay tweaks, and I find that they
+help with an issue where large transfers would bring the ethernet
+link down, causing a link reset regularly.
 
-Rework the timer semantics to accept signed values, with a value of '-1'
-being interpreted as "use adaptive tuning with KVM's internal default",
-and any other value being used as an explicit advancement time, e.g. a
-time of '0' effectively disables advancement.
-
-Note, this does not completely restore the original behavior of
-lapic_timer_advance_ns.  Prior to tracking the advancement per vCPU,
-which is necessary to support autotuning, userspace could adjust
-lapic_timer_advance_ns for *running* vCPU.  With per-vCPU tracking, the
-module params are snapshotted at vCPU creation, i.e. applying a new
-advancement effectively requires restarting a VM.
-
-Dynamically updating a running vCPU is possible, e.g. a helper could be
-added to retrieve the desired delay, choosing between the global module
-param and the per-VCPU value depending on whether or not auto-tuning is
-(globally) enabled, but introduces a great deal of complexity.  The
-wrapper itself is not complex, but understanding and documenting the
-effects of dynamically toggling auto-tuning and/or adjusting the timer
-advancement is nigh impossible since the behavior would be dependent on
-KVM's implementation as well as compiler optimizations.  In other words,
-providing stable behavior would require extremely careful consideration
-now and in the future.
-
-Given that the expected use of a manually-tuned timer advancement is to
-"tune once, run many", use the vastly simpler approach of recognizing
-changes to the module params only when creating a new vCPU.
-
-Cc: Liran Alon <liran.alon@oracle.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Cc: stable@vger.kernel.org
-Fixes: 3b8a5df6c4dc6 ("KVM: LAPIC: Tune lapic_timer_advance_ns automatically")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/x86/kvm/lapic.c |   11 +++++++++--
- arch/x86/kvm/lapic.h |    2 +-
- arch/x86/kvm/x86.c   |    9 +++++++--
- 3 files changed, 17 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -2260,7 +2260,7 @@ static enum hrtimer_restart apic_timer_f
- 		return HRTIMER_NORESTART;
- }
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index 99d0d9912950..a91f87df662e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -107,8 +107,8 @@
+ 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+-	tx_delay = <0x25>;
+-	rx_delay = <0x11>;
++	tx_delay = <0x24>;
++	rx_delay = <0x18>;
+ 	status = "okay";
+ };
  
--int kvm_create_lapic(struct kvm_vcpu *vcpu, u32 timer_advance_ns)
-+int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
- {
- 	struct kvm_lapic *apic;
- 
-@@ -2284,7 +2284,14 @@ int kvm_create_lapic(struct kvm_vcpu *vc
- 	hrtimer_init(&apic->lapic_timer.timer, CLOCK_MONOTONIC,
- 		     HRTIMER_MODE_ABS_PINNED);
- 	apic->lapic_timer.timer.function = apic_timer_fn;
--	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
-+	if (timer_advance_ns == -1) {
-+		apic->lapic_timer.timer_advance_ns = 1000;
-+		apic->lapic_timer.timer_advance_adjust_done = false;
-+	} else {
-+		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
-+		apic->lapic_timer.timer_advance_adjust_done = true;
-+	}
-+
- 
- 	/*
- 	 * APIC is created enabled. This will prevent kvm_lapic_set_base from
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -64,7 +64,7 @@ struct kvm_lapic {
- 
- struct dest_map;
- 
--int kvm_create_lapic(struct kvm_vcpu *vcpu, u32 timer_advance_ns);
-+int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns);
- void kvm_free_lapic(struct kvm_vcpu *vcpu);
- 
- int kvm_apic_has_interrupt(struct kvm_vcpu *vcpu);
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -136,8 +136,13 @@ EXPORT_SYMBOL_GPL(kvm_default_tsc_scalin
- static u32 __read_mostly tsc_tolerance_ppm = 250;
- module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_IWUSR);
- 
--/* lapic timer advance (tscdeadline mode only) in nanoseconds */
--static u32 __read_mostly lapic_timer_advance_ns = 1000;
-+/*
-+ * lapic timer advance (tscdeadline mode only) in nanoseconds.  '-1' enables
-+ * adaptive tuning starting from default advancment of 1000ns.  '0' disables
-+ * advancement entirely.  Any other value is used as-is and disables adaptive
-+ * tuning, i.e. allows priveleged userspace to set an exact advancement time.
-+ */
-+static int __read_mostly lapic_timer_advance_ns = -1;
- module_param(lapic_timer_advance_ns, uint, S_IRUGO | S_IWUSR);
- 
- static bool __read_mostly vector_hashing = true;
+-- 
+2.20.1
+
 
 
