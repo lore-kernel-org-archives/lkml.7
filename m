@@ -2,90 +2,91 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6436CC04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91E2C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31A912082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:24:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TPr27RmG";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i1KkOMmb"
+	by mail.kernel.org (Postfix) with ESMTP id 856712082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfEFIY5 (ORCPT
+        id S1726220AbfEFI0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:24:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37348 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfEFIY4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:24:56 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0349460E41; Mon,  6 May 2019 08:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557131096;
-        bh=CcStSjrO0gVGsOcZ+KnnAXuOwgsmdjWUfXEyxrzscwE=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=TPr27RmGJaEbJjwIbWL28kN1dLHSGJWLGaDb83v4W3h7WTje6INgnb2t1DtGLtTR/
-         0X6dlULTaVMEtebKtKowTNasii11czcYJ1yWF85zXXJvF23QAgU9klY3ecTuyifhtO
-         divp09Q5LeTLA9VMXEdd8zke+XpVWy+axtm6vmTI=
-Received: from x230.qca.qualcomm.com (37-136-65-53.rev.dnainternet.fi [37.136.65.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA7DF60741;
-        Mon,  6 May 2019 08:24:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557131095;
-        bh=CcStSjrO0gVGsOcZ+KnnAXuOwgsmdjWUfXEyxrzscwE=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=i1KkOMmbsX4M0yNhzHTOAjfoTNmSJvMmW5iv3BFydA0Jyaj8ui26Ei/HiGiD3L4II
-         PesZcD4LdQ8dXyyM3SSqcFO1w0Do/MCZIY6E5ENf3Ykp7zXTaarEo9HQkLr2+0+XCA
-         jcr8MQLiAy+EF/TmcBG7xieW/bzFTNnIjizLpubY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA7DF60741
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, ath9k-devel@qca.qualcomm.com,
-        davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: wireless: ath9k: Return an error when ath9k_hw_reset() fails
-References: <20190504100815.19876-1-baijiaju1990@gmail.com>
-        <e47117d6-f918-1dd0-834e-d056534bfead@gmail.com>
-Date:   Mon, 06 May 2019 11:24:51 +0300
-In-Reply-To: <e47117d6-f918-1dd0-834e-d056534bfead@gmail.com> (Heiner
-        Kallweit's message of "Sat, 4 May 2019 13:02:25 +0200")
-Message-ID: <87zho0uh0s.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 6 May 2019 04:26:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60046 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725836AbfEFI0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 04:26:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 29B41AC5A;
+        Mon,  6 May 2019 08:26:30 +0000 (UTC)
+Date:   Mon, 6 May 2019 10:26:28 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RFC: console: hack up console_lock more v2
+Message-ID: <20190506082628.wehkislebljxmk5d@pathway.suse.cz>
+References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
+ <20190506074553.21464-1-daniel.vetter@ffwll.ch>
+ <20190506081614.b7b22k4prodskbiy@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506081614.b7b22k4prodskbiy@pathway.suse.cz>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Heiner Kallweit <hkallweit1@gmail.com> writes:
+On Mon 2019-05-06 10:16:14, Petr Mladek wrote:
+> On Mon 2019-05-06 09:45:53, Daniel Vetter wrote:
+> > console_trylock, called from within printk, can be called from pretty
+> > much anywhere. Including try_to_wake_up. Note that this isn't common,
+> > usually the box is in pretty bad shape at that point already. But it
+> > really doesn't help when then lockdep jumps in and spams the logs,
+> > potentially obscuring the real backtrace we're really interested in.
+> > One case I've seen (slightly simplified backtrace):
+> > 
+> >  Call Trace:
+> >   <IRQ>
+> >   console_trylock+0xe/0x60
+> >   vprintk_emit+0xf1/0x320
+> >   printk+0x4d/0x69
+> >   __warn_printk+0x46/0x90
+> >   native_smp_send_reschedule+0x2f/0x40
+> >   check_preempt_curr+0x81/0xa0
+> >   ttwu_do_wakeup+0x14/0x220
+> >   try_to_wake_up+0x218/0x5f0
+> 
+> try_to_wake_up() takes p->pi_lock. It could deadlock because it
+> can get called recursively from printk_safe_up().
+> 
+> And there are more locks taken from try_to_wake_up(), for example,
+> __task_rq_lock() taken from ttwu_remote().
+> 
+> IMHO, the most reliable solution would be do call the entire
+> up_console_sem() from printk deferred context. We could assign
+> few bytes for this context in the per-CPU printk_deferred
+> variable.
 
-> On 04.05.2019 12:08, Jia-Ju Bai wrote:
->> ath9k_hw_reset() in ath9k_start() can fail, and in this case, 
->> ath9k_start() should return an error instead of executing the 
->> subsequent code.
->> 
-> Such mechanical patches w/o understanding the code are always
-> problematic. Do you have any proof that this error is fatal?
-> I think it is not, else we wouldn't have this line:
-> ah->reset_power_on = false;
-> Also you should consider that a mutex and a spinlock are held.
-> Maybe changing the error message to a warning would be more
-> appropriate. But this I would leave to somebody being more
-> familiar with this driver.
+Ah, I was too fast and did the same mistake. This won't help because
+it would still call try_to_wake_up() recursively.
 
-A very good point, thanks Heiner! I will drop this unless someone
-familiar with ath9k says that this is ok.
+We need to call all printk's that can be called under locks
+taken in try_to_wake_up() path in printk deferred context.
+Unfortunately it is whack a mole approach.
 
--- 
-Kalle Valo
+Best Regards,
+Petr
