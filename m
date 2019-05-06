@@ -2,69 +2,97 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7A8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF1FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B21205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F652053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557154685;
+	bh=N9J1O/dinkSCatUPCOSKp6J9RJCLyqj8e+wbFW+y2hU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=woZVJbA4ORshlHvqKP/Hqx4GdOrKvejZhOaMa7vSO+j84D82xYVLaU6/qJy9TXaCJ
+	 x1VLt/PM02CxmX4I4dbXBFVLGDoINP0oLCdasu/f4K2fsy+WJazbFb/8neVDgKAt0J
+	 wkdnkZh0e0ewDxCi+0Pn0y0n1Qr3+HebewDb4xKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfEFO5v (ORCPT
+        id S1728283AbfEFO6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:57:51 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:52196 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727262AbfEFO5t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:57:49 -0400
-Received: (qmail 4141 invoked by uid 2102); 6 May 2019 10:57:48 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 6 May 2019 10:57:48 -0400
-Date:   Mon, 6 May 2019 10:57:48 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Jim Lin <jilin@nvidia.com>
-cc:     gregkh@linuxfoundation.org, <mathias.nyman@intel.com>,
-        <hminas@synopsys.com>, <kai.heng.feng@canonical.com>,
-        <drinkcat@chromium.org>, <prime.zeng@hisilicon.com>,
-        <malat@debian.org>, <nsaenzjulienne@suse.de>, <jflat@chromium.org>,
-        <linus.walleij@linaro.org>, <clabbe@baylibre.com>,
-        <colin.king@canonical.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/1] usb: xhci: Add Clear_TT_Buffer
-In-Reply-To: <1557153262-22972-1-git-send-email-jilin@nvidia.com>
-Message-ID: <Pine.LNX.4.44L0.1905061053550.1585-100000@iolanthe.rowland.org>
+        Mon, 6 May 2019 10:58:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728081AbfEFOoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA58920449;
+        Mon,  6 May 2019 14:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557153847;
+        bh=N9J1O/dinkSCatUPCOSKp6J9RJCLyqj8e+wbFW+y2hU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aH24t3smp9HE9oNkBHig2RkZKXCOOBtvkKbvWxrq2wwbteF4sGTMiOfmQM6OKy/Db
+         QmIvz8ARbESxIfUNBV8AwEMh32+rsY9pJIP/oJTIKf2yCp3wt9vZU4+Ea7pCnNjOEu
+         gstGKlYaqrpUyPK6O43xEqKreFkLOxpYSg2UjBdQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 19/75] USB: yurex: Fix protection fault after device removal
+Date:   Mon,  6 May 2019 16:32:27 +0200
+Message-Id: <20190506143054.895240578@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
+References: <20190506143053.287515952@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019, Jim Lin wrote:
+From: Alan Stern <stern@rowland.harvard.edu>
 
-> USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
-> processing for full-/low-speed endpoints connected via a TT, the host
-> software must use the Clear_TT_Buffer request to the TT to ensure
-> that the buffer is not in the busy state".
-> 
-> In our case, a full-speed speaker (ConferenceCam) is behind a high-
-> speed hub (ConferenceCam Connect), sometimes once we get STALL on a
-> request we may continue to get STALL with the folllowing requests,
-> like Set_Interface.
-> 
-> Here we add Clear_TT_Buffer for the following Set_Interface requests
-> to get ACK successfully.
-> 
-> Originally usb_hub_clear_tt_buffer uses urb->dev->devnum as device
-> address while sending Clear_TT_Buffer command, but this doesn't work
-> for XHCI.
+commit ef61eb43ada6c1d6b94668f0f514e4c268093ff3 upstream.
 
-Why doesn't it work for xHCI?  Clear-TT-Buffer is part of the USB 2.0 
-spec; it should work exactly the same for xHCI as for a USB-2.0 host 
-controller.
+The syzkaller USB fuzzer found a general-protection-fault bug in the
+yurex driver.  The fault occurs when a device has been unplugged; the
+driver's interrupt-URB handler logs an error message referring to the
+device by name, after the device has been unregistered and its name
+deallocated.
 
-Alan Stern
+This problem is caused by the fact that the interrupt URB isn't
+cancelled until the driver's private data structure is released, which
+can happen long after the device is gone.  The cure is to make sure
+that the interrupt URB is killed before yurex_disconnect() returns;
+this is exactly the sort of thing that usb_poison_urb() was meant for.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/misc/yurex.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -318,6 +318,7 @@ static void yurex_disconnect(struct usb_
+ 	usb_deregister_dev(interface, &yurex_class);
+ 
+ 	/* prevent more I/O from starting */
++	usb_poison_urb(dev->urb);
+ 	mutex_lock(&dev->io_mutex);
+ 	dev->interface = NULL;
+ 	mutex_unlock(&dev->io_mutex);
+
 
