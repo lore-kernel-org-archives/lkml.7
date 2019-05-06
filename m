@@ -4,41 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B556C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579DFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA1A20449
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A43E21530
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153756;
-	bh=kb4YRoMz1q9JxSCiNz5n5guxW0c2uzMpx47xBcCN2qE=;
+	s=default; t=1557153759;
+	bh=kHPUHyvhntNx/u4JJbUbu/sAkYPFW0akYta476j60QU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YCxKlGR4AMXypU8SCwpLayugD3Eds6kv5dWWaRdyj3krv2cQwp9dNuYaWy0R1TF9H
-	 zxJRxfE40fYdHNO3CoPOnEJGmcEOZqSCWNX6zjNfCSheQHeU35nY+aZpMm8608M9Mw
-	 ERO4vhf1Ze4VxhOqDv6ugEu2oueM4AETc+Od2EXA=
+	b=cEPIaR45syoAcW1SVN2GYagbxxhq71qPgsTDDQM6UlW0OCQACnKhrsHWL5FjJH+Dc
+	 TitneZrA+OvW4ZCXqRANdEwFO6mqH9gDtkLrRf76LQ9NQTni02rOj9yVXwRqp6Vz7x
+	 x+WZgvQk12sW5DHrTyLmMeNVpofo/gZAPe3XntSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbfEFOmf (ORCPT
+        id S1728512AbfEFOmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:42:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727204AbfEFOmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:42:33 -0400
+        id S1727204AbfEFOmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E0EB20449;
-        Mon,  6 May 2019 14:42:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0B6C20C01;
+        Mon,  6 May 2019 14:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153752;
-        bh=kb4YRoMz1q9JxSCiNz5n5guxW0c2uzMpx47xBcCN2qE=;
+        s=default; t=1557153755;
+        bh=kHPUHyvhntNx/u4JJbUbu/sAkYPFW0akYta476j60QU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z1KPdojLdOnKzQaqO0sth2LEVzMyM5r6I+qfJsp9WVsnA3VGaHwGVB2w67Qhi38IO
-         nLt2/n31/DyJKjCWH4BfGVm1JuQ2HF1T9U3HYDMApzOZMVs+knunFlL/AFHQsVzEUz
-         p2bEHEOMW3mS47rhxu2wvrQuXMbLDJMOpiU0T3lM=
+        b=dakampvHBn1zlDV6dvx4JEBuqLuNnRU2YG+1Crj06n6ffKJZxxd9purkivlcXqV5+
+         Ja/HxxheUwyg4IerBhF/jOEU87ZYR+nYtiYhj6ZMhgPmBdqoEIKGWyYCN2z7dCxJC9
+         0fZTX1LYVHFMBr3ZCDJfRDszNYC8+j/TdXsAIi9s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +45,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Parav Pandit <parav@mellanox.com>,
         Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 83/99] IB/core: Unregister notifier before freeing MAD security
-Date:   Mon,  6 May 2019 16:32:56 +0200
-Message-Id: <20190506143101.548249942@linuxfoundation.org>
+Subject: [PATCH 4.19 84/99] IB/core: Fix potential memory leak while creating MAD agents
+Date:   Mon,  6 May 2019 16:32:57 +0200
+Message-Id: <20190506143101.610098947@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -63,35 +62,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Daniel Jurgens <danielj@mellanox.com>
 
-commit d60667fc398ed34b3c7456b020481c55c760e503 upstream.
+commit 6e88e672b69f0e627acdae74a527b730ea224b6b upstream.
 
-If the notifier runs after the security context is freed an access of
-freed memory can occur.
+If the MAD agents isn't allowed to manage the subnet, or fails to register
+for the LSM notifier, the security context is leaked. Free the context in
+these cases.
 
 Fixes: 47a2b338fe63 ("IB/core: Enforce security on management datagrams")
 Signed-off-by: Daniel Jurgens <danielj@mellanox.com>
 Reviewed-by: Parav Pandit <parav@mellanox.com>
+Reported-by: Parav Pandit <parav@mellanox.com>
 Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/security.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/security.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 --- a/drivers/infiniband/core/security.c
 +++ b/drivers/infiniband/core/security.c
-@@ -728,9 +728,10 @@ void ib_mad_agent_security_cleanup(struc
- 	if (!rdma_protocol_ib(agent->device, agent->port_num))
- 		return;
+@@ -711,16 +711,20 @@ int ib_mad_agent_security_setup(struct i
+ 						agent->device->name,
+ 						agent->port_num);
+ 	if (ret)
+-		return ret;
++		goto free_security;
  
--	security_ib_free_security(agent->security);
- 	if (agent->lsm_nb_reg)
- 		unregister_lsm_notifier(&agent->lsm_nb);
+ 	agent->lsm_nb.notifier_call = ib_mad_agent_security_change;
+ 	ret = register_lsm_notifier(&agent->lsm_nb);
+ 	if (ret)
+-		return ret;
++		goto free_security;
+ 
+ 	agent->smp_allowed = true;
+ 	agent->lsm_nb_reg = true;
+ 	return 0;
 +
++free_security:
 +	security_ib_free_security(agent->security);
++	return ret;
  }
  
- int ib_mad_enforce_security(struct ib_mad_agent_private *map, u16 pkey_index)
+ void ib_mad_agent_security_cleanup(struct ib_mad_agent *agent)
 
 
