@@ -2,267 +2,248 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62880C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4028FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41015206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0679620675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:07:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="RPhHfxdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfEFUCo (ORCPT
+        id S1726415AbfEFUHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 16:02:44 -0400
-Received: from mga07.intel.com ([134.134.136.100]:41052 "EHLO mga07.intel.com"
+        Mon, 6 May 2019 16:07:15 -0400
+Received: from mout.gmx.net ([212.227.15.19]:33119 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfEFUCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 16:02:44 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 13:02:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,439,1549958400"; 
-   d="p7s'?scan'208";a="137519864"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga007.jf.intel.com with ESMTP; 06 May 2019 13:02:37 -0700
-Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
- ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 6 May 2019 13:02:37 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.212]) by
- ORSMSX155.amr.corp.intel.com ([169.254.7.27]) with mapi id 14.03.0415.000;
- Mon, 6 May 2019 13:02:36 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zub@linux.fjfi.cvut.cz" <zub@linux.fjfi.cvut.cz>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "sbauer@plzdonthack.me" <sbauer@plzdonthack.me>,
-        "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "jonas.rabenstein@studium.uni-erlangen.de" 
-        <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: Re: [PATCH 1/3] block: sed-opal: add ioctl for done-mark of shadow
- mbr
-Thread-Topic: [PATCH 1/3] block: sed-opal: add ioctl for done-mark of shadow
- mbr
-Thread-Index: AQHU/6tmEtIp1537yEqob/W50qrDRqZfA0AA
-Date:   Mon, 6 May 2019 20:02:36 +0000
-Message-ID: <e032c71d0b3a49211cb5989fc5255dbcf70fdfae.camel@intel.com>
-References: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
-         <1556666459-17948-2-git-send-email-zub@linux.fjfi.cvut.cz>
-In-Reply-To: <1556666459-17948-2-git-send-email-zub@linux.fjfi.cvut.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.232.115.159]
-Content-Type: multipart/signed; micalg=sha-1;
-        protocol="application/x-pkcs7-signature"; boundary="=-yQjkPFjNItXQravISkN+"
+        id S1726268AbfEFUHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 16:07:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1557173211;
+        bh=VfXx558+VlXRqC6DuXAeELbx2WcCU2gN6wItdaEoRMo=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=RPhHfxddCJFmIOSCNTyDwTmir7mgKx3V9W5KMnGXU2y0SEaPFQaBtvOxYxryrMuEO
+         79PUrFQTFk+kuPjgvG2myUXlMHb4lh5LzsvysBPlYKJDEm6kGbwER4YiDtTfAnJ9Kr
+         5jRfC6IWjajGuMKK3G3fMD9k96+PQifJOTcwXTtg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.123.60] ([84.118.159.3]) by mail.gmx.com (mrgmx002
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0MPUlV-1hJb100BOL-004lQR; Mon, 06
+ May 2019 22:06:51 +0200
+Subject: Re: [U-Boot] [v4 PATCH] RISCV: image: Add booti support
+To:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
+Cc:     Tom Rini <trini@konsulko.com>, Karsten Merker <merker@debian.org>,
+        Alexander Graf <agraf@suse.de>,
+        Anup Patel <anup@brainfault.org>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
+        Joe Hershberger <joe.hershberger@ni.com>,
+        Lukas Auer <lukas.auer@aisec.fraunhofer.de>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rick Chen <rick@andestech.com>, Simon Glass <sjg@chromium.org>,
+        u-boot@lists.denx.de
+References: <20190506181134.9575-1-atish.patra@wdc.com>
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+Message-ID: <251ea152-6407-02e2-076c-7ee377f6181d@gmx.de>
+Date:   Mon, 6 May 2019 22:06:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190506181134.9575-1-atish.patra@wdc.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:6RckYc5U0Da60ys01K5KqNxlDxGQyIskoQPgUx44VHgouWNQQYL
+ 06Ft9i2dc+rcS6etF364TAEy8yyDQ077msAf1ABtFwpKSWn5fww6XAEmBWRgtgOBMWFse3W
+ aaUIRZk9CWaPW4DzPscPWepC7ie85sej3lNl4PVdlf7z3/Ca1NTp27GnuR8fw3S5JAfynVj
+ bDzxugY0ne8f/zHkq/v3g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GYBYyni7Hq8=:mclJuPMFIlvJXe9GlanYzP
+ 4Jr5AW87UQ2nYL7idRcNJWUNrrRI3iuSqMV8EvrLDAuchcJDmGro+iJE9cU4YcZR2czkqI/lc
+ sAqHU+KJC1ZctqX7dgZJH9OMNmvlk+LLDWk7dhEyN7ztFHX4hegTLNNPuAKGKsUSP3DXnzJ2b
+ ym2l6QpnQ/qyFdHOymvT9L57WxPTOazqIYJhJrpMECcVCVUEl1Ev8I/f4/V5W8hCVLMkKbxoI
+ FC7LgUaEaladubdvgyQkqLdI9m3qDPhMGJE5iJ87bN/dAoRu2TQ+l9TREIZYZy5KKjn1GllCU
+ YdNCO0HzZSI1w1h9k97ohgWGdABa5IcCJrWxVjKjCVP4EH50/cNCPigtkXbM2feNVLHbQUjm1
+ IrnyTEtbKly+JHa8G+LAx6pSFMM50rFCTVAuQKFHAAdlBESbjgfyLq0ClsfGTr0eb5pLlEUKe
+ IHeQilL12A6Yu3byW77ZujPaRBQ+coIFTH5og9+xTWuJ+x3h8gWdePdlQvFXVYVL07fGcTp2X
+ oT4PrJx5TDkoBMCvGn3sTscXdG3iQhyf99ot4aUagh+ULAkDqyyPnjjIvOVg6DsqF9pIsepfA
+ 2Ie2R76YnRwgu6s0EyvT+h/BvCtyxnW89EGDlYe9MmGs+UBGE+X/OTZ14ca1bKsccHukC7vyU
+ j+8DlpNZh6zCsyLYHszhIY0IrZ7FU74kHZNd3oDLS1mxvYTFkP3DNxJIz1ZtgcnZ7gAbFOqRO
+ KmE5BskuvIBYg/kNiLZA76wa0xg1xiih+5JQg55MKmWeNCMRZZkfae20Ed1XimgNSGrFyqVCs
+ FHKUyMj6aYLR1HPDJYV2Et6NlPstfEpCPCa52exnRBt8lmPiAZO+lfxJmoVGsCAtqdvyEjH67
+ /eaLAUdDukAfs4GYzVmD3kiJfGvd6oeAuq3msSszn8SLOXjjnYajTW9upn9Bs33dem9o1kHmg
+ QOnyWpgKF/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-yQjkPFjNItXQravISkN+
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-LGTM
-
-Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
-
-On Wed, 2019-05-01 at 01:20 +0200, David Kozub wrote:
-> From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
->=20
-> Enable users to mark the shadow mbr as done without completely
-> deactivating the shadow mbr feature. This may be useful on reboots,
-> when the power to the disk is not disconnected in between and the
-> shadow
-> mbr stores the required boot files. Of course, this saves also the
-> (few) commands required to enable the feature if it is already
-> enabled
-> and one only wants to mark the shadow mbr as done.
->=20
-> Co-authored-by: David Kozub <zub@linux.fjfi.cvut.cz>
-> Signed-off-by: Jonas Rabenstein <
-> jonas.rabenstein@studium.uni-erlangen.de>
-> Signed-off-by: David Kozub <zub@linux.fjfi.cvut.cz>
+On 5/6/19 8:11 PM, Atish Patra wrote:
+> This patch adds booti support for RISC-V Linux kernel. The existing
+> bootm method will also continue to work as it is.
+>
+> It depends on the following kernel patch which adds the header to the
+> flat Image. Gzip compressed Image (Image.gz) support is not enabled with
+> this patch.
+>
+> https://patchwork.kernel.org/patch/10925543/
+>
+> Tested on HiFive Unleashed and QEMU.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Reviewed-by: Tom Rini <trini@konsulko.com>
+> Tested-by: Karsten Merker <merker@debian.org>
 > ---
->  block/sed-opal.c              | 27 +++++++++++++++++++++++++++
->  include/linux/sed-opal.h      |  1 +
->  include/uapi/linux/sed-opal.h | 12 ++++++++++++
->  3 files changed, 40 insertions(+)
->=20
-> diff --git a/block/sed-opal.c b/block/sed-opal.c
-> index b1aa0cc25803..f1eb9c18e335 100644
-> --- a/block/sed-opal.c
-> +++ b/block/sed-opal.c
-> @@ -1986,6 +1986,30 @@ static int
-> opal_enable_disable_shadow_mbr(struct opal_dev *dev,
->  	return ret;
->  }
-> =20
-> +static int opal_set_mbr_done(struct opal_dev *dev,
-> +			     struct opal_mbr_done *mbr_done)
+> Changes from v3->v4
+> 1. Rebased on top of master to avoid git am errors.
+>
+> Changes from v2->v3
+> 1. Updated the image header structure as per kernel patch.
+> 2. Removed Image.gz support as it will be added as separate RFC patch.
+> ---
+>   arch/riscv/lib/Makefile |  1 +
+>   arch/riscv/lib/image.c  | 55 +++++++++++++++++++++++++++++++++++++++++
+>   cmd/Kconfig             |  2 +-
+>   cmd/booti.c             |  8 ++++--
+>   4 files changed, 63 insertions(+), 3 deletions(-)
+>   create mode 100644 arch/riscv/lib/image.c
+>
+> diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
+> index 1c332db436a9..6ae6ebbeafda 100644
+> --- a/arch/riscv/lib/Makefile
+> +++ b/arch/riscv/lib/Makefile
+> @@ -7,6 +7,7 @@
+>   # Rick Chen, Andes Technology Corporation <rick@andestech.com>
+>
+>   obj-$(CONFIG_CMD_BOOTM) +=3D bootm.o
+> +obj-$(CONFIG_CMD_BOOTI) +=3D bootm.o image.o
+>   obj-$(CONFIG_CMD_GO) +=3D boot.o
+>   obj-y	+=3D cache.o
+>   obj-$(CONFIG_RISCV_RDTIME) +=3D rdtime.o
+> diff --git a/arch/riscv/lib/image.c b/arch/riscv/lib/image.c
+> new file mode 100644
+> index 000000000000..d063beb7dfbe
+> --- /dev/null
+> +++ b/arch/riscv/lib/image.c
+> @@ -0,0 +1,55 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2019 Western Digital Corporation or its affiliates.
+> + * Authors:
+> + *	Atish Patra <atish.patra@wdc.com>
+> + * Based on arm/lib/image.c
+> + */
+> +
+> +#include <common.h>
+> +#include <mapmem.h>
+> +#include <errno.h>
+> +#include <linux/sizes.h>
+> +#include <linux/stddef.h>
+> +
+> +DECLARE_GLOBAL_DATA_PTR;
+> +
+> +/* ASCII version of "RISCV" defined in Linux kernel */
+> +#define LINUX_RISCV_IMAGE_MAGIC 0x5643534952
+> +
+> +struct linux_image_h {
+> +	uint32_t	code0;		/* Executable code */
+> +	uint32_t	code1;		/* Executable code */
+> +	uint64_t	text_offset;	/* Image load offset */
+> +	uint64_t	image_size;	/* Effective Image size */
+> +	uint64_t	res1;		/* reserved */
+> +	uint64_t	res2;		/* reserved */
+> +	uint64_t	res3;		/* reserved */
+> +	uint64_t	magic;		/* Magic number */
+> +	uint32_t	res4;		/* reserved */
+> +	uint32_t	res5;		/* reserved */
+> +};
+> +
+> +int booti_setup(ulong image, ulong *relocated_addr, ulong *size,
+> +		bool force_reloc)
 > +{
-> +	u8 mbr_done_tf =3D mbr_done->done_flag =3D=3D OPAL_MBR_DONE ?
-> +		OPAL_TRUE : OPAL_FALSE;
+> +	struct linux_image_h *lhdr;
 > +
-> +	const struct opal_step mbr_steps[] =3D {
-> +		{ start_admin1LSP_opal_session, &mbr_done->key },
-> +		{ set_mbr_done, &mbr_done_tf },
-> +		{ end_opal_session, }
-> +	};
-> +	int ret;
+> +	lhdr =3D (struct linux_image_h *)map_sysmem(image, 0);
 > +
-> +	if (mbr_done->done_flag !=3D OPAL_MBR_DONE &&
-> +	    mbr_done->done_flag !=3D OPAL_MBR_NOT_DONE)
+> +	if (lhdr->magic !=3D LINUX_RISCV_IMAGE_MAGIC) {
+> +		puts("Bad Linux RISCV Image magic!\n");
 > +		return -EINVAL;
+> +	}
 > +
-> +	mutex_lock(&dev->dev_lock);
-> +	setup_opal_dev(dev);
-> +	ret =3D execute_steps(dev, mbr_steps, ARRAY_SIZE(mbr_steps));
-> +	mutex_unlock(&dev->dev_lock);
-> +	return ret;
+> +	if (lhdr->image_size =3D=3D 0) {
+> +		puts("Image lacks image_size field, error!\n");
+> +		return -EINVAL;
+> +	}
+> +	*size =3D lhdr->image_size;
+> +	*relocated_addr =3D gd->ram_base + lhdr->text_offset;
+> +
+> +	unmap_sysmem(lhdr);
+> +
+> +	return 0;
 > +}
-> +
->  static int opal_save(struct opal_dev *dev, struct opal_lock_unlock
-> *lk_unlk)
->  {
->  	struct opal_suspend_data *suspend;
-> @@ -2299,6 +2323,9 @@ int sed_ioctl(struct opal_dev *dev, unsigned
-> int cmd, void __user *arg)
->  	case IOC_OPAL_ENABLE_DISABLE_MBR:
->  		ret =3D opal_enable_disable_shadow_mbr(dev, p);
->  		break;
-> +	case IOC_OPAL_MBR_DONE:
-> +		ret =3D opal_set_mbr_done(dev, p);
-> +		break;
->  	case IOC_OPAL_ERASE_LR:
->  		ret =3D opal_erase_locking_range(dev, p);
->  		break;
-> diff --git a/include/linux/sed-opal.h b/include/linux/sed-opal.h
-> index 04b124fca51e..42b2ce5da7b3 100644
-> --- a/include/linux/sed-opal.h
-> +++ b/include/linux/sed-opal.h
-> @@ -47,6 +47,7 @@ static inline bool is_sed_ioctl(unsigned int cmd)
->  	case IOC_OPAL_ENABLE_DISABLE_MBR:
->  	case IOC_OPAL_ERASE_LR:
->  	case IOC_OPAL_SECURE_ERASE_LR:
-> +	case IOC_OPAL_MBR_DONE:
->  		return true;
->  	}
->  	return false;
-> diff --git a/include/uapi/linux/sed-opal.h b/include/uapi/linux/sed-
-> opal.h
-> index e092e124dd16..81dd0e8886a1 100644
-> --- a/include/uapi/linux/sed-opal.h
-> +++ b/include/uapi/linux/sed-opal.h
-> @@ -29,6 +29,11 @@ enum opal_mbr {
->  	OPAL_MBR_DISABLE =3D 0x01,
->  };
-> =20
-> +enum opal_mbr_done_flag {
-> +	OPAL_MBR_NOT_DONE =3D 0x0,
-> +	OPAL_MBR_DONE =3D 0x01
-> +};
-> +
->  enum opal_user {
->  	OPAL_ADMIN1 =3D 0x0,
->  	OPAL_USER1 =3D 0x01,
-> @@ -104,6 +109,12 @@ struct opal_mbr_data {
->  	__u8 __align[7];
->  };
-> =20
-> +struct opal_mbr_done {
-> +	struct opal_key key;
-> +	__u8 done_flag;
-> +	__u8 __align[7];
-> +};
-> +
->  #define IOC_OPAL_SAVE		    _IOW('p', 220, struct
-> opal_lock_unlock)
->  #define IOC_OPAL_LOCK_UNLOCK	    _IOW('p', 221, struct
-> opal_lock_unlock)
->  #define IOC_OPAL_TAKE_OWNERSHIP	    _IOW('p', 222, struct
-> opal_key)
-> @@ -116,5 +127,6 @@ struct opal_mbr_data {
->  #define IOC_OPAL_ENABLE_DISABLE_MBR _IOW('p', 229, struct
-> opal_mbr_data)
->  #define IOC_OPAL_ERASE_LR           _IOW('p', 230, struct
-> opal_session_info)
->  #define IOC_OPAL_SECURE_ERASE_LR    _IOW('p', 231, struct
-> opal_session_info)
-> +#define IOC_OPAL_MBR_DONE           _IOW('p', 232, struct
-> opal_mbr_done)
-> =20
->  #endif /* _UAPI_SED_OPAL_H */
+> diff --git a/cmd/Kconfig b/cmd/Kconfig
+> index 069e0ea7300b..4e11e0f404c8 100644
+> --- a/cmd/Kconfig
+> +++ b/cmd/Kconfig
+> @@ -223,7 +223,7 @@ config CMD_BOOTZ
+>
+>   config CMD_BOOTI
+>   	bool "booti"
+> -	depends on ARM64
+> +	depends on ARM64 || RISCV
+>   	default y
+>   	help
+>   	  Boot an AArch64 Linux Kernel image from memory.
+> diff --git a/cmd/booti.c b/cmd/booti.c
+> index 04353b68eccc..5e902993865b 100644
+> --- a/cmd/booti.c
+> +++ b/cmd/booti.c
+> @@ -77,7 +77,11 @@ int do_booti(cmd_tbl_t *cmdtp, int flag, int argc, ch=
+ar * const argv[])
+>   	bootm_disable_interrupts();
+>
+>   	images.os.os =3D IH_OS_LINUX;
+> +#ifdef CONFIG_RISCV_SMODE
+> +	images.os.arch =3D IH_ARCH_RISCV;
+> +#elif CONFIG_ARM64
+>   	images.os.arch =3D IH_ARCH_ARM64;
+> +#endif
+>   	ret =3D do_bootm_states(cmdtp, flag, argc, argv,
+>   #ifdef CONFIG_SYS_BOOT_RAMDISK_HIGH
+>   			      BOOTM_STATE_RAMDISK |
+> @@ -92,7 +96,7 @@ int do_booti(cmd_tbl_t *cmdtp, int flag, int argc, cha=
+r * const argv[])
+>   #ifdef CONFIG_SYS_LONGHELP
+>   static char booti_help_text[] =3D
+>   	"[addr [initrd[:size]] [fdt]]\n"
+> -	"    - boot arm64 Linux Image stored in memory\n"
+> +	"    - boot arm64/riscv Linux Image stored in memory\n"
 
---=-yQjkPFjNItXQravISkN+
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-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
-PNauajAtxgRKfqfSMb+IcL/VXiPtVZOxVq+CTZeDJkaEmn/79vg8OYxpR+YhFF+tGlKf/Zc4id1P
-AgMBAAGjggI3MIICMzAdBgNVHQ4EFgQU4oawcWXM1cPGdwGcIszDfjORVZAwHwYDVR0jBBgwFoAU
-HmkqtNwo/kcYTiELP7ysES/wmPUwZQYDVR0fBF4wXDBaoFigVoZUaHR0cDovL3d3dy5pbnRlbC5j
-b20vcmVwb3NpdG9yeS9DUkwvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIwSXNzdWluZyUyMENB
-JTIwNEEuY3JsMIGfBggrBgEFBQcBAQSBkjCBjzBpBggrBgEFBQcwAoZdaHR0cDovL3d3dy5pbnRl
-bC5jb20vcmVwb3NpdG9yeS9jZXJ0aWZpY2F0ZXMvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIw
-SXNzdWluZyUyMENBJTIwNEEuY3J0MCIGCCsGAQUFBzABhhZodHRwOi8vb2NzcC5pbnRlbC5jb20v
-MAsGA1UdDwQEAwIHgDA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiGw4x1hJnlUYP9gSiFjp9T
-gpHACWeB3r05lfBDAgFkAgEJMB8GA1UdJQQYMBYGCCsGAQUFBwMEBgorBgEEAYI3CgMMMCkGCSsG
-AQQBgjcVCgQcMBowCgYIKwYBBQUHAwQwDAYKKwYBBAGCNwoDDDBRBgNVHREESjBIoCoGCisGAQQB
-gjcUAgOgHAwaam9uYXRoYW4uZGVycmlja0BpbnRlbC5jb22BGmpvbmF0aGFuLmRlcnJpY2tAaW50
-ZWwuY29tMA0GCSqGSIb3DQEBBQUAA4IBAQBxGkHe05DNpYel4b9WbbyQqD1G6y6YA6C93TjKULZi
-p8+gO1LL096ixD44+frVm3jtXMikoadRHQJmBJdzsCywNE1KgtrYF0k4zRWr7a28nyfGgQe4UHHD
-7ARyZFeGd7AKSQ1y4/LU57I2Aw2HKx9/PXavv1JXjjO2/bqTfnZDJTQmOQ0nvlO3/gvbbABxZHqz
-NtfHZsQWS7s+Elk2xGUQ0Po2pMCQoaPo9R96mm+84UP9q3OvSqMoaZwfzoUeAx2wGJYl0h3S+ABr
-CPVfCgq9qnmVCn5DyHWE3V/BRjJCoILLBLxAxnmSdH4pF6wJ6pYRLEw9qoyNhpzGUIJU/Lk1MYIC
-FzCCAhMCAQEwgZAweTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRQwEgYDVQQHEwtTYW50YSBD
-bGFyYTEaMBgGA1UEChMRSW50ZWwgQ29ycG9yYXRpb24xKzApBgNVBAMTIkludGVsIEV4dGVybmFs
-IEJhc2ljIElzc3VpbmcgQ0EgNEECEzMAAMamAkocC+WQNPgAAAAAxqYwCQYFKw4DAhoFAKBdMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDUwNjIwMDIyNFowIwYJ
-KoZIhvcNAQkEMRYEFG3VjcddPPFxt1N0ijCL2VM86bO0MA0GCSqGSIb3DQEBAQUABIIBAC0yqTwD
-IBsDesQwYrhOpcdaUabuBHHFdXqDefgTbEB38UhP93ejpBqHb27+quFkpfD3O2WtXrF3j9bkUur2
-GC/AqJiYe2ESthQpVMwwCqsisco8Nk+YlJCElAdlWiCRwhloOdTUKu8tgREzLEX617vV92zs8nJr
-0yggnsvZoCyu14s1YdqbYZRuCmG32WiForZh/GzvmCgKb7VrDKVzaieUm50+CJU7pm8o12Mlh3Oo
-r00Sd3GZf7ve1/yqybn8yqY+i0HfZ3WHwIVx15CB3vZNR17e4Sqzk49fbs9nbDGFT8nsb4QtDqYn
-kanrvJXyLRYS5/effFtQLpFqqoBoxQwAAAAAAAA=
+Why would you repeat the short description? Just remove this line.
 
 
---=-yQjkPFjNItXQravISkN+--
+>   	"\tThe argument 'initrd' is optional and specifies the address\n"
+>   	"\tof an initrd in memory. The optional parameter ':size' allows\n"
+>   	"\tspecifying the size of a RAW initrd.\n"
+> @@ -107,5 +111,5 @@ static char booti_help_text[] =3D
+>
+>   U_BOOT_CMD(
+>   	booti,	CONFIG_SYS_MAXARGS,	1,	do_booti,
+> -	"boot arm64 Linux Image image from memory", booti_help_text
+> +	"boot arm64/riscv Linux Image image from memory", booti_help_text
+
+%s/Image image/image/
+
+"arm64/riscv" is distracting. If I am on RISC-V I cannot boot an ARM64
+image here. Remove the reference to the architecture, please.
+
+Best regards
+
+Heinrich
+
+>   );
+>
+
