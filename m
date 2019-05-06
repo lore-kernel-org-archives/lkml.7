@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EF1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31884C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C941D21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDBE52087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153949;
-	bh=QoyRgNmTdAJPWL9A22hSP/JtEszVw69vNRYFpH7L4QA=;
+	s=default; t=1557153953;
+	bh=VKIaQHqILKktV1uilDIzU4auAHkCA0xrJuZDJAa28PY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gcqKnra/m2v5poOD8ME3ZIkNgEfUpe8zQCJXJv4O/QT5b274tw/EaP5LJdyF6FRfj
-	 EMJxTUM3w/KPU6xWt2pIBQH57rQdYevTk8QmOVOw2xfRu/qF5bGuH+Qhyjnm3eMUWl
-	 InO463vMUmd+JpzIPTNZrNyctaKnn8kMc5VUAdWc=
+	b=eoPA9c8nXaZs0s9QtGFOoDeQ2IgHF3gtzkZeW+NPf9WqeLXNJTdBoPy3hHZxEgh/e
+	 jPSyCsuxxi0ocYkyQ5RvQWmF+NX+PQ+KvtrQ/7qyONEqgOPGlKC9lJkzObdl9DjHO+
+	 9Xv8HpzvydPhhAgK5h/5oA7DX8mcuBxT56mchDu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbfEFOps (ORCPT
+        id S1729013AbfEFOpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:45:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42772 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:45:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbfEFOpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:45:45 -0400
+        id S1729004AbfEFOps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBEB821479;
-        Mon,  6 May 2019 14:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FFD121019;
+        Mon,  6 May 2019 14:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153945;
-        bh=QoyRgNmTdAJPWL9A22hSP/JtEszVw69vNRYFpH7L4QA=;
+        s=default; t=1557153947;
+        bh=VKIaQHqILKktV1uilDIzU4auAHkCA0xrJuZDJAa28PY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ye21rSUSvgUTXPKG6U4CTpmPN2eyMJ3lkicHOWJUkMAueJ5V9uH8oTgndFFq4pZrl
-         mcLyal0hZqt7kroTff7pLmZ9cqRzoHAMwh2Z1yHFbeOsUINnPaqAimPuTG5H1j/YIk
-         gwGdVNt3kMz8wn+bfAL9gf+G8p4l5YVlslrmIRFg=
+        b=m7grC+xeCog9BxJW7MMCrL0p14trNyFvqoccpxTcFr9HQxvZgzq64ndDJBC37ht82
+         ZhqH63MBcdTKcs1C+/xXuva46vf2vWQNvsIRb3LyorcNShTHlx/uKG5BEDlPsiRFIY
+         x00nEA1S79VmUZvjBfSLl5xQRO88DwHM+CJLKN4g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 56/75] ARM: orion: dont use using 64-bit DMA masks
-Date:   Mon,  6 May 2019 16:33:04 +0200
-Message-Id: <20190506143058.334427540@linuxfoundation.org>
+Subject: [PATCH 4.14 57/75] ARM: iop: dont use using 64-bit DMA masks
+Date:   Mon,  6 May 2019 16:33:05 +0200
+Message-Id: <20190506143058.420952736@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -60,47 +60,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cd92d74d67c811dc22544430b9ac3029f5bd64c5 ]
+[ Upstream commit 2125801ccce19249708ca3245d48998e70569ab8 ]
 
 clang warns about statically defined DMA masks from the DMA_BIT_MASK
 macro with length 64:
 
-arch/arm/plat-orion/common.c:625:29: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-                .coherent_dma_mask      = DMA_BIT_MASK(64),
-                                          ^~~~~~~~~~~~~~~~
-include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
+ arch/arm/mach-iop13xx/setup.c:303:35: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+ static u64 iop13xx_adma_dmamask = DMA_BIT_MASK(64);
+                                  ^~~~~~~~~~~~~~~~
+ include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
  #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+                                                      ^ ~~~
 
-The ones in orion shouldn't really be 64 bit masks, so changing them
+The ones in iop shouldn't really be 64 bit masks, so changing them
 to what the driver can support avoids the warning.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-orion/common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/mach-iop13xx/setup.c |  8 ++++----
+ arch/arm/mach-iop13xx/tpmi.c  | 10 +++++-----
+ arch/arm/plat-iop/adma.c      |  6 +++---
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
-index a2399fd66e97..1e970873439c 100644
---- a/arch/arm/plat-orion/common.c
-+++ b/arch/arm/plat-orion/common.c
-@@ -622,7 +622,7 @@ static struct platform_device orion_xor0_shared = {
- 	.resource	= orion_xor0_shared_resources,
- 	.dev            = {
- 		.dma_mask               = &orion_xor_dmamask,
--		.coherent_dma_mask      = DMA_BIT_MASK(64),
-+		.coherent_dma_mask      = DMA_BIT_MASK(32),
- 		.platform_data          = &orion_xor0_pdata,
+diff --git a/arch/arm/mach-iop13xx/setup.c b/arch/arm/mach-iop13xx/setup.c
+index 53c316f7301e..fe4932fda01d 100644
+--- a/arch/arm/mach-iop13xx/setup.c
++++ b/arch/arm/mach-iop13xx/setup.c
+@@ -300,7 +300,7 @@ static struct resource iop13xx_adma_2_resources[] = {
+ 	}
+ };
+ 
+-static u64 iop13xx_adma_dmamask = DMA_BIT_MASK(64);
++static u64 iop13xx_adma_dmamask = DMA_BIT_MASK(32);
+ static struct iop_adma_platform_data iop13xx_adma_0_data = {
+ 	.hw_id = 0,
+ 	.pool_size = PAGE_SIZE,
+@@ -324,7 +324,7 @@ static struct platform_device iop13xx_adma_0_channel = {
+ 	.resource = iop13xx_adma_0_resources,
+ 	.dev = {
+ 		.dma_mask = &iop13xx_adma_dmamask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
++		.coherent_dma_mask = DMA_BIT_MASK(32),
+ 		.platform_data = (void *) &iop13xx_adma_0_data,
  	},
  };
-@@ -683,7 +683,7 @@ static struct platform_device orion_xor1_shared = {
- 	.resource	= orion_xor1_shared_resources,
- 	.dev            = {
- 		.dma_mask               = &orion_xor_dmamask,
--		.coherent_dma_mask      = DMA_BIT_MASK(64),
-+		.coherent_dma_mask      = DMA_BIT_MASK(32),
- 		.platform_data          = &orion_xor1_pdata,
+@@ -336,7 +336,7 @@ static struct platform_device iop13xx_adma_1_channel = {
+ 	.resource = iop13xx_adma_1_resources,
+ 	.dev = {
+ 		.dma_mask = &iop13xx_adma_dmamask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
++		.coherent_dma_mask = DMA_BIT_MASK(32),
+ 		.platform_data = (void *) &iop13xx_adma_1_data,
+ 	},
+ };
+@@ -348,7 +348,7 @@ static struct platform_device iop13xx_adma_2_channel = {
+ 	.resource = iop13xx_adma_2_resources,
+ 	.dev = {
+ 		.dma_mask = &iop13xx_adma_dmamask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
++		.coherent_dma_mask = DMA_BIT_MASK(32),
+ 		.platform_data = (void *) &iop13xx_adma_2_data,
+ 	},
+ };
+diff --git a/arch/arm/mach-iop13xx/tpmi.c b/arch/arm/mach-iop13xx/tpmi.c
+index db511ec2b1df..116feb6b261e 100644
+--- a/arch/arm/mach-iop13xx/tpmi.c
++++ b/arch/arm/mach-iop13xx/tpmi.c
+@@ -152,7 +152,7 @@ static struct resource iop13xx_tpmi_3_resources[] = {
+ 	}
+ };
+ 
+-u64 iop13xx_tpmi_mask = DMA_BIT_MASK(64);
++u64 iop13xx_tpmi_mask = DMA_BIT_MASK(32);
+ static struct platform_device iop13xx_tpmi_0_device = {
+ 	.name = "iop-tpmi",
+ 	.id = 0,
+@@ -160,7 +160,7 @@ static struct platform_device iop13xx_tpmi_0_device = {
+ 	.resource = iop13xx_tpmi_0_resources,
+ 	.dev = {
+ 		.dma_mask          = &iop13xx_tpmi_mask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
++		.coherent_dma_mask = DMA_BIT_MASK(32),
+ 	},
+ };
+ 
+@@ -171,7 +171,7 @@ static struct platform_device iop13xx_tpmi_1_device = {
+ 	.resource = iop13xx_tpmi_1_resources,
+ 	.dev = {
+ 		.dma_mask          = &iop13xx_tpmi_mask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
++		.coherent_dma_mask = DMA_BIT_MASK(32),
+ 	},
+ };
+ 
+@@ -182,7 +182,7 @@ static struct platform_device iop13xx_tpmi_2_device = {
+ 	.resource = iop13xx_tpmi_2_resources,
+ 	.dev = {
+ 		.dma_mask          = &iop13xx_tpmi_mask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
++		.coherent_dma_mask = DMA_BIT_MASK(32),
+ 	},
+ };
+ 
+@@ -193,7 +193,7 @@ static struct platform_device iop13xx_tpmi_3_device = {
+ 	.resource = iop13xx_tpmi_3_resources,
+ 	.dev = {
+ 		.dma_mask          = &iop13xx_tpmi_mask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
++		.coherent_dma_mask = DMA_BIT_MASK(32),
+ 	},
+ };
+ 
+diff --git a/arch/arm/plat-iop/adma.c b/arch/arm/plat-iop/adma.c
+index a4d1f8de3b5b..d9612221e484 100644
+--- a/arch/arm/plat-iop/adma.c
++++ b/arch/arm/plat-iop/adma.c
+@@ -143,7 +143,7 @@ struct platform_device iop3xx_dma_0_channel = {
+ 	.resource = iop3xx_dma_0_resources,
+ 	.dev = {
+ 		.dma_mask = &iop3xx_adma_dmamask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
++		.coherent_dma_mask = DMA_BIT_MASK(32),
+ 		.platform_data = (void *) &iop3xx_dma_0_data,
+ 	},
+ };
+@@ -155,7 +155,7 @@ struct platform_device iop3xx_dma_1_channel = {
+ 	.resource = iop3xx_dma_1_resources,
+ 	.dev = {
+ 		.dma_mask = &iop3xx_adma_dmamask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
++		.coherent_dma_mask = DMA_BIT_MASK(32),
+ 		.platform_data = (void *) &iop3xx_dma_1_data,
+ 	},
+ };
+@@ -167,7 +167,7 @@ struct platform_device iop3xx_aau_channel = {
+ 	.resource = iop3xx_aau_resources,
+ 	.dev = {
+ 		.dma_mask = &iop3xx_adma_dmamask,
+-		.coherent_dma_mask = DMA_BIT_MASK(64),
++		.coherent_dma_mask = DMA_BIT_MASK(32),
+ 		.platform_data = (void *) &iop3xx_aau_data,
  	},
  };
 -- 
