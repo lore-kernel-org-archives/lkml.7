@@ -2,102 +2,107 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2485BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD86C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E612087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:57:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samba.org header.i=@samba.org header.b="QotzqNtj"
+	by mail.kernel.org (Postfix) with ESMTP id 174FA205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfEFQ5F (ORCPT
+        id S1726982AbfEFQ5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:57:05 -0400
-Received: from hr2.samba.org ([144.76.82.148]:38120 "EHLO hr2.samba.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbfEFQ5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:57:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-         s=42627210; h=Message-ID:Cc:To:From:Date;
-        bh=sIeWRsQrjfl5uiGG2Afv8XyEcWfXKzvrjMXyJwlUSgs=; b=QotzqNtjAKaav33thlCTI2Hwte
-        bjtFIAyRnHZa2j1wF9E4CcF3LQGfrLiNrlrCgiilCXSUgs72o7eyyI5nhqw5thxFGNSVXC925r6cL
-        zvTKkzRBoNhCu4M5Q62OQ0EnAORwq4FV820kgcWxrVAlcq7gfht/07poI8M0Aal5ui/s=;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-        by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_RSA_CHACHA20_POLY1305:256)
-        (Exim)
-        id 1hNgvF-0007UB-DL; Mon, 06 May 2019 16:57:01 +0000
-Date:   Mon, 6 May 2019 09:56:58 -0700
-From:   Jeremy Allison <jra@samba.org>
-To:     Steve French <smfrench@gmail.com>
-Cc:     Christoph Probst <kernel@probst.it>,
-        Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cifs: fix strcat buffer overflow in
- smb21_set_oplock_level()
-Message-ID: <20190506165658.GA168433@jra4>
-Reply-To: Jeremy Allison <jra@samba.org>
-References: <1557155792-2703-1-git-send-email-kernel@probst.it>
- <CAH2r5mtdpOvcE25P2UuNFpOwsNyFiBWRQELQFui+FJGVOOBV8w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH2r5mtdpOvcE25P2UuNFpOwsNyFiBWRQELQFui+FJGVOOBV8w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 6 May 2019 12:57:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53236 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726094AbfEFQ5w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 12:57:52 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46GqmiJ049737
+        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 12:57:51 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2saq7mmvqg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 12:57:50 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 6 May 2019 17:57:49 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 6 May 2019 17:57:46 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x46GvjDh39846052
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 May 2019 16:57:45 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA920A4051;
+        Mon,  6 May 2019 16:57:45 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04B1CA4040;
+        Mon,  6 May 2019 16:57:45 +0000 (GMT)
+Received: from localhost.ibm.com (unknown [9.80.95.145])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  6 May 2019 16:57:44 +0000 (GMT)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Igor Zhbanov <i.zhbanov@omprussia.ru>,
+        Jordan Glover <Golden_Miller83@protonmail.ch>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 0/3] ima: addressing mmap/mprotect concerns
+Date:   Mon,  6 May 2019 12:57:01 -0400
+X-Mailer: git-send-email 2.7.5
+X-TM-AS-GCONF: 00
+x-cbid: 19050616-0016-0000-0000-00000278E759
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050616-0017-0000-0000-000032D58D35
+Message-Id: <1557161824-6623-1-git-send-email-zohar@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=872 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 11:53:44AM -0500, Steve French via samba-technical wrote:
-> I think strcpy is clearer - but I don't think it can overflow since if
-> R, W or W were written to "message" then cinode->oplock would be
-> non-zero so we would never strcap "None"
+Igor Zhbanov's "Should mprotect(..., PROT_EXEC) be checked by IMA?"
+thread raised concerns about IMA's handling of mmap/mprotect. [1]  The
+kernel calls deny_write_access() to prevent a file already opened for
+write from being executed and also prevents files being executed from
+being opened for write.  For some reason this does not extend to files
+being mmap'ed execute.  This is a known, well described problem.[2]
+Jordan Glover commented that the proposed minor LSM "SARA" addresses
+this issue.[3]
 
-Ahem. In Samba we have :
+This patch set attempts to address some the IMA mmap/mprotect concerns
+without locking the mmap'ed files.
 
-lib/util/safe_string.h:#define strcpy(dest,src) __ERROR__XX__NEVER_USE_STRCPY___;
+Mimi
 
-Maybe you should do likewise :-).
+[1] https://lore.kernel.org/linux-integrity/cce2c4c7-5333-41c3-aeef-34d43e63acb0@omprussia.ru/
+[2] ]https://pax.grsecurity.net/docs/mprotect.txt
+[3] https://sara.smeso.it/en/latest/
 
-> On Mon, May 6, 2019 at 10:26 AM Christoph Probst <kernel@probst.it> wrote:
-> >
-> > Change strcat to strcpy in the "None" case as it is never valid to append
-> > "None" to any other message. It may also overflow char message[5], in a
-> > race condition on cinode if cinode->oplock is unset by another thread
-> > after "RHW" or "RH" had been written to message.
-> >
-> > Signed-off-by: Christoph Probst <kernel@probst.it>
-> > ---
-> >  fs/cifs/smb2ops.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-> > index c36ff0d..5fd5567 100644
-> > --- a/fs/cifs/smb2ops.c
-> > +++ b/fs/cifs/smb2ops.c
-> > @@ -2936,7 +2936,7 @@ smb21_set_oplock_level(struct cifsInodeInfo *cinode, __u32 oplock,
-> >                 strcat(message, "W");
-> >         }
-> >         if (!cinode->oplock)
-> > -               strcat(message, "None");
-> > +               strcpy(message, "None");
-> >         cifs_dbg(FYI, "%s Lease granted on inode %p\n", message,
-> >                  &cinode->vfs_inode);
-> >  }
-> > --
-> > 2.1.4
-> >
-> 
-> 
-> -- 
-> Thanks,
-> 
-> Steve
-> 
+Mimi Zohar (3):
+  ima: verify mprotect change is consistent with mmap policy
+  ima: prevent a file already mmap'ed write to be mmap'ed execute
+  ima: prevent a file already mmap'ed read|execute to be mmap'ed write
+
+ include/linux/ima.h               |  6 +++--
+ security/integrity/ima/ima_main.c | 53 ++++++++++++++++++++++++++++++++++++---
+ security/security.c               |  9 +++++--
+ 3 files changed, 61 insertions(+), 7 deletions(-)
+
+-- 
+2.7.5
+
