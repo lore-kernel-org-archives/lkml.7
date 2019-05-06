@@ -2,135 +2,130 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC64EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DFBC04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1FD2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D1D21019
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:01:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Gesm1Mat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfEFR5a (ORCPT
+        id S1726790AbfEFSB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:57:30 -0400
-Received: from mga11.intel.com ([192.55.52.93]:10171 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbfEFR5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:57:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 10:57:28 -0700
-X-ExtLoop1: 1
-Received: from ray.jf.intel.com (HELO [10.7.201.126]) ([10.7.201.126])
-  by orsmga002.jf.intel.com with ESMTP; 06 May 2019 10:57:29 -0700
-Subject: Re: [v5 2/3] mm/hotplug: make remove_memory() interface useable
-To:     Pavel Tatashin <pasha.tatashin@soleen.com>, jmorris@namei.org,
-        sashal@kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
-        akpm@linux-foundation.org, mhocko@suse.com,
-        dave.hansen@linux.intel.com, dan.j.williams@intel.com,
-        keith.busch@intel.com, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, zwisler@kernel.org, thomas.lendacky@amd.com,
-        ying.huang@intel.com, fengguang.wu@intel.com, bp@suse.de,
-        bhelgaas@google.com, baiyaowei@cmss.chinamobile.com, tiwai@suse.de,
-        jglisse@redhat.com, david@redhat.com
-References: <20190502184337.20538-1-pasha.tatashin@soleen.com>
- <20190502184337.20538-3-pasha.tatashin@soleen.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <cac721ed-c404-19d1-71d1-37c66df9b2a8@intel.com>
-Date:   Mon, 6 May 2019 10:57:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 6 May 2019 14:01:26 -0400
+Received: from mail-ot1-f48.google.com ([209.85.210.48]:38714 "EHLO
+        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfEFSB0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 14:01:26 -0400
+Received: by mail-ot1-f48.google.com with SMTP id b1so12341463otp.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 11:01:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s1iYiXewvQHx5myE/g1Y4h4JHD9obTw48tmYZs0bXqI=;
+        b=Gesm1Mat5Nvdr9Z6ppAbheRkkXki5hmEJfki+aAZEgQWtXeZOTMMrgHdcrUMVJlQDM
+         EoFBqW0epQyBVW0aMfUQWMZnSCnDG8Y/vtE5zcyaAH6Zdl9pu/EraJnHe6FBYcMXyLyp
+         VZWggnrv7fI/MHQOhvLueK8w7k5e1LgXjHwFDufU47j2WbehxdNld3it11T/RfmzXJrP
+         ljgYCI7GsW9S1KDe1lCVZ4mK3cyWa3kT8S9i8NiXyvnLEBSmbjhWarFP7+6KuIOEkME3
+         7O9VFfUN9zNq29/cUxKNj4nEuJwTTMN48lYv1nIyegLPGtL2vWXAzQYZsJ+V1TQeTBnW
+         0sdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s1iYiXewvQHx5myE/g1Y4h4JHD9obTw48tmYZs0bXqI=;
+        b=N2/jQrSU98T/8re8Nd0X6RAH2BNn53sXpFZxoz+cFTIKhtD9SpQE15bjgW7Rs8tsfy
+         vWxMT2lwtbUCdwzmNwpCNpXliCAOj0c7nS77LvIoxKBTWRvrVm/G06HLUgt4aaP27xf6
+         HW20WrBlZELHjF7FfcC6OLLTbj4trsp8H+nZvj4qlxAWYz0rI3xyyxR/CfFrbYDGN6+T
+         q5G3ZBb3kuzUiQ4xlNLgK9gsqg0e7noEuiDPxxbFV5Bvbw8g9A0IMcvC/KvFeSaMPKLC
+         6FLZQ2ka2yPVaNUn1NspwH70QQSoZWzmrq5Ep1jcXa+RgPGSPnaws3TWpk8by4F4hrBg
+         Kz7g==
+X-Gm-Message-State: APjAAAUzRqXgrpqcHAemwpW9suuhN1zfk/n3nqdkMkaAQVOeJQ288GWM
+        werviiJaYVygjMJjfnzie39cX4m27p7I4l61QF939w==
+X-Google-Smtp-Source: APXvYqyX9nJzOdD3XQZPHP+tb9t4162dRKXqMf2zXk6saJvTjLay55UFP+hEuwJnc0ji6oilX5u1sKGnO6ke6FVIfL4=
+X-Received: by 2002:a9d:7ad1:: with SMTP id m17mr17304018otn.367.1557165685323;
+ Mon, 06 May 2019 11:01:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190502184337.20538-3-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190502184337.20538-1-pasha.tatashin@soleen.com>
+ <20190502184337.20538-3-pasha.tatashin@soleen.com> <cac721ed-c404-19d1-71d1-37c66df9b2a8@intel.com>
+In-Reply-To: <cac721ed-c404-19d1-71d1-37c66df9b2a8@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 6 May 2019 11:01:14 -0700
+Message-ID: <CAPcyv4greisKBSorzQWebcVOf2AqUH6DwbvNKMW0MQ5bCwYZrw@mail.gmail.com>
+Subject: Re: [v5 2/3] mm/hotplug: make remove_memory() interface useable
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -static inline void remove_memory(int nid, u64 start, u64 size) {}
-> +static inline bool remove_memory(int nid, u64 start, u64 size)
-> +{
-> +	return -EBUSY;
-> +}
+On Mon, May 6, 2019 at 10:57 AM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> > -static inline void remove_memory(int nid, u64 start, u64 size) {}
+> > +static inline bool remove_memory(int nid, u64 start, u64 size)
+> > +{
+> > +     return -EBUSY;
+> > +}
+>
+> This seems like an appropriate place for a WARN_ONCE(), if someone
+> manages to call remove_memory() with hotplug disabled.
+>
+> BTW, I looked and can't think of a better errno, but -EBUSY probably
+> isn't the best error code, right?
+>
+> > -void remove_memory(int nid, u64 start, u64 size)
+> > +/**
+> > + * remove_memory
+> > + * @nid: the node ID
+> > + * @start: physical address of the region to remove
+> > + * @size: size of the region to remove
+> > + *
+> > + * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
+> > + * and online/offline operations before this call, as required by
+> > + * try_offline_node().
+> > + */
+> > +void __remove_memory(int nid, u64 start, u64 size)
+> >  {
+> > +
+> > +     /*
+> > +      * trigger BUG() is some memory is not offlined prior to calling this
+> > +      * function
+> > +      */
+> > +     if (try_remove_memory(nid, start, size))
+> > +             BUG();
+> > +}
+>
+> Could we call this remove_offline_memory()?  That way, it makes _some_
+> sense why we would BUG() if the memory isn't offline.
 
-This seems like an appropriate place for a WARN_ONCE(), if someone
-manages to call remove_memory() with hotplug disabled.
-
-BTW, I looked and can't think of a better errno, but -EBUSY probably
-isn't the best error code, right?
-
-> -void remove_memory(int nid, u64 start, u64 size)
-> +/**
-> + * remove_memory
-> + * @nid: the node ID
-> + * @start: physical address of the region to remove
-> + * @size: size of the region to remove
-> + *
-> + * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
-> + * and online/offline operations before this call, as required by
-> + * try_offline_node().
-> + */
-> +void __remove_memory(int nid, u64 start, u64 size)
->  {
-> +
-> +	/*
-> +	 * trigger BUG() is some memory is not offlined prior to calling this
-> +	 * function
-> +	 */
-> +	if (try_remove_memory(nid, start, size))
-> +		BUG();
-> +}
-
-Could we call this remove_offline_memory()?  That way, it makes _some_
-sense why we would BUG() if the memory isn't offline.
-
+Please WARN() instead of BUG() because failing to remove memory should
+not be system fatal.
