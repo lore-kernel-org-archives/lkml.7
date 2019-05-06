@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C88C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE065C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F13D21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B635F20449
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153834;
-	bh=eWrxKa5mruWpD72si73uMiQaXjLDj/Ihgq8FAilg64g=;
+	s=default; t=1557153839;
+	bh=Anbqk/0kGfZhabFXywOM8sZ195ri9Pr7rlLUW3zeX7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D9rG0eC2KOh6Yoc7Bt+qYBppTaU7rjZMrkqOjwr6V4SeUgsB2oO3OZcXmnhW8qTYX
-	 VvggO8/olE/j59Kak0StymZ1piEsR0GB/UPHxjz2Ox2XJnmNLf7LWDxgOc3qqGxPq2
-	 8XcpckNnuRj/7PVc314TF9Qoo4BMr60z5rg4JsaI=
+	b=ha3lxcwkkB9/JhLt+UVMbPi6eymr6aYFS3yfZCpmhS4QWyjPs6OHibBxrV3AI4LwJ
+	 04udpsexuIYQg/PWcR6zWQxNa/HncRn6EpkiotdBHqMGYTHe+CmNXBaRnwIzyNSBex
+	 3I6YrQBuLB40uV2dDr4nfh/JiHsfJq1smD4TTWlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfEFOnw (ORCPT
+        id S1728736AbfEFOn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:43:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39682 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:43:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727165AbfEFOnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:49 -0400
+        id S1727165AbfEFOnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F017921479;
-        Mon,  6 May 2019 14:43:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4895320C01;
+        Mon,  6 May 2019 14:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153828;
-        bh=eWrxKa5mruWpD72si73uMiQaXjLDj/Ihgq8FAilg64g=;
+        s=default; t=1557153833;
+        bh=Anbqk/0kGfZhabFXywOM8sZ195ri9Pr7rlLUW3zeX7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ayp0yk7PkP7ShVWzh8BmbrBmqeP3iisEHiT7Q6zv/badwGUNLw3QCySqdC3A6WVf7
-         VvzCXAwyWB5h/+9WCSrmAqUxwGLGHLIaFZ85cTdt7RxaBBKzTKIF02dm9g4/dUHOVx
-         UqSj1jFftoW6nHgeoVNeQQ4XfLKY2rp+kjsZuGkI=
+        b=F3Ik2cqTWl5TAAW15I9JGA+6iSe8NRzDr6/yOm9t6fXT41Nw4ksPZlFmHCKnni2yL
+         wmMZxNlggANeT1N00NXGe9Spq9jJDExcG8XK2Wf3TDep5k8HkUIgiNoIGFwg1TEXiS
+         l7oBE72UB8bJxbrNJFZruFCfOYyVKrHo57c/zc8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
         Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 4.14 12/75] kasan: remove redundant initialization of variable real_size
-Date:   Mon,  6 May 2019 16:32:20 +0200
-Message-Id: <20190506143054.307788749@linuxfoundation.org>
+Subject: [PATCH 4.14 14/75] arm64: Fix single stepping in kernel traps
+Date:   Mon,  6 May 2019 16:32:22 +0200
+Message-Id: <20190506143054.480275434@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -64,43 +63,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Julien Thierry <julien.thierry@arm.com>
 
-commit 48c232395431c23d35cf3b4c5a090bd793316578 upstream.
+commit 6436beeee5721a8e906e9eabf866f12d04470437 upstream.
 
-Variable real_size is initialized with a value that is never read, it is
-re-assigned a new value later on, hence the initialization is redundant
-and can be removed.
+Software Step exception is missing after stepping a trapped instruction.
 
-Cleans up clang warning:
+Ensure SPSR.SS gets set to 0 after emulating/skipping a trapped instruction
+before doing ERET.
 
-  lib/test_kasan.c:422:21: warning: Value stored to 'real_size' during its initialization is never read
-
-Link: http://lkml.kernel.org/r/20180206144950.32457-1-colin.king@canonical.com
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Julien Thierry <julien.thierry@arm.com>
+Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
+[will: replaced AARCH32_INSN_SIZE with 4]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/test_kasan.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/traps.h       |    6 ++++++
+ arch/arm64/kernel/armv8_deprecated.c |    8 ++++----
+ arch/arm64/kernel/cpufeature.c       |    2 +-
+ arch/arm64/kernel/traps.c            |   21 ++++++++++++++++-----
+ 4 files changed, 27 insertions(+), 10 deletions(-)
 
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -389,7 +389,7 @@ static noinline void __init kasan_stack_
- static noinline void __init ksize_unpoisons_memory(void)
- {
- 	char *ptr;
--	size_t size = 123, real_size = size;
-+	size_t size = 123, real_size;
+--- a/arch/arm64/include/asm/traps.h
++++ b/arch/arm64/include/asm/traps.h
+@@ -37,6 +37,12 @@ void unregister_undef_hook(struct undef_
  
- 	pr_info("ksize() unpoisons the whole allocated chunk\n");
- 	ptr = kmalloc(size, GFP_KERNEL);
+ void arm64_notify_segfault(struct pt_regs *regs, unsigned long addr);
+ 
++/*
++ * Move regs->pc to next instruction and do necessary setup before it
++ * is executed.
++ */
++void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size);
++
+ static inline int __in_irqentry_text(unsigned long ptr)
+ {
+ 	return ptr >= (unsigned long)&__irqentry_text_start &&
+--- a/arch/arm64/kernel/armv8_deprecated.c
++++ b/arch/arm64/kernel/armv8_deprecated.c
+@@ -431,7 +431,7 @@ ret:
+ 	pr_warn_ratelimited("\"%s\" (%ld) uses obsolete SWP{B} instruction at 0x%llx\n",
+ 			current->comm, (unsigned long)current->pid, regs->pc);
+ 
+-	regs->pc += 4;
++	arm64_skip_faulting_instruction(regs, 4);
+ 	return 0;
+ 
+ fault:
+@@ -512,7 +512,7 @@ ret:
+ 	pr_warn_ratelimited("\"%s\" (%ld) uses deprecated CP15 Barrier instruction at 0x%llx\n",
+ 			current->comm, (unsigned long)current->pid, regs->pc);
+ 
+-	regs->pc += 4;
++	arm64_skip_faulting_instruction(regs, 4);
+ 	return 0;
+ }
+ 
+@@ -586,14 +586,14 @@ static int compat_setend_handler(struct
+ static int a32_setend_handler(struct pt_regs *regs, u32 instr)
+ {
+ 	int rc = compat_setend_handler(regs, (instr >> 9) & 1);
+-	regs->pc += 4;
++	arm64_skip_faulting_instruction(regs, 4);
+ 	return rc;
+ }
+ 
+ static int t16_setend_handler(struct pt_regs *regs, u32 instr)
+ {
+ 	int rc = compat_setend_handler(regs, (instr >> 3) & 1);
+-	regs->pc += 2;
++	arm64_skip_faulting_instruction(regs, 2);
+ 	return rc;
+ }
+ 
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -1398,7 +1398,7 @@ static int emulate_mrs(struct pt_regs *r
+ 	if (!rc) {
+ 		dst = aarch64_insn_decode_register(AARCH64_INSN_REGTYPE_RT, insn);
+ 		pt_regs_write_reg(regs, dst, val);
+-		regs->pc += 4;
++		arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+ 	}
+ 
+ 	return rc;
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -296,6 +296,17 @@ void arm64_notify_die(const char *str, s
+ 	}
+ }
+ 
++void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
++{
++	regs->pc += size;
++
++	/*
++	 * If we were single stepping, we want to get the step exception after
++	 * we return from the trap.
++	 */
++	user_fastforward_single_step(current);
++}
++
+ static LIST_HEAD(undef_hook);
+ static DEFINE_RAW_SPINLOCK(undef_lock);
+ 
+@@ -483,7 +494,7 @@ static void user_cache_maint_handler(uns
+ 	if (ret)
+ 		arm64_notify_segfault(regs, address);
+ 	else
+-		regs->pc += 4;
++		arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+ }
+ 
+ static void ctr_read_handler(unsigned int esr, struct pt_regs *regs)
+@@ -493,7 +504,7 @@ static void ctr_read_handler(unsigned in
+ 
+ 	pt_regs_write_reg(regs, rt, val);
+ 
+-	regs->pc += 4;
++	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+ }
+ 
+ static void cntvct_read_handler(unsigned int esr, struct pt_regs *regs)
+@@ -501,7 +512,7 @@ static void cntvct_read_handler(unsigned
+ 	int rt = (esr & ESR_ELx_SYS64_ISS_RT_MASK) >> ESR_ELx_SYS64_ISS_RT_SHIFT;
+ 
+ 	pt_regs_write_reg(regs, rt, arch_counter_get_cntvct());
+-	regs->pc += 4;
++	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+ }
+ 
+ static void cntfrq_read_handler(unsigned int esr, struct pt_regs *regs)
+@@ -509,7 +520,7 @@ static void cntfrq_read_handler(unsigned
+ 	int rt = (esr & ESR_ELx_SYS64_ISS_RT_MASK) >> ESR_ELx_SYS64_ISS_RT_SHIFT;
+ 
+ 	pt_regs_write_reg(regs, rt, arch_timer_get_rate());
+-	regs->pc += 4;
++	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+ }
+ 
+ struct sys64_hook {
+@@ -756,7 +767,7 @@ static int bug_handler(struct pt_regs *r
+ 	}
+ 
+ 	/* If thread survives, skip over the BUG instruction and continue: */
+-	regs->pc += AARCH64_INSN_SIZE;	/* skip BRK and resume */
++	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+ 	return DBG_HOOK_HANDLED;
+ }
+ 
 
 
