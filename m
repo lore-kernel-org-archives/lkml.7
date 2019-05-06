@@ -2,232 +2,374 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A583C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF39FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 121542087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:40:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557139243;
-	bh=wQ2ktsr6a9u9eBcm1dGeb1ZEk3xPjJo5KhEaGtsKsGk=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=YEEYSTw3MFItN5rqH4og3YVfuUVCYufGyC2d6BTHeo8izCVcGXaJDdGYHc4mXkYqE
-	 UF1eS1bwdLslKNucM/5A67J+lHwWq775XlR8ekD8BtCr7l8dT2mz4RMvkC0XjfZ0ow
-	 CzIR9TlCH9jIssxM+PEZ5p/RKJWeKAZut9gxbfQQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6E363206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfEFKkl (ORCPT
+        id S1726268AbfEFKnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 06:40:41 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34717 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfEFKkl (ORCPT
+        Mon, 6 May 2019 06:43:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36820 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725861AbfEFKnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 06:40:41 -0400
-Received: by mail-wm1-f67.google.com with SMTP id m20so5142620wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 03:40:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ijxsCt+TB//9DJtfbHRaO+c3pvussPa3AewCteTr1Hg=;
-        b=cm4WCGSoQesOMJV0mmDe2ozMJOyLsbE7L+gy5HRxAFRvtKbNg6l/umR90WaVx7T5tt
-         qFvkIqDdhBiGwyCKEJBOg3yVfsB0av2m3nQzU/XoAC6kn0xtwLy3SOgB4I7QJbj0jVdQ
-         cXDvjvvXBcpG+FIQWYInlaLK7Q1Yo1Lt1goE5Mx+aPfG3kAGbd4UMfEIYU5o/fW5aRMF
-         UOpQVKM9fBRlbz3mXc0+1FuQToNmQZF50TMgIeSeM1ZsBIRsIfVeo6YM3gNUFvFfdiXR
-         Q0Z23giVrN3urdzwkLm0x9ztHpDagcSMyTOjzhDr1gOVYdjgtg0VFccOgd+pQM2rD3CQ
-         WHLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=ijxsCt+TB//9DJtfbHRaO+c3pvussPa3AewCteTr1Hg=;
-        b=DNx9aN4CrLcoxdWS13wON+rSTdgGOtj3FrBwbTFI5jYwkoeDzdXoax/kWX497gpXOz
-         tehU82deLiLuo5u9yHJhBQgul5J1DuaT0Qnli+cUN3csmHbVnO0P9v+2wuQESrhgpsM+
-         qKzpYk2+cPpPDHxka/15Cqxym/QXp4MHZ8VJH49LAqdcANntSGlbMUK79E8wnMZOL9Hw
-         bJQ6QnmpN4A49kbwCm3q/rwncHYbyoxmLgjJk6uSywgFB6OJWGfyI0frdbQn7cYevm68
-         twoGsFOaw96ZqMIG8j1hmfrKm6UN8citbmJzt1d3mXah4914lNXEhwSXseuTkcLuZfxe
-         PbVw==
-X-Gm-Message-State: APjAAAXh8C71dzZTMK1r5UKzViaEMiJigSHboRaCacht40JOHVgfThh2
-        eI5P9EITNvO83j9ICwISso6hFldP
-X-Google-Smtp-Source: APXvYqxGkDZmTkkDSbpkuuqwZyKv0uLiWR/I7zO0+nCn2XLbI19Qh77QtU1bLOuckU6BiNPfXU3Lcg==
-X-Received: by 2002:a1c:44d7:: with SMTP id r206mr15405366wma.129.1557139238454;
-        Mon, 06 May 2019 03:40:38 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id r9sm9261584wrv.82.2019.05.06.03.40.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 03:40:37 -0700 (PDT)
-Date:   Mon, 6 May 2019 12:40:35 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rik van Riel <riel@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [GIT PULL] x86/mm changes for v5.2
-Message-ID: <20190506104035.GA39266@gmail.com>
+        Mon, 6 May 2019 06:43:00 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46AgbZf041118
+        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 06:42:58 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sag5900sa-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 06:42:58 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Mon, 6 May 2019 11:42:55 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 6 May 2019 11:42:53 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x46AgqTI47251618
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 May 2019 10:42:52 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B0375204F;
+        Mon,  6 May 2019 10:42:52 +0000 (GMT)
+Received: from [9.145.46.119] (unknown [9.145.46.119])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 68CB552051;
+        Mon,  6 May 2019 10:42:51 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 5/7] s390: vfio-ap: allow hot plug/unplug of AP
+ resources using mdev device
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+ <1556918073-13171-6-git-send-email-akrowiak@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Mon, 6 May 2019 12:42:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1556918073-13171-6-git-send-email-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050610-0012-0000-0000-00000318C64E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050610-0013-0000-0000-000021513EC5
+Message-Id: <d97cf90c-3750-bea0-2f9f-bae81f61e288@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On 03/05/2019 23:14, Tony Krowiak wrote:
+> Let's allow AP resources to be assigned to or unassigned from an AP matrix
+> mdev device while it is in use by a guest. If a guest is using the mdev
+> device while assignment is taking place, the guest will be granted access
+> to the resource as long as the guest will not be given access to an AP
+> queue device that is not bound to the vfio_ap device driver. If a guest is
+> using the mdev device while unassignment is taking place, access to the
+> resource will be taken from the guest.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>   drivers/s390/crypto/vfio_ap_ops.c | 116 ++++++++++++++++++++++++++++----------
+>   1 file changed, 86 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index ea24caf17a16..ede45184eb67 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -226,6 +226,8 @@ static struct device *vfio_ap_get_queue_dev(unsigned long apid,
+>   				  &apqn, match_apqn);
+>   }
+>   
+> +
+> +
 
-Please pull the latest x86-mm-for-linus git tree from:
+two white lines
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-mm-for-linus
+>   static int vfio_ap_mdev_validate_masks(unsigned long *apm, unsigned long *aqm)
+>   {
+>   	int ret;
+> @@ -237,6 +239,26 @@ static int vfio_ap_mdev_validate_masks(unsigned long *apm, unsigned long *aqm)
+>   	return vfio_ap_mdev_verify_no_sharing(apm, aqm);
+>   }
+>   
+> +static bool vfio_ap_queues_on_drv(unsigned long *apm, unsigned long *aqm)
+> +{
+> +	unsigned long apid, apqi, apqn;
+> +	struct device *dev;
+> +
+> +	for_each_set_bit_inv(apid, apm, AP_DEVICES) {
+> +		for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
+> +			apqn = AP_MKQID(apid, apqi);
 
-   # HEAD: caa841360134f863987f2d4f77b8dc2fbb7596f8 x86/mm: Initialize PGD cache during mm initialization
+You do not use apqn in the function.
 
-The changes in this tree are:
+> +
+> +			dev = vfio_ap_get_queue_dev(apid, apqi);
+> +			if (!dev)
+> +				return false;
+> +
+> +			put_device(dev);
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>   /**
+>    * assign_adapter_store
+>    *
+> @@ -247,7 +269,10 @@ static int vfio_ap_mdev_validate_masks(unsigned long *apm, unsigned long *aqm)
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the APID from @buf and sets the corresponding bit in the mediated
+> - * matrix device's APM.
+> + * matrix device's APM. If a guest is using the mediated matrix device and each
+> + * new APQN formed as a result of the assignment identifies an AP queue device
+> + * that is bound to the vfio_ap device driver, the guest will be granted access
+> + * to the adapter with the specified APID.
+>    *
+>    * Returns the number of bytes processed if the APID is valid; otherwise,
+>    * returns one of the following errors:
+> @@ -279,10 +304,6 @@ static ssize_t assign_adapter_store(struct device *dev,
+>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   
+> -	/* If the guest is running, disallow assignment of adapter */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &apid);
+>   	if (ret)
+>   		return ret;
+> @@ -300,6 +321,14 @@ static ssize_t assign_adapter_store(struct device *dev,
+>   		return ret;
+>   	}
+>   	set_bit_inv(apid, matrix_mdev->matrix.apm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (vfio_ap_queues_on_drv(apm,
+> +					  matrix_mdev->shadow_crycb->aqm)) {
+> +			set_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
+> @@ -315,7 +344,9 @@ static DEVICE_ATTR_WO(assign_adapter);
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the APID from @buf and clears the corresponding bit in the mediated
+> - * matrix device's APM.
+> + * matrix device's APM. If a guest is using the mediated matrix device and has
+> + * access to the AP adapter with the specified APID, access to the adapter will
+> + * be taken from the guest.
+>    *
+>    * Returns the number of bytes processed if the APID is valid; otherwise,
+>    * returns one of the following errors:
+> @@ -332,10 +363,6 @@ static ssize_t unassign_adapter_store(struct device *dev,
+>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   
+> -	/* If the guest is running, disallow un-assignment of adapter */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &apid);
+>   	if (ret)
+>   		return ret;
+> @@ -345,6 +372,13 @@ static ssize_t unassign_adapter_store(struct device *dev,
+>   
+>   	mutex_lock(&matrix_dev->lock);
+>   	clear_bit_inv((unsigned long)apid, matrix_mdev->matrix.apm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (test_bit_inv(apid, matrix_mdev->shadow_crycb->apm)) {
+> +			clear_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
+> @@ -361,7 +395,10 @@ static DEVICE_ATTR_WO(unassign_adapter);
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the APQI from @buf and sets the corresponding bit in the mediated
+> - * matrix device's AQM.
+> + * matrix device's AQM. If a guest is using the mediated matrix device and each
+> + * new APQN formed as a result of the assignment identifies an AP queue device
+> + * that is bound to the vfio_ap device driver, the guest will be given access
+> + * to the AP queue(s) with the specified APQI.
+>    *
+>    * Returns the number of bytes processed if the APQI is valid; otherwise returns
+>    * one of the following errors:
+> @@ -394,10 +431,6 @@ static ssize_t assign_domain_store(struct device *dev,
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   	unsigned long max_apqi = matrix_mdev->matrix.aqm_max;
+>   
+> -	/* If the guest is running, disallow assignment of domain */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &apqi);
+>   	if (ret)
+>   		return ret;
+> @@ -414,6 +447,14 @@ static ssize_t assign_domain_store(struct device *dev,
+>   		return ret;
+>   	}
+>   	set_bit_inv(apqi, matrix_mdev->matrix.aqm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (vfio_ap_queues_on_drv(matrix_mdev->shadow_crycb->apm,
+> +					  aqm)) {
+> +			set_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
+> @@ -431,7 +472,9 @@ static DEVICE_ATTR_WO(assign_domain);
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the APQI from @buf and clears the corresponding bit in the
+> - * mediated matrix device's AQM.
+> + * mediated matrix device's AQM. If a guest is using the mediated matrix device
+> + * and has access to queue(s) with the specified domain APQI, access to
+> + * the queue(s) will be taken away from the guest.
+>    *
+>    * Returns the number of bytes processed if the APQI is valid; otherwise,
+>    * returns one of the following errors:
+> @@ -447,10 +490,6 @@ static ssize_t unassign_domain_store(struct device *dev,
+>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   
+> -	/* If the guest is running, disallow un-assignment of domain */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &apqi);
+>   	if (ret)
+>   		return ret;
+> @@ -460,6 +499,13 @@ static ssize_t unassign_domain_store(struct device *dev,
+>   
+>   	mutex_lock(&matrix_dev->lock);
+>   	clear_bit_inv((unsigned long)apqi, matrix_mdev->matrix.aqm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (test_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm)) {
+> +			clear_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
+> @@ -475,7 +521,9 @@ static DEVICE_ATTR_WO(unassign_domain);
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the domain ID from @buf and sets the corresponding bit in the mediated
+> - * matrix device's ADM.
+> + * matrix device's ADM. If a guest is using the mediated matrix device and the
+> + * guest does not have access to the control domain with the specified ID, the
+> + * guest will be granted access to it.
+>    *
+>    * Returns the number of bytes processed if the domain ID is valid; otherwise,
+>    * returns one of the following errors:
+> @@ -491,10 +539,6 @@ static ssize_t assign_control_domain_store(struct device *dev,
+>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   
+> -	/* If the guest is running, disallow assignment of control domain */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &id);
+>   	if (ret)
+>   		return ret;
+> @@ -504,6 +548,13 @@ static ssize_t assign_control_domain_store(struct device *dev,
+>   
+>   	mutex_lock(&matrix_dev->lock);
+>   	set_bit_inv(id, matrix_mdev->matrix.adm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (!test_bit_inv(id, matrix_mdev->shadow_crycb->adm)) {
+> +			set_bit_inv(id, matrix_mdev->shadow_crycb->adm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
+> @@ -519,7 +570,9 @@ static DEVICE_ATTR_WO(assign_control_domain);
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the domain ID from @buf and clears the corresponding bit in the
+> - * mediated matrix device's ADM.
+> + * mediated matrix device's ADM. If a guest is using the mediated matrix device
+> + * and has access to control domain with the specified domain ID, access to
+> + * the control domain will be taken from the guest.
+>    *
+>    * Returns the number of bytes processed if the domain ID is valid; otherwise,
+>    * returns one of the following errors:
+> @@ -536,10 +589,6 @@ static ssize_t unassign_control_domain_store(struct device *dev,
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   	unsigned long max_domid =  matrix_mdev->matrix.adm_max;
+>   
+> -	/* If the guest is running, disallow un-assignment of control domain */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &domid);
+>   	if (ret)
+>   		return ret;
+> @@ -548,6 +597,13 @@ static ssize_t unassign_control_domain_store(struct device *dev,
+>   
+>   	mutex_lock(&matrix_dev->lock);
+>   	clear_bit_inv(domid, matrix_mdev->matrix.adm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (test_bit_inv(domid, matrix_mdev->shadow_crycb->adm)) {
+> +			clear_bit_inv(domid, matrix_mdev->shadow_crycb->adm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
+> 
 
- - text_poke() fixes and an extensive set of executability lockdowns, to 
-   (hopefully) eliminate the last residual circumstances under which we 
-   are using W|X mappings even temporarily on x86 kernels. This required 
-   a broad range of surgery in text patching facilities, module loading, 
-   trampoline handling and other bits.
-
- - Tweak page fault messages to be more informative and more structured.
-
- - Remove DISCONTIGMEM support on x86-32 and make SPARSEMEM the default.
-
- - Reduce KASLR granularity on 5-level paging kernels from 512 GB to 1 GB.
-
- - Misc other changes and updates.
-
-  out-of-topic modifications in x86-mm-for-linus:
-  -------------------------------------------------
-  arch/Kconfig                       # d253ca0c3865: x86/mm/cpa: Add set_direct_m
-  include/asm-generic/pgtable.h      # caa841360134: x86/mm: Initialize PGD cache
-  include/asm-generic/tlb.h          # 5932c9fd19e6: mm/tlb: Provide default nmi_
-  include/linux/filter.h             # d53d2f78cead: bpf: Use vmalloc special fla
-                                   # f2c65fb3221a: x86/modules: Avoid breaking 
-  include/linux/mm.h                 # d63326928611: mm/hibernation: Make hiberna
-  include/linux/sched/task.h         # 13585fa0668c: fork: Provide a function for
-  include/linux/set_memory.h         # d253ca0c3865: x86/mm/cpa: Add set_direct_m
-  include/linux/uprobes.h            # aad42dd44db0: uprobes: Initialize uprobes 
-  include/linux/vmalloc.h            # 868b104d7379: mm/vmalloc: Add flag for fre
-  kernel/bpf/core.c                  # d53d2f78cead: bpf: Use vmalloc special fla
-  kernel/events/uprobes.c            # aad42dd44db0: uprobes: Initialize uprobes 
-  kernel/module.c                    # 1a7b7d922081: modules: Use vmalloc special
-                                   # f2c65fb3221a: x86/modules: Avoid breaking 
-  kernel/power/snapshot.c            # d63326928611: mm/hibernation: Make hiberna
-  kernel/trace/bpf_trace.c           # c7b6f29b6257: bpf: Fail bpf_probe_write_us
-  mm/page_alloc.c                    # d63326928611: mm/hibernation: Make hiberna
-  mm/vmalloc.c                       # 868b104d7379: mm/vmalloc: Add flag for fre
-
- Thanks,
-
-	Ingo
-
------------------->
-Andy Lutomirski (1):
-      x86/mm: Introduce temporary mm structs
-
-Baoquan He (2):
-      x86/mm/KASLR: Use only one PUD entry for real mode trampoline
-      x86/mm/KASLR: Reduce randomization granularity for 5-level paging to 1GB
-
-Borislav Petkov (1):
-      x86/fault: Make fault messages more succinct
-
-Jiri Kosina (1):
-      x86/mm: Remove in_nmi() warning from 64-bit implementation of vmalloc_fault()
-
-Kees Cook (1):
-      x86/build: Move _etext to actual end of .text
-
-Mike Rapoport (2):
-      x86/Kconfig: Make SPARSEMEM default for 32-bit x86
-      x86/Kconfig: Deprecate DISCONTIGMEM support for 32-bit x86
-
-Nadav Amit (18):
-      x86/mm/tlb: Remove 'struct flush_tlb_info' from the stack
-      x86/alternatives: Add text_poke_kgdb() to not assert the lock when debugging
-      mm/tlb: Provide default nmi_uaccess_okay()
-      bpf: Fail bpf_probe_write_user() while mm is switched
-      x86/jump_label: Use text_poke_early() during early init
-      x86/mm: Save debug registers when loading a temporary mm
-      uprobes: Initialize uprobes earlier
-      fork: Provide a function for copying init_mm
-      x86/alternatives: Initialize temporary mm for patching
-      x86/alternatives: Use temporary mm for text poking
-      x86/kgdb: Avoid redundant comparison of patched code
-      x86/ftrace: Set trampoline pages as executable
-      x86/kprobes: Set instruction page as executable
-      x86/modules: Avoid breaking W^X while loading modules
-      x86/jump-label: Remove support for custom text poker
-      x86/alternatives: Remove the return value of text_poke_*()
-      x86/alternatives: Add comment about module removal races
-      x86/mm: Initialize PGD cache during mm initialization
-
-Rick Edgecombe (7):
-      x86/mm/cpa: Add set_direct_map_*() functions
-      mm/hibernation: Make hibernation handle unmapped pages
-      mm/vmalloc: Add flag for freeing of special permsissions
-      modules: Use vmalloc special flag
-      bpf: Use vmalloc special flag
-      x86/ftrace: Use vmalloc special flag
-      x86/kprobes: Use vmalloc special flag
-
-Sean Christopherson (2):
-      x86/fault: Reword initial BUG message for unhandled page faults
-      x86/fault: Decode and print #PF oops in human readable form
-
-Stephen Kitt (1):
-      x86/mm: Fix the 56-bit addresses memory map in Documentation/x86/x86_64/mm.txt
+beside the two NITs, look good to me.
+Still need to test.
 
 
- Documentation/x86/x86_64/mm.txt      |   6 +-
- arch/Kconfig                         |   4 +
- arch/x86/Kconfig                     |  11 +-
- arch/x86/include/asm/fixmap.h        |   2 -
- arch/x86/include/asm/mmu_context.h   |  56 ++++++++++
- arch/x86/include/asm/pgtable.h       |   3 +
- arch/x86/include/asm/set_memory.h    |   3 +
- arch/x86/include/asm/text-patching.h |   7 +-
- arch/x86/include/asm/tlbflush.h      |   2 +
- arch/x86/kernel/alternative.c        | 201 +++++++++++++++++++++++++++--------
- arch/x86/kernel/ftrace.c             |  22 ++--
- arch/x86/kernel/jump_label.c         |  21 ++--
- arch/x86/kernel/kgdb.c               |  25 ++---
- arch/x86/kernel/kprobes/core.c       |  19 +++-
- arch/x86/kernel/module.c             |   2 +-
- arch/x86/kernel/vmlinux.lds.S        |   6 +-
- arch/x86/mm/fault.c                  |  55 ++++------
- arch/x86/mm/init.c                   |  37 +++++++
- arch/x86/mm/kaslr.c                  |  94 +++++++---------
- arch/x86/mm/pageattr.c               |  16 +--
- arch/x86/mm/pgtable.c                |  10 +-
- arch/x86/mm/tlb.c                    | 116 ++++++++++++++------
- arch/x86/xen/mmu_pv.c                |   2 -
- include/asm-generic/pgtable.h        |   2 +
- include/asm-generic/tlb.h            |   9 ++
- include/linux/filter.h               |  18 +---
- include/linux/mm.h                   |  18 ++--
- include/linux/sched/task.h           |   1 +
- include/linux/set_memory.h           |  11 ++
- include/linux/uprobes.h              |   5 +
- include/linux/vmalloc.h              |  15 +++
- init/main.c                          |   6 ++
- kernel/bpf/core.c                    |   1 -
- kernel/events/uprobes.c              |   8 +-
- kernel/fork.c                        |  25 +++--
- kernel/module.c                      |  82 +++++++-------
- kernel/power/snapshot.c              |   5 +-
- kernel/trace/bpf_trace.c             |   8 ++
- mm/page_alloc.c                      |   7 +-
- mm/vmalloc.c                         | 113 ++++++++++++++++----
- 40 files changed, 711 insertions(+), 343 deletions(-)
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
