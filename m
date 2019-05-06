@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CE5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F647C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2EA2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D2D20449
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153844;
-	bh=p4k4VEEcg6/JvNjILCfPYUNlLZeYKtbYzZxS21BDptg=;
+	s=default; t=1557153849;
+	bh=d/+bwDNC7iCZg3a5u/9HNqnnXQra3ey63UsefxpuTwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AlqKzjJm2+YDgps7caG0eFVVBYZZRcI3rhmE13GNb6biOtUK0GxCRTYWo6mcRVDFa
-	 RySKN7keAE8ya6Q/27xqB3GssemX0J0XVf/w826M9hY5oMSW7jMVD26QbqFiGlOwsu
-	 S1tTlLb5MyVWiFxtNOEPJNJBxavyFhPY0PZTiTqY=
+	b=FkWXtIil/5MoeYxEGfCvLmCGRW+Qni25ZcDjJXNN4sulztyY4n1bYvvH80wXBYusK
+	 yy/MuLnnenIxQXerXKujeoVh9OSr6nGxlyzB/Br0PhPNgwHxKOVDrNaqktFX+TFrC4
+	 ahojfn9lOoJM2XjDi0kvO8IZN0GqNAsuXUOXOvFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbfEFOoD (ORCPT
+        id S1728750AbfEFOoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:44:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39962 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:44:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727165AbfEFOoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:00 -0400
+        id S1728351AbfEFOoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A89E120C01;
-        Mon,  6 May 2019 14:43:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EDC520449;
+        Mon,  6 May 2019 14:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153839;
-        bh=p4k4VEEcg6/JvNjILCfPYUNlLZeYKtbYzZxS21BDptg=;
+        s=default; t=1557153841;
+        bh=d/+bwDNC7iCZg3a5u/9HNqnnXQra3ey63UsefxpuTwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LpN5HpvTzt+fHkyUCqxTivxJJrgB2oS3j80JNWtHJrGClAc1zNrxAvqP2mpXLiNzL
-         o6uWm1mIDnMFSHJkrQ86ZWw5eES7NktSiu0Ifi0uDNu8ZHpD+ojnjI/Xcy8WNZP0hM
-         XiK81hrau6yjjf1VIdlXWCjJzZiy5cTO49l7JHN8=
+        b=rSGF/SLOztLTw67NL7Vme08NubH6iz+dr04gEIlzd5MByNZEum6CoNW+VIPnUcHBV
+         GEqSg3GoLvKqZjACyf64S5u0GKshJ90ZvrZzAlGHPig+z1CXLVh7uABHsgh4aDOgCE
+         UjkZs0sOGQHp7nEMQlFJMyx+Hko0G8M8wn4YA/3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 4.14 16/75] caif: reduce stack size with KASAN
-Date:   Mon,  6 May 2019 16:32:24 +0200
-Message-Id: <20190506143054.648064741@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 17/75] ALSA: hda/realtek - Add new Dell platform for headset mode
+Date:   Mon,  6 May 2019 16:32:25 +0200
+Message-Id: <20190506143054.731306274@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -60,226 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Kailang Yang <kailang@realtek.com>
 
-commit ce6289661b14a8b391d90db918c91b6d6da6540a upstream.
+commit 0a29c57b76624723b6b00c027e0e992d130ace49 upstream.
 
-When CONFIG_KASAN is set, we can use relatively large amounts of kernel
-stack space:
+Add two Dell platform for headset mode.
 
-net/caif/cfctrl.c:555:1: warning: the frame size of 1600 bytes is larger than 1280 bytes [-Wframe-larger-than=]
+[ Note: this is a further correction / addition of the previous
+  pin-based quirks for Dell machines; another entry for ALC236 with
+  the d-mic pin 0x12 and an entry for ALC295 -- tiwai ]
 
-This adds convenience wrappers around cfpkt_extr_head(), which is responsible
-for most of the stack growth. With those wrapper functions, gcc apparently
-starts reusing the stack slots for each instance, thus avoiding the
-problem.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Fixes: b26e36b7ef36 ("ALSA: hda/realtek - add two more pin configuration sets to quirk table")
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/caif/cfpkt.h |   27 +++++++++++++++++++++++++
- net/caif/cfctrl.c        |   50 ++++++++++++++++++++---------------------------
- 2 files changed, 49 insertions(+), 28 deletions(-)
+ sound/pci/hda/patch_realtek.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/include/net/caif/cfpkt.h
-+++ b/include/net/caif/cfpkt.h
-@@ -32,6 +32,33 @@ void cfpkt_destroy(struct cfpkt *pkt);
-  */
- int cfpkt_extr_head(struct cfpkt *pkt, void *data, u16 len);
- 
-+static inline u8 cfpkt_extr_head_u8(struct cfpkt *pkt)
-+{
-+	u8 tmp;
-+
-+	cfpkt_extr_head(pkt, &tmp, 1);
-+
-+	return tmp;
-+}
-+
-+static inline u16 cfpkt_extr_head_u16(struct cfpkt *pkt)
-+{
-+	__le16 tmp;
-+
-+	cfpkt_extr_head(pkt, &tmp, 2);
-+
-+	return le16_to_cpu(tmp);
-+}
-+
-+static inline u32 cfpkt_extr_head_u32(struct cfpkt *pkt)
-+{
-+	__le32 tmp;
-+
-+	cfpkt_extr_head(pkt, &tmp, 4);
-+
-+	return le32_to_cpu(tmp);
-+}
-+
- /*
-  * Peek header from packet.
-  * Reads data from packet without changing packet.
---- a/net/caif/cfctrl.c
-+++ b/net/caif/cfctrl.c
-@@ -352,15 +352,14 @@ static int cfctrl_recv(struct cflayer *l
- 	u8 cmdrsp;
- 	u8 cmd;
- 	int ret = -1;
--	u16 tmp16;
- 	u8 len;
- 	u8 param[255];
--	u8 linkid;
-+	u8 linkid = 0;
- 	struct cfctrl *cfctrl = container_obj(layer);
- 	struct cfctrl_request_info rsp, *req;
- 
- 
--	cfpkt_extr_head(pkt, &cmdrsp, 1);
-+	cmdrsp = cfpkt_extr_head_u8(pkt);
- 	cmd = cmdrsp & CFCTRL_CMD_MASK;
- 	if (cmd != CFCTRL_CMD_LINK_ERR
- 	    && CFCTRL_RSP_BIT != (CFCTRL_RSP_BIT & cmdrsp)
-@@ -378,13 +377,12 @@ static int cfctrl_recv(struct cflayer *l
- 			u8 physlinkid;
- 			u8 prio;
- 			u8 tmp;
--			u32 tmp32;
- 			u8 *cp;
- 			int i;
- 			struct cfctrl_link_param linkparam;
- 			memset(&linkparam, 0, sizeof(linkparam));
- 
--			cfpkt_extr_head(pkt, &tmp, 1);
-+			tmp = cfpkt_extr_head_u8(pkt);
- 
- 			serv = tmp & CFCTRL_SRV_MASK;
- 			linkparam.linktype = serv;
-@@ -392,13 +390,13 @@ static int cfctrl_recv(struct cflayer *l
- 			servtype = tmp >> 4;
- 			linkparam.chtype = servtype;
- 
--			cfpkt_extr_head(pkt, &tmp, 1);
-+			tmp = cfpkt_extr_head_u8(pkt);
- 			physlinkid = tmp & 0x07;
- 			prio = tmp >> 3;
- 
- 			linkparam.priority = prio;
- 			linkparam.phyid = physlinkid;
--			cfpkt_extr_head(pkt, &endpoint, 1);
-+			endpoint = cfpkt_extr_head_u8(pkt);
- 			linkparam.endpoint = endpoint & 0x03;
- 
- 			switch (serv) {
-@@ -407,45 +405,43 @@ static int cfctrl_recv(struct cflayer *l
- 				if (CFCTRL_ERR_BIT & cmdrsp)
- 					break;
- 				/* Link ID */
--				cfpkt_extr_head(pkt, &linkid, 1);
-+				linkid = cfpkt_extr_head_u8(pkt);
- 				break;
- 			case CFCTRL_SRV_VIDEO:
--				cfpkt_extr_head(pkt, &tmp, 1);
-+				tmp = cfpkt_extr_head_u8(pkt);
- 				linkparam.u.video.connid = tmp;
- 				if (CFCTRL_ERR_BIT & cmdrsp)
- 					break;
- 				/* Link ID */
--				cfpkt_extr_head(pkt, &linkid, 1);
-+				linkid = cfpkt_extr_head_u8(pkt);
- 				break;
- 
- 			case CFCTRL_SRV_DATAGRAM:
--				cfpkt_extr_head(pkt, &tmp32, 4);
- 				linkparam.u.datagram.connid =
--				    le32_to_cpu(tmp32);
-+				    cfpkt_extr_head_u32(pkt);
- 				if (CFCTRL_ERR_BIT & cmdrsp)
- 					break;
- 				/* Link ID */
--				cfpkt_extr_head(pkt, &linkid, 1);
-+				linkid = cfpkt_extr_head_u8(pkt);
- 				break;
- 			case CFCTRL_SRV_RFM:
- 				/* Construct a frame, convert
- 				 * DatagramConnectionID
- 				 * to network format long and copy it out...
- 				 */
--				cfpkt_extr_head(pkt, &tmp32, 4);
- 				linkparam.u.rfm.connid =
--				  le32_to_cpu(tmp32);
-+				    cfpkt_extr_head_u32(pkt);
- 				cp = (u8 *) linkparam.u.rfm.volume;
--				for (cfpkt_extr_head(pkt, &tmp, 1);
-+				for (tmp = cfpkt_extr_head_u8(pkt);
- 				     cfpkt_more(pkt) && tmp != '\0';
--				     cfpkt_extr_head(pkt, &tmp, 1))
-+				     tmp = cfpkt_extr_head_u8(pkt))
- 					*cp++ = tmp;
- 				*cp = '\0';
- 
- 				if (CFCTRL_ERR_BIT & cmdrsp)
- 					break;
- 				/* Link ID */
--				cfpkt_extr_head(pkt, &linkid, 1);
-+				linkid = cfpkt_extr_head_u8(pkt);
- 
- 				break;
- 			case CFCTRL_SRV_UTIL:
-@@ -454,13 +450,11 @@ static int cfctrl_recv(struct cflayer *l
- 				 * to network format long and copy it out...
- 				 */
- 				/* Fifosize KB */
--				cfpkt_extr_head(pkt, &tmp16, 2);
- 				linkparam.u.utility.fifosize_kb =
--				    le16_to_cpu(tmp16);
-+				    cfpkt_extr_head_u16(pkt);
- 				/* Fifosize bufs */
--				cfpkt_extr_head(pkt, &tmp16, 2);
- 				linkparam.u.utility.fifosize_bufs =
--				    le16_to_cpu(tmp16);
-+				    cfpkt_extr_head_u16(pkt);
- 				/* name */
- 				cp = (u8 *) linkparam.u.utility.name;
- 				caif_assert(sizeof(linkparam.u.utility.name)
-@@ -468,24 +462,24 @@ static int cfctrl_recv(struct cflayer *l
- 				for (i = 0;
- 				     i < UTILITY_NAME_LENGTH
- 				     && cfpkt_more(pkt); i++) {
--					cfpkt_extr_head(pkt, &tmp, 1);
-+					tmp = cfpkt_extr_head_u8(pkt);
- 					*cp++ = tmp;
- 				}
- 				/* Length */
--				cfpkt_extr_head(pkt, &len, 1);
-+				len = cfpkt_extr_head_u8(pkt);
- 				linkparam.u.utility.paramlen = len;
- 				/* Param Data */
- 				cp = linkparam.u.utility.params;
- 				while (cfpkt_more(pkt) && len--) {
--					cfpkt_extr_head(pkt, &tmp, 1);
-+					tmp = cfpkt_extr_head_u8(pkt);
- 					*cp++ = tmp;
- 				}
- 				if (CFCTRL_ERR_BIT & cmdrsp)
- 					break;
- 				/* Link ID */
--				cfpkt_extr_head(pkt, &linkid, 1);
-+				linkid = cfpkt_extr_head_u8(pkt);
- 				/* Length */
--				cfpkt_extr_head(pkt, &len, 1);
-+				len = cfpkt_extr_head_u8(pkt);
- 				/* Param Data */
- 				cfpkt_extr_head(pkt, &param, len);
- 				break;
-@@ -522,7 +516,7 @@ static int cfctrl_recv(struct cflayer *l
- 		}
- 		break;
- 	case CFCTRL_CMD_LINK_DESTROY:
--		cfpkt_extr_head(pkt, &linkid, 1);
-+		linkid = cfpkt_extr_head_u8(pkt);
- 		cfctrl->res.linkdestroy_rsp(cfctrl->serv.layer.up, linkid);
- 		break;
- 	case CFCTRL_CMD_LINK_ERR:
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6745,6 +6745,10 @@ static const struct snd_hda_pin_quirk al
+ 		{0x21, 0x02211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 		{0x21, 0x02211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
++		{0x12, 0x40000000},
++		{0x14, 0x90170110},
++		{0x21, 0x02211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1028, "Dell", ALC255_FIXUP_DELL2_MIC_NO_PRESENCE,
+ 		{0x14, 0x90170110},
+ 		{0x21, 0x02211020}),
+@@ -6986,6 +6990,9 @@ static const struct snd_hda_pin_quirk al
+ 		ALC292_STANDARD_PINS,
+ 		{0x13, 0x90a60140}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
++		{0x14, 0x90170110},
++		{0x21, 0x04211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 		ALC295_STANDARD_PINS,
+ 		{0x17, 0x21014020},
+ 		{0x18, 0x21a19030}),
 
 
