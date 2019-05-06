@@ -4,57 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F501C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5EEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3203921530
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0745420449
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153786;
-	bh=u9oHRNAihdMwpZi3InYE8PYCFtu3+h1jANOTHuC5Aus=;
+	s=default; t=1557153790;
+	bh=JfTKtXFNOHSrgjA7GMHgaGf6E7mV96kS+hHxxaVNAnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oX+0SrrHyGFAYCW48iXJ586S3QU0LlDca64oDJuBA5d6fTbFqh90VCfuE1+QIWttN
-	 a6byQ3oWN2mhNBmJlEZtgEB10JBjt7ciURxu7+dxzUbSlhwREKj0VdKf1KkQLg7+Ek
-	 vcbdEo2odP22bQDPpp2Pf6uPP4V4WjvTvxL7MhQc=
+	b=y7DlNmOGlX3ZKDH93sMUZhhAWYiDkn6UBA4UUm0CWwMU5+9dS6530ljbT6qWrwZvY
+	 O0/c6BbFJE4fPASuXy83djvciXsus/7yjP1pdlZ+iXrCy7jXYMGkupBhK5CKPVbGgL
+	 VmLQbRey1HA4OeVGlccssxrK1pmU+HPvzsNLtbLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbfEFOnE (ORCPT
+        id S1728618AbfEFOnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:43:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38186 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728588AbfEFOnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:00 -0400
+        id S1727549AbfEFOnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14D7A214AF;
-        Mon,  6 May 2019 14:42:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0DBF216C4;
+        Mon,  6 May 2019 14:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153779;
-        bh=u9oHRNAihdMwpZi3InYE8PYCFtu3+h1jANOTHuC5Aus=;
+        s=default; t=1557153782;
+        bh=JfTKtXFNOHSrgjA7GMHgaGf6E7mV96kS+hHxxaVNAnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=piTjqxkLixlzMArX/g5Vi2fOEzSoRzfg4FmAGfq1IHcezoA/Z4hZuieBWrPUQOL7D
-         NcmhdPyY4K+8VTFIyCEChmdGqGMe7F7vCFjD53uHyCtRe9xmtPEr4tJfC876m9xGDU
-         0EX+GU06F62w/CUB8xTiKRYpSr3BNuVUYdJFq0rM=
+        b=mEo6Uv+vhhP+yv1H/k/i8WnEh+YCekL5mVDU5LnMR/zrWMjprMbZuYSMMpox7+9Lu
+         7CCM2mLalWgYtCGVBgpr466I19rZqOXca+Q9XLtA8DhutBzPm4s+S4acFXFFJuInOL
+         EZiX4B1KiocoTE/Y8i/6b2K6Cz9RhHqvjkd6K97M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Qian Cai <cai@lca.pw>, Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Avi Kivity <avi@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Yufen Yu <yuyufen@huawei.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 62/99] kmemleak: powerpc: skip scanning holes in the .bss section
-Date:   Mon,  6 May 2019 16:32:35 +0200
-Message-Id: <20190506143059.710412844@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 63/99] hugetlbfs: fix memory leak for resv_map
+Date:   Mon,  6 May 2019 16:32:36 +0200
+Message-Id: <20190506143059.813682386@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -67,104 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 298a32b132087550d3fa80641ca58323c5dfd4d9 ]
+[ Upstream commit 58b6e5e8f1addd44583d61b0a03c0f5519527e35 ]
 
-Commit 2d4f567103ff ("KVM: PPC: Introduce kvm_tmp framework") adds
-kvm_tmp[] into the .bss section and then free the rest of unused spaces
-back to the page allocator.
+When mknod is used to create a block special file in hugetlbfs, it will
+allocate an inode and kmalloc a 'struct resv_map' via resv_map_alloc().
+inode->i_mapping->private_data will point the newly allocated resv_map.
+However, when the device special file is opened bd_acquire() will set
+inode->i_mapping to bd_inode->i_mapping.  Thus the pointer to the
+allocated resv_map is lost and the structure is leaked.
 
-kernel_init
-  kvm_guest_init
-    kvm_free_tmp
-      free_reserved_area
-        free_unref_page
-          free_unref_page_prepare
+Programs to reproduce:
+        mount -t hugetlbfs nodev hugetlbfs
+        mknod hugetlbfs/dev b 0 0
+        exec 30<> hugetlbfs/dev
+        umount hugetlbfs/
 
-With DEBUG_PAGEALLOC=y, it will unmap those pages from kernel.  As the
-result, kmemleak scan will trigger a panic when it scans the .bss
-section with unmapped pages.
+resv_map structures are only needed for inodes which can have associated
+page allocations.  To fix the leak, only allocate resv_map for those
+inodes which could possibly be associated with page allocations.
 
-This patch creates dedicated kmemleak objects for the .data, .bss and
-potentially .data..ro_after_init sections to allow partial freeing via
-the kmemleak_free_part() in the powerpc kvm_free_tmp() function.
-
-Link: http://lkml.kernel.org/r/20190321171917.62049-1-catalin.marinas@arm.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Reported-by: Qian Cai <cai@lca.pw>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Tested-by: Qian Cai <cai@lca.pw>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Avi Kivity <avi@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krcmar <rkrcmar@redhat.com>
+Link: http://lkml.kernel.org/r/20190401213101.16476-1-mike.kravetz@oracle.com
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Reported-by: Yufen Yu <yuyufen@huawei.com>
+Suggested-by: Yufen Yu <yuyufen@huawei.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/kvm.c |  7 +++++++
- mm/kmemleak.c             | 16 +++++++++++-----
- 2 files changed, 18 insertions(+), 5 deletions(-)
+ fs/hugetlbfs/inode.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
-index 683b5b3805bd..cd381e2291df 100644
---- a/arch/powerpc/kernel/kvm.c
-+++ b/arch/powerpc/kernel/kvm.c
-@@ -22,6 +22,7 @@
- #include <linux/kvm_host.h>
- #include <linux/init.h>
- #include <linux/export.h>
-+#include <linux/kmemleak.h>
- #include <linux/kvm_para.h>
- #include <linux/slab.h>
- #include <linux/of.h>
-@@ -712,6 +713,12 @@ static void kvm_use_magic_page(void)
- 
- static __init void kvm_free_tmp(void)
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index a7fa037b876b..a3a3d256fb0e 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -741,11 +741,17 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 					umode_t mode, dev_t dev)
  {
+ 	struct inode *inode;
+-	struct resv_map *resv_map;
++	struct resv_map *resv_map = NULL;
+ 
+-	resv_map = resv_map_alloc();
+-	if (!resv_map)
+-		return NULL;
 +	/*
-+	 * Inform kmemleak about the hole in the .bss section since the
-+	 * corresponding pages will be unmapped with DEBUG_PAGEALLOC=y.
++	 * Reserve maps are only needed for inodes that can have associated
++	 * page allocations.
 +	 */
-+	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
-+			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
- 	free_reserved_area(&kvm_tmp[kvm_tmp_index],
- 			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
++	if (S_ISREG(mode) || S_ISLNK(mode)) {
++		resv_map = resv_map_alloc();
++		if (!resv_map)
++			return NULL;
++	}
+ 
+ 	inode = new_inode(sb);
+ 	if (inode) {
+@@ -780,8 +786,10 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 			break;
+ 		}
+ 		lockdep_annotate_inode_mutex_key(inode);
+-	} else
+-		kref_put(&resv_map->refs, resv_map_release);
++	} else {
++		if (resv_map)
++			kref_put(&resv_map->refs, resv_map_release);
++	}
+ 
+ 	return inode;
  }
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 17dd883198ae..5912a26e041c 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1501,11 +1501,6 @@ static void kmemleak_scan(void)
- 	}
- 	rcu_read_unlock();
- 
--	/* data/bss scanning */
--	scan_large_block(_sdata, _edata);
--	scan_large_block(__bss_start, __bss_stop);
--	scan_large_block(__start_ro_after_init, __end_ro_after_init);
--
- #ifdef CONFIG_SMP
- 	/* per-cpu sections scanning */
- 	for_each_possible_cpu(i)
-@@ -2036,6 +2031,17 @@ void __init kmemleak_init(void)
- 	}
- 	local_irq_restore(flags);
- 
-+	/* register the data/bss sections */
-+	create_object((unsigned long)_sdata, _edata - _sdata,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+	create_object((unsigned long)__bss_start, __bss_stop - __bss_start,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+	/* only register .data..ro_after_init if not within .data */
-+	if (__start_ro_after_init < _sdata || __end_ro_after_init > _edata)
-+		create_object((unsigned long)__start_ro_after_init,
-+			      __end_ro_after_init - __start_ro_after_init,
-+			      KMEMLEAK_GREY, GFP_ATOMIC);
-+
- 	/*
- 	 * This is the point where tracking allocations is safe. Automatic
- 	 * scanning is started during the late initcall. Add the early logged
 -- 
 2.20.1
 
