@@ -2,124 +2,198 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E12C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC486C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88412082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:37:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="INfFhdA7"
+	by mail.kernel.org (Postfix) with ESMTP id BA4432082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfEFGh5 (ORCPT
+        id S1726034AbfEFGlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 02:37:57 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:8034 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfEFGh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 02:37:57 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44yCjC05gSz9tyfp;
-        Mon,  6 May 2019 08:37:51 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=INfFhdA7; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id swq0gQX0qCwx; Mon,  6 May 2019 08:37:50 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44yCjB60m9z9tyfj;
-        Mon,  6 May 2019 08:37:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1557124670; bh=Fb/CfyK7JfRp2sW54fTJ+6Rf6oUelXmcXkT+5h/45/c=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=INfFhdA7tRmt1FVI8j3SqxuQQESHAfTtVhUtlil3cPOHCm6ZeNyBUx2GTo9b8jjLM
-         CEih9FbiXBnscjZCTE5xN3imiIYeWdQiTJI8c+bamoU0Cz40CVGCf1UnGqMrKYYsrq
-         K23LjJnza09GwLEh1xFaG9ksN2/rzstiozYsWndE=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 57DD78B812;
-        Mon,  6 May 2019 08:37:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id V_RXAT8fPJk7; Mon,  6 May 2019 08:37:55 +0200 (CEST)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.6])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2FA788B74F;
-        Mon,  6 May 2019 08:37:55 +0200 (CEST)
-Subject: Re: [PATCH v2 03/15] powerpc/mm: convert Book3E 64 to pte_fragment
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        aneesh.kumar@linux.ibm.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <cover.1556293738.git.christophe.leroy@c-s.fr>
- <c440b242da6de3823c4ef51f35f38405bbd51430.1556293738.git.christophe.leroy@c-s.fr>
-Message-ID: <0076ad26-9d0e-e408-3521-b8e17669bb04@c-s.fr>
-Date:   Mon, 6 May 2019 08:37:55 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Mon, 6 May 2019 02:41:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42966 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725830AbfEFGlN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 02:41:13 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x466cebw032015
+        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 02:41:12 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2safjbrkjr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:41:12 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Mon, 6 May 2019 07:41:10 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 6 May 2019 07:41:07 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x466f6CU51445868
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 May 2019 06:41:06 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E228952065;
+        Mon,  6 May 2019 06:41:05 +0000 (GMT)
+Received: from [9.145.46.119] (unknown [9.145.46.119])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4AA8D5205A;
+        Mon,  6 May 2019 06:41:05 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 1/7] s390: vfio-ap: wait for queue empty on queue reset
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+ <1556918073-13171-2-git-send-email-akrowiak@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Mon, 6 May 2019 08:41:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <c440b242da6de3823c4ef51f35f38405bbd51430.1556293738.git.christophe.leroy@c-s.fr>
+In-Reply-To: <1556918073-13171-2-git-send-email-akrowiak@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050606-0012-0000-0000-00000318B306
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050606-0013-0000-0000-000021512AA5
+Message-Id: <0bdb1655-4c4e-1982-a842-9dfc7c02a576@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 26/04/2019 à 17:58, Christophe Leroy a écrit :
-> Book3E 64 is the only subarch not using pte_fragment. In order
-> to allow refactorisation, this patch converts it to pte_fragment.
+On 03/05/2019 23:14, Tony Krowiak wrote:
+> Refactors the AP queue reset function to wait until the queue is empty
+> after the PQAP(ZAPQ) instruction is executed to zero out the queue as
+> required by the AP architecture.
 > 
-> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 > ---
->   arch/powerpc/include/asm/mmu_context.h       |  6 -----
->   arch/powerpc/include/asm/nohash/64/mmu.h     |  4 +++-
->   arch/powerpc/include/asm/nohash/64/pgalloc.h | 33 ++++++++++------------------
->   arch/powerpc/mm/Makefile                     |  4 ++--
->   arch/powerpc/mm/mmu_context.c                |  2 +-
->   5 files changed, 18 insertions(+), 31 deletions(-)
+>   drivers/s390/crypto/vfio_ap_ops.c | 35 ++++++++++++++++++++++++++++++++---
+>   1 file changed, 32 insertions(+), 3 deletions(-)
 > 
-[...]
-
-> diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
-> index 3c1bd9fa23cd..138c772d58d1 100644
-> --- a/arch/powerpc/mm/Makefile
-> +++ b/arch/powerpc/mm/Makefile
-> @@ -9,6 +9,7 @@ CFLAGS_REMOVE_slb.o = $(CC_FLAGS_FTRACE)
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 900b9cf20ca5..b88a2a2ba075 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -271,6 +271,32 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>   	return 0;
+>   }
 >   
->   obj-y				:= fault.o mem.o pgtable.o mmap.o \
->   				   init_$(BITS).o pgtable_$(BITS).o \
-> +				   pgtable-frag.o \
->   				   init-common.o mmu_context.o drmem.o
->   obj-$(CONFIG_PPC_MMU_NOHASH)	+= mmu_context_nohash.o tlb_nohash.o \
->   				   tlb_nohash_low.o
-> @@ -17,8 +18,7 @@ hash64-$(CONFIG_PPC_NATIVE)	:= hash_native_64.o
->   obj-$(CONFIG_PPC_BOOK3E_64)   += pgtable-book3e.o
->   obj-$(CONFIG_PPC_BOOK3S_64)	+= pgtable-hash64.o hash_utils_64.o slb.o \
->   				   $(hash64-y) mmu_context_book3s64.o \
-> -				   pgtable-book3s64.o pgtable-frag.o
-> -obj-$(CONFIG_PPC32)		+= pgtable-frag.o
-> +				   pgtable-book3s64.o
+> +static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned long apqi)
+> +{
+> +	struct ap_queue_status status;
+> +	ap_qid_t qid = AP_MKQID(apid, apqi);
+> +	int retry = 5;
+> +
+> +	do {
+> +		status = ap_tapq(qid, NULL);
+> +		switch (status.response_code) {
+> +		case AP_RESPONSE_NORMAL:
+> +			if (status.queue_empty)
+> +				return;
+> +			msleep(20);
 
-Looks like the removal of pgtable-frag.o for CONFIG_PPC_BOOK3S_64 didn't 
-survive the merge.
+NIT: 	Fall through ?
 
-Will send a patch to fix that.
+> +			break;
+> +		case AP_RESPONSE_RESET_IN_PROGRESS:
+> +		case AP_RESPONSE_BUSY:
+> +			msleep(20);
+> +			break;
+> +		default:
+> +			pr_warn("%s: tapq err %02x: %04lx.%02lx may not be empty\n",
+> +				__func__, status.response_code, apid, apqi);
 
-Christophe
+I do not thing the warning sentence is appropriate:
+The only possible errors here are if the AP is not available due to AP 
+checkstop, deconfigured AP or invalid APQN.
 
->   obj-$(CONFIG_PPC_RADIX_MMU)	+= pgtable-radix.o tlb-radix.o
->   obj-$(CONFIG_PPC_BOOK3S_32)	+= ppc_mmu_32.o hash_low_32.o mmu_context_hash32.o
->   obj-$(CONFIG_PPC_BOOK3S)	+= tlb_hash$(BITS).o
+
+> +			return;
+> +		}
+> +	} while (--retry);
+> +}
+> +
+>   /**
+>    * assign_adapter_store
+>    *
+> @@ -790,15 +816,18 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>   	return NOTIFY_OK;
+>   }
+>   
+> -static int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+> -				    unsigned int retry)
+> +int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
+>   {
+>   	struct ap_queue_status status;
+> +	int retry = 5;
+>   
+>   	do {
+>   		status = ap_zapq(AP_MKQID(apid, apqi));
+>   		switch (status.response_code) {
+>   		case AP_RESPONSE_NORMAL:
+> +			vfio_ap_mdev_wait_for_qempty(apid, apqi);
+> +			return 0;
+> +		case AP_RESPONSE_DECONFIGURED:
+
+Since you modify the switch, you can return for all the following cases:
+AP_RESPONSE_DECONFIGURE
+..._CHECKSTOP
+..._INVALID_APQN
+
+
+And you should wait for qempty on AP_RESET_IN_PROGRESS along with 
+AP_RESPONSE_NORMAL
+
+>   			return 0;
+>   		case AP_RESPONSE_RESET_IN_PROGRESS:
+>   		case AP_RESPONSE_BUSY:
+
+While at modifying this function, the AP_RESPONSE_BUSY is not a valid 
+code for ZAPQ, you can remove this.
+
+> @@ -824,7 +853,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>   			     matrix_mdev->matrix.apm_max + 1) {
+>   		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+>   				     matrix_mdev->matrix.aqm_max + 1) {
+> -			ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
+> +			ret = vfio_ap_mdev_reset_queue(apid, apqi);
+
+IMHO, since you are at changing this call, passing the apqn as parameter 
+would be a good simplification.
+
+
+
+>   			/*
+>   			 * Regardless whether a queue turns out to be busy, or
+>   			 * is not operational, we need to continue resetting
+
+Depends on why the reset failed, but this is out of scope.
+
+> 
+
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
