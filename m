@@ -2,185 +2,145 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E8BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5704C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E724820830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B76A2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 05:07:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOHzuPSu"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dwUU0wqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725864AbfEFFDT (ORCPT
+        id S1725855AbfEFFHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 01:03:19 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52204 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfEFFDT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 01:03:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o189so3073224wmb.1;
-        Sun, 05 May 2019 22:03:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=0iwgFxx37HBfD23g1KI0JAhY1B0UoYTsAYZb53CyeGM=;
-        b=XOHzuPSuLJL/Z10dbyoEM7k+gBvAnZCCF6rys475o3DudxtZhkJs94DWcWh36Tx5Q2
-         6veOGvtrG/zfcjByqw9WJr9sF1L89x3/ner70GXftq3Xpx+eO4w5sz5Ep4lFeffoYuQW
-         oz9xDZkMJyxn5G4h3srytj2jHzjlr5jgWbK4WRl5MmDANdruV3ipHTQ8IofQwb030C5D
-         EBLLyRHp4eIZkMck4c/1gyfxR9bwUpbRbor8qXPOMtl3RFWQojQJ4ClZXzcZPLY2jgjW
-         AyJgzRDb5TDXx/JFdJo3p6x5x3KmO+Im1SUL8xkkngPcUtFtYMGh5YwJbIeneqCfAz/f
-         yK9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=0iwgFxx37HBfD23g1KI0JAhY1B0UoYTsAYZb53CyeGM=;
-        b=DSIk4LQcH0RM8osBGxnlRuG7UY04uPHGqedhfRBvquA0KFJdINXoHHYg+bd9Z7pZDc
-         UO/3+qIA54LJrAWwKH5CMTJxxSKrMcPptshCuXZqR94GUPY2+FLqHGKYyxAvKf8vFD3l
-         cdYMYEnXG346HdnYYq6AqUh4xmxU/iAYGc2tIZQNpYfBm8MWETDAzCbaNzMJLoRgpCBf
-         XAqBv2em+gS+4FcUzBvxuG1ibpAMi+fCUM3esbpEx6RCw3cMEPjzxjQsWz5BSRIrOLrk
-         Q6pBK0lGHt/N96hvtS5HXMhHsQMiKfp757tre1RNTQNk4GclMF352xnCcll955BY5YkQ
-         z9uA==
-X-Gm-Message-State: APjAAAUq9OSoDy8e/AF7g7s0qhgwU0i3PGoRnSMibVO5B4fpcHctDCW6
-        aqnRWiksY5cTs5UWldUFTQs=
-X-Google-Smtp-Source: APXvYqxyUHJ5oByujLOvgNslNZ7DkEs7RGhkEdCGJuBgVCX2dCxAWCXjkXO3ymAjpKXP8Uc4QuFjcA==
-X-Received: by 2002:a1c:cf83:: with SMTP id f125mr14014904wmg.96.1557118996660;
-        Sun, 05 May 2019 22:03:16 -0700 (PDT)
-Received: from felia ([2001:16b8:2d26:d900:408f:de1d:7b39:73c4])
-        by smtp.gmail.com with ESMTPSA id j13sm31019135wrd.88.2019.05.05.22.03.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 May 2019 22:03:15 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Mon, 6 May 2019 07:03:00 +0200 (CEST)
-X-X-Sender: lukas@felia
-To:     NeilBrown <neilb@suse.com>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Shaohua Li <shli@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Himanshu Jha <himanshujha199639@gmail.com>,
-        clang-built-linux@googlegroups.com, linux-raid@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] md: properly lock and unlock in rdev_attr_store()
-In-Reply-To: <877ebd693t.fsf@notabene.neil.brown.name>
-Message-ID: <alpine.DEB.2.21.1905060657010.2480@felia>
-References: <20190428104041.11262-1-lukas.bulwahn@gmail.com> <877ebd693t.fsf@notabene.neil.brown.name>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 6 May 2019 01:07:13 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37345 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725710AbfEFFHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 01:07:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44y9hX3h3Tz9s4V;
+        Mon,  6 May 2019 15:07:08 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557119229;
+        bh=FMiZOhRHChN5HmB9f6Nh4VABzWfps63z4dJBq75TmeA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dwUU0wqP6XlfwDxlLDscq+XJ6rPjfLsud2j3ukrsImA9c7ooXRyjUs2XlxE9N9Xi8
+         qj5LFwOC4ufIZkojpUwykuCDIB0HgoWF6CHJysbVYnpDu4YJwFUA9Y0mQ0NaYxyc1N
+         3JSBUYhsWVR9T2PWqV/v+69LN4emPAISg2DXZym1U6guYVWsSP6ZYIZOnc/VAyfhNT
+         weK2EkanW6QGMh0gzR8AARJhc9yHS8+/77H5RO4NSKuadyGnw9+5xN1lEITqtp9v79
+         FmBVdbpA2A4JlnzhxDPDkxZw/RdzVRWcZJzb1xKEGcphble9VgerMtf8mCsLzVuS+S
+         TZQR3XIgb2rMg==
+Date:   Mon, 6 May 2019 15:07:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Abhi Das <adas@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: linux-next: build failure after merge of the block tree
+Message-ID: <20190506150707.618f013d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/gcMpqtS=NShUJ79kEyb321h"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/gcMpqtS=NShUJ79kEyb321h
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi Jens,
 
-On Mon, 29 Apr 2019, NeilBrown wrote:
+After merging the block tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-> On Sun, Apr 28 2019, Lukas Bulwahn wrote:
-> 
-> > rdev_attr_store() should lock and unlock mddev->reconfig_mutex in a
-> > balanced way with mddev_lock() and mddev_unlock().
-> 
-> It does.
-> 
-> >
-> > But when rdev->mddev is NULL, rdev_attr_store() would try to unlock
-> > without locking before. Resolve this locking issue..
-> 
-> This is incorrect.
-> 
-> >
-> > This locking issue was detected with Clang Thread Safety Analyser:
-> 
-> Either the Clang Thread Safety Analyser is broken, or you used it
-> incorrectly.
->
+fs/gfs2/lops.c: In function 'gfs2_end_log_read':
+fs/gfs2/lops.c:394:49: error: macro "bio_for_each_segment_all" passed 4 arg=
+uments, but takes just 3
+  bio_for_each_segment_all(bvec, bio, i, iter_all) {
+                                                 ^
+fs/gfs2/lops.c:394:2: error: 'bio_for_each_segment_all' undeclared (first u=
+se in this function); did you mean 'bio_first_page_all'?
+  bio_for_each_segment_all(bvec, bio, i, iter_all) {
+  ^~~~~~~~~~~~~~~~~~~~~~~~
+  bio_first_page_all
+fs/gfs2/lops.c:394:2: note: each undeclared identifier is reported only onc=
+e for each function it appears in
+fs/gfs2/lops.c:394:26: error: expected ';' before '{' token
+  bio_for_each_segment_all(bvec, bio, i, iter_all) {
+                          ^                        ~
+                          ;
 
-Please ignore this patch.
+Caused by commit
 
-Clang Thread Safety Analyser cannot handle the original code, but can
-handle my semantically equivalent code. I did not get that at first, and
-thought I fixed an issue, but I did not.
+  2b070cfe582b ("block: remove the i argument to bio_for_each_segment_all")
 
-Sorry for the noise.
+interacting with commit
 
-Lukas
- 
-> >
-> > drivers/md/md.c:3393:3: warning: releasing mutex 'mddev->reconfig_mutex' that was not held [-Wthread-safety-analysis]
-> >                 mddev_unlock(mddev);
-> >                 ^
-> >
-> > This warning was reported after annotating mutex functions and
-> > mddev_lock() and mddev_unlock().
-> >
-> > Fixes: 27c529bb8e90 ("md: lock access to rdev attributes properly")
-> > Link: https://groups.google.com/d/topic/clang-built-linux/CvBiiQLB0H4/discussion
-> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> > ---
-> > Arnd, Neil, here a proposal to fix lock and unlocking asymmetry.
-> >
-> > I quite sure that if mddev is NULL, it should just return.
-> 
-> If mddev is NULL, the code does return (with -EBUSY).  All you've done
-> is change things so it returns from a different part of the code.  You
-> haven't changed the behaviour at all.
-> 
-> >
-> > I am still puzzled if the return value from mddev_lock() should be really
-> > return by rdev_attr_store() when it is not 0. But that was the behaviour
-> > before, so I will keep it that way.
-> 
-> Certainly it should. mddev_lock() either returns 0 to indicate success
-> or -EINTR if it received a signal.
-> If it was interrupted by a signal, then rdev_attr_store() should return
-> -EINTR as well.
-> 
-> As Arnd tried to explain, the only possible problem here is that the C
-> compiler is allowed to assume that rdev->mddev never changes value, so
-> in
->    rv = mddev ? mddev_lock(mddev) : =EBUSY
-> 
-> it could load rdev->mddev, test if it is NULL, then load it again and
-> pass that value to mddev_lock() - the new value might be NULL which
-> would cause problems.
-> 
-> This could be fixed by changing
-> 
-> 	struct mddev *mddev = rdev->mddev;
-> to
-> 	struct mddev *mddev = READ_ONCE(rdev->mddev);
-> 
-> That is the only change that might be useful here.
-> 
-> NeilBrown
-> 
-> 
-> >
-> >  drivers/md/md.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/md/md.c b/drivers/md/md.c
-> > index 05ffffb8b769..a9735d8f1e70 100644
-> > --- a/drivers/md/md.c
-> > +++ b/drivers/md/md.c
-> > @@ -3384,7 +3384,9 @@ rdev_attr_store(struct kobject *kobj, struct attribute *attr,
-> >  		return -EIO;
-> >  	if (!capable(CAP_SYS_ADMIN))
-> >  		return -EACCES;
-> > -	rv = mddev ? mddev_lock(mddev): -EBUSY;
-> > +	if (!mddev)
-> > +		return -EBUSY;
-> > +	rv = mddev_lock(mddev);
-> >  	if (!rv) {
-> >  		if (rdev->mddev == NULL)
-> >  			rv = -EBUSY;
-> > -- 
-> > 2.17.1
-> 
+  e21e191994af ("gfs2: read journal in large chunks")
+
+from the gfs2 tree.
+
+I have applied the following patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Mon, 6 May 2019 14:57:42 +1000
+Subject: [PATCH] gfs2: fix for "block: remove the i argument to bio_for_eac=
+h_segment_all"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ fs/gfs2/lops.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/fs/gfs2/lops.c b/fs/gfs2/lops.c
+index 3b3dd2ef53f7..33ab662c9aac 100644
+--- a/fs/gfs2/lops.c
++++ b/fs/gfs2/lops.c
+@@ -388,10 +388,9 @@ static void gfs2_end_log_read(struct bio *bio)
+ {
+ 	struct page *page;
+ 	struct bio_vec *bvec;
+-	int i;
+ 	struct bvec_iter_all iter_all;
+=20
+-	bio_for_each_segment_all(bvec, bio, i, iter_all) {
++	bio_for_each_segment_all(bvec, bio, iter_all) {
+ 		page =3D bvec->bv_page;
+ 		if (bio->bi_status) {
+ 			int err =3D blk_status_to_errno(bio->bi_status);
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gcMpqtS=NShUJ79kEyb321h
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzPwPsACgkQAVBC80lX
+0GwaqQf+Kb93aXAqHVmB3fNXzovRjENYa+yP4ysCuDIp+VjqvWM9OQicrMA4Ma44
+DECEBder32fMiEMuj1m2SMt7+jYAxZbKvd7lg4EU+v2XLWPnFFrPLG4Vay7x3YM6
+iqbzUi+AcDIIpuPKBta/o41KDWQLkI8MVMVAVbTNka0PKnMT9c20KeK77gi+rZMc
+fg+imuEQgvztuYLS1+BpZAVxTpD4IQ+eJdTEIob9M9ZWMTibGWZ391C1YCSoOi4H
+QmJXxx1XSnPOp7ivw0jESunwjBr/kwPglbqTxfiVg9E56zVI3Kw7HoWSQLlcxgvQ
+jfTYQLR0MBJS6j1osKybBDFV7mefpA==
+=CEyL
+-----END PGP SIGNATURE-----
+
+--Sig_/gcMpqtS=NShUJ79kEyb321h--
