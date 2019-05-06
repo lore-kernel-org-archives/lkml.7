@@ -2,117 +2,73 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC06DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E149C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5A82054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1442054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:19:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="KonHm0ud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfEFNTV (ORCPT
+        id S1726340AbfEFNT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 09:19:21 -0400
-Received: from mga12.intel.com ([192.55.52.136]:46398 "EHLO mga12.intel.com"
+        Mon, 6 May 2019 09:19:28 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55758 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725853AbfEFNTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 09:19:21 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 06:19:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
-   d="scan'208";a="155548586"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.164]) ([10.237.72.164])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 May 2019 06:19:18 -0700
-Subject: Re: [PATCH 1/2] usb: xhci: Make it possible to not have a secondary
- HCD (3.0)
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>
-References: <20190502045631.229386-1-drinkcat@chromium.org>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <6844539f-3d5e-e3ff-b498-390cdc731880@linux.intel.com>
-Date:   Mon, 6 May 2019 16:21:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1725853AbfEFNT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 09:19:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=/39Byr8Jz1d2Cq9RZc884MwZCtSwkYNYQBE+LN5ZoMk=; b=KonHm0ud0tHXY8V6u9Y7S9GRJ4
+        caA7TK2xPZ7euRsB90vYTt67HPHd3ui/AzbKSGb439axZfxMfIjQ3VZuV7YKUxD2hbNDAuE52+aaD
+        dWD4Ta0yqq9x4lNYcvgxqC/9Xh5NlWev5/szH72aMCzBxow4cX3I9YL8geSvSZEQKgOg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hNdWZ-0004xc-1J; Mon, 06 May 2019 15:19:19 +0200
+Date:   Mon, 6 May 2019 15:19:19 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, palmer@sifive.com,
+        paul.walmsley@sifive.com, peter@korsgaard.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 v1 1/3] dt-bindings: i2c: add documentation for adding
+ SiFive I2C driver
+Message-ID: <20190506131919.GC15291@lunn.ch>
+References: <1557147240-29551-1-git-send-email-sagar.kadam@sifive.com>
+ <1557147240-29551-2-git-send-email-sagar.kadam@sifive.com>
 MIME-Version: 1.0
-In-Reply-To: <20190502045631.229386-1-drinkcat@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557147240-29551-2-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2.5.2019 7.56, Nicolas Boichat wrote:
-> Some XHCI controllers may not have any USB 3.0 port, in this case, it
-> is not useful to create add hcd->shared_hcd, which has 2 main
-> downsides:
->   - A useless USB 3.0 root hub is created.
->   - A warning is thrown on boot:
-> hub 2-0:1.0: config failed, hub doesn't have any ports! (err -19)
+On Mon, May 06, 2019 at 06:23:58PM +0530, Sagar Shrikant Kadam wrote:
+> Add DT binding for OpenCore's based i2c device as found in
+> FU540 Chipset on HiFive Unleashed Platform (Rev A00).
 > 
-> The change is mostly about checking if hcd->shared_hcd is NULL before
-> accessing it. The one special case is in xhci_run, where we need to
-> call xhci_run_finished immediately, if there is no secondary hcd.
-
-To me it looks like this creates an controller starting issue for
-xHC hardware that have both usb2 and usb3 ports.
-
-When we have usb3 ports xhci->shared_hcd is not set yet when xhci_run is called
-the first time. We will end up starting the xHC before properly setting up the secondary hcd.
-
-See further down for details
-
+> The doc explains, how to add DT support for I2C devices.
 > 
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 > ---
-> 
-> This is a respin of https://lore.kernel.org/patchwork/patch/863993/,
-> hopefully addressing the comments there. Note that I dropped the change
-> in xhci-plat.c, as I do not have a device to test it, but made a
-> similar change in xhci-mtk.c, in the next patch.
-> 
-> (the @apm.com addresses seem to bounce, so I added some
-> @amperecomputing.com instead, if somebody there can track back the
-> original issue, I'm happy to provide a patch for xhci-plat.c as well)
-> 
-> drivers/usb/host/xhci-hub.c |  7 ++++--
->   drivers/usb/host/xhci.c     | 45 +++++++++++++++++++++++++++----------
->   2 files changed, 38 insertions(+), 14 deletions(-)
-> 
+>  .../devicetree/bindings/i2c/i2c-sifive.txt         | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sifive.txt
 
-...
+Hi Sagar
 
-> @@ -698,6 +703,10 @@ int xhci_run(struct usb_hcd *hcd)
->   
->   	xhci_debugfs_init(xhci);
->   
-> +	/* There is no secondary HCD, start the host controller immediately. */
-> +	if (!xhci->shared_hcd)
-> +		return xhci_run_finished(xhci);
-> +
+Please extend the existing i2c-ocores.txt file, not add a new file.
 
-PCI xHC controllers with both usb2 and usb3 ports will be started before usb3 parts are properly set up.
-
-xhci_pci_probe()
-   usb_hcd_pci_probe()
-     usb_add_hcd()
-       hcd->driver->start(hcd)  // .start = xhci_run
-         xhci_run()
-           if (!xhci->shared_hcd)  // TRUE as xhci->shared_hcd is not yet set,
-	    return xhci_run_finished(xhci)  // starting controller too early here
-   xhci->shared_hcd = usb_create_shared_hcd()   // now xhci->shared_hcd is set.
-
--Mathias
+       Andrew
