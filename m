@@ -2,261 +2,175 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D51FC04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A95C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E95420675
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8252087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:20:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cmUNiJ98"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfEFUP7 (ORCPT
+        id S1726544AbfEFUUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 16:15:59 -0400
-Received: from mga06.intel.com ([134.134.136.31]:3643 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbfEFUP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 16:15:59 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 13:15:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,439,1549958400"; 
-   d="p7s'?scan'208";a="146986828"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by fmsmga008.fm.intel.com with ESMTP; 06 May 2019 13:15:57 -0700
-Received: from orsmsx152.amr.corp.intel.com (10.22.226.39) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 6 May 2019 13:15:57 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.212]) by
- ORSMSX152.amr.corp.intel.com ([169.254.8.32]) with mapi id 14.03.0415.000;
- Mon, 6 May 2019 13:15:56 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zub@linux.fjfi.cvut.cz" <zub@linux.fjfi.cvut.cz>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "sbauer@plzdonthack.me" <sbauer@plzdonthack.me>,
-        "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "jonas.rabenstein@studium.uni-erlangen.de" 
-        <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: Re: [PATCH 3/3] block: sed-opal: check size of shadow mbr
-Thread-Topic: [PATCH 3/3] block: sed-opal: check size of shadow mbr
-Thread-Index: AQHU/6tn8kaaiz8S70Ofjh7OSj2Sf6ZfBv2A
-Date:   Mon, 6 May 2019 20:15:56 +0000
-Message-ID: <36dab0ec1f7e0f974e035abb597bb38be517c959.camel@intel.com>
-References: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
-         <1556666459-17948-4-git-send-email-zub@linux.fjfi.cvut.cz>
-In-Reply-To: <1556666459-17948-4-git-send-email-zub@linux.fjfi.cvut.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.232.115.159]
-Content-Type: multipart/signed; micalg=sha-1;
-        protocol="application/x-pkcs7-signature"; boundary="=-aNKiBgGvlrizwhd+Nayx"
+        Mon, 6 May 2019 16:20:11 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51555 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfEFUUK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 16:20:10 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o189so6461654wmb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 13:20:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5KVj2cIFo4sf42IOvLasjrLGxhKPAN71ZeOyGOXbgEg=;
+        b=cmUNiJ98WYG7sItDJoJr3sz3tx87o4/cseKFyRTB6KPblTqcD6p2X4Cl9Dt7uhRrbX
+         hwg3vsZ07HYU/TiXZVulJMltTrF/i8J+DlWJ8kYkqKoW3peDCioHiWUYbjftKe6qPglk
+         +yDK+zpMcVMUEQBzOIhOI3WfpIT6a5+4NO1/0EUR7vAT5tyU2DdWvP3oWcTcWKXeX+YG
+         C6Q7Hq5oLAY6JvccnQw8frAjd7/cZts981BUwUlJrmEuKmxiAeJ9UADewVtE7o06DJu9
+         8etmdNoNdE/3u5DC1DPp9fes9/FTjtks4PT0YKvOg69TSeWpiw1vKegIHhwPwDgriAPk
+         EYsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5KVj2cIFo4sf42IOvLasjrLGxhKPAN71ZeOyGOXbgEg=;
+        b=bURqFuzKnwqYxkAES3gajhry6AvFbCGB5FPhrbjcIMFf22qz3a7uSY4Y+kJo2Fh5qP
+         3inAAfj89DU5Jb0mVh17XcUvZZZ5CvOHaJ4e5tJTTU5jm7//F4GTETRobAy7qlSlLjpo
+         gKQcacyj9Ltg2LXpuwGmZZrqODHkeKlaPfx7PTuZZAmXAG9F4JBUDlfjzubcN1+JTwyZ
+         MEeHfD8zY4iTgZNBDVjyePHBlEJ1+ug1PaM+DBfr06Apg4K4RSfLhoGEaI+3RSeDucEu
+         3KvhGtRxD5cw0BG93qFM2fYpXvNlwqIi0aGSKR//fQkuBRRR7FiEUq9BVFbAvhU+ejXK
+         Dx3w==
+X-Gm-Message-State: APjAAAVDW61RMIfuXT801EvAhLDJIQDk/BR0BH7ebLBMGSS/smJg6dIT
+        7KA99vr1ikev2Cw1MXLYRfY6PqUdpz82i/6haqeQvQ==
+X-Google-Smtp-Source: APXvYqw6YN+mxes4KsRlBEwg0TxslCYp4jV8sOumNLnEbdftzDK/6jIQfDvI0cZj8kywJzf8b7wnJVv8SPDDt1cLFo8=
+X-Received: by 2002:a05:600c:2248:: with SMTP id a8mr18696267wmm.75.1557174006447;
+ Mon, 06 May 2019 13:20:06 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190501003001.186239-1-jemoreira@google.com> <20190501190831.GF22391@stefanha-x1.localdomain>
+ <20190502082045.u3xypjbac5npbhtc@steredhat.homenet.telecomitalia.it>
+In-Reply-To: <20190502082045.u3xypjbac5npbhtc@steredhat.homenet.telecomitalia.it>
+From:   Jorge Moreira Broche <jemoreira@google.com>
+Date:   Mon, 6 May 2019 13:19:55 -0700
+Message-ID: <CAJi--POaVsfprbp5na5BvR=VNONKGfFya_BnmTzzcWmOQ1DM2Q@mail.gmail.com>
+Subject: Re: [PATCH] vsock/virtio: Initialize core virtio vsock before
+ registering the driver
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        kernel-team@android.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-aNKiBgGvlrizwhd+Nayx
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> On Wed, May 01, 2019 at 03:08:31PM -0400, Stefan Hajnoczi wrote:
+> > On Tue, Apr 30, 2019 at 05:30:01PM -0700, Jorge E. Moreira wrote:
+> > > Avoid a race in which static variables in net/vmw_vsock/af_vsock.c are
+> > > accessed (while handling interrupts) before they are initialized.
+> > >
+> > >
+> > > [    4.201410] BUG: unable to handle kernel paging request at ffffffffffffffe8
+> > > [    4.207829] IP: vsock_addr_equals_addr+0x3/0x20
+> > > [    4.211379] PGD 28210067 P4D 28210067 PUD 28212067 PMD 0
+> > > [    4.211379] Oops: 0000 [#1] PREEMPT SMP PTI
+> > > [    4.211379] Modules linked in:
+> > > [    4.211379] CPU: 1 PID: 30 Comm: kworker/1:1 Not tainted 4.14.106-419297-gd7e28cc1f241 #1
+> > > [    4.211379] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> > > [    4.211379] Workqueue: virtio_vsock virtio_transport_rx_work
+> > > [    4.211379] task: ffffa3273d175280 task.stack: ffffaea1800e8000
+> > > [    4.211379] RIP: 0010:vsock_addr_equals_addr+0x3/0x20
+> > > [    4.211379] RSP: 0000:ffffaea1800ebd28 EFLAGS: 00010286
+> > > [    4.211379] RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffffffffb94e42f0
+> > > [    4.211379] RDX: 0000000000000400 RSI: ffffffffffffffe0 RDI: ffffaea1800ebdd0
+> > > [    4.211379] RBP: ffffaea1800ebd58 R08: 0000000000000001 R09: 0000000000000001
+> > > [    4.211379] R10: 0000000000000000 R11: ffffffffb89d5d60 R12: ffffaea1800ebdd0
+> > > [    4.211379] R13: 00000000828cbfbf R14: 0000000000000000 R15: ffffaea1800ebdc0
+> > > [    4.211379] FS:  0000000000000000(0000) GS:ffffa3273fd00000(0000) knlGS:0000000000000000
+> > > [    4.211379] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [    4.211379] CR2: ffffffffffffffe8 CR3: 000000002820e001 CR4: 00000000001606e0
+> > > [    4.211379] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > [    4.211379] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > [    4.211379] Call Trace:
+> > > [    4.211379]  ? vsock_find_connected_socket+0x6c/0xe0
+> > > [    4.211379]  virtio_transport_recv_pkt+0x15f/0x740
+> > > [    4.211379]  ? detach_buf+0x1b5/0x210
+> > > [    4.211379]  virtio_transport_rx_work+0xb7/0x140
+> > > [    4.211379]  process_one_work+0x1ef/0x480
+> > > [    4.211379]  worker_thread+0x312/0x460
+> > > [    4.211379]  kthread+0x132/0x140
+> > > [    4.211379]  ? process_one_work+0x480/0x480
+> > > [    4.211379]  ? kthread_destroy_worker+0xd0/0xd0
+> > > [    4.211379]  ret_from_fork+0x35/0x40
+> > > [    4.211379] Code: c7 47 08 00 00 00 00 66 c7 07 28 00 c7 47 08 ff ff ff ff c7 47 04 ff ff ff ff c3 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 8b 47 08 <3b> 46 08 75 0a 8b 47 04 3b 46 04 0f 94 c0 c3 31 c0 c3 90 66 2e
+> > > [    4.211379] RIP: vsock_addr_equals_addr+0x3/0x20 RSP: ffffaea1800ebd28
+> > > [    4.211379] CR2: ffffffffffffffe8
+> > > [    4.211379] ---[ end trace f31cc4a2e6df3689 ]---
+> > > [    4.211379] Kernel panic - not syncing: Fatal exception in interrupt
+> > > [    4.211379] Kernel Offset: 0x37000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> > > [    4.211379] Rebooting in 5 seconds..
+> > >
+> > > Fixes: 22b5c0b63f32 ("vsock/virtio: fix kernel panic after device hot-unplug")
+> > > Cc: Stefan Hajnoczi <stefanha@redhat.com>
+> > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > Cc: kvm@vger.kernel.org
+> > > Cc: virtualization@lists.linux-foundation.org
+> > > Cc: netdev@vger.kernel.org
+> > > Cc: kernel-team@android.com
+> > > Cc: stable@vger.kernel.org [4.9+]
+> > > Signed-off-by: Jorge E. Moreira <jemoreira@google.com>
+> > > ---
+> > >  net/vmw_vsock/virtio_transport.c | 13 ++++++-------
+> > >  1 file changed, 6 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+> > > index 15eb5d3d4750..96ab344f17bb 100644
+> > > --- a/net/vmw_vsock/virtio_transport.c
+> > > +++ b/net/vmw_vsock/virtio_transport.c
+> > > @@ -702,28 +702,27 @@ static int __init virtio_vsock_init(void)
+> > >     if (!virtio_vsock_workqueue)
+> > >             return -ENOMEM;
+> > >
+> > > -   ret = register_virtio_driver(&virtio_vsock_driver);
+> > > +   ret = vsock_core_init(&virtio_transport.transport);
+> >
+> > Have you checked that all transport callbacks are safe even if another
+> > CPU calls them while virtio_vsock_probe() is executing on another CPU?
+> >
+>
+> I have the same doubt.
+>
+> What do you think to take the 'the_virtio_vsock_mutex' in the
+> virtio_vsock_init(), keeping the previous order?
+>
+> This should prevent this issue because the virtio_vsock_probe() remains
+> blocked in the mutex until the end of vsock_core_init().
+>
+> Cheers,
+> Stefano
 
-lgtm again
+Hi Stefan, Stefano,
+Sorry for the late reply.
 
-Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
+@Stefan
+The order of vsock_core_exit() does not need to be changed to fix the
+bug I found, but not changing it means the exit function is not
+symmetric to the init function.
 
-On Wed, 2019-05-01 at 01:20 +0200, David Kozub wrote:
-> From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
->=20
-> Check whether the shadow mbr does fit in the provided space on the
-> target. Also a proper firmware should handle this case and return an
-> error we may prevent problems or even damage with crappy firmwares.
->=20
-> Signed-off-by: Jonas Rabenstein <
-> jonas.rabenstein@studium.uni-erlangen.de>
-> Signed-off-by: David Kozub <zub@linux.fjfi.cvut.cz>
-> Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
-> Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
-> ---
->  block/opal_proto.h | 16 ++++++++++++++++
->  block/sed-opal.c   | 39 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 55 insertions(+)
->=20
-> diff --git a/block/opal_proto.h b/block/opal_proto.h
-> index b6e352cfe982..5e8df3245eb0 100644
-> --- a/block/opal_proto.h
-> +++ b/block/opal_proto.h
-> @@ -106,6 +106,7 @@ enum opal_uid {
->  	OPAL_ENTERPRISE_BANDMASTER0_UID,
->  	OPAL_ENTERPRISE_ERASEMASTER_UID,
->  	/* tables */
-> +	OPAL_TABLE_TABLE,
->  	OPAL_LOCKINGRANGE_GLOBAL,
->  	OPAL_LOCKINGRANGE_ACE_RDLOCKED,
->  	OPAL_LOCKINGRANGE_ACE_WRLOCKED,
-> @@ -160,6 +161,21 @@ enum opal_token {
->  	OPAL_STARTCOLUMN =3D 0x03,
->  	OPAL_ENDCOLUMN =3D 0x04,
->  	OPAL_VALUES =3D 0x01,
-> +	/* table table */
-> +	OPAL_TABLE_UID =3D 0x00,
-> +	OPAL_TABLE_NAME =3D 0x01,
-> +	OPAL_TABLE_COMMON =3D 0x02,
-> +	OPAL_TABLE_TEMPLATE =3D 0x03,
-> +	OPAL_TABLE_KIND =3D 0x04,
-> +	OPAL_TABLE_COLUMN =3D 0x05,
-> +	OPAL_TABLE_COLUMNS =3D 0x06,
-> +	OPAL_TABLE_ROWS =3D 0x07,
-> +	OPAL_TABLE_ROWS_FREE =3D 0x08,
-> +	OPAL_TABLE_ROW_BYTES =3D 0x09,
-> +	OPAL_TABLE_LASTID =3D 0x0A,
-> +	OPAL_TABLE_MIN =3D 0x0B,
-> +	OPAL_TABLE_MAX =3D 0x0C,
-> +
->  	/* authority table */
->  	OPAL_PIN =3D 0x03,
->  	/* locking tokens */
-> diff --git a/block/sed-opal.c b/block/sed-opal.c
-> index 5acb873e9037..39e3eecca58d 100644
-> --- a/block/sed-opal.c
-> +++ b/block/sed-opal.c
-> @@ -138,6 +138,8 @@ static const u8 opaluid[][OPAL_UID_LENGTH] =3D {
-> =20
->  	/* tables */
-> =20
-> +	[OPAL_TABLE_TABLE]
-> +		{ 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01 },
->  	[OPAL_LOCKINGRANGE_GLOBAL] =3D
->  		{ 0x00, 0x00, 0x08, 0x02, 0x00, 0x00, 0x00, 0x01 },
->  	[OPAL_LOCKINGRANGE_ACE_RDLOCKED] =3D
-> @@ -1139,6 +1141,29 @@ static int generic_get_column(struct opal_dev
-> *dev, const u8 *table,
->  	return finalize_and_send(dev, parse_and_check_status);
->  }
-> =20
-> +/*
-> + * see TCG SAS 5.3.2.3 for a description of the available columns
-> + *
-> + * the result is provided in dev->resp->tok[4]
-> + */
-> +static int generic_get_table_info(struct opal_dev *dev, enum
-> opal_uid table,
-> +				  u64 column)
-> +{
-> +	u8 uid[OPAL_UID_LENGTH];
-> +	const unsigned int half =3D OPAL_UID_LENGTH/2;
-> +
-> +	/* sed-opal UIDs can be split in two halves:
-> +	 *  first:  actual table index
-> +	 *  second: relative index in the table
-> +	 * so we have to get the first half of the OPAL_TABLE_TABLE and
-> use the
-> +	 * first part of the target table as relative index into that
-> table
-> +	 */
-> +	memcpy(uid, opaluid[OPAL_TABLE_TABLE], half);
-> +	memcpy(uid+half, opaluid[table], half);
-> +
-> +	return generic_get_column(dev, uid, column);
-> +}
-> +
->  static int gen_key(struct opal_dev *dev, void *data)
->  {
->  	u8 uid[OPAL_UID_LENGTH];
-> @@ -1554,6 +1579,20 @@ static int write_shadow_mbr(struct opal_dev
-> *dev, void *data)
->  	u64 len;
->  	int err =3D 0;
-> =20
-> +	/* do we fit in the available shadow mbr space? */
-> +	err =3D generic_get_table_info(dev, OPAL_MBR, OPAL_TABLE_ROWS);
-> +	if (err) {
-> +		pr_debug("MBR: could not get shadow size\n");
-> +		return err;
-> +	}
-> +
-> +	len =3D response_get_u64(&dev->parsed, 4);
-> +	if (shadow->size > len || shadow->offset > len - shadow->size)
-> {
-> +		pr_debug("MBR: does not fit in shadow (%llu vs.
-> %llu)\n",
-> +			 shadow->offset + shadow->size, len);
-> +		return -ENOSPC;
-> +	}
-> +
->  	/* do the actual transmission(s) */
->  	src =3D (u8 __user *)(uintptr_t)shadow->data;
->  	while (off < shadow->size) {
+@Stefano
+Taking the mutex from virtio_vsock_init() could work too (I haven't
+tried it yet), but it's unnecessary, all that needs to be done is
+properly initialize vsock_core before attempting to use it.
 
---=-aNKiBgGvlrizwhd+Nayx
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-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
-PNauajAtxgRKfqfSMb+IcL/VXiPtVZOxVq+CTZeDJkaEmn/79vg8OYxpR+YhFF+tGlKf/Zc4id1P
-AgMBAAGjggI3MIICMzAdBgNVHQ4EFgQU4oawcWXM1cPGdwGcIszDfjORVZAwHwYDVR0jBBgwFoAU
-HmkqtNwo/kcYTiELP7ysES/wmPUwZQYDVR0fBF4wXDBaoFigVoZUaHR0cDovL3d3dy5pbnRlbC5j
-b20vcmVwb3NpdG9yeS9DUkwvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIwSXNzdWluZyUyMENB
-JTIwNEEuY3JsMIGfBggrBgEFBQcBAQSBkjCBjzBpBggrBgEFBQcwAoZdaHR0cDovL3d3dy5pbnRl
-bC5jb20vcmVwb3NpdG9yeS9jZXJ0aWZpY2F0ZXMvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIw
-SXNzdWluZyUyMENBJTIwNEEuY3J0MCIGCCsGAQUFBzABhhZodHRwOi8vb2NzcC5pbnRlbC5jb20v
-MAsGA1UdDwQEAwIHgDA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiGw4x1hJnlUYP9gSiFjp9T
-gpHACWeB3r05lfBDAgFkAgEJMB8GA1UdJQQYMBYGCCsGAQUFBwMEBgorBgEEAYI3CgMMMCkGCSsG
-AQQBgjcVCgQcMBowCgYIKwYBBQUHAwQwDAYKKwYBBAGCNwoDDDBRBgNVHREESjBIoCoGCisGAQQB
-gjcUAgOgHAwaam9uYXRoYW4uZGVycmlja0BpbnRlbC5jb22BGmpvbmF0aGFuLmRlcnJpY2tAaW50
-ZWwuY29tMA0GCSqGSIb3DQEBBQUAA4IBAQBxGkHe05DNpYel4b9WbbyQqD1G6y6YA6C93TjKULZi
-p8+gO1LL096ixD44+frVm3jtXMikoadRHQJmBJdzsCywNE1KgtrYF0k4zRWr7a28nyfGgQe4UHHD
-7ARyZFeGd7AKSQ1y4/LU57I2Aw2HKx9/PXavv1JXjjO2/bqTfnZDJTQmOQ0nvlO3/gvbbABxZHqz
-NtfHZsQWS7s+Elk2xGUQ0Po2pMCQoaPo9R96mm+84UP9q3OvSqMoaZwfzoUeAx2wGJYl0h3S+ABr
-CPVfCgq9qnmVCn5DyHWE3V/BRjJCoILLBLxAxnmSdH4pF6wJ6pYRLEw9qoyNhpzGUIJU/Lk1MYIC
-FzCCAhMCAQEwgZAweTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRQwEgYDVQQHEwtTYW50YSBD
-bGFyYTEaMBgGA1UEChMRSW50ZWwgQ29ycG9yYXRpb24xKzApBgNVBAMTIkludGVsIEV4dGVybmFs
-IEJhc2ljIElzc3VpbmcgQ0EgNEECEzMAAMamAkocC+WQNPgAAAAAxqYwCQYFKw4DAhoFAKBdMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDUwNjIwMTU0N1owIwYJ
-KoZIhvcNAQkEMRYEFGbtiykThVyKSscCNc05JYZmW6plMA0GCSqGSIb3DQEBAQUABIIBAHngHpsQ
-r1ozeWF4YSBfZmGN/ILcfOw0MQG1av4eijTsbhMj1vdu+H3YJP59uKFuBk0pFfEBJoeGrEMKT5YT
-7IRQBgHavMGkgarHIrI3SKHCinHp5x4gAQByKmTXHD3PBuU+mO5pf78vqMsBvwUtWlrcc51FdAXd
-ZllJLLM/Us9crAhFWpugIN+TweF0p8x8yTkeuDQW/lJidk3m9SuzHdYRHRewcm+NqJTrfjBMuUQa
-Q7XYtUfkKsbBYBE7wGBWBCx72PAAaghxlTg4yo4de6XY9sCYUX+usuM/Em/Yh9SF7blXfjCn5fsD
-Zak+SWzId6NkgmHZoiFKRr4J5dYnnPYAAAAAAAA=
-
-
---=-aNKiBgGvlrizwhd+Nayx--
+I would prefer to change the order in virtio_vsock_init, while leaving
+virtio_vsock_exit unchanged, but I'll leave the final decision to you
+since I am not very familiar with the inner workings of these modules.
