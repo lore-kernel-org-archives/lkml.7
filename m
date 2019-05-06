@@ -2,112 +2,110 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFF0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09F1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968FB206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80746206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:27:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="YVZTIM/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfEFLYu (ORCPT
+        id S1726280AbfEFL1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 07:24:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35158 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725883AbfEFLYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 07:24:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E2C16AB6D;
-        Mon,  6 May 2019 11:24:48 +0000 (UTC)
-Date:   Mon, 6 May 2019 13:24:48 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RFC: console: hack up console_lock more v2
-Message-ID: <20190506112448.rng2oefmp2c262dq@pathway.suse.cz>
-References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
- <20190506074553.21464-1-daniel.vetter@ffwll.ch>
- <20190506081614.b7b22k4prodskbiy@pathway.suse.cz>
- <20190506082628.wehkislebljxmk5d@pathway.suse.cz>
- <20190506093812.GG17751@phenom.ffwll.local>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506093812.GG17751@phenom.ffwll.local>
-User-Agent: NeoMutt/20170912 (1.9.0)
+        Mon, 6 May 2019 07:27:34 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46284 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfEFL1e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 07:27:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id j11so6583237pff.13
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 04:27:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=MkPuHs9MpdmcYLP05ibBDjwFgoo9Bzabjg0rXaXjY8o=;
+        b=YVZTIM/PRH70xiHiNZ3g4QeIjRfn6Spvf7lAc4DK9eDJENXGWEbwBGHPRuEWzvXB3K
+         eeYjKpOvjVA6W+1IWTdLmyb5D7UwurznsaIQBklg2OVuP6ya8Nuy7uZRYw4ks+ttRt4x
+         xEoE8R+Gs40NAu0+DOK6T40m1CdJF5cNgcJOxvqxxNJ6JXuxg44jYMrm8Eg3+Pkm4aYm
+         sXjB4XphUS+L8hWhMsucwjRVW3qu4/L0Tilxoz94EDqKxVKMK0SZ55/6glKz3TEFsjhh
+         8xPK1Z822u3Aj/22Z8Pk1rrKbuf4YuQUw6VTa7h+9V0tWFTcczuc3gTUelkDvPGvQcUD
+         n1ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MkPuHs9MpdmcYLP05ibBDjwFgoo9Bzabjg0rXaXjY8o=;
+        b=q1YrmFZAU2Qukd3obFDZIt94QQjLtN+qgL3ybsbC/PTSkppreEBrCMb8uLWRP1gpD6
+         RZlJb1FG5QUuGL0JubmiTY56Pf3LjHutqOVkM1aLz9iMVmsBQUGUShgqazM9lkaW4LPU
+         uJQI+vqc6d+gYwkBiS0BQPxOws5KWceWd/HSdGb90eNmTFD5VJoQFZVFxc13Khi2vrQ+
+         20RhSAtcZrxtwufDTWz/bBftLoC7Vw70rSzBnQ1hvaIONJmEwjHHrHqYN7xRXbIqKrNH
+         8X3M97dvSK1fMkLBjs77JZQTY5bKuDv5W6ufDFt7ZTz5Ih0Tg8bIvCJsHLjpaDs3SsZ4
+         XaIg==
+X-Gm-Message-State: APjAAAUYdI2EkroLu43OBka9b97kS6VsQIANQD8e1qJa7TuaaV5h5gqk
+        k6xs915YCNG4rNvwVjEJhmSLjQ==
+X-Google-Smtp-Source: APXvYqypdffY+Z23d/npCXxA3vA8vPoVVmSlKn+AhYIVb+CdTJzYHXc/Pk9JzJmfD2szzXOKjQVSfA==
+X-Received: by 2002:a65:5687:: with SMTP id v7mr31142196pgs.299.1557142053267;
+        Mon, 06 May 2019 04:27:33 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id k4sm23990693pgh.27.2019.05.06.04.27.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 06 May 2019 04:27:32 -0700 (PDT)
+From:   Yash Shah <yash.shah@sifive.com>
+To:     linux-edac@vger.kernel.org, linux-riscv@lists.infradead.org,
+        palmer@sifive.com, bp@alien8.de, james.morse@arm.com
+Cc:     paul.walmsley@sifive.com, linux-kernel@vger.kernel.org,
+        aou@eecs.berkeley.edu, mchehab@kernel.org, sachin.ghadi@sifive.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v2] EDAC support for SiFive SoCs
+Date:   Mon,  6 May 2019 16:57:05 +0530
+Message-Id: <1557142026-15949-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-05-06 11:38:13, Daniel Vetter wrote:
-> On Mon, May 06, 2019 at 10:26:28AM +0200, Petr Mladek wrote:
-> > On Mon 2019-05-06 10:16:14, Petr Mladek wrote:
-> > > On Mon 2019-05-06 09:45:53, Daniel Vetter wrote:
-> > > > console_trylock, called from within printk, can be called from pretty
-> > > > much anywhere. Including try_to_wake_up. Note that this isn't common,
-> > > > usually the box is in pretty bad shape at that point already. But it
-> > > > really doesn't help when then lockdep jumps in and spams the logs,
-> > > > potentially obscuring the real backtrace we're really interested in.
-> > > > One case I've seen (slightly simplified backtrace):
-> > > > 
-> > > >  Call Trace:
-> > > >   <IRQ>
-> > > >   console_trylock+0xe/0x60
-> > > >   vprintk_emit+0xf1/0x320
-> > > >   printk+0x4d/0x69
-> > > >   __warn_printk+0x46/0x90
-> > > >   native_smp_send_reschedule+0x2f/0x40
-> > > >   check_preempt_curr+0x81/0xa0
-> > > >   ttwu_do_wakeup+0x14/0x220
-> > > >   try_to_wake_up+0x218/0x5f0
-> > > 
-> > > try_to_wake_up() takes p->pi_lock. It could deadlock because it
-> > > can get called recursively from printk_safe_up().
-> > > 
-> > > And there are more locks taken from try_to_wake_up(), for example,
-> > > __task_rq_lock() taken from ttwu_remote().
-> > > 
-> > > IMHO, the most reliable solution would be do call the entire
-> > > up_console_sem() from printk deferred context. We could assign
-> > > few bytes for this context in the per-CPU printk_deferred
-> > > variable.
-> > 
-> > Ah, I was too fast and did the same mistake. This won't help because
-> > it would still call try_to_wake_up() recursively.
-> 
-> Uh :-/
-> 
-> > We need to call all printk's that can be called under locks
-> > taken in try_to_wake_up() path in printk deferred context.
-> > Unfortunately it is whack a mole approach.
-> 
-> Hm since it's whack-a-mole anyway, what about converting the WARN_ON into
-> a prinkt_deferred, like all the other scheduler related code? Feels a
-> notch more consistent to me than leaking the printk_context into areas it
-> wasn't really meant built for. Scheduler code already fully subscribed to
-> the whack-a-mole approach after all.
+Adds an EDAC platform driver for SiFive SoCs.
 
-I am not sure how exactly you mean the conversion.
+This patch was earlier part of the patch series:
+'L2 cache controller and EDAC support for SiFive SoCs'
+https://lkml.org/lkml/2019/4/15/320
+In order to merge L2 cache controller driver without any dependency on EDAC,
+this EDAC patch is re-posted separately with updated MAINTAINERS entry.
 
-Anyway, we do not want to use printk_deferred() treewide. It reduces
-the chance that the messages reach consoles. Scheduler is an
-exception because of the possible deadlocks.
+This patch depends on patch
+'RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs'
+https://lkml.org/lkml/2019/5/6/255
+The EDAC driver registers for notifier events from the L2 cache controller
+driver (arch/riscv/mm/sifive_l2_cache.c) for L2 ECC events
 
-A solution would be to define WARN_ON_DEFERRED() that would
-call normal WARN_ON() in printk deferred context and
-use in scheduler.
+The patch is based on Linux 5.1-rc2 and tested on HiFive Unleashed board
+with additional board related patches needed for testing can be found at
+dev/yashs/L2_cache_controller branch of:
+https://github.com/yashshah7/riscv-linux.git
 
-Best Regards,
-Petr
+Changes since v1
+- Move extern definition into sifive_l2_cache header file
+- Replace NOTIFY_STOP with NOTIFY_OK in ecc_err_event()
+- Other minor fixes based upon comments against v1
+
+Yash Shah (1):
+  edac: sifive: Add EDAC platform driver for SiFive SoCs
+
+ MAINTAINERS                |   6 +++
+ arch/riscv/Kconfig         |   1 +
+ drivers/edac/Kconfig       |   6 +++
+ drivers/edac/Makefile      |   1 +
+ drivers/edac/sifive_edac.c | 119 +++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 133 insertions(+)
+ create mode 100644 drivers/edac/sifive_edac.c
+
+-- 
+1.9.1
+
