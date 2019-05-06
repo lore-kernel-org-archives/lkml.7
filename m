@@ -2,108 +2,147 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DF8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E778C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3085206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1FA20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfEFUk3 (ORCPT
+        id S1726631AbfEFUln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 16:40:29 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:53269 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbfEFUk2 (ORCPT
+        Mon, 6 May 2019 16:41:43 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:52510 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726403AbfEFUlm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 16:40:28 -0400
-Received: from excalibur.cnev.de ([81.173.131.93]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MhULz-1gkogl17Qp-00eajU; Mon, 06 May 2019 22:40:00 +0200
-Received: from karsten by excalibur.cnev.de with local (Exim 4.89)
-        (envelope-from <merker@debian.org>)
-        id 1hNkOz-0001uJ-1N; Mon, 06 May 2019 22:39:57 +0200
-Date:   Mon, 6 May 2019 22:39:56 +0200
-From:   Karsten Merker <merker@debian.org>
-To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org,
-        Tom Rini <trini@konsulko.com>,
-        Karsten Merker <merker@debian.org>,
-        Alexander Graf <agraf@suse.de>,
-        Anup Patel <anup@brainfault.org>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Joe Hershberger <joe.hershberger@ni.com>,
-        Lukas Auer <lukas.auer@aisec.fraunhofer.de>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rick Chen <rick@andestech.com>, Simon Glass <sjg@chromium.org>,
-        u-boot@lists.denx.de
-Subject: Re: [U-Boot] [v4 PATCH] RISCV: image: Add booti support
-Message-ID: <20190506203956.ty6gkmhm4dlylld4@excalibur.cnev.de>
-References: <20190506181134.9575-1-atish.patra@wdc.com>
- <251ea152-6407-02e2-076c-7ee377f6181d@gmx.de>
+        Mon, 6 May 2019 16:41:42 -0400
+Received: (qmail 5462 invoked by uid 2102); 6 May 2019 16:41:41 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 6 May 2019 16:41:41 -0400
+Date:   Mon, 6 May 2019 16:41:41 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <mchehab@kernel.org>, <syzkaller-bugs@googlegroups.com>,
+        <wen.yang99@zte.com.cn>
+Subject: Re: general protection fault in smsusb_init_device
+In-Reply-To: <0000000000008d89900586ccd37b@google.com>
+Message-ID: <Pine.LNX.4.44L0.1905061638380.1585-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <251ea152-6407-02e2-076c-7ee377f6181d@gmx.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:j9vbx5B588gOFFRAxO/ZjvtJjBPlHp5f7SziyV6bnBqvT0xcY7N
- wDqXPjt3tfFBGUX7H/fx9BVIVx9PlQZPrYiJfmAPdDe9cXMpP82RA/8wiHMyNk4LSATuVmO
- wNJ4IX4m2z/BVUetfMc6kjFesuVcVMAPHtRl0FSkBYdfdCFh2PsI92fPRvC0fTE2jX/IoYo
- Qd4o2/wkx+jIDrjZkvOjg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZZNtQIMnrhk=:lBxcmfvk+j7wZ7KOl2q+is
- 9XzqwW6xPnLZqFqdlOXRso78t9GgJf7ExTrDu1YxyfDKVUYlrRs6moa/XtKlpftg+53CXDFjq
- d3XVlQt8DrLejSAgVADeOpHZCvGyhhUETpQ23uGVrc3cvfc/Ns0M3mWN50n64WMtBbqaiRIXw
- T26Xi1PfLXHnlbDeohlghc0G6PS34Oi2V7qe4dr0+js2H+JEPEXKDVwNMKgleKMG8kQ3B8TBz
- 9ojkmeEtI/S5WRyNPiQP9HykpkIV3lg/eO/Ctl4PpKciDU07n460rJlDPAcIacdnomfTeT7gI
- RXRhZ9+U1TVslYwBn6r+ddE05Q5V4q2XuZVZHeBQ8VORQGUTEbWBCnI0NtGb58VtZWtWipmL7
- gQjYuEFLlbi4GOdZPZXgacgEBiL07aFRWeGFFmf06r3VLYhu18Df4GXKoQ8iRQej0wVOqFmwX
- dZB69mqx/kiXCkJzSDZB7kz1/t5xE6xFFtbCvin2NDjwJ8QLofNQ/5oqUVANs9vdaoV6UiPSo
- yJH5FAAFEvLVX+xwxgSgn9mXLxAc4KA3UxLh1E3PxHCw6H0xqvIP0syw0ySAFMchf0B51cjVi
- +pRYpT7NDhtBk74BK2VqAWUwz3bM7sn3X8Vtyc8a7LtJdJL8SMP8rWIPvua/EoM4VXJeH5xPl
- o1cSKZrOZ1sAtRNMURTx6W6g/96Nt9GDCthWWN6a8j/1eUEdXK0rIiOwwbiO0EWgrjiTduqOv
- oyryRH1xL9IO3E4l1zebAnCnfgfAH0AhV88eDg==
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 10:06:39PM +0200, Heinrich Schuchardt wrote:
-> On 5/6/19 8:11 PM, Atish Patra wrote:
-> > This patch adds booti support for RISC-V Linux kernel. The existing
-> > bootm method will also continue to work as it is.
-[...]
-> > +	"boot arm64/riscv Linux Image image from memory", booti_help_text
+On Thu, 18 Apr 2019, syzbot wrote:
+
+> Hello,
 > 
-> %s/Image image/image/
+> syzbot found the following crash on:
 > 
-> "arm64/riscv" is distracting. If I am on RISC-V I cannot boot an ARM64
-> image here. Remove the reference to the architecture, please.
+> HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=128ec3fd200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
+> dashboard link: https://syzkaller.appspot.com/bug?extid=53f029db71c19a47325a
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16138e67200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=128dddbf200000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+53f029db71c19a47325a@syzkaller.appspotmail.com
+> 
+> usb 1-1: config 0 descriptor??
+> usb 1-1: string descriptor 0 read error: -71
+> smsusb:smsusb_probe: board id=18, interface number 0
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] SMP KASAN PTI
+> CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.1.0-rc5-319617-gd34f951 #4
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> RIP: 0010:smsusb_init_device+0x366/0x937  
+> drivers/media/usb/siano/smsusb.c:429
 
-Hello,
+The driver assumes endpoint 1in exists, and doesn't check the existence 
+of the endpoints it uses.
 
-I'm not sure about the last point - ISTR (please correct me if my
-memory betrays me here) that an arm64 U-Boot can in principle be
-used to boot either an arm64 or an armv7 kernel, but the commands
-are different in those cases (booti for an arm64 "Image" format
-kernel and bootz for an armv7 "zImage" format kernel), so having
-the information which kernel format is supported by the
-respective commands appears useful to me.  If the arm64 kernel
-image format would have a distinctive name (like "zImage" on
-armv7 or "bzImage" on x86) that would be less problematic, but
-with the confusion potential of "boot a Linux Image" (as in the
-arm64/riscv-specific "Image" format) vs "boot a Linux image" (as
-in generally some form of kernel image), I think explicitly
-mentioning the supported architectures makes sense.
+Alan Stern
 
-Regards,
-Karsten
--- 
-Ich widerspreche hiermit ausdrücklich der Nutzung sowie der
-Weitergabe meiner personenbezogenen Daten für Zwecke der Werbung
-sowie der Markt- oder Meinungsforschung.
+
+#syz test: https://github.com/google/kasan.git usb-fuzzer
+
+ drivers/media/usb/siano/smsusb.c |   32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
+
+Index: usb-devel/drivers/media/usb/siano/smsusb.c
+===================================================================
+--- usb-devel.orig/drivers/media/usb/siano/smsusb.c
++++ usb-devel/drivers/media/usb/siano/smsusb.c
+@@ -400,6 +400,7 @@ static int smsusb_init_device(struct usb
+ 	struct smsusb_device_t *dev;
+ 	void *mdev;
+ 	int i, rc;
++	int in_maxp;
+ 
+ 	/* create device object */
+ 	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
+@@ -411,6 +412,23 @@ static int smsusb_init_device(struct usb
+ 	dev->udev = interface_to_usbdev(intf);
+ 	dev->state = SMSUSB_DISCONNECTED;
+ 
++	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
++		struct usb_endpoint_descriptor *desc =
++				&intf->cur_altsetting->endpoint[i].desc;
++
++		if (desc->bEndpointAddress & USB_DIR_IN) {
++			dev->in_ep = desc->bEndpointAddress;
++			in_maxp = usb_endpoint_maxp(desc);
++		} else {
++			dev->out_ep = desc->bEndpointAddress;
++		}
++	}
++
++	pr_debug("in_ep = %02x, out_ep = %02x\n",
++		dev->in_ep, dev->out_ep);
++	if (!dev->in_ep || !dev->out_ep)	/* Missing endpoints? */
++		return -EINVAL;
++
+ 	params.device_type = sms_get_board(board_id)->type;
+ 
+ 	switch (params.device_type) {
+@@ -425,24 +443,12 @@ static int smsusb_init_device(struct usb
+ 		/* fall-thru */
+ 	default:
+ 		dev->buffer_size = USB2_BUFFER_SIZE;
+-		dev->response_alignment =
+-		    le16_to_cpu(dev->udev->ep_in[1]->desc.wMaxPacketSize) -
+-		    sizeof(struct sms_msg_hdr);
++		dev->response_alignment = in_maxp - sizeof(struct sms_msg_hdr);
+ 
+ 		params.flags |= SMS_DEVICE_FAMILY2;
+ 		break;
+ 	}
+ 
+-	for (i = 0; i < intf->cur_altsetting->desc.bNumEndpoints; i++) {
+-		if (intf->cur_altsetting->endpoint[i].desc. bEndpointAddress & USB_DIR_IN)
+-			dev->in_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
+-		else
+-			dev->out_ep = intf->cur_altsetting->endpoint[i].desc.bEndpointAddress;
+-	}
+-
+-	pr_debug("in_ep = %02x, out_ep = %02x\n",
+-		dev->in_ep, dev->out_ep);
+-
+ 	params.device = &dev->udev->dev;
+ 	params.usb_device = dev->udev;
+ 	params.buffer_size = dev->buffer_size;
+
