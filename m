@@ -2,100 +2,237 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_MED,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D773C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6A4C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62375205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04533205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:48:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="MbrvW8fl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EnO7STvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbfEFIqu (ORCPT
+        id S1726321AbfEFIsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:46:50 -0400
-Received: from onstation.org ([52.200.56.107]:48060 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbfEFIqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:46:50 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id ADD7F3E941;
-        Mon,  6 May 2019 08:46:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1557132409;
-        bh=xI56e4hzg4jsRuD6zEwMlE664g9qNhVDQ6VNP1rTbBo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MbrvW8flOyL19oI0XQSJXHxCE4aknvmEvXhDIrAnh2i+7wuAD1LOHt7sh+PzCSKsZ
-         6w54mSq6UnjAv9pT7IriI5tFztg2ea6akIdw++qmqmwJAItsPw4o6CkTgYry+K6eqJ
-         bI0/YPJ1okYTxaDvcGPjj3HqDlx8j3eEeBrTA90U=
-Date:   Mon, 6 May 2019 04:46:48 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        freedreno@lists.freedesktop.org, Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 0/6] ARM: qcom: initial Nexus 5 display support
-Message-ID: <20190506084648.GA270@basecamp>
-References: <20190505130413.32253-1-masneyb@onstation.org>
- <CACRpkda=JTfKC4z=1Gmt1BE5adwd8XGZ4ERTgapWX_BN9TFESw@mail.gmail.com>
+        Mon, 6 May 2019 04:48:23 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34133 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfEFIsW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 04:48:22 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v10so8992140oib.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MeIMthOxRJANSArvv5AObvGzpm/HBsUqmQ+gWt5K6h4=;
+        b=EnO7STvybywxQ2wAHAyVtfRt84WqWHo207o6kKVYZqrOG/ThSPPoSiv9GKUUU6krNY
+         ZPKR5EsUOem3trEr0yMncM+DcCpGDrZ0FDCeazMNQyv2Pd5e5dQ6QhqISngWLdNZe7mc
+         eawHIqLnKoEL5GaC7a/wL78gStXrV93eaNw5LiiwdvjwLuumdactPs7Xo+O1nOLBrCoI
+         q7RNn20cdCpK2RkkKmjieZ4bqnI6tlUECZmK1Q2Q7GxKkiiHbNI+h1D6YkpszJ0eKle6
+         VcM9pzRThTNiXpbPMDpK9Er1S78DZpzSLNHj1u5T0r9XUmsbM0Jw6UaKS//SSn1+WQji
+         72ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MeIMthOxRJANSArvv5AObvGzpm/HBsUqmQ+gWt5K6h4=;
+        b=pFn9kcwCwWEu6+lIHeC5VMypvfHf0VyEHPuNAgZoE+ZAiIDQ5soca9kd+M92zmxmAr
+         EJnCvkE3kn02h3pziBJumaPNlsarnuRv88M46jrUk8KPXYnfRUhh2FIz/nV47XN4IfJG
+         GWmm9sHvrGZLUD8D0g2rnQ28edJg9XvjJ0YUEHP3/RhXEUnZWEcqpeJgZZclAx+8Ssaz
+         LS7fUcjXHu9DPmR5TKZ0r/wH5jLsQwmMooBW+k7FMj5C9WNwGh43oFFTfl4wN1krrOy6
+         7XmPDn+qCHpmnbQFh1G4x6+d/j10LceBKTys/3Lvi2lbfoKfDxYAoedIyhLFQ6m33Pyf
+         ZCQw==
+X-Gm-Message-State: APjAAAUvjiklvLCfhKO/ttTzdxmi4+QLjgE/Tt4M/pHvmNsucPHtWrmw
+        QPWtLrOx4LAOTZiHzfY3BfIelSL2cAuMtlUdnsbCfQ==
+X-Google-Smtp-Source: APXvYqwzZvfW7/3beZRJaVyn8GceHPah5zWKYDYxiPS3rsvYlVs7eDDRovZxwZa4HjwEUc1S/sOaEWJ7E7OBNja8JRU=
+X-Received: by 2002:aca:a84d:: with SMTP id r74mr402573oie.44.1557132501212;
+ Mon, 06 May 2019 01:48:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkda=JTfKC4z=1Gmt1BE5adwd8XGZ4ERTgapWX_BN9TFESw@mail.gmail.com>
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-9-brendanhiggins@google.com> <0a605543-477a-1854-eb35-6e586606889b@deltatee.com>
+ <CAFd5g47hxAd=+72xbPJbWPdZCXRXmtLpsGhUh=zc7MSwfcaGJQ@mail.gmail.com> <b2379db6-634a-001e-6f67-37427d8a2666@deltatee.com>
+In-Reply-To: <b2379db6-634a-001e-6f67-37427d8a2666@deltatee.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 6 May 2019 01:48:09 -0700
+Message-ID: <CAFd5g47LzBfE8J-rCgd4TU_P_=iwbctgeOMM9JZFDN8ZK6R7iw@mail.gmail.com>
+Subject: Re: [PATCH v2 08/17] kunit: test: add support for test abort
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        shuah <shuah@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 08:42:36AM +0200, Linus Walleij wrote:
-> On Sun, May 5, 2019 at 3:04 PM Brian Masney <masneyb@onstation.org> wrote:
-> 
-> > mdp5_get_scanoutpos() and mdp5_get_vblank_counter() both return 0, which
-> > is causing this stack trace to be dumped into the system log several
-> > times:
+On Fri, May 3, 2019 at 5:33 AM Logan Gunthorpe <logang@deltatee.com> wrote:
+>
+>
+>
+> On 2019-05-03 12:48 a.m., Brendan Higgins wrote:
+> > On Thu, May 2, 2019 at 8:15 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+> >> On 2019-05-01 5:01 p.m., Brendan Higgins wrote:
+> >>> +/*
+> >>> + * struct kunit_try_catch - provides a generic way to run code which might fail.
+> >>> + * @context: used to pass user data to the try and catch functions.
+> >>> + *
+> >>> + * kunit_try_catch provides a generic, architecture independent way to execute
+> >>> + * an arbitrary function of type kunit_try_catch_func_t which may bail out by
+> >>> + * calling kunit_try_catch_throw(). If kunit_try_catch_throw() is called, @try
+> >>> + * is stopped at the site of invocation and @catch is catch is called.
+> >>
+> >> I found some of the C++ comparisons in this series a bit distasteful but
+> >> wasn't going to say anything until I saw the try catch.... But looking
+> >> into the implementation it's just a thread that can exit early which
+> >> seems fine to me. Just a poor choice of name I guess...
 > >
-> >     WARNING: CPU: 0 PID: 5 at drivers/gpu/drm/drm_atomic_helper.c:1430 drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290
-> >     [CRTC:49:crtc-0] vblank wait timed out
-> >     Modules linked in:
-> >     CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.1.0-rc6-next-20190426-00006-g35c0d32a96e1-dirty #191
-> >     Hardware name: Generic DT based system
-> >     Workqueue: events deferred_probe_work_func
-> >     [<c031229c>] (unwind_backtrace) from [<c030d5ac>] (show_stack+0x10/0x14)
-> >     [<c030d5ac>] (show_stack) from [<c0ac134c>] (dump_stack+0x78/0x8c)
-> >     [<c0ac134c>] (dump_stack) from [<c0321660>] (__warn.part.3+0xb8/0xd4)
-> >     [<c0321660>] (__warn.part.3) from [<c03216e0>] (warn_slowpath_fmt+0x64/0x88)
-> >     [<c03216e0>] (warn_slowpath_fmt) from [<c0761a0c>] (drm_atomic_helper_wait_for_vblanks.part.1+0x288/0x290)
-> >     [<c0761a0c>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c07b0a98>] (mdp5_complete_commit+0x14/0x40)
-> >     [<c07b0a98>] (mdp5_complete_commit) from [<c07ddb80>] (msm_atomic_commit_tail+0xa8/0x140)
-> >     [<c07ddb80>] (msm_atomic_commit_tail) from [<c0763304>] (commit_tail+0x40/0x6c)
-> >     [<c07633f4>] (drm_atomic_helper_commit) from [<c07667f0>] (restore_fbdev_mode_atomic+0x168/0x1d4)
-> 
-> I recently merged this patch:
-> https://cgit.freedesktop.org/drm/drm-misc/commit/?id=b3198c38f02d54a5e964258a2180d502abe6eaf0
-> 
-> I noticed that DSI is sometimes way slower than a monitor, even  in HS mode.
-> On the MCDE this happened on the first screen update, which was slower
-> than 50ms.
-> 
-> Check if your vblanks are simply slow, try bumping this timeout even higher,
-> I spent weeks finding this issue which boils down to an assumption that
-> the vblank will be fired from something like a monitor at 50 or 60 HZ
-> ~20 ms so 50ms seemed like a good timeout at the time.
-> 
-> On a DSI display this is dubious, absolutely in LP mode, and even
-> in HS mode.
+> > Guilty as charged (I have a long history with C++, sorry). Would you
+> > prefer I changed the name? I just figured that try-catch is a commonly
+> > understood pattern that describes exactly what I am doing.
+>
+> It is a commonly understood pattern, but I don't think it's what the
+> code is doing. Try-catch cleans up an entire stack and allows each level
+> of the stack to apply local cleanup. This implementation simply exits a
+> thread and has none of that complexity. To me, it seems like an odd
+> abstraction here as it's really just a test runner that can exit early
+> (though I haven't seen the follow-up UML implementation).
 
-That did not fix the issue for me, and I went as high as 5 seconds.
-That's good to know though since I would have likely ran into that same
-issue down the line.
+Yeah, that is closer to what the UML specific version does, but that's
+a conversation for another time.
 
-Brian
+>
+> I would prefer to see this cleaned up such that the abstraction matches
+> more what's going on but I don't feel that strongly about it so I'll
+> leave it up to you to figure out what's best unless other reviewers have
+> stronger opinions.
+
+Cool. Let's revisit this with the follow-up patchset.
+
+>
+> >>
+> >> [snip]
+> >>
+> >>> +static void __noreturn kunit_abort(struct kunit *test)
+> >>> +{
+> >>> +     kunit_set_death_test(test, true);
+> >>> +
+> >>> +     kunit_try_catch_throw(&test->try_catch);
+> >>> +
+> >>> +     /*
+> >>> +      * Throw could not abort from test.
+> >>> +      *
+> >>> +      * XXX: we should never reach this line! As kunit_try_catch_throw is
+> >>> +      * marked __noreturn.
+> >>> +      */
+> >>> +     WARN_ONCE(true, "Throw could not abort from test!\n");
+> >>> +}
+> >>> +
+> >>>  int kunit_init_test(struct kunit *test, const char *name)
+> >>>  {
+> >>>       spin_lock_init(&test->lock);
+> >>> @@ -77,6 +103,7 @@ int kunit_init_test(struct kunit *test, const char *name)
+> >>>       test->name = name;
+> >>>       test->vprintk = kunit_vprintk;
+> >>>       test->fail = kunit_fail;
+> >>> +     test->abort = kunit_abort;
+> >>
+> >> There are a number of these function pointers which seem to be pointless
+> >> to me as you only ever set them to one function. Just call the function
+> >> directly. As it is, it is an unnecessary indirection for someone reading
+> >> the code. If and when you have multiple implementations of the function
+> >> then add the pointer. Don't assume you're going to need it later on and
+> >> add all this maintenance burden if you never use it..
+> >
+> > Ah, yes, Frank (and probably others) previously asked me to remove
+> > unnecessary method pointers; I removed all the totally unused ones. As
+> > for these, I don't use them in this patchset, but I use them in my
+> > patchsets that will follow up this one. These in particular are
+> > present so that they can be mocked out for testing.
+>
+> Adding indirection and function pointers solely for the purpose of
+> mocking out while testing doesn't sit well with me and I don't think it
+> should be a pattern that's encouraged. Adding extra complexity like this
+> to a design to make it unit-testable doesn't seem like something that
+> makes sense in kernel code. Especially given that indirect calls are
+> more expensive in the age of spectre.
+
+Indirection is a pretty common method to make something mockable or
+fakeable. Nevertheless, probably an easier discussion to have once we
+have some examples to discuss.
+
+>
+> Also, mocking these particular functions seems like it's an artifact of
+> how you've designed the try/catch abstraction. If the abstraction was
+> more around an abort-able test runner then it doesn't make sense to need
+> to mock out the abort/fail functions as you will be testing overly
+> generic features of something that don't seem necessary to the
+> implementation.
+>
+> >>
+> >> [snip]
+> >>
+> >>> +void kunit_generic_try_catch_init(struct kunit_try_catch *try_catch)
+> >>> +{
+> >>> +     try_catch->run = kunit_generic_run_try_catch;
+> >>> +     try_catch->throw = kunit_generic_throw;
+> >>> +}
+> >>
+> >> Same here. There's only one implementation of try_catch and I can't
+> >> really see any sensible justification for another implementation. Even
+> >> if there is, add the indirection when the second implementation is
+> >> added. This isn't C++ and we don't need to make everything a "method".
+> >
+> > These methods are for a UML specific implementation in a follow up
+> > patchset, which is needed for some features like crash recovery, death
+> > tests, and removes dependence on kthreads.
+> >
+> > I know this probably sounds like premature complexity. Arguably it is
+> > in hindsight, but I wrote those features before I pulled out these
+> > interfaces (they were actually both originally in this patchset, but I
+> > dropped them to make this patchset easier to review). I can remove
+> > these methods and add them back in when I actually use them in the
+> > follow up patchsets if you prefer.
+>
+> Yes, remove them now and add them back when you use them in follow-up
+> patches. If reviewers find problems with the follow-up patches or have a
+> better suggestion on how to do what ever it is you are doing, then you
+> just have this unnecessary code and there's wasted developer time and
+> review bandwidth that will need to be spent cleaning it up.
+
+Fair enough. Next patchset will have the remaining unused indirection
+you pointed out removed.
+
+Thanks!
