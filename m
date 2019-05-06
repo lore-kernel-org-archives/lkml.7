@@ -2,128 +2,229 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3E6C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3D4C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E107120675
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:33:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iq6UXkez"
+	by mail.kernel.org (Postfix) with ESMTP id 5959320830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfEFTdR (ORCPT
+        id S1726567AbfEFThr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:33:17 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:56155 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbfEFTdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:33:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=RHdPpckqPDyvdI9hgd3ivdy7BwlPmrYeJYGbEjPzhIQ=; b=iq6UXkezK/7BH2CDHnWD3aQ5XX
-        ss0J4xpEHOHbGyhUDCClE+O69DEIO63WhcoaAHzo85qoEaWdZfFn8sNfWzlnbquVGX/rNv8fbsAB6
-        V0pfgR8+0A21ihKwa5Fe7wkrlUF5Dy8Osx1qln/qxYTJsNTATDIhcIylvwzAUVGX4Uv8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hNjMH-0000Xf-9I; Mon, 06 May 2019 21:33:05 +0200
-Date:   Mon, 6 May 2019 21:33:05 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Ruslan Babayev <ruslan@babayev.com>
-Cc:     linux@armlinux.org.uk, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        mika.westerberg@linux.intel.com, wsa@the-dreams.de,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, xe-linux-external@cisco.com
-Subject: Re: [PATCH net-next 2/2] net: phy: sfp: enable i2c-bus detection on
- ACPI based systems
-Message-ID: <20190506193305.GA25013@lunn.ch>
-References: <20190505220524.37266-3-ruslan@babayev.com>
- <20190506125523.GA15291@lunn.ch>
- <87zhnztnby.fsf@babayev.com>
+        Mon, 6 May 2019 15:37:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60042 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726190AbfEFThq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 15:37:46 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46Jb4ZV100771
+        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 15:37:44 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sar9jqj8y-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 15:37:44 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Mon, 6 May 2019 20:37:44 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 6 May 2019 20:37:40 +0100
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x46JbcWa34930920
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 May 2019 19:37:38 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 546E9AC05B;
+        Mon,  6 May 2019 19:37:38 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 09562AC059;
+        Mon,  6 May 2019 19:37:38 +0000 (GMT)
+Received: from [9.60.75.251] (unknown [9.60.75.251])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  6 May 2019 19:37:37 +0000 (GMT)
+Subject: Re: [PATCH v2 1/7] s390: vfio-ap: wait for queue empty on queue reset
+To:     pmorel@linux.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+ <1556918073-13171-2-git-send-email-akrowiak@linux.ibm.com>
+ <0bdb1655-4c4e-1982-a842-9dfc7c02a576@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Mon, 6 May 2019 15:37:37 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zhnztnby.fsf@babayev.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <0bdb1655-4c4e-1982-a842-9dfc7c02a576@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050619-2213-0000-0000-00000389BF5B
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011061; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01199536; UDB=6.00629317; IPR=6.00980412;
+ MB=3.00026760; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-06 19:37:42
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050619-2214-0000-0000-00005E548F93
+Message-Id: <ecc5d1d5-a1ea-64ed-2af0-b2a6ca00d748@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi Andrew,
+On 5/6/19 2:41 AM, Pierre Morel wrote:
+> On 03/05/2019 23:14, Tony Krowiak wrote:
+>> Refactors the AP queue reset function to wait until the queue is empty
+>> after the PQAP(ZAPQ) instruction is executed to zero out the queue as
+>> required by the AP architecture.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_ops.c | 35 
+>> ++++++++++++++++++++++++++++++++---
+>>   1 file changed, 32 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
+>> b/drivers/s390/crypto/vfio_ap_ops.c
+>> index 900b9cf20ca5..b88a2a2ba075 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -271,6 +271,32 @@ static int vfio_ap_mdev_verify_no_sharing(struct 
+>> ap_matrix_mdev *matrix_mdev)
+>>       return 0;
+>>   }
+>> +static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned 
+>> long apqi)
+>> +{
+>> +    struct ap_queue_status status;
+>> +    ap_qid_t qid = AP_MKQID(apid, apqi);
+>> +    int retry = 5;
+>> +
+>> +    do {
+>> +        status = ap_tapq(qid, NULL);
+>> +        switch (status.response_code) {
+>> +        case AP_RESPONSE_NORMAL:
+>> +            if (status.queue_empty)
+>> +                return;
+>> +            msleep(20);
 > 
-> I had the GPIOs and the "maximum-power" property in my ACPI snippet initially,
-> but then decided to take it out thinking it was not relevant for the
-> current patch. I can add the missing pieces back in V2.
-> This is what it would like:
+> NIT:     Fall through ?
+
+Yes
+
 > 
-> Device (SFP0)
-> {
->     Name (_HID, "PRP0001")
->     Name (_CRS, ResourceTemplate()
->     {
->         GpioIo(Exclusive, PullDefault, 0, 0, IoRestrictionNone,
->                "\\_SB.PCI0.RP01.GPIO", 0, ResourceConsumer)
->             { 0, 1, 2, 3, 4 }
->     })
->     Name (_DSD, Package ()
->     {
->         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->         Package () {
->             Package () { "compatible", "sff,sfp" },
->             Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
->             Package () { "maximum-power-milliwatt", 1000 },
->             Package () { "tx-disable-gpios", Package () { ^SFP0, 0, 0, 1} },
->             Package () { "reset-gpio",       Package () { ^SFP0, 0, 1, 1} },
->             Package () { "mod-def0-gpios",   Package () { ^SFP0, 0, 2, 1} },
->             Package () { "tx-fault-gpios",   Package () { ^SFP0, 0, 3, 0} },
->             Package () { "los-gpios",        Package () { ^SFP0, 0, 4, 1} },
->         },
->     })
-> }
-
-Hi Ruslan
-
-I know approximately 0 about ACPI. But that at least lists all the
-properties we expect. Thanks.
-
-> > Before accepting this patch, i would like to know more about the
-> > complete solution.
+>> +            break;
+>> +        case AP_RESPONSE_RESET_IN_PROGRESS:
+>> +        case AP_RESPONSE_BUSY:
+>> +            msleep(20);
+>> +            break;
+>> +        default:
+>> +            pr_warn("%s: tapq err %02x: %04lx.%02lx may not be empty\n",
+>> +                __func__, status.response_code, apid, apqi);
 > 
-> I haven't gotten that far yet, but for the Phylink I was thinking something along the
-> lines of:
+> I do not thing the warning sentence is appropriate:
+> The only possible errors here are if the AP is not available due to AP 
+> checkstop, deconfigured AP or invalid APQN.
+
+Right you are! I'll work on a new message.
+
 > 
-> Device (PHY0)
-> {
->     Name (_HID, "PRP0001")
->     Name (_DSD, Package ()
->     {
->         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->         Package () {
->             Package () { "compatible", "ethernet-phy-ieee802.3-c45" },
->             Package () { "sfp", \_SB.PCI0.RP01.SFP0 },
->         },
->     })
-> }
+> 
+>> +            return;
+>> +        }
+>> +    } while (--retry);
+>> +}
+>> +
+>>   /**
+>>    * assign_adapter_store
+>>    *
+>> @@ -790,15 +816,18 @@ static int vfio_ap_mdev_group_notifier(struct 
+>> notifier_block *nb,
+>>       return NOTIFY_OK;
+>>   }
+>> -static int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int 
+>> apqi,
+>> -                    unsigned int retry)
+>> +int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
+>>   {
+>>       struct ap_queue_status status;
+>> +    int retry = 5;
+>>       do {
+>>           status = ap_zapq(AP_MKQID(apid, apqi));
+>>           switch (status.response_code) {
+>>           case AP_RESPONSE_NORMAL:
+>> +            vfio_ap_mdev_wait_for_qempty(apid, apqi);
+>> +            return 0;
+>> +        case AP_RESPONSE_DECONFIGURED:
+> 
+> Since you modify the switch, you can return for all the following cases:
+> AP_RESPONSE_DECONFIGURE
+> ..._CHECKSTOP
+> ..._INVALID_APQN
+> 
+> 
+> And you should wait for qempty on AP_RESET_IN_PROGRESS along with 
+> AP_RESPONSE_NORMAL
 
-You probably also need managed = "in-band-status" and
-phy-mode = "sgmii";
+If a queue reset is in progress, we retry the zapq. Are you saying we
+should wait for qempty then reissue the zapq?
 
-armada-388-clearfog.dtsi is probably the best reference, much of the
-development work for Phylink and SFPs was done on that board.
+> 
+>>               return 0;
+>>           case AP_RESPONSE_RESET_IN_PROGRESS:
+>>           case AP_RESPONSE_BUSY:
+> 
+> While at modifying this function, the AP_RESPONSE_BUSY is not a valid 
+> code for ZAPQ, you can remove this.
 
-> I don't have a complete solution working yet. With these patches
-> I was hoping to get some early feedback.
+Okay
 
-Please post your patches as "RFC" in the subject line, if you are
-wanting early feedback.
+> 
+>> @@ -824,7 +853,7 @@ static int vfio_ap_mdev_reset_queues(struct 
+>> mdev_device *mdev)
+>>                    matrix_mdev->matrix.apm_max + 1) {
+>>           for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+>>                        matrix_mdev->matrix.aqm_max + 1) {
+>> -            ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>> +            ret = vfio_ap_mdev_reset_queue(apid, apqi);
+> 
+> IMHO, since you are at changing this call, passing the apqn as parameter 
+> would be a good simplification.
 
-Thanks
-	Andrew
+Okay.
+
+> 
+> 
+> 
+>>               /*
+>>                * Regardless whether a queue turns out to be busy, or
+>>                * is not operational, we need to continue resetting
+> 
+> Depends on why the reset failed, but this is out of scope.
+
+I'm not sure what you mean by out of scope here, but you do make a valid
+point. If the response code for the zapq is AP_RESPONSE_DECONFIGURED,
+there is probably no sense in continuing to reset queues for that
+particular adapter. I'll consider a change here.
+
+> 
+>>
+> 
+> 
+
