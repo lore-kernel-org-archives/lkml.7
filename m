@@ -2,115 +2,87 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8A5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACE8C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E276206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D1682054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:00:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LhftYKUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbfEFN4h convert rfc822-to-8bit (ORCPT
+        id S1726197AbfEFOAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 09:56:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725853AbfEFN4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 09:56:36 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EEB02054F;
-        Mon,  6 May 2019 13:56:32 +0000 (UTC)
-Date:   Mon, 6 May 2019 09:56:31 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Message-ID: <20190506095631.6f71ad7c@gandalf.local.home>
-In-Reply-To: <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
-References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
-        <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
-        <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
-        <20190502185225.0cdfc8bc@gandalf.local.home>
-        <20190502193129.664c5b2e@gandalf.local.home>
-        <20190502195052.0af473cf@gandalf.local.home>
-        <20190503092959.GB2623@hirez.programming.kicks-ass.net>
-        <20190503092247.20cc1ff0@gandalf.local.home>
-        <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
-        <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
-        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 6 May 2019 10:00:33 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35098 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfEFOAd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:00:33 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so6436483plp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 07:00:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MbsZIl3ArB5wEdByvk9rAkhe7aFmbknUmqiIp7u42Ng=;
+        b=LhftYKUl9AlNvf4VZqvgbwBPxpgUgibHvvGfFBJck7yL7q8JqiiTpSivC9g3C2AFl4
+         4JUYNszhcoDNOslLs5nZ4G2pJUjBS7WrbJjFZRKG5kiO9v/Y4utk1M6fHTclgYYg7XkA
+         TYdf2hqusC/TGIjs1k3Ap64OeIAylNxoGi+XI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MbsZIl3ArB5wEdByvk9rAkhe7aFmbknUmqiIp7u42Ng=;
+        b=Ne8/psSdGnGslfE6wozxJX08bj1GXrOCaMI5Bfyt3MlxPyLhifpvuvZIv/+b6dmKwu
+         DVONCifDg/2oT2cqf1vq89SWCSbDuGkrL4d5qKIMtA6nNMAj2j1LKF9LgbY199HH2uHN
+         x/Fdgj2YE3fld+VQ1Ok7Jkqqhy4TnI3E6A50E92iKDwSZLHzRVVMcLMNGEnx6lAeMuCu
+         fiy1ZYDo2cU74oXf7VBQ28Og4HYqSCSTqcb1RZSDwnmBfjNNEr5s89MgWPnwG4lzHaYb
+         xVdG6lw6oc4NxfH5hBjPZMHGxUdQmf9pPrZW+dnh6plrcpluX1p8OVVcfTUUemKlto2i
+         qheg==
+X-Gm-Message-State: APjAAAUlyk/3d6qpp7rs5AphV2Gzd2MFCj8A6JKVb6LcQURrA3NBiw4j
+        JJuZnfi112T5rSQixKFQkVWuvA==
+X-Google-Smtp-Source: APXvYqzPlaGBL9bRnL5IaA1pHdnIdt0qf3kR4PAAdxPyMLDsxAogkCmgpD0uGJF9NCNvxLGa6Ne/gQ==
+X-Received: by 2002:a17:902:8f88:: with SMTP id z8mr31603828plo.54.1557151232688;
+        Mon, 06 May 2019 07:00:32 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id 124sm11882126pfe.124.2019.05.06.07.00.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 07:00:31 -0700 (PDT)
+Date:   Mon, 6 May 2019 10:00:30 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Viktor Rosendahl <viktor.rosendahl@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] ftrace: Implement fs notification for
+ preempt/irqsoff tracers
+Message-ID: <20190506140030.GA234965@google.com>
+References: <20190504164710.GA55790@google.com>
+ <20190505223915.4569-1-viktor.rosendahl@gmail.com>
+ <20190505190133.49b5ea46@oasis.local.home>
+ <b415ea04-e078-a73c-3609-56fb195841c3@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b415ea04-e078-a73c-3609-56fb195841c3@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019 10:19:51 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, May 06, 2019 at 01:54:04AM +0200, Viktor Rosendahl wrote:
+> On 5/6/19 1:01 AM, Steven Rostedt wrote:
+[snip]
+> > Hmm, what about adding a notifier to tracing_max_latency instead? And
+> > do it not as a config option, but have it always enabled. It would send a
+> > notification when it changes, and that only happens when there's a new
+> > max latency. Would that work for you?
 
-> On Fri, May 03, 2019 at 11:57:22AM -0700, Linus Torvalds wrote:
-> > On Fri, May 3, 2019 at 9:21 AM Andy Lutomirski <luto@amacapital.net> wrote:  
-> > >
-> > > So here’s a somewhat nutty suggestion: how about we tweak the 32-bit
-> > > entry code to emulate the sane 64-bit frame, not just for int3 but
-> > > always?  
-> > 
-> > What would the code actually end up looking like? I don't necessarily
-> > object, since that kernel_stack_pointer() thing certainly looks
-> > horrible, but honestly, my suggestion to just pass in the 'struct
-> > pt_regs' and let the call emulation fix it up would have also worked,
-> > and avoided that bug (and who knows what else might be hiding).
-> > 
-> > I really think that you're now hitting all the special case magic
-> > low-level crap that I wanted to avoid.  
-> 
-> This did actually boot on first try; so there must be something horribly
-> wrong...
-> 
-> Now, I know you like that other approach; but I figured I should at
-> least show you what this one looks like. Maybe I've been staring at
-> entry_32.S too much, but I really don't dislike this.
+That sounds like a much better approach. thanks,
 
-I can test this too. I was hoping to get this in by this merge window.
-I spent 3 hours yesterday trying to get Linus's version working on
-i386 with no success. Not sure how much time Linus will have to look at
-this, as he just opened the merge window.
+ - Joel
 
-Again, I think Peter's solution here is the more elegant one. But as
-long as we get *a* solution, I'll be happy. And my time to work on it
-has pretty much already been depleted.
-
--- Steve
