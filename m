@@ -2,53 +2,52 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B18C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C03C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38DCB20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F092E21019
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153315;
-	bh=c+RirpKRmLCnZH63iU9x2IOb/hAAViXjJzoHg5qZteY=;
+	s=default; t=1557153318;
+	bh=DytcGrl3mGpbEuLxTjKHLaMmoB5X9NoU6eNM5+cV+XU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KYkdyc9odOlx1SXj0quwDcXiwQpilw10me95W1zo1/9BSnDoRxSopOA9Ej/PHHvEb
-	 UI4iZRAz9VVj16ZFBK1YtDm/Rj3ueNVRLh4fNsYiVpQUJ9EJ/sL94FgLezdI1XFTJB
-	 pGD1uqlTF85rBkdZTdtVhiwM9H0oCBw1drvMoOwA=
+	b=UsK4g3BxohlVAkqRKXxzHKjMLFJM4LKxWNkSKM89prvXjxHyvI2wKGlydbhCpgym2
+	 sHBH7qVgTLt7FtNkVTv1JfbdXZUuXPS73DaIxBkVlUPVrpdSVFrhZhHDRaD0lYYbzd
+	 52T+sNEMY8uEI2krxf3WZ8rI6p3PDnPlU8xPlOgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfEFOfO (ORCPT
+        id S1726901AbfEFOfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55164 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:35:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726861AbfEFOfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:35:12 -0400
+        id S1726393AbfEFOfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:35:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F2E420B7C;
-        Mon,  6 May 2019 14:35:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C970F2087F;
+        Mon,  6 May 2019 14:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153311;
-        bh=c+RirpKRmLCnZH63iU9x2IOb/hAAViXjJzoHg5qZteY=;
+        s=default; t=1557153314;
+        bh=DytcGrl3mGpbEuLxTjKHLaMmoB5X9NoU6eNM5+cV+XU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dlrMpal9DPgHra3yfujVCv0NbQFO7c6HaKp6yaTj0IVPzrn0Hh3fZROwbPzjDgH0U
-         fWwqtClCqmaoXA51KRpaCx3GBAr9TYozQxq/tjrQv71ir8yVkTt4NA1Ts9dq0SVymk
-         aHZYK20yDyff/Wm9Vat3Vw2x6a0+7qtvB9yHLNp8=
+        b=sksalBO8JrVcLYzwThGhfQxLQ8wvYyw7rGD+MPbQ/pRS1D7JFWZqiwrtMctCJKq97
+         31Bv03QdjBHzkGX3RrEi1ozZHe+J1p8fN6DfoIs58JVM5sLj02LQeHdptbdGu7M8s8
+         k8bsgwCVkIz9lRCflwI0RWqqAMbPVolk4RY6YH7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Vecera <ivecera@redhat.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 041/122] ixgbe: fix mdio bus registration
-Date:   Mon,  6 May 2019 16:31:39 +0200
-Message-Id: <20190506143058.606057843@linuxfoundation.org>
+        stable@vger.kernel.org, Joao Martins <joao.m.martins@oracle.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.0 021/122] KVM: x86: Consider LAPIC TSC-Deadline timer expired if deadline too short
+Date:   Mon,  6 May 2019 16:31:19 +0200
+Message-Id: <20190506143056.649682511@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -61,63 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7ec52b9df7d7472240fa96223185894b1897aeb0 ]
+From: Liran Alon <liran.alon@oracle.com>
 
-The ixgbe ignores errors returned from mdiobus_register() and leaves
-adapter->mii_bus non-NULL and MDIO bus state as MDIOBUS_ALLOCATED.
-This triggers a BUG from mdiobus_unregister() during ixgbe_remove() call.
+commit c09d65d9eab69985c75f98ed64541229f6fa9aa6 upstream.
 
-Fixes: 8fa10ef01260 ("ixgbe: register a mdiobus")
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+If guest sets MSR_IA32_TSCDEADLINE to value such that in host
+time-domain it's shorter than lapic_timer_advance_ns, we can
+reach a case that we call hrtimer_start() with expiration time set at
+the past.
+
+Because lapic_timer.timer is init with HRTIMER_MODE_ABS_PINNED, it
+is not allowed to run in softirq and therefore will never expire.
+
+To avoid such a scenario, verify that deadline expiration time is set on
+host time-domain further than (now + lapic_timer_advance_ns).
+
+A future patch can also consider adding a min_timer_deadline_ns module parameter,
+similar to min_timer_period_us to avoid races that amount of ns it takes
+to run logic could still call hrtimer_start() with expiration timer set
+at the past.
+
+Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Signed-off-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ arch/x86/kvm/lapic.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c
-index cc4907f9ff02..2fb97967961c 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c
-@@ -905,13 +905,12 @@ s32 ixgbe_mii_bus_init(struct ixgbe_hw *hw)
- 	struct pci_dev *pdev = adapter->pdev;
- 	struct device *dev = &adapter->netdev->dev;
- 	struct mii_bus *bus;
-+	int err = -ENODEV;
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1543,9 +1543,12 @@ static void start_sw_tscdeadline(struct
  
--	adapter->mii_bus = devm_mdiobus_alloc(dev);
--	if (!adapter->mii_bus)
-+	bus = devm_mdiobus_alloc(dev);
-+	if (!bus)
- 		return -ENOMEM;
- 
--	bus = adapter->mii_bus;
--
- 	switch (hw->device_id) {
- 	/* C3000 SoCs */
- 	case IXGBE_DEV_ID_X550EM_A_KR:
-@@ -949,12 +948,15 @@ s32 ixgbe_mii_bus_init(struct ixgbe_hw *hw)
- 	 */
- 	hw->phy.mdio.mode_support = MDIO_SUPPORTS_C45 | MDIO_SUPPORTS_C22;
- 
--	return mdiobus_register(bus);
-+	err = mdiobus_register(bus);
-+	if (!err) {
-+		adapter->mii_bus = bus;
-+		return 0;
-+	}
- 
- ixgbe_no_mii_bus:
- 	devm_mdiobus_free(dev, bus);
--	adapter->mii_bus = NULL;
--	return -ENODEV;
-+	return err;
- }
- 
- /**
--- 
-2.20.1
-
+ 	now = ktime_get();
+ 	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+-	if (likely(tscdeadline > guest_tsc)) {
+-		ns = (tscdeadline - guest_tsc) * 1000000ULL;
+-		do_div(ns, this_tsc_khz);
++
++	ns = (tscdeadline - guest_tsc) * 1000000ULL;
++	do_div(ns, this_tsc_khz);
++
++	if (likely(tscdeadline > guest_tsc) &&
++	    likely(ns > lapic_timer_advance_ns)) {
+ 		expire = ktime_add_ns(now, ns);
+ 		expire = ktime_sub_ns(expire, lapic_timer_advance_ns);
+ 		hrtimer_start(&apic->lapic_timer.timer,
 
 
