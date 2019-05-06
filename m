@@ -2,52 +2,52 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A60C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8062FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF772054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492062087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155174;
-	bh=sL3y0IG1KUINbFHeL51POgTm3rfkjbjchIH4oxMEPRs=;
+	s=default; t=1557155186;
+	bh=zDAKcMa/8chgKR168C5oTv7UXbBJQlB3EXyfwadbaiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b1JIUF3UzWpVF0wRg8tmyTK7OYiJjITrPDQDVTCqhhtVEFAtpGAGI6hkc2LPXk/WN
-	 ak2orUoGMLwUpEjkWh+9Z7qIKUlz8tRVHlFUUmwsS00wfdHcZoBLTUGV8tXDS79kZk
-	 1CixqC5u4/ZhLSyklfBtKavtR2JVVZK/iXwqaPvw=
+	b=SDM36j3amPpcmczYE8xCY/PLg6N0sWoH5EC/uTxVTAGymRik3LUdgV8ioY4cqOcfa
+	 q/XOXKmAP6C4lIk3ACm1YohJNv0Dke6GVtL/Rs1zOPvlUDkFfn5h7XDZVQmvVhKQks
+	 3Hg7sKL93OqfC9+OSr7fjB4VzsHGlzIjFDEyBe7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfEFPGN (ORCPT
+        id S1727740AbfEFPGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:06:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59016 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727507AbfEFOiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:38:02 -0400
+        id S1726658AbfEFOhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:37:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AE5B214AE;
-        Mon,  6 May 2019 14:38:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACA93214AF;
+        Mon,  6 May 2019 14:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153482;
-        bh=sL3y0IG1KUINbFHeL51POgTm3rfkjbjchIH4oxMEPRs=;
+        s=default; t=1557153474;
+        bh=zDAKcMa/8chgKR168C5oTv7UXbBJQlB3EXyfwadbaiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G3tUtwo2DFXrFLozGkpfu9R+vxnnrX2sOvxzkedKyyrXVZtoZDliS5tWFpiexWzLe
-         ZUUnDsf9ibFo5fYYTfKz/oUaU1aDJB20/VnV8VABLlT/EHCaeTlZOhopOPfUQ3tJIH
-         eI4WiwMJtNtP4t2xgr3iUPbw5Azc/mYLHkzjiOgk=
+        b=qeJejRd3lDaaFcGE1GSwf6eYDBWKUUJWWAu2UDIi85PRuVnrfODvWGXoj3tJRRZDs
+         KSFSzNnQL69dSrGlAEH0ZIlleuDV1Igm9Wve9Pp8wckdssEm0PRnJ6wSWqeM7mM+mN
+         Xs4Cgn1CPLrg/TxRwQ5uxwucbtmaaCK94oBg3Goo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 084/122] Bluetooth: btusb: request wake pin with NOAUTOEN
-Date:   Mon,  6 May 2019 16:32:22 +0200
-Message-Id: <20190506143102.306608149@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 5.0 081/122] ARM: orion: dont use using 64-bit DMA masks
+Date:   Mon,  6 May 2019 16:32:19 +0200
+Message-Id: <20190506143102.082580250@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,46 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brian Norris <briannorris@chromium.org>
+[ Upstream commit cd92d74d67c811dc22544430b9ac3029f5bd64c5 ]
 
-commit 771acc7e4a6e5dba779cb1a7fd851a164bc81033 upstream.
+clang warns about statically defined DMA masks from the DMA_BIT_MASK
+macro with length 64:
 
-Badly-designed systems might have (for example) active-high wake pins
-that default to high (e.g., because of external pull ups) until they
-have an active firmware which starts driving it low.  This can cause an
-interrupt storm in the time between request_irq() and disable_irq().
+arch/arm/plat-orion/common.c:625:29: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+                .coherent_dma_mask      = DMA_BIT_MASK(64),
+                                          ^~~~~~~~~~~~~~~~
+include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
+ #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
 
-We don't support shared interrupts here, so let's just pre-configure the
-interrupt to avoid auto-enabling it.
+The ones in orion shouldn't really be 64 bit masks, so changing them
+to what the driver can support avoids the warning.
 
-Fixes: fd913ef7ce61 ("Bluetooth: btusb: Add out-of-band wakeup support")
-Fixes: 5364a0b4f4be ("arm64: dts: rockchip: move QCA6174A wakeup pin into its USB node")
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/bluetooth/btusb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/plat-orion/common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -2885,6 +2885,7 @@ static int btusb_config_oob_wake(struct
- 		return 0;
- 	}
- 
-+	irq_set_status_flags(irq, IRQ_NOAUTOEN);
- 	ret = devm_request_irq(&hdev->dev, irq, btusb_oob_wake_handler,
- 			       0, "OOB Wake-on-BT", data);
- 	if (ret) {
-@@ -2899,7 +2900,6 @@ static int btusb_config_oob_wake(struct
- 	}
- 
- 	data->oob_wake_irq = irq;
--	disable_irq(irq);
- 	bt_dev_info(hdev, "OOB Wake-on-BT configured at IRQ %u", irq);
- 	return 0;
- }
+diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
+index a2399fd66e97..1e970873439c 100644
+--- a/arch/arm/plat-orion/common.c
++++ b/arch/arm/plat-orion/common.c
+@@ -622,7 +622,7 @@ static struct platform_device orion_xor0_shared = {
+ 	.resource	= orion_xor0_shared_resources,
+ 	.dev            = {
+ 		.dma_mask               = &orion_xor_dmamask,
+-		.coherent_dma_mask      = DMA_BIT_MASK(64),
++		.coherent_dma_mask      = DMA_BIT_MASK(32),
+ 		.platform_data          = &orion_xor0_pdata,
+ 	},
+ };
+@@ -683,7 +683,7 @@ static struct platform_device orion_xor1_shared = {
+ 	.resource	= orion_xor1_shared_resources,
+ 	.dev            = {
+ 		.dma_mask               = &orion_xor_dmamask,
+-		.coherent_dma_mask      = DMA_BIT_MASK(64),
++		.coherent_dma_mask      = DMA_BIT_MASK(32),
+ 		.platform_data          = &orion_xor1_pdata,
+ 	},
+ };
+-- 
+2.20.1
+
 
 
