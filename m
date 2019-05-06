@@ -2,107 +2,114 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1E8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F140C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B59206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B97D20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7qO46Ow"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="DaML3+9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfEFTK0 (ORCPT
+        id S1726667AbfEFTMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:10:26 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35693 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfEFTK0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:10:26 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h1so6938533pgs.2;
-        Mon, 06 May 2019 12:10:26 -0700 (PDT)
+        Mon, 6 May 2019 15:12:00 -0400
+Received: from mail-eopbgr800097.outbound.protection.outlook.com ([40.107.80.97]:54144
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726145AbfEFTMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 15:12:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:newsgroups:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9jO/ahJRB+Px44zguVkj7zF4Hq0FcXKIPGMM17YjuPg=;
-        b=C7qO46Owo391rrCME2jNC8g202rdRFT0mvYDxy9h1EQafI8c2JNiNDT+Mp9YROuiQw
-         GcQG3moSn6h95IP/WCrpr+jwnGl8wV4T89K3xOLqrIrBBy820VZMzl9A9y3DG3FAcnsF
-         qd6juKyk+tg45aF1alrbup5S+gQUoan7/Ueu8y7IYdzmN9X/COpQz1zqoXagnz4z6J6D
-         6zXUzy51SqDY4QVY0dOc2eyi+U5Y1GobwGdoZIBSbcJsoYkhP84Eeg3iwRIK5j9LblU2
-         If7bAfDOm5ijlDpfpqLXHYx7c4PtWyYTbXs08qQ3IC+djYfosFGtT0Q2KuwFnPqHbg9z
-         hokw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:newsgroups:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=9jO/ahJRB+Px44zguVkj7zF4Hq0FcXKIPGMM17YjuPg=;
-        b=LRr+tQbm8ytLiZkmtxJYg4VBTtdJr23iZjmNQMXHcL8NBIeRX3XhH5K5wFupofmplE
-         d+C8z7tJlbM+qA4m0wwXAw7/iapWWKVtrM16NpG40NIF/BiuW+UPcxnJZqdif0EJ0w25
-         q/LMEvkUvpyXpF7XssoaiJ6YuiCBOZIwxG7qRXmGfegYeQWO8DJKbbg6qm8CTjtob4jE
-         ahv6AqkR/hEaXkUjtVdESX8dWinRMW1aHgrd7gxoLspJXrpiCJEIw6QOpTlUaKtQGNv0
-         ytXJZ+GgjA0HS4+GqPYqmVMp8EThUI1WoaTWsrvZoHRRjr8iqWGw6OS1qErWWx/AIhg7
-         S5jw==
-X-Gm-Message-State: APjAAAUWDJnQKp+EJnwAbTMFP2iU/6frflMAMOrLz78+CaTIF2sPu1TY
-        OJjz8CMa+0hMtTmTUcBBiKBno2tP
-X-Google-Smtp-Source: APXvYqxnZIbX947YWBxnv6hz4gECy//DYiwPTncI39gyYqZCb0cncitKEKaeREoGUlR+gW74VDrH8Q==
-X-Received: by 2002:a63:a41:: with SMTP id z1mr33991488pgk.389.1557169825178;
-        Mon, 06 May 2019 12:10:25 -0700 (PDT)
-Received: from [192.168.0.2] ([98.248.174.105])
-        by smtp.googlemail.com with ESMTPSA id p7sm13445161pgn.64.2019.05.06.12.10.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 12:10:24 -0700 (PDT)
-Subject: Re: [PATCH] kconfig: fix 'Save As' menu of xconfig
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ulf Magnusson <ulfalizer@gmail.com>,
-        linux-kernel@vger.kernel.org
-Newsgroups: gmane.linux.kernel,gmane.linux.kbuild.devel
-References: <1552234395-7699-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Robert Gadsdon <rhgadsdon@gmail.com>
-Message-ID: <84db9131-5498-d2d5-a984-11079e3c2a6e@gmail.com>
-Date:   Mon, 6 May 2019 12:10:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
-MIME-Version: 1.0
-In-Reply-To: <1552234395-7699-1-git-send-email-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ywzyqmXunx8o56skT6VEskNZ01rlO6lRLcV+6onBoQE=;
+ b=DaML3+9tLrTnqo5M0iPcBuJWfsPPIz2Qft2Ztj30zZaj1h+73AhkSnDAFixX27+vbRlE+xaZwHaUKdp7i1bDSSuCGMyiMYKwJNKMlOTLqr0OIaC9w49e5WJmBSqYYEr0IvTFd/Y1aqwpyxQE0YpJvI8vjJqKfMO3rISmKx5/IDE=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1710.namprd22.prod.outlook.com (10.164.206.152) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Mon, 6 May 2019 19:11:56 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::90ff:8d19:8459:834b]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::90ff:8d19:8459:834b%7]) with mapi id 15.20.1856.012; Mon, 6 May 2019
+ 19:11:56 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v2 1/5] mips: Dump memblock regions for debugging
+Thread-Topic: [PATCH v2 1/5] mips: Dump memblock regions for debugging
+Thread-Index: AQHVAdjcB/jpjwvrqkS8AfzMfrbjNaZee3AA
+Date:   Mon, 6 May 2019 19:11:56 +0000
+Message-ID: <MWHPR2201MB12772F4F9442C678538DCDE8C1300@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190503175041.7949-2-fancer.lancer@gmail.com>
+In-Reply-To: <20190503175041.7949-2-fancer.lancer@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR02CA0043.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::20) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ae46db6c-ae3f-41c5-5948-08d6d256b47a
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1710;
+x-ms-traffictypediagnostic: MWHPR2201MB1710:
+x-microsoft-antispam-prvs: <MWHPR2201MB171059777B73FD9494FAC1C9C1300@MWHPR2201MB1710.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0029F17A3F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(39840400004)(366004)(346002)(396003)(189003)(199004)(4744005)(8936002)(6506007)(386003)(66476007)(66556008)(64756008)(66446008)(76176011)(476003)(9686003)(6246003)(229853002)(42882007)(186003)(4326008)(6116002)(81156014)(3846002)(81166006)(53936002)(71190400001)(2906002)(8676002)(73956011)(66946007)(26005)(55016002)(102836004)(71200400001)(44832011)(99286004)(446003)(7736002)(7416002)(14454004)(68736007)(74316002)(52536014)(5660300002)(256004)(305945005)(478600001)(66066001)(52116002)(7696005)(11346002)(25786009)(33656002)(54906003)(6916009)(486006)(6436002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1710;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: oUltihqPwOyOZSMR61nzOEDaWs+iV3X+P7VTZ71Wqq+B8zfe/EEyVvwlDPHRDQK67OL7ApMNFjrBqvA/HCKZ1YJ6rS66yhCrSR6wdiyIKCugk8EKbmyghat/SaQeWEyDw9dWG+z8ZP9987xeANcLLhCCy68/xhNW/Rtmye8h1jHudAITi/4E+GbFmWSa6d9yX/gQPvKmS5QDUJji0Wvr7siwtwQAG4FAbrZT5Gu3bz1CjVt7Z9hVsFiiGC8LMm10ILayY2vIPR3ax7GN301aVLZZE3Jzk+6hZWNBqsMMmk+nCSAk4Y5X2o8V/giPVGom4mt5K2BG/xPKiOgU7Kga801YQraBYV9ehXP4GvbYmx07zbEzYgZkbw9PxO2Yoc9fE0fHDgqaUCCQgBvaS93VXJIMBf5eOdG3ecVkwkIuoMQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae46db6c-ae3f-41c5-5948-08d6d256b47a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 19:11:56.0674
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1710
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/10/2019 09:13 AM, Masahiro Yamada wrote:
-> The 'Save As' menu of xconfig is not working; it always saves the
-> kernel configuration into the default file irrespective of the file
-> chosen in the dialog box.
-> 
-> The 'Save' menu always writes into the default file, but it would
-> make more sense to write into the file previously chosen by 'Load'
-> or 'Save As'.
-> 
-> Signed-off-by: Masahiro Yamada<yamada.masahiro@socionext.com>
-> ---
-
-The 'save as' may be used for out-of-tree kernel config saves, but the 
-default 'save' should always save to the in-tree .config file, as before 
-(and for the past 10+ years..)  If the kernel config was loaded from an 
-out-of-tree location, it now saves back to that out-of-tree location, 
-which is useless for the kernel compile..
-
-I have always kept my hardware/system-specific kernel configs 
-out-of-tree, and then applied them in-tree before compiling.
-
-Now, I have to use 'save as' and type in the entire in-tree path 
-(/usr/src/linux-5.1/.config) each time, in order to apply the specific 
-config to the kernel, ready for compilation.
-
-Robert Gadsdon.
-rglinuxtech.com
+SGVsbG8sDQoNClNlcmdlIFNlbWluIHdyb3RlOg0KPiBJdCBpcyB1c2VmdWwgdG8gaGF2ZSB0aGUg
+d2hvbGUgbWVtYmxvY2sgbWVtb3J5IHNwYWNlIHByaW50ZWQgdG8gY29uc29sZQ0KPiB3aGVuIGJh
+c2ljIG1lbWxvY2sgaW5pdGlhbGl6YXRpb25zIGFyZSBkb25lLiBJdCBjYW4gYmUgcGVyZm9ybWVk
+IGJ5DQo+IHJlYWR5LXRvLXVzZSBtZXRob2QgbWVtYmxvY2tfZHVtcF9hbGwoKSwgd2hpY2ggcHJp
+bnRzIHRoZSBhdmFpbGFibGUNCj4gYW5kIHJlc2VydmVkIG1lbW9yeSBzcGFjZXMgaWYgbWVtYmxv
+Y2s9ZGVidWcga2VybmVsIHBhcmFtZXRlciBpcw0KPiBzcGVjaWZpZWQuIExldHMgY2FsbCBpdCBh
+dCB0aGUgdmVyeSBlbmQgb2YgYXJjaF9tZW1faW5pdCgpIGZ1bmN0aW9uLA0KPiB3aGVuIGFsbCBt
+ZW1ibG9jayBtZW1vcnkgYW5kIHJlc2VydmVkIHJlZ2lvbnMgYXJlIGRlZmluZWQsIGJ1dCBiZWZv
+cmUNCj4gYW55IHNlcmlvdXMgYWxsb2NhdGlvbiBpcyBwZXJmb3JtZWQuDQo+IA0KPiBTaWduZWQt
+b2ZmLWJ5OiBTZXJnZSBTZW1pbiA8ZmFuY2VyLmxhbmNlckBnbWFpbC5jb20+DQoNCkFwcGxpZWQg
+dG8gbWlwcy1uZXh0Lg0KDQpUaGFua3MsDQogICAgUGF1bA0KDQpbIFRoaXMgbWVzc2FnZSB3YXMg
+YXV0by1nZW5lcmF0ZWQ7IGlmIHlvdSBiZWxpZXZlIGFueXRoaW5nIGlzIGluY29ycmVjdA0KICB0
+aGVuIHBsZWFzZSBlbWFpbCBwYXVsLmJ1cnRvbkBtaXBzLmNvbSB0byByZXBvcnQgaXQuIF0NCg==
