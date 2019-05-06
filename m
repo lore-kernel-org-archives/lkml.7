@@ -2,53 +2,51 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69923C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39867C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D05205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 004A620C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154206;
-	bh=Ssz7bAFJmMrMEk3bUWNjS3aKTLjX0TpE0Llhx7ykABY=;
+	s=default; t=1557154214;
+	bh=Hnb7z3+7JBqf/LXbuVAtgRZVI934LRCWUyNEAg07ttQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OATueED4V8AtaJDLBfYgz8u6NCRUyqGauVrXsJWUnDrJjNfiWACp7Wx2sBPDAHMW+
-	 C28X/tPE6xOhYXEMlUrxBfA+INJWlZjMLKIE7NNw/I8ybkV06STPaqDgMxQxfiE7T+
-	 TvW1pLUxRNbZY5r/gry0OMRyQBpvO5/pxgn0ps30=
+	b=jVjPqPuAvvXrIrrWKT9J95qSky0fWLwGBCgrZP47szEOwsRTrXVet2vzvog6pC4NR
+	 xiCEYOftkRh+f4t/n4r3E5wl3ukz5CptfH/ywPaiNee6hdyfCzUZT2KCUzHP8cC5xN
+	 SGmuoSwl5pZrjQeLuywWtkkqew+ICrAIDGOzw4qE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbfEFOuF (ORCPT
+        id S1729236AbfEFOuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51686 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:50:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728340AbfEFOtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:49:45 -0400
+        id S1729597AbfEFOtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:49:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 005D4205ED;
-        Mon,  6 May 2019 14:49:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0E0621530;
+        Mon,  6 May 2019 14:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154184;
-        bh=Ssz7bAFJmMrMEk3bUWNjS3aKTLjX0TpE0Llhx7ykABY=;
+        s=default; t=1557154179;
+        bh=Hnb7z3+7JBqf/LXbuVAtgRZVI934LRCWUyNEAg07ttQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0qumWqKWfjYqJpe6yA9RswFvzCytobXicg2cOodIrU3CLS18l4ePeh5khqGBoWD1u
-         WWxoN/ahyqQ0jYTMflf6fco1eFASKGq3GytYfuhpHYmt3yd0ihV24H3ldnZN0huVz0
-         +GW4GJX8acxTTgQmKIeJ5mE6vnyzLvsPaPVwwXl4=
+        b=NAFf8ULk5aPoDrmm/RMZsHcbxDwIyRb20j4GBjXSLxjNX5wgr4hDA9BngI1pks2BS
+         3oKNei4pRsFsXc6SsZRbY1qKA+BQMCXRFm5tpV3IKaHkRUEk8878vLOopEEWJhGYbj
+         QxeJfEbBOWocv4BhqhWsUD6iANfqsfNLcFAgEfqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Louis Taylor <louis@kragniz.eu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 43/62] vfio/pci: use correct format characters
-Date:   Mon,  6 May 2019 16:33:14 +0200
-Message-Id: <20190506143054.928200753@linuxfoundation.org>
+Subject: [PATCH 4.9 41/62] debugfs: fix use-after-free on symlink traversal
+Date:   Mon,  6 May 2019 16:33:12 +0200
+Message-Id: <20190506143054.696253573@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -61,79 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 426b046b748d1f47e096e05bdcc6fb4172791307 ]
+[ Upstream commit 93b919da64c15b90953f96a536e5e61df896ca57 ]
 
-When compiling with -Wformat, clang emits the following warnings:
+symlink body shouldn't be freed without an RCU delay.  Switch debugfs to
+->destroy_inode() and use of call_rcu(); free both the inode and symlink
+body in the callback.  Similar to solution for bpf, only here it's even
+more obvious that ->evict_inode() can be dropped.
 
-drivers/vfio/pci/vfio_pci.c:1601:5: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                ^~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1601:13: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                        ^~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1601:21: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                ^~~~~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1601:32: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                           ^~~~~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:5: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                ^~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:13: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                        ^~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:21: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                ^~~~~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:32: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                           ^~~~~~~~~
-The types of these arguments are unconditionally defined, so this patch
-updates the format character to the correct ones for unsigned ints.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/debugfs/inode.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 7338e43faa17..f9a75df2d22d 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -1467,11 +1467,11 @@ static void __init vfio_pci_fill_ids(void)
- 		rc = pci_add_dynid(&vfio_pci_driver, vendor, device,
- 				   subvendor, subdevice, class, class_mask, 0);
- 		if (rc)
--			pr_warn("failed to add dynamic id [%04hx:%04hx[%04hx:%04hx]] class %#08x/%08x (%d)\n",
-+			pr_warn("failed to add dynamic id [%04x:%04x[%04x:%04x]] class %#08x/%08x (%d)\n",
- 				vendor, device, subvendor, subdevice,
- 				class, class_mask, rc);
- 		else
--			pr_info("add [%04hx:%04hx[%04hx:%04hx]] class %#08x/%08x\n",
-+			pr_info("add [%04x:%04x[%04x:%04x]] class %#08x/%08x\n",
- 				vendor, device, subvendor, subdevice,
- 				class, class_mask);
- 	}
+diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
+index 77e9cd7a0137..20ee612017bf 100644
+--- a/fs/debugfs/inode.c
++++ b/fs/debugfs/inode.c
+@@ -170,19 +170,24 @@ static int debugfs_show_options(struct seq_file *m, struct dentry *root)
+ 	return 0;
+ }
+ 
+-static void debugfs_evict_inode(struct inode *inode)
++static void debugfs_i_callback(struct rcu_head *head)
+ {
+-	truncate_inode_pages_final(&inode->i_data);
+-	clear_inode(inode);
++	struct inode *inode = container_of(head, struct inode, i_rcu);
+ 	if (S_ISLNK(inode->i_mode))
+ 		kfree(inode->i_link);
++	free_inode_nonrcu(inode);
++}
++
++static void debugfs_destroy_inode(struct inode *inode)
++{
++	call_rcu(&inode->i_rcu, debugfs_i_callback);
+ }
+ 
+ static const struct super_operations debugfs_super_operations = {
+ 	.statfs		= simple_statfs,
+ 	.remount_fs	= debugfs_remount,
+ 	.show_options	= debugfs_show_options,
+-	.evict_inode	= debugfs_evict_inode,
++	.destroy_inode	= debugfs_destroy_inode,
+ };
+ 
+ static struct vfsmount *debugfs_automount(struct path *path)
 -- 
 2.20.1
 
