@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE2FC04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FAEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB06C2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC682053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155082;
-	bh=SsqbmMywSBVKwpFvFFFQV1gHcQwfUpjDQfe4U40oK1c=;
+	s=default; t=1557155094;
+	bh=lPYL5g+WLM6d+0Qykg+Y4Id03XshCXb478aRIX0DWkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GV3KVzWVGgmxkDaf4RuAMdebDLCNkzhBPCGUJ+oGSZ7BKE+yfsv0ZyXNZvFNS3UC8
-	 y/3Rx2VAznANZ6KWLFa5Nc7ntwuqybhPIY8tiPiheYD2bCZHTgND2w9avRLB6dIQy/
-	 UmmYCroAfbncv/BavjblANK4UZF3XMe66Y4PeJxE=
+	b=ltmfpjNue9t4YyqnzQq4p5b9pi5x3Utvwn8yT+A0EYwPdICKUfEnPj+xoPvUDV9o6
+	 TNzb+5IvmYsZoQbyd0Jz3Z4V5KtPH60jHrBMQLn2cYVijJzpntceMRNUkc8SV9W27F
+	 q1M8e9rq2+S+8ViwipU60puxI/6YmgmuJURbIGu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfEFPEk (ORCPT
+        id S1727716AbfEFOjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:04:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:39:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbfEFOjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:39:14 -0400
+        id S1727698AbfEFOiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:38:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD9C21479;
-        Mon,  6 May 2019 14:39:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8929120449;
+        Mon,  6 May 2019 14:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153553;
-        bh=SsqbmMywSBVKwpFvFFFQV1gHcQwfUpjDQfe4U40oK1c=;
+        s=default; t=1557153535;
+        bh=lPYL5g+WLM6d+0Qykg+Y4Id03XshCXb478aRIX0DWkY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gpb8Oxldlr/F7jD0qhMe5BIgzDUm3uUputVqanId6ehR7vkNG2qiqCU3mZVs8A+Ph
-         dPNZT7ZwGrMZB4yy5YFhA4Edknkb2EAR9WAH/vyTwyR5tzIXrbnfDUkOWiIvAkXm42
-         gR0R7GSGHaoEQV62KHTkLYU7f4+OGGURob1qOIOg=
+        b=bIyNGXLxSPgVBcOEX8QIcyBQ1TbaTLncz9vTsnV+belGliUFdByGgfpb275OHd8E9
+         Z1s+YhBdk4qyv3qjgEj/PprNBmons9j8L3haZIrctj5xAL6m5ZgOVEdLGUTMMBfsNM
+         4TIiNTlVJZwQby+OPkwDLIQnGxunm2lfwr5mHQLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 10/99] ALSA: hda/realtek - Add new Dell platform for headset mode
-Date:   Mon,  6 May 2019 16:31:43 +0200
-Message-Id: <20190506143054.785244490@linuxfoundation.org>
+        stable@vger.kernel.org, "David E. Box" <david.e.box@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.0 104/122] platform/x86: intel_pmc_core: Fix PCH IP name
+Date:   Mon,  6 May 2019 16:32:42 +0200
+Message-Id: <20190506143104.026476119@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
-References: <20190506143053.899356316@linuxfoundation.org>
+In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
+References: <20190506143054.670334917@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,48 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
 
-commit 0a29c57b76624723b6b00c027e0e992d130ace49 upstream.
+commit d6827015e671cd17871c9b7a0fabe06c044f7470 upstream.
 
-Add two Dell platform for headset mode.
+For Cannonlake and Icelake, the IP name for Res_6 should be SPF i.e.
+South Port F. No functional change is intended other than just renaming
+the IP appropriately.
 
-[ Note: this is a further correction / addition of the previous
-  pin-based quirks for Dell machines; another entry for ALC236 with
-  the d-mic pin 0x12 and an entry for ALC295 -- tiwai ]
-
-Fixes: b26e36b7ef36 ("ALSA: hda/realtek - add two more pin configuration sets to quirk table")
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: "David E. Box" <david.e.box@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Fixes: 291101f6a735 ("platform/x86: intel_pmc_core: Add CannonLake PCH support")
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/platform/x86/intel_pmc_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7172,6 +7172,10 @@ static const struct snd_hda_pin_quirk al
- 		{0x21, 0x02211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
- 		{0x21, 0x02211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
-+		{0x12, 0x40000000},
-+		{0x14, 0x90170110},
-+		{0x21, 0x02211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1028, "Dell", ALC255_FIXUP_DELL2_MIC_NO_PRESENCE,
- 		{0x14, 0x90170110},
- 		{0x21, 0x02211020}),
-@@ -7446,6 +7450,9 @@ static const struct snd_hda_pin_quirk al
- 		{0x17, 0x90170110},
- 		{0x21, 0x04211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
-+		{0x14, 0x90170110},
-+		{0x21, 0x04211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
- 		ALC295_STANDARD_PINS,
- 		{0x17, 0x21014020},
- 		{0x18, 0x21a19030}),
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -205,7 +205,7 @@ static const struct pmc_bit_map cnp_pfea
+ 	{"CNVI",                BIT(3)},
+ 	{"UFS0",                BIT(4)},
+ 	{"EMMC",                BIT(5)},
+-	{"Res_6",               BIT(6)},
++	{"SPF",			BIT(6)},
+ 	{"SBR6",                BIT(7)},
+ 
+ 	{"SBR7",                BIT(0)},
 
 
