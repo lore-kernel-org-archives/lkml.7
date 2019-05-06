@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096B7C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D497C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63102087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DA8214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153704;
-	bh=lRNIYmFIsCxmdjlVSc56AtBFUVHBM4tCJ2q0ZlP67uE=;
+	s=default; t=1557153707;
+	bh=qH/V5U6geHfVfZ2F0E2UNIsWNssJW+kuSQOBNqbi2HA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wD+Ew6117BaQshEuorJsTsgIpulUhqZCC9S7/vLX7NahJQQHeeZ9G9WXMVzUQruEB
-	 IrQR4L47XFIY/EI8dNLWbH15AjvmHdzyUNcJdVrTUrlcy/T9nfvTcMXZUOO5cdH43V
-	 vQftLajsUEMpCn3IiL2yx9wY/xpuuFh+xXAnAW2w=
+	b=zoWECgDk0PlMxVCa/l2IeFE7rsu8r8tGre26oOAtRMxS2tC2xqStIHnEKSbYp8mds
+	 t+ytnbgYu6xzZEauSTKWp5ATJoVKFRsDC3vmqwhcTJRzFL7UMHq2pk9smSIYhkiNKU
+	 aKi+Ik6vlQmT11RinixTz61k03POyjUXB4xevrOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbfEFOln (ORCPT
+        id S1728318AbfEFOlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:41:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35878 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:41:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728285AbfEFOlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:40 -0400
+        id S1727832AbfEFOln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:41:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F61E20C01;
-        Mon,  6 May 2019 14:41:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C528520C01;
+        Mon,  6 May 2019 14:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153699;
-        bh=lRNIYmFIsCxmdjlVSc56AtBFUVHBM4tCJ2q0ZlP67uE=;
+        s=default; t=1557153702;
+        bh=qH/V5U6geHfVfZ2F0E2UNIsWNssJW+kuSQOBNqbi2HA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VdPhXCmF3hmqeBBwQURdVgVXmWq5F5dssbEzElbkSJIyhjiLeNqovv6CGOmxVtHJl
-         p18rPKISZRiuSyBLn57plOIAeKBy9zRIKW8fc2FzO2BL3z+t4MNIXaPcxgQUrraUVJ
-         lm1FaE2qrcJJDVvOT7GnzV8dLoodfz05iLMEAL0o=
+        b=1I+JB++m46OLxqP7oQoXxrc2rP7Ol6eq8MEzM/Bt9hSdPPPXODvC9OE5Fx5p5Up/L
+         3PGkr2NwxZBSKf2ZbmBeSpgGi7jZzZw2/j6YwP0czehPdpUfvwkiJ6CP2GU2PybTMm
+         VJV6GURGxjvj0ORwmZkVkJFulJpi4Jd7fK5Z1/lE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 29/99] batman-adv: fix warning in function batadv_v_elp_get_throughput
-Date:   Mon,  6 May 2019 16:32:02 +0200
-Message-Id: <20190506143056.596637433@linuxfoundation.org>
+Subject: [PATCH 4.19 20/99] efi: Fix debugobjects warning on efi_rts_work
+Date:   Mon,  6 May 2019 16:31:53 +0200
+Message-Id: <20190506143055.740457435@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,47 +65,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ca8c3b922e7032aff6cc3fd05548f4df1f3df90e ]
+[ Upstream commit ef1491e791308317bb9851a0ad380c4a68b58d54 ]
 
-When CONFIG_CFG80211 isn't enabled the compiler correcly warns about
-'sinfo.pertid' may be unused. It can also happen for other error
-conditions that it not warn about.
+The following commit:
 
-net/batman-adv/bat_v_elp.c: In function ‘batadv_v_elp_get_throughput.isra.0’:
-include/net/cfg80211.h:6370:13: warning: ‘sinfo.pertid’ may be used
- uninitialized in this function [-Wmaybe-uninitialized]
-  kfree(sinfo->pertid);
-        ~~~~~^~~~~~~~
+  9dbbedaa6171 ("efi: Make efi_rts_work accessible to efi page fault handler")
 
-Rework so that we only release '&sinfo' if cfg80211_get_station returns
-zero.
+converted 'efi_rts_work' from an auto variable to a global variable.
+However, when submitting the work, INIT_WORK_ONSTACK() was still used,
+causing the following complaint from debugobjects:
 
-Fixes: 7d652669b61d ("batman-adv: release station info tidstats")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+  ODEBUG: object 00000000ed27b500 is NOT on stack 00000000c7d38760, but annotated.
+
+Change the macro to just INIT_WORK() to eliminate the warning.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Acked-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Fixes: 9dbbedaa6171 ("efi: Make efi_rts_work accessible to efi page fault handler")
+Link: http://lkml.kernel.org/r/20181114175544.12860-2-ard.biesheuvel@linaro.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/bat_v_elp.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/runtime-wrappers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/batman-adv/bat_v_elp.c b/net/batman-adv/bat_v_elp.c
-index ef0dec20c7d8..5da183b2f4c9 100644
---- a/net/batman-adv/bat_v_elp.c
-+++ b/net/batman-adv/bat_v_elp.c
-@@ -104,8 +104,10 @@ static u32 batadv_v_elp_get_throughput(struct batadv_hardif_neigh_node *neigh)
- 
- 		ret = cfg80211_get_station(real_netdev, neigh->addr, &sinfo);
- 
--		/* free the TID stats immediately */
--		cfg80211_sinfo_release_content(&sinfo);
-+		if (!ret) {
-+			/* free the TID stats immediately */
-+			cfg80211_sinfo_release_content(&sinfo);
-+		}
- 
- 		dev_put(real_netdev);
- 		if (ret == -ENOENT) {
+diff --git a/drivers/firmware/efi/runtime-wrappers.c b/drivers/firmware/efi/runtime-wrappers.c
+index b0aeffd4e269..1606abead22c 100644
+--- a/drivers/firmware/efi/runtime-wrappers.c
++++ b/drivers/firmware/efi/runtime-wrappers.c
+@@ -95,7 +95,7 @@ struct efi_runtime_work {
+ 	efi_rts_work.status = EFI_ABORTED;				\
+ 									\
+ 	init_completion(&efi_rts_work.efi_rts_comp);			\
+-	INIT_WORK_ONSTACK(&efi_rts_work.work, efi_call_rts);		\
++	INIT_WORK(&efi_rts_work.work, efi_call_rts);			\
+ 	efi_rts_work.arg1 = _arg1;					\
+ 	efi_rts_work.arg2 = _arg2;					\
+ 	efi_rts_work.arg3 = _arg3;					\
 -- 
 2.20.1
 
