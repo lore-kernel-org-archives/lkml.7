@@ -4,207 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FA5C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2D1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FB82053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B558E20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:56:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="aC+4w2+s"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="VTcOSw6D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfEFRz3 (ORCPT
+        id S1726979AbfEFR41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:55:29 -0400
-Received: from vps.xff.cz ([195.181.215.36]:53132 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbfEFRz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:55:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1557165326; bh=QToEKXP2eCsa3a89ivPJya44poxVDY+W0mrcVNncgzU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aC+4w2+sYJQXzcI226MvyxCEq28Ds0mPf9srDIxrQGAflss/0ZPhrSV2Fq/xNlJiO
-         iHF6yRftWmuTOR1UssD3uq4Cn9LYZD+6TXm7P04pXINVmEB8dJ9StUX5vVAeHxxNeg
-         Nqv6HcP8aHxISL+7r3vHuQLtMuaFF6fx5+DUJY2M=
-Date:   Mon, 6 May 2019 19:55:25 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     Icenowy Zheng <icenowy@aosc.io>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, lars@metafoo.de,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        robh+dt@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        pmeerw@pmeerw.net, knaack.h@gmx.de,
-        Lee Jones <lee.jones@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/7] iio: adc: sun4i-gpadc: rework for support multiple
- thermal sensor
-Message-ID: <20190506175525.swc5u7j6ntry7v3g@core.my.home>
-Mail-Followup-To: Frank Lee <tiny.windzz@gmail.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        lars@metafoo.de, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        robh+dt@kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>, pmeerw@pmeerw.net,
-        knaack.h@gmx.de, Lee Jones <lee.jones@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>
-References: <20190503072813.2719-1-tiny.windzz@gmail.com>
- <20190503072813.2719-2-tiny.windzz@gmail.com>
- <20190505162215.3594f77d@archlinux>
- <20190506122807.4u323iys74jddcet@flea>
- <282ccf0979e6c58effd0e177917bdf824c32f64e.camel@aosc.io>
- <CAEExFWusPoxtkGCoA+3gXq69cXZEfjZW+UpHW_0UfrcjpLmaXg@mail.gmail.com>
+        Mon, 6 May 2019 13:56:27 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34631 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfEFR40 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 13:56:26 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m20so5961552wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 10:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XgcBPgF1G8mWsEvrlCrTStioPWUfDuKosdmWCCS6E5E=;
+        b=VTcOSw6DyJHMGc0Los3OPWsCksrdPWPyD8vO7tfd4hoUYxYcfmFRvdg6+xhXohcDI4
+         iaPbQJh8VcU547wAZs36ZseUPhEx2n6IGa7dslufaoh80Vv9iPal8eujdbqhX47dUUCf
+         rd0f8NtzfQWEGvOpMeRmdX8JSJP8cWcKcVhIbhptYXMtK+CkC+jkyMF1+0K9zUfHIWKS
+         SJl54+i/RAyvIlSJFHmzstzMCaSBfFTRYRQj0rviMBg1ovVLt3DHD9KLbmEDFh5DQkUB
+         K/4VUUv6V6l3X4JgKl9DsDvUKdy2qvZJaDBJBTVgKEAth7AkIIbN3tSX8f+DjWvOa5Un
+         ZWlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XgcBPgF1G8mWsEvrlCrTStioPWUfDuKosdmWCCS6E5E=;
+        b=j+xOvUTkABjrnDrQRNoQsoFkFz0ikh2rVdcfzPsDYtiLKJLRqAfp1Y0+SET5pUqW6Z
+         ACRl7PqjBuvJSex3iW8p1FdHUo5NFwpSdtIIps2YA8o4cH9CBzQ1h1YJdbpJVAL565uX
+         o3/sk1ZTihyWUzJ0vzaqWKypwb1Livp4/rJmzrhypoX2sab7chG7jo2Maf82diwSRvjQ
+         +1ebIIcEfo1EvwRgk03DZR91Em05IKKVpdDllzAxMx8p2cs80S1yAwJUFT1vpcqRlUj0
+         WPYu049x6OExIQB5TwOV5lwDSYzjjZczvaH+xxXzKiepUtiZWzb8PH2EjRjgyxhnWcKR
+         7tiA==
+X-Gm-Message-State: APjAAAXsjBnA2BqefKwUU376nQ+hdegFWMV1cXNQPnO4lQ00qfpMR/+a
+        8KqX+iLwGsyPpMwecrEGsIbhWhS+YcrYhOheCNivBA==
+X-Google-Smtp-Source: APXvYqy6O9Hx4Xu6PpK27h5ZvwKOZrtRiCBaX5D6FeKqa43xpsoBRLSUcAf7GCThq5ov8PH4U8Kpn29YDNsu9mBVmhc=
+X-Received: by 2002:a1c:2e88:: with SMTP id u130mr10259976wmu.54.1557165384862;
+ Mon, 06 May 2019 10:56:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEExFWusPoxtkGCoA+3gXq69cXZEfjZW+UpHW_0UfrcjpLmaXg@mail.gmail.com>
+References: <20190430002952.18909-1-tmurphy@arista.com> <20190430002952.18909-4-tmurphy@arista.com>
+ <20190430111222.GA3191@infradead.org> <da835ce2-f73e-3035-e1d7-d3028cc1a838@arm.com>
+ <20190430113253.GA23210@infradead.org> <96ebb6fc-a889-fa94-09ba-65d505b85724@arm.com>
+In-Reply-To: <96ebb6fc-a889-fa94-09ba-65d505b85724@arm.com>
+From:   Tom Murphy <tmurphy@arista.com>
+Date:   Mon, 6 May 2019 18:56:13 +0100
+Message-ID: <CAPL0++61WytVhs63tvt+hdpZKXGinrkYx=4nDtNx1UoNTRWWjw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] iommu/dma-iommu: Use the dev->coherent_dma_mask
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        David Brown <david.brown@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tom Murphy <murphyt7@tcd.ie>,
+        David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Just to make this clear, I won't apply Christoph's patch (the one in
+this email thread) and instead the only change I will make is to
+rename dma_limit to dma_mask.
 
-On Tue, May 07, 2019 at 01:08:39AM +0800, Frank Lee wrote:
-> On Tue, May 7, 2019 at 12:52 AM Icenowy Zheng <icenowy@aosc.io> wrote:
+On Tue, Apr 30, 2019 at 1:05 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 30/04/2019 12:32, Christoph Hellwig wrote:
+> > On Tue, Apr 30, 2019 at 12:27:02PM +0100, Robin Murphy wrote:
+> >>> Hmm, I don't think we need the DMA mask for the MSI mapping, this
+> >>> should probably always use a 64-bit mask.
+> >>
+> >> If that were true then we wouldn't need DMA masks for regular mappings
+> >> either. If we have to map the MSI doorbell at all, then we certainly have to
+> >> place it at an IOVA that the relevant device is actually capable of
+> >> addressing.
 > >
-> > 在 2019-05-06一的 14:28 +0200，Maxime Ripard写道：
-> > > Hi,
-> > >
-> > > On Sun, May 05, 2019 at 04:22:15PM +0100, Jonathan Cameron wrote:
-> > > > On Fri,  3 May 2019 03:28:07 -0400
-> > > > Yangtao Li <tiny.windzz@gmail.com> wrote:
-> > > >
-> > > > > For some SOCs, there are more than one thermal sensor, and there
-> > > > > are
-> > > > > currently four sensors on the A80. So we need to do some work in
-> > > > > order
-> > > > > to support multiple thermal sensors:
-> > > > >
-> > > > >   1) add sensor_count in gpadc_data.
-> > > > >   2) introduce sun4i_sensor_tzd in sun4i_gpadc_iio, to support
-> > > > > multiple
-> > > > >      thermal_zone_device and distinguish between different
-> > > > > sensors.
-> > > > >   3) modify read temperature and initialization function.
-> > > >
-> > > > This comment doesn't mention the devm change. If it had it would
-> > > > have
-> > > > raised immediate alarm bells.
-> > > >
-> > > > I'm also not keen on the web of pointers that this driver is
-> > > > steadily
-> > > > evolving.  I can't immediately see how to reduce that complexity
-> > > > however.
-> > >
-> > > So I might be responsible for that, and looking back, this has been a
-> > > mistake.
-> > >
-> > > This driver was initally put together to support a controller found
-> > > in
-> > > older (A10 up to A31) Allwinner SoCs. This controller had an ADC
-> > > driver that could be operated as a touchscreen controller, and was
-> > > providing a CPU temperature sensor and a general purpose ADC.
-> > >
-> > > However, we already had a driver for that controller in drivers/input
-> > > to report the CPU temperature, and the one in IIO was introduced to
-> > > support the general purpose ADC (and the CPU temperature). The long
-> > > term goal was to add the touchscreen feature as well eventually so
-> > > that we could remove the one in drivers/input. That didn't happen.
-> > >
-> > > At the same time, the Allwinner hardware slowly evolved to remove the
-> > > touchscreen and ADC features, and only keep the CPU temperature
-> > > readout. It then evolved further on to support multiple temperatures
-> > > (for different clusters, the GPU, and so on).
-> > >
-> > > So, today, we're in a situation where I was pushing everything into
-> > > that IIO drivers since there was similiraties between all the
-> > > generations, but the fact that we have to support so many odd cases
-> > > (DT bindings compatibility, controllers with and without ADC, etc)
-> > > that it becomes a real mess.
-> > >
-> > > And that mess isn't really used by anybody, since we want to have the
-> > > touchscreen.
-> > >
-> > > There's only one SoC that is supported only by that driver, which is
-> > > the A33 that only had a CPU temperature readout, and is still pretty
-> > > similar to the latest SoC from Allwinner (that is supported by this
-> > > series).
-> > >
-> > > I guess, for everyone's sanity and in order to not stall this
-> > > further,
-> > > it would just be better to create an hwmon driver for the A33 (and
-> > > onwards, including the H6) for the SoC that just have the temperature
-> > > readout feature. And for the older SoC, we just keep the older driver
-> > > under input/. Once the A33 is supported, we'll remove the driver in
-> > > IIO (and the related bits in drivers/mfd).
-> 
-> a hwmon driver or a thermal driver？
-> 
-> >
-> > I think a thermal driver is better.
-> 
-> This is what I hope to see a few months ago.
-> 
-> >
-> > Other SoCs' thermal sensor drivers are all thermal drivers.
-> >
-> > >
-> > > Armbian already has a driver for that they never upstreamed iirc, so
-> > > it might be a good starting point, and we would add the support for
-> > > the H6. How does that sound?
-> >
-> > I think the developer abandoned to upstream it because of the previous
-> > problem ;-)
-> >
-> > Maybe it can be taken and add A33&H6 support.
-> 
-> If OK, I am going to start some thermal driver work this weekend.  : )
-
-There are plenty of thermal drivers flying around, with varying levels
-of support for various SoCs:
-
-- H3/H5: https://megous.com/git/linux/commit/?h=ths-5.1&id=b8e20c5da7a00b3a3fa1b274fc8d5bea95872b0a
-- A83T: https://megous.com/git/linux/commit/?h=ths-5.1&id=796dff9a946fd475cc1e4bb948a723ea841c640c
-- H6: https://megous.com/git/linux/commit/?h=opi3-5.1&id=aeab762c19b4aa228a295258c9d6b2e1f143bf86
-
-For H3/H5 Icenowy also tried to upstream some variant of my THS driver, with
-better SID/calibration data reading support.
-
-I'd suggest starting with the H6 driver above (as that implements the
-calibration data readout correctly), and make it so that it can support multiple
-SoCs.
-
-regards,
-	o.
-
-> Cheers,
-> Yangtao
-> 
-> >
-> > >
-> > > Sorry for wasting everybody's time on this.
-> > >
-> > > Maxime
-> > >
-> > > --
-> > > Maxime Ripard, Bootlin
-> > > Embedded Linux and Kernel engineering
-> > > https://bootlin.com
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > Well, as shown by the patch below we don't even look at the DMA mask
+> > for the MSI page - we just allocate from bottom to top.
+>
+> In the trivial cookie for unmanaged domains, yes, but in that case the
+> responsibility is on VFIO to provide a suitable (i.e. sub-32-bit)
+> address range for that cookie in the first place. In the managed case,
+> allocation uses the streaming mask via iommu_dma_get_msi_page() calling
+> __iommu_dma_map(). Admittedly the mask can then get overlooked when
+> reusing an existing mapping, which strictly could pose a problem if you
+> have multiple devices with incompatible masks in the same group (and
+> such that the PCI stuff doesn't already mitigate it), but that's such an
+> obscure corner case that I'm reticent to introduce the complication to
+> handle it until it's actually proven necessary.
+>
+> Robin.
