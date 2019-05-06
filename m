@@ -2,151 +2,181 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB9DC46470
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BB3C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D72D02082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:51:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="rv+1FVnA"
+	by mail.kernel.org (Postfix) with ESMTP id EC6562087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfEFGvi (ORCPT
+        id S1726063AbfEFGyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 02:51:38 -0400
-Received: from mail-eopbgr710056.outbound.protection.outlook.com ([40.107.71.56]:39136
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725830AbfEFGvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 02:51:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aZlUxmHAnTfV4fvuRR07OAFwnrB0KNHVpt968yquJ20=;
- b=rv+1FVnApWblORq9qEh+/0QewDuvpmPpEXu2DbGD3JkryITdtvlfILh2Ecwgg4lIVjuVXmcbpE1yPyGhg02bI09ZaDUZilUoWkgUGSLX8kJ3A8+WFh5ILyLl7oUkqdmfIVO7MMQ0BzYAvwgIVWGMcCh4u4vsr0xP070VD//L3OI=
-Received: from CY4PR03CA0017.namprd03.prod.outlook.com (2603:10b6:903:33::27)
- by DM2PR03MB560.namprd03.prod.outlook.com (2a01:111:e400:241c::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1856.10; Mon, 6 May
- 2019 06:51:34 +0000
-Received: from SN1NAM02FT050.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::200) by CY4PR03CA0017.outlook.office365.com
- (2603:10b6:903:33::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1856.10 via Frontend
- Transport; Mon, 6 May 2019 06:51:33 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.55)
- smtp.mailfrom=analog.com; linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=bestguesspass action=none
- header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT050.mail.protection.outlook.com (10.152.72.128) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1856.11
- via Frontend Transport; Mon, 6 May 2019 06:51:33 +0000
-Received: from NWD2HUBCAS9.ad.analog.com (nwd2hubcas9.ad.analog.com [10.64.69.109])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x466pWBL021375
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Sun, 5 May 2019 23:51:32 -0700
-Received: from NWD2MBX7.ad.analog.com ([fe80::190e:f9c1:9a22:9663]) by
- NWD2HUBCAS9.ad.analog.com ([fe80::44a2:871b:49ab:ea47%12]) with mapi id
- 14.03.0415.000; Mon, 6 May 2019 02:51:31 -0400
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "ardeleanalex@gmail.com" <ardeleanalex@gmail.com>,
-        "melissa.srw@gmail.com" <melissa.srw@gmail.com>
-CC:     "kernel-usp@googlegroups.com" <kernel-usp@googlegroups.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "21cnbao@gmail.com" <21cnbao@gmail.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/4] staging: iio: ad7150: use FIELD_GET and GENMASK
-Thread-Topic: [PATCH 2/4] staging: iio: ad7150: use FIELD_GET and GENMASK
-Thread-Index: AQHVAmZEuvjZKalljUODTfy22uS+XaZd7oYA
-Date:   Mon, 6 May 2019 06:51:31 +0000
-Message-ID: <179d019c34cc69e50f19499a6089ac94740b59f5.camel@analog.com>
-References: <cover.1556919363.git.melissa.srw@gmail.com>
-         <7f7d36348bca1de25bd70350b7c665be6441250f.1556919363.git.melissa.srw@gmail.com>
-         <CA+U=Dso6zSLzhhdiZcc+P4-2zcabxnoMd2539HmofTXrtYoKDQ@mail.gmail.com>
-In-Reply-To: <CA+U=Dso6zSLzhhdiZcc+P4-2zcabxnoMd2539HmofTXrtYoKDQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.50.1.244]
-x-adiroutedonprem: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7C855B05558C3C478658EC39E2C73FC4@analog.com>
-Content-Transfer-Encoding: base64
+        Mon, 6 May 2019 02:54:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34414 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725836AbfEFGyk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 02:54:40 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x466q4EQ079384
+        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 02:54:39 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sad5tdtq1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:54:39 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Mon, 6 May 2019 07:54:36 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 6 May 2019 07:54:33 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x466sWZ160686528
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 May 2019 06:54:32 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0581652050;
+        Mon,  6 May 2019 06:54:32 +0000 (GMT)
+Received: from [9.145.46.119] (unknown [9.145.46.119])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 602115204F;
+        Mon,  6 May 2019 06:54:31 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 3/7] s390: vfio-ap: sysfs interface to display guest
+ CRYCB
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+ <1556918073-13171-4-git-send-email-akrowiak@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Mon, 6 May 2019 08:54:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(979002)(136003)(376002)(346002)(396003)(39860400002)(2980300002)(199004)(189003)(36756003)(356004)(76176011)(23676004)(2486003)(14444005)(118296001)(106002)(70586007)(70206006)(8676002)(5660300002)(246002)(8936002)(7736002)(7636002)(305945005)(47776003)(14454004)(102836004)(6246003)(50466002)(186003)(2501003)(4326008)(6116002)(3846002)(53546011)(26005)(229853002)(7416002)(2616005)(316002)(478600001)(126002)(476003)(486006)(7696005)(54906003)(110136005)(11346002)(2906002)(436003)(426003)(446003)(86362001)(336012)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM2PR03MB560;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b786019d-19f4-465b-2d24-08d6d1ef46e1
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328)(7193020);SRVR:DM2PR03MB560;
-X-MS-TrafficTypeDiagnostic: DM2PR03MB560:
-X-Microsoft-Antispam-PRVS: <DM2PR03MB5602EA77DCBE1E8CF87360AF9300@DM2PR03MB560.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-Forefront-PRVS: 0029F17A3F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: A/Vl/Kdfww9B6FU2TsYUhDJU6FUUNIgWED+x9YrpBZja/88Xava3MSy5fGgSD625//ETTNjSeiB1UGl8CDmtdsVELppmxA63+zSkUZHMtR7eiAXwt0OcS4Yl0aFcHy9n4UkQxguYTwsHxYpiYsKH9gOiUF3OgbAXXpcYrNOn3AW/rZLbjmvYF5vfttORqSKUUPe3D2JW9oplSjHwNSGhrfG/BGd61EXaDVRv2Jmd3Bx2yK7ijEoF0/+6OsMwugHKb6zu1gWRbONinrNXMjZsoXGmdgzJlkHBfbwbeIm08iJQQqol3B54l4pgPV8/IlwIl+vsNMSReyu5qt1zDegukvyMQhTjqJ5uW0Yx4dMh3Rzdjch7KSh41tiRqx5tqG3Oe3M7HaK3c/l6hZfDhlLUgZ71rupmj4ko1G9iME1TFeI=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2019 06:51:33.1271
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b786019d-19f4-465b-2d24-08d6d1ef46e1
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM2PR03MB560
+In-Reply-To: <1556918073-13171-4-git-send-email-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050606-0008-0000-0000-000002E3B0CA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050606-0009-0000-0000-0000225027A3
+Message-Id: <a2361365-050e-dfdd-ccd2-0167ccfcdfbf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDE5LTA1LTA0IGF0IDEzOjQzICswMzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3Jv
-dGU6DQo+IFtFeHRlcm5hbF0NCj4gDQo+IA0KPiBPbiBTYXQsIE1heSA0LCAyMDE5IGF0IDE6MjUg
-QU0gTWVsaXNzYSBXZW4gPG1lbGlzc2Euc3J3QGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4g
-VXNlIHRoZSBiaXRmaWVsZCBtYWNybyBGSUVMRF9HRVQsIGFuZCBHRU5NQVNLIHRvIGRvIHRoZSBz
-aGlmdCBhbmQgbWFzaw0KPiA+IGluDQo+ID4gb25lIGdvLiBUaGlzIG1ha2VzIHRoZSBjb2RlIG1v
-cmUgcmVhZGFibGUgdGhhbiBleHBsaWNpdCBtYXNraW5nDQo+ID4gZm9sbG93ZWQNCj4gPiBieSBh
-IHNoaWZ0Lg0KPiA+IA0KPiANCj4gVGhpcyBsb29rcyBuZWF0Lg0KPiBJJ2QgaGF2ZSB0byByZW1l
-bWJlciB0byBhY2sgaXQgZnJvbSBteSB3b3JrIGVtYWlsLg0KDQpBY2tlZC1ieTogQWxleGFuZHJ1
-IEFyZGVsZWFuIDxhbGV4YW5kcnUuYXJkZWxlYW5AYW5hbG9nLmNvbT4NCg0KPiANCj4gT25lIG1p
-bm9yIGNvbW1lbnQgaW5saW5lLCB3aGljaCB3b3VsZCBiZSB0aGUgb2JqZWN0IG9mIGEgbmV3IHBh
-dGNoLg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBNZWxpc3NhIFdlbiA8bWVsaXNzYS5zcndAZ21h
-aWwuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3N0YWdpbmcvaWlvL2NkYy9hZDcxNTAuYyB8
-IDYgKysrKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL2lpby9jZGMvYWQ3
-MTUwLmMNCj4gPiBiL2RyaXZlcnMvc3RhZ2luZy9paW8vY2RjL2FkNzE1MC5jDQo+ID4gaW5kZXgg
-MjQ2MDFiYTdkYjg4Li40YmE0NmZiNmFjMDIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zdGFn
-aW5nL2lpby9jZGMvYWQ3MTUwLmMNCj4gPiArKysgYi9kcml2ZXJzL3N0YWdpbmcvaWlvL2NkYy9h
-ZDcxNTAuYw0KPiA+IEBAIC01LDYgKzUsNyBAQA0KPiA+ICAgKiBDb3B5cmlnaHQgMjAxMC0yMDEx
-IEFuYWxvZyBEZXZpY2VzIEluYy4NCj4gPiAgICovDQo+ID4gDQo+ID4gKyNpbmNsdWRlIDxsaW51
-eC9iaXRmaWVsZC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+DQo+ID4gICNp
-bmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0K
-PiA+IEBAIC00NCw2ICs0NSw5IEBADQo+ID4gICNkZWZpbmUgQUQ3MTUwX1NOMF9SRUcgICAgICAg
-ICAgICAgICAgICAgICAgICAgMHgxNg0KPiA+ICAjZGVmaW5lIEFENzE1MF9JRF9SRUcgICAgICAg
-ICAgICAgICAgICAgICAgICAgIDB4MTcNCj4gPiANCj4gPiArLyogQUQ3MTUwIG1hc2tzICovDQo+
-ID4gKyNkZWZpbmUgQUQ3MTUwX1RIUkVTSFRZUEVfTVNLICAgICAgICAgICAgICAgICAgR0VOTUFT
-Syg2LCA1KQ0KPiA+ICsNCj4gPiAgLyoqDQo+ID4gICAqIHN0cnVjdCBhZDcxNTBfY2hpcF9pbmZv
-IC0gaW5zdGFuY2Ugc3BlY2lmaWMgY2hpcCBkYXRhDQo+ID4gICAqIEBjbGllbnQ6IGkyYyBjbGll
-bnQgZm9yIHRoaXMgZGV2aWNlDQo+ID4gQEAgLTEzNiw3ICsxNDAsNyBAQCBzdGF0aWMgaW50IGFk
-NzE1MF9yZWFkX2V2ZW50X2NvbmZpZyhzdHJ1Y3QgaWlvX2Rldg0KPiA+ICppbmRpb19kZXYsDQo+
-ID4gICAgICAgICBpZiAocmV0IDwgMCkNCj4gPiAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsN
-Cj4gPiANCj4gPiAtICAgICAgIHRocmVzaHR5cGUgPSAocmV0ID4+IDUpICYgMHgwMzsNCj4gPiAr
-ICAgICAgIHRocmVzaHR5cGUgPSBGSUVMRF9HRVQoQUQ3MTUwX1RIUkVTSFRZUEVfTVNLLCByZXQp
-Ow0KPiA+ICAgICAgICAgYWRhcHRpdmUgPSAhIShyZXQgJiAweDgwKTsNCj4gDQo+IFdoeSBub3Qg
-YWxzbyBkbyBzb21ldGhpbmcgc2ltaWxhciBmb3IgdGhlIGBhZGFwdGl2ZWAgdmFsdWUgPw0KPiAN
-Cj4gPiANCj4gPiAgICAgICAgIHN3aXRjaCAodHlwZSkgew0KPiA+IC0tDQo+ID4gMi4yMC4xDQo+
-ID4gDQo=
+On 03/05/2019 23:14, Tony Krowiak wrote:
+> Introduces a sysfs interface on the matrix mdev device to display the
+> contents of the shadow of the guest's CRYCB
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>   drivers/s390/crypto/vfio_ap_ops.c | 59 +++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 59 insertions(+)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 44a04b4aa9ae..1021466cb661 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -771,6 +771,64 @@ static ssize_t matrix_show(struct device *dev, struct device_attribute *attr,
+>   }
+>   static DEVICE_ATTR_RO(matrix);
+>   
+> +static ssize_t guest_matrix_show(struct device *dev,
+> +				 struct device_attribute *attr, char *buf)
+> +{
+> +	struct mdev_device *mdev = mdev_from_dev(dev);
+> +	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+> +	char *bufpos = buf;
+> +	unsigned long apid;
+> +	unsigned long apqi;
+> +	unsigned long apid1;
+> +	unsigned long apqi1;
+> +	unsigned long napm_bits;
+> +	unsigned long naqm_bits;
+> +	int nchars = 0;
+> +	int n;
+> +
+> +	if (!matrix_mdev->shadow_crycb)
+> +		return -ENODEV;
+> +
+> +	mutex_lock(&matrix_dev->lock);
+> +	napm_bits = matrix_mdev->shadow_crycb->apm_max + 1;
+> +	naqm_bits = matrix_mdev->shadow_crycb->aqm_max + 1;
+> +	apid1 = find_first_bit_inv(matrix_mdev->shadow_crycb->apm, napm_bits);
+> +	apqi1 = find_first_bit_inv(matrix_mdev->shadow_crycb->aqm, naqm_bits);
+> +
+> +	if ((apid1 < napm_bits) && (apqi1 < naqm_bits)) {
+> +		for_each_set_bit_inv(apid, matrix_mdev->shadow_crycb->apm,
+> +				     napm_bits) {
+> +			for_each_set_bit_inv(apqi,
+> +					     matrix_mdev->shadow_crycb->aqm,
+> +					     naqm_bits) {
+> +				n = sprintf(bufpos, "%02lx.%04lx\n", apid,
+> +					    apqi);
+> +				bufpos += n;
+> +				nchars += n;
+> +			}
+> +		}
+> +	} else if (apid1 < napm_bits) {
+> +		for_each_set_bit_inv(apid, matrix_mdev->shadow_crycb->apm,
+> +				     napm_bits) {
+> +			n = sprintf(bufpos, "%02lx.\n", apid);
+> +			bufpos += n;
+> +			nchars += n;
+> +		}
+> +	} else if (apqi1 < naqm_bits) {
+> +		for_each_set_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm,
+> +				     naqm_bits) {
+> +			n = sprintf(bufpos, ".%04lx\n", apqi);
+> +			bufpos += n;
+> +			nchars += n;
+> +		}
+> +	}
+> +
+> +	mutex_unlock(&matrix_dev->lock);
+> +
+> +	return nchars;
+> +}
+> +static DEVICE_ATTR_RO(guest_matrix);
+> +
+>   static struct attribute *vfio_ap_mdev_attrs[] = {
+>   	&dev_attr_assign_adapter.attr,
+>   	&dev_attr_unassign_adapter.attr,
+> @@ -780,6 +838,7 @@ static struct attribute *vfio_ap_mdev_attrs[] = {
+>   	&dev_attr_unassign_control_domain.attr,
+>   	&dev_attr_control_domains.attr,
+>   	&dev_attr_matrix.attr,
+> +	&dev_attr_guest_matrix.attr,
+>   	NULL,
+>   };
+>   
+> 
+
+Code seems very similar to matrix_show, can't you share the code?
+
+
+
+
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
