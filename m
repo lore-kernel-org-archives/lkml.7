@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7074DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9601C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C21421479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D402087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EpGCpl+6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LG/2E0lF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfEFMfb (ORCPT
+        id S1726446AbfEFMff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 08:35:31 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54092 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfEFMfa (ORCPT
+        Mon, 6 May 2019 08:35:35 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40680 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfEFMfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 08:35:30 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x46CZF0K059214;
-        Mon, 6 May 2019 07:35:15 -0500
+        Mon, 6 May 2019 08:35:34 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x46CZ748066829;
+        Mon, 6 May 2019 07:35:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557146115;
-        bh=J/ztuefVNdaUxVZk/fXN3QlBfazYQfruuHk4r23bWRk=;
+        s=ti-com-17Q1; t=1557146108;
+        bh=FmEP4mSp+GB3++ivD8Sfw2OMCbXIs8M52yHh6m5wEd4=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=EpGCpl+6cd4Uuq5R/Q2nwvgrnRsdSVn2lPFLAnuLVKEPpMK7kadrN+HygAe80U1MW
-         tJLJczcmPSXK41uXdVW4r+WQ8+5vmp2T+vm79Js1WecNEGzOL5k4tYl6VhaqAgtaUB
-         m7ua+WFKOra27mS7XSW54tdYx9vjRlxXie7DUezE=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x46CZFn4024070
+        b=LG/2E0lFTM9NGhEwCU1liFGmqN+ouMr/NPNPGAy3rl4EHAeqgVdk6iB4oXVtUUYge
+         1Q7Nn3KEPkNcD+itWYn1bGSoghTd+F19MLmfvlvb/UI72GvHXAsHstaLyzNLrOnry2
+         2GecCe5YHbEjvvbxSSlilc7MAqf+yi6nDGeXyP44=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x46CZ7HT128610
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 May 2019 07:35:15 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 6 May 2019 07:35:07 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 6 May
- 2019 07:35:13 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 07:35:07 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 6 May 2019 07:35:13 -0500
+ Frontend Transport; Mon, 6 May 2019 07:35:07 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x46CYpUC110286;
-        Mon, 6 May 2019 07:35:10 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x46CYpUA110286;
+        Mon, 6 May 2019 07:35:04 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
         <ssantosh@kernel.org>
@@ -56,9 +56,9 @@ CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
         <t-kristo@ti.com>, <tony@atomide.com>
-Subject: [PATCH 06/16] dmaengine: Add support for reporting DMA cached data amount
-Date:   Mon, 6 May 2019 15:34:46 +0300
-Message-ID: <20190506123456.6777-7-peter.ujfalusi@ti.com>
+Subject: [PATCH 04/16] dmaengine: doc: Add sections for per descriptor metadata support
+Date:   Mon, 6 May 2019 15:34:44 +0300
+Message-ID: <20190506123456.6777-5-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506123456.6777-1-peter.ujfalusi@ti.com>
 References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
@@ -71,62 +71,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A DMA hardware can have big cache or FIFO and the amount of data sitting in
-the DMA fabric can be an interest for the clients.
-
-For example in audio we want to know the delay in the data flow and in case
-the DMA have significantly large FIFO/cache, it can affect the latenc/delay
+Update the provider and client documentation with details about the
+metadata support.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/dmaengine.h   | 8 ++++++++
- include/linux/dmaengine.h | 2 ++
- 2 files changed, 10 insertions(+)
+ Documentation/driver-api/dmaengine/client.rst | 75 +++++++++++++++++++
+ .../driver-api/dmaengine/provider.rst         | 46 ++++++++++++
+ 2 files changed, 121 insertions(+)
 
-diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
-index 501c0b063f85..b0b97475707a 100644
---- a/drivers/dma/dmaengine.h
-+++ b/drivers/dma/dmaengine.h
-@@ -77,6 +77,7 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
- 		state->last = complete;
- 		state->used = used;
- 		state->residue = 0;
-+		state->in_flight_bytes = 0;
- 	}
- 	return dma_async_is_complete(cookie, complete, used);
- }
-@@ -87,6 +88,13 @@ static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
- 		state->residue = residue;
- }
+diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+index 45953f171500..d708e46b88a2 100644
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -151,6 +151,81 @@ The details of these operations are:
+      Note that callbacks will always be invoked from the DMA
+      engines tasklet, never from interrupt context.
  
-+static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
-+					   u32 in_flight_bytes)
-+{
-+	if (state)
-+		state->in_flight_bytes = in_flight_bytes;
-+}
++  Optional: per descriptor metadata
++  ---------------------------------
++  DMAengine provides two ways for metadata support.
 +
- struct dmaengine_desc_callback {
- 	dma_async_tx_callback callback;
- 	dma_async_tx_callback_result callback_result;
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 10ff71b13eef..c1486564a314 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -701,11 +701,13 @@ static inline struct dma_async_tx_descriptor *txd_next(struct dma_async_tx_descr
-  * @residue: the remaining number of bytes left to transmit
-  *	on the selected transfer for states DMA_IN_PROGRESS and
-  *	DMA_PAUSED if this is implemented in the driver, else 0
-+ * @in_flight_bytes: amount of data in bytes cached by the DMA.
-  */
- struct dma_tx_state {
- 	dma_cookie_t last;
- 	dma_cookie_t used;
- 	u32 residue;
-+	u32 in_flight_bytes;
- };
++  DESC_METADATA_CLIENT
++
++    The metadata buffer is allocated/provided by the client driver and it is
++    attached to the descriptor.
++
++  .. code-block:: c
++
++     int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
++				   void *data, size_t len);
++
++  DESC_METADATA_ENGINE
++
++    The metadata buffer is allocated/managed by the DMA driver. The client
++    driver can ask for the pointer, maximum size and the currently used size of
++    the metadata and can directly update or read it.
++
++  .. code-block:: c
++
++     void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
++		size_t *payload_len, size_t *max_len);
++
++     int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
++		size_t payload_len);
++
++  Client drivers can query if a given mode is supported with:
++
++  .. code-block:: c
++
++     bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
++		enum dma_desc_metadata_mode mode);
++
++  Depending on the used mode client drivers must follow different flow.
++
++  DESC_METADATA_CLIENT
++
++    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++         construct the metadata in the client's buffer
++      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++         descriptor
++      3. submit the transfer
++    - DMA_DEV_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
++         descriptor
++      3. submit the transfer
++      4. when the transfer is completed, the metadata should be available in the
++         attached buffer
++
++  DESC_METADATA_ENGINE
++
++    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
++         engine's metadata area
++      3. update the metadata at the pointer
++      4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
++         amount of data the client has placed into the metadata buffer
++      5. submit the transfer
++    - DMA_DEV_TO_MEM:
++      1. prepare the descriptor (dmaengine_prep_*)
++      2. submit the transfer
++      3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get the
++         pointer to the engine's metadata are
++      4. Read out the metadate from the pointer
++
++  .. note::
++
++     Mixed use of DESC_METADATA_CLIENT / DESC_METADATA_ENGINE is not allowed,
++     client drivers must use either of the modes per descriptor.
++
+ 4. Submit the transaction
  
- /**
+    Once the descriptor has been prepared and the callback information
+diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+index dfc4486b5743..9e6d87b3c477 100644
+--- a/Documentation/driver-api/dmaengine/provider.rst
++++ b/Documentation/driver-api/dmaengine/provider.rst
+@@ -247,6 +247,52 @@ after each transfer. In case of a ring buffer, they may loop
+ (DMA_CYCLIC). Addresses pointing to a device's register (e.g. a FIFO)
+ are typically fixed.
+ 
++Per descriptor metadata support
++-------------------------------
++Some data movement architecure (DMA controller and peripherals) uses metadata
++associated with a transaction. The DMA controller role is to transfer the
++payload and the metadata alongside.
++The metadata itself is not used by the DMA engine itself, but it contains
++parameters, keys, vectors, etc for peripheral or from the peripheral.
++
++The DMAengine framework provides a generic ways to facilitate the metadata for
++descriptors. Depending on the architecture the DMA driver can implement either
++or both of the methods and it is up to the client driver to choose which one
++to use.
++
++- DESC_METADATA_CLIENT
++
++  The metadata buffer is allocated/provided by the client driver and it is
++  attached (via the dmaengine_desc_attach_metadata() helper to the descriptor.
++
++  From the DMA driver the following is expected for this mode:
++  - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM
++    The data from the provided metadata buffer should be prepared for the DMA
++    controller to be sent alongside of the payload data. Either by copying to a
++    hardware descriptor, or highly coupled packet.
++  - DMA_DEV_TO_MEM
++    On transfer completion the DMA driver must copy the metadata to the client
++    provided metadata buffer.
++
++- DESC_METADATA_ENGINE
++
++  The metadata buffer is allocated/managed by the DMA driver. The client driver
++  can ask for the pointer, maximum size and the currently used size of the
++  metadata and can directly update or read it. dmaengine_desc_get_metadata_ptr()
++  and dmaengine_desc_set_metadata_len() is provided as helper functions.
++
++  From the DMA driver the following is expected for this mode:
++  - get_metadata_ptr
++    Should return a pointer for the metadata buffer, the maximum size of the
++    metadata buffer and the currently used / valid (if any) bytes in the buffer.
++  - set_metadata_len
++    It is called by the clients after it have placed the metadata to the buffer
++    to let the DMA driver know the number of valid bytes provided.
++
++  Note: since the client will ask for the metadata pointer in the completion
++  callback (in DMA_DEV_TO_MEM case) the DMA driver must ensure that the
++  descriptor is not freed up prior the callback is called.
++
+ Device operations
+ -----------------
+ 
 -- 
 Peter
 
