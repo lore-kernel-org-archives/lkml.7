@@ -2,142 +2,128 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C9EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3E6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA86A20675
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E107120675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nNjHFpzz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iq6UXkez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfEFTbm (ORCPT
+        id S1726545AbfEFTdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:31:42 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40240 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbfEFTbl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:31:41 -0400
-Received: by mail-lj1-f195.google.com with SMTP id d15so12131288ljc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 12:31:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gzqt154DTH5ImHOjvijUWjXzMNwVv74MLXkB9lgKrrw=;
-        b=nNjHFpzz2vKI+badclYzMfOso23Nvg4F0z3eEjQbGkckMUxF028F3XqkKl/++V119q
-         rmijiMxVjktUYfhRDo+EilRRHAeKGukmRxE8T9sjzgWaXZRFMY7e09yL3qFe55WFI9AZ
-         wqbVg0bjGylSD2CSjKPBYzkvCehm17FK+pFyWWHkFPCpf5nNR5P6dJbc5ALmkWPSbaew
-         pDzKzELKkim55dy96hCNNH0k+6PMagrKQHF3cOw3CK8MTFdPOc/2GHg/8uwzzao6MrlA
-         RX5rEyrn/eJu877EpH28W6WpdxyOPHkkTOBbPfYpj8moqhZr1HlkgaJpNGwKmva9zmhU
-         CNXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gzqt154DTH5ImHOjvijUWjXzMNwVv74MLXkB9lgKrrw=;
-        b=UHViupDUueHx3ZfZAMit+pgqffrg5sQ7TpsxCR0EOBeAFy9Ak3Jn5qJejxvfLPmH9p
-         gb0GPJlsiT5+V093eZhVj0fo9zKRFERfkFvPtFtVJBejKU9i3P39Q31o7GK4/tF82jB0
-         g3UXDg4506bDXA7pL0KFIM5NmAHbf5FoZng1b29MjE1XojZ3LWCGSPyUuXe2ry+cFbV7
-         /ht43G7V1T5/s3MFlEiKvNkQztqDeTCMMZXUasO4038VUppDfqT//5dNMQAi2iJBhrEE
-         6+Dt+Yz21aYUnB293SWRMjkMdn13DwyeZQ33GBHi+X4ErClA/pZR1HdyvzZLidjU1B98
-         FrvQ==
-X-Gm-Message-State: APjAAAXEgR5nwHNhafMioD29F75IzzcOhd4SvHBBWJfH0Z+9bHX2IwBJ
-        /BLcT30mNkeIVNnSxb+ctPONFg==
-X-Google-Smtp-Source: APXvYqy8ZbmneS+bhGFlFzRN4Lj7M6HDD7Mh2kRpXYNfAJfEhMqOyD3kfORTGIB7aXwSQnnwZTAtJg==
-X-Received: by 2002:a2e:8141:: with SMTP id t1mr14742420ljg.122.1557171099519;
-        Mon, 06 May 2019 12:31:39 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-72.NA.cust.bahnhof.se. [158.174.22.72])
-        by smtp.gmail.com with ESMTPSA id r136sm2660779lff.50.2019.05.06.12.31.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 06 May 2019 12:31:38 -0700 (PDT)
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     amit.kucheria@linaro.org, jorge.ramirez-ortiz@linaro.org,
-        lina.iyer@linaro.org, ulf.hansson@linaro.org,
-        bjorn.andersson@linaro.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
-Date:   Mon,  6 May 2019 21:31:15 +0200
-Message-Id: <20190506193115.20909-1-niklas.cassel@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Mon, 6 May 2019 15:33:17 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:56155 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbfEFTdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 15:33:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=RHdPpckqPDyvdI9hgd3ivdy7BwlPmrYeJYGbEjPzhIQ=; b=iq6UXkezK/7BH2CDHnWD3aQ5XX
+        ss0J4xpEHOHbGyhUDCClE+O69DEIO63WhcoaAHzo85qoEaWdZfFn8sNfWzlnbquVGX/rNv8fbsAB6
+        V0pfgR8+0A21ihKwa5Fe7wkrlUF5Dy8Osx1qln/qxYTJsNTATDIhcIylvwzAUVGX4Uv8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hNjMH-0000Xf-9I; Mon, 06 May 2019 21:33:05 +0200
+Date:   Mon, 6 May 2019 21:33:05 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Ruslan Babayev <ruslan@babayev.com>
+Cc:     linux@armlinux.org.uk, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        mika.westerberg@linux.intel.com, wsa@the-dreams.de,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, xe-linux-external@cisco.com
+Subject: Re: [PATCH net-next 2/2] net: phy: sfp: enable i2c-bus detection on
+ ACPI based systems
+Message-ID: <20190506193305.GA25013@lunn.ch>
+References: <20190505220524.37266-3-ruslan@babayev.com>
+ <20190506125523.GA15291@lunn.ch>
+ <87zhnztnby.fsf@babayev.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zhnztnby.fsf@babayev.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device bindings for CPUs to suspend using PSCI as the enable-method.
+> Hi Andrew,
+> 
+> I had the GPIOs and the "maximum-power" property in my ACPI snippet initially,
+> but then decided to take it out thinking it was not relevant for the
+> current patch. I can add the missing pieces back in V2.
+> This is what it would like:
+> 
+> Device (SFP0)
+> {
+>     Name (_HID, "PRP0001")
+>     Name (_CRS, ResourceTemplate()
+>     {
+>         GpioIo(Exclusive, PullDefault, 0, 0, IoRestrictionNone,
+>                "\\_SB.PCI0.RP01.GPIO", 0, ResourceConsumer)
+>             { 0, 1, 2, 3, 4 }
+>     })
+>     Name (_DSD, Package ()
+>     {
+>         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>         Package () {
+>             Package () { "compatible", "sff,sfp" },
+>             Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
+>             Package () { "maximum-power-milliwatt", 1000 },
+>             Package () { "tx-disable-gpios", Package () { ^SFP0, 0, 0, 1} },
+>             Package () { "reset-gpio",       Package () { ^SFP0, 0, 1, 1} },
+>             Package () { "mod-def0-gpios",   Package () { ^SFP0, 0, 2, 1} },
+>             Package () { "tx-fault-gpios",   Package () { ^SFP0, 0, 3, 0} },
+>             Package () { "los-gpios",        Package () { ^SFP0, 0, 4, 1} },
+>         },
+>     })
+> }
 
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Hi Ruslan
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index ffedf9640af7..f9db9f3ee10c 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -31,6 +31,7 @@
- 			reg = <0x100>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			cpu-idle-states = <&CPU_PC>;
- 		};
- 
- 		CPU1: cpu@101 {
-@@ -39,6 +40,7 @@
- 			reg = <0x101>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			cpu-idle-states = <&CPU_PC>;
- 		};
- 
- 		CPU2: cpu@102 {
-@@ -47,6 +49,7 @@
- 			reg = <0x102>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			cpu-idle-states = <&CPU_PC>;
- 		};
- 
- 		CPU3: cpu@103 {
-@@ -55,12 +58,24 @@
- 			reg = <0x103>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-+			cpu-idle-states = <&CPU_PC>;
- 		};
- 
- 		L2_0: l2-cache {
- 			compatible = "cache";
- 			cache-level = <2>;
- 		};
-+
-+		idle-states {
-+			CPU_PC: pc {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x40000003>;
-+				entry-latency-us = <125>;
-+				exit-latency-us = <180>;
-+				min-residency-us = <595>;
-+				local-timer-stop;
-+			};
-+		};
- 	};
- 
- 	firmware {
--- 
-2.21.0
+I know approximately 0 about ACPI. But that at least lists all the
+properties we expect. Thanks.
 
+> > Before accepting this patch, i would like to know more about the
+> > complete solution.
+> 
+> I haven't gotten that far yet, but for the Phylink I was thinking something along the
+> lines of:
+> 
+> Device (PHY0)
+> {
+>     Name (_HID, "PRP0001")
+>     Name (_DSD, Package ()
+>     {
+>         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>         Package () {
+>             Package () { "compatible", "ethernet-phy-ieee802.3-c45" },
+>             Package () { "sfp", \_SB.PCI0.RP01.SFP0 },
+>         },
+>     })
+> }
+
+You probably also need managed = "in-band-status" and
+phy-mode = "sgmii";
+
+armada-388-clearfog.dtsi is probably the best reference, much of the
+development work for Phylink and SFPs was done on that board.
+
+> I don't have a complete solution working yet. With these patches
+> I was hoping to get some early feedback.
+
+Please post your patches as "RFC" in the subject line, if you are
+wanting early feedback.
+
+Thanks
+	Andrew
