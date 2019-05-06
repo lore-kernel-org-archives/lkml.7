@@ -2,176 +2,82 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A06CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6DFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FDF2082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:10:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="efbGg26t"
+	by mail.kernel.org (Postfix) with ESMTP id C7FCB206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfEFVKL (ORCPT
+        id S1726597AbfEFVLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 17:10:11 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:41322 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfEFVKL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 17:10:11 -0400
-Received: by mail-ua1-f67.google.com with SMTP id s30so5208565uas.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 14:10:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8bHpgQyzNXmSigtHpLPdMgiBL3zjoqHtCMHUPQ65vlc=;
-        b=efbGg26t1plscKmTr5AG/RpzJ3Ly5HJYzat+OL5lpECeRe1if/gjdAvwM+3ktU48Ud
-         FmojR3dM0QW0g9CApczD3ijClH8YvAj9cTzAqrmcZ0tq90TckGXajrvoaa1RrzTz9rR/
-         tjoKcGH8AkqVNdaJKEU9GZYqZp4DICTTtYSnM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8bHpgQyzNXmSigtHpLPdMgiBL3zjoqHtCMHUPQ65vlc=;
-        b=GERRpCzQY0qIkEz0IdIFTehXEpXz+stmu3xOJPvmz0V7uYwxvNLA5XZEab9Efhjtjl
-         VHGUqRqn5J+HiZFD9/xbh/XiWHp8eSXxi35eII91DTMu7Qyh/u32cf2HVG5PDWBZqivg
-         vG7lB5Bqc79tvN5xnCGHuzK4KI+EzPWqxn1adhWJcu0wWcUeIP8y+TzcHMbAmYXwcWPJ
-         EvHhAGuMyGado6z2+CAVBTjzzQOSyx/rpYtesFf84JD8kEDUhaQhPh+NX1czRvPHP4JT
-         LhobkSTCK1fBcSXkTUV5VFSHaXrckDt8agxD3qzYusbOmhD/gWK4XhU0gVC7f8rxzdqe
-         JJOQ==
-X-Gm-Message-State: APjAAAWLcGc1eZlZMU8CRtVirJs9ccxSAKduDXruUuEA+hGl1dp/Zljc
-        81DChEJaRy2JQONN0sBXsPEkIt1AHWM=
-X-Google-Smtp-Source: APXvYqyVRGNqCSUFAnJJ9rm44NNz0M8XJjdxWzYMChqgeScVvaGCq2eeg9n/E8IAGn1OQVSdGGgDDg==
-X-Received: by 2002:ab0:70d4:: with SMTP id r20mr12008901ual.67.1557177009060;
-        Mon, 06 May 2019 14:10:09 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id 15sm1923057vkg.16.2019.05.06.14.10.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 14:10:08 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id e2so9030041vsc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 14:10:07 -0700 (PDT)
-X-Received: by 2002:a67:f849:: with SMTP id b9mr9084650vsp.188.1557177007238;
- Mon, 06 May 2019 14:10:07 -0700 (PDT)
+        Mon, 6 May 2019 17:11:25 -0400
+Received: from muru.com ([72.249.23.125]:48076 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbfEFVLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 17:11:25 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 7E3B580DB;
+        Mon,  6 May 2019 21:11:41 +0000 (UTC)
+Date:   Mon, 6 May 2019 14:11:20 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] Remove MODULE_ALIAS() calls that take undefined macro
+Message-ID: <20190506211120.GR8007@atomide.com>
+References: <1557163697-17882-1-git-send-email-yamada.masahiro@socionext.com>
+ <6d8e2880-0cc0-a7d8-1d42-4401e15e3ac9@linaro.org>
 MIME-Version: 1.0
-References: <20190503174730.245762-1-dianders@chromium.org>
-In-Reply-To: <20190503174730.245762-1-dianders@chromium.org>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Mon, 6 May 2019 14:09:55 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jL9cJ+8scZ+Cg9yqdc9+rb563xs-qVjXXuPRJYjNa4Y8w@mail.gmail.com>
-Message-ID: <CAGXu5jL9cJ+8scZ+Cg9yqdc9+rb563xs-qVjXXuPRJYjNa4Y8w@mail.gmail.com>
-Subject: Re: [PATCH] pstore/ram: Improve backward compatibility with older Chromebooks
-To:     Douglas Anderson <dianders@chromium.org>,
-        Rob Herring <robh@kernel.org>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        linux-rockchip@lists.infradead.org, jwerner@chromium.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d8e2880-0cc0-a7d8-1d42-4401e15e3ac9@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
-Date: Fri, May 3, 2019 at 10:48 AM
-To: Kees Cook, Anton Vorontsov
-Cc: <linux-rockchip@lists.infradead.org>, <jwerner@chromium.org>,
-<groeck@chromium.org>, <mka@chromium.org>, <briannorris@chromium.org>,
-Douglas Anderson, Colin Cross, Tony Luck,
-<linux-kernel@vger.kernel.org>
+* Daniel Lezcano <daniel.lezcano@linaro.org> [190506 17:40]:
+> On 06/05/2019 19:28, Masahiro Yamada wrote:
+> > These files do not define (USBHS_)DRIVER_NAME. Yet, they can be
+> > successfully compiled because they are never built as a module by
+> > anyone, i.e, the MODULE_ALIAS() calls are always no-op.
+> > 
+> > A problem showed up when a patch "moduleparam: Save information about
+> > built-in modules in separate file" is applied. With this new feature,
+> > MODULE_*() are populated even if the callers are built-in.
+> > 
+> > To avoid the build errors, the lines referencing to the undefined
+> > macro must be removed.
+> > 
+> > The complete fix is to remove all MODULE_* and #include <linux/module.h>
+> > like many "make ... explicitly non-modular" commits did.
+> > 
+> > For now, I am touching the offending lines.
+> > 
+> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> 
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-> When you try to run an upstream kernel on an old ARM-based Chromebook
-> you'll find that console-ramoops doesn't work.
->
-> Old ARM-based Chromebooks, before <https://crrev.com/c/439792>
-> ("ramoops: support upstream {console,pmsg,ftrace}-size properties")
-> used to create a "ramoops" node at the top level that looked like:
->
-> / {
->   ramoops {
->     compatible = "ramoops";
->     reg = <...>;
->     record-size = <...>;
->     dump-oops;
->   };
-> };
->
-> ...and these Chromebooks assumed that the downstream kernel would make
-> console_size / pmsg_size match the record size.  The above ramoops
-> node was added by the firmware so it's not easy to make any changes.
->
-> Let's match the expected behavior, but only for those using the old
-> backward-compatible way of working where ramoops is right under the
-> root node.
->
-> NOTE: if there are some out-of-tree devices that had ramoops at the
-> top level, left everything but the record size as 0, and somehow
-> doesn't want this behavior, we can try to add more conditions here.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Thanks, please feel free to merge together with your series:
 
-I like this; thanks! Rob is this okay by you? I just want to
-double-check since it's part of the DT parsing logic.
+Acked-by: Tony Lindgren <tony@atomide.com>
 
-I'll pick it up and add a Cc: stable.
+Or if you want me to queue it separately, please let me know.
 
--Kees
+Regards,
 
-> ---
->
->  fs/pstore/ram.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index c5c685589e36..8df3bfa2837f 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -669,6 +669,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
->                             struct ramoops_platform_data *pdata)
->  {
->         struct device_node *of_node = pdev->dev.of_node;
-> +       struct device_node *parent_node;
->         struct resource *res;
->         u32 value;
->         int ret;
-> @@ -703,6 +704,23 @@ static int ramoops_parse_dt(struct platform_device *pdev,
->
->  #undef parse_size
->
-> +       /*
-> +        * Some old Chromebooks relied on the kernel setting the console_size
-> +        * and pmsg_size to the record size since that's what the downstream
-> +        * kernel did.  These same Chromebooks had "ramoops" straight under
-> +        * the root node which isn't according to the upstream bindings.  Let's
-> +        * make those old Chromebooks work by detecting this and mimicing the
-> +        * expected behavior.
-> +        */
-> +       parent_node = of_get_parent(of_node);
-> +       if (of_node_is_root(parent_node) &&
-> +           !pdata->console_size && !pdata->ftrace_size &&
-> +           !pdata->pmsg_size && !pdata->ecc_info.ecc_size) {
-> +               pdata->console_size = pdata->record_size;
-> +               pdata->pmsg_size = pdata->record_size;
-> +       }
-> +       of_node_put(parent_node);
-> +
->         return 0;
->  }
->
-> --
-> 2.21.0.1020.gf2820cf01a-goog
->
-
-
--- 
-Kees Cook
+Tony
