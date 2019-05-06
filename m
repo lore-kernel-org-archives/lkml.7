@@ -2,70 +2,109 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3625AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29005C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0E82053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 088D12053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfEFOqZ (ORCPT
+        id S1728669AbfEFOy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:46:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44096 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:54:58 -0400
+Received: from mga05.intel.com ([192.55.52.43]:27605 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729111AbfEFOqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:46:20 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9798C2053B;
-        Mon,  6 May 2019 14:46:19 +0000 (UTC)
-Date:   Mon, 6 May 2019 10:46:18 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 4/7] sched: Add sched_load_rq tracepoint
-Message-ID: <20190506104618.2fa49e13@gandalf.local.home>
-In-Reply-To: <20190506144200.z4s63nm7untol2tr@e107158-lin.cambridge.arm.com>
-References: <20190505115732.9844-1-qais.yousef@arm.com>
-        <20190505115732.9844-5-qais.yousef@arm.com>
-        <20190506090859.GK2606@hirez.programming.kicks-ass.net>
-        <20190506095239.08577b3e@gandalf.local.home>
-        <20190506144200.z4s63nm7untol2tr@e107158-lin.cambridge.arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728146AbfEFOqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:46:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 07:46:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
+   d="scan'208";a="343985669"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga005.fm.intel.com with ESMTP; 06 May 2019 07:46:21 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hNesm-0006d2-HJ; Mon, 06 May 2019 17:46:20 +0300
+Date:   Mon, 6 May 2019 17:46:20 +0300
+From:   "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+To:     Alexandru Ardelean <ardeleanalex@gmail.com>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>
+Subject: Re: [PATCH 1/2] lib: add __sysfs_match_string_with_gaps() helper
+Message-ID: <20190506144620.GM9224@smile.fi.intel.com>
+References: <20190422083257.21805-1-alexandru.ardelean@analog.com>
+ <20190422210606.GA8805@kroah.com>
+ <86ea407aaa891e50a3bdaf2c3653636a365076ee.camel@analog.com>
+ <20190424133455.00002909@huawei.com>
+ <20190425193736.GA11458@kroah.com>
+ <CA+U=DsoyPQyNDX6CDx=xE73H9A=66BGKhTseEvZcZZPnpPAfQw@mail.gmail.com>
+ <20190426142754.GU9224@smile.fi.intel.com>
+ <CA+U=DspC2gbcWgEoCfTs-K0UaGt9DBLkXoyFufShUXD61uAAbQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+U=DspC2gbcWgEoCfTs-K0UaGt9DBLkXoyFufShUXD61uAAbQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019 15:42:00 +0100
-Qais Yousef <qais.yousef@arm.com> wrote:
-
-> I can control that for the wrappers I'm introducing. But the actual tracepoint
-> get the 'trace_' part prepended automatically by the macros.
+On Mon, May 06, 2019 at 04:45:43PM +0300, Alexandru Ardelean wrote:
+> On Fri, Apr 26, 2019 at 5:27 PM andriy.shevchenko@linux.intel.com
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Fri, Apr 26, 2019 at 12:29:11PM +0300, Alexandru Ardelean wrote:
+> >
+> > > Hmm, I actually did not give much thought to that -1.
+> > > I'll check into this and see about a V3.
+> > > It may make more sense to just fix the original
+> > > `__sysfs_match_string()`, but I'll need to go through the users of
+> > > this function and see.
+> >
+> > I was thinking about existing users of such (with "gaps") cases.
+> > Not all of them have NULL there and would like to avoid some members.
+> > Though, I think that we may ignore NULL items if -1 is supplied.
+> >
+> > Think as well about ARRAY_SIZE() as given to that.
+> >
 > 
-> ie DECLARE_TRACE(pelt_rq, ...) will automatically generate a function called
-> trace_pelt_se(...)
+> I am a bit vague on what you are proposing.
+> Is it:
 > 
-> Or am I missing something?
+> a) Leave __sysfs_match_string() as-is and introduce a new
+> `__sysfs_match_string_with_gaps()` helper/variant ?
+> b) Fix __sysfs_match_string() to break/exit on the first NULL, only if
+> -1 is provided ?
+> 
+> Either is fine, but I wanted to clarify.
 
-No trace comes from the trace points.
+The current logic something like "-1 to go till first NULL" and ARRAY_SIZE() in
+*some* cases is basically the synonym to above.
 
-So basically, we are going back to having tracepoints without
-associated trace events. Which basically is just saying "we want trace
-events here, but don't want an API". Of course, we can create a module
-that can attach to them and create the trace events as well.
+What I meant is to check if there is *any* case where ARRAY_SIZE() behaves in
+the same way as -1. Those cases should be fixed accordingly.
 
-I'm not a big fan of this, but I'll let Peter decide.
+Otherwise, the b) is what would be preferred according to the discussion.
 
--- Steve
+> > And consider to fix match_string() accordingly.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
