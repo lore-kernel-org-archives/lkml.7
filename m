@@ -2,184 +2,192 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDD6C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21116C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E478214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D890720C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557162846;
+	bh=hKEivjPezdoQpNsw9V8wzbLUYXgRFE3IPMuKbpOvsIQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XAMmd8CHSeXKFB0hCYfm0LVu4D/0a2bmjQem1ca/mZD+yAZx34ljXef7VnajC4Zf8
+	 goEuB6HoneaFCiwzFzF0Bmsmk/AqgpufFVVmM3QGXPDj23KAtRuKI3iIBiSqHhd2u1
+	 NM0lLIOFjRDFY2lZBxjVF6d+71KRCBHpLm5P4y54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfEFRMc (ORCPT
+        id S1727049AbfEFROE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:12:32 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:57457 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfEFRMb (ORCPT
+        Mon, 6 May 2019 13:14:04 -0400
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:44865 "EHLO
+        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbfEFROE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:12:31 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 843383C00C6;
-        Mon,  6 May 2019 19:12:27 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tK9ZBC8iMECS; Mon,  6 May 2019 19:12:19 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 863563C004C;
-        Mon,  6 May 2019 19:12:19 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 6 May 2019
- 19:12:19 +0200
-Date:   Mon, 6 May 2019 19:12:16 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Simon Horman <horms@verge.net.au>
-CC:     Simon Horman <horms@verge.net.au>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andy Lowe <andy_lowe@mentor.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Helge Deller <deller@gmx.de>,
-        Michael Neuling <mikey@neuling.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Philip Yang <Philip.Yang@amd.com>,
-        Matthew Wilcox <mawilcox@microsoft.com>,
-        Borislav Petkov <bp@suse.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: Re: [PATCH 1/6] serial: sh-sci: Reveal ptrval in dev_dbg
-Message-ID: <20190506171216.GA2181@vmlxhi-102.adit-jv.com>
-References: <20190504004258.23574-1-erosca@de.adit-jv.com>
- <20190504004258.23574-2-erosca@de.adit-jv.com>
- <20190506134700.ya565idfzzc3enbm@verge.net.au>
- <20190506152433.GA22769@vmlxhi-102.adit-jv.com>
- <CAMuHMdXJzEYL48qwHAxrRsurQLBipZsQpv+w8i=+B2XCM_CZng@mail.gmail.com>
+        Mon, 6 May 2019 13:14:04 -0400
+Received: by mail-lf1-f48.google.com with SMTP id n134so7889505lfn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 10:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BWErFa2Tb4Iv9aICLnei73w528HT1mPAhqrqIzBV8n8=;
+        b=A/1GS57fjXXZgfDIFSzv5EkjXjqduB2iecI//MYxRTsOyDEtXxuDBaXBNmKk3QNbZo
+         ic+a6bYXBTLe0BX8PfBz1JeKdB8jrQ/3YOzCOEe0IgU7hvKDFxotfpKn/N3W1iJDimFx
+         GYlEKt8UbE9tbFG9WjvQkiWtxAMk3TOqfUJS8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BWErFa2Tb4Iv9aICLnei73w528HT1mPAhqrqIzBV8n8=;
+        b=m4w4NefOJiyV9MIRLs+/cjfWgbZ/o8jCswCbt4mOeI7lRC42SK6xlOlpotzcr/UVab
+         VQJAEcH530OapNn3DaVihDVdNc99nZL73pXV3V1pes66N/x6aMPEDauEgrnKmbh5fAs4
+         LKqZjWXwq2u1oRWNAtXe0czYrJTA8fVFU9EEYofQarxvXPWeiMEeb190hds4Cp4wBnZw
+         AHkhnw2dJml/JIWj/Y5yjRytQpDuRiXQ4hEdUSxagLjB/COHe+FmyJmyxn4Etfe6YFww
+         nY1AoL79Bgx+TF3IIuhBsRei6AKjQTmebebPT3IrOhQlOaJOTmcHMuvOr+3b0upp1xn6
+         WDfQ==
+X-Gm-Message-State: APjAAAWuhimS07PeSr0Q+4ffcS6cauj+9HnsyvBpnEou0nXSTt7uF8c9
+        wT6dYaABmoT/NEFesnbSKgftKGPqrKk=
+X-Google-Smtp-Source: APXvYqzpHJia0/aqNHWR13ZSL7xU5ItUlavJdrK8G2XlUJRGOsIQ0rNOBz4ro3mx/PIaVh7pv96eCw==
+X-Received: by 2002:ac2:51a1:: with SMTP id f1mr12425383lfk.129.1557162840951;
+        Mon, 06 May 2019 10:14:00 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id s12sm2430160ljd.66.2019.05.06.10.13.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 10:13:59 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id h126so9710952lfh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 10:13:59 -0700 (PDT)
+X-Received: by 2002:ac2:43cf:: with SMTP id u15mr13444160lfl.67.1557162838971;
+ Mon, 06 May 2019 10:13:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXJzEYL48qwHAxrRsurQLBipZsQpv+w8i=+B2XCM_CZng@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.184]
+References: <20190429145159.GA29076@hc> <CAHk-=wjPqcPYkiWKFc=R3+18DXqEhV+Nfbo=JWa32Xp8Nze67g@mail.gmail.com>
+ <20190502082741.GE13955@hc> <CAHk-=wjmtMrxC1nSEHarBn8bW+hNXGv=2YeAWmTw1o54V8GKWA@mail.gmail.com>
+ <20190502231858.GB13168@dc5-eodlnx05.marvell.com> <CAHk-=wiEahkwDXpoy=-SzJHNMRXKVSjPa870+eKKenufhO_Hgw@mail.gmail.com>
+ <20190506061100.GA8465@dc5-eodlnx05.marvell.com>
+In-Reply-To: <20190506061100.GA8465@dc5-eodlnx05.marvell.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 6 May 2019 10:13:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whGAef6+mZi-_+rfTDxXrLDw-jrOiy3MNEpLAkC5scGRg@mail.gmail.com>
+Message-ID: <CAHk-=whGAef6+mZi-_+rfTDxXrLDw-jrOiy3MNEpLAkC5scGRg@mail.gmail.com>
+Subject: Re: [EXT] Re: [RFC] Disable lockref on arm64
+To:     Jayachandran Chandrasekharan Nair <jnair@marvell.com>
+Cc:     Jan Glauber <jglauber@marvell.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 06:46:57PM +0200, Geert Uytterhoeven wrote:
-> Hi Eugeniu,
-> 
-> On Mon, May 6, 2019 at 5:24 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> > On Mon, May 06, 2019 at 03:47:05PM +0200, Simon Horman wrote:
-> > > On Sat, May 04, 2019 at 02:42:53AM +0200, Eugeniu Rosca wrote:
-> > > > Starting with v4.15-rc2 commit ad67b74d2469d9 ("printk: hash addresses
-> > > > printed with %p"), enabling debug prints in sh-sci.c would generate
-> > > > output like below confusing the users who try to sneak into the
-> > > > internals of the driver:
-> > > >
-> > > > sh-sci e6e88000.serial: sci_request_dma: TX: got channel (____ptrval____)
-> > > > sh-sci e6e88000.serial: sci_request_dma: mapped 4096@(____ptrval____) to 0x00000006798bf000
-> > > > sh-sci e6e88000.serial: sci_request_dma: RX: got channel (____ptrval____)
-> > > > sh-sci e6e88000.serial: sci_dma_tx_work_fn: (____ptrval____): 0...2, cookie 2
-> > > >
-> > > > There are two possible fixes for that:
-> > > >  - get rid of '%p' prints if they don't reveal any useful information
-> > > >  - s/%p/%px/, since it is unlikely we have any concerns leaking the
-> > > >    pointer values when running a debug/non-production kernel
-> > >
-> > > I am concerned that this may expose information in circumstances
-> > > where it is undesirable. Is it generally accepted practice to
-> > > use %px in conjunction with dev_dbg() ?
-> > >
-> > > ...
-> >
-> > Below commits performed a similar s/%p/%px/ update in debug context:
-> >
-> > Authors (CC-ed)   Commit         Subject
-> > ----------------------------------------
-> > Christophe Leroy  b18f0ae92b0a1d ("powerpc/prom: fix early DEBUG messages")
-> > Helge Deller      3847dab7742186 ("parisc: Add alternative coding infrastructure")
-> > Michael Neuling   51c3c62b58b357 ("powerpc: Avoid code patching freed init sections")
-> > Kuninori Morimoto dabdbe3ae0cb9a ("ASoC: rsnd: don't use %p for dev_dbg()")
-> > Philip Yang       fa7e65147e5dca ("drm/amdkfd: use %px to print user space address instead of %p")
-> > Matthew Wilcox    68c1f08203f2b0 ("lib/list_debug.c: print unmangled addresses")
-> > Borislav Petkov   0e6c16c652cada ("x86/alternative: Print unadorned pointers")
-> > Darrick J. Wong   c96900435fa9fd ("xfs: use %px for data pointers when debugging")
-> > Helge Deller      04903c06b4854d ("parisc: Show unhashed HPA of Dino chip")
-> >
-> > To quote Matthew, with respect to any debug prints:
-> > If an attacker can force this message to be printed, we've already lost.
-> 
-> I think the issue with using %px in debug code is that a distro may enable
-> CONFIG_DYNAMIC_DEBUG (it is enabled in several defconfigs), after which
-> an attacker just has to convince/trick the system into enabling debug for that
-> particular driver.
+On Sun, May 5, 2019 at 11:13 PM Jayachandran Chandrasekharan Nair
+<jnair@marvell.com> wrote:
+>
+> > It's not normal, and it's not inevitable.
+>
+> If you look at the code, the CAS failure is followed by a yield
+> before retrying the CAS. Yield on arm64 is expected to be a hint
+> to release resources so that other threads/cores can make progress.
+> Under heavy contention, I expect the current code to behave the way
+> I noted in my last mail, with the issue with fairness as well.
 
-How about going the route of commit c96900435fa9fd ("xfs: use %px for
-data pointers when debugging"), i.e. s/%p/"PTR_FMT"/ like below (this
-would enable the expected debug output only on manually defining DEBUG
-in the *.c file, while still keeping the output hashed on
-DYNAMIC_DEBUG=y if DEBUG is undefined).
+Yes, this is a good point.
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index 3cd139752d3f..69cd87c5ef0c 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -56,6 +56,12 @@
- #include <asm/sh_bios.h>
- #endif
- 
-+#ifdef DEBUG
-+#define PTR_FMT "%px"
-+#else
-+#define PTR_FMT "%p"
-+#endif
-+
- #include "serial_mctrl_gpio.h"
- #include "sh-sci.h"
- 
-@@ -1434,7 +1440,7 @@ static void sci_dma_tx_work_fn(struct work_struct *work)
- 		goto switch_to_pio;
- 	}
- 
--	dev_dbg(port->dev, "%s: %p: %d...%d, cookie %d\n",
-+	dev_dbg(port->dev, "%s: "PTR_FMT": %d...%d, cookie %d\n",
- 		__func__, xmit->buf, xmit->tail, xmit->head, s->cookie_tx);
- 
- 	dma_async_issue_pending(chan);
+It's entirely possibly that _particularly_ for CAS loops - where we
+get an updated value that caused the CAS to fail - we should not yield
+in between every CAS. Exactly so that we don't force the CPU to flush
+the cacheline that it just got and make the CAS loop do lots of
+unnecessary work and just keep looping.
 
-> 
-> > In any case, I won't be affected much if the change is not accepted,
-> > since it doesn't resolve any major issue on my end. Thanks!
-> 
-> OK.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+That said, I think right now all ARM implementations actually treat
+the yield instruction as a pure nop, so I assume this isn't actually
+the root of the ThunderX2 problems.
 
--- 
-Best Regards,
-Eugeniu.
+But we could do something like "unroll the cmpxchg loop twice, only
+yield every other iteration" exactly for the case wher cpu_relax()
+might encourage the CPU to actually release the cacheline.
+
+If you find that something like that would help ThunderX2, we can most
+certainly try that kind of thing. It makes sense, and unrolling the
+cmpxchg loop once might even help with branch prediction (ie the
+common case might be that the *first* cmpxchg succeeds, and that's
+what the branch predictors get primed for, but then if the first one
+actually fails, we fall through to the contention case, and now maybe
+the branch predictor ends up being primed for *that* case for the
+second one).
+
+Yes, the above is wild handwaving - but it's the kind of thing we
+could easily do if the hardware people have a good argument for them.
+
+I'm not asking for _perfect_ hardware. I'm just asking for hardware to
+not be actively antagonistic to something fundamental like a cmpxchg
+loop.
+
+> Your larger point seems to be that the hardware has smarter to
+> scale standard locking implementations when adding cores, and
+> be graceful even in extremely high contention cases. Yes, this
+> is something we should be looking at for ThunderX3.
+
+Yes. Also, my point really is that no core should ever be in the
+situation that it fetches a cache-line, only to then release it
+immediately again without making any progress. You do want a *certain*
+amount of stickiness to the cachelines.
+
+Of course, you very much do not want to overdo it - I'm talking about
+keeping the cacheline around for tens of cycles, not for hundreds of
+cycles. Enough that if you have small code snippets that are in and
+out quickly, you don't see bouncing at that level.
+
+Because you *don't* want the stickiness to be such that once one CPU
+has the cacheline, it will stay with that CPU (or that socket) as long
+as the CPU hammers it all the time.
+
+So for example, in the case of a cmpxchg loop, maybe you'll get a
+couple of branch mispredicts the first few times round the loop (first
+because the original value read was a plain read and the cacheline was
+shared rather than exclusive, but then after that because the branch
+predictor saw previous cases where there was no contention, and the
+loop exited immediately).
+
+So maybe the first couple of iterations the core might be "slow
+enough" to not get the cmpxchg loop working well. But not a lot more
+than that (again, unless something special happens, like an interrupt
+storm that keeps interrupting the loop).
+
+End result: I do think the cache coherency needs to be a *bit* smarter
+than just a "oh, another core wants this line, I will now immediately
+try to satisfy it". And yes, those kinds of things get more important
+the more cores you have. You don't need a whole lot of smarts if you
+have just a couple of cores, because you'll be making progress
+regardless.
+
+And note that I really think this kind of support absolutely falls on
+hardware. Software simply _cannot_ make some good tuning decision
+using backoff or whatever. Yes, yes, I know people have done things
+like that historically (Sparc and SunOS were famous for it), but part
+of doing them historically was that
+
+ (a) they didn't know better
+
+ (b) the software was often tuned to particular hardware and loads (or
+at least a very small set of hardware)
+
+ (c) there wasn't necessarily better hardware options available
+
+but none of the above is true today.
+
+Things like backoff loops in software are not only hw specific, they
+tend to have seriously bad fairness behavior (and they depend on
+everybody honoring the backoff, which can be a security issue), so
+then you have to add even more complexity to deal with the fairness
+issues, and your cmpxchg loop becomes something truly disgusting.
+
+Which is why I say: "do it right in hardware".
+
+                   Linus
