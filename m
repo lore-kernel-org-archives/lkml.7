@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A97C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF2BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9568214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A5D21019
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154097;
-	bh=IdkG2QPFkuZg4RSN+xXYYGxvc5kF66IVxfdNBTMQhsQ=;
+	s=default; t=1557154101;
+	bh=Yo/FcclupItuUI/duShN/8hCZGvDgKe9Px+JlwS0P3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d1eOYYS6YxnMpeK7YwytBSPCHchl8tHrY7tTEyh/fX4UF/0+SWcERT1HEsZqhucxH
-	 AkNC5Xn1x73gY2c2POUHkXFbRi7Rp4ddC9EsuFx5T4L0pEHu6ZPcALhfM6d5CE1G6V
-	 +5/lkXKbzy3Ge+UxzkOdkr2LPVGOu1wIRdS0nNPk=
+	b=CGw0gGuSYrNHHyqUbM+Ist9jjaJouxL4oHyWYAs7SMtxmEsZY3sa3ojH+XAe5/ONq
+	 oY6eg5vTp1Rm7HmE7ZCdGeEeLsJAvvZg/QHtdbR3ekpvoO67xs4n1wfj25aAriEzUN
+	 xjv+JOLFnnXgg57iSpsgxFrrJuBD9vZ9PSkrvQNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbfEFOsQ (ORCPT
+        id S1729441AbfEFOsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:48:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48294 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:48:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728258AbfEFOsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:48:14 -0400
+        id S1727845AbfEFOsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:48:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D8722053B;
-        Mon,  6 May 2019 14:48:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9533205ED;
+        Mon,  6 May 2019 14:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154093;
-        bh=IdkG2QPFkuZg4RSN+xXYYGxvc5kF66IVxfdNBTMQhsQ=;
+        s=default; t=1557154096;
+        bh=Yo/FcclupItuUI/duShN/8hCZGvDgKe9Px+JlwS0P3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l/AQ63zUUvC0JHOdAATUDhSBzCMLX6r9hJnLHzEX6FIO1xiGU1iW33D4m+xfcVPqS
-         lHiUww0vY8DSlLjkoOdPxmzrxor4WUQvfM08qhqVyY4aw8mcSK1Xps/Za9gHZqXTr9
-         +vuhLoP5LdpqklwAtkeuawX5aATu8c7i0uk8JZ64=
+        b=SISdyqC+YcTY04f+9TnYrDc859SdLrN8mV1RkiedrjZbhMxSdKM4ZBOf/E+zgRjmr
+         g79Wl4PLCtx+/1Ie7/RLwPeP1Ej5ZoI4oq+1oGanqDI3MwcJ4WNbEsW9X6n2C+naQe
+         LpGpTFEzayYFbEbJhWCA+7+sI2CWBa7pWp7DdKJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Weinelt <martin@linuxlounge.net>,
-        Sven Eckelmann <sven@narfation.org>,
-        Antonio Quartulli <a@unstable.cc>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+        stable@vger.kernel.org, Arvind Sankar <niveditas98@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 33/62] batman-adv: Reduce tt_global hash refcnt only for removed entry
-Date:   Mon,  6 May 2019 16:33:04 +0200
-Message-Id: <20190506143053.937319645@linuxfoundation.org>
+Subject: [PATCH 4.9 34/62] igb: Fix WARN_ONCE on runtime suspend
+Date:   Mon,  6 May 2019 16:33:05 +0200
+Message-Id: <20190506143054.022934768@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -62,73 +62,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f131a56880d10932931e74773fb8702894a94a75 ]
+[ Upstream commit dabb8338be533c18f50255cf39ff4f66d4dabdbe ]
 
-The batadv_hash_remove is a function which searches the hashtable for an
-entry using a needle, a hashtable bucket selection function and a compare
-function. It will lock the bucket list and delete an entry when the compare
-function matches it with the needle. It returns the pointer to the
-hlist_node which matches or NULL when no entry matches the needle.
+The runtime_suspend device callbacks are not supposed to save
+configuration state or change the power state. Commit fb29f76cc566
+("igb: Fix an issue that PME is not enabled during runtime suspend")
+changed the driver to not save configuration state during runtime
+suspend, however the driver callback still put the device into a
+low-power state. This causes a warning in the pci pm core and results in
+pci_pm_runtime_suspend not calling pci_save_state or pci_finish_runtime_suspend.
 
-The batadv_tt_global_free is not itself protected in anyway to avoid that
-any other function is modifying the hashtable between the search for the
-entry and the call to batadv_hash_remove. It can therefore happen that the
-entry either doesn't exist anymore or an entry was deleted which is not the
-same object as the needle. In such an situation, the reference counter (for
-the reference stored in the hashtable) must not be reduced for the needle.
-Instead the reference counter of the actually removed entry has to be
-reduced.
+Fix this by not changing the power state either, leaving that to pci pm
+core, and make the same change for suspend callback as well.
 
-Otherwise the reference counter will underflow and the object might be
-freed before all its references were dropped. The kref helpers reported
-this problem as:
+Also move a couple of defines into the appropriate header file instead
+of inline in the .c file.
 
-  refcount_t: underflow; use-after-free.
-
-Fixes: 7683fdc1e886 ("batman-adv: protect the local and the global trans-tables with rcu")
-Reported-by: Martin Weinelt <martin@linuxlounge.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: fb29f76cc566 ("igb: Fix an issue that PME is not enabled during runtime suspend")
+Signed-off-by: Arvind Sankar <niveditas98@gmail.com>
+Reviewed-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/translation-table.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ .../net/ethernet/intel/igb/e1000_defines.h    |  2 +
+ drivers/net/ethernet/intel/igb/igb_main.c     | 57 +++----------------
+ 2 files changed, 10 insertions(+), 49 deletions(-)
 
-diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
-index 4f18fcd2d3c0..af4a02ad8503 100644
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -615,14 +615,26 @@ static void batadv_tt_global_free(struct batadv_priv *bat_priv,
- 				  struct batadv_tt_global_entry *tt_global,
- 				  const char *message)
- {
-+	struct batadv_tt_global_entry *tt_removed_entry;
-+	struct hlist_node *tt_removed_node;
-+
- 	batadv_dbg(BATADV_DBG_TT, bat_priv,
- 		   "Deleting global tt entry %pM (vid: %d): %s\n",
- 		   tt_global->common.addr,
- 		   BATADV_PRINT_VID(tt_global->common.vid), message);
+diff --git a/drivers/net/ethernet/intel/igb/e1000_defines.h b/drivers/net/ethernet/intel/igb/e1000_defines.h
+index 2688180a7acd..f948eec7b35f 100644
+--- a/drivers/net/ethernet/intel/igb/e1000_defines.h
++++ b/drivers/net/ethernet/intel/igb/e1000_defines.h
+@@ -193,6 +193,8 @@
+ /* enable link status from external LINK_0 and LINK_1 pins */
+ #define E1000_CTRL_SWDPIN0  0x00040000  /* SWDPIN 0 value */
+ #define E1000_CTRL_SWDPIN1  0x00080000  /* SWDPIN 1 value */
++#define E1000_CTRL_ADVD3WUC 0x00100000  /* D3 WUC */
++#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000 /* PHY PM enable */
+ #define E1000_CTRL_SDP0_DIR 0x00400000  /* SDP0 Data direction */
+ #define E1000_CTRL_SDP1_DIR 0x00800000  /* SDP1 Data direction */
+ #define E1000_CTRL_RST      0x04000000  /* Global reset */
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 82e48e355fb9..7956176c2c73 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -7548,9 +7548,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 	struct e1000_hw *hw = &adapter->hw;
+ 	u32 ctrl, rctl, status;
+ 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
+-#ifdef CONFIG_PM
+-	int retval = 0;
+-#endif
++	bool wake;
  
--	batadv_hash_remove(bat_priv->tt.global_hash, batadv_compare_tt,
--			   batadv_choose_tt, &tt_global->common);
--	batadv_tt_global_entry_put(tt_global);
-+	tt_removed_node = batadv_hash_remove(bat_priv->tt.global_hash,
-+					     batadv_compare_tt,
-+					     batadv_choose_tt,
-+					     &tt_global->common);
-+	if (!tt_removed_node)
-+		return;
+ 	rtnl_lock();
+ 	netif_device_detach(netdev);
+@@ -7563,14 +7561,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 	igb_clear_interrupt_scheme(adapter);
+ 	rtnl_unlock();
+ 
+-#ifdef CONFIG_PM
+-	if (!runtime) {
+-		retval = pci_save_state(pdev);
+-		if (retval)
+-			return retval;
+-	}
+-#endif
+-
+ 	status = rd32(E1000_STATUS);
+ 	if (status & E1000_STATUS_LU)
+ 		wufc &= ~E1000_WUFC_LNKC;
+@@ -7587,10 +7577,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 		}
+ 
+ 		ctrl = rd32(E1000_CTRL);
+-		/* advertise wake from D3Cold */
+-		#define E1000_CTRL_ADVD3WUC 0x00100000
+-		/* phy power management enable */
+-		#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000
+ 		ctrl |= E1000_CTRL_ADVD3WUC;
+ 		wr32(E1000_CTRL, ctrl);
+ 
+@@ -7604,12 +7590,15 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 		wr32(E1000_WUFC, 0);
+ 	}
+ 
+-	*enable_wake = wufc || adapter->en_mng_pt;
+-	if (!*enable_wake)
++	wake = wufc || adapter->en_mng_pt;
++	if (!wake)
+ 		igb_power_down_link(adapter);
+ 	else
+ 		igb_power_up_link(adapter);
+ 
++	if (enable_wake)
++		*enable_wake = wake;
 +
-+	/* drop reference of remove hash entry */
-+	tt_removed_entry = hlist_entry(tt_removed_node,
-+				       struct batadv_tt_global_entry,
-+				       common.hash_entry);
-+	batadv_tt_global_entry_put(tt_removed_entry);
+ 	/* Release control of h/w to f/w.  If f/w is AMT enabled, this
+ 	 * would have already happened in close and is redundant.
+ 	 */
+@@ -7624,22 +7613,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ #ifdef CONFIG_PM_SLEEP
+ static int igb_suspend(struct device *dev)
+ {
+-	int retval;
+-	bool wake;
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-
+-	retval = __igb_shutdown(pdev, &wake, 0);
+-	if (retval)
+-		return retval;
+-
+-	if (wake) {
+-		pci_prepare_to_sleep(pdev);
+-	} else {
+-		pci_wake_from_d3(pdev, false);
+-		pci_set_power_state(pdev, PCI_D3hot);
+-	}
+-
+-	return 0;
++	return __igb_shutdown(to_pci_dev(dev), NULL, 0);
+ }
+ #endif /* CONFIG_PM_SLEEP */
+ 
+@@ -7707,22 +7681,7 @@ static int igb_runtime_idle(struct device *dev)
+ 
+ static int igb_runtime_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	int retval;
+-	bool wake;
+-
+-	retval = __igb_shutdown(pdev, &wake, 1);
+-	if (retval)
+-		return retval;
+-
+-	if (wake) {
+-		pci_prepare_to_sleep(pdev);
+-	} else {
+-		pci_wake_from_d3(pdev, false);
+-		pci_set_power_state(pdev, PCI_D3hot);
+-	}
+-
+-	return 0;
++	return __igb_shutdown(to_pci_dev(dev), NULL, 1);
  }
  
- /**
+ static int igb_runtime_resume(struct device *dev)
 -- 
 2.20.1
 
