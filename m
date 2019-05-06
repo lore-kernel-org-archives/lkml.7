@@ -2,107 +2,158 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E670C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 04:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0970BC04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 04:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00AB20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 04:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE2F2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 04:24:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jBlCglUa"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="BvJ/3C+I";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="d8zTvlnK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbfEFELc (ORCPT
+        id S1725851AbfEFEY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 00:11:32 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39883 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfEFELc (ORCPT
+        Mon, 6 May 2019 00:24:28 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:40443 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725710AbfEFEY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 00:11:32 -0400
-Received: by mail-qk1-f193.google.com with SMTP id z128so4490435qkb.6
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 21:11:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a/9jBpXTZnQFeOciLXd3ZrvUElHq2Jv+0k02JlnPEJU=;
-        b=jBlCglUaJPP/RHcXNVXHWy5SxyOg7l9yIUGv/SlPVrdvtfSkWMXBmufeK4XN6+N2CQ
-         hrZrwGcS+vtGlcYninLD0qmZXP9pOHuNW5TkPN3kdv8uIuj4nboRj7XrstWxZXX0sXvh
-         8Hjwe49h11MXj2vAuYKPaNlSXfLPJGZwopxWHySAX5FYinUkLTCYI/eR8Gp68Z/LW+Ao
-         HuslEbmnRLs6LOsfzyw2kB4L/M2r363F34q06KGgmC7ptC2Nd75ubGNbAF5PjpKyNhVm
-         xSFrwQ9nVlgtkvdRItuhcoYlxBL2JalPkVoalg4GdHX0cTkNBSF+0J7VlP8Y03OcJwZp
-         9ysg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a/9jBpXTZnQFeOciLXd3ZrvUElHq2Jv+0k02JlnPEJU=;
-        b=NmuAK9bvbBZoTD4c+MTd11vSEuWX4W427mpwAZOjrN+wDJWOqdcRgTMcbdHimxMI1L
-         wu+poSVFynozLPBjWf1GfZT2mjxcBTeP2WMqfO2HM2pZ9qesZ17v/09a/q+CEflLTEdc
-         btoQ200hqhjAO0GIcjktuukbvYsIMkj2JXNXdgNR1ShBtbrChs6Bk+Z8YpHVoplQihcx
-         vFL24H8apvoBkT1AFxrulHZ2fb3uS8sqB7QEFH70NSpW7XmuivAoOLokAHHr/L2YC5ui
-         z7+HUaQztJB/vAsBN4AaTbgStloxaeZEcFPqikC0ed+CJnEvOD5rivocX3MiRlTdZIuJ
-         Begg==
-X-Gm-Message-State: APjAAAVlVOSEkZdQUSB/2YaAbDemyd27OkFDqcaKj0URb6ylL2+MTLL7
-        ijFl1+DFs83gDLLz4ZjGU3ZBHQ==
-X-Google-Smtp-Source: APXvYqzDxKH7+7jB1OvTn40IPHrxitvDRhwmOASshkDIaRLNFor/C/gqgDxKs/ndQBhcJ743DS4ZIA==
-X-Received: by 2002:a37:2d81:: with SMTP id t123mr17416678qkh.316.1557115890995;
-        Sun, 05 May 2019 21:11:30 -0700 (PDT)
-Received: from ovpn-121-162.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id h7sm4739467qkk.27.2019.05.05.21.11.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 21:11:30 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     jroedel@suse.de
-Cc:     gary.hook@amd.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] iommu/amd: print out "tag" in INVALID_PPR_REQUEST
-Date:   Mon,  6 May 2019 00:11:06 -0400
-Message-Id: <20190506041106.29167-1-cai@lca.pw>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 6 May 2019 00:24:27 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id EBAE720F51;
+        Mon,  6 May 2019 00:24:23 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Mon, 06 May 2019 00:24:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=vvpSEtd/71ILYVnxht0QzJ3t9KHpGOA
+        BdcYTEMQnFnY=; b=BvJ/3C+IsTJlE3JZt+akWqhUuurfqr85XWkuxTk6XWvc6Hv
+        I8HzRy+inMg56yezGMfICg/mgb3mqTkwZLPVony1rsYhtnP7FsMCYEJj/rQIOIxz
+        OT2H4eZY7JPqWWeUPGdjdscfM+rFkg0IXkPF8V5MAXpGWVzM9RW27pEE4BgOjPHN
+        E8VxiveMfbOiA8NdCMGfKpLddsSZQ3/Y1YfUQ61Zras2yLtv1BTs09Fq9PLs6lEb
+        VMmqnmisGj9al8vfqEM07fJkqzxx8VrATkxhXL69FVLU2Xla1Pmwak6li+seetqD
+        yx+efktSd04jw5c9MY9VS3JXIc70cQ0zmsizP+w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=vvpSEt
+        d/71ILYVnxht0QzJ3t9KHpGOABdcYTEMQnFnY=; b=d8zTvlnKIZ99YD0EcU/6CB
+        1YKJz0mMB4fMvN7y5nBCWVhKz6Ralyn8SlVkVmqZhbJZw0fiUXMxISgRHjkduc4a
+        8Y+7zl5c3MV8nQar/k/Mq0omEGBnpx7DioVlNLd/G25cV4EjT3r4R4Nwaan6FCbd
+        y69UD4gwAstyKz0nLp/K5OxO/qSfF7IQnBWmCLUIWJR48rERnCnTAP3tZky+EweK
+        c/B9sCW1PuHXZ9CJ92E9UpWsGWy5uSmjKIfDAtnyt67r7zm1DssWos9WW+8r3E7E
+        3uaK345q2GAUq+hBLsJIUL/tEoRg5aCH+tBeDeqv6YRl6jTM0QhIMIZ9ImCpOoug
+        ==
+X-ME-Sender: <xms:9bbPXDTXQERiByBN7ueIdBBWGKvLLTvpXXdEP1Cnvg_5Mg4PkSlylw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrjeeigdekhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
+    ufhiiigvpedt
+X-ME-Proxy: <xmx:9bbPXJowtklksSLCrnL19NWbqRExZANDMYdik5fxSZLkpyT_n-xOUQ>
+    <xmx:9bbPXBZWgZ_X03aerpo-O4DjS7RPwOeK7H_13mUcLdE11qyCFmEEkQ>
+    <xmx:9bbPXES6tGlFSKWnBE2VVcXNh8oo8zCxVotneQCYb4EwQ3L3nXTdTg>
+    <xmx:97bPXBrQC5vH8uH97yfNiXOmXjuTHF4XBvRWl6di87l-C-HnXC3_Lw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 66C437C6D9; Mon,  6 May 2019 00:24:21 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-449-gfb3fc5a-fmstable-20190430v1
+Mime-Version: 1.0
+Message-Id: <76491a70-01ca-4308-a09e-4f223ac49ebd@www.fastmail.com>
+In-Reply-To: <20190503181336.579877-1-vijaykhemka@fb.com>
+References: <20190503181336.579877-1-vijaykhemka@fb.com>
+Date:   Mon, 06 May 2019 00:24:13 -0400
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Vijay Khemka" <vijaykhemka@fb.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Joel Stanley" <joel@jms.id.au>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     sdasari@fb.com
+Subject: Re: [PATCH v2] misc: aspeed-lpc-ctrl: Correct return values
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit e7f63ffc1bf1 ("iommu/amd: Update logging information for new
-event type") introduced a variable "tag" but had never used it which
-generates a warning below,
 
-drivers/iommu/amd_iommu.c: In function 'iommu_print_event':
-drivers/iommu/amd_iommu.c:567:33: warning: variable 'tag' set but not
-used [-Wunused-but-set-variable]
-  int type, devid, pasid, flags, tag;
-                                 ^~~
-so just use it during the logging.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/iommu/amd_iommu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Sat, 4 May 2019, at 03:43, Vijay Khemka wrote:
+> Corrected some of return values with appropriate meanings and reported
+> relevant messages as debug information.
+> 
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index f7cdd2ab7f11..52f41369c5b3 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -631,9 +631,9 @@ static void iommu_print_event(struct amd_iommu *iommu, void *__evt)
- 		pasid = ((event[0] >> 16) & 0xFFFF)
- 			| ((event[1] << 6) & 0xF0000);
- 		tag = event[1] & 0x03FF;
--		dev_err(dev, "Event logged [INVALID_PPR_REQUEST device=%02x:%02x.%x pasid=0x%05x address=0x%llx flags=0x%04x]\n",
-+		dev_err(dev, "Event logged [INVALID_PPR_REQUEST device=%02x:%02x.%x pasid=0x%05x tag=0x%04x address=0x%llx flags=0x%04x]\n",
- 			PCI_BUS_NUM(devid), PCI_SLOT(devid), PCI_FUNC(devid),
--			pasid, address, flags);
-+			pasid, tag, address, flags);
- 		break;
- 	default:
- 		dev_err(dev, "Event logged [UNKNOWN event[0]=0x%08x event[1]=0x%08x event[2]=0x%08x event[3]=0x%08x\n",
--- 
-2.20.1 (Apple Git-117)
+Thanks for the fixes, this looks okay now. However, was there a reason for
+not squashing change into your previous patch that introduced the issues
+this fixes? That hasn't been applied yet either as far as I'm aware. I'd prefer
+we do that and submit a single, good patch if we can.
 
+Andrew
+
+> ---
+>  drivers/misc/aspeed-lpc-ctrl.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/misc/aspeed-lpc-ctrl.c 
+> b/drivers/misc/aspeed-lpc-ctrl.c
+> index 332210e06e98..aca13779764a 100644
+> --- a/drivers/misc/aspeed-lpc-ctrl.c
+> +++ b/drivers/misc/aspeed-lpc-ctrl.c
+> @@ -93,8 +93,8 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, 
+> unsigned int cmd,
+>  
+>  		/* If memory-region is not described in device tree */
+>  		if (!lpc_ctrl->mem_size) {
+> -			dev_err(dev, "Didn't find reserved memory\n");
+> -			return -EINVAL;
+> +			dev_dbg(dev, "Didn't find reserved memory\n");
+> +			return -ENXIO;
+>  		}
+>  
+>  		map.size = lpc_ctrl->mem_size;
+> @@ -134,16 +134,16 @@ static long aspeed_lpc_ctrl_ioctl(struct file 
+> *file, unsigned int cmd,
+>  
+>  		if (map.window_type == ASPEED_LPC_CTRL_WINDOW_FLASH) {
+>  			if (!lpc_ctrl->pnor_size) {
+> -				dev_err(dev, "Didn't find host pnor flash\n");
+> -				return -EINVAL;
+> +				dev_dbg(dev, "Didn't find host pnor flash\n");
+> +				return -ENXIO;
+>  			}
+>  			addr = lpc_ctrl->pnor_base;
+>  			size = lpc_ctrl->pnor_size;
+>  		} else if (map.window_type == ASPEED_LPC_CTRL_WINDOW_MEMORY) {
+>  			/* If memory-region is not described in device tree */
+>  			if (!lpc_ctrl->mem_size) {
+> -				dev_err(dev, "Didn't find reserved memory\n");
+> -				return -EINVAL;
+> +				dev_dbg(dev, "Didn't find reserved memory\n");
+> +				return -ENXIO;
+>  			}
+>  			addr = lpc_ctrl->mem_base;
+>  			size = lpc_ctrl->mem_size;
+> @@ -239,7 +239,7 @@ static int aspeed_lpc_ctrl_probe(struct 
+> platform_device *pdev)
+>  		of_node_put(node);
+>  		if (rc) {
+>  			dev_err(dev, "Couldn't address to resource for reserved memory\n");
+> -			return -ENOMEM;
+> +			return -ENXIO;
+>  		}
+>  
+>  		lpc_ctrl->mem_size = resource_size(&resm);
+> -- 
+> 2.17.1
+> 
+>
