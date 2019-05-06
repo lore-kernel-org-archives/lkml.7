@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBECC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792D0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47FBC2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF2D2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154861;
-	bh=iQRuPbmdXIi0lGoFvr2R2Tz7DVczw5Bk8bNILLR9LVo=;
+	s=default; t=1557154872;
+	bh=VLrLbpQNG2oo8f9AnDWa0+M/cFsK37HiCdGpLr1MZmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=olJD+FU2NrrofwG0xArOLU0lnKRNeEtW7iZ+ds1lWgPYVx4pv7G4S1vlKhyf+oo7A
-	 TWK3b/OCMr3ndLjC+6aP0gk4jQLTQaUn/KN/SSUKfjx5biB/l63VwG+kjzwiToDKG/
-	 8nH6DiljQ2wvzP8gjOdNPMaxWr35ADcE9sjcRv50=
+	b=z9a6LFnlAHhipdkOMGHRq8Nz1GFL7MIpgJx9Y2uiYWdGvGDmjozdyXkRm2IJLPdiD
+	 jCxCUzJFNx5Z1zr5d7Ns+uDuINR7DN4j6VmaoQmd5Is4X6JuQpdGTGKf9O3sA2R2rp
+	 p0tF8jy5mnVf/AWiyjHJv3vGH9sgCZDHFTlcpZzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbfEFOlt (ORCPT
+        id S1727944AbfEFPBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36070 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:01:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727832AbfEFOlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:46 -0400
+        id S1727816AbfEFOli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:41:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CFB021019;
-        Mon,  6 May 2019 14:41:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3D012087F;
+        Mon,  6 May 2019 14:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153705;
-        bh=iQRuPbmdXIi0lGoFvr2R2Tz7DVczw5Bk8bNILLR9LVo=;
+        s=default; t=1557153697;
+        bh=VLrLbpQNG2oo8f9AnDWa0+M/cFsK37HiCdGpLr1MZmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PyGoFdoSn0gCj/MNM0KyLdr373ccNhxYGhV6RsbMszw5vANzCuOfLBcVVcMCe+YYK
-         W0UTrB8YBavW2GbjevEpPagzJEmNMskEbrsn94G2MWX5facsdhFlZQN/2vZk1QA01p
-         k2SE1TH3bCmgWCZVWMDFYPXmFepzI0gegJAAaSZg=
+        b=IB+VM4L4LCIkT7Y7Mx+sHg7mF00Xp0FyLGJhMm5SGzdh+tjQq12VRWFtq8YQQPR/u
+         AvuEXjvESBcS7uxk38QolpndSwDqii5WZnRcDXnLfoL46lAn7e/H/AXvnx8jGSMLvB
+         RSfYoNQDlXnaKWxQeo58NjZL45I9UMjyAxLi1Z88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Martin Weinelt <martin@linuxlounge.net>,
+        Sven Eckelmann <sven@narfation.org>,
+        Antonio Quartulli <a@unstable.cc>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/99] net: hns: fix ICMP6 neighbor solicitation messages discard problem
-Date:   Mon,  6 May 2019 16:32:31 +0200
-Message-Id: <20190506143059.319853587@linuxfoundation.org>
+Subject: [PATCH 4.19 28/99] batman-adv: Reduce tt_global hash refcnt only for removed entry
+Date:   Mon,  6 May 2019 16:32:01 +0200
+Message-Id: <20190506143056.514633379@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -60,85 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f058e46855dcbc28edb2ed4736f38a71fd19cadb ]
+[ Upstream commit f131a56880d10932931e74773fb8702894a94a75 ]
 
-ICMP6 neighbor solicitation messages will be discard by the Hip06
-chips, because of not setting forwarding pool. Enable promisc mode
-has the same problem.
+The batadv_hash_remove is a function which searches the hashtable for an
+entry using a needle, a hashtable bucket selection function and a compare
+function. It will lock the bucket list and delete an entry when the compare
+function matches it with the needle. It returns the pointer to the
+hlist_node which matches or NULL when no entry matches the needle.
 
-This patch fix the wrong forwarding table configs for the multicast
-vague matching when enable promisc mode, and add forwarding pool
-for the forwarding table.
+The batadv_tt_global_free is not itself protected in anyway to avoid that
+any other function is modifying the hashtable between the search for the
+entry and the call to batadv_hash_remove. It can therefore happen that the
+entry either doesn't exist anymore or an entry was deleted which is not the
+same object as the needle. In such an situation, the reference counter (for
+the reference stored in the hashtable) must not be reduced for the needle.
+Instead the reference counter of the actually removed entry has to be
+reduced.
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Otherwise the reference counter will underflow and the object might be
+freed before all its references were dropped. The kref helpers reported
+this problem as:
+
+  refcount_t: underflow; use-after-free.
+
+Fixes: 7683fdc1e886 ("batman-adv: protect the local and the global trans-tables with rcu")
+Reported-by: Martin Weinelt <martin@linuxlounge.net>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/hisilicon/hns/hns_dsaf_main.c    | 33 +++++++++++++++----
- 1 file changed, 27 insertions(+), 6 deletions(-)
+ net/batman-adv/translation-table.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-index b8155f5e71b4..fdff5526d2e8 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-@@ -2750,6 +2750,17 @@ int hns_dsaf_get_regs_count(void)
- 	return DSAF_DUMP_REGS_NUM;
+diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
+index 696e6ddc534b..359ec1a6e822 100644
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -616,14 +616,26 @@ static void batadv_tt_global_free(struct batadv_priv *bat_priv,
+ 				  struct batadv_tt_global_entry *tt_global,
+ 				  const char *message)
+ {
++	struct batadv_tt_global_entry *tt_removed_entry;
++	struct hlist_node *tt_removed_node;
++
+ 	batadv_dbg(BATADV_DBG_TT, bat_priv,
+ 		   "Deleting global tt entry %pM (vid: %d): %s\n",
+ 		   tt_global->common.addr,
+ 		   batadv_print_vid(tt_global->common.vid), message);
+ 
+-	batadv_hash_remove(bat_priv->tt.global_hash, batadv_compare_tt,
+-			   batadv_choose_tt, &tt_global->common);
+-	batadv_tt_global_entry_put(tt_global);
++	tt_removed_node = batadv_hash_remove(bat_priv->tt.global_hash,
++					     batadv_compare_tt,
++					     batadv_choose_tt,
++					     &tt_global->common);
++	if (!tt_removed_node)
++		return;
++
++	/* drop reference of remove hash entry */
++	tt_removed_entry = hlist_entry(tt_removed_node,
++				       struct batadv_tt_global_entry,
++				       common.hash_entry);
++	batadv_tt_global_entry_put(tt_removed_entry);
  }
  
-+static int hns_dsaf_get_port_id(u8 port)
-+{
-+	if (port < DSAF_SERVICE_NW_NUM)
-+		return port;
-+
-+	if (port >= DSAF_BASE_INNER_PORT_NUM)
-+		return port - DSAF_BASE_INNER_PORT_NUM + DSAF_SERVICE_NW_NUM;
-+
-+	return -EINVAL;
-+}
-+
- static void set_promisc_tcam_enable(struct dsaf_device *dsaf_dev, u32 port)
- {
- 	struct dsaf_tbl_tcam_ucast_cfg tbl_tcam_ucast = {0, 1, 0, 0, 0x80};
-@@ -2815,23 +2826,33 @@ static void set_promisc_tcam_enable(struct dsaf_device *dsaf_dev, u32 port)
- 	memset(&temp_key, 0x0, sizeof(temp_key));
- 	mask_entry.addr[0] = 0x01;
- 	hns_dsaf_set_mac_key(dsaf_dev, &mask_key, mask_entry.in_vlan_id,
--			     port, mask_entry.addr);
-+			     0xf, mask_entry.addr);
- 	tbl_tcam_mcast.tbl_mcast_item_vld = 1;
- 	tbl_tcam_mcast.tbl_mcast_old_en = 0;
- 
--	if (port < DSAF_SERVICE_NW_NUM) {
--		mskid = port;
--	} else if (port >= DSAF_BASE_INNER_PORT_NUM) {
--		mskid = port - DSAF_BASE_INNER_PORT_NUM + DSAF_SERVICE_NW_NUM;
--	} else {
-+	/* set MAC port to handle multicast */
-+	mskid = hns_dsaf_get_port_id(port);
-+	if (mskid == -EINVAL) {
- 		dev_err(dsaf_dev->dev, "%s,pnum(%d)error,key(%#x:%#x)\n",
- 			dsaf_dev->ae_dev.name, port,
- 			mask_key.high.val, mask_key.low.val);
- 		return;
- 	}
-+	dsaf_set_bit(tbl_tcam_mcast.tbl_mcast_port_msk[mskid / 32],
-+		     mskid % 32, 1);
- 
-+	/* set pool bit map to handle multicast */
-+	mskid = hns_dsaf_get_port_id(port_num);
-+	if (mskid == -EINVAL) {
-+		dev_err(dsaf_dev->dev,
-+			"%s, pool bit map pnum(%d)error,key(%#x:%#x)\n",
-+			dsaf_dev->ae_dev.name, port_num,
-+			mask_key.high.val, mask_key.low.val);
-+		return;
-+	}
- 	dsaf_set_bit(tbl_tcam_mcast.tbl_mcast_port_msk[mskid / 32],
- 		     mskid % 32, 1);
-+
- 	memcpy(&temp_key, &mask_key, sizeof(mask_key));
- 	hns_dsaf_tcam_mc_cfg_vague(dsaf_dev, entry_index, &tbl_tcam_data_mc,
- 				   (struct dsaf_tbl_tcam_data *)(&mask_key),
+ /**
 -- 
 2.20.1
 
