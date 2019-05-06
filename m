@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B536C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5B3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E226C214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008F720C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153813;
-	bh=9gbumceD6ikjDbZK1PP/dlsoDdVo2qH76kCkoJBKes8=;
+	s=default; t=1557153818;
+	bh=m8PUzezVg4mUsEUiPciQfr6l0rmMTKutw+jQ/sYN8D8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KKQnSNPzUMOIT8aYLhTD07FrKYDOBmez6LxYpf3Hcgf6l0zgf/PCr+IdyrvOrHd8L
-	 w3yeg/SS7Rohpq+s8dkIiV8i6oonqW9Q6wlNGdacB5E/361xfp1NzpAQIWifwAPJHy
-	 pe6BdyBw9LzI46wEQdshI+BH82vA5V2wJAqnvhoU=
+	b=fveppG2v6blMZvcCLx6Spu+JMJkXFToL1WcVN8ay3Hnd871eO84CQdp98EUcbxAiW
+	 EAqHEiU7yi/Mq/1BwCUoavnvnKvRWEZ7/4wbZuzj2IvNhOXF6vJyTIIXGG4jnoctqU
+	 ov/cS8zgaE8p/jJUmnWHmM5kkPlDTBOtycBMzLgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfEFOnc (ORCPT
+        id S1728679AbfEFOng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:43:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39052 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:43:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbfEFOn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:28 -0400
+        id S1728674AbfEFOnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 940802087F;
-        Mon,  6 May 2019 14:43:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1B7220C01;
+        Mon,  6 May 2019 14:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153807;
-        bh=9gbumceD6ikjDbZK1PP/dlsoDdVo2qH76kCkoJBKes8=;
+        s=default; t=1557153812;
+        bh=m8PUzezVg4mUsEUiPciQfr6l0rmMTKutw+jQ/sYN8D8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nRcUnufjZDaSHLUyMxAIEfrlNL/3fCuVrPtx4tLfpKpm0WBazW5hW3dJ08iFUxU7e
-         SrELkdwKMAdqEMJmKDY3UGAQbWvDWZ1evlos2bAKSl292QyQ8ICWm+QxtJLjzNMlLH
-         5LUw0ehbqRpViMZ/l3fYpPrF0owzQeZUAi6N2gec=
+        b=Uab24UkOsGv9WLGO/laCgQ9XQ76wdDprMJ3HlZfUga4KkMkO38ZEJ9lHAAkTEvcVL
+         mgUP286ZUNLNDr1PWNRgq/oZxWvMKInnKtd+ZXBsIa1//imiUonOn3OzdqdJlxtaPb
+         Au7sQN34SSUrhkvJ2l7Ey/0sFX+JuM5p16SWxnxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.19 96/99] x86/mm: Fix a crash with kmemleak_scan()
-Date:   Mon,  6 May 2019 16:33:09 +0200
-Message-Id: <20190506143102.536637385@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Le Bayon <nicolas.le.bayon@st.com>,
+        Bich Hemon <bich.hemon@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 4.19 98/99] i2c: i2c-stm32f7: Fix SDADEL minimum formula
+Date:   Mon,  6 May 2019 16:33:11 +0200
+Message-Id: <20190506143102.699671981@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -66,82 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
 
-commit 0d02113b31b2017dd349ec9df2314e798a90fa6e upstream.
+commit c86da50cfd840edf223a242580913692acddbcf6 upstream.
 
-The first kmemleak_scan() call after boot would trigger the crash below
-because this callpath:
+It conforms with Reference Manual I2C timing section.
 
-  kernel_init
-    free_initmem
-      mem_encrypt_free_decrypted_mem
-        free_init_pages
-
-unmaps memory inside the .bss when DEBUG_PAGEALLOC=y.
-
-kmemleak_init() will register the .data/.bss sections and then
-kmemleak_scan() will scan those addresses and dereference them looking
-for pointer references. If free_init_pages() frees and unmaps pages in
-those sections, kmemleak_scan() will crash if referencing one of those
-addresses:
-
-  BUG: unable to handle kernel paging request at ffffffffbd402000
-  CPU: 12 PID: 325 Comm: kmemleak Not tainted 5.1.0-rc4+ #4
-  RIP: 0010:scan_block
-  Call Trace:
-   scan_gray_list
-   kmemleak_scan
-   kmemleak_scan_thread
-   kthread
-   ret_from_fork
-
-Since kmemleak_free_part() is tolerant to unknown objects (not tracked
-by kmemleak), it is fine to call it from free_init_pages() even if not
-all address ranges passed to this function are known to kmemleak.
-
- [ bp: Massage. ]
-
-Fixes: b3f0907c71e0 ("x86/mm: Add .bss..decrypted section to hold shared variables")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190423165811.36699-1-cai@lca.pw
+Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
+Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
+Signed-off-by: Bich Hemon <bich.hemon@st.com>
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/mm/init.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/i2c/busses/i2c-stm32f7.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -6,6 +6,7 @@
- #include <linux/bootmem.h>	/* for max_low_pfn */
- #include <linux/swapfile.h>
- #include <linux/swapops.h>
-+#include <linux/kmemleak.h>
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -424,7 +424,7 @@ static int stm32f7_i2c_compute_timing(st
+ 		 STM32F7_I2C_ANALOG_FILTER_DELAY_MAX : 0);
+ 	dnf_delay = setup->dnf * i2cclk;
  
- #include <asm/set_memory.h>
- #include <asm/e820/api.h>
-@@ -767,6 +768,11 @@ void free_init_pages(char *what, unsigne
- 	if (debug_pagealloc_enabled()) {
- 		pr_info("debug: unmapping init [mem %#010lx-%#010lx]\n",
- 			begin, end - 1);
-+		/*
-+		 * Inform kmemleak about the hole in the memory since the
-+		 * corresponding pages will be unmapped.
-+		 */
-+		kmemleak_free_part((void *)begin, end - begin);
- 		set_memory_np(begin, (end - begin) >> PAGE_SHIFT);
- 	} else {
- 		/*
+-	sdadel_min = setup->fall_time - i2c_specs[setup->speed].hddat_min -
++	sdadel_min = i2c_specs[setup->speed].hddat_min + setup->fall_time -
+ 		af_delay_min - (setup->dnf + 3) * i2cclk;
+ 
+ 	sdadel_max = i2c_specs[setup->speed].vddat_max - setup->rise_time -
 
 
