@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6482C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785B0C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B08DF20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463E620B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwjNoxfL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oeP9QoMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfEFIVF (ORCPT
+        id S1726698AbfEFIUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:21:05 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43954 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfEFIVE (ORCPT
+        Mon, 6 May 2019 04:20:51 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37787 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726678AbfEFIUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:21:04 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t22so6082311pgi.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:21:03 -0700 (PDT)
+        Mon, 6 May 2019 04:20:46 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e6so6097745pgc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:20:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ybIiqJfLE2MLl7jPAgW081LP7KxnoAkO9g1BwAPI45g=;
-        b=gwjNoxfLwHayA9JN5g8ixh+8cKbp0rktR3KK21XARyP0FhC4lQk3IfgrIu2eKkt9dW
-         WMZl3ag3v54M796Wx4O1s++TZv6LP0Pi+OyA6dWHaXFxZPmaRzzgak877bcq2nlekW5U
-         S/ghQF+YsegjG7veWhKSJ6LZoWuph2EvQ6v6e/wfO5ldM//kj4b+KdX7N10vWXNzL6o1
-         s5FOvL9T6z+s87+ukoE/QQKfoQDQKia+7plojPHEpF42/lc5aQdvBEDkoJutX7NvgSHX
-         6EhwFpFnBgywHEa3cDcZus4EVzUIzacjVYdWV0ALGZrAbE2ZwqnWzMp8/LdXTbYt4eyK
-         UcoQ==
+        bh=SQz2jf18ZhbqJGiF1vojuJ/sEIUTmJdMiuQ/TuxIMiQ=;
+        b=oeP9QoMfqrvYsVVeDTczuzWMPHS5M4FcWUa5gYiUME40nj1Izqbf9tmrF4nHNvjlHq
+         g2Dy1e5xi9tNYBX0pQpHDITLdVHd+yKuyaif6n74MQ/XOwFeAHF5sU/MG5t0M3yZx/KX
+         KKEN64unlZdGVMyyA5SvgZvTOZODSbXCBUkFh+jj4cnEfGf/uXMUgcOtUF1ZTCxq7MTb
+         bWh9yeorjBRD6Fd5BTz5Pe8XYsk8xz0s4UoQ9+JPKFVJqh+z5fsEui2nbuVTnBsXhHaD
+         ruCIxrOB70DGuNw6mrgyElK0GRs4UmFPn3TBrNg9YgNoCSvgH6nGkMuNO9rchu9TURiD
+         Dtcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ybIiqJfLE2MLl7jPAgW081LP7KxnoAkO9g1BwAPI45g=;
-        b=qan5BiSq2Xfjjw34QbTaXy2n87fVyz5DmhgbW/7kBSBlMJTjwliPoGApHbNblhqRPO
-         0hbYz9oT/afh3WPuMG9Z0o9/ILhGz4Oo4G4LZv84/Vqw9YmmjQjpMbLhHcoBI1d8pZsp
-         hNcDMG2qObmCzqONVNbtwkAThVv3twdr/pJgNyp8hj2mLbFaN91wQVHQq/ozibnpq8c1
-         BPTeCQVqV3ljSGcYPSJfblLLa6vh/Cb+y761CA9KXL/0hx4rg22phl3bQveo5aH+EJK4
-         7o4ExW844BmZd/Ku9QCkSnAQzYc2GYHfk/Lg33Uq3s1P/xRvQHqgNY3mbJV5xHmHXNWi
-         4tgQ==
-X-Gm-Message-State: APjAAAUEQ71P7JZyt/k+4Z3O3RCzUYC15oIOgLU2ZXLi4WkythJ7/BK+
-        gvGaHpYOJnv1b6HJJoJNy60=
-X-Google-Smtp-Source: APXvYqyvu+MOMiV1sU+zR5eFRr6SHsO8XgP4PVqB7bfmeG1e5N25r2hVjeNTJiXr6ItijCekzYYjtQ==
-X-Received: by 2002:a65:60ca:: with SMTP id r10mr30530869pgv.64.1557130863547;
-        Mon, 06 May 2019 01:21:03 -0700 (PDT)
+        bh=SQz2jf18ZhbqJGiF1vojuJ/sEIUTmJdMiuQ/TuxIMiQ=;
+        b=lX4PfkTGcE3UoHbSVq6gQbzI+hTCfIkGHMOsssESnOSEoXvb8nXY4S8vrmXdVNAg5b
+         k0l46B+r0LRfZnVApHlGV0p5/d9n7xUFHhfCVOmeJkq97ME25/+sYEXQqwR71NASyu8t
+         9G7fZF2zPNp7qrBJsBFEBdzeHPNwTd24CIYnbstW8K6te67xzhz+Ge+I8mPyDUHUgD9/
+         wUBkozmq2eViTB7ckvuHxqRLX6VtgnhAg/Pl64UtKiS+pWeaJl6kjmJuoRAsFhk9P1k0
+         3XwU5aDFEYhnKA9F8hvWu6RQEEZLnUcUT1WHibT5ZtENozqEF/f/cE7qbn0u5sIACFjq
+         Ynow==
+X-Gm-Message-State: APjAAAVGGl2Iix6psX1YjseIFfFspA/CvJ+ZGqPbD1sDpLMphP80vfuA
+        Hw1YUrBAIcFfq+kS5cW7ugI=
+X-Google-Smtp-Source: APXvYqwIx+uOCRMH8DADdj4zTgK9ml3evRwlIfwlP1nb+p06taeClNpk8N+eFFgufaqvR+zsYWf/sg==
+X-Received: by 2002:a63:a351:: with SMTP id v17mr15329785pgn.431.1557130846304;
+        Mon, 06 May 2019 01:20:46 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v19sm20958013pfa.138.2019.05.06.01.20.59
+        by smtp.gmail.com with ESMTPSA id v19sm20958013pfa.138.2019.05.06.01.20.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 01:21:01 -0700 (PDT)
+        Mon, 06 May 2019 01:20:45 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, linux-kernel@vger.kernel.org,
         Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v2 23/23] locking/lockdep: Remove !dir in lock irq usage check
-Date:   Mon,  6 May 2019 16:19:39 +0800
-Message-Id: <20190506081939.74287-24-duyuyang@gmail.com>
+Subject: [PATCH v2 18/23] locking/lockdep: Remove unused argument in __lock_release
+Date:   Mon,  6 May 2019 16:19:34 +0800
+Message-Id: <20190506081939.74287-19-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190506081939.74287-1-duyuyang@gmail.com>
 References: <20190506081939.74287-1-duyuyang@gmail.com>
@@ -74,48 +74,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In mark_lock_irq(), the following checks are performed:
-
-   ----------------------------------
-  |   ->      | unsafe | read unsafe |
-  |----------------------------------|
-  | safe      |  F  B  |    F* B*    |
-  |----------------------------------|
-  | read safe |  F? B* |      -      |
-   ----------------------------------
-
-Where:
-F: check_usage_forwards
-B: check_usage_backwards
-*: check enabled by STRICT_READ_CHECKS
-?: check enabled by the !dir condition
-
-From checking point of view, the special F? case does not make sense,
-whereas it perhaps is made for peroformance concern. As later patch will
-address this issue, remove this exception, which makes the checks
-consistent later.
-
-With STRICT_READ_CHECKS = 1 which is default, there is no functional
-change.
+The @nested is not used in __release_lock so remove it despite that it
+is not used in lock_release in the first place.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/lockdep.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 24e3bca..7275d6c 100644
+index 67b6a76..ebfa42a 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -3234,7 +3234,7 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
- 	 * Validate that the lock dependencies don't have conflicting usage
- 	 * states.
- 	 */
--	if ((!read || !dir || STRICT_READ_CHECKS) &&
-+	if ((!read || STRICT_READ_CHECKS) &&
- 			!usage(curr, this, excl_bit, state_name(new_bit & ~LOCK_USAGE_READ_MASK)))
- 		return 0;
- 
+@@ -4095,7 +4095,7 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+  * @nested is an hysterical artifact, needs a tree wide cleanup.
+  */
+ static int
+-__lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
++__lock_release(struct lockdep_map *lock, unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
+ 	struct held_lock *hlock;
+@@ -4383,7 +4383,7 @@ void lock_release(struct lockdep_map *lock, int nested,
+ 	check_flags(flags);
+ 	current->lockdep_recursion = 1;
+ 	trace_lock_release(lock, ip);
+-	if (__lock_release(lock, nested, ip))
++	if (__lock_release(lock, ip))
+ 		check_chain_key(current);
+ 	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
 -- 
 1.8.3.1
 
