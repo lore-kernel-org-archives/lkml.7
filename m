@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 908F3C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE2FC04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A381205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB06C2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155074;
-	bh=J6O7YHknQMMh9GgrHKVn3dZ6xeVMLPiS7n/F1IMKFHM=;
+	s=default; t=1557155082;
+	bh=SsqbmMywSBVKwpFvFFFQV1gHcQwfUpjDQfe4U40oK1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czPJl2CEZPQd7y4iP1Xx1tT5gBmvH569op+KhIqMR02VRja0uAwVDSknRnIpcMARl
-	 GTOGaBuVhhtpsP5E0XzQjGjuspX7KCH59p6vw8s+Tt9l/iBjpZGWoGJGg66dyzDvah
-	 cCWhqfKPPu1eq4ZeiSh7w15EtxbIafPFtnKOqKyw=
+	b=GV3KVzWVGgmxkDaf4RuAMdebDLCNkzhBPCGUJ+oGSZ7BKE+yfsv0ZyXNZvFNS3UC8
+	 y/3Rx2VAznANZ6KWLFa5Nc7ntwuqybhPIY8tiPiheYD2bCZHTgND2w9avRLB6dIQy/
+	 UmmYCroAfbncv/BavjblANK4UZF3XMe66Y4PeJxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfEFOjO (ORCPT
+        id S1728063AbfEFPEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60540 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:04:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfEFOjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:39:11 -0400
+        id S1726997AbfEFOjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:39:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64B9A21479;
-        Mon,  6 May 2019 14:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFD9C21479;
+        Mon,  6 May 2019 14:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153550;
-        bh=J6O7YHknQMMh9GgrHKVn3dZ6xeVMLPiS7n/F1IMKFHM=;
+        s=default; t=1557153553;
+        bh=SsqbmMywSBVKwpFvFFFQV1gHcQwfUpjDQfe4U40oK1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cq2tJRIJg4f1p3CWgVrUTw3Jb9UQ0sMhUNv5f0AXc3PrXI/uL226pVaz1h2aRffEy
-         rF7XExxyTgpj0HrGwRgZssHxiNi752WN/p1JJiTqw8/e0A3boFVSKjW6Pi5idifbwP
-         hUkPX8MVuGQoAu39KLtAAuSl0sXQPmrUdKMzRpug=
+        b=Gpb8Oxldlr/F7jD0qhMe5BIgzDUm3uUputVqanId6ehR7vkNG2qiqCU3mZVs8A+Ph
+         dPNZT7ZwGrMZB4yy5YFhA4Edknkb2EAR9WAH/vyTwyR5tzIXrbnfDUkOWiIvAkXm42
+         gR0R7GSGHaoEQV62KHTkLYU7f4+OGGURob1qOIOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 4.19 01/99] iwlwifi: fix driver operation for 5350
-Date:   Mon,  6 May 2019 16:31:34 +0200
-Message-Id: <20190506143054.025064509@linuxfoundation.org>
+        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 10/99] ALSA: hda/realtek - Add new Dell platform for headset mode
+Date:   Mon,  6 May 2019 16:31:43 +0200
+Message-Id: <20190506143054.785244490@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,47 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+From: Kailang Yang <kailang@realtek.com>
 
-commit 5c9adef9789148d382d7d1307c3d6bfaf51d143d upstream.
+commit 0a29c57b76624723b6b00c027e0e992d130ace49 upstream.
 
-We introduced a bug that prevented this old device from
-working. The driver would simply not be able to complete
-the INIT flow while spewing this warning:
+Add two Dell platform for headset mode.
 
- CSR addresses aren't configured
- WARNING: CPU: 0 PID: 819 at drivers/net/wireless/intel/iwlwifi/pcie/drv.c:917
- iwl_pci_probe+0x160/0x1e0 [iwlwifi]
+[ Note: this is a further correction / addition of the previous
+  pin-based quirks for Dell machines; another entry for ALC236 with
+  the d-mic pin 0x12 and an entry for ALC295 -- tiwai ]
 
-Cc: stable@vger.kernel.org # v4.18+
-Fixes: a8cbb46f831d ("iwlwifi: allow different csr flags for different device families")
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Fixes: c8f1b51e506d ("iwlwifi: allow different csr flags for different device families")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fixes: b26e36b7ef36 ("ALSA: hda/realtek - add two more pin configuration sets to quirk table")
+Signed-off-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/cfg/5000.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/net/wireless/intel/iwlwifi/cfg/5000.c
-+++ b/drivers/net/wireless/intel/iwlwifi/cfg/5000.c
-@@ -1,7 +1,7 @@
- /******************************************************************************
-  *
-  * Copyright(c) 2007 - 2014 Intel Corporation. All rights reserved.
-- * Copyright(c) 2018 Intel Corporation
-+ * Copyright(c) 2018 - 2019 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of version 2 of the GNU General Public License as
-@@ -140,6 +140,7 @@ const struct iwl_cfg iwl5350_agn_cfg = {
- 	.ht_params = &iwl5000_ht_params,
- 	.led_mode = IWL_LED_BLINK,
- 	.internal_wimax_coex = true,
-+	.csr = &iwl_csr_v1,
- };
- 
- #define IWL_DEVICE_5150						\
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7172,6 +7172,10 @@ static const struct snd_hda_pin_quirk al
+ 		{0x21, 0x02211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 		{0x21, 0x02211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
++		{0x12, 0x40000000},
++		{0x14, 0x90170110},
++		{0x21, 0x02211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1028, "Dell", ALC255_FIXUP_DELL2_MIC_NO_PRESENCE,
+ 		{0x14, 0x90170110},
+ 		{0x21, 0x02211020}),
+@@ -7446,6 +7450,9 @@ static const struct snd_hda_pin_quirk al
+ 		{0x17, 0x90170110},
+ 		{0x21, 0x04211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
++		{0x14, 0x90170110},
++		{0x21, 0x04211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 		ALC295_STANDARD_PINS,
+ 		{0x17, 0x21014020},
+ 		{0x18, 0x21a19030}),
 
 
