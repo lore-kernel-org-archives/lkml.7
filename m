@@ -2,184 +2,145 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038CCC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB65FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5164206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D242087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:57:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="kh3j8pze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfEFTzR (ORCPT
+        id S1726489AbfEFT5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:55:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33228 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726241AbfEFTzQ (ORCPT
+        Mon, 6 May 2019 15:57:00 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44831 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbfEFT5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:55:16 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46Jm0G8126373;
-        Mon, 6 May 2019 15:55:13 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2saudar5tr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 May 2019 15:55:12 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x46DmK52003133;
-        Mon, 6 May 2019 13:59:18 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma01dal.us.ibm.com with ESMTP id 2s92c3vgtv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 May 2019 13:59:18 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x46Jt9Wh29753468
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 May 2019 19:55:09 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7A42BAC060;
-        Mon,  6 May 2019 19:55:09 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C944AC05B;
-        Mon,  6 May 2019 19:55:09 +0000 (GMT)
-Received: from [9.60.75.251] (unknown [9.60.75.251])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  6 May 2019 19:55:09 +0000 (GMT)
-Subject: Re: [PATCH v2 3/7] s390: vfio-ap: sysfs interface to display guest
- CRYCB
-To:     pmorel@linux.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
- <1556918073-13171-4-git-send-email-akrowiak@linux.ibm.com>
- <a2361365-050e-dfdd-ccd2-0167ccfcdfbf@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <b0770195-c016-c661-4ca4-dabbffacf332@linux.ibm.com>
-Date:   Mon, 6 May 2019 15:55:08 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 6 May 2019 15:57:00 -0400
+Received: by mail-qt1-f193.google.com with SMTP id f24so5885095qtk.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 12:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=IapbnG17HnRAI+fgjIuaulp9CMBvFm3VLGbRmGWF4E0=;
+        b=kh3j8pzeyTDmGdBdKT2t6wK4qJrWUxjJXhSIbeCddOyLk5cEpXkW4F9N9u/+Cu+JYe
+         CcD+9uc4Qg7Zmm+P86rKLNxNIuzFyN0OzWfKQtI2x4PixE0FH3kFcVFuPlLo/Ompqdu9
+         w7+GVG9UeA0IbgDDhWr88xyWm4uNLGrNLbYpVGiEWxcRPBo++VUOVJcu47sjlyVVwUeI
+         /0fW1+foLI2m//cXq3yGitHMCceBcv6YhtnWyMBhfj3Qw3RiebMP5Bu1VTQl8/Uonzn0
+         1GwiYltb3AemZiK8e09/6Yi5+nA1kCdB43L1rD1DxX+XJ+3W+eo5S6qX5BUXHAcD2WAl
+         qG1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=IapbnG17HnRAI+fgjIuaulp9CMBvFm3VLGbRmGWF4E0=;
+        b=PQh54ZZcwTCAP/Fwl60FuRmDJl0TOFVrYzrmZEJuuTM8LWVy2UZaAp+mCJq/WB5FIK
+         wFVj69yamsACVKi1CiDFZmYk8u8NpoI7OlgZNXdMB+7UXjWGE6xNKEAHXg3B8X3/woPB
+         5bewdKzrjsvTy/X8vE7NUvKi04r8XgLhTWHAX4kyBBALH7FbLSAtjBoh+ejzNmZhDq1w
+         MoBtu9rk7F4G27IS2zFnt7XRL0Lst+tgQy7iHZvZnugmU0F5q1+KvnnhbPsUfNKEtpIM
+         e827sYscdnArxH3yXwmufooMAiFkxum3b6sThfLwyw4ZxiSXrNkbhS58obB4kF80eKg7
+         pa2g==
+X-Gm-Message-State: APjAAAUibRP/Mg1BVXyePawEhcFkKbhtEZYmUgPdUyPdjLful/kWOiEt
+        DiU6YctflzL6y4pHUoB5oL28Ug==
+X-Google-Smtp-Source: APXvYqxjdKr8Wo1ZXFmZHUCUSuh1O7kFe1C0/S4S/tUB/aC2ePJCp7gcnSCWSFy1sqGqg62USpuzhA==
+X-Received: by 2002:a0c:9ac8:: with SMTP id k8mr22216670qvf.132.1557172619424;
+        Mon, 06 May 2019 12:56:59 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id h7sm5794217qkk.27.2019.05.06.12.56.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 12:56:58 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hNjjN-0007sr-Dg; Mon, 06 May 2019 16:56:57 -0300
+Date:   Mon, 6 May 2019 16:56:57 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     jglisse@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>
+Subject: Re: [PATCH v4 0/1] Use HMM for ODP v4
+Message-ID: <20190506195657.GA30261@ziepe.ca>
+References: <20190411181314.19465-1-jglisse@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <a2361365-050e-dfdd-ccd2-0167ccfcdfbf@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905060162
+In-Reply-To: <20190411181314.19465-1-jglisse@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/19 2:54 AM, Pierre Morel wrote:
-> On 03/05/2019 23:14, Tony Krowiak wrote:
->> Introduces a sysfs interface on the matrix mdev device to display the
->> contents of the shadow of the guest's CRYCB
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_ops.c | 59 
->> +++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 59 insertions(+)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
->> b/drivers/s390/crypto/vfio_ap_ops.c
->> index 44a04b4aa9ae..1021466cb661 100644
->> --- a/drivers/s390/crypto/vfio_ap_ops.c
->> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->> @@ -771,6 +771,64 @@ static ssize_t matrix_show(struct device *dev, 
->> struct device_attribute *attr,
->>   }
->>   static DEVICE_ATTR_RO(matrix);
->> +static ssize_t guest_matrix_show(struct device *dev,
->> +                 struct device_attribute *attr, char *buf)
->> +{
->> +    struct mdev_device *mdev = mdev_from_dev(dev);
->> +    struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
->> +    char *bufpos = buf;
->> +    unsigned long apid;
->> +    unsigned long apqi;
->> +    unsigned long apid1;
->> +    unsigned long apqi1;
->> +    unsigned long napm_bits;
->> +    unsigned long naqm_bits;
->> +    int nchars = 0;
->> +    int n;
->> +
->> +    if (!matrix_mdev->shadow_crycb)
->> +        return -ENODEV;
->> +
->> +    mutex_lock(&matrix_dev->lock);
->> +    napm_bits = matrix_mdev->shadow_crycb->apm_max + 1;
->> +    naqm_bits = matrix_mdev->shadow_crycb->aqm_max + 1;
->> +    apid1 = find_first_bit_inv(matrix_mdev->shadow_crycb->apm, 
->> napm_bits);
->> +    apqi1 = find_first_bit_inv(matrix_mdev->shadow_crycb->aqm, 
->> naqm_bits);
->> +
->> +    if ((apid1 < napm_bits) && (apqi1 < naqm_bits)) {
->> +        for_each_set_bit_inv(apid, matrix_mdev->shadow_crycb->apm,
->> +                     napm_bits) {
->> +            for_each_set_bit_inv(apqi,
->> +                         matrix_mdev->shadow_crycb->aqm,
->> +                         naqm_bits) {
->> +                n = sprintf(bufpos, "%02lx.%04lx\n", apid,
->> +                        apqi);
->> +                bufpos += n;
->> +                nchars += n;
->> +            }
->> +        }
->> +    } else if (apid1 < napm_bits) {
->> +        for_each_set_bit_inv(apid, matrix_mdev->shadow_crycb->apm,
->> +                     napm_bits) {
->> +            n = sprintf(bufpos, "%02lx.\n", apid);
->> +            bufpos += n;
->> +            nchars += n;
->> +        }
->> +    } else if (apqi1 < naqm_bits) {
->> +        for_each_set_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm,
->> +                     naqm_bits) {
->> +            n = sprintf(bufpos, ".%04lx\n", apqi);
->> +            bufpos += n;
->> +            nchars += n;
->> +        }
->> +    }
->> +
->> +    mutex_unlock(&matrix_dev->lock);
->> +
->> +    return nchars;
->> +}
->> +static DEVICE_ATTR_RO(guest_matrix);
->> +
->>   static struct attribute *vfio_ap_mdev_attrs[] = {
->>       &dev_attr_assign_adapter.attr,
->>       &dev_attr_unassign_adapter.attr,
->> @@ -780,6 +838,7 @@ static struct attribute *vfio_ap_mdev_attrs[] = {
->>       &dev_attr_unassign_control_domain.attr,
->>       &dev_attr_control_domains.attr,
->>       &dev_attr_matrix.attr,
->> +    &dev_attr_guest_matrix.attr,
->>       NULL,
->>   };
->>
+On Thu, Apr 11, 2019 at 02:13:13PM -0400, jglisse@redhat.com wrote:
+> From: Jérôme Glisse <jglisse@redhat.com>
 > 
-> Code seems very similar to matrix_show, can't you share the code?
+> Just fixed Kconfig and build when ODP was not enabled, other than that
+> this is the same as v3. Here is previous cover letter:
+> 
+> Git tree with all prerequisite:
+> https://cgit.freedesktop.org/~glisse/linux/log/?h=rdma-odp-hmm-v4
+> 
+> This patchset convert RDMA ODP to use HMM underneath this is motivated
+> by stronger code sharing for same feature (share virtual memory SVM or
+> Share Virtual Address SVA) and also stronger integration with mm code to
+> achieve that. It depends on HMM patchset posted for inclusion in 5.2 [2]
+> and [3].
+> 
+> It has been tested with pingpong test with -o and others flags to test
+> different size/features associated with ODP.
+> 
+> Moreover they are some features of HMM in the works like peer to peer
+> support, fast CPU page table snapshot, fast IOMMU mapping update ...
+> It will be easier for RDMA devices with ODP to leverage those if they
+> use HMM underneath.
+> 
+> Quick summary of what HMM is:
+>     HMM is a toolbox for device driver to implement software support for
+>     Share Virtual Memory (SVM). Not only it provides helpers to mirror a
+>     process address space on a device (hmm_mirror). It also provides
+>     helper to allow to use device memory to back regular valid virtual
+>     address of a process (any valid mmap that is not an mmap of a device
+>     or a DAX mapping). They are two kinds of device memory. Private memory
+>     that is not accessible to CPU because it does not have all the expected
+>     properties (this is for all PCIE devices) or public memory which can
+>     also be access by CPU without restriction (with OpenCAPI or CCIX or
+>     similar cache-coherent and atomic inter-connect).
+> 
+>     Device driver can use each of HMM tools separatly. You do not have to
+>     use all the tools it provides.
+> 
+> For RDMA device i do not expect a need to use the device memory support
+> of HMM. This device memory support is geared toward accelerator like GPU.
+> 
+> 
+> You can find a branch [1] with all the prerequisite in. This patch is on
+> top of rdma-next with the HMM patchset [2] and mmu notifier patchset [3]
+> applied on top of it.
+> 
+> [1] https://cgit.freedesktop.org/~glisse/linux/log/?h=rdma-odp-hmm-v4
+> [2] https://lkml.org/lkml/2019/4/3/1032
+> [3] https://lkml.org/lkml/2019/3/26/900
 
-It is, I suppose I could write a function that both can call.
+Jerome, please let me know if these dependent series are merged during
+the first week of the merge window.
 
-> 
-> 
-> 
-> 
-> 
+This patch has been tested and could go along next week if the
+dependencies are met.
 
+Thanks,
+Jason
