@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792D0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C33BC04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF2D2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D58205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154872;
-	bh=VLrLbpQNG2oo8f9AnDWa0+M/cFsK37HiCdGpLr1MZmw=;
+	s=default; t=1557154885;
+	bh=tVT4BUfcBUytwcxsLLXjx+9CLdXeN8ftHXA5BRVr70w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z9a6LFnlAHhipdkOMGHRq8Nz1GFL7MIpgJx9Y2uiYWdGvGDmjozdyXkRm2IJLPdiD
-	 jCxCUzJFNx5Z1zr5d7Ns+uDuINR7DN4j6VmaoQmd5Is4X6JuQpdGTGKf9O3sA2R2rp
-	 p0tF8jy5mnVf/AWiyjHJv3vGH9sgCZDHFTlcpZzQ=
+	b=XK7R6VduG117YvUiaQWyCLoSiTJLJbgW3kUUiNaAN1RdrkAlLWZ++NQXU0E3jbRrz
+	 AFIT4e7xIr4bQPaLL5VNs9Nu8ZRKOPakI3BltZgV72629KASkQksxv9pVfICwvL0Pz
+	 gvTF/87jlGy7Xrl+AWqdSceDaR3DAQNpRv6Hlw34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfEFPBK (ORCPT
+        id S1728245AbfEFOl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:01:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35824 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:41:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfEFOli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:38 -0400
+        id S1728229AbfEFOlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:41:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3D012087F;
-        Mon,  6 May 2019 14:41:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 822622087F;
+        Mon,  6 May 2019 14:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153697;
-        bh=VLrLbpQNG2oo8f9AnDWa0+M/cFsK37HiCdGpLr1MZmw=;
+        s=default; t=1557153683;
+        bh=tVT4BUfcBUytwcxsLLXjx+9CLdXeN8ftHXA5BRVr70w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IB+VM4L4LCIkT7Y7Mx+sHg7mF00Xp0FyLGJhMm5SGzdh+tjQq12VRWFtq8YQQPR/u
-         AvuEXjvESBcS7uxk38QolpndSwDqii5WZnRcDXnLfoL46lAn7e/H/AXvnx8jGSMLvB
-         RSfYoNQDlXnaKWxQeo58NjZL45I9UMjyAxLi1Z88=
+        b=GI0xKHyRV7O15aO4Dau4GSFQnJ2NlC5w5EwwRKkwSijvQmiI9oTJ9UPrX6Tp3Su3s
+         cIOPCPCGwG6OP50pUHXvelQlMo7JpoVAOyj9K3J2NC1DkbVbgBrAu+NLrt1X//m2Tm
+         R9NFqV7Y54D4hBrCGLLD38B/wg6L1WiI309+O7Mg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Weinelt <martin@linuxlounge.net>,
-        Sven Eckelmann <sven@narfation.org>,
-        Antonio Quartulli <a@unstable.cc>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 28/99] batman-adv: Reduce tt_global hash refcnt only for removed entry
-Date:   Mon,  6 May 2019 16:32:01 +0200
-Message-Id: <20190506143056.514633379@linuxfoundation.org>
+Subject: [PATCH 4.19 56/99] net: hns: Use NAPI_POLL_WEIGHT for hns driver
+Date:   Mon,  6 May 2019 16:32:29 +0200
+Message-Id: <20190506143059.143338658@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -62,73 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f131a56880d10932931e74773fb8702894a94a75 ]
+[ Upstream commit acb1ce15a61154aa501891d67ebf79bc9ea26818 ]
 
-The batadv_hash_remove is a function which searches the hashtable for an
-entry using a needle, a hashtable bucket selection function and a compare
-function. It will lock the bucket list and delete an entry when the compare
-function matches it with the needle. It returns the pointer to the
-hlist_node which matches or NULL when no entry matches the needle.
+When the HNS driver loaded, always have an error print:
+"netif_napi_add() called with weight 256"
 
-The batadv_tt_global_free is not itself protected in anyway to avoid that
-any other function is modifying the hashtable between the search for the
-entry and the call to batadv_hash_remove. It can therefore happen that the
-entry either doesn't exist anymore or an entry was deleted which is not the
-same object as the needle. In such an situation, the reference counter (for
-the reference stored in the hashtable) must not be reduced for the needle.
-Instead the reference counter of the actually removed entry has to be
-reduced.
+This is because the kernel checks the NAPI polling weights
+requested by drivers and it prints an error message if a driver
+requests a weight bigger than 64.
 
-Otherwise the reference counter will underflow and the object might be
-freed before all its references were dropped. The kref helpers reported
-this problem as:
+So use NAPI_POLL_WEIGHT to fix it.
 
-  refcount_t: underflow; use-after-free.
-
-Fixes: 7683fdc1e886 ("batman-adv: protect the local and the global trans-tables with rcu")
-Reported-by: Martin Weinelt <martin@linuxlounge.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/translation-table.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
-index 696e6ddc534b..359ec1a6e822 100644
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -616,14 +616,26 @@ static void batadv_tt_global_free(struct batadv_priv *bat_priv,
- 				  struct batadv_tt_global_entry *tt_global,
- 				  const char *message)
- {
-+	struct batadv_tt_global_entry *tt_removed_entry;
-+	struct hlist_node *tt_removed_node;
-+
- 	batadv_dbg(BATADV_DBG_TT, bat_priv,
- 		   "Deleting global tt entry %pM (vid: %d): %s\n",
- 		   tt_global->common.addr,
- 		   batadv_print_vid(tt_global->common.vid), message);
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index 3a6e5cc76c5b..1c70f9aa0aa7 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -29,9 +29,6 @@
  
--	batadv_hash_remove(bat_priv->tt.global_hash, batadv_compare_tt,
--			   batadv_choose_tt, &tt_global->common);
--	batadv_tt_global_entry_put(tt_global);
-+	tt_removed_node = batadv_hash_remove(bat_priv->tt.global_hash,
-+					     batadv_compare_tt,
-+					     batadv_choose_tt,
-+					     &tt_global->common);
-+	if (!tt_removed_node)
-+		return;
-+
-+	/* drop reference of remove hash entry */
-+	tt_removed_entry = hlist_entry(tt_removed_node,
-+				       struct batadv_tt_global_entry,
-+				       common.hash_entry);
-+	batadv_tt_global_entry_put(tt_removed_entry);
- }
+ #define SERVICE_TIMER_HZ (1 * HZ)
  
- /**
+-#define NIC_TX_CLEAN_MAX_NUM 256
+-#define NIC_RX_CLEAN_MAX_NUM 64
+-
+ #define RCB_IRQ_NOT_INITED 0
+ #define RCB_IRQ_INITED 1
+ #define HNS_BUFFER_SIZE_2048 2048
+@@ -2151,7 +2148,7 @@ static int hns_nic_init_ring_data(struct hns_nic_priv *priv)
+ 			hns_nic_tx_fini_pro_v2;
+ 
+ 		netif_napi_add(priv->netdev, &rd->napi,
+-			       hns_nic_common_poll, NIC_TX_CLEAN_MAX_NUM);
++			       hns_nic_common_poll, NAPI_POLL_WEIGHT);
+ 		rd->ring->irq_init_flag = RCB_IRQ_NOT_INITED;
+ 	}
+ 	for (i = h->q_num; i < h->q_num * 2; i++) {
+@@ -2164,7 +2161,7 @@ static int hns_nic_init_ring_data(struct hns_nic_priv *priv)
+ 			hns_nic_rx_fini_pro_v2;
+ 
+ 		netif_napi_add(priv->netdev, &rd->napi,
+-			       hns_nic_common_poll, NIC_RX_CLEAN_MAX_NUM);
++			       hns_nic_common_poll, NAPI_POLL_WEIGHT);
+ 		rd->ring->irq_init_flag = RCB_IRQ_NOT_INITED;
+ 	}
+ 
 -- 
 2.20.1
 
