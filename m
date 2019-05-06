@@ -2,171 +2,118 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E55BC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38EFC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A38D2082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866282082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:35:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="HfCKA2Gc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbfEFHc1 convert rfc822-to-8bit (ORCPT
+        id S1726287AbfEFHe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:32:27 -0400
-Received: from mga12.intel.com ([192.55.52.136]:27841 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbfEFHc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:32:27 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 00:32:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,437,1549958400"; 
-   d="scan'208";a="344117474"
-Received: from irsmsx153.ger.corp.intel.com ([163.33.192.75])
-  by fmsmga006.fm.intel.com with ESMTP; 06 May 2019 00:32:23 -0700
-Received: from irsmsx111.ger.corp.intel.com (10.108.20.4) by
- IRSMSX153.ger.corp.intel.com (163.33.192.75) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 6 May 2019 08:32:15 +0100
-Received: from irsmsx102.ger.corp.intel.com ([169.254.2.21]) by
- irsmsx111.ger.corp.intel.com ([169.254.2.85]) with mapi id 14.03.0415.000;
- Mon, 6 May 2019 08:32:14 +0100
-From:   "Reshetova, Elena" <elena.reshetova@intel.com>
-To:     Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>
-CC:     David Laight <David.Laight@aculab.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Mon, 6 May 2019 03:34:59 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39799 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbfEFHe7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 03:34:59 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q10so10175447ljc.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 00:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ok4FiX0qqzxFXNlfPJQBxeAS7MtYAthIHs0pXM/1gsw=;
+        b=HfCKA2GcWuIWfyCu6q7Vb4VuU5C85rltY95cYwAzVOuNpcOxt9Vpj8t6IWJzXJpM16
+         uc9PlW5f9Go3h/CJ9UsWwq1rdbfbTV7+cveeHt9cUsGuK9G3I7pEgW3Zv9bOFVDQOZbH
+         MpdHFdCp7U0R6aqGNC2FBUx6AIBp++6riZnVE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ok4FiX0qqzxFXNlfPJQBxeAS7MtYAthIHs0pXM/1gsw=;
+        b=s8AW9AAlOAsUAda3HdLWbgN0rPSSyw5jkTt6dcHkB8VnOIQGBZB/jqPER41gJ072hh
+         +ZwvBsc4rsHSdtJbGZ3wYZJ2hiOoNih+wjUxX1BC9VOML4hhIddSxs5gGOivGuzQOMW2
+         vNTn3A+6IghMx3nMDw79aW18/5FPWHwTdP9LTMHXO+zoMhIzODszyPbW2Ea4Wq+kqQiZ
+         dPCHCUyXcJrb6B/Pg9YBb68MoCGJA8rwB6eGroh8zX03uTDNXxCFuKugtVC9jqfE0ZWI
+         S6OjHbRjXG9PmJpXrRj/8rwBM9JcWMKQnVKxi+ne7C1oS74qC3BN7A8aqcTXoyYbVnle
+         gX1g==
+X-Gm-Message-State: APjAAAVKZFTDJ9lqPcf6LmH2x90Jra0PbVGFf96s7TQVC1u0QyNAB0Zd
+        k8FVCKAD2Kf7cRs4clMHQXTn2Q==
+X-Google-Smtp-Source: APXvYqyIXcDanMudqDV0cbvEgmg2JswEqVaUi3W8CZa23fGsbc0VYTSqSxQKNyi+uTC2tZHBHGapWQ==
+X-Received: by 2002:a2e:9f07:: with SMTP id u7mr3713010ljk.115.1557128097278;
+        Mon, 06 May 2019 00:34:57 -0700 (PDT)
+Received: from [172.16.11.26] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id y25sm2083764ljh.31.2019.05.06.00.34.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 00:34:56 -0700 (PDT)
+Subject: Re: [PATCH 00/10] implement DYNAMIC_DEBUG_RELATIVE_POINTERS
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Baron <jbaron@akamai.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon
- syscall
-Thread-Index: AQHU81HQwzT9MH4dM0y/JZXnSwiYT6Y8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAAQuGgIAAYQuAgAAKhwCACsPi4IADJTwAgAAcagCAAExngIAEBbGAgACIbACAAbyQ8IAA626AgAGZfXCAAARpgIAAWpuAgAAF74CABdWt4A==
-Date:   Mon, 6 May 2019 07:32:14 +0000
-Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4C712F7@IRSMSX102.ger.corp.intel.com>
-References: <2236FBA76BA1254E88B949DDB74E612BA4C63E24@IRSMSX102.ger.corp.intel.com>
- <20190426140102.GA4922@mit.edu>
- <57357E35-3D9B-4CA7-BAB9-0BE89E0094D2@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C66A8A@IRSMSX102.ger.corp.intel.com>
- <6860856C-6A92-4569-9CD8-FF6C5C441F30@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
- <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C6C2C3@IRSMSX102.ger.corp.intel.com>
- <2e55aeb3b39440c0bebf47f0f9522dd8@AcuMS.aculab.com>
- <CALCETrXjGvWVgZHrKCfH6RBsnYOyD2+Mey1Esw7BsA4Eg6PS0A@mail.gmail.com>
- <20190502150853.GA16779@gmail.com>
-In-Reply-To: <20190502150853.GA16779@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYTRmNDFjMWEtYjg0OS00OWUzLWEwNjAtY2U5MTYwNjQ3ZjUyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoick5hUktJayswZTc4VGFLSGtcL2tIWFoyREhucmxJN2cwV3NRMWZwM0RDaXdFMHMza0ZBNXhFN3FTZjVpR0JYNlgifQ==
-x-originating-ip: [163.33.239.180]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Andy Lutomirski <luto@kernel.org>
+References: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
+ <1afb0702-3cc5-ba4f-2bdd-604d9da2b846@rasmusvillemoes.dk>
+ <20190506070544.GA66463@gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <25dfde77-fdad-0b99-75ec-4ba480058970@rasmusvillemoes.dk>
+Date:   Mon, 6 May 2019 09:34:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190506070544.GA66463@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> * Andy Lutomirski <luto@kernel.org> wrote:
+On 06/05/2019 09.05, Ingo Molnar wrote:
 > 
-> > Or we decide that calling get_random_bytes() is okay with IRQs off and
-> > this all gets a bit simpler.
 > 
-> BTW., before we go down this path any further, is the plan to bind this
-> feature to a real CPU-RNG capability, i.e. to the RDRAND instruction,
-> which excludes a significant group of x86 of CPUs?
-
-I would not like to bind this to only CPUs that have RDRAND. 
-That's why I was looking into using kernel's CSRNG (we can also use it
-as backup when rdrand is not available).
- 
-> Because calling tens of millions of system calls per second will deplete
-> any non-CPU-RNG sources of entropy and will also starve all other users
-> of random numbers, which might have a more legitimate need for
-> randomness, such as the networking stack ...
-
-This should not apply to the proper CSRNG. They of course also have a
-limitation on the amount of bits they can produce safely (as any crypto
-primitive), but this period is very big and within that it does not affect
-any other user of this CSPRNG, otherwise all guarantees are broken. 
- 
-> I.e. I'm really *super sceptical* of this whole plan, as currently
-> formulated.
+> It's sad to see such nice data footprint savings go the way of the dodo 
+> just because GCC 4.8 is buggy.
 > 
-> If we bind it to RDRAND then we shouldn't be using the generic
-> drivers/char/random.c pool *at all*, but just call the darn instruction
-> directly. This is an x86 patch-set after all, right?
-
-Yes, but my main issues with RDRAND (even if we focus strictly onx86) are:
-- it is not available on older PCs
-- its performance varies across CPUs that support it (and as I understood varies quite some)
-The last one can actually give unpleasant surprises... 
- 
-> Furthermore the following post suggests that RDRAND isn't a per CPU
-> capability, but a core or socket level facility, depending on CPU make:
+> The current compatibility cut-off is GCC 4.6:
 > 
->   https://stackoverflow.com/questions/10484164/what-is-the-latency-and-
-> throughput-of-the-rdrand-instruction-on-ivy-bridge
+>   GNU C                  4.6              gcc --version
 > 
-> 8 gigabits/sec sounds good throughput in principle, if there's no
-> scalability pathologies with that.
-> 
-> It would also be nice to know whether RDRAND does buffering *internally*,
-> in which case it might be better to buffer as little at the system call
-> level as possible, to allow the hardware RNG buffer to rebuild between
-> system calls.
+> Do we know where the GCC bug was fixed, was it in GCC 4.9?
 
-I will try asking around about concrete details on RDRAND behavior. 
-I have various bits and pieces I have been told plus measurements I did, but things 
-don't quite add up.. 
+Not sure. The report was from a build on CentOS with gcc 4.8.5, so I
+tried installing the gcc-4.8 package on my Ubuntu machine and could
+reproduce. Then I tried installed gcc-4.9, and after disabling
+CONFIG_RETPOLINE (both CentOS and Ubuntu carry backported retpoline
+support in their 4.8, but apparently not 4.9), I could see that the
+problem was gone. But whether it's gone because it no longer elides an
+asm volatile() on a code path it otherwise emits code for, or because it
+simply doesn't emit the unused static inline() at all I don't know.
 
-> 
-> I.e. I'd suggest to retrieve randomness via a fixed number of RDRAND-r64
-> calls (where '1' is a perfectly valid block size - it should be
-> measured), which random bits are then used as-is for the ~6 bits of
-> system call stack offset. (I'd even suggest 7 bits: that skips a full
-> cache line almost for free and makes the fuzz actually meaningful: no
-> spear attacker will take a 1/128, 0.8% chance to successfully attack a
-> critical system.)
-> 
-> Then those 64*N random bits get buffered and consumed in 5-7 bit chunk,
-> in a super efficient fashion, possibly inlining the fast path, totally
-> outside the flow of the drivers/char/random.c
+I thought 0day also tested a range of supported compiler versions, so I
+was rather surprised at getting this report at all. But I suppose the
+arch/config matrix is already pretty huge. Anyway, the bug certainly
+doesn't exist in any of the gcc versions 0day does test.
 
-I will ask around on what is the best way to use RDRAND for our purpose.
+I _am_ bending the C rules a bit with the "extern some_var; asm
+volatile(".section some_section\nsome_var: blabla");". I should probably
+ask on the gcc list whether this way of defining a local symbol in
+inline assembly and referring to it from C is supposed to work, or it
+just happens to work by chance.
 
-> 
-> Any non-CPU source of randomness for system calls and plans to add
-> several extra function calls to every x86 system call is crazy talk I
-> believe...
-
-So, if we go the CPU randomness path, then what do we fall back to when
-RNRAND is not available? Skip randomization altogether or backup to
-CSRNG?
-
-Best Regards,
-Elena.
+Rasmus
