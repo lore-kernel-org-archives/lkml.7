@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-16.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5697AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143AAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA2C205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B92205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:33:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YtLNTr71"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e90YIYJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfEFQdT (ORCPT
+        id S1727443AbfEFQda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:33:19 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:48055 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbfEFQbY (ORCPT
+        Mon, 6 May 2019 12:33:30 -0400
+Received: from mail-yw1-f73.google.com ([209.85.161.73]:32872 "EHLO
+        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfEFQbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:31:24 -0400
-Received: by mail-vk1-f201.google.com with SMTP id x77so6154074vke.14
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:31:23 -0700 (PDT)
+        Mon, 6 May 2019 12:31:17 -0400
+Received: by mail-yw1-f73.google.com with SMTP id c4so26406133ywd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:31:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=5/U30IDTpMzOZZUHty5OaCehkawNQwuaMdmb1lxJ4Z0=;
-        b=YtLNTr71LQtDtm4+fIzPRqVEmsig4jIZm+5Xq1i7HEuxqe92Fba7UIz0P7LGc/lCae
-         dXG34rcNIps8e/OHQ3Qzc2dw8Q2cw02t5CRXFsyAuFyvOSJWHO7z9kGM+zFce82aoyA3
-         qtrPznLya17o1jSMBsriB2NxUvL6TNepNcLFNmzdS0xujMY5BYhLZIcZKNLcHkkh0W1L
-         /UJ5RkfdxqJMDgKHhR9weZLpKLMZYLR2mkyZcMWZXKn0tWKezIF4luzZUNs3aAJ9eSxT
-         OA5Tz3eW90ZO6gwE2fYYKkT2xZxlwtZaQj4M4Oni1/3Ul1zlOiWvHRCQ7SYhl4fTWfl6
-         H0KQ==
+        bh=x8HMVSO2lCP9thpVq0jteC8wa+ruR/qG5sfvMEzcSf4=;
+        b=e90YIYJEqCjuv0dQNXe7JfByZ3LYw/uoix1gLG6qHxakrZEGoit4yh6fTDsfYia+jH
+         wb7igUzrFQvpjJl955zqS3eb64AMNM806CURkcixGS6z1rzCJzMGBiAz82rRhlhjgKjR
+         9cdDyeo/3JMugM0eGAxc56H2X/rF/Gu5NZJ6OlTvycYfBxRjWeovYDz5GGyc2/popU6X
+         Q4rJTvbhNlqr5zqGtmKCjWUttV6dsKWcbk2qBw0aV1In8VLH8mRF5MiPk8iCO4KWMnPF
+         BSI3N1BBXtSHWlnz3+Iji+1TK5JldUspg0pnnlvUCK4PaDa6c2GsK9cElOVCY5yx3kNx
+         bcTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=5/U30IDTpMzOZZUHty5OaCehkawNQwuaMdmb1lxJ4Z0=;
-        b=URDWOReAkH3ydnZ/dQ3IPHk0bGdVYOy7wuSIYaIcftT9NH3vr462hF5OdvkS98+LnO
-         YgFFGveYJwuoJWglN4R3bpxsbXAnjsRt+v6sFKVE1PS0XB7NL5d78htpTAXe7+bHPVTM
-         iAbBdBeJWOj3Mdji6Mvq6hsrwRI0cl+nXzWJ0nrbArYxj1o85Hqx4Y9nZQNlO13NN3Ww
-         mr0xHGUkOpKgCOiXJWEtX8XHRIwda+uD/LN2WOspqd7OIs0HvZPBSAN7Yd/oKWbz7YhC
-         b4kHPvVnP3n0rsUTWDA6OaUTw0D2tFg1prp3d+a0QWtTMM/WvGwx5jrGlkaHvQ12Nf+n
-         NJew==
-X-Gm-Message-State: APjAAAX0t4q1nW5ygaXFg1vGOM2ehrWkBsCRfLjCRUXld7WOBBKS/v0V
-        wvIGnSDqvlsFwgosJsKiJqkq0HNrQ2w2eScB
-X-Google-Smtp-Source: APXvYqzPcSLCkM7yKRgWAgtLPPmtlxC3d1i0NZJgfFSPt5rWBLpStTcU2VVry9J5XQbhU5Djgso0ZhxSZBobo+In
-X-Received: by 2002:a67:ed0b:: with SMTP id l11mr13351119vsp.55.1557160282543;
- Mon, 06 May 2019 09:31:22 -0700 (PDT)
-Date:   Mon,  6 May 2019 18:30:51 +0200
+        bh=x8HMVSO2lCP9thpVq0jteC8wa+ruR/qG5sfvMEzcSf4=;
+        b=b6PHwXvVmLNg6m4yrGzNzPtce8LLQuOl8+4tsOGE+4B2LW1tVfLKgkfhll3H+skADf
+         oM7bra6XsUIhla/oWUZid9buGss9ibcE+t9NQSsYvFgiZq+c9FpMIMZ4KFV+P3G645eG
+         NyZ78rugmsHd9zVACcAOxJ3usf5ryOTBB0i6w3P8Fm4N/U+Rh2+uSmkGflXNylb/mlnV
+         UCkYfip8EYeE5o7BzletGiSFSGZgdx2bBVKzduu7/7olczGG4MJVs3tgpkSM83Z/Dbdw
+         X21ZOuY9l4xzIMZ09q2tJnqbhabupPm0zS96MX8NC48ih1M8kFnCzciQbKpum8tU4cCe
+         77zQ==
+X-Gm-Message-State: APjAAAWy12oFjoBEHAy2/u/L0VucIwBrDh0sUCoUa04ORQn8RqHWRn8A
+        aoTv2jNmuXZd6uxf4C3+yfQKe7bsV0VAJkDA
+X-Google-Smtp-Source: APXvYqyZq8rlWFW4uBLN8C8I3oEaQAU5CNW3HReq+6c5opQ9wp/VGDDqgMMeEo6tOAWNlA3+Gfl3rFVlDcMv6bDq
+X-Received: by 2002:a5b:8c2:: with SMTP id w2mr16278460ybq.201.1557160276487;
+ Mon, 06 May 2019 09:31:16 -0700 (PDT)
+Date:   Mon,  6 May 2019 18:30:49 +0200
 In-Reply-To: <cover.1557160186.git.andreyknvl@google.com>
-Message-Id: <00eb4c63fefc054e2c8d626e8fedfca11d7c2600.1557160186.git.andreyknvl@google.com>
+Message-Id: <861418ff7ed7253356cb8267de5ee2d4bd84196d.1557160186.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1557160186.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH v15 05/17] arms64: untag user pointers passed to memory syscalls
+Subject: [PATCH v15 03/17] lib, arm64: untag user pointers in strn*_user
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
@@ -103,172 +103,63 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-This patch allows tagged pointers to be passed to the following memory
-syscalls: brk, get_mempolicy, madvise, mbind, mincore, mlock, mlock2,
-mmap, mmap_pgoff, mprotect, mremap, msync, munlock, munmap,
-remap_file_pages, shmat and shmdt.
+strncpy_from_user and strnlen_user accept user addresses as arguments, and
+do not go through the same path as copy_from_user and others, so here we
+need to handle the case of tagged user addresses separately.
 
-This is done by untagging pointers passed to these syscalls in the
-prologues of their handlers.
+Untag user pointers passed to these functions.
+
+Note, that this patch only temporarily untags the pointers to perform
+validity checks, but then uses them as is to perform user memory accesses.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- arch/arm64/kernel/sys.c | 128 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 127 insertions(+), 1 deletion(-)
+ lib/strncpy_from_user.c | 3 ++-
+ lib/strnlen_user.c      | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
-index b44065fb1616..933bb9f3d6ec 100644
---- a/arch/arm64/kernel/sys.c
-+++ b/arch/arm64/kernel/sys.c
-@@ -35,10 +35,33 @@ SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
- {
- 	if (offset_in_page(off) != 0)
- 		return -EINVAL;
--
-+	addr = untagged_addr(addr);
- 	return ksys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT);
- }
+diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
+index 58eacd41526c..6209bb9507c7 100644
+--- a/lib/strncpy_from_user.c
++++ b/lib/strncpy_from_user.c
+@@ -6,6 +6,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
++#include <linux/mm.h>
  
-+SYSCALL_DEFINE6(arm64_mmap_pgoff, unsigned long, addr, unsigned long, len,
-+		unsigned long, prot, unsigned long, flags,
-+		unsigned long, fd, unsigned long, pgoff)
-+{
-+	addr = untagged_addr(addr);
-+	return ksys_mmap_pgoff(addr, len, prot, flags, fd, pgoff);
-+}
-+
-+SYSCALL_DEFINE5(arm64_mremap, unsigned long, addr, unsigned long, old_len,
-+		unsigned long, new_len, unsigned long, flags,
-+		unsigned long, new_addr)
-+{
-+	addr = untagged_addr(addr);
-+	new_addr = untagged_addr(new_addr);
-+	return ksys_mremap(addr, old_len, new_len, flags, new_addr);
-+}
-+
-+SYSCALL_DEFINE2(arm64_munmap, unsigned long, addr, size_t, len)
-+{
-+	addr = untagged_addr(addr);
-+	return ksys_munmap(addr, len);
-+}
-+
- SYSCALL_DEFINE1(arm64_personality, unsigned int, personality)
- {
- 	if (personality(personality) == PER_LINUX32 &&
-@@ -47,10 +70,113 @@ SYSCALL_DEFINE1(arm64_personality, unsigned int, personality)
- 	return ksys_personality(personality);
- }
+ #include <asm/byteorder.h>
+ #include <asm/word-at-a-time.h>
+@@ -107,7 +108,7 @@ long strncpy_from_user(char *dst, const char __user *src, long count)
+ 		return 0;
  
-+SYSCALL_DEFINE1(arm64_brk, unsigned long, brk)
-+{
-+	brk = untagged_addr(brk);
-+	return ksys_brk(brk);
-+}
-+
-+SYSCALL_DEFINE5(arm64_get_mempolicy, int __user *, policy,
-+		unsigned long __user *, nmask, unsigned long, maxnode,
-+		unsigned long, addr, unsigned long, flags)
-+{
-+	addr = untagged_addr(addr);
-+	return ksys_get_mempolicy(policy, nmask, maxnode, addr, flags);
-+}
-+
-+SYSCALL_DEFINE3(arm64_madvise, unsigned long, start,
-+		size_t, len_in, int, behavior)
-+{
-+	start = untagged_addr(start);
-+	return ksys_madvise(start, len_in, behavior);
-+}
-+
-+SYSCALL_DEFINE6(arm64_mbind, unsigned long, start, unsigned long, len,
-+		unsigned long, mode, const unsigned long __user *, nmask,
-+		unsigned long, maxnode, unsigned int, flags)
-+{
-+	start = untagged_addr(start);
-+	return ksys_mbind(start, len, mode, nmask, maxnode, flags);
-+}
-+
-+SYSCALL_DEFINE2(arm64_mlock, unsigned long, start, size_t, len)
-+{
-+	start = untagged_addr(start);
-+	return ksys_mlock(start, len, VM_LOCKED);
-+}
-+
-+SYSCALL_DEFINE2(arm64_mlock2, unsigned long, start, size_t, len)
-+{
-+	start = untagged_addr(start);
-+	return ksys_mlock(start, len, VM_LOCKED);
-+}
-+
-+SYSCALL_DEFINE2(arm64_munlock, unsigned long, start, size_t, len)
-+{
-+	start = untagged_addr(start);
-+	return ksys_munlock(start, len);
-+}
-+
-+SYSCALL_DEFINE3(arm64_mprotect, unsigned long, start, size_t, len,
-+		unsigned long, prot)
-+{
-+	start = untagged_addr(start);
-+	return ksys_mprotect_pkey(start, len, prot, -1);
-+}
-+
-+SYSCALL_DEFINE3(arm64_msync, unsigned long, start, size_t, len, int, flags)
-+{
-+	start = untagged_addr(start);
-+	return ksys_msync(start, len, flags);
-+}
-+
-+SYSCALL_DEFINE3(arm64_mincore, unsigned long, start, size_t, len,
-+		unsigned char __user *, vec)
-+{
-+	start = untagged_addr(start);
-+	return ksys_mincore(start, len, vec);
-+}
-+
-+SYSCALL_DEFINE5(arm64_remap_file_pages, unsigned long, start,
-+		unsigned long, size, unsigned long, prot,
-+		unsigned long, pgoff, unsigned long, flags)
-+{
-+	start = untagged_addr(start);
-+	return ksys_remap_file_pages(start, size, prot, pgoff, flags);
-+}
-+
-+SYSCALL_DEFINE3(arm64_shmat, int, shmid, char __user *, shmaddr, int, shmflg)
-+{
-+	shmaddr = untagged_addr(shmaddr);
-+	return ksys_shmat(shmid, shmaddr, shmflg);
-+}
-+
-+SYSCALL_DEFINE1(arm64_shmdt, char __user *, shmaddr)
-+{
-+	shmaddr = untagged_addr(shmaddr);
-+	return ksys_shmdt(shmaddr);
-+}
-+
- /*
-  * Wrappers to pass the pt_regs argument.
-  */
- #define sys_personality		sys_arm64_personality
-+#define sys_mmap_pgoff		sys_arm64_mmap_pgoff
-+#define sys_mremap		sys_arm64_mremap
-+#define sys_munmap		sys_arm64_munmap
-+#define sys_brk			sys_arm64_brk
-+#define sys_get_mempolicy	sys_arm64_get_mempolicy
-+#define sys_madvise		sys_arm64_madvise
-+#define sys_mbind		sys_arm64_mbind
-+#define sys_mlock		sys_arm64_mlock
-+#define sys_mlock2		sys_arm64_mlock2
-+#define sys_munlock		sys_arm64_munlock
-+#define sys_mprotect		sys_arm64_mprotect
-+#define sys_msync		sys_arm64_msync
-+#define sys_mincore		sys_arm64_mincore
-+#define sys_remap_file_pages	sys_arm64_remap_file_pages
-+#define sys_shmat		sys_arm64_shmat
-+#define sys_shmdt		sys_arm64_shmdt
+ 	max_addr = user_addr_max();
+-	src_addr = (unsigned long)src;
++	src_addr = (unsigned long)untagged_addr(src);
+ 	if (likely(src_addr < max_addr)) {
+ 		unsigned long max = max_addr - src_addr;
+ 		long retval;
+diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
+index 1c1a1b0e38a5..8ca3d2ac32ec 100644
+--- a/lib/strnlen_user.c
++++ b/lib/strnlen_user.c
+@@ -2,6 +2,7 @@
+ #include <linux/kernel.h>
+ #include <linux/export.h>
+ #include <linux/uaccess.h>
++#include <linux/mm.h>
  
- asmlinkage long sys_ni_syscall(const struct pt_regs *);
- #define __arm64_sys_ni_syscall	sys_ni_syscall
+ #include <asm/word-at-a-time.h>
+ 
+@@ -109,7 +110,7 @@ long strnlen_user(const char __user *str, long count)
+ 		return 0;
+ 
+ 	max_addr = user_addr_max();
+-	src_addr = (unsigned long)str;
++	src_addr = (unsigned long)untagged_addr(str);
+ 	if (likely(src_addr < max_addr)) {
+ 		unsigned long max = max_addr - src_addr;
+ 		long retval;
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
