@@ -2,142 +2,226 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3889BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8318C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A45206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968E3206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbfEFM2P (ORCPT
+        id S1726298AbfEFM3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 08:28:15 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:40865 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfEFM2O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 08:28:14 -0400
-X-Originating-IP: 90.88.149.145
-Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 89BA960018;
-        Mon,  6 May 2019 12:28:08 +0000 (UTC)
-Date:   Mon, 6 May 2019 14:28:07 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>, lee.jones@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 1/7] iio: adc: sun4i-gpadc: rework for support multiple
- thermal sensor
-Message-ID: <20190506122807.4u323iys74jddcet@flea>
-References: <20190503072813.2719-1-tiny.windzz@gmail.com>
- <20190503072813.2719-2-tiny.windzz@gmail.com>
- <20190505162215.3594f77d@archlinux>
+        Mon, 6 May 2019 08:29:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47390 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725853AbfEFM3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 08:29:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CCF4BAE12;
+        Mon,  6 May 2019 12:29:18 +0000 (UTC)
+Date:   Mon, 6 May 2019 14:29:16 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     hch@lst.de, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, jejb@linux.ibm.com,
+        don.brace@microsemi.com, kevin.barnett@microsemi.com,
+        scott.teel@microsemi.com, david.carroll@microsemi.com
+Subject: Re: "iommu/amd: Set exclusion range correctly" causes smartpqi
+ offline
+Message-ID: <20190506122916.GB3486@suse.de>
+References: <1556290348.6132.6.camel@lca.pw>
+ <ca40e139-3b0e-01db-b3c8-df0c1a04f9e6@lca.pw>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="e762al6xbx7iiess"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190505162215.3594f77d@archlinux>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <ca40e139-3b0e-01db-b3c8-df0c1a04f9e6@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 05, 2019 at 10:56:28PM -0400, Qian Cai wrote:
+> It turned out another linux-next commit is needed to reproduce this, i.e.,
+> 7a5dbf3ab2f0 ("iommu/amd: Remove the leftover of bypass support"). Specifically,
+> the chunks for map_sg() and unmap_sg(). This has been reproduced on 3 different
+> HPE ProLiant DL385 Gen10 systems so far.
+> 
+> Either reverted the chunks (map_sg() and unmap_sg()) on the top of the latest
+> linux-next fixed the issue or applied them on the top of the mainline v5.1
+> reproduced it immediately.
+> 
+> Lots of time it triggered this BUG_ON(!iova) in iova_magazine_free_pfns()
+> instead of the smartpqi offline.
 
---e762al6xbx7iiess
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks a lot for tracking this down further. I queued a revert of the
+above patch, as it does some questionable things I missed during review.
+We should revisit the patch during the next cycle, but for now it is
+better to just revert it. Revert attached.
 
-Hi,
+From 89736a0ee81d14439d085c8d4653bc1d86fe64d8 Mon Sep 17 00:00:00 2001
+From: Joerg Roedel <jroedel@suse.de>
+Date: Mon, 6 May 2019 14:24:18 +0200
+Subject: [PATCH] Revert "iommu/amd: Remove the leftover of bypass support"
 
-On Sun, May 05, 2019 at 04:22:15PM +0100, Jonathan Cameron wrote:
-> On Fri,  3 May 2019 03:28:07 -0400
-> Yangtao Li <tiny.windzz@gmail.com> wrote:
->
-> > For some SOCs, there are more than one thermal sensor, and there are
-> > currently four sensors on the A80. So we need to do some work in order
-> > to support multiple thermal sensors:
-> >
-> >   1) add sensor_count in gpadc_data.
-> >   2) introduce sun4i_sensor_tzd in sun4i_gpadc_iio, to support multiple
-> >      thermal_zone_device and distinguish between different sensors.
-> >   3) modify read temperature and initialization function.
->
-> This comment doesn't mention the devm change. If it had it would have
-> raised immediate alarm bells.
->
-> I'm also not keen on the web of pointers that this driver is steadily
-> evolving.  I can't immediately see how to reduce that complexity however.
+This reverts commit 7a5dbf3ab2f04905cf8468c66fcdbfb643068bcb.
 
-So I might be responsible for that, and looking back, this has been a
-mistake.
+This commit not only removes the leftovers of bypass
+support, it also mostly removes the checking of the return
+value of the get_domain() function. This can lead to silent
+data corruption bugs when a device is not attached to its
+dma_ops domain and a DMA-API function is called for that
+device.
 
-This driver was initally put together to support a controller found in
-older (A10 up to A31) Allwinner SoCs. This controller had an ADC
-driver that could be operated as a touchscreen controller, and was
-providing a CPU temperature sensor and a general purpose ADC.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ drivers/iommu/amd_iommu.c | 80 +++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 63 insertions(+), 17 deletions(-)
 
-However, we already had a driver for that controller in drivers/input
-to report the CPU temperature, and the one in IIO was introduced to
-support the general purpose ADC (and the CPU temperature). The long
-term goal was to add the touchscreen feature as well eventually so
-that we could remove the one in drivers/input. That didn't happen.
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index bc98de5fa867..23c1a7eebb06 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2459,10 +2459,20 @@ static dma_addr_t map_page(struct device *dev, struct page *page,
+ 			   unsigned long attrs)
+ {
+ 	phys_addr_t paddr = page_to_phys(page) + offset;
+-	struct protection_domain *domain = get_domain(dev);
+-	struct dma_ops_domain *dma_dom = to_dma_ops_domain(domain);
++	struct protection_domain *domain;
++	struct dma_ops_domain *dma_dom;
++	u64 dma_mask;
++
++	domain = get_domain(dev);
++	if (PTR_ERR(domain) == -EINVAL)
++		return (dma_addr_t)paddr;
++	else if (IS_ERR(domain))
++		return DMA_MAPPING_ERROR;
++
++	dma_mask = *dev->dma_mask;
++	dma_dom = to_dma_ops_domain(domain);
+ 
+-	return __map_single(dev, dma_dom, paddr, size, dir, *dev->dma_mask);
++	return __map_single(dev, dma_dom, paddr, size, dir, dma_mask);
+ }
+ 
+ /*
+@@ -2471,8 +2481,14 @@ static dma_addr_t map_page(struct device *dev, struct page *page,
+ static void unmap_page(struct device *dev, dma_addr_t dma_addr, size_t size,
+ 		       enum dma_data_direction dir, unsigned long attrs)
+ {
+-	struct protection_domain *domain = get_domain(dev);
+-	struct dma_ops_domain *dma_dom = to_dma_ops_domain(domain);
++	struct protection_domain *domain;
++	struct dma_ops_domain *dma_dom;
++
++	domain = get_domain(dev);
++	if (IS_ERR(domain))
++		return;
++
++	dma_dom = to_dma_ops_domain(domain);
+ 
+ 	__unmap_single(dma_dom, dma_addr, size, dir);
+ }
+@@ -2512,13 +2528,20 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+ 		  unsigned long attrs)
+ {
+ 	int mapped_pages = 0, npages = 0, prot = 0, i;
+-	struct protection_domain *domain = get_domain(dev);
+-	struct dma_ops_domain *dma_dom = to_dma_ops_domain(domain);
++	struct protection_domain *domain;
++	struct dma_ops_domain *dma_dom;
+ 	struct scatterlist *s;
+ 	unsigned long address;
+-	u64 dma_mask = *dev->dma_mask;
++	u64 dma_mask;
+ 	int ret;
+ 
++	domain = get_domain(dev);
++	if (IS_ERR(domain))
++		return 0;
++
++	dma_dom  = to_dma_ops_domain(domain);
++	dma_mask = *dev->dma_mask;
++
+ 	npages = sg_num_pages(dev, sglist, nelems);
+ 
+ 	address = dma_ops_alloc_iova(dev, dma_dom, npages, dma_mask);
+@@ -2592,11 +2615,20 @@ static void unmap_sg(struct device *dev, struct scatterlist *sglist,
+ 		     int nelems, enum dma_data_direction dir,
+ 		     unsigned long attrs)
+ {
+-	struct protection_domain *domain = get_domain(dev);
+-	struct dma_ops_domain *dma_dom = to_dma_ops_domain(domain);
++	struct protection_domain *domain;
++	struct dma_ops_domain *dma_dom;
++	unsigned long startaddr;
++	int npages = 2;
++
++	domain = get_domain(dev);
++	if (IS_ERR(domain))
++		return;
++
++	startaddr = sg_dma_address(sglist) & PAGE_MASK;
++	dma_dom   = to_dma_ops_domain(domain);
++	npages    = sg_num_pages(dev, sglist, nelems);
+ 
+-	__unmap_single(dma_dom, sg_dma_address(sglist) & PAGE_MASK,
+-			sg_num_pages(dev, sglist, nelems) << PAGE_SHIFT, dir);
++	__unmap_single(dma_dom, startaddr, npages << PAGE_SHIFT, dir);
+ }
+ 
+ /*
+@@ -2607,11 +2639,16 @@ static void *alloc_coherent(struct device *dev, size_t size,
+ 			    unsigned long attrs)
+ {
+ 	u64 dma_mask = dev->coherent_dma_mask;
+-	struct protection_domain *domain = get_domain(dev);
++	struct protection_domain *domain;
+ 	struct dma_ops_domain *dma_dom;
+ 	struct page *page;
+ 
+-	if (IS_ERR(domain))
++	domain = get_domain(dev);
++	if (PTR_ERR(domain) == -EINVAL) {
++		page = alloc_pages(flag, get_order(size));
++		*dma_addr = page_to_phys(page);
++		return page_address(page);
++	} else if (IS_ERR(domain))
+ 		return NULL;
+ 
+ 	dma_dom   = to_dma_ops_domain(domain);
+@@ -2657,13 +2694,22 @@ static void free_coherent(struct device *dev, size_t size,
+ 			  void *virt_addr, dma_addr_t dma_addr,
+ 			  unsigned long attrs)
+ {
+-	struct protection_domain *domain = get_domain(dev);
+-	struct dma_ops_domain *dma_dom = to_dma_ops_domain(domain);
+-	struct page *page = virt_to_page(virt_addr);
++	struct protection_domain *domain;
++	struct dma_ops_domain *dma_dom;
++	struct page *page;
+ 
++	page = virt_to_page(virt_addr);
+ 	size = PAGE_ALIGN(size);
+ 
++	domain = get_domain(dev);
++	if (IS_ERR(domain))
++		goto free_mem;
++
++	dma_dom = to_dma_ops_domain(domain);
++
+ 	__unmap_single(dma_dom, dma_addr, size, DMA_BIDIRECTIONAL);
++
++free_mem:
+ 	if (!dma_release_from_contiguous(dev, page, size >> PAGE_SHIFT))
+ 		__free_pages(page, get_order(size));
+ }
+-- 
+2.16.4
 
-At the same time, the Allwinner hardware slowly evolved to remove the
-touchscreen and ADC features, and only keep the CPU temperature
-readout. It then evolved further on to support multiple temperatures
-(for different clusters, the GPU, and so on).
-
-So, today, we're in a situation where I was pushing everything into
-that IIO drivers since there was similiraties between all the
-generations, but the fact that we have to support so many odd cases
-(DT bindings compatibility, controllers with and without ADC, etc)
-that it becomes a real mess.
-
-And that mess isn't really used by anybody, since we want to have the
-touchscreen.
-
-There's only one SoC that is supported only by that driver, which is
-the A33 that only had a CPU temperature readout, and is still pretty
-similar to the latest SoC from Allwinner (that is supported by this
-series).
-
-I guess, for everyone's sanity and in order to not stall this further,
-it would just be better to create an hwmon driver for the A33 (and
-onwards, including the H6) for the SoC that just have the temperature
-readout feature. And for the older SoC, we just keep the older driver
-under input/. Once the A33 is supported, we'll remove the driver in
-IIO (and the related bits in drivers/mfd).
-
-Armbian already has a driver for that they never upstreamed iirc, so
-it might be a good starting point, and we would add the support for
-the H6. How does that sound?
-
-Sorry for wasting everybody's time on this.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---e762al6xbx7iiess
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNAoUgAKCRDj7w1vZxhR
-xTLvAQDqYglT93yaQujSGHibjsOVHEjlG/IsBmh8AK4LTLRYaAEAsCfJVF5ZRnpC
-1HOLCDVK5qAjlTxiKXg4tjrrxbWVEgU=
-=Rbya
------END PGP SIGNATURE-----
-
---e762al6xbx7iiess--
