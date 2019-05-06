@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F09C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35EBC004C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186EA205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7C8205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:51:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbfEFCuV (ORCPT
+        id S1726595AbfEFCvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 22:50:21 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7162 "EHLO huawei.com"
+        Sun, 5 May 2019 22:51:45 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46890 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726128AbfEFCuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726156AbfEFCuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 5 May 2019 22:50:20 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9B862AD836BE2DAB8F8C;
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C426A8DC97BF788801BE;
         Mon,  6 May 2019 10:50:18 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 6 May 2019 10:50:11 +0800
+ 14.3.439.0; Mon, 6 May 2019 10:50:12 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,9 +32,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <nhorman@redhat.com>,
         Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 06/12] net: hns3: refactor BD filling for l2l3l4 info
-Date:   Mon, 6 May 2019 10:48:46 +0800
-Message-ID: <1557110932-683-7-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 09/12] net: hns3: optimize the barrier using when cleaning TX BD
+Date:   Mon, 6 May 2019 10:48:49 +0800
+Message-ID: <1557110932-683-10-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1557110932-683-1-git-send-email-tanhuazhong@huawei.com>
 References: <1557110932-683-1-git-send-email-tanhuazhong@huawei.com>
@@ -49,109 +49,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yunsheng Lin <linyunsheng@huawei.com>
 
-This patch separates the inner and outer l2l3l4 len handling in
-hns3_set_l2l3l4_len, this is a preparation to combine the l2l3l4
-len and checksum handling for inner and outer header.
+Currently, a barrier is used when cleaning each TX BD, which may
+cause performance degradation.
+
+This patch optimizes it to use one barrier when cleaning TX BD
+each round.
 
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 62 +++++++++----------------
- 1 file changed, 23 insertions(+), 39 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 29 +++++++++++++------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 14312ff..9170743 100644
+index 21eac68..25d607c 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -741,65 +741,49 @@ static void hns3_set_l2l3l4_len(struct sk_buff *skb, u8 ol4_proto,
- 				u8 il4_proto, u32 *type_cs_vlan_tso,
- 				u32 *ol_type_vlan_len_msec)
+@@ -2186,20 +2186,25 @@ static void hns3_reuse_buffer(struct hns3_enet_ring *ring, int i)
+ 	ring->desc[i].rx.bd_base_info = 0;
+ }
+ 
+-static void hns3_nic_reclaim_one_desc(struct hns3_enet_ring *ring, int *bytes,
+-				      int *pkts)
++static void hns3_nic_reclaim_desc(struct hns3_enet_ring *ring, int head,
++				  int *bytes, int *pkts)
  {
-+	unsigned char *l2_hdr = skb->data;
-+	u8 l4_proto = ol4_proto;
- 	union l3_hdr_info l3;
- 	union l4_hdr_info l4;
--	unsigned char *l2_hdr;
--	u8 l4_proto = ol4_proto;
--	u32 ol2_len;
--	u32 ol3_len;
--	u32 ol4_len;
- 	u32 l2_len;
- 	u32 l3_len;
-+	u32 l4_len;
+ 	int ntc = ring->next_to_clean;
+ 	struct hns3_desc_cb *desc_cb;
  
- 	l3.hdr = skb_network_header(skb);
- 	l4.hdr = skb_transport_header(skb);
+-	desc_cb = &ring->desc_cb[ntc];
+-	(*pkts) += (desc_cb->type == DESC_TYPE_SKB);
+-	(*bytes) += desc_cb->length;
+-	/* desc_cb will be cleaned, after hnae3_free_buffer_detach*/
+-	hns3_free_buffer_detach(ring, ntc);
++	while (head != ntc) {
++		desc_cb = &ring->desc_cb[ntc];
++		(*pkts) += (desc_cb->type == DESC_TYPE_SKB);
++		(*bytes) += desc_cb->length;
++		/* desc_cb will be cleaned, after hnae3_free_buffer_detach */
++		hns3_free_buffer_detach(ring, ntc);
  
--	/* compute L2 header size for normal packet, defined in 2 Bytes */
--	l2_len = l3.hdr - skb->data;
--	hns3_set_field(*type_cs_vlan_tso, HNS3_TXD_L2LEN_S, l2_len >> 1);
--
--	/* tunnel packet*/
-+	/* tunnel packet */
- 	if (skb->encapsulation) {
-+		/* not MAC in UDP, MAC in GRE (0x6558) */
-+		if (!(ol4_proto == IPPROTO_UDP || ol4_proto == IPPROTO_GRE))
-+			return;
+-	if (++ntc == ring->desc_num)
+-		ntc = 0;
++		if (++ntc == ring->desc_num)
++			ntc = 0;
 +
- 		/* compute OL2 header size, defined in 2 Bytes */
--		ol2_len = l2_len;
-+		l2_len = l3.hdr - skb->data;
- 		hns3_set_field(*ol_type_vlan_len_msec,
--			       HNS3_TXD_L2LEN_S, ol2_len >> 1);
-+			       HNS3_TXD_L2LEN_S, l2_len >> 1);
++		/* Issue prefetch for next Tx descriptor */
++		prefetch(&ring->desc_cb[ntc]);
++	}
  
- 		/* compute OL3 header size, defined in 4 Bytes */
--		ol3_len = l4.hdr - l3.hdr;
-+		l3_len = l4.hdr - l3.hdr;
- 		hns3_set_field(*ol_type_vlan_len_msec, HNS3_TXD_L3LEN_S,
--			       ol3_len >> 2);
--
--		/* MAC in UDP, MAC in GRE (0x6558)*/
--		if ((ol4_proto == IPPROTO_UDP) || (ol4_proto == IPPROTO_GRE)) {
--			/* switch MAC header ptr from outer to inner header.*/
--			l2_hdr = skb_inner_mac_header(skb);
--
--			/* compute OL4 header size, defined in 4 Bytes. */
--			ol4_len = l2_hdr - l4.hdr;
--			hns3_set_field(*ol_type_vlan_len_msec,
--				       HNS3_TXD_L4LEN_S, ol4_len >> 2);
-+			       l3_len >> 2);
+ 	/* This smp_store_release() pairs with smp_load_acquire() in
+ 	 * ring_space called by hns3_nic_net_xmit.
+@@ -2244,11 +2249,7 @@ void hns3_clean_tx_ring(struct hns3_enet_ring *ring)
  
--			/* switch IP header ptr from outer to inner header */
--			l3.hdr = skb_inner_network_header(skb);
-+		l2_hdr = skb_inner_mac_header(skb);
-+		/* compute OL4 header size, defined in 4 Bytes. */
-+		l4_len = l2_hdr - l4.hdr;
-+		hns3_set_field(*ol_type_vlan_len_msec, HNS3_TXD_L4LEN_S,
-+			       l4_len >> 2);
+ 	bytes = 0;
+ 	pkts = 0;
+-	while (head != ring->next_to_clean) {
+-		hns3_nic_reclaim_one_desc(ring, &bytes, &pkts);
+-		/* Issue prefetch for next Tx descriptor */
+-		prefetch(&ring->desc_cb[ring->next_to_clean]);
+-	}
++	hns3_nic_reclaim_desc(ring, head, &bytes, &pkts);
  
--			/* compute inner l2 header size, defined in 2 Bytes. */
--			l2_len = l3.hdr - l2_hdr;
--			hns3_set_field(*type_cs_vlan_tso, HNS3_TXD_L2LEN_S,
--				       l2_len >> 1);
--		} else {
--			/* skb packet types not supported by hardware,
--			 * txbd len fild doesn't be filled.
--			 */
--			return;
--		}
--
--		/* switch L4 header pointer from outer to inner */
-+		/* switch to inner header */
-+		l2_hdr = skb_inner_mac_header(skb);
-+		l3.hdr = skb_inner_network_header(skb);
- 		l4.hdr = skb_inner_transport_header(skb);
--
- 		l4_proto = il4_proto;
- 	}
- 
-+	l2_len = l3.hdr - l2_hdr;
-+	hns3_set_field(*type_cs_vlan_tso, HNS3_TXD_L2LEN_S, l2_len >> 1);
-+
- 	/* compute inner(/normal) L3 header size, defined in 4 Bytes */
- 	l3_len = l4.hdr - l3.hdr;
- 	hns3_set_field(*type_cs_vlan_tso, HNS3_TXD_L3LEN_S, l3_len >> 2);
+ 	ring->tqp_vector->tx_group.total_bytes += bytes;
+ 	ring->tqp_vector->tx_group.total_packets += pkts;
 -- 
 2.7.4
 
