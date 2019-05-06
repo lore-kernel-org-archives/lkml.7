@@ -2,192 +2,139 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21116C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D726CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D890720C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:14:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557162846;
-	bh=hKEivjPezdoQpNsw9V8wzbLUYXgRFE3IPMuKbpOvsIQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XAMmd8CHSeXKFB0hCYfm0LVu4D/0a2bmjQem1ca/mZD+yAZx34ljXef7VnajC4Zf8
-	 goEuB6HoneaFCiwzFzF0Bmsmk/AqgpufFVVmM3QGXPDj23KAtRuKI3iIBiSqHhd2u1
-	 NM0lLIOFjRDFY2lZBxjVF6d+71KRCBHpLm5P4y54=
+	by mail.kernel.org (Postfix) with ESMTP id AAC272053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:20:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FSlD/GUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfEFROE (ORCPT
+        id S1726479AbfEFRUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:14:04 -0400
-Received: from mail-lf1-f48.google.com ([209.85.167.48]:44865 "EHLO
-        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbfEFROE (ORCPT
+        Mon, 6 May 2019 13:20:05 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:53624 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfEFRUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:14:04 -0400
-Received: by mail-lf1-f48.google.com with SMTP id n134so7889505lfn.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 10:14:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BWErFa2Tb4Iv9aICLnei73w528HT1mPAhqrqIzBV8n8=;
-        b=A/1GS57fjXXZgfDIFSzv5EkjXjqduB2iecI//MYxRTsOyDEtXxuDBaXBNmKk3QNbZo
-         ic+a6bYXBTLe0BX8PfBz1JeKdB8jrQ/3YOzCOEe0IgU7hvKDFxotfpKn/N3W1iJDimFx
-         GYlEKt8UbE9tbFG9WjvQkiWtxAMk3TOqfUJS8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BWErFa2Tb4Iv9aICLnei73w528HT1mPAhqrqIzBV8n8=;
-        b=m4w4NefOJiyV9MIRLs+/cjfWgbZ/o8jCswCbt4mOeI7lRC42SK6xlOlpotzcr/UVab
-         VQJAEcH530OapNn3DaVihDVdNc99nZL73pXV3V1pes66N/x6aMPEDauEgrnKmbh5fAs4
-         LKqZjWXwq2u1oRWNAtXe0czYrJTA8fVFU9EEYofQarxvXPWeiMEeb190hds4Cp4wBnZw
-         AHkhnw2dJml/JIWj/Y5yjRytQpDuRiXQ4hEdUSxagLjB/COHe+FmyJmyxn4Etfe6YFww
-         nY1AoL79Bgx+TF3IIuhBsRei6AKjQTmebebPT3IrOhQlOaJOTmcHMuvOr+3b0upp1xn6
-         WDfQ==
-X-Gm-Message-State: APjAAAWuhimS07PeSr0Q+4ffcS6cauj+9HnsyvBpnEou0nXSTt7uF8c9
-        wT6dYaABmoT/NEFesnbSKgftKGPqrKk=
-X-Google-Smtp-Source: APXvYqzpHJia0/aqNHWR13ZSL7xU5ItUlavJdrK8G2XlUJRGOsIQ0rNOBz4ro3mx/PIaVh7pv96eCw==
-X-Received: by 2002:ac2:51a1:: with SMTP id f1mr12425383lfk.129.1557162840951;
-        Mon, 06 May 2019 10:14:00 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id s12sm2430160ljd.66.2019.05.06.10.13.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 10:13:59 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id h126so9710952lfh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 10:13:59 -0700 (PDT)
-X-Received: by 2002:ac2:43cf:: with SMTP id u15mr13444160lfl.67.1557162838971;
- Mon, 06 May 2019 10:13:58 -0700 (PDT)
+        Mon, 6 May 2019 13:20:05 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x46HIoKc023713;
+        Mon, 6 May 2019 17:19:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=lm/pUQLSmHfHBwQh1FqE2NU2hu5mjgOk5sT30/V+Yq4=;
+ b=FSlD/GUQwmeWCi/moIjGfBBk7pXux9pCWz2oUKjG4fHWmXQNVXfjkhICzZauPcnvj8F8
+ zdupdKCRhok29PFx3GszVS/7F2xnLBMd3S5W5WZxaF40WJvC/7jGP3LQKDZ+X6fCSc7V
+ 74T0VUKC00iyKE6Q0X+BBQyOxu3RRZy/3sEzlqeljKS1mkuViXuyPX7LqZm5ULdjXpj1
+ cteiCAmxvc+RIn15xrIQHYZ6XWfEI/D4lJs0NdzurUVd+tcx/6yH2nlWJ8ijTi7zR27I
+ PpqMos/sj4SZww1SLJKOcvdOmpoPi3d8j2gIKhD5UG2vIDTyw4FT7H5DGPmoPA/KwH1E eQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2s94b5r1s2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 06 May 2019 17:19:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x46HJpiH179798;
+        Mon, 6 May 2019 17:19:51 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2sagytfn3j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 06 May 2019 17:19:51 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x46HJkkf010497;
+        Mon, 6 May 2019 17:19:46 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 06 May 2019 10:19:46 -0700
+Subject: Re: [PATCH v2] mm/hugetlb: Don't put_page in lock of hugetlb_lock
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>, mhocko@suse.com,
+        shenkai8@huawei.com, linfeilong@huawei.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        wangwang2@huawei.com, "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>, agl@us.ibm.com,
+        nacc@us.ibm.com
+References: <12a693da-19c8-dd2c-ea6a-0a5dc9d2db27@huawei.com>
+ <b8ade452-2d6b-0372-32c2-703644032b47@huawei.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <9405fcd5-a5a7-db4a-d613-acf2872f6e62@oracle.com>
+Date:   Mon, 6 May 2019 10:19:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190429145159.GA29076@hc> <CAHk-=wjPqcPYkiWKFc=R3+18DXqEhV+Nfbo=JWa32Xp8Nze67g@mail.gmail.com>
- <20190502082741.GE13955@hc> <CAHk-=wjmtMrxC1nSEHarBn8bW+hNXGv=2YeAWmTw1o54V8GKWA@mail.gmail.com>
- <20190502231858.GB13168@dc5-eodlnx05.marvell.com> <CAHk-=wiEahkwDXpoy=-SzJHNMRXKVSjPa870+eKKenufhO_Hgw@mail.gmail.com>
- <20190506061100.GA8465@dc5-eodlnx05.marvell.com>
-In-Reply-To: <20190506061100.GA8465@dc5-eodlnx05.marvell.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 6 May 2019 10:13:43 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whGAef6+mZi-_+rfTDxXrLDw-jrOiy3MNEpLAkC5scGRg@mail.gmail.com>
-Message-ID: <CAHk-=whGAef6+mZi-_+rfTDxXrLDw-jrOiy3MNEpLAkC5scGRg@mail.gmail.com>
-Subject: Re: [EXT] Re: [RFC] Disable lockref on arm64
-To:     Jayachandran Chandrasekharan Nair <jnair@marvell.com>
-Cc:     Jan Glauber <jglauber@marvell.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b8ade452-2d6b-0372-32c2-703644032b47@huawei.com>
+Content-Type: text/plain; charset=gbk
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905060147
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905060147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 5, 2019 at 11:13 PM Jayachandran Chandrasekharan Nair
-<jnair@marvell.com> wrote:
->
-> > It's not normal, and it's not inevitable.
->
-> If you look at the code, the CAS failure is followed by a yield
-> before retrying the CAS. Yield on arm64 is expected to be a hint
-> to release resources so that other threads/cores can make progress.
-> Under heavy contention, I expect the current code to behave the way
-> I noted in my last mail, with the issue with fairness as well.
+On 5/6/19 7:06 AM, Zhiqiang Liu wrote:
+> From: Kai Shen <shenkai8@huawei.com>
+> 
+> spinlock recursion happened when do LTP test:
+> #!/bin/bash
+> ./runltp -p -f hugetlb &
+> ./runltp -p -f hugetlb &
+> ./runltp -p -f hugetlb &
+> ./runltp -p -f hugetlb &
+> ./runltp -p -f hugetlb &
+> 
+> The dtor returned by get_compound_page_dtor in __put_compound_page
+> may be the function of free_huge_page which will lock the hugetlb_lock,
+> so don't put_page in lock of hugetlb_lock.
+> 
+>  BUG: spinlock recursion on CPU#0, hugemmap05/1079
+>   lock: hugetlb_lock+0x0/0x18, .magic: dead4ead, .owner: hugemmap05/1079, .owner_cpu: 0
+>  Call trace:
+>   dump_backtrace+0x0/0x198
+>   show_stack+0x24/0x30
+>   dump_stack+0xa4/0xcc
+>   spin_dump+0x84/0xa8
+>   do_raw_spin_lock+0xd0/0x108
+>   _raw_spin_lock+0x20/0x30
+>   free_huge_page+0x9c/0x260
+>   __put_compound_page+0x44/0x50
+>   __put_page+0x2c/0x60
+>   alloc_surplus_huge_page.constprop.19+0xf0/0x140
+>   hugetlb_acct_memory+0x104/0x378
+>   hugetlb_reserve_pages+0xe0/0x250
+>   hugetlbfs_file_mmap+0xc0/0x140
+>   mmap_region+0x3e8/0x5b0
+>   do_mmap+0x280/0x460
+>   vm_mmap_pgoff+0xf4/0x128
+>   ksys_mmap_pgoff+0xb4/0x258
+>   __arm64_sys_mmap+0x34/0x48
+>   el0_svc_common+0x78/0x130
+>   el0_svc_handler+0x38/0x78
+>   el0_svc+0x8/0xc
+> 
+> Fixes: 9980d744a0 ("mm, hugetlb: get rid of surplus page accounting tricks")
+> Signed-off-by: Kai Shen <shenkai8@huawei.com>
+> Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+> Reported-by: Wang Wang <wangwang2@huawei.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
 
-Yes, this is a good point.
+Good catch.  Sorry, for the late reply.
 
-It's entirely possibly that _particularly_ for CAS loops - where we
-get an updated value that caused the CAS to fail - we should not yield
-in between every CAS. Exactly so that we don't force the CPU to flush
-the cacheline that it just got and make the CAS loop do lots of
-unnecessary work and just keep looping.
-
-That said, I think right now all ARM implementations actually treat
-the yield instruction as a pure nop, so I assume this isn't actually
-the root of the ThunderX2 problems.
-
-But we could do something like "unroll the cmpxchg loop twice, only
-yield every other iteration" exactly for the case wher cpu_relax()
-might encourage the CPU to actually release the cacheline.
-
-If you find that something like that would help ThunderX2, we can most
-certainly try that kind of thing. It makes sense, and unrolling the
-cmpxchg loop once might even help with branch prediction (ie the
-common case might be that the *first* cmpxchg succeeds, and that's
-what the branch predictors get primed for, but then if the first one
-actually fails, we fall through to the contention case, and now maybe
-the branch predictor ends up being primed for *that* case for the
-second one).
-
-Yes, the above is wild handwaving - but it's the kind of thing we
-could easily do if the hardware people have a good argument for them.
-
-I'm not asking for _perfect_ hardware. I'm just asking for hardware to
-not be actively antagonistic to something fundamental like a cmpxchg
-loop.
-
-> Your larger point seems to be that the hardware has smarter to
-> scale standard locking implementations when adding cores, and
-> be graceful even in extremely high contention cases. Yes, this
-> is something we should be looking at for ThunderX3.
-
-Yes. Also, my point really is that no core should ever be in the
-situation that it fetches a cache-line, only to then release it
-immediately again without making any progress. You do want a *certain*
-amount of stickiness to the cachelines.
-
-Of course, you very much do not want to overdo it - I'm talking about
-keeping the cacheline around for tens of cycles, not for hundreds of
-cycles. Enough that if you have small code snippets that are in and
-out quickly, you don't see bouncing at that level.
-
-Because you *don't* want the stickiness to be such that once one CPU
-has the cacheline, it will stay with that CPU (or that socket) as long
-as the CPU hammers it all the time.
-
-So for example, in the case of a cmpxchg loop, maybe you'll get a
-couple of branch mispredicts the first few times round the loop (first
-because the original value read was a plain read and the cacheline was
-shared rather than exclusive, but then after that because the branch
-predictor saw previous cases where there was no contention, and the
-loop exited immediately).
-
-So maybe the first couple of iterations the core might be "slow
-enough" to not get the cmpxchg loop working well. But not a lot more
-than that (again, unless something special happens, like an interrupt
-storm that keeps interrupting the loop).
-
-End result: I do think the cache coherency needs to be a *bit* smarter
-than just a "oh, another core wants this line, I will now immediately
-try to satisfy it". And yes, those kinds of things get more important
-the more cores you have. You don't need a whole lot of smarts if you
-have just a couple of cores, because you'll be making progress
-regardless.
-
-And note that I really think this kind of support absolutely falls on
-hardware. Software simply _cannot_ make some good tuning decision
-using backoff or whatever. Yes, yes, I know people have done things
-like that historically (Sparc and SunOS were famous for it), but part
-of doing them historically was that
-
- (a) they didn't know better
-
- (b) the software was often tuned to particular hardware and loads (or
-at least a very small set of hardware)
-
- (c) there wasn't necessarily better hardware options available
-
-but none of the above is true today.
-
-Things like backoff loops in software are not only hw specific, they
-tend to have seriously bad fairness behavior (and they depend on
-everybody honoring the backoff, which can be a security issue), so
-then you have to add even more complexity to deal with the fairness
-issues, and your cmpxchg loop becomes something truly disgusting.
-
-Which is why I say: "do it right in hardware".
-
-                   Linus
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+-- 
+Mike Kravetz
