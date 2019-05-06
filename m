@@ -2,222 +2,230 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57FAC04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283CDC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD3C206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:35:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="HObcMkf2";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="pubZ8tJE"
+	by mail.kernel.org (Postfix) with ESMTP id F2F442082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfEFRfe (ORCPT
+        id S1726622AbfEFRik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:35:34 -0400
-Received: from mail15.wdc04.mandrillapp.com ([205.201.139.15]:42572 "EHLO
-        mail15.wdc04.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726481AbfEFRfd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:35:33 -0400
-X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 May 2019 13:35:32 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=rfgDjKTmnZ6x2r/PxDrCJ83aQW0m2mt8bkvR4gYyUZI=;
- b=HObcMkf2W6O6fwlygJtXbYbc0oSye2NwhLsho7jTS0yOwAYVH707i7RC9rpJQe7d729YApkSJ76X
-   SeGtT2C+OcnQmVQVVupdDkhixWSF6ZF3iydMIMNhKz4d4YJxnC/QtAT+kdJ2lHpfAfhSf9bLJX7g
-   /Hwou4neSzOxGpEmZN4=
-Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail15.wdc04.mandrillapp.com id hq1o681jvmgn for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 17:20:31 +0000 (envelope-from <bounce-md_31050260.5cd06cdf.v1-8f57005ab0a942f89ee306f3c0d38324@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1557163231; h=From : 
- Subject : To : Cc : Message-Id : Date : MIME-Version : Content-Type : 
- Content-Transfer-Encoding : From : Subject : Date : X-Mandrill-User : 
- List-Unsubscribe; bh=rfgDjKTmnZ6x2r/PxDrCJ83aQW0m2mt8bkvR4gYyUZI=; 
- b=pubZ8tJEC1thyqxSEMseIrocIG5cQDkAFEWbx42MTqPTAi5WOgNztrj3GBNQFpscE353a4
- 6+HkHnnHXC85RKcczFGbg6sQm1eKwuplMyq7zLxhbdSC/B1maplNkQmQ92xlKgWOMMZMQiVb
- IcMI/pLO8K8rxLFm2zXqSbI6d6RBg=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: [PATCH 0/3] stream_open bits for Linux 5.2
-Received: from [87.98.221.171] by mandrillapp.com id 8f57005ab0a942f89ee306f3c0d38324; Mon, 06 May 2019 17:20:31 +0000
-X-Mailer: git-send-email 2.20.1
+        Mon, 6 May 2019 13:38:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726373AbfEFRik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 13:38:40 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C11E92082F;
+        Mon,  6 May 2019 17:38:38 +0000 (UTC)
+Date:   Mon, 6 May 2019 13:38:37 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@denx.de>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kirill Smelkov <kirr@nexedi.com>
-Message-Id: <cover.1557162679.git.kirr@nexedi.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.8f57005ab0a942f89ee306f3c0d38324
-X-Mandrill-User: md_31050260
-Date:   Mon, 06 May 2019 17:20:31 +0000
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        John 'Warthog9' Hawley <warthog9@kernel.org>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Subject: [GIT PULL] ktest: Updates for 5.2
+Message-ID: <20190506133837.55832171@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+
 Linus,
 
-Please consider applying the following stream_open related patches:
+Minor updates to ktest.pl
 
-- The first one removes unnecessary double nonseekable_open from
-  drivers/char/dtlk.c as noticed by Pavel Machek while reviewing
-  nonseekable_open -> stream_open mass conversion.
-
-- The second one is the mass conversion patch promised in 10dce8af3422 ("fs:
-  stream_open - opener for stream-like files so that read and write can run
-  simultaneously without deadlock") and is automatically generated by running
-
-	$ make coccicheck MODE=patch COCCI=scripts/coccinelle/api/stream_open.cocci
-
-  I've verified each generated change manually - that it is correct to convert -
-  and each other nonseekable_open instance left - that it is either not correct
-  to convert there, or that it is not converted due to current stream_open.cocci
-  limitations. More details on this in the patch.
-
-- The third patch changes VFS to pass ppos=NULL into .read/.write for files
-  that declare themselves streams. It was suggested by Rasmus Villemoes and makes
-  sure that if ppos starts to be erroneously used in a stream file, such bug
-  won't go unnoticed and will produce an oops instead of creating illusion of
-  position change being taken into account.
-
-  Note: this patch does not conflict with "fuse: Add FOPEN_STREAM to use
-  stream_open()" that will be hopefully coming via FUSE tree, because fs/fuse/
-  uses new-style .read_iter/.write_iter, and for these accessors position is
-  still passed as non-pointer kiocb.ki_pos .
-
-I was hoping for the patches to be picked up into VFS tree, but since that did
-not happenned for some reason I'm sending them to you directly.
-
-Maybe it will help: the patches can be also pulled from here:
-
-	git pull https://lab.nexedi.com/kirr/linux.git y/stream_open-5.2
+ - Handle meta characters in grub memu
+ - Use configurable reboot return code for handling ssh reboots
+ - Display names and iteration number on error message
 
 
-Thanks beforehand,
-Kirill
+Please pull the latest ktest-v5.1 tree, which can be found at:
 
-Kirill Smelkov (3):
-  dtlk: remove double call to nonseekable_open
-  *: convert stream-like files from nonseekable_open -> stream_open
-  vfs: pass ppos=NULL to .read()/.write() of FMODE_STREAM files
 
- arch/powerpc/platforms/52xx/mpc52xx_gpt.c |   2 +-
- arch/powerpc/platforms/cell/spufs/file.c  |   2 +-
- arch/um/drivers/harddog_kern.c            |   2 +-
- arch/x86/kernel/cpu/microcode/core.c      |   2 +-
- drivers/char/ds1620.c                     |   2 +-
- drivers/char/dtlk.c                       |   3 +-
- drivers/char/ipmi/ipmi_watchdog.c         |   2 +-
- drivers/char/pcmcia/cm4000_cs.c           |   2 +-
- drivers/char/pcmcia/scr24x_cs.c           |   2 +-
- drivers/char/tb0219.c                     |   2 +-
- drivers/firewire/nosy.c                   |   2 +-
- drivers/gnss/core.c                       |   2 +-
- drivers/hid/uhid.c                        |   2 +-
- drivers/hwmon/fschmd.c                    |   2 +-
- drivers/hwmon/w83793.c                    |   2 +-
- drivers/infiniband/core/ucm.c             |   2 +-
- drivers/infiniband/core/ucma.c            |   2 +-
- drivers/infiniband/core/user_mad.c        |   2 +-
- drivers/infiniband/core/uverbs_main.c     |   2 +-
- drivers/input/evdev.c                     |   2 +-
- drivers/input/joydev.c                    |   2 +-
- drivers/input/misc/uinput.c               |   2 +-
- drivers/isdn/capi/capi.c                  |   2 +-
- drivers/leds/uleds.c                      |   2 +-
- drivers/media/rc/lirc_dev.c               |   2 +-
- drivers/pci/switch/switchtec.c            |   2 +-
- drivers/platform/chrome/cros_ec_debugfs.c |   2 +-
- drivers/rtc/rtc-ds1374.c                  |   2 +-
- drivers/rtc/rtc-m41t80.c                  |   2 +-
- drivers/s390/char/fs3270.c                |   2 +-
- drivers/s390/char/tape_char.c             |   2 +-
- drivers/s390/char/zcore.c                 |   2 +-
- drivers/s390/crypto/zcrypt_api.c          |   2 +-
- drivers/spi/spidev.c                      |   2 +-
- drivers/staging/pi433/pi433_if.c          |   2 +-
- drivers/usb/misc/ldusb.c                  |   2 +-
- drivers/watchdog/acquirewdt.c             |   2 +-
- drivers/watchdog/advantechwdt.c           |   2 +-
- drivers/watchdog/alim1535_wdt.c           |   2 +-
- drivers/watchdog/alim7101_wdt.c           |   2 +-
- drivers/watchdog/ar7_wdt.c                |   2 +-
- drivers/watchdog/at91rm9200_wdt.c         |   2 +-
- drivers/watchdog/ath79_wdt.c              |   2 +-
- drivers/watchdog/bcm63xx_wdt.c            |   2 +-
- drivers/watchdog/cpu5wdt.c                |   2 +-
- drivers/watchdog/cpwd.c                   |   2 +-
- drivers/watchdog/eurotechwdt.c            |   2 +-
- drivers/watchdog/f71808e_wdt.c            |   2 +-
- drivers/watchdog/gef_wdt.c                |   2 +-
- drivers/watchdog/geodewdt.c               |   2 +-
- drivers/watchdog/ib700wdt.c               |   2 +-
- drivers/watchdog/ibmasr.c                 |   2 +-
- drivers/watchdog/indydog.c                |   2 +-
- drivers/watchdog/intel_scu_watchdog.c     |   2 +-
- drivers/watchdog/iop_wdt.c                |   2 +-
- drivers/watchdog/it8712f_wdt.c            |   2 +-
- drivers/watchdog/ixp4xx_wdt.c             |   2 +-
- drivers/watchdog/ks8695_wdt.c             |   2 +-
- drivers/watchdog/m54xx_wdt.c              |   2 +-
- drivers/watchdog/machzwd.c                |   2 +-
- drivers/watchdog/mixcomwd.c               |   2 +-
- drivers/watchdog/mtx-1_wdt.c              |   2 +-
- drivers/watchdog/mv64x60_wdt.c            |   2 +-
- drivers/watchdog/nuc900_wdt.c             |   2 +-
- drivers/watchdog/nv_tco.c                 |   2 +-
- drivers/watchdog/pc87413_wdt.c            |   2 +-
- drivers/watchdog/pcwd.c                   |   4 +-
- drivers/watchdog/pcwd_pci.c               |   4 +-
- drivers/watchdog/pcwd_usb.c               |   4 +-
- drivers/watchdog/pika_wdt.c               |   2 +-
- drivers/watchdog/pnx833x_wdt.c            |   2 +-
- drivers/watchdog/rc32434_wdt.c            |   2 +-
- drivers/watchdog/rdc321x_wdt.c            |   2 +-
- drivers/watchdog/riowd.c                  |   2 +-
- drivers/watchdog/sa1100_wdt.c             |   2 +-
- drivers/watchdog/sb_wdog.c                |   2 +-
- drivers/watchdog/sbc60xxwdt.c             |   2 +-
- drivers/watchdog/sbc7240_wdt.c            |   2 +-
- drivers/watchdog/sbc8360.c                |   2 +-
- drivers/watchdog/sbc_epx_c3.c             |   2 +-
- drivers/watchdog/sbc_fitpc2_wdt.c         |   2 +-
- drivers/watchdog/sc1200wdt.c              |   2 +-
- drivers/watchdog/sc520_wdt.c              |   2 +-
- drivers/watchdog/sch311x_wdt.c            |   2 +-
- drivers/watchdog/scx200_wdt.c             |   2 +-
- drivers/watchdog/smsc37b787_wdt.c         |   2 +-
- drivers/watchdog/w83877f_wdt.c            |   2 +-
- drivers/watchdog/w83977f_wdt.c            |   2 +-
- drivers/watchdog/wafer5823wdt.c           |   2 +-
- drivers/watchdog/watchdog_dev.c           |   2 +-
- drivers/watchdog/wdrtas.c                 |   4 +-
- drivers/watchdog/wdt.c                    |   4 +-
- drivers/watchdog/wdt285.c                 |   2 +-
- drivers/watchdog/wdt977.c                 |   2 +-
- drivers/watchdog/wdt_pci.c                |   4 +-
- drivers/xen/evtchn.c                      |   2 +-
- fs/open.c                                 |   5 +-
- fs/read_write.c                           | 113 +++++++++++++---------
- net/batman-adv/icmp_socket.c              |   2 +-
- net/batman-adv/log.c                      |   2 +-
- net/rfkill/core.c                         |   2 +-
- sound/core/control.c                      |   2 +-
- sound/core/rawmidi.c                      |   2 +-
- sound/core/seq/seq_clientmgr.c            |   2 +-
- sound/core/timer.c                        |   2 +-
- 105 files changed, 179 insertions(+), 158 deletions(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-ktest.git
+ktest-v5.1
 
--- 
-2.20.1
+Tag SHA1: 32cb828776e96e89268929a200aee24ea9a11a9e
+Head SHA1: 37e1677330bdc2e96e70f18701e589876f054c67
+
+
+Masayoshi Mizuma (2):
+      ktest: Add support for meta characters in GRUB_MENU
+      ktest: introduce REBOOT_RETURN_CODE to confirm the result of REBOOT
+
+Steven Rostedt (VMware) (1):
+      ktest: Show name and iteration on errors
+
+----
+ tools/testing/ktest/ktest.pl    | 41 +++++++++++++++++++++++++++++++++--------
+ tools/testing/ktest/sample.conf |  4 ++++
+ 2 files changed, 37 insertions(+), 8 deletions(-)
+---------------------------
+diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+index 87af8a68ab25..275ad8ac8872 100755
+--- a/tools/testing/ktest/ktest.pl
++++ b/tools/testing/ktest/ktest.pl
+@@ -58,6 +58,7 @@ my %default = (
+     "SCP_TO_TARGET"		=> "scp \$SRC_FILE \$SSH_USER\@\$MACHINE:\$DST_FILE",
+     "SCP_TO_TARGET_INSTALL"	=> "\${SCP_TO_TARGET}",
+     "REBOOT"			=> "ssh \$SSH_USER\@\$MACHINE reboot",
++    "REBOOT_RETURN_CODE"	=> 255,
+     "STOP_AFTER_SUCCESS"	=> 10,
+     "STOP_AFTER_FAILURE"	=> 60,
+     "STOP_TEST_AFTER"		=> 600,
+@@ -105,6 +106,7 @@ my $reboot_type;
+ my $reboot_script;
+ my $power_cycle;
+ my $reboot;
++my $reboot_return_code;
+ my $reboot_on_error;
+ my $switch_to_good;
+ my $switch_to_test;
+@@ -278,6 +280,7 @@ my %option_map = (
+     "POST_BUILD_DIE"		=> \$post_build_die,
+     "POWER_CYCLE"		=> \$power_cycle,
+     "REBOOT"			=> \$reboot,
++    "REBOOT_RETURN_CODE"	=> \$reboot_return_code,
+     "BUILD_NOCLEAN"		=> \$noclean,
+     "MIN_CONFIG"		=> \$minconfig,
+     "OUTPUT_MIN_CONFIG"		=> \$output_minconfig,
+@@ -1437,16 +1440,27 @@ sub do_not_reboot {
+ 
+ my $in_die = 0;
+ 
++sub get_test_name() {
++    my $name;
++
++    if (defined($test_name)) {
++	$name = "$test_name:$test_type";
++    } else {
++	$name = $test_type;
++    }
++    return $name;
++}
++
+ sub dodie {
+ 
+     # avoid recusion
+     return if ($in_die);
+     $in_die = 1;
+ 
+-    doprint "CRITICAL FAILURE... ", @_, "\n";
+-
+     my $i = $iteration;
+ 
++    doprint "CRITICAL FAILURE... [TEST $i] ", @_, "\n";
++
+     if ($reboot_on_error && !do_not_reboot) {
+ 
+ 	doprint "REBOOTING\n";
+@@ -1462,7 +1476,8 @@ sub dodie {
+     }
+ 
+     if ($email_on_error) {
+-        send_email("KTEST: critical failure for your [$test_type] test",
++	my $name = get_test_name;
++        send_email("KTEST: critical failure for test $i [$name]",
+                 "Your test started at $script_start_time has failed with:\n@_\n");
+     }
+ 
+@@ -1737,6 +1752,7 @@ sub run_command {
+     my $dord = 0;
+     my $dostdout = 0;
+     my $pid;
++    my $command_orig = $command;
+ 
+     $command =~ s/\$SSH_USER/$ssh_user/g;
+     $command =~ s/\$MACHINE/$machine/g;
+@@ -1791,6 +1807,11 @@ sub run_command {
+     # shift 8 for real exit status
+     $run_command_status = $? >> 8;
+ 
++    if ($command_orig eq $default{REBOOT} &&
++	$run_command_status == $reboot_return_code) {
++	$run_command_status = 0;
++    }
++
+     close(CMD);
+     close(LOG) if ($dolog);
+     close(RD)  if ($dord);
+@@ -1866,9 +1887,10 @@ sub get_grub2_index {
+ 	or dodie "unable to get $grub_file";
+ 
+     my $found = 0;
++    my $grub_menu_qt = quotemeta($grub_menu);
+ 
+     while (<IN>) {
+-	if (/^menuentry.*$grub_menu/) {
++	if (/^menuentry.*$grub_menu_qt/) {
+ 	    $grub_number++;
+ 	    $found = 1;
+ 	    last;
+@@ -1909,9 +1931,10 @@ sub get_grub_index {
+ 	or dodie "unable to get menu.lst";
+ 
+     my $found = 0;
++    my $grub_menu_qt = quotemeta($grub_menu);
+ 
+     while (<IN>) {
+-	if (/^\s*title\s+$grub_menu\s*$/) {
++	if (/^\s*title\s+$grub_menu_qt\s*$/) {
+ 	    $grub_number++;
+ 	    $found = 1;
+ 	    last;
+@@ -4193,7 +4216,8 @@ sub send_email {
+ 
+ sub cancel_test {
+     if ($email_when_canceled) {
+-        send_email("KTEST: Your [$test_type] test was cancelled",
++	my $name = get_test_name;
++        send_email("KTEST: Your [$name] test was cancelled",
+                 "Your test started at $script_start_time was cancelled: sig int");
+     }
+     die "\nCaught Sig Int, test interrupted: $!\n"
+@@ -4247,7 +4271,8 @@ for (my $i = 1; $i <= $opt{"NUM_TESTS"}; $i++) {
+             run_command $pre_ktest;
+         }
+         if ($email_when_started) {
+-            send_email("KTEST: Your [$test_type] test was started",
++	    my $name = get_test_name;
++            send_email("KTEST: Your [$name] test was started",
+                 "Your test was started on $script_start_time");
+         }
+     }
+@@ -4414,7 +4439,7 @@ if ($opt{"POWEROFF_ON_SUCCESS"}) {
+ doprint "\n    $successes of $opt{NUM_TESTS} tests were successful\n\n";
+ 
+ if ($email_when_finished) {
+-    send_email("KTEST: Your [$test_type] test has finished!",
++    send_email("KTEST: Your test has finished!",
+             "$successes of $opt{NUM_TESTS} tests started at $script_start_time were successful!");
+ }
+ exit 0;
+diff --git a/tools/testing/ktest/sample.conf b/tools/testing/ktest/sample.conf
+index 6ca6ca0ce695..8c893a58b68e 100644
+--- a/tools/testing/ktest/sample.conf
++++ b/tools/testing/ktest/sample.conf
+@@ -887,6 +887,10 @@
+ # The variables SSH_USER and MACHINE are defined.
+ #REBOOT = ssh $SSH_USER@$MACHINE reboot
+ 
++# The return code of REBOOT
++# (default 255)
++#REBOOT_RETURN_CODE = 255
++
+ # The way triple faults are detected is by testing the kernel
+ # banner. If the kernel banner for the kernel we are testing is
+ # found, and then later a kernel banner for another kernel version
