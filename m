@@ -2,131 +2,112 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E64BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35775C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C9E20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C74820830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:16:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557141377;
+	bh=nL/tARHWQcVwZlZmn9EiUMz/HoqHnL6lCC9/1YCxvwY=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=cRrIVTSNZvUbkq3cvb/bghc3zz8/ik0SwaApfsA6VVA3l7fTQUQ9p4LXtaVhZXMUG
+	 dk/85C0CqcYflpHiDRshH38PKDw6BYWsol4cUcJ7HQ2NhHpFztGdQmQGUT1KWcNz5c
+	 pOxYl/FjDqxdUwdO29WK1EEs6Z/8Rdzrjdanu4d4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfEFLQO (ORCPT
+        id S1726501AbfEFLQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 07:16:14 -0400
-Received: from [195.159.176.226] ([195.159.176.226]:52154 "EHLO
-        blaine.gmane.org" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbfEFLQK (ORCPT
+        Mon, 6 May 2019 07:16:16 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39438 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfEFLQO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 07:16:10 -0400
-Received: from list by blaine.gmane.org with local (Exim 4.89)
-        (envelope-from <glk-linux-kernel-4@m.gmane.org>)
-        id 1hNbbJ-000vSh-Fy
-        for linux-kernel@vger.kernel.org; Mon, 06 May 2019 13:16:05 +0200
-X-Injected-Via-Gmane: http://gmane.org/
-To:     linux-kernel@vger.kernel.org
-From:   Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v1 3/3] drm/tegra: Support PM QoS memory bandwidth
- management
-Date:   Mon, 6 May 2019 14:15:59 +0300
-Message-ID: <e1dc16d2-db9e-6869-81dc-8ffe5d5fd6fe@gmail.com>
-References: <20190505173707.29282-1-digetx@gmail.com>
- <20190505173707.29282-4-digetx@gmail.com>
-Mime-Version: 1.0
+        Mon, 6 May 2019 07:16:14 -0400
+Received: by mail-oi1-f193.google.com with SMTP id x16so3337468oic.6;
+        Mon, 06 May 2019 04:16:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=cJyYuADfEWn6fMmGuvdFVfwMOt9JIo6FdLSYJFZv93U=;
+        b=sFcXu5DBH4DZIQNKcwlTfi3IXSghmnsyIGfO3p6Cmz5FhlOiDKweetNAF2p0bMLb90
+         MGWpzeEyY2CykmGwZqCqVcRDPSDHtidIj5Dc9HLH2fTjpuXr8/JIF+hcb4Xp2RBh+WH3
+         yzDAvdYwPX+7nTYwjBY8h4rNi1NrwBCrYEHi/7KBjhe+Z68udy0/9JCAAu84CIW25Yg9
+         vSW7UVCnVhDLL5g5TQgGbh20YyViImp/bv7bR9BSPm60DQQaotSOOXNGltxw0157wvVc
+         +FpOICGvQMrpsPKcJeWrYiDYMqFIdI4feZNfoP96Y1tQYaVgYDgdZhw8BedBdOKASiZL
+         Y5ZQ==
+X-Gm-Message-State: APjAAAVY9zBOdHxEcQqsXIUGXeXCN6VEhl+48UzkKZkt6kw0hSy3+tgj
+        FJA7oSOwHphnjeZuze7DSwHze1EiaVWjkOl1zkmwG2rW
+X-Google-Smtp-Source: APXvYqxN3hKZvpklY46oOagbJEr8nc5+hFaglZLO3u+BsKoPOffBozEeNN1VQHV9n7k8AUQewslaSSvkUGEMDkndW48=
+X-Received: by 2002:aca:ba82:: with SMTP id k124mr822524oif.110.1557141373079;
+ Mon, 06 May 2019 04:16:13 -0700 (PDT)
+MIME-Version: 1.0
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 6 May 2019 13:16:02 +0200
+Message-ID: <CAJZ5v0jx12=bmcDaVkgd1=mocwPQ2MwMNHOE6KiTSyS+CdhRyQ@mail.gmail.com>
+Subject: [GIT PULL] Device properties framework updates for v5.2-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <20190505173707.29282-4-digetx@gmail.com>
-Content-Language: en-US
-Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20190506111559.UOPH6uoKx7FEWWVpRWtwxBpfNhMop8es0D2WZjeOWps@z>
 
-05.05.2019 20:37, Dmitry Osipenko пишет:
-> Display controller (DC) performs isochronous memory transfers and thus
-> has a requirement for a minimum memory bandwidth that shall be fulfilled,
-> otherwise framebuffer data can't be fetched fast enough and this results
-> in a DC's data-FIFO underflow that follows by a visual corruption.
-> 
-> The External Memory Controller drivers will provide memory bandwidth
-> management facility via the generic Power Management QoS API soonish.
-> This patch wires up the PM QoS API support for the display driver
-> beforehand.
-> 
-> Display won't have visual corruption on coming up from suspend state when
-> devfreq driver is active once all prerequisite bits will get upstreamed.
-> The devfreq reaction has a quite significant latency and it also doesn't
-> take into account the ISO transfers which may result in assumption about
-> lower memory bandwidth requirement than actually needed.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/gpu/drm/tegra/dc.c    | 216 +++++++++++++++++++++++++++++++++-
->  drivers/gpu/drm/tegra/dc.h    |   8 ++
->  drivers/gpu/drm/tegra/drm.c   |  18 +++
->  drivers/gpu/drm/tegra/plane.c |   1 +
->  drivers/gpu/drm/tegra/plane.h |   4 +-
->  5 files changed, 245 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-> index 41cb67db6dbc..8c5b9e71ca6f 100644
-> --- a/drivers/gpu/drm/tegra/dc.c
-> +++ b/drivers/gpu/drm/tegra/dc.c
-> @@ -514,6 +514,107 @@ static void tegra_dc_setup_window(struct tegra_plane *plane,
->  		tegra_plane_setup_blending(plane, window);
->  }
->  
-> +static unsigned long
-> +tegra_plane_memory_bandwidth(struct drm_plane_state *state,
-> +			     struct tegra_dc_window *window)
-> +{
-> +	struct tegra_plane_state *tegra_state;
-> +	struct drm_crtc_state *crtc_state;
-> +	struct tegra_dc_window win;
-> +	unsigned int mul;
-> +	unsigned int bpp;
-> +	bool planar;
-> +	bool yuv;
-> +
-> +	if (!state->fb || !state->visible)
-> +		return 0;
-> +
-> +	crtc_state = drm_atomic_get_new_crtc_state(state->state, state->crtc);
-> +	tegra_state = to_tegra_plane_state(state);
-> +
-> +	if (!window)
-> +		window = &win;
-> +
-> +	window->src.w = drm_rect_width(&state->src) >> 16;
-> +	window->src.h = drm_rect_height(&state->src) >> 16;
-> +	window->dst.w = drm_rect_width(&state->dst);
-> +	window->dst.h = drm_rect_height(&state->dst);
-> +	window->format = tegra_state->format;
-> +	window->tiling = tegra_state->tiling;
-> +
-> +	yuv = tegra_plane_format_is_yuv(window->format, &planar);
-> +	if (!yuv || !planar)
-> +		bpp = state->fb->format->cpp[0] * 8;
-> +	else
-> +		bpp = 16;
+Hi Linus,
 
-It occurred to me that it will be much better to use the drm_format_*
-helpers here to calculate the bits-per-pixel because the above variant
-isn't really good for all of possible formats. I'll switch to the
-generic helpers in v2.
+Please pull from the tag
 
-Thierry, for now I'll wait for awhile for yours comments. Please let me
-know if you'll want to see anything else changed in v2. I think there is
-a good chance that we could get everything ready in regards to memory
-bandwidth management basics for v5.3, please help with reviewing and
-getting the patches upstreamed.
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ devprop-5.2-rc1
 
--- 
-Dmitry
+with top-most commit 23583f7795025e3c783b680d906509366b0906ad
 
+ ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
+
+on top of commit dc4060a5dc2557e6b5aa813bf5b73677299d62d2
+
+ Linux 5.1-rc5
+
+to receive device properties framework updates for 5.2-rc1.
+
+These fix the handling of data nodes in the ACPI properties support
+code, add a new helper for endpoint lookup in property graphs and
+restore a comment inadvertently removed by one of previous changes.
+
+Specifics:
+
+ - Fix the handling of data nodes in the ACPI properties support
+   code for devices with child devices and hierarchical _DSD
+   properties (Pierre-Louis Bossart).
+
+ - Add fwnode_graph_get_endpoint_by_id() helper for endpoint lookup
+   in device property graphs (Sakari Ailus).
+
+ - Restore the _DSD data subnodes GUID comment inadvertently removed
+   by one of previous changes (Shunyong Yang).
+
+Thanks!
+
+
+---------------
+
+Pierre-Louis Bossart (1):
+      ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
+
+Sakari Ailus (1):
+      device property: Add fwnode_graph_get_endpoint_by_id()
+
+Shunyong Yang (1):
+      ACPI: property: restore _DSD data subnodes GUID comment
+
+---------------
+
+ drivers/acpi/property.c  |  9 ++++++
+ drivers/base/property.c  | 75 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/property.h | 18 ++++++++++++
+ 3 files changed, 102 insertions(+)
