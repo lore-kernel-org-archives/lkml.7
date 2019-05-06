@@ -2,52 +2,51 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B6DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAF0C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3B1205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975112054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154566;
-	bh=VX+PH9WvdYe+f667jeOvjW4CpVmd7nBwhf1vYWuPd/8=;
+	s=default; t=1557154576;
+	bh=IrPcc57wj/qwVY+4g3/GgkDnOZM19Ur0TOOrKUMgLSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2BXaycKgaGqkumN1rPkhkGHyd82GpBBOgvaSToM4LgehwvNNJout7sfMxjhqqlF+U
-	 +v3m1oW29kezQAGEEKo7imrcWiGZ/FJawQNusY1d0c0w/4fKl3Lt2dw/f6lm2UWPNL
-	 UbUcfh20FHV87g+j76D9/xENEoB/PfP4LlNjQGhw=
+	b=SYfxFTIuKrZaHKaBnOVAUjjtmkMDHj/t0cqmnsb7EuFe/laIGXyQbAtLBSGPbZRN3
+	 9PaTxCSL+22je7mJkA92xA7JCsSaseoMzh8uct+rqMcxnHMZU7opbjxX+gT5X2Nw8p
+	 B+j1MynYs0cWTjTWW8t1Hs3+HI1gWOVwQRKQ5bRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbfEFOp2 (ORCPT
+        id S1728924AbfEFOpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:45:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42262 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:45:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbfEFOp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:45:26 -0400
+        id S1728263AbfEFOpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64AFB20C01;
-        Mon,  6 May 2019 14:45:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D1CA20449;
+        Mon,  6 May 2019 14:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153925;
-        bh=VX+PH9WvdYe+f667jeOvjW4CpVmd7nBwhf1vYWuPd/8=;
+        s=default; t=1557153910;
+        bh=IrPcc57wj/qwVY+4g3/GgkDnOZM19Ur0TOOrKUMgLSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPZYl51XEqUsbWFBmP3B5WacLzcFikRGs5oUJJrM3T/ge8eSLae/JBijhYaoLhorM
-         i47g0qObNSOQLgdbxt4f302z5VDTQxIOWR279ulH532ctEa2ukTI9jAJenso42/zn4
-         nMbCdt8DW8LDf1ocRRNW90RF0m+GjHHGwWMGze7U=
+        b=DWFjGod2ILKm/mPiGM+yXVDMHG5yKX0luC7Xw3zXhRHcS6AdAif52u/ozbg7U7Y/T
+         2O4OqTbOeKPEDBeEYSUZenWaBlkzArFc0Zh1c4DrWQnkM6K9UOUxGvO5HeUbS9hEuM
+         Ey9+iOMb0ItXjYFM5MJNLO0HvvWSNCpzXOFFpIog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 08/75] bnxt_en: Free short FW command HWRM memory in error path in bnxt_init_one()
-Date:   Mon,  6 May 2019 16:32:16 +0200
-Message-Id: <20190506143053.980658045@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 40/75] jffs2: fix use-after-free on symlink traversal
+Date:   Mon,  6 May 2019 16:32:48 +0200
+Message-Id: <20190506143056.851664501@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -60,31 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+[ Upstream commit 4fdcfab5b5537c21891e22e65996d4d0dd8ab4ca ]
 
-[ Upstream commit f9099d611449836a51a65f40ea7dc9cb5f2f665e ]
+free the symlink body after the same RCU delay we have for freeing the
+struct inode itself, so that traversal during RCU pathwalk wouldn't step
+into freed memory.
 
-In the bnxt_init_one() error path, short FW command request memory
-is not freed. This patch fixes it.
-
-Fixes: e605db801bde ("bnxt_en: Support for Short Firmware Message")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/jffs2/readinode.c | 5 -----
+ fs/jffs2/super.c     | 5 ++++-
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -8241,6 +8241,7 @@ init_err_cleanup_tc:
- 	bnxt_clear_int_mode(bp);
+diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
+index 389ea53ea487..bccfc40b3a74 100644
+--- a/fs/jffs2/readinode.c
++++ b/fs/jffs2/readinode.c
+@@ -1414,11 +1414,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
  
- init_err_pci_clean:
-+	bnxt_free_hwrm_short_cmd_req(bp);
- 	bnxt_free_hwrm_resources(bp);
- 	bnxt_cleanup_pci(bp);
+ 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
  
+-	if (f->target) {
+-		kfree(f->target);
+-		f->target = NULL;
+-	}
+-
+ 	fds = f->dents;
+ 	while(fds) {
+ 		fd = fds;
+diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
+index 83340496645b..9a9f30eddbbb 100644
+--- a/fs/jffs2/super.c
++++ b/fs/jffs2/super.c
+@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
+ static void jffs2_i_callback(struct rcu_head *head)
+ {
+ 	struct inode *inode = container_of(head, struct inode, i_rcu);
+-	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
++	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
++
++	kfree(f->target);
++	kmem_cache_free(jffs2_inode_cachep, f);
+ }
+ 
+ static void jffs2_destroy_inode(struct inode *inode)
+-- 
+2.20.1
+
 
 
