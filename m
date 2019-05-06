@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D18C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BA4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8540A2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED7B2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153988;
-	bh=1kBE+NZDF6goqzCOP7Q49F98RCalj0qAKJg6qhzVuTM=;
+	s=default; t=1557153992;
+	bh=QBSunIwk2sq53lut5q3wAM4APzM6eYRPvuu1yZg2/pM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tJbU69m+4BIFWAmJAPHPuD00VZJYSBE36GwKvEZvJy3CYIxv5lzd5ZX20Ob1pd8ui
-	 k+tYh5numbaTAx1/H81GdEabU/KaBkRpHQnjBEG6ZWaaA0+3QGBjTp1q8BzZEurxyw
-	 aqp17gxUkAnwP1ls7ZfW13QPkDjcWMcMomucdxbU=
+	b=pGGOVr7O29Wi10is/c9pGShUmdXsMSO0UpmXPYmfC4FFs2Zt7ZSZPpFJvbkppkQKe
+	 7QudddY0Bz9LWVAejVGlXtxLFoIwf/7n7D0z2Z3Umkf6nzRffk7kvHSmHz2XRcHiRZ
+	 Gdj0UPBXphzCK+1FXHQMfJ0TZGXuxDZRk8o/Www0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbfEFOq1 (ORCPT
+        id S1728272AbfEFOqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:46:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44182 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:46:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728838AbfEFOqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:46:23 -0400
+        id S1729124AbfEFOq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:46:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 316422087F;
-        Mon,  6 May 2019 14:46:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF03F20C01;
+        Mon,  6 May 2019 14:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153982;
-        bh=1kBE+NZDF6goqzCOP7Q49F98RCalj0qAKJg6qhzVuTM=;
+        s=default; t=1557153985;
+        bh=QBSunIwk2sq53lut5q3wAM4APzM6eYRPvuu1yZg2/pM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cJVRvTy1uF9+p++Bmzm/h9WlZvTfKEa0uo3t4GgFKaDK4T/JeITW5B4hCOO9/3fYC
-         ghayZmqBD9hqSaqipVFilUYriMdLHl4cILtXJ6AT3fZQ1r1b3FanF3T8GVZvuxEbWr
-         NDc7LANissCubCjboAIbsaOLbtUGTIKnWp41h39E=
+        b=xE4O6QLzQbo4ct55Y42pfYb/u1WU1B0ZdSeQDf+iGB471UCSXBuU0CG4zjVh1yUlx
+         4XVmYFijagFaVu6facf1y86XWxOdlTyeu6i9WRIlaFehD3C1lM9+MLADHMoaaNkjGD
+         H7ldTo36Jtz0L//iNnnAjddLMwQ061h882dqddas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Shyti <andi@etezian.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 69/75] Input: stmfts - acknowledge that setting brightness is a blocking call
-Date:   Mon,  6 May 2019 16:33:17 +0200
-Message-Id: <20190506143059.520111571@linuxfoundation.org>
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 4.14 70/75] selinux: never allow relabeling on context mounts
+Date:   Mon,  6 May 2019 16:33:18 +0200
+Message-Id: <20190506143059.606606075@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -58,76 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Ondrej Mosnacek <omosnace@redhat.com>
 
-commit 937c4e552fd1174784045684740edfcea536159d upstream.
+commit a83d6ddaebe541570291205cb538e35ad4ff94f9 upstream.
 
-We need to turn regulators on and off when switching brightness, and
-that may block, therefore we have to set stmfts_brightness_set() as
-LED's brightness_set_blocking() method.
+In the SECURITY_FS_USE_MNTPOINT case we never want to allow relabeling
+files/directories, so we should never set the SBLABEL_MNT flag. The
+'special handling' in selinux_is_sblabel_mnt() is only intended for when
+the behavior is set to SECURITY_FS_USE_GENFS.
 
-Fixes: 78bcac7b2ae1 ("Input: add support for the STMicroelectronics FingerTip touchscreen")
-Acked-by: Andi Shyti <andi@etezian.org>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+While there, make the logic in selinux_is_sblabel_mnt() more explicit
+and add a BUILD_BUG_ON() to make sure that introducing a new
+SECURITY_FS_USE_* forces a review of the logic.
+
+Fixes: d5f3a5f6e7e7 ("selinux: add security in-core xattr support for pstore and debugfs")
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Reviewed-by: Stephen Smalley <sds@tycho.nsa.gov>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/touchscreen/stmfts.c |   30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+ security/selinux/hooks.c |   40 +++++++++++++++++++++++++++++++---------
+ 1 file changed, 31 insertions(+), 9 deletions(-)
 
---- a/drivers/input/touchscreen/stmfts.c
-+++ b/drivers/input/touchscreen/stmfts.c
-@@ -111,27 +111,29 @@ struct stmfts_data {
- 	bool running;
- };
- 
--static void stmfts_brightness_set(struct led_classdev *led_cdev,
-+static int stmfts_brightness_set(struct led_classdev *led_cdev,
- 					enum led_brightness value)
- {
- 	struct stmfts_data *sdata = container_of(led_cdev,
- 					struct stmfts_data, led_cdev);
- 	int err;
- 
--	if (value == sdata->led_status || !sdata->ledvdd)
--		return;
--
--	if (!value) {
--		regulator_disable(sdata->ledvdd);
--	} else {
--		err = regulator_enable(sdata->ledvdd);
--		if (err)
--			dev_warn(&sdata->client->dev,
--				 "failed to disable ledvdd regulator: %d\n",
--				 err);
-+	if (value != sdata->led_status && sdata->ledvdd) {
-+		if (!value) {
-+			regulator_disable(sdata->ledvdd);
-+		} else {
-+			err = regulator_enable(sdata->ledvdd);
-+			if (err) {
-+				dev_warn(&sdata->client->dev,
-+					 "failed to disable ledvdd regulator: %d\n",
-+					 err);
-+				return err;
-+			}
-+		}
-+		sdata->led_status = value;
- 	}
- 
--	sdata->led_status = value;
-+	return 0;
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -471,16 +471,10 @@ static int may_context_mount_inode_relab
+ 	return rc;
  }
  
- static enum led_brightness stmfts_brightness_get(struct led_classdev *led_cdev)
-@@ -613,7 +615,7 @@ static int stmfts_enable_led(struct stmf
- 	sdata->led_cdev.name = STMFTS_DEV_NAME;
- 	sdata->led_cdev.max_brightness = LED_ON;
- 	sdata->led_cdev.brightness = LED_OFF;
--	sdata->led_cdev.brightness_set = stmfts_brightness_set;
-+	sdata->led_cdev.brightness_set_blocking = stmfts_brightness_set;
- 	sdata->led_cdev.brightness_get = stmfts_brightness_get;
+-static int selinux_is_sblabel_mnt(struct super_block *sb)
++static int selinux_is_genfs_special_handling(struct super_block *sb)
+ {
+-	struct superblock_security_struct *sbsec = sb->s_security;
+-
+-	return sbsec->behavior == SECURITY_FS_USE_XATTR ||
+-		sbsec->behavior == SECURITY_FS_USE_TRANS ||
+-		sbsec->behavior == SECURITY_FS_USE_TASK ||
+-		sbsec->behavior == SECURITY_FS_USE_NATIVE ||
+-		/* Special handling. Genfs but also in-core setxattr handler */
+-		!strcmp(sb->s_type->name, "sysfs") ||
++	/* Special handling. Genfs but also in-core setxattr handler */
++	return	!strcmp(sb->s_type->name, "sysfs") ||
+ 		!strcmp(sb->s_type->name, "pstore") ||
+ 		!strcmp(sb->s_type->name, "debugfs") ||
+ 		!strcmp(sb->s_type->name, "tracefs") ||
+@@ -490,6 +484,34 @@ static int selinux_is_sblabel_mnt(struct
+ 		  !strcmp(sb->s_type->name, "cgroup2")));
+ }
  
- 	err = devm_led_classdev_register(&sdata->client->dev, &sdata->led_cdev);
++static int selinux_is_sblabel_mnt(struct super_block *sb)
++{
++	struct superblock_security_struct *sbsec = sb->s_security;
++
++	/*
++	 * IMPORTANT: Double-check logic in this function when adding a new
++	 * SECURITY_FS_USE_* definition!
++	 */
++	BUILD_BUG_ON(SECURITY_FS_USE_MAX != 7);
++
++	switch (sbsec->behavior) {
++	case SECURITY_FS_USE_XATTR:
++	case SECURITY_FS_USE_TRANS:
++	case SECURITY_FS_USE_TASK:
++	case SECURITY_FS_USE_NATIVE:
++		return 1;
++
++	case SECURITY_FS_USE_GENFS:
++		return selinux_is_genfs_special_handling(sb);
++
++	/* Never allow relabeling on context mounts */
++	case SECURITY_FS_USE_MNTPOINT:
++	case SECURITY_FS_USE_NONE:
++	default:
++		return 0;
++	}
++}
++
+ static int sb_finish_set_opts(struct super_block *sb)
+ {
+ 	struct superblock_security_struct *sbsec = sb->s_security;
 
 
