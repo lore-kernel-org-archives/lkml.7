@@ -2,98 +2,94 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F96C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B38AC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADB220830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:29:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RHi4YtGw";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HFVHKT+4"
+	by mail.kernel.org (Postfix) with ESMTP id 4123D2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfEFI3l (ORCPT
+        id S1726240AbfEFIbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:29:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39300 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfEFI3j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:29:39 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 64EC760DA8; Mon,  6 May 2019 08:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557131378;
-        bh=lrmi5R4AZI3gF9Ncy7xLnfPSXtgWNbQ9CagJI2qZ7+M=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=RHi4YtGwgHzqvCu1ud3ucO7u3R77mQCk2xODHPcoxrP+EQivknugVQHl94txl6ZYj
-         iA3PWT4GL3s3SSJLCCSake0xAqfDP3JdU9HpI/sGMDwZFAbaLfth0USUE44DVOcdGG
-         nYxSV8OYekuGBShow4V0xsIuk0Zbeq3M58uNfSLE=
-Received: from x230.qca.qualcomm.com (37-136-65-53.rev.dnainternet.fi [37.136.65.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 6 May 2019 04:31:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50530 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725846AbfEFIbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 04:31:34 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9B6EF60CEC;
-        Mon,  6 May 2019 08:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557131377;
-        bh=lrmi5R4AZI3gF9Ncy7xLnfPSXtgWNbQ9CagJI2qZ7+M=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=HFVHKT+4XIcM5qAVlIob4+mQjYOF3TYIfL91ASGWFwwOmpVk0FaEyD8+x0gGt76PP
-         ag0S2s2j813Cv4M6mgOWspQG8EK1HG2TSOKM3XdrhYiGrKvz/g2wW4N4Yfvu0aDoIG
-         dsk+g8E9MKv4NUN6yX3paB0P6hW0ksKlhDhtr25U=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9B6EF60CEC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: pull-request: wireless-drivers 2019-04-30
-References: <8736lzpm0m.fsf@kamboji.qca.qualcomm.com>
-        <20190430.120117.1616322040923778364.davem@davemloft.net>
-        <87r29jo2jy.fsf@kamboji.qca.qualcomm.com>
-        <20190505.005130.1921658214241614481.davem@davemloft.net>
-Date:   Mon, 06 May 2019 11:29:34 +0300
-In-Reply-To: <20190505.005130.1921658214241614481.davem@davemloft.net> (David
-        Miller's message of "Sun, 05 May 2019 00:51:30 -0700 (PDT)")
-Message-ID: <87v9yougsx.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        by mx1.redhat.com (Postfix) with ESMTPS id 397CE81DFA;
+        Mon,  6 May 2019 08:31:34 +0000 (UTC)
+Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C8A11001DDE;
+        Mon,  6 May 2019 08:31:25 +0000 (UTC)
+Message-ID: <1cc7efd1852f298b01f09955f2c4bf3b20cead13.camel@redhat.com>
+Subject: Re: [PATCH v2 06/10] nvme/core: add mdev interfaces
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>, Max Gurtovoy <maxg@mellanox.com>
+Cc:     Fam Zheng <fam@euphon.net>, kvm@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@infradead.org>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        John Ferlan <jferlan@redhat.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Amnon Ilan <ailan@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Date:   Mon, 06 May 2019 11:31:27 +0300
+In-Reply-To: <20190504064938.GA30814@lst.de>
+References: <20190502114801.23116-1-mlevitsk@redhat.com>
+         <20190502114801.23116-7-mlevitsk@redhat.com>
+         <20190503122902.GA5081@infradead.org>
+         <d1c0c7ae-1a7d-06e5-d8bb-765a7fd5e41d@mellanox.com>
+         <20190504064938.GA30814@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 06 May 2019 08:31:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Miller <davem@davemloft.net> writes:
+On Sat, 2019-05-04 at 08:49 +0200, Christoph Hellwig wrote:
+> On Fri, May 03, 2019 at 10:00:54PM +0300, Max Gurtovoy wrote:
+> > Don't see a big difference of taking NVMe queue and namespace/partition to 
+> > guest OS or to P2P since IO is issued by external entity and pooled outside 
+> > the pci driver.
+> 
+> We are not going to the queue aside either way..  That is where the
+> last patch in this series is already working to, and which would be
+> the sensible vhost model to start with.
 
-> From: Kalle Valo <kvalo@codeaurora.org>
-> Date: Tue, 30 Apr 2019 19:55:45 +0300
->
->> David Miller <davem@davemloft.net> writes:
->> 
->>> Thanks for the conflict resolution information, it is very helpful.
->>>
->>> However, can you put it into the merge commit text next time as well?
->>> I cut and pasted it in there when I pulled this stuff in.
->> 
->> A good idea, I'll do that. Just to be sure, do you mean that I should
->> add it only with conflicts between net and net-next (like in this case)?
->> Or should I add it everytime I see a conflict, for example between
->> wireless-drivers-next and net-next? I hope my question is not too
->> confusing...
->
-> When there is a major conflict for me to resolve when I pull in your
-> pull reqeust, please place the conflict resolution help text into the
-> merge commit message.
->
-> I hope this is now clear :-)
+Why are you saying that? I actualy prefer to use a sepearate queue per software
+nvme controller, tat because of lower overhead (about half than going through
+the block layer) and it better at QoS as the separate queue (or even few queues
+if needed) will give the guest a mostly guaranteed slice of the bandwidth of the
+device.
 
-Got it now, thanks!
+The only drawback of this is some code duplication but that can be worked on
+with some changes in the block layer.
 
--- 
-Kalle Valo
+The last patch in my series was done with 2 purposes in mind which are to
+measure the overhead, and to maybe utilize that as a failback to non nvme
+devices.
+
+Best regards,
+	Maxim Levitsky
+
