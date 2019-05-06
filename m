@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2CCC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11402C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05BC02054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2442054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154510;
-	bh=aiLjpeAoWNOBxt8nJ1mTSVl7fDXJwwZi5qiMMPi0HfA=;
+	s=default; t=1557154515;
+	bh=3Ca6qMXXyzzlbNgKoHpmWEQMnGIcdn4oM83zHpLqnTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bu2GaWhomGQF9iNa995opai9TqqWNDrU8wN7SrFqI9UgV+DZ3u7H9rFf4QSdbthoi
-	 jmy+ZoeQV7RRBnrGaEVvt4SxDEqjzr6vXpyxgmILnrQS/8KY0FVt6V2SRT4nWXu0Kd
-	 ujHJeKTVldS86d0m1EsA4bxlTu/NrGaGxZpYv4is=
+	b=AmsppFsePCMQJjVB0roU+c3eGlCA2voe7tTJXFrMY5UwaMAPsAB96to57Y9bvsNaG
+	 XQGUqm2kcgcPZOZn0GhF+ic/52we692POcFiS76mJcmaSr1EJKwrcNE8A5KEVcjsdn
+	 hHnyKvjmAllu8WXHRtTgOdK63LGBB5jtbb+qZKj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbfEFOqO (ORCPT
+        id S1728134AbfEFOqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:46:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43834 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:46:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728809AbfEFOqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:46:12 -0400
+        id S1728489AbfEFOqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:46:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A76ED214C6;
-        Mon,  6 May 2019 14:46:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6378521479;
+        Mon,  6 May 2019 14:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153972;
-        bh=aiLjpeAoWNOBxt8nJ1mTSVl7fDXJwwZi5qiMMPi0HfA=;
+        s=default; t=1557153965;
+        bh=3Ca6qMXXyzzlbNgKoHpmWEQMnGIcdn4oM83zHpLqnTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TSWk26VbvMBE9maZls5DwVO1ttONkTC73zQcXtvN7C+Umf/tz2Ed2d8/gmA+Inx24
-         c8xbxX9/0QXgdIdfdUxzmP/R0qujqR5VQ7DnNzHIw7bG48GfDkGDOjXxgSYBT2k+Fn
-         8jeeZO0ossFsfTNcqmedlafzXj0pHUCedWWKABX8=
+        b=ocXc07/VfoOzXt3yR8KwRrH6LatNMf2k0vwSrBiBLXaDWxLJCJxJzA0gthKqqFkkj
+         uAQbwaJGearQSwpIT1VvecFbemkhyslrxGw7iA+rE+DIIVpcHvDKhlMFykaqWlWwGf
+         v4HSkjP/wXfQ94skTC2ivhaswOQuavsSgfglTquE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jurgens <danielj@mellanox.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.14 65/75] IB/core: Unregister notifier before freeing MAD security
-Date:   Mon,  6 May 2019 16:33:13 +0200
-Message-Id: <20190506143059.149974388@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        Mike Christie <mchristi@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 63/75] scsi: RDMA/srpt: Fix a credit leak for aborted commands
+Date:   Mon,  6 May 2019 16:33:11 +0200
+Message-Id: <20190506143058.977870720@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -61,37 +65,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jurgens <danielj@mellanox.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit d60667fc398ed34b3c7456b020481c55c760e503 upstream.
+commit 40ca8757291ca7a8775498112d320205b2a2e571 upstream.
 
-If the notifier runs after the security context is freed an access of
-freed memory can occur.
+Make sure that the next time a response is sent to the initiator that the
+credit it had allocated for the aborted request gets freed.
 
-Fixes: 47a2b338fe63 ("IB/core: Enforce security on management datagrams")
-Signed-off-by: Daniel Jurgens <danielj@mellanox.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Doug Ledford <dledford@redhat.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Nicholas Bellinger <nab@linux-iscsi.org>
+Cc: Mike Christie <mchristi@redhat.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Fixes: 131e6abc674e ("target: Add TFO->abort_task for aborted task resources release") # v3.15
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/security.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/ulp/srpt/ib_srpt.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/infiniband/core/security.c
-+++ b/drivers/infiniband/core/security.c
-@@ -732,9 +732,10 @@ void ib_mad_agent_security_cleanup(struc
- 	if (!rdma_protocol_ib(agent->device, agent->port_num))
- 		return;
- 
--	security_ib_free_security(agent->security);
- 	if (agent->lsm_nb_reg)
- 		unregister_lsm_notifier(&agent->lsm_nb);
-+
-+	security_ib_free_security(agent->security);
+--- a/drivers/infiniband/ulp/srpt/ib_srpt.c
++++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+@@ -2381,8 +2381,19 @@ static void srpt_queue_tm_rsp(struct se_
+ 	srpt_queue_response(cmd);
  }
  
- int ib_mad_enforce_security(struct ib_mad_agent_private *map, u16 pkey_index)
++/*
++ * This function is called for aborted commands if no response is sent to the
++ * initiator. Make sure that the credits freed by aborting a command are
++ * returned to the initiator the next time a response is sent by incrementing
++ * ch->req_lim_delta.
++ */
+ static void srpt_aborted_task(struct se_cmd *cmd)
+ {
++	struct srpt_send_ioctx *ioctx = container_of(cmd,
++				struct srpt_send_ioctx, cmd);
++	struct srpt_rdma_ch *ch = ioctx->ch;
++
++	atomic_inc(&ch->req_lim_delta);
+ }
+ 
+ static int srpt_queue_status(struct se_cmd *cmd)
 
 
