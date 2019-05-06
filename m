@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD22C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4427C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB052053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC002053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154402;
-	bh=vbPwdDLTa7OrWI0SflkBBJ7iLeQtCJf62w+l948vi5U=;
+	s=default; t=1557154406;
+	bh=3MntDR9kUmhFdar+ptPW4odvKho86UrhSYTPEEofWs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zZzus3Q50/oVD//HyBIBsmlIG6o2IkVBOgT0MruLp1upONE47LJT54BDcxo+SzA2b
-	 47jaKk+plov+WivWey+pDDsLdmMYyBbkN3+z6a1utQZvbYOZXolPPKTjH453ko328L
-	 bJEGN7kDF9l0UnaCBwgk/suH+Lyl1gqhASXcbQEA=
+	b=z3fSAc+CEUEdT8uTM65BFizoWq+NTwQ4E3zRI9xKzpIzdzSmsx/JeEF0GoTOjIoUG
+	 MTzd2Wcz0WaoTL8U0eFEVx2dBdJvdyX68iyYS6NWLSrJ/5da11xAiAyagjjDLI1PZ4
+	 1XqWv+q2sq2aabCfik2aG/y5hfDflMI2V0PSeaTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbfEFOrg (ORCPT
+        id S1728709AbfEFOxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:47:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46292 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:53:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727382AbfEFOrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:19 -0400
+        id S1729318AbfEFOrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC8FC20449;
-        Mon,  6 May 2019 14:47:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38C5F205ED;
+        Mon,  6 May 2019 14:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154038;
-        bh=vbPwdDLTa7OrWI0SflkBBJ7iLeQtCJf62w+l948vi5U=;
+        s=default; t=1557154054;
+        bh=3MntDR9kUmhFdar+ptPW4odvKho86UrhSYTPEEofWs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a9qkcwulZLKR6zNcFJBYvGoS9Xa56qiqjXrNsesEpaB3rmDEXXbl8KAXRluVy8hle
-         rO44TB43iCc3+OmsN3u+kvcHY1rn2isUbsVvM6ZP3QfOkBLl18dP5f9YeWvCG1LWx1
-         xf421H83RbfifHERmKsKj3kgKGX4nLlWCgRHL36s=
+        b=2SXarBdFxdIo/o9j8G+V+X09jdgtlAtDDK9YsqM61n2sQ32hadTMh+pWXij92TLkO
+         zbscBVeSVAEAdywCFhnNjC30TUhYx5q+Zmfs2ru8SZ/4T0NNBPj4T+r3ypEhjpFX3F
+         9f05rIqdbQkMxq9i761qXkBACHp7lTKlq9pCdKVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 4.9 15/62] kasan: avoid -Wmaybe-uninitialized warning
-Date:   Mon,  6 May 2019 16:32:46 +0200
-Message-Id: <20190506143052.384495640@linuxfoundation.org>
+Subject: [PATCH 4.9 20/62] arm64: mm: dont print out page table entries on EL0 faults
+Date:   Mon,  6 May 2019 16:32:51 +0200
+Message-Id: <20190506143052.802065560@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -64,51 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Kristina Martsenko <kristina.martsenko@arm.com>
 
-commit e7701557bfdd81ff44cab13a80439319a735d8e2 upstream.
+commit bf396c09c2447a787d02af34cf167e953f85fa42 upstream.
 
-gcc-7 produces this warning:
+When we take a fault from EL0 that can't be handled, we print out the
+page table entries associated with the faulting address. This allows
+userspace to print out any current page table entries, including kernel
+(TTBR1) entries. Exposing kernel mappings like this could pose a
+security risk, so don't print out page table information on EL0 faults.
+(But still print it out for EL1 faults.) This also follows the same
+behaviour as x86, printing out page table entries on kernel mode faults
+but not user mode faults.
 
-  mm/kasan/report.c: In function 'kasan_report':
-  mm/kasan/report.c:351:3: error: 'info.first_bad_addr' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-     print_shadow_for_address(info->first_bad_addr);
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  mm/kasan/report.c:360:27: note: 'info.first_bad_addr' was declared here
-
-The code seems fine as we only print info.first_bad_addr when there is a
-shadow, and we always initialize it in that case, but this is relatively
-hard for gcc to figure out after the latest rework.
-
-Adding an intialization to the most likely value together with the other
-struct members shuts up that warning.
-
-Fixes: b235b9808664 ("kasan: unify report headers")
-Link: https://patchwork.kernel.org/patch/9641417/
-Link: http://lkml.kernel.org/r/20170725152739.4176967-1-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: Alexander Potapenko <glider@google.com>
-Suggested-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Kristina Martsenko <kristina.martsenko@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/kasan/report.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/mm/fault.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/mm/kasan/report.c
-+++ b/mm/kasan/report.c
-@@ -302,6 +302,7 @@ void kasan_report(unsigned long addr, si
- 	disable_trace_on_warning();
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -231,7 +231,6 @@ static void __do_user_fault(struct task_
+ 		pr_info("%s[%d]: unhandled %s (%d) at 0x%08lx, esr 0x%03x\n",
+ 			tsk->comm, task_pid_nr(tsk), inf->name, sig,
+ 			addr, esr);
+-		show_pte(addr);
+ 		show_regs(regs);
+ 	}
  
- 	info.access_addr = (void *)addr;
-+	info.first_bad_addr = (void *)addr;
- 	info.access_size = size;
- 	info.is_write = is_write;
- 	info.ip = ip;
 
 
