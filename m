@@ -2,173 +2,85 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EC5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBD2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6AAA206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:58:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="eLarq4Ff"
+	by mail.kernel.org (Postfix) with ESMTP id 18483206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfEFM6C (ORCPT
+        id S1726483AbfEFM6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 08:58:02 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43106 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfEFM6B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 08:58:01 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c6so1533123pfa.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 05:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=3yJBCKGR2L57C08ZCcNvx8rpcWn4E4qX0pN/jP148ZU=;
-        b=eLarq4Ffp7BjsITqSQlz2hSLPWtaejD9F29WXPEMw2SqJDUECmBS4D7XP1Pt5cl+Gj
-         6Qim1TVRAg/xxrtKNnSMLQ1sFJyWF3z8/K4E48r2dufIm4l8G9mRpjrcRd/z5J8qu22a
-         vcWshiwGN/r2EzzCR4FftWIW614/C17yN/JKBzSAlxD4hNwdI4eMxGWHbosZcWaBw/TD
-         +tq4tFRIMr5icG/Elbt41wWtleyysZxvvScYYpCG9VWOIZfmIDUk9b1PfxTQOttXQKMu
-         SJD6DliKlgTV+WndmwX90KWxulzq7oC/wbbkYnMXkCyQB2I/XDdlcdnIW9RGJQmn4i5W
-         AJlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=3yJBCKGR2L57C08ZCcNvx8rpcWn4E4qX0pN/jP148ZU=;
-        b=ON6UmM3P8p7DwBOVex58X3Q3fy+8GlGY19h0ytfMMF7H9qi9pHSz/5z6dhz2PU8TjY
-         t0S+plXrRv2g+d3qhfHO70GVKhAsTVx14xa7TNC6hLq7kcN0h173kZuP0qTkyjzGaBgY
-         zPdU0i/1I/0Bme89kGJZkUm5Wg81HNadZx3d49BpWQdEVsG9/p4kY48smq93yFBOKMGD
-         fozBfw/7VXrWWMXT1dXUK/nK9nYCDmW80tPjkecpY5mNBEoUAuxxQ1GMxznWvDoC9akD
-         wu/5cAU99ia1VKXJosfyWwQk02pW9PFWYf16p5L0pemn8xESNWkV7G9bIZjGzI8bhtUu
-         1rhw==
-X-Gm-Message-State: APjAAAUNbCFSA7KDlc/GR8Ka7Rt0lkvTRt6KhcNsLfxAfQBrZ8e4brEw
-        SbCtlG5xPDOqVr0i/GllLOHSJZDjC+QSEA==
-X-Google-Smtp-Source: APXvYqzOLRJnZ/ugQgGd1S7emDFcNYFDNzwkPn6sKQ1ywPvxa6ZPbBSvOcGtuJOVmTmh8hb5KAhWdQ==
-X-Received: by 2002:a63:fd08:: with SMTP id d8mr31596695pgh.141.1557147480957;
-        Mon, 06 May 2019 05:58:00 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id p81sm18031132pfa.26.2019.05.06.05.57.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 06 May 2019 05:58:00 -0700 (PDT)
-From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, palmer@sifive.com,
-        paul.walmsley@sifive.com, sagar.kadam@sifive.com,
-        peter@korsgaard.com, andrew@lunn.ch, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 v1 3/3] i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC.
-Date:   Mon,  6 May 2019 18:24:00 +0530
-Message-Id: <1557147240-29551-4-git-send-email-sagar.kadam@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1557147240-29551-1-git-send-email-sagar.kadam@sifive.com>
-References: <1557147240-29551-1-git-send-email-sagar.kadam@sifive.com>
+        Mon, 6 May 2019 08:58:13 -0400
+Received: from verein.lst.de ([213.95.11.211]:52187 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbfEFM6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 08:58:13 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 7423D67358; Mon,  6 May 2019 14:57:52 +0200 (CEST)
+Date:   Mon, 6 May 2019 14:57:52 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Fam Zheng <fam@euphon.net>,
+        Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>, kvm@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Amnon Ilan <ailan@redhat.com>, John Ferlan <jferlan@redhat.com>
+Subject: Re: [PATCH v2 00/10] RFC: NVME MDEV
+Message-ID: <20190506125752.GA5288@lst.de>
+References: <20190502114801.23116-1-mlevitsk@redhat.com> <20190503121838.GA21041@lst.de> <e8f6981863bdbba89adcba1c430083e68546ac1a.camel@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8f6981863bdbba89adcba1c430083e68546ac1a.camel@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i2c-ocore driver already has a polling mode interface.But it needs
-a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
-There is an erratum in FU540 chip that prevents interrupt driven i2c
-transfers from working, and also the I2C controller's interrupt bit
-cannot be cleared if set, due to this the existing i2c polling mode
-interface added in mainline earlier doesn't work, and CPU stall's
-infinitely, when-ever i2c transfer is initiated.
+On Mon, May 06, 2019 at 12:04:06PM +0300, Maxim Levitsky wrote:
+> 1. Frontend interface (the interface that faces the guest/userspace/etc):
+> 
+> VFIO/mdev is just way to expose a (partially) software defined PCIe device to a
+> guest.
+> 
+> Vhost on the other hand is an interface that is hardcoded and optimized for
+> virtio. It can be extended to be pci generic, but why to do so if we already
+> have VFIO.
 
-	commit 69c8c0c0efa8 ("i2c: ocores: add polling interface")
+I wouldn't say vhost is virtio specific.  At least Hanne's vhost-nvme
+doesn't get impacted by that a whole lot.
 
-The workaround / fix is particularly for FU540-COOO SoC.
+> 2. Backend interface (the connection to the real nvme device):
+> 
+> Currently the backend interface _doesn't have_ to allocate a dedicated queue and
+> bypass the block layer. It can use the block submit_bio/blk_poll as I
+> demonstrate in the last patch in the series. Its 2x slower though.
+> 
+> However, similar to the (1), when the driver will support the devices with
+> hardware based passthrough, it will have to dedicate a bunch of queues to the
+> guest, configure them with the appropriate PASID, and then let the guest useA
+> these queues directly.
 
-Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
----
- drivers/i2c/busses/i2c-ocores.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+We will not let you abuse the nvme queues for anything else.  We had
+that discussion with the mellanox offload and it not only unsafe but
+also adds way to much crap to the core nvme code for corner cases.
 
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index 7bf7b0c..08cdfed 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -27,6 +27,7 @@
- #include <linux/jiffies.h>
- 
- #define OCORES_FLAG_POLL BIT(0)
-+#define SIFIVE_FLAG_POLL BIT(1)
- 
- /*
-  * 'process_lock' exists because ocores_process() and ocores_process_timeout()
-@@ -239,8 +240,13 @@ static irqreturn_t ocores_isr(int irq, void *dev_id)
- 	struct ocores_i2c *i2c = dev_id;
- 	u8 stat = oc_getreg(i2c, OCI2C_STATUS);
- 
--	if (!(stat & OCI2C_STAT_IF))
-+	if (i2c->flags && SIFIVE_FLAG_POLL) {
-+		if (stat & OCI2C_STAT_IF)
-+			if (!(stat & OCI2C_STAT_BUSY))
-+				return IRQ_NONE;
-+	} else if (!(stat & OCI2C_STAT_IF)) {
- 		return IRQ_NONE;
-+	}
- 
- 	ocores_process(i2c, stat);
- 
-@@ -356,6 +362,11 @@ static void ocores_process_polling(struct ocores_i2c *i2c)
- 		ret = ocores_isr(-1, i2c);
- 		if (ret == IRQ_NONE)
- 			break; /* all messages have been transferred */
-+		else {
-+			if (i2c->flags && SIFIVE_FLAG_POLL)
-+				if (i2c->state == STATE_DONE)
-+					break;
-+		}
- 	}
- }
- 
-@@ -406,7 +417,7 @@ static int ocores_xfer(struct i2c_adapter *adap,
- {
- 	struct ocores_i2c *i2c = i2c_get_adapdata(adap);
- 
--	if (i2c->flags & OCORES_FLAG_POLL)
-+	if ((i2c->flags & OCORES_FLAG_POLL) || (i2c->flags & SIFIVE_FLAG_POLL))
- 		return ocores_xfer_polling(adap, msgs, num);
- 	return ocores_xfer_core(i2c, msgs, num, false);
- }
-@@ -597,6 +608,7 @@ static int ocores_i2c_probe(struct platform_device *pdev)
- {
- 	struct ocores_i2c *i2c;
- 	struct ocores_i2c_platform_data *pdata;
-+	const struct of_device_id *match;
- 	struct resource *res;
- 	int irq;
- 	int ret;
-@@ -678,13 +690,21 @@ static int ocores_i2c_probe(struct platform_device *pdev)
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq == -ENXIO) {
--		i2c->flags |= OCORES_FLAG_POLL;
-+		/*
-+		 * Set a SIFIVE_FLAG_POLL to enable workaround for FU540
-+		 * in polling mode interface of i2c-ocore driver.
-+		 */
-+		match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
-+		if (match && (long)match->data == TYPE_SIFIVE_REV0)
-+			i2c->flags |= SIFIVE_FLAG_POLL;
-+		else
-+			i2c->flags |= OCORES_FLAG_POLL;
- 	} else {
- 		if (irq < 0)
- 			return irq;
- 	}
- 
--	if (!(i2c->flags & OCORES_FLAG_POLL)) {
-+	if (!(i2c->flags & (OCORES_FLAG_POLL | SIFIVE_FLAG_POLL))) {
- 		ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
- 				       pdev->name, i2c);
- 		if (ret) {
--- 
-1.9.1
-
+Or to put it into another way:  unless your paravirt interface requires
+zero specific changes to the core nvme code it is not acceptable at all.
