@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8893AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C074C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5653A214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4D6214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153498;
-	bh=b1+zedKg8zdeP7otKTiu/0hB8d4eiwI693m/aSnw4sM=;
+	s=default; t=1557153506;
+	bh=FvI5gFX9R24R70VbdiLlNJDE4Pc3Edl/7/lv98bBtKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CAj0JVJT3dAQQQq3TdyYpy7ZZuaCW2Jgp5xVVV5+SXLz2gQarFh0GhBAjgWAxWYzw
-	 ZnVvMWvJNprJUDIHFXwfBJnXdVOWoPxfNTrYxSl46cgYvNML3kQRJQyJj0NUMw3Tav
-	 6XZpcTSh4ehs+Nrg53UG4hBI27uX59r2TkrVTUz8=
+	b=up0C/2qYBSMFCztj6Sq64zwa4bSZroYOCvLsnqaxYyT0iU9qxFqNrqSa0KujakI/B
+	 k0EOd1Sxb3Zqu29d0/Ty9/EUPnaXQrKVsYw5DP0sWAVUl/+MMfcvZhy6mrdjLOCOzM
+	 1ngvz3y9awLKiePiXL1ADIoUzRYG9/wskvcQocxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfEFOiQ (ORCPT
+        id S1727590AbfEFOiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:38:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59246 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:38:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727527AbfEFOiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:38:13 -0400
+        id S1727554AbfEFOiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:38:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0596C206A3;
-        Mon,  6 May 2019 14:38:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2816821479;
+        Mon,  6 May 2019 14:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153492;
-        bh=b1+zedKg8zdeP7otKTiu/0hB8d4eiwI693m/aSnw4sM=;
+        s=default; t=1557153497;
+        bh=FvI5gFX9R24R70VbdiLlNJDE4Pc3Edl/7/lv98bBtKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=186lQK+vZpFLosDEf54Tb0CSOdWSr0ra7vwHAZBRIFdNIQDEutcaurpOJnQmXYxwt
-         QFv5FljhVLGxsw0MsrtdWvtWwA9URHyRCgk9XI6BX8H3Zcz7j2mM7IpIUsFlHqKtPJ
-         tbUTJQaRGjsIq5ykfUpZMELi0L/mYgMld3HGibpQ=
+        b=bv7V2O2f+edOwulfp1X9MaZZRBO5olTbCy0523SYDOFYo1ojT8AGT0yinK0po+p4H
+         RRz2d8DwGsC3eCfs2r/ctnrJl4/Tt62ni37ruQ10Q/CPiMtSJC18Hh8x5AI+RiBD1Y
+         Xz0FjUWKNid3N0lQZWROwCnP72OwwfvZhL6MYy+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Shyti <andi@etezian.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.0 110/122] Input: stmfts - acknowledge that setting brightness is a blocking call
-Date:   Mon,  6 May 2019 16:32:48 +0200
-Message-Id: <20190506143104.376228859@linuxfoundation.org>
+        stable@vger.kernel.org, BMK <bmktuwien@gmail.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 5.0 112/122] selinux: avoid silent denials in permissive mode under RCU walk
+Date:   Mon,  6 May 2019 16:32:50 +0200
+Message-Id: <20190506143104.534069852@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -59,76 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Stephen Smalley <sds@tycho.nsa.gov>
 
-commit 937c4e552fd1174784045684740edfcea536159d upstream.
+commit 3a28cff3bd4bf43f02be0c4e7933aebf3dc8197e upstream.
 
-We need to turn regulators on and off when switching brightness, and
-that may block, therefore we have to set stmfts_brightness_set() as
-LED's brightness_set_blocking() method.
+commit 0dc1ba24f7fff6 ("SELINUX: Make selinux cache VFS RCU walks safe")
+results in no audit messages at all if in permissive mode because the
+cache is updated during the rcu walk and thus no denial occurs on
+the subsequent ref walk.  Fix this by not updating the cache when
+performing a non-blocking permission check.  This only affects search
+and symlink read checks during rcu walk.
 
-Fixes: 78bcac7b2ae1 ("Input: add support for the STMicroelectronics FingerTip touchscreen")
-Acked-by: Andi Shyti <andi@etezian.org>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 0dc1ba24f7fff6 ("SELINUX: Make selinux cache VFS RCU walks safe")
+Reported-by: BMK <bmktuwien@gmail.com>
+Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/touchscreen/stmfts.c |   30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+ security/selinux/avc.c         |   23 +++++++++++++++++++++--
+ security/selinux/hooks.c       |    4 +++-
+ security/selinux/include/avc.h |    1 +
+ 3 files changed, 25 insertions(+), 3 deletions(-)
 
---- a/drivers/input/touchscreen/stmfts.c
-+++ b/drivers/input/touchscreen/stmfts.c
-@@ -106,27 +106,29 @@ struct stmfts_data {
- 	bool running;
- };
+--- a/security/selinux/avc.c
++++ b/security/selinux/avc.c
+@@ -838,6 +838,7 @@ out:
+  * @ssid,@tsid,@tclass : identifier of an AVC entry
+  * @seqno : sequence number when decision was made
+  * @xpd: extended_perms_decision to be added to the node
++ * @flags: the AVC_* flags, e.g. AVC_NONBLOCKING, AVC_EXTENDED_PERMS, or 0.
+  *
+  * if a valid AVC entry doesn't exist,this function returns -ENOENT.
+  * if kmalloc() called internal returns NULL, this function returns -ENOMEM.
+@@ -856,6 +857,23 @@ static int avc_update_node(struct selinu
+ 	struct hlist_head *head;
+ 	spinlock_t *lock;
  
--static void stmfts_brightness_set(struct led_classdev *led_cdev,
-+static int stmfts_brightness_set(struct led_classdev *led_cdev,
- 					enum led_brightness value)
- {
- 	struct stmfts_data *sdata = container_of(led_cdev,
- 					struct stmfts_data, led_cdev);
- 	int err;
++	/*
++	 * If we are in a non-blocking code path, e.g. VFS RCU walk,
++	 * then we must not add permissions to a cache entry
++	 * because we cannot safely audit the denial.  Otherwise,
++	 * during the subsequent blocking retry (e.g. VFS ref walk), we
++	 * will find the permissions already granted in the cache entry
++	 * and won't audit anything at all, leading to silent denials in
++	 * permissive mode that only appear when in enforcing mode.
++	 *
++	 * See the corresponding handling in slow_avc_audit(), and the
++	 * logic in selinux_inode_follow_link and selinux_inode_permission
++	 * for the VFS MAY_NOT_BLOCK flag, which is transliterated into
++	 * AVC_NONBLOCKING for avc_has_perm_noaudit().
++	 */
++	if (flags & AVC_NONBLOCKING)
++		return 0;
++
+ 	node = avc_alloc_node(avc);
+ 	if (!node) {
+ 		rc = -ENOMEM;
+@@ -1115,7 +1133,7 @@ decision:
+  * @tsid: target security identifier
+  * @tclass: target security class
+  * @requested: requested permissions, interpreted based on @tclass
+- * @flags:  AVC_STRICT or 0
++ * @flags:  AVC_STRICT, AVC_NONBLOCKING, or 0
+  * @avd: access vector decisions
+  *
+  * Check the AVC to determine whether the @requested permissions are granted
+@@ -1199,7 +1217,8 @@ int avc_has_perm_flags(struct selinux_st
+ 	struct av_decision avd;
+ 	int rc, rc2;
  
--	if (value == sdata->led_status || !sdata->ledvdd)
--		return;
--
--	if (!value) {
--		regulator_disable(sdata->ledvdd);
--	} else {
--		err = regulator_enable(sdata->ledvdd);
--		if (err)
--			dev_warn(&sdata->client->dev,
--				 "failed to disable ledvdd regulator: %d\n",
--				 err);
-+	if (value != sdata->led_status && sdata->ledvdd) {
-+		if (!value) {
-+			regulator_disable(sdata->ledvdd);
-+		} else {
-+			err = regulator_enable(sdata->ledvdd);
-+			if (err) {
-+				dev_warn(&sdata->client->dev,
-+					 "failed to disable ledvdd regulator: %d\n",
-+					 err);
-+				return err;
-+			}
-+		}
-+		sdata->led_status = value;
- 	}
+-	rc = avc_has_perm_noaudit(state, ssid, tsid, tclass, requested, 0,
++	rc = avc_has_perm_noaudit(state, ssid, tsid, tclass, requested,
++				  (flags & MAY_NOT_BLOCK) ? AVC_NONBLOCKING : 0,
+ 				  &avd);
  
--	sdata->led_status = value;
-+	return 0;
- }
+ 	rc2 = avc_audit(state, ssid, tsid, tclass, requested, &avd, rc,
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -2985,7 +2985,9 @@ static int selinux_inode_permission(stru
+ 		return PTR_ERR(isec);
  
- static enum led_brightness stmfts_brightness_get(struct led_classdev *led_cdev)
-@@ -608,7 +610,7 @@ static int stmfts_enable_led(struct stmf
- 	sdata->led_cdev.name = STMFTS_DEV_NAME;
- 	sdata->led_cdev.max_brightness = LED_ON;
- 	sdata->led_cdev.brightness = LED_OFF;
--	sdata->led_cdev.brightness_set = stmfts_brightness_set;
-+	sdata->led_cdev.brightness_set_blocking = stmfts_brightness_set;
- 	sdata->led_cdev.brightness_get = stmfts_brightness_get;
+ 	rc = avc_has_perm_noaudit(&selinux_state,
+-				  sid, isec->sid, isec->sclass, perms, 0, &avd);
++				  sid, isec->sid, isec->sclass, perms,
++				  (flags & MAY_NOT_BLOCK) ? AVC_NONBLOCKING : 0,
++				  &avd);
+ 	audited = avc_audit_required(perms, &avd, rc,
+ 				     from_access ? FILE__AUDIT_ACCESS : 0,
+ 				     &denied);
+--- a/security/selinux/include/avc.h
++++ b/security/selinux/include/avc.h
+@@ -142,6 +142,7 @@ static inline int avc_audit(struct selin
  
- 	err = devm_led_classdev_register(&sdata->client->dev, &sdata->led_cdev);
+ #define AVC_STRICT 1 /* Ignore permissive mode. */
+ #define AVC_EXTENDED_PERMS 2	/* update extended permissions */
++#define AVC_NONBLOCKING    4	/* non blocking */
+ int avc_has_perm_noaudit(struct selinux_state *state,
+ 			 u32 ssid, u32 tsid,
+ 			 u16 tclass, u32 requested,
 
 
