@@ -2,88 +2,142 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AB3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C9EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD33D20675
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA86A20675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rg74RFa+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nNjHFpzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfEFTb2 (ORCPT
+        id S1726698AbfEFTbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:31:28 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58866 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbfEFTb2 (ORCPT
+        Mon, 6 May 2019 15:31:42 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40240 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbfEFTbl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:31:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gZ+PznOa1NPjwtyprbc4xPeHY4zz9L/0ME3WLNqb0aA=; b=rg74RFa+90w0Nw3xnzbjpJ8v6i
-        KTB6rv1ErhwxB+owHswOKFjpS88NMEarvqWtjhl0donO1sfb4HH5TfrKgK8y2SfOVFy4W3HkEFmLJ
-        lrZlgBYYAtfSkn2tk30kjrsbEg6Q/Oe9NjoCneCzyacU5IwQdbSS8f5HUqn7ioebEafQ5y7uzy8FM
-        Awxinlg4oyPq9iH5PejF8x8bI8y9ep2pJ+64PBSgq00De78MRLU1fqk4iH9cmw0plZvg6q7CfZtdF
-        6KAFObr9ILkjwJE94jh8zGy0FveUCKx1wLZ3iTBLnWpLKiXgDL2aDBq+hv0lEBaFZbRBJDTE1uPhu
-        myKi9A0Q==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hNjKh-0008GU-35; Mon, 06 May 2019 19:31:27 +0000
-To:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] x86: olpc: fix section mismatch warning
-Message-ID: <76cbb7d3-bb91-4900-0275-a9b09fd7c77b@infradead.org>
-Date:   Mon, 6 May 2019 12:31:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 6 May 2019 15:31:41 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d15so12131288ljc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 12:31:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gzqt154DTH5ImHOjvijUWjXzMNwVv74MLXkB9lgKrrw=;
+        b=nNjHFpzz2vKI+badclYzMfOso23Nvg4F0z3eEjQbGkckMUxF028F3XqkKl/++V119q
+         rmijiMxVjktUYfhRDo+EilRRHAeKGukmRxE8T9sjzgWaXZRFMY7e09yL3qFe55WFI9AZ
+         wqbVg0bjGylSD2CSjKPBYzkvCehm17FK+pFyWWHkFPCpf5nNR5P6dJbc5ALmkWPSbaew
+         pDzKzELKkim55dy96hCNNH0k+6PMagrKQHF3cOw3CK8MTFdPOc/2GHg/8uwzzao6MrlA
+         RX5rEyrn/eJu877EpH28W6WpdxyOPHkkTOBbPfYpj8moqhZr1HlkgaJpNGwKmva9zmhU
+         CNXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gzqt154DTH5ImHOjvijUWjXzMNwVv74MLXkB9lgKrrw=;
+        b=UHViupDUueHx3ZfZAMit+pgqffrg5sQ7TpsxCR0EOBeAFy9Ak3Jn5qJejxvfLPmH9p
+         gb0GPJlsiT5+V093eZhVj0fo9zKRFERfkFvPtFtVJBejKU9i3P39Q31o7GK4/tF82jB0
+         g3UXDg4506bDXA7pL0KFIM5NmAHbf5FoZng1b29MjE1XojZ3LWCGSPyUuXe2ry+cFbV7
+         /ht43G7V1T5/s3MFlEiKvNkQztqDeTCMMZXUasO4038VUppDfqT//5dNMQAi2iJBhrEE
+         6+Dt+Yz21aYUnB293SWRMjkMdn13DwyeZQ33GBHi+X4ErClA/pZR1HdyvzZLidjU1B98
+         FrvQ==
+X-Gm-Message-State: APjAAAXEgR5nwHNhafMioD29F75IzzcOhd4SvHBBWJfH0Z+9bHX2IwBJ
+        /BLcT30mNkeIVNnSxb+ctPONFg==
+X-Google-Smtp-Source: APXvYqy8ZbmneS+bhGFlFzRN4Lj7M6HDD7Mh2kRpXYNfAJfEhMqOyD3kfORTGIB7aXwSQnnwZTAtJg==
+X-Received: by 2002:a2e:8141:: with SMTP id t1mr14742420ljg.122.1557171099519;
+        Mon, 06 May 2019 12:31:39 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-72.NA.cust.bahnhof.se. [158.174.22.72])
+        by smtp.gmail.com with ESMTPSA id r136sm2660779lff.50.2019.05.06.12.31.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 06 May 2019 12:31:38 -0700 (PDT)
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     amit.kucheria@linaro.org, jorge.ramirez-ortiz@linaro.org,
+        lina.iyer@linaro.org, ulf.hansson@linaro.org,
+        bjorn.andersson@linaro.org,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
+Date:   Mon,  6 May 2019 21:31:15 +0200
+Message-Id: <20190506193115.20909-1-niklas.cassel@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Add device bindings for CPUs to suspend using PSCI as the enable-method.
 
-Fix section mismatch warning:
-
-WARNING: vmlinux.o(.text+0x36e00): Section mismatch in reference from the function olpc_dt_compatible_match() to the function .init.text:olpc_dt_getproperty()
-The function olpc_dt_compatible_match() references
-the function __init olpc_dt_getproperty().
-This is often because olpc_dt_compatible_match lacks a __init 
-annotation or the annotation of olpc_dt_getproperty is wrong.
-
-All calls to olpc_dt_compatible_match() are from __init functions,
-so it can be marked __init also.
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: x86@kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 ---
- arch/x86/platform/olpc/olpc_dt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- linux-next-20190506.orig/arch/x86/platform/olpc/olpc_dt.c
-+++ linux-next-20190506/arch/x86/platform/olpc/olpc_dt.c
-@@ -220,7 +220,7 @@ static u32 __init olpc_dt_get_board_revi
- 	return be32_to_cpu(rev);
- }
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index ffedf9640af7..f9db9f3ee10c 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -31,6 +31,7 @@
+ 			reg = <0x100>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_0>;
++			cpu-idle-states = <&CPU_PC>;
+ 		};
  
--int olpc_dt_compatible_match(phandle node, const char *compat)
-+int __init olpc_dt_compatible_match(phandle node, const char *compat)
- {
- 	char buf[64], *p;
- 	int plen, len;
-
+ 		CPU1: cpu@101 {
+@@ -39,6 +40,7 @@
+ 			reg = <0x101>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_0>;
++			cpu-idle-states = <&CPU_PC>;
+ 		};
+ 
+ 		CPU2: cpu@102 {
+@@ -47,6 +49,7 @@
+ 			reg = <0x102>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_0>;
++			cpu-idle-states = <&CPU_PC>;
+ 		};
+ 
+ 		CPU3: cpu@103 {
+@@ -55,12 +58,24 @@
+ 			reg = <0x103>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&L2_0>;
++			cpu-idle-states = <&CPU_PC>;
+ 		};
+ 
+ 		L2_0: l2-cache {
+ 			compatible = "cache";
+ 			cache-level = <2>;
+ 		};
++
++		idle-states {
++			CPU_PC: pc {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <125>;
++				exit-latency-us = <180>;
++				min-residency-us = <595>;
++				local-timer-stop;
++			};
++		};
+ 	};
+ 
+ 	firmware {
+-- 
+2.21.0
 
