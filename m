@@ -2,97 +2,112 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E195DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951F1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE37B206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D64120675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:54:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ccmwmu4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfEFVsR (ORCPT
+        id S1726411AbfEFVye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 17:48:17 -0400
-Received: from mga06.intel.com ([134.134.136.31]:9220 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbfEFVsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 17:48:17 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 14:48:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,439,1549958400"; 
-   d="scan'208";a="148968542"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga003.jf.intel.com with ESMTP; 06 May 2019 14:48:15 -0700
-Date:   Mon, 6 May 2019 14:39:49 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v8 13/15] x86/split_lock: Enable split lock detection by
- default
-Message-ID: <20190506213948.GA124959@romley-ivt3.sc.intel.com>
-References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
- <1556134382-58814-14-git-send-email-fenghua.yu@intel.com>
- <alpine.DEB.2.21.1904250943160.1762@nanos.tec.linutronix.de>
+        Mon, 6 May 2019 17:54:34 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:33593 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfEFVye (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 17:54:34 -0400
+Received: by mail-vs1-f68.google.com with SMTP id z145so9116359vsc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 14:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q8k4deF6LUSg0XMhZjIJsMDswCGChCG8LHJ6aCWS2+c=;
+        b=Ccmwmu4KNXWaEjBHmOG8b3/Kt1J4Hyn+xX+ENKhZtIRrAZ25NJeBgAX99FQpDkzSQR
+         Di1Vlgs8raV+O31O3C/y+HHwzVHNkMhOeXy1aZVu7yst0FzKfuH93SE3fxCGrHUMmMSf
+         RXC9W7RvHmGAn0XChsIbR/1xqUtoRDv6gJcNA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q8k4deF6LUSg0XMhZjIJsMDswCGChCG8LHJ6aCWS2+c=;
+        b=G8Ftde9MP5GkfroIJE/b/QKqKHFzH9AOg/yp1QTTn/I7ty05U95aDpmEr7oGmNlU8C
+         Sn5tO2giUyFoeNA+LGbw9K7u8hCcrTyCHyM7w0t0jCzedoL1OtRbnveOb8S65wSWSxkh
+         0Ffgkzk80efHcVC+fJKtjuJsuECuSLls7fsot3V/Q7sW5xxU3s2w+rJoj8+wHjg/OpKq
+         pEGtGW7SnqkuoZr3bVutePcYbUmilyrrGDqAbmNrcjG1Ahtv64u2BOdLzADJdX7TFAlZ
+         1IyeTAwYXARST/ghaLjY/UT3H8x/65gNowBgRNFWOZ8OfeOx4pNShqwo22AF6xL+Os9r
+         x+tw==
+X-Gm-Message-State: APjAAAUN6av8P/qMGww80kmL5dBQ2XIGwGo8FszirWoMhjmhcTa5D4F+
+        tVUoDCmw6sO8Ic2ZaHC1wPcCKJAPgIU=
+X-Google-Smtp-Source: APXvYqwvybiNpSVy04fRd1eR5M8pFCYD0QCQaopQ3BtKqj96pnT4BSnQeO0N4p1mCBNKsjI5qNQcLA==
+X-Received: by 2002:a67:fa4a:: with SMTP id j10mr4681169vsq.99.1557179672117;
+        Mon, 06 May 2019 14:54:32 -0700 (PDT)
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
+        by smtp.gmail.com with ESMTPSA id r67sm2952998vkd.39.2019.05.06.14.54.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 14:54:31 -0700 (PDT)
+Received: by mail-vk1-f179.google.com with SMTP id l17so3551687vke.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 14:54:30 -0700 (PDT)
+X-Received: by 2002:a1f:6604:: with SMTP id a4mr4576099vkc.13.1557179670399;
+ Mon, 06 May 2019 14:54:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1904250943160.1762@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190506191950.9521-1-jmoreira@suse.de>
+In-Reply-To: <20190506191950.9521-1-jmoreira@suse.de>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Mon, 6 May 2019 14:54:19 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jJ40OaniqR+rwu2npRNM4hGjbZoReWF=vhE99hB1Dqbow@mail.gmail.com>
+Message-ID: <CAGXu5jJ40OaniqR+rwu2npRNM4hGjbZoReWF=vhE99hB1Dqbow@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/4] x86/crypto: Fix crypto function casts
+To:     Joao Moreira <jmoreira@suse.de>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 09:50:20AM +0200, Thomas Gleixner wrote:
-> On Wed, 24 Apr 2019, Fenghua Yu wrote:
-> >  
-> > +static void split_lock_update_msr(void)
-> > +{
-> > +	/* Enable split lock detection */
-> > +	msr_set_bit(MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT);
-> > +	this_cpu_or(msr_test_ctl_cache, TEST_CTL_SPLIT_LOCK_DETECT);
-> 
-> I'm pretty sure, that I told you to utilize the cache proper. Again:
-> 
-> > > Nothing in this file initializes msr_test_ctl_cache explicitely. Register
-> > > caching always requires to read the register and store it in the cache
-> > > before doing anything with it. Nothing guarantees that all bits in that MSR
-> > > are 0 by default forever.
-> > >
-> > > And once you do that _before_ calling split_lock_update_msr() then you can
-> > > spare the RMW in that function.
-> 
-> So you managed to fix the initializaiton part, but then you still do a
-> pointless RMW.
+On Mon, May 6, 2019 at 12:20 PM Joao Moreira <jmoreira@suse.de> wrote:
+> It is possible to indirectly invoke functions with prototypes that do not
+> match those of the respectively used function pointers by using void types.
+> This feature is frequently used as a way of relaxing function invocation,
+> making it possible that different data structures are passed to different
+> functions through the same pointer.
+>
+> Despite the benefits, this can lead to a situation where functions with a
+> given prototype are invoked by pointers with a different prototype, what is
+> undesirable as it may prevent the use of heuristics such as prototype
+> matching-based Control-Flow Integrity, which can be used to prevent
+> ROP-based attacks.
+>
+> One way of fixing this situation is through the use of helper functions
+> with prototypes that match the one in the respective invoking pointer.
+>
+> Given the above, the current efforts to improve the Linux security, and the
+> upcoming kernel support to compilers with CFI features, fix the prototype
+> casting of x86/crypto algorithms camellia, cast6, serpent and twofish with
+> the use of a macro that generates the helper function.
+>
+> This patch does not introduce semantic changes to the cryptographic
+> algorithms, yet, if someone finds relevant, the affected algorithms were
+> tested with the help of tcrypt.ko without any visible harm.
 
-Ok. I see. msr_set_bit() is a RMW operation.
+Awesome; thanks for working on this! I'm looking through the patches
+now and pondering solutions to the RFC in twofish. I'll send notes in
+a bit...
 
-So is the following the right code to update msr and cache variable?
-
-+static void split_lock_update_msr(void)
-+{
-+   /* Enable split lock detection */
-+   this_cpu_or(msr_test_ctl_cache, TEST_CTL_SPLIT_LOCK_DETECT);
-+   wrmsrl(MSR_TEST_CTL, msr_test_ctl_cache);
-
-Thanks.
-
--Fenghua
+-- 
+Kees Cook
