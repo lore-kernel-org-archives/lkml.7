@@ -2,52 +2,51 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08FFC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33250C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9940B214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF45D20C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154151;
-	bh=Kt6zibHm4bJov755b+lhAMEphIGRS+hCf29jdsAGEx4=;
+	s=default; t=1557154157;
+	bh=YA3JNiVBYcitVvsZftvYLsftHrvJTf3e/D8Iz/Bsv4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zfQanqT+ZZE99Ts0pQPiAcISBIa3vIOuNH6/9LI5dkeXgQq6hRMJCG/veNnsKhVM0
-	 HWOnWLzExa55v+06Rf8H5fb+wi+digQwqvq54hLyfLzrqWJfRi+7GaC4DEM82A3zzv
-	 ue2HzFrbXT2k9ZTTZUBxNiKaovD2hp7l4XerEti8=
+	b=gOdvEXlVakLSYBdWgpd5vbBxzWT/1+Iq7K0r6bPKn5E2qSxgRdqJnZH6xEknTuj45
+	 mEcFD1bJucvJtRXXzoggFtQSGNf3GXnXO+lNu/PvaN8Zcfa9dAfi5qsTekqoZH8QcQ
+	 PcX3J7soY8eI5VweCJHmCLgqEyUgp9u9sUfEFDyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfEFOtK (ORCPT
+        id S1729537AbfEFOtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:49:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49998 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729069AbfEFOtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:49:05 -0400
+        id S1728377AbfEFOtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:49:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 713D621019;
-        Mon,  6 May 2019 14:48:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9139B205ED;
+        Mon,  6 May 2019 14:49:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154138;
-        bh=Kt6zibHm4bJov755b+lhAMEphIGRS+hCf29jdsAGEx4=;
+        s=default; t=1557154152;
+        bh=YA3JNiVBYcitVvsZftvYLsftHrvJTf3e/D8Iz/Bsv4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TWBW2KFinWxRDdsrqcaMzXHPQMz1UtBPScAXhBDHAuDIoirXKztQpjuA/tS4dMHaG
-         nAZDxK2Hfag8+AHPGHcOKaVNeO7jlE8oaVldqReuXrJdGPCSi+8RgPN0kgpz/MBKV5
-         ovNzFYi0ZiSk44aBzeUF/wcTgItWOWHy+gICqA3E=
+        b=Rn3hnmb+b9/GRFwQHMViINRrMfVdMR8fbMfD/O1R9qvyS61mYT1WrtbbVuGlIccAZ
+         /SmWADAkqJsjdIf837C0y87Y15z9Az/OU557aSWWIuCB4FA7T7GW7iatAii7uVa2pt
+         tvHSiNT5JCvmhy/PY8E8raqMeuTq8/qnJpgYZP2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 52/62] ARM: orion: dont use using 64-bit DMA masks
-Date:   Mon,  6 May 2019 16:33:23 +0200
-Message-Id: <20190506143055.830370773@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.9 56/62] staging: iio: adt7316: fix the dac read calculation
+Date:   Mon,  6 May 2019 16:33:27 +0200
+Message-Id: <20190506143056.239253328@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -60,51 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cd92d74d67c811dc22544430b9ac3029f5bd64c5 ]
+From: Jeremy Fertic <jeremyfertic@gmail.com>
 
-clang warns about statically defined DMA masks from the DMA_BIT_MASK
-macro with length 64:
+commit 45130fb030aec26ac28b4bb23344901df3ec3b7f upstream.
 
-arch/arm/plat-orion/common.c:625:29: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-                .coherent_dma_mask      = DMA_BIT_MASK(64),
-                                          ^~~~~~~~~~~~~~~~
-include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
- #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+The calculation of the current dac value is using the wrong bits of the
+dac lsb register. Create two macros to shift the lsb register value into
+lsb position, depending on whether the dac is 10 or 12 bit. Initialize
+data to 0 so, with an 8 bit dac, the msb register value can be bitwise
+ORed with data.
 
-The ones in orion shouldn't really be 64 bit masks, so changing them
-to what the driver can support avoids the warning.
+Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
+Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-orion/common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/iio/addac/adt7316.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
-index 272f49b2c68f..bb29e6ebdc0d 100644
---- a/arch/arm/plat-orion/common.c
-+++ b/arch/arm/plat-orion/common.c
-@@ -605,7 +605,7 @@ static struct platform_device orion_xor0_shared = {
- 	.resource	= orion_xor0_shared_resources,
- 	.dev            = {
- 		.dma_mask               = &orion_xor_dmamask,
--		.coherent_dma_mask      = DMA_BIT_MASK(64),
-+		.coherent_dma_mask      = DMA_BIT_MASK(32),
- 		.platform_data          = &orion_xor0_pdata,
- 	},
- };
-@@ -666,7 +666,7 @@ static struct platform_device orion_xor1_shared = {
- 	.resource	= orion_xor1_shared_resources,
- 	.dev            = {
- 		.dma_mask               = &orion_xor_dmamask,
--		.coherent_dma_mask      = DMA_BIT_MASK(64),
-+		.coherent_dma_mask      = DMA_BIT_MASK(32),
- 		.platform_data          = &orion_xor1_pdata,
- 	},
- };
--- 
-2.20.1
-
+--- a/drivers/staging/iio/addac/adt7316.c
++++ b/drivers/staging/iio/addac/adt7316.c
+@@ -47,6 +47,8 @@
+ #define ADT7516_MSB_AIN3		0xA
+ #define ADT7516_MSB_AIN4		0xB
+ #define ADT7316_DA_DATA_BASE		0x10
++#define ADT7316_DA_10_BIT_LSB_SHIFT	6
++#define ADT7316_DA_12_BIT_LSB_SHIFT	4
+ #define ADT7316_DA_MSB_DATA_REGS	4
+ #define ADT7316_LSB_DAC_A		0x10
+ #define ADT7316_MSB_DAC_A		0x11
+@@ -1411,7 +1413,7 @@ static IIO_DEVICE_ATTR(ex_analog_temp_of
+ static ssize_t adt7316_show_DAC(struct adt7316_chip_info *chip,
+ 		int channel, char *buf)
+ {
+-	u16 data;
++	u16 data = 0;
+ 	u8 msb, lsb, offset;
+ 	int ret;
+ 
+@@ -1436,7 +1438,11 @@ static ssize_t adt7316_show_DAC(struct a
+ 	if (ret)
+ 		return -EIO;
+ 
+-	data = (msb << offset) + (lsb & ((1 << offset) - 1));
++	if (chip->dac_bits == 12)
++		data = lsb >> ADT7316_DA_12_BIT_LSB_SHIFT;
++	else if (chip->dac_bits == 10)
++		data = lsb >> ADT7316_DA_10_BIT_LSB_SHIFT;
++	data |= msb << offset;
+ 
+ 	return sprintf(buf, "%d\n", data);
+ }
 
 
