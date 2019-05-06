@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5F8C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9773C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956BF208C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F3B208C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfEFCub (ORCPT
+        id S1726464AbfEFCuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 22:50:31 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58428 "EHLO huawei.com"
+        Sun, 5 May 2019 22:50:23 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7161 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726477AbfEFCu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 22:50:26 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A3BEC207D4745634FBC4;
-        Mon,  6 May 2019 10:50:23 +0800 (CST)
+        id S1726147AbfEFCuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 22:50:20 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 96D972F8CED492A96385;
+        Mon,  6 May 2019 10:50:18 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 6 May 2019 10:50:13 +0800
+ 14.3.439.0; Mon, 6 May 2019 10:50:11 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,9 +32,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <nhorman@redhat.com>,
         Yunsheng Lin <linyunsheng@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 11/12] net: hns3: some cleanup for struct hns3_enet_ring
-Date:   Mon, 6 May 2019 10:48:51 +0800
-Message-ID: <1557110932-683-12-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 04/12] net: hns3: add linearizing checking for TSO case
+Date:   Mon, 6 May 2019 10:48:44 +0800
+Message-ID: <1557110932-683-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1557110932-683-1-git-send-email-tanhuazhong@huawei.com>
 References: <1557110932-683-1-git-send-email-tanhuazhong@huawei.com>
@@ -49,71 +49,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yunsheng Lin <linyunsheng@huawei.com>
 
-This patch removes some unused field in struct hns3_enet_ring,
-use ring->dev for ring_to_dev macro, and use dev consistently
-in hns3_fill_desc.
+HW requires every continuous 8 buffer data to be larger than MSS,
+we simplify it by ensuring skb_headlen + the first continuous
+7 frags to to be larger than GSO header len + mss, and the
+remaining continuous 7 frags to be larger than MSS except the
+last 7 frags.
+
+This patch adds hns3_skb_need_linearized to handle it for TSO
+case.
 
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h | 9 +--------
- 2 files changed, 2 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 45 +++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index b6e73fe..65fb421 100644
+index 453fdf4..944e0ae 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1051,7 +1051,7 @@ static int hns3_fill_desc(struct hns3_enet_ring *ring, void *priv,
- 		dma = skb_frag_dma_map(dev, frag, 0, size, DMA_TO_DEVICE);
+@@ -1181,6 +1181,47 @@ static int hns3_nic_bd_num(struct sk_buff *skb)
+ 	return bd_num;
+ }
+ 
++static unsigned int hns3_gso_hdr_len(struct sk_buff *skb)
++{
++	if (!skb->encapsulation)
++		return skb_transport_offset(skb) + tcp_hdrlen(skb);
++
++	return skb_inner_transport_offset(skb) + inner_tcp_hdrlen(skb);
++}
++
++/* HW need every continuous 8 buffer data to be larger than MSS,
++ * we simplify it by ensuring skb_headlen + the first continuous
++ * 7 frags to to be larger than gso header len + mss, and the remaining
++ * continuous 7 frags to be larger than MSS except the last 7 frags.
++ */
++static bool hns3_skb_need_linearized(struct sk_buff *skb)
++{
++	int bd_limit = HNS3_MAX_BD_PER_FRAG - 1;
++	unsigned int tot_len = 0;
++	int i;
++
++	for (i = 0; i < bd_limit; i++)
++		tot_len += skb_frag_size(&skb_shinfo(skb)->frags[i]);
++
++	/* ensure headlen + the first 7 frags is greater than mss + header
++	 * and the first 7 frags is greater than mss.
++	 */
++	if (((tot_len + skb_headlen(skb)) < (skb_shinfo(skb)->gso_size +
++	    hns3_gso_hdr_len(skb))) || (tot_len < skb_shinfo(skb)->gso_size))
++		return true;
++
++	/* ensure the remaining continuous 7 buffer is greater than mss */
++	for (i = 0; i < (skb_shinfo(skb)->nr_frags - bd_limit - 1); i++) {
++		tot_len -= skb_frag_size(&skb_shinfo(skb)->frags[i]);
++		tot_len += skb_frag_size(&skb_shinfo(skb)->frags[i + bd_limit]);
++
++		if (tot_len < skb_shinfo(skb)->gso_size)
++			return true;
++	}
++
++	return false;
++}
++
+ static int hns3_nic_maybe_stop_tx(struct hns3_enet_ring *ring,
+ 				  struct sk_buff **out_skb)
+ {
+@@ -1194,6 +1235,9 @@ static int hns3_nic_maybe_stop_tx(struct hns3_enet_ring *ring,
+ 	if (unlikely(bd_num > HNS3_MAX_BD_PER_FRAG)) {
+ 		struct sk_buff *new_skb;
+ 
++		if (skb_is_gso(skb) && !hns3_skb_need_linearized(skb))
++			goto out;
++
+ 		bd_num = hns3_tx_bd_count(skb->len);
+ 		if (unlikely(ring_space(ring) < bd_num))
+ 			return -EBUSY;
+@@ -1209,6 +1253,7 @@ static int hns3_nic_maybe_stop_tx(struct hns3_enet_ring *ring,
+ 		u64_stats_update_end(&ring->syncp);
  	}
  
--	if (unlikely(dma_mapping_error(ring->dev, dma))) {
-+	if (unlikely(dma_mapping_error(dev, dma))) {
- 		ring->stats.sw_err_cnt++;
- 		return -ENOMEM;
- 	}
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index 9680a68..c14480f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -401,7 +401,6 @@ struct hns3_enet_ring {
- 	struct hns3_enet_ring *next;
- 	struct hns3_enet_tqp_vector *tqp_vector;
- 	struct hnae3_queue *tqp;
--	char ring_name[HNS3_RING_NAME_LEN];
- 	struct device *dev; /* will be used for DMA mapping of descriptors */
++out:
+ 	if (unlikely(ring_space(ring) < bd_num))
+ 		return -EBUSY;
  
- 	/* statistic */
-@@ -411,9 +410,6 @@ struct hns3_enet_ring {
- 	dma_addr_t desc_dma_addr;
- 	u32 buf_size;       /* size for hnae_desc->addr, preset by AE */
- 	u16 desc_num;       /* total number of desc */
--	u16 max_desc_num_per_pkt;
--	u16 max_raw_data_sz_per_desc;
--	u16 max_pkt_size;
- 	int next_to_use;    /* idx of next spare desc */
- 
- 	/* idx of lastest sent desc, the ring is empty when equal to
-@@ -427,9 +423,6 @@ struct hns3_enet_ring {
- 
- 	u32 flag;          /* ring attribute */
- 
--	int numa_node;
--	cpumask_t affinity_mask;
--
- 	int pending_buf;
- 	struct sk_buff *skb;
- 	struct sk_buff *tail_skb;
-@@ -629,7 +622,7 @@ static inline bool hns3_nic_resetting(struct net_device *netdev)
- #define hnae3_queue_xmit(tqp, buf_num) writel_relaxed(buf_num, \
- 		(tqp)->io_base + HNS3_RING_TX_RING_TAIL_REG)
- 
--#define ring_to_dev(ring) (&(ring)->tqp->handle->pdev->dev)
-+#define ring_to_dev(ring) ((ring)->dev)
- 
- #define ring_to_dma_dir(ring) (HNAE3_IS_TX_RING(ring) ? \
- 	DMA_TO_DEVICE : DMA_FROM_DEVICE)
 -- 
 2.7.4
 
