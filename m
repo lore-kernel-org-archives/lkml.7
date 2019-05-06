@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33482C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C6BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A842054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D662054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155346;
-	bh=vDVKbKUUdwYRAUpcP5cBGCVWRh/XYy6oRPf0vncYxBQ=;
+	s=default; t=1557155352;
+	bh=fswLb29KFSWxhWuB7kR8SScaaOcEFb4ErFrPM2jSrw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YXuzgCDw/spO123maoVWDB2EVRfFJ0ZFpkFLJ88s9HPQNZw8RsfUU8LQdDkwPxMSX
-	 auxLNkv4h+f/x5GyUONpghp5qrsvZsDxXSolOFAn9fyLkaafMzx+Cx0otNqQVmXKfb
-	 xRF4GCg+uS/8Ed01vf4PYGgQNpXO46wQaXPTdevQ=
+	b=V1hvpYK+s6HjnY0x6Cc1/Zu+UyNA6gM5ENONl9VAe3q13CEHRT9cE381J73kWjrMj
+	 ra97J1/MCsO6uy7sIz1OGEtVzRXRhm3h9b+R4BIv4HVFwVAWYgX3Qf1p07BbB+e/gj
+	 Npfg4vCRHe8Po6QyU8T/8edYDxf8VLmRm8El4dNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfEFOfy (ORCPT
+        id S1727005AbfEFOfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:35:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55990 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:35:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727000AbfEFOfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:35:47 -0400
+        id S1726460AbfEFOfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:35:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12891204EC;
-        Mon,  6 May 2019 14:35:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EAC020C01;
+        Mon,  6 May 2019 14:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153347;
-        bh=vDVKbKUUdwYRAUpcP5cBGCVWRh/XYy6oRPf0vncYxBQ=;
+        s=default; t=1557153344;
+        bh=fswLb29KFSWxhWuB7kR8SScaaOcEFb4ErFrPM2jSrw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L4agL4tm1XKB8OXJZBdErKzGBPgtVNuRCLpaM0vL+LsvKmr2hzvQl3DSwLfPPpFjf
-         6gUYOiWX+T2GspXsAWaEq8WPY8Ntm2jId4mDDFWcz9TakAWQ1IbF8DEfxOgxHOeeDk
-         uhQcJBGLmvEAyqWlqNm4S2DVVXrhtNZ4sBTdswnA=
+        b=t2CdfFK5UDttxSrm7ro3JGe+RdTZ7FsyS7RXPs1RHreu+G4PJVFOMjBZJuhKrNRoH
+         IMKTJShqK7vRO+gjkIca0FW1oTyTMzyqV4Y+tk5+dJeP2Sem5TtgwTXr7F4dGqEL/6
+         vpvJ/JYkvintNPpk9TZWvZledO7uZY6RGHenVceU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
         "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 055/122] net: stmmac: dont log oversized frames
-Date:   Mon,  6 May 2019 16:31:53 +0200
-Message-Id: <20190506143059.898911910@linuxfoundation.org>
+Subject: [PATCH 5.0 054/122] net: stmmac: fix dropping of multi-descriptor RX frames
+Date:   Mon,  6 May 2019 16:31:52 +0200
+Message-Id: <20190506143059.782324555@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,31 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 057a0c5642a2ff2db7c421cdcde34294a23bf37b ]
+[ Upstream commit 8ac0c24fe1c256af6644caf3d311029440ec2fbd ]
 
-This is log is harmful as it can trigger multiple times per packet. Delete
-it.
+Packets without the last descriptor set should be dropped early. If we
+receive a frame larger than the DMA buffer, the HW will continue using the
+next descriptor. Driver mistakes these as individual frames, and sometimes
+a truncated frame (without the LD set) may look like a valid packet.
+
+This fixes a strange issue where the system replies to 4098-byte ping
+although the MTU/DMA buffer size is set to 4096, and yet at the same
+time it's logging an oversized packet.
 
 Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/norm_desc.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/enh_desc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-index c55a9815b394..b7dd4e3c760d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-@@ -91,8 +91,6 @@ static int ndesc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+index c42ef6c729c0..5202d6ad7919 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+@@ -201,6 +201,11 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ 	if (unlikely(rdes0 & RDES0_OWN))
  		return dma_own;
  
- 	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
--		pr_warn("%s: Oversized frame spanned multiple buffers\n",
--			__func__);
- 		stats->rx_length_errors++;
- 		return discard_frame;
- 	}
++	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
++		stats->rx_length_errors++;
++		return discard_frame;
++	}
++
+ 	if (unlikely(rdes0 & RDES0_ERROR_SUMMARY)) {
+ 		if (unlikely(rdes0 & RDES0_DESCRIPTOR_ERROR)) {
+ 			x->rx_desc++;
 -- 
 2.20.1
 
