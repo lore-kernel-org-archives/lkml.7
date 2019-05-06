@@ -2,166 +2,220 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F8CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA83C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEAC9206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iyy8Cwb4"
+	by mail.kernel.org (Postfix) with ESMTP id 6962320830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfEFXud (ORCPT
+        id S1726568AbfEFXxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 19:50:33 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44787 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfEFXuc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 19:50:32 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z16so7248725pgv.11;
-        Mon, 06 May 2019 16:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=e1BH/13SfZ3XaTKw+rGmuIvZM7E0chy4OEUBJjQkVh8=;
-        b=iyy8Cwb4tUyXOPBZZ7vKSInyJ69btlQW1E4XeTw5U1q2Ce9HLHYwmDAplXSYp225HK
-         029WfgJX6vRfVdONCUTcveff+4IoZGtol/wThCLXWa1p3cP3TLiLR9SZIldzRJ1Wtsgj
-         EYAgJfU7YSrqw9RMRmdJv0sINk9g+kOhi5MNBYtI5i4447BoxTpGHd20kXy70J9Cvsz8
-         wEzOFSv23qFy+BmWyChYmoN1PosP0Vt97V8LKygscl7XL7enmsE7MpxNtoLqzNSwIp2L
-         mk1rtfRAeTAONgnvQiVN20hwRlm4QAGeKjVYJu4lGTavcEP0IKRB4ookcM7m2dHrguZ8
-         noSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=e1BH/13SfZ3XaTKw+rGmuIvZM7E0chy4OEUBJjQkVh8=;
-        b=LxkdV5IPsHZ5GcHaQ+3htVxTg9CbOHRXWEiB+3w3DHefbiY5Rp6dfEmlsqrp/RdyZN
-         sqbkKDjukcYOOZrWenrLtfoJ/UcseoPmS0v6V7crhop0C6ULTscaJH28ilyo0CHtYZn/
-         xCEl+XOXrOnTkECnjXOsim0Uc9bLToYhL9z681mC2QDO5Nvn8+GwNh8ytWXdDbNCuxjr
-         eknCcPIl8F0ym62D5xcmD7ZhDELpkYfCJmOWmHEEAQIuodQBnhO3AsjVGYQ3GFHg42Vt
-         GNy1eXuKOlp+7wShCJ+F7w4EXDN4AhJ26lmqS4Cajuq5ggXKbypugCBXLZU0T6mo2Zcj
-         e3Yg==
-X-Gm-Message-State: APjAAAWmpM7LS7WE/1o1jmDZyQx28kMzFe80uR/t54aJYP4Qt+wcw9TK
-        K95my20vyRI7QEHDpS4BTEg=
-X-Google-Smtp-Source: APXvYqzS7UG3lbx7Dlz4TGjj9fWBy1CPaNYzoREyX0fqJR3dCZKaqUGdJz3+MMWnhVaIyXpczhl47A==
-X-Received: by 2002:aa7:8243:: with SMTP id e3mr4766738pfn.213.1557186631397;
-        Mon, 06 May 2019 16:50:31 -0700 (PDT)
-Received: from localhost ([203.63.161.72])
-        by smtp.gmail.com with ESMTPSA id e8sm20817127pfc.47.2019.05.06.16.50.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 16:50:30 -0700 (PDT)
-Date:   Tue, 07 May 2019 09:50:24 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [tip:sched/core] sched/isolation: Require a present CPU in
- housekeeping mask
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     fweisbec@gmail.com, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        linux-tip-commits@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, rafael.j.wysocki@intel.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org
-References: <20190411033448.20842-5-npiggin@gmail.com>
-        <tip-9219565aa89033a9cfdae788c1940473a1253d6c@git.kernel.org>
-        <20190504002733.GB19076@lenoir> <1556952021.2xpa7joi2y.astroid@bobo.none>
-        <20190506151615.GA14529@lenoir>
-In-Reply-To: <20190506151615.GA14529@lenoir>
+        Mon, 6 May 2019 19:53:14 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15870 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbfEFXxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 19:53:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 16:53:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,439,1549958400"; 
+   d="scan'208";a="140720507"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga008.jf.intel.com with ESMTP; 06 May 2019 16:53:13 -0700
+Subject: [PATCH v8 00/12] mm: Sub-section memory hotplug support
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     akpm@linux-foundation.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Jane Chu <jane.chu@oracle.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>, stable@vger.kernel.org,
+        =?utf-8?b?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, osalvador@suse.de, mhocko@suse.com
+Date:   Mon, 06 May 2019 16:39:26 -0700
+Message-ID: <155718596657.130019.17139634728875079809.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1557186148.ocs72ssdjc.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Frederic Weisbecker's on May 7, 2019 1:16 am:
-> On Sat, May 04, 2019 at 04:59:12PM +1000, Nicholas Piggin wrote:
->> Frederic Weisbecker's on May 4, 2019 10:27 am:
->> > On Fri, May 03, 2019 at 10:47:37AM -0700, tip-bot for Nicholas Piggin =
-wrote:
->> >> Commit-ID:  9219565aa89033a9cfdae788c1940473a1253d6c
->> >> Gitweb:     https://git.kernel.org/tip/9219565aa89033a9cfdae788c19404=
-73a1253d6c
->> >> Author:     Nicholas Piggin <npiggin@gmail.com>
->> >> AuthorDate: Thu, 11 Apr 2019 13:34:47 +1000
->> >> Committer:  Ingo Molnar <mingo@kernel.org>
->> >> CommitDate: Fri, 3 May 2019 19:42:58 +0200
->> >>=20
->> >> sched/isolation: Require a present CPU in housekeeping mask
->> >>=20
->> >> During housekeeping mask setup, currently a possible CPU is required.
->> >> That does not guarantee the CPU would be available at boot time, so
->> >> check to ensure that at least one present CPU is in the mask.
->> >=20
->> > I have a doubt about the requirements and semantics of cpu_present_mas=
-k.
->> > IIUC a present CPU means that it is physically plugged in (from ACPI
->> > perspective) but might not be logically plugged in (set on cpu_online_=
-mask).
->>=20
->> Right, a superset of cpu_possible_mask, subset of cpu_online_mask. It=20
->> means that CPU can be brought online at any time.
->>=20
->> > But do we have the guarantee that a present CPU _will_ be online at le=
-ast once
->> > right after the boot? After all, kernel parameters such as "maxcpus=3D=
-" can prevent
->> > from turning some CPUs on. I guess there are even more creative ways t=
-o achieve
->> > that.
->> >=20
->> > In any case we really require the housekeeper to be forced online. Per=
-haps
->> > I missed that enforcement somewhere in the patchset?
->>=20
->> No I think you're right, that may be able to boot without anything in
->> the housekeeping mask. Maybe we can just cpu_up() a CPU in the=20
->> housekeeping mask with a warning that it has overidden their SMP
->> command line option. I'll take a look at it.
->=20
-> But then what if cpu_up() fails? In this case I can think of only two
-> answers:
->=20
-> * Force the boot CPU as the housekeeper.
-> * Rollback the whole thing: nohz and all isolation.
+Changes since v7 [1]:
 
-If cpu_up fails despite being in the present map and we explicitly
-selected it as the housekeeper? I think it would be okay to print
-a message telling admin to correct the config, and panic.
+- Make subsection helpers pfn based rather than physical-address based
+  (Oscar and Pavel)
 
-We try a best effort to make the system boot and limp along, but if
-you misconfigure it, crashing is not unreasonable. There's lots of
-command line option misconfiguration that will cause the same thing.
+- Make subsection bitmap definition scalable for different section and
+  sub-section sizes across architectures. As a result:
 
-The primary problem with my patch that needs to be addressed is that
-the error is not explicitly caught and printed if the housekeeper
-does not come up, so the system might die in non-obvious ways.
+      unsigned long map_active
 
->=20
-> The second solution looks sane to me. After all if the user doesn't
-> include CPU 0 in the housekeeping set, forcing it isn't going to
-> help much.
->=20
-> But that means we must enhance the isolation code (nohz included)
-> to be able to dynamically add/del CPUs to the houseeeping/isolation
-> set. That's not going to be easy but it's a necessary evolution
-> of that subsystem since we want to drive it through cpusets.
->=20
-> I should start working on that.
+  ...is converted to:
 
-I considered that when looking at the series, but couldn't justify
-the complexity based on my usage (which is static boot time).
+      DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION)
 
-If you have other uses for it, then that would solve all these boot
-time issues as well, which will be nice.
+  ...and the helpers are renamed with a 'subsection' prefix. (Pavel)
 
-Thanks,
-Nick
+- New in this version is a touch of arch/powerpc/include/asm/sparsemem.h
+  in "[PATCH v8 01/12] mm/sparsemem: Introduce struct mem_section_usage"
+  to define ARCH_SUBSECTION_SHIFT.
 
-=
+- Drop "mm/sparsemem: Introduce common definitions for the size and mask
+  of a section" in favor of Robin's "mm/memremap: Rename and consolidate
+  SECTION_SIZE" (Pavel)
+
+- Collect some more Reviewed-by tags. Patches that still lack review
+  tags: 1, 3, 9 - 12
+
+[1]: https://lore.kernel.org/lkml/155677652226.2336373.8700273400832001094.stgit@dwillia2-desk3.amr.corp.intel.com/
+
+---
+[merge logistics]
+
+Hi Andrew,
+
+These are too late for v5.2, I'm posting this v8 during the merge window
+to maintain the review momentum. 
+
+---
+[cover letter]
+
+The memory hotplug section is an arbitrary / convenient unit for memory
+hotplug. 'Section-size' units have bled into the user interface
+('memblock' sysfs) and can not be changed without breaking existing
+userspace. The section-size constraint, while mostly benign for typical
+memory hotplug, has and continues to wreak havoc with 'device-memory'
+use cases, persistent memory (pmem) in particular. Recall that pmem uses
+devm_memremap_pages(), and subsequently arch_add_memory(), to allocate a
+'struct page' memmap for pmem. However, it does not use the 'bottom
+half' of memory hotplug, i.e. never marks pmem pages online and never
+exposes the userspace memblock interface for pmem. This leaves an
+opening to redress the section-size constraint.
+
+To date, the libnvdimm subsystem has attempted to inject padding to
+satisfy the internal constraints of arch_add_memory(). Beyond
+complicating the code, leading to bugs [2], wasting memory, and limiting
+configuration flexibility, the padding hack is broken when the platform
+changes this physical memory alignment of pmem from one boot to the
+next. Device failure (intermittent or permanent) and physical
+reconfiguration are events that can cause the platform firmware to
+change the physical placement of pmem on a subsequent boot, and device
+failure is an everyday event in a data-center.
+
+It turns out that sections are only a hard requirement of the
+user-facing interface for memory hotplug and with a bit more
+infrastructure sub-section arch_add_memory() support can be added for
+kernel internal usages like devm_memremap_pages(). Here is an analysis
+of the current design assumptions in the current code and how they are
+addressed in the new implementation:
+
+Current design assumptions:
+
+- Sections that describe boot memory (early sections) are never
+  unplugged / removed.
+
+- pfn_valid(), in the CONFIG_SPARSEMEM_VMEMMAP=y, case devolves to a
+  valid_section() check
+
+- __add_pages() and helper routines assume all operations occur in
+  PAGES_PER_SECTION units.
+
+- The memblock sysfs interface only comprehends full sections
+
+New design assumptions:
+
+- Sections are instrumented with a sub-section bitmask to track (on x86)
+  individual 2MB sub-divisions of a 128MB section.
+
+- Partially populated early sections can be extended with additional
+  sub-sections, and those sub-sections can be removed with
+  arch_remove_memory(). With this in place we no longer lose usable memory
+  capacity to padding.
+
+- pfn_valid() is updated to look deeper than valid_section() to also check the
+  active-sub-section mask. This indication is in the same cacheline as
+  the valid_section() so the performance impact is expected to be
+  negligible. So far the lkp robot has not reported any regressions.
+
+- Outside of the core vmemmap population routines which are replaced,
+  other helper routines like shrink_{zone,pgdat}_span() are updated to
+  handle the smaller granularity. Core memory hotplug routines that deal
+  with online memory are not touched.
+
+- The existing memblock sysfs user api guarantees / assumptions are
+  not touched since this capability is limited to !online
+  !memblock-sysfs-accessible sections.
+
+Meanwhile the issue reports continue to roll in from users that do not
+understand when and how the 128MB constraint will bite them. The current
+implementation relied on being able to support at least one misaligned
+namespace, but that immediately falls over on any moderately complex
+namespace creation attempt. Beyond the initial problem of 'System RAM'
+colliding with pmem, and the unsolvable problem of physical alignment
+changes, Linux is now being exposed to platforms that collide pmem
+ranges with other pmem ranges by default [3]. In short,
+devm_memremap_pages() has pushed the venerable section-size constraint
+past the breaking point, and the simplicity of section-aligned
+arch_add_memory() is no longer tenable.
+
+These patches are exposed to the kbuild robot on my libnvdimm-pending
+branch [4], and a preview of the unit test for this functionality is
+available on the 'subsection-pending' branch of ndctl [5].
+
+[2]: https://lore.kernel.org/r/155000671719.348031.2347363160141119237.stgit@dwillia2-desk3.amr.corp.intel.com
+[3]: https://github.com/pmem/ndctl/issues/76
+[4]: https://git.kernel.org/pub/scm/linux/kernel/git/djbw/nvdimm.git/log/?h=libnvdimm-pending
+[5]: https://github.com/pmem/ndctl/commit/7c59b4867e1c
+
+---
+
+Dan Williams (11):
+      mm/sparsemem: Introduce struct mem_section_usage
+      mm/sparsemem: Add helpers track active portions of a section at boot
+      mm/hotplug: Prepare shrink_{zone,pgdat}_span for sub-section removal
+      mm/sparsemem: Convert kmalloc_section_memmap() to populate_section_memmap()
+      mm/hotplug: Kill is_dev_zone() usage in __remove_pages()
+      mm: Kill is_dev_zone() helper
+      mm/sparsemem: Prepare for sub-section ranges
+      mm/sparsemem: Support sub-section hotplug
+      mm/devm_memremap_pages: Enable sub-section remap
+      libnvdimm/pfn: Fix fsdax-mode namespace info-block zero-fields
+      libnvdimm/pfn: Stop padding pmem namespaces to section alignment
+
+Robin Murphy (1):
+      mm/memremap: Rename and consolidate SECTION_SIZE
+
+
+ arch/powerpc/include/asm/sparsemem.h |    3 
+ arch/x86/mm/init_64.c                |    4 
+ drivers/nvdimm/dax_devs.c            |    2 
+ drivers/nvdimm/pfn.h                 |   15 -
+ drivers/nvdimm/pfn_devs.c            |   95 +++------
+ include/linux/memory_hotplug.h       |    7 -
+ include/linux/mm.h                   |    4 
+ include/linux/mmzone.h               |   93 +++++++--
+ kernel/memremap.c                    |   63 ++----
+ mm/hmm.c                             |    2 
+ mm/memory_hotplug.c                  |  172 +++++++++-------
+ mm/page_alloc.c                      |    8 -
+ mm/sparse-vmemmap.c                  |   21 +-
+ mm/sparse.c                          |  369 +++++++++++++++++++++++-----------
+ 14 files changed, 511 insertions(+), 347 deletions(-)
