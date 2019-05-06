@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54212C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DACC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2646421530
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E2221530
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153613;
-	bh=Afgh+Sq4msLI6Zaus7cWnd3enu133AWvkvtE359K/r8=;
+	s=default; t=1557153617;
+	bh=8tddgKOnYoE36R0ibw+wZnmj0Pd2qXUm9TRN8yTC4Ho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMGSgwhGHSdX+4gYfTaeBoP9M4kM5bGowATZkDg9RnLEIl372wu8dETZtGDfEPJQx
-	 ExuiZ3N8IsOQDMWNiW6kBsscqve7j9Xf+3U9X6skiCLSkwHRZewJqxV7jYSvSxNiuO
-	 4mtCzB8rjqRCCLcAkrYrhZn70ZLyA8sFJhhKTXKw=
+	b=qxzrcCUjapKq2gJF6LM1pEKSAO8T/Q1o3j560jRj523P1wwzaonORDxV0i4d8ix2J
+	 Q2JtNy9zg3LROZRovclN4Aujf+A4j05DYY3zXdozVzLM+kFSXN0Ad2hL9VUqF+4SBI
+	 ugKgNtc1fXhqzA2bynqKh5k7lbDFhos3Ebg6to64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbfEFOkM (ORCPT
+        id S1727999AbfEFOkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:40:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33340 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:40:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727960AbfEFOkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:40:08 -0400
+        id S1727980AbfEFOkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:40:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83D7F206A3;
-        Mon,  6 May 2019 14:40:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7875214AE;
+        Mon,  6 May 2019 14:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153608;
-        bh=Afgh+Sq4msLI6Zaus7cWnd3enu133AWvkvtE359K/r8=;
+        s=default; t=1557153613;
+        bh=8tddgKOnYoE36R0ibw+wZnmj0Pd2qXUm9TRN8yTC4Ho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VTMwTkponJe0s9yJRsSgftimH6NHX1O3KCZeL293FWaLJIosau7dEwE9Zya9S9dqF
-         TcYtbgFV5nesJKB0UcBwly7Yz5JnvWv+H/T2Hk5MIr0MXQFL9KF7g5vKl5nAxv0Of5
-         zuIB0gXVBPnMZLE0gHsl1yL+i2+Fgwl8eqR7WB7M=
+        b=Wkf8s0hjXTNgFfOhkslXI1r4bzdNERfT5lQKWpJuoEAqyRNNn76D7wPW+fYclIBuu
+         UC+vJ4QAf849TI2Nh0ICGpOkfkib7poH4F4GRtlD8ybmPq9/imH8xlYIuv6UndRncL
+         eYOG/MTcsWCyzm2R3ZA/+GQByP24sFux0bXbO+Pw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Arvind Sankar <niveditas98@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/99] ARM: dts: rockchip: Fix gpu opp node names for rk3288
-Date:   Mon,  6 May 2019 16:32:03 +0200
-Message-Id: <20190506143056.687902514@linuxfoundation.org>
+Subject: [PATCH 4.19 32/99] igb: Fix WARN_ONCE on runtime suspend
+Date:   Mon,  6 May 2019 16:32:05 +0200
+Message-Id: <20190506143056.863225153@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,61 +62,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d040e4e8deeaa8257d6aa260e29ad69832b5d630 ]
+[ Upstream commit dabb8338be533c18f50255cf39ff4f66d4dabdbe ]
 
-The device tree compiler yells like this:
-  Warning (unit_address_vs_reg):
-  /gpu-opp-table/opp@100000000:
-  node has a unit name, but no reg property
+The runtime_suspend device callbacks are not supposed to save
+configuration state or change the power state. Commit fb29f76cc566
+("igb: Fix an issue that PME is not enabled during runtime suspend")
+changed the driver to not save configuration state during runtime
+suspend, however the driver callback still put the device into a
+low-power state. This causes a warning in the pci pm core and results in
+pci_pm_runtime_suspend not calling pci_save_state or pci_finish_runtime_suspend.
 
-Let's match the cpu opp node names and use a dash.
+Fix this by not changing the power state either, leaving that to pci pm
+core, and make the same change for suspend callback as well.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Also move a couple of defines into the appropriate header file instead
+of inline in the .c file.
+
+Fixes: fb29f76cc566 ("igb: Fix an issue that PME is not enabled during runtime suspend")
+Signed-off-by: Arvind Sankar <niveditas98@gmail.com>
+Reviewed-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ .../net/ethernet/intel/igb/e1000_defines.h    |  2 +
+ drivers/net/ethernet/intel/igb/igb_main.c     | 57 +++----------------
+ 2 files changed, 10 insertions(+), 49 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index e6a36a792bae..c706adf4aed2 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -1261,27 +1261,27 @@
- 	gpu_opp_table: gpu-opp-table {
- 		compatible = "operating-points-v2";
+diff --git a/drivers/net/ethernet/intel/igb/e1000_defines.h b/drivers/net/ethernet/intel/igb/e1000_defines.h
+index 8a28f3388f69..dca671591ef6 100644
+--- a/drivers/net/ethernet/intel/igb/e1000_defines.h
++++ b/drivers/net/ethernet/intel/igb/e1000_defines.h
+@@ -194,6 +194,8 @@
+ /* enable link status from external LINK_0 and LINK_1 pins */
+ #define E1000_CTRL_SWDPIN0  0x00040000  /* SWDPIN 0 value */
+ #define E1000_CTRL_SWDPIN1  0x00080000  /* SWDPIN 1 value */
++#define E1000_CTRL_ADVD3WUC 0x00100000  /* D3 WUC */
++#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000 /* PHY PM enable */
+ #define E1000_CTRL_SDP0_DIR 0x00400000  /* SDP0 Data direction */
+ #define E1000_CTRL_SDP1_DIR 0x00800000  /* SDP1 Data direction */
+ #define E1000_CTRL_RST      0x04000000  /* Global reset */
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index ffaa6e031632..aa39a068858e 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -8754,9 +8754,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 	struct e1000_hw *hw = &adapter->hw;
+ 	u32 ctrl, rctl, status;
+ 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
+-#ifdef CONFIG_PM
+-	int retval = 0;
+-#endif
++	bool wake;
  
--		opp@100000000 {
-+		opp-100000000 {
- 			opp-hz = /bits/ 64 <100000000>;
- 			opp-microvolt = <950000>;
- 		};
--		opp@200000000 {
-+		opp-200000000 {
- 			opp-hz = /bits/ 64 <200000000>;
- 			opp-microvolt = <950000>;
- 		};
--		opp@300000000 {
-+		opp-300000000 {
- 			opp-hz = /bits/ 64 <300000000>;
- 			opp-microvolt = <1000000>;
- 		};
--		opp@400000000 {
-+		opp-400000000 {
- 			opp-hz = /bits/ 64 <400000000>;
- 			opp-microvolt = <1100000>;
- 		};
--		opp@500000000 {
-+		opp-500000000 {
- 			opp-hz = /bits/ 64 <500000000>;
- 			opp-microvolt = <1200000>;
- 		};
--		opp@600000000 {
-+		opp-600000000 {
- 			opp-hz = /bits/ 64 <600000000>;
- 			opp-microvolt = <1250000>;
- 		};
+ 	rtnl_lock();
+ 	netif_device_detach(netdev);
+@@ -8769,14 +8767,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 	igb_clear_interrupt_scheme(adapter);
+ 	rtnl_unlock();
+ 
+-#ifdef CONFIG_PM
+-	if (!runtime) {
+-		retval = pci_save_state(pdev);
+-		if (retval)
+-			return retval;
+-	}
+-#endif
+-
+ 	status = rd32(E1000_STATUS);
+ 	if (status & E1000_STATUS_LU)
+ 		wufc &= ~E1000_WUFC_LNKC;
+@@ -8793,10 +8783,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 		}
+ 
+ 		ctrl = rd32(E1000_CTRL);
+-		/* advertise wake from D3Cold */
+-		#define E1000_CTRL_ADVD3WUC 0x00100000
+-		/* phy power management enable */
+-		#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000
+ 		ctrl |= E1000_CTRL_ADVD3WUC;
+ 		wr32(E1000_CTRL, ctrl);
+ 
+@@ -8810,12 +8796,15 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 		wr32(E1000_WUFC, 0);
+ 	}
+ 
+-	*enable_wake = wufc || adapter->en_mng_pt;
+-	if (!*enable_wake)
++	wake = wufc || adapter->en_mng_pt;
++	if (!wake)
+ 		igb_power_down_link(adapter);
+ 	else
+ 		igb_power_up_link(adapter);
+ 
++	if (enable_wake)
++		*enable_wake = wake;
++
+ 	/* Release control of h/w to f/w.  If f/w is AMT enabled, this
+ 	 * would have already happened in close and is redundant.
+ 	 */
+@@ -8858,22 +8847,7 @@ static void igb_deliver_wake_packet(struct net_device *netdev)
+ 
+ static int __maybe_unused igb_suspend(struct device *dev)
+ {
+-	int retval;
+-	bool wake;
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-
+-	retval = __igb_shutdown(pdev, &wake, 0);
+-	if (retval)
+-		return retval;
+-
+-	if (wake) {
+-		pci_prepare_to_sleep(pdev);
+-	} else {
+-		pci_wake_from_d3(pdev, false);
+-		pci_set_power_state(pdev, PCI_D3hot);
+-	}
+-
+-	return 0;
++	return __igb_shutdown(to_pci_dev(dev), NULL, 0);
+ }
+ 
+ static int __maybe_unused igb_resume(struct device *dev)
+@@ -8944,22 +8918,7 @@ static int __maybe_unused igb_runtime_idle(struct device *dev)
+ 
+ static int __maybe_unused igb_runtime_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	int retval;
+-	bool wake;
+-
+-	retval = __igb_shutdown(pdev, &wake, 1);
+-	if (retval)
+-		return retval;
+-
+-	if (wake) {
+-		pci_prepare_to_sleep(pdev);
+-	} else {
+-		pci_wake_from_d3(pdev, false);
+-		pci_set_power_state(pdev, PCI_D3hot);
+-	}
+-
+-	return 0;
++	return __igb_shutdown(to_pci_dev(dev), NULL, 1);
+ }
+ 
+ static int __maybe_unused igb_runtime_resume(struct device *dev)
 -- 
 2.20.1
 
