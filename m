@@ -2,131 +2,143 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1247C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CEFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC71E2082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7A920675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:38:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MBoBEQKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfEFSfQ (ORCPT
+        id S1726218AbfEFSiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 14:35:16 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59244 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfEFSfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 14:35:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC17CA78;
-        Mon,  6 May 2019 11:35:14 -0700 (PDT)
-Received: from brain-police (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0C843F5AF;
-        Mon,  6 May 2019 11:35:09 -0700 (PDT)
-Date:   Mon, 6 May 2019 19:35:06 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org,
-        Michal Gregorczyk <michalgr@live.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
-Message-ID: <20190506183506.GD2875@brain-police>
-References: <20190502204958.7868-1-joel@joelfernandes.org>
- <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
- <20190503134935.GA253329@google.com>
- <20190505110423.u7g3f2viovvgzbtn@e107158-lin.cambridge.arm.com>
- <20190505132949.GB3076@localhost>
- <20190505144608.u3vsxyz5huveuskx@e107158-lin.cambridge.arm.com>
- <20190505155223.GA4976@localhost>
- <20190505180313.GA80924@google.com>
+        Mon, 6 May 2019 14:38:05 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39339 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfEFSiE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 14:38:04 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x16so4487403oic.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 11:38:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DJEsU4nDrYVuZtMVVFf4WrJq7TRs9Dl+cfY2LjHeYik=;
+        b=MBoBEQKfRSbHx9GOc308vRlaTuHtNlVgKaleqLz6VWU9jPubTioCuQS5bAsqlJPl70
+         kLLf/a2s74wO9d7xMzl6NvPOTPL95DMI5Kd8roODkNjxkLqb+OJj7T2K9+fA3DD5YiFy
+         Csn5W9HSmnaJHJQKPXJBxM2D9lac7YK6NYqM6oWR3WwnOdIdF2bxlYFtB6WOB8Re40Ge
+         1pbNACljeg5BON3hEiNjZvJYjZgCF6OX3MuKJy0mXq/rO3FU0ptaX4FNkdijc4oSUknn
+         hJFQ0aAo3YIZ2MKlhIfRpUSY02KuEtPwlFSu2EjYDy7zdM0tmerfOmBXnlYcrQB+zWBH
+         YTHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DJEsU4nDrYVuZtMVVFf4WrJq7TRs9Dl+cfY2LjHeYik=;
+        b=XUX1/im/B7l4Ua6J3PyxEVd1gHiT1YHdRII4/7lB+GjwSlcrUo03G/+r7ktQRXf7EN
+         J8+FxT+M3o6wSoHgyrLVySZZgyOO08Oei2kWRU0m7xbzLFcPe9MA9huOj9wnMrqAuzqI
+         pRNBo/arkFMiqkxMbFbo13dqnJxDvqB2r1y/seHIdrv+4XC1pOdS4ZlyYcFAm13fsuZR
+         gP5YukZvBiKk3yOqzJhAMh6SxdUvfOsR7D5pmSQjVysiMvgG1tr9F6f7w2bqDvZ4T35G
+         K/W/GuqX/hq5PSha3wiTW8tiP+WXNx9WI4d9M630g4whl39zANsTbLq71KKMce3q9qpD
+         l6Ww==
+X-Gm-Message-State: APjAAAWjybn55+45RrrBU4y7Fpd1Pb4TxCkd0k8bAK2rF38IEH4SRwzP
+        xV0Ke0w50JC+rtXYGBGxQWx3fTcPGOTXetN4vZ8sxQ==
+X-Google-Smtp-Source: APXvYqyRtYhLJtXFbPaT/4axbLHrLss+1Ssr+PITeKIx+2SHq2/t5N+tRD9+558gYq8usuNGo+uYxRI39k8vizFBPt0=
+X-Received: by 2002:aca:5412:: with SMTP id i18mr2217737oib.157.1557167883599;
+ Mon, 06 May 2019 11:38:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190505180313.GA80924@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190506165439.9155-1-cyphar@cyphar.com> <20190506165439.9155-6-cyphar@cyphar.com>
+In-Reply-To: <20190506165439.9155-6-cyphar@cyphar.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 6 May 2019 20:37:37 +0200
+Message-ID: <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
+To:     Aleksa Sarai <cyphar@cyphar.com>, Andy Lutomirski <luto@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
+On Mon, May 6, 2019 at 6:56 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> The need to be able to scope path resolution of interpreters became
+> clear with one of the possible vectors used in CVE-2019-5736 (which
+> most major container runtimes were vulnerable to).
+>
+> Naively, it might seem that openat(2) -- which supports path scoping --
+> can be combined with execveat(AT_EMPTY_PATH) to trivially scope the
+> binary being executed. Unfortunately, a "bad binary" (usually a symlink)
+> could be written as a #!-style script with the symlink target as the
+> interpreter -- which would be completely missed by just scoping the
+> openat(2). An example of this being exploitable is CVE-2019-5736.
+>
+> In order to get around this, we need to pass down to each binfmt_*
+> implementation the scoping flags requested in execveat(2). In order to
+> maintain backwards-compatibility we only pass the scoping AT_* flags.
+>
+> To avoid breaking userspace (in the exceptionally rare cases where you
+> have #!-scripts with a relative path being execveat(2)-ed with dfd !=
+> AT_FDCWD), we only pass dfd down to binfmt_* if any of our new flags are
+> set in execveat(2).
 
-On Sun, May 05, 2019 at 02:03:13PM -0400, Joel Fernandes wrote:
-> +Mark, Will since discussion is about arm64 arch code.
-> 
-> The difference between observing the bug and everything just working seems to
-> be the set_fs(USER_DS) as done by Masami's patch that this patch is based on.
-> The following diff shows 'ret' as 255 when set_fs(KERN_DS) is used, and then
-> after we retry with set_fs(USER_DS), the read succeeds.
-> 
-> diff --git a/mm/maccess.c b/mm/maccess.c
-> index 78f9274dd49d..d3e01a33c712 100644
-> --- a/mm/maccess.c
-> +++ b/mm/maccess.c
-> @@ -32,9 +32,20 @@ long __probe_kernel_read(void *dst, const void *src, size_t size)
->  	pagefault_disable();
->  	ret = __copy_from_user_inatomic(dst,
->  			(__force const void __user *)src, size);
-> +	trace_printk("KERNEL_DS: __copy_from_user_inatomic: ret=%d\n", ret);
->  	pagefault_enable();
->  	set_fs(old_fs);
->  
-> +	if (ret) {
-> +	set_fs(USER_DS);
-> +	pagefault_disable();
-> +	ret = __copy_from_user_inatomic(dst,
-> +			(__force const void __user *)src, size);
-> +	trace_printk("RETRY WITH USER_DS: __copy_from_user_inatomic: ret=%d\n", ret);
-> +	pagefault_enable();
-> +	set_fs(old_fs);
-> +	}
-> +
->  	return ret ? -EFAULT : 0;
->  }
->  EXPORT_SYMBOL_GPL(probe_kernel_read);
-> 
-> In initially thought this was because of the addr_limit pointer masking done
-> by this patch from Mark Rutland "arm64: Use pointer masking to limit uaccess
-> speculation"
-> 
-> However removing this masking still makes it fail with KERNEL_DS.
-> 
-> Fwiw, I am still curious which other paths in arm64 check the addr_limit
-> which might make the __copy_from_user_inatomic fail if the set_fs is not
-> setup correctly.
-> 
-> Either way, I will resubmit the patch with the commit message fixed correctly
-> as we agreed and also address Alexei's comments.
+This seems extremely dangerous. I like the overall series, but not this patch.
 
-I'm coming at this with no background, so it's tricky to understand exactly
-what's going on here. Some questions:
+> @@ -1762,6 +1774,12 @@ static int __do_execve_file(int fd, struct filename *filename,
+>
+>         sched_exec();
+>
+> +       bprm->flags = flags & (AT_XDEV | AT_NO_MAGICLINKS | AT_NO_SYMLINKS |
+> +                              AT_THIS_ROOT);
+[...]
+> +#define AT_THIS_ROOT           0x100000 /* - Scope ".." resolution to dirfd (like chroot(2)). */
 
-  * Are you seeing a failure with mainline and/or an official stable kernel?
-  * What is the failing CPU? (so we can figure out which architectural
-    extensions are implemented)
-  * Do you have a .config anywhere? Particular, how are ARM64_PAN,
-    ARM64_TTBR0_PAN and ARM64_UAO set?
-  * Is the address being accessed a user or a kernel address?
+So now what happens if there is a setuid root ELF binary with program
+interpreter "/lib64/ld-linux-x86-64.so.2" (like /bin/su), and an
+unprivileged user runs it with execveat(..., AT_THIS_ROOT)? Is that
+going to let the unprivileged user decide which interpreter the
+setuid-root process should use? From a high-level perspective, opening
+the interpreter should be controlled by the program that is being
+loaded, not by the program that invoked it.
 
-If you're trying to dereference a pointer to userspace using
-probe_kernel_read(), that clearly isn't going to work.
 
-Will
+In my opinion, CVE-2019-5736 points out two different problems:
+
+The big problem: The __ptrace_may_access() logic has a special-case
+short-circuit for "introspection" that you can't opt out of; this
+makes it possible to open things in procfs that are related to the
+current process even if the credentials of the process wouldn't permit
+accessing another process like it. I think the proper fix to deal with
+this would be to add a prctl() flag for "set whether introspection is
+allowed for this process", and if userspace has manually un-set that
+flag, any introspection special-case logic would be skipped.
+
+An additional problem: /proc/*/exe can be used to open a file for
+writing; I think it may have been Andy Lutomirski who pointed out some
+time ago that it would be nice if you couldn't use /proc/*/fd/* to
+re-open files with more privileges, which is sort of the same thing.
