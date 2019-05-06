@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB275C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B08CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1CE2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4D42087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155274;
-	bh=gIPycv8dbcn1JC3zOTMxaLgrxP4VVdplls7mNHRinzQ=;
+	s=default; t=1557155276;
+	bh=7TSZU9uuESChnQZl6Z/mt6OaAgpomEHBrYCg3HwUwV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ABjBqnWcf1A8oiVKTSEEdCa9cO8N3xNuXeqslpPUj2RN65RlvuCa20m+YB+enB7YO
-	 qpGoy84xSQjTTTKcbk7Ez6rgoNeZdZ63aCwPpHWb6sQgJBGhSIJxZFN8z6Ktp/P/Io
-	 Ho8JG90QSe0nU84FW0QzKSMye+Mu+2s4Se80RjEw=
+	b=cwNzp7c7RCb/sIpMTKkRU1XexFV2LhsRbtLPZw0U2fB0v+abbMIZGIFg01ayp38Gn
+	 w0JuLQ1PlYFoDp9Y+uWJ7xQ5lnKxAh01TJaIl4suDZo6fMBqyPqCR9KYi3yTSBf8Hv
+	 Zt+e2oXbrahHCpSXsvWoyotqu7l1uXHoauxA5NDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfEFPHx (ORCPT
+        id S1727671AbfEFPHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38448 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:07:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbfEFPHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:07:50 -0400
+        id S1727408AbfEFPHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 11:07:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 481C32087F;
-        Mon,  6 May 2019 15:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0B362087F;
+        Mon,  6 May 2019 15:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557155269;
-        bh=gIPycv8dbcn1JC3zOTMxaLgrxP4VVdplls7mNHRinzQ=;
+        s=default; t=1557155272;
+        bh=7TSZU9uuESChnQZl6Z/mt6OaAgpomEHBrYCg3HwUwV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCmNzWNUc7uzzPuR3VCjw7I+hd7jaBr3SQCi0A2xFTJ/rkb3IompkjPx1exqOKJ+p
-         B9XzLXU2O+gwVOaHef6MkuHM1bY1Jwe/48WGeAZzPOynr+BKp/OBEB3lzw1Hoabevb
-         BOvaQmHciqG5rJU6YpTP6lVl4OLQWHXF2BwUo4Ek=
+        b=QQUY8HkKXayixjYnRbS9dY8i7ZdNI6za/pRKKe7+29ahKIigUPaDsIHmQ4++ZH6pa
+         mlMIavWY+0fbxaErrFzK6pDeOam67+pFZL6++5LRMmjhhxCfFBRxv3LBj3zHdqHiK7
+         F1Ft80nYnBGwsJidolvupoO4ozQXDLgMo+hq2FZk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, "he, bo" <bo.he@intel.com>,
         "Zhang, Jun" <jun.zhang@intel.com>, Jiri Kosina <jkosina@suse.cz>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 27/75] HID: debug: fix race condition with between rdesc_show() and device removal
-Date:   Mon,  6 May 2019 16:32:35 +0200
-Message-Id: <20190506143055.631670523@linuxfoundation.org>
+Subject: [PATCH 4.9 29/62] HID: debug: fix race condition with between rdesc_show() and device removal
+Date:   Mon,  6 May 2019 16:33:00 +0200
+Message-Id: <20190506143053.575546010@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
-References: <20190506143053.287515952@linuxfoundation.org>
+In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
+References: <20190506143051.102535767@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -93,10 +93,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+)
 
 diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
-index a90967cd4987..a0bcbb633b67 100644
+index d7179dd3c9ef..3cafa1d28fed 100644
 --- a/drivers/hid/hid-debug.c
 +++ b/drivers/hid/hid-debug.c
-@@ -1060,10 +1060,15 @@ static int hid_debug_rdesc_show(struct seq_file *f, void *p)
+@@ -1058,10 +1058,15 @@ static int hid_debug_rdesc_show(struct seq_file *f, void *p)
  	seq_printf(f, "\n\n");
  
  	/* dump parsed data and input mappings */
