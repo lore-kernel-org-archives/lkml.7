@@ -2,109 +2,96 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29005C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2CCC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 088D12053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BC02054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557154510;
+	bh=aiLjpeAoWNOBxt8nJ1mTSVl7fDXJwwZi5qiMMPi0HfA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Bu2GaWhomGQF9iNa995opai9TqqWNDrU8wN7SrFqI9UgV+DZ3u7H9rFf4QSdbthoi
+	 jmy+ZoeQV7RRBnrGaEVvt4SxDEqjzr6vXpyxgmILnrQS/8KY0FVt6V2SRT4nWXu0Kd
+	 ujHJeKTVldS86d0m1EsA4bxlTu/NrGaGxZpYv4is=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfEFOy6 (ORCPT
+        id S1729086AbfEFOqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:54:58 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27605 "EHLO mga05.intel.com"
+        Mon, 6 May 2019 10:46:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbfEFOqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:46:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 07:46:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
-   d="scan'208";a="343985669"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga005.fm.intel.com with ESMTP; 06 May 2019 07:46:21 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hNesm-0006d2-HJ; Mon, 06 May 2019 17:46:20 +0300
-Date:   Mon, 6 May 2019 17:46:20 +0300
-From:   "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-To:     Alexandru Ardelean <ardeleanalex@gmail.com>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>
-Subject: Re: [PATCH 1/2] lib: add __sysfs_match_string_with_gaps() helper
-Message-ID: <20190506144620.GM9224@smile.fi.intel.com>
-References: <20190422083257.21805-1-alexandru.ardelean@analog.com>
- <20190422210606.GA8805@kroah.com>
- <86ea407aaa891e50a3bdaf2c3653636a365076ee.camel@analog.com>
- <20190424133455.00002909@huawei.com>
- <20190425193736.GA11458@kroah.com>
- <CA+U=DsoyPQyNDX6CDx=xE73H9A=66BGKhTseEvZcZZPnpPAfQw@mail.gmail.com>
- <20190426142754.GU9224@smile.fi.intel.com>
- <CA+U=DspC2gbcWgEoCfTs-K0UaGt9DBLkXoyFufShUXD61uAAbQ@mail.gmail.com>
+        id S1728809AbfEFOqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:46:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A76ED214C6;
+        Mon,  6 May 2019 14:46:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557153972;
+        bh=aiLjpeAoWNOBxt8nJ1mTSVl7fDXJwwZi5qiMMPi0HfA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TSWk26VbvMBE9maZls5DwVO1ttONkTC73zQcXtvN7C+Umf/tz2Ed2d8/gmA+Inx24
+         c8xbxX9/0QXgdIdfdUxzmP/R0qujqR5VQ7DnNzHIw7bG48GfDkGDOjXxgSYBT2k+Fn
+         8jeeZO0ossFsfTNcqmedlafzXj0pHUCedWWKABX8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Daniel Jurgens <danielj@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.14 65/75] IB/core: Unregister notifier before freeing MAD security
+Date:   Mon,  6 May 2019 16:33:13 +0200
+Message-Id: <20190506143059.149974388@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
+References: <20190506143053.287515952@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+U=DspC2gbcWgEoCfTs-K0UaGt9DBLkXoyFufShUXD61uAAbQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 04:45:43PM +0300, Alexandru Ardelean wrote:
-> On Fri, Apr 26, 2019 at 5:27 PM andriy.shevchenko@linux.intel.com
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Fri, Apr 26, 2019 at 12:29:11PM +0300, Alexandru Ardelean wrote:
-> >
-> > > Hmm, I actually did not give much thought to that -1.
-> > > I'll check into this and see about a V3.
-> > > It may make more sense to just fix the original
-> > > `__sysfs_match_string()`, but I'll need to go through the users of
-> > > this function and see.
-> >
-> > I was thinking about existing users of such (with "gaps") cases.
-> > Not all of them have NULL there and would like to avoid some members.
-> > Though, I think that we may ignore NULL items if -1 is supplied.
-> >
-> > Think as well about ARRAY_SIZE() as given to that.
-> >
-> 
-> I am a bit vague on what you are proposing.
-> Is it:
-> 
-> a) Leave __sysfs_match_string() as-is and introduce a new
-> `__sysfs_match_string_with_gaps()` helper/variant ?
-> b) Fix __sysfs_match_string() to break/exit on the first NULL, only if
-> -1 is provided ?
-> 
-> Either is fine, but I wanted to clarify.
+From: Daniel Jurgens <danielj@mellanox.com>
 
-The current logic something like "-1 to go till first NULL" and ARRAY_SIZE() in
-*some* cases is basically the synonym to above.
+commit d60667fc398ed34b3c7456b020481c55c760e503 upstream.
 
-What I meant is to check if there is *any* case where ARRAY_SIZE() behaves in
-the same way as -1. Those cases should be fixed accordingly.
+If the notifier runs after the security context is freed an access of
+freed memory can occur.
 
-Otherwise, the b) is what would be preferred according to the discussion.
+Fixes: 47a2b338fe63 ("IB/core: Enforce security on management datagrams")
+Signed-off-by: Daniel Jurgens <danielj@mellanox.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> > And consider to fix match_string() accordingly.
+---
+ drivers/infiniband/core/security.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
--- 
-With Best Regards,
-Andy Shevchenko
+--- a/drivers/infiniband/core/security.c
++++ b/drivers/infiniband/core/security.c
+@@ -732,9 +732,10 @@ void ib_mad_agent_security_cleanup(struc
+ 	if (!rdma_protocol_ib(agent->device, agent->port_num))
+ 		return;
+ 
+-	security_ib_free_security(agent->security);
+ 	if (agent->lsm_nb_reg)
+ 		unregister_lsm_notifier(&agent->lsm_nb);
++
++	security_ib_free_security(agent->security);
+ }
+ 
+ int ib_mad_enforce_security(struct ib_mad_agent_private *map, u16 pkey_index)
 
 
