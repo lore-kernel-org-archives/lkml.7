@@ -2,82 +2,85 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68CCC04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E30C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99EAC20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF3E2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ALeaEk9C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HeRnYqWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfEFJwJ (ORCPT
+        id S1726475AbfEFJwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:52:09 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:38793 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbfEFJwI (ORCPT
+        Mon, 6 May 2019 05:52:16 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:41300 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbfEFJwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:52:08 -0400
-Received: by mail-vs1-f65.google.com with SMTP id v141so7746860vsc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:52:07 -0700 (PDT)
+        Mon, 6 May 2019 05:52:14 -0400
+Received: by mail-ua1-f68.google.com with SMTP id s30so4422732uas.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:52:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DmsBhkWlYc1uTNw6jjpjWWASyR4UniOiR+IT6QHntHo=;
-        b=ALeaEk9CIsi5/SHzgOkGrfo3YVdBP/hnx+rPsqMosbUzT0agIR+DCcF41mPVsIH2m/
-         nEmge4VayE35vHVB6PNtNuDQN9TRFVwRnRnuuSlW/BhtKVXvA/t6YtvumSt6wVfDxGOl
-         cAAVFBlC4/zDsCReQgHVykBYp3NFUxpFGlMUWxIl7tZVSo+g5l0AfZwpksDtUapreSoT
-         pUSQXqkSuV+/usHSUlKtOCsB2eOKJZfn6/0mzeRcyhTHgQdal6D0WSRKAmzxIf+FBdaJ
-         yxw2gNdbFGmBz7NxMKMxH/Zw3GLVlX0u3IR7vssLk1nTTI1tJTtRL2VdNeWAXSx9HEwW
-         oLLQ==
+        bh=sK1AW46uFm51k7mgTa8btpLaGMbzfNDj8ewiwbIYzZk=;
+        b=HeRnYqWwxPUpFC+wvfGu3tZiVy2frYO9St/sbs+uJklMjxVucVdmn6QY7a2+duAoK/
+         CqMSO5pHO/0IBK3D6Tpy6f0G/HE1XfBgnM34QQ0mL/CnT3ZIDWkGKeuHqmeTpEnI1fUj
+         L0UIqDi/D+qQKexFaE5pI/zS76L4gE3ICEmmi6oh0dGwmUiZ7YoG7SbDNHc3hTdqhSB+
+         5jZNYuELm8guM30bxvc0vNWiXNkStWGJG+gZtS9e4UDYrXmeMv3vJ+faoezgMsvXua5V
+         aywxibcehAlF3e56cgi2jV+BUUePYEXnNM8PS1BWfmacr8nBZ637YpdzLsM9pBN6SQ2i
+         cvEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DmsBhkWlYc1uTNw6jjpjWWASyR4UniOiR+IT6QHntHo=;
-        b=AStf5ObXWndKqx2xHsHtW5780xY0ju8vHQXmmS1l09GdFK9bO0y5JBzIrCaTEo6DMZ
-         fITUyYiAwFqVfY+Cv328VgS3x0OEL/KgM/VpHF2VHUZnNFi8UqydV3V+SBitfcsKfm2K
-         BEmsQNRS/2D1sbEVuoXsMdetVenC4hYoVnFVBW79HKGRvaBPm/zVJGfYEZsbDRisORDA
-         7IsLOkMGKSfFYSs8yz97o4AWeL0ik86kSD867vkS3duO7uaKODtmIH2AoSkF9q2nlvPN
-         PjGijremqaaJTXffwnbnOqiwCvNURWUKd4kzZNvNrzz+ThT2/zew+4y0sUaYoOep/0uY
-         JftQ==
-X-Gm-Message-State: APjAAAX1vfk868hgiLVNRgNgTKOJSIHhdLMoYffyXaRXPvQ8J56J1MCx
-        k2MZfAMWEcogKVB1mR9R9XphMcx9EAscjqudcR9IQQ==
-X-Google-Smtp-Source: APXvYqxF66GwjuWRom41i00LWsDcol9d1DnTeSM0hRqjZ8HvNnzE/hNVgU2a1XSbP9yYHmTqxELfJd0bOHoSwsErZRI=
-X-Received: by 2002:a67:b44d:: with SMTP id c13mr12757692vsm.165.1557136326923;
- Mon, 06 May 2019 02:52:06 -0700 (PDT)
+        bh=sK1AW46uFm51k7mgTa8btpLaGMbzfNDj8ewiwbIYzZk=;
+        b=aNn5omqJN9esKtUmaEUbmOpc5IkreYBrYEKLepQ0zk2xF8yn/HSP2apRp6UzvjjqQT
+         vV5OO9QSAWkyrlQMYu9ut28BCTidWjlHB4lhme2WUqT4VDMBmGvCQqQnirvYM9N6z/Es
+         QTwa+ZSMi+/zqTfsLvYdBpBHOT4C0Ookc8nL1r3DpEYfESJVwH4kiE4ImPl0SAsTheLW
+         3zf+6VJhFuJgHV1ObxLjJNeWgrwYzI8dPjE2bbNl0fhbJgnpE2NL3YqbeY/qybUoJtCn
+         bv9QFsAx3CiZs6TLjD8Nq4DKbfqkGEO+5bAyi1JcKG6QxMW1KbHSpmgDZYaxAIRFpUIF
+         WvZQ==
+X-Gm-Message-State: APjAAAXFO2DJOt3pVl0SqTumPMhOz2Mq7IuFaCXtVQIJb0QQ+V2FG7SL
+        U96COUHjU47AUtOvGSlgDZ9Uw3FUlOHr39+icvcnbg==
+X-Google-Smtp-Source: APXvYqwRjSSrQqdAGdNhhsMUNgKYFkiN8aJTLBYaPDU00ethSrpubRCAgZGaRAPkoFFQeWvQTDbGYAQff6V2hFR7nzc=
+X-Received: by 2002:ab0:2b13:: with SMTP id e19mr12246383uar.15.1557136333748;
+ Mon, 06 May 2019 02:52:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <155696540998.8632.5242582397805128125.stgit@noble.brown>
-In-Reply-To: <155696540998.8632.5242582397805128125.stgit@noble.brown>
+References: <20190505055858.37509-1-yinbo.zhu@nxp.com>
+In-Reply-To: <20190505055858.37509-1-yinbo.zhu@nxp.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 6 May 2019 11:51:30 +0200
-Message-ID: <CAPDyKFp9aQNsqkUnznPUaDDZf8Oa95MRKmb35Y-PuMbSJPfZug@mail.gmail.com>
-Subject: Re: [PATCH 0/4] mtk-sd enhancement to support MT7621 - V2
-To:     NeilBrown <neil@brown.name>
-Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+Date:   Mon, 6 May 2019 11:51:37 +0200
+Message-ID: <CAPDyKFrcFo_zCy5q2VkUP+SxOTogmAsys-X_yBrARLE1dTcqqw@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: mmc: add DT bindings for ls1028a eSDHC
+ host controller
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        thirtythreeforty@gmail.com
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>,
+        "Y.b. Lu" <yangbo.lu@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 4 May 2019 at 12:25, NeilBrown <neil@brown.name> wrote:
+On Sun, 5 May 2019 at 07:57, Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
 >
-> The MT7621 MIPS-based SOC contains an sdhci unit that is
-> much the same as the units supported by mtk-sd.c.
+> From: Yinbo Zhu <yinbo.zhu@nxp.com>
 >
-> These patches enhance the driver so that I can use it on my MT7621
-> board (gnubee.org).
+> Add "fsl,ls1028a-esdhc" bindings for ls1028a eSDHC host controller
 >
-> This series have been revised based on feedback from Chaotian.
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
 
 Applied for next, thanks!
 
@@ -85,24 +88,26 @@ Kind regards
 Uffe
 
 
->
-> Thanks,
-> NeilBrown
->
 > ---
+> Change in v2:
+>                 as alphabetical order to update dt-bindings
+>                 update the commit information.
 >
-> NeilBrown (4):
->       mmc: mtk-sd: don't hard-code interrupt trigger type
->       mmc: mtk-sd: add support for config found in mt7620 family SOCs.
->       mmc: mtk-sd: enable internal card-detect logic.
->       mmc: mtk-sd: select REGULATOR
+>  Documentation/devicetree/bindings/mmc/fsl-esdhc.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
->
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt |    1
->  drivers/mmc/host/Kconfig                         |    1
->  drivers/mmc/host/mtk-sd.c                        |   78 +++++++++++++++++++++-
->  3 files changed, 75 insertions(+), 5 deletions(-)
->
+> diff --git a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> index 99c5cf8507e8..edb8cadb9541 100644
+> --- a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> @@ -17,6 +17,7 @@ Required properties:
+>         "fsl,t4240-esdhc"
+>      Possible compatibles for ARM:
+>         "fsl,ls1012a-esdhc"
+> +       "fsl,ls1028a-esdhc"
+>         "fsl,ls1088a-esdhc"
+>         "fsl,ls1043a-esdhc"
+>         "fsl,ls1046a-esdhc"
 > --
-> Signature
+> 2.17.1
 >
