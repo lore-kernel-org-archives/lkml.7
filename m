@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E985BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00633C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E302053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7EE021530
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154162;
-	bh=TQGe9TxHu3D7KOn2jkfNTb1T1IjtARppxziVDR57G04=;
+	s=default; t=1557154166;
+	bh=qW0yTp0Bkwnm33rylBQl14Ex1/xlNSpFb9hZF9+Snsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WEzi+/5lutQs4C7YJK6dUyJ91ZdpBo/zTzZwcQA2UKjybUspQmghqsTD4jFxnJQFM
-	 E3q2FjZvwTzvzbS4iswn5P+V+5EeYcMRyhvsg+FmRmeSC8JS78IaliMCLbnrfyomwH
-	 jRxvYegtqBX2BHdZ+WufxFkgudpha3HlROrzH/ao=
+	b=zGDjLejMf/TMNvsOE3JInGvKpKpSBBv9Fby6UjcVMug+0U9kMZVQ4bYMSpoPylNNO
+	 9eM4VS8IT62rYbioFk/qyESbcK9ulsCSqTrKEllvAmnjXXqeTWPy7x8KLWn/lSyNNB
+	 EGjngHgMehqSpAB2x9Tvw0jYpoG7Vdm2cMoA6S1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbfEFOtU (ORCPT
+        id S1729575AbfEFOtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:49:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50568 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:49:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729386AbfEFOtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:49:15 -0400
+        id S1726985AbfEFOtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:49:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2464D20C01;
-        Mon,  6 May 2019 14:49:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F04D121019;
+        Mon,  6 May 2019 14:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154154;
-        bh=TQGe9TxHu3D7KOn2jkfNTb1T1IjtARppxziVDR57G04=;
+        s=default; t=1557154162;
+        bh=qW0yTp0Bkwnm33rylBQl14Ex1/xlNSpFb9hZF9+Snsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R0BxFVXOkdJBF0dsRCg7QfZcjjqshVSO7AbHdGBhoLTyTKLHbxWHhs2V1hPVINA7M
-         CRnwdI8/XbzRCdig1nypXrxWMYQ04I0X4T9JhFBLl0derYqm1WdN3Ri6JmMrY+Wf+y
-         HywyptGbC9IFCAuyplb8WuAfvorJgFeuGc6eYStc=
+        b=wXv8VZ3D23gRk57JxVQqb5kQ/v1APK7NibJPWqfyhZcRa0Um65Ws6VdPDcdrpA4iA
+         yXNZ9mlY0hOuiRwv8wYfTUOPpezSXMp6KcuZH6N7U6fM811Zhb6fPzTWPYFf10tCQe
+         +5kAbamJR/bVFgf39Ivb+XPNmwzsTjhdVPSm5Vzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.9 57/62] staging: iio: adt7316: fix the dac write calculation
-Date:   Mon,  6 May 2019 16:33:28 +0200
-Message-Id: <20190506143056.333792235@linuxfoundation.org>
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Paul Moore <paul@paul-moore.com>
+Subject: [PATCH 4.9 60/62] selinux: never allow relabeling on context mounts
+Date:   Mon,  6 May 2019 16:33:31 +0200
+Message-Id: <20190506143056.624747476@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -59,54 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Fertic <jeremyfertic@gmail.com>
+From: Ondrej Mosnacek <omosnace@redhat.com>
 
-commit 78accaea117c1ae878774974fab91ac4a0b0e2b0 upstream.
+commit a83d6ddaebe541570291205cb538e35ad4ff94f9 upstream.
 
-The lsb calculation is not masking the correct bits from the user input.
-Subtract 1 from (1 << offset) to correctly set up the mask to be applied
-to user input.
+In the SECURITY_FS_USE_MNTPOINT case we never want to allow relabeling
+files/directories, so we should never set the SBLABEL_MNT flag. The
+'special handling' in selinux_is_sblabel_mnt() is only intended for when
+the behavior is set to SECURITY_FS_USE_GENFS.
 
-The lsb register stores its value starting at the bit 7 position.
-adt7316_store_DAC() currently assumes the value is at the other end of the
-register. Shift the lsb value before storing it in a new variable lsb_reg,
-and write this variable to the lsb register.
+While there, make the logic in selinux_is_sblabel_mnt() more explicit
+and add a BUILD_BUG_ON() to make sure that introducing a new
+SECURITY_FS_USE_* forces a review of the logic.
 
-Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
-Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: d5f3a5f6e7e7 ("selinux: add security in-core xattr support for pstore and debugfs")
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Reviewed-by: Stephen Smalley <sds@tycho.nsa.gov>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/iio/addac/adt7316.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ security/selinux/hooks.c |   40 +++++++++++++++++++++++++++++++---------
+ 1 file changed, 31 insertions(+), 9 deletions(-)
 
---- a/drivers/staging/iio/addac/adt7316.c
-+++ b/drivers/staging/iio/addac/adt7316.c
-@@ -1450,7 +1450,7 @@ static ssize_t adt7316_show_DAC(struct a
- static ssize_t adt7316_store_DAC(struct adt7316_chip_info *chip,
- 		int channel, const char *buf, size_t len)
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -467,21 +467,43 @@ static int may_context_mount_inode_relab
+ 	return rc;
+ }
+ 
+-static int selinux_is_sblabel_mnt(struct super_block *sb)
++static int selinux_is_genfs_special_handling(struct super_block *sb)
  {
--	u8 msb, lsb, offset;
-+	u8 msb, lsb, lsb_reg, offset;
- 	u16 data;
- 	int ret;
+-	struct superblock_security_struct *sbsec = sb->s_security;
+-
+-	return sbsec->behavior == SECURITY_FS_USE_XATTR ||
+-		sbsec->behavior == SECURITY_FS_USE_TRANS ||
+-		sbsec->behavior == SECURITY_FS_USE_TASK ||
+-		sbsec->behavior == SECURITY_FS_USE_NATIVE ||
+-		/* Special handling. Genfs but also in-core setxattr handler */
+-		!strcmp(sb->s_type->name, "sysfs") ||
++	/* Special handling. Genfs but also in-core setxattr handler */
++	return	!strcmp(sb->s_type->name, "sysfs") ||
+ 		!strcmp(sb->s_type->name, "pstore") ||
+ 		!strcmp(sb->s_type->name, "debugfs") ||
+ 		!strcmp(sb->s_type->name, "rootfs");
+ }
  
-@@ -1468,9 +1468,13 @@ static ssize_t adt7316_store_DAC(struct
- 		return -EINVAL;
- 
- 	if (chip->dac_bits > 8) {
--		lsb = data & (1 << offset);
-+		lsb = data & ((1 << offset) - 1);
-+		if (chip->dac_bits == 12)
-+			lsb_reg = lsb << ADT7316_DA_12_BIT_LSB_SHIFT;
-+		else
-+			lsb_reg = lsb << ADT7316_DA_10_BIT_LSB_SHIFT;
- 		ret = chip->bus.write(chip->bus.client,
--			ADT7316_DA_DATA_BASE + channel * 2, lsb);
-+			ADT7316_DA_DATA_BASE + channel * 2, lsb_reg);
- 		if (ret)
- 			return -EIO;
- 	}
++static int selinux_is_sblabel_mnt(struct super_block *sb)
++{
++	struct superblock_security_struct *sbsec = sb->s_security;
++
++	/*
++	 * IMPORTANT: Double-check logic in this function when adding a new
++	 * SECURITY_FS_USE_* definition!
++	 */
++	BUILD_BUG_ON(SECURITY_FS_USE_MAX != 7);
++
++	switch (sbsec->behavior) {
++	case SECURITY_FS_USE_XATTR:
++	case SECURITY_FS_USE_TRANS:
++	case SECURITY_FS_USE_TASK:
++	case SECURITY_FS_USE_NATIVE:
++		return 1;
++
++	case SECURITY_FS_USE_GENFS:
++		return selinux_is_genfs_special_handling(sb);
++
++	/* Never allow relabeling on context mounts */
++	case SECURITY_FS_USE_MNTPOINT:
++	case SECURITY_FS_USE_NONE:
++	default:
++		return 0;
++	}
++}
++
+ static int sb_finish_set_opts(struct super_block *sb)
+ {
+ 	struct superblock_security_struct *sbsec = sb->s_security;
 
 
