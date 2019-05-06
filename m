@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FB2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 22:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66594C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 22:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42AC62082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 22:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C94A2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 22:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UPA6SoQY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAhDVIwC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfEFWfT (ORCPT
+        id S1726581AbfEFWfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 18:35:19 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42920 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfEFWfQ (ORCPT
+        Mon, 6 May 2019 18:35:24 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36093 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfEFWfR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 18:35:16 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p6so7163144pgh.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 15:35:16 -0700 (PDT)
+        Mon, 6 May 2019 18:35:17 -0400
+Received: by mail-pf1-f195.google.com with SMTP id v80so7515430pfa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 15:35:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ej/Ro/6MoIBqWhxs/bm5kdLDOFr0cOwCG34qRqhI9Dc=;
-        b=UPA6SoQYsSPvTylk1dQZ1L0t3hqYf8CMFgWp7WrrySREH4BXXS6CrosQyhYUxq6bzu
-         0/auwEgH13pqwb88QCnI494RFvGSpdsh5ZsdoBk7ahVJF4k9yg8TUfwj2vcUYXRfdUkG
-         X2eI1T0tAk6QpGuxNLfxbJyeDGQ/q9u7v5QBC3ggMYbrmLcdJ+5H6ZTVSd0qLbV4VhVb
-         o5Icz83S/8nHIpj33SkFQH4XKYf05SRNqVWjpRglrGTupccHvJydIXKDY7NhBBKpxkAM
-         Hh7rOspNjtP60Xq+iCpyecPwcmLwq+kKF9RstBjx6zkbMaEEHlc0IWgZMxxtGQFIu4VH
-         n+8g==
+        bh=vxeV9ft42Z9weuRQsncwqOnoZhf6GFp447KDcblUrfk=;
+        b=RAhDVIwCMHTCtsbl6YiM3wbt/Ww204Kft83qmMlh/oZk9oVNu59qGWNZ0UtZ4Z6xjI
+         Q5HZYvn49VUI6276rjq0/6vBnBUdCDmcNWylc0XNVdiESz96iOfliR9JnLtfwE0EB+Hi
+         SLGnP4s1MhZGHBPr6S/W6rD+APYuTpblhdS/80+S9+QJ7/A7nQ0UgE4itiNQk8P2aga8
+         /35qi+RzmiJyjAwz0HSF9I8iFsPq+Ba8+SLTzCMwwemheDGzlCKFaSj94Ew7qFDw7m41
+         bmOSw/5frMORTko6m7KwCjdyi3jm+rqPWpZ34IEjX8AGApo/Igp34KxZM1FN1NzgMVxA
+         EnaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Ej/Ro/6MoIBqWhxs/bm5kdLDOFr0cOwCG34qRqhI9Dc=;
-        b=rFzUYD1lPyATqs3yntO9mx3Qffcnjq8u1e8nKeMALcJQktCGKgLzjgKWhdeEjNIzR/
-         snRlbom4NhTQ/B9BYgGtSZiSJ21R/NqBJaQDMGxRaCMreNKj13TCAh4jTw0R7VmaN8mX
-         BvT1PW6GShgkrzooLkG1KWG2OD356oDDoFcgFqk79gD0IOfpmULcnOL+H1tzKLpv4FzI
-         hyRTPMgHJDPNSI47yjyTKet586q+tDDChPeY9XQYC8qjfMU/QI3egFNaT8y0Qe8ug8yr
-         FHv4Fc59/HGATn0vzqwSn1hgnztcZfZKOnH4w/bl+TnCj/CLB5SGXqIlEG6GqsPyJObl
-         8aDw==
-X-Gm-Message-State: APjAAAX2HHbpYwvPzGItPJa5rr9oT4fGp0hKbr4a3ijdv+x8mO3rwMyV
-        y0MJ3HNtZkT3y6LtAsbXEMk=
-X-Google-Smtp-Source: APXvYqwsKimZ9Q/0xbHPsNmrVpLZSdGARiXYhvF8TmpC5VJvQmzT9/PzK0TAk5oLAz87VaTu0/1l7g==
-X-Received: by 2002:aa7:99c7:: with SMTP id v7mr37336357pfi.103.1557182115662;
-        Mon, 06 May 2019 15:35:15 -0700 (PDT)
+        bh=vxeV9ft42Z9weuRQsncwqOnoZhf6GFp447KDcblUrfk=;
+        b=eCbGq0mWS3WlR7rI6kg5gz6QXIhupqaGxVtUVWChJrIQWq5pBzrCRNXihRqPgQLeCC
+         KcWk7lTE39unk6MDOdrgLgqj3Vknn/EoiGYaabl5uvfw7BaXtDY3WBiWtWWb94z+EK7T
+         2p/wuaXqqimGY6EVcYd86phl2QMZtrjRcfphoUl1rl+qiYmUeZHLjHQRuuCDKwzN6SgO
+         hNkmG86CgkZveshV3uNKghWQ7jm6qwyMPDE9JqOMkb5LqLCe0C8kFFb19IMaIGxifMsb
+         YtFBDrKlrqZ03JeLrURO49Z1dxjPK+ZXoQ/yChtPxMPMM/kU1XqCnCWhWjO4QcnS4F3V
+         c7pQ==
+X-Gm-Message-State: APjAAAXFAjOGaF5rri46lYwgWSNEdEeNR3bt81SRwzcCDI4cPuvExRkX
+        vTQlL8lwyDrEUK0S2Y/n140Ip0Buaqw=
+X-Google-Smtp-Source: APXvYqzYdAWKFIs+VsCPM+aRKfv4xdzOF68ZHdwgvThexqcw/HGkkiQVMrGZrh7oe8WQqm2t7rS0EA==
+X-Received: by 2002:a65:610a:: with SMTP id z10mr35758284pgu.54.1557182116975;
+        Mon, 06 May 2019 15:35:16 -0700 (PDT)
 Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id c19sm14254976pgi.42.2019.05.06.15.35.14
+        by smtp.gmail.com with ESMTPSA id c19sm14254976pgi.42.2019.05.06.15.35.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 15:35:15 -0700 (PDT)
+        Mon, 06 May 2019 15:35:16 -0700 (PDT)
 From:   Nicolin Chen <nicoleotsuka@gmail.com>
 To:     hch@lst.de, robin.murphy@arm.com, m.szyprowski@samsung.com
 Cc:     vdumpa@nvidia.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
@@ -65,9 +65,9 @@ Cc:     vdumpa@nvidia.com, linux@armlinux.org.uk, catalin.marinas@arm.com,
         wsa+renesas@sang-engineering.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org
-Subject: [PATCH v2 1/2] dma-contiguous: Abstract dma_{alloc,free}_contiguous()
-Date:   Mon,  6 May 2019 15:33:33 -0700
-Message-Id: <20190506223334.1834-2-nicoleotsuka@gmail.com>
+Subject: [PATCH v2 2/2] dma-contiguous: Use fallback alloc_pages for single pages
+Date:   Mon,  6 May 2019 15:33:34 -0700
+Message-Id: <20190506223334.1834-3-nicoleotsuka@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190506223334.1834-1-nicoleotsuka@gmail.com>
 References: <20190506223334.1834-1-nicoleotsuka@gmail.com>
@@ -76,197 +76,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both dma_alloc_from_contiguous() and dma_release_from_contiguous()
-are very simply implemented, but requiring callers to pass certain
-parameters like count and align, and taking a boolean parameter to
-check __GFP_NOWARN in the allocation flags. So every function call
-duplicates similar work:
-  /* A piece of example */
-  unsigned long order = get_order(size);
-  size_t count = size >> PAGE_SHIFT;
-  page = dma_alloc_from_contiguous(dev, count, order, gfp & __GFP_NOWARN);
-  [...]
-  dma_release_from_contiguous(dev, page, size >> PAGE_SHIFT);
+The addresses within a single page are always contiguous, so it's
+not so necessary to always allocate one single page from CMA area.
+Since the CMA area has a limited predefined size of space, it may
+run out of space in heavy use cases, where there might be quite a
+lot CMA pages being allocated for single pages.
 
-Additionally, as CMA can be used only in the context which permits
-sleeping, most of callers do a gfpflags_allow_blocking() check and
-a corresponding fallback allocation of normal pages upon any false
-result:
-  /* A piece of example */
-  if (gfpflags_allow_blocking(flag))
-      page = dma_alloc_from_contiguous();
-  if (!page)
-      page = alloc_pages();
-  [...]
-  if (!dma_release_from_contiguous(dev, page, count))
-      __free_pages(page, get_order(size));
+However, there is also a concern that a device might care where a
+page comes from -- it might expect the page from CMA area and act
+differently if the page doesn't.
 
-So this patch simplifies those function calls by abstracting these
-operations into the two new functions: dma_{alloc,free}_contiguous.
+This patch tries to use the fallback alloc_pages path, instead of
+one-page size allocations from the global CMA area in case that a
+device does not have its own CMA area. This'd save resources from
+the CMA global area for more CMA allocations, and also reduce CMA
+fragmentations resulted from trivial allocations.
 
-As some callers of dma_{alloc,release}_from_contiguous() might be
-complicated, this patch just implements these two new functions to
-kernel/dma/direct.c only as an initial step.
-
-Suggested-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 ---
-Changelog
-v1->v2:
- * Added new functions beside the old ones so we can replace callers
-   one by one later.
- * Applied new functions to dma/direct.c only, because it's the best
-   example caller to apply and should be safe with the new functions.
+ kernel/dma/contiguous.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
- include/linux/dma-contiguous.h | 10 +++++++
- kernel/dma/contiguous.c        | 48 ++++++++++++++++++++++++++++++++++
- kernel/dma/direct.c            | 24 +++--------------
- 3 files changed, 62 insertions(+), 20 deletions(-)
-
-diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
-index f247e8aa5e3d..dacbdcb91a89 100644
---- a/include/linux/dma-contiguous.h
-+++ b/include/linux/dma-contiguous.h
-@@ -115,6 +115,8 @@ struct page *dma_alloc_from_contiguous(struct device *dev, size_t count,
- 				       unsigned int order, bool no_warn);
- bool dma_release_from_contiguous(struct device *dev, struct page *pages,
- 				 int count);
-+struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp);
-+void dma_free_contiguous(struct device *dev, struct page *page, size_t size);
- 
- #else
- 
-@@ -157,6 +159,14 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
- 	return false;
- }
- 
-+struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
-+{
-+	return NULL;
-+}
-+
-+static inline
-+void dma_free_contiguous(struct device *dev, struct page *page, size_t size) { }
-+
- #endif
- 
- #endif
 diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-index b2a87905846d..21f39a6cb04f 100644
+index 21f39a6cb04f..6914b92d5c88 100644
 --- a/kernel/dma/contiguous.c
 +++ b/kernel/dma/contiguous.c
-@@ -214,6 +214,54 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
- 	return cma_release(dev_get_cma_area(dev), pages, count);
- }
- 
-+/**
-+ * dma_alloc_contiguous() - allocate contiguous pages
-+ * @dev:   Pointer to device for which the allocation is performed.
-+ * @size:  Requested allocation size.
-+ * @gfp:   Allocation flags.
+@@ -223,14 +223,23 @@ bool dma_release_from_contiguous(struct device *dev, struct page *pages,
+  * This function allocates contiguous memory buffer for specified device. It
+  * first tries to use device specific contiguous memory area if available or
+  * the default global one, then tries a fallback allocation of normal pages.
 + *
-+ * This function allocates contiguous memory buffer for specified device. It
-+ * first tries to use device specific contiguous memory area if available or
-+ * the default global one, then tries a fallback allocation of normal pages.
-+ */
-+struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
-+{
-+	int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
-+	size_t count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-+	size_t align = get_order(PAGE_ALIGN(size));
-+	struct cma *cma = dev_get_cma_area(dev);
-+	struct page *page = NULL;
-+
-+	/* CMA can be used only in the context which permits sleeping */
-+	if (cma && gfpflags_allow_blocking(gfp)) {
-+		align = min_t(size_t, align, CONFIG_CMA_ALIGNMENT);
-+		page = cma_alloc(cma, count, align, gfp & __GFP_NOWARN);
-+	}
-+
-+	/* Fallback allocation of normal pages */
-+	if (!page)
-+		page = alloc_pages_node(node, gfp, align);
-+
-+	return page;
-+}
-+
-+/**
-+ * dma_free_contiguous() - release allocated pages
-+ * @dev:   Pointer to device for which the pages were allocated.
-+ * @page:  Pointer to the allocated pages.
-+ * @size:  Size of allocated pages.
-+ *
-+ * This function releases memory allocated by dma_alloc_contiguous(). As the
-+ * cma_release returns false when provided pages do not belong to contiguous
-+ * area and true otherwise, this function then does a fallback __free_pages()
-+ * upon a false-return.
-+ */
-+void dma_free_contiguous(struct device *dev, struct page *page, size_t size)
-+{
-+	if (!cma_release(dev_get_cma_area(dev), page, size >> PAGE_SHIFT))
-+		__free_pages(page, get_order(size));
-+}
-+
- /*
-  * Support for reserved memory regions defined in device tree
++ * Note that it byapss one-page size of allocations from the global area as
++ * the addresses within one page are always contiguous, so there is no need
++ * to waste CMA pages for that kind; it also helps reduce fragmentations.
   */
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 2c2772e9702a..0816c1e8b05a 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -96,8 +96,6 @@ static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
- struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
- 		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
  {
--	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
--	int page_order = get_order(size);
+ 	int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+ 	size_t count = PAGE_ALIGN(size) >> PAGE_SHIFT;
+ 	size_t align = get_order(PAGE_ALIGN(size));
+-	struct cma *cma = dev_get_cma_area(dev);
  	struct page *page = NULL;
- 	u64 phys_mask;
++	struct cma *cma = NULL;
++
++	if (dev && dev->cma_area)
++		cma = dev->cma_area;
++	else if (count > 1)
++		cma = dma_contiguous_default_area;
  
-@@ -109,20 +107,9 @@ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
- 	gfp |= __dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
- 			&phys_mask);
- again:
--	/* CMA can be used only in the context which permits sleeping */
--	if (gfpflags_allow_blocking(gfp)) {
--		page = dma_alloc_from_contiguous(dev, count, page_order,
--						 gfp & __GFP_NOWARN);
--		if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
--			dma_release_from_contiguous(dev, page, count);
--			page = NULL;
--		}
--	}
--	if (!page)
--		page = alloc_pages_node(dev_to_node(dev), gfp, page_order);
--
-+	page = dma_alloc_contiguous(dev, size, gfp);
- 	if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
--		__free_pages(page, page_order);
-+		dma_free_contiguous(dev, page, size);
- 		page = NULL;
- 
- 		if (IS_ENABLED(CONFIG_ZONE_DMA32) &&
-@@ -154,7 +141,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 	if (PageHighMem(page)) {
- 		/*
- 		 * Depending on the cma= arguments and per-arch setup
--		 * dma_alloc_from_contiguous could return highmem pages.
-+		 * dma_alloc_contiguous could return highmem pages.
- 		 * Without remapping there is no way to return them here,
- 		 * so log an error and fail.
- 		 */
-@@ -176,10 +163,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 
- void __dma_direct_free_pages(struct device *dev, size_t size, struct page *page)
- {
--	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
--
--	if (!dma_release_from_contiguous(dev, page, count))
--		__free_pages(page, get_order(size));
-+	dma_free_contiguous(dev, page, size);
- }
- 
- void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
+ 	/* CMA can be used only in the context which permits sleeping */
+ 	if (cma && gfpflags_allow_blocking(gfp)) {
 -- 
 2.17.1
 
