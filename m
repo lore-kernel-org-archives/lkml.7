@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C17C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CA3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78D4214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDF320C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153336;
-	bh=/CtsiC3QKIiq+eFj1WiGdmRM56VbB/uKlEKnvHHzNXI=;
+	s=default; t=1557153340;
+	bh=mvVg1JdDwMsN6OACj1AvgZ/teB7ua0sGC95Ru4jlzOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbKSk+syPOhtf+MEMmkcBnZRX2LY49yWk69UFCLIuDbJ2mkrDLDpdNep/rbkrGab8
-	 z886pNnGTxfEKyKumpK/yvwfP9OEh0GizlYBKv1AHsUIZRjfoDMlvEBZ39j/HjjeG4
-	 6zeRTOQLXlMoGG14O5wdCEGGuPrgcvkOBDqjTNpw=
+	b=ddVD7c8lsXxb+Ry0V+wLp+rbmSDdb8lJ5ycgtIEozSVKiaK2ENiE7ALH4MldT/L/w
+	 xvxDt4y4KLafUc7ySj3abWYh2aqIQpXuWBgiHqeMh1+6tP5/vh2Gaobs38OKMyO0yn
+	 PGj9j25Xa0FPpZmqmNPlV6WVOVES1Bag/+tkwq3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfEFOff (ORCPT
+        id S1726982AbfEFOfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:35:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55628 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:35:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbfEFOfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:35:32 -0400
+        id S1726954AbfEFOfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:35:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1171214AE;
-        Mon,  6 May 2019 14:35:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EA5720C01;
+        Mon,  6 May 2019 14:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153331;
-        bh=/CtsiC3QKIiq+eFj1WiGdmRM56VbB/uKlEKnvHHzNXI=;
+        s=default; t=1557153336;
+        bh=mvVg1JdDwMsN6OACj1AvgZ/teB7ua0sGC95Ru4jlzOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nOj8bBXfKPGT7Mwtry1ykmmQJcDceyZeIzNZ0bPxKTcYFKYskkRl8Y5xH42re7p7b
-         Iejjsx5KX2JDpcHk1KB2oG5tRi9l1jKIuBSr6C8uoBlHlaoIZQrLDB0EWpqOibEiFc
-         1K6+h977BhlOLWQ3ygPrk44MBRh63ukn7w44Be1s=
+        b=GrkiGweUx5FJXw+gVjiKqPq94niJ0mN12JSZQilHnhllDowA2U0sL3o2l6F9yIfK1
+         +sYZrPllta4TVrjis8EuTCh0QtI5O5UGbYS9bFcUuXAkZ2sqvzerCbzob5bf6Y2RPS
+         CIK0Cj/Tw8P4oL8QGVNIkRN5B5wfWnKneZ+0u1pg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Jiri Kosina <jkosina@suse.cz>,
+        stable@vger.kernel.org, Alan Kao <alankao@andestech.com>,
+        Greentime Hu <greentime@andestech.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 027/122] HID: logitech: check the return value of create_singlethread_workqueue
-Date:   Mon,  6 May 2019 16:31:25 +0200
-Message-Id: <20190506143057.185665784@linuxfoundation.org>
+Subject: [PATCH 5.0 043/122] riscv: fix accessing 8-byte variable from RV32
+Date:   Mon,  6 May 2019 16:31:41 +0200
+Message-Id: <20190506143058.785457087@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,45 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6c44b15e1c9076d925d5236ddadf1318b0a25ce2 ]
+[ Upstream commit dbee9c9c45846f003ec2f819710c2f4835630a6a ]
 
-create_singlethread_workqueue may fail and return NULL. The fix checks if it is
-NULL to avoid NULL pointer dereference.  Also, the fix moves the call of
-create_singlethread_workqueue earlier to avoid resource-release issues.
+A memory save operation to 8-byte variable in RV32 is divided into
+two sw instructions in the put_user macro.  The current fixup returns
+execution flow to the second sw instead of the one after it.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+This patch fixes this fixup code according to the load access part.
+
+Signed-off-by: Alan Kao<alankao@andestech.com>
+Cc: Greentime Hu <greentime@andestech.com>
+Cc: Vincent Chen <deanbo422@gmail.com>
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/riscv/include/asm/uaccess.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index f040c8a7f9a9..199cc256e9d9 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -2111,6 +2111,13 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
- 		kfree(data);
- 		return -ENOMEM;
- 	}
-+	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
-+	if (!data->wq) {
-+		kfree(data->effect_ids);
-+		kfree(data);
-+		return -ENOMEM;
-+	}
-+
- 	data->hidpp = hidpp;
- 	data->feature_index = feature_index;
- 	data->version = version;
-@@ -2155,7 +2162,6 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
- 	/* ignore boost value at response.fap.params[2] */
- 
- 	/* init the hardware command queue */
--	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
- 	atomic_set(&data->workqueue_size, 0);
- 
- 	/* initialize with zero autocenter to get wheel in usable state */
+diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+index 637b896894fc..aa82df30e38a 100644
+--- a/arch/riscv/include/asm/uaccess.h
++++ b/arch/riscv/include/asm/uaccess.h
+@@ -301,7 +301,7 @@ do {								\
+ 		"	.balign 4\n"				\
+ 		"4:\n"						\
+ 		"	li %0, %6\n"				\
+-		"	jump 2b, %1\n"				\
++		"	jump 3b, %1\n"				\
+ 		"	.previous\n"				\
+ 		"	.section __ex_table,\"a\"\n"		\
+ 		"	.balign " RISCV_SZPTR "\n"			\
 -- 
 2.20.1
 
