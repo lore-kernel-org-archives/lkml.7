@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54614C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A60C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2761F2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF772054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155159;
-	bh=l+vwBq8B0iCqSp7zzsk2DETMYixOA5pWhzYBakqzhJw=;
+	s=default; t=1557155174;
+	bh=sL3y0IG1KUINbFHeL51POgTm3rfkjbjchIH4oxMEPRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V2N4Ba3TIQz6+gi4JAowIZ0FhntoAvzTcyFV2XTVZYJ1ohMx0g+JDSU0zzmcaXmT1
-	 8LFnCNieQnw3+Zg7LBcFYv5X414DxrJ3sNcnDVdAFPuUZLWFp8OBAZ/kITwyHbKind
-	 8QTMmDTgOgdce4A2bWCTBwRw2MQVj+gAh8lrZiq4=
+	b=b1JIUF3UzWpVF0wRg8tmyTK7OYiJjITrPDQDVTCqhhtVEFAtpGAGI6hkc2LPXk/WN
+	 ak2orUoGMLwUpEjkWh+9Z7qIKUlz8tRVHlFUUmwsS00wfdHcZoBLTUGV8tXDS79kZk
+	 1CixqC5u4/ZhLSyklfBtKavtR2JVVZK/iXwqaPvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfEFPF5 (ORCPT
+        id S1727663AbfEFPGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:05:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59306 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:06:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727547AbfEFOiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:38:15 -0400
+        id S1727507AbfEFOiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:38:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1A1920449;
-        Mon,  6 May 2019 14:38:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AE5B214AE;
+        Mon,  6 May 2019 14:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153495;
-        bh=l+vwBq8B0iCqSp7zzsk2DETMYixOA5pWhzYBakqzhJw=;
+        s=default; t=1557153482;
+        bh=sL3y0IG1KUINbFHeL51POgTm3rfkjbjchIH4oxMEPRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fx15v/a2L1xN4Da0l14LrWpD9CtQyRz4Twb3j883wqaOp5KnZgHTNd/pLOzMlO0gJ
-         ZcMVCzxUu1SKX5Zcn71V+TGwwlV1rJWwZpSasXu+8uqEMWWHF+t9Kg51/YymHXWmV+
-         Homu4gM4cql0m6PqqKrQgYOyVZQlOs81YooPHfmE=
+        b=G3tUtwo2DFXrFLozGkpfu9R+vxnnrX2sOvxzkedKyyrXVZtoZDliS5tWFpiexWzLe
+         ZUUnDsf9ibFo5fYYTfKz/oUaU1aDJB20/VnV8VABLlT/EHCaeTlZOhopOPfUQ3tJIH
+         eI4WiwMJtNtP4t2xgr3iUPbw5Azc/mYLHkzjiOgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.0 111/122] gpio: mxc: add check to return defer probe if clock tree NOT ready
-Date:   Mon,  6 May 2019 16:32:49 +0200
-Message-Id: <20190506143104.441736734@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.0 084/122] Bluetooth: btusb: request wake pin with NOAUTOEN
+Date:   Mon,  6 May 2019 16:32:22 +0200
+Message-Id: <20190506143102.306608149@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -59,39 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <anson.huang@nxp.com>
+From: Brian Norris <briannorris@chromium.org>
 
-commit a329bbe707cee2cf8c660890ef2ad0d00ec7e8a3 upstream.
+commit 771acc7e4a6e5dba779cb1a7fd851a164bc81033 upstream.
 
-On i.MX8MQ platform, clock driver uses platform driver
-model and it is probed after GPIO driver, so when GPIO
-driver fails to get clock, it should check the error type
-to decide whether to return defer probe or just ignore
-the clock operation.
+Badly-designed systems might have (for example) active-high wake pins
+that default to high (e.g., because of external pull ups) until they
+have an active firmware which starts driving it low.  This can cause an
+interrupt storm in the time between request_irq() and disable_irq().
 
-Fixes: 2808801aab8a ("gpio: mxc: add clock operation")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+We don't support shared interrupts here, so let's just pre-configure the
+interrupt to avoid auto-enabling it.
+
+Fixes: fd913ef7ce61 ("Bluetooth: btusb: Add out-of-band wakeup support")
+Fixes: 5364a0b4f4be ("arm64: dts: rockchip: move QCA6174A wakeup pin into its USB node")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-mxc.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/bluetooth/btusb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -438,8 +438,11 @@ static int mxc_gpio_probe(struct platfor
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2885,6 +2885,7 @@ static int btusb_config_oob_wake(struct
+ 		return 0;
+ 	}
  
- 	/* the controller clock is optional */
- 	port->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(port->clk))
-+	if (IS_ERR(port->clk)) {
-+		if (PTR_ERR(port->clk) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
- 		port->clk = NULL;
-+	}
++	irq_set_status_flags(irq, IRQ_NOAUTOEN);
+ 	ret = devm_request_irq(&hdev->dev, irq, btusb_oob_wake_handler,
+ 			       0, "OOB Wake-on-BT", data);
+ 	if (ret) {
+@@ -2899,7 +2900,6 @@ static int btusb_config_oob_wake(struct
+ 	}
  
- 	err = clk_prepare_enable(port->clk);
- 	if (err) {
+ 	data->oob_wake_irq = irq;
+-	disable_irq(irq);
+ 	bt_dev_info(hdev, "OOB Wake-on-BT configured at IRQ %u", irq);
+ 	return 0;
+ }
 
 
