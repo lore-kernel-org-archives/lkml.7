@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1549C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D27C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8535D2082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028EE2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKpHRgXa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rNlEyEgK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfEFIU7 (ORCPT
+        id S1726755AbfEFIVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:20:59 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40068 "EHLO
+        Mon, 6 May 2019 04:21:03 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43950 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfEFIU4 (ORCPT
+        with ESMTP id S1726739AbfEFIVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:20:56 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d31so6091803pgl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:20:56 -0700 (PDT)
+        Mon, 6 May 2019 04:21:00 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t22so6082241pgi.10
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:20:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=t70GCGACIUWewKKDD5qrnEovI01jL9vwBiMVTScwpdQ=;
-        b=oKpHRgXa47NOgo/vGp8semc/qpulzzzXcb0ttnNg7EYsNlpSoFZWioiUrf26bGC98m
-         eUSR7Bf5/qcCkM4+azAcADd6p3WmhznVa+1uMTr4pQuk4DeU0UWxmGBCD/r4+xuveWko
-         /HjMWAMZpilSY3qMkE2b6ATMUdO41dCUl6s0Kur5Q/lXHCQo45PuQURtf/7rWwBqz+JO
-         8E82e1ZL9hS2Jkg3DeYWpvV1gZV5R59CLlOcxIiu4dSPkcJqfjhmwvVsi9cOFMRHYqNo
-         k2XvmnWaii49/JGdhW2ZQEe51yxsdq6IlbcAfmh3ZhJQA/mFDJgr8CVD1iIHOBL40Fmu
-         m8xw==
+        bh=QxG1O4WWZxwFIRqkhxWEPqmVT9qEXuTD/gGlj/tlLpY=;
+        b=rNlEyEgKW6hDoDHLX1fSr9fvlWUxtHa2VzHauzurG1LLg2qyLoh6pvJ+9Hx4oWzRbM
+         FvSdAuMncfV9vcjlZDNcgXwOgntveG6ft1R7AeFmpe04Fx9ke6OWChd/OzJJcs+1pGmA
+         /EOlea2I/IYveP8rNmifPzg4aVKduwNJA+5flBQilwBSutmZAOziGf+WIrVODD0jeDDc
+         HJJTfpcvHI8rzB1RGSaVe9AUPFsdoMu32gb/OvGDrYiGO+c3gMCfHSPr0GBfCIXmdVTD
+         J3DjOCwiqOAcdbe92gI04Ar1jIrM6yQuwmMYCeDRw1wnY3qvDKYVwvJNFSnFrKm7FZ1y
+         Lknw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=t70GCGACIUWewKKDD5qrnEovI01jL9vwBiMVTScwpdQ=;
-        b=ihKc2BZ5lTaqH2mdCilxBKvnW2FYMI5FUWDvGvTtRsadPzpyM3YuR0UROK+Zho1pM0
-         t62dZ8u3Ji+wuukGEPOmJpLGN5uDpyiR0zVwYt7kFckcCPRAfFGFWwkH6RzO9nK6pPNm
-         i2LW34n4xs0jxSlf1aWkzn37FmoOGwloZ5SqGPyRSKl2kmE9rDM0ZHTOYX91QP1k9W/d
-         ZJCB2VbqoTSSwoeAtrgSxUuKm6V7TyfJKNEnBd5JsaWDHjK8q+DCuI88OxeZ/h+I/tlt
-         9aNQ885365tI3WspIUlYJVBqhGf1hvKYcstpNK+QPlpHNNuBxNVwD6FizoNUI1KWcFs7
-         EAMg==
-X-Gm-Message-State: APjAAAXmTSUfoXb7wT1CLp8u+MwK3hqAo+fv/4LHM3maWz4ZArWoKMfz
-        s9+uHjbkHRiSRGP/wbEsD4s=
-X-Google-Smtp-Source: APXvYqzp4NzdTux9vAnYxuI9usVUVhWVyeu9wamNRRWSVnNAtFhUUgpZmDuUkFtMSRZHJffkCNjH/Q==
-X-Received: by 2002:a63:1604:: with SMTP id w4mr30773662pgl.148.1557130856083;
-        Mon, 06 May 2019 01:20:56 -0700 (PDT)
+        bh=QxG1O4WWZxwFIRqkhxWEPqmVT9qEXuTD/gGlj/tlLpY=;
+        b=ehFgqr39nfSg8OkqK/4pnEwHhh+z/nTGXIuiFyrbqDkFc+/2elri9OLbdOxJ/7Qvkq
+         7YjhwONUpNlAKw2yyQncA/5qxbD+X80LhGI0y+MeG0MiF8yRlLVZ4QQBRUYmjg0cGK12
+         DRyXUj0QjHQGiCmEDNtEo1zxdtbW8IzAuJZiTLg0l4Dg0HTS2RDyVqrY/DeSlsjge1SP
+         PTaCntSMgICcXy0EptraSOHGK6AsZbXnAQXck5SjGt8c7d7r6MoxRDTtQx6g3xBEfyJ2
+         4YBAygfcoDNgF//lXAR+GqWl7fZ5IMFJk0/e9c1i+VUSSKnCkvObgDTgONEL4KiFRGDk
+         tQtw==
+X-Gm-Message-State: APjAAAVSbTD1pnyxlRLDskA8s6yUSMzZ+sY8xzpNsD9J06Gc/mqMKzXM
+        ZvK0OelX5oc3fjhAJCpQwm0=
+X-Google-Smtp-Source: APXvYqy8oPFmoJ0+3Yv6z8UJPjmBg6ptnYHJlV3AThNTOQ4AIMorgVWk/L5VgnWZMUy+OkAZLrJBsQ==
+X-Received: by 2002:aa7:80d0:: with SMTP id a16mr32496632pfn.206.1557130859204;
+        Mon, 06 May 2019 01:20:59 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v19sm20958013pfa.138.2019.05.06.01.20.52
+        by smtp.gmail.com with ESMTPSA id v19sm20958013pfa.138.2019.05.06.01.20.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 01:20:55 -0700 (PDT)
+        Mon, 06 May 2019 01:20:58 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, linux-kernel@vger.kernel.org,
         Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v2 21/23] locking/lockdep: Consolidate lock usage bit initialization
-Date:   Mon,  6 May 2019 16:19:37 +0800
-Message-Id: <20190506081939.74287-22-duyuyang@gmail.com>
+Subject: [PATCH v2 22/23] locking/lockdep: Adjust new bit cases in mark_lock
+Date:   Mon,  6 May 2019 16:19:38 +0800
+Message-Id: <20190506081939.74287-23-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190506081939.74287-1-duyuyang@gmail.com>
 References: <20190506081939.74287-1-duyuyang@gmail.com>
@@ -74,69 +74,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lock usage bit initialization is consolidated into one function
-mark_usage(). Trivial readability improvement. No functional change.
+The new bit can be any possible lock usage except it is garbage, so the
+cases in switch can be made simpler. Warn early on if wrong usage bit is
+passed without taking locks. No functional change.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ kernel/locking/lockdep.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 9d2728c..79bc6cd 100644
+index 79bc6cd..24e3bca 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -3459,8 +3459,12 @@ void trace_softirqs_off(unsigned long ip)
- 		debug_atomic_inc(redundant_softirqs_off);
- }
- 
--static int mark_irqflags(struct task_struct *curr, struct held_lock *hlock)
-+static int
-+mark_usage(struct task_struct *curr, struct held_lock *hlock, int check)
+@@ -3581,6 +3581,11 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
  {
-+	if (!check)
-+		goto lock_used;
+ 	unsigned int new_mask = 1 << new_bit, ret = 1;
+ 
++	if (new_bit >= LOCK_USAGE_STATES) {
++		DEBUG_LOCKS_WARN_ON(1);
++		return 0;
++	}
 +
  	/*
- 	 * If non-trylock use in a hardirq or softirq context, then
- 	 * mark the lock as used in these contexts:
-@@ -3504,6 +3508,11 @@ static int mark_irqflags(struct task_struct *curr, struct held_lock *hlock)
- 		}
- 	}
- 
-+lock_used:
-+	/* mark it as used: */
-+	if (!mark_lock(curr, hlock, LOCK_USED))
-+		return 0;
-+
- 	return 1;
- }
- 
-@@ -3545,8 +3554,8 @@ int mark_lock_irq(struct task_struct *curr, struct held_lock *this,
- 	return 1;
- }
- 
--static inline int mark_irqflags(struct task_struct *curr,
--		struct held_lock *hlock)
-+static inline int
-+mark_usage(struct task_struct *curr, struct held_lock *hlock, int check)
- {
- 	return 1;
- }
-@@ -3832,11 +3841,8 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
- #endif
- 	hlock->pin_count = pin_count;
- 
--	if (check && !mark_irqflags(curr, hlock))
--		return 0;
--
--	/* mark it as used: */
--	if (!mark_lock(curr, hlock, LOCK_USED))
-+	/* Initialize the lock usage bit */
-+	if (!mark_usage(curr, hlock, check))
+ 	 * If already set then do not dirty the cacheline,
+ 	 * nor do any checks:
+@@ -3604,25 +3609,13 @@ static int mark_lock(struct task_struct *curr, struct held_lock *this,
  		return 0;
  
- 	/*
+ 	switch (new_bit) {
+-#define LOCKDEP_STATE(__STATE)			\
+-	case LOCK_USED_IN_##__STATE:		\
+-	case LOCK_USED_IN_##__STATE##_READ:	\
+-	case LOCK_ENABLED_##__STATE:		\
+-	case LOCK_ENABLED_##__STATE##_READ:
+-#include "lockdep_states.h"
+-#undef LOCKDEP_STATE
+-		ret = mark_lock_irq(curr, this, new_bit);
+-		if (!ret)
+-			return 0;
+-		break;
+ 	case LOCK_USED:
+ 		debug_atomic_dec(nr_unused_locks);
+ 		break;
+ 	default:
+-		if (!debug_locks_off_graph_unlock())
++		ret = mark_lock_irq(curr, this, new_bit);
++		if (!ret)
+ 			return 0;
+-		WARN_ON(1);
+-		return 0;
+ 	}
+ 
+ 	graph_unlock();
 -- 
 1.8.3.1
 
