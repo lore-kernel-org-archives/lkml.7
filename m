@@ -2,111 +2,107 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C18C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A79C46470
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAFB206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0548214DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbfEFHBL (ORCPT
+        id S1726175AbfEFHDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:01:11 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31788 "EHLO mga02.intel.com"
+        Mon, 6 May 2019 03:03:32 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:40984 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725710AbfEFHBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:01:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 00:01:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,437,1549958400"; 
-   d="scan'208";a="140379799"
-Received: from irsmsx106.ger.corp.intel.com ([163.33.3.31])
-  by orsmga008.jf.intel.com with ESMTP; 06 May 2019 00:01:05 -0700
-Received: from irsmsx102.ger.corp.intel.com ([169.254.2.21]) by
- IRSMSX106.ger.corp.intel.com ([169.254.8.235]) with mapi id 14.03.0415.000;
- Mon, 6 May 2019 08:01:05 +0100
-From:   "Reshetova, Elena" <elena.reshetova@intel.com>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Ingo Molnar <mingo@kernel.org>
-CC:     Andy Lutomirski <luto@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-        "Eric Biggers" <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon
- syscall
-Thread-Index: AQHU81HQwzT9MH4dM0y/JZXnSwiYT6Y8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAAQuGgIAAYQuAgAAKhwCACsPi4IADJTwAgAAcagCAAExngIAEBbGAgACIbACAAbyQ8IAA626AgAGZfXCAAARpgIAAWpuAgAAF74CAABf/AIAAAvkAgAGZnrD///dzgIAEI1ng
-Date:   Mon, 6 May 2019 07:01:04 +0000
-Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4C7125F@IRSMSX102.ger.corp.intel.com>
-References: <57357E35-3D9B-4CA7-BAB9-0BE89E0094D2@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C66A8A@IRSMSX102.ger.corp.intel.com>
- <6860856C-6A92-4569-9CD8-FF6C5C441F30@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
- <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C6C2C3@IRSMSX102.ger.corp.intel.com>
- <2e55aeb3b39440c0bebf47f0f9522dd8@AcuMS.aculab.com>
- <CALCETrXjGvWVgZHrKCfH6RBsnYOyD2+Mey1Esw7BsA4Eg6PS0A@mail.gmail.com>
- <20190502150853.GA16779@gmail.com>
- <d64b3562d179430f9bdd8712999ff98a@AcuMS.aculab.com>
- <20190502164524.GB115950@gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C6F523@IRSMSX102.ger.corp.intel.com>
- <e4fbad8c51284a0583b98c52de4a207d@AcuMS.aculab.com>
-In-Reply-To: <e4fbad8c51284a0583b98c52de4a207d@AcuMS.aculab.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMDkwNzNhZTgtMTVmZi00NmVmLThmNzAtN2VhNjNkZDY3OWViIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiQnVQcFlEbXZGaU9iYUlqU3dUQ2JydWNzS1ZZblZhNVJ5dGtXZTRRU3pzTnZsRHB4dkdyTTI5NjBVeWVmWmhKcyJ9
-x-originating-ip: [163.33.239.182]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        id S1725710AbfEFHDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 03:03:31 -0400
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id 678822367F41339C650A;
+        Mon,  6 May 2019 15:03:29 +0800 (CST)
+Received: from notes_smtp.zte.com.cn ([10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id x4673Pko021643;
+        Mon, 6 May 2019 15:03:25 +0800 (GMT-8)
+        (envelope-from wen.yang99@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019050615032919-10027948 ;
+          Mon, 6 May 2019 15:03:29 +0800 
+From:   Wen Yang <wen.yang99@zte.com.cn>
+To:     linux-kernel@vger.kernel.org
+Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: [PATCH 1/4] media: venus: firmware: fix leaked of_node references
+Date:   Mon, 6 May 2019 15:05:15 +0800
+Message-Id: <1557126318-21487-2-git-send-email-wen.yang99@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1557126318-21487-1-git-send-email-wen.yang99@zte.com.cn>
+References: <1557126318-21487-1-git-send-email-wen.yang99@zte.com.cn>
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-05-06 15:03:29,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-05-06 15:03:23,
+        Serialize complete at 2019-05-06 15:03:23
+X-MAIL: mse-fl1.zte.com.cn x4673Pko021643
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBSZXNoZXRvdmEsIEVsZW5hDQo+ID4gU2VudDogMDMgTWF5IDIwMTkgMTc6MTcNCj4g
-Li4uDQo+ID4gcmRyYW5kIChjYWxsaW5nIGV2ZXJ5IDggc3lzY2FsbHMpOiBTaW1wbGUgc3lzY2Fs
-bDogMC4wNzk1IG1pY3Jvc2Vjb25kcw0KPiANCj4gWW91IGNvdWxkIHRyeSBzb21ldGhpbmcgbGlr
-ZToNCj4gCXU2NCByYW5kX3ZhbCA9IGNwdV92YXItPnN5c2NhbGxfcmFuZA0KPiANCj4gCXdoaWxl
-ICh1bmxpa2VseShyYW5kX3ZhbCA9PSAwKSkNCj4gCQlyYW5kX3ZhbCA9IHJkcmFuZDY0KCk7DQo+
-IA0KPiAJc3RhY2tfb2Zmc2V0ID0gcmFuZF92YWwgJiAweGZmOw0KPiAJcmFuZF92YWwgPj49IDY7
-DQo+IAlpZiAobGlrZWx5KHJhbmRfdmFsID49IDQpKQ0KPiAJCWNwdV92YXItPnN5c2NhbGxfcmFu
-ZCA9IHJhbmRfdmFsOw0KPiAJZWxzZQ0KPiAJCWNwdV92YXItPnN5c2NhbGxfcmFuZCA9IHJkcmFu
-ZDY0KCk7DQo+IA0KPiAJcmV0dXJuIHN0YWNrX29mZnNldDsNCj4gDQo+IFRoYXQgZ2l2ZXMgeW91
-IDEwIHN5c3RlbSBjYWxscyBwZXIgcmRyYW5kIGluc3RydWN0aW9uDQo+IGFuZCBtb3N0bHkgdGFr
-ZXMgdGhlIGxhdGVuY3kgb3V0IG9mIGxpbmUuDQoNCkkgYW0gbm90IHJlYWxseSBoYXBweSBnb2lu
-ZyB0aGUgcmRyYW5kIHBhdGggZm9yIGEgY291cGxlIG9mIHJlYXNvbnM6DQotIGl0IGlzIG5vdCBh
-dmFpbGFibGUgb24gb2xkZXIgUENzDQotIGl0cyBwZXJmb3JtYW5jZSB2YXJpZXMgYWNyb3NzIENQ
-VXMgdGhhdCBzdXBwb3J0IGl0IChhbmQgYXMgSSB1bmRlcnN0b29kIHZhcmllcyBxdWl0ZSBzb21l
-KQ0KLSBpdCBpcyB4ODYgY2VudHJpYyBhbmQgbm90IGdlbmVyaWMNCg0KU28sIGlmIHdlIGNhbiB1
-c2UgZ2V0X3JhbmRvbV9ieXRlcygpIGludGVyZmFjZSB3aXRob3V0IHRpZ2h0ZW5pbmcgb3Vyc2Vs
-dmVzIHRvDQphIHBhcnRpY3VsYXIgaW5zdHJ1Y3Rpb24sIEkgdGhpbmsgaXQgd291bGQgYmUgYmV0
-dGVyLiANClRoZSBudW1iZXJzIEkgaGF2ZSBtZWFzdXJlZCBzbyBmYXIgZm9yIGJ1ZmZlciBzaXpl
-IG9mIDQwOTYgaXMgU1cgb25seSwgDQpJIHdpbGwgdHJ5IHRvIG1lYXN1cmUgdG9kYXkgd2hhdCBi
-b29zdCAoaWYgYW55KSB3ZSBjYW4gaGF2ZSBpZiB3ZSB1c2UgU0lNRCANCmNvZGUgZm9yIGl0LiAN
-Cg0KQmVzdCBSZWdhcmRzLA0KRWxlbmEuDQo=
+The call to of_parse_phandle returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
+
+Detected by coccinelle with the following warnings:
+drivers/media/platform/qcom/venus/firmware.c:90:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
+drivers/media/platform/qcom/venus/firmware.c:94:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
+drivers/media/platform/qcom/venus/firmware.c:128:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 82, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/media/platform/qcom/venus/firmware.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+index 6cfa802..f81449b 100644
+--- a/drivers/media/platform/qcom/venus/firmware.c
++++ b/drivers/media/platform/qcom/venus/firmware.c
+@@ -87,11 +87,11 @@ static int venus_load_fw(struct venus_core *core, const char *fwname,
+ 
+ 	ret = of_address_to_resource(node, 0, &r);
+ 	if (ret)
+-		return ret;
++		goto err_put_node;
+ 
+ 	ret = request_firmware(&mdt, fwname, dev);
+ 	if (ret < 0)
+-		return ret;
++		goto err_put_node;
+ 
+ 	fw_size = qcom_mdt_get_size(mdt);
+ 	if (fw_size < 0) {
+@@ -125,6 +125,8 @@ static int venus_load_fw(struct venus_core *core, const char *fwname,
+ 	memunmap(mem_va);
+ err_release_fw:
+ 	release_firmware(mdt);
++err_put_node:
++	of_node_put(node);
+ 	return ret;
+ }
+ 
+-- 
+2.9.5
+
