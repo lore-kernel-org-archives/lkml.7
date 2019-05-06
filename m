@@ -2,118 +2,121 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38EFC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A176EC04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866282082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:35:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="HfCKA2Gc"
+	by mail.kernel.org (Postfix) with ESMTP id 6AC23204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557128265;
+	bh=/l8jqohquRf1w21bmzWUYO4PKKiiQd+E4G01VKTDYOg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vXMYOo3tQN4Vu1E0MZ83MowvaIv+byz9vnya23mCCmFvQK9ZzumUiWYkevnZGrBiL
+	 do0WSTydf2bgwE2RnKDMMUIqA+wHd5utgag1mwibAlpvov7+AFDIuj/t2tsiz0XvtX
+	 8HCHalnKfQ/ivd9fx/9n0GixrqG+5Hjv+WkLUQLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfEFHe7 (ORCPT
+        id S1726298AbfEFHho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:34:59 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39799 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbfEFHe7 (ORCPT
+        Mon, 6 May 2019 03:37:44 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38842 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfEFHhn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:34:59 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q10so10175447ljc.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 00:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ok4FiX0qqzxFXNlfPJQBxeAS7MtYAthIHs0pXM/1gsw=;
-        b=HfCKA2GcWuIWfyCu6q7Vb4VuU5C85rltY95cYwAzVOuNpcOxt9Vpj8t6IWJzXJpM16
-         uc9PlW5f9Go3h/CJ9UsWwq1rdbfbTV7+cveeHt9cUsGuK9G3I7pEgW3Zv9bOFVDQOZbH
-         MpdHFdCp7U0R6aqGNC2FBUx6AIBp++6riZnVE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ok4FiX0qqzxFXNlfPJQBxeAS7MtYAthIHs0pXM/1gsw=;
-        b=s8AW9AAlOAsUAda3HdLWbgN0rPSSyw5jkTt6dcHkB8VnOIQGBZB/jqPER41gJ072hh
-         +ZwvBsc4rsHSdtJbGZ3wYZJ2hiOoNih+wjUxX1BC9VOML4hhIddSxs5gGOivGuzQOMW2
-         vNTn3A+6IghMx3nMDw79aW18/5FPWHwTdP9LTMHXO+zoMhIzODszyPbW2Ea4Wq+kqQiZ
-         dPCHCUyXcJrb6B/Pg9YBb68MoCGJA8rwB6eGroh8zX03uTDNXxCFuKugtVC9jqfE0ZWI
-         S6OjHbRjXG9PmJpXrRj/8rwBM9JcWMKQnVKxi+ne7C1oS74qC3BN7A8aqcTXoyYbVnle
-         gX1g==
-X-Gm-Message-State: APjAAAVKZFTDJ9lqPcf6LmH2x90Jra0PbVGFf96s7TQVC1u0QyNAB0Zd
-        k8FVCKAD2Kf7cRs4clMHQXTn2Q==
-X-Google-Smtp-Source: APXvYqyIXcDanMudqDV0cbvEgmg2JswEqVaUi3W8CZa23fGsbc0VYTSqSxQKNyi+uTC2tZHBHGapWQ==
-X-Received: by 2002:a2e:9f07:: with SMTP id u7mr3713010ljk.115.1557128097278;
-        Mon, 06 May 2019 00:34:57 -0700 (PDT)
-Received: from [172.16.11.26] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id y25sm2083764ljh.31.2019.05.06.00.34.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 00:34:56 -0700 (PDT)
-Subject: Re: [PATCH 00/10] implement DYNAMIC_DEBUG_RELATIVE_POINTERS
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jason Baron <jbaron@akamai.com>, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>
-References: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
- <1afb0702-3cc5-ba4f-2bdd-604d9da2b846@rasmusvillemoes.dk>
- <20190506070544.GA66463@gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <25dfde77-fdad-0b99-75ec-4ba480058970@rasmusvillemoes.dk>
-Date:   Mon, 6 May 2019 09:34:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 6 May 2019 03:37:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ml4uJzXcGzydWf79ydXHif8mbv/MfKjBeSGO2rM7E+g=; b=DwMEcOpnMtddv14wrkldHEyB+
+        hF4fks1qiB5DJ7lI1MC/QJ8Esa52mK+osjDFyyJpEL0lK+dKFPvL+RRZVN8jY4kz6yijQKF5GQOjX
+        CUQ+0Hkw9MpBZ6xzGOHuRcj8hAF+GQrrTtmpF+qypulZ1LX3tpLkwvIN2DnCEtwjdx7oU=;
+Received: from kd111239184067.au-net.ne.jp ([111.239.184.67] helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hNYBt-0000s5-BM; Mon, 06 May 2019 07:37:37 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id DFBC3440040; Mon,  6 May 2019 05:49:16 +0100 (BST)
+Date:   Mon, 6 May 2019 13:49:16 +0900
+From:   Mark Brown <broonie@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Krishna Yarlagadda <kyarlagadda@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V3 3/9] spi: add SPI_LSBYTE_FIRST mode
+Message-ID: <20190506044916.GO14916@sirena.org.uk>
+References: <1555363834-32155-1-git-send-email-skomatineni@nvidia.com>
+ <1555363834-32155-4-git-send-email-skomatineni@nvidia.com>
+ <20190419152208.GT2803@sirena.org.uk>
+ <BYAPR12MB33989D8DCEFCDE5DB76429E7C23F0@BYAPR12MB3398.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190506070544.GA66463@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AoBLyXwWXtFbU0pZ"
+Content-Disposition: inline
+In-Reply-To: <BYAPR12MB33989D8DCEFCDE5DB76429E7C23F0@BYAPR12MB3398.namprd12.prod.outlook.com>
+X-Cookie: -- I have seen the FUN --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/05/2019 09.05, Ingo Molnar wrote:
-> 
-> 
-> It's sad to see such nice data footprint savings go the way of the dodo 
-> just because GCC 4.8 is buggy.
-> 
-> The current compatibility cut-off is GCC 4.6:
-> 
->   GNU C                  4.6              gcc --version
-> 
-> Do we know where the GCC bug was fixed, was it in GCC 4.9?
 
-Not sure. The report was from a build on CentOS with gcc 4.8.5, so I
-tried installing the gcc-4.8 package on my Ubuntu machine and could
-reproduce. Then I tried installed gcc-4.9, and after disabling
-CONFIG_RETPOLINE (both CentOS and Ubuntu carry backported retpoline
-support in their 4.8, but apparently not 4.9), I could see that the
-problem was gone. But whether it's gone because it no longer elides an
-asm volatile() on a code path it otherwise emits code for, or because it
-simply doesn't emit the unused static inline() at all I don't know.
+--AoBLyXwWXtFbU0pZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I thought 0day also tested a range of supported compiler versions, so I
-was rather surprised at getting this report at all. But I suppose the
-arch/config matrix is already pretty huge. Anyway, the bug certainly
-doesn't exist in any of the gcc versions 0day does test.
+On Sat, Apr 27, 2019 at 12:32:58AM +0000, Sowjanya Komatineni wrote:
+> > On Mon, Apr 15, 2019 at 02:30:28PM -0700, Sowjanya Komatineni wrote:
 
-I _am_ bending the C rules a bit with the "extern some_var; asm
-volatile(".section some_section\nsome_var: blabla");". I should probably
-ask on the gcc list whether this way of defining a local symbol in
-inline assembly and referring to it from C is supposed to work, or it
-just happens to work by chance.
+> > This is byte ordering as opposed to bit ordering which the core
+> > already supports.  Do you have any examples of devices that need
+> > this or is it just being added for completeness?  If devices are
+> > going to rely on this we probably need emulation > support in the
+> > core I guess given that this is a pretty unusual controller feature.
 
-Rasmus
+> Current upstream platforms have no specific device requirement but
+> added this feature as Tegra support it for specific requirements of
+> some slaves.
+
+Do we have any examples of such devices?  In any case I think the main
+thing here would be a software implementation of the feature so that
+drivers can use it sensibly - at the minute they'd have to provide code
+to work without the feature anyway and it seems like a relatively small
+optimization for most things.
+
+> [Changed mail client message format word wrap limit to 74 columns]
+
+It's not working, and it's also mangling quoted sections of the mail
+too.
+
+--AoBLyXwWXtFbU0pZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzPvMwACgkQJNaLcl1U
+h9BhdAf+KaNn14IkNGm8rJREfmZNBQNH91xi4m0l7rxa6aW9c9YwozOM6cKxPdyR
+LRhdsAMvfNxCdosH7hrOPptQgEsAudA3+JVIwnhOuhFkkBmqfeNlc2/HUQIoXkKr
++RIH1nJJA9bxD0Z5u2x7wAt1F4bQ6EQ1kb0oSSuHThMI7WI5u7y3kafC/gUctwzB
+JeU9TplFlzXmGLHkve6berLhGmZOvZ+bnOPHC7H0FlGScV6M6qk9sw7zxt6zxPF9
+Aw9KSh05HPZ5aCYz/4kYBGYf7K+w97bjpUxX73idvJeXauzklnVgAnaq2S1JZf8q
+hUny8YE9djcs/IQXidQFluYReixJDA==
+=8Pu3
+-----END PGP SIGNATURE-----
+
+--AoBLyXwWXtFbU0pZ--
