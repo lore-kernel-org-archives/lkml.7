@@ -2,140 +2,118 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BF8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8BDC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCB62054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EBD206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfEFOGj (ORCPT
+        id S1726362AbfEFOGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:06:39 -0400
-Received: from 0.ictbs.com ([203.137.112.168]:36262 "EHLO 0.ictbs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbfEFOGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:06:38 -0400
-Received: by hq.local (Postfix, from userid 1000)
-        id 20DD366429; Mon,  6 May 2019 16:06:30 +0200 (CEST)
-Date:   Mon, 6 May 2019 16:06:30 +0200
-From:   Victor Bravo <1905@spmblk.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Arend Van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] brcmfmac: sanitize DMI strings v2
-Message-ID: <20190506140629.2swl35wzkves4h2v@localhost>
-References: <20190504162633.ldrz2nqfocg55grb@localhost>
- <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
- <20190504194440.4zcxjrtj2aft3ka4@localhost>
- <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <20190505150355.3fbng4ny34x255vk@localhost>
- <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
- <87o94gug81.fsf@codeaurora.org>
- <20190506091441.wqtccm4n6xxhxom2@localhost>
- <878svjvk9q.fsf@codeaurora.org>
+        Mon, 6 May 2019 10:06:51 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7172 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725852AbfEFOGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:06:51 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B5049A20A38C0258464B;
+        Mon,  6 May 2019 22:06:47 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 6 May 2019
+ 22:06:39 +0800
+Subject: [PATCH v2] mm/hugetlb: Don't put_page in lock of hugetlb_lock
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+To:     <mhocko@suse.com>, <mike.kravetz@oracle.com>,
+        <shenkai8@huawei.com>, <linfeilong@huawei.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <wangwang2@huawei.com>, "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>, <agl@us.ibm.com>,
+        <nacc@us.ibm.com>
+References: <12a693da-19c8-dd2c-ea6a-0a5dc9d2db27@huawei.com>
+Message-ID: <b8ade452-2d6b-0372-32c2-703644032b47@huawei.com>
+Date:   Mon, 6 May 2019 22:06:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878svjvk9q.fsf@codeaurora.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <12a693da-19c8-dd2c-ea6a-0a5dc9d2db27@huawei.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.225.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 03:29:21PM +0300, Kalle Valo wrote:
-> Victor Bravo <1905@spmblk.com> writes:
-> 
-> > On Mon, May 06, 2019 at 11:42:06AM +0300, Kalle Valo wrote:
-> >> Hans de Goede <hdegoede@redhat.com> writes:
-> >> 
-> >> >> @@ -99,6 +107,15 @@ static const struct dmi_system_id dmi_platform_data[] = {
-> >> >>   	{}
-> >> >>   };
-> >> >>   +void brcmf_dmi_sanitize(char *dst, const unsigned char *allowed,
-> >> >> char safe)
-> >> >> +{
-> >> >> +	while (*dst) {
-> >> >> +		if ((*dst < 0) || !(allowed[*dst / 8] & (1 << (*dst % 8))))
-> >> >
-> >> > At a first look I have no clue what this code is doing and I honestly do not feel
-> >> > like figuring it out, this is clever, but IMHO not readable.
-> >> >
-> >> > Please just write this as if (*dst < 0x21 || (*dst > foo && < bar) || etc,
-> >> > so that a human can actually see in one look what the code is doing.
-> >> 
-> >> Is there an existing function for sanitising filenames so that we don't
-> >> need to reinvent the wheel, maybe something like isalnum()?
-> >
-> > I would definitely prefer to use existing function, but I didn't find
-> > any suitable one. Suggestions are welcome.
-> 
-> I didn't find anything either, but hopefully someone knows.
-> 
-> > As for implementation details, the one I posted was optimized for both
-> > speed and size, and at least in my opinion this bit array driven
-> > parametric implementation is exactly what is needed here (using a string
-> > of allowed characters with strchr-style lookups would bring much worse
-> > complexity, and checking the characters using series of hardcoded if
-> > conditions could quickly grow to more than those 16 bytes used by the
-> > array).
-> 
-> But is this really something which should be optimised? This is driver
-> initialisation, not in some hot path, right? Can you even measure the
-> difference?
+From: Kai Shen <shenkai8@huawei.com>
 
-I didn't measure it, but according to my understanding of "Linux Kernel
-Contributor Covenant Code of Conduct Interpretation" this actually
-seems to be right according to "everyone involved wants to see the best
-possible solution for the overall success of Linux" (but it also depends
-on defintion of "best possible" of course).
+spinlock recursion happened when do LTP test:
+#!/bin/bash
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
+./runltp -p -f hugetlb &
 
-Honestly, my exact thought behind this was that switch() or if
-conditions shouldn't be used here (except simple case handling few
-characters) because of above rule.
+The dtor returned by get_compound_page_dtor in __put_compound_page
+may be the function of free_huge_page which will lock the hugetlb_lock,
+so don't put_page in lock of hugetlb_lock.
 
-I also definitely want to avoid reinventing the wheel or even having
-duplicate code in the kernel, so I tried to write the routine in a way
-that allows it to be used as kernel library function usable in any
-driver unless we manage to find existing wheel of similar parameters
-elsewhere. That's why allowed and safe are passed as arguments even if
-they are available as global varible / macro.
+ BUG: spinlock recursion on CPU#0, hugemmap05/1079
+  lock: hugetlb_lock+0x0/0x18, .magic: dead4ead, .owner: hugemmap05/1079, .owner_cpu: 0
+ Call trace:
+  dump_backtrace+0x0/0x198
+  show_stack+0x24/0x30
+  dump_stack+0xa4/0xcc
+  spin_dump+0x84/0xa8
+  do_raw_spin_lock+0xd0/0x108
+  _raw_spin_lock+0x20/0x30
+  free_huge_page+0x9c/0x260
+  __put_compound_page+0x44/0x50
+  __put_page+0x2c/0x60
+  alloc_surplus_huge_page.constprop.19+0xf0/0x140
+  hugetlb_acct_memory+0x104/0x378
+  hugetlb_reserve_pages+0xe0/0x250
+  hugetlbfs_file_mmap+0xc0/0x140
+  mmap_region+0x3e8/0x5b0
+  do_mmap+0x280/0x460
+  vm_mmap_pgoff+0xf4/0x128
+  ksys_mmap_pgoff+0xb4/0x258
+  __arm64_sys_mmap+0x34/0x48
+  el0_svc_common+0x78/0x130
+  el0_svc_handler+0x38/0x78
+  el0_svc+0x8/0xc
 
-The bitmask approach also still seems useful as it allows to easily
-handle any set of allowed characters, while it seems that the set
-of unwanted characters may be extended to even more than my patch
-handles.
+Fixes: 9980d744a0 ("mm, hugetlb: get rid of surplus page accounting tricks")
+Signed-off-by: Kai Shen <shenkai8@huawei.com>
+Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+Reported-by: Wang Wang <wangwang2@huawei.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+---
+v1->v2: add Acked-by: Michal Hocko <mhocko@suse.com>
 
-So *in case no suitable existing sanitizing function is found*, the
-approach IMHO might be also
+ mm/hugetlb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-1) fine-tuning this kind of sanitizing routine and making it a kernel
-"library" function outside the driver, possibly with some useful macros
-- e.g. parametric macro to check whether a value is present in a set
-(which could also help to make this check more readable as suggested by
-Hans), and I would also really like a macro for compile-time initializon
-of the bit array from string literal containing allowed characters
-(which unfortunately doesn't seem possible in C yet).
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 6cdc7b2..c1e7b81 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1574,8 +1574,9 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
+ 	 */
+ 	if (h->surplus_huge_pages >= h->nr_overcommit_huge_pages) {
+ 		SetPageHugeTemporary(page);
++		spin_unlock(&hugetlb_lock);
+ 		put_page(page);
+-		page = NULL;
++		return NULL;
+ 	} else {
+ 		h->surplus_huge_pages++;
+ 		h->surplus_huge_pages_node[page_to_nid(page)]++;
+-- 
+1.8.3.1
 
-2) having only brcmf_dmi_allowed_chars and BRCMF_DMI_SAFE_CHAR in the
-driver and use these with the "library" function.
-
-Unfortunately I'm new to kernel development and have no clue whether
-it's a good idea to start with such a function inside driver and
-eventually moving it later, or start with getting the function in final
-location first and delay driver modificatios until it's ready.
-
-Regards,
-v.
