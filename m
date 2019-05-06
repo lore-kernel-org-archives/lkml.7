@@ -2,67 +2,107 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B64C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1E8C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F422053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:07:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557169655;
-	bh=td4OvxrBcPmkDdFNMhTd5GOSULW88Fh9zmY67lJjBaI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G+eq/C9VW2RANmnrPhuEpvflWFt9iN26fTBiHJ2t7isc1bqD0/LFbYy4SgQHKgRlW
-	 Ki02K0ITWmSeJMmpfQCpN65vZsUQVxjCvP0wVSPuVK4/+ic/UNFa4wDgmvCw97DbYP
-	 cNuCXs7FR+JA5p7miiCvpOGU4t8q7lNDN0gqMH+k=
+	by mail.kernel.org (Postfix) with ESMTP id 49B59206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7qO46Ow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfEFTHe (ORCPT
+        id S1726598AbfEFTK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:07:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36904 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725883AbfEFTHe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:07:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F2707AD3A;
-        Mon,  6 May 2019 19:07:32 +0000 (UTC)
-Date:   Mon, 6 May 2019 21:07:31 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Cc:     mike.kravetz@oracle.com, shenkai8@huawei.com,
-        linfeilong@huawei.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, wangwang2@huawei.com,
-        "Zhoukang (A)" <zhoukang7@huawei.com>,
-        Mingfangsen <mingfangsen@huawei.com>, agl@us.ibm.com,
-        nacc@us.ibm.com, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2] mm/hugetlb: Don't put_page in lock of hugetlb_lock
-Message-ID: <20190506190731.GE31017@dhcp22.suse.cz>
-References: <12a693da-19c8-dd2c-ea6a-0a5dc9d2db27@huawei.com>
- <b8ade452-2d6b-0372-32c2-703644032b47@huawei.com>
- <20190506142001.GC31017@dhcp22.suse.cz>
- <d11fa51f-e976-ec33-4f5b-3b26ada64306@huawei.com>
+        Mon, 6 May 2019 15:10:26 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35693 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726145AbfEFTK0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 15:10:26 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h1so6938533pgs.2;
+        Mon, 06 May 2019 12:10:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:newsgroups:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9jO/ahJRB+Px44zguVkj7zF4Hq0FcXKIPGMM17YjuPg=;
+        b=C7qO46Owo391rrCME2jNC8g202rdRFT0mvYDxy9h1EQafI8c2JNiNDT+Mp9YROuiQw
+         GcQG3moSn6h95IP/WCrpr+jwnGl8wV4T89K3xOLqrIrBBy820VZMzl9A9y3DG3FAcnsF
+         qd6juKyk+tg45aF1alrbup5S+gQUoan7/Ueu8y7IYdzmN9X/COpQz1zqoXagnz4z6J6D
+         6zXUzy51SqDY4QVY0dOc2eyi+U5Y1GobwGdoZIBSbcJsoYkhP84Eeg3iwRIK5j9LblU2
+         If7bAfDOm5ijlDpfpqLXHYx7c4PtWyYTbXs08qQ3IC+djYfosFGtT0Q2KuwFnPqHbg9z
+         hokw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:newsgroups:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=9jO/ahJRB+Px44zguVkj7zF4Hq0FcXKIPGMM17YjuPg=;
+        b=LRr+tQbm8ytLiZkmtxJYg4VBTtdJr23iZjmNQMXHcL8NBIeRX3XhH5K5wFupofmplE
+         d+C8z7tJlbM+qA4m0wwXAw7/iapWWKVtrM16NpG40NIF/BiuW+UPcxnJZqdif0EJ0w25
+         q/LMEvkUvpyXpF7XssoaiJ6YuiCBOZIwxG7qRXmGfegYeQWO8DJKbbg6qm8CTjtob4jE
+         ahv6AqkR/hEaXkUjtVdESX8dWinRMW1aHgrd7gxoLspJXrpiCJEIw6QOpTlUaKtQGNv0
+         ytXJZ+GgjA0HS4+GqPYqmVMp8EThUI1WoaTWsrvZoHRRjr8iqWGw6OS1qErWWx/AIhg7
+         S5jw==
+X-Gm-Message-State: APjAAAUWDJnQKp+EJnwAbTMFP2iU/6frflMAMOrLz78+CaTIF2sPu1TY
+        OJjz8CMa+0hMtTmTUcBBiKBno2tP
+X-Google-Smtp-Source: APXvYqxnZIbX947YWBxnv6hz4gECy//DYiwPTncI39gyYqZCb0cncitKEKaeREoGUlR+gW74VDrH8Q==
+X-Received: by 2002:a63:a41:: with SMTP id z1mr33991488pgk.389.1557169825178;
+        Mon, 06 May 2019 12:10:25 -0700 (PDT)
+Received: from [192.168.0.2] ([98.248.174.105])
+        by smtp.googlemail.com with ESMTPSA id p7sm13445161pgn.64.2019.05.06.12.10.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 12:10:24 -0700 (PDT)
+Subject: Re: [PATCH] kconfig: fix 'Save As' menu of xconfig
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ulf Magnusson <ulfalizer@gmail.com>,
+        linux-kernel@vger.kernel.org
+Newsgroups: gmane.linux.kernel,gmane.linux.kbuild.devel
+References: <1552234395-7699-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Robert Gadsdon <rhgadsdon@gmail.com>
+Message-ID: <84db9131-5498-d2d5-a984-11079e3c2a6e@gmail.com>
+Date:   Mon, 6 May 2019 12:10:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d11fa51f-e976-ec33-4f5b-3b26ada64306@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1552234395-7699-1-git-send-email-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 06-05-19 23:22:08, Zhiqiang Liu wrote:
-[...]
-> Does adding Cc: stable mean adding Cc: <stable@vger.kernel.org>
-> tag in the patch or Ccing stable@vger.kernel.org when sending the new mail?
+On 03/10/2019 09:13 AM, Masahiro Yamada wrote:
+> The 'Save As' menu of xconfig is not working; it always saves the
+> kernel configuration into the default file irrespective of the file
+> chosen in the dialog box.
+> 
+> The 'Save' menu always writes into the default file, but it would
+> make more sense to write into the file previously chosen by 'Load'
+> or 'Save As'.
+> 
+> Signed-off-by: Masahiro Yamada<yamada.masahiro@socionext.com>
+> ---
 
-The former. See Documentation/process/stable-kernel-rules.rst for more.
+The 'save as' may be used for out-of-tree kernel config saves, but the 
+default 'save' should always save to the in-tree .config file, as before 
+(and for the past 10+ years..)  If the kernel config was loaded from an 
+out-of-tree location, it now saves back to that out-of-tree location, 
+which is useless for the kernel compile..
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+I have always kept my hardware/system-specific kernel configs 
+out-of-tree, and then applied them in-tree before compiling.
+
+Now, I have to use 'save as' and type in the entire in-tree path 
+(/usr/src/linux-5.1/.config) each time, in order to apply the specific 
+config to the kernel, ready for compilation.
+
+Robert Gadsdon.
+rglinuxtech.com
