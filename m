@@ -2,164 +2,122 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143AAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC380C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B92205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:33:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e90YIYJE"
+	by mail.kernel.org (Postfix) with ESMTP id 7EBFA20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557160698;
+	bh=AekdLqHpDoOsRjyE4YTt8yYR+74f0A2mIBOAgYZpno4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mnwDx28ywiWojIQvzWiLTVAvkAwH1/V42y3RmWas3lfqJW9dlTMsOxGD5QI2s5/MI
+	 Btbi9Sa/Z2Vr9N4HIuKIxspNNbuwcEESBSwBoqSBwlQ+qoPZ/s8JCxPFmvDGDOJGx6
+	 +Lb01PUQ96vmXqw9qPdAmPG1TFmCTHWA80pgxU68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfEFQda (ORCPT
+        id S1726527AbfEFQiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:33:30 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:32872 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfEFQbR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:31:17 -0400
-Received: by mail-yw1-f73.google.com with SMTP id c4so26406133ywd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:31:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=x8HMVSO2lCP9thpVq0jteC8wa+ruR/qG5sfvMEzcSf4=;
-        b=e90YIYJEqCjuv0dQNXe7JfByZ3LYw/uoix1gLG6qHxakrZEGoit4yh6fTDsfYia+jH
-         wb7igUzrFQvpjJl955zqS3eb64AMNM806CURkcixGS6z1rzCJzMGBiAz82rRhlhjgKjR
-         9cdDyeo/3JMugM0eGAxc56H2X/rF/Gu5NZJ6OlTvycYfBxRjWeovYDz5GGyc2/popU6X
-         Q4rJTvbhNlqr5zqGtmKCjWUttV6dsKWcbk2qBw0aV1In8VLH8mRF5MiPk8iCO4KWMnPF
-         BSI3N1BBXtSHWlnz3+Iji+1TK5JldUspg0pnnlvUCK4PaDa6c2GsK9cElOVCY5yx3kNx
-         bcTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=x8HMVSO2lCP9thpVq0jteC8wa+ruR/qG5sfvMEzcSf4=;
-        b=b6PHwXvVmLNg6m4yrGzNzPtce8LLQuOl8+4tsOGE+4B2LW1tVfLKgkfhll3H+skADf
-         oM7bra6XsUIhla/oWUZid9buGss9ibcE+t9NQSsYvFgiZq+c9FpMIMZ4KFV+P3G645eG
-         NyZ78rugmsHd9zVACcAOxJ3usf5ryOTBB0i6w3P8Fm4N/U+Rh2+uSmkGflXNylb/mlnV
-         UCkYfip8EYeE5o7BzletGiSFSGZgdx2bBVKzduu7/7olczGG4MJVs3tgpkSM83Z/Dbdw
-         X21ZOuY9l4xzIMZ09q2tJnqbhabupPm0zS96MX8NC48ih1M8kFnCzciQbKpum8tU4cCe
-         77zQ==
-X-Gm-Message-State: APjAAAWy12oFjoBEHAy2/u/L0VucIwBrDh0sUCoUa04ORQn8RqHWRn8A
-        aoTv2jNmuXZd6uxf4C3+yfQKe7bsV0VAJkDA
-X-Google-Smtp-Source: APXvYqyZq8rlWFW4uBLN8C8I3oEaQAU5CNW3HReq+6c5opQ9wp/VGDDqgMMeEo6tOAWNlA3+Gfl3rFVlDcMv6bDq
-X-Received: by 2002:a5b:8c2:: with SMTP id w2mr16278460ybq.201.1557160276487;
- Mon, 06 May 2019 09:31:16 -0700 (PDT)
-Date:   Mon,  6 May 2019 18:30:49 +0200
-In-Reply-To: <cover.1557160186.git.andreyknvl@google.com>
-Message-Id: <861418ff7ed7253356cb8267de5ee2d4bd84196d.1557160186.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1557160186.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH v15 03/17] lib, arm64: untag user pointers in strn*_user
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 May 2019 12:38:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46180 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbfEFQiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 12:38:17 -0400
+Received: from localhost (unknown [106.200.210.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D51020578;
+        Mon,  6 May 2019 16:38:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557160696;
+        bh=AekdLqHpDoOsRjyE4YTt8yYR+74f0A2mIBOAgYZpno4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YBrU4rBuE3MPa6I6muGRenYoUcTpyx1Mnkwhrx8nhlI1RKIxFNJ7QoCL+fknzhuce
+         s0VhHL2Aa/yPpH6tQ1fpnqUzgC9JYH48qUgurR0SAdXulLgD9fN0BIm0mvOY4YBbAk
+         IkE5vzwINvW4lZCzvQ3Ea1x3PeXvASZ5IcxGE48I=
+Date:   Mon, 6 May 2019 22:08:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, joe@perches.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 5/7] soundwire: add debugfs support
+Message-ID: <20190506163810.GK3845@vkoul-mobl.Dlink>
+References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
+ <20190504010030.29233-6-pierre-louis.bossart@linux.intel.com>
+ <20190504070301.GD9770@kroah.com>
+ <a9e1c3d2-fe29-1683-9253-b66034c62010@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a9e1c3d2-fe29-1683-9253-b66034c62010@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is a part of a series that extends arm64 kernel ABI to allow to
-pass tagged user pointers (with the top byte set to something else other
-than 0x00) as syscall arguments.
+On 06-05-19, 09:48, Pierre-Louis Bossart wrote:
 
-strncpy_from_user and strnlen_user accept user addresses as arguments, and
-do not go through the same path as copy_from_user and others, so here we
-need to handle the case of tagged user addresses separately.
+> > > +struct dentry *sdw_bus_debugfs_get_root(struct sdw_bus_debugfs *d)
+> > > +{
+> > > +	if (d)
+> > > +		return d->fs;
+> > > +	return NULL;
+> > > +}
+> > > +EXPORT_SYMBOL(sdw_bus_debugfs_get_root);
+> > 
+> > _GPL()?
+> 
+> Oops, that's a big miss. will fix, thanks for spotting this.
 
-Untag user pointers passed to these functions.
+Not really. The Soundwire code is dual licensed. Many of the soundwire
+symbols are indeed exported as EXPORT_SYMBOL. But I agree this one is
+'linux' specific so can be made _GPL.
 
-Note, that this patch only temporarily untags the pointers to perform
-validity checks, but then uses them as is to perform user memory accesses.
+Pierre, does Intel still care about this being dual licensed or not?
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- lib/strncpy_from_user.c | 3 ++-
- lib/strnlen_user.c      | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> > 
+> > But why is this exported at all?  No one calls this function.
+> 
+> I will have to check.
 
-diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-index 58eacd41526c..6209bb9507c7 100644
---- a/lib/strncpy_from_user.c
-+++ b/lib/strncpy_from_user.c
-@@ -6,6 +6,7 @@
- #include <linux/uaccess.h>
- #include <linux/kernel.h>
- #include <linux/errno.h>
-+#include <linux/mm.h>
- 
- #include <asm/byteorder.h>
- #include <asm/word-at-a-time.h>
-@@ -107,7 +108,7 @@ long strncpy_from_user(char *dst, const char __user *src, long count)
- 		return 0;
- 
- 	max_addr = user_addr_max();
--	src_addr = (unsigned long)src;
-+	src_addr = (unsigned long)untagged_addr(src);
- 	if (likely(src_addr < max_addr)) {
- 		unsigned long max = max_addr - src_addr;
- 		long retval;
-diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-index 1c1a1b0e38a5..8ca3d2ac32ec 100644
---- a/lib/strnlen_user.c
-+++ b/lib/strnlen_user.c
-@@ -2,6 +2,7 @@
- #include <linux/kernel.h>
- #include <linux/export.h>
- #include <linux/uaccess.h>
-+#include <linux/mm.h>
- 
- #include <asm/word-at-a-time.h>
- 
-@@ -109,7 +110,7 @@ long strnlen_user(const char __user *str, long count)
- 		return 0;
- 
- 	max_addr = user_addr_max();
--	src_addr = (unsigned long)str;
-+	src_addr = (unsigned long)untagged_addr(str);
- 	if (likely(src_addr < max_addr)) {
- 		unsigned long max = max_addr - src_addr;
- 		long retval;
+It is used by codec driver which are not upstream yet. So my suggestion
+would be NOT to export this and only do so when we have users for it
+That would be true for other APIs exported out as well.
+
+> > 
+> > > +struct sdw_slave_debugfs {
+> > > +	struct sdw_slave *slave;
+> > 
+> > Same question as above, why do you need this pointer?
+> 
+> will check.
+
+The deubugfs code does hold a ref to slave object to read the data and
+dump, this particular instance might be able to get rid of (should be
+doable)
+
+> > And meta-comment, if you _EVER_ save off a pointer to a reference
+> > counted object (like this and the above one), you HAVE to grab a
+> > reference to it, otherwise it can go away at any point in time as that
+> > is the point of reference counted objects.
+> > 
+> > So even if you do need/want this, you have to properly handle the
+> > reference count by incrementing/decrementing it as needed.
+
+Yes, but then device exit routine is supposed to do debugfs cleanup as
+well, so that would ensure these references are dropped at that point of
+time. Greg should that not take care of it or we *should* always do
+refcounting.
+
+Thanks
 -- 
-2.21.0.1020.gf2820cf01a-goog
-
+~Vinod
