@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DACC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0F6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E2221530
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05872087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153617;
-	bh=8tddgKOnYoE36R0ibw+wZnmj0Pd2qXUm9TRN8yTC4Ho=;
+	s=default; t=1557153619;
+	bh=nDIUlaxkvmhOAQSd1f4i2fv1g2yrDhaWLZ590WwfUB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qxzrcCUjapKq2gJF6LM1pEKSAO8T/Q1o3j560jRj523P1wwzaonORDxV0i4d8ix2J
-	 Q2JtNy9zg3LROZRovclN4Aujf+A4j05DYY3zXdozVzLM+kFSXN0Ad2hL9VUqF+4SBI
-	 ugKgNtc1fXhqzA2bynqKh5k7lbDFhos3Ebg6to64=
+	b=Vk1Mg5GHTzYouS/+gZ6DT0DUSDpenRkREBblprKMHGTVyNebDEfE5Oe1L9ZHPowfO
+	 ikXeSnV9f2y1IMGzb2js10To7gVGg4CU4warrU25UXU+Qd3hXvLbIEvDpUO6OZ1Edv
+	 eMfRv8rfdlmyYoAy+cWfjg7m8iV1vX5n7ZhSKLu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbfEFOkP (ORCPT
+        id S1728006AbfEFOkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:40:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33428 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727980AbfEFOkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:40:14 -0400
+        id S1727257AbfEFOkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:40:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7875214AE;
-        Mon,  6 May 2019 14:40:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B37D206A3;
+        Mon,  6 May 2019 14:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153613;
-        bh=8tddgKOnYoE36R0ibw+wZnmj0Pd2qXUm9TRN8yTC4Ho=;
+        s=default; t=1557153615;
+        bh=nDIUlaxkvmhOAQSd1f4i2fv1g2yrDhaWLZ590WwfUB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wkf8s0hjXTNgFfOhkslXI1r4bzdNERfT5lQKWpJuoEAqyRNNn76D7wPW+fYclIBuu
-         UC+vJ4QAf849TI2Nh0ICGpOkfkib7poH4F4GRtlD8ybmPq9/imH8xlYIuv6UndRncL
-         eYOG/MTcsWCyzm2R3ZA/+GQByP24sFux0bXbO+Pw=
+        b=kM2rs7TR+kzrHthIW4mzf5SjyXvr6ZEvav/dbQFrFDn61pw0YiF0Kk4Il1lWMmmP5
+         5yoBzYnZcwBOqUP5mGMuhHtGz3TjzHJfVHXBbLNM9Zf7yfo2qjIcEeZi9UuLm272Gb
+         ykNrrUW/tRBf4sYUptcm4GoEAuV4biq/C8BeaCzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <niveditas98@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Alan Kao <alankao@andestech.com>,
+        Greentime Hu <greentime@andestech.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 32/99] igb: Fix WARN_ONCE on runtime suspend
-Date:   Mon,  6 May 2019 16:32:05 +0200
-Message-Id: <20190506143056.863225153@linuxfoundation.org>
+Subject: [PATCH 4.19 33/99] riscv: fix accessing 8-byte variable from RV32
+Date:   Mon,  6 May 2019 16:32:06 +0200
+Message-Id: <20190506143056.938968443@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -62,153 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dabb8338be533c18f50255cf39ff4f66d4dabdbe ]
+[ Upstream commit dbee9c9c45846f003ec2f819710c2f4835630a6a ]
 
-The runtime_suspend device callbacks are not supposed to save
-configuration state or change the power state. Commit fb29f76cc566
-("igb: Fix an issue that PME is not enabled during runtime suspend")
-changed the driver to not save configuration state during runtime
-suspend, however the driver callback still put the device into a
-low-power state. This causes a warning in the pci pm core and results in
-pci_pm_runtime_suspend not calling pci_save_state or pci_finish_runtime_suspend.
+A memory save operation to 8-byte variable in RV32 is divided into
+two sw instructions in the put_user macro.  The current fixup returns
+execution flow to the second sw instead of the one after it.
 
-Fix this by not changing the power state either, leaving that to pci pm
-core, and make the same change for suspend callback as well.
+This patch fixes this fixup code according to the load access part.
 
-Also move a couple of defines into the appropriate header file instead
-of inline in the .c file.
-
-Fixes: fb29f76cc566 ("igb: Fix an issue that PME is not enabled during runtime suspend")
-Signed-off-by: Arvind Sankar <niveditas98@gmail.com>
-Reviewed-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Alan Kao<alankao@andestech.com>
+Cc: Greentime Hu <greentime@andestech.com>
+Cc: Vincent Chen <deanbo422@gmail.com>
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/intel/igb/e1000_defines.h    |  2 +
- drivers/net/ethernet/intel/igb/igb_main.c     | 57 +++----------------
- 2 files changed, 10 insertions(+), 49 deletions(-)
+ arch/riscv/include/asm/uaccess.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/e1000_defines.h b/drivers/net/ethernet/intel/igb/e1000_defines.h
-index 8a28f3388f69..dca671591ef6 100644
---- a/drivers/net/ethernet/intel/igb/e1000_defines.h
-+++ b/drivers/net/ethernet/intel/igb/e1000_defines.h
-@@ -194,6 +194,8 @@
- /* enable link status from external LINK_0 and LINK_1 pins */
- #define E1000_CTRL_SWDPIN0  0x00040000  /* SWDPIN 0 value */
- #define E1000_CTRL_SWDPIN1  0x00080000  /* SWDPIN 1 value */
-+#define E1000_CTRL_ADVD3WUC 0x00100000  /* D3 WUC */
-+#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000 /* PHY PM enable */
- #define E1000_CTRL_SDP0_DIR 0x00400000  /* SDP0 Data direction */
- #define E1000_CTRL_SDP1_DIR 0x00800000  /* SDP1 Data direction */
- #define E1000_CTRL_RST      0x04000000  /* Global reset */
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index ffaa6e031632..aa39a068858e 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -8754,9 +8754,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	struct e1000_hw *hw = &adapter->hw;
- 	u32 ctrl, rctl, status;
- 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
--#ifdef CONFIG_PM
--	int retval = 0;
--#endif
-+	bool wake;
- 
- 	rtnl_lock();
- 	netif_device_detach(netdev);
-@@ -8769,14 +8767,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	igb_clear_interrupt_scheme(adapter);
- 	rtnl_unlock();
- 
--#ifdef CONFIG_PM
--	if (!runtime) {
--		retval = pci_save_state(pdev);
--		if (retval)
--			return retval;
--	}
--#endif
--
- 	status = rd32(E1000_STATUS);
- 	if (status & E1000_STATUS_LU)
- 		wufc &= ~E1000_WUFC_LNKC;
-@@ -8793,10 +8783,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 		}
- 
- 		ctrl = rd32(E1000_CTRL);
--		/* advertise wake from D3Cold */
--		#define E1000_CTRL_ADVD3WUC 0x00100000
--		/* phy power management enable */
--		#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000
- 		ctrl |= E1000_CTRL_ADVD3WUC;
- 		wr32(E1000_CTRL, ctrl);
- 
-@@ -8810,12 +8796,15 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 		wr32(E1000_WUFC, 0);
- 	}
- 
--	*enable_wake = wufc || adapter->en_mng_pt;
--	if (!*enable_wake)
-+	wake = wufc || adapter->en_mng_pt;
-+	if (!wake)
- 		igb_power_down_link(adapter);
- 	else
- 		igb_power_up_link(adapter);
- 
-+	if (enable_wake)
-+		*enable_wake = wake;
-+
- 	/* Release control of h/w to f/w.  If f/w is AMT enabled, this
- 	 * would have already happened in close and is redundant.
- 	 */
-@@ -8858,22 +8847,7 @@ static void igb_deliver_wake_packet(struct net_device *netdev)
- 
- static int __maybe_unused igb_suspend(struct device *dev)
- {
--	int retval;
--	bool wake;
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	retval = __igb_shutdown(pdev, &wake, 0);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 0);
- }
- 
- static int __maybe_unused igb_resume(struct device *dev)
-@@ -8944,22 +8918,7 @@ static int __maybe_unused igb_runtime_idle(struct device *dev)
- 
- static int __maybe_unused igb_runtime_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	int retval;
--	bool wake;
--
--	retval = __igb_shutdown(pdev, &wake, 1);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 1);
- }
- 
- static int __maybe_unused igb_runtime_resume(struct device *dev)
+diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+index 8c3e3e3c8be1..f0ea3156192d 100644
+--- a/arch/riscv/include/asm/uaccess.h
++++ b/arch/riscv/include/asm/uaccess.h
+@@ -307,7 +307,7 @@ do {								\
+ 		"	.balign 4\n"				\
+ 		"4:\n"						\
+ 		"	li %0, %6\n"				\
+-		"	jump 2b, %1\n"				\
++		"	jump 3b, %1\n"				\
+ 		"	.previous\n"				\
+ 		"	.section __ex_table,\"a\"\n"		\
+ 		"	.balign " RISCV_SZPTR "\n"			\
 -- 
 2.20.1
 
