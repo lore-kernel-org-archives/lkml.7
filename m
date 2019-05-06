@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C74AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096B7C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F04A221019
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63102087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153702;
-	bh=3NovFybzUC5YkkLlXAVHiF72M1hXcAlS07Kd/WhUF5k=;
+	s=default; t=1557153704;
+	bh=lRNIYmFIsCxmdjlVSc56AtBFUVHBM4tCJ2q0ZlP67uE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=chbZjDWOCRItp5997dd59bw3umeIXcmAj1QqT/vvr70OdZkkAa5tFcg7Qp4Lz4tsH
-	 0MZM7YtQHVAR/xIhqKikpa3sakCEI+vytfETOuF9hZ4Jj5Kge61viytd5sfIpKXSMC
-	 9Cr5Kz826djU/Tpec2c6IIMOFlnHv2r4OOHz1Fc4=
+	b=wD+Ew6117BaQshEuorJsTsgIpulUhqZCC9S7/vLX7NahJQQHeeZ9G9WXMVzUQruEB
+	 IrQR4L47XFIY/EI8dNLWbH15AjvmHdzyUNcJdVrTUrlcy/T9nfvTcMXZUOO5cdH43V
+	 vQftLajsUEMpCn3IiL2yx9wY/xpuuFh+xXAnAW2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfEFOlk (ORCPT
+        id S1728303AbfEFOln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35746 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:41:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727525AbfEFOlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:35 -0400
+        id S1728285AbfEFOlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:41:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A7EC20C01;
-        Mon,  6 May 2019 14:41:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F61E20C01;
+        Mon,  6 May 2019 14:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153694;
-        bh=3NovFybzUC5YkkLlXAVHiF72M1hXcAlS07Kd/WhUF5k=;
+        s=default; t=1557153699;
+        bh=lRNIYmFIsCxmdjlVSc56AtBFUVHBM4tCJ2q0ZlP67uE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cFubIEpD1L/9A6t6WH4ODJiw1SKNICu7S8qxMt7Rqim4IBS15iKwk0/Ynhm/dPME/
-         +xbZ5Qm1PixwJsDQYK6b5Fjv7w0z6TahXlRL4oAn6WKvu2hH+Q6jHPzTwSgpXV5C4j
-         ORogYy+YGpf0+uCcrXiz0eQs+pD6OW+fwLHf26Ao=
+        b=VdPhXCmF3hmqeBBwQURdVgVXmWq5F5dssbEzElbkSJIyhjiLeNqovv6CGOmxVtHJl
+         p18rPKISZRiuSyBLn57plOIAeKBy9zRIKW8fc2FzO2BL3z+t4MNIXaPcxgQUrraUVJ
+         lm1FaE2qrcJJDVvOT7GnzV8dLoodfz05iLMEAL0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Eckelmann <sven@narfation.org>,
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Sven Eckelmann <sven@narfation.org>,
         Simon Wunderlich <sw@simonwunderlich.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/99] batman-adv: Reduce tt_local hash refcnt only for removed entry
-Date:   Mon,  6 May 2019 16:32:00 +0200
-Message-Id: <20190506143056.416571825@linuxfoundation.org>
+Subject: [PATCH 4.19 29/99] batman-adv: fix warning in function batadv_v_elp_get_throughput
+Date:   Mon,  6 May 2019 16:32:02 +0200
+Message-Id: <20190506143056.596637433@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -60,76 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3d65b9accab4a7ed5038f6df403fbd5e298398c7 ]
+[ Upstream commit ca8c3b922e7032aff6cc3fd05548f4df1f3df90e ]
 
-The batadv_hash_remove is a function which searches the hashtable for an
-entry using a needle, a hashtable bucket selection function and a compare
-function. It will lock the bucket list and delete an entry when the compare
-function matches it with the needle. It returns the pointer to the
-hlist_node which matches or NULL when no entry matches the needle.
+When CONFIG_CFG80211 isn't enabled the compiler correcly warns about
+'sinfo.pertid' may be unused. It can also happen for other error
+conditions that it not warn about.
 
-The batadv_tt_local_remove is not itself protected in anyway to avoid that
-any other function is modifying the hashtable between the search for the
-entry and the call to batadv_hash_remove. It can therefore happen that the
-entry either doesn't exist anymore or an entry was deleted which is not the
-same object as the needle. In such an situation, the reference counter (for
-the reference stored in the hashtable) must not be reduced for the needle.
-Instead the reference counter of the actually removed entry has to be
-reduced.
+net/batman-adv/bat_v_elp.c: In function ‘batadv_v_elp_get_throughput.isra.0’:
+include/net/cfg80211.h:6370:13: warning: ‘sinfo.pertid’ may be used
+ uninitialized in this function [-Wmaybe-uninitialized]
+  kfree(sinfo->pertid);
+        ~~~~~^~~~~~~~
 
-Otherwise the reference counter will underflow and the object might be
-freed before all its references were dropped. The kref helpers reported
-this problem as:
+Rework so that we only release '&sinfo' if cfg80211_get_station returns
+zero.
 
-  refcount_t: underflow; use-after-free.
-
-Fixes: ef72706a0543 ("batman-adv: protect tt_local_entry from concurrent delete events")
+Fixes: 7d652669b61d ("batman-adv: release station info tidstats")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/translation-table.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ net/batman-adv/bat_v_elp.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
-index d21624c44665..696e6ddc534b 100644
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -1332,9 +1332,10 @@ u16 batadv_tt_local_remove(struct batadv_priv *bat_priv, const u8 *addr,
- 			   unsigned short vid, const char *message,
- 			   bool roaming)
- {
-+	struct batadv_tt_local_entry *tt_removed_entry;
- 	struct batadv_tt_local_entry *tt_local_entry;
- 	u16 flags, curr_flags = BATADV_NO_FLAGS;
--	void *tt_entry_exists;
-+	struct hlist_node *tt_removed_node;
+diff --git a/net/batman-adv/bat_v_elp.c b/net/batman-adv/bat_v_elp.c
+index ef0dec20c7d8..5da183b2f4c9 100644
+--- a/net/batman-adv/bat_v_elp.c
++++ b/net/batman-adv/bat_v_elp.c
+@@ -104,8 +104,10 @@ static u32 batadv_v_elp_get_throughput(struct batadv_hardif_neigh_node *neigh)
  
- 	tt_local_entry = batadv_tt_local_hash_find(bat_priv, addr, vid);
- 	if (!tt_local_entry)
-@@ -1363,15 +1364,18 @@ u16 batadv_tt_local_remove(struct batadv_priv *bat_priv, const u8 *addr,
- 	 */
- 	batadv_tt_local_event(bat_priv, tt_local_entry, BATADV_TT_CLIENT_DEL);
+ 		ret = cfg80211_get_station(real_netdev, neigh->addr, &sinfo);
  
--	tt_entry_exists = batadv_hash_remove(bat_priv->tt.local_hash,
-+	tt_removed_node = batadv_hash_remove(bat_priv->tt.local_hash,
- 					     batadv_compare_tt,
- 					     batadv_choose_tt,
- 					     &tt_local_entry->common);
--	if (!tt_entry_exists)
-+	if (!tt_removed_node)
- 		goto out;
+-		/* free the TID stats immediately */
+-		cfg80211_sinfo_release_content(&sinfo);
++		if (!ret) {
++			/* free the TID stats immediately */
++			cfg80211_sinfo_release_content(&sinfo);
++		}
  
--	/* extra call to free the local tt entry */
--	batadv_tt_local_entry_put(tt_local_entry);
-+	/* drop reference of remove hash entry */
-+	tt_removed_entry = hlist_entry(tt_removed_node,
-+				       struct batadv_tt_local_entry,
-+				       common.hash_entry);
-+	batadv_tt_local_entry_put(tt_removed_entry);
- 
- out:
- 	if (tt_local_entry)
+ 		dev_put(real_netdev);
+ 		if (ret == -ENOENT) {
 -- 
 2.20.1
 
