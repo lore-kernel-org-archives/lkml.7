@@ -2,350 +2,80 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8994C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99ACBC04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8852A20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCC820B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfEFKeX (ORCPT
+        id S1726383AbfEFKh2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 06:34:23 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44981 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfEFKeW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 06:34:22 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b8so14764823edm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 03:34:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zIDTz7T0+wpw7kwe9MxB0z8rDQ9ZoFG9tyC1VKVPC6s=;
-        b=IkcTWziQXr4oowPLtXOuFIPC+tF+surmvBI1g1gG/6ru9FyxKfbuDsBa2lisySGC+h
-         NIe5t+x+NEF121pBaFIfw9ifUqF6y+oqNs81QhUhAuHCNh/fDQQZg7uUGMQp9/LGxAjZ
-         T1m5liYdf9QRM8rnNOHaB+s0wY+is+1UMo1NEhUMmRhy0I5M4vlzUGHbSemPwUE07GAj
-         yfogoRDuY//YPzaDlPyhAIme/PXgAvat+XZmOGusybAPMo0Q+ksMtRjR3br1uxwBF0ob
-         4+q5DfUSHeM+7UUuvIKZd3lNJ4RCe+8H9UxxEWvgjoQ7HVFViKvn3pjZcQ2k7+0aQeyc
-         CkxQ==
-X-Gm-Message-State: APjAAAVQ3bbFDulG7IEey0nBKA1/8O1Vk+3gccdaL37X0m3mGcLoRpE4
-        qdzFV1XYv6QJy61nXNxtBB/46g6kCd8=
-X-Google-Smtp-Source: APXvYqxZZy8GLunFMSkT0e74eUoc4vMuCbkmmpqq9mqxQqCuy3+NT1sQxrqEcF1ZsgIjOCxSv4Zabw==
-X-Received: by 2002:a17:906:7ac5:: with SMTP id k5mr18022962ejo.270.1557138859134;
-        Mon, 06 May 2019 03:34:19 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id e47sm2987919ede.26.2019.05.06.03.34.17
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 03:34:18 -0700 (PDT)
-Subject: Re: [PATCH RFC] brcmfmac: sanitize DMI strings v2
-To:     Victor Bravo <1905@spmblk.com>
-Cc:     Arend Van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org
-References: <20190504162633.ldrz2nqfocg55grb@localhost>
- <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
- <20190504194440.4zcxjrtj2aft3ka4@localhost>
- <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <20190505150355.3fbng4ny34x255vk@localhost>
- <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
- <20190506090609.msudhncj7e5vdtzw@localhost>
- <70677dff-4336-28d5-7ab9-7ba7c3d74ebc@redhat.com>
- <20190506102032.3ximjecado4mz62j@localhost>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <fb07ae01-4cca-98e7-1c2d-dfdf44909900@redhat.com>
-Date:   Mon, 6 May 2019 12:34:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190506102032.3ximjecado4mz62j@localhost>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 6 May 2019 06:37:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55078 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725886AbfEFKh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 06:37:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D08FBAD33;
+        Mon,  6 May 2019 10:37:26 +0000 (UTC)
+Date:   Mon, 6 May 2019 12:37:24 +0200
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 00/3] MIPS: SGI-IP27 rework part2
+Message-Id: <20190506123724.5c78bcff04f722ae92e7f6a8@suse.de>
+In-Reply-To: <20190418205726.GB126710@google.com>
+References: <20190319154755.31049-1-tbogendoerfer@suse.de>
+        <20190418205726.GB126710@google.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 18 Apr 2019 15:57:26 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-On 06-05-19 12:20, Victor Bravo wrote:
-> On Mon, May 06, 2019 at 11:33:20AM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 06-05-19 11:06, Victor Bravo wrote:
->>> On Mon, May 06, 2019 at 10:13:38AM +0200, Hans de Goede wrote:
->>>> Hi,
->>>
->>> Hi,
->>>
->>>> On 05-05-19 17:03, Victor Bravo wrote:
->>>>> Sanitize DMI strings in brcmfmac driver to make resulting filenames
->>>>> contain only safe characters. This version replaces all non-printable
->>>>> characters incl. delete (0-31, 127-255), spaces and slashes with
->>>>> underscores.
->>>>>
->>>>> This change breaks backward compatibility, but adds control over strings
->>>>> passed to firmware loader and compatibility with CONFIG_EXTRA_FIRMWARE
->>>>> which doesn't support spaces in filenames.
->>>>>
->>>>> Changes from v1: don't revert fresh commit by someone else
->>>>>
->>>>> Signed-off-by: Victor Bravo <1905@spmblk.com>
->>>>
->>>> Thank you for the patch, but I'm sorry to say this patch cannot go in as is,
->>>> because it will break existing systems.
->>>>
->>>> If you look here:
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/brcm
->>>>
->>>> You will see a file named: "brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt" there, which
->>>> has a space in its name (and which works fine).
->>>
->>> Thanks for the updates. Spaces are actually a problem as files with spaces
->>> don't work when built-in with CONFIG_EXTRA_FIRMWARE (which is used with
->>> non-modular kernel containing brcmfmac driver).
->>>
->>> If the DMI string contains slashes, they will cause problems
->>> for obvious reasons too.
->>
->> Right, as said I'm fine with sanitizing the names, so dropping e.g. / chars,
->> but replacing space with _ will cause wifi to stop working on Onda V80 Plus devices and
->> we have a clear no regressions policy in the kernel.
+> Hi Thomas,
 > 
-> Please keep in mind that dropping slashes and non-printable characters
-> might be a regression too, as some users may already be using
-> intermediate directories or filenames with tabs etc. if their DMI
-> strings contain these.  If such users exist, they will have to rename
-> their nvram files anyway.
-
-I consider it very unlikely that such users exist OTOH the Onda V80 PLus
-nvram file is actually in linux-firmware upstream, so that e.g. Fedora 30
-has working wifi OOTB on the V80 Plus, if we go with your proposal to
-also replace spaces, then users with a V80 Plus will all of a sudden have
-their wifi stop working.
-
-If Kalle and Arend are in favor of including space in the "bad character"
-list then at a minimum we must first get a patch added to linux-firmware
-adding an ONDA-V80_PLUS.txt symlink to the ONDA-V80 PLUS.txt file.
-
-> On the other hand, removing just slashes and non-printable characters
-> (i.e. (*dst < 0x20) || (dst == '/') || (dst == 0x7f)) would allow
-> the sanitize function to the bit array and go with hardcoded conditions
-> (especially if those are final and won't need further adjustments in
-> set of allowed characters
-
-If we're going to do some filtering, then I suggest we play it safe and also
-disallow other chars which may be used as a separator somewhere, specifically
-':' and ','.
-
-Currently upstream linux-firmware has these files which rely on the DMI
-matching:
-
-brcmfmac4330-sdio.Prowise-PT301.txt
-brcmfmac43430-sdio.Hampoo-D2D3_Vi8A1.txt
-brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt
-
-The others are either part of the DMI override table for devices with unsuitable
-DMI strings like "Default String"; or are device-tree based.
-
-So as long as we don't break those 3 (or break the ONDA one but get a symlink
-in place) we can sanitize a bit more then just non-printable and '/'.
-
-Kalle, Arend, what is your opinion on this?
-
-Note I do not expect the ONDA V80 Plus to have a lot of Linux users, but it definitely has some.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
+> On Tue, Mar 19, 2019 at 04:47:49PM +0100, Thomas Bogendoerfer wrote:
+> > SGI IP27 (Origin/Onyx2) and SGI IP30 (Octane) have a similair
+> > architecture and share some hardware (ioc3/bridge). To share
+> > the software parts this patchset reworks SGI IP27 interrupt
+> > and pci bridge code. By using features Linux gained during the
+> > many years since SGI IP27 code was integrated this even results
+> > in code reduction and IMHO cleaner code.
+> > 
+> > Tests have been done on a two module O200 (4 CPUs) and an
+> > Origin 2000 (8 CPUs).
 > 
->>>> I'm fine with doing some sanitizing of the strings, but replacing spaces with _
->>>> breaks existing use-cases (will cause a regression for them) and a space is absolutely
->>>> a valid character in a filename and the firmware-loader can deal with this just fine.
->>>>
->>>> If the code for building firmwares into the kernel cannot deal with spaces then IMHO
->>>> that code should be fixed instead. Have you looked into fixing that?
->>>
->>> Yes, but updating CONFIG_EXTRA_FIRMWARE to support spaces because of
->>> this looks much like
->>
->> <snip off-topic remark>
->>
->>> Do you really think it's a good idea to propose that in
->>> this case?
->>
->> I think expecting spaces in filenames to just work is quite reasonable, after all
->> its been a long time since we've left DOS-es 8.3 filename limitations.
->>
->> Have you actually looked at how hard it would be to make filenames with spaces work
->> with CONFIG_EXTRA_FIRMWARE ?
->>
->> No matter how you spin it, the space problem is a CONFIG_EXTRA_FIRMWARE bug, not an
->> issue with the brcmfmac code.
+> Thanks for doing all this work!  It seems like it basically converts
+> some of the SGI PCI code to the structure typical of current host
+> controller drivers and moves it to drivers/pci/controller, which all
+> seems great to me.
 > 
-> Well CONFIG_EXTRA_FIRMWARE is defined to use space as filename
-> separator, so I don't really dare to call that a bug. Also brcmfmac
-> seems to be only driver requiring support for spaces etc. in firmware
-> file names, and this requirement seems to be quite fresh.
-> 
-> So to me the proper way to fix this via CONFIG_EXTRA_FIRMWARE seems to
-> be
-> 
-> 1) wait some time until brcfmac's fw filenames with spaces become
-> de-facto standard and distros are literally full of these.
-> 
-> 2) after this happens, propose update of CONFIG_EXTRA_FIRMWARE to
-> support spaces in filenames, arguing with status quo which coming from 1)
-> 
-> Unfortunately I feel more like a programmer and this seems more like
-> politics, so I can promise participation in the wait part only right
-> now.
-> 
->>>> As for your T100HA example from earlier in this thread, the brcmfmac driver now
->>>> also supports getting the firmware from a special EFI nvram variable, which the
->>>> T100HA sets, so you do not need to provide a nvram file on the T100HA and things
->>>> will still work.
->>>
->>> I don't really get this. Can you please suggest how do I make the driver
->>> use something different than "brcmfmac43340-sdio.txt" or
->>> "brcmfmac43340-sdio.ASUSTeK COMPUTER INC.-T100HAN.txt" on T100HAN?
->>
->> If you leave out either file, then with a recent kernel you should see this
->> brcm_info trigger:
->>
->>          brcmf_info("Using nvram EFI variable\n");
->>
->> So you should see this message when you do:
->>
->> dmesg | grep "Using nvram EFI variable"
->>
->> And the wifi on the T100HAN should just work, without needing to do any
->> manual config / provide an nvram file in anyway.
->>
->> I always strive to make hardware just work with Linux and any UEFI x86 machine
->> using brcmfmac which provides the necessary nvram EFI variable in its firmware
->> should now just work when booting say a Fedora 30 livecd.
->>
->> The EFI nvram var support has been tested successfully on the following models:
->>
->> Acer Iconia Tab8 w1-8
->> Acer One 10
->> Asus T100CHI
->> Asus T100HA
->> Asus T100TA
->> Asus T200TA
->> Lenovo Mixx 2 8
->> Lenovo Yoga2 tablet 10
-> 
-> Thanks! Wasn't aware of this, will try in the evening.
-> 
-> Regards,
-> v.
-> 
->> Regards,
->>
->> Hans
->>
->>
->>
->>>>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
->>>>> index 7535cb0d4ac0..84571e09b465 100644
->>>>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
->>>>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
->>>>> @@ -23,6 +23,14 @@
->>>>>     /* The DMI data never changes so we can use a static buf for this */
->>>>>     static char dmi_board_type[128];
->>>>> +/* Array of 128 bits representing 7-bit characters allowed in DMI strings. */
->>>>> +static unsigned char brcmf_dmi_allowed_chars[] = {
->>>>> +	0x00, 0x00, 0x00, 0x00, 0xfe, 0x7f, 0xff, 0xff,
->>>>> +	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f
->>>>> +};
->>>>> +
->>>>> +#define BRCMF_DMI_SAFE_CHAR '_'
->>>>> +
->>>>>     struct brcmf_dmi_data {
->>>>>     	u32 chip;
->>>>>     	u32 chiprev;
->>>>> @@ -99,6 +107,15 @@ static const struct dmi_system_id dmi_platform_data[] = {
->>>>>     	{}
->>>>>     };
->>>>> +void brcmf_dmi_sanitize(char *dst, const unsigned char *allowed, char safe)
->>>>> +{
->>>>> +	while (*dst) {
->>>>> +		if ((*dst < 0) || !(allowed[*dst / 8] & (1 << (*dst % 8))))
->>>>
->>>> At a first look I have no clue what this code is doing and I honestly do not feel
->>>> like figuring it out, this is clever, but IMHO not readable.
->>>
->>> Understood. The cluless part actually checks corresponding bit
->>> in allowed array, which is a bit mask describing what characters
->>> are allowed or not.
->>>
->>>> Please just write this as if (*dst < 0x21 || (*dst > foo && < bar) || etc,
->>>> so that a human can actually see in one look what the code is doing.
->>>>
->>>> You may want to wait for Arend to give his opinion before changing this though,
->>>> maybe he likes the code as is.
->>>>
->>>> Also note that that should be < 0x20 of course, since we need to preserve spaces
->>>> as is to avoid a regression.
->>>
->>> This has been already discussed, spaces are a problem. There even was an
->>> opinion that adding the code that doesn't bother with spaces and slashes
->>> might be a regression as well.
->>>
->>> Regards,
->>>
->>> v.
->>>
->>>> Regards,
->>>>
->>>> Hans
->>>>
->>>>
->>>>
->>>>
->>>>
->>>>> +			*dst = safe;
->>>>> +		dst++;
->>>>> +	}
->>>>> +}
->>>>> +
->>>>>     void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
->>>>>     {
->>>>>     	const struct dmi_system_id *match;
->>>>> @@ -126,6 +143,9 @@ void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
->>>>>     	if (sys_vendor && product_name) {
->>>>>     		snprintf(dmi_board_type, sizeof(dmi_board_type), "%s-%s",
->>>>>     			 sys_vendor, product_name);
->>>>> +		brcmf_dmi_sanitize(dmi_board_type,
->>>>> +				   brcmf_dmi_allowed_chars,
->>>>> +				   BRCMF_DMI_SAFE_CHAR);
->>>>>     		settings->board_type = dmi_board_type;
->>>>>     	}
->>>>>     }
->>>>>
->>>>
->>
+> The patches were kind of in limbo as far as Patchwork.  Lorenzo
+> handles the native host controller drivers, so I just delegated them
+> to him, so now they should be on his radar.
+
+Is there a chance to still get this into v5.2 ?
+
+Thomas.
+
+-- 
+SUSE Linux GmbH
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
