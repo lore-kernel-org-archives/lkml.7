@@ -2,114 +2,109 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0BDC04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6E3C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E762087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:04:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e+nL3Wus"
+	by mail.kernel.org (Postfix) with ESMTP id B9B3520830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbfEFJEE (ORCPT
+        id S1726518AbfEFJET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:04:04 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33185 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfEFJEC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:04:02 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m204so3322588oib.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:04:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w3CwerUbOgOXXiCSnS9RlnGeZVnQdj5otMQLyftCR5U=;
-        b=e+nL3WusVlSphHxBUuOnwpeLcTbcxkM3d0tJwFVnHeQxPP67ruHIlvq20gXdKZhu2H
-         bB9lDEUqhP1wiSu91mOioGKtT4ycBoUxoh4FC+hVoBp2F1BbODAaUF2mKyUrYhOAKqit
-         T2YBO051njEtXYukqn8B+THQu9IDpG8A3FVKKTOi4pDJ7oz0d7KTjVHPE8z2o4ACwsE9
-         ykptic7rc2BJziW9//fZQROuPUNapGoh5nZURetTsM9RFF/vX1CnGbAUdl8YpJIBiHYh
-         HGrZrCbs8q8pyJ0vRF0MLBvicTMU2fCeAXdJWGTYB+VAAWlNl7nlXw7CpLz/tNO1+YWN
-         PWrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w3CwerUbOgOXXiCSnS9RlnGeZVnQdj5otMQLyftCR5U=;
-        b=huQX27942Tz5IqqUzwhFiRaMWLXyzURvvqBKl9ICcbeMFgyd+tktmATRzknN4xcHyH
-         okLMlPNQJPjxrvDdmilXvrtBuN8N4egUUwxdBl9VeHpY54AuDHiFwPlic/AyJqJ6EAbK
-         dQCyy9hEPlhBuqajK/YuIzYCFYUZFz89Y3CiZa0EaapJ62uBgYQuMTy+ruRkBw9t6fYM
-         hm3iVyK20vzs3eL9ylpOAbE1ZEXv9fwtURlrquBGAOAIaGm2EvTDf0Gvw5FPPQO6VDB0
-         /qjkOEbWNZVYA/FJLFlzl/5Prnitkg0xXB7zwsATgXVgsrzT+spXAefktRKNfOuF4y3R
-         ++6w==
-X-Gm-Message-State: APjAAAV6uMjWoMYXM3WOaWZTWfMOV/4KOefD5N1iuyyukYfUaVrAevTZ
-        b1xQlJliEyMT6foihpmXKfpCSjS3rba3yc22jUuq4A==
-X-Google-Smtp-Source: APXvYqwEoyQ/+gdbpiq96mf1vlv5hUoY2bhtp6ecuZwu3ufRDNiX4lPMqoN7zAZpCfyk7yZAb5CAmenmXz4Vrtgwk5I=
-X-Received: by 2002:aca:d4cf:: with SMTP id l198mr457112oig.137.1557133441163;
- Mon, 06 May 2019 02:04:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-12-brendanhiggins@google.com> <8c37fd20-859c-9c34-4465-8adfcfdaab09@kernel.org>
-In-Reply-To: <8c37fd20-859c-9c34-4465-8adfcfdaab09@kernel.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 6 May 2019 02:03:49 -0700
-Message-ID: <CAFd5g44q3qyahykujDzOoO01DwGMUm+Kce-tOAzSW90U4mQM7w@mail.gmail.com>
-Subject: Re: [PATCH v2 11/17] kunit: test: add test managed resource tests
-To:     shuah <shuah@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Avinash Kondareddy <akndr41@gmail.com>
+        Mon, 6 May 2019 05:04:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45308 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726085AbfEFJER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 05:04:17 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7DD605945B;
+        Mon,  6 May 2019 09:04:17 +0000 (UTC)
+Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D03F55F9D4;
+        Mon,  6 May 2019 09:04:04 +0000 (UTC)
+Message-ID: <e8f6981863bdbba89adcba1c430083e68546ac1a.camel@redhat.com>
+Subject: Re: [PATCH v2 00/10] RFC: NVME MDEV
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Fam Zheng <fam@euphon.net>, Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>, kvm@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liang Cunming <cunming.liang@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Liu Changpeng <changpeng.liu@intel.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Amnon Ilan <ailan@redhat.com>, John Ferlan <jferlan@redhat.com>
+Date:   Mon, 06 May 2019 12:04:06 +0300
+In-Reply-To: <20190503121838.GA21041@lst.de>
+References: <20190502114801.23116-1-mlevitsk@redhat.com>
+         <20190503121838.GA21041@lst.de>
 Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 06 May 2019 09:04:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 7:34 AM shuah <shuah@kernel.org> wrote:
->
-> On 5/1/19 5:01 PM, Brendan Higgins wrote:
-> > From: Avinash Kondareddy <akndr41@gmail.com>
-> >
-> > Tests how tests interact with test managed resources in their lifetime.
-> >
-> > Signed-off-by: Avinash Kondareddy <akndr41@gmail.com>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > ---
->
-> I think this change log could use more details. It is vague on what it
-> does.
+On Fri, 2019-05-03 at 14:18 +0200, Christoph Hellwig wrote:
+> I simply don't get the point of this series.
+> 
+> MDEV is an interface for exposing parts of a device to a userspace
+> program / VM.  But that this series appears to do is to expose a
+> purely software defined nvme controller to userspace.  Which in
+> principle is a good idea, but we have a much better framework for that,
+> which is called vhost.
 
-Agreed. Will fix in next revision.
+Let me explain the reasons for choosing the IO interfaces as I did:
+
+1. Frontend interface (the interface that faces the guest/userspace/etc):
+
+VFIO/mdev is just way to expose a (partially) software defined PCIe device to a
+guest.
+
+Vhost on the other hand is an interface that is hardcoded and optimized for
+virtio. It can be extended to be pci generic, but why to do so if we already
+have VFIO.
+
+So the biggest advantage of using VFIO _currently_ is that I don't add any new
+API/ABI to the kernel, and neither the userspace (qemu) needs to learn to use a
+new API. 
+
+It also worth noting that VFIO supports nesting out of box, so I don't need to
+worry about it (vhost has to deal with that on the protocol level using its
+IOTLB facility).
+
+On top of that, it is expected that newer hardware will support the PASID based
+device subdivision, which will allow us to _directly_ pass through the
+submission queues of the device and _force_ us to use the NVME protocol for the
+frontend.
+
+2. Backend interface (the connection to the real nvme device):
+
+Currently the backend interface _doesn't have_ to allocate a dedicated queue and
+bypass the block layer. It can use the block submit_bio/blk_poll as I
+demonstrate in the last patch in the series. Its 2x slower though.
+
+However, similar to the (1), when the driver will support the devices with
+hardware based passthrough, it will have to dedicate a bunch of queues to the
+guest, configure them with the appropriate PASID, and then let the guest use
+these queues directly.
+
+
+Best regards,
+	Maxim Levitsky
+
