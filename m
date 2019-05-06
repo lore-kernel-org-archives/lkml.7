@@ -4,193 +4,284 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CF2C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89424C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0091E20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5080A20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HEXOulif"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="d+AoqMuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfEFJnF (ORCPT
+        id S1726328AbfEFJux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:43:05 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35976 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfEFJnE (ORCPT
+        Mon, 6 May 2019 05:50:53 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42334 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbfEFJuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:43:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id o4so16397730wra.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:43:03 -0700 (PDT)
+        Mon, 6 May 2019 05:50:52 -0400
+Received: by mail-lf1-f67.google.com with SMTP id w23so8662214lfc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:50:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oBRW4mzs2+gSuRgFKtSlAc3IAdXzqU5G7UW4zze+fv0=;
-        b=HEXOulifYSD9r6cpc+favVP51KND98+0UEUwidmOZ+pPyUdRR5WR3JUzUuNSX2pxIF
-         T/4MnQbM7IHWrbQVqbXyzeEWQWGuf3EgNQOiQp/8Hhvp87nNMZBMdlV3CVOrD3DaAn6J
-         ZdKkCGrKwiobSJZASqPNEgw9E5TFxcOHKf66XxLgdMHFQYwNe8iDCqox9IVWvZoNcB3R
-         FN2m2fG3G0pbWqFeWwBLoz1aFFCi45zvEnREThevLqPoiMMy5GOyH3B7zHm8YY1gtEn5
-         Ry2lclt2WVw6oBz33J9/YxM6oK8O/HlZ7HC/kNFgEoBuDij+/bD2XuaJ0yzc006uQg8S
-         zdIQ==
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oIR8Y8TRD7JDnicAYZXuKYFswk6mChm5W5k3uZy/A8k=;
+        b=d+AoqMuQ+gxyQUTlKLM437WV02AuIWPqZZ1yHOnsCKYwHu0AhjGiAuzSJT5RiYJl6B
+         Qce06yQsR/XVFG8X7cZyoRD9930ckqJBHB/8sP0tfFs8/hzMGrx2NSSUxhopMiE/PLH+
+         aciy+GxGj8EV21P7qMeOXKCclGn861HWkgFXOHLW9xZRbzh6O8lSVyq93cLbcWMzdbSC
+         xXIf5FqvX7wSFeKtyGEgENldh4VFOAFHKWx1khPTu3GSXl6uujnpOfDSEIybCvn5n2C9
+         r5hfZos5c/011hdQS3RHWVTiCflO9iJqgVmtGKR7maoGkwNAmR0k4VJey1zWt+HbpGy8
+         sz4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oBRW4mzs2+gSuRgFKtSlAc3IAdXzqU5G7UW4zze+fv0=;
-        b=DJgfUESXlE0ZZ1OFbhkdaY5Dmw1/ROBM1T8VBSSzk9QXCIaoPb5BgxU3iOjIjbALFp
-         Y3ZvNnL5IwdqUzc0LVvF54SA5f9RxkxMcklD4cO9tZstWBPv/fKhhohijRU09otnZcot
-         XWpDAPAfLde7PRumhPw2yC3qwCIR4MjbTDPLaaolHLLedJFdePMAw2DvkMDLgKVSi9WI
-         gYByqgbQ7S6VbSV2t4+KY3PEp5RzGCcWTmN4MNRrA7mpKwiVeS4twwxo7bZpMcJy+L4A
-         x5lnytoNaGh9X1qKP59RhMHkpSryagvirAYKfg/GL2oxzlzAzC++9baAFRnNaMpeopU4
-         K2CQ==
-X-Gm-Message-State: APjAAAVXmh6dY39aEBFmzpMNSqEks3CYz0MexZh8Qt9WeCZ2JNGOYVD5
-        IfDKPHDTe7qZ/mNaKF7PlCEaXg==
-X-Google-Smtp-Source: APXvYqzERXrD9dfIppanGsG4vczgC5yAuidlgdRE0rB9x9uiRwmebaGhxtIZTRMTsNGX8g/83N2t8g==
-X-Received: by 2002:a5d:52c6:: with SMTP id r6mr18035560wrv.131.1557135782760;
-        Mon, 06 May 2019 02:43:02 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id g5sm10623857wrh.44.2019.05.06.02.43.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 02:43:02 -0700 (PDT)
-Subject: Re: [PATCH 1/8] arm64: dts: mt8183: add thermal zone node
-To:     "michael.kao" <michael.kao@mediatek.com>, fan.chen@mediatek.com,
-        jamesjj.liao@mediatek.com, dawei.chien@mediatek.com,
-        louis.yu@mediatek.com, roger.lu@mediatek.com,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
- <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <8e0fad21-57d1-923c-fd8b-f5f2c47a5c94@linaro.org>
-Date:   Mon, 6 May 2019 11:43:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oIR8Y8TRD7JDnicAYZXuKYFswk6mChm5W5k3uZy/A8k=;
+        b=Syt/yucEWu/IAPeQkrb1UTjvOmg6dBQO3B9J8rpB8+4L+Z63lxRbroXNg/mEueYSC2
+         fPoi7JpuVgvCps2IjHtIV9DVFEJPiVVU30GsXKqs/zNKun7ry1c41ldeWm3C6esyEy4T
+         z3noJtYOzEEBn9Xr7kKR1etoCl1SR8ZosAayE/j1NINuTB25TG9rMY/6OmIO/NCOCaiy
+         c6cGn142Vh0OqrsQviOk0BdyyEeGRN/jiK97vQZP48yurwG7yT4AxkEcQEoNXDhYR7hn
+         PxX2FKrJZorJhPFYa844E8eXUa1SrinVa0j6i2q9r+tpniD5WEHB6cP6S5KDU6Ugp/9r
+         GHPQ==
+X-Gm-Message-State: APjAAAU/vhZudqPg73+tpYz63a2xR9pJF5fcN7t2j9KASnwlPljV6WWC
+        RfIehrLUeW0MFfNb5jGgAymQUK60VXmoCWvWbCTeIQ==
+X-Google-Smtp-Source: APXvYqxV/hG6zQ32Xe6xOpYrPEyzfvj/VSnJeB1RXBGmX03eV/CXV7dEIw0VnFDK5CIZjeeoNL7naRm+Scii7rPJ9EU=
+X-Received: by 2002:a19:4f54:: with SMTP id a20mr12191013lfk.136.1557136249774;
+ Mon, 06 May 2019 02:50:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1556795761-21630-1-git-send-email-yash.shah@sifive.com>
+ <1556795761-21630-2-git-send-email-yash.shah@sifive.com> <4072c812-d3bf-9ad5-2b30-6b2a5060bb55@arm.com>
+In-Reply-To: <4072c812-d3bf-9ad5-2b30-6b2a5060bb55@arm.com>
+From:   Yash Shah <yash.shah@sifive.com>
+Date:   Mon, 6 May 2019 15:20:13 +0530
+Message-ID: <CAJ2_jOFz907Kf5fhQ2a6K3Fyhr_h2PjvGfpQKxN-OQLRrzP=Ng@mail.gmail.com>
+Subject: Re: [PATCH] edac: sifive: Add EDAC platform driver for SiFive SoCs
+To:     James Morse <james.morse@arm.com>
+Cc:     linux-edac@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
+        mchehab@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/05/2019 12:43, michael.kao wrote:
-> Add thermal zone node to Mediatek MT8183 dts file.
-> 
-> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> ---
+Hi james,
 
-Hi Michael,
+On Thu, May 2, 2019 at 10:12 PM James Morse <james.morse@arm.com> wrote:
+>
+> Hi Yash,
+>
+> Sorry for the delay on the earlier version of this - I was trying to work out what happens
+> when multiple edac drivers probe based on DT...
+>
+>
+> On 02/05/2019 12:16, Yash Shah wrote:
+> > The initial ver of EDAC driver supports:
+> > - ECC event monitoring and reporting through the EDAC framework for SiFive
+> >   L2 cache controller.
+> >
+>
+> You probably don't want this bit preserved in the kernel log:
+> {
+>
+> > This patch depends on patch
+> > 'RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs'
+> > https://lkml.org/lkml/2019/5/2/309
+>
+> }
+>
+> > The EDAC driver registers for notifier events from the L2 cache controller
+> > driver (arch/riscv/mm/sifive_l2_cache.c) for L2 ECC events
+> >
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > ---
+>
+> (if you put it here, it gets discarded when the patch is applied)
 
-the device tree binding for thermal specifies the thermal zone must
-define a cooling-maps (it is a required field).
+Ok, will move it down here.
 
-All the thermal zones below tzts1, tzts2, etc ... do not have it.
+>
+> Having an separately posted dependency like this is tricky, as this code can't be
+> used/tested until the other bits are merged.
+>
+>
+> >  MAINTAINERS                |   6 +++
+> >  arch/riscv/Kconfig         |   1 +
+> >  drivers/edac/Kconfig       |   6 +++
+> >  drivers/edac/Makefile      |   1 +
+> >  drivers/edac/sifive_edac.c | 121 +++++++++++++++++++++++++++++++++++++++++++++
+> >  5 files changed, 135 insertions(+)
+> >  create mode 100644 drivers/edac/sifive_edac.c
+>
+> > diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
+> > new file mode 100644
+> > index 0000000..eb7a9b9
+> > --- /dev/null
+> > +++ b/drivers/edac/sifive_edac.c
+> > @@ -0,0 +1,121 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * SiFive Platform EDAC Driver
+> > + *
+> > + * Copyright (C) 2018-2019 SiFive, Inc.
+> > + *
+> > + * This driver is partially based on octeon_edac-pc.c
+> > + *
+> > + */
+> > +#include <linux/edac.h>
+> > +#include <linux/platform_device.h>
+> > +#include "edac_module.h"
+> > +
+> > +#define DRVNAME "sifive_edac"
+> > +
+> > +extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
+> > +extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
+>
+> Ideally these would live in some header file.
 
+Will move the externs in sifive_l2_cache header file
 
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 64 ++++++++++++++++++++++++++++++++
->  1 file changed, 64 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index 926df75..b92116f 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -334,6 +334,67 @@
->  			status = "disabled";
->  		};
->  
-> +		thermal: thermal@1100b000 {
-> +			#thermal-sensor-cells = <1>;
-> +			compatible = "mediatek,mt8183-thermal";
-> +			reg = <0 0x1100b000 0 0x1000>;
-> +			interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_INFRA_THERM>,
-> +				 <&infracfg CLK_INFRA_AUXADC>;
-> +			clock-names = "therm", "auxadc";
-> +			resets = <&infracfg  MT8183_INFRACFG_AO_THERM_SW_RST>;
-> +			mediatek,auxadc = <&auxadc>;
-> +			mediatek,apmixedsys = <&apmixedsys>;
-> +			mediatek,hw-reset-temp = <117000>;
-> +			nvmem-cells = <&thermal_calibration>;
-> +			nvmem-cell-names = "calibration-data";
-> +		};
-> +
-> +		thermal-zones {
-> +			cpu_thermal: cpu_thermal {
-> +				polling-delay-passive = <1000>;
-> +				polling-delay = <1000>;
-> +
-> +				thermal-sensors = <&thermal 0>;
-> +				sustainable-power = <1500>;
-> +			};
-> +
-> +			tzts1: tzts1 {
-> +				polling-delay-passive = <1000>;
-> +				polling-delay = <1000>;
-> +				thermal-sensors = <&thermal 1>;
-> +			};
-> +
-> +			tzts2: tzts2 {
-> +				polling-delay-passive = <1000>;
-> +				polling-delay = <1000>;
-> +				thermal-sensors = <&thermal 2>;
-> +			};
-> +
-> +			tzts3: tzts3 {
-> +				polling-delay-passive = <1000>;
-> +				polling-delay = <1000>;
-> +				thermal-sensors = <&thermal 3>;
-> +			};
-> +
-> +			tzts4: tzts4 {
-> +				polling-delay-passive = <1000>;
-> +				polling-delay = <1000>;
-> +				thermal-sensors = <&thermal 4>;
-> +			};
-> +
-> +			tzts5: tzts5 {
-> +				polling-delay-passive = <1000>;
-> +				polling-delay = <1000>;
-> +				thermal-sensors = <&thermal 5>;
-> +			};
-> +
-> +			tztsABB: tztsABB {
-> +				polling-delay-passive = <1000>;
-> +				polling-delay = <1000>;
-> +				thermal-sensors = <&thermal 6>;
-> +			};
-> +		};
->  		audiosys: syscon@11220000 {
->  			compatible = "mediatek,mt8183-audiosys", "syscon";
->  			reg = <0 0x11220000 0 0x1000>;
-> @@ -368,6 +429,9 @@
->  			compatible = "mediatek,mt8183-efuse",
->  				     "mediatek,efuse";
->  			reg = <0 0x11f10000 0 0x1000>;
-> +			thermal_calibration: calib@180 {
-> +				reg = <0x180 0xc>;
-> +			};
->  		};
->  
->  		mfgcfg: syscon@13000000 {
-> 
+>
+>
+> > +struct sifive_edac_priv {
+> > +     struct notifier_block notifier;
+> > +     struct edac_device_ctl_info *dci;
+> > +};
+> > +
+> > +/**
+> > + * EDAC error callback
+> > + *
+> > + * @event: non-zero if unrecoverable.
+> > + */
+> > +static
+> > +int ecc_err_event(struct notifier_block *this, unsigned long event, void *ptr)
+> > +{
+> > +     const char *msg = (char *)ptr;
+> > +     struct sifive_edac_priv *p;
+> > +
+> > +     p = container_of(this, struct sifive_edac_priv, notifier);
+> > +
+> > +     if (event)
+> > +             edac_device_handle_ue(p->dci, 0, 0, msg);
+> > +     else
+> > +             edac_device_handle_ce(p->dci, 0, 0, msg);
+>
+> This would be easier to read if your SIFIVE_L2_ERR_TYPE_UE were exposed via some header file.
 
+sure.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+>
+>
+> > +
+> > +     return NOTIFY_STOP;
+>
+> Your notifier register calls are EXPORT_SYMBOL()d, but Kconfig forbids building this as a
+> module, so its not for this driver. If there is another user of this notifier-chain, won't
+> NOTIFY_STOP here break it?
+>
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Yes, you are right. Will change it to NOTIFY_OK
 
+>
+> > +}
+> > +
+> > +static int ecc_register(struct platform_device *pdev)
+> > +{
+> > +     struct sifive_edac_priv *p;
+> > +
+> > +     p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
+> > +     if (!p)
+> > +             return -ENOMEM;
+> > +
+> > +     p->notifier.notifier_call = ecc_err_event;
+> > +     platform_set_drvdata(pdev, p);
+> > +
+> > +     p->dci = edac_device_alloc_ctl_info(sizeof(*p), "sifive_ecc", 1,
+>
+> sizeof(*p) here is how much space in struct edac_device_ctl_info you need for private
+> storage... but you never touch p->dci->pvt_info, so you aren't using it.
+>
+> 0?
+
+Yes, will change it.
+
+>
+>
+> > +                                         "sifive_ecc", 1, 1, NULL, 0,
+> > +                                         edac_device_alloc_index());
+> > +     if (IS_ERR(p->dci))
+> > +             return PTR_ERR(p->dci);
+> > +
+> > +     p->dci->dev = &pdev->dev;
+> > +     p->dci->mod_name = "Sifive ECC Manager";
+> > +     p->dci->ctl_name = dev_name(&pdev->dev);
+> > +     p->dci->dev_name = dev_name(&pdev->dev);
+> > +
+> > +     if (edac_device_add_device(p->dci)) {
+> > +             dev_err(p->dci->dev, "failed to register with EDAC core\n");
+> > +             goto err;
+> > +     }
+> > +
+> > +     register_sifive_l2_error_notifier(&p->notifier);
+> > +
+> > +     return 0;
+> > +
+> > +err:
+> > +     edac_device_free_ctl_info(p->dci);
+> > +
+> > +     return -ENXIO;
+> > +}
+>
+> > +struct platform_device *sifive_pdev;
+>
+> static?
+
+Yes, will change this too.
+
+>
+>
+> > +static int __init sifive_edac_init(void)
+> > +{
+> > +     int ret;
+> > +
+> > +     sifive_pdev = platform_device_register_simple(DRVNAME, 0, NULL, 0);
+> > +     if (IS_ERR(sifive_pdev))
+> > +             return PTR_ERR(sifive_pdev);
+> > +
+> > +     ret = ecc_register(sifive_pdev);
+> > +     if (ret)
+> > +             platform_device_unregister(sifive_pdev);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static void __exit sifive_edac_exit(void)
+> > +{
+> > +     ecc_unregister(sifive_pdev);
+> > +     platform_device_unregister(sifive_pdev);
+> > +}
+>
+> Looks good to me. I think this patch should go with its two dependencies, I'm not sure why
+> it got split off...
+>
+> Reviewed-by: James Morse <james.morse@arm.com>
+>
+
+Thanks for your review.
+
+- Yash
+
+>
+> Thanks,
+>
+> James
