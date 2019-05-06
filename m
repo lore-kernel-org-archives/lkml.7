@@ -2,170 +2,119 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51121C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8035FC04AAE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109E0208C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:46:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AKjrTTeN"
+	by mail.kernel.org (Postfix) with ESMTP id 5DC25205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfEFHqz (ORCPT
+        id S1726475AbfEFHsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:46:55 -0400
-Received: from mail-eopbgr30062.outbound.protection.outlook.com ([40.107.3.62]:44010
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        Mon, 6 May 2019 03:48:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53992 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725855AbfEFHqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:46:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NlbrpMn4jcauvmvLzlZ3Ywlezr8Ks2g3uPSkYHoLfzM=;
- b=AKjrTTeNTM4phOI1QRA5QhAozTAlVTh576pyGCGkVVIf3Xbi1Gvq0Qfcn0U5gmd+/p14USxq+J+D8LF2awBSvi7zryyE8+QXWnB44cBn9BClooP5TvwUFDP2391QmsUUh+CgrOxHystuS05FRQf8YRTn7Phb2T1zeBslJ3iddEA=
-Received: from AM6PR04MB4357.eurprd04.prod.outlook.com (52.135.167.33) by
- AM6PR04MB4421.eurprd04.prod.outlook.com (20.177.39.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Mon, 6 May 2019 07:46:49 +0000
-Received: from AM6PR04MB4357.eurprd04.prod.outlook.com
- ([fe80::f062:7002:6318:780b]) by AM6PR04MB4357.eurprd04.prod.outlook.com
- ([fe80::f062:7002:6318:780b%2]) with mapi id 15.20.1856.012; Mon, 6 May 2019
- 07:46:49 +0000
-From:   Chuanhua Han <chuanhua.han@nxp.com>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "eha@deif.com" <eha@deif.com>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "peda@axentia.se" <peda@axentia.se>,
-        Sumit Batra <sumit.batra@nxp.com>
-Subject: RE: [EXT] Re: [PATCH 1/2] i2c: imx: I2C Driver doesn't consider
- I2C_IPGCLK_SEL RCW bit when using ls1046a SoC
-Thread-Topic: [EXT] Re: [PATCH 1/2] i2c: imx: I2C Driver doesn't consider
- I2C_IPGCLK_SEL RCW bit when using ls1046a SoC
-Thread-Index: AQHU/w+WtXmB7zSh+EKM7NDEvi24aqZUqIWAgAYQEbCAAwZvgIAAAgjQ
-Date:   Mon, 6 May 2019 07:46:49 +0000
-Message-ID: <AM6PR04MB4357663A5CBEF3BBC8EBCECC97300@AM6PR04MB4357.eurprd04.prod.outlook.com>
-References: <20190430044719.30720-1-chuanhua.han@nxp.com>
- <20190430125043.weqwzim4gpsvtkfe@pengutronix.de>
- <AM6PR04MB43571B8D52C1FE9ED20DBA1D97360@AM6PR04MB4357.eurprd04.prod.outlook.com>
- <20190506073735.ctzybytamu44pbvv@pengutronix.de>
-In-Reply-To: <20190506073735.ctzybytamu44pbvv@pengutronix.de>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=chuanhua.han@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1617b42f-a809-46a1-99f1-08d6d1f6ff22
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB4421;
-x-ms-traffictypediagnostic: AM6PR04MB4421:
-x-ms-exchange-purlcount: 1
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <AM6PR04MB442134B539C0538513456DBB97300@AM6PR04MB4421.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:612;
-x-forefront-prvs: 0029F17A3F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(346002)(376002)(396003)(199004)(189003)(13464003)(66946007)(6916009)(66476007)(64756008)(66446008)(68736007)(478600001)(7736002)(81156014)(256004)(52536014)(2906002)(7416002)(55016002)(14454004)(76176011)(7696005)(446003)(476003)(486006)(44832011)(11346002)(33656002)(53936002)(99286004)(316002)(26005)(229853002)(8676002)(186003)(6506007)(53546011)(45080400002)(102836004)(81166006)(966005)(8936002)(3846002)(6116002)(66556008)(54906003)(6436002)(305945005)(6246003)(4326008)(9686003)(25786009)(76116006)(74316002)(73956011)(71200400001)(66066001)(6306002)(5660300002)(86362001)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4421;H:AM6PR04MB4357.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ksb1a7YzvjhbLMsWpgVca0zaqPl1uLu2cT3nkvWieJgwSppl6aIeMIltFQ2dvIz4sMK/Pc2odPs+vr2ageX9NPPleKGW8Y9NLfpMK3Bn6kN+9ci0UqGto8QXNQnxyNJFXBqu181AnKmcBr7rEVh8JfmAwmeP4gIklySOPa6tAOuA6R/W0FtCGRVilJPdSEMifyLUdOfsz/UrriK14/gRWbkg9tdtqmTOQI5UBqaKy+PTYLOmRiT6FmqRoAnxWRAJ+egI+lroQBufcckysfEtSaqmdUSLEnG+uKuHle7bmMCvsmWQaLmFV4P8ymz14IYkviVZXvEHSYfnGrHpAIGhQOnXLitLlbriX8fm7PIUhRTaLYiT7JkqlIJOHH6MAQiHiXL86XoZ1kJoAV31xXxKhO1gWwIq0Bi1ZpiDmi2yK7A=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726438AbfEFHsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 03:48:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C5F40AE27;
+        Mon,  6 May 2019 07:48:09 +0000 (UTC)
+Date:   Mon, 6 May 2019 09:48:09 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RFC: console: hack up console_trylock more
+Message-ID: <20190506074809.huawsdaynyci5kwz@pathway.suse.cz>
+References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
+ <20190503151437.dc2ty2mnddabrz4r@pathway.suse.cz>
+ <CAKMK7uF8AD6033_tJw1Y7VsAXb6OD_syZtG3a-JM2g9eEb-P9g@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1617b42f-a809-46a1-99f1-08d6d1f6ff22
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 07:46:49.1230
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4421
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uF8AD6033_tJw1Y7VsAXb6OD_syZtG3a-JM2g9eEb-P9g@mail.gmail.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2FzY2hhIEhhdWVyIDxz
-LmhhdWVyQHBlbmd1dHJvbml4LmRlPg0KPiBTZW50OiAyMDE55bm0NeaciDbml6UgMTU6MzgNCj4g
-VG86IENodWFuaHVhIEhhbiA8Y2h1YW5odWEuaGFuQG54cC5jb20+DQo+IENjOiBzaGF3bmd1b0Br
-ZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9y
-ZzsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-DQo+IGxpbnV4LWkyY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGZlc3RldmFtQGdtYWls
-LmNvbTsgZGwtbGludXgtaW14DQo+IDxsaW51eC1pbXhAbnhwLmNvbT47IHdzYStyZW5lc2FzQHNh
-bmctZW5naW5lZXJpbmcuY29tOw0KPiB1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU7IGVo
-YUBkZWlmLmNvbTsgbGludXhAcmVtcGVsLXByaXZhdC5kZTsNCj4gbC5zdGFjaEBwZW5ndXRyb25p
-eC5kZTsgcGVkYUBheGVudGlhLnNlOyBTdW1pdCBCYXRyYQ0KPiA8c3VtaXQuYmF0cmFAbnhwLmNv
-bT4NCj4gU3ViamVjdDogUmU6IFtFWFRdIFJlOiBbUEFUQ0ggMS8yXSBpMmM6IGlteDogSTJDIERy
-aXZlciBkb2Vzbid0IGNvbnNpZGVyDQo+IEkyQ19JUEdDTEtfU0VMIFJDVyBiaXQgd2hlbiB1c2lu
-ZyBsczEwNDZhIFNvQw0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBPbiBTYXQsIE1h
-eSAwNCwgMjAxOSBhdCAwOToyODo0OEFNICswMDAwLCBDaHVhbmh1YSBIYW4gd3JvdGU6DQo+ID4N
-Cj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFNhc2No
-YSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4NCj4gPiA+IFNlbnQ6IDIwMTnlubQ05pyI
-MzDml6UgMjA6NTENCj4gPiA+IFRvOiBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29t
-Pg0KPiA+ID4gQ2M6IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAu
-Y29tPjsNCj4gPiA+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+
-ID4gPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1pMmNAdmdlci5rZXJuZWwu
-b3JnOw0KPiA+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4g
-ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGZlc3RldmFtQGdtYWlsLmNvbTsgZGwtbGludXgt
-aW14DQo+ID4gPiA8bGludXgtaW14QG54cC5jb20+OyB3c2ErcmVuZXNhc0BzYW5nLWVuZ2luZWVy
-aW5nLmNvbTsNCj4gPiA+IHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZTsgZWhhQGRlaWYu
-Y29tOw0KPiA+ID4gbGludXhAcmVtcGVsLXByaXZhdC5kZTsgbC5zdGFjaEBwZW5ndXRyb25peC5k
-ZTsgcGVkYUBheGVudGlhLnNlOw0KPiA+ID4gU3VtaXQgQmF0cmEgPHN1bWl0LmJhdHJhQG54cC5j
-b20+DQo+ID4gPiBTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIIDEvMl0gaTJjOiBpbXg6IEkyQyBE
-cml2ZXIgZG9lc24ndCBjb25zaWRlcg0KPiA+ID4gSTJDX0lQR0NMS19TRUwgUkNXIGJpdCB3aGVu
-IHVzaW5nIGxzMTA0NmEgU29DDQo+ID4gPg0KPiA+ID4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+ID4g
-Pg0KPiA+ID4gT24gVHVlLCBBcHIgMzAsIDIwMTkgYXQgMTI6NDc6MThQTSArMDgwMCwgQ2h1YW5o
-dWEgSGFuIHdyb3RlOg0KPiA+ID4gPiBUaGUgY3VycmVudCBrZXJuZWwgZHJpdmVyIGRvZXMgbm90
-IGNvbnNpZGVyIEkyQ19JUEdDTEtfU0VMICg0MjQNCj4gPiA+ID4gYml0IG9mDQo+ID4gPiA+IFJD
-VykgaW4gZGVjaWRpbmcgIGkyY19jbGtfcmF0ZSBpbiBmdW5jdGlvbiBpMmNfaW14X3NldF9jbGso
-KSB7IDANCj4gPiA+ID4gUGxhdGZvcm0gY2xvY2svNCwgMSBQbGF0Zm9ybSBjbG9jay8yfS4NCj4g
-PiA+ID4NCj4gPiA+ID4gV2hlbiB1c2luZyBsczEwNDZhIFNvQywgdGhpcyBwb3B1bGF0ZXMgaW5j
-b3JyZWN0IHZhbHVlIGluIElCRkQNCj4gPiA+ID4gcmVnaXN0ZXIgaWYgSTJDX0lQR0NMS19TRUwg
-PSAwLCB3aGljaCBnZW5lcmF0ZXMgaGFsZiBvZiB0aGUgZGVzaXJlZCBDbG9jay4NCj4gPiA+ID4N
-Cj4gPiA+ID4gVGhlcmVmb3JlLCBpZiBsczEwNDZhIFNvQyBpcyB1c2VkLCB3ZSBuZWVkIHRvIHNl
-dCB0aGUgaTJjIGNsb2NrDQo+ID4gPiA+IGFjY29yZGluZyB0byB0aGUgY29ycmVzcG9uZGluZyBS
-Q1cuDQo+ID4gPg0KPiA+ID4gU28gdGhlIGNsb2NrIGRyaXZlciByZXBvcnRzIHRoZSB3cm9uZyBj
-bG9jay4gUGxlYXNlIGZpeCB0aGUgY2xvY2sgZHJpdmVyIHRoZW4uDQo+ID4gTm8sIHRoaXMgaXMg
-YSBwcm9ibGVtIHdpdGggdGhlIGkyYyBkcml2ZXIuIEl0IGlzIG5vdCBhIHByb2JsZW0gd2l0aA0K
-PiA+IHRoZSBjbG9jayBkcml2ZXIsIHNvIHRoZSBpMmMgZHJpdmVyIG5lZWRzIHRvIGJlIG1vZGlm
-aWVkLg0KPiANCj4gU28gaG93IGRvZXMgdGhpcyBSQ1cgYml0IGdldCBldmFsdWF0ZWQ/IEFjY29y
-ZGluZyB0byB0aGUgcmVmZXJlbmNlIG1hbnVhbA0KPiBvbmx5IG9uZSBjbG9jayBnb2VzIHRvIHRo
-ZSBpMmMgbW9kdWxlIChkZXNjcmliZWQgYXMgMS8yIFBsYXRmb3JtDQo+IENsb2NrKSBhbmQgdGhl
-IGkyYyBtb2R1bGUgb25seSB0YWtlcyBvbmUgY2xvY2suIFNvIGl0IHNlZW1zIHRoZXJlIG11c3Qg
-YmUgYSAvMg0KPiBkaXZpZGVyIHNvbWV3aGVyZSwgZWl0aGVyIGluIGVhY2ggaTJjIG1vZHVsZSBv
-ciBzb21ld2hlcmUgb3V0c2lkZS4gQ2FuIHlvdXINCj4gSUMgZ3V5cyB0ZWxsIHlvdSB3aGVyZSBp
-dCBpcz8NCj4gDQo+IE9uZSByZWFzb24gSSBzdWdnZXN0ZWQgdGhlIGNsb2NrIGRyaXZlciBpcyB0
-aGF0IHRoZSBjbG9jayBkcml2ZXIgY29udGFpbnMgU29DDQo+IHNwZWNpZmljIGNvZGUgYWxyZWFk
-eSwgc28gaXQgc2hvdWxkIGJlIGVhc2llciB0byBpbnRlZ3JhdGUgdGhlcmUuDQpPSywgSSB3aWxs
-IHNlZSB0aGF0IGl0IGNhbiBiZSBxdWFsaWZpZWQgaW4gdGhlIGNsb2NrIGRyaXZlci4NCj4gDQo+
-IFNhc2NoYQ0KPiANCj4gDQo+IC0tDQo+IFBlbmd1dHJvbml4IGUuSy4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8DQo+IHwNCj4gSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgICAg
-ICAgICAgIHwNCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNv
-bS8/dXJsPWh0dHAlM0ElMkYlMkZ3d3cucGUNCj4gbmd1dHJvbml4LmRlJTJGJmFtcDtkYXRhPTAy
-JTdDMDElN0NjaHVhbmh1YS5oYW4lNDBueHAuY29tJTdDYjJkDQo+IDQ2ODA2OTljNDQ4ZTg1MTQz
-MDhkNmQxZjViZjgyJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2Mw0KPiA1JTdDMCU3
-QzAlN0M2MzY5MjcyNTA3NDM1MTY1NjMmYW1wO3NkYXRhPXBGZENiaURYRSUyRkRsbDAxWDlOag0K
-PiBIZzNTQ0RwRUN6Z3JyOE1MdFlCZEtINWMlM0QmYW1wO3Jlc2VydmVkPTAgIHwNCj4gUGVpbmVy
-IFN0ci4gNi04LCAzMTEzNyBIaWxkZXNoZWltLCBHZXJtYW55IHwgUGhvbmU6ICs0OS01MTIxLTIw
-NjkxNy0wDQo+IHwNCj4gQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgICAgICAgICAg
-IHwgRmF4Og0KPiArNDktNTEyMS0yMDY5MTctNTU1NSB8DQo=
+On Mon 2019-05-06 09:11:37, Daniel Vetter wrote:
+> On Fri, May 3, 2019 at 5:14 PM Petr Mladek <pmladek@suse.com> wrote:
+> > On Thu 2019-05-02 16:16:43, Daniel Vetter wrote:
+> > > console_trylock, called from within printk, can be called from pretty
+> > > much anywhere. Including try_to_wake_up. Note that this isn't common,
+> > > usually the box is in pretty bad shape at that point already. But it
+> > > really doesn't help when then lockdep jumps in and spams the logs,
+> > > potentially obscuring the real backtrace we're really interested in.
+> > > One case I've seen (slightly simplified backtrace):
+> > >
+> > >  Call Trace:
+> > >   <IRQ>
+> > >   console_trylock+0xe/0x60
+> > >   vprintk_emit+0xf1/0x320
+> > >   printk+0x4d/0x69
+> > >   __warn_printk+0x46/0x90
+> > >   native_smp_send_reschedule+0x2f/0x40
+> > >   check_preempt_curr+0x81/0xa0
+> > >   ttwu_do_wakeup+0x14/0x220
+> > >   try_to_wake_up+0x218/0x5f0
+> > >   pollwake+0x6f/0x90
+> > >   credit_entropy_bits+0x204/0x310
+> > >   add_interrupt_randomness+0x18f/0x210
+> > >   handle_irq+0x67/0x160
+> > >   do_IRQ+0x5e/0x130
+> > >   common_interrupt+0xf/0xf
+> > >   </IRQ>
+> > >
+> > > This alone isn't a problem, but the spinlock in the semaphore is also
+> > > still held while waking up waiters (up() -> __up() -> try_to_wake_up()
+> > > callchain), which then closes the runqueue vs. semaphore.lock loop,
+> > > and upsets lockdep, which issues a circular locking splat to dmesg.
+> > > Worse it upsets developers, since we don't want to spam dmesg with
+> > > clutter when the machine is dying already.
+> > >
+> > > Fix this by creating a __down_trylock which only trylocks the
+> > > semaphore.lock. This isn't correct in full generality, but good enough
+> > > for console_lock:
+> > >
+> > > - there's only ever one console_lock holder, we won't fail spuriously
+> > >   because someone is doing a down() or up() while there's still room
+> > >   (unlike other semaphores with count > 1).
+> > >
+> > > - console_unlock() has one massive retry loop, which will catch anyone
+> > >   who races the trylock against the up(). This makes sure that no
+> > >   printk lines will get lost. Making the trylock more racy therefore
+> > >   has no further impact.
+> >
+> > To be honest, I do not see how this could solve the problem.
+> >
+> > The circular dependency is still there. If the new __down_trylock()
+> > succeeds then console_unlock() will get called in the same context
+> > and it will still need to call up() -> try_to_wake_up().
+> >
+> > Note that there are many other console_lock() callers that might
+> > happen in parallel and might appear in the wait queue.
+> 
+> Hm right. It's very rare we hit this in our CI and I don't know how to
+> repro otherwise, so just threw this out at the wall to see if it
+> sticks. I'll try and come up with a new trick then.
+
+Single messages are printed from scheduler via printk_deferred().
+WARN() might be solved by introducing printk deferred context,
+see the per-cpu variable printk_context.
+
+Best Regards,
+Petr
