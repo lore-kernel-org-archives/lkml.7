@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98E2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9A5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726492087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02A620C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153902;
-	bh=0sCxsk4ZhCr/cOB8EqI0wCflLdcv00pT061/03t1zBY=;
+	s=default; t=1557153907;
+	bh=JK/v2MkIjQROkV0ZWEqSRpWKOhdaWykh5GI1KeZuzys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPh2n3Gcv4alr3FHEFZcXf9uxsQLzRRX54VNqq4MoWtmqFlaf2776pinTBtQZaxhZ
-	 o0ERo6Y9wY6ErJ13i3T8pCRCPA+xFjvnfoE1+zGuh1aD+bdQ8403kgtQx3cFBcQFmu
-	 kbBuVb7HaHtSgR0NWXYuT4lTW/XfAp8D1OioEyew=
+	b=SlrZ0iHJHFroY+vXAXqPoJ6DwxCsZK+YzfJip7h4KQvEVR5GvO3G0Qq/cpxsp12m/
+	 wWoV1FzyCeF4CVNLhfDlVLn2+8U7iJ83YNtkzsL8mv1MzREqnnUHK/5/pwn1QfExhs
+	 nLCTAVZYUip9Vgcyb/Gl5UH3FB4Bt2lC8DBs8KeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfEFOpA (ORCPT
+        id S1728900AbfEFOpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:45:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41388 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:45:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728873AbfEFOoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:54 -0400
+        id S1728626AbfEFOpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A944B20C01;
-        Mon,  6 May 2019 14:44:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DD0720449;
+        Mon,  6 May 2019 14:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153894;
-        bh=0sCxsk4ZhCr/cOB8EqI0wCflLdcv00pT061/03t1zBY=;
+        s=default; t=1557153902;
+        bh=JK/v2MkIjQROkV0ZWEqSRpWKOhdaWykh5GI1KeZuzys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xDOlpuXkZgEfWBtR+YWZzcMCLX9C3175dUlwFVjyShZMfK8XbYU0BZZtBMRmis6my
-         gK9vLTqgsFG3MM5FEJ2qUSh+zVK/BzvrgLlpPwhW7nbI35d7K+q9XIgfenbjs3wDGJ
-         32sk8WtxLH59MXSjdyk9rLixaRhnoh/1xM8kgfL4=
+        b=SGrPAsEJAcPtgOd+/YzjHKXWbsQMoJtA/CKT4ms0BnPiYRT4nyQAVwGD5c62GBkJY
+         UJzJ5WxZFggu26vuItCpQzC2PIUE35X4jHzDWKx1OHroGhzgem9jrBesbFg5pN+gMt
+         O8RfoX5HHbDeBph1U/8FqJeT0tasHt6ffAjwieW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 35/75] bonding: show full hw address in sysfs for slave entries
-Date:   Mon,  6 May 2019 16:32:43 +0200
-Message-Id: <20190506143056.396926948@linuxfoundation.org>
+Subject: [PATCH 4.14 38/75] net: stmmac: fix dropping of multi-descriptor RX frames
+Date:   Mon,  6 May 2019 16:32:46 +0200
+Message-Id: <20190506143056.677620529@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -61,41 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 18bebc6dd3281955240062655a4df35eef2c46b3 ]
+[ Upstream commit 8ac0c24fe1c256af6644caf3d311029440ec2fbd ]
 
-Bond expects ethernet hwaddr for its slave, but it can be longer than 6
-bytes - infiniband interface for example.
+Packets without the last descriptor set should be dropped early. If we
+receive a frame larger than the DMA buffer, the HW will continue using the
+next descriptor. Driver mistakes these as individual frames, and sometimes
+a truncated frame (without the LD set) may look like a valid packet.
 
- # cat /sys/devices/<skipped>/net/ib0/address
- 80:00:02:08:fe:80:00:00:00:00:00:00:7c:fe:90:03:00:be:5d:e1
+This fixes a strange issue where the system replies to 4098-byte ping
+although the MTU/DMA buffer size is set to 4096, and yet at the same
+time it's logging an oversized packet.
 
- # cat /sys/devices/<skipped>/net/ib0/bonding_slave/perm_hwaddr
- 80:00:02:08:fe:80
-
-So print full hwaddr in sysfs "bonding_slave/perm_hwaddr" as well.
-
-Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_sysfs_slave.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/enh_desc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/bonding/bond_sysfs_slave.c b/drivers/net/bonding/bond_sysfs_slave.c
-index 7d16c51e6913..641a532b67cb 100644
---- a/drivers/net/bonding/bond_sysfs_slave.c
-+++ b/drivers/net/bonding/bond_sysfs_slave.c
-@@ -55,7 +55,9 @@ static SLAVE_ATTR_RO(link_failure_count);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+index cdfe9a350ac0..f2150efddc88 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+@@ -201,6 +201,11 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ 	if (unlikely(rdes0 & RDES0_OWN))
+ 		return dma_own;
  
- static ssize_t perm_hwaddr_show(struct slave *slave, char *buf)
- {
--	return sprintf(buf, "%pM\n", slave->perm_hwaddr);
-+	return sprintf(buf, "%*phC\n",
-+		       slave->dev->addr_len,
-+		       slave->perm_hwaddr);
- }
- static SLAVE_ATTR_RO(perm_hwaddr);
- 
++	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
++		stats->rx_length_errors++;
++		return discard_frame;
++	}
++
+ 	if (unlikely(rdes0 & RDES0_ERROR_SUMMARY)) {
+ 		if (unlikely(rdes0 & RDES0_DESCRIPTOR_ERROR)) {
+ 			x->rx_desc++;
 -- 
 2.20.1
 
