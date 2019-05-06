@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13963C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9DCC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEAFE2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ADD72087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154024;
-	bh=xXVhw4rYzZVrdJBk2BB/nhSxbQrOB/KgHjTaiF1hqVc=;
+	s=default; t=1557154027;
+	bh=9XJoIW3im0c4o9kP86IKLI5/0HF/dfsUCxOv8kUS0xA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KBp6pJn3TAMZabVL4FjeafX+Ktp9AJKbnz5gg43cx908RWFcTC2WnWNo1IXmVTYqI
-	 U5HjIyxJuDnbLZuyDl+pjWsNKJLB4MfbtRZH1y6lJtfQsytfB4q/RAM68swltDJGQM
-	 tz1iPcKDoHDIYJcwFitRJ3eof4ApmZjPavI8KPJg=
+	b=2HsheCRQ8LuJvOe0EzkcyM/TEe8OqSalS3oLVZft5Y/4yT/MyH7e951qCxmJjdva1
+	 p9LXSX0B69+5qAmz4Dg+vlt4VP09LWprTnY8GtreV0po2AHcslML72lLdDiefxdNuw
+	 SwUAjcVFQMkfibaqZreEh7ZcmwXC22DZhs22/U6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbfEFOrE (ORCPT
+        id S1729231AbfEFOrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:47:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45536 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:47:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728284AbfEFOrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:00 -0400
+        id S1728064AbfEFOq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:46:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85A0E20449;
-        Mon,  6 May 2019 14:46:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA3982053B;
+        Mon,  6 May 2019 14:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154020;
-        bh=xXVhw4rYzZVrdJBk2BB/nhSxbQrOB/KgHjTaiF1hqVc=;
+        s=default; t=1557154017;
+        bh=9XJoIW3im0c4o9kP86IKLI5/0HF/dfsUCxOv8kUS0xA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FvbLtCCz47y5Z39k8LJBgmOHieQOcNghNOvLchRBNVixXSjE1CWiA19aVOF2Prg6d
-         c1o0ZECqu3XIYrJtcSeFgvUpRECDRx2Vq8Cutrxt/Wm7kJT0vZM67HR1azzGMETRaN
-         EHnJfEcuZVhOm6ES6S56APQaa5/842113raGIUcs=
+        b=c/TmI0SpcsMfzwpocrXAwZDZtN7agpHYMy07YaR8HZ9TSQ1r6qpqPFL1YQB29MUPV
+         ew0k/Jh58iiGNN1ItN/m8kEyy6rImKkJ9OnMjOEnZGCCr2BLKGMTBieKiEuKD0COz+
+         HaCwquvEeYc6tfeH1W81sEb5n/u5hIjESDN6YTm0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 43/75] HID: input: add mapping for Assistant key
-Date:   Mon,  6 May 2019 16:32:51 +0200
-Message-Id: <20190506143057.123087897@linuxfoundation.org>
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Qian Cai <cai@lca.pw>, Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Avi Kivity <avi@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 52/75] kmemleak: powerpc: skip scanning holes in the .bss section
+Date:   Mon,  6 May 2019 16:33:00 +0200
+Message-Id: <20190506143057.956132371@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -60,31 +67,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ce856634af8cda3490947df8ac1ef5843e6356af ]
+[ Upstream commit 298a32b132087550d3fa80641ca58323c5dfd4d9 ]
 
-According to HUTRR89 usage 0x1cb from the consumer page was assigned to
-allow launching desktop-aware assistant application, so let's add the
-mapping.
+Commit 2d4f567103ff ("KVM: PPC: Introduce kvm_tmp framework") adds
+kvm_tmp[] into the .bss section and then free the rest of unused spaces
+back to the page allocator.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+kernel_init
+  kvm_guest_init
+    kvm_free_tmp
+      free_reserved_area
+        free_unref_page
+          free_unref_page_prepare
+
+With DEBUG_PAGEALLOC=y, it will unmap those pages from kernel.  As the
+result, kmemleak scan will trigger a panic when it scans the .bss
+section with unmapped pages.
+
+This patch creates dedicated kmemleak objects for the .data, .bss and
+potentially .data..ro_after_init sections to allow partial freeing via
+the kmemleak_free_part() in the powerpc kvm_free_tmp() function.
+
+Link: http://lkml.kernel.org/r/20190321171917.62049-1-catalin.marinas@arm.com
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Tested-by: Qian Cai <cai@lca.pw>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Avi Kivity <avi@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krcmar <rkrcmar@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/kernel/kvm.c |  7 +++++++
+ mm/kmemleak.c             | 16 +++++++++++-----
+ 2 files changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index d146a9b545ee..1aa7d268686b 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -973,6 +973,7 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x1b8: map_key_clear(KEY_VIDEO);		break;
- 		case 0x1bc: map_key_clear(KEY_MESSENGER);	break;
- 		case 0x1bd: map_key_clear(KEY_INFO);		break;
-+		case 0x1cb: map_key_clear(KEY_ASSISTANT);	break;
- 		case 0x201: map_key_clear(KEY_NEW);		break;
- 		case 0x202: map_key_clear(KEY_OPEN);		break;
- 		case 0x203: map_key_clear(KEY_CLOSE);		break;
+diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
+index 9ad37f827a97..7b59cc853abf 100644
+--- a/arch/powerpc/kernel/kvm.c
++++ b/arch/powerpc/kernel/kvm.c
+@@ -22,6 +22,7 @@
+ #include <linux/kvm_host.h>
+ #include <linux/init.h>
+ #include <linux/export.h>
++#include <linux/kmemleak.h>
+ #include <linux/kvm_para.h>
+ #include <linux/slab.h>
+ #include <linux/of.h>
+@@ -712,6 +713,12 @@ static void kvm_use_magic_page(void)
+ 
+ static __init void kvm_free_tmp(void)
+ {
++	/*
++	 * Inform kmemleak about the hole in the .bss section since the
++	 * corresponding pages will be unmapped with DEBUG_PAGEALLOC=y.
++	 */
++	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
++			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
+ 	free_reserved_area(&kvm_tmp[kvm_tmp_index],
+ 			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
+ }
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index d9e0be2a8189..337be9aacb7a 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -1492,11 +1492,6 @@ static void kmemleak_scan(void)
+ 	}
+ 	rcu_read_unlock();
+ 
+-	/* data/bss scanning */
+-	scan_large_block(_sdata, _edata);
+-	scan_large_block(__bss_start, __bss_stop);
+-	scan_large_block(__start_ro_after_init, __end_ro_after_init);
+-
+ #ifdef CONFIG_SMP
+ 	/* per-cpu sections scanning */
+ 	for_each_possible_cpu(i)
+@@ -2027,6 +2022,17 @@ void __init kmemleak_init(void)
+ 	}
+ 	local_irq_restore(flags);
+ 
++	/* register the data/bss sections */
++	create_object((unsigned long)_sdata, _edata - _sdata,
++		      KMEMLEAK_GREY, GFP_ATOMIC);
++	create_object((unsigned long)__bss_start, __bss_stop - __bss_start,
++		      KMEMLEAK_GREY, GFP_ATOMIC);
++	/* only register .data..ro_after_init if not within .data */
++	if (__start_ro_after_init < _sdata || __end_ro_after_init > _edata)
++		create_object((unsigned long)__start_ro_after_init,
++			      __end_ro_after_init - __start_ro_after_init,
++			      KMEMLEAK_GREY, GFP_ATOMIC);
++
+ 	/*
+ 	 * This is the point where tracking allocations is safe. Automatic
+ 	 * scanning is started during the late initcall. Add the early logged
 -- 
 2.20.1
 
