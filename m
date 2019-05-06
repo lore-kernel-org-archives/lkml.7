@@ -2,181 +2,135 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BB3C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79133C04AAC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC6562087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408A4206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:55:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MG7rNX13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbfEFGyk (ORCPT
+        id S1726241AbfEFGzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 02:54:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34414 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725836AbfEFGyk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 02:54:40 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x466q4EQ079384
-        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 02:54:39 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sad5tdtq1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:54:39 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Mon, 6 May 2019 07:54:36 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 6 May 2019 07:54:33 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x466sWZ160686528
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 May 2019 06:54:32 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0581652050;
-        Mon,  6 May 2019 06:54:32 +0000 (GMT)
-Received: from [9.145.46.119] (unknown [9.145.46.119])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 602115204F;
-        Mon,  6 May 2019 06:54:31 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v2 3/7] s390: vfio-ap: sysfs interface to display guest
- CRYCB
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
- <1556918073-13171-4-git-send-email-akrowiak@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Mon, 6 May 2019 08:54:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1556918073-13171-4-git-send-email-akrowiak@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 6 May 2019 02:55:03 -0400
+Received: from mail-eopbgr30082.outbound.protection.outlook.com ([40.107.3.82]:58769
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725813AbfEFGzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 02:55:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/tIQCrft4vu7JSTRSxL8lCCCVPuM20V2XxZBct5JMns=;
+ b=MG7rNX13ekaXGwIq+W7b8go8I5iaB+4Hinb2jc4qeF+yWqtVYChuM/hgDETIC4hRodJpyZXMyalCOUswv7xUpkVZF47Q521pLaD2xvmJacZnh9VzJ1ES6oWIVxJYJ7EX5S1suxczyxyYdlyjVv4UutKtBBFsXCrXvej4Hy3vM/k=
+Received: from AM6PR04MB4007.eurprd04.prod.outlook.com (52.135.161.10) by
+ AM6PR04MB5526.eurprd04.prod.outlook.com (20.178.94.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Mon, 6 May 2019 06:54:58 +0000
+Received: from AM6PR04MB4007.eurprd04.prod.outlook.com
+ ([fe80::2816:971e:ba5e:4d12]) by AM6PR04MB4007.eurprd04.prod.outlook.com
+ ([fe80::2816:971e:ba5e:4d12%5]) with mapi id 15.20.1856.012; Mon, 6 May 2019
+ 06:54:58 +0000
+From:   Robert Chiras <robert.chiras@nxp.com>
+To:     "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "afaerber@suse.de" <afaerber@suse.de>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "johan@kernel.org" <johan@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "treding@nvidia.com" <treding@nvidia.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "sam@ravnborg.org" <sam@ravnborg.org>, Jun Li <jun.li@nxp.com>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH v9 2/2] phy: Add driver for mixel mipi dphy
+ found on NXP's i.MX8 SoCs
+Thread-Topic: [EXT] Re: [PATCH v9 2/2] phy: Add driver for mixel mipi dphy
+ found on NXP's i.MX8 SoCs
+Thread-Index: AQHVAPzRmWpjaKnPJ0eQppDSCW9zEKZdrzyA
+Date:   Mon, 6 May 2019 06:54:58 +0000
+Message-ID: <1557125693.7006.3.camel@nxp.com>
+References: <cover.1556633413.git.agx@sigxcpu.org>
+         <b999b07673e59c676d2e43a786b635beb056e9bf.1556633413.git.agx@sigxcpu.org>
+         <4ce62b78-64ac-ca84-733f-bc4d10a67c54@suse.de>
+In-Reply-To: <4ce62b78-64ac-ca84-733f-bc4d10a67c54@suse.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050606-0008-0000-0000-000002E3B0CA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050606-0009-0000-0000-0000225027A3
-Message-Id: <a2361365-050e-dfdd-ccd2-0167ccfcdfbf@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905060059
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=robert.chiras@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7612ced1-fc0a-498d-701e-08d6d1efc125
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB5526;
+x-ms-traffictypediagnostic: AM6PR04MB5526:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM6PR04MB5526A06A34649D7204461693E3300@AM6PR04MB5526.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0029F17A3F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(346002)(39860400002)(396003)(366004)(136003)(376002)(189003)(199004)(81156014)(45080400002)(8676002)(68736007)(76116006)(91956017)(2616005)(11346002)(64756008)(66946007)(66556008)(446003)(73956011)(66446008)(71190400001)(7736002)(71200400001)(478600001)(66476007)(966005)(7416002)(102836004)(14454004)(186003)(76176011)(305945005)(2501003)(486006)(8936002)(103116003)(26005)(6506007)(44832011)(6512007)(3846002)(6486002)(99286004)(6116002)(6436002)(86362001)(476003)(53936002)(66574012)(81166006)(6246003)(25786009)(229853002)(110136005)(54906003)(256004)(5660300002)(2906002)(36756003)(316002)(6306002)(66066001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB5526;H:AM6PR04MB4007.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: hwlZEpLnYXq7shhT+BtSEnlpcj+JC2akyoGtmxX3pZT9W2eW55dDHbPesePlxuopILQm7BnxdGT1BUsiVCYwYtFQwJzftmvKwHSmpexqKUECyQUipcEEsGiqqbHF7crcuEG1yb8uKsNsMPmmy6UnphImhOtgOiySW5SYtZkX8MBOk9VxkPI06o1OGPktfazDQEqr/T+OCmSSEoSbotElQxPsMiBTuq1n2RHQDkpPkXysAKpKdbJNnPrBGOUUNH1h4wDqYzzvL+L6A/FDF7Z29tnGl3APbTOQz43hm0ZbW5U3sbZ94gMGBoZkdufvstlD0yBeaWiaxWxyWA3wZt+4b0zxE6qgTLF3e2MhYpp2EMSSBlD+sF7w0vzWAho0ZmuyckK2K2/oeQjt1dNs8wg58ZWkJrVXQ7xMvZAlqmVUMc4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3D16E7ABF72A224DACDD9C819AE894B5@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7612ced1-fc0a-498d-701e-08d6d1efc125
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 06:54:58.6248
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5526
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/05/2019 23:14, Tony Krowiak wrote:
-> Introduces a sysfs interface on the matrix mdev device to display the
-> contents of the shadow of the guest's CRYCB
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->   drivers/s390/crypto/vfio_ap_ops.c | 59 +++++++++++++++++++++++++++++++++++++++
->   1 file changed, 59 insertions(+)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 44a04b4aa9ae..1021466cb661 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -771,6 +771,64 @@ static ssize_t matrix_show(struct device *dev, struct device_attribute *attr,
->   }
->   static DEVICE_ATTR_RO(matrix);
->   
-> +static ssize_t guest_matrix_show(struct device *dev,
-> +				 struct device_attribute *attr, char *buf)
-> +{
-> +	struct mdev_device *mdev = mdev_from_dev(dev);
-> +	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
-> +	char *bufpos = buf;
-> +	unsigned long apid;
-> +	unsigned long apqi;
-> +	unsigned long apid1;
-> +	unsigned long apqi1;
-> +	unsigned long napm_bits;
-> +	unsigned long naqm_bits;
-> +	int nchars = 0;
-> +	int n;
-> +
-> +	if (!matrix_mdev->shadow_crycb)
-> +		return -ENODEV;
-> +
-> +	mutex_lock(&matrix_dev->lock);
-> +	napm_bits = matrix_mdev->shadow_crycb->apm_max + 1;
-> +	naqm_bits = matrix_mdev->shadow_crycb->aqm_max + 1;
-> +	apid1 = find_first_bit_inv(matrix_mdev->shadow_crycb->apm, napm_bits);
-> +	apqi1 = find_first_bit_inv(matrix_mdev->shadow_crycb->aqm, naqm_bits);
-> +
-> +	if ((apid1 < napm_bits) && (apqi1 < naqm_bits)) {
-> +		for_each_set_bit_inv(apid, matrix_mdev->shadow_crycb->apm,
-> +				     napm_bits) {
-> +			for_each_set_bit_inv(apqi,
-> +					     matrix_mdev->shadow_crycb->aqm,
-> +					     naqm_bits) {
-> +				n = sprintf(bufpos, "%02lx.%04lx\n", apid,
-> +					    apqi);
-> +				bufpos += n;
-> +				nchars += n;
-> +			}
-> +		}
-> +	} else if (apid1 < napm_bits) {
-> +		for_each_set_bit_inv(apid, matrix_mdev->shadow_crycb->apm,
-> +				     napm_bits) {
-> +			n = sprintf(bufpos, "%02lx.\n", apid);
-> +			bufpos += n;
-> +			nchars += n;
-> +		}
-> +	} else if (apqi1 < naqm_bits) {
-> +		for_each_set_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm,
-> +				     naqm_bits) {
-> +			n = sprintf(bufpos, ".%04lx\n", apqi);
-> +			bufpos += n;
-> +			nchars += n;
-> +		}
-> +	}
-> +
-> +	mutex_unlock(&matrix_dev->lock);
-> +
-> +	return nchars;
-> +}
-> +static DEVICE_ATTR_RO(guest_matrix);
-> +
->   static struct attribute *vfio_ap_mdev_attrs[] = {
->   	&dev_attr_assign_adapter.attr,
->   	&dev_attr_unassign_adapter.attr,
-> @@ -780,6 +838,7 @@ static struct attribute *vfio_ap_mdev_attrs[] = {
->   	&dev_attr_unassign_control_domain.attr,
->   	&dev_attr_control_domains.attr,
->   	&dev_attr_matrix.attr,
-> +	&dev_attr_guest_matrix.attr,
->   	NULL,
->   };
->   
-> 
-
-Code seems very similar to matrix_show, can't you share the code?
-
-
-
-
-
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
-
+T24gSm8sIDIwMTktMDUtMDIgYXQgMTc6MzYgKzAyMDAsIEFuZHJlYXMgRsOkcmJlciB3cm90ZToN
+Cj4gDQo+IEFtIDMwLjA0LjE5IHVtIDE2OjQwIHNjaHJpZWIgR3VpZG8gR8O8bnRoZXI6DQo+ID4g
+DQo+ID4gVGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBNaXhlbCBEUEhZIGFzIGZvdW5kIG9uIGku
+TVg4IENQVXMgYnV0DQo+ID4gc2luY2UNCj4gPiB0aGlzIGlzIGFuIElQIGNvcmUgaXQgd2lsbCBs
+aWtlbHkgYmUgZm91bmQgb24gb3RoZXJzIGluIHRoZSBmdXR1cmUuDQo+ID4gU28NCj4gPiBpbnN0
+ZWFkIG9mIGFkZGluZyB0aGlzIHRvIHRoZSBud2wgaG9zdCBkcml2ZXIgbWFrZSBpdCBhIGdlbmVy
+aWMgUEhZDQo+ID4gZHJpdmVyLg0KPiA+IA0KPiA+IFRoZSBkcml2ZXIgc3VwcG9ydHMgdGhlIGku
+TVg4TVEuIFN1cHBvcnQgZm9yIGkuTVg4UU0gYW5kIGkuTVg4UVhQDQo+ID4gY2FuIGJlDQo+ID4g
+YWRkZWQgb25jZSB0aGUgbmVjZXNzYXJ5IHN5c3RlbSBjb250cm9sbGVyIGJpdHMgYXJlIGluIHZp
+YQ0KPiA+IG1peGVsX2RwaHlfZGV2ZGF0YS4NCj4gPiANCj4gPiBDby1hdXRob3JlZC1ieTogUm9i
+ZXJ0IENoaXJhcyA8cm9iZXJ0LmNoaXJhc0BueHAuY29tPg0KPiBUaGlzIHNob3VsZCBiZSBDby1k
+ZXZlbG9wZWQtYnkgYW5kIGlzIGxhY2tpbmcgYSBTaWduZWQtb2ZmLWJ5IGZyb20NCj4gdGhhdA0K
+PiBhdXRob3IuIFJvYmVydCwgY2FuIHlvdSBwbGVhc2UgcHJvdmlkZSBvbmU/DQpTdXJlLiBBZGRl
+ZCBiZWxvdy4NCj4gDQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9v
+ay5jb20vP3VybD1odHRwcyUzQSUyRiUyRnd3dw0KPiAua2VybmVsLm9yZyUyRmRvYyUyRmh0bWwl
+MkZsYXRlc3QlMkZwcm9jZXNzJTJGc3VibWl0dGluZy0NCj4gcGF0Y2hlcy5odG1sJTIzd2hlbi10
+by11c2UtYWNrZWQtYnktY2MtYW5kLWNvLWRldmVsb3BlZC0NCj4gYnkmYW1wO2RhdGE9MDIlN0Mw
+MSU3Q3JvYmVydC5jaGlyYXMlNDBueHAuY29tJTdDMDEyZjY1NzdhYWI0NDBmNjJlMTYwDQo+IDhk
+NmNmMTNmMmEwJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYz
+NjkyNDA4MTkxNw0KPiA3NTQ0MTEmYW1wO3NkYXRhPSUyRnJGTnJBYUw3TXdQWHVhWU9seGZhOE80
+SkxOSUxxNWVGRXE5MnFWMkpaZyUzRCZhbXANCj4gO3Jlc2VydmVkPTANCj4gDQo+ID4gDQo+ID4g
+U2lnbmVkLW9mZi1ieTogR3VpZG8gR8O8bnRoZXIgPGFneEBzaWd4Y3B1Lm9yZz4NClNpZ25lZC1v
+ZmYtYnk6IFJvYmVydCBDaGlyYXMgPHJvYmVydC5jaGlyYXNAbnhwLmNvbT4NCj4gVGhhbmtzLA0K
+PiBBbmRyZWFzDQo+IA0KPiAtLQ0KPiBTVVNFIExpbnV4IEdtYkgsIE1heGZlbGRzdHIuIDUsIDkw
+NDA5IE7DvHJuYmVyZywgR2VybWFueQ0KPiBHRjogRmVsaXggSW1lbmTDtnJmZmVyLCBNYXJ5IEhp
+Z2dpbnMsIFNyaSBSYXNpYWgNCj4gSFJCIDIxMjg0IChBRyBOw7xybmJlcmcp
