@@ -2,102 +2,102 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC1DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BF0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE7B2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F4A20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfEFP7K (ORCPT
+        id S1726847AbfEFQBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:59:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60760 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726413AbfEFP7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:59:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4DCC3ADDC;
-        Mon,  6 May 2019 15:59:07 +0000 (UTC)
-Message-ID: <686a4d50696a87b9cbe2a5908737ce91faec5313.camel@suse.de>
-Subject: Re: [PATCH v2 2/3] staging: vchiq: revert "switch to
- wait_for_completion_killable"
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, phil@raspberrypi.org,
-        stefan.wahren@i2se.com, Eric Anholt <eric@anholt.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
-Date:   Mon, 06 May 2019 17:59:04 +0200
-In-Reply-To: <20190506152039.GT2239@kadam>
-References: <20190506144030.29056-1-nsaenzjulienne@suse.de>
-         <20190506144030.29056-3-nsaenzjulienne@suse.de>
-         <20190506152039.GT2239@kadam>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-HWk7wVSA1bmO90ELmSsB"
-User-Agent: Evolution 3.30.5 
+        Mon, 6 May 2019 12:01:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbfEFQBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 12:01:22 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0E2620578;
+        Mon,  6 May 2019 16:01:20 +0000 (UTC)
+Date:   Mon, 6 May 2019 12:01:19 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 4/7] sched: Add sched_load_rq tracepoint
+Message-ID: <20190506120119.12d98042@gandalf.local.home>
+In-Reply-To: <20190506153317.fv73wpdwsn7xcyc4@e107158-lin.cambridge.arm.com>
+References: <20190505115732.9844-1-qais.yousef@arm.com>
+        <20190505115732.9844-5-qais.yousef@arm.com>
+        <20190506090859.GK2606@hirez.programming.kicks-ass.net>
+        <20190506095239.08577b3e@gandalf.local.home>
+        <20190506144200.z4s63nm7untol2tr@e107158-lin.cambridge.arm.com>
+        <20190506104618.2fa49e13@gandalf.local.home>
+        <20190506153317.fv73wpdwsn7xcyc4@e107158-lin.cambridge.arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 6 May 2019 16:33:17 +0100
+Qais Yousef <qais.yousef@arm.com> wrote:
 
---=-HWk7wVSA1bmO90ELmSsB
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> On 05/06/19 10:46, Steven Rostedt wrote:
+> > On Mon, 6 May 2019 15:42:00 +0100
+> > Qais Yousef <qais.yousef@arm.com> wrote:
+> >   
+> > > I can control that for the wrappers I'm introducing. But the actual tracepoint
+> > > get the 'trace_' part prepended automatically by the macros.
+> > > 
+> > > ie DECLARE_TRACE(pelt_rq, ...) will automatically generate a function called
+> > > trace_pelt_se(...)
+> > > 
+> > > Or am I missing something?  
+> > 
+> > No trace comes from the trace points.  
 
-Hi Dan, thanks for reviewing.
+Re-reading that line, I see I totally didn't express what I meant :-p
 
-On Mon, 2019-05-06 at 18:20 +0300, Dan Carpenter wrote:
-> On Mon, May 06, 2019 at 04:40:29PM +0200, Nicolas Saenz Julienne wrote:
-> > @@ -1740,7 +1740,8 @@ parse_rx_slots(struct vchiq_state *state)
-> >  					&service->bulk_rx : &service->bulk_tx;
-> > =20
-> >  				DEBUG_TRACE(PARSE_LINE);
-> > -				if (mutex_lock_killable(&service->bulk_mutex)) {
-> > +				if (mutex_lock_killable(
-> > +					&service->bulk_mutex) !=3D 0) {
->=20
-> This series does't add !=3D 0 consistently...  Personally, I would prefer
-> we just leave it out.  I use !=3D 0 for two things.  1)  When I'm talking
-> about the number zero.
->=20
-> 	if (len =3D=3D 0) {
->=20
-> Or with strcmp():
->=20
-> 	if (strcmp(a, b) =3D=3D 0) { // a equals b
-> 	if (strcmp(a, b) < 0) {  // a less than b.
->=20
-> But here zero means no errors, so I would just leave it out...
+> 
+> If you want I can do something like below to help create a distinction. It is
+> none enforcing though.
+> 
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index 9c3186578ce0..f654ced20045 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -232,6 +232,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>   */
+>  #define __DECLARE_TRACE(name, proto, args, cond, data_proto, data_args) \
+>         extern struct tracepoint __tracepoint_##name;                   \
+> +       static inline void tp_##name(proto) __alias(trace_##name);      \
+>         static inline void trace_##name(proto)                          \
+>         {                                                               \
+>                 if (static_key_false(&__tracepoint_##name.key))         \
+> 
+> 
+> Another option is to extend DECLARE_TRACE() to take a new argument IS_TP and
+> based on that select the function name. This will be enforcing but I will have
+> to go fixup many places.
+> 
+> Of course 'TP' can be replaced with anything more appealing.
 
-I agree, I'll fix it.
+No no no, I meant to say...
 
-Regards,
-Nicolas
+ "No that's OK. The "trace_" *is* from the trace points, and trace
+ events build on top of them."
 
-
---=-HWk7wVSA1bmO90ELmSsB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlzQWcgACgkQlfZmHno8
-x/5C3Qf+L5Sma8zaKvvi3d9DSw4lZXBIQpyTCI5G81wW2l+4ax2oZnUNZlLpu7lj
-sRJy5o+hSJExXkx/3b3oBUEojchKWCZPC7ZI76aq7uhRK93Q7Yf4jem9wUJvsOwf
-kvsdFhSIO7F/gxfNfZUDn2whfAN5FPBvSTBqq3e++k/1+RTqe/y65rAbJIeIkmrL
-s9qVV+DWownkHzfGwsVJ1paJmvrLuwYOlfsPXIlQk3y8g+GSClXRsCWvPJxeS4vi
-2Qzs/+AB6kDiVzDdxj7YDF1puf1d4xliFfvMJnUR7iEdzOG0IQZAp+qMktTvOKX8
-n//mOh1eQcHx4P/2ajTxj8/5P5Wieg==
-=QGu9
------END PGP SIGNATURE-----
-
---=-HWk7wVSA1bmO90ELmSsB--
+-- Steve
 
