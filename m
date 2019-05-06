@@ -2,190 +2,97 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BE7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D99C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADDD205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B4C205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:21:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVD+eEv2"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="UFXgx9Hu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfEFQUx (ORCPT
+        id S1726548AbfEFQVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:20:53 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38824 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726160AbfEFQUw (ORCPT
+        Mon, 6 May 2019 12:21:51 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:52553 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbfEFQVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:20:52 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a59so6615751pla.5;
-        Mon, 06 May 2019 09:20:51 -0700 (PDT)
+        Mon, 6 May 2019 12:21:50 -0400
+Received: by mail-it1-f194.google.com with SMTP id q65so19784246itg.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:21:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rwhJD74xfD/UXtBBnubuC2BkNBqZahNTcck6QOIWCQQ=;
-        b=BVD+eEv22cofmtuysgxgU27eatoy7VtaMG+XH5ppIZitrkrJRlzq1NW69R/bvgR5d8
-         1OkWrkcydsBTKzaFRWVDS9csU+wXdyrpW3FpqIassCS5CzDVneJpJT4eXO0V3/VhmSqF
-         qNRIVDpd8jy0YeekzYsi9SWKSyO0yvSiaNDRAGCUs/RAsFIxZJwi/cO8Sd01f/Mm7Tin
-         4IMIscJsesC1isZUqDSoHOr7wRsyW/Sl4+8NsCTWgOIoMqN1hUtoqd86STFRAZa6X4/K
-         kQR/M4mcECQw2kJVD/oJaD6eh5wch/DMrKmJHQ74UUirnrZIPpLNv57+lPmfBUH+ZPT8
-         Ugmg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JM/WZfijWawO0dM75sC9wd0xm0O1e7k2DME12T/WG/Q=;
+        b=UFXgx9HuMJqBVirFEYXePbVMPL7ifubbChBpKxZBsozZhVZdUX8Ot96uTiSw/V7CNk
+         fSLYzzNvhbUb5hAYmI5Zl6SEyQ2jdbAKtEms3Ypy2pQmMDDum4DOht2B4MltviwdHnoq
+         pXa0AIgIt5dGhunS5vhMZ92AiF53tkkXPDPv+0pTedFeqkTRhFOKBfgyTCqxB/Bi1xP2
+         dPQnaN2VrGkDeGBjsgm960JmoMz207/11+prKIuW9Ru/8earF5aZf93UhtGUWdlB18Eq
+         8yfQOtssex78N19DTIEBJQMWZ9atH8CaNx3iNa+PeisifL3Ff8LW9WaSlUw/DyuxyxS9
+         5Phg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rwhJD74xfD/UXtBBnubuC2BkNBqZahNTcck6QOIWCQQ=;
-        b=P18rwo++PtxomF5d9349M/LcREWPJ6g8CNCmbFJrYM7SfOdb6F/R+92Eo4wYtyHPiX
-         gy+77jMrxgUoR+1RmC6+bMNHnbT/efItsLkx164gZWXXmapC1+tSBfJ8mViFwyjJM/rV
-         UT1RY1hGX/HUJznRm3bUVbr6hcU/NgrGbcJjXBC1NIJj+kTMtCdkNlymkHo3sSMZwsRw
-         N7Iy+GjE0dch9/+UBfTRJSUcRhfFvDLuz/x8a8HC3xP0d4vLAXZhsq73jO0Hv43h2oh/
-         78ugENAUa0oh/81vFQGfE45Ldpd4RXZ5/mZicGlHXAPtI5SIFUeZqhbFfecb8+PXxTob
-         4Jhg==
-X-Gm-Message-State: APjAAAXLsFsQXwzfPTolsr+aZgl2Tu5tZ/+s52jTosrljCoCMJFsYqT9
-        nvZKEOFOoKNq2jSYrrFza4lCFsBg
-X-Google-Smtp-Source: APXvYqx1AaDT6JXFCF2yVVs31A0dxBBaQlvZMLooiC+UlO61cPKdoXveF88gss+9vqbA1/fQTRKwPw==
-X-Received: by 2002:a17:902:d88b:: with SMTP id b11mr12930180plz.186.1557159651393;
-        Mon, 06 May 2019 09:20:51 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n18sm24028204pfi.48.2019.05.06.09.20.49
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JM/WZfijWawO0dM75sC9wd0xm0O1e7k2DME12T/WG/Q=;
+        b=ARgdBkBMmtWky/5xrQMKt/FsRFe9sdEGM8InDV+e5lAji6gOVZBCgEgzCbexGuVaPd
+         KVF6+1hPtJy7mGkLeGQ9S0i4kx8D1oEe+tzVyPhjuAfa557iF9v5Mdn6ov+PglbNRyQb
+         dNlVLqyiLtkelIZvXJPU2aUN4G1l4Ls/GTlKymJaK8+D3OQrCRk/J/tCYx9HK7pwiGmM
+         ul25aoPYgq2W0ElGY5vwmAZK4VSmYlIuM3ZP2BWbyN8QekHg00/PkcpgagR3PbzcPKvy
+         pvRfd59VklXIAR1yoPctGdDt7vBz/eucXfTHrDQRl7fvdNvy0N59DW6o7g+n4FFbFLC4
+         Qt8Q==
+X-Gm-Message-State: APjAAAWVqzJmD0Ev3LG2hKQwpiteCZqLqksUlKI+scP4NlkpJ2YJ+a8y
+        6vTAKISEMh38sa4HVxSGBvI7tdttHWaogQ==
+X-Google-Smtp-Source: APXvYqx5RyQ8KTZzVdgGtPBddYXhbpfXTeY6xfZ5bVFKqngkFqVvd5/hfJWmx5YQugDGs5G6H8rXIA==
+X-Received: by 2002:a24:6987:: with SMTP id e129mr18889644itc.28.1557159709220;
+        Mon, 06 May 2019 09:21:49 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id d10sm3880686ios.72.2019.05.06.09.21.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 09:20:50 -0700 (PDT)
-Date:   Mon, 6 May 2019 09:20:49 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] usb: typec: tcpm: Add functions to read the VBUS
- voltage
-Message-ID: <20190506162049.GA26804@roeck-us.net>
-References: <20190506140830.25376-1-angus@akkea.ca>
- <20190506140830.25376-3-angus@akkea.ca>
+        Mon, 06 May 2019 09:21:48 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: fix shadowed variable ret return code being not
+ checked
+To:     Colin King <colin.king@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190505220122.5024-1-colin.king@canonical.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <5ccacedd-41d9-f33c-25de-ae16bcdb7b08@kernel.dk>
+Date:   Mon, 6 May 2019 10:21:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506140830.25376-3-angus@akkea.ca>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190505220122.5024-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 08:08:29AM -0600, Angus Ainslie (Purism) wrote:
-> Put some diagnostics in the tcpm log when there's an over
-> or under voltage situation.
+On 5/5/19 4:01 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-
-Subject is missing 'tcpci'.
-
-> ---
->  drivers/usb/typec/tcpm/tcpci.c | 44 ++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
+> Currently variable ret is declared in a while-loop code block that
+> shadows another variable ret. When an error occurs in the while-loop
+> the error return in ret is not being set in the outer code block and
+> so the error check on ret is always going to be checking on the wrong
+> ret variable resulting in check that is always going to be true and
+> a premature return occurs.
 > 
-> diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-> index c1f7073a56de..c6e0e48b9a2a 100644
-> --- a/drivers/usb/typec/tcpm/tcpci.c
-> +++ b/drivers/usb/typec/tcpm/tcpci.c
-> @@ -261,6 +261,39 @@ static int tcpci_set_pd_rx(struct tcpc_dev *tcpc, bool enable)
->  	return 0;
->  }
->  
-> +static int tcpci_get_vbus_voltage(struct tcpc_dev *tcpc)
-> +{
-> +	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> +	u16 vbus_reg;
-> +	unsigned int vbus_voltage;
-> +	int ret, scale;
-> +
-> +	ret = tcpci_read16(tcpci, TCPC_VBUS_VOLTAGE, &vbus_reg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	vbus_voltage = vbus_reg & 0x3f;
-> +	switch ((ret >> 10) & 3) {
+> Fix this by removing the declaration of the inner while-loop variable
+> ret so that shadowing does not occur.
 
-Did you test this code ?
+Thanks, applied.
 
-> +	case 0:
-> +		scale = 1;
-> +		break;
-> +	case 1:
-> +		scale = 2;
-> +		break;
-> +	case 2:
-> +		scale = 4;
-> +		break;
-> +	case 3:
-> +		tcpm_log(tcpci->port, "invalid VBUS scale");
-> +		return -1;
+-- 
+Jens Axboe
 
-Any special reason for not using standard error codes ?
-The code above does, meaning this is a hardcodesd -EPERM, which doesn't
-really make any sense.
-
-> +	}
-> +
-> +	if (scale != 1)
-> +		vbus_voltage *= scale;
-
-I don't immediately see why this is better than, say,
-
-	scale = (vbus_reg >> 10) & 3;
-	if (scale == 3)
-		return -Esomething;	// -EPROTO, maybe
-	return vbus_voltage << scale;
-
-> +
-> +	return vbus_voltage;
-> +}
-> +
->  static int tcpci_get_vbus(struct tcpc_dev *tcpc)
->  {
->  	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-> @@ -463,6 +496,17 @@ irqreturn_t tcpci_irq(struct tcpci *tcpci)
->  	else if (status & TCPC_ALERT_TX_FAILED)
->  		tcpm_pd_transmit_complete(tcpci->port, TCPC_TX_FAILED);
->  
-> +	if (status & (TCPC_ALERT_V_ALARM_LO | TCPC_ALERT_V_ALARM_HI)) {
-> +		int ret;
-> +
-> +		ret = tcpci_get_vbus_voltage(&tcpci->tcpc);
-> +
-Unnecessary empty line.
-
-> +		if (IS_ERR(ret))
-> +			tcpm_log(tcpci->port, "Can't read VBUS voltage");
-
-VBUS_VOLTAGE is an optional register. This is not an error. Besides, the
-message doesn't match the event and is useless.
-
-> +		else
-> +			tcpm_log(tcpci->port, "Invalid VBUS voltage %d", ret);
-
-Displaying a raw number without context is not very useful.
-'ret' is the voltage in multiples of 25mV. Besides, the error is that a low
-or high voltage was detected. That doesn't mean the voltage is still invalid.
-The error message should reflect that situation. Something like
-
-		"VBUS {low, high} detected, VBUS=x.yy V"
-
-would be much more useful (with VBUS=x.yy being optional).
-
-Also, please no tcpm log. The tcpci driver needs to implement
-its own logging if that is desired.
-
-> +	}
-> +
->  	return IRQ_HANDLED;
->  }
->  EXPORT_SYMBOL_GPL(tcpci_irq);
-> -- 
-> 2.17.1
-> 
