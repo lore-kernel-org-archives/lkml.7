@@ -2,143 +2,185 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527C2C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACD4C04AAE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24611206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557123693;
-	bh=Zzsevc3QFsdcI+m74gIccvrYIxck4T0/TqqA55LEfsk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=awhZrVJ+g0oKDdppZjkrSVHJpIvsn+6Y2CYGdWE7VrV7XAPr8r/62vVmsV4myygx4
-	 FfswKYMNeN/90uIXXaAcfSJdDbZxd7pTSNOLHGdISpm6JS+S4B/aNqFh5fVPxtEqqu
-	 YC54/TaIubmAqKFGpjIVXO7yRGRkghwGGrVWhEPs=
+	by mail.kernel.org (Postfix) with ESMTP id 6D0242087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:36:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LoSYKvlc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbfEFGVc (ORCPT
+        id S1725981AbfEFGf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 02:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbfEFGVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 02:21:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2290206A3;
-        Mon,  6 May 2019 06:21:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557123690;
-        bh=Zzsevc3QFsdcI+m74gIccvrYIxck4T0/TqqA55LEfsk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W5ApHSdOOJKw22qIecHl5v2w3x4janhQpYuAOJ+bv/ZjzuNmaY17JITsB3F8xDp5H
-         9EA3aOwnyGRjBrgG1yoUS9reCRCZBK9XCzRH3+q8+4jE+mtq4NdcHRRPhYgd4yP65v
-         rB/XbzFfQjdHXjtVPMfQHOfkhCL42ve4tM4dQ80E=
-Date:   Mon, 6 May 2019 08:21:27 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Prateek Sood <prsood@codeaurora.org>
-Cc:     rafael@kernel.org, sramana@codeaurora.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] drivers: core: Remove glue dirs early only when
- refcount is 1
-Message-ID: <20190506062127.GC9557@kroah.com>
-References: <20190501065313.GA30616@kroah.com>
- <1556711999-16898-1-git-send-email-prsood@codeaurora.org>
- <0aac6bf3-6691-7c5a-31f1-fb7231c6b585@codeaurora.org>
+        Mon, 6 May 2019 02:35:58 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:40235 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbfEFGf6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 02:35:58 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x466YIuK4032620
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Sun, 5 May 2019 23:34:18 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x466YIuK4032620
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1557124459;
+        bh=CUpNcCDQKx6zVxA8dzYrnmmnbZzGtNKCPc406O4qvLU=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=LoSYKvlcp0Q7sC79s+mUN4r+tMAWDt5l25MqzogBZppAjfUwz4OBODltVWZPHBZHu
+         NLrohnl44WJwmHc2nNwmqDEgt9AUdSaIi/KohJxROm1o5h7cK4xC0h7DT2aSJP9Ng3
+         Tkhb9bhE7vBXRYN1Px42/LfqsrYXweN/bhv6Z7eMPqoPmM56bWDbNokD9MNMd3cjv+
+         T4AWbkcPmHaGyfcHsMkexRoigvhjHB3oDt6f0c2sW3Fbnb9/W2AUyAOiaKZuwHV3Nw
+         apNRkt/P3H9ATzJU2izJ39/cK/SMDw3J1S9Npwxzm2GUMqnCstGznuuaF+drAV08fp
+         f7xIa22UutMlQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x466YGML4032617;
+        Sun, 5 May 2019 23:34:16 -0700
+Date:   Sun, 5 May 2019 23:34:16 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Nadav Amit <tipbot@zytor.com>
+Message-ID: <tip-caa841360134f863987f2d4f77b8dc2fbb7596f8@git.kernel.org>
+Cc:     sfr@canb.auug.org.au, linux-kernel@vger.kernel.org,
+        luto@kernel.org, bp@alien8.de, hpa@zytor.com, lkp@intel.com,
+        dave.hansen@linux.intel.com, rick.p.edgecombe@intel.com,
+        mingo@kernel.org, torvalds@linux-foundation.org,
+        peterz@infradead.org, nadav.amit@gmail.com, namit@vmware.com,
+        tglx@linutronix.de, riel@surriel.com
+Reply-To: hpa@zytor.com, dave.hansen@linux.intel.com, lkp@intel.com,
+          rick.p.edgecombe@intel.com, sfr@canb.auug.org.au,
+          linux-kernel@vger.kernel.org, luto@kernel.org, bp@alien8.de,
+          tglx@linutronix.de, torvalds@linux-foundation.org,
+          nadav.amit@gmail.com, namit@vmware.com, riel@surriel.com,
+          mingo@kernel.org, peterz@infradead.org
+In-Reply-To: <20190505011124.39692-1-namit@vmware.com>
+References: <20190505011124.39692-1-namit@vmware.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/mm] x86/mm: Initialize PGD cache during mm initialization
+Git-Commit-ID: caa841360134f863987f2d4f77b8dc2fbb7596f8
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <0aac6bf3-6691-7c5a-31f1-fb7231c6b585@codeaurora.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 10:41:34AM +0530, Prateek Sood wrote:
-> On 5/1/19 5:29 PM, Prateek Sood wrote:
-> > While loading firmware blobs parallely in different threads, it is possible
-> > to free sysfs node of glue_dirs in device_del() from a thread while another
-> > thread is trying to add subdir from device_add() in glue_dirs sysfs node.
-> > 
-> >     CPU1                                           CPU2
-> > fw_load_sysfs_fallback()
-> >   device_add()
-> >     get_device_parent()
-> >       class_dir_create_and_add()
-> >         kobject_add_internal()
-> >           create_dir() // glue_dir
-> > 
-> >                                            fw_load_sysfs_fallback()
-> >                                              device_add()
-> >                                                get_device_parent()
-> >                                                  kobject_get() //glue_dir
-> > 
-> >   device_del()
-> >     cleanup_glue_dir()
-> >       kobject_del()
-> > 
-> >                                                kobject_add()
-> >                                                  kobject_add_internal()
-> >                                                    create_dir() // in glue_dir
-> >                                                      kernfs_create_dir_ns()
-> > 
-> >        sysfs_remove_dir() //glue_dir->sd=NULL
-> >        sysfs_put() // free glue_dir->sd
-> > 
-> >                                                        kernfs_new_node()
-> >                                                          kernfs_get(glue_dir)
-> > 
-> > Fix this race by making sure that kernfs_node for glue_dir is released only
-> > when refcount for glue_dir kobj is 1.
-> > 
-> > Signed-off-by: Prateek Sood <prsood@codeaurora.org>
-> > 
-> > ---
-> > 
-> > Changes from v2->v3:
-> >  - Added patch version change related comments.
-> > 
-> > Changes from v1->v2:
-> >  - Updated callstack from _request_firmware_load() to fw_load_sysfs_fallback().
-> > 
-> > 
-> >  drivers/base/core.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index 4aeaa0c..3955d07 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -1820,12 +1820,15 @@ static inline struct kobject *get_glue_dir(struct device *dev)
-> >   */
-> >  static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
-> >  {
-> > +	unsigned int refcount;
-> > +
-> >  	/* see if we live in a "glue" directory */
-> >  	if (!live_in_glue_dir(glue_dir, dev))
-> >  		return;
-> >  
-> >  	mutex_lock(&gdp_mutex);
-> > -	if (!kobject_has_children(glue_dir))
-> > +	refcount = kref_read(&glue_dir->kref);
-> > +	if (!kobject_has_children(glue_dir) && !--refcount)
-> >  		kobject_del(glue_dir);
-> >  	kobject_put(glue_dir);
-> >  	mutex_unlock(&gdp_mutex);
-> > 
-> 
-> Folks,
-> 
-> Please share feedback on the race condition and the patch to
-> fix it.
+Commit-ID:  caa841360134f863987f2d4f77b8dc2fbb7596f8
+Gitweb:     https://git.kernel.org/tip/caa841360134f863987f2d4f77b8dc2fbb7596f8
+Author:     Nadav Amit <nadav.amit@gmail.com>
+AuthorDate: Sat, 4 May 2019 18:11:24 -0700
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Sun, 5 May 2019 20:32:46 +0200
 
-Please relax, we will get to this eventually, it has only been a week...
+x86/mm: Initialize PGD cache during mm initialization
 
-greg k-h
+Poking-mm initialization might require to duplicate the PGD in early
+stage. Initialize the PGD cache earlier to prevent boot failures.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 4fc19708b165 ("x86/alternatives: Initialize temporary mm for patching")
+Link: http://lkml.kernel.org/r/20190505011124.39692-1-namit@vmware.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/mm/pgtable.c         | 10 ++++++----
+ include/asm-generic/pgtable.h |  2 ++
+ init/main.c                   |  3 +++
+ 3 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index 7bd01709a091..c8177045b7d4 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -373,14 +373,14 @@ static void pgd_prepopulate_user_pmd(struct mm_struct *mm,
+ 
+ static struct kmem_cache *pgd_cache;
+ 
+-static int __init pgd_cache_init(void)
++void __init pgd_cache_init(void)
+ {
+ 	/*
+ 	 * When PAE kernel is running as a Xen domain, it does not use
+ 	 * shared kernel pmd. And this requires a whole page for pgd.
+ 	 */
+ 	if (!SHARED_KERNEL_PMD)
+-		return 0;
++		return;
+ 
+ 	/*
+ 	 * when PAE kernel is not running as a Xen domain, it uses
+@@ -390,9 +390,7 @@ static int __init pgd_cache_init(void)
+ 	 */
+ 	pgd_cache = kmem_cache_create("pgd_cache", PGD_SIZE, PGD_ALIGN,
+ 				      SLAB_PANIC, NULL);
+-	return 0;
+ }
+-core_initcall(pgd_cache_init);
+ 
+ static inline pgd_t *_pgd_alloc(void)
+ {
+@@ -420,6 +418,10 @@ static inline void _pgd_free(pgd_t *pgd)
+ }
+ #else
+ 
++void __init pgd_cache_init(void)
++{
++}
++
+ static inline pgd_t *_pgd_alloc(void)
+ {
+ 	return (pgd_t *)__get_free_pages(PGALLOC_GFP, PGD_ALLOCATION_ORDER);
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index fa782fba51ee..75d9d68a6de7 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -1126,6 +1126,8 @@ int phys_mem_access_prot_allowed(struct file *file, unsigned long pfn,
+ static inline void init_espfix_bsp(void) { }
+ #endif
+ 
++extern void __init pgd_cache_init(void);
++
+ #ifndef __HAVE_ARCH_PFN_MODIFY_ALLOWED
+ static inline bool pfn_modify_allowed(unsigned long pfn, pgprot_t prot)
+ {
+diff --git a/init/main.c b/init/main.c
+index 95dd9406ee31..9dc2f3b4f753 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -506,6 +506,8 @@ void __init __weak mem_encrypt_init(void) { }
+ 
+ void __init __weak poking_init(void) { }
+ 
++void __init __weak pgd_cache_init(void) { }
++
+ bool initcall_debug;
+ core_param(initcall_debug, initcall_debug, bool, 0644);
+ 
+@@ -537,6 +539,7 @@ static void __init mm_init(void)
+ 	init_espfix_bsp();
+ 	/* Should be run after espfix64 is set up. */
+ 	pti_init();
++	pgd_cache_init();
+ }
+ 
+ void __init __weak arch_call_rest_init(void)
