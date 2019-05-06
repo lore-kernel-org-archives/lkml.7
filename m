@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-12.4 required=3.0
 	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2823BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312A0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E35892087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F205820830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfEFSLR (ORCPT
+        id S1727003AbfEFSLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 14:11:17 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58456 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbfEFSLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 14:11:16 -0400
+        Mon, 6 May 2019 14:11:33 -0400
+Received: from foss.arm.com ([217.140.101.70]:58512 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726287AbfEFSLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 14:11:32 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A840A78;
-        Mon,  6 May 2019 11:11:16 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D67F8A78;
+        Mon,  6 May 2019 11:11:31 -0700 (PDT)
 Received: from brain-police (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 338D03F5AF;
-        Mon,  6 May 2019 11:11:14 -0700 (PDT)
-Date:   Mon, 6 May 2019 19:11:11 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF87A3F5AF;
+        Mon,  6 May 2019 11:11:29 -0700 (PDT)
+Date:   Mon, 6 May 2019 19:11:22 +0100
 From:   Will Deacon <will.deacon@arm.com>
 To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, paulmck@linux.ibm.com,
-        benh@kernel.crashing.org, macro@linux-mips.org, mingo@kernel.org,
-        npiggin@gmail.com
-Subject: [GIT PULL] mmiowb() removal for 5.2
-Message-ID: <20190506181110.GB2875@brain-police>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        catalin.marinas@arm.com, tglx@linutronix.de, marc.zyngier@arm.com,
+        jpoimboe@redhat.com
+Subject: [GIT PULL] arm64: updates for 5.2
+Message-ID: <20190506181122.GC2875@brain-police>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -45,19 +45,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi Linus,
 
-Here's the mmiowb() removal series ready for 5.2. The only relatively
-recent changes have been addressing review comments on the documentation,
-which is in a much better shape thanks to the efforts of Ben and Ingo.
+Please pull these arm64 updates for 5.2. As per usual, there are details
+in the tag, but it's worth noting that we're including the core
+"mitigations=" command-line code here from -tip so that we could develop
+arm64 support on top of adding support for the "cpu/vulnerabilities"
+directory under sysfs.
 
-I was initially planning to split this into two pull requests so that you
-could run the coccinelle script yourself, however it's been plain sailing
-in linux-next so I've just included the whole lot here to keep things
-simple.
+There is a straightforward conflict with -tip in the mm/kasan Makefile,
+which just involves replacing a '-pg' with '$(CC_FLAGS_FTRACE)'. I also
+ended up applying a duplicate of 045afc24124d ("arm64: futex: Fix
+FUTEX_WAKE_OP atomic ops with non-zero result value") as 84ff7a09c371,
+which I'm not very pleased about. The fix in mainline was based on -rc4,
+so the alternative would've been merging all of that in, which seemed a
+lot messier. In future, we're going to avoid fast-forwarding our fixes
+branch with each -rc, so this shouldn't happen again.
 
-There is a trivial conflict in the S390 asm/Kbuild file with the rwsem
-changes in -tip, but I think that's it.
-
-Please pull,
+Cheers,
 
 Will
 
@@ -69,231 +72,301 @@ The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
 
 are available in the git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-mmiowb
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-upstream
 
-for you to fetch changes up to 9726840d9cf0d42377e1591263d7c1d9ae0988ac:
+for you to fetch changes up to b33f908811b7627015238e0dee9baf2b4c9d720d:
 
-  docs/memory-barriers.txt: Update I/O section to be clearer about CPU vs thread (2019-04-23 13:34:17 +0100)
-
-----------------------------------------------------------------
-Remove Mysterious Macro Intended to Obscure Weird Behaviours (mmiowb())
-
-Remove mmiowb() from the kernel memory barrier API and instead, for
-architectures that need it, hide the barrier inside spin_unlock() when
-MMIO has been performed inside the critical section.
+  Merge branch 'for-next/perf' of git://git.kernel.org/pub/scm/linux/kernel/git/will/linux into for-next/core (2019-05-03 10:18:08 +0100)
 
 ----------------------------------------------------------------
-Will Deacon (23):
-      docs/memory-barriers.txt: Rewrite "KERNEL I/O BARRIER EFFECTS" section
-      asm-generic/mmiowb: Add generic implementation of mmiowb() tracking
-      arch: Use asm-generic header for asm/mmiowb.h
-      mmiowb: Hook up mmiowb helpers to spinlocks and generic I/O accessors
-      ARM/io: Remove useless definition of mmiowb()
-      arm64/io: Remove useless definition of mmiowb()
-      x86/io: Remove useless definition of mmiowb()
-      nds32/io: Remove useless definition of mmiowb()
-      m68k/io: Remove useless definition of mmiowb()
-      sh/mmiowb: Add unconditional mmiowb() to arch_spin_unlock()
-      mips/mmiowb: Add unconditional mmiowb() to arch_spin_unlock()
-      ia64/mmiowb: Add unconditional mmiowb() to arch_spin_unlock()
-      powerpc/mmiowb: Hook up mmwiob() implementation to asm-generic code
-      riscv/mmiowb: Hook up mmwiob() implementation to asm-generic code
-      Documentation: Kill all references to mmiowb()
-      drivers: Remove useless trailing comments from mmiowb() invocations
-      drivers: Remove explicit invocations of mmiowb()
-      scsi/qla1280: Remove stale comment about mmiowb()
-      i40iw: Redefine i40iw_mmiowb() to do nothing
-      net/ethernet/silan/sc92031: Remove stale comment about mmiowb()
-      arch: Remove dummy mmiowb() definitions from arch code
-      docs/memory-barriers.txt: Fix style, spacing and grammar in I/O section
-      docs/memory-barriers.txt: Update I/O section to be clearer about CPU vs thread
+arm64 updates for 5.2
 
- Documentation/driver-api/device-io.rst             |  45 ----
- Documentation/driver-api/pci/p2pdma.rst            |   4 -
- Documentation/memory-barriers.txt                  | 249 +++++++++------------
- arch/alpha/include/asm/Kbuild                      |   1 +
- arch/alpha/include/asm/io.h                        |   2 -
- arch/arc/include/asm/Kbuild                        |   1 +
- arch/arm/include/asm/Kbuild                        |   1 +
- arch/arm/include/asm/io.h                          |   2 -
- arch/arm64/include/asm/Kbuild                      |   1 +
- arch/arm64/include/asm/io.h                        |   2 -
- arch/c6x/include/asm/Kbuild                        |   1 +
- arch/csky/include/asm/Kbuild                       |   1 +
- arch/h8300/include/asm/Kbuild                      |   1 +
- arch/hexagon/include/asm/Kbuild                    |   1 +
- arch/hexagon/include/asm/io.h                      |   2 -
- arch/ia64/include/asm/io.h                         |  17 --
- arch/ia64/include/asm/mmiowb.h                     |  25 +++
- arch/ia64/include/asm/spinlock.h                   |   2 +
- arch/m68k/include/asm/Kbuild                       |   1 +
- arch/m68k/include/asm/io_mm.h                      |   2 -
- arch/microblaze/include/asm/Kbuild                 |   1 +
- arch/mips/include/asm/io.h                         |   3 -
- arch/mips/include/asm/mmiowb.h                     |  11 +
- arch/mips/include/asm/spinlock.h                   |  15 ++
- arch/nds32/include/asm/Kbuild                      |   1 +
- arch/nds32/include/asm/io.h                        |   2 -
- arch/nios2/include/asm/Kbuild                      |   1 +
- arch/openrisc/include/asm/Kbuild                   |   1 +
- arch/parisc/include/asm/Kbuild                     |   1 +
- arch/parisc/include/asm/io.h                       |   2 -
- arch/powerpc/Kconfig                               |   1 +
- arch/powerpc/include/asm/io.h                      |  33 +--
- arch/powerpc/include/asm/mmiowb.h                  |  18 ++
- arch/powerpc/include/asm/paca.h                    |   6 +-
- arch/powerpc/include/asm/spinlock.h                |  17 --
- arch/powerpc/xmon/xmon.c                           |   5 +-
- arch/riscv/Kconfig                                 |   1 +
- arch/riscv/include/asm/io.h                        |  15 +-
- arch/riscv/include/asm/mmiowb.h                    |  14 ++
- arch/s390/include/asm/Kbuild                       |   1 +
- arch/sh/include/asm/io.h                           |   3 -
- arch/sh/include/asm/mmiowb.h                       |  12 +
- arch/sh/include/asm/spinlock-llsc.h                |   2 +
- arch/sparc/include/asm/Kbuild                      |   1 +
- arch/sparc/include/asm/io_64.h                     |   2 -
- arch/um/include/asm/Kbuild                         |   1 +
- arch/unicore32/include/asm/Kbuild                  |   1 +
- arch/x86/include/asm/Kbuild                        |   1 +
- arch/x86/include/asm/io.h                          |   2 -
- arch/xtensa/include/asm/Kbuild                     |   1 +
- drivers/crypto/cavium/nitrox/nitrox_reqmgr.c       |   4 -
- drivers/dma/txx9dmac.c                             |   3 -
- drivers/firewire/ohci.c                            |   1 -
- drivers/gpu/drm/i915/intel_hdmi.c                  |  10 -
- drivers/ide/tx4939ide.c                            |   2 -
- drivers/infiniband/hw/hfi1/chip.c                  |   3 -
- drivers/infiniband/hw/hfi1/pio.c                   |   1 -
- drivers/infiniband/hw/hns/hns_roce_hw_v1.c         |   2 -
- drivers/infiniband/hw/i40iw/i40iw_osdep.h          |   2 +-
- drivers/infiniband/hw/mlx4/qp.c                    |   6 -
- drivers/infiniband/hw/mlx5/qp.c                    |   1 -
- drivers/infiniband/hw/mthca/mthca_cmd.c            |   6 -
- drivers/infiniband/hw/mthca/mthca_cq.c             |   5 -
- drivers/infiniband/hw/mthca/mthca_qp.c             |  17 --
- drivers/infiniband/hw/mthca/mthca_srq.c            |   6 -
- drivers/infiniband/hw/qedr/verbs.c                 |  12 -
- drivers/infiniband/hw/qib/qib_iba6120.c            |   4 -
- drivers/infiniband/hw/qib/qib_iba7220.c            |   3 -
- drivers/infiniband/hw/qib/qib_iba7322.c            |   3 -
- drivers/infiniband/hw/qib/qib_sd7220.c             |   4 -
- drivers/media/pci/dt3155/dt3155.c                  |   8 -
- drivers/memstick/host/jmb38x_ms.c                  |   4 -
- drivers/misc/ioc4.c                                |   2 -
- drivers/misc/mei/hw-me.c                           |   3 -
- drivers/misc/tifm_7xx1.c                           |   1 -
- drivers/mmc/host/alcor.c                           |   1 -
- drivers/mmc/host/sdhci.c                           |  13 --
- drivers/mmc/host/tifm_sd.c                         |   3 -
- drivers/mmc/host/via-sdmmc.c                       |  10 -
- drivers/mtd/nand/raw/r852.c                        |   2 -
- drivers/mtd/nand/raw/txx9ndfmc.c                   |   1 -
- drivers/net/ethernet/aeroflex/greth.c              |   1 -
- drivers/net/ethernet/alacritech/slicoss.c          |   4 -
- drivers/net/ethernet/amazon/ena/ena_com.c          |   1 -
- drivers/net/ethernet/atheros/atlx/atl1.c           |   1 -
- drivers/net/ethernet/atheros/atlx/atl2.c           |   1 -
- drivers/net/ethernet/broadcom/bnx2.c               |   4 -
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c    |   2 -
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h    |   4 -
- .../net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c    |   1 -
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c   |  29 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_sp.c     |   1 -
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c  |   2 -
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c   |   4 -
- drivers/net/ethernet/broadcom/bnxt/bnxt.c          |   3 -
- drivers/net/ethernet/broadcom/tg3.c                |   6 -
- .../net/ethernet/cavium/liquidio/cn66xx_device.c   |  10 -
- .../net/ethernet/cavium/liquidio/octeon_device.c   |   1 -
- drivers/net/ethernet/cavium/liquidio/octeon_droq.c |   4 -
- .../net/ethernet/cavium/liquidio/request_manager.c |   1 -
- drivers/net/ethernet/intel/e1000/e1000_main.c      |   5 -
- drivers/net/ethernet/intel/e1000e/netdev.c         |   7 -
- drivers/net/ethernet/intel/fm10k/fm10k_iov.c       |   2 -
- drivers/net/ethernet/intel/fm10k/fm10k_main.c      |   5 -
- drivers/net/ethernet/intel/i40e/i40e_txrx.c        |   5 -
- drivers/net/ethernet/intel/iavf/iavf_txrx.c        |   5 -
- drivers/net/ethernet/intel/ice/ice_txrx.c          |   5 -
- drivers/net/ethernet/intel/igb/igb_main.c          |   5 -
- drivers/net/ethernet/intel/igbvf/netdev.c          |   4 -
- drivers/net/ethernet/intel/igc/igc_main.c          |   5 -
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c      |   5 -
- drivers/net/ethernet/marvell/sky2.c                |   4 -
- drivers/net/ethernet/mellanox/mlx4/catas.c         |   4 -
- drivers/net/ethernet/mellanox/mlx4/cmd.c           |  13 --
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c      |   1 -
- drivers/net/ethernet/myricom/myri10ge/myri10ge.c   |   2 -
- drivers/net/ethernet/neterion/s2io.c               |   2 -
- drivers/net/ethernet/neterion/vxge/vxge-main.c     |   5 -
- drivers/net/ethernet/neterion/vxge/vxge-traffic.c  |   4 -
- drivers/net/ethernet/qlogic/qed/qed_int.c          |  13 --
- drivers/net/ethernet/qlogic/qed/qed_spq.c          |   3 -
- drivers/net/ethernet/qlogic/qede/qede_ethtool.c    |   8 -
- drivers/net/ethernet/qlogic/qede/qede_fp.c         |   8 -
- drivers/net/ethernet/qlogic/qla3xxx.c              |   1 -
- drivers/net/ethernet/qlogic/qlge/qlge.h            |   1 -
- drivers/net/ethernet/qlogic/qlge/qlge_main.c       |   1 -
- drivers/net/ethernet/renesas/ravb_main.c           |   9 -
- drivers/net/ethernet/renesas/ravb_ptp.c            |   3 -
- drivers/net/ethernet/renesas/sh_eth.c              |   1 -
- drivers/net/ethernet/sfc/falcon/io.h               |   2 -
- drivers/net/ethernet/sfc/io.h                      |   2 -
- drivers/net/ethernet/silan/sc92031.c               |  15 --
- drivers/net/ethernet/via/via-rhine.c               |   3 -
- drivers/net/ethernet/wiznet/w5100.c                |   6 -
- drivers/net/ethernet/wiznet/w5300.c                |  15 --
- drivers/net/wireless/ath/ath5k/base.c              |   4 -
- drivers/net/wireless/ath/ath5k/mac80211-ops.c      |   2 -
- drivers/net/wireless/broadcom/b43/main.c           |   7 -
- drivers/net/wireless/broadcom/b43/sysfs.c          |   1 -
- drivers/net/wireless/broadcom/b43legacy/ilt.c      |   2 -
- drivers/net/wireless/broadcom/b43legacy/main.c     |  20 --
- drivers/net/wireless/broadcom/b43legacy/phy.c      |   1 -
- drivers/net/wireless/broadcom/b43legacy/pio.h      |   1 -
- drivers/net/wireless/broadcom/b43legacy/radio.c    |   4 -
- drivers/net/wireless/broadcom/b43legacy/sysfs.c    |   1 -
- drivers/net/wireless/intel/iwlegacy/common.h       |   7 -
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c    |   1 -
- drivers/ntb/hw/idt/ntb_hw_idt.c                    |   7 -
- drivers/ntb/test/ntb_perf.c                        |   3 -
- drivers/scsi/bfa/bfa.h                             |   3 +-
- drivers/scsi/bfa/bfa_hw_cb.c                       |   2 -
- drivers/scsi/bfa/bfa_hw_ct.c                       |   2 -
- drivers/scsi/bnx2fc/bnx2fc_hwi.c                   |   2 -
- drivers/scsi/bnx2i/bnx2i_hwi.c                     |   3 -
- drivers/scsi/megaraid/megaraid_sas_base.c          |   1 -
- drivers/scsi/megaraid/megaraid_sas_fusion.c        |   1 -
- drivers/scsi/mpt3sas/mpt3sas_base.c                |   1 -
- drivers/scsi/qedf/qedf_io.c                        |   1 -
- drivers/scsi/qedi/qedi_fw.c                        |   1 -
- drivers/scsi/qla1280.c                             |  15 --
- drivers/ssb/pci.c                                  |   1 -
- drivers/ssb/pcmcia.c                               |   4 -
- drivers/staging/comedi/drivers/mite.c              |   3 -
- drivers/staging/comedi/drivers/ni_660x.c           |   2 -
- drivers/staging/comedi/drivers/ni_mio_common.c     |   1 -
- drivers/staging/comedi/drivers/ni_pcidio.c         |   2 -
- drivers/staging/comedi/drivers/ni_tio.c            |   1 -
- drivers/staging/comedi/drivers/s626.c              |   2 -
- drivers/tty/serial/men_z135_uart.c                 |   1 -
- drivers/tty/serial/serial_txx9.c                   |   1 -
- drivers/usb/early/xhci-dbc.c                       |   4 -
- drivers/usb/host/xhci-dbgcap.c                     |   2 -
- include/asm-generic/io.h                           |   7 +-
- include/asm-generic/mmiowb.h                       |  63 ++++++
- include/asm-generic/mmiowb_types.h                 |  12 +
- include/linux/qed/qed_if.h                         |   2 -
- include/linux/spinlock.h                           |  11 +-
- kernel/Kconfig.locks                               |   7 +
- kernel/locking/spinlock.c                          |   7 +
- kernel/locking/spinlock_debug.c                    |   6 +-
- sound/soc/txx9/txx9aclc-ac97.c                     |   1 -
- 181 files changed, 343 insertions(+), 828 deletions(-)
- create mode 100644 arch/ia64/include/asm/mmiowb.h
- create mode 100644 arch/mips/include/asm/mmiowb.h
- create mode 100644 arch/powerpc/include/asm/mmiowb.h
- create mode 100644 arch/riscv/include/asm/mmiowb.h
- create mode 100644 arch/sh/include/asm/mmiowb.h
- create mode 100644 include/asm-generic/mmiowb.h
- create mode 100644 include/asm-generic/mmiowb_types.h
+Mostly just incremental improvements here:
+
+- Introduce AT_HWCAP2 for advertising CPU features to userspace
+
+- Expose SVE2 availability to userspace
+
+- Support for "data cache clean to point of deep persistence" (DC PODP)
+
+- Honour "mitigations=off" on the cmdline and advertise status via sysfs
+
+- CPU timer erratum workaround (Neoverse-N1 #1188873)
+
+- Introduce perf PMU driver for the SMMUv3 performance counters
+
+- Add config option to disable the kuser helpers page for AArch32 tasks
+
+- Futex modifications to ensure liveness under contention
+
+- Rework debug exception handling to seperate kernel and user handlers
+
+- Non-critical fixes and cleanup
+
+----------------------------------------------------------------
+Alexandru Elisei (1):
+      arm64: Use defines instead of magic numbers
+
+Andrew Murray (6):
+      arm64: HWCAP: add support for AT_HWCAP2
+      arm64: HWCAP: encapsulate elf_hwcap
+      arm64: Handle trapped DC CVADP
+      arm64: Expose DC CVADP to userspace
+      arm64: add CVADP support to the cache maintenance helper
+      arm64: Advertise ARM64_HAS_DCPODP cpu feature
+
+Anshuman Khandual (1):
+      KVM: ARM: Remove pgtable page standard functions from stage-2 page tables
+
+Arun KS (1):
+      arm64: Fix size of __early_cpu_boot_status
+
+Boyang Zhou (1):
+      arm64: mmap: Ensure file offset is treated as unsigned
+
+Dave Martin (1):
+      arm64: Expose SVE2 features for userspace
+
+Jean-Philippe Brucker (2):
+      arm64: Clear OSDLR_EL1 on CPU boot
+      arm64: Save and restore OSDLR_EL1 across suspend/resume
+
+Jeremy Linton (6):
+      arm64: Provide a command line to disable spectre_v2 mitigation
+      arm64: add sysfs vulnerability show for meltdown
+      arm64: Always enable spectre-v2 vulnerability detection
+      arm64: add sysfs vulnerability show for spectre-v2
+      arm64: Always enable ssb vulnerability detection
+      arm64: add sysfs vulnerability show for speculative store bypass
+
+Josh Poimboeuf (6):
+      cpu/speculation: Add 'mitigations=' cmdline option
+      x86/speculation: Support 'mitigations=' cmdline option
+      powerpc/speculation: Support 'mitigations=' cmdline option
+      s390/speculation: Support 'mitigations=' cmdline option
+      arm64/speculation: Support 'mitigations=' cmdline option
+      Documentation: Add ARM64 to kernel-parameters.rst
+
+Kees Cook (1):
+      arm64: sysreg: Make mrs_s and msr_s macros work with Clang and LTO
+
+Kefeng Wang (1):
+      ACPI/IORT: Reject platform device creation on NUMA node mapping failure
+
+Marc Zyngier (13):
+      arm64: Advertise mitigation of Spectre-v2, or lack thereof
+      arm64: Use firmware to detect CPUs that are not affected by Spectre-v2
+      arm64: Restrict ARM64_ERRATUM_1188873 mitigation to AArch32
+      arm64: Make ARM64_ERRATUM_1188873 depend on COMPAT
+      arm64: Add part number for Neoverse N1
+      arm64: Apply ARM64_ERRATUM_1188873 to Neoverse-N1
+      ARM: vdso: Remove dependency with the arch_timer driver internals
+      watchdog/sbsa: Use arch_timer_read_counter instead of arch_counter_get_cntvct
+      arm64: Use arch_timer_read_counter instead of arch_counter_get_cntvct
+      clocksource/arm_arch_timer: Direcly assign set_next_event workaround
+      clocksource/arm_arch_timer: Drop use of static key in arch_timer_reg_read_stable
+      clocksource/arm_arch_timer: Remove use of workaround static key
+      clocksource/arm_arch_timer: Use arch_timer_read_counter to access stable counters
+
+Mark Rutland (1):
+      arm64: instrument smp_{load_acquire,store_release}
+
+Masahiro Yamada (2):
+      arm64: vdso: fix and clean-up Makefile
+      arm64: vdso: use $(LD) instead of $(CC) to link VDSO
+
+Masami Hiramatsu (1):
+      arm64: ptrace: Add function argument access API
+
+Matteo Croce (1):
+      arm64/vdso: don't leak kernel addresses
+
+Mian Yousaf Kaukab (2):
+      arm64: Add sysfs vulnerability show for spectre-v1
+      arm64: enable generic CPU vulnerabilites support
+
+Miles Chen (2):
+      arm64: setup min_low_pfn
+      arm64: mm: check virtual addr in virt_to_page() if CONFIG_DEBUG_VIRTUAL=y
+
+Muchun Song (1):
+      arm64: mm: fix incorrect assignment of 'max_mapnr'
+
+Neil Leeder (2):
+      ACPI/IORT: Add support for PMCG
+      perf/smmuv3: Add arm64 smmuv3 pmu driver
+
+Nishad Kamdar (1):
+      arm64: Use the correct style for SPDX License Identifier
+
+Qian Cai (3):
+      arm64/mm: fix kernel-doc comments
+      arm64: Fix compiler warning from pte_unmap() with -Wunused-but-set-variable
+      arm64: mm: Remove pte_unmap_nested()
+
+Raphael Gault (1):
+      arm64: perf_event: Remove wrongfully used inline
+
+Robin Murphy (2):
+      perf/arm-cci: Remove broken race mitigation
+      perf/arm-ccn: Clean up CPU hotplug handling
+
+Shameer Kolothum (2):
+      perf/smmuv3: Add MSI irq support
+      perf/smmuv3: Enable HiSilicon Erratum 162001800 quirk
+
+Torsten Duwe (3):
+      arm64: Makefile: Replace -pg with CC_FLAGS_FTRACE
+      efi/arm/arm64: Makefile: Replace -pg with CC_FLAGS_FTRACE
+      kasan: Makefile: Replace -pg with CC_FLAGS_FTRACE
+
+Vincenzo Frascino (7):
+      arm64: compat: Reduce address limit
+      arm64: vdso: Fix clock_getres() for CLOCK_REALTIME
+      arm64: compat: Alloc separate pages for vectors and sigpage
+      arm64: compat: Split kuser32
+      arm64: compat: Refactor aarch32_alloc_vdso_pages()
+      arm64: compat: Add KUSER_HELPERS config option
+      arm64: compat: Reduce address limit for 64K pages
+
+Wen Yang (1):
+      arm64: cpu_ops: fix a leaked reference by adding missing of_node_put
+
+Will Deacon (25):
+      arm64: mm: Make show_pte() a static function
+      arm64: mm: Ensure we ignore the initrd if it is placed out of range
+      arm64: debug: Remove unused return value from do_debug_exception()
+      arm64: debug: Rename addr parameter for non-watchpoint exception hooks
+      arm64: debug: Remove meaningless comment
+      arm64: debug: Separate debug hooks based on target exception level
+      arm64: kprobes: Avoid calling kprobes debug handlers explicitly
+      arm64: debug: Remove redundant user_mode(regs) checks from debug handlers
+      arm64: probes: Move magic BRK values into brk-imm.h
+      arm64: debug: Clean up brk_handler()
+      arm64: mm: Consolidate early page table allocation
+      arm64: Kconfig: Make CONFIG_COMPAT a menuconfig entry
+      Merge branch 'core/speculation' of git://git.kernel.org/.../tip/tip into for-next/mitigations
+      arm64: futex: Fix FUTEX_WAKE_OP atomic ops with non-zero result value
+      locking/futex: Allow low-level atomic operations to return -EAGAIN
+      arm64: futex: Bound number of LDXR/STXR loops in FUTEX_WAKE_OP
+      arm64: futex: Avoid copying out uninitialised stack in failed cmpxchg()
+      futex: Update comments and docs about return values of arch futex code
+      arm64: Kconfig: Tidy up errata workaround help text
+      arm64: arch_timer: Ensure counter register reads occur with seqlock held
+      arm64: ssbs: Don't treat CPUs with SSBS as unaffected by SSB
+      Merge branch 'for-next/futex' of git://git.kernel.org/.../arm64/linux into for-next/core
+      Merge branch 'for-next/mitigations' of git://git.kernel.org/.../arm64/linux into for-next/core
+      Merge branch 'for-next/timers' of git://git.kernel.org/.../arm64/linux into for-next/core
+      Merge branch 'for-next/perf' of git://git.kernel.org/.../will/linux into for-next/core
+
+Xiongfeng Wang (1):
+      firmware: arm_sdei: Prohibit probing in '_sdei_handler'
+
+Yu Zhao (3):
+      arm64: mm: use appropriate ctors for page tables
+      arm64: mm: don't call page table ctors for init_mm
+      arm64: mm: enable per pmd page table lock
+
+ Documentation/admin-guide/kernel-parameters.rst |   1 +
+ Documentation/admin-guide/kernel-parameters.txt |  42 +-
+ Documentation/arm64/cpu-feature-registers.txt   |  16 +
+ Documentation/arm64/elf_hwcaps.txt              |  41 +-
+ Documentation/arm64/silicon-errata.txt          |   2 +
+ Documentation/arm64/sve.txt                     |  17 +
+ Documentation/robust-futexes.txt                |   3 +-
+ arch/arm/include/asm/arch_timer.h               |  18 +-
+ arch/arm/include/asm/cp15.h                     |   2 +
+ arch/arm/include/asm/stage2_pgtable.h           |   4 +-
+ arch/arm/vdso/vgettimeofday.c                   |   5 +-
+ arch/arm64/Kconfig                              | 132 ++--
+ arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h   |   2 +-
+ arch/arm64/crypto/aes-ce-ccm-glue.c             |   2 +-
+ arch/arm64/crypto/aes-neonbs-glue.c             |   2 +-
+ arch/arm64/crypto/chacha-neon-glue.c            |   2 +-
+ arch/arm64/crypto/crct10dif-ce-glue.c           |   4 +-
+ arch/arm64/crypto/ghash-ce-glue.c               |   8 +-
+ arch/arm64/crypto/nhpoly1305-neon-glue.c        |   2 +-
+ arch/arm64/crypto/sha256-glue.c                 |   4 +-
+ arch/arm64/include/asm/arch_timer.h             | 119 +++-
+ arch/arm64/include/asm/assembler.h              |   8 +-
+ arch/arm64/include/asm/barrier.h                |  24 +-
+ arch/arm64/include/asm/brk-imm.h                |   5 +
+ arch/arm64/include/asm/cpucaps.h                |   3 +-
+ arch/arm64/include/asm/cpufeature.h             |  25 +-
+ arch/arm64/include/asm/cputype.h                |   2 +
+ arch/arm64/include/asm/debug-monitors.h         |  25 +-
+ arch/arm64/include/asm/elf.h                    |   6 +-
+ arch/arm64/include/asm/esr.h                    |   7 +-
+ arch/arm64/include/asm/futex.h                  |  63 +-
+ arch/arm64/include/asm/hwcap.h                  |  60 +-
+ arch/arm64/include/asm/irqflags.h               |   8 +-
+ arch/arm64/include/asm/kprobes.h                |   2 -
+ arch/arm64/include/asm/kvm_hyp.h                |   4 +-
+ arch/arm64/include/asm/memory.h                 |   2 +-
+ arch/arm64/include/asm/pgalloc.h                |  12 +-
+ arch/arm64/include/asm/pgtable.h                |   5 +-
+ arch/arm64/include/asm/pointer_auth.h           |   2 +-
+ arch/arm64/include/asm/processor.h              |   8 +
+ arch/arm64/include/asm/ptrace.h                 |  22 +
+ arch/arm64/include/asm/sdei.h                   |   2 +-
+ arch/arm64/include/asm/signal32.h               |   2 -
+ arch/arm64/include/asm/stage2_pgtable.h         |   4 +-
+ arch/arm64/include/asm/sysreg.h                 |  59 +-
+ arch/arm64/include/asm/system_misc.h            |   1 -
+ arch/arm64/include/asm/tlb.h                    |   5 +-
+ arch/arm64/include/asm/vdso_datapage.h          |   1 +
+ arch/arm64/include/asm/vmap_stack.h             |   2 +-
+ arch/arm64/include/uapi/asm/hwcap.h             |  13 +-
+ arch/arm64/kernel/Makefile                      |  11 +-
+ arch/arm64/kernel/asm-offsets.c                 |   2 +-
+ arch/arm64/kernel/cpu_errata.c                  | 256 +++++--
+ arch/arm64/kernel/cpu_ops.c                     |   1 +
+ arch/arm64/kernel/cpufeature.c                  | 193 ++++--
+ arch/arm64/kernel/cpuinfo.c                     |   9 +-
+ arch/arm64/kernel/debug-monitors.c              | 115 ++--
+ arch/arm64/kernel/entry.S                       |  19 +-
+ arch/arm64/kernel/fpsimd.c                      |   4 +-
+ arch/arm64/kernel/head.S                        |  12 +-
+ arch/arm64/kernel/kgdb.c                        |  30 +-
+ arch/arm64/kernel/kuser32.S                     |  66 +-
+ arch/arm64/kernel/perf_event.c                  |   4 +-
+ arch/arm64/kernel/probes/kprobes.c              |  22 +-
+ arch/arm64/kernel/probes/uprobes.c              |  19 +-
+ arch/arm64/kernel/signal32.c                    |   3 +-
+ arch/arm64/kernel/sigreturn32.S                 |  46 ++
+ arch/arm64/kernel/sys.c                         |   2 +-
+ arch/arm64/kernel/traps.c                       |  33 +-
+ arch/arm64/kernel/vdso.c                        | 139 +++-
+ arch/arm64/kernel/vdso/Makefile                 |  19 +-
+ arch/arm64/kernel/vdso/gettimeofday.S           |  22 +-
+ arch/arm64/lib/Makefile                         |   2 +-
+ arch/arm64/mm/fault.c                           |  16 +-
+ arch/arm64/mm/init.c                            |   5 +-
+ arch/arm64/mm/mmu.c                             |  47 +-
+ arch/arm64/mm/numa.c                            |  25 +-
+ arch/arm64/mm/proc.S                            |  34 +-
+ arch/powerpc/kernel/security.c                  |   6 +-
+ arch/powerpc/kernel/setup_64.c                  |   2 +-
+ arch/s390/kernel/nospec-branch.c                |   3 +-
+ arch/x86/kernel/cpu/bugs.c                      |  11 +-
+ arch/x86/mm/pti.c                               |   4 +-
+ drivers/acpi/arm64/iort.c                       | 150 +++-
+ drivers/clocksource/arm_arch_timer.c            | 138 ++--
+ drivers/firmware/arm_sdei.c                     |   3 +
+ drivers/firmware/efi/libstub/Makefile           |   6 +-
+ drivers/perf/Kconfig                            |   9 +
+ drivers/perf/Makefile                           |   1 +
+ drivers/perf/arm-cci.c                          |  21 +-
+ drivers/perf/arm-ccn.c                          |  25 +-
+ drivers/perf/arm_smmuv3_pmu.c                   | 865 ++++++++++++++++++++++++
+ drivers/watchdog/sbsa_gwdt.c                    |   2 +-
+ include/asm-generic/futex.h                     |   8 +-
+ include/linux/acpi_iort.h                       |   8 +
+ include/linux/cpu.h                             |  24 +
+ kernel/cpu.c                                    |  15 +
+ kernel/futex.c                                  | 188 +++--
+ mm/kasan/Makefile                               |   6 +-
+ virt/kvm/arm/mmu.c                              |   2 +-
+ 100 files changed, 2624 insertions(+), 839 deletions(-)
+ create mode 100644 arch/arm64/kernel/sigreturn32.S
+ create mode 100644 drivers/perf/arm_smmuv3_pmu.c
