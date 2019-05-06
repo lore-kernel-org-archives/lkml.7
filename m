@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FD7C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC35C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF12E2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444552053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154745;
-	bh=JoJB5VMng8NPu4tyyX+HHPyVO3AaIoTy9QwqCQI1tTk=;
+	s=default; t=1557154750;
+	bh=SqD8OrZ7/sr4F+8A2XazlG09XH1CvAtt77rj9BDVjYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R32JbNGH0K7Rs+5pUTBR7r4RgVKI8TBOO0qQrdwwu3uqZlVl3OXtbS7vrRvXfhKoi
-	 tYtOHL21jUQmtrlmH9bU+tRCVWMNR+/Ukxx8+C9m2hJZZ2iCF3MhLaPvmfhrAyhBY/
-	 9olErGEUyy/CS7uuZ7z9ht07SX93u8G7AqN5juSU=
+	b=kqWYtwTvks6q0qtPrbdN8WaWRpY8pniGr99bCQGQk9ow6ajvX9i/gCcAFG6B/WCQO
+	 JkocsRg9iLaX28bowot6mii83Q332Jgo1/J/8nnVPp2Q/zytAUickH17uYETYxp3Yy
+	 ZAyeEMrJxFtb2rwGrbOtldjkmpPAvTTQfoCWcCHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbfEFOnY (ORCPT
+        id S1728406AbfEFO7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:43:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38736 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:59:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728639AbfEFOnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:17 -0400
+        id S1727909AbfEFOnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52B0221479;
-        Mon,  6 May 2019 14:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E185C21655;
+        Mon,  6 May 2019 14:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153796;
-        bh=JoJB5VMng8NPu4tyyX+HHPyVO3AaIoTy9QwqCQI1tTk=;
+        s=default; t=1557153799;
+        bh=SqD8OrZ7/sr4F+8A2XazlG09XH1CvAtt77rj9BDVjYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ua5BmdUsegcU6xxjIImAdD1PwL7pkYAHES+qvaejJgsJQBFPruwKZxt6X0UCYSbrk
-         7lTdO0JXrivCOpwr6W+x6GO5OpZJxtZOnqXkdcFme/2hSLL4ExoK6ilXYmxCsSNJhD
-         bgkG+seZreW9iyxuE0Xn+TT1VMBnWxxI4OWZzJsg=
+        b=YbqLv5ux0jyHBfwfog0ceFq+0q7ZCovlrQgovLqUcFqqeDSFdNhl0Yaol13rhnx3F
+         Dwu9N47ONQAafuG4Dz/Vi0RlZMBnHE5jpCk5nYGOt5x+DLb5Smpv9NTu8rLI3RzhIb
+         YT0F39v2Wm52PsTFUDZP3tiXy+qbVkCTtd4lzleA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Dufour <ldufour@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 92/99] powerpc/mm/hash: Handle mmap_min_addr correctly in get_unmapped_area topdown search
-Date:   Mon,  6 May 2019 16:33:05 +0200
-Message-Id: <20190506143102.210573858@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, Pu Wen <puwen@hygon.cn>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 4.19 93/99] x86/mce: Improve error message when kernel cannot recover, p2
+Date:   Mon,  6 May 2019 16:33:06 +0200
+Message-Id: <20190506143102.288742394@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,70 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Tony Luck <tony.luck@intel.com>
 
-commit 3b4d07d2674f6b4a9281031f99d1f7efd325b16d upstream.
+commit 41f035a86b5b72a4f947c38e94239d20d595352a upstream.
 
-When doing top-down search the low_limit is not PAGE_SIZE but rather
-max(PAGE_SIZE, mmap_min_addr). This handle cases in which mmap_min_addr >
-PAGE_SIZE.
+In
 
-Fixes: fba2369e6ceb ("mm: use vm_unmapped_area() on powerpc architecture")
-Reviewed-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+  c7d606f560e4 ("x86/mce: Improve error message when kernel cannot recover")
+
+a case was added for a machine check caused by a DATA access to poison
+memory from the kernel. A case should have been added also for an
+uncorrectable error during an instruction fetch in the kernel.
+
+Add that extra case so the error message now reads:
+
+  mce: [Hardware Error]: Machine check: Instruction fetch error in kernel
+
+Fixes: c7d606f560e4 ("x86/mce: Improve error message when kernel cannot recover")
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190225205940.15226-1-tony.luck@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/slice.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/mcheck/mce-severity.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/arch/powerpc/mm/slice.c
-+++ b/arch/powerpc/mm/slice.c
-@@ -31,6 +31,7 @@
- #include <linux/spinlock.h>
- #include <linux/export.h>
- #include <linux/hugetlb.h>
-+#include <linux/security.h>
- #include <asm/mman.h>
- #include <asm/mmu.h>
- #include <asm/copro.h>
-@@ -376,6 +377,7 @@ static unsigned long slice_find_area_top
- 	int pshift = max_t(int, mmu_psize_defs[psize].shift, PAGE_SHIFT);
- 	unsigned long addr, found, prev;
- 	struct vm_unmapped_area_info info;
-+	unsigned long min_addr = max(PAGE_SIZE, mmap_min_addr);
- 
- 	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
- 	info.length = len;
-@@ -392,7 +394,7 @@ static unsigned long slice_find_area_top
- 	if (high_limit > DEFAULT_MAP_WINDOW)
- 		addr += mm->context.slb_addr_limit - DEFAULT_MAP_WINDOW;
- 
--	while (addr > PAGE_SIZE) {
-+	while (addr > min_addr) {
- 		info.high_limit = addr;
- 		if (!slice_scan_available(addr - 1, available, 0, &addr))
- 			continue;
-@@ -404,8 +406,8 @@ static unsigned long slice_find_area_top
- 		 * Check if we need to reduce the range, or if we can
- 		 * extend it to cover the previous available slice.
- 		 */
--		if (addr < PAGE_SIZE)
--			addr = PAGE_SIZE;
-+		if (addr < min_addr)
-+			addr = min_addr;
- 		else if (slice_scan_available(addr - 1, available, 0, &prev)) {
- 			addr = prev;
- 			goto prev_slice;
-@@ -527,7 +529,7 @@ unsigned long slice_get_unmapped_area(un
- 		addr = _ALIGN_UP(addr, page_size);
- 		slice_dbg(" aligned addr=%lx\n", addr);
- 		/* Ignore hint if it's too large or overlaps a VMA */
--		if (addr > high_limit - len ||
-+		if (addr > high_limit - len || addr < mmap_min_addr ||
- 		    !slice_area_is_free(mm, addr, len))
- 			addr = 0;
- 	}
+--- a/arch/x86/kernel/cpu/mcheck/mce-severity.c
++++ b/arch/x86/kernel/cpu/mcheck/mce-severity.c
+@@ -165,6 +165,11 @@ static struct severity {
+ 		SER, MASK(MCI_STATUS_OVER|MCI_UC_SAR|MCI_ADDR|MCACOD, MCI_UC_SAR|MCI_ADDR|MCACOD_DATA),
+ 		KERNEL
+ 		),
++	MCESEV(
++		PANIC, "Instruction fetch error in kernel",
++		SER, MASK(MCI_STATUS_OVER|MCI_UC_SAR|MCI_ADDR|MCACOD, MCI_UC_SAR|MCI_ADDR|MCACOD_INSTR),
++		KERNEL
++		),
+ #endif
+ 	MCESEV(
+ 		PANIC, "Action required: unknown MCACOD",
 
 
