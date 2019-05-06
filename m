@@ -4,105 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF59C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B75C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BE9208C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8658D208CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfEFJLC (ORCPT
+        id S1726416AbfEFJLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:11:02 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58976 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfEFJLC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:11:02 -0400
-Received: from localhost.localdomain (unknown [IPv6:2a02:2450:102f:3e0:95da:b269:747c:91b3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: robertfoss)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9A482261136;
-        Mon,  6 May 2019 10:10:57 +0100 (BST)
-From:   Robert Foss <robert.foss@collabora.com>
-To:     airlied@linux.ie, kraxel@redhat.com, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Chia-I Wu <olvaffe@gmail.com>
-Cc:     Robert Foss <robert.foss@collabora.com>,
-        Emil Velikov <emil.velikov@collabora.com>
-Subject: [PATCH v2] drm/virtio: Remove redundant return type
-Date:   Mon,  6 May 2019 11:10:34 +0200
-Message-Id: <20190506091034.30289-1-robert.foss@collabora.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 6 May 2019 05:11:35 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:39326 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbfEFJLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 05:11:35 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 595F0200057;
+        Mon,  6 May 2019 11:11:33 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7263D20010B;
+        Mon,  6 May 2019 11:11:28 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 26265402A3;
+        Mon,  6 May 2019 17:11:22 +0800 (SGT)
+From:   Peng Ma <peng.ma@nxp.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, leoyang.li@nxp.com
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Peng Ma <peng.ma@nxp.com>
+Subject: [PATCH 1/4] arm64: dts: fsl: ls1028a: Add qDMA node
+Date:   Mon,  6 May 2019 09:03:41 +0000
+Message-Id: <20190506090344.37784-1-peng.ma@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtio_gpu_fence_emit() always returns 0, since it
-has no error paths.
+Add the qDMA device tree nodes for LS1028A devices
 
-Consequently no calls for virtio_gpu_fence_emit()
-use the return value, and it can be removed.
-
-Signed-off-by: Robert Foss <robert.foss@collabora.com>
-Suggested-by: Emil Velikov <emil.velikov@collabora.com>
-Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
 ---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
 
-This patch was suggested in this email thread:
-
-[PATCH] drm/virtio: allocate fences with GFP_KERNEL
-https://www.spinics.net/lists/dri-devel/msg208536.html
-
-Changes since v1:
- - Rebased on drm-misc-next
- - Added r-b from Chia-I Wu
-
-
- drivers/gpu/drm/virtio/virtgpu_drv.h   | 2 +-
- drivers/gpu/drm/virtio/virtgpu_fence.c | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index 90461feeafdb..2d3e5b1debb3 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -355,7 +355,7 @@ int virtio_gpu_mmap(struct file *filp, struct vm_area_struct *vma);
- bool virtio_fence_signaled(struct dma_fence *f);
- struct virtio_gpu_fence *virtio_gpu_fence_alloc(
- 	struct virtio_gpu_device *vgdev);
--int virtio_gpu_fence_emit(struct virtio_gpu_device *vgdev,
-+void virtio_gpu_fence_emit(struct virtio_gpu_device *vgdev,
- 			  struct virtio_gpu_ctrl_hdr *cmd_hdr,
- 			  struct virtio_gpu_fence *fence);
- void virtio_gpu_fence_event_process(struct virtio_gpu_device *vdev,
-diff --git a/drivers/gpu/drm/virtio/virtgpu_fence.c b/drivers/gpu/drm/virtio/virtgpu_fence.c
-index 8aecc36a0417..70d6c4329778 100644
---- a/drivers/gpu/drm/virtio/virtgpu_fence.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_fence.c
-@@ -85,7 +85,7 @@ struct virtio_gpu_fence *virtio_gpu_fence_alloc(struct virtio_gpu_device *vgdev)
- 	return fence;
- }
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 2896bbc..8116fb3 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -336,6 +336,26 @@
+ 				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  
--int virtio_gpu_fence_emit(struct virtio_gpu_device *vgdev,
-+void virtio_gpu_fence_emit(struct virtio_gpu_device *vgdev,
- 			  struct virtio_gpu_ctrl_hdr *cmd_hdr,
- 			  struct virtio_gpu_fence *fence)
- {
-@@ -102,7 +102,6 @@ int virtio_gpu_fence_emit(struct virtio_gpu_device *vgdev,
- 
- 	cmd_hdr->flags |= cpu_to_le32(VIRTIO_GPU_FLAG_FENCE);
- 	cmd_hdr->fence_id = cpu_to_le64(fence->f.seqno);
--	return 0;
- }
- 
- void virtio_gpu_fence_event_process(struct virtio_gpu_device *vgdev,
++		qdma: dma-controller@8380000 {
++			compatible = "fsl,ls1028a-qdma", "fsl,ls1021a-qdma";
++			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
++			      <0x0 0x8390000 0x0 0x10000>, /* Status regs */
++			      <0x0 0x83a0000 0x0 0x40000>; /* Block regs */
++			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "qdma-error", "qdma-queue0",
++				"qdma-queue1", "qdma-queue2", "qdma-queue3";
++			dma-channels = <8>;
++			block-number = <1>;
++			block-offset = <0x10000>;
++			fsl,dma-queues = <2>;
++			status-sizes = <64>;
++			queue-sizes = <64 64>;
++		};
++
+ 		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+ 			compatible = "pci-host-ecam-generic";
+ 			reg = <0x01 0xf0000000 0x0 0x100000>;
 -- 
-2.20.1
+1.7.1
 
