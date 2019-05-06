@@ -5,107 +5,137 @@ X-Spam-Level:
 X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EDDC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5818AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4BFB20578
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3286C20578
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfEFQqJ (ORCPT
+        id S1726822AbfEFQrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:46:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:4605 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbfEFQqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:46:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 09:46:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
-   d="scan'208";a="171355585"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 06 May 2019 09:46:08 -0700
-Received: from slaugust-mobl.amr.corp.intel.com (unknown [10.254.21.102])
-        by linux.intel.com (Postfix) with ESMTP id 8116D58010A;
-        Mon,  6 May 2019 09:46:07 -0700 (PDT)
-Subject: Re: [alsa-devel] [RFC PATCH 2/7] soundwire: add Slave sysfs support
-To:     Vinod Koul <vkoul@kernel.org>, Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, joe@perches.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
- <20190504010030.29233-3-pierre-louis.bossart@linux.intel.com>
- <20190504065444.GC9770@kroah.com>
- <c675ea60-5bfa-2475-8878-c589b8d20b32@linux.intel.com>
- <20190506151953.GA13178@kroah.com> <20190506162208.GI3845@vkoul-mobl.Dlink>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <be72bbb1-b51f-8201-fdff-958836ed94d1@linux.intel.com>
-Date:   Mon, 6 May 2019 11:46:06 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Mon, 6 May 2019 12:47:11 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:46315 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfEFQrL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 12:47:11 -0400
+Received: by mail-ua1-f65.google.com with SMTP id n23so4879131uap.13;
+        Mon, 06 May 2019 09:47:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KRsp84CR/wZjf7JSxDT5PziM3wZtSANeGjBl9N5WJPY=;
+        b=M2WAm3zKsvX/U5EO7RnbWnpV7F70x5KP9SwdmROsIEe7qOoeXWRK/+dzNYEuN7DLdf
+         KDiyG3t+V1q1W/2lcHpFRCAjPDRAece4OzP3HgQ70yac83vwQH2I7qeyWnOZxbjGxSry
+         uNssbiAoB9NF16QnVpDN0lkqrY4gbxmqhiQUth7bzjspFgVUdVufYKb7yy5gav8ib7va
+         fCM6mIluYhwjk0tIbKmyO+xtf0Q1hpTY1re0EL819Pxrdtgft9vI+diJeECilhTadEvt
+         Ou3xkObFCbrw1QKB6/KPuTzovxu/Q6hq3ZYypnLNHgSO21EaBxgw908AnK1j75jnyKNX
+         x0vw==
+X-Gm-Message-State: APjAAAXDkuZUo++LyflJ+YmIvW2c76Sg4eQTkYA8HIZJzlLFcRI3A6E9
+        6Ld0RkJ1Iktz1RK0weH0ap6sPSvnq24muHlImOc=
+X-Google-Smtp-Source: APXvYqxivUBYKeylf06dc/FajmKOGINCDT9FRcHViFrODon94uEeIITcByJUAga3hTH23Y3VDVffI/Cm5Acd2hQyJVE=
+X-Received: by 2002:a9f:2b84:: with SMTP id y4mr10578570uai.28.1557161229621;
+ Mon, 06 May 2019 09:47:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190506162208.GI3845@vkoul-mobl.Dlink>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190504004258.23574-1-erosca@de.adit-jv.com> <20190504004258.23574-2-erosca@de.adit-jv.com>
+ <20190506134700.ya565idfzzc3enbm@verge.net.au> <20190506152433.GA22769@vmlxhi-102.adit-jv.com>
+In-Reply-To: <20190506152433.GA22769@vmlxhi-102.adit-jv.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 6 May 2019 18:46:57 +0200
+Message-ID: <CAMuHMdXJzEYL48qwHAxrRsurQLBipZsQpv+w8i=+B2XCM_CZng@mail.gmail.com>
+Subject: Re: [PATCH 1/6] serial: sh-sci: Reveal ptrval in dev_dbg
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Simon Horman <horms@verge.net.au>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "George G . Davis" <george_davis@mentor.com>,
+        Andy Lowe <andy_lowe@mentor.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Helge Deller <deller@gmx.de>,
+        Michael Neuling <mikey@neuling.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Philip Yang <Philip.Yang@amd.com>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        Borislav Petkov <bp@suse.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/19 11:22 AM, Vinod Koul wrote:
-> On 06-05-19, 17:19, Greg KH wrote:
->> On Mon, May 06, 2019 at 09:42:35AM -0500, Pierre-Louis Bossart wrote:
->>>>> +
->>>>> +int sdw_sysfs_slave_init(struct sdw_slave *slave)
->>>>> +{
->>>>> +	struct sdw_slave_sysfs *sysfs;
->>>>> +	unsigned int src_dpns, sink_dpns, i, j;
->>>>> +	int err;
->>>>> +
->>>>> +	if (slave->sysfs) {
->>>>> +		dev_err(&slave->dev, "SDW Slave sysfs is already initialized\n");
->>>>> +		err = -EIO;
->>>>> +		goto err_ret;
->>>>> +	}
->>>>> +
->>>>> +	sysfs = kzalloc(sizeof(*sysfs), GFP_KERNEL);
->>>>
->>>> Same question as patch 1, why a new device?
->>>
->>> yes it's the same open. In this case, the slave devices are defined at a
->>> different level so it's also confusing to create a device to represent the
->>> slave properties. The code works but I am not sure the initial directions
->>> are correct.
->>
->> You can just make a subdir for your attributes by using the attribute
->> group name, if a subdirectory is needed just to keep things a bit more
->> organized.
-> 
-> The key here is 'a subdir' which is not the case here. We did discuss
-> this in the initial patches for SoundWire which had sysfs :)
-> 
-> The way MIPI disco spec organized properties, we have dp0 and dpN
-> properties each of them requires to have a subdir of their own and that
-> was the reason why I coded it to be creating a device.
+Hi Eugeniu,
 
-Vinod, the question was not for dp0 and dpN, it's fine to have 
-subdirectories there, but rather why we need separate devices for the 
-master and slave properties.
+On Mon, May 6, 2019 at 5:24 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> On Mon, May 06, 2019 at 03:47:05PM +0200, Simon Horman wrote:
+> > On Sat, May 04, 2019 at 02:42:53AM +0200, Eugeniu Rosca wrote:
+> > > Starting with v4.15-rc2 commit ad67b74d2469d9 ("printk: hash addresses
+> > > printed with %p"), enabling debug prints in sh-sci.c would generate
+> > > output like below confusing the users who try to sneak into the
+> > > internals of the driver:
+> > >
+> > > sh-sci e6e88000.serial: sci_request_dma: TX: got channel (____ptrval____)
+> > > sh-sci e6e88000.serial: sci_request_dma: mapped 4096@(____ptrval____) to 0x00000006798bf000
+> > > sh-sci e6e88000.serial: sci_request_dma: RX: got channel (____ptrval____)
+> > > sh-sci e6e88000.serial: sci_dma_tx_work_fn: (____ptrval____): 0...2, cookie 2
+> > >
+> > > There are two possible fixes for that:
+> > >  - get rid of '%p' prints if they don't reveal any useful information
+> > >  - s/%p/%px/, since it is unlikely we have any concerns leaking the
+> > >    pointer values when running a debug/non-production kernel
+> >
+> > I am concerned that this may expose information in circumstances
+> > where it is undesirable. Is it generally accepted practice to
+> > use %px in conjunction with dev_dbg() ?
+> >
+> > ...
+>
+> Below commits performed a similar s/%p/%px/ update in debug context:
+>
+> Authors (CC-ed)   Commit         Subject
+> ----------------------------------------
+> Christophe Leroy  b18f0ae92b0a1d ("powerpc/prom: fix early DEBUG messages")
+> Helge Deller      3847dab7742186 ("parisc: Add alternative coding infrastructure")
+> Michael Neuling   51c3c62b58b357 ("powerpc: Avoid code patching freed init sections")
+> Kuninori Morimoto dabdbe3ae0cb9a ("ASoC: rsnd: don't use %p for dev_dbg()")
+> Philip Yang       fa7e65147e5dca ("drm/amdkfd: use %px to print user space address instead of %p")
+> Matthew Wilcox    68c1f08203f2b0 ("lib/list_debug.c: print unmangled addresses")
+> Borislav Petkov   0e6c16c652cada ("x86/alternative: Print unadorned pointers")
+> Darrick J. Wong   c96900435fa9fd ("xfs: use %px for data pointers when debugging")
+> Helge Deller      04903c06b4854d ("parisc: Show unhashed HPA of Dino chip")
+>
+> To quote Matthew, with respect to any debug prints:
+> If an attacker can force this message to be printed, we've already lost.
 
-> 
-> Do we have a better way to handle this?
-> 
->> Otherwise, you need to mess with having multiple "types" of struct
->> device all associated with the same bus.  It is possible, and not that
->> hard, but I don't think you are doing that here.
->>
->> thnaks,
->>
->> greg k-h
-> 
+I think the issue with using %px in debug code is that a distro may enable
+CONFIG_DYNAMIC_DEBUG (it is enabled in several defconfigs), after which
+an attacker just has to convince/trick the system into enabling debug for that
+particular driver.
 
+> In any case, I won't be affected much if the change is not accepted,
+> since it doesn't resolve any major issue on my end. Thanks!
+
+OK.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
