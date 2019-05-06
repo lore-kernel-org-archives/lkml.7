@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D0CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC87C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DEDA20C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EFD20C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153676;
-	bh=Xph91PTElbhPBg+/XmzDzojimsGgbX/H+wKp2q6B6tw=;
+	s=default; t=1557153682;
+	bh=sx1pPAWwYCqiei8ugsKwF71A33BMH82+O9H5YI+MoGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RSywgwVmssydyevYXePn3ezIRSWPLfmDFUABC0Z4oYiRmqUk5YBQXBcv0L/ru+QlK
-	 L6BR7m+tlwCwPd4YSm1VyoW85mNcs2N6inoT9Ew+hDwymX08xVvF5aC6vU7MALip3A
-	 dZ8ZuQAnPPNg+4iaMJqRsbkPQCRatRfHiGF8b+lw=
+	b=CDUCF0kJIVZXF0pVzZ3ui2tC6pe+OjCv8QAtylJ+J+iQk38gKifIN+jqW50u/NkKZ
+	 tGmDHtl1yvGz+1QsT8n5tCGkyTSdvceItRMNaFH6MgPNVoHcFuFkRwPJFlbIrb6sBP
+	 VB1nGIHBJxAq4D7krCF/QCuHo78FDlJ+AB/V7zzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbfEFOlP (ORCPT
+        id S1728217AbfEFOlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:41:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35058 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:41:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfEFOlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:13 -0400
+        id S1728208AbfEFOlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:41:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0566920449;
-        Mon,  6 May 2019 14:41:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4155A2087F;
+        Mon,  6 May 2019 14:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153672;
-        bh=Xph91PTElbhPBg+/XmzDzojimsGgbX/H+wKp2q6B6tw=;
+        s=default; t=1557153677;
+        bh=sx1pPAWwYCqiei8ugsKwF71A33BMH82+O9H5YI+MoGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FOu2mrmBpzSLg876fbw8QkL42F954aKJL7lgjhzrL2yy1eiGG1v9X4ww2LLQBYICU
-         oWb02tm8XSeOtjCoAh295y0MDqx/cvDj0IC2ILAd5/4DKWqz6cXI2ii5c3QQB26eUL
-         DnPQLPlrnLrDe6m/uwHSQny8w/NTj53w2onlLdfs=
+        b=oSqeyZzfwWYEXtLh+BIjVr44VTfk3uMw3YbCrbI8IJdoT2lkgOCRzT6n8z83s6au4
+         lv74ZoxpAUn9KsO32CBu/xGjLIQ/5qD8cZ28VAFliSgCbEZrAeBldyAreIt0viDwi8
+         ZOcA4KV8cnBF5ER+sEMbIdSwhqeesGC8JNN2sw+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Long Li <longli@microsoft.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
+        Wei Li <liwei391@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 52/99] scsi: storvsc: Fix calculation of sub-channel count
-Date:   Mon,  6 May 2019 16:32:25 +0200
-Message-Id: <20190506143058.787872410@linuxfoundation.org>
+Subject: [PATCH 4.19 54/99] arm64: fix wrong check of on_sdei_stack in nmi context
+Date:   Mon,  6 May 2019 16:32:27 +0200
+Message-Id: <20190506143058.974732530@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -62,56 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 382e06d11e075a40b4094b6ef809f8d4bcc7ab2a ]
+[ Upstream commit 1c41860864c8ae0387ef7d44f0000e99cbb2e06d ]
 
-When the number of sub-channels offered by Hyper-V is >= the number of CPUs
-in the VM, calculate the correct number of sub-channels.  The current code
-produces one too many.
+When doing unwind_frame() in the context of pseudo nmi (need enable
+CONFIG_ARM64_PSEUDO_NMI), reaching the bottom of the stack (fp == 0,
+pc != 0), function on_sdei_stack() will return true while the sdei acpi
+table is not inited in fact. This will cause a "NULL pointer dereference"
+oops when going on.
 
-This scenario arises only when the number of CPUs is artificially
-restricted (for example, with maxcpus=<n> on the kernel boot line), because
-Hyper-V normally offers a sub-channel count < number of CPUs.  While the
-current code doesn't break, the extra sub-channel is unbalanced across the
-CPUs (for example, a total of 5 channels on a VM with 4 CPUs).
-
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Long Li <longli@microsoft.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Julien Thierry <julien.thierry@arm.com>
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/storvsc_drv.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/sdei.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index f03dc03a42c3..0c2ba075bc71 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -664,13 +664,22 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
- static void  handle_multichannel_storage(struct hv_device *device, int max_chns)
- {
- 	struct storvsc_device *stor_device;
--	int num_cpus = num_online_cpus();
- 	int num_sc;
- 	struct storvsc_cmd_request *request;
- 	struct vstor_packet *vstor_packet;
- 	int ret, t;
+diff --git a/arch/arm64/kernel/sdei.c b/arch/arm64/kernel/sdei.c
+index 5ba4465e44f0..ea94cf8f9dc6 100644
+--- a/arch/arm64/kernel/sdei.c
++++ b/arch/arm64/kernel/sdei.c
+@@ -94,6 +94,9 @@ static bool on_sdei_normal_stack(unsigned long sp, struct stack_info *info)
+ 	unsigned long low = (unsigned long)raw_cpu_read(sdei_stack_normal_ptr);
+ 	unsigned long high = low + SDEI_STACK_SIZE;
  
--	num_sc = ((max_chns > num_cpus) ? num_cpus : max_chns);
-+	/*
-+	 * If the number of CPUs is artificially restricted, such as
-+	 * with maxcpus=1 on the kernel boot line, Hyper-V could offer
-+	 * sub-channels >= the number of CPUs. These sub-channels
-+	 * should not be created. The primary channel is already created
-+	 * and assigned to one CPU, so check against # CPUs - 1.
-+	 */
-+	num_sc = min((int)(num_online_cpus() - 1), max_chns);
-+	if (!num_sc)
-+		return;
++	if (!low)
++		return false;
 +
- 	stor_device = get_out_stor_device(device);
- 	if (!stor_device)
- 		return;
+ 	if (sp < low || sp >= high)
+ 		return false;
+ 
+@@ -111,6 +114,9 @@ static bool on_sdei_critical_stack(unsigned long sp, struct stack_info *info)
+ 	unsigned long low = (unsigned long)raw_cpu_read(sdei_stack_critical_ptr);
+ 	unsigned long high = low + SDEI_STACK_SIZE;
+ 
++	if (!low)
++		return false;
++
+ 	if (sp < low || sp >= high)
+ 		return false;
+ 
 -- 
 2.20.1
 
