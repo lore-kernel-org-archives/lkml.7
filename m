@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4529C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E989FC04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 872342053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCACD20C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154755;
-	bh=x1SGsy91AKrsrjIUaUkvzSRneNijMtxzmwlNUSfBJuw=;
+	s=default; t=1557154756;
+	bh=jVq50ngoBQtpoEA3AFOE9PiGPI6r0ej24GoE2XKlPuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p98roxO82gRD2NcA3/X2YZsZ9DlWqR5XOLV3iCGAe0UwzFOgj4aeOZ/3mnlKqOBIX
-	 sdIcYxTf+Dso8ma7rw4QlO1BxOvpDfiIAMzpCWGT0k+I9wgrGYm6NAMeScBFTsZFHS
-	 JQS19UMzXErIGCrMFsPDJDxLm+hA/9PRT2r1KO9Q=
+	b=ifhpXa+VwvuYZiyRjW04zFV45xCpw55plAYmFmVBN86jkRb0rXk7GR66tADbndyXn
+	 MrMERMNUKiWSeojyM9X5ig4KcMcrUsJTO2VETUsfecWbKdCy9AJgGYOCriwtYRXHZ3
+	 Hk6nwL0IwVQPZqjn9FeFd/tfF81LwCsSU9Xs8DB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfEFOnO (ORCPT
+        id S1728626AbfEFO7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:43:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38488 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728612AbfEFOnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:08 -0400
+        id S1728630AbfEFOnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C6862087F;
-        Mon,  6 May 2019 14:43:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6DF921019;
+        Mon,  6 May 2019 14:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153787;
-        bh=x1SGsy91AKrsrjIUaUkvzSRneNijMtxzmwlNUSfBJuw=;
+        s=default; t=1557153794;
+        bh=jVq50ngoBQtpoEA3AFOE9PiGPI6r0ej24GoE2XKlPuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kTYlneADmzO0tcUX+12AKStfRJghZqiwf3Qr+LGsi4+fN+atm7Am36EYrjcnz0HNh
-         /SFErvoCqAdu9NePD39LClmoVz+t854i8TbwNmR5pg6gBom4FxHdyhpevOYbFRqory
-         UPMb26/EWrcTp0cGzhxMMRQuPelkDW9TVB12/5Z0=
+        b=P1MLc1pwPRR9Q1cvwbUuw0gi2y+joOIRiyIq5D6mf45yRfAf5ovC2AVHo9HajM/Wr
+         UC67TDnY9uMEsqi8bfmFxTMVP/8FwwadlDmXkTcs5J4icMEMpsrgVPE8m5EXsMb/Ud
+         GUj8zUU4wdi3QVrtYZvh/rZtnHliOg1WPUE+QKRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 65/99] xsysace: Fix error handling in ace_setup
-Date:   Mon,  6 May 2019 16:32:38 +0200
-Message-Id: <20190506143100.027909452@linuxfoundation.org>
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 57/99] net: hns: Fix probabilistic memory overwrite when HNS driver initialized
+Date:   Mon,  6 May 2019 16:32:30 +0200
+Message-Id: <20190506143059.236130025@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -60,83 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 47b16820c490149c2923e8474048f2c6e7557cab ]
+[ Upstream commit c0b0984426814f3a9251873b689e67d34d8ccd84 ]
 
-If xace hardware reports a bad version number, the error handling code
-in ace_setup() calls put_disk(), followed by queue cleanup. However, since
-the disk data structure has the queue pointer set, put_disk() also
-cleans and releases the queue. This results in blk_cleanup_queue()
-accessing an already released data structure, which in turn may result
-in a crash such as the following.
+When reboot the system again and again, may cause a memory
+overwrite.
 
-[   10.681671] BUG: Kernel NULL pointer dereference at 0x00000040
-[   10.681826] Faulting instruction address: 0xc0431480
-[   10.682072] Oops: Kernel access of bad area, sig: 11 [#1]
-[   10.682251] BE PAGE_SIZE=4K PREEMPT Xilinx Virtex440
-[   10.682387] Modules linked in:
-[   10.682528] CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.0.0-rc6-next-20190218+ #2
-[   10.682733] NIP:  c0431480 LR: c043147c CTR: c0422ad8
-[   10.682863] REGS: cf82fbe0 TRAP: 0300   Tainted: G        W          (5.0.0-rc6-next-20190218+)
-[   10.683065] MSR:  00029000 <CE,EE,ME>  CR: 22000222  XER: 00000000
-[   10.683236] DEAR: 00000040 ESR: 00000000
-[   10.683236] GPR00: c043147c cf82fc90 cf82ccc0 00000000 00000000 00000000 00000002 00000000
-[   10.683236] GPR08: 00000000 00000000 c04310bc 00000000 22000222 00000000 c0002c54 00000000
-[   10.683236] GPR16: 00000000 00000001 c09aa39c c09021b0 c09021dc 00000007 c0a68c08 00000000
-[   10.683236] GPR24: 00000001 ced6d400 ced6dcf0 c0815d9c 00000000 00000000 00000000 cedf0800
-[   10.684331] NIP [c0431480] blk_mq_run_hw_queue+0x28/0x114
-[   10.684473] LR [c043147c] blk_mq_run_hw_queue+0x24/0x114
-[   10.684602] Call Trace:
-[   10.684671] [cf82fc90] [c043147c] blk_mq_run_hw_queue+0x24/0x114 (unreliable)
-[   10.684854] [cf82fcc0] [c04315bc] blk_mq_run_hw_queues+0x50/0x7c
-[   10.685002] [cf82fce0] [c0422b24] blk_set_queue_dying+0x30/0x68
-[   10.685154] [cf82fcf0] [c0423ec0] blk_cleanup_queue+0x34/0x14c
-[   10.685306] [cf82fd10] [c054d73c] ace_probe+0x3dc/0x508
-[   10.685445] [cf82fd50] [c052d740] platform_drv_probe+0x4c/0xb8
-[   10.685592] [cf82fd70] [c052abb0] really_probe+0x20c/0x32c
-[   10.685728] [cf82fda0] [c052ae58] driver_probe_device+0x68/0x464
-[   10.685877] [cf82fdc0] [c052b500] device_driver_attach+0xb4/0xe4
-[   10.686024] [cf82fde0] [c052b5dc] __driver_attach+0xac/0xfc
-[   10.686161] [cf82fe00] [c0528428] bus_for_each_dev+0x80/0xc0
-[   10.686314] [cf82fe30] [c0529b3c] bus_add_driver+0x144/0x234
-[   10.686457] [cf82fe50] [c052c46c] driver_register+0x88/0x15c
-[   10.686610] [cf82fe60] [c09de288] ace_init+0x4c/0xac
-[   10.686742] [cf82fe80] [c0002730] do_one_initcall+0xac/0x330
-[   10.686888] [cf82fee0] [c09aafd0] kernel_init_freeable+0x34c/0x478
-[   10.687043] [cf82ff30] [c0002c6c] kernel_init+0x18/0x114
-[   10.687188] [cf82ff40] [c000f2f0] ret_from_kernel_thread+0x14/0x1c
-[   10.687349] Instruction dump:
-[   10.687435] 3863ffd4 4bfffd70 9421ffd0 7c0802a6 93c10028 7c9e2378 93e1002c 38810008
-[   10.687637] 7c7f1b78 90010034 4bfffc25 813f008c <81290040> 75290100 4182002c 80810008
-[   10.688056] ---[ end trace 13c9ff51d41b9d40 ]---
+[   15.638922] systemd[1]: Reached target Swap.
+[   15.667561] tun: Universal TUN/TAP device driver, 1.6
+[   15.676756] Bridge firewalling registered
+[   17.344135] Unable to handle kernel paging request at virtual address 0000000200000040
+[   17.352179] Mem abort info:
+[   17.355007]   ESR = 0x96000004
+[   17.358105]   Exception class = DABT (current EL), IL = 32 bits
+[   17.364112]   SET = 0, FnV = 0
+[   17.367209]   EA = 0, S1PTW = 0
+[   17.370393] Data abort info:
+[   17.373315]   ISV = 0, ISS = 0x00000004
+[   17.377206]   CM = 0, WnR = 0
+[   17.380214] user pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
+[   17.386926] [0000000200000040] pgd=0000000000000000
+[   17.391878] Internal error: Oops: 96000004 [#1] SMP
+[   17.396824] CPU: 23 PID: 95 Comm: kworker/u130:0 Tainted: G            E     4.19.25-1.2.78.aarch64 #1
+[   17.414175] Hardware name: Huawei TaiShan 2280 /BC11SPCD, BIOS 1.54 08/16/2018
+[   17.425615] Workqueue: events_unbound async_run_entry_fn
+[   17.435151] pstate: 00000005 (nzcv daif -PAN -UAO)
+[   17.444139] pc : __mutex_lock.isra.1+0x74/0x540
+[   17.453002] lr : __mutex_lock.isra.1+0x3c/0x540
+[   17.461701] sp : ffff000100d9bb60
+[   17.469146] x29: ffff000100d9bb60 x28: 0000000000000000
+[   17.478547] x27: 0000000000000000 x26: ffff802fb8945000
+[   17.488063] x25: 0000000000000000 x24: ffff802fa32081a8
+[   17.497381] x23: 0000000000000002 x22: ffff801fa2b15220
+[   17.506701] x21: ffff000009809000 x20: ffff802fa23a0888
+[   17.515980] x19: ffff801fa2b15220 x18: 0000000000000000
+[   17.525272] x17: 0000000200000000 x16: 0000000200000000
+[   17.534511] x15: 0000000000000000 x14: 0000000000000000
+[   17.543652] x13: ffff000008d95db8 x12: 000000000000000d
+[   17.552780] x11: ffff000008d95d90 x10: 0000000000000b00
+[   17.561819] x9 : ffff000100d9bb90 x8 : ffff802fb89d6560
+[   17.570829] x7 : 0000000000000004 x6 : 00000004a1801d05
+[   17.579839] x5 : 0000000000000000 x4 : 0000000000000000
+[   17.588852] x3 : ffff802fb89d5a00 x2 : 0000000000000000
+[   17.597734] x1 : 0000000200000000 x0 : 0000000200000000
+[   17.606631] Process kworker/u130:0 (pid: 95, stack limit = 0x(____ptrval____))
+[   17.617438] Call trace:
+[   17.623349]  __mutex_lock.isra.1+0x74/0x540
+[   17.630927]  __mutex_lock_slowpath+0x24/0x30
+[   17.638602]  mutex_lock+0x50/0x60
+[   17.645295]  drain_workqueue+0x34/0x198
+[   17.652623]  __sas_drain_work+0x7c/0x168
+[   17.659903]  sas_drain_work+0x60/0x68
+[   17.666947]  hisi_sas_scan_finished+0x30/0x40 [hisi_sas_main]
+[   17.676129]  do_scsi_scan_host+0x70/0xb0
+[   17.683534]  do_scan_async+0x20/0x228
+[   17.690586]  async_run_entry_fn+0x4c/0x1d0
+[   17.697997]  process_one_work+0x1b4/0x3f8
+[   17.705296]  worker_thread+0x54/0x470
 
-Fix the problem by setting the disk queue pointer to NULL before calling
-put_disk(). A more comprehensive fix might be to rearrange the code
-to check the hardware version before initializing data structures,
-but I don't know if this would have undesirable side effects, and
-it would increase the complexity of backporting the fix to older kernels.
+Every time the call trace is not the same, but the overwrite address
+is always the same:
+Unable to handle kernel paging request at virtual address 0000000200000040
 
-Fixes: 74489a91dd43a ("Add support for Xilinx SystemACE CompactFlash interface")
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The root cause is, when write the reg XGMAC_MAC_TX_LF_RF_CONTROL_REG,
+didn't use the io_base offset.
+
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/xsysace.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
-index c24589414c75..0f36db0cf74a 100644
---- a/drivers/block/xsysace.c
-+++ b/drivers/block/xsysace.c
-@@ -1063,6 +1063,8 @@ static int ace_setup(struct ace_device *ace)
- 	return 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
+index ba4316910dea..a60f207768fc 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
+@@ -129,7 +129,7 @@ static void hns_xgmac_lf_rf_control_init(struct mac_driver *mac_drv)
+ 	dsaf_set_bit(val, XGMAC_UNIDIR_EN_B, 0);
+ 	dsaf_set_bit(val, XGMAC_RF_TX_EN_B, 1);
+ 	dsaf_set_field(val, XGMAC_LF_RF_INSERT_M, XGMAC_LF_RF_INSERT_S, 0);
+-	dsaf_write_reg(mac_drv, XGMAC_MAC_TX_LF_RF_CONTROL_REG, val);
++	dsaf_write_dev(mac_drv, XGMAC_MAC_TX_LF_RF_CONTROL_REG, val);
+ }
  
- err_read:
-+	/* prevent double queue cleanup */
-+	ace->gd->queue = NULL;
- 	put_disk(ace->gd);
- err_alloc_disk:
- 	blk_cleanup_queue(ace->queue);
+ /**
 -- 
 2.20.1
 
