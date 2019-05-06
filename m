@@ -7,67 +7,61 @@ X-Spam-Status: No, score=-1.5 required=3.0 tests=DATE_IN_PAST_03_06,
 	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21812C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3468CC04AB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C142087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A5D2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557128276;
-	bh=miGkatXHtioLnQgqzhowFjMzG9oQCfMzr4FBW9BO1Pk=;
+	s=default; t=1557128297;
+	bh=OXkh92WoJxCetKWr4gv5KeiDYO9V6OnVZCUYljGGixo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d/Z3XNlgqajDfns1QfUdDcYchlMA5lwKstK/TZWNpstBNRtT3mKP1FsBjMZrtgDcD
-	 oX17NydR5Dir21VcXpdFflnL2BOzv2b2tXhPcVZX4k0hktIjNGZX5Y8g6CS7q17jVR
-	 SxhWJNg1Ka7i/5iehzUJdWX9IJbQIMR//AsJGLZU=
+	b=Q0WSI/txYiYFRF3N/Eg/OxhjyAhNLk/64YttGwkn+8wAeWvjFmv9DH+v5uE08gApB
+	 uuilLUG5/8OUrpksMBTE4u4R41skd2+7+hu602VmJAP1XO2TaClrC7+QWtvkJcO7+a
+	 Yr13cQCAvRW0qHfGhpZwQsSg4FA5Gd/MBT+LakIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfEFHhz (ORCPT
+        id S1726503AbfEFHiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:37:55 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39164 "EHLO
+        Mon, 6 May 2019 03:38:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38894 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbfEFHhx (ORCPT
+        with ESMTP id S1725864AbfEFHho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:37:53 -0400
+        Mon, 6 May 2019 03:37:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
         MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MlFyerrYRCSvPhKw2U+CT72hE7v7yaWVoYGE318wXPc=; b=N1euGcYiwa2CPfRpDTB2kTUHI
-        3sBVaJ2Rw9Z5DDgVI4HY/3r4mDZCa5xj1+kGB6PX58BCiHIa7Gom+vBUyS3TDJlQhHQnq84ccmLJz
-        WlwLAM+JS+XliWoOWhIB7QYZu+JlGFRqdv/AQTdE477BIRPZ1mXfYDzbBE3/F0EA3NmBQ=;
+         bh=tzpXHk7pggK3a6IReCA75UnDglv4kzjtwAX41NwuIs4=; b=NjHcG+e5mciylrLgGpMM5XvoQ
+        xOog8IPCBf1UzwcpqaA6fQTHSG8iv9C6CvC2qOUWzWc1Idw1jS0qia5310WtllkAjfaM+7p5dv1QQ
+        FniGskOBWOn5W4M7Dick338AZbeW9tlV5ueQYGHR76aN7OvKeA+i2lFdJW9zctVOk0mJ4=;
 Received: from kd111239184067.au-net.ne.jp ([111.239.184.67] helo=finisterre.ee.mobilebroadband)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hNYBt-0000s0-8z; Mon, 06 May 2019 07:37:37 +0000
+        id 1hNYBt-0000s1-90; Mon, 06 May 2019 07:37:37 +0000
 Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 1D8B2441D3C; Mon,  6 May 2019 04:37:33 +0100 (BST)
-Date:   Mon, 6 May 2019 12:37:33 +0900
+        id 7342C441D41; Mon,  6 May 2019 04:53:45 +0100 (BST)
+Date:   Mon, 6 May 2019 12:53:45 +0900
 From:   Mark Brown <broonie@kernel.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, srv_heupstream@mediatek.com
-Subject: Re: [PATCH v3 07/10] regulator: mt6358: Add support for MT6358
- regulator
-Message-ID: <20190506033733.GH14916@sirena.org.uk>
-References: <20190503093117.54830-1-hsin-hsiung.wang@mediatek.com>
- <20190503093117.54830-8-hsin-hsiung.wang@mediatek.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     Nicolin Chen <nicoleotsuka@gmail.com>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V4] ASoC: fsl_esai: Add pm runtime function
+Message-ID: <20190506035345.GJ14916@sirena.org.uk>
+References: <VE1PR04MB64794DF2979F3AD350A9EB3DE3370@VE1PR04MB6479.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RbAp84Sx/Z5HOs1D"
+        protocol="application/pgp-signature"; boundary="7e8BFhNxqpjiNKz7"
 Content-Disposition: inline
-In-Reply-To: <20190503093117.54830-8-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <VE1PR04MB64794DF2979F3AD350A9EB3DE3370@VE1PR04MB6479.eurprd04.prod.outlook.com>
 X-Cookie: -- I have seen the FUN --
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,89 +70,38 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---RbAp84Sx/Z5HOs1D
+--7e8BFhNxqpjiNKz7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, May 03, 2019 at 05:31:14PM +0800, Hsin-Hsiung Wang wrote:
+On Sun, May 05, 2019 at 03:28:59AM +0000, S.j. Wang wrote:
 
-A few fairly minor things but mostly this looks good.
+> We find that maybe it is caused by the Transfer-Encoding format.
+> We sent the patch by the  --transfer-encoding=8bit, but in the receiver side
+> it shows:
+]
+> Content-Type: text/plain; charset="utf-8"
+> Content-Transfer-Encoding: base64
 
-> +static const u32 vcama1_voltages[] = {
-> +	1800000, 2500000, 2700000,
-> +	2800000, 2900000, 3000000,
-> +};
+> It may be caused by our company's mail server. We are checking...
 
-> +static const u32 vcama2_voltages[] = {
-> +	1800000, 2500000, 2700000,
-> +	2800000, 2900000, 3000000,
-> +};
-> +
+Ah, that looks likely...  not sure I have any great suggestions for how
+to resolve it but at least it looks like progress on figuring out the
+cause, I haven't been able to see anything wrong locally.
 
-These two tables look the same?
-
-> +static int mt6358_get_voltage_sel(struct regulator_dev *rdev)
-> +{
-> +	int idx, ret;
-> +	u32 selector;
-> +	struct mt6358_regulator_info *info = rdev_get_drvdata(rdev);
-> +	const u32 *pvol;
-> +
-> +	ret = regmap_read(rdev->regmap, info->desc.vsel_reg, &selector);
-> +	if (ret != 0) {
-> +		dev_info(&rdev->dev,
-> +			 "Failed to get mt6358 %s vsel reg: %d\n",
-> +			 info->desc.name, ret);
-> +		return ret;
-> +	}
-> +
-> +	selector = (selector & info->desc.vsel_mask) >> info->vsel_shift;
-> +	pvol = (const u32 *)info->index_table;
-> +	ret = -1;
-> +	for (idx = 0; idx < info->desc.n_voltages; idx++) {
-> +		if (pvol[idx] == selector) {
-> +			ret = idx;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-
-I don't entirely understand what this is intended to do which suggests
-it could use some comments.  As far as I can tell it's looking up the
-hardware selector in a table and then using the index of the entry in
-that table as the selector in order to deal with a sparse set of
-selectors, is that right?  You should be able to handle this by having
-_list_voltage() return an error code for the invalid selectors though we
-don't have helpers for that yet as it's an unusual design.
-
-Also -1 is not a good return value in the case where you fail to do a
-mapping, use -EINVAL.
-
-> +	ret = regmap_read(rdev->regmap, info->da_vsel_reg, &regval);
-> +	if (ret != 0) {
-> +		dev_info(&rdev->dev,
-> +			 "Failed to get mt6358 Buck %s vsel reg: %d\n",
-> +			 info->desc.name, ret);
-> +		return ret;
-> +	}
-
-These error messages should be dev_err().
-
---RbAp84Sx/Z5HOs1D
+--7e8BFhNxqpjiNKz7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzPq/oACgkQJNaLcl1U
-h9BktAf/aapG5sI3j3lduVVaxhPGb7OblQA1/rmv6rhzowc0XcjywrRfMMlL6sep
-mS9qN1bqSNfzF9jPmK9OZS012K04jHqCbDzeJ8tJbRdq1SXNO0KpIukzTaPghrsc
-I42t/n4iqmnDtVyHRlBmhIpzeeJPdghqNRL+Q0WnBFEAtCjMq3TBXasmbEqPNFBs
-zMZHo7/pfbBJfeNiVYj4Z9Fujt9G1cLEiG0386sgTZLt2GXC1tFk5nsh1Z7dJppa
-U+L2jM+HMVU9ylQcVEMzsJx//3eEQHBMvGL18tkGtjU8zWnYUpue/A4MKziwwRyI
-WXOx4oPTy0KypDnnAhOZhT12VM+D1g==
-=otJk
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzPr8gACgkQJNaLcl1U
+h9DVeQf7ByKyqDU+F0dmHJsGDAll4nFkuDLq9wax+i1rjUCghvBhzq+0tNPf51Dk
+oJT0+OmCtKJcYIu4Z7OsLBDr75SiQE83YxdWnaAGik49IJUA7ggTXCtXfpLcs2Vy
+VtPc2H969t2crPjYI3AkUIJzYHB2GCwgsWvKmDeWS0c6Sb55eN5DptFsS6UuPcrI
+CCOhBJvO9P85bBNjkMRAla+SM6GV77Uq5DC4iV7ert68gwp8pRVdMY1sNTx9J7BZ
+soqk2U9xLPJtJUeZs89WKZy8mCW1BtFuvQAvt1W/mNJmkWWedc4FkAQgHV3b/pIn
+z4slaJ2AqBkaAIC0hq6wGq8dKSVecQ==
+=/QHA
 -----END PGP SIGNATURE-----
 
---RbAp84Sx/Z5HOs1D--
+--7e8BFhNxqpjiNKz7--
