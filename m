@@ -2,115 +2,159 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E3CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9289EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F712205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:14:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="txS+4YeG"
+	by mail.kernel.org (Postfix) with ESMTP id 6524B2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557159461;
+	bh=xO41kDz7NLVIkD2y/X2X2tZPi0d+n5DsS8gVh34nHrU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=juSVlw+xgVFghv9WdUqpQZpcb+acROBeW8/VRxLwKG5jiRqCbbuYRPcrcCPnuZEyW
+	 g4W7f308fZL6gvd7pK8wMl+9GJ3+jJI+BPN62mw2ylDl23AZAeh+9i48yDED1Onlza
+	 xxnbNvj/xf0stKKDy7s4su1YXIbR4KU20rSSVGm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfEFQOp (ORCPT
+        id S1726451AbfEFQRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:14:45 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45910 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfEFQOo (ORCPT
+        Mon, 6 May 2019 12:17:40 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35519 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfEFQRj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:14:44 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i21so6675889pgi.12
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:14:44 -0700 (PDT)
+        Mon, 6 May 2019 12:17:39 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j20so9603424lfh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:17:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z3pUfqa7gd7ssg4ALokCu3zp8vqsQw6UnB3He64S+ro=;
-        b=txS+4YeGY/H0S3mICXO5X0wIehkEzXdpri2XdKbPxIONUrrYDOQ/b5DcvhMMPHEY0r
-         KOfyyC3IEmPR2NHWqwych9DXW5MN64WHhTW2lyi1HzI6KRwVPWjbVxDG4Xn06HuG/K/K
-         6wa6cnUwNwfMqS98pUQElA4gw+kVzawQYbw5Y=
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gdKWMzG0jTPJKQefPY2Ldaf6Ms3KDojiEWREzp6GY/0=;
+        b=acUkx/SyXE0iTsaLBqBApazjPIDAcpKLa6eanB/pwg3/nd2wX7zX61gfnOb7YkZ3Ll
+         QSKrbp97fW9PaMvvakbU30HZC6d9E8ZxMJWyn8rtqBZLvZSLIjhpYOKX3sVWKA+T51pr
+         jCo9GXVhBGPddoOghrCGtgtxD8b+3ePfN7F28=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z3pUfqa7gd7ssg4ALokCu3zp8vqsQw6UnB3He64S+ro=;
-        b=udJR2KzNYcZZuiblB8aMTQM40bIHxWZTJgG7Sstn2KHnOAUe8GYTLrp/Ldn60UEZAv
-         NUhZ3LrwiPrh+AyPMFPrgBx7gFAK1ILDb+hO4GfLsab0y3a6tmMXGQZAEX9iIotrFnMR
-         W9FyqlhV1gY3L+2v3C07RcvvShW+I8ZXfwdwmILFwtE+OXVnABo/ano16xPb3GZwwXiU
-         AUBN+19u2/nCBgpAnf7Ds3WEI1EMjzTuqtU8dMdo8BoZrs8wW4wWHfl5OkE5DbBCe8nq
-         rV6xUu8KQRXZc51WCAYE5DWHCfQK2O5a/4BsOT1nx5txq06KNVQJy2uWa2JHUtoxcgmB
-         R57A==
-X-Gm-Message-State: APjAAAWQu/ABl4Kwu0Gc0IH6u0WkNXkWTnJlhB3QElHKMx6s3BlUq9In
-        bGGA9wKl4V6g436mk1G+KqzMgA==
-X-Google-Smtp-Source: APXvYqzDM4UBpLP79cwiwJXWz9mzogsUcq++jnwygx905NSVdBAvAy2weNCMHUIvOQCc2MgQKU+Bow==
-X-Received: by 2002:a63:6b49:: with SMTP id g70mr33374565pgc.340.1557159283609;
-        Mon, 06 May 2019 09:14:43 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id h127sm14371516pgc.31.2019.05.06.09.14.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 09:14:41 -0700 (PDT)
-Date:   Mon, 6 May 2019 12:14:29 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Michal Gregorczyk <michalgr@live.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
-Message-ID: <20190506161429.GB234965@google.com>
-References: <20190502204958.7868-1-joel@joelfernandes.org>
- <20190506234751.65c92139dccbfa025bdfe300@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gdKWMzG0jTPJKQefPY2Ldaf6Ms3KDojiEWREzp6GY/0=;
+        b=GTNrUUJnTi3H3RA0k4Lj6/degxMQ/TRZ3WB47CvWVMWMV83ZLj6+RuspiSDuHNRyFV
+         M16WtjC83CHVY25PLgqCStcCbru7tg+rqK4XaYe7lz6tNRDm9GMN2GvVc9ZhbKuVkOV5
+         05U9LRtBssciGiz7C9WAdIREqPURwsrXgAUs07hyFQ7qgZwqqGNeTCQQgG5G17yHoGzH
+         AIoDHD+XHv7Ij8RfgIPkNwYdEI+95gXzY8AXVppNuEozFYL0jhLW7/US/ATKLQFy/FKs
+         uHRMU6RfALVBPQ1zEaTHt9QR9bZiMDc4QbMdt5F/hal1+nsrgJjmRgZ3yimuEdovXNWW
+         kDXw==
+X-Gm-Message-State: APjAAAVNb8SMwLmQ/OkFK/2bSnPT0CixPrUXKNO/u9ePme5RaWXXSUj/
+        kWkHOjAVrcGLjhgHpP4XbcrddTC1Iuo=
+X-Google-Smtp-Source: APXvYqzATtAWbt+Pn9TiO+/EFI/LCOUUmNwpYl+1XR6QyAnZ0t6rrELE9FHcf21LwljLagcUHsj4UA==
+X-Received: by 2002:a19:96:: with SMTP id 144mr11189347lfa.29.1557159457137;
+        Mon, 06 May 2019 09:17:37 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id n9sm2552533lfl.35.2019.05.06.09.17.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 09:17:36 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id j20so9603366lfh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:17:35 -0700 (PDT)
+X-Received: by 2002:a19:ec07:: with SMTP id b7mr7420419lfa.62.1557159455483;
+ Mon, 06 May 2019 09:17:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506234751.65c92139dccbfa025bdfe300@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
+ <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
+ <20190502202146.GZ2623@hirez.programming.kicks-ass.net> <20190502185225.0cdfc8bc@gandalf.local.home>
+ <20190502193129.664c5b2e@gandalf.local.home> <20190502195052.0af473cf@gandalf.local.home>
+ <20190503092959.GB2623@hirez.programming.kicks-ass.net> <20190503092247.20cc1ff0@gandalf.local.home>
+ <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net> <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
+ <20190506081951.GJ2606@hirez.programming.kicks-ass.net> <20190506095631.6f71ad7c@gandalf.local.home>
+In-Reply-To: <20190506095631.6f71ad7c@gandalf.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 6 May 2019 09:17:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
+Message-ID: <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 11:47:51PM +0900, Masami Hiramatsu wrote:
-> Hi Joel,
-> 
-> On Thu,  2 May 2019 16:49:58 -0400
-> "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
-> 
-> > The eBPF based opensnoop tool fails to read the file path string passed
-> > to the do_sys_open function. This is because it is a pointer to
-> > userspace address and causes an -EFAULT when read with
-> > probe_kernel_read. This is not an issue when running the tool on x86 but
-> > is an issue on arm64. This patch adds a new bpf function call based
-> > which calls the recently proposed probe_user_read function [1].
-> > Using this function call from opensnoop fixes the issue on arm64.
-> > 
-> > [1] https://lore.kernel.org/patchwork/patch/1051588/
-> 
-> Anyway, this series is still out-of-tree. We have to push this or similar
-> update into kernel at first. I can resend v7 on the latest -tip tree including
-> this patch if you update the description.
+On Mon, May 6, 2019 at 6:56 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> I can test this too. I was hoping to get this in by this merge window.
+> I spent 3 hours yesterday trying to get Linus's version working on
+> i386 with no success. Not sure how much time Linus will have to look at
+> this, as he just opened the merge window.
 
-Sounds good. I also have to split it up and add a deprecation for the old
-API. I will get this done today and then you can include them in your series,
-thanks! Once I send them, could you CC bpf maintainers on the patches too in
-the future? thanks.
+I acvtually just tested it in qemu, and it worked fine.
 
- - Joel
+Ok, so my test was admittedly really simple and stupid, in that al I did was
 
+        printk("Before int3\n");
+        asm("int3; nop; nop; nop; nop" : : :"ax","dx","cx");
+        printk("After int3\n");
+
+and then I hacked up do_kernel_int3() to just unconditionally do
+
+        return int3_emulate_call(regs, (unsigned long)test_int3);
+
+with a stupid test-function:
+
+    void test_int3(void)
+    {
+        printk("In int3 handler");
+    }
+
+instead fo anything fancy.
+
+But it did exactly the expected thing, and resulted in
+
+    Before int3
+    In int3 handler
+    After int3
+
+on the screen.
+
+So what is it that doesn't actually work? I've looked at the patch
+even more, and I can't for the life of me see how it wouldn't work.
+
+Of course, I didn't test any of the actual ftrace parts, since I
+short-circuited them intentionally with the above test function hack.
+I have no idea what the semantics for those
+ftrace_location(ip)/is_ftrace_caller(ip) cases are supposed to be, I
+only tested that yes, the infrastructure clearly emulates a call
+instruction.
+
+               Linus
