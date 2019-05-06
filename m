@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA066C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD22C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A0D2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB052053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154394;
-	bh=E3pP6r+Tt7mCCHRSN5hTQTQRqAJ1nkxxBBX51vIGfwc=;
+	s=default; t=1557154402;
+	bh=vbPwdDLTa7OrWI0SflkBBJ7iLeQtCJf62w+l948vi5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oxMEVm3bYq784OS4JnANVCaQzZI6b3j4HKhaRmpx4/cM2ju0ddsutm5EqMVd/Kx4X
-	 OiBkQKwas/QOuALiiLYdwCoqq1EtZY0sv9n0xOeyJGHOguJ7Rcz+LCDFgux4C5ipuL
-	 qaQwVUiDeDqusbR6/IXo17FMKabI+sieSVe/hW70=
+	b=zZzus3Q50/oVD//HyBIBsmlIG6o2IkVBOgT0MruLp1upONE47LJT54BDcxo+SzA2b
+	 47jaKk+plov+WivWey+pDDsLdmMYyBbkN3+z6a1utQZvbYOZXolPPKTjH453ko328L
+	 bJEGN7kDF9l0UnaCBwgk/suH+Lyl1gqhASXcbQEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbfEFOrj (ORCPT
+        id S1729326AbfEFOrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:47:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46834 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728555AbfEFOrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:32 -0400
+        id S1727382AbfEFOrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91CF921019;
-        Mon,  6 May 2019 14:47:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC8FC20449;
+        Mon,  6 May 2019 14:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154052;
-        bh=E3pP6r+Tt7mCCHRSN5hTQTQRqAJ1nkxxBBX51vIGfwc=;
+        s=default; t=1557154038;
+        bh=vbPwdDLTa7OrWI0SflkBBJ7iLeQtCJf62w+l948vi5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CiUUysFIgrI4scrfxs8IuPGjv/KPrvqh2vx0QPjBHmt0mOD3BTXXXOZTbKpnu22Pg
-         H8UoH9dmxwlSxn8sW9jGYigx98LtMLPdFD+ddkt17qQ34686B3BLIk9QqzCB4QFui/
-         sq1fVgr0YEvFChskALNuASNUaXCsriiKi6oER+nI=
+        b=a9qkcwulZLKR6zNcFJBYvGoS9Xa56qiqjXrNsesEpaB3rmDEXXbl8KAXRluVy8hle
+         rO44TB43iCc3+OmsN3u+kvcHY1rn2isUbsVvM6ZP3QfOkBLl18dP5f9YeWvCG1LWx1
+         xf421H83RbfifHERmKsKj3kgKGX4nLlWCgRHL36s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shmulik Ladkani <shmulik.ladkani@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 02/62] ipv4: ip_do_fragment: Preserve skb_iif during fragmentation
-Date:   Mon,  6 May 2019 16:32:33 +0200
-Message-Id: <20190506143051.313171027@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrey Konovalov <andreyknvl@google.com>
+Subject: [PATCH 4.9 15/62] kasan: avoid -Wmaybe-uninitialized warning
+Date:   Mon,  6 May 2019 16:32:46 +0200
+Message-Id: <20190506143052.384495640@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -60,42 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shmulik Ladkani <shmulik@metanetworks.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit d2f0c961148f65bc73eda72b9fa3a4e80973cb49 ]
+commit e7701557bfdd81ff44cab13a80439319a735d8e2 upstream.
 
-Previously, during fragmentation after forwarding, skb->skb_iif isn't
-preserved, i.e. 'ip_copy_metadata' does not copy skb_iif from given
-'from' skb.
+gcc-7 produces this warning:
 
-As a result, ip_do_fragment's creates fragments with zero skb_iif,
-leading to inconsistent behavior.
+  mm/kasan/report.c: In function 'kasan_report':
+  mm/kasan/report.c:351:3: error: 'info.first_bad_addr' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+     print_shadow_for_address(info->first_bad_addr);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  mm/kasan/report.c:360:27: note: 'info.first_bad_addr' was declared here
 
-Assume for example an eBPF program attached at tc egress (post
-forwarding) that examines __sk_buff->ingress_ifindex:
- - the correct iif is observed if forwarding path does not involve
-   fragmentation/refragmentation
- - a bogus iif is observed if forwarding path involves
-   fragmentation/refragmentatiom
+The code seems fine as we only print info.first_bad_addr when there is a
+shadow, and we always initialize it in that case, but this is relatively
+hard for gcc to figure out after the latest rework.
 
-Fix, by preserving skb_iif during 'ip_copy_metadata'.
+Adding an intialization to the most likely value together with the other
+struct members shuts up that warning.
 
-Signed-off-by: Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b235b9808664 ("kasan: unify report headers")
+Link: https://patchwork.kernel.org/patch/9641417/
+Link: http://lkml.kernel.org/r/20170725152739.4176967-1-arnd@arndb.de
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Suggested-by: Alexander Potapenko <glider@google.com>
+Suggested-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/ipv4/ip_output.c |    1 +
+ mm/kasan/report.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -492,6 +492,7 @@ static void ip_copy_metadata(struct sk_b
- 	to->pkt_type = from->pkt_type;
- 	to->priority = from->priority;
- 	to->protocol = from->protocol;
-+	to->skb_iif = from->skb_iif;
- 	skb_dst_drop(to);
- 	skb_dst_copy(to, from);
- 	to->dev = from->dev;
+--- a/mm/kasan/report.c
++++ b/mm/kasan/report.c
+@@ -302,6 +302,7 @@ void kasan_report(unsigned long addr, si
+ 	disable_trace_on_warning();
+ 
+ 	info.access_addr = (void *)addr;
++	info.first_bad_addr = (void *)addr;
+ 	info.access_size = size;
+ 	info.is_write = is_write;
+ 	info.ip = ip;
 
 
