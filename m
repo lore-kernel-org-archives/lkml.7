@@ -2,176 +2,153 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAB5C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6DFC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5AB32082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:33:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="HKsFzThl"
+	by mail.kernel.org (Postfix) with ESMTP id 2B0412082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557135309;
+	bh=huIACiIBjmWbSTxsLu9gbwVrno+enrHwzv+rYcwmQ1w=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=DQk+CQVT5Hq1uMOXM0RScFUHMHXADy8m8MJ26s1MwFMANcqv+grKk3rq6tduOmCqZ
+	 L0w95Op8wSl5mLLb9MpcnzJOZ5aL3cOH1SM2kqbEstI9ePVc9JtuCoMyg2UQ+uvbi9
+	 XC8ZoaWlZW06EG50uJm90Xjw/qOZaj7llLtKRiGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbfEFJd3 (ORCPT
+        id S1726386AbfEFJfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:33:29 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:54174 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfEFJd1 (ORCPT
+        Mon, 6 May 2019 05:35:08 -0400
+Received: from mail-wr1-f45.google.com ([209.85.221.45]:39863 "EHLO
+        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfEFJfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:33:27 -0400
-Received: by mail-it1-f195.google.com with SMTP id l10so19198110iti.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:33:27 -0700 (PDT)
+        Mon, 6 May 2019 05:35:07 -0400
+Received: by mail-wr1-f45.google.com with SMTP id v10so4072568wrt.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:35:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gyd/Ti2kNFqn57KrY+jJie0lDAypj1lVK7fphS1Bm7M=;
-        b=HKsFzThl5UWeChygjAOtiRYkHMtsyGBOPTcSmC+vo3Rm32ECFjRyNUWDPcIzhoy4Wf
-         YYkKqERL30biuuTmsK95DtLtLhsfmquox7B7WsSAMs92vIvpxcFh9m4T2bkRn8Bjn5lN
-         zE1+piUwnv4R43r5rHaMnAB+nQRO/IT8RT7Ig=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=awhhrnN2/+oxUF2NNig63hHj+UDu6IjGilpFCLNHsYc=;
+        b=thAZLvYifY0AML0erfiAC1u3F2RTmP3/msIYKbnNfcCyLlvwvk5eQPui1qSVjhkLKf
+         lhx6olM9LApDXJG/osmfaW/+bubFdLd27yUfpSgmOJI1QcLEDfAZtzAS3tHxF+M63PR0
+         /rZN1OStxvB4nPRxi40ofxNkpnwf+ACB7Lq2E5xEcQHLvHirA4I9kevtbaZ1x6wR4BGN
+         VQbaD4IrcKzBCehG0ENJWL7fuNGm5zxkZPs975LlaUTs7JjRsF7K0m0nk7PlT7oIrnyN
+         wGgQHdQS3CdWBiFoNHyhYMiUV7K4uaCjPOlIIsCWHOR1pxdsSKlpzADlWSGrl5b83zWR
+         PWmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gyd/Ti2kNFqn57KrY+jJie0lDAypj1lVK7fphS1Bm7M=;
-        b=U2/Rxb2Vgp65vj60nBAerUm+GO4dFyDGqmwXxUUg9qh/yWEcz568AFAoTe+mqfn6aO
-         SDA5bcC3+Yqh19Ra6OuPCxfMfopVtux3Fq3VTs9K3HOT+pV9npbEUIt/G6bkdhtsTcbg
-         vIb7c8ZnrXLte19uXE6L1GrHZZ19PJopziPHF4JiYw2LPAcSSqHTOKkwTkAoeEZkf924
-         lcFEFTyTlPquX+/eGxe9NBd+LG3GEekTVjsftsO7wewDdNOfSE9Tebko1bXjhaLCjtbj
-         ybW7ciUjJqpIjCOoEZOWtWGL5kel9JLYhCS89H12APe8Pm34AaKPYzuIXHKKr6/H8Zba
-         2MXg==
-X-Gm-Message-State: APjAAAVugUVbg1qGDeIOAwI+wL8tlYKkHvTQCh7BrWWLKAhmxHrS+4uA
-        kBxEp5woGWIgFnrRZaGOaNNiIYcLPIrlKXgpkHkC8g==
-X-Google-Smtp-Source: APXvYqx/SnEtjDy0ciVF4+liqkodEYASR4S6w603/eqwIhIS2Lvf6CSIQVgbf5ng1w20fkg51AF8ckTTLJqxn2r59Ac=
-X-Received: by 2002:a24:65cf:: with SMTP id u198mr6958544itb.32.1557135206826;
- Mon, 06 May 2019 02:33:26 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:content-transfer-encoding
+         :user-agent;
+        bh=awhhrnN2/+oxUF2NNig63hHj+UDu6IjGilpFCLNHsYc=;
+        b=h0ir4hqd8UsZCmMF5BS6EcTTW4IGaAVq+q7HUOrCse4lOr+GAdGQsuKPo9kWGOC9sc
+         7xjSUBEZuP2sE8HNtcPXMNB8Y+g4Ms8pXPmW6TbEH/2lw/HNIcv5WxdYZv4Rj74NU2yn
+         4mLXb0v7hI1szXYGaqq6H+I/5ONJNxLMGx5LvdUqN34aip4AfRqpYVg5yn/enIzZZVXs
+         RFfMt72yQy0RIoDWEI63yPB6Wk6YBphZotVqkp9TiaeXPGB+9CsDy3ATJxB6ozqSl0hG
+         npSNBMV59ZKsnsnmQa7k0Vuhr075OutVzgqjh4L9m3WJwBwkq0wCLCvtZiNmGG1GILo9
+         xSrA==
+X-Gm-Message-State: APjAAAV+Ldu4GbAdBrVmXXYvRc9w6DkD+ROdRUmDS6fR5DO8WHPVlyke
+        WBug+g4OWot20vctOQH7sse6JRB5
+X-Google-Smtp-Source: APXvYqyrujTuX8ge/NPahf0KLgmOo1CEQQ/zMSF03eg+PnSj9qmP6hbjeCZuHmRPCNocvva7WUtPpA==
+X-Received: by 2002:adf:e907:: with SMTP id f7mr10579427wrm.125.1557135305934;
+        Mon, 06 May 2019 02:35:05 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id 91sm15645125wrs.43.2019.05.06.02.35.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 02:35:05 -0700 (PDT)
+Date:   Mon, 6 May 2019 11:35:03 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/asm changes for v5.2
+Message-ID: <20190506093503.GA55099@gmail.com>
 MIME-Version: 1.0
-References: <20190503115928.27662-1-jagan@amarulasolutions.com> <20190503144651.ttqfha656dykqjzo@flea>
-In-Reply-To: <20190503144651.ttqfha656dykqjzo@flea>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Mon, 6 May 2019 15:03:15 +0530
-Message-ID: <CAMty3ZCQTiX5OvCG_uMRS02vFu0c1-bkcyauLD6oaFcd=y3RNA@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: allwinner: h6: orangepi-one-plus: Add Ethernet support
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 3, 2019 at 8:16 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Fri, May 03, 2019 at 05:29:28PM +0530, Jagan Teki wrote:
-> > Add Ethernet support for orangepi-one-plus board,
-> >
-> > - Ethernet port connected via RTL8211E PHY
-> > - PHY suppiled with
-> >   GMAC-2V5, fixed regulator with GMAC_EN pin via PD6
-> >   GMAC-3V, which is supplied by VCC3V3-MAC via aldo2
-> > - RGMII-RESET pin connected via PD14
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
->
-> Your commit log should be improved. We can get those informations from
-> the patch itself...
+Linus,
 
-Thought it was a clear commit log :)  will update anyway.
+Please pull the latest x86-asm-for-linus git tree from:
 
->
-> > ---
-> > Changes for v2:
-> > - emac changes on top of https://patchwork.kernel.org/cover/10899529/
-> >   series
-> >
-> >  .../allwinner/sun50i-h6-orangepi-one-plus.dts |  8 ++++
-> >  .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 42 +++++++++++++++++++
-> >  2 files changed, 50 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-> > index 12e17567ab56..9e8ed1053715 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
-> > @@ -9,4 +9,12 @@
-> >  / {
-> >       model = "OrangePi One Plus";
-> >       compatible = "xunlong,orangepi-one-plus", "allwinner,sun50i-h6";
-> > +
-> > +     aliases {
-> > +             ethernet0 = &emac;
-> > +     };
-> > +};
-> > +
-> > +&emac {
-> > +     status = "okay";
-> >  };
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> > index 62e27948a3fa..c48e24acaf8a 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
-> > @@ -45,6 +45,48 @@
-> >               regulator-max-microvolt = <5000000>;
-> >               regulator-always-on;
-> >       };
-> > +
-> > +     /*
-> > +      * The board uses 2.5V RGMII signalling. Power sequence to enable
-> > +      * the phy is to enable GMAC-2V5 and GMAC-3V (aldo2) power rails
-> > +      * at the same time and to wait 100ms.
-> > +      */
-> > +     reg_gmac_2v5: gmac-2v5 {
-> > +             compatible = "regulator-fixed";
-> > +             regulator-name = "gmac-2v5";
-> > +             regulator-min-microvolt = <2500000>;
-> > +             regulator-max-microvolt = <2500000>;
-> > +             startup-delay-us = <100000>;
-> > +             enable-active-high;
-> > +             gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* GMAC_EN: PD6 */
-> > +
-> > +             /* The real parent of gmac-2v5 is reg_vcc5v, but we need to
-> > +              * enable two regulators to power the phy. This is one way
-> > +              * to achieve that.
-> > +              */
-> > +             vin-supply = <&reg_aldo2>; /* VCC3V3-MAC: GMAC-3V */
-> > +     };
-> > +};
-> > +
-> > +&emac {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&ext_rgmii_pins>;
-> > +     phy-mode = "rgmii";
-> > +     phy-handle = <&ext_rgmii_phy>;
-> > +     phy-supply = <&reg_gmac_2v5>;
-> > +     allwinner,rx-delay-ps = <1500>;
-> > +     allwinner,tx-delay-ps = <700>;
-> > +};
-> > +
-> > +&mdio {
-> > +     ext_rgmii_phy: ethernet-phy@1 {
-> > +             compatible = "ethernet-phy-ieee802.3-c22";
-> > +             reg = <1>;
-> > +
-> > +             reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* RGMII-RESET: PD14 */
-> > +             reset-assert-us = <15000>;
-> > +             reset-deassert-us = <40000>;
-> > +     };
-> >  };
->
-> ... however, at no point in time you explain why you made that switch,
-> and while most of the definition of the EMAC nodes is in the DTSI, you
-> only enable it in one DTS.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-asm-for-linus
 
-The dtsi is shared b/w 1+ and lite2 and 1+ has emac, so I enabled the
-status directly on dts and keeping the relevant nodes on dtsi just
-like SoC dtsi does. do I need to mention this in commit log?
+   # HEAD: 3855f11d54a07256cc4a6fb85c692000208a73a7 x86/um/vdso: Drop unnecessary cc-ldoption
+
+This tree includes the following changes:
+
+ - cpu_has() cleanups
+ - sync_bitops.h modernization to the rmwcc.h facility, similarly to bitops.h
+ - Continued LTO annotations/fixes
+ - misc cleanups and smaller cleanups
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Andi Kleen (2):
+      x86/asm: Mark all top level asm statements as .text
+      x86/cpu/amd: Exclude 32bit only assembler from 64bit build
+
+Borislav Petkov (4):
+      x86/cpufeature: Remove __pure attribute to _static_cpu_has()
+      x86/asm: Clarify static_cpu_has()'s intended use
+      x86: Convert some slow-path static_cpu_has() callers to boot_cpu_has()
+      x86/mm: Convert some slow-path static_cpu_has() callers to boot_cpu_has()
+
+Jan Beulich (1):
+      x86/asm: Modernize sync_bitops.h
+
+Jann Horn (1):
+      x86/uaccess: Fix implicit cast of __user pointer
+
+Leonardo Brás (1):
+      x86/vdso: Rename variable to fix -Wshadow warning
+
+Masahiro Yamada (1):
+      x86/build/vdso: Add FORCE to the build rule of %.so
+
+Nick Desaulniers (1):
+      x86/um/vdso: Drop unnecessary cc-ldoption
+
+
+ arch/x86/entry/vdso/Makefile         |  2 +-
+ arch/x86/entry/vdso/vdso2c.h         | 13 +++++++------
+ arch/x86/include/asm/cpufeature.h    | 11 +++++++----
+ arch/x86/include/asm/fpu/internal.h  |  7 +++----
+ arch/x86/include/asm/sync_bitops.h   | 31 +++++++++----------------------
+ arch/x86/include/asm/uaccess.h       |  3 +--
+ arch/x86/kernel/apic/apic_numachip.c |  2 +-
+ arch/x86/kernel/cpu/amd.c            |  5 ++++-
+ arch/x86/kernel/cpu/aperfmperf.c     |  6 +++---
+ arch/x86/kernel/cpu/common.c         |  2 +-
+ arch/x86/kernel/cpu/mce/inject.c     |  2 +-
+ arch/x86/kernel/cpu/proc.c           | 10 +++++-----
+ arch/x86/kernel/kprobes/core.c       |  1 +
+ arch/x86/kernel/ldt.c                | 14 +++++++-------
+ arch/x86/kernel/paravirt.c           |  2 +-
+ arch/x86/kernel/process.c            |  4 ++--
+ arch/x86/kernel/reboot.c             |  2 +-
+ arch/x86/kernel/vm86_32.c            |  2 +-
+ arch/x86/lib/error-inject.c          |  1 +
+ arch/x86/mm/dump_pagetables.c        |  4 ++--
+ arch/x86/mm/pgtable.c                |  4 ++--
+ arch/x86/mm/pti.c                    |  2 +-
+ arch/x86/um/vdso/Makefile            |  2 +-
+ 23 files changed, 63 insertions(+), 69 deletions(-)
+
