@@ -2,150 +2,105 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E989FC04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A22C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCACD20C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154756;
-	bh=jVq50ngoBQtpoEA3AFOE9PiGPI6r0ej24GoE2XKlPuU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ifhpXa+VwvuYZiyRjW04zFV45xCpw55plAYmFmVBN86jkRb0rXk7GR66tADbndyXn
-	 MrMERMNUKiWSeojyM9X5ig4KcMcrUsJTO2VETUsfecWbKdCy9AJgGYOCriwtYRXHZ3
-	 Hk6nwL0IwVQPZqjn9FeFd/tfF81LwCsSU9Xs8DB4=
+	by mail.kernel.org (Postfix) with ESMTP id 930802053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFMrfz6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbfEFO7P (ORCPT
+        id S1728146AbfEFO7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:59:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38678 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728630AbfEFOnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6DF921019;
-        Mon,  6 May 2019 14:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153794;
-        bh=jVq50ngoBQtpoEA3AFOE9PiGPI6r0ej24GoE2XKlPuU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P1MLc1pwPRR9Q1cvwbUuw0gi2y+joOIRiyIq5D6mf45yRfAf5ovC2AVHo9HajM/Wr
-         UC67TDnY9uMEsqi8bfmFxTMVP/8FwwadlDmXkTcs5J4icMEMpsrgVPE8m5EXsMb/Ud
-         GUj8zUU4wdi3QVrtYZvh/rZtnHliOg1WPUE+QKRc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 57/99] net: hns: Fix probabilistic memory overwrite when HNS driver initialized
-Date:   Mon,  6 May 2019 16:32:30 +0200
-Message-Id: <20190506143059.236130025@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
-References: <20190506143053.899356316@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 6 May 2019 10:59:37 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44408 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727229AbfEFO7g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:59:36 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d3so2492020plj.11;
+        Mon, 06 May 2019 07:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OLbPX/jc7tfPj8ZUy6gaQ1Cz5/GWVvpyc6+DIQ2G8xI=;
+        b=MFMrfz6rkhP6p/6Nr8Pc7iwkiKQzrtKzppdvsG5uSlWVW7hyK27q7GQUPwYEC8shL5
+         6Lh191M/iSZ3VtDPmsLWk4/1TL8oVNhPLRAytWzdrLHxt06Bf3Bvwd/u/0lBhSW4QgGA
+         O3lblGfOtFwK8rZCmIpgGVaUwBXHFMN5av2UUUUS9Uk5TNVv/NeCdbne+y+np0pg9JrB
+         fGIr9vC+YkSq+1vCXe8wROfljy5RL2VmetGcjCa1DqhQecdXfN/o4jjoWJUoJZxSyBcR
+         /hMvQOdIHVcvMAcqw2aE9XKsDfOKNpdeNbTNhaXWM0NbxPlogfwRjtMJpKvbs1KHiqip
+         bxwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OLbPX/jc7tfPj8ZUy6gaQ1Cz5/GWVvpyc6+DIQ2G8xI=;
+        b=pJgauNzeu6TVe+4sh1EgJNs6qe2YYrmjEu6vhNvzH0JYHf6ncIbbn4LSawmaZF/wcy
+         l99jNMXce4B9JPbnctZnNNyDelKct0zywX4RQPZ/UwJlg31//ZGUaUG+DGyp+hE9h6th
+         sSzuG4AelidXLWilCoxOQInuT4WKYtFhPVFXsI27DrZGEkn6GzPaC/3pXBkTZaPKRtz7
+         M+pObumXxZaGR+dYmTuSdN/D4aUSc5OxXgTCy8h4aotNQoX2Jc3r+QFDcQaFAqN6imCQ
+         +jCnxZp05qaAC4R+eE2zcvoGHnfUBW2I25GbAeOM9Sl2fV6lmrIgwojntsISLoploSb8
+         QYNw==
+X-Gm-Message-State: APjAAAW7y0VYOojWpveT9A4BJNGLVQbeLKgA10Sa5rv8oCWUt5RfSlNN
+        AC6XHuPm5fIBiA4pCKfBPKpHzmKzPIREHER+u2g=
+X-Google-Smtp-Source: APXvYqwzSMqo9crfo125Yxte4pN3tmzi3CJP3QdsNC5Pdax4AytdjIDg9svbewfAzG6RNN0bV71MCBLFPZSIh21F0+E=
+X-Received: by 2002:a17:902:758b:: with SMTP id j11mr33389919pll.87.1557154775857;
+ Mon, 06 May 2019 07:59:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190429150135.15070-1-hdegoede@redhat.com> <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
+ <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com>
+In-Reply-To: <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 6 May 2019 17:59:25 +0300
+Message-ID: <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
+ critclk_systems DMI table
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Semyon Verchenko <semverchenko@factor-ts.ru>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c0b0984426814f3a9251873b689e67d34d8ccd84 ]
+On Mon, May 6, 2019 at 5:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 06-05-19 14:38, Andy Shevchenko wrote:
+> > On Mon, Apr 29, 2019 at 6:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >>
+> >> The Lex 3I380D industrial PC has 4 ethernet controllers on board
+> >> which need pmc_plt_clk0 - 3 to function, add it to the critclk_systems
+> >> DMI table, so that drivers/clk/x86/clk-pmc-atom.c will mark the clocks
+> >> as CLK_CRITICAL and they will not get turned off.
+> >>
+> >
+> > Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > supposedly to go via CLK tree.
+> >
+> > P.S. If you want it through PDx86, I need immutable branch / tag from CLK.
+>
+> Stephen added the patches this depends on to his fixes branch, so they
+> are in the 5.1 / Torvald's master branch, since we are now in the 5.2 merge
+> window, you should be able to cleanly apply this directly.
 
-When reboot the system again and again, may cause a memory
-overwrite.
+We don't do back merges, so, our base is v5.1-rc1. Does it mean the
+commit in question is in v5.1-rc1?
+AFAICS it was appeared in v5.1-rc5.
 
-[   15.638922] systemd[1]: Reached target Swap.
-[   15.667561] tun: Universal TUN/TAP device driver, 1.6
-[   15.676756] Bridge firewalling registered
-[   17.344135] Unable to handle kernel paging request at virtual address 0000000200000040
-[   17.352179] Mem abort info:
-[   17.355007]   ESR = 0x96000004
-[   17.358105]   Exception class = DABT (current EL), IL = 32 bits
-[   17.364112]   SET = 0, FnV = 0
-[   17.367209]   EA = 0, S1PTW = 0
-[   17.370393] Data abort info:
-[   17.373315]   ISV = 0, ISS = 0x00000004
-[   17.377206]   CM = 0, WnR = 0
-[   17.380214] user pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
-[   17.386926] [0000000200000040] pgd=0000000000000000
-[   17.391878] Internal error: Oops: 96000004 [#1] SMP
-[   17.396824] CPU: 23 PID: 95 Comm: kworker/u130:0 Tainted: G            E     4.19.25-1.2.78.aarch64 #1
-[   17.414175] Hardware name: Huawei TaiShan 2280 /BC11SPCD, BIOS 1.54 08/16/2018
-[   17.425615] Workqueue: events_unbound async_run_entry_fn
-[   17.435151] pstate: 00000005 (nzcv daif -PAN -UAO)
-[   17.444139] pc : __mutex_lock.isra.1+0x74/0x540
-[   17.453002] lr : __mutex_lock.isra.1+0x3c/0x540
-[   17.461701] sp : ffff000100d9bb60
-[   17.469146] x29: ffff000100d9bb60 x28: 0000000000000000
-[   17.478547] x27: 0000000000000000 x26: ffff802fb8945000
-[   17.488063] x25: 0000000000000000 x24: ffff802fa32081a8
-[   17.497381] x23: 0000000000000002 x22: ffff801fa2b15220
-[   17.506701] x21: ffff000009809000 x20: ffff802fa23a0888
-[   17.515980] x19: ffff801fa2b15220 x18: 0000000000000000
-[   17.525272] x17: 0000000200000000 x16: 0000000200000000
-[   17.534511] x15: 0000000000000000 x14: 0000000000000000
-[   17.543652] x13: ffff000008d95db8 x12: 000000000000000d
-[   17.552780] x11: ffff000008d95d90 x10: 0000000000000b00
-[   17.561819] x9 : ffff000100d9bb90 x8 : ffff802fb89d6560
-[   17.570829] x7 : 0000000000000004 x6 : 00000004a1801d05
-[   17.579839] x5 : 0000000000000000 x4 : 0000000000000000
-[   17.588852] x3 : ffff802fb89d5a00 x2 : 0000000000000000
-[   17.597734] x1 : 0000000200000000 x0 : 0000000200000000
-[   17.606631] Process kworker/u130:0 (pid: 95, stack limit = 0x(____ptrval____))
-[   17.617438] Call trace:
-[   17.623349]  __mutex_lock.isra.1+0x74/0x540
-[   17.630927]  __mutex_lock_slowpath+0x24/0x30
-[   17.638602]  mutex_lock+0x50/0x60
-[   17.645295]  drain_workqueue+0x34/0x198
-[   17.652623]  __sas_drain_work+0x7c/0x168
-[   17.659903]  sas_drain_work+0x60/0x68
-[   17.666947]  hisi_sas_scan_finished+0x30/0x40 [hisi_sas_main]
-[   17.676129]  do_scsi_scan_host+0x70/0xb0
-[   17.683534]  do_scan_async+0x20/0x228
-[   17.690586]  async_run_entry_fn+0x4c/0x1d0
-[   17.697997]  process_one_work+0x1b4/0x3f8
-[   17.705296]  worker_thread+0x54/0x470
-
-Every time the call trace is not the same, but the overwrite address
-is always the same:
-Unable to handle kernel paging request at virtual address 0000000200000040
-
-The root cause is, when write the reg XGMAC_MAC_TX_LF_RF_CONTROL_REG,
-didn't use the io_base offset.
-
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
-index ba4316910dea..a60f207768fc 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
-@@ -129,7 +129,7 @@ static void hns_xgmac_lf_rf_control_init(struct mac_driver *mac_drv)
- 	dsaf_set_bit(val, XGMAC_UNIDIR_EN_B, 0);
- 	dsaf_set_bit(val, XGMAC_RF_TX_EN_B, 1);
- 	dsaf_set_field(val, XGMAC_LF_RF_INSERT_M, XGMAC_LF_RF_INSERT_S, 0);
--	dsaf_write_reg(mac_drv, XGMAC_MAC_TX_LF_RF_CONTROL_REG, val);
-+	dsaf_write_dev(mac_drv, XGMAC_MAC_TX_LF_RF_CONTROL_REG, val);
- }
- 
- /**
 -- 
-2.20.1
-
-
-
+With Best Regards,
+Andy Shevchenko
