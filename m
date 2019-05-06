@@ -5,65 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F97C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB05C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696B32087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D732082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCNkBV4I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hv00WVo5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfEFIVv (ORCPT
+        id S1726564AbfEFIUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:21:51 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34435 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfEFIUe (ORCPT
+        Mon, 6 May 2019 04:20:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44636 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726520AbfEFIU2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:20:34 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b3so6362782pfd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:20:34 -0700 (PDT)
+        Mon, 6 May 2019 04:20:28 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z16so6081048pgv.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:20:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YR1uPUJkVk7yfuNsYEGBjpJtJTSenXj3xCLi83CgQCQ=;
-        b=mCNkBV4IgMyS5Odt2U30IIR20STOIrsRBiSP0iAHuqTxsIitdfPIOvgCVw3f0iThNg
-         xvF5SQslWgY7IEa8zcRl4Wo29ldvHS1Dx9QY6MLj3ZonHU10yagK+aTXNKOSIU33KJ3B
-         flLwkk8+h+BR3GN6GP2LrefuRfiK1Q/ZbksdJ7iTod7YYEZROV+ABgrS2JZYK1SvQwxB
-         WxvoEUq/v+BTwsEt/rcgpO/AeEjMQ1yQXEfcbtbSUpnhH8Wu6wBetMWlkQ9BJBgCzxlH
-         uA/1qJkYdiZlLiAaf+ApQDAooKfoda2a/wqoKcEsC6iucVOXkNS7g2Oxpr6t/MmhMn7G
-         lQsg==
+        bh=8oVvJ9mj35Lp12Pvnx1rYrM9wXOWQruIs8G8w3waPxY=;
+        b=Hv00WVo5hgfQYhK/g33jV6jD7uZtD18fCtp+V11I//o27F4G8pmpRuSwdCRafyPyfB
+         1MU7A0CyOcwqTjHClv/SFN4ufVwl6aBkI5MTpN1NYpQcvxWxhMRJZ1oPz3G13M8cW/Ji
+         vUZjnqVk7fEuuDLl2DDs1chBHRoh8VcuIes3CI/RFayxbjxEkg4x3O0+8GLxcq5P00Z8
+         SWdfy0R+j87dkZ1m8F8OyL/u58D0NfJ0DDz2x73RZNUO9bPfr2s2qv0oSCBbh+Yb2efT
+         +l1rEWiXqVOlReGOh5LmOW3iJQHJPGJ8MphZv/LO2b42oijB4puz0duKNSLEXOtVkVCS
+         EXGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YR1uPUJkVk7yfuNsYEGBjpJtJTSenXj3xCLi83CgQCQ=;
-        b=aTCMPwI5+Tp+5+6t3ooK9Ja3SFDZtOdL7wdbBoyV0HWBdGyfADhQsG40+e4e+fgZEz
-         vChaqIkqltIl9nlTmPx9EbL/4XurJJRJQNuTnbr4q1PjDJpjfJkG8qFTNHxwfXaEi+rB
-         pkmredy4zcWTIqYfgsVcBuF3io2lX3es7Oex11bo4C4tDQT52pRvxnF85/5fynx5n4v8
-         Rr5B3GGKKXzow9JpeNa/KeFik7Ng0fHTTfjuSLqd8NUIv9+bTvDegQW/dr+OOYBNzJod
-         BYA7QsZWdr4u/8m5N8D9GUemkRhgzJBqy9Q30GlywHxlTvTgkjmLsXWiHVXYTBh86tT/
-         BNtg==
-X-Gm-Message-State: APjAAAViRUbvGPIZ3oKGLBr3FmNOMU16TLIagJcxJzZSOBaZq3eLGcS1
-        lEVmezxxGUoJmm5/+ID+HiQ=
-X-Google-Smtp-Source: APXvYqx93xvJxwyDr+5//OVD6EMB327ZWW4cnjR0XSTvrSzLBFUTEGM01bqdYhhZmu1vvEvml2CcXw==
-X-Received: by 2002:a63:7982:: with SMTP id u124mr30041388pgc.352.1557130833910;
-        Mon, 06 May 2019 01:20:33 -0700 (PDT)
+        bh=8oVvJ9mj35Lp12Pvnx1rYrM9wXOWQruIs8G8w3waPxY=;
+        b=UuH6qKsZiEgoPSh9rml4KymPgfczHPk0INflsxaqPPPwffFgQEBxTYwUwHEOVXZ+63
+         DoW64rdb/jLIIqoPufeZHFpIHTser6TgEHlIw3JEjEAv0oIDHFe3ULzcLejUDfdB9nuN
+         JtWbOeRJsW0YIAv7TsjOwoUFOVI350fhEOK6tWxsW1Q307M9XZfRSBaaktl1x8eMbtz4
+         uvf1D/wmaFiVQE/gr/5hh7sQzAnFm6vwGNBcIIt2w0pea6WkzXkzG9eFUup5JMiQXdmI
+         hlnoYOGk0rWCTJ79bTN3VS891J2aCa0O95TjU/t/CyqfwNml+fxtLfIatIzX8XreXwzZ
+         47gg==
+X-Gm-Message-State: APjAAAWV7VbnDuLrXrqys0QcNnKvNSQw1jM6Ds8WIotEkmFluw1FyZG3
+        lNQ5oZQ8Whejbrqs+bH6GeY=
+X-Google-Smtp-Source: APXvYqwPwveOBDJYOjJvpw5a2qU/GjOSBqZJeYG8THQe/E81zIH4QtChGC6q60P84cHzN+vUlRKt9g==
+X-Received: by 2002:a62:4602:: with SMTP id t2mr31626278pfa.26.1557130827633;
+        Mon, 06 May 2019 01:20:27 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v19sm20958013pfa.138.2019.05.06.01.20.30
+        by smtp.gmail.com with ESMTPSA id v19sm20958013pfa.138.2019.05.06.01.20.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 01:20:33 -0700 (PDT)
+        Mon, 06 May 2019 01:20:27 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, linux-kernel@vger.kernel.org,
         Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v2 14/23] locking/lockdep: Avoid constant checks in __bfs by using offset reference
-Date:   Mon,  6 May 2019 16:19:30 +0800
-Message-Id: <20190506081939.74287-15-duyuyang@gmail.com>
+Subject: [PATCH v2 12/23] locking/lockdep: Change type of the element field in circular_queue
+Date:   Mon,  6 May 2019 16:19:28 +0800
+Message-Id: <20190506081939.74287-13-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190506081939.74287-1-duyuyang@gmail.com>
 References: <20190506081939.74287-1-duyuyang@gmail.com>
@@ -74,93 +75,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In search of a dependency in the lock graph, there is contant checks for
-forward or backward search. Directly reference the field offset of the
-struct that differentiates the type of search to avoid those checks.
+The element field is an array in struct circular_queue to keep track of locks
+in the search. Making it the same type as the locks avoids type cast. Also
+fix a typo and elaborate the comment above struct circular_queue.
 
 No functional change.
 
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 33 +++++++++++++++++++++------------
- 1 file changed, 21 insertions(+), 12 deletions(-)
+ kernel/locking/lockdep.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 5a0c908f..15cf2ac 100644
+index b8e6ba3..eb8b190 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -1362,11 +1362,25 @@ static inline int get_lock_depth(struct lock_list *child)
- 	return depth;
+@@ -1257,13 +1257,17 @@ static int add_lock_to_list(struct lock_class *this,
+ #define CQ_MASK				(MAX_CIRCULAR_QUEUE_SIZE-1)
+ 
+ /*
+- * The circular_queue and helpers is used to implement the
+- * breadth-first search(BFS)algorithem, by which we can build
+- * the shortest path from the next lock to be acquired to the
+- * previous held lock if there is a circular between them.
++ * The circular_queue and helpers are used to implement graph
++ * breadth-first search (BFS) algorithm, by which we can determine
++ * whether there is a path from a lock to another. In deadlock checks,
++ * a path from the next lock to be acquired to a previous held lock
++ * indicates that adding the <prev> -> <next> lock dependency will
++ * produce a circle in the graph. Breadth-first search instead of
++ * depth-first search is used in order to find the shortest (circular)
++ * path.
+  */
+ struct circular_queue {
+-	unsigned long element[MAX_CIRCULAR_QUEUE_SIZE];
++	struct lock_list *element[MAX_CIRCULAR_QUEUE_SIZE];
+ 	unsigned int  front, rear;
+ };
+ 
+@@ -1289,7 +1293,7 @@ static inline int __cq_full(struct circular_queue *cq)
+ 	return ((cq->rear + 1) & CQ_MASK) == cq->front;
  }
  
-+/*
-+ * Return the forward or backward dependency list.
-+ *
-+ * @lock:   the lock_list to get its class's dependency list
-+ * @offset: the offset to struct lock_class to determine whether it is
-+ *          locks_after or locks_before
-+ */
-+static inline struct list_head *get_dep_list(struct lock_list *lock, int offset)
-+{
-+	void *lock_class = lock->class;
-+
-+	return lock_class + offset;
-+}
-+
- static int __bfs(struct lock_list *source_entry,
- 		 void *data,
- 		 int (*match)(struct lock_list *entry, void *data),
- 		 struct lock_list **target_entry,
--		 int forward)
-+		 int offset)
+-static inline int __cq_enqueue(struct circular_queue *cq, unsigned long elem)
++static inline int __cq_enqueue(struct circular_queue *cq, struct lock_list *elem)
  {
- 	struct lock_list *entry;
- 	struct lock_list *lock;
-@@ -1380,11 +1394,7 @@ static int __bfs(struct lock_list *source_entry,
+ 	if (__cq_full(cq))
+ 		return -1;
+@@ -1299,7 +1303,7 @@ static inline int __cq_enqueue(struct circular_queue *cq, unsigned long elem)
+ 	return 0;
+ }
+ 
+-static inline int __cq_dequeue(struct circular_queue *cq, unsigned long *elem)
++static inline int __cq_dequeue(struct circular_queue *cq, struct lock_list **elem)
+ {
+ 	if (__cq_empty(cq))
+ 		return -1;
+@@ -1377,12 +1381,12 @@ static int __bfs(struct lock_list *source_entry,
  		goto exit;
- 	}
  
--	if (forward)
--		head = &source_entry->class->locks_after;
--	else
--		head = &source_entry->class->locks_before;
--
-+	head = get_dep_list(source_entry, offset);
- 	if (list_empty(head))
- 		goto exit;
+ 	__cq_init(cq);
+-	__cq_enqueue(cq, (unsigned long)source_entry);
++	__cq_enqueue(cq, source_entry);
  
-@@ -1398,10 +1408,7 @@ static int __bfs(struct lock_list *source_entry,
- 			goto exit;
- 		}
+ 	while (!__cq_empty(cq)) {
+ 		struct lock_list *lock;
  
--		if (forward)
--			head = &lock->class->locks_after;
--		else
--			head = &lock->class->locks_before;
-+		head = get_dep_list(lock, offset);
+-		__cq_dequeue(cq, (unsigned long *)&lock);
++		__cq_dequeue(cq, &lock);
  
- 		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
+ 		if (!lock->class) {
+ 			ret = -2;
+@@ -1406,7 +1410,7 @@ static int __bfs(struct lock_list *source_entry,
+ 					goto exit;
+ 				}
  
-@@ -1434,7 +1441,8 @@ static inline int __bfs_forwards(struct lock_list *src_entry,
- 			int (*match)(struct lock_list *entry, void *data),
- 			struct lock_list **target_entry)
- {
--	return __bfs(src_entry, data, match, target_entry, 1);
-+	return __bfs(src_entry, data, match, target_entry,
-+		     offsetof(struct lock_class, locks_after));
- 
- }
- 
-@@ -1443,7 +1451,8 @@ static inline int __bfs_backwards(struct lock_list *src_entry,
- 			int (*match)(struct lock_list *entry, void *data),
- 			struct lock_list **target_entry)
- {
--	return __bfs(src_entry, data, match, target_entry, 0);
-+	return __bfs(src_entry, data, match, target_entry,
-+		     offsetof(struct lock_class, locks_before));
- 
- }
- 
+-				if (__cq_enqueue(cq, (unsigned long)entry)) {
++				if (__cq_enqueue(cq, entry)) {
+ 					ret = -1;
+ 					goto exit;
+ 				}
 -- 
 1.8.3.1
 
