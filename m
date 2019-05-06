@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9837C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF91C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB478214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FDED205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154037;
-	bh=ZWme/I8XL5DLX6KM91dRGi4a4dE7wwzF7MHXMGfGN9E=;
+	s=default; t=1557154040;
+	bh=FbLKEUl3KRNnMUhZoYAxYnUWvRn/WoNTy/4xfKgqgTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+vu/UFHkx74TQCqJsgcGrQxn+DrkWSH3sKfhoUqQCvP1FaKpGSB835usncfb1273
-	 iVcU0xiUG/j2kM+c7JBAJ9aHoZeSUCjBlgdv6U6dXboF+Rq4iN4AAlMJfD7PJ7XN1m
-	 GyD5i45KXRttoqVcR5iK05DzhDzerV/LtJ9+Nxrw=
+	b=QPAibpKC1MNMWOBzDO4XWs9AslYr1/0SKdMpbQOd9l6FCOG8ULRW2qwHDcphzQi3K
+	 InpVpoIGYhcs3rTBNz4xaF1jxJfn++MKMpd0i1iW9I26+Gb833cFb59dkc0AlvAR0M
+	 YkAxGg9nqC50kunOGfUUE3YW6wiz/9E5kGIpgmYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbfEFOrQ (ORCPT
+        id S1729293AbfEFOrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:47:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46084 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:47:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbfEFOrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:13 -0400
+        id S1729279AbfEFOrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64F0720449;
-        Mon,  6 May 2019 14:47:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BEB6214AE;
+        Mon,  6 May 2019 14:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154032;
-        bh=ZWme/I8XL5DLX6KM91dRGi4a4dE7wwzF7MHXMGfGN9E=;
+        s=default; t=1557154035;
+        bh=FbLKEUl3KRNnMUhZoYAxYnUWvRn/WoNTy/4xfKgqgTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=obu/ygWjkqXN3BWalGEjXQYSsY6ht/3WCtLYa2Yusn9fiejiAhcrZUPLqn54yzLMy
-         f5dLd+u1/3P6WgsB5HFEXi2npGfQz1YyfT1Sk0LnHyfoNm2ozxt3yXHoNygd9UqWvT
-         7zV78hgU1N8P5ZyVAzq1ugt9N54uiqfnRbY0XgGU=
+        b=iUsUXaFajtpqNF0q1lCxj9XIrxofqh2XCdO6WpTr4XHRDWF/HI4uOUGGhXqvhr8NE
+         MfhqSQRfMMievXaY+F1BpGX+pRcZw4U6enDqD2TymUJ1sgh7BhcCfMlpYpWOLEjIx3
+         Ln85VIyPHfE0k+lc30UIlamnsD8VU+5Cnvu4rn5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 4.9 13/62] arm64: kasan: avoid bad virt_to_pfn()
-Date:   Mon,  6 May 2019 16:32:44 +0200
-Message-Id: <20190506143052.234114233@linuxfoundation.org>
+Subject: [PATCH 4.9 14/62] kasan: add a prototype of task_struct to avoid warning
+Date:   Mon,  6 May 2019 16:32:45 +0200
+Message-Id: <20190506143052.314322038@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -61,57 +65,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit b0de0ccc8b9edd8846828e0ecdc35deacdf186b0 upstream.
+commit 5be9b730b09c45c358bbfe7f51d254e306cccc07 upstream.
 
-Booting a v4.11-rc1 kernel with DEBUG_VIRTUAL and KASAN enabled produces
-the following splat (trimmed for brevity):
+Add a prototype of task_struct to fix below warning on arm64.
 
-[    0.000000] virt_to_phys used for non-linear address: ffff200008080000 (0xffff200008080000)
-[    0.000000] WARNING: CPU: 0 PID: 0 at arch/arm64/mm/physaddr.c:14 __virt_to_phys+0x48/0x70
-[    0.000000] PC is at __virt_to_phys+0x48/0x70
-[    0.000000] LR is at __virt_to_phys+0x48/0x70
-[    0.000000] Call trace:
-[    0.000000] [<ffff2000080b1ac0>] __virt_to_phys+0x48/0x70
-[    0.000000] [<ffff20000a03b86c>] kasan_init+0x1c0/0x498
-[    0.000000] [<ffff20000a034018>] setup_arch+0x2fc/0x948
-[    0.000000] [<ffff20000a030c68>] start_kernel+0xb8/0x570
-[    0.000000] [<ffff20000a0301e8>] __primary_switched+0x6c/0x74
+  In file included from arch/arm64/kernel/probes/kprobes.c:19:0:
+  include/linux/kasan.h:81:132: error: 'struct task_struct' declared inside parameter list will not be visible outside of this definition or declaration [-Werror]
+   static inline void kasan_unpoison_task_stack(struct task_struct *task) {}
 
-This is because we use virt_to_pfn() on a kernel image address when
-trying to figure out its nid, so that we can allocate its shadow from
-the same node.
+As same as other types (kmem_cache, page, and vm_struct) this adds a
+prototype of task_struct data structure on top of kasan.h.
 
-As with other recent changes, this patch uses lm_alias() to solve this.
+[arnd] A related warning was fixed before, but now appears in a
+different line in the same file in v4.11-rc2.  The patch from Masami
+Hiramatsu still seems appropriate, so let's take his version.
 
-We could instead use NUMA_NO_NODE, as x86 does for all shadow
-allocations, though we'll likely want the "real" memory shadow to be
-backed from its corresponding nid anyway, so we may as well be
-consistent and find the nid for the image shadow.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Acked-by: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Fixes: 71af2ed5eeea ("kasan, sched/headers: Remove <linux/sched.h> from <linux/kasan.h>")
+Link: https://patchwork.kernel.org/patch/9569839/
+Link: http://lkml.kernel.org/r/20170313141517.3397802-1-arnd@arndb.de
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Alexander Potapenko <glider@google.com>
+Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/mm/kasan_init.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/kasan.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/mm/kasan_init.c
-+++ b/arch/arm64/mm/kasan_init.c
-@@ -153,7 +153,7 @@ void __init kasan_init(void)
- 	clear_pgds(KASAN_SHADOW_START, KASAN_SHADOW_END);
+--- a/include/linux/kasan.h
++++ b/include/linux/kasan.h
+@@ -7,6 +7,7 @@
+ struct kmem_cache;
+ struct page;
+ struct vm_struct;
++struct task_struct;
  
- 	vmemmap_populate(kimg_shadow_start, kimg_shadow_end,
--			 pfn_to_nid(virt_to_pfn(_text)));
-+			 pfn_to_nid(virt_to_pfn(lm_alias(_text))));
+ #ifdef CONFIG_KASAN
  
- 	/*
- 	 * vmemmap_populate() has populated the shadow region that covers the
 
 
