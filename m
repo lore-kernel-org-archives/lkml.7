@@ -2,53 +2,54 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F4BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C053C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7F52053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBB1205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154997;
-	bh=7TPRLxLTFcgyHj50Btjvh0KiUBOEcT8EwlzWkavrPqo=;
+	s=default; t=1557155006;
+	bh=VrITzsTbisGn2C7tt2H6CbV7YDI6yS12z/qYRjbw2Z4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lx9vrC5PPKSv39jUp0Wkmlg/w6M8IHFTP7OFKFWbWY6CD1W/GyQlAMGCmTb22oiI1
-	 PV6wwcoTruH4lJmTAewU+X40aHe7qdtfiuMXN4NMVL9QAnhjZVFunwjLk6c1BOBquA
-	 PvUcqbLRblF6ZHcOCOs732WRXJJTCwcBKgMJUN+o=
+	b=tDDY5LgI3GbU4DLDOz2txvgnk/tZ8NYIMiV7WZiLazhNBLox8PYEFwIjgOm88ljWb
+	 pzek58Awf5SKF8pXkZwMf7Ej8DPv+XbDIPrM9sBaXDLbRvfSOk2odZEPwaqlzXyFI1
+	 FsxukhR8kEA/bIvlKWdZX0nzOyyeKmYdNBDL2r8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfEFOjy (ORCPT
+        id S1727870AbfEFOjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:39:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33006 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:39:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727134AbfEFOjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:39:52 -0400
+        id S1726582AbfEFOjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:39:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2F0520449;
-        Mon,  6 May 2019 14:39:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F70120449;
+        Mon,  6 May 2019 14:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153592;
-        bh=7TPRLxLTFcgyHj50Btjvh0KiUBOEcT8EwlzWkavrPqo=;
+        s=default; t=1557153578;
+        bh=VrITzsTbisGn2C7tt2H6CbV7YDI6yS12z/qYRjbw2Z4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zt5v4qELT4G11414VtmfEYkDGpTLhU2BAiKHd7s0dbLaFBz+qCURiab5jwggIVjXY
-         q4nlZNnrJf3b6dE4YnGH3UyC2tXjVQiuKgu5jyS2rV5HlP+xLVPp9+JyC8CRLbD4Dh
-         31Ifx/DVXvy9IZUiKvBHnzOWxDEdKG1S8tFdtpi0=
+        b=164hSrMzYMcHPJ6lsts3GuwpJjivxjLW3r4ruaVY+Ux+3y6iEOr5oWSulLA3jomx0
+         OLnaB1vVLMvE6MKGPdFx/D6VZeP4wdRjh9cT1yAvwVDkP/Z7H3fLpfZypqooqOq0kN
+         HDeTIJrJpH+eTPZmJn4ltGoA2rhAutxq7PzDYOnQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 4.19 06/99] i2c: Remove unnecessary call to irq_find_mapping
-Date:   Mon,  6 May 2019 16:31:39 +0200
-Message-Id: <20190506143054.443262341@linuxfoundation.org>
+        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 19/99] nvme-loop: init nvmet_ctrl fatal_err_work when allocate
+Date:   Mon,  6 May 2019 16:31:52 +0200
+Message-Id: <20190506143055.646077057@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,36 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+[ Upstream commit d11de63f2b519f0a162b834013b6d3a46dbf3886 ]
 
-commit b9bb3fdf4e870fb655064f5c3c81c1fee7fd89ce upstream.
+After commit 4d43d395fe (workqueue: Try to catch flush_work() without
+INIT_WORK()), it can cause warning when delete nvme-loop device, trace
+like:
 
-irq_create_mapping calls irq_find_mapping internally and will use the
-found mapping if one exists, so there is no need to manually call this
-from i2c_smbus_host_notify_to_irq.
+[   76.601272] Call Trace:
+[   76.601646]  ? del_timer+0x72/0xa0
+[   76.602156]  __cancel_work_timer+0x1ae/0x270
+[   76.602791]  cancel_work_sync+0x14/0x20
+[   76.603407]  nvmet_ctrl_free+0x1b7/0x2f0 [nvmet]
+[   76.604091]  ? free_percpu+0x168/0x300
+[   76.604652]  nvmet_sq_destroy+0x106/0x240 [nvmet]
+[   76.605346]  nvme_loop_destroy_admin_queue+0x30/0x60 [nvme_loop]
+[   76.606220]  nvme_loop_shutdown_ctrl+0xc3/0xf0 [nvme_loop]
+[   76.607026]  nvme_loop_delete_ctrl_host+0x19/0x30 [nvme_loop]
+[   76.607871]  nvme_do_delete_ctrl+0x75/0xb0
+[   76.608477]  nvme_sysfs_delete+0x7d/0xc0
+[   76.609057]  dev_attr_store+0x24/0x40
+[   76.609603]  sysfs_kf_write+0x4c/0x60
+[   76.610144]  kernfs_fop_write+0x19a/0x260
+[   76.610742]  __vfs_write+0x1c/0x60
+[   76.611246]  vfs_write+0xfa/0x280
+[   76.611739]  ksys_write+0x6e/0x120
+[   76.612238]  __x64_sys_write+0x1e/0x30
+[   76.612787]  do_syscall_64+0xbf/0x3a0
+[   76.613329]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Reviewed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We fix it by moving fatal_err_work init to nvmet_alloc_ctrl(), which may
+more reasonable.
 
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/i2c-core-base.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/nvme/target/core.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -306,10 +306,7 @@ static int i2c_smbus_host_notify_to_irq(
- 	if (client->flags & I2C_CLIENT_TEN)
- 		return -EINVAL;
- 
--	irq = irq_find_mapping(adap->host_notify_domain, client->addr);
--	if (!irq)
--		irq = irq_create_mapping(adap->host_notify_domain,
--					 client->addr);
-+	irq = irq_create_mapping(adap->host_notify_domain, client->addr);
- 
- 	return irq > 0 ? irq : -ENXIO;
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index b5ec96abd048..776b7e9e23b9 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -921,6 +921,15 @@ bool nvmet_host_allowed(struct nvmet_req *req, struct nvmet_subsys *subsys,
+ 		return __nvmet_host_allowed(subsys, hostnqn);
  }
+ 
++static void nvmet_fatal_error_handler(struct work_struct *work)
++{
++	struct nvmet_ctrl *ctrl =
++			container_of(work, struct nvmet_ctrl, fatal_err_work);
++
++	pr_err("ctrl %d fatal error occurred!\n", ctrl->cntlid);
++	ctrl->ops->delete_ctrl(ctrl);
++}
++
+ u16 nvmet_alloc_ctrl(const char *subsysnqn, const char *hostnqn,
+ 		struct nvmet_req *req, u32 kato, struct nvmet_ctrl **ctrlp)
+ {
+@@ -962,6 +971,7 @@ u16 nvmet_alloc_ctrl(const char *subsysnqn, const char *hostnqn,
+ 
+ 	INIT_WORK(&ctrl->async_event_work, nvmet_async_event_work);
+ 	INIT_LIST_HEAD(&ctrl->async_events);
++	INIT_WORK(&ctrl->fatal_err_work, nvmet_fatal_error_handler);
+ 
+ 	memcpy(ctrl->subsysnqn, subsysnqn, NVMF_NQN_SIZE);
+ 	memcpy(ctrl->hostnqn, hostnqn, NVMF_NQN_SIZE);
+@@ -1076,21 +1086,11 @@ void nvmet_ctrl_put(struct nvmet_ctrl *ctrl)
+ 	kref_put(&ctrl->ref, nvmet_ctrl_free);
+ }
+ 
+-static void nvmet_fatal_error_handler(struct work_struct *work)
+-{
+-	struct nvmet_ctrl *ctrl =
+-			container_of(work, struct nvmet_ctrl, fatal_err_work);
+-
+-	pr_err("ctrl %d fatal error occurred!\n", ctrl->cntlid);
+-	ctrl->ops->delete_ctrl(ctrl);
+-}
+-
+ void nvmet_ctrl_fatal_error(struct nvmet_ctrl *ctrl)
+ {
+ 	mutex_lock(&ctrl->lock);
+ 	if (!(ctrl->csts & NVME_CSTS_CFS)) {
+ 		ctrl->csts |= NVME_CSTS_CFS;
+-		INIT_WORK(&ctrl->fatal_err_work, nvmet_fatal_error_handler);
+ 		schedule_work(&ctrl->fatal_err_work);
+ 	}
+ 	mutex_unlock(&ctrl->lock);
+-- 
+2.20.1
+
 
 
