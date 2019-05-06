@@ -2,254 +2,154 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A208CC04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9227DC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66196208C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjJlj6D6"
+	by mail.kernel.org (Postfix) with ESMTP id 7085C2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfEFIVU (ORCPT
+        id S1726775AbfEFIV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:21:20 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36959 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726684AbfEFIUu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:20:50 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g3so6352394pfi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:20:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+8HIoRSyDPaSOtCc6WVfXhPNvkE0D51zSx8WtXTLxao=;
-        b=TjJlj6D6iObGQWNC6mjY5viFyYUfLeBqv1XY3YKsicJRHP86kDbbTdEGVmnymlA7kZ
-         VxSty4rFVgFLMtC9Z+QlWk//k+Y0pTjLR8zPN/nsNkhh1ZNi9lEcDWqptfwjs2Y6nQ5D
-         Sgu+rvwEDXACiJX0eKrMv49tcVS8+wA+MSJw0G47lN7gfR7pR/a7moJfdk9ep0FVnlSP
-         LV0IurlVDrj0c7IH3PfqGOcaf7n1bgRHbMScXa9YO/pknhbhdH4nlYMST2BlQXdC1g6W
-         2+hSOO+SC6aYHW6oKmBnO7aKuM+tCMBQTPsXUUobfeyarEawOzqfiauJSshv8Iz7Vp/B
-         W6uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+8HIoRSyDPaSOtCc6WVfXhPNvkE0D51zSx8WtXTLxao=;
-        b=lJZdAjkq1gaWabUNz01fAQLgUGoLsVAwq5PUiqGECWJ2ieHIzW3kXOIpRHfp/cpsir
-         bOSCpA6P+NVZsZlWS8KhH0yTNt1fQ8ddtQUG1oBhzXBu0KKh+QHHIl50+JgRW2xg1DAh
-         jV6EtbsklyIotFK2zWkb3l28ewSWMm5U/MeJ34GXHjGuazhbyg48PjIPpub7+Nlcx4cH
-         furd3ZapXuTJfA0OIDHRTLiOvigGizZ0UTJwtHZPkIzFvleBGae33a25Mvvk7V/9gWKL
-         fpFQc85GK3VHKLXysb7zZO6CsEb0UxofwCenSikR5W7m/1Y4rex87QPL289uDDcpWeYh
-         YndQ==
-X-Gm-Message-State: APjAAAV1aG4YFQ2gm4D8lfpua9teUaaHJ3VwuiumoNURnIE8coOps4PK
-        HuQ3RhCQPgqjA5cZOknqS6A=
-X-Google-Smtp-Source: APXvYqyps9j/IbWcccPBcH3kvO0rvSxX5ijEtgazw/TVq1cRwYEZgNPyUzd6eObN8vDSc1MgTUMrkg==
-X-Received: by 2002:a63:de11:: with SMTP id f17mr29708964pgg.94.1557130849411;
-        Mon, 06 May 2019 01:20:49 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v19sm20958013pfa.138.2019.05.06.01.20.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 01:20:48 -0700 (PDT)
-From:   Yuyang Du <duyuyang@gmail.com>
-To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v2 19/23] locking/lockdep: Refactorize check_noncircular and check_redundant
-Date:   Mon,  6 May 2019 16:19:35 +0800
-Message-Id: <20190506081939.74287-20-duyuyang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20190506081939.74287-1-duyuyang@gmail.com>
-References: <20190506081939.74287-1-duyuyang@gmail.com>
+        Mon, 6 May 2019 04:21:26 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7171 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726657AbfEFIUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 04:20:46 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 510C3F015AB8680A8616;
+        Mon,  6 May 2019 16:20:44 +0800 (CST)
+Received: from euler.huawei.com (10.175.104.193) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 6 May 2019 16:20:41 +0800
+From:   Wei Li <liwei391@huawei.com>
+To:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <marc.zyngier@arm.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>
+CC:     <julien.thierry@arm.com>, <Suzuki.Poulose@arm.com>,
+        <sudeep.holla@arm.com>, <steve.capper@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <daniel.thompson@linaro.org>,
+        <james.morse@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/3] arm64: Add support for on-demand backtrace of other CPUs
+Date:   Mon, 6 May 2019 16:25:41 +0800
+Message-ID: <20190506082542.11357-3-liwei391@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190506082542.11357-1-liwei391@huawei.com>
+References: <20190506082542.11357-1-liwei391@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two functions now handle different check results themselves. A new
-check_path function is added to check whether there is a path in the
-dependency graph. No functional change.
+To support backtracing of other CPUs in the system on lockups, add the
+implementation of arch_trigger_cpumask_backtrace() for arm64.
 
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+In this patch, we add an arm64 NMI-like IPI based backtracer, referring
+to the implementation on arm by Russell King and Chris Metcalf.
+
+Signed-off-by: Wei Li <liwei391@huawei.com>
 ---
- kernel/locking/lockdep.c | 118 +++++++++++++++++++++++++++++------------------
- 1 file changed, 74 insertions(+), 44 deletions(-)
+ arch/arm64/include/asm/hardirq.h |  2 +-
+ arch/arm64/include/asm/irq.h     |  6 ++++++
+ arch/arm64/kernel/smp.c          | 22 +++++++++++++++++++++-
+ 3 files changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index ebfa42a..2502ea4 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1678,33 +1678,90 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+diff --git a/arch/arm64/include/asm/hardirq.h b/arch/arm64/include/asm/hardirq.h
+index 89691c86640a..a5d94aa59c7c 100644
+--- a/arch/arm64/include/asm/hardirq.h
++++ b/arch/arm64/include/asm/hardirq.h
+@@ -24,7 +24,7 @@
+ #include <asm/kvm_arm.h>
+ #include <asm/sysreg.h>
+ 
+-#define NR_IPI	7
++#define NR_IPI	8
+ 
+ typedef struct {
+ 	unsigned int __softirq_pending;
+diff --git a/arch/arm64/include/asm/irq.h b/arch/arm64/include/asm/irq.h
+index b2b0c6405eb0..28471df488c0 100644
+--- a/arch/arm64/include/asm/irq.h
++++ b/arch/arm64/include/asm/irq.h
+@@ -13,5 +13,11 @@ static inline int nr_legacy_irqs(void)
+ 	return 0;
  }
  
- /*
-- * Prove that the dependency graph starting at <entry> can not
-- * lead to <target>. Print an error and return 0 if it does.
-+ * Check that the dependency graph starting at <src> can lead to
-+ * <target> or not. Print an error and return 0 if it does.
-  */
- static noinline int
--check_noncircular(struct lock_list *root, struct lock_class *target,
--		struct lock_list **target_entry)
-+check_path(struct lock_class *target, struct lock_list *src_entry,
-+	   struct lock_list **target_entry)
++#ifdef CONFIG_SMP
++extern void arch_trigger_cpumask_backtrace(const cpumask_t *mask,
++					   bool exclude_self);
++#define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
++#endif
++
+ #endif /* !__ASSEMBLER__ */
+ #endif
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index bd8fdf6fcd8e..7e862f9124f3 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -35,6 +35,7 @@
+ #include <linux/smp.h>
+ #include <linux/seq_file.h>
+ #include <linux/irq.h>
++#include <linux/nmi.h>
+ #include <linux/irqchip/arm-gic-v3.h>
+ #include <linux/percpu.h>
+ #include <linux/clockchips.h>
+@@ -83,7 +84,8 @@ enum ipi_msg_type {
+ 	IPI_CPU_CRASH_STOP,
+ 	IPI_TIMER,
+ 	IPI_IRQ_WORK,
+-	IPI_WAKEUP
++	IPI_WAKEUP,
++	IPI_CPU_BACKTRACE
+ };
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+@@ -787,6 +789,7 @@ static const char *ipi_types[NR_IPI] __tracepoint_string = {
+ 	S(IPI_TIMER, "Timer broadcast interrupts"),
+ 	S(IPI_IRQ_WORK, "IRQ work interrupts"),
+ 	S(IPI_WAKEUP, "CPU wake-up interrupts"),
++	S(IPI_CPU_BACKTRACE, "Backtrace interrupts"),
+ };
+ 
+ static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
+@@ -946,6 +949,12 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+ 		break;
+ #endif
+ 
++	case IPI_CPU_BACKTRACE:
++		nmi_enter();
++		nmi_cpu_backtrace(regs);
++		nmi_exit();
++		break;
++
+ 	default:
+ 		pr_crit("CPU%u: Unknown IPI message 0x%x\n", cpu, ipinr);
+ 		break;
+@@ -1070,4 +1079,15 @@ bool cpus_are_stuck_in_kernel(void)
+ 
+ void ipi_gic_nmi_setup(void __iomem *base)
  {
--	int result;
-+	int ret;
-+
-+	ret = __bfs_forwards(src_entry, (void *)target, class_equal,
-+			     target_entry);
-+
-+	if (unlikely(ret < 0))
-+		print_bfs_bug(ret);
-+
-+	return ret;
++	gic_sgi_set_prio(base, IPI_CPU_BACKTRACE, GICD_INT_NMI_PRI);
 +}
 +
-+/*
-+ * Prove that the dependency graph starting at <src> can not
-+ * lead to <target>. If it can, there is a circle when adding
-+ * <target> -> <src> dependency.
-+ *
-+ * Print an error and return 0 if it does.
-+ */
-+static noinline int
-+check_noncircular(struct held_lock *src, struct held_lock *target,
-+		  struct lock_trace *trace)
++static void raise_nmi(cpumask_t *mask)
 +{
-+	int ret;
-+	struct lock_list *uninitialized_var(target_entry);
-+	struct lock_list src_entry = {
-+		.class = hlock_class(src),
-+		.parent = NULL,
-+	};
- 
- 	debug_atomic_inc(nr_cyclic_checks);
- 
--	result = __bfs_forwards(root, target, class_equal, target_entry);
-+	ret = check_path(hlock_class(target), &src_entry, &target_entry);
- 
--	return result;
-+	if (unlikely(!ret)) {
-+		if (!trace->nr_entries) {
-+			/*
-+			 * If save_trace fails here, the printing might
-+			 * trigger a WARN but because of the !nr_entries it
-+			 * should not do bad things.
-+			 */
-+			save_trace(trace);
-+		}
++	smp_cross_call(mask, IPI_CPU_BACKTRACE);
++}
 +
-+		print_circular_bug(&src_entry, target_entry, src, target);
-+	}
-+
-+	return ret;
++void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
++{
++	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_nmi);
  }
- 
-+/*
-+ * Check that the dependency graph starting at <src> can lead to
-+ * <target> or not. If it can, <src> -> <target> dependency is already
-+ * in the graph.
-+ *
-+ * Print an error and return 2 if it does or 1 if it does not.
-+ */
- static noinline int
--check_redundant(struct lock_list *root, struct lock_class *target,
--		struct lock_list **target_entry)
-+check_redundant(struct held_lock *src, struct held_lock *target)
- {
--	int result;
-+	int ret;
-+	struct lock_list *uninitialized_var(target_entry);
-+	struct lock_list src_entry = {
-+		.class = hlock_class(src),
-+		.parent = NULL,
-+	};
- 
- 	debug_atomic_inc(nr_redundant_checks);
- 
--	result = __bfs_forwards(root, target, class_equal, target_entry);
-+	ret = check_path(hlock_class(target), &src_entry, &target_entry);
- 
--	return result;
-+	if (!ret) {
-+		debug_atomic_inc(nr_redundant);
-+		ret = 2;
-+	} else if (ret < 0)
-+		ret = 0;
-+
-+	return ret;
- }
- 
- #ifdef CONFIG_TRACE_IRQFLAGS
-@@ -2302,9 +2359,7 @@ static inline void inc_chains(void)
- check_prev_add(struct task_struct *curr, struct held_lock *prev,
- 	       struct held_lock *next, int distance, struct lock_trace *trace)
- {
--	struct lock_list *uninitialized_var(target_entry);
- 	struct lock_list *entry;
--	struct lock_list this;
- 	int ret;
- 
- 	if (!hlock_class(prev)->key || !hlock_class(next)->key) {
-@@ -2335,25 +2390,9 @@ static inline void inc_chains(void)
- 	 * MAX_CIRCULAR_QUEUE_SIZE) which keeps track of a breadth of nodes
- 	 * in the graph whose neighbours are to be checked.
- 	 */
--	this.class = hlock_class(next);
--	this.parent = NULL;
--	ret = check_noncircular(&this, hlock_class(prev), &target_entry);
--	if (unlikely(!ret)) {
--		if (!trace->nr_entries) {
--			/*
--			 * If save_trace fails here, the printing might
--			 * trigger a WARN but because of the !nr_entries it
--			 * should not do bad things.
--			 */
--			save_trace(trace);
--		}
--		print_circular_bug(&this, target_entry, next, prev);
-+	ret = check_noncircular(next, prev, trace);
-+	if (unlikely(ret <= 0))
- 		return 0;
--	}
--	else if (unlikely(ret < 0)) {
--		print_bfs_bug(ret);
--		return 0;
--	}
- 
- 	if (!check_irq_usage(curr, prev, next))
- 		return 0;
-@@ -2387,18 +2426,9 @@ static inline void inc_chains(void)
- 	/*
- 	 * Is the <prev> -> <next> link redundant?
- 	 */
--	this.class = hlock_class(prev);
--	this.parent = NULL;
--	ret = check_redundant(&this, hlock_class(next), &target_entry);
--	if (!ret) {
--		debug_atomic_inc(nr_redundant);
--		return 2;
--	}
--	if (ret < 0) {
--		print_bfs_bug(ret);
--		return 0;
--	}
--
-+	ret = check_redundant(prev, next);
-+	if (ret != 1)
-+		return ret;
- 
- 	if (!trace->nr_entries && !save_trace(trace))
- 		return 0;
 -- 
-1.8.3.1
+2.17.1
 
