@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71D4C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165A4C46460
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDCF2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02682054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155339;
-	bh=78zibKYhiig/J4kVmq6XTXpHwwwZRz64lGOKhh4NTDo=;
+	s=default; t=1557155342;
+	bh=JpkTfvP7iuybK9XXJKIRzG4hbXM/kJ8qskJAtD0sy8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltvHOhQWp7e4heXHlcfzQkOImFCnGRyvt5GTV8tVZaEYSmIe1FfITusTeZCvS2N2o
-	 z4kz5mf/P6hJj+C2wuSezorYOadmI6Z8RUGn//kvPEg1lR4Qr+95Wcf/pPTUARU1Hg
-	 P7Q7+y5UDWDlEqoSRqMt2IRF2wycePCP2WCrIEN8=
+	b=XMOPuUZO8L9dzMeZYNMq5WkHcVeoxvTO+Xg298eApJGJz9/eQiPP+ocp/Yq2k/NYP
+	 nan4deYBP/9h2LvwrTbhE+Xoq5pEiJfjB53RWWPLoJSO+qafvM01yE6Oj6hR23xiKP
+	 bcAu7iGe0+DqevpDg2MqDagnWkZWzx95xG5jce3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfEFPI6 (ORCPT
+        id S1727044AbfEFOf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:08:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727043AbfEFOf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 May 2019 10:35:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727016AbfEFOfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:35:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3FE021479;
-        Mon,  6 May 2019 14:35:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC78920B7C;
+        Mon,  6 May 2019 14:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153355;
-        bh=78zibKYhiig/J4kVmq6XTXpHwwwZRz64lGOKhh4NTDo=;
+        s=default; t=1557153350;
+        bh=JpkTfvP7iuybK9XXJKIRzG4hbXM/kJ8qskJAtD0sy8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DMxM2xtQJVDSGl6WTwiyaYpzow+wd91sIHn6riOc6C5UM6UBx+6I0TJc9+U4KnFfZ
-         xj+W1eJ+l42CJ3bClWCRevvgAZ7EjsMZWwUygwpJLO3F0b9ApXQ4HnrcPYmarHTDzW
-         dfBr/jpi7QJI9O/AnMg81BzX5C5LAYlTiQAkCLYA=
+        b=0F5uMvM9W2WBcBzx+bGOeO3/2Kx5eSRULb0KWzLvKrAboR27LFV6VSLQdke2tgdFU
+         9bXb7zb07Owu6Li0T87iooZpMfbqnQcUBUPpV6MeImtGIXTTXQaeEgewm50KvzYdmu
+         IXC9SUbtrUZ+Hs7+mgTbHeGnSyVyNrWCecOkmcd0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
-        Tony Lindgren <tony@atomide.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 058/122] mfd: twl-core: Disable IRQ while suspended
-Date:   Mon,  6 May 2019 16:31:56 +0200
-Message-Id: <20190506143100.226604550@linuxfoundation.org>
+Subject: [PATCH 5.0 056/122] jffs2: fix use-after-free on symlink traversal
+Date:   Mon,  6 May 2019 16:31:54 +0200
+Message-Id: <20190506143100.011884860@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -61,78 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 20bb907f7dc82ecc9e135ad7067ac7eb69c81222 ]
+[ Upstream commit 4fdcfab5b5537c21891e22e65996d4d0dd8ab4ca ]
 
-Since commit 6e2bd956936 ("i2c: omap: Use noirq system sleep pm ops to idle device for suspend")
-on gta04 we have handle_twl4030_pih() called in situations where pm_runtime_get()
-in i2c-omap.c returns -EACCES.
+free the symlink body after the same RCU delay we have for freeing the
+struct inode itself, so that traversal during RCU pathwalk wouldn't step
+into freed memory.
 
-[   86.474365] Freezing remaining freezable tasks ... (elapsed 0.002 seconds) done.
-[   86.485473] printk: Suspending console(s) (use no_console_suspend to debug)
-[   86.555572] Disabling non-boot CPUs ...
-[   86.555664] Successfully put all powerdomains to target state
-[   86.563720] twl: Read failed (mod 1, reg 0x01 count 1)
-[   86.563751] twl4030: I2C error -13 reading PIH ISR
-[   86.563812] twl: Read failed (mod 1, reg 0x01 count 1)
-[   86.563812] twl4030: I2C error -13 reading PIH ISR
-[   86.563873] twl: Read failed (mod 1, reg 0x01 count 1)
-[   86.563903] twl4030: I2C error -13 reading PIH ISR
-
-This happens when we wakeup via something behing twl4030 (powerbutton or rtc
-alarm). This goes on for minutes until the system is finally resumed.
-Disable the irq on suspend and enable it on resume to avoid
-having i2c access problems when the irq registers are checked.
-
-Fixes: 6e2bd956936 ("i2c: omap: Use noirq system sleep pm ops to idle device for suspend")
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Tested-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/mfd/twl-core.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ fs/jffs2/readinode.c | 5 -----
+ fs/jffs2/super.c     | 5 ++++-
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mfd/twl-core.c b/drivers/mfd/twl-core.c
-index 299016bc46d9..104477b512a2 100644
---- a/drivers/mfd/twl-core.c
-+++ b/drivers/mfd/twl-core.c
-@@ -1245,6 +1245,28 @@ twl_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	return status;
+diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
+index 389ea53ea487..bccfc40b3a74 100644
+--- a/fs/jffs2/readinode.c
++++ b/fs/jffs2/readinode.c
+@@ -1414,11 +1414,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
+ 
+ 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
+ 
+-	if (f->target) {
+-		kfree(f->target);
+-		f->target = NULL;
+-	}
+-
+ 	fds = f->dents;
+ 	while(fds) {
+ 		fd = fds;
+diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
+index bb6ae387469f..05d892c79339 100644
+--- a/fs/jffs2/super.c
++++ b/fs/jffs2/super.c
+@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
+ static void jffs2_i_callback(struct rcu_head *head)
+ {
+ 	struct inode *inode = container_of(head, struct inode, i_rcu);
+-	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
++	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
++
++	kfree(f->target);
++	kmem_cache_free(jffs2_inode_cachep, f);
  }
  
-+static int __maybe_unused twl_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+
-+	if (client->irq)
-+		disable_irq(client->irq);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused twl_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+
-+	if (client->irq)
-+		enable_irq(client->irq);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(twl_dev_pm_ops, twl_suspend, twl_resume);
-+
- static const struct i2c_device_id twl_ids[] = {
- 	{ "twl4030", TWL4030_VAUX2 },	/* "Triton 2" */
- 	{ "twl5030", 0 },		/* T2 updated */
-@@ -1262,6 +1284,7 @@ static const struct i2c_device_id twl_ids[] = {
- /* One Client Driver , 4 Clients */
- static struct i2c_driver twl_driver = {
- 	.driver.name	= DRIVER_NAME,
-+	.driver.pm	= &twl_dev_pm_ops,
- 	.id_table	= twl_ids,
- 	.probe		= twl_probe,
- 	.remove		= twl_remove,
+ static void jffs2_destroy_inode(struct inode *inode)
 -- 
 2.20.1
 
