@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F08AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906AAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC62206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599EF2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:11:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXVagYm4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m1l/+hgd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfEFRLG (ORCPT
+        id S1727001AbfEFRLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:11:06 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39803 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbfEFRLE (ORCPT
+        Mon, 6 May 2019 13:11:12 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36395 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEFRLL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:11:04 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z26so7102902pfg.6;
-        Mon, 06 May 2019 10:11:04 -0700 (PDT)
+        Mon, 6 May 2019 13:11:11 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 85so6765950pgc.3;
+        Mon, 06 May 2019 10:11:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zAXLPjGujT6Na6Fx5FR5OHTWfQ8Sl9PgNJoSP5Q6+xc=;
-        b=LXVagYm4/IHPaFkp97SU/HNUlh5vX9CvZ1BIM6+L5VIafHqZGLD3Y84IciIrxRZMRF
-         Hvv5lBoWNRmd8QrAdnAIDHD6a7X94ZuHLw/jBMsLFka75ypSxgwTlxlpCBXQFRO2Cm83
-         orY1QyhuyzoYx9TO5QkXC+XytSNoOF7ylblJcTkK7ZuP7Iac4Nvc86jE+hC2MQ6Pt8hn
-         2LyHxwQot2Dl30DsLrwG0PMDUaa9bbTNCZXsyxf7a9PmiCm12yntL8pBlPojwRPQsaW2
-         BzIBFbDIQr24t93R55ckjcYtMl0+HBbasOAJbxW9EvWhsTTUDmi64JCmbPZJY1NgddmG
-         K+tA==
+        bh=+HtXa4Ue9AbTj0aCIbX5pYV5pqTXz//dsdosYq60Tuc=;
+        b=m1l/+hgdFUsOc0vlEXidVHNEJMUkj2kWEMox/748vp2VpgI2lpGTNaEtkdQATskaGV
+         53M7c5GRK3pUbYV/oDAre8vyL5I7tlaZPD1u+tyfe0VKszmAFartAy4lC8/2bG6KO10u
+         WkkSlD4ixsunF1jFXSefd4sVXFOmfMerzb2awIgkPPJw+2uDu/zustGxVgByy1zmnpYI
+         9lH1lff0UaO3qxo/A/2znDHrf15zVvRrdBBYE1ihuVVC0DPMgf9weShGnbaPyIky23iD
+         T7S4zfw5vfWlqdArgm8FLSO1C2CvLNnazoHNRfh9pDfLt3xvXLY7WY2z1yjJodfPG53H
+         R2xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zAXLPjGujT6Na6Fx5FR5OHTWfQ8Sl9PgNJoSP5Q6+xc=;
-        b=ZNUmsS5ULPuzVertPF4z/32O4V3nF1Qv0Ma8XQ0sCCsG08RZZV0XUy1aTADMi2FXZf
-         K5egiLCk+oGGT8dJO6KpUPYVHJ0uNNp74DTLABislJCiN/28rIPxNDdBtBefbpr6YoNu
-         Fj0723gPHekgAJTxfpR4alDrCo4MpiLzQpvjIEro56WRF7Ha+L6rx3mfS1c/QU238WT2
-         ZSEh9qJAogKobElzIDxdIZV067UwGqCEFq8PtfZ/fZLTs5q3JUSej0gtJfp7T9YrNLB1
-         tHvCCVd7b37g/i2c0xy2oEVPezk25fmvUbpFl5FH/35ebmLBuxfKrpcyhxgTFSU2gD9F
-         Qodw==
-X-Gm-Message-State: APjAAAUMMtjhsFHF34gBVg+ziVbJDR0covcHUggbNeBvPzHyIYVM0g2A
-        gTQIEvubdr9gSoG6HNjpvgw=
-X-Google-Smtp-Source: APXvYqxkrhpvnm1+Dng/70zJcIW9K2MM2gw1EO0UPCJdz9N37i4W7kv8r08gScI0VwD7isomQn/Xjg==
-X-Received: by 2002:a62:bd14:: with SMTP id a20mr33966214pff.107.1557162664209;
-        Mon, 06 May 2019 10:11:04 -0700 (PDT)
+        bh=+HtXa4Ue9AbTj0aCIbX5pYV5pqTXz//dsdosYq60Tuc=;
+        b=MqXa7VCzRwNexSjAqKofuGL2Uj01TJLDcLp+OMGAPcfI3fwY01CsfzZ8HeD4OyNymR
+         xEpFjcF3CYuS/tMp5iyCNWVN1DFkGSGxTNtJB2D78XIra6yKLYohWbbf/J8GVAnnPUj/
+         KEm7DH3r+gsegZPZe0HuKNQhf8UpzxwZ85Yg2aiTCN5ZngtDD2bRr8UqF/1SiPD0z+Y/
+         tklM1Zrbj6V8sDX2alUNZPmg7zX31vm3DgdH1nDw3Tg3FRVouT309prvZ5MLabDKGZY6
+         I7gG2kKBAXUIUij9jJ+8pV81j1H21Bl3MHe+NSKelcilNTHqQVEEELEgWKzabVHG1Flp
+         +efw==
+X-Gm-Message-State: APjAAAXmOj+6jTIp1QE7+7oIBLmaqHl1gAqyAl0E10BSZukXX3PN984+
+        R6jLWs4dQscksFLSgGq6utM=
+X-Google-Smtp-Source: APXvYqwOpbpCRCQbdySy5g0BCmxl7I//spl7+mmCo4uY8S+bc2+W5v3+sHDPGOPbzDa2UVWstDhhvg==
+X-Received: by 2002:a63:6a41:: with SMTP id f62mr1786159pgc.392.1557162670042;
+        Mon, 06 May 2019 10:11:10 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id h13sm11045680pgk.55.2019.05.06.10.10.58
+        by smtp.gmail.com with ESMTPSA id h13sm11045680pgk.55.2019.05.06.10.11.04
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 06 May 2019 10:11:03 -0700 (PDT)
+        Mon, 06 May 2019 10:11:09 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
 Cc:     x86@kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH v3 15/27] Documentation: x86: convert pti.txt to reST
-Date:   Tue,  7 May 2019 01:09:11 +0800
-Message-Id: <20190506170923.7117-16-changbin.du@gmail.com>
+Subject: [PATCH v3 16/27] Documentation: x86: convert microcode.txt to reST
+Date:   Tue,  7 May 2019 01:09:12 +0800
+Message-Id: <20190506170923.7117-17-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190506170923.7117-1-changbin.du@gmail.com>
 References: <20190506170923.7117-1-changbin.du@gmail.com>
@@ -81,77 +81,152 @@ add it to Sphinx TOC tree. No essential content change.
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/x86/index.rst            |  1 +
- Documentation/x86/{pti.txt => pti.rst} | 17 +++++++++++++----
- 2 files changed, 14 insertions(+), 4 deletions(-)
- rename Documentation/x86/{pti.txt => pti.rst} (96%)
+ Documentation/x86/index.rst                   |  1 +
+ .../x86/{microcode.txt => microcode.rst}      | 62 ++++++++++---------
+ 2 files changed, 35 insertions(+), 28 deletions(-)
+ rename Documentation/x86/{microcode.txt => microcode.rst} (81%)
 
 diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index 85f1f44cc8ac..6719defc16f8 100644
+index 6719defc16f8..ae29c026be72 100644
 --- a/Documentation/x86/index.rst
 +++ b/Documentation/x86/index.rst
-@@ -21,3 +21,4 @@ x86-specific Documentation
-    protection-keys
+@@ -22,3 +22,4 @@ x86-specific Documentation
     intel_mpx
     amd-memory-encryption
-+   pti
-diff --git a/Documentation/x86/pti.txt b/Documentation/x86/pti.rst
-similarity index 96%
-rename from Documentation/x86/pti.txt
-rename to Documentation/x86/pti.rst
-index 5cd58439ad2d..4b858a9bad8d 100644
---- a/Documentation/x86/pti.txt
-+++ b/Documentation/x86/pti.rst
-@@ -1,9 +1,15 @@
+    pti
++   microcode
+diff --git a/Documentation/x86/microcode.txt b/Documentation/x86/microcode.rst
+similarity index 81%
+rename from Documentation/x86/microcode.txt
+rename to Documentation/x86/microcode.rst
+index 79fdb4a8148a..a320d37982ed 100644
+--- a/Documentation/x86/microcode.txt
++++ b/Documentation/x86/microcode.rst
+@@ -1,7 +1,11 @@
+-	The Linux Microcode Loader
 +.. SPDX-License-Identifier: GPL-2.0
-+
+ 
+-Authors: Fenghua Yu <fenghua.yu@intel.com>
+-	 Borislav Petkov <bp@suse.de>
 +==========================
-+Page Table Isolation (PTI)
++The Linux Microcode Loader
 +==========================
 +
- Overview
- ========
++:Authors: - Fenghua Yu <fenghua.yu@intel.com>
++          - Borislav Petkov <bp@suse.de>
  
--Page Table Isolation (pti, previously known as KAISER[1]) is a
-+Page Table Isolation (pti, previously known as KAISER [1]_) is a
- countermeasure against attacks on the shared user/kernel address
--space such as the "Meltdown" approach[2].
-+space such as the "Meltdown" approach [2]_.
+ The kernel has a x86 microcode loading facility which is supposed to
+ provide microcode loading methods in the OS. Potential use cases are
+@@ -10,8 +14,8 @@ and updating the microcode on long-running systems without rebooting.
  
- To mitigate this class of attacks, we create an independent set of
- page tables for use only when running userspace applications.  When
-@@ -60,6 +66,7 @@ Protection against side-channel attacks is important.  But,
- this protection comes at a cost:
+ The loader supports three loading methods:
  
- 1. Increased Memory Use
+-1. Early load microcode
+-=======================
++Early load microcode
++====================
+ 
+ The kernel can update microcode very early during boot. Loading
+ microcode early can fix CPU issues before they are observed during
+@@ -26,8 +30,10 @@ loader parses the combined initrd image during boot.
+ 
+ The microcode files in cpio name space are:
+ 
+-on Intel: kernel/x86/microcode/GenuineIntel.bin
+-on AMD  : kernel/x86/microcode/AuthenticAMD.bin
++on Intel:
++  kernel/x86/microcode/GenuineIntel.bin
++on AMD  :
++  kernel/x86/microcode/AuthenticAMD.bin
+ 
+ During BSP (BootStrapping Processor) boot (pre-SMP), the kernel
+ scans the microcode file in the initrd. If microcode matching the
+@@ -42,8 +48,8 @@ Here's a crude example how to prepare an initrd with microcode (this is
+ normally done automatically by the distribution, when recreating the
+ initrd, so you don't really have to do it yourself. It is documented
+ here for future reference only).
++::
+ 
+----
+   #!/bin/bash
+ 
+   if [ -z "$1" ]; then
+@@ -76,15 +82,15 @@ here for future reference only).
+   cat ucode.cpio $INITRD.orig > $INITRD
+ 
+   rm -rf $TMPDIR
+----
 +
-   a. Each process now needs an order-1 PGD instead of order-0.
-      (Consumes an additional 4k per process).
-   b. The 'cpu_entry_area' structure must be 2MB in size and 2MB
-@@ -68,6 +75,7 @@ this protection comes at a cost:
-      is decompressed, but no space in the kernel image itself.
  
- 2. Runtime Cost
-+
-   a. CR3 manipulation to switch between the page table copies
-      must be done at interrupt, syscall, and exception entry
-      and exit (it can be skipped when the kernel is interrupted,
-@@ -142,6 +150,7 @@ ideally doing all of these in parallel:
-    interrupted, including nested NMIs.  Using "-c" boosts the rate of
-    NMIs, and using two -c with separate counters encourages nested NMIs
-    and less deterministic behavior.
-+   ::
+ The system needs to have the microcode packages installed into
+ /lib/firmware or you need to fixup the paths above if yours are
+ somewhere else and/or you've downloaded them directly from the processor
+ vendor's site.
  
- 	while true; do perf record -c 10000 -e instructions,cycles -a sleep 10; done
+-2. Late loading
+-===============
++Late loading
++============
  
-@@ -182,5 +191,5 @@ that are worth noting here.
-    tended to be TLB invalidation issues.  Usually invalidating
-    the wrong PCID, or otherwise missing an invalidation.
+ There are two legacy user space interfaces to load microcode, either through
+ /dev/cpu/microcode or through /sys/devices/system/cpu/microcode/reload file
+@@ -94,9 +100,9 @@ The /dev/cpu/microcode method is deprecated because it needs a special
+ userspace tool for that.
  
--1. https://gruss.cc/files/kaiser.pdf
--2. https://meltdownattack.com/meltdown.pdf
-+.. [1] https://gruss.cc/files/kaiser.pdf
-+.. [2] https://meltdownattack.com/meltdown.pdf
+ The easier method is simply installing the microcode packages your distro
+-supplies and running:
++supplies and running::
+ 
+-# echo 1 > /sys/devices/system/cpu/microcode/reload
++  # echo 1 > /sys/devices/system/cpu/microcode/reload
+ 
+ as root.
+ 
+@@ -104,29 +110,29 @@ The loading mechanism looks for microcode blobs in
+ /lib/firmware/{intel-ucode,amd-ucode}. The default distro installation
+ packages already put them there.
+ 
+-3. Builtin microcode
+-====================
++Builtin microcode
++=================
+ 
+ The loader supports also loading of a builtin microcode supplied through
+ the regular builtin firmware method CONFIG_EXTRA_FIRMWARE. Only 64-bit is
+ currently supported.
+ 
+-Here's an example:
++Here's an example::
+ 
+-CONFIG_EXTRA_FIRMWARE="intel-ucode/06-3a-09 amd-ucode/microcode_amd_fam15h.bin"
+-CONFIG_EXTRA_FIRMWARE_DIR="/lib/firmware"
++  CONFIG_EXTRA_FIRMWARE="intel-ucode/06-3a-09 amd-ucode/microcode_amd_fam15h.bin"
++  CONFIG_EXTRA_FIRMWARE_DIR="/lib/firmware"
+ 
+-This basically means, you have the following tree structure locally:
++This basically means, you have the following tree structure locally::
+ 
+-/lib/firmware/
+-|-- amd-ucode
+-...
+-|   |-- microcode_amd_fam15h.bin
+-...
+-|-- intel-ucode
+-...
+-|   |-- 06-3a-09
+-...
++  /lib/firmware/
++  |-- amd-ucode
++  ...
++  |   |-- microcode_amd_fam15h.bin
++  ...
++  |-- intel-ucode
++  ...
++  |   |-- 06-3a-09
++  ...
+ 
+ so that the build system can find those files and integrate them into
+ the final kernel image. The early loader finds them and applies them.
 -- 
 2.20.1
 
