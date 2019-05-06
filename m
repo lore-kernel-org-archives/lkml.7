@@ -2,167 +2,137 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C99C04AAF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A07C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36C6208C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:37:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G8Apsdac"
+	by mail.kernel.org (Postfix) with ESMTP id 51B192087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:38:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557128285;
+	bh=DOKRU8VF11kW1JPbXVxEGEopd7AYRSbPKW251llYHbY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HkEWbU0q5qnL0dGbO8KAe+38+W7TK+L7F8EUdx5So8Bquv2paNsXE84bA7M/jV55F
+	 K2KtgjiZYz2mS4849F4aUyqrMBzwI7VtbJULf/RdBrheyjkH9GfVU7jfRgeoSNWd8T
+	 HK6G3dJJjtDpk+kmBf/XTx4yGutaUn0MQtJxFlAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfEFHhx (ORCPT
+        id S1726486AbfEFHiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:37:53 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39198 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfEFHhw (ORCPT
+        Mon, 6 May 2019 03:38:04 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38980 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfEFHhr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:37:52 -0400
-Received: by mail-ot1-f65.google.com with SMTP id o39so10595405ota.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 00:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VBzgaXpZlMW3qUziKMTrNIsU6hoCECAA0i8m2SW5Vno=;
-        b=G8Apsdac6cxEre7pzQch8MuGvLvy4OAtrerFD+8qUqPq00aP7B+rH2m2zh3fNiP683
-         JehsG+fRLsRyp//KRtYczGH4yN3/qRae0Yoz8nUiIYy4QvgA/EvZh6vlT0qAf4y+Pc3c
-         Jm656p/xZ+K2CNY+PrRf/kDB65dlgip3ZR4nZ6wuj3PmsRWHhQaLqT+BygaLHxG4RSNx
-         5bSTtESxQhLlea8qgJPl+qgXiTLgKMP7y/IqUkE/37dbXGtZvYfqaEnEjUXo6aM3r6Gt
-         YOoIsa1QbIkID6YMdwJ267M+ofqNBXOy08lz0fdr/O+QHIEyi0pGeUOMIe6zCIYaXAIy
-         Kt1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VBzgaXpZlMW3qUziKMTrNIsU6hoCECAA0i8m2SW5Vno=;
-        b=jIssYLBfSXiOHXI6V0/ss9rcTQ5XBWOfscbvQKWr0Yb7Ufd+ls7Jya+PwrrcDMJKJp
-         tcqqxObB6OtlvdiMAVor2tAN6hazzhhYnyktbNA0bx5PzZtwZeVhuuxFYmDYt/mETvdE
-         5VpduTcN+/LuyJhJPnTDxQhGC1z2oJKvEA5+dpqqs2ZiyJfCfJv7Q8fNvuGQUDNz0d7d
-         9C2S084KJ3zAtg8+SuLfbidPC0/72evChcKlwSq211Dx8iLc59S2i6VMpirR8hDEp3QV
-         rVxV1OCAzkeO9Vlw1oyZ1dGTPuAxmpAu132tu/oh7lcAI9LjvHP13K5pXWMr77rVnn3c
-         09Iw==
-X-Gm-Message-State: APjAAAU5s2KZMmp4gwLDiYnhtt8+7y8DN/72PeCac9awiznjyX7bVqCc
-        XFnZVWYzIS5M6t7CGG0SvVxaPrm2KFmwasaZLd3exw==
-X-Google-Smtp-Source: APXvYqyK4/SAtmNGvtd8ck3bkArJwNTGFExfjP5d2CwifK0lVSo64KVSCvSjMkZDMJ2Qwp4Isu90YKRnrZ8jvsp4Ctc=
-X-Received: by 2002:a05:6830:b:: with SMTP id c11mr15200300otp.281.1557128271074;
- Mon, 06 May 2019 00:37:51 -0700 (PDT)
+        Mon, 6 May 2019 03:37:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tHEGQ9oW3tTgBWCAOeQCOTnFuPn94mh9AkAln7vInY4=; b=l7fNRNLCq2MIuMeUy6SV4mr7n
+        1qpPp/FUVJ51Os8GeDRVf7F5aguVa/b0irPfvM9G/cW6+FEzAtdo798HVEHAhauYXY8UsPSnZQSRL
+        tJ1EDC287NTk/V18FW2MzFdOSlzo/2DhR2TkqiYxz8p9y7lM+asUSwmonZ5IO7jxu/sL8=;
+Received: from kd111239184067.au-net.ne.jp ([111.239.184.67] helo=finisterre.ee.mobilebroadband)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hNYBx-0000rz-7U; Mon, 06 May 2019 07:37:42 +0000
+Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
+        id 5653E44003B; Mon,  6 May 2019 05:44:25 +0100 (BST)
+Date:   Mon, 6 May 2019 13:44:25 +0900
+From:   Mark Brown <broonie@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Krishna Yarlagadda <kyarlagadda@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V3 5/9] spi: export spi core function spi_set_cs
+Message-ID: <20190506044425.GN14916@sirena.org.uk>
+References: <1555363834-32155-1-git-send-email-skomatineni@nvidia.com>
+ <1555363834-32155-6-git-send-email-skomatineni@nvidia.com>
+ <20190419151823.GS2803@sirena.org.uk>
+ <BYAPR12MB3398D133D1C71355BC530754C2390@BYAPR12MB3398.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-References: <ee4a22c3491628abf94c8d356dccd67984604811.1555049554.git.baolin.wang@linaro.org>
- <20190418102606.AE0181126DA9@debutante.sirena.org.uk>
-In-Reply-To: <20190418102606.AE0181126DA9@debutante.sirena.org.uk>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Mon, 6 May 2019 15:37:39 +0800
-Message-ID: <CAMz4kuLK_XS93Wpq+BkXVAJA3M+vFnL8pR0gR7aRpYxBzwLv9w@mail.gmail.com>
-Subject: Re: Applied "ASoC: sprd: Add reserved DMA memory support" to the asoc tree
-To:     Mark Brown <broonie@kernel.org>
-Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="UIkw8Cc2/Xz5YwHB"
+Content-Disposition: inline
+In-Reply-To: <BYAPR12MB3398D133D1C71355BC530754C2390@BYAPR12MB3398.namprd12.prod.outlook.com>
+X-Cookie: -- I have seen the FUN --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
 
-On Thu, 18 Apr 2019 at 18:26, Mark Brown <broonie@kernel.org> wrote:
->
-> The patch
->
->    ASoC: sprd: Add reserved DMA memory support
->
-> has been applied to the asoc tree at
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
->
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
->
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
->
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
->
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
+--UIkw8Cc2/Xz5YwHB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I did not find this patch in your sound git tree and the linux-next
-tree, so could you check if you missed this patch? Or did I miss
-anything? Thanks a lot.
+On Mon, Apr 29, 2019 at 10:02:46PM +0000, Sowjanya Komatineni wrote:
 
->
-> Thanks,
-> Mark
->
-> From 25a073bb9ceda91b8bf731b20ac01b68cc8877a9 Mon Sep 17 00:00:00 2001
-> From: Baolin Wang <baolin.wang@linaro.org>
-> Date: Fri, 12 Apr 2019 14:40:17 +0800
-> Subject: [PATCH] ASoC: sprd: Add reserved DMA memory support
->
-> For Spreadtrum audio platform driver, it need allocate a larger DMA buffer
-> dynamically to copy audio data between userspace and kernel space, but that
-> will increase the risk of memory allocation failure especially the system
-> is under heavy load situation.
->
-> To make sure the audio can work in this scenario, we usually reserve one
-> region of memory to be used as a shared pool of DMA buffers for the
-> platform component. So add of_reserved_mem_device_init_by_idx() function
-> to initialize the shared pool of DMA buffers to be used by the platform
-> component.
->
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  sound/soc/sprd/sprd-pcm-dma.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/sound/soc/sprd/sprd-pcm-dma.c b/sound/soc/sprd/sprd-pcm-dma.c
-> index 9be6d4b2bf74..d38ebbbbf169 100644
-> --- a/sound/soc/sprd/sprd-pcm-dma.c
-> +++ b/sound/soc/sprd/sprd-pcm-dma.c
-> @@ -6,6 +6,7 @@
->  #include <linux/dma/sprd-dma.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> +#include <linux/of_reserved_mem.h>
->  #include <linux/platform_device.h>
->  #include <sound/pcm.h>
->  #include <sound/pcm_params.h>
-> @@ -530,8 +531,14 @@ static const struct snd_soc_component_driver sprd_soc_component = {
->
->  static int sprd_soc_platform_probe(struct platform_device *pdev)
->  {
-> +       struct device_node *np = pdev->dev.of_node;
->         int ret;
->
-> +       ret = of_reserved_mem_device_init_by_idx(&pdev->dev, np, 0);
-> +       if (ret)
-> +               dev_warn(&pdev->dev,
-> +                        "no reserved DMA memory for audio platform device\n");
-> +
->         ret = devm_snd_soc_register_component(&pdev->dev, &sprd_soc_component,
->                                               NULL, 0);
->         if (ret)
-> --
-> 2.20.1
->
+Please fix your mail client to word wrap within paragraphs at something
+substantially less than 80 columns.  Doing this makes your messages much
+easier to read and reply to.
 
+> > On Mon, Apr 15, 2019 at 02:30:30PM -0700, Sowjanya Komatineni wrote:
+> > > This patch exports spi_set_cs of the spi core to allow SPI masters to=
+=20
+> > > use when gpio based chip select is needed.
 
--- 
-Baolin Wang
-Best Regards
+> > This isn't really what I meant when I said it'd be good to use the
+> > core GPIO code - this function doesn't do a huge amount really and
+> > the usage of it in your subsequent patch for the > driver isn't
+> > exactly joined up with the little it does (which is mainly swapping
+> > in the GPIO chip select instead of the hardware chip select) isn't
+> > used in your driver usage of this as far as I can see.  The bulk of
+> > the chip select handling code in the core is actually in
+> > transfer_one_message() which your driver doesn't use as it's got
+> > it's own implementation of that; I've not looked in enough detail to
+> > figure out if it could use it.
+
+> In SPI Tegra driver, we wanted to have GPIO based CS control when
+> cs-gpios is specified in parallel to HW/SW CS. Having parallel GPIO
+> based CS is to mimic some of the timing stuff that's needed for some
+> spi devices by not actually using HW CS on platform but only for SPI
+> HW design logic inside the chip.
+
+> Tegra spi driver don't use set_cs callback so looking into spi_set_cs
+> from spi core implementation when cs-gpios property is used it exactly
+> the same that is needed for GPIO control CS. So used this in V3.=20
+
+> Can you please provide more details on what you are suggesting?
+> Do you prefer not to use SPI core spi_set_cs and gpio_set_values APIs
+> and instead implement in tegra SPI driver using GPIO descriptors ?
+
+You're probably best open coding in the driver if there's value in using
+the hardware chip select.
+
+--UIkw8Cc2/Xz5YwHB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzPu6YACgkQJNaLcl1U
+h9DM0Qf7Bykvbj1t4ndVRPemN1ZjRrYC94F5FOwPPHuLYIIFawPR0xupsoIwdZPi
+b9rbj7/L3dNBHHO+gjkDEQLYC++gMNJnL5bSo2AA8cz/qJhVqzMS0nu+F6Fgofup
+jwo4IWbjxYPAJWqrjWFj6Y79h+cXTmu+lcOiEnHoEjuqjxNH5fWJXqLrDYe7irOJ
+ST8QQXWtz2T1A9BfvWzZ56NFlieoOR+vKQFZZjwYzS7irq+F9LqT5Q/VKNQOvExL
+SLu4ZnMlPuZQBkOxFqtr8yve31kkxhyFfUrvhKCBwAHKzg+dt3Aop+gkbwJCeEEJ
+tuLSjnUOUENVdEKWAwHEj4DdEcXH7Q==
+=C76I
+-----END PGP SIGNATURE-----
+
+--UIkw8Cc2/Xz5YwHB--
