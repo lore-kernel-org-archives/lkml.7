@@ -2,97 +2,134 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB67C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC50C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033FF206A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF08206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:29:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Xi4GnazF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfEFNXA (ORCPT
+        id S1726190AbfEFN3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 09:23:00 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:60339 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbfEFNXA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 09:23:00 -0400
-X-Originating-IP: 90.88.149.145
-Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 1834E1BF211;
-        Mon,  6 May 2019 13:22:55 +0000 (UTC)
-Date:   Mon, 6 May 2019 15:22:55 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 18/20] lib: image-formats: Add v4l2 formats support
-Message-ID: <20190506132255.k5d4e6wcsy5ltjjk@flea>
-References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
- <a9af304793a38b6001c9155f36e370002926841c.1555487650.git-series.maxime.ripard@bootlin.com>
- <5c904167-14f3-8e64-42f1-650d0689f78d@xs4all.nl>
+        Mon, 6 May 2019 09:29:33 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55766 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbfEFN3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 09:29:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=iqK/8epn5ls+IZG0UVMrU/nhCwJXFn7xBX1PC/hdTw8=; b=Xi4GnazFzWujEyL0+B6GoxfPXw
+        yypf4DnisTvFQyII2YxI8Dq+6W1uRpKc+dxsYsBsa+Dpv2j+og2+nHKl5eyc96I8rPF6SecgNg+qv
+        dnTngDKXOw4HfSo1EdOyX4oJ89lR64yLS2wQ4mZE13dQi9ckbzmSoJ8oR4rkGq2lWWRs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hNdgK-00051K-MA; Mon, 06 May 2019 15:29:24 +0200
+Date:   Mon, 6 May 2019 15:29:24 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, palmer@sifive.com,
+        paul.walmsley@sifive.com, peter@korsgaard.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 v1 3/3] i2c-ocores: sifive: add polling mode
+ workaround for FU540-C000 SoC.
+Message-ID: <20190506132924.GD15291@lunn.ch>
+References: <1557147240-29551-1-git-send-email-sagar.kadam@sifive.com>
+ <1557147240-29551-4-git-send-email-sagar.kadam@sifive.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="elbcsaswnwcxysle"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5c904167-14f3-8e64-42f1-650d0689f78d@xs4all.nl>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1557147240-29551-4-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>  /*
+>   * 'process_lock' exists because ocores_process() and ocores_process_timeout()
+> @@ -239,8 +240,13 @@ static irqreturn_t ocores_isr(int irq, void *dev_id)
+>  	struct ocores_i2c *i2c = dev_id;
+>  	u8 stat = oc_getreg(i2c, OCI2C_STATUS);
+>  
+> -	if (!(stat & OCI2C_STAT_IF))
+> +	if (i2c->flags && SIFIVE_FLAG_POLL) {
 
---elbcsaswnwcxysle
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Do you really want && here?
 
-Hi Hans
+> +		if (stat & OCI2C_STAT_IF)
+> +			if (!(stat & OCI2C_STAT_BUSY))
+> +				return IRQ_NONE;
+> +	} else if (!(stat & OCI2C_STAT_IF)) {
+>  		return IRQ_NONE;
+> +	}
+>  
+>  	ocores_process(i2c, stat);
+>  
+> @@ -356,6 +362,11 @@ static void ocores_process_polling(struct ocores_i2c *i2c)
+>  		ret = ocores_isr(-1, i2c);
+>  		if (ret == IRQ_NONE)
+>  			break; /* all messages have been transferred */
+> +		else {
+> +			if (i2c->flags && SIFIVE_FLAG_POLL)
 
-On Thu, May 02, 2019 at 10:24:00AM +0200, Hans Verkuil wrote:
-> On 4/17/19 9:54 AM, Maxime Ripard wrote:
-> > V4L2 uses different fourcc's than DRM, and has a different set of formats.
-> > For now, let's add the v4l2 fourcc's for the already existing formats.
->
-> For this lib to be more useful for V4L2, would it be a good idea to add
-> Bayer formats as well? This can be done in a separate patch.
->
-> Those formats are V4L specific, but are very common.
+And here?
 
-Yeah, this was mostly to support the formats that are already
-supported as of today, but eventually more are going to be supported,
-and the bayer formats seems like a natural choice :)
+> +				if (i2c->state == STATE_DONE)
+> +					break;
+> +		}
+>  	}
+>  }
+>  
+> @@ -406,7 +417,7 @@ static int ocores_xfer(struct i2c_adapter *adap,
+>  {
+>  	struct ocores_i2c *i2c = i2c_get_adapdata(adap);
+>  
+> -	if (i2c->flags & OCORES_FLAG_POLL)
+> +	if ((i2c->flags & OCORES_FLAG_POLL) || (i2c->flags & SIFIVE_FLAG_POLL))
 
-Maxime
+You can combine this
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+if ((i2c->flags & (OCORES_FLAG_POLL | SIFIVE_FLAG_POLL))
 
---elbcsaswnwcxysle
-Content-Type: application/pgp-signature; name="signature.asc"
+>  		return ocores_xfer_polling(adap, msgs, num);
+>  	return ocores_xfer_core(i2c, msgs, num, false);
+>  }
+> @@ -597,6 +608,7 @@ static int ocores_i2c_probe(struct platform_device *pdev)
+>  {
+>  	struct ocores_i2c *i2c;
+>  	struct ocores_i2c_platform_data *pdata;
+> +	const struct of_device_id *match;
+>  	struct resource *res;
+>  	int irq;
+>  	int ret;
+> @@ -678,13 +690,21 @@ static int ocores_i2c_probe(struct platform_device *pdev)
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq == -ENXIO) {
+> -		i2c->flags |= OCORES_FLAG_POLL;
+> +		/*
+> +		 * Set a SIFIVE_FLAG_POLL to enable workaround for FU540
+> +		 * in polling mode interface of i2c-ocore driver.
+> +		 */
+> +		match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
+> +		if (match && (long)match->data == TYPE_SIFIVE_REV0)
+> +			i2c->flags |= SIFIVE_FLAG_POLL;
+> +		else
+> +			i2c->flags |= OCORES_FLAG_POLL;
 
------BEGIN PGP SIGNATURE-----
+Please take a look at the whole code, and consider if it is better to
+set both SIFIVE_FLAG_POLL and OCORES_FLAG_POLL. Maybe rename
+SIFIVE_FLAG_POLL to OCORES_FLAG_BROKEN_IRQ_BIT?
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNA1LwAKCRDj7w1vZxhR
-xQb1AP9+7X+VYpkwMiJLhzyVSkvkphWcjZ4tq9sc/yOP03E47AD/YZpmkkIpI1FW
-n04Y3eAA5DKrtCudeW0FjnAIclNJogs=
-=bYjp
------END PGP SIGNATURE-----
-
---elbcsaswnwcxysle--
+Thanks
+	Andrew
