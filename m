@@ -4,139 +4,151 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43940C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A489C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EAF321019
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224892082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:25:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="I3Sp4fEP";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="P2SuC4TS"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NKrWKCiG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbfEFST1 (ORCPT
+        id S1726557AbfEFSZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 14:19:27 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:51940 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726175AbfEFST1 (ORCPT
+        Mon, 6 May 2019 14:25:55 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45005 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfEFSZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 14:19:27 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 83258C01B4;
-        Mon,  6 May 2019 18:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557166761; bh=QtJyrHd1kqFiZBvKEbAd5xX72dDlbRtHAwVPExvEW6A=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=I3Sp4fEPPA3ef3oVOMH4WQCUtNOkvZO6ESx3XdCc3xpf+CWutYaRryD/xXQXbYb2b
-         mYjz6FXkZtDjZyu2ESfADn9yw782b7aLa3VIs/qszEScwQfzHmk7ZCAvYsWEvk4kUL
-         I1iSCzHbFIi7hIc7m0MrWEyGqCKWc4wk+aboC5EN+k0P77lCaEqq/2u6NQmC4w9PyH
-         7vQad/BBOwOB3AD7IYz2LUQLQbPZHxmunu6IADiWdMzeQzhZ3ZdizH1t6iPxNaQ0lF
-         lb9pqzsYg++yaW2p2GRuN0gPLz1wNbFHMTAIOHs4teWp46q7YH063zpRsyuGAs/U/m
-         IdN4WZJKlDVgQ==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 51933A0095;
-        Mon,  6 May 2019 18:19:23 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 6 May 2019 11:19:23 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 6 May 2019 11:19:23 -0700
+        Mon, 6 May 2019 14:25:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y13so7197270pfm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 11:25:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QtJyrHd1kqFiZBvKEbAd5xX72dDlbRtHAwVPExvEW6A=;
- b=P2SuC4TSIw7HPekAWtT1Lkozqod+7Zh7dYfUZmvFLpm47y/7OV0beYnslcnR6XM/td5E37Jh7l4ErJR4+2Kpwk2Tu1iA+rIFVof0i7LBpZgSQSQK4HLNhHSdeOS3IWs11oyOxChehLlwRZMaJr65c7G3Ly4c7rmIBRYsYy2zGSk=
-Received: from MWHPR12MB1632.namprd12.prod.outlook.com (10.172.56.21) by
- MWHPR12MB1775.namprd12.prod.outlook.com (10.175.55.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Mon, 6 May 2019 18:19:20 +0000
-Received: from MWHPR12MB1632.namprd12.prod.outlook.com
- ([fe80::c5dc:3b4:6ab8:4dc6]) by MWHPR12MB1632.namprd12.prod.outlook.com
- ([fe80::c5dc:3b4:6ab8:4dc6%2]) with mapi id 15.20.1856.012; Mon, 6 May 2019
- 18:19:20 +0000
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-CC:     "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>,
-        "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>,
-        "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins
- number to GMAC node
-Thread-Topic: [PATCH] ARC: [plat-hsdk]: Add missing multicast filter bins
- number to GMAC node
-Thread-Index: AQHVAPmYu+SP3l/OT0e8rqST5fDlGKZX+TEAgAZ1TIA=
-Date:   Mon, 6 May 2019 18:19:20 +0000
-Message-ID: <1557166759.17021.9.camel@synopsys.com>
-References: <7f36bbadc0df4c93c396690dab59f34775de3874.1556788240.git.joabreu@synopsys.com>
-         <56933076-879c-78a0-4bae-2613203b93b1@synopsys.com>
-In-Reply-To: <56933076-879c-78a0-4bae-2613203b93b1@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=paltsev@synopsys.com; 
-x-originating-ip: [84.204.78.101]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: db93fc10-3909-4230-81fd-08d6d24f5be6
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR12MB1775;
-x-ms-traffictypediagnostic: MWHPR12MB1775:
-x-microsoft-antispam-prvs: <MWHPR12MB17754AF42F8FA4F933A446C7DE300@MWHPR12MB1775.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 0029F17A3F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39850400004)(376002)(346002)(396003)(189003)(199004)(54906003)(8676002)(8936002)(110136005)(316002)(102836004)(66066001)(256004)(76176011)(186003)(81156014)(86362001)(81166006)(53546011)(2501003)(478600001)(229853002)(5660300002)(53936002)(6512007)(6506007)(2201001)(14454004)(6486002)(6116002)(107886003)(66476007)(66556008)(64756008)(66446008)(68736007)(76116006)(66946007)(446003)(2906002)(11346002)(73956011)(476003)(91956017)(6246003)(6436002)(2616005)(486006)(4326008)(305945005)(7736002)(99286004)(26005)(71190400001)(71200400001)(3846002)(36756003)(103116003)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR12MB1775;H:MWHPR12MB1632.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LtCLXwsLT6co9xynGg2JZ11/j1E7fGTC0Xi2nPeZ7e7BLLFQUnc4qGD3ION2nngr4kcOZcpC8/r0UnEhQItdm4BCamGeLxn7kOQDi0Ro1ByuFhpKGjuuHeTqHubd4LlFL18W8odPBP939pgt+Uz7DBMGxbcgD1zaRC6dIR2KhdMHyDG3OfzULlO1oIrPCK3QUlVVMvJ1FKUsJK24wsqbhed0Mf+qOnY7bW7PENr2ThfftGxgGOZdRGSmeU+DlOG/7nLySukFyxNX8MZFqiT2ULHlQcDfz/mTReHyo/COaCg3h7Hbvv/wJ+jO2TDuafCKfgkm1ElkaNJgJhLwAUSC0wa3mqRbS0/+rNqk0i+VRPjmcwiS2ilwawpOC4v+jyU4hPo78AcVGll/YVZZfXeeuRjrFYW85aLhQbvjYaQpYBI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5A823811A20DAA43B211A7AB42CD65C2@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: db93fc10-3909-4230-81fd-08d6d24f5be6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 18:19:20.3634
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1775
-X-OriginatorOrg: synopsys.com
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NXCCd9DEwpVv+CkVk+97oddxbHXiAPPbrF6iGBSrYgc=;
+        b=NKrWKCiGbzmza35fOtOMvL+ftXETfh3uUcp/GkaCXcI8/XzVP8qVDBZioaj7yzgwas
+         2tQRRTKTuRAtOwQhT+kcUBv2qp2jRZVnznAovTkgFRvmAuuaShMFB+Nx1bbVUNa9A7OX
+         8BLulEh57QbYge20tVCIr34v+fwMGVGOSH1ehzMLel+zcPUV1nVeQpw7cWLe4F7TLSOw
+         ++VBDFOhS3lKU6/bS8dLLIX6A8ANpsIH1DryjqnbCnoWXwVNSYR3C7RBe/CPhV/P7ncT
+         Cg2Mr2IcrlFerHMT/L21aU76jEgkMtiGDQAE6F2Y4uyRJKfpkAmDpf2MCdenO33CvIPF
+         KysQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=NXCCd9DEwpVv+CkVk+97oddxbHXiAPPbrF6iGBSrYgc=;
+        b=l4XkZDYYLg1zHbR7lpP6FjR5CV6+k3bXPo3wkBTw1TgvEW88JWRB+EDyEfVdA+m8dM
+         Bs+qlChlTa3ced4jkcDMIRSy/HTSmGTWBxaSSI9XK0V6lv6F6/+bXDu7mmAhnK7h6G+m
+         cIuGz96vmZPSh7nSgvIk7lbw+kAQ4ysYVGgH5CHZOVLnewI0sMEz9TKZjXlTKs3SHCPK
+         /TEBsVGUibjgE+QSjwga5ywo9Xn7dj+4h33H9OHoAp1HskouC13gWqmZu/mpWikpbDtO
+         ElJCnk/ROyEOT7dchjCLPxZ5v8c6sFN853gBRdiYrsX41kRE5ZzwMkTAgyIEVA/omIsr
+         OnPg==
+X-Gm-Message-State: APjAAAVT5q3o1StjKZ21rLOKg/Xo6Qfyd83FtuFyXvtoAaFLoo9sjKxu
+        c8ipr3Bo/R2YTRW/bgtKRGF58g==
+X-Google-Smtp-Source: APXvYqz/rXdpBxODnklgvIEL8bDQcS0bWQdd3xgt2Ribpt+WuSOewfTAdZg7WDT5L829vlRrQKqfdA==
+X-Received: by 2002:a62:121c:: with SMTP id a28mr34935323pfj.58.1557167153191;
+        Mon, 06 May 2019 11:25:53 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id x66sm15776570pfb.78.2019.05.06.11.25.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 11:25:52 -0700 (PDT)
+Date:   Mon, 06 May 2019 11:25:52 -0700 (PDT)
+X-Google-Original-Date: Mon, 06 May 2019 11:25:42 PDT (-0700)
+Subject:     Re: [PATCH 13/15] riscv: switch to generic version of pte allocation
+In-Reply-To: <1556810922-20248-14-git-send-email-rppt@linux.ibm.com>
+CC:     akpm@linux-foundation.org, Arnd Bergmann <arnd@arndb.de>,
+        catalin.marinas@arm.com, geert@linux-m68k.org, green.hu@gmail.com,
+        gxt@pku.edu.cn, guoren@kernel.org, deller@gmx.de, lftan@altera.com,
+        willy@infradead.org, mattst88@gmail.com, mpe@ellerman.id.au,
+        mhocko@suse.com, paul.burton@mips.com, rkuo@codeaurora.org,
+        richard@nod.at, linux@armlinux.org.uk, sammy@sammy.net,
+        x86@kernel.org, linux-alpha@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
+        nios2-dev@lists.rocketboards.org, rppt@linux.ibm.com
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     rppt@linux.ibm.com
+Message-ID: <mhng-c23d2e8b-1dc0-48db-a4cf-d6964ca650c0@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCkknbGwgY2hlY2sgdGhpcyBpbiB0aGUgbmV4dCBmZXcgZGF5cy4NCg0KT24gVGh1LCAy
-MDE5LTA1LTAyIGF0IDA4OjQxIC0wNzAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+ICtDQyBBbGV4
-ZXksIEV1Z2VuaXkgd2hvIG1haW50YWluIGhzZGsgc3VwcG9ydCAhDQo+IA0KPiBPbiA1LzIvMTkg
-ODoxMiBBTSwgSm9zZSBBYnJldSB3cm90ZToNCj4gPiBHTUFDIGNvbnRyb2xsZXIgb24gSFNESyBi
-b2FyZHMgc3VwcG9ydHMgMjU2IEhhc2ggVGFibGUgc2l6ZSBzbyB3ZSBuZWVkIHRvDQo+ID4gYWRk
-IHRoZSBtdWx0aWNhc3QgZmlsdGVyIGJpbnMgcHJvcGVydHkuIFRoaXMgYWxsb3dzIGZvciB0aGUg
-SGFzaCBmaWx0ZXINCj4gPiB0byB3b3JrIHByb3Blcmx5IHVzaW5nIHN0bW1hYyBkcml2ZXIuDQo+
-ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSm9zZSBBYnJldSA8am9hYnJldUBzeW5vcHN5cy5jb20+
-DQo+ID4gQ2M6IEpvYW8gUGludG8gPGpwaW50b0BzeW5vcHN5cy5jb20+DQo+ID4gQ2M6IFJvYiBI
-ZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+DQo+ID4gQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5y
-dXRsYW5kQGFybS5jb20+DQo+ID4gQ2M6IFZpbmVldCBHdXB0YSA8dmd1cHRhQHN5bm9wc3lzLmNv
-bT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcmMvYm9vdC9kdHMvaHNkay5kdHMgfCAxICsNCj4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJjL2Jvb3QvZHRzL2hzZGsuZHRzIGIvYXJjaC9hcmMvYm9vdC9kdHMvaHNkay5kdHMNCj4g
-PiBpbmRleCA2OWJjMWM5ZThlNTAuLmIwZjA1OTM3N2FiMCAxMDA2NDQNCj4gPiAtLS0gYS9hcmNo
-L2FyYy9ib290L2R0cy9oc2RrLmR0cw0KPiA+ICsrKyBiL2FyY2gvYXJjL2Jvb3QvZHRzL2hzZGsu
-ZHRzDQo+ID4gQEAgLTE4Nyw2ICsxODcsNyBAQA0KPiA+ICAJCQlpbnRlcnJ1cHQtbmFtZXMgPSAi
-bWFjaXJxIjsNCj4gPiAgCQkJcGh5LW1vZGUgPSAicmdtaWkiOw0KPiA+ICAJCQlzbnBzLHBibCA9
-IDwzMj47DQo+ID4gKwkJCXNucHMsbXVsdGljYXN0LWZpbHRlci1iaW5zID0gPDI1Nj47DQo+ID4g
-IAkJCWNsb2NrcyA9IDwmZ21hY2Nsaz47DQo+ID4gIAkJCWNsb2NrLW5hbWVzID0gInN0bW1hY2V0
-aCI7DQo+ID4gIAkJCXBoeS1oYW5kbGUgPSA8JnBoeTA+Ow0KPiA+IA0KPiANCj4gDQotLSANCiBF
-dWdlbml5IFBhbHRzZXY=
+On Thu, 02 May 2019 08:28:40 PDT (-0700), rppt@linux.ibm.com wrote:
+> The only difference between the generic and RISC-V implementation of PTE
+> allocation is the usage of __GFP_RETRY_MAYFAIL for both kernel and user
+> PTEs and the absence of __GFP_ACCOUNT for the user PTEs.
+>
+> The conversion to the generic version removes the __GFP_RETRY_MAYFAIL and
+> ensures that GFP_ACCOUNT is used for the user PTE allocations.
+
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+
+I'm assuming this is going in along with the rest of the patches, so I'm not
+going to add it to my tree.
+
+>
+> The pte_free() and pte_free_kernel() versions are identical to the generic
+> ones and can be simply dropped.
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/riscv/include/asm/pgalloc.h | 29 ++---------------------------
+>  1 file changed, 2 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
+> index 94043cf..48f28bb 100644
+> --- a/arch/riscv/include/asm/pgalloc.h
+> +++ b/arch/riscv/include/asm/pgalloc.h
+> @@ -18,6 +18,8 @@
+>  #include <linux/mm.h>
+>  #include <asm/tlb.h>
+>
+> +#include <asm-generic/pgalloc.h>	/* for pte_{alloc,free}_one */
+> +
+>  static inline void pmd_populate_kernel(struct mm_struct *mm,
+>  	pmd_t *pmd, pte_t *pte)
+>  {
+> @@ -82,33 +84,6 @@ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
+>
+>  #endif /* __PAGETABLE_PMD_FOLDED */
+>
+> -static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+> -{
+> -	return (pte_t *)__get_free_page(
+> -		GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
+> -}
+> -
+> -static inline struct page *pte_alloc_one(struct mm_struct *mm)
+> -{
+> -	struct page *pte;
+> -
+> -	pte = alloc_page(GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
+> -	if (likely(pte != NULL))
+> -		pgtable_page_ctor(pte);
+> -	return pte;
+> -}
+> -
+> -static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+> -{
+> -	free_page((unsigned long)pte);
+> -}
+> -
+> -static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
+> -{
+> -	pgtable_page_dtor(pte);
+> -	__free_page(pte);
+> -}
+> -
+>  #define __pte_free_tlb(tlb, pte, buf)   \
+>  do {                                    \
+>  	pgtable_page_dtor(pte);         \
