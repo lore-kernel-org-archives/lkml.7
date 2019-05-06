@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15679C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7B1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D265D20C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF80521655
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153374;
-	bh=nD6+/xIy6pqXa9KgPPOcUQnBHoKVtX0H5oZGvLHkLbA=;
+	s=default; t=1557153380;
+	bh=nGmKw7oEcz7t/3WCPMGsy5WKp48TzXsV/M5wENwuxF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QVtiUbmZkG1AoltXCHAXYjfbW8d0WRfqBsIspplh6qcVWgnRIpvd4nE/FsqMpZ8cb
-	 x3lpV2UaTDpca0k4mD+A3mHJx2v07syYoUj6uge7DnvsbqmrDort3bwjmUZ5QRLR9d
-	 cxm48SqGoo7y9f7mr1+GcgifnCgc00QjmWekSfyY=
+	b=EQK4d7DkgdEkMGjIeZSHihK9NXTggpbSjeUGtfDez08Va3AOW54zrTfo5q5EqYFy/
+	 13Flo3JOLQF7w0dH9I/ddfggbVZfTGlJMsg6lukG9xCvaZ5HB+JWD4B3Y9lHBTa3/M
+	 5e9gnwaVhUZnfOhCg8pBMX69iPaGzOFauNY44kR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfEFOgO (ORCPT
+        id S1727145AbfEFOgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:36:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56352 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:36:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726564AbfEFOgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:36:06 -0400
+        id S1727127AbfEFOgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:36:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4696E204EC;
-        Mon,  6 May 2019 14:36:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6896E20C01;
+        Mon,  6 May 2019 14:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153365;
-        bh=nD6+/xIy6pqXa9KgPPOcUQnBHoKVtX0H5oZGvLHkLbA=;
+        s=default; t=1557153375;
+        bh=nGmKw7oEcz7t/3WCPMGsy5WKp48TzXsV/M5wENwuxF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pW3pc+4vMvOfaIrFt7+lxOTvyYxsijmb0GhnS8bUCdynji2vHcXyeDIbUY25qdCkU
-         Zg+irWttomtxWvKoY6wfCLK1RzS6S3t+AVKWin6PAU5cL8bmEapPS4GbmjTePuh3IK
-         hQhYR63lhLqhGg1aovl42ybA580VrVoZ9CwY/IfQ=
+        b=epVBLkrigMyU8yd/rTfWbJCp237oS4STsAq4ZX5V8ZENfpdf4SG5DA82CT59ptYT9
+         OSeLHIrs1vIZNlmmhIWt1/xVWEcQiSFh/dGrsBJqCDGzvd2u4ZWQKJILrnMcWSHedf
+         rg/E02vx2jUYUO/H1LBQ7Q7xG5pTSwN9RzszJbqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>,
+        stable@vger.kernel.org, Mukesh Ojha <mojha@codeaurora.org>,
+        Peng Hao <peng.hao2@zte.com.cn>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 044/122] HID: quirks: Fix keyboard + touchpad on Lenovo Miix 630
-Date:   Mon,  6 May 2019 16:31:42 +0200
-Message-Id: <20190506143058.868183112@linuxfoundation.org>
+Subject: [PATCH 5.0 065/122] arm/mach-at91/pm : fix possible object reference leak
+Date:   Mon,  6 May 2019 16:32:03 +0200
+Message-Id: <20190506143100.794247114@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,45 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2bafa1e9625400bec4c840a168d70ba52607a58d ]
+[ Upstream commit ba5e60c9b75dec92d4c695b928f69300b17d7686 ]
 
-Similar to commit edfc3722cfef ("HID: quirks: Fix keyboard + touchpad on
-Toshiba Click Mini not working"), the Lenovo Miix 630 has a combo
-keyboard/touchpad device with vid:pid of 04F3:0400, which is shared with
-Elan touchpads.  The combo on the Miix 630 has an ACPI id of QTEC0001,
-which is not claimed by the elan_i2c driver, so key on that similar to
-what was done for the Toshiba Click Mini.
+of_find_device_by_node() takes a reference to the struct device
+when it finds a match via get_device. When returning error we should
+call put_device.
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/hid/hid-quirks.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/mach-at91/pm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 94088c0ed68a..e24790c988c0 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -744,7 +744,6 @@ static const struct hid_device_id hid_ignore_list[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DEALEXTREAME, USB_DEVICE_ID_DEALEXTREAME_RADIO_SI4701) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DELORME, USB_DEVICE_ID_DELORME_EARTHMATE) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DELORME, USB_DEVICE_ID_DELORME_EM_LT20) },
--	{ HID_I2C_DEVICE(USB_VENDOR_ID_ELAN, 0x0400) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ESSENTIAL_REALITY, USB_DEVICE_ID_ESSENTIAL_REALITY_P5) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ETT, USB_DEVICE_ID_TC5UH) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ETT, USB_DEVICE_ID_TC4UM) },
-@@ -1025,6 +1024,10 @@ bool hid_ignore(struct hid_device *hdev)
- 		if (hdev->product == 0x0401 &&
- 		    strncmp(hdev->name, "ELAN0800", 8) != 0)
- 			return true;
-+		/* Same with product id 0x0400 */
-+		if (hdev->product == 0x0400 &&
-+		    strncmp(hdev->name, "QTEC0001", 8) != 0)
-+			return true;
- 		break;
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index 51e808adb00c..2a757dcaa1a5 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -591,13 +591,13 @@ static int __init at91_pm_backup_init(void)
+ 
+ 	np = of_find_compatible_node(NULL, NULL, "atmel,sama5d2-securam");
+ 	if (!np)
+-		goto securam_fail;
++		goto securam_fail_no_ref_dev;
+ 
+ 	pdev = of_find_device_by_node(np);
+ 	of_node_put(np);
+ 	if (!pdev) {
+ 		pr_warn("%s: failed to find securam device!\n", __func__);
+-		goto securam_fail;
++		goto securam_fail_no_ref_dev;
  	}
  
+ 	sram_pool = gen_pool_get(&pdev->dev, NULL);
+@@ -620,6 +620,8 @@ static int __init at91_pm_backup_init(void)
+ 	return 0;
+ 
+ securam_fail:
++	put_device(&pdev->dev);
++securam_fail_no_ref_dev:
+ 	iounmap(pm_data.sfrbu);
+ 	pm_data.sfrbu = NULL;
+ 	return ret;
 -- 
 2.20.1
 
