@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0CDC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B8FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE29721479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B932020C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153246;
-	bh=9UwnwSLSRzGF+aoCsEt4MidaK9aiEQCsI0f/H/t9rQY=;
+	s=default; t=1557153251;
+	bh=W/lGqeBro/48e+2JpIMC+nxeka/nghR3kybGxm1aJR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TcGyyFLYyca+qTwLQIOlCwu3ifk/FlYDFuEL35QkGeo89FrQAeh7rNDa1TsiCreZR
-	 kkY2NSApaDGbUxansLStnBhjoWQN1ia0kra404/TXojHBhiOTGZ/CynZJ4hSKXYeeW
-	 Cz+yy4geGjFZ0Y1SbPqgl4xVZihFr8B6qES8Ds98=
+	b=Mq/8TQbrMzl9xpT3dMPaudz/OsB8pbci2azDVjRy2K1vjgO6sNKu9VHir3HUmnP6C
+	 Kl559pKAJMfCoWhlsEVJP3Hxw35EZviiBHgIgSB6tgpqfQyf5TQ4uFtTYDDi6PCiN1
+	 3bahwVDF/4adtrlhJP45eZnpJ4w7Mn216cxrSw+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfEFOeF (ORCPT
+        id S1726538AbfEFOeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:34:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53474 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:34:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726455AbfEFOd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:33:58 -0400
+        id S1726455AbfEFOeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:34:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99B39204EC;
-        Mon,  6 May 2019 14:33:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F8C1204EC;
+        Mon,  6 May 2019 14:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153238;
-        bh=9UwnwSLSRzGF+aoCsEt4MidaK9aiEQCsI0f/H/t9rQY=;
+        s=default; t=1557153245;
+        bh=W/lGqeBro/48e+2JpIMC+nxeka/nghR3kybGxm1aJR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nW5ksmu2PXH8RacVVnh2vOMwh1hf1HpKEubxtW4DCgpCoW1ngaZ/huCAXkWOCxJvH
-         yxQSVZWtukFKfNKvTckzv23zt6aueSE8tg+2czVsdKPBZlUTy0JyAWn4MzI9hlEK/6
-         /NWqPYU+pg8TnjAQB6DW+bNKcIZ09j/K5MpGA0M8=
+        b=wnOBBgny5+e+qRb+M97ibM+nRog2bFU1XAI0uQk4GtL44OdCHD2AFSt3xZayC2bZD
+         3kql7iOwZ3Y0Eeesi8rWigsh4avXmEHMTHhIQRsbYSrRwD85Iy8K0zfhWH9U5OGCjz
+         reB9RyPbtW2xKTJkl6XJ0hKJOGL6Elj2M/nV0xmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
-Subject: [PATCH 5.0 014/122] USB: yurex: Fix protection fault after device removal
-Date:   Mon,  6 May 2019 16:31:12 +0200
-Message-Id: <20190506143056.014215892@linuxfoundation.org>
+        stable@vger.kernel.org, Malte Leip <malte@leip.net>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 5.0 017/122] usb: usbip: fix isoc packet num validation in get_pipe
+Date:   Mon,  6 May 2019 16:31:15 +0200
+Message-Id: <20190506143056.304654193@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -58,40 +58,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Malte Leip <malte@leip.net>
 
-commit ef61eb43ada6c1d6b94668f0f514e4c268093ff3 upstream.
+commit c409ca3be3c6ff3a1eeb303b191184e80d412862 upstream.
 
-The syzkaller USB fuzzer found a general-protection-fault bug in the
-yurex driver.  The fault occurs when a device has been unplugged; the
-driver's interrupt-URB handler logs an error message referring to the
-device by name, after the device has been unregistered and its name
-deallocated.
+Change the validation of number_of_packets in get_pipe to compare the
+number of packets to a fixed maximum number of packets allowed, set to
+be 1024. This number was chosen due to it being used by other drivers as
+well, for example drivers/usb/host/uhci-q.c
 
-This problem is caused by the fact that the interrupt URB isn't
-cancelled until the driver's private data structure is released, which
-can happen long after the device is gone.  The cure is to make sure
-that the interrupt URB is killed before yurex_disconnect() returns;
-this is exactly the sort of thing that usb_poison_urb() was meant for.
+Background/reason:
+The get_pipe function in stub_rx.c validates the number of packets in
+isochronous mode and aborts with an error if that number is too large,
+in order to prevent malicious input from possibly triggering large
+memory allocations. This was previously done by checking whether
+pdu->u.cmd_submit.number_of_packets is bigger than the number of packets
+that would be needed for pdu->u.cmd_submit.transfer_buffer_length bytes
+if all except possibly the last packet had maximum length, given by
+usb_endpoint_maxp(epd) *  usb_endpoint_maxp_mult(epd). This leads to an
+error if URBs with packets shorter than the maximum possible length are
+submitted, which is allowed according to
+Documentation/driver-api/usb/URB.rst and occurs for example with the
+snd-usb-audio driver.
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
+Fixes: c6688ef9f297 ("usbip: fix stub_rx: harden CMD_SUBMIT path to handle malicious input")
+Signed-off-by: Malte Leip <malte@leip.net>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/yurex.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/usbip/stub_rx.c      |   12 +++---------
+ drivers/usb/usbip/usbip_common.h |    7 +++++++
+ 2 files changed, 10 insertions(+), 9 deletions(-)
 
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -314,6 +314,7 @@ static void yurex_disconnect(struct usb_
- 	usb_deregister_dev(interface, &yurex_class);
+--- a/drivers/usb/usbip/stub_rx.c
++++ b/drivers/usb/usbip/stub_rx.c
+@@ -361,16 +361,10 @@ static int get_pipe(struct stub_device *
+ 	}
  
- 	/* prevent more I/O from starting */
-+	usb_poison_urb(dev->urb);
- 	mutex_lock(&dev->io_mutex);
- 	dev->interface = NULL;
- 	mutex_unlock(&dev->io_mutex);
+ 	if (usb_endpoint_xfer_isoc(epd)) {
+-		/* validate packet size and number of packets */
+-		unsigned int maxp, packets, bytes;
+-
+-		maxp = usb_endpoint_maxp(epd);
+-		maxp *= usb_endpoint_maxp_mult(epd);
+-		bytes = pdu->u.cmd_submit.transfer_buffer_length;
+-		packets = DIV_ROUND_UP(bytes, maxp);
+-
++		/* validate number of packets */
+ 		if (pdu->u.cmd_submit.number_of_packets < 0 ||
+-		    pdu->u.cmd_submit.number_of_packets > packets) {
++		    pdu->u.cmd_submit.number_of_packets >
++		    USBIP_MAX_ISO_PACKETS) {
+ 			dev_err(&sdev->udev->dev,
+ 				"CMD_SUBMIT: isoc invalid num packets %d\n",
+ 				pdu->u.cmd_submit.number_of_packets);
+--- a/drivers/usb/usbip/usbip_common.h
++++ b/drivers/usb/usbip/usbip_common.h
+@@ -121,6 +121,13 @@ extern struct device_attribute dev_attr_
+ #define USBIP_DIR_OUT	0x00
+ #define USBIP_DIR_IN	0x01
+ 
++/*
++ * Arbitrary limit for the maximum number of isochronous packets in an URB,
++ * compare for example the uhci_submit_isochronous function in
++ * drivers/usb/host/uhci-q.c
++ */
++#define USBIP_MAX_ISO_PACKETS 1024
++
+ /**
+  * struct usbip_header_basic - data pertinent to every request
+  * @command: the usbip request type
 
 
