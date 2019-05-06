@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80692C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394C6C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573492053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF9221019
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153855;
-	bh=UIHC9Cy2fpk/qppWUPfyau/uOaITclXHx0K+EQfW83s=;
+	s=default; t=1557153856;
+	bh=ji2Fkc2JCt0iE1AsuDOUcQhSeTai/544j7ODEE/aw8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i6vEqxEhnvnSUV0bwouhwHue/mHVWo1gGngXTu6F3HTWDkEmNQ14LDK6cDhEnFyWU
-	 WNqX6oYwy//oSRuANDx4QtOrjeU4dl6k+2aGmP0g6F1Oq3c7gsGSXt6Svn6j0FpY+d
-	 TlZoPUJwHShL1Kb/8LFU+YWsgaSW9tXx9c1CN9YE=
+	b=Jtjs1CA2sgFEMYare22hgqzJq35JcmT8fiH2do92w7blJIT0kRvV2EZyBQ5nyWAAC
+	 DqJ4Ja4ikouM97YqTh4bA109a8gbTU5c/4ue6pmLPAlhhFOdFqOvGB9I3gJLtsqtFS
+	 7WTF35tABcJXfKwuotxbqoRXhyfd9vtpNwLz+5Nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfEFOoN (ORCPT
+        id S1728767AbfEFOoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:44:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40258 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:44:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727654AbfEFOoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:11 -0400
+        id S1727944AbfEFOoN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3BF3214AF;
-        Mon,  6 May 2019 14:44:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63A5620449;
+        Mon,  6 May 2019 14:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153850;
-        bh=UIHC9Cy2fpk/qppWUPfyau/uOaITclXHx0K+EQfW83s=;
+        s=default; t=1557153852;
+        bh=ji2Fkc2JCt0iE1AsuDOUcQhSeTai/544j7ODEE/aw8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gITQZ2APY/OEabH4bZ9BG30UDEUWz5lPGmpmemhey0VLlSk0inWqq6TABvvMmkHUj
-         KFOIco/4pcMHzfoCrL2PMgvDN4kOT1GkPMKPLWb5pJIl2cyjUQmJps2N75AIkK9egm
-         MO/M0PVPBq5NHeBd8sgvjYDvMGqsU4lUSTZcnxTw=
+        b=p3V5ymTqeKrKOhs59BB93WWDWtHWXtPpoCJrISyBJ7l0x2qU14iEbVxS4wVqg+VTA
+         q81Dr1y80N6X8jMMTyAPIH7qcdfJNoMJzPSGawd5FJ5lvk85pz0iR4ha2U8Y1GbL5B
+         xmqFuAy7lLwZa5XpIryjKlqM9etRiXptbDhorYK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shmulik Ladkani <shmulik.ladkani@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 02/75] ipv4: ip_do_fragment: Preserve skb_iif during fragmentation
-Date:   Mon,  6 May 2019 16:32:10 +0200
-Message-Id: <20190506143053.481001390@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 20/75] USB: w1 ds2490: Fix bug caused by improper use of altsetting array
+Date:   Mon,  6 May 2019 16:32:28 +0200
+Message-Id: <20190506143054.983786741@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -60,42 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shmulik Ladkani <shmulik@metanetworks.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit d2f0c961148f65bc73eda72b9fa3a4e80973cb49 ]
+commit c114944d7d67f24e71562fcfc18d550ab787e4d4 upstream.
 
-Previously, during fragmentation after forwarding, skb->skb_iif isn't
-preserved, i.e. 'ip_copy_metadata' does not copy skb_iif from given
-'from' skb.
+The syzkaller USB fuzzer spotted a slab-out-of-bounds bug in the
+ds2490 driver.  This bug is caused by improper use of the altsetting
+array in the usb_interface structure (the array's entries are not
+always stored in numerical order), combined with a naive assumption
+that all interfaces probed by the driver will have the expected number
+of altsettings.
 
-As a result, ip_do_fragment's creates fragments with zero skb_iif,
-leading to inconsistent behavior.
+The bug can be fixed by replacing references to the possibly
+non-existent intf->altsetting[alt] entry with the guaranteed-to-exist
+intf->cur_altsetting entry.
 
-Assume for example an eBPF program attached at tc egress (post
-forwarding) that examines __sk_buff->ingress_ifindex:
- - the correct iif is observed if forwarding path does not involve
-   fragmentation/refragmentation
- - a bogus iif is observed if forwarding path involves
-   fragmentation/refragmentatiom
-
-Fix, by preserving skb_iif during 'ip_copy_metadata'.
-
-Signed-off-by: Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/ip_output.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -518,6 +518,7 @@ static void ip_copy_metadata(struct sk_b
- 	to->pkt_type = from->pkt_type;
- 	to->priority = from->priority;
- 	to->protocol = from->protocol;
-+	to->skb_iif = from->skb_iif;
- 	skb_dst_drop(to);
- 	skb_dst_copy(to, from);
- 	to->dev = from->dev;
+---
+ drivers/w1/masters/ds2490.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/drivers/w1/masters/ds2490.c
++++ b/drivers/w1/masters/ds2490.c
+@@ -1018,15 +1018,15 @@ static int ds_probe(struct usb_interface
+ 	/* alternative 3, 1ms interrupt (greatly speeds search), 64 byte bulk */
+ 	alt = 3;
+ 	err = usb_set_interface(dev->udev,
+-		intf->altsetting[alt].desc.bInterfaceNumber, alt);
++		intf->cur_altsetting->desc.bInterfaceNumber, alt);
+ 	if (err) {
+ 		dev_err(&dev->udev->dev, "Failed to set alternative setting %d "
+ 			"for %d interface: err=%d.\n", alt,
+-			intf->altsetting[alt].desc.bInterfaceNumber, err);
++			intf->cur_altsetting->desc.bInterfaceNumber, err);
+ 		goto err_out_clear;
+ 	}
+ 
+-	iface_desc = &intf->altsetting[alt];
++	iface_desc = intf->cur_altsetting;
+ 	if (iface_desc->desc.bNumEndpoints != NUM_EP-1) {
+ 		pr_info("Num endpoints=%d. It is not DS9490R.\n",
+ 			iface_desc->desc.bNumEndpoints);
 
 
