@@ -2,217 +2,210 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFACC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0824C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5D2214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997FD214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154083;
-	bh=I3RuPUnsau3/9T4URycFeXmxeH3JbPXrTjlfIFBbXOg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cGHFkpDp4NNJCcEDdWLktwYjqoDSmTSGlfdxUMAa6qpld9oNdpLYadEgM5+QjUqSo
-	 K4yiVt/v+YSh5nSM8Y1+hikGZQsl8SDPZmmbbMby9Pw27LQuaac+jCnlgj0qQAOjgq
-	 +1yT74DKEZCtVJy2QNfTD3DbgYz3dZHP0mR18/3I=
+	s=default; t=1557154086;
+	bh=FwKT+klbAU6IuKJGLc8X7ttbHeesRLveH+crazINx7U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2DURlkE5YtnMqEYVz89zmCINfVu8AZyOIsEh2uv0i8NMAQ6HeiAXpn/VSQDlJnSXI
+	 TAEcOE1Y3fYoQSSZiNycn7ptVJyvOJzQ5QfgB+igZigPylsaU75+nPoGrCnCQ/4L7a
+	 nZDVhHQj3IloyH6B9+sKA9bW01+EzPbvpeTJCEDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbfEFOsC (ORCPT
+        id S1729421AbfEFOsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:48:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47762 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:48:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728610AbfEFOr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:59 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1729411AbfEFOsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:48:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B09AF2087F;
-        Mon,  6 May 2019 14:47:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B934A214C6;
+        Mon,  6 May 2019 14:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154078;
-        bh=I3RuPUnsau3/9T4URycFeXmxeH3JbPXrTjlfIFBbXOg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DqUmgGisNw+/giG/ord66rkonSMoqSF91WC7wOTWyCgsJgOSov+m1vSLOqOSBKKCP
-         vDLYkj9L48KHbOS3Qi8WGDP12vZ7j49e5S7Zb8SQ86NZgkUg24H2BMf285zL9TVBjo
-         PXd56WG6upWC1grtw6tlaMl3VETTE9eTFQ7J7+NA=
-Date:   Mon, 6 May 2019 23:47:51 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Michal Gregorczyk <michalgr@live.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
-Message-Id: <20190506234751.65c92139dccbfa025bdfe300@kernel.org>
-In-Reply-To: <20190502204958.7868-1-joel@joelfernandes.org>
-References: <20190502204958.7868-1-joel@joelfernandes.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1557154081;
+        bh=FwKT+klbAU6IuKJGLc8X7ttbHeesRLveH+crazINx7U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=erM0YoQvgxeDg01ClsybMJP6o5o4iNVIMOo2r9fyffCBpcZx1v7zacM51jSubD+8k
+         y8QO3eK5/nug+MlMzOV5XNs8e5pfQsFTMxpOAsFFzA+4odhNWjAYgS1784nGZ8BSv0
+         VY5itYmDTlDTh7WFOXLLziarxOkWzjG6Pem7hCNI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 03/62] ipv6/flowlabel: wait rcu grace period before put_pid()
+Date:   Mon,  6 May 2019 16:32:34 +0200
+Message-Id: <20190506143051.397032869@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
+References: <20190506143051.102535767@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
+From: Eric Dumazet <edumazet@google.com>
 
-On Thu,  2 May 2019 16:49:58 -0400
-"Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+[ Upstream commit 6c0afef5fb0c27758f4d52b2210c61b6bd8b4470 ]
 
-> The eBPF based opensnoop tool fails to read the file path string passed
-> to the do_sys_open function. This is because it is a pointer to
-> userspace address and causes an -EFAULT when read with
-> probe_kernel_read. This is not an issue when running the tool on x86 but
-> is an issue on arm64. This patch adds a new bpf function call based
-> which calls the recently proposed probe_user_read function [1].
-> Using this function call from opensnoop fixes the issue on arm64.
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1051588/
+syzbot was able to catch a use-after-free read in pid_nr_ns() [1]
 
-Anyway, this series is still out-of-tree. We have to push this or similar
-update into kernel at first. I can resend v7 on the latest -tip tree including
-this patch if you update the description.
+ip6fl_seq_show() seems to use RCU protection, dereferencing fl->owner.pid
+but fl_free() releases fl->owner.pid before rcu grace period is started.
 
-Thank you,
+[1]
 
-> 
-> Cc: Michal Gregorczyk <michalgr@live.com>
-> Cc: Adrian Ratiu <adrian.ratiu@collabora.com>
-> Cc: Mohammad Husain <russoue@gmail.com>
-> Cc: Qais Yousef <qais.yousef@arm.com>
-> Cc: Srinivas Ramana <sramana@codeaurora.org>
-> Cc: duyuchao <yuchao.du@unisoc.com>
-> Cc: Manjo Raja Rao <linux@manojrajarao.com>
-> Cc: Karim Yaghmour <karim.yaghmour@opersys.com>
-> Cc: Tamir Carmeli <carmeli.tamir@gmail.com>
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Peter Ziljstra <peterz@infradead.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: kernel-team@android.com
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  include/uapi/linux/bpf.h       |  7 ++++++-
->  kernel/trace/bpf_trace.c       | 22 ++++++++++++++++++++++
->  tools/include/uapi/linux/bpf.h |  7 ++++++-
->  3 files changed, 34 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index e99e3e6f8b37..6fec701eaa46 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -539,6 +539,10 @@ union bpf_attr {
->   *     @mode: operation mode (enum bpf_adj_room_mode)
->   *     @flags: reserved for future use
->   *     Return: 0 on success or negative error code
-> + *
-> + * int bpf_probe_read_user(void *dst, int size, void *src)
-> + *     Read a userspace pointer safely.
-> + *     Return: 0 on success or negative error
->   */
->  #define __BPF_FUNC_MAPPER(FN)		\
->  	FN(unspec),			\
-> @@ -591,7 +595,8 @@ union bpf_attr {
->  	FN(get_socket_uid),		\
->  	FN(set_hash),			\
->  	FN(setsockopt),			\
-> -	FN(skb_adjust_room),
-> +	FN(skb_adjust_room),		\
-> +	FN(probe_read_user),
->  
->  /* integer value in 'imm' field of BPF_CALL instruction selects which helper
->   * function eBPF program intends to call
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index dc498b605d5d..1e1a11d9faa8 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -81,6 +81,26 @@ static const struct bpf_func_proto bpf_probe_read_proto = {
->  	.arg3_type	= ARG_ANYTHING,
->  };
->  
-> +BPF_CALL_3(bpf_probe_read_user, void *, dst, u32, size, const void *, unsafe_ptr)
-> +{
-> +	int ret;
-> +
-> +	ret = probe_user_read(dst, unsafe_ptr, size);
-> +	if (unlikely(ret < 0))
-> +		memset(dst, 0, size);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct bpf_func_proto bpf_probe_read_user_proto = {
-> +	.func		= bpf_probe_read_user,
-> +	.gpl_only	= true,
-> +	.ret_type	= RET_INTEGER,
-> +	.arg1_type	= ARG_PTR_TO_UNINIT_MEM,
-> +	.arg2_type	= ARG_CONST_SIZE,
-> +	.arg3_type	= ARG_ANYTHING,
-> +};
-> +
->  BPF_CALL_3(bpf_probe_write_user, void *, unsafe_ptr, const void *, src,
->  	   u32, size)
->  {
-> @@ -459,6 +479,8 @@ static const struct bpf_func_proto *tracing_func_proto(enum bpf_func_id func_id)
->  		return &bpf_map_delete_elem_proto;
->  	case BPF_FUNC_probe_read:
->  		return &bpf_probe_read_proto;
-> +	case BPF_FUNC_probe_read_user:
-> +		return &bpf_probe_read_user_proto;
->  	case BPF_FUNC_ktime_get_ns:
->  		return &bpf_ktime_get_ns_proto;
->  	case BPF_FUNC_tail_call:
-> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-> index e99e3e6f8b37..6fec701eaa46 100644
-> --- a/tools/include/uapi/linux/bpf.h
-> +++ b/tools/include/uapi/linux/bpf.h
-> @@ -539,6 +539,10 @@ union bpf_attr {
->   *     @mode: operation mode (enum bpf_adj_room_mode)
->   *     @flags: reserved for future use
->   *     Return: 0 on success or negative error code
-> + *
-> + * int bpf_probe_read_user(void *dst, int size, void *src)
-> + *     Read a userspace pointer safely.
-> + *     Return: 0 on success or negative error
->   */
->  #define __BPF_FUNC_MAPPER(FN)		\
->  	FN(unspec),			\
-> @@ -591,7 +595,8 @@ union bpf_attr {
->  	FN(get_socket_uid),		\
->  	FN(set_hash),			\
->  	FN(setsockopt),			\
-> -	FN(skb_adjust_room),
-> +	FN(skb_adjust_room),		\
-> +	FN(probe_read_user),
->  
->  /* integer value in 'imm' field of BPF_CALL instruction selects which helper
->   * function eBPF program intends to call
-> -- 
-> 2.21.0.593.g511ec345e18-goog
-> 
+BUG: KASAN: use-after-free in pid_nr_ns+0x128/0x140 kernel/pid.c:407
+Read of size 4 at addr ffff888094012a04 by task syz-executor.0/18087
+
+CPU: 0 PID: 18087 Comm: syz-executor.0 Not tainted 5.1.0-rc6+ #89
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+ kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
+ pid_nr_ns+0x128/0x140 kernel/pid.c:407
+ ip6fl_seq_show+0x2f8/0x4f0 net/ipv6/ip6_flowlabel.c:794
+ seq_read+0xad3/0x1130 fs/seq_file.c:268
+ proc_reg_read+0x1fe/0x2c0 fs/proc/inode.c:227
+ do_loop_readv_writev fs/read_write.c:701 [inline]
+ do_loop_readv_writev fs/read_write.c:688 [inline]
+ do_iter_read+0x4a9/0x660 fs/read_write.c:922
+ vfs_readv+0xf0/0x160 fs/read_write.c:984
+ kernel_readv fs/splice.c:358 [inline]
+ default_file_splice_read+0x475/0x890 fs/splice.c:413
+ do_splice_to+0x12a/0x190 fs/splice.c:876
+ splice_direct_to_actor+0x2d2/0x970 fs/splice.c:953
+ do_splice_direct+0x1da/0x2a0 fs/splice.c:1062
+ do_sendfile+0x597/0xd00 fs/read_write.c:1443
+ __do_sys_sendfile64 fs/read_write.c:1498 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1490 [inline]
+ __x64_sys_sendfile64+0x15a/0x220 fs/read_write.c:1490
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458da9
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f300d24bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000458da9
+RDX: 00000000200000c0 RSI: 0000000000000008 RDI: 0000000000000007
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 000000000000005a R11: 0000000000000246 R12: 00007f300d24c6d4
+R13: 00000000004c5fa3 R14: 00000000004da748 R15: 00000000ffffffff
+
+Allocated by task 17543:
+ save_stack+0x45/0xd0 mm/kasan/common.c:75
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_kmalloc mm/kasan/common.c:497 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
+ kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:505
+ slab_post_alloc_hook mm/slab.h:437 [inline]
+ slab_alloc mm/slab.c:3393 [inline]
+ kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3555
+ alloc_pid+0x55/0x8f0 kernel/pid.c:168
+ copy_process.part.0+0x3b08/0x7980 kernel/fork.c:1932
+ copy_process kernel/fork.c:1709 [inline]
+ _do_fork+0x257/0xfd0 kernel/fork.c:2226
+ __do_sys_clone kernel/fork.c:2333 [inline]
+ __se_sys_clone kernel/fork.c:2327 [inline]
+ __x64_sys_clone+0xbf/0x150 kernel/fork.c:2327
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 7789:
+ save_stack+0x45/0xd0 mm/kasan/common.c:75
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
+ __cache_free mm/slab.c:3499 [inline]
+ kmem_cache_free+0x86/0x260 mm/slab.c:3765
+ put_pid.part.0+0x111/0x150 kernel/pid.c:111
+ put_pid+0x20/0x30 kernel/pid.c:105
+ fl_free+0xbe/0xe0 net/ipv6/ip6_flowlabel.c:102
+ ip6_fl_gc+0x295/0x3e0 net/ipv6/ip6_flowlabel.c:152
+ call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
+ expire_timers kernel/time/timer.c:1362 [inline]
+ __run_timers kernel/time/timer.c:1681 [inline]
+ __run_timers kernel/time/timer.c:1649 [inline]
+ run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
+ __do_softirq+0x266/0x95a kernel/softirq.c:293
+
+The buggy address belongs to the object at ffff888094012a00
+ which belongs to the cache pid_2 of size 88
+The buggy address is located 4 bytes inside of
+ 88-byte region [ffff888094012a00, ffff888094012a58)
+The buggy address belongs to the page:
+page:ffffea0002500480 count:1 mapcount:0 mapping:ffff88809a483080 index:0xffff888094012980
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea00018a3508 ffffea0002524a88 ffff88809a483080
+raw: ffff888094012980 ffff888094012000 000000010000001b 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888094012900: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
+ ffff888094012980: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
+>ffff888094012a00: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
+                   ^
+ ffff888094012a80: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
+ ffff888094012b00: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
+
+Fixes: 4f82f45730c6 ("net ip6 flowlabel: Make owner a union of struct pid * and kuid_t")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv6/ip6_flowlabel.c |   18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+--- a/net/ipv6/ip6_flowlabel.c
++++ b/net/ipv6/ip6_flowlabel.c
+@@ -94,15 +94,21 @@ static struct ip6_flowlabel *fl_lookup(s
+ 	return fl;
+ }
+ 
++static void fl_free_rcu(struct rcu_head *head)
++{
++	struct ip6_flowlabel *fl = container_of(head, struct ip6_flowlabel, rcu);
++
++	if (fl->share == IPV6_FL_S_PROCESS)
++		put_pid(fl->owner.pid);
++	kfree(fl->opt);
++	kfree(fl);
++}
++
+ 
+ static void fl_free(struct ip6_flowlabel *fl)
+ {
+-	if (fl) {
+-		if (fl->share == IPV6_FL_S_PROCESS)
+-			put_pid(fl->owner.pid);
+-		kfree(fl->opt);
+-		kfree_rcu(fl, rcu);
+-	}
++	if (fl)
++		call_rcu(&fl->rcu, fl_free_rcu);
+ }
+ 
+ static void fl_release(struct ip6_flowlabel *fl)
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
