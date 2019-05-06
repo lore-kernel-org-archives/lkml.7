@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D52C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF032C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F95E2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BDC205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154359;
-	bh=Mz5846nar66Iy343b/Hbki8SXNus2eCbBEC8vFyt5XI=;
+	s=default; t=1557154371;
+	bh=973Nq6dL4r5jKDvmfxM1PPCHsA9lre+z6ID0zsTwmHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fOub8QszRNSm/2S48UBbK7ya+8wyixwIr4SYhMU6+TAvfLA23O+0BdWkIerDhv5nZ
-	 4dHsV8lx78DtzGQoNIR0oB7xwkA6d6QMJZIZnd+Iz8gfmM6qowFEG7EBr3ARFZ5dUZ
-	 HmcW80AZilYfo1wKF73aVH+KiZ34/G1XcTB5Umlw=
+	b=TzdACWZEArVLdkcu1A5FjIArf95y6hERmAEv0c+5ZA22A1DcIOE4NkIrPGhlyTRWY
+	 uvvbBoFYBRngkqxC9VpjkkQZxF9Z8wHlN6S3b6FqhYiGlj1acLiyqKfreiJiwBny07
+	 saedPpHpo49QamQm8c2FVJyzqj2BTI5By/yg7WMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbfEFOwi (ORCPT
+        id S1729397AbfEFOwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:52:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48120 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:52:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726914AbfEFOsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:48:08 -0400
+        id S1728922AbfEFOr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F4BC21530;
-        Mon,  6 May 2019 14:48:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08551214AF;
+        Mon,  6 May 2019 14:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154087;
-        bh=Mz5846nar66Iy343b/Hbki8SXNus2eCbBEC8vFyt5XI=;
+        s=default; t=1557154076;
+        bh=973Nq6dL4r5jKDvmfxM1PPCHsA9lre+z6ID0zsTwmHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MdKcg25t/mXCo3hsyEOgGONkow+VFK1xWxXAYeGPwvO5LeXHNVxZwFHhTaXePzYli
-         ES9Nvjq8CuvyRBDRHVQwGoUIwrvsLFGmh3dAo5CnBYYdg3RwF9eFMzUAUaouXfNgVY
-         5H0pboT9idL8dePhpriROYG3uGmqoSrFWCUK+rzE=
+        b=F3l7I18iMINty2D/k1FuUgKamiUARRSLy33rrLC7/RthrROClMHi5IF1/6g6jIwPu
+         ZpRwKKBZoYQjA/WpYibMJ9vJap/lUrv03zJt5SQJFfIVZWx35XndRou23C8kmshX77
+         PY5FNH4S6drZS8jso5I3c+TpgrxSoRMJ7AdjJA84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 31/62] batman-adv: Reduce claim hash refcnt only for removed entry
-Date:   Mon,  6 May 2019 16:33:02 +0200
-Message-Id: <20190506143053.755589380@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 28/62] HID: logitech: check the return value of create_singlethread_workqueue
+Date:   Mon,  6 May 2019 16:32:59 +0200
+Message-Id: <20190506143053.476354954@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -60,72 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4ba104f468bbfc27362c393815d03aa18fb7a20f ]
+[ Upstream commit 6c44b15e1c9076d925d5236ddadf1318b0a25ce2 ]
 
-The batadv_hash_remove is a function which searches the hashtable for an
-entry using a needle, a hashtable bucket selection function and a compare
-function. It will lock the bucket list and delete an entry when the compare
-function matches it with the needle. It returns the pointer to the
-hlist_node which matches or NULL when no entry matches the needle.
+create_singlethread_workqueue may fail and return NULL. The fix checks if it is
+NULL to avoid NULL pointer dereference.  Also, the fix moves the call of
+create_singlethread_workqueue earlier to avoid resource-release issues.
 
-The batadv_bla_del_claim is not itself protected in anyway to avoid that
-any other function is modifying the hashtable between the search for the
-entry and the call to batadv_hash_remove. It can therefore happen that the
-entry either doesn't exist anymore or an entry was deleted which is not the
-same object as the needle. In such an situation, the reference counter (for
-the reference stored in the hashtable) must not be reduced for the needle.
-Instead the reference counter of the actually removed entry has to be
-reduced.
-
-Otherwise the reference counter will underflow and the object might be
-freed before all its references were dropped. The kref helpers reported
-this problem as:
-
-  refcount_t: underflow; use-after-free.
-
-Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/bridge_loop_avoidance.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/net/batman-adv/bridge_loop_avoidance.c b/net/batman-adv/bridge_loop_avoidance.c
-index 8b6f654bc85d..00123064eb26 100644
---- a/net/batman-adv/bridge_loop_avoidance.c
-+++ b/net/batman-adv/bridge_loop_avoidance.c
-@@ -802,6 +802,8 @@ static void batadv_bla_del_claim(struct batadv_priv *bat_priv,
- 				 const u8 *mac, const unsigned short vid)
- {
- 	struct batadv_bla_claim search_claim, *claim;
-+	struct batadv_bla_claim *claim_removed_entry;
-+	struct hlist_node *claim_removed_node;
- 
- 	ether_addr_copy(search_claim.addr, mac);
- 	search_claim.vid = vid;
-@@ -812,10 +814,18 @@ static void batadv_bla_del_claim(struct batadv_priv *bat_priv,
- 	batadv_dbg(BATADV_DBG_BLA, bat_priv, "bla_del_claim(): %pM, vid %d\n",
- 		   mac, BATADV_PRINT_VID(vid));
- 
--	batadv_hash_remove(bat_priv->bla.claim_hash, batadv_compare_claim,
--			   batadv_choose_claim, claim);
--	batadv_claim_put(claim); /* reference from the hash is gone */
-+	claim_removed_node = batadv_hash_remove(bat_priv->bla.claim_hash,
-+						batadv_compare_claim,
-+						batadv_choose_claim, claim);
-+	if (!claim_removed_node)
-+		goto free_claim;
- 
-+	/* reference from the hash is gone */
-+	claim_removed_entry = hlist_entry(claim_removed_node,
-+					  struct batadv_bla_claim, hash_entry);
-+	batadv_claim_put(claim_removed_entry);
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 2e2515a4c070..3198faf5cff4 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -1282,6 +1282,13 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+ 		kfree(data);
+ 		return -ENOMEM;
+ 	}
++	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
++	if (!data->wq) {
++		kfree(data->effect_ids);
++		kfree(data);
++		return -ENOMEM;
++	}
 +
-+free_claim:
- 	/* don't need the reference from hash_find() anymore */
- 	batadv_claim_put(claim);
- }
+ 	data->hidpp = hidpp;
+ 	data->feature_index = feature_index;
+ 	data->version = version;
+@@ -1326,7 +1333,6 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+ 	/* ignore boost value at response.fap.params[2] */
+ 
+ 	/* init the hardware command queue */
+-	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
+ 	atomic_set(&data->workqueue_size, 0);
+ 
+ 	/* initialize with zero autocenter to get wheel in usable state */
 -- 
 2.20.1
 
