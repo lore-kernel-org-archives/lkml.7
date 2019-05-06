@@ -2,153 +2,319 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A489C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097E3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224892082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CACA32082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:27:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NKrWKCiG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jDFU/yLN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfEFSZz (ORCPT
+        id S1726575AbfEFS14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 14:25:55 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45005 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfEFSZy (ORCPT
+        Mon, 6 May 2019 14:27:56 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44476 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfEFS14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 14:25:54 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y13so7197270pfm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 11:25:54 -0700 (PDT)
+        Mon, 6 May 2019 14:27:56 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z16so6857079pgv.11;
+        Mon, 06 May 2019 11:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NXCCd9DEwpVv+CkVk+97oddxbHXiAPPbrF6iGBSrYgc=;
-        b=NKrWKCiGbzmza35fOtOMvL+ftXETfh3uUcp/GkaCXcI8/XzVP8qVDBZioaj7yzgwas
-         2tQRRTKTuRAtOwQhT+kcUBv2qp2jRZVnznAovTkgFRvmAuuaShMFB+Nx1bbVUNa9A7OX
-         8BLulEh57QbYge20tVCIr34v+fwMGVGOSH1ehzMLel+zcPUV1nVeQpw7cWLe4F7TLSOw
-         ++VBDFOhS3lKU6/bS8dLLIX6A8ANpsIH1DryjqnbCnoWXwVNSYR3C7RBe/CPhV/P7ncT
-         Cg2Mr2IcrlFerHMT/L21aU76jEgkMtiGDQAE6F2Y4uyRJKfpkAmDpf2MCdenO33CvIPF
-         KysQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=41sPx6Whjrf2UT/npH/aukGPBQDjUUU7QAE4tnLqXe4=;
+        b=jDFU/yLNsElQppc4CcDPuPMLyzDcTxg8TE710XAxY/CPslQQJHkrL/fLoMU3CKuXPS
+         ih85Mhvk2ew+r8Pu9hgt2oHkW069cNN8qxjCQnCHnZf1n1R9O0cPSizPXY8kjvAV+oUM
+         E30/L059vaddiZ4Koq0LHe7k+UWoyGmPffjSUc+iNuv0k99coUlVRrD6GWQTft7kEHBX
+         tkS13yTKwGQnLI5uKlcKkoe0wkJvAKA5x9DwM1ixsRmzzHhMDjd56Nml94+dfhnsVOIn
+         eddua9s3zbTL9V5JRg67o9rhTU6xnV6l/TzDWstqC+TzpHkpRKP+QBBNNlf+PPGEya+2
+         PObg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=NXCCd9DEwpVv+CkVk+97oddxbHXiAPPbrF6iGBSrYgc=;
-        b=l4XkZDYYLg1zHbR7lpP6FjR5CV6+k3bXPo3wkBTw1TgvEW88JWRB+EDyEfVdA+m8dM
-         Bs+qlChlTa3ced4jkcDMIRSy/HTSmGTWBxaSSI9XK0V6lv6F6/+bXDu7mmAhnK7h6G+m
-         cIuGz96vmZPSh7nSgvIk7lbw+kAQ4ysYVGgH5CHZOVLnewI0sMEz9TKZjXlTKs3SHCPK
-         /TEBsVGUibjgE+QSjwga5ywo9Xn7dj+4h33H9OHoAp1HskouC13gWqmZu/mpWikpbDtO
-         ElJCnk/ROyEOT7dchjCLPxZ5v8c6sFN853gBRdiYrsX41kRE5ZzwMkTAgyIEVA/omIsr
-         OnPg==
-X-Gm-Message-State: APjAAAVT5q3o1StjKZ21rLOKg/Xo6Qfyd83FtuFyXvtoAaFLoo9sjKxu
-        c8ipr3Bo/R2YTRW/bgtKRGF58g==
-X-Google-Smtp-Source: APXvYqz/rXdpBxODnklgvIEL8bDQcS0bWQdd3xgt2Ribpt+WuSOewfTAdZg7WDT5L829vlRrQKqfdA==
-X-Received: by 2002:a62:121c:: with SMTP id a28mr34935323pfj.58.1557167153191;
-        Mon, 06 May 2019 11:25:53 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id x66sm15776570pfb.78.2019.05.06.11.25.51
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 11:25:52 -0700 (PDT)
-Date:   Mon, 06 May 2019 11:25:52 -0700 (PDT)
-X-Google-Original-Date: Mon, 06 May 2019 11:25:42 PDT (-0700)
-Subject:     Re: [PATCH 13/15] riscv: switch to generic version of pte allocation
-In-Reply-To: <1556810922-20248-14-git-send-email-rppt@linux.ibm.com>
-CC:     akpm@linux-foundation.org, Arnd Bergmann <arnd@arndb.de>,
-        catalin.marinas@arm.com, geert@linux-m68k.org, green.hu@gmail.com,
-        gxt@pku.edu.cn, guoren@kernel.org, deller@gmx.de, lftan@altera.com,
-        willy@infradead.org, mattst88@gmail.com, mpe@ellerman.id.au,
-        mhocko@suse.com, paul.burton@mips.com, rkuo@codeaurora.org,
-        richard@nod.at, linux@armlinux.org.uk, sammy@sammy.net,
-        x86@kernel.org, linux-alpha@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-um@lists.infradead.org,
-        nios2-dev@lists.rocketboards.org, rppt@linux.ibm.com
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     rppt@linux.ibm.com
-Message-ID: <mhng-c23d2e8b-1dc0-48db-a4cf-d6964ca650c0@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=41sPx6Whjrf2UT/npH/aukGPBQDjUUU7QAE4tnLqXe4=;
+        b=k2VYvwlJzixZYe1AMxniy1DNphtQZTEVLPeiy15E8PJKJf62WMNL5Mc3DjdqyP3PrD
+         +t+oNKoHleeTdOuYuxAdeKiKuK/F0OnM68S5Q567FpM5s/N2FY13E68cqg+WbqOng0vG
+         SJFe95765K0jrx+Evz9Cu+nC/7bLUwoSG1C2AqOCUrFzRHMxsuTuPQU9UQy6lVcNiG98
+         KlwkJqeX9gdyM72TtlCDD9D91AIV5kIy6lmSUr4yCenRMFH6yFY1HuQA/lTXDLUAiHw3
+         OOji4pmV1/YBnLrt3uzSThReX8nyP3egtx6SEmpCYyoQJo+aUukotT5Lk0ZEYLZhROEY
+         mb0Q==
+X-Gm-Message-State: APjAAAUb++AiBbum5TfNenpx5l+JRx4KwmYIcUqXjw3F3WUEMwhdQI5Q
+        LuwvBK8jPfXEOFGd1o3Yqpcau3cH
+X-Google-Smtp-Source: APXvYqygz5p8dYod3qZyxx2Qqd7O25KS/7wjTzlFtbxFg6b1tr9qKawrx8744HroZ9A+uSBnZEQzgw==
+X-Received: by 2002:a62:489d:: with SMTP id q29mr35366715pfi.45.1557167275342;
+        Mon, 06 May 2019 11:27:55 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y20sm14077593pfe.188.2019.05.06.11.27.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 11:27:53 -0700 (PDT)
+Date:   Mon, 6 May 2019 11:27:52 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V3 3/3] watchdog: imx_sc: Add pretimeout support
+Message-ID: <20190506182752.GA358@roeck-us.net>
+References: <1557022189-10993-1-git-send-email-Anson.Huang@nxp.com>
+ <1557022189-10993-3-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557022189-10993-3-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 02 May 2019 08:28:40 PDT (-0700), rppt@linux.ibm.com wrote:
-> The only difference between the generic and RISC-V implementation of PTE
-> allocation is the usage of __GFP_RETRY_MAYFAIL for both kernel and user
-> PTEs and the absence of __GFP_ACCOUNT for the user PTEs.
->
-> The conversion to the generic version removes the __GFP_RETRY_MAYFAIL and
-> ensures that GFP_ACCOUNT is used for the user PTE allocations.
-
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-
-I'm assuming this is going in along with the rest of the patches, so I'm not
-going to add it to my tree.
-
->
-> The pte_free() and pte_free_kernel() versions are identical to the generic
-> ones and can be simply dropped.
->
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+On Sun, May 05, 2019 at 02:15:00AM +0000, Anson Huang wrote:
+> i.MX system controller watchdog can support pretimeout IRQ
+> via general SCU MU IRQ, it depends on IMX_SCU and driver MUST
+> be probed after SCU IPC ready, then enable corresponding SCU
+> IRQ group and register SCU IRQ notifier, when watchdog pretimeout
+> IRQ fires, SCU MU IRQ will be handled and watchdog pretimeout
+> notifier will be called to handle the event.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  arch/riscv/include/asm/pgalloc.h | 29 ++---------------------------
->  1 file changed, 2 insertions(+), 27 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
-> index 94043cf..48f28bb 100644
-> --- a/arch/riscv/include/asm/pgalloc.h
-> +++ b/arch/riscv/include/asm/pgalloc.h
-> @@ -18,6 +18,8 @@
->  #include <linux/mm.h>
->  #include <asm/tlb.h>
->
-> +#include <asm-generic/pgalloc.h>	/* for pte_{alloc,free}_one */
+> No change.
+> ---
+>  drivers/watchdog/Kconfig      |   1 +
+>  drivers/watchdog/imx_sc_wdt.c | 114 ++++++++++++++++++++++++++++++++++--------
+>  2 files changed, 95 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index e19960a..dbc74e1 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -710,6 +710,7 @@ config IMX2_WDT
+>  config IMX_SC_WDT
+>  	tristate "IMX SC Watchdog"
+>  	depends on HAVE_ARM_SMCCC
+> +	depends on IMX_SCU
+>  	select WATCHDOG_CORE
+>  	help
+>  	  This is the driver for the system controller watchdog
+> diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
+> index 49848b6..d8493a3 100644
+> --- a/drivers/watchdog/imx_sc_wdt.c
+> +++ b/drivers/watchdog/imx_sc_wdt.c
+> @@ -4,6 +4,7 @@
+>   */
+>  
+>  #include <linux/arm-smccc.h>
+> +#include <linux/firmware/imx/sci.h>
+>  #include <linux/io.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> @@ -33,11 +34,19 @@
+>  
+>  #define SC_TIMER_WDOG_ACTION_PARTITION	0
+>  
+> +#define SC_IRQ_WDOG			1
+> +#define SC_IRQ_GROUP_WDOG		1
 > +
->  static inline void pmd_populate_kernel(struct mm_struct *mm,
->  	pmd_t *pmd, pte_t *pte)
+>  static bool nowayout = WATCHDOG_NOWAYOUT;
+>  module_param(nowayout, bool, 0000);
+>  MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+>  		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+>  
+> +struct imx_sc_wdt_device {
+> +	struct watchdog_device wdd;
+> +	struct notifier_block wdt_notifier;
+> +};
+> +
+>  static int imx_sc_wdt_ping(struct watchdog_device *wdog)
 >  {
-> @@ -82,33 +84,6 @@ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
->
->  #endif /* __PAGETABLE_PMD_FOLDED */
->
-> -static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
-> -{
-> -	return (pte_t *)__get_free_page(
-> -		GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
-> -}
-> -
-> -static inline struct page *pte_alloc_one(struct mm_struct *mm)
-> -{
-> -	struct page *pte;
-> -
-> -	pte = alloc_page(GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_ZERO);
-> -	if (likely(pte != NULL))
-> -		pgtable_page_ctor(pte);
-> -	return pte;
-> -}
-> -
-> -static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
-> -{
-> -	free_page((unsigned long)pte);
-> -}
-> -
-> -static inline void pte_free(struct mm_struct *mm, pgtable_t pte)
-> -{
-> -	pgtable_page_dtor(pte);
-> -	__free_page(pte);
-> -}
-> -
->  #define __pte_free_tlb(tlb, pte, buf)   \
->  do {                                    \
->  	pgtable_page_dtor(pte);         \
+>  	struct arm_smccc_res res;
+> @@ -85,24 +94,66 @@ static int imx_sc_wdt_set_timeout(struct watchdog_device *wdog,
+>  	return res.a0 ? -EACCES : 0;
+>  }
+>  
+> +static int imx_sc_wdt_set_pretimeout(struct watchdog_device *wdog,
+> +				     unsigned int pretimeout)
+> +{
+> +	struct arm_smccc_res res;
+> +
+> +	arm_smccc_smc(IMX_SIP_TIMER, IMX_SIP_TIMER_SET_PRETIME_WDOG,
+> +		      pretimeout * 1000, 0, 0, 0, 0, 0, &res);
+> +	if (res.a0)
+> +		return -EACCES;
+> +
+> +	wdog->pretimeout = pretimeout;
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_sc_wdt_notify(struct notifier_block *nb,
+> +			     unsigned long event, void *group)
+> +{
+> +	struct imx_sc_wdt_device *imx_sc_wdd =
+> +				 container_of(nb,
+> +					      struct imx_sc_wdt_device,
+> +					      wdt_notifier);
+> +
+> +	if (event & SC_IRQ_WDOG &&
+> +	    *(u8 *)group == SC_IRQ_GROUP_WDOG)
+> +		watchdog_notify_pretimeout(&imx_sc_wdd->wdd);
+> +
+> +	return 0;
+> +}
+> +
+> +static void imx_sc_wdt_action(void *data)
+> +{
+> +	struct notifier_block *wdt_notifier = data;
+> +
+> +	imx_scu_irq_unregister_notifier(wdt_notifier);
+> +	imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
+> +				 SC_IRQ_WDOG,
+> +				 false);
+> +}
+> +
+>  static const struct watchdog_ops imx_sc_wdt_ops = {
+>  	.owner = THIS_MODULE,
+>  	.start = imx_sc_wdt_start,
+>  	.stop  = imx_sc_wdt_stop,
+>  	.ping  = imx_sc_wdt_ping,
+>  	.set_timeout = imx_sc_wdt_set_timeout,
+> +	.set_pretimeout = imx_sc_wdt_set_pretimeout,
+>  };
+>  
+> -static const struct watchdog_info imx_sc_wdt_info = {
+> +static struct watchdog_info imx_sc_wdt_info = {
+>  	.identity	= "i.MX SC watchdog timer",
+>  	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
+> -			  WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT,
+> +			  WDIOF_MAGICCLOSE,
+>  };
+>  
+>  static int imx_sc_wdt_probe(struct platform_device *pdev)
+>  {
+> +	struct imx_sc_wdt_device *imx_sc_wdd;
+> +	struct watchdog_device *wdog;
+>  	struct device *dev = &pdev->dev;
+> -	struct watchdog_device *imx_sc_wdd;
+>  	int ret;
+>  
+>  	imx_sc_wdd = devm_kzalloc(dev, sizeof(*imx_sc_wdd), GFP_KERNEL);
+> @@ -111,42 +162,65 @@ static int imx_sc_wdt_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, imx_sc_wdd);
+>  
+> -	imx_sc_wdd->info = &imx_sc_wdt_info;
+> -	imx_sc_wdd->ops = &imx_sc_wdt_ops;
+> -	imx_sc_wdd->min_timeout = 1;
+> -	imx_sc_wdd->max_timeout = MAX_TIMEOUT;
+> -	imx_sc_wdd->parent = dev;
+> -	imx_sc_wdd->timeout = DEFAULT_TIMEOUT;
+> +	wdog = &imx_sc_wdd->wdd;
+> +	wdog->info = &imx_sc_wdt_info;
+> +	wdog->ops = &imx_sc_wdt_ops;
+> +	wdog->min_timeout = 1;
+> +	wdog->max_timeout = MAX_TIMEOUT;
+> +	wdog->parent = dev;
+> +	wdog->timeout = DEFAULT_TIMEOUT;
+>  
+> -	watchdog_init_timeout(imx_sc_wdd, 0, dev);
+> -	watchdog_stop_on_reboot(imx_sc_wdd);
+> -	watchdog_stop_on_unregister(imx_sc_wdd);
+> +	watchdog_init_timeout(wdog, 0, dev);
+> +	watchdog_stop_on_reboot(wdog);
+> +	watchdog_stop_on_unregister(wdog);
+>  
+> -	ret = devm_watchdog_register_device(dev, imx_sc_wdd);
+> +	ret = devm_watchdog_register_device(dev, wdog);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to register watchdog device\n");
+>  		return ret;
+>  	}
+>  
+> -	return 0;
+> +	ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
+> +				       SC_IRQ_WDOG,
+> +				       true);
+> +	if (ret) {
+> +		dev_warn(dev, "Enable irq failed, pretimeout NOT supported\n");
+> +		return 0;
+> +	}
+> +
+> +	imx_sc_wdd->wdt_notifier.notifier_call = imx_sc_wdt_notify;
+> +	ret = imx_scu_irq_register_notifier(&imx_sc_wdd->wdt_notifier);
+> +	if (ret) {
+> +		imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
+> +					 SC_IRQ_WDOG,
+> +					 false);
+> +		dev_warn(dev,
+> +			 "Register irq notifier failed, pretimeout NOT supported\n");
+> +		return 0;
+> +	}
+> +
+> +	imx_sc_wdt_info.options |= WDIOF_PRETIMEOUT;
+> +	ret = devm_add_action(dev, imx_sc_wdt_action,
+> +			      &imx_sc_wdd->wdt_notifier);
+
+This needs devm_add_action_or_reset() because otherwise the notifier would
+not be removed, and the interrupt group would not be disabled.
+
+> +	return ret;
+
+This should not return an error. Accepting that the notifier can not be
+registered and that the irq group can not be enabled but bailing out if
+devm_add_action() fails is inconsistent.
+
+Guenter
+
+>  }
+>  
+>  static int __maybe_unused imx_sc_wdt_suspend(struct device *dev)
+>  {
+> -	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
+> +	struct imx_sc_wdt_device *imx_sc_wdd = dev_get_drvdata(dev);
+>  
+> -	if (watchdog_active(imx_sc_wdd))
+> -		imx_sc_wdt_stop(imx_sc_wdd);
+> +	if (watchdog_active(&imx_sc_wdd->wdd))
+> +		imx_sc_wdt_stop(&imx_sc_wdd->wdd);
+>  
+>  	return 0;
+>  }
+>  
+>  static int __maybe_unused imx_sc_wdt_resume(struct device *dev)
+>  {
+> -	struct watchdog_device *imx_sc_wdd = dev_get_drvdata(dev);
+> +	struct imx_sc_wdt_device *imx_sc_wdd = dev_get_drvdata(dev);
+>  
+> -	if (watchdog_active(imx_sc_wdd))
+> -		imx_sc_wdt_start(imx_sc_wdd);
+> +	if (watchdog_active(&imx_sc_wdd->wdd))
+> +		imx_sc_wdt_start(&imx_sc_wdd->wdd);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.7.4
+> 
