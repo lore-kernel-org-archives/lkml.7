@@ -2,283 +2,65 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91ABBC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 109F5C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E7B206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:27:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Bk/ZFvOI"
+	by mail.kernel.org (Postfix) with ESMTP id DB66D206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfEFL1n (ORCPT
+        id S1726415AbfEFL2a convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 07:27:43 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40832 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEFL1m (ORCPT
+        Mon, 6 May 2019 07:28:30 -0400
+Received: from smtp.profeco.gob.mx ([201.144.226.30]:17357 "EHLO
+        owa.profeco.gob.mx" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726147AbfEFL2a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 07:27:42 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b3so6219080plr.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 04:27:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=T8hpdmPuZ0S4pAwGaFbzxGbWzGiaXVlLtVKlfYx4iio=;
-        b=Bk/ZFvOIuQWRmXzKFsuxJ00hiLtOb4ZoDbwp6eXMKveVW/RPVFwSmc44fPc/ZJ6GP/
-         UTNJZvjSkvpNM0+QgnKNQ4n1Cb4+gjspV/eAFIqBhte+d/d+2PS8luAjgdceOT1Yfja4
-         +LIKLTvzcRLnbIZPAvB4HYe9/o6QOm7iZk/Q+3GVZLJzdUBMQnsbrmo41YqHni6qkzDW
-         EO9fUcW6TJ008kdJJjE6elBB/gfphZgHDOlc4JQT1t+mIKgi+RwuL2WOpOZsM75RzBS+
-         FlzFYQS1FBTf9798vV6PzExx0JbJQysoxr6KdGIeOdUzZ0oMvBZKlf9AsJ7doLOOXsFG
-         Dawg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=T8hpdmPuZ0S4pAwGaFbzxGbWzGiaXVlLtVKlfYx4iio=;
-        b=YaXybF1mNbcrJtj5tckFoPpeUO2jcNMd6kpBEbnlV24TGZGxBdC/nWFMNp6aArbMZO
-         xNOhJU1l+1Ukwpm2Jdtw3v4OLdssGWpkhp5Jc11SLi7oyyMG/49ByvMTZilVi/n595gd
-         ro5htaGHMVIamtEqEIBG0UTpWUSJOCNCQLUyy9QZ4bFy/dzV9IG0NlttzONdnIx+Wted
-         LtIfiyOb9jsDSYgc2Hxo7wjVz9aVKKRzfh2FZ3LsNkHmZxQLcZzHESeGfgizLDydkuah
-         yrnm1kwfBGDxnbpxQKj8plqI50rLPvvcc4pF7mgA/JyLcaAutDK/+t++cL/1bjnln+sQ
-         2DXA==
-X-Gm-Message-State: APjAAAWiELfRuZTKmy4y5DHJ1G+X0gsE5/DoJ1BKQwr6h5AMCingl0US
-        cCEhJia13eD2BFWJEZSaWchDEw==
-X-Google-Smtp-Source: APXvYqwvAjJnxUVsUW1uW8HJ+SfIt8h2TIyySZXIVTncALvvJkEVjE2ZgjSeTQHCUfvKmF5+rETmxg==
-X-Received: by 2002:a17:902:8609:: with SMTP id f9mr30112857plo.32.1557142062000;
-        Mon, 06 May 2019 04:27:42 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id k4sm23990693pgh.27.2019.05.06.04.27.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 06 May 2019 04:27:40 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     linux-edac@vger.kernel.org, linux-riscv@lists.infradead.org,
-        palmer@sifive.com, bp@alien8.de, james.morse@arm.com
-Cc:     paul.walmsley@sifive.com, linux-kernel@vger.kernel.org,
-        aou@eecs.berkeley.edu, mchehab@kernel.org, sachin.ghadi@sifive.com,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        nicolas.ferre@microchip.com, paulmck@linux.ibm.com,
-        Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v2] edac: sifive: Add EDAC platform driver for SiFive SoCs
-Date:   Mon,  6 May 2019 16:57:06 +0530
-Message-Id: <1557142026-15949-2-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1557142026-15949-1-git-send-email-yash.shah@sifive.com>
-References: <1557142026-15949-1-git-send-email-yash.shah@sifive.com>
+        Mon, 6 May 2019 07:28:30 -0400
+X-Greylist: delayed 321 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 May 2019 07:28:29 EDT
+Received: from PFCOCEEXCH02.profeco.gob.mx (10.4.60.109) by
+ PFCOCEEXCH03.profeco.gob.mx (10.4.60.108) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 6 May 2019 06:23:03 -0500
+Received: from coris.com (103.125.190.80) by PFCOCEEXCH02.profeco.gob.mx
+ (10.4.60.123) with Microsoft SMTP Server id 14.3.408.0; Mon, 6 May 2019
+ 06:22:54 -0500
+Reply-To: <kentpace@sina.com>
+From:   <derek@coris.com>
+To:     <linux-kernel@vger.kernel.org>
+Subject: Are you still alive
+Date:   Mon, 6 May 2019 04:23:08 -0700
+Message-ID: <20190506042307.5ECC75480A133482@coris.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The initial ver of EDAC driver supports:
-- ECC event monitoring and reporting through the EDAC framework for SiFive
-  L2 cache controller.
+Dear, 
 
-The EDAC driver registers for notifier events from the L2 cache controller
-driver (arch/riscv/mm/sifive_l2_cache.c) for L2 ECC events
+Please confirm if you are still alive because two gentle men 
+walked into my office this morning to claim your inheritance 
+funds with our bank. They said that you are dead and that they 
+are your  representative. 
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
-Reviewed-by: James Morse <james.morse@arm.com>
----
-This patch depends on patch
-'RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive SoCs'
-https://lkml.org/lkml/2019/5/6/255
+I got your email from the file of your relative 
+who is yet to be paid for the Contract he has executed before his 
+death several years ago.
 
- MAINTAINERS                |   6 +++
- arch/riscv/Kconfig         |   1 +
- drivers/edac/Kconfig       |   6 +++
- drivers/edac/Makefile      |   1 +
- drivers/edac/sifive_edac.c | 119 +++++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 133 insertions(+)
- create mode 100644 drivers/edac/sifive_edac.c
+You the beneficiary of this fund has 
+not been in contact with the bank to claim your fund. The 
+gentlemen submitted an address where they want your VISA DEBIT 
+ATM CARD sent. 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ba4f104..50f9f43 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5679,6 +5679,12 @@ L:	linux-edac@vger.kernel.org
- S:	Maintained
- F:	drivers/edac/sb_edac.c
- 
-+EDAC-SIFIVE
-+M:	Yash Shah <yash.shah@sifive.com>
-+L:	linux-edac@vger.kernel.org
-+S:	Supported
-+F:	drivers/edac/sifive_edac.c
-+
- EDAC-SKYLAKE
- M:	Tony Luck <tony.luck@intel.com>
- L:	linux-edac@vger.kernel.org
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index eb56c82..31999a6 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -49,6 +49,7 @@ config RISCV
- 	select GENERIC_IRQ_MULTI_HANDLER
- 	select ARCH_HAS_PTE_SPECIAL
- 	select HAVE_EBPF_JIT if 64BIT
-+	select EDAC_SUPPORT
- 
- config MMU
- 	def_bool y
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 47eb4d1..3e05228 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -460,6 +460,12 @@ config EDAC_ALTERA_SDMMC
- 	  Support for error detection and correction on the
- 	  Altera SDMMC FIFO Memory for Altera SoCs.
- 
-+config EDAC_SIFIVE
-+	bool "Sifive platform EDAC driver"
-+	depends on EDAC=y && RISCV
-+	help
-+	  Support for error detection and correction on the SiFive SoCs.
-+
- config EDAC_SYNOPSYS
- 	tristate "Synopsys DDR Memory Controller"
- 	depends on ARCH_ZYNQ || ARCH_ZYNQMP
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 89ad4a84..165ca65e 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -79,6 +79,7 @@ obj-$(CONFIG_EDAC_OCTEON_PCI)		+= octeon_edac-pci.o
- obj-$(CONFIG_EDAC_THUNDERX)		+= thunderx_edac.o
- 
- obj-$(CONFIG_EDAC_ALTERA)		+= altera_edac.o
-+obj-$(CONFIG_EDAC_SIFIVE)		+= sifive_edac.o
- obj-$(CONFIG_EDAC_SYNOPSYS)		+= synopsys_edac.o
- obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
- obj-$(CONFIG_EDAC_TI)			+= ti_edac.o
-diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
-new file mode 100644
-index 0000000..413cdb4
---- /dev/null
-+++ b/drivers/edac/sifive_edac.c
-@@ -0,0 +1,119 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SiFive Platform EDAC Driver
-+ *
-+ * Copyright (C) 2018-2019 SiFive, Inc.
-+ *
-+ * This driver is partially based on octeon_edac-pc.c
-+ *
-+ */
-+#include <linux/edac.h>
-+#include <linux/platform_device.h>
-+#include "edac_module.h"
-+#include <asm/sifive_l2_cache.h>
-+
-+#define DRVNAME "sifive_edac"
-+
-+struct sifive_edac_priv {
-+	struct notifier_block notifier;
-+	struct edac_device_ctl_info *dci;
-+};
-+
-+/**
-+ * EDAC error callback
-+ *
-+ * @event: non-zero if unrecoverable.
-+ */
-+static
-+int ecc_err_event(struct notifier_block *this, unsigned long event, void *ptr)
-+{
-+	const char *msg = (char *)ptr;
-+	struct sifive_edac_priv *p;
-+
-+	p = container_of(this, struct sifive_edac_priv, notifier);
-+
-+	if (event == SIFIVE_L2_ERR_TYPE_UE)
-+		edac_device_handle_ue(p->dci, 0, 0, msg);
-+	else if (event == SIFIVE_L2_ERR_TYPE_CE)
-+		edac_device_handle_ce(p->dci, 0, 0, msg);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int ecc_register(struct platform_device *pdev)
-+{
-+	struct sifive_edac_priv *p;
-+
-+	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	p->notifier.notifier_call = ecc_err_event;
-+	platform_set_drvdata(pdev, p);
-+
-+	p->dci = edac_device_alloc_ctl_info(0, "sifive_ecc", 1, "sifive_ecc",
-+					    1, 1, NULL, 0,
-+					    edac_device_alloc_index());
-+	if (IS_ERR(p->dci))
-+		return PTR_ERR(p->dci);
-+
-+	p->dci->dev = &pdev->dev;
-+	p->dci->mod_name = "Sifive ECC Manager";
-+	p->dci->ctl_name = dev_name(&pdev->dev);
-+	p->dci->dev_name = dev_name(&pdev->dev);
-+
-+	if (edac_device_add_device(p->dci)) {
-+		dev_err(p->dci->dev, "failed to register with EDAC core\n");
-+		goto err;
-+	}
-+
-+	register_sifive_l2_error_notifier(&p->notifier);
-+
-+	return 0;
-+
-+err:
-+	edac_device_free_ctl_info(p->dci);
-+
-+	return -ENXIO;
-+}
-+
-+static int ecc_unregister(struct platform_device *pdev)
-+{
-+	struct sifive_edac_priv *p = platform_get_drvdata(pdev);
-+
-+	unregister_sifive_l2_error_notifier(&p->notifier);
-+	edac_device_del_device(&pdev->dev);
-+	edac_device_free_ctl_info(p->dci);
-+
-+	return 0;
-+}
-+
-+static struct platform_device *sifive_pdev;
-+
-+static int __init sifive_edac_init(void)
-+{
-+	int ret;
-+
-+	sifive_pdev = platform_device_register_simple(DRVNAME, 0, NULL, 0);
-+	if (IS_ERR(sifive_pdev))
-+		return PTR_ERR(sifive_pdev);
-+
-+	ret = ecc_register(sifive_pdev);
-+	if (ret)
-+		platform_device_unregister(sifive_pdev);
-+
-+	return ret;
-+}
-+
-+static void __exit sifive_edac_exit(void)
-+{
-+	ecc_unregister(sifive_pdev);
-+	platform_device_unregister(sifive_pdev);
-+}
-+
-+module_init(sifive_edac_init);
-+module_exit(sifive_edac_exit);
-+
-+MODULE_AUTHOR("SiFive Inc.");
-+MODULE_DESCRIPTION("SiFive platform EDAC driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+If you are still alive, please indicate by sending your full 
+contact details within 7 day of receiving this message, faliure 
+to do so, I will send the card to the address submitted by your 
+representatives. 
 
+
+Regards
