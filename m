@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB1AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3160C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411D5214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B78214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153769;
-	bh=b1+zedKg8zdeP7otKTiu/0hB8d4eiwI693m/aSnw4sM=;
+	s=default; t=1557153774;
+	bh=l+vwBq8B0iCqSp7zzsk2DETMYixOA5pWhzYBakqzhJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oWJSS3TbTXT3Aux2f+cJM2U98m4wyQZZdF2TRnX9AwGPd9C8nSMyh8A4YdNok5xhF
-	 Z4AqdKG+SJnZdC9Nbw/hAjr9DNJT6cprpVjFbne/UWvYNuSkSWEctwVkYs7+doX0kK
-	 0DehGovXmeih40MaUqs3MmZ6IQi6MbD4jxoVDLrs=
+	b=ehc82002m5qrr+T515ppzD0TplYAI1Wekn7y4TaJxmbWaTgJ3DGjEbmPAhWmiBGoK
+	 5ZohyO+MY0AJhCO0JmiY10eB1/mCSsTphYmzQrKuAzhLsfv+AUNKzQ1AZAtMlsCowG
+	 XRuJ2VZ5Eovbback2zkQK20lo/hpeu7uXrMWAv+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbfEFOms (ORCPT
+        id S1728567AbfEFOmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:42:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37808 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:42:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727799AbfEFOmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:42:46 -0400
+        id S1727779AbfEFOmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 417DD20C01;
-        Mon,  6 May 2019 14:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D530C21479;
+        Mon,  6 May 2019 14:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153765;
-        bh=b1+zedKg8zdeP7otKTiu/0hB8d4eiwI693m/aSnw4sM=;
+        s=default; t=1557153769;
+        bh=l+vwBq8B0iCqSp7zzsk2DETMYixOA5pWhzYBakqzhJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tjyAIhkommLJaSRaw1xxvtR5nHIq4KQbw9+gx8S6UwTYCIXC4W2Yn2fo/zpL9Y/js
-         Wu+7DuNwtimQSi1TFnstDMEthKgf2uv+dS2ht8qvjlamO1UWATqriYfj+qf+B2iz61
-         a0cMakTw2fJgkhfOtjQj98rCUs3+mzvJErGoUR3E=
+        b=eVfwM6nIqARxOGRxYYeqgNPaLVxFaF580F/sJcppxGIDK8itu+ItC1TNjSWd9O1Ze
+         GI+F7ZgqG9htDXkqTZWzBo+JuG41Knul/hc8JdLyMJVe7nsryhw3blErGuKRc0GjF+
+         7KUgGWCGt/7LwxVYt1fM/esYsZNI7Fv7xmLdd1XA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Shyti <andi@etezian.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 87/99] Input: stmfts - acknowledge that setting brightness is a blocking call
-Date:   Mon,  6 May 2019 16:33:00 +0200
-Message-Id: <20190506143101.843299779@linuxfoundation.org>
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.19 88/99] gpio: mxc: add check to return defer probe if clock tree NOT ready
+Date:   Mon,  6 May 2019 16:33:01 +0200
+Message-Id: <20190506143101.905965388@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -58,76 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
 
-commit 937c4e552fd1174784045684740edfcea536159d upstream.
+commit a329bbe707cee2cf8c660890ef2ad0d00ec7e8a3 upstream.
 
-We need to turn regulators on and off when switching brightness, and
-that may block, therefore we have to set stmfts_brightness_set() as
-LED's brightness_set_blocking() method.
+On i.MX8MQ platform, clock driver uses platform driver
+model and it is probed after GPIO driver, so when GPIO
+driver fails to get clock, it should check the error type
+to decide whether to return defer probe or just ignore
+the clock operation.
 
-Fixes: 78bcac7b2ae1 ("Input: add support for the STMicroelectronics FingerTip touchscreen")
-Acked-by: Andi Shyti <andi@etezian.org>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 2808801aab8a ("gpio: mxc: add clock operation")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/touchscreen/stmfts.c |   30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+ drivers/gpio/gpio-mxc.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/input/touchscreen/stmfts.c
-+++ b/drivers/input/touchscreen/stmfts.c
-@@ -106,27 +106,29 @@ struct stmfts_data {
- 	bool running;
- };
+--- a/drivers/gpio/gpio-mxc.c
++++ b/drivers/gpio/gpio-mxc.c
+@@ -438,8 +438,11 @@ static int mxc_gpio_probe(struct platfor
  
--static void stmfts_brightness_set(struct led_classdev *led_cdev,
-+static int stmfts_brightness_set(struct led_classdev *led_cdev,
- 					enum led_brightness value)
- {
- 	struct stmfts_data *sdata = container_of(led_cdev,
- 					struct stmfts_data, led_cdev);
- 	int err;
+ 	/* the controller clock is optional */
+ 	port->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(port->clk))
++	if (IS_ERR(port->clk)) {
++		if (PTR_ERR(port->clk) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
+ 		port->clk = NULL;
++	}
  
--	if (value == sdata->led_status || !sdata->ledvdd)
--		return;
--
--	if (!value) {
--		regulator_disable(sdata->ledvdd);
--	} else {
--		err = regulator_enable(sdata->ledvdd);
--		if (err)
--			dev_warn(&sdata->client->dev,
--				 "failed to disable ledvdd regulator: %d\n",
--				 err);
-+	if (value != sdata->led_status && sdata->ledvdd) {
-+		if (!value) {
-+			regulator_disable(sdata->ledvdd);
-+		} else {
-+			err = regulator_enable(sdata->ledvdd);
-+			if (err) {
-+				dev_warn(&sdata->client->dev,
-+					 "failed to disable ledvdd regulator: %d\n",
-+					 err);
-+				return err;
-+			}
-+		}
-+		sdata->led_status = value;
- 	}
- 
--	sdata->led_status = value;
-+	return 0;
- }
- 
- static enum led_brightness stmfts_brightness_get(struct led_classdev *led_cdev)
-@@ -608,7 +610,7 @@ static int stmfts_enable_led(struct stmf
- 	sdata->led_cdev.name = STMFTS_DEV_NAME;
- 	sdata->led_cdev.max_brightness = LED_ON;
- 	sdata->led_cdev.brightness = LED_OFF;
--	sdata->led_cdev.brightness_set = stmfts_brightness_set;
-+	sdata->led_cdev.brightness_set_blocking = stmfts_brightness_set;
- 	sdata->led_cdev.brightness_get = stmfts_brightness_get;
- 
- 	err = devm_led_classdev_register(&sdata->client->dev, &sdata->led_cdev);
+ 	err = clk_prepare_enable(port->clk);
+ 	if (err) {
 
 
