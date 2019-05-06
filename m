@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968AEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C17C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D6821530
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78D4214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153332;
-	bh=ficshpO8Shqw6Abdhvok6FU9UFWIkLTXgtO1J+kYecU=;
+	s=default; t=1557153336;
+	bh=/CtsiC3QKIiq+eFj1WiGdmRM56VbB/uKlEKnvHHzNXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zeMWdKI3O8B3ba0nBaZnCVwDck97fTbDlbpHeoqSm/h6BT5xR3FSo1UzxljKCr0Ol
-	 ZG0evVvdNFFj+zLB+AAMrif6ajKjbXQGoBAlExhFvxIDif8jfULSdacuOamta4hspX
-	 amnBbpDqZL23HP08cChSpHIMx0lr+wddO88f5398=
+	b=GbKSk+syPOhtf+MEMmkcBnZRX2LY49yWk69UFCLIuDbJ2mkrDLDpdNep/rbkrGab8
+	 z886pNnGTxfEKyKumpK/yvwfP9OEh0GizlYBKv1AHsUIZRjfoDMlvEBZ39j/HjjeG4
+	 6zeRTOQLXlMoGG14O5wdCEGGuPrgcvkOBDqjTNpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfEFOfb (ORCPT
+        id S1726967AbfEFOff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:35:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55578 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:35:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726373AbfEFOf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:35:29 -0400
+        id S1726954AbfEFOfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:35:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8506021530;
-        Mon,  6 May 2019 14:35:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1171214AE;
+        Mon,  6 May 2019 14:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153328;
-        bh=ficshpO8Shqw6Abdhvok6FU9UFWIkLTXgtO1J+kYecU=;
+        s=default; t=1557153331;
+        bh=/CtsiC3QKIiq+eFj1WiGdmRM56VbB/uKlEKnvHHzNXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P7BPkkfIutkqgi7CsZ8bKjJfc0pE4zWRZ/nau/CWZJ9yv7LxuDNYGKgr/qC/xGE7d
-         G8gXOPWg9bi89cWWLY4e3ipC+4ZSwl9JdcWhf0IOh3U/IxvAGgPMY8tyCpLuAuwNZS
-         u2hXxsjcYo/zOuKCyZTsMsRFiESLcynXolI3mGtk=
+        b=nOj8bBXfKPGT7Mwtry1ykmmQJcDceyZeIzNZ0bPxKTcYFKYskkRl8Y5xH42re7p7b
+         Iejjsx5KX2JDpcHk1KB2oG5tRi9l1jKIuBSr6C8uoBlHlaoIZQrLDB0EWpqOibEiFc
+         1K6+h977BhlOLWQ3ygPrk44MBRh63ukn7w44Be1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
         Jiri Kosina <jkosina@suse.cz>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 026/122] HID: Increase maximum report size allowed by hid_field_extract()
-Date:   Mon,  6 May 2019 16:31:24 +0200
-Message-Id: <20190506143057.104585809@linuxfoundation.org>
+Subject: [PATCH 5.0 027/122] HID: logitech: check the return value of create_singlethread_workqueue
+Date:   Mon,  6 May 2019 16:31:25 +0200
+Message-Id: <20190506143057.185665784@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -61,42 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 94a9992f7dbdfb28976b565af220e0c4a117144a ]
+[ Upstream commit 6c44b15e1c9076d925d5236ddadf1318b0a25ce2 ]
 
-Commit 71f6fa90a353 ("HID: increase maximum global item tag report size
-to 256") increases the max report size from 128 to 256.
+create_singlethread_workqueue may fail and return NULL. The fix checks if it is
+NULL to avoid NULL pointer dereference.  Also, the fix moves the call of
+create_singlethread_workqueue earlier to avoid resource-release issues.
 
-We also need to update the report size in hid_field_extract() otherwise
-it complains and truncates now valid report size:
-[ 406.165461] hid-sensor-hub 001F:8086:22D8.0002: hid_field_extract() called with n (192) > 32! (kworker/5:1)
-
-BugLink: https://bugs.launchpad.net/bugs/1818547
-Fixes: 71f6fa90a353 ("HID: increase maximum global item tag report size to 256")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/hid/hid-core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 9993b692598f..860e21ec6a49 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -1301,10 +1301,10 @@ static u32 __extract(u8 *report, unsigned offset, int n)
- u32 hid_field_extract(const struct hid_device *hid, u8 *report,
- 			unsigned offset, unsigned n)
- {
--	if (n > 32) {
--		hid_warn(hid, "hid_field_extract() called with n (%d) > 32! (%s)\n",
-+	if (n > 256) {
-+		hid_warn(hid, "hid_field_extract() called with n (%d) > 256! (%s)\n",
- 			 n, current->comm);
--		n = 32;
-+		n = 256;
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index f040c8a7f9a9..199cc256e9d9 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -2111,6 +2111,13 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+ 		kfree(data);
+ 		return -ENOMEM;
  	}
++	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
++	if (!data->wq) {
++		kfree(data->effect_ids);
++		kfree(data);
++		return -ENOMEM;
++	}
++
+ 	data->hidpp = hidpp;
+ 	data->feature_index = feature_index;
+ 	data->version = version;
+@@ -2155,7 +2162,6 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+ 	/* ignore boost value at response.fap.params[2] */
  
- 	return __extract(report, offset, n);
+ 	/* init the hardware command queue */
+-	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
+ 	atomic_set(&data->workqueue_size, 0);
+ 
+ 	/* initialize with zero autocenter to get wheel in usable state */
 -- 
 2.20.1
 
