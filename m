@@ -2,114 +2,153 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAD1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4664C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55582054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7695520675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:23:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UmZd8Do3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbfEFOVh (ORCPT
+        id S1726308AbfEFOX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:21:37 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:34068 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfEFOVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:21:37 -0400
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x46EKWH9001979
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Mon, 6 May 2019 07:20:43 -0700
-Received: from yow-pgortmak-d1.corp.ad.wrs.com (128.224.56.57) by
- ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 6 May 2019 07:20:11 -0700
-Received: by yow-pgortmak-d1.corp.ad.wrs.com (Postfix, from userid 1000)        id
- 06B1B2E063C; Mon,  6 May 2019 10:20:10 -0400 (EDT)
-Date:   Mon, 6 May 2019 10:20:10 -0400
-From:   Paul Gortmaker <paul.gortmaker@windriver.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: Fwd: linux-next: build failure after merge of the kbuild tree
-Message-ID: <20190506142010.GC2649@windriver.com>
-References: <20190506094609.08e930f2@canb.auug.org.au>
- <CAK7LNASH4CuVBjfEJsT+aBx4aLrj9j2=aOD3B4f9+Tdcm=x2pg@mail.gmail.com>
- <20190506033151.GB2649@windriver.com>
- <CAK7LNAS=D96B_OgnRu-NK0-G+y8itvhe3qvwfYxZUCSqdC0gEA@mail.gmail.com>
+        Mon, 6 May 2019 10:23:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55660 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfEFOX1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:23:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GxKuXy1+s+PeeiwubdliM/pp8/xYTCCy3OKd2YpFtsI=; b=UmZd8Do3/TQldA46xNq9LjC5o
+        ujqe1cGw3Kwuj67vT+ByS393Qd2O2pXTtZ1B4I26kZ6yV09UpFzfMEym3ETWoPvYl3TVGcyFOk5N4
+        hK9n2++qFXLdLa5cOTAUwTsSLPqbs5TX6WrYUNpH+naBZ82mAF1U8bJL8O7LXVuxLo7aru+o3jWYK
+        bFQ3YL526U2l6zTU0A6mwlX+e1Gu9OZyH80MquAzo2GtJW53iokh2Otg2gf0O3tD/g6hB4EExmiWK
+        nIgAQZLottZR3RvnuZLeW+L3Rs8ndg5qHLggBa3yxKoYxOZa51yf746AoYXylzcRuh8aCvd6AT7UH
+        IBiqAoBXw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hNeW8-0005Ye-1s; Mon, 06 May 2019 14:22:56 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 096412029F884; Mon,  6 May 2019 16:22:54 +0200 (CEST)
+Date:   Mon, 6 May 2019 16:22:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call functions
+Message-ID: <20190506142254.GG2650@hirez.programming.kicks-ass.net>
+References: <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
+ <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
+ <20190502185225.0cdfc8bc@gandalf.local.home>
+ <20190502193129.664c5b2e@gandalf.local.home>
+ <20190502195052.0af473cf@gandalf.local.home>
+ <20190503092959.GB2623@hirez.programming.kicks-ass.net>
+ <20190503092247.20cc1ff0@gandalf.local.home>
+ <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
+ <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
+ <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK7LNAS=D96B_OgnRu-NK0-G+y8itvhe3qvwfYxZUCSqdC0gEA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Re: Fwd: linux-next: build failure after merge of the kbuild tree] On 06/05/2019 (Mon 21:07) Masahiro Yamada wrote:
+On Mon, May 06, 2019 at 10:19:51AM +0200, Peter Zijlstra wrote:
+> +.Lfrom_usermode_no_fixup_\@:
+> +.endm
+> +
+> +.macro IRET_FRAME
+> +
+> +	/* orig_eax is already POP'ed when we're here */
+> +
+> +	testl $CS_FROM_KERNEL, 1*4(%esp)
+> +	jz .Lfinished_frame_\@
+> +
+> +	pushl %eax
+> +
 
-> Hi Paul,
-> 
-> 
-> On Mon, May 6, 2019 at 12:34 PM Paul Gortmaker
-> <paul.gortmaker@windriver.com> wrote:
-> >
-> > [Fwd: linux-next: build failure after merge of the kbuild tree] On 06/05/2019 (Mon 11:19) Masahiro Yamada wrote:
-> >
-> > > Hi Paul,
-> > >
-> > > In today's linux-next build testing,
-> > > more "make ... explicitly non-modular"
-> > > candidates showed up.
-> > >
-> >
-> > Hi Masahiro,
-> >
-> > I am not 100% clear on what you are asking me.  There are lots and lots
-> > of these in the kernel.... many fixed, and many remain unfortunately.
-> >
-> > > arch/arm/plat-omap/dma.c
-> > > drivers/clocksource/timer-ti-dm.c
-> > > drivers/mfd/omap-usb-host.c
-> > > drivers/mfd/omap-usb-tll.c
-> >
-> > None of these are "new".  I just checked, and I have had patches for all
-> > these for a long time, in my personal queue, found by my audits.
-> 
-> 
-> OK, I saw many patches from you
-> addressing this issue,
-> so I just thought you might be motivated to
-> fix them.
-> 
-> Anyway, I have a reason to fix them
-> because a patch in my tree is causing build errors.
+From there..
 
-I understand now.  I missed the connection between these drivers and the
-Kbuild change when I read this last night.  Sorry about that.
+> +	lea 10*4(%esp), %eax	# address of <previous context>
+> +	cmpl %eax, 4*4(%esp)	# if ->sp is unmodified
+> +	jnz .Lmodified_sp_do_fixup_\@
+> +
+> +	/*
+> +	 * Fast path; regs->sp wasn't modified, reuse the original IRET frame.
+> +	 */
+> +	pop %eax
+> +	add $6*4, %esp
+> +	jmp .Lfinished_frame_\@;
+> +
+> +.Lmodified_sp_do_fixup_\@:
 
-I can send the changes to those four files, but since I can't guarantee
-they will be merged quickly (or at all!) - that will leave the commit in
-the Kbuild tree causing build regressions for days or likely even weeks.
+... until here, needs to go, it is buggy. While a clever idea, it looses
+updates to regs->ip and ->flags.
 
-> So, I will do something for them
-> if you do not have a plan to send patches soon.
-
-I will be happy to send them, but we just opened the two week merge
-window, and a lot of maintainers don't like getting sent new patches
-until the two week merge window has closed - so we should avoid that.
-
-I'm not sure how you would like to proceed - one way would be that we
-get the drivers above changed in 5.2 and you delay your kbuild change
-until we start v5.3 - to that end I'd be happy to add the Kbuild change
-to my internal build testing in the meantime, if you would like.
-
-Now that I understand the problem, let me know what you would like to
-do, and I'll do what I can to help out.
-
-Thanks,
-Paul.
+> +
+> +	/*
+> +	 * Reconstruct the 3 entry IRET frame right after the (modified)
+> +	 * regs->sp without lowering %esp in between, such that an NMI in the
+> +	 * middle doesn't scribble our stack.
+> +	 */
+> +	pushl	%ecx
+> +	movl	5*4(%esp), %eax		# (modified) regs->sp
+> +
+> +	movl	4*4(%esp), %ecx		# flags
+> +	movl	%ecx, -4(%eax)
+> +
+> +	movl	3*4(%esp), %ecx		# cs
+> +	andl	$0x0000ffff, %ecx
+> +	movl	%ecx, -8(%eax)
+> +
+> +	movl	2*4(%esp), %ecx		# ip
+> +	movl	%ecx, -12(%eax)
+> +
+> +	movl	1*4(%esp), %ecx		# eax
+> +	movl	%ecx, -16(%eax)
+> +
+> +	popl	%ecx
+> +	lea	-16(%eax), %esp
+> +	popl	%eax
+> +
+> +.Lfinished_frame_\@:
+> +.endm
