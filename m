@@ -2,70 +2,144 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370B2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E970C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128AC20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E742206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:53:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kv7aGbZw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbfEFNwm (ORCPT
+        id S1726371AbfEFNxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 09:52:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbfEFNwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 09:52:42 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B38A2054F;
-        Mon,  6 May 2019 13:52:41 +0000 (UTC)
-Date:   Mon, 6 May 2019 09:52:39 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 4/7] sched: Add sched_load_rq tracepoint
-Message-ID: <20190506095239.08577b3e@gandalf.local.home>
-In-Reply-To: <20190506090859.GK2606@hirez.programming.kicks-ass.net>
-References: <20190505115732.9844-1-qais.yousef@arm.com>
-        <20190505115732.9844-5-qais.yousef@arm.com>
-        <20190506090859.GK2606@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 6 May 2019 09:53:14 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40771 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfEFNxN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 09:53:13 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d31so6498163pgl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 06:53:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DfsikH3ADmgNVGOW8dVHffAJXBPBy/1Drd0IdtpjjJ8=;
+        b=kv7aGbZwowOP86IiNXKGTzv02HGdI2dS555U/AmH12LgQOZnKLK39c4sVdRuufn96A
+         qthFKSfdn7G60uj86be1sn6Yz08bEym7ZdQPS1mHAwXca2PX4G4xwzBsumjfQSNalrzf
+         yL5bwTZ9P03pKULjLPyCJCemso/1RN2dFNxsJkh8Db8dDQ4uyTu4XB2OtIwgRdUtOIbE
+         AyYkrbplUjKWiH4tJjgIH/K5mFuPdBD8NVSdZa64NURA8ieEyhpOBhaJlBUr1GIoMIGp
+         v2ptbSyS2qLsf62uamUc0COAt9buSU1YrXxFbkm18U+53rgjezb09axtZoHwZgv8hVgU
+         L1Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DfsikH3ADmgNVGOW8dVHffAJXBPBy/1Drd0IdtpjjJ8=;
+        b=DnQ2LYhQXIBacN8qhPs4rK0vXG61iJIzmvwe86TF9Qvm9o7fbOjiD+wrlJAam9KXPh
+         iaWIjanRNzwZxmQWySf1LUPX1vQL9PQ9l2J/vH0GsBRBuc9xEZVD73wK97/QvgGRP8Gc
+         0KZ59DeYiEpyDtpzt0SO0EiiHhowClA0j5FCEOph0AMOmF7FKKpFZ7tlYTEhganeanJs
+         CafwjVzq1MO5BD7GJmyEZjSJhAn3O6FNiDXrWV5r+IZmSpwR7OYFRkZNr6p6VU9r6k4n
+         hcDz9JfxhYkQE5A85uktst4+nKL0OKlv0rItvo8TbxCGLuH10w08qlIzogLv+I8cE6Tc
+         9yGA==
+X-Gm-Message-State: APjAAAUROAYkghETbikcwDCyeJ3VZRi+kS/L0npzA972apAXrmmZ85R/
+        VsQPwX36lRSCuD0ZxLLAO+tvPwOsqU3KNiwG27zj7Q==
+X-Google-Smtp-Source: APXvYqz1fgwxD3Q1L0PJp0GBoiDCnAmVuD+UduBO6dKustad4HqnmYC98uMKFLNp2x7D5yl19BVMVIT9EGy2Pg34Ktk=
+X-Received: by 2002:aa7:9116:: with SMTP id 22mr33262822pfh.165.1557150792655;
+ Mon, 06 May 2019 06:53:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <cover.1556630205.git.andreyknvl@google.com> <8e20df035de677029b3f970744ba2d35e2df1db3.1556630205.git.andreyknvl@google.com>
+ <20190503165113.GJ55449@arrakis.emea.arm.com>
+In-Reply-To: <20190503165113.GJ55449@arrakis.emea.arm.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 6 May 2019 15:53:01 +0200
+Message-ID: <CAAeHK+wCyCa-5=bPNwfivP6sEODOXKE1bPjcjc2y_T4rN+-6gA@mail.gmail.com>
+Subject: Re: [PATCH v14 08/17] mm, arm64: untag user pointers in get_vaddr_frames
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>, Kuehling@google.com,
+        Felix <Felix.Kuehling@amd.com>, Deucher@google.com,
+        Alexander <Alexander.Deucher@amd.com>, Koenig@google.com,
+        Christian <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019 11:08:59 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, May 3, 2019 at 6:51 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> On Tue, Apr 30, 2019 at 03:25:04PM +0200, Andrey Konovalov wrote:
+> > This patch is a part of a series that extends arm64 kernel ABI to allow to
+> > pass tagged user pointers (with the top byte set to something else other
+> > than 0x00) as syscall arguments.
+> >
+> > get_vaddr_frames uses provided user pointers for vma lookups, which can
+> > only by done with untagged pointers. Instead of locating and changing
+> > all callers of this function, perform untagging in it.
+> >
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > ---
+> >  mm/frame_vector.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/mm/frame_vector.c b/mm/frame_vector.c
+> > index c64dca6e27c2..c431ca81dad5 100644
+> > --- a/mm/frame_vector.c
+> > +++ b/mm/frame_vector.c
+> > @@ -46,6 +46,8 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
+> >       if (WARN_ON_ONCE(nr_frames > vec->nr_allocated))
+> >               nr_frames = vec->nr_allocated;
+> >
+> > +     start = untagged_addr(start);
+> > +
+> >       down_read(&mm->mmap_sem);
+> >       locked = 1;
+> >       vma = find_vma_intersection(mm, start, start + 1);
+>
+> Is this some buffer that the user may have malloc'ed? I got lost when
+> trying to track down the provenience of this buffer.
 
-> These functions really should be called trace_*()
-> 
-> Also; I _really_ hate how fat they are. Why can't we do simple straight
-> forward things like:
-> 
-> 	trace_pelt_cfq(cfq);
-> 	trace_pelt_rq(rq);
-> 	trace_pelt_se(se);
-> 
-> And then have the thing attached to the event do the fat bits like
-> extract the path and whatnot.
+The caller that I found when I was looking at this:
 
-I'd like to avoid functions called "trace_*" that are not trace events.
-It's getting confusing when I see a "trace_*()" function and then go
-look for the corresponding TRACE_EVENT() just to find out that one does
-not exist.
+drivers/gpu/drm/exynos/exynos_drm_g2d.c:482
+exynos_g2d_set_cmdlist_ioctl()->g2d_map_cmdlist_gem()->g2d_userptr_get_dma_addr()->get_vaddr_frames()
 
- sched_trace_*()  maybe?
-
--- Steve
+>
+> --
+> Catalin
