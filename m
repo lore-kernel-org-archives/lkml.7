@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9C1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B88C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD76D205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5788E2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155010;
-	bh=h5G9h/bRS+IuYmY6CVOdg7fWktl2RLXV8mvmFo2gtw0=;
+	s=default; t=1557155020;
+	bh=LOD1V+6gL9WXMN4zviTvrNZvb9jMmiuHBYDaYzfhRek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FwDMv6UHkFK4+WiD1YHFmHC1qWQL6fjmT4r2VgngyMZvYihY4paUa7xDAQvR6Yjmc
-	 kwNECkKNdyWxZfN/64ln4W/zHk5wjXyGm/uOpJrSiPgqgFj5FDyWVvqKWjGm+0aV8J
-	 ubnB802oWU974kFAW4SrHxxigDy8Dr5Xps1py5Ek=
+	b=e6dvldqLGAwNAxQ2ERMSPAHsBjLw4J+06OjKXEUg8ov8A7xfpXUArr5JdFIeJzWt+
+	 3v3ZPMUB8JT3+WhtZuQQB0TP9GHesdjPFqYHmKTqvxhgCpxK4euTVJqPKGmCYmsadP
+	 f7OVD8QrAoIOwkdbiLjyVGHEr8J4D4q9jNt6sJfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfEFPD3 (ORCPT
+        id S1727996AbfEFPDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:03:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32826 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:03:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727854AbfEFOjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:39:41 -0400
+        id S1726921AbfEFOjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:39:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24CFC206A3;
-        Mon,  6 May 2019 14:39:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D2B420449;
+        Mon,  6 May 2019 14:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153580;
-        bh=h5G9h/bRS+IuYmY6CVOdg7fWktl2RLXV8mvmFo2gtw0=;
+        s=default; t=1557153572;
+        bh=LOD1V+6gL9WXMN4zviTvrNZvb9jMmiuHBYDaYzfhRek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zxqoSt0MJBk5Hcgmy/m3DdFTGArj2jeSwGTtyi3JZ2UJSMMRp7Jjo7QHz3kSIIB8K
-         M/XLWejrz781eqWgvnpfDn3YjN5MJYbvtqgSFIGBiatsqL4aGHE082jFYQc+W7Psrm
-         y4bBj25tIhKevVp1nxW4U9pi/Y0sTfT6jrWrIH6I=
+        b=iKe/uUfMvchltE1WK3EfMFpKbKCG9q/poYt7wPd59nN9hAd5bLwehScCAZFkyHeEI
+         D+Iy8VvlspI8BRybzNt/gRTO0v1UnCWgIIivmoYaNB14MVWvGexI5H1lM+Bpd+UODD
+         9hR6avPTnZ+sDMLhg7MGJ0aGxP2knzCidtC5zB0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 02/99] mwifiex: Make resume actually do something useful again on SDIO cards
-Date:   Mon,  6 May 2019 16:31:35 +0200
-Message-Id: <20190506143054.102508636@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 17/99] USB: core: Fix unterminated string returned by usb_string()
+Date:   Mon,  6 May 2019 16:31:50 +0200
+Message-Id: <20190506143055.445051058@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -60,46 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit b82d6c1f8f8288f744a9dcc16cd3085d535decca upstream.
+commit c01c348ecdc66085e44912c97368809612231520 upstream.
 
-The commit fc3a2fcaa1ba ("mwifiex: use atomic bitops to represent
-adapter status variables") had a fairly straightforward bug in it.  It
-contained this bit of diff:
+Some drivers (such as the vub300 MMC driver) expect usb_string() to
+return a properly NUL-terminated string, even when an error occurs.
+(In fact, vub300's probe routine doesn't bother to check the return
+code from usb_string().)  When the driver goes on to use an
+unterminated string, it leads to kernel errors such as
+stack-out-of-bounds, as found by the syzkaller USB fuzzer.
 
- - if (!adapter->is_suspended) {
- + if (test_bit(MWIFIEX_IS_SUSPENDED, &adapter->work_flags)) {
+An out-of-range string index argument is not at all unlikely, given
+that some devices don't provide string descriptors and therefore list
+0 as the value for their string indexes.  This patch makes
+usb_string() return a properly terminated empty string along with the
+-EINVAL error code when an out-of-range index is encountered.
 
-As you can see the patch missed the "!" when converting to the atomic
-bitops.  This meant that the resume hasn't done anything at all since
-that commit landed and suspend/resume for mwifiex SDIO cards has been
-totally broken.
+And since a USB string index is a single-byte value, indexes >= 256
+are just as invalid as values of 0 or below.
 
-After fixing this mwifiex suspend/resume appears to work again, at
-least with the simple testing I've done.
-
-Fixes: fc3a2fcaa1ba ("mwifiex: use atomic bitops to represent adapter status variables")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/marvell/mwifiex/sdio.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/message.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/marvell/mwifiex/sdio.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sdio.c
-@@ -181,7 +181,7 @@ static int mwifiex_sdio_resume(struct de
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -820,9 +820,11 @@ int usb_string(struct usb_device *dev, i
  
- 	adapter = card->adapter;
- 
--	if (test_bit(MWIFIEX_IS_SUSPENDED, &adapter->work_flags)) {
-+	if (!test_bit(MWIFIEX_IS_SUSPENDED, &adapter->work_flags)) {
- 		mwifiex_dbg(adapter, WARN,
- 			    "device already resumed\n");
- 		return 0;
+ 	if (dev->state == USB_STATE_SUSPENDED)
+ 		return -EHOSTUNREACH;
+-	if (size <= 0 || !buf || !index)
++	if (size <= 0 || !buf)
+ 		return -EINVAL;
+ 	buf[0] = 0;
++	if (index <= 0 || index >= 256)
++		return -EINVAL;
+ 	tbuf = kmalloc(256, GFP_NOIO);
+ 	if (!tbuf)
+ 		return -ENOMEM;
 
 
