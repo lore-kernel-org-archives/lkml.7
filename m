@@ -2,147 +2,261 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF7FC04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E476DC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2FD1208C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60CA20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:40:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="GrqoWz8i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GqPYYZv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbfEFJiS (ORCPT
+        id S1726308AbfEFJkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:38:18 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40903 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725855AbfEFJiS (ORCPT
+        Mon, 6 May 2019 05:40:15 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45909 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbfEFJkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:38:18 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e56so14589056ede.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:38:17 -0700 (PDT)
+        Mon, 6 May 2019 05:40:15 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i21so6175685pgi.12;
+        Mon, 06 May 2019 02:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MUCBKoTdL7VxsTLho10xCSR8XMf/U+cya+mYQZsv5YA=;
-        b=GrqoWz8ic+tDcnjbjpjFtcOjd6NbN54Wyvv5rMJIdupSUBjBwo0/ROqMu7caGtGH06
-         lZiC9iXum79qeSwTMg5qAqzmJdIyIYMAQHMaeBPWRVkfeWFAQ3qQkV21tSPWc4JOWaoi
-         g8cWXqYAaDYT9ZB5vyO8Cm30d3U03sJVI9Z5o=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t+Uksr38qEQdnUktzf7iuzjMvop9CtHdm9Gzd+jY0qU=;
+        b=GqPYYZv8MSqHpuM/ukI6DRu1X76foSsRd3AxPs3L4Sw6YWhiMXWpcu5UokMWuCWCti
+         /zJ+MrI+hHTR1Q6kcdZL4F9lAm3PC4SwtiC6a/Rsl09GnQVsBsFallrXRRqMhh3NxC2n
+         R7Sw3Rhx5ikIxhjtkLYaSAwhmsWyJt7bj1TkHKaQP/Tip1KjbXK0jKI8g/lQEMMfP0Wk
+         j5fTYEKfzaLMjP9UY9oaUAdmHP7/aVIiWihTrU4bGakR5EMv3WOo2A8xn+r9N1yFDF43
+         6qYrGGW+9uAakR70U6pkrbQdltWa4qavdVB4qAgJfLRTDoP7PRelHTs/prAXvQ2b/2zc
+         FVyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=MUCBKoTdL7VxsTLho10xCSR8XMf/U+cya+mYQZsv5YA=;
-        b=qfhN6/DvcgZjDne+btDGtbFIGwzeldQQLD+t0kYKNOIdxNRuuStd5GDALPg1xLVf/p
-         Y3sW4gUJ/Hrncr8yMedncMKHOmLcS0WJU2/UJuH4YOQ9DQoGb+1Or9NhUwRLfq47SPQk
-         ek5tYuIbdEIJTF/f0TcerZkOV5HWBd7Xu3uJMihwmZYBtwf+J8hOK0SfqFd4/4saoeiC
-         okO32u2XISzdbGwxYJ2ADRscrmx84iG0XnIozdQDFCPSfN6q6zL+5S0YHTmNJC3hv67d
-         Uzo+WoHIiUhdvwFT9aMFF154F7yBfHudi7aNpB1KSRgydOVK40KHavyA0p121ToEQBSz
-         cwxA==
-X-Gm-Message-State: APjAAAW4Hn42G0T4Bgl8wz90u5IKoi8M9/8ipMa0VbJmwtT1wEnCv8Ly
-        mz+I0ibWqloO9msSHVxZk2wvpA==
-X-Google-Smtp-Source: APXvYqw3h5nl5mbp+FVa0nCaCTx5coCf2LzYGxq4yAq8+03Hn5kxlCza/d+7Jjzk2FFRKDNEt/P9yw==
-X-Received: by 2002:a17:906:3403:: with SMTP id c3mr18303929ejb.177.1557135496310;
-        Mon, 06 May 2019 02:38:16 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id g11sm157101eda.42.2019.05.06.02.38.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 02:38:15 -0700 (PDT)
-Date:   Mon, 6 May 2019 11:38:13 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RFC: console: hack up console_lock more v2
-Message-ID: <20190506093812.GG17751@phenom.ffwll.local>
-Mail-Followup-To: Petr Mladek <pmladek@suse.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org
-References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
- <20190506074553.21464-1-daniel.vetter@ffwll.ch>
- <20190506081614.b7b22k4prodskbiy@pathway.suse.cz>
- <20190506082628.wehkislebljxmk5d@pathway.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t+Uksr38qEQdnUktzf7iuzjMvop9CtHdm9Gzd+jY0qU=;
+        b=f81P6H1ebHo3Pu0XYYad9fYaezIj45fl/c7ijm5U/MJXUp9WS6QMrS9YlQUH+vsEkY
+         j5VkExNA0JbjCiDrKROZdrR8TcPBv2ymCEQuAWTbpIDc2kN+dOMzmUy0XNs4sm0L/PZ+
+         fotpjkyed2IPwJjBG1i5ZhCyZLKcUHdETIdr+L6dphx1+2UPANv3a0jzrAdfWrXZKKwM
+         of5SY7ToEDMePcjsuea4sSN/nz72jgKtgfkued9+szKP2KHFx9/jNq510HPj11L+Fppw
+         59ZOGAtRQq2kDaiUizxNLkgKpHVa6J4vNfENrklJD2ESRH8rJ8E4A2oZE6eBwUg6ABSg
+         d61Q==
+X-Gm-Message-State: APjAAAXuv0ft7ROGAbLl18NkdahSN+HBSVxpXvjO1WHFhl1KBl5vrADt
+        BA5J0FcDTc+UKc7tUNH1Om/xBujiFQUgYXiEgOY=
+X-Google-Smtp-Source: APXvYqwHG1UHZVFS1gJgCGndzOVqmSz/F35MDJ/DFQzlnmuRKqZb6pmJzG2aXViL6M/bF8et+fIV2Qggt1+2q7bgHuc=
+X-Received: by 2002:a63:4621:: with SMTP id t33mr28149042pga.246.1557135614509;
+ Mon, 06 May 2019 02:40:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506082628.wehkislebljxmk5d@pathway.suse.cz>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190313222124.229371-1-rajatja@google.com> <20190417230155.5282-1-rajatja@google.com>
+ <20190417230155.5282-3-rajatja@google.com>
+In-Reply-To: <20190417230155.5282-3-rajatja@google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 6 May 2019 12:40:03 +0300
+Message-ID: <CAHp75VfYLYx=4VoGLMbqVxEMubamibjmzzEEJo_u1y+g_Z-NcQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] platform/x86: intel_pmc_core: Attach using APCI
+ HID "INT33A1"
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Evan Green <evgreen@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 10:26:28AM +0200, Petr Mladek wrote:
-> On Mon 2019-05-06 10:16:14, Petr Mladek wrote:
-> > On Mon 2019-05-06 09:45:53, Daniel Vetter wrote:
-> > > console_trylock, called from within printk, can be called from pretty
-> > > much anywhere. Including try_to_wake_up. Note that this isn't common,
-> > > usually the box is in pretty bad shape at that point already. But it
-> > > really doesn't help when then lockdep jumps in and spams the logs,
-> > > potentially obscuring the real backtrace we're really interested in.
-> > > One case I've seen (slightly simplified backtrace):
-> > > 
-> > >  Call Trace:
-> > >   <IRQ>
-> > >   console_trylock+0xe/0x60
-> > >   vprintk_emit+0xf1/0x320
-> > >   printk+0x4d/0x69
-> > >   __warn_printk+0x46/0x90
-> > >   native_smp_send_reschedule+0x2f/0x40
-> > >   check_preempt_curr+0x81/0xa0
-> > >   ttwu_do_wakeup+0x14/0x220
-> > >   try_to_wake_up+0x218/0x5f0
-> > 
-> > try_to_wake_up() takes p->pi_lock. It could deadlock because it
-> > can get called recursively from printk_safe_up().
-> > 
-> > And there are more locks taken from try_to_wake_up(), for example,
-> > __task_rq_lock() taken from ttwu_remote().
-> > 
-> > IMHO, the most reliable solution would be do call the entire
-> > up_console_sem() from printk deferred context. We could assign
-> > few bytes for this context in the per-CPU printk_deferred
-> > variable.
-> 
-> Ah, I was too fast and did the same mistake. This won't help because
-> it would still call try_to_wake_up() recursively.
+On Thu, Apr 18, 2019 at 2:02 AM Rajat Jain <rajatja@google.com> wrote:
+>
+> Most modern platforms already have the ACPI device "INT33A1" that could
+> be used to attach to the driver. Switch the driver to using that and
+> thus make the intel_pmc_core.c a pure platform_driver.
+>
+> Some of the legacy platforms though, may still not have this ACPI device
+> in their ACPI tables. Thus for such platforms, move the code to manually
+> instantiate a platform_device into a new file of its own. This would
+> instantiate the intel_pmc_core platform device and thus attach to
+> the driver, if the ACPI device for the same ("INT33A1") is not present
+> in a system where it should be. This was discussed here:
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1966991.html
+>
 
-Uh :-/
+Pushed to my review and testing queue, thanks!
 
-> We need to call all printk's that can be called under locks
-> taken in try_to_wake_up() path in printk deferred context.
-> Unfortunately it is whack a mole approach.
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+> v6: Squash some of the changes of first patch into this patch to work
+>     around the bisectability issue.
+> v5: Remove the gerrit id from commit log
+> v4: Rename file, remove dummy arg, 1 conditional per if statement,
+>     simplify init / exit calls..
+> v3: (first version of *this* patch -to go with rest of v3 patchset)
+> v2: (does not exist)
+> v1: (does not exist)
+>
+>  drivers/platform/x86/Makefile                 |  2 +-
+>  drivers/platform/x86/intel_pmc_core.c         | 40 +++----------
+>  .../platform/x86/intel_pmc_core_plat_drv.c    | 60 +++++++++++++++++++
+>  3 files changed, 69 insertions(+), 33 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel_pmc_core_plat_drv.c
+>
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 86cb76677bc8..7041a88c34c7 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -89,7 +89,7 @@ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)    += intel_bxtwc_tmu.o
+>  obj-$(CONFIG_INTEL_TELEMETRY)  += intel_telemetry_core.o \
+>                                    intel_telemetry_pltdrv.o \
+>                                    intel_telemetry_debugfs.o
+> -obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o
+> +obj-$(CONFIG_INTEL_PMC_CORE)    += intel_pmc_core.o intel_pmc_core_plat_drv.o
+>  obj-$(CONFIG_PMC_ATOM)         += pmc_atom.o
+>  obj-$(CONFIG_MLX_PLATFORM)     += mlx-platform.o
+>  obj-$(CONFIG_INTEL_TURBO_MAX_3) += intel_turbo_max_3.o
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index 1d902230ba61..f20d08ad39ea 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -1023,47 +1023,23 @@ static const struct dev_pm_ops pmc_core_pm_ops = {
+>         SET_LATE_SYSTEM_SLEEP_PM_OPS(pmc_core_suspend, pmc_core_resume)
+>  };
+>
+> +static const struct acpi_device_id pmc_core_acpi_ids[] = {
+> +       {"INT33A1", 0}, /* _HID for Intel Power Engine, _CID PNP0D80*/
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, pmc_core_acpi_ids);
+> +
+>  static struct platform_driver pmc_core_driver = {
+>         .driver = {
+>                 .name = "intel_pmc_core",
+> +               .acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
+>                 .pm = &pmc_core_pm_ops,
+>         },
+>         .probe = pmc_core_probe,
+>         .remove = pmc_core_remove,
+>  };
+>
+> -static struct platform_device pmc_core_device = {
+> -       .name = "intel_pmc_core",
+> -};
+> -
+> -static int __init pmc_core_init(void)
+> -{
+> -       int ret;
+> -
+> -       if (!x86_match_cpu(intel_pmc_core_ids))
+> -               return -ENODEV;
+> -
+> -       ret = platform_driver_register(&pmc_core_driver);
+> -       if (ret)
+> -               return ret;
+> -
+> -       ret = platform_device_register(&pmc_core_device);
+> -       if (ret) {
+> -               platform_driver_unregister(&pmc_core_driver);
+> -               return ret;
+> -       }
+> -
+> -       return 0;
+> -}
+> -
+> -static void __exit pmc_core_exit(void)
+> -{
+> -       platform_device_unregister(&pmc_core_device);
+> -       platform_driver_unregister(&pmc_core_driver);
+> -}
+> -
+> -module_init(pmc_core_init)
+> -module_exit(pmc_core_exit)
+> +module_platform_driver(pmc_core_driver);
+>
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_DESCRIPTION("Intel PMC Core Driver");
+> diff --git a/drivers/platform/x86/intel_pmc_core_plat_drv.c b/drivers/platform/x86/intel_pmc_core_plat_drv.c
+> new file mode 100644
+> index 000000000000..20be3eaeb722
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_pmc_core_plat_drv.c
+> @@ -0,0 +1,60 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Intel PMC Core platform init
+> + * Copyright (c) 2019, Google Inc.
+> + * Author - Rajat Jain
+> + *
+> + * This code instantiates platform devices for intel_pmc_core driver, only
+> + * on supported platforms that may not have the ACPI devices in the ACPI tables.
+> + * No new platforms should be added here, because we expect that new platforms
+> + * should all have the ACPI device, which is the preferred way of enumeration.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <asm/cpu_device_id.h>
+> +#include <asm/intel-family.h>
+> +
+> +static struct platform_device pmc_core_device = {
+> +       .name = "intel_pmc_core",
+> +};
+> +
+> +/*
+> + * intel_pmc_core_platform_ids is the list of platforms where we want to
+> + * instantiate the platform_device if not already instantiated. This is
+> + * different than intel_pmc_core_ids in intel_pmc_core.c which is the
+> + * list of platforms that the driver supports for pmc_core device. The
+> + * other list may grow, but this list should not.
+> + */
+> +static const struct x86_cpu_id intel_pmc_core_platform_ids[] = {
+> +       INTEL_CPU_FAM6(SKYLAKE_MOBILE, pmc_core_device),
+> +       INTEL_CPU_FAM6(SKYLAKE_DESKTOP, pmc_core_device),
+> +       INTEL_CPU_FAM6(KABYLAKE_MOBILE, pmc_core_device),
+> +       INTEL_CPU_FAM6(KABYLAKE_DESKTOP, pmc_core_device),
+> +       INTEL_CPU_FAM6(CANNONLAKE_MOBILE, pmc_core_device),
+> +       INTEL_CPU_FAM6(ICELAKE_MOBILE, pmc_core_device),
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_platform_ids);
+> +
+> +static int __init pmc_core_platform_init(void)
+> +{
+> +       /* Skip creating the platform device if ACPI already has a device */
+> +       if (acpi_dev_present("INT33A1", NULL, -1))
+> +               return -ENODEV;
+> +
+> +       if (!x86_match_cpu(intel_pmc_core_platform_ids))
+> +               return -ENODEV;
+> +
+> +       return platform_device_register(&pmc_core_device);
+> +}
+> +
+> +static void __exit pmc_core_platform_exit(void)
+> +{
+> +       platform_device_unregister(&pmc_core_device);
+> +}
+> +
+> +module_init(pmc_core_platform_init);
+> +module_exit(pmc_core_platform_exit);
+> --
+> 2.21.0.392.gf8f6787159e-goog
+>
 
-Hm since it's whack-a-mole anyway, what about converting the WARN_ON into
-a prinkt_deferred, like all the other scheduler related code? Feels a
-notch more consistent to me than leaking the printk_context into areas it
-wasn't really meant built for. Scheduler code already fully subscribed to
-the whack-a-mole approach after all.
 
-This would mean we drop the backtrace from the native_smp_send_reschedule,
-or maybe we need a printk_deferred_backtrace()?
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+--
+With Best Regards,
+Andy Shevchenko
