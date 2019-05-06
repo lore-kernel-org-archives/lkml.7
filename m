@@ -2,201 +2,88 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9CAC04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84982C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566BF20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C59620830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:01:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nnn9sNge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfEFS7A (ORCPT
+        id S1726723AbfEFTBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 14:59:00 -0400
-Received: from mga17.intel.com ([192.55.52.151]:13387 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726413AbfEFS67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 14:58:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 11:58:58 -0700
-X-ExtLoop1: 1
-Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by orsmga002.jf.intel.com with ESMTP; 06 May 2019 11:58:58 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v2 2/5] PCI/ATS: Add PASID support for PCIe VF devices
-Date:   Mon,  6 May 2019 11:57:10 -0700
-Message-Id: <72e8403a18efe4eac30b6f672841a65c830d5a99.1557168473.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1557168473.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1557168473.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Reply-To: 078b169334b4996d03d8608f205942c061590681.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com
+        Mon, 6 May 2019 15:01:53 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58726 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbfEFTBw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 15:01:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=5TMyYRHgzNlyFc2iFg5V9iQsMZ2X4aG50vUoYbZ7Chs=; b=Nnn9sNgeJMf5Z4m5Fs+d34HxFv
+        g723CsTM1OAwh8Hp6L93uy371AkHkPNghnvwY/3r8iTFTmwGPN0dNVhAiQh0esHuHBf5ZiU6h2dYY
+        ZD1qHZBtcDHoeYgm3IFHeOzpBYdR3xkoSfXyVzXd5H/Cp24Y8qFF07yWe2VI/H3jtGIqMo2NS1DtZ
+        qaImJu5w06Um2cdrROUrm9i14CdiQn8dFEx+JPb/z6Y+21Z3TCYx4rEK+mi819WCCPS+rr2Pe3vXO
+        vWDRXpqXJHx49LNOZadPwConBqr98CF6byPqLZhSJQJmnMwS1s8QMpAvX79y+E4O6vhYju/SPh13K
+        dnJyH4KA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hNirv-0007ul-Pl; Mon, 06 May 2019 19:01:43 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] ASoC: sound/soc/sof/: fix kconfig dependency warning
+Message-ID: <418abbd5-f01c-19ef-c9f2-7de5662f10a2@infradead.org>
+Date:   Mon, 6 May 2019 12:01:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-When IOMMU tries to enable PASID for VF device in
-iommu_enable_dev_iotlb(), it always fails because PASID support for PCIe
-VF device is currently broken in PCIE driver. Current implementation
-expects the given PCIe device (PF & VF) to implement PASID capability
-before enabling the PASID support. But this assumption is incorrect. As
-per PCIe spec r4.0, sec 9.3.7.14, all VFs associated with PF can only
-use the PASID of the PF and not implement it.
+Fix kconfig warning for unmet dependency for IOSF_MBI when
+PCI is not set/enabled.  Fixes this warning:
 
-Since PASID is shared between PF/VF devices, following rules should
-apply.
+WARNING: unmet direct dependencies detected for IOSF_MBI
+  Depends on [n]: PCI [=n]
+  Selected by [y]:
+  - SND_SOC_SOF_ACPI [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_SOC_SOF_TOPLEVEL [=y] && (ACPI [=y] || COMPILE_TEST [=n]) && X86 [=y]
 
-1. Enable PASID in VF only if its already enabled in PF.
-2. Enable PASID in VF only if the requested features matches with PF
-config, otherwise return error.
-3. When enabling/disabling PASID for VF, instead of configuring the PF
-registers just increase/decrease the usage count (pasid_ref_cnt).
-4. Disable PASID in PF (configuring the registers) only if pasid_ref_cnt
-is zero.
-5. When reading PASID features/settings for VF, use registers of
-corresponding PF.
-
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org
 ---
-Updates:
- * Fixed a typo
+ sound/soc/sof/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/pci/ats.c   | 55 ++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/pci.h |  1 +
- 2 files changed, 55 insertions(+), 1 deletion(-)
+--- linux-next-20190506.orig/sound/soc/sof/Kconfig
++++ linux-next-20190506/sound/soc/sof/Kconfig
+@@ -28,7 +28,7 @@ config SND_SOC_SOF_ACPI
+ 	select SND_SOC_ACPI if ACPI
+ 	select SND_SOC_SOF_OPTIONS
+ 	select SND_SOC_SOF_INTEL_ACPI if SND_SOC_SOF_INTEL_TOPLEVEL
+-	select IOSF_MBI if X86
++	select IOSF_MBI if X86 && PCI
+ 	help
+ 	  This adds support for ACPI enumeration. This option is required
+ 	  to enable Intel Haswell/Broadwell/Baytrail/Cherrytrail devices
 
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index 5582e5d83a3f..d65784ca8847 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -345,6 +345,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
- {
- 	u16 control, supported;
- 	int pos;
-+	struct pci_dev *pf;
- 
- 	if (WARN_ON(pdev->pasid_enabled))
- 		return -EBUSY;
-@@ -353,7 +354,33 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
- 		return -EINVAL;
- 
- 	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
--	if (!pos)
-+
-+	if (pdev->is_virtfn) {
-+		/*
-+		 * Per PCIe r4.0, sec 9.3.7.14, VF must not implement
-+		 * Process Address Space ID (PASID) Capability.
-+		*/
-+		if (pos) {
-+			dev_err(&pdev->dev, "VF must not implement PASID\n");
-+			return -EINVAL;
-+		}
-+		/* Since VF shares PASID with PF, use PF config */
-+		pf = pci_physfn(pdev);
-+
-+		/* If VF config does not match with PF, return error */
-+		if (!pf->pasid_enabled || pf->pasid_features != features)
-+			return -EINVAL;
-+
-+		pdev->pasid_features = features;
-+		pdev->pasid_enabled = 1;
-+
-+		/* Increment PF PASID refcount */
-+		atomic_inc(&pf->pasid_ref_cnt);
-+
-+		return 0;
-+	}
-+
-+	if (pdev->is_physfn && !pos)
- 		return -EINVAL;
- 
- 	pci_read_config_word(pdev, pos + PCI_PASID_CAP, &supported);
-@@ -382,10 +409,27 @@ void pci_disable_pasid(struct pci_dev *pdev)
- {
- 	u16 control = 0;
- 	int pos;
-+	struct pci_dev *pf;
- 
- 	if (WARN_ON(!pdev->pasid_enabled))
- 		return;
- 
-+	/* All VFs PASID should be disabled before disabling PF PASID*/
-+	if (atomic_read(&pdev->pasid_ref_cnt))
-+		return;
-+
-+	if (pdev->is_virtfn) {
-+		/* Since VF shares PASID with PF, use PF config. */
-+		pf = pci_physfn(pdev);
-+
-+		/* Decrement PF PASID refcount */
-+		atomic_dec(&pf->pasid_ref_cnt);
-+
-+		pdev->pasid_enabled = 0;
-+
-+		return;
-+	}
-+
- 	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
- 	if (!pos)
- 		return;
-@@ -408,6 +452,9 @@ void pci_restore_pasid_state(struct pci_dev *pdev)
- 	if (!pdev->pasid_enabled)
- 		return;
- 
-+	if (pdev->is_virtfn)
-+		return;
-+
- 	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
- 	if (!pos)
- 		return;
-@@ -432,6 +479,9 @@ int pci_pasid_features(struct pci_dev *pdev)
- 	u16 supported;
- 	int pos;
- 
-+	if (pdev->is_virtfn)
-+		pdev = pci_physfn(pdev);
-+
- 	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
- 	if (!pos)
- 		return -EINVAL;
-@@ -488,6 +538,9 @@ int pci_max_pasids(struct pci_dev *pdev)
- 	u16 supported;
- 	int pos;
- 
-+	if (pdev->is_virtfn)
-+		pdev = pci_physfn(pdev);
-+
- 	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PASID);
- 	if (!pos)
- 		return -EINVAL;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 699c79c99a39..2a761ea63f8d 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -454,6 +454,7 @@ struct pci_dev {
- #endif
- #ifdef CONFIG_PCI_PASID
- 	u16		pasid_features;
-+	atomic_t	pasid_ref_cnt;	/* Number of VFs with PASID enabled */
- #endif
- #ifdef CONFIG_PCI_P2PDMA
- 	struct pci_p2pdma *p2pdma;
--- 
-2.20.1
 
