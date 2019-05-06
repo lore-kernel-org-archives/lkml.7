@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAF0C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A9BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975112054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E175A2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154576;
-	bh=IrPcc57wj/qwVY+4g3/GgkDnOZM19Ur0TOOrKUMgLSg=;
+	s=default; t=1557154583;
+	bh=+52cvG3pHsqSgjG/lMIyF9g7CcFQcev64IC0EDoxeF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SYfxFTIuKrZaHKaBnOVAUjjtmkMDHj/t0cqmnsb7EuFe/laIGXyQbAtLBSGPbZRN3
-	 9PaTxCSL+22je7mJkA92xA7JCsSaseoMzh8uct+rqMcxnHMZU7opbjxX+gT5X2Nw8p
-	 B+j1MynYs0cWTjTWW8t1Hs3+HI1gWOVwQRKQ5bRA=
+	b=LRBzPRuymq4hia2KJN9UyzGdtyVKGqfuwUpDzbowFA+8OUeDZwRa+u/rwPpK7VKSy
+	 GrxD60GwHeGmOCCThpGv0q9n2EzjUdasUNt7ItPFGpr+6IgHizBZJPxs3BnbyOGuRW
+	 MM3ftbmnzp+UcKnzU1F0YKnqUcuMKynsZDeiiXf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfEFOpQ (ORCPT
+        id S1727795AbfEFO4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:45:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41814 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728263AbfEFOpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:45:10 -0400
+        id S1727693AbfEFOpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D1CA20449;
-        Mon,  6 May 2019 14:45:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 308972053B;
+        Mon,  6 May 2019 14:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153910;
-        bh=IrPcc57wj/qwVY+4g3/GgkDnOZM19Ur0TOOrKUMgLSg=;
+        s=default; t=1557153912;
+        bh=+52cvG3pHsqSgjG/lMIyF9g7CcFQcev64IC0EDoxeF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DWFjGod2ILKm/mPiGM+yXVDMHG5yKX0luC7Xw3zXhRHcS6AdAif52u/ozbg7U7Y/T
-         2O4OqTbOeKPEDBeEYSUZenWaBlkzArFc0Zh1c4DrWQnkM6K9UOUxGvO5HeUbS9hEuM
-         Ey9+iOMb0ItXjYFM5MJNLO0HvvWSNCpzXOFFpIog=
+        b=GR3V8/rU8/PU3cnjxg5ANjKW5PYeZSKLNIv0rvveMxazpwtNpMgFN1oWKr1SgbhUX
+         2O5q9A/UKPP5EyAN9BxYWdpZS4BSur8glMLSSDjpdV8WJt/WAtWNghcn5eZXbA3apA
+         LpWpYxqYqYOSUBHBGITlQzYwu9slp8WPh/BeIrC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 40/75] jffs2: fix use-after-free on symlink traversal
-Date:   Mon,  6 May 2019 16:32:48 +0200
-Message-Id: <20190506143056.851664501@linuxfoundation.org>
+Subject: [PATCH 4.14 41/75] debugfs: fix use-after-free on symlink traversal
+Date:   Mon,  6 May 2019 16:32:49 +0200
+Message-Id: <20190506143056.946616088@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -59,51 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4fdcfab5b5537c21891e22e65996d4d0dd8ab4ca ]
+[ Upstream commit 93b919da64c15b90953f96a536e5e61df896ca57 ]
 
-free the symlink body after the same RCU delay we have for freeing the
-struct inode itself, so that traversal during RCU pathwalk wouldn't step
-into freed memory.
+symlink body shouldn't be freed without an RCU delay.  Switch debugfs to
+->destroy_inode() and use of call_rcu(); free both the inode and symlink
+body in the callback.  Similar to solution for bpf, only here it's even
+more obvious that ->evict_inode() can be dropped.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jffs2/readinode.c | 5 -----
- fs/jffs2/super.c     | 5 ++++-
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ fs/debugfs/inode.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
-index 389ea53ea487..bccfc40b3a74 100644
---- a/fs/jffs2/readinode.c
-+++ b/fs/jffs2/readinode.c
-@@ -1414,11 +1414,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
- 
- 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
- 
--	if (f->target) {
--		kfree(f->target);
--		f->target = NULL;
--	}
--
- 	fds = f->dents;
- 	while(fds) {
- 		fd = fds;
-diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-index 83340496645b..9a9f30eddbbb 100644
---- a/fs/jffs2/super.c
-+++ b/fs/jffs2/super.c
-@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
- static void jffs2_i_callback(struct rcu_head *head)
- {
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
--	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
-+	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
-+
-+	kfree(f->target);
-+	kmem_cache_free(jffs2_inode_cachep, f);
+diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
+index ccfe1e1cb6bc..f4df6feec271 100644
+--- a/fs/debugfs/inode.c
++++ b/fs/debugfs/inode.c
+@@ -170,19 +170,24 @@ static int debugfs_show_options(struct seq_file *m, struct dentry *root)
+ 	return 0;
  }
  
- static void jffs2_destroy_inode(struct inode *inode)
+-static void debugfs_evict_inode(struct inode *inode)
++static void debugfs_i_callback(struct rcu_head *head)
+ {
+-	truncate_inode_pages_final(&inode->i_data);
+-	clear_inode(inode);
++	struct inode *inode = container_of(head, struct inode, i_rcu);
+ 	if (S_ISLNK(inode->i_mode))
+ 		kfree(inode->i_link);
++	free_inode_nonrcu(inode);
++}
++
++static void debugfs_destroy_inode(struct inode *inode)
++{
++	call_rcu(&inode->i_rcu, debugfs_i_callback);
+ }
+ 
+ static const struct super_operations debugfs_super_operations = {
+ 	.statfs		= simple_statfs,
+ 	.remount_fs	= debugfs_remount,
+ 	.show_options	= debugfs_show_options,
+-	.evict_inode	= debugfs_evict_inode,
++	.destroy_inode	= debugfs_destroy_inode,
+ };
+ 
+ static struct vfsmount *debugfs_automount(struct path *path)
 -- 
 2.20.1
 
