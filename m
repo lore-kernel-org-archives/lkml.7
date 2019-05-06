@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4427C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03123C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC002053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79052054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154406;
-	bh=3MntDR9kUmhFdar+ptPW4odvKho86UrhSYTPEEofWs8=;
+	s=default; t=1557154411;
+	bh=AlTtKsKgZWXRO+VchEO+ZdakVY1Z7mSRhb03uM8VTsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z3fSAc+CEUEdT8uTM65BFizoWq+NTwQ4E3zRI9xKzpIzdzSmsx/JeEF0GoTOjIoUG
-	 MTzd2Wcz0WaoTL8U0eFEVx2dBdJvdyX68iyYS6NWLSrJ/5da11xAiAyagjjDLI1PZ4
-	 1XqWv+q2sq2aabCfik2aG/y5hfDflMI2V0PSeaTA=
+	b=rlqf6byCWVZ3JgSsPWzf3KQlY8UAo9K9B0ldEr8XUoR8knt8rNa4XPss7CYlsf0gb
+	 ofOljHbmaj7INKOksgmWx/kyST7Th0gtPcdGnCg6uucyp1e+g9JixKNdYYBYHkhA3b
+	 ZKVRPp9+3cjtvH+TBm+MdkEoluWRk4orvr6K+FFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbfEFOxZ (ORCPT
+        id S1728812AbfEFOre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46902 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:47:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729318AbfEFOrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:35 -0400
+        id S1728798AbfEFOrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38C5F205ED;
-        Mon,  6 May 2019 14:47:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA158214AE;
+        Mon,  6 May 2019 14:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154054;
-        bh=3MntDR9kUmhFdar+ptPW4odvKho86UrhSYTPEEofWs8=;
+        s=default; t=1557154043;
+        bh=AlTtKsKgZWXRO+VchEO+ZdakVY1Z7mSRhb03uM8VTsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2SXarBdFxdIo/o9j8G+V+X09jdgtlAtDDK9YsqM61n2sQ32hadTMh+pWXij92TLkO
-         zbscBVeSVAEAdywCFhnNjC30TUhYx5q+Zmfs2ru8SZ/4T0NNBPj4T+r3ypEhjpFX3F
-         9f05rIqdbQkMxq9i761qXkBACHp7lTKlq9pCdKVQ=
+        b=A/F/BCj1dIW3N47tAP1U7ftupgzJqcweIS5+suq/UxWLcqqWkH/+SsZThzRc/ZsWN
+         scYgC98OQ4B5qm91Hk2I45VtiZ0VTOMIZS2fx2g5svYfiAx826jVd6BU6dDN+jUCOB
+         QMzjCJIklP2kWcWrO1avlL4pp8+zKH1oBJ0PCJSk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
         Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 4.9 20/62] arm64: mm: dont print out page table entries on EL0 faults
-Date:   Mon,  6 May 2019 16:32:51 +0200
-Message-Id: <20190506143052.802065560@linuxfoundation.org>
+Subject: [PATCH 4.9 17/62] arm64: proc: Set PTE_NG for table entries to avoid traversing them twice
+Date:   Mon,  6 May 2019 16:32:48 +0200
+Message-Id: <20190506143052.549892170@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -61,38 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kristina Martsenko <kristina.martsenko@arm.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit bf396c09c2447a787d02af34cf167e953f85fa42 upstream.
+commit 2ce77f6d8a9ae9ce6d80397d88bdceb84a2004cd upstream.
 
-When we take a fault from EL0 that can't be handled, we print out the
-page table entries associated with the faulting address. This allows
-userspace to print out any current page table entries, including kernel
-(TTBR1) entries. Exposing kernel mappings like this could pose a
-security risk, so don't print out page table information on EL0 faults.
-(But still print it out for EL1 faults.) This also follows the same
-behaviour as x86, printing out page table entries on kernel mode faults
-but not user mode faults.
+When KASAN is enabled, the swapper page table contains many identical
+mappings of the zero page, which can lead to a stall during boot whilst
+the G -> nG code continually walks the same page table entries looking
+for global mappings.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Kristina Martsenko <kristina.martsenko@arm.com>
+This patch sets the nG bit (bit 11, which is IGNORED) in table entries
+after processing the subtree so we can easily skip them if we see them
+a second time.
+
+Tested-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/mm/fault.c |    1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/mm/proc.S |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -231,7 +231,6 @@ static void __do_user_fault(struct task_
- 		pr_info("%s[%d]: unhandled %s (%d) at 0x%08lx, esr 0x%03x\n",
- 			tsk->comm, task_pid_nr(tsk), inf->name, sig,
- 			addr, esr);
--		show_pte(addr);
- 		show_regs(regs);
- 	}
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -181,7 +181,8 @@ ENDPROC(idmap_cpu_replace_ttbr1)
+ 	dc	cvac, cur_\()\type\()p		// Ensure any existing dirty
+ 	dmb	sy				// lines are written back before
+ 	ldr	\type, [cur_\()\type\()p]	// loading the entry
+-	tbz	\type, #0, next_\()\type	// Skip invalid entries
++	tbz	\type, #0, skip_\()\type	// Skip invalid and
++	tbnz	\type, #11, skip_\()\type	// non-global entries
+ 	.endm
  
+ 	.macro __idmap_kpti_put_pgtable_ent_ng, type
+@@ -241,8 +242,9 @@ ENTRY(idmap_kpti_install_ng_mappings)
+ 	add	end_pgdp, cur_pgdp, #(PTRS_PER_PGD * 8)
+ do_pgd:	__idmap_kpti_get_pgtable_ent	pgd
+ 	tbnz	pgd, #1, walk_puds
+-	__idmap_kpti_put_pgtable_ent_ng	pgd
+ next_pgd:
++	__idmap_kpti_put_pgtable_ent_ng	pgd
++skip_pgd:
+ 	add	cur_pgdp, cur_pgdp, #8
+ 	cmp	cur_pgdp, end_pgdp
+ 	b.ne	do_pgd
+@@ -270,8 +272,9 @@ walk_puds:
+ 	add	end_pudp, cur_pudp, #(PTRS_PER_PUD * 8)
+ do_pud:	__idmap_kpti_get_pgtable_ent	pud
+ 	tbnz	pud, #1, walk_pmds
+-	__idmap_kpti_put_pgtable_ent_ng	pud
+ next_pud:
++	__idmap_kpti_put_pgtable_ent_ng	pud
++skip_pud:
+ 	add	cur_pudp, cur_pudp, 8
+ 	cmp	cur_pudp, end_pudp
+ 	b.ne	do_pud
+@@ -290,8 +293,9 @@ walk_pmds:
+ 	add	end_pmdp, cur_pmdp, #(PTRS_PER_PMD * 8)
+ do_pmd:	__idmap_kpti_get_pgtable_ent	pmd
+ 	tbnz	pmd, #1, walk_ptes
+-	__idmap_kpti_put_pgtable_ent_ng	pmd
+ next_pmd:
++	__idmap_kpti_put_pgtable_ent_ng	pmd
++skip_pmd:
+ 	add	cur_pmdp, cur_pmdp, #8
+ 	cmp	cur_pmdp, end_pmdp
+ 	b.ne	do_pmd
+@@ -309,7 +313,7 @@ walk_ptes:
+ 	add	end_ptep, cur_ptep, #(PTRS_PER_PTE * 8)
+ do_pte:	__idmap_kpti_get_pgtable_ent	pte
+ 	__idmap_kpti_put_pgtable_ent_ng	pte
+-next_pte:
++skip_pte:
+ 	add	cur_ptep, cur_ptep, #8
+ 	cmp	cur_ptep, end_ptep
+ 	b.ne	do_pte
 
 
