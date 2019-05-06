@@ -2,136 +2,94 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10D3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4526BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5F52054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7C62054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557151464;
+	bh=Alhp1xh6c5yPvi0KstiCK8Z6FeOcbLPZWQMtMnppqj4=;
+	h=Date:From:To:cc:Subject:List-ID:From;
+	b=cCGzCgCEGvVW+hEJguOBgWESaUoMwuqZ58lIrLxp3Ui1K4b8tiFJPPccyoApYe2a3
+	 rkZal9rZZMMWqrgtJXaXvd/b83Z0vJquOpmxTkQ5sGGM4ivgXjYcrlo9FvOevSUOlu
+	 LDwiJFKLyyrinNW8J+N0iPyXehGeuCLKF4ga8x7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfEFOEL (ORCPT
+        id S1726468AbfEFOEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:04:11 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:57613 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfEFOEK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:04:10 -0400
-Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 44D5920001E;
-        Mon,  6 May 2019 14:04:05 +0000 (UTC)
-Date:   Mon, 6 May 2019 16:04:04 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Alban Bedel <albeu@free.fr>, Felix Fietkau <nbd@nbd.name>,
-        John Crispin <john@phrozen.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 01/10] of_net: add NVMEM support to of_get_mac_address
-Message-ID: <20190506140404.rg63wecj4qet2244@flea>
-References: <1556893635-18549-1-git-send-email-ynezz@true.cz>
- <1556893635-18549-2-git-send-email-ynezz@true.cz>
- <20190503143643.hhfamnptcuriav4k@flea>
- <20190503154407.GE71477@meh.true.cz>
+        Mon, 6 May 2019 10:04:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbfEFOEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:04:22 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ED632054F;
+        Mon,  6 May 2019 14:04:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557151462;
+        bh=Alhp1xh6c5yPvi0KstiCK8Z6FeOcbLPZWQMtMnppqj4=;
+        h=Date:From:To:cc:Subject:From;
+        b=fL9EVUqehUPqmZqfVyAkzY3c33niQapg3sfFGsqxQxfQH8orzIa7jibyR1Le9Vcdh
+         bXl8Q6IIbAQrkVtbvGGcXMo9nf1gGm4bBv/7iPjTfgpFfaWoo8z0ulqBBZ9o7Hi9vd
+         vENQT/Ne4pKA8BNOR5cBW3ekBKysuo6GG/y+5mdE=
+Date:   Mon, 6 May 2019 16:04:19 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: [GIT PULL] livepatching for 5.2
+Message-ID: <nycvar.YFH.7.76.1905061556400.17054@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p37qtcksadkvh5cm"
-Content-Disposition: inline
-In-Reply-To: <20190503154407.GE71477@meh.true.cz>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
 
---p37qtcksadkvh5cm
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+please pull from
 
-On Fri, May 03, 2019 at 05:44:07PM +0200, Petr =C5=A0tetiar wrote:
-> Maxime Ripard <maxime.ripard@bootlin.com> [2019-05-03 16:36:43]:
->
-> Hi,
->
-> ...
->
-> > > +	pp =3D devm_kzalloc(&pdev->dev, sizeof(*pp), GFP_KERNEL);
-> > > +	if (!pp)
-> > > +		return ERR_PTR(-ENOMEM);
-> > > +
-> > > +	pp->name =3D "nvmem-mac-address";
-> > > +	pp->length =3D ETH_ALEN;
-> > > +	pp->value =3D devm_kmemdup(&pdev->dev, mac, ETH_ALEN, GFP_KERNEL);
-> > > +	if (!pp->value) {
-> > > +		ret =3D -ENOMEM;
-> > > +		goto free;
-> > > +	}
-> > > +
-> > > +	ret =3D of_add_property(np, pp);
-> > > +	if (ret)
-> > > +		goto free;
-> > > +
-> > > +	return pp->value;
-> >
-> > I'm not sure why you need to do that allocation here, and why you need
-> > to modify the DT?
->
-> I was asked about that in v2[0] already, so just copy&pasting relevant pa=
-rt of
-> my response here:
->
->  I've just carried it over from v1 ("of_net: add mtd-mac-address support =
-to
->  of_get_mac_address()")[1] as nobody objected about this so far.
->
->  Honestly I don't know if it's necessary to have it, but so far address,
->  mac-address and local-mac-address properties provide this DT nodes, so I=
-'ve
->  simply thought, that it would be good to have it for MAC address from NV=
-MEM as
->  well in order to stay consistent.
->
->  [...]
->
-> 0. https://patchwork.ozlabs.org/patch/1092248/#2164089
-> 1. https://patchwork.ozlabs.org/patch/1086628/
->
-> > can't you just return the mac address directly since it's what the
-> > of_get_mac_address caller will expect anyway?
->
-> I don't need this stuff, I can remove it, please just tell me what is
-> appropriate and I'm going to do that.
+  git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git for-linus
 
-Well, if no ones need it, then there's no point in adding support for
-it then?
+to receive livepatching updates for 5.2 merge window. Highlights:
 
-Maxime
+=====
+- livepatching kselftests improvements from Joe Lawrence and Miroslav 
+  Benes
+- making use of gcc's -flive-patching option when available, from
+  Miroslav Benes
+- kobject handling cleanups, from Petr Mladek
+=====
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks.
 
---p37qtcksadkvh5cm
-Content-Type: application/pgp-signature; name="signature.asc"
+----------------------------------------------------------------
+Joe Lawrence (1):
+      selftests/livepatch: use TEST_PROGS for test scripts
 
------BEGIN PGP SIGNATURE-----
+Miroslav Benes (2):
+      kbuild: use -flive-patching when CONFIG_LIVEPATCH is enabled
+      selftests/livepatch: Add functions.sh to TEST_PROGS_EXTENDED
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNA+1AAKCRDj7w1vZxhR
-xbBPAQDGD/fKy0R05WqaOtYm+o/xz3E7fmM55x4yVTtBBNPaBwEAlrB12chRxf7D
-hQKQJNr947sM00pol0dDHf0AdNW3xwk=
-=fTWI
------END PGP SIGNATURE-----
+Petr Mladek (3):
+      livepatch: Convert error about unsupported reliable stacktrace into a warning
+      livepatch: Remove custom kobject state handling
+      livepatch: Remove duplicated code for early initialization
 
---p37qtcksadkvh5cm--
+ Makefile                                   |  4 ++
+ include/linux/livepatch.h                  |  3 -
+ kernel/livepatch/core.c                    | 91 +++++++++++++-----------------
+ tools/testing/selftests/livepatch/Makefile |  3 +-
+ 4 files changed, 45 insertions(+), 56 deletions(-)
+
+-- 
+Jiri Kosina
+SUSE Labs
+
