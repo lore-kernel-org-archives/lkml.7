@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA11C46460
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1763BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D862054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38202053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154601;
-	bh=dSgiSJOkgwKJOQchPPXosPfklzC3ZKRtMnVJZJRghE0=;
+	s=default; t=1557154605;
+	bh=RlmniEJwBXOW+NjN3pyjmupFRydJ9KjlAVSH+e0+/Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IL7KPLce8pFFoHzImxrwX8Kq5vSnYUOiABKLOWWUVIwvzC4Nc8EU5E6UDvadStru/
-	 rdyhwDQtUJX6ZJSquaJN2ERIlTG2GRtTtu9woOytTUnPrw+HKtIxiDPCpJH/i51Plu
-	 v3TLWo6PjOPrR/8VDioBc6H6W/oO5bIb2+jxuVvQ=
+	b=WMe/KHOxVR/tqmzpjPI4pMfxDbJtduSXwyhzzB4bj/c6XPkiKdeLFDMHrXA+YkEA4
+	 AITPjwY2+sU3qtepbeQXpz6alKe72RKeJo6wFJ93C5oALnd9YdDg6cw80L8ReEZ4e+
+	 IZWMlrRF69aRiVc2OqiZR0As8Xa4IQmVn1jdeChQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfEFOpE (ORCPT
+        id S1728869AbfEFO4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:45:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41510 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:56:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbfEFOpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:45:00 -0400
+        id S1728466AbfEFOo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 055E72053B;
-        Mon,  6 May 2019 14:44:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F7C12087F;
+        Mon,  6 May 2019 14:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153899;
-        bh=dSgiSJOkgwKJOQchPPXosPfklzC3ZKRtMnVJZJRghE0=;
+        s=default; t=1557153896;
+        bh=RlmniEJwBXOW+NjN3pyjmupFRydJ9KjlAVSH+e0+/Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QPPXc3aPzHA+HGC5f3ACERaVAv3tpkcRbnLKKdR4U+7j/gCwzYSKsFPxHTF6+m0yl
-         mXNBq3VDJNwqJ/nCSiCDl9pE109zEFmWMTbygQzyUJvbNLCc/4jvaktgbeR4d9pzb4
-         n9XhiVv/5VGwLzA6/PdgsjyKWY2S4uKkaL0vwibA=
+        b=KAqJ48Qm5OInN9+OP/4VUlhW68/37tAQz/IDAaGgatjPI4mFKQZw67HkV1bri1V30
+         eTaSny+mWKnNjQDsnF82g25wSe/KmLDa4V1fw8t46VNn7SXf2SZNO21ZnteP3WY2I6
+         sfPcfrnab+e0wgs7r00BXmanWRt7UkG40hHMA3XQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 37/75] net: stmmac: dont overwrite discard_frame status
-Date:   Mon,  6 May 2019 16:32:45 +0200
-Message-Id: <20190506143056.578889905@linuxfoundation.org>
+Subject: [PATCH 4.14 36/75] net: stmmac: ratelimit RX error logs
+Date:   Mon,  6 May 2019 16:32:44 +0200
+Message-Id: <20190506143056.491057244@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -60,37 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1b746ce8b397e58f9e40ce5c63b7198de6930482 ]
+[ Upstream commit 972c9be784e077bc56472c78243e0326e525b689 ]
 
-If we have error bits set, the discard_frame status will get overwritten
-by checksum bit checks, which might set the status back to good one.
-Fix by checking the COE status only if the frame is good.
+Ratelimit RX error logs.
 
 Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/enh_desc.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-index acd65a4f94d4..cdfe9a350ac0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-@@ -231,9 +231,10 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
- 	 * It doesn't match with the information reported into the databook.
- 	 * At any rate, we need to understand if the CSUM hw computation is ok
- 	 * and report this info to the upper layers. */
--	ret = enh_desc_coe_rdes0(!!(rdes0 & RDES0_IPC_CSUM_ERROR),
--				 !!(rdes0 & RDES0_FRAME_TYPE),
--				 !!(rdes0 & ERDES0_RX_MAC_ADDR));
-+	if (likely(ret == good_frame))
-+		ret = enh_desc_coe_rdes0(!!(rdes0 & RDES0_IPC_CSUM_ERROR),
-+					 !!(rdes0 & RDES0_FRAME_TYPE),
-+					 !!(rdes0 & ERDES0_RX_MAC_ADDR));
- 
- 	if (unlikely(rdes0 & RDES0_DRIBBLING))
- 		x->dribbling_bit++;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index ecf3f8c1bc0e..0f85e540001f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3413,9 +3413,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			 *  ignored
+ 			 */
+ 			if (frame_len > priv->dma_buf_sz) {
+-				netdev_err(priv->dev,
+-					   "len %d larger than size (%d)\n",
+-					   frame_len, priv->dma_buf_sz);
++				if (net_ratelimit())
++					netdev_err(priv->dev,
++						   "len %d larger than size (%d)\n",
++						   frame_len, priv->dma_buf_sz);
+ 				priv->dev->stats.rx_length_errors++;
+ 				break;
+ 			}
+@@ -3473,9 +3474,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			} else {
+ 				skb = rx_q->rx_skbuff[entry];
+ 				if (unlikely(!skb)) {
+-					netdev_err(priv->dev,
+-						   "%s: Inconsistent Rx chain\n",
+-						   priv->dev->name);
++					if (net_ratelimit())
++						netdev_err(priv->dev,
++							   "%s: Inconsistent Rx chain\n",
++							   priv->dev->name);
+ 					priv->dev->stats.rx_dropped++;
+ 					break;
+ 				}
 -- 
 2.20.1
 
