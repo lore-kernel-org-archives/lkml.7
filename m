@@ -2,91 +2,85 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 048CBC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDC0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09352053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154834;
-	bh=eyFQyilBY65uHC4KqCfyG7XQzSgs6BspptZVvJr2wYE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHMpZQ5h/iRSUtdDBmBIgSJHa7LOW7XS0pTR7xjpTykaejGZqOL8iulbhOMmVw4ec
-	 xCrVo/CawqTESsv1fNnioJew01lQcfMApOrgWeyTodsuJdR4KqzZFKRmf+aZpS62vI
-	 vod2mceDBZN8UoD9zwI69NqlzdqBPKbXzac8kCVE=
+	by mail.kernel.org (Postfix) with ESMTP id BC4B42053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfEFOmL (ORCPT
+        id S1727881AbfEFPAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:42:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36708 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:00:40 -0400
+Received: from foss.arm.com ([217.140.101.70]:52768 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728407AbfEFOmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:42:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E52A206A3;
-        Mon,  6 May 2019 14:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153726;
-        bh=eyFQyilBY65uHC4KqCfyG7XQzSgs6BspptZVvJr2wYE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJJCDNEF0YmTQPhsf7pXhMj9PndiyLKtI+Fm4lNkbHtqTQeOFXs8E9HvJf+BNf09/
-         OICN1pLLpdmyyRHapXWbi2+k9Mtf2UGCOUxMaaVgxxuRb+2f+qFyWluf/qN/t+/Mua
-         zZsaLxj2w+8xB4vwSu/uQ1Uba/mTrbWSo0Jn1Q4M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 74/99] staging: iio: adt7316: allow adt751x to use internal vref for all dacs
-Date:   Mon,  6 May 2019 16:32:47 +0200
-Message-Id: <20190506143100.836033993@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
-References: <20190506143053.899356316@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728391AbfEFOmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B88B4A78;
+        Mon,  6 May 2019 07:42:04 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E56F3F575;
+        Mon,  6 May 2019 07:42:03 -0700 (PDT)
+Date:   Mon, 6 May 2019 15:42:00 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 4/7] sched: Add sched_load_rq tracepoint
+Message-ID: <20190506144200.z4s63nm7untol2tr@e107158-lin.cambridge.arm.com>
+References: <20190505115732.9844-1-qais.yousef@arm.com>
+ <20190505115732.9844-5-qais.yousef@arm.com>
+ <20190506090859.GK2606@hirez.programming.kicks-ass.net>
+ <20190506095239.08577b3e@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190506095239.08577b3e@gandalf.local.home>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Fertic <jeremyfertic@gmail.com>
+On 05/06/19 09:52, Steven Rostedt wrote:
+> On Mon, 6 May 2019 11:08:59 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > These functions really should be called trace_*()
+> > 
+> > Also; I _really_ hate how fat they are. Why can't we do simple straight
+> > forward things like:
+> > 
+> > 	trace_pelt_cfq(cfq);
+> > 	trace_pelt_rq(rq);
+> > 	trace_pelt_se(se);
+> > 
+> > And then have the thing attached to the event do the fat bits like
+> > extract the path and whatnot.
+> 
+> I'd like to avoid functions called "trace_*" that are not trace events.
+> It's getting confusing when I see a "trace_*()" function and then go
+> look for the corresponding TRACE_EVENT() just to find out that one does
+> not exist.
+> 
+>  sched_trace_*()  maybe?
 
-commit 10bfe7cc1739c22f0aa296b39e53f61e9e3f4d99 upstream.
+I can control that for the wrappers I'm introducing. But the actual tracepoint
+get the 'trace_' part prepended automatically by the macros.
 
-With adt7516/7/9, internal vref is available for dacs a and b, dacs c and
-d, or all dacs. The driver doesn't currently support internal vref for all
-dacs. Change the else if to an if so both bits are checked rather than
-just one or the other.
+ie DECLARE_TRACE(pelt_rq, ...) will automatically generate a function called
+trace_pelt_se(...)
 
-Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
-Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Or am I missing something?
 
----
- drivers/staging/iio/addac/adt7316.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks
 
---- a/drivers/staging/iio/addac/adt7316.c
-+++ b/drivers/staging/iio/addac/adt7316.c
-@@ -1086,7 +1086,7 @@ static ssize_t adt7316_store_DAC_interna
- 		ldac_config = chip->ldac_config & (~ADT7516_DAC_IN_VREF_MASK);
- 		if (data & 0x1)
- 			ldac_config |= ADT7516_DAC_AB_IN_VREF;
--		else if (data & 0x2)
-+		if (data & 0x2)
- 			ldac_config |= ADT7516_DAC_CD_IN_VREF;
- 	} else {
- 		ret = kstrtou8(buf, 16, &data);
-
-
+--
+Qais Yousef
