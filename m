@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F647C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3442C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D2D20449
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C774A2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153849;
-	bh=d/+bwDNC7iCZg3a5u/9HNqnnXQra3ey63UsefxpuTwg=;
+	s=default; t=1557153851;
+	bh=wp/JFpo1uSdPUgskhrSVZu0XCJO3Hs78erktObWBOqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FkWXtIil/5MoeYxEGfCvLmCGRW+Qni25ZcDjJXNN4sulztyY4n1bYvvH80wXBYusK
-	 yy/MuLnnenIxQXerXKujeoVh9OSr6nGxlyzB/Br0PhPNgwHxKOVDrNaqktFX+TFrC4
-	 ahojfn9lOoJM2XjDi0kvO8IZN0GqNAsuXUOXOvFU=
+	b=znTIVMWUhnnI9vNuAflEWgnzSh/grgEUmXb3LaoiUwlUAJL4SGb0REImK+uDsnDOy
+	 zPTXQWXjcic/oK48ecfMk7uwXaRchiRqkhHYFVC16jptv7Tc7DFvj0MOJ2sAXliudn
+	 B+ZfLRzITvgnNT0mQDkCO1p52JIdTaOsx1uhunIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbfEFOoI (ORCPT
+        id S1728760AbfEFOoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:44:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40030 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728351AbfEFOoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:02 -0400
+        id S1728383AbfEFOoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EDC520449;
-        Mon,  6 May 2019 14:44:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32ADE20449;
+        Mon,  6 May 2019 14:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153841;
-        bh=d/+bwDNC7iCZg3a5u/9HNqnnXQra3ey63UsefxpuTwg=;
+        s=default; t=1557153844;
+        bh=wp/JFpo1uSdPUgskhrSVZu0XCJO3Hs78erktObWBOqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rSGF/SLOztLTw67NL7Vme08NubH6iz+dr04gEIlzd5MByNZEum6CoNW+VIPnUcHBV
-         GEqSg3GoLvKqZjACyf64S5u0GKshJ90ZvrZzAlGHPig+z1CXLVh7uABHsgh4aDOgCE
-         UjkZs0sOGQHp7nEMQlFJMyx+Hko0G8M8wn4YA/3Y=
+        b=0bKS4qO5cwlqcRgqYdHj1bKdKtCOGAxQGr3ECKzkjTRBn1Q8Rh3Ms/fXuxgJ9fGG5
+         vEfkXQqYuBIjFJOvgOUA8gRC9Eu0l4i4ji/bv8pb+FpJgq6oQ15SN00f6ezeb2j8dw
+         xdacPmUgZGVuixEEbjcZ7Q/eRv7m3kBaQqE47W7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 17/75] ALSA: hda/realtek - Add new Dell platform for headset mode
-Date:   Mon,  6 May 2019 16:32:25 +0200
-Message-Id: <20190506143054.731306274@linuxfoundation.org>
+Subject: [PATCH 4.14 18/75] ALSA: hda/realtek - Fixed Dell AIO speaker noise
+Date:   Mon,  6 May 2019 16:32:26 +0200
+Message-Id: <20190506143054.802984000@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -61,46 +61,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kailang Yang <kailang@realtek.com>
 
-commit 0a29c57b76624723b6b00c027e0e992d130ace49 upstream.
+commit 0700d3d117a7f110ddddbd83873e13652f69c54b upstream.
 
-Add two Dell platform for headset mode.
+Fixed Dell AIO speaker noise.
+spec->gen.auto_mute_via_amp = 1, this option was solved speaker white
+noise at boot.
+codec->power_save_node = 0, this option was solved speaker noise at
+resume back.
 
-[ Note: this is a further correction / addition of the previous
-  pin-based quirks for Dell machines; another entry for ALC236 with
-  the d-mic pin 0x12 and an entry for ALC295 -- tiwai ]
-
-Fixes: b26e36b7ef36 ("ALSA: hda/realtek - add two more pin configuration sets to quirk table")
+Fixes: 9226665159f0 ("ALSA: hda/realtek - Fix Dell AIO LineOut issue")
 Signed-off-by: Kailang Yang <kailang@realtek.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/pci/hda/patch_realtek.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
 --- a/sound/pci/hda/patch_realtek.c
 +++ b/sound/pci/hda/patch_realtek.c
-@@ -6745,6 +6745,10 @@ static const struct snd_hda_pin_quirk al
- 		{0x21, 0x02211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
- 		{0x21, 0x02211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
-+		{0x12, 0x40000000},
-+		{0x14, 0x90170110},
-+		{0x21, 0x02211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1028, "Dell", ALC255_FIXUP_DELL2_MIC_NO_PRESENCE,
- 		{0x14, 0x90170110},
- 		{0x21, 0x02211020}),
-@@ -6986,6 +6990,9 @@ static const struct snd_hda_pin_quirk al
- 		ALC292_STANDARD_PINS,
- 		{0x13, 0x90a60140}),
- 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
-+		{0x14, 0x90170110},
-+		{0x21, 0x04211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
- 		ALC295_STANDARD_PINS,
- 		{0x17, 0x21014020},
- 		{0x18, 0x21a19030}),
+@@ -5294,6 +5294,8 @@ static void alc274_fixup_bind_dacs(struc
+ 		return;
+ 
+ 	spec->gen.preferred_dacs = preferred_pairs;
++	spec->gen.auto_mute_via_amp = 1;
++	codec->power_save_node = 0;
+ }
+ 
+ static void alc_fixup_disable_mic_vref(struct hda_codec *codec,
 
 
