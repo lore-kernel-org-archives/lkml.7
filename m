@@ -2,102 +2,186 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E63C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587ECC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AEE32082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557176157;
-	bh=MJGQtbr3SVPwPzhwzTF6faNs/xQmywKrZ8DDLfalMME=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FJOU7GgzGaa8xW7JE8vFiDzNi+Ub2zbqtkzvm7FaADOaj4TMyTcZzz+RhQWWnPTaM
-	 I2sLF6miS4L313kT+HIqzUOqKekzQ8GYu2anOfa239P0qg8yBNAGfOdlfggGT0Se6V
-	 6opTEpHXg9Ar/uGBJCQEeTmkz0G4JtzeoPBiWaK8=
+	by mail.kernel.org (Postfix) with ESMTP id 2513B2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="OTEKU73c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfEFUz4 (ORCPT
+        id S1726484AbfEFU6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 16:55:56 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38393 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfEFUzz (ORCPT
+        Mon, 6 May 2019 16:58:12 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33443 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfEFU6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 16:55:55 -0400
-Received: by mail-lj1-f195.google.com with SMTP id u21so3214287lja.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 13:55:54 -0700 (PDT)
+        Mon, 6 May 2019 16:58:11 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z28so7411153pfk.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 13:58:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/+wx15rGm9cDQexehyk/mRiQiqjaNR8eRgC+cNivLYI=;
-        b=TmbcnqXU9pQk+YWlxnUQotMwmX2uY4bDvF54qfvao07i2ySRBjA1Xm6gX4V6q8U/SF
-         Bv2Gj3i8iN0eCrWXDT4PoXf8poPp86x2tqTXhp1jUfZ5kmZdIvwoks7l84Ew9c3yo+1T
-         QGwBQi8xjgpe1QWco+n9pgphWcu2SrUq/8EmY=
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kLvBEkbGH2riUHwBmQ3jNmUgnYR588n2GWNQ8y8PGCE=;
+        b=OTEKU73clE6B6zjUJhEw6aF1TCgyEE6l6Jlty1yHWx43iZ9pTMHpSlvBIvsXC3DZqW
+         3dRE5Jt67zdSEBTCnNkF2c1i/hWhxPopBmGZWoN285CLByjeps7LkIuNvBSgYnPbwJlA
+         IFqm8+81yGkeBshC/6R5YWtE7k47BPcG7nsxg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/+wx15rGm9cDQexehyk/mRiQiqjaNR8eRgC+cNivLYI=;
-        b=EsOknWu6KuJf2xSBIxNjG4tK7UBg5q49cGOLeV0S0lyxereJfgycv1FHVk3T9yp/ic
-         AyJZCQvYXB9Kf/Pplf9GPU3yWPpoju0Yu/tdVX5Ual75GdYgrbAIuoFguLXdy5SVqk1w
-         2tavp494CJkWv/eW8ofGRUVaCSAXw9VTU0/mx+RSa/u66FHWIDGGfHzhdKL4dLoxXf+t
-         J/YrcViGmiEGwrSmRiBpra7IYVYnQi127TbRiXEilOsJ6/q9CWFt6PROihelG8rsPFXj
-         au3OszyzYLwO6mqzgaYFfW0b3sqovp2h1XqrT8upIkCtwkJZk2wzFUlbEC3IBI49+cmA
-         H3Tg==
-X-Gm-Message-State: APjAAAUydDWKvS71aG12fnwi+kxuuna+JU1xSodvzm2Ot183nlGNh6VL
-        UP+GLIjRfc5VFkAeHy0uqF/7orVVpBo=
-X-Google-Smtp-Source: APXvYqwzfrXLrwEgHBSMjIwdkq69eiteI5TfdB6rplXVh28UGk5zMMArI1inqVcma+UR0uOc96zctw==
-X-Received: by 2002:a2e:9216:: with SMTP id k22mr220288ljg.179.1557176153429;
-        Mon, 06 May 2019 13:55:53 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id r136sm2715552lff.50.2019.05.06.13.55.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 13:55:52 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id o16so10163618lfl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 13:55:52 -0700 (PDT)
-X-Received: by 2002:a19:2952:: with SMTP id p79mr5408053lfp.166.1557176150977;
- Mon, 06 May 2019 13:55:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kLvBEkbGH2riUHwBmQ3jNmUgnYR588n2GWNQ8y8PGCE=;
+        b=BrfvX+lllR5lb0NpvqW+5no2Q1sRbrpiE0699IdvW1Ii9BSx4ShmjEao8s+dOjSEzZ
+         eOkwZDtyNhWjd+73IV47O6OfhGZgLjUvfZBNNl/nO+Nplvi8STc+G/M7wW2sUIhhW+Tq
+         S5Nsq9J7Wq9Fa6063rylH4WkvtHi4IixGYuTtM7Fm716W5RXCfZZ8LIdUm/eFBLZJW9p
+         Bfs0chE9NKruOKAY43Rhaa0H9+bkCDFFl9OhyP5IadF3xCYHeJ51+XlT9mOC3YPIYZzK
+         9JvbIZxT6IhffixOrVI0rnxWrsAjTs9tNHVqktDUh5parU3NNJ2IwUG+DJXQ2rdexBWp
+         pHuQ==
+X-Gm-Message-State: APjAAAWq+oudjtv5VFje/qkSKAslQsVvBUz8b2xjTTyazU/VUpcDec9H
+        I8Y5qurwfu3JGFAuNEV6niYZOQ==
+X-Google-Smtp-Source: APXvYqzNxbDaZNkAkn2IFcOFX6jeB95iYdhBq3D6DLWqE4q+X5tNDHdBAe4TCV+WnbzUN5tSp0m8+g==
+X-Received: by 2002:aa7:8384:: with SMTP id u4mr35598358pfm.214.1557176289853;
+        Mon, 06 May 2019 13:58:09 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id l23sm5007490pgh.68.2019.05.06.13.58.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 13:58:08 -0700 (PDT)
+Date:   Mon, 6 May 2019 16:58:07 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Qais Yousef <qais.yousef@arm.com>, linux-kernel@vger.kernel.org,
+        Michal Gregorczyk <michalgr@live.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        duyuchao <yuchao.du@unisoc.com>,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
+Message-ID: <20190506205807.GA223956@google.com>
+References: <20190502204958.7868-1-joel@joelfernandes.org>
+ <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
+ <20190503134935.GA253329@google.com>
+ <20190505110423.u7g3f2viovvgzbtn@e107158-lin.cambridge.arm.com>
+ <20190505132949.GB3076@localhost>
+ <20190505144608.u3vsxyz5huveuskx@e107158-lin.cambridge.arm.com>
+ <20190505155223.GA4976@localhost>
+ <20190505180313.GA80924@google.com>
+ <20190506183506.GD2875@brain-police>
 MIME-Version: 1.0
-References: <20190506085014.GA130963@gmail.com> <a5ee37fe-bdcf-2da7-4f02-6d64b4dcd2d3@gmail.com>
- <20190506194339.GA20938@gmail.com>
-In-Reply-To: <20190506194339.GA20938@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 6 May 2019 13:55:35 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wifHYK-NKCTbT3_iHpy3QeK7H+=RLbFUaFpPziPn3O8Ng@mail.gmail.com>
-Message-ID: <CAHk-=wifHYK-NKCTbT3_iHpy3QeK7H+=RLbFUaFpPziPn3O8Ng@mail.gmail.com>
-Subject: Re: [GIT PULL] locking changes for v5.2
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Waiman Long <longman9394@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506183506.GD2875@brain-police>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 12:43 PM Ingo Molnar <mingo@kernel.org> wrote:
->
-> Sure - how close is this to a straight:
->
->         git revert 70800c3c0cc5
+On Mon, May 06, 2019 at 07:35:06PM +0100, Will Deacon wrote:
+> Hi Joel,
+> 
+> On Sun, May 05, 2019 at 02:03:13PM -0400, Joel Fernandes wrote:
+> > +Mark, Will since discussion is about arm64 arch code.
+> > 
+> > The difference between observing the bug and everything just working seems to
+> > be the set_fs(USER_DS) as done by Masami's patch that this patch is based on.
+> > The following diff shows 'ret' as 255 when set_fs(KERN_DS) is used, and then
+> > after we retry with set_fs(USER_DS), the read succeeds.
+> > 
+> > diff --git a/mm/maccess.c b/mm/maccess.c
+> > index 78f9274dd49d..d3e01a33c712 100644
+> > --- a/mm/maccess.c
+> > +++ b/mm/maccess.c
+> > @@ -32,9 +32,20 @@ long __probe_kernel_read(void *dst, const void *src, size_t size)
+> >  	pagefault_disable();
+> >  	ret = __copy_from_user_inatomic(dst,
+> >  			(__force const void __user *)src, size);
+> > +	trace_printk("KERNEL_DS: __copy_from_user_inatomic: ret=%d\n", ret);
+> >  	pagefault_enable();
+> >  	set_fs(old_fs);
+> >  
+> > +	if (ret) {
+> > +	set_fs(USER_DS);
+> > +	pagefault_disable();
+> > +	ret = __copy_from_user_inatomic(dst,
+> > +			(__force const void __user *)src, size);
+> > +	trace_printk("RETRY WITH USER_DS: __copy_from_user_inatomic: ret=%d\n", ret);
+> > +	pagefault_enable();
+> > +	set_fs(old_fs);
+> > +	}
+> > +
+> >  	return ret ? -EFAULT : 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(probe_kernel_read);
+> > 
+> > In initially thought this was because of the addr_limit pointer masking done
+> > by this patch from Mark Rutland "arm64: Use pointer masking to limit uaccess
+> > speculation"
+> > 
+> > However removing this masking still makes it fail with KERNEL_DS.
+> > 
+> > Fwiw, I am still curious which other paths in arm64 check the addr_limit
+> > which might make the __copy_from_user_inatomic fail if the set_fs is not
+> > setup correctly.
+> > 
+> > Either way, I will resubmit the patch with the commit message fixed correctly
+> > as we agreed and also address Alexei's comments.
+> 
+> I'm coming at this with no background, so it's tricky to understand exactly
+> what's going on here. Some questions:
 
-It's not really a revert. The code is different (and better) from the
-straight revert, but perhaps equally importantly it also ends up with
-a big comment about what's going on that made the original commit
-wrong.
+No problem, I added you out of the blue so it is quite understandable :)
 
-So I'd suggest just taking the patch as-is, and not calling it a
-revert. It may revert to the original _model_ of wakup list traversal,
-but it does so differently enough that the patch itself is not a
-revert.
+>   * Are you seeing a failure with mainline and/or an official stable kernel?
 
-                 Linus
+This issue is noticed on the Pixel3 kernel (4.9 based):
+git clone https://android.googlesource.com/kernel/msm
+(branch: android-msm-crosshatch-4.9-q-preview-1)
+
+>   * What is the failing CPU? (so we can figure out which architectural
+>     extensions are implemented)
+From cpuinfo:
+AArch64 Processor rev 12 (aarch64)
+(Qualcomm SDM845 SoC). It is a Pixel 3 phone.
+
+>   * Do you have a .config anywhere? Particular, how are ARM64_PAN,
+>     ARM64_TTBR0_PAN and ARM64_UAO set?
+
+CONFIG_ARM64_SW_TTBR0_PAN is not set
+CONFIG_ARM64_PAN=y
+CONFIG_ARM64_UAO=y
+
+I wanted to say I enabled SW_TTBR0_PAN config and also got the same result.
+
+>   * Is the address being accessed a user or a kernel address?
+
+User. It is the second argument of do_sys_open() kernel function. kprobe
+gives bpf the pointer which the bpf program dereferences with
+probe_kernel_read.
+
+> If you're trying to dereference a pointer to userspace using
+> probe_kernel_read(), that clearly isn't going to work.
+
+Ok. Thanks for confirming as well. The existing code has this bug and these
+patches fix it.
+
+ - Joel
+
