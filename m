@@ -2,88 +2,80 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D394C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A32C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431272087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D280C208C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfEFJOr (ORCPT
+        id S1726452AbfEFJPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:14:47 -0400
-Received: from 0.ictbs.com ([203.137.112.168]:53975 "EHLO 0.ictbs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfEFJOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:14:46 -0400
-Received: by hq.local (Postfix, from userid 1000)
-        id 5596C66429; Mon,  6 May 2019 11:14:41 +0200 (CEST)
-Date:   Mon, 6 May 2019 11:14:41 +0200
-From:   Victor Bravo <1905@spmblk.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Arend Van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] brcmfmac: sanitize DMI strings v2
-Message-ID: <20190506091441.wqtccm4n6xxhxom2@localhost>
-References: <20190504162633.ldrz2nqfocg55grb@localhost>
- <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
- <20190504194440.4zcxjrtj2aft3ka4@localhost>
- <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <20190505150355.3fbng4ny34x255vk@localhost>
- <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
- <87o94gug81.fsf@codeaurora.org>
+        Mon, 6 May 2019 05:15:09 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:40335 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfEFJPI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 05:15:08 -0400
+X-Originating-IP: 90.88.149.145
+Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id F05436000D;
+        Mon,  6 May 2019 09:15:04 +0000 (UTC)
+Date:   Mon, 6 May 2019 11:15:04 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Pablo Greco <pgreco@centosproject.org>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: sun8i: r40: bananapi-m2-ultra: Remove
+ regulator-always-on
+Message-ID: <20190506091504.mbkr5kqyym5gngeb@flea>
+References: <1556924720-49372-1-git-send-email-pgreco@centosproject.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dvasnxeqq2ltvqq3"
 Content-Disposition: inline
-In-Reply-To: <87o94gug81.fsf@codeaurora.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1556924720-49372-1-git-send-email-pgreco@centosproject.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 11:42:06AM +0300, Kalle Valo wrote:
-> Hans de Goede <hdegoede@redhat.com> writes:
-> 
-> >> @@ -99,6 +107,15 @@ static const struct dmi_system_id dmi_platform_data[] = {
-> >>   	{}
-> >>   };
-> >>   +void brcmf_dmi_sanitize(char *dst, const unsigned char *allowed,
-> >> char safe)
-> >> +{
-> >> +	while (*dst) {
-> >> +		if ((*dst < 0) || !(allowed[*dst / 8] & (1 << (*dst % 8))))
-> >
-> > At a first look I have no clue what this code is doing and I honestly do not feel
-> > like figuring it out, this is clever, but IMHO not readable.
-> >
-> > Please just write this as if (*dst < 0x21 || (*dst > foo && < bar) || etc,
-> > so that a human can actually see in one look what the code is doing.
-> 
-> Is there an existing function for sanitising filenames so that we don't
-> need to reinvent the wheel, maybe something like isalnum()?
 
-I would definitely prefer to use existing function, but I didn't find
-any suitable one. Suggestions are welcome.
+--dvasnxeqq2ltvqq3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-As for implementation details, the one I posted was optimized for both
-speed and size, and at least in my opinion this bit array driven
-parametric implementation is exactly what is needed here (using a string
-of allowed characters with strchr-style lookups would bring much worse
-complexity, and checking the characters using series of hardcoded if
-conditions could quickly grow to more than those 16 bytes used by the
-array).
+On Fri, May 03, 2019 at 08:05:19PM -0300, Pablo Greco wrote:
+> Now that the regulators are tied to the GPIO bank, we can remove the
+> unneeded regulator-always-on in reg_aldo2
+>
+> Signed-off-by: Pablo Greco <pgreco@centosproject.org>
 
-Regards,
-v.
+Queued for 5.3, thanks
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--dvasnxeqq2ltvqq3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXM/7GAAKCRDj7w1vZxhR
+xc9bAQC8YRi3gs8HuqDb8+sr+DijRefSa0vscw+8e3AW3uzKTwEAm8liWEtJpnJD
+D9zHOmLRY4EuKSYRPGBj8xCScD/U5wU=
+=Oikk
+-----END PGP SIGNATURE-----
+
+--dvasnxeqq2ltvqq3--
