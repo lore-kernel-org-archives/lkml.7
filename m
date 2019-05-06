@@ -2,248 +2,261 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4028FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D51FC04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0679620675
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="RPhHfxdd"
+	by mail.kernel.org (Postfix) with ESMTP id 4E95420675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfEFUHP (ORCPT
+        id S1726427AbfEFUP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 16:07:15 -0400
-Received: from mout.gmx.net ([212.227.15.19]:33119 "EHLO mout.gmx.net"
+        Mon, 6 May 2019 16:15:59 -0400
+Received: from mga06.intel.com ([134.134.136.31]:3643 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfEFUHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 16:07:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1557173211;
-        bh=VfXx558+VlXRqC6DuXAeELbx2WcCU2gN6wItdaEoRMo=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=RPhHfxddCJFmIOSCNTyDwTmir7mgKx3V9W5KMnGXU2y0SEaPFQaBtvOxYxryrMuEO
-         79PUrFQTFk+kuPjgvG2myUXlMHb4lh5LzsvysBPlYKJDEm6kGbwER4YiDtTfAnJ9Kr
-         5jRfC6IWjajGuMKK3G3fMD9k96+PQifJOTcwXTtg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.123.60] ([84.118.159.3]) by mail.gmx.com (mrgmx002
- [212.227.17.190]) with ESMTPSA (Nemesis) id 0MPUlV-1hJb100BOL-004lQR; Mon, 06
- May 2019 22:06:51 +0200
-Subject: Re: [U-Boot] [v4 PATCH] RISCV: image: Add booti support
-To:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org
-Cc:     Tom Rini <trini@konsulko.com>, Karsten Merker <merker@debian.org>,
-        Alexander Graf <agraf@suse.de>,
-        Anup Patel <anup@brainfault.org>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
-        Joe Hershberger <joe.hershberger@ni.com>,
-        Lukas Auer <lukas.auer@aisec.fraunhofer.de>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rick Chen <rick@andestech.com>, Simon Glass <sjg@chromium.org>,
-        u-boot@lists.denx.de
-References: <20190506181134.9575-1-atish.patra@wdc.com>
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-Message-ID: <251ea152-6407-02e2-076c-7ee377f6181d@gmx.de>
-Date:   Mon, 6 May 2019 22:06:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190506181134.9575-1-atish.patra@wdc.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1726118AbfEFUP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 16:15:59 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 13:15:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,439,1549958400"; 
+   d="p7s'?scan'208";a="146986828"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by fmsmga008.fm.intel.com with ESMTP; 06 May 2019 13:15:57 -0700
+Received: from orsmsx152.amr.corp.intel.com (10.22.226.39) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 6 May 2019 13:15:57 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.212]) by
+ ORSMSX152.amr.corp.intel.com ([169.254.8.32]) with mapi id 14.03.0415.000;
+ Mon, 6 May 2019 13:15:56 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "zub@linux.fjfi.cvut.cz" <zub@linux.fjfi.cvut.cz>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "sbauer@plzdonthack.me" <sbauer@plzdonthack.me>,
+        "axboe@kernel.dk" <axboe@kernel.dk>
+CC:     "jonas.rabenstein@studium.uni-erlangen.de" 
+        <jonas.rabenstein@studium.uni-erlangen.de>
+Subject: Re: [PATCH 3/3] block: sed-opal: check size of shadow mbr
+Thread-Topic: [PATCH 3/3] block: sed-opal: check size of shadow mbr
+Thread-Index: AQHU/6tn8kaaiz8S70Ofjh7OSj2Sf6ZfBv2A
+Date:   Mon, 6 May 2019 20:15:56 +0000
+Message-ID: <36dab0ec1f7e0f974e035abb597bb38be517c959.camel@intel.com>
+References: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz>
+         <1556666459-17948-4-git-send-email-zub@linux.fjfi.cvut.cz>
+In-Reply-To: <1556666459-17948-4-git-send-email-zub@linux.fjfi.cvut.cz>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6RckYc5U0Da60ys01K5KqNxlDxGQyIskoQPgUx44VHgouWNQQYL
- 06Ft9i2dc+rcS6etF364TAEy8yyDQ077msAf1ABtFwpKSWn5fww6XAEmBWRgtgOBMWFse3W
- aaUIRZk9CWaPW4DzPscPWepC7ie85sej3lNl4PVdlf7z3/Ca1NTp27GnuR8fw3S5JAfynVj
- bDzxugY0ne8f/zHkq/v3g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GYBYyni7Hq8=:mclJuPMFIlvJXe9GlanYzP
- 4Jr5AW87UQ2nYL7idRcNJWUNrrRI3iuSqMV8EvrLDAuchcJDmGro+iJE9cU4YcZR2czkqI/lc
- sAqHU+KJC1ZctqX7dgZJH9OMNmvlk+LLDWk7dhEyN7ztFHX4hegTLNNPuAKGKsUSP3DXnzJ2b
- ym2l6QpnQ/qyFdHOymvT9L57WxPTOazqIYJhJrpMECcVCVUEl1Ev8I/f4/V5W8hCVLMkKbxoI
- FC7LgUaEaladubdvgyQkqLdI9m3qDPhMGJE5iJ87bN/dAoRu2TQ+l9TREIZYZy5KKjn1GllCU
- YdNCO0HzZSI1w1h9k97ohgWGdABa5IcCJrWxVjKjCVP4EH50/cNCPigtkXbM2feNVLHbQUjm1
- IrnyTEtbKly+JHa8G+LAx6pSFMM50rFCTVAuQKFHAAdlBESbjgfyLq0ClsfGTr0eb5pLlEUKe
- IHeQilL12A6Yu3byW77ZujPaRBQ+coIFTH5og9+xTWuJ+x3h8gWdePdlQvFXVYVL07fGcTp2X
- oT4PrJx5TDkoBMCvGn3sTscXdG3iQhyf99ot4aUagh+ULAkDqyyPnjjIvOVg6DsqF9pIsepfA
- 2Ie2R76YnRwgu6s0EyvT+h/BvCtyxnW89EGDlYe9MmGs+UBGE+X/OTZ14ca1bKsccHukC7vyU
- j+8DlpNZh6zCsyLYHszhIY0IrZ7FU74kHZNd3oDLS1mxvYTFkP3DNxJIz1ZtgcnZ7gAbFOqRO
- KmE5BskuvIBYg/kNiLZA76wa0xg1xiih+5JQg55MKmWeNCMRZZkfae20Ed1XimgNSGrFyqVCs
- FHKUyMj6aYLR1HPDJYV2Et6NlPstfEpCPCa52exnRBt8lmPiAZO+lfxJmoVGsCAtqdvyEjH67
- /eaLAUdDukAfs4GYzVmD3kiJfGvd6oeAuq3msSszn8SLOXjjnYajTW9upn9Bs33dem9o1kHmg
- QOnyWpgKF/Q==
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.232.115.159]
+Content-Type: multipart/signed; micalg=sha-1;
+        protocol="application/x-pkcs7-signature"; boundary="=-aNKiBgGvlrizwhd+Nayx"
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/19 8:11 PM, Atish Patra wrote:
-> This patch adds booti support for RISC-V Linux kernel. The existing
-> bootm method will also continue to work as it is.
->
-> It depends on the following kernel patch which adds the header to the
-> flat Image. Gzip compressed Image (Image.gz) support is not enabled with
-> this patch.
->
-> https://patchwork.kernel.org/patch/10925543/
->
-> Tested on HiFive Unleashed and QEMU.
->
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Reviewed-by: Tom Rini <trini@konsulko.com>
-> Tested-by: Karsten Merker <merker@debian.org>
+--=-aNKiBgGvlrizwhd+Nayx
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+lgtm again
+
+Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
+
+On Wed, 2019-05-01 at 01:20 +0200, David Kozub wrote:
+> From: Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
+>=20
+> Check whether the shadow mbr does fit in the provided space on the
+> target. Also a proper firmware should handle this case and return an
+> error we may prevent problems or even damage with crappy firmwares.
+>=20
+> Signed-off-by: Jonas Rabenstein <
+> jonas.rabenstein@studium.uni-erlangen.de>
+> Signed-off-by: David Kozub <zub@linux.fjfi.cvut.cz>
+> Reviewed-by: Scott Bauer <sbauer@plzdonthack.me>
+> Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
 > ---
-> Changes from v3->v4
-> 1. Rebased on top of master to avoid git am errors.
->
-> Changes from v2->v3
-> 1. Updated the image header structure as per kernel patch.
-> 2. Removed Image.gz support as it will be added as separate RFC patch.
-> ---
->   arch/riscv/lib/Makefile |  1 +
->   arch/riscv/lib/image.c  | 55 +++++++++++++++++++++++++++++++++++++++++
->   cmd/Kconfig             |  2 +-
->   cmd/booti.c             |  8 ++++--
->   4 files changed, 63 insertions(+), 3 deletions(-)
->   create mode 100644 arch/riscv/lib/image.c
->
-> diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
-> index 1c332db436a9..6ae6ebbeafda 100644
-> --- a/arch/riscv/lib/Makefile
-> +++ b/arch/riscv/lib/Makefile
-> @@ -7,6 +7,7 @@
->   # Rick Chen, Andes Technology Corporation <rick@andestech.com>
->
->   obj-$(CONFIG_CMD_BOOTM) +=3D bootm.o
-> +obj-$(CONFIG_CMD_BOOTI) +=3D bootm.o image.o
->   obj-$(CONFIG_CMD_GO) +=3D boot.o
->   obj-y	+=3D cache.o
->   obj-$(CONFIG_RISCV_RDTIME) +=3D rdtime.o
-> diff --git a/arch/riscv/lib/image.c b/arch/riscv/lib/image.c
-> new file mode 100644
-> index 000000000000..d063beb7dfbe
-> --- /dev/null
-> +++ b/arch/riscv/lib/image.c
-> @@ -0,0 +1,55 @@
-> +// SPDX-License-Identifier: GPL-2.0+
+>  block/opal_proto.h | 16 ++++++++++++++++
+>  block/sed-opal.c   | 39 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 55 insertions(+)
+>=20
+> diff --git a/block/opal_proto.h b/block/opal_proto.h
+> index b6e352cfe982..5e8df3245eb0 100644
+> --- a/block/opal_proto.h
+> +++ b/block/opal_proto.h
+> @@ -106,6 +106,7 @@ enum opal_uid {
+>  	OPAL_ENTERPRISE_BANDMASTER0_UID,
+>  	OPAL_ENTERPRISE_ERASEMASTER_UID,
+>  	/* tables */
+> +	OPAL_TABLE_TABLE,
+>  	OPAL_LOCKINGRANGE_GLOBAL,
+>  	OPAL_LOCKINGRANGE_ACE_RDLOCKED,
+>  	OPAL_LOCKINGRANGE_ACE_WRLOCKED,
+> @@ -160,6 +161,21 @@ enum opal_token {
+>  	OPAL_STARTCOLUMN =3D 0x03,
+>  	OPAL_ENDCOLUMN =3D 0x04,
+>  	OPAL_VALUES =3D 0x01,
+> +	/* table table */
+> +	OPAL_TABLE_UID =3D 0x00,
+> +	OPAL_TABLE_NAME =3D 0x01,
+> +	OPAL_TABLE_COMMON =3D 0x02,
+> +	OPAL_TABLE_TEMPLATE =3D 0x03,
+> +	OPAL_TABLE_KIND =3D 0x04,
+> +	OPAL_TABLE_COLUMN =3D 0x05,
+> +	OPAL_TABLE_COLUMNS =3D 0x06,
+> +	OPAL_TABLE_ROWS =3D 0x07,
+> +	OPAL_TABLE_ROWS_FREE =3D 0x08,
+> +	OPAL_TABLE_ROW_BYTES =3D 0x09,
+> +	OPAL_TABLE_LASTID =3D 0x0A,
+> +	OPAL_TABLE_MIN =3D 0x0B,
+> +	OPAL_TABLE_MAX =3D 0x0C,
+> +
+>  	/* authority table */
+>  	OPAL_PIN =3D 0x03,
+>  	/* locking tokens */
+> diff --git a/block/sed-opal.c b/block/sed-opal.c
+> index 5acb873e9037..39e3eecca58d 100644
+> --- a/block/sed-opal.c
+> +++ b/block/sed-opal.c
+> @@ -138,6 +138,8 @@ static const u8 opaluid[][OPAL_UID_LENGTH] =3D {
+> =20
+>  	/* tables */
+> =20
+> +	[OPAL_TABLE_TABLE]
+> +		{ 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01 },
+>  	[OPAL_LOCKINGRANGE_GLOBAL] =3D
+>  		{ 0x00, 0x00, 0x08, 0x02, 0x00, 0x00, 0x00, 0x01 },
+>  	[OPAL_LOCKINGRANGE_ACE_RDLOCKED] =3D
+> @@ -1139,6 +1141,29 @@ static int generic_get_column(struct opal_dev
+> *dev, const u8 *table,
+>  	return finalize_and_send(dev, parse_and_check_status);
+>  }
+> =20
 > +/*
-> + * Copyright (C) 2019 Western Digital Corporation or its affiliates.
-> + * Authors:
-> + *	Atish Patra <atish.patra@wdc.com>
-> + * Based on arm/lib/image.c
+> + * see TCG SAS 5.3.2.3 for a description of the available columns
+> + *
+> + * the result is provided in dev->resp->tok[4]
 > + */
-> +
-> +#include <common.h>
-> +#include <mapmem.h>
-> +#include <errno.h>
-> +#include <linux/sizes.h>
-> +#include <linux/stddef.h>
-> +
-> +DECLARE_GLOBAL_DATA_PTR;
-> +
-> +/* ASCII version of "RISCV" defined in Linux kernel */
-> +#define LINUX_RISCV_IMAGE_MAGIC 0x5643534952
-> +
-> +struct linux_image_h {
-> +	uint32_t	code0;		/* Executable code */
-> +	uint32_t	code1;		/* Executable code */
-> +	uint64_t	text_offset;	/* Image load offset */
-> +	uint64_t	image_size;	/* Effective Image size */
-> +	uint64_t	res1;		/* reserved */
-> +	uint64_t	res2;		/* reserved */
-> +	uint64_t	res3;		/* reserved */
-> +	uint64_t	magic;		/* Magic number */
-> +	uint32_t	res4;		/* reserved */
-> +	uint32_t	res5;		/* reserved */
-> +};
-> +
-> +int booti_setup(ulong image, ulong *relocated_addr, ulong *size,
-> +		bool force_reloc)
+> +static int generic_get_table_info(struct opal_dev *dev, enum
+> opal_uid table,
+> +				  u64 column)
 > +{
-> +	struct linux_image_h *lhdr;
+> +	u8 uid[OPAL_UID_LENGTH];
+> +	const unsigned int half =3D OPAL_UID_LENGTH/2;
 > +
-> +	lhdr =3D (struct linux_image_h *)map_sysmem(image, 0);
+> +	/* sed-opal UIDs can be split in two halves:
+> +	 *  first:  actual table index
+> +	 *  second: relative index in the table
+> +	 * so we have to get the first half of the OPAL_TABLE_TABLE and
+> use the
+> +	 * first part of the target table as relative index into that
+> table
+> +	 */
+> +	memcpy(uid, opaluid[OPAL_TABLE_TABLE], half);
+> +	memcpy(uid+half, opaluid[table], half);
 > +
-> +	if (lhdr->magic !=3D LINUX_RISCV_IMAGE_MAGIC) {
-> +		puts("Bad Linux RISCV Image magic!\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (lhdr->image_size =3D=3D 0) {
-> +		puts("Image lacks image_size field, error!\n");
-> +		return -EINVAL;
-> +	}
-> +	*size =3D lhdr->image_size;
-> +	*relocated_addr =3D gd->ram_base + lhdr->text_offset;
-> +
-> +	unmap_sysmem(lhdr);
-> +
-> +	return 0;
+> +	return generic_get_column(dev, uid, column);
 > +}
-> diff --git a/cmd/Kconfig b/cmd/Kconfig
-> index 069e0ea7300b..4e11e0f404c8 100644
-> --- a/cmd/Kconfig
-> +++ b/cmd/Kconfig
-> @@ -223,7 +223,7 @@ config CMD_BOOTZ
->
->   config CMD_BOOTI
->   	bool "booti"
-> -	depends on ARM64
-> +	depends on ARM64 || RISCV
->   	default y
->   	help
->   	  Boot an AArch64 Linux Kernel image from memory.
-> diff --git a/cmd/booti.c b/cmd/booti.c
-> index 04353b68eccc..5e902993865b 100644
-> --- a/cmd/booti.c
-> +++ b/cmd/booti.c
-> @@ -77,7 +77,11 @@ int do_booti(cmd_tbl_t *cmdtp, int flag, int argc, ch=
-ar * const argv[])
->   	bootm_disable_interrupts();
->
->   	images.os.os =3D IH_OS_LINUX;
-> +#ifdef CONFIG_RISCV_SMODE
-> +	images.os.arch =3D IH_ARCH_RISCV;
-> +#elif CONFIG_ARM64
->   	images.os.arch =3D IH_ARCH_ARM64;
-> +#endif
->   	ret =3D do_bootm_states(cmdtp, flag, argc, argv,
->   #ifdef CONFIG_SYS_BOOT_RAMDISK_HIGH
->   			      BOOTM_STATE_RAMDISK |
-> @@ -92,7 +96,7 @@ int do_booti(cmd_tbl_t *cmdtp, int flag, int argc, cha=
-r * const argv[])
->   #ifdef CONFIG_SYS_LONGHELP
->   static char booti_help_text[] =3D
->   	"[addr [initrd[:size]] [fdt]]\n"
-> -	"    - boot arm64 Linux Image stored in memory\n"
-> +	"    - boot arm64/riscv Linux Image stored in memory\n"
+> +
+>  static int gen_key(struct opal_dev *dev, void *data)
+>  {
+>  	u8 uid[OPAL_UID_LENGTH];
+> @@ -1554,6 +1579,20 @@ static int write_shadow_mbr(struct opal_dev
+> *dev, void *data)
+>  	u64 len;
+>  	int err =3D 0;
+> =20
+> +	/* do we fit in the available shadow mbr space? */
+> +	err =3D generic_get_table_info(dev, OPAL_MBR, OPAL_TABLE_ROWS);
+> +	if (err) {
+> +		pr_debug("MBR: could not get shadow size\n");
+> +		return err;
+> +	}
+> +
+> +	len =3D response_get_u64(&dev->parsed, 4);
+> +	if (shadow->size > len || shadow->offset > len - shadow->size)
+> {
+> +		pr_debug("MBR: does not fit in shadow (%llu vs.
+> %llu)\n",
+> +			 shadow->offset + shadow->size, len);
+> +		return -ENOSPC;
+> +	}
+> +
+>  	/* do the actual transmission(s) */
+>  	src =3D (u8 __user *)(uintptr_t)shadow->data;
+>  	while (off < shadow->size) {
 
-Why would you repeat the short description? Just remove this line.
+--=-aNKiBgGvlrizwhd+Nayx
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+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
+PNauajAtxgRKfqfSMb+IcL/VXiPtVZOxVq+CTZeDJkaEmn/79vg8OYxpR+YhFF+tGlKf/Zc4id1P
+AgMBAAGjggI3MIICMzAdBgNVHQ4EFgQU4oawcWXM1cPGdwGcIszDfjORVZAwHwYDVR0jBBgwFoAU
+HmkqtNwo/kcYTiELP7ysES/wmPUwZQYDVR0fBF4wXDBaoFigVoZUaHR0cDovL3d3dy5pbnRlbC5j
+b20vcmVwb3NpdG9yeS9DUkwvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIwSXNzdWluZyUyMENB
+JTIwNEEuY3JsMIGfBggrBgEFBQcBAQSBkjCBjzBpBggrBgEFBQcwAoZdaHR0cDovL3d3dy5pbnRl
+bC5jb20vcmVwb3NpdG9yeS9jZXJ0aWZpY2F0ZXMvSW50ZWwlMjBFeHRlcm5hbCUyMEJhc2ljJTIw
+SXNzdWluZyUyMENBJTIwNEEuY3J0MCIGCCsGAQUFBzABhhZodHRwOi8vb2NzcC5pbnRlbC5jb20v
+MAsGA1UdDwQEAwIHgDA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiGw4x1hJnlUYP9gSiFjp9T
+gpHACWeB3r05lfBDAgFkAgEJMB8GA1UdJQQYMBYGCCsGAQUFBwMEBgorBgEEAYI3CgMMMCkGCSsG
+AQQBgjcVCgQcMBowCgYIKwYBBQUHAwQwDAYKKwYBBAGCNwoDDDBRBgNVHREESjBIoCoGCisGAQQB
+gjcUAgOgHAwaam9uYXRoYW4uZGVycmlja0BpbnRlbC5jb22BGmpvbmF0aGFuLmRlcnJpY2tAaW50
+ZWwuY29tMA0GCSqGSIb3DQEBBQUAA4IBAQBxGkHe05DNpYel4b9WbbyQqD1G6y6YA6C93TjKULZi
+p8+gO1LL096ixD44+frVm3jtXMikoadRHQJmBJdzsCywNE1KgtrYF0k4zRWr7a28nyfGgQe4UHHD
+7ARyZFeGd7AKSQ1y4/LU57I2Aw2HKx9/PXavv1JXjjO2/bqTfnZDJTQmOQ0nvlO3/gvbbABxZHqz
+NtfHZsQWS7s+Elk2xGUQ0Po2pMCQoaPo9R96mm+84UP9q3OvSqMoaZwfzoUeAx2wGJYl0h3S+ABr
+CPVfCgq9qnmVCn5DyHWE3V/BRjJCoILLBLxAxnmSdH4pF6wJ6pYRLEw9qoyNhpzGUIJU/Lk1MYIC
+FzCCAhMCAQEwgZAweTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRQwEgYDVQQHEwtTYW50YSBD
+bGFyYTEaMBgGA1UEChMRSW50ZWwgQ29ycG9yYXRpb24xKzApBgNVBAMTIkludGVsIEV4dGVybmFs
+IEJhc2ljIElzc3VpbmcgQ0EgNEECEzMAAMamAkocC+WQNPgAAAAAxqYwCQYFKw4DAhoFAKBdMBgG
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDUwNjIwMTU0N1owIwYJ
+KoZIhvcNAQkEMRYEFGbtiykThVyKSscCNc05JYZmW6plMA0GCSqGSIb3DQEBAQUABIIBAHngHpsQ
+r1ozeWF4YSBfZmGN/ILcfOw0MQG1av4eijTsbhMj1vdu+H3YJP59uKFuBk0pFfEBJoeGrEMKT5YT
+7IRQBgHavMGkgarHIrI3SKHCinHp5x4gAQByKmTXHD3PBuU+mO5pf78vqMsBvwUtWlrcc51FdAXd
+ZllJLLM/Us9crAhFWpugIN+TweF0p8x8yTkeuDQW/lJidk3m9SuzHdYRHRewcm+NqJTrfjBMuUQa
+Q7XYtUfkKsbBYBE7wGBWBCx72PAAaghxlTg4yo4de6XY9sCYUX+usuM/Em/Yh9SF7blXfjCn5fsD
+Zak+SWzId6NkgmHZoiFKRr4J5dYnnPYAAAAAAAA=
 
 
->   	"\tThe argument 'initrd' is optional and specifies the address\n"
->   	"\tof an initrd in memory. The optional parameter ':size' allows\n"
->   	"\tspecifying the size of a RAW initrd.\n"
-> @@ -107,5 +111,5 @@ static char booti_help_text[] =3D
->
->   U_BOOT_CMD(
->   	booti,	CONFIG_SYS_MAXARGS,	1,	do_booti,
-> -	"boot arm64 Linux Image image from memory", booti_help_text
-> +	"boot arm64/riscv Linux Image image from memory", booti_help_text
-
-%s/Image image/image/
-
-"arm64/riscv" is distracting. If I am on RISC-V I cannot boot an ARM64
-image here. Remove the reference to the architecture, please.
-
-Best regards
-
-Heinrich
-
->   );
->
-
+--=-aNKiBgGvlrizwhd+Nayx--
