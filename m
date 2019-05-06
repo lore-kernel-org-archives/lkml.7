@@ -2,119 +2,266 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF79BC04AAE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB99C04AAE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10142082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:48:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="D8snUQHA"
+	by mail.kernel.org (Postfix) with ESMTP id C4C7220830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfEFGsT (ORCPT
+        id S1726190AbfEFGtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 02:48:19 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37551 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfEFGsT (ORCPT
+        Mon, 6 May 2019 02:49:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54090 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725851AbfEFGtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 02:48:19 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 132so2334264ljj.4
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 23:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=C2U/Y3HrsZsGwgSrYLbL41jSdN4fVhl+NLwRQdY4iqY=;
-        b=D8snUQHAfdzQm9GkWQI34dkVAxrAJuZkmWsqO5irUHT1hWyV2hkSyYSsSclecD9gti
-         eZwTtFWJLX5djPnJJpwa1CrKEH1nOO0tvUGWucaebAmsJGSDQJQdRdXKpwRfY3sKAUYf
-         4wqO50fRoeyvl+KoXsP2lu7dYVZcoUzjU59UA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=C2U/Y3HrsZsGwgSrYLbL41jSdN4fVhl+NLwRQdY4iqY=;
-        b=SQ3Ud71MjHcViVo+hIEEKtU/mWjfLeCaUCaNqvRYAMRoLOuWlXh8MzPTWYVGAFD6qE
-         /Jp/5J5lf9NnZ8ULcCVE/et7Jp31nogGSAMPWqvE2qeiMwVscDCXDkHheiY8pknXIucJ
-         53XOm87+Z3lrUGv9Un/qyG+PYEeswyN19S1jYuVIsAyRI5Q3G+X6Us8J9DqN24HQ/Gpq
-         qtWlXQ8Age3uvKWays7v6t7OaoXrKlrhRtAbgXdBh8bm3HyU5Uf3NWV9ONFVfRIWEBZf
-         w1CaA5gPnFBfZ6Glj0Rr11bmOAqLlEsRqt4nJkaWdfLXVQMy4oog+pn6xIkopOYFWl99
-         A8ow==
-X-Gm-Message-State: APjAAAVuDouTauvNT2XEbOXAdY6a2y7P1hiVqAMWu64hDkd0u5MBS0jh
-        Ug5iaVYA232dQ7AlOXwQkGdN/A==
-X-Google-Smtp-Source: APXvYqzZ60bhW+zmKxgQWKFu3bPVmpIDGkgZaXEtzr6qDGU0QdrT3fUUEmHHE44uPUNcpPCQcav0rQ==
-X-Received: by 2002:a2e:7503:: with SMTP id q3mr587089ljc.190.1557125297062;
-        Sun, 05 May 2019 23:48:17 -0700 (PDT)
-Received: from [172.16.11.26] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id j13sm2142583lfb.34.2019.05.05.23.48.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 23:48:16 -0700 (PDT)
-Subject: Re: [PATCH 00/10] implement DYNAMIC_DEBUG_RELATIVE_POINTERS
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Baron <jbaron@akamai.com>, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-References: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <1afb0702-3cc5-ba4f-2bdd-604d9da2b846@rasmusvillemoes.dk>
-Date:   Mon, 6 May 2019 08:48:15 +0200
+        Mon, 6 May 2019 02:49:39 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x466ln73145632
+        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 02:49:38 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sabrr8etj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:49:38 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Mon, 6 May 2019 07:49:36 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 6 May 2019 07:49:32 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x466nUoH46465108
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 May 2019 06:49:30 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B64E52054;
+        Mon,  6 May 2019 06:49:30 +0000 (GMT)
+Received: from [9.145.46.119] (unknown [9.145.46.119])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 084EB5204E;
+        Mon,  6 May 2019 06:49:30 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 2/7] s390: vfio-ap: maintain a shadow of the guest's
+ CRYCB
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+ <1556918073-13171-3-git-send-email-akrowiak@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Mon, 6 May 2019 08:49:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1556918073-13171-3-git-send-email-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050606-0008-0000-0000-000002E3B089
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050606-0009-0000-0000-00002250275F
+Message-Id: <2f980dbc-4765-aba8-46fc-848ee66854d6@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2019 23.25, Rasmus Villemoes wrote:
+On 03/05/2019 23:14, Tony Krowiak wrote:
+> This patch introduces a shadow of the CRYCB being used by a guest. This
+> will enable to more effectively manage dynamic changes to the AP
+> resources installed on the host that may be assigned to an mdev device
+> and being used by a guest. For example:
+> 
+> * AP adapter cards can be dynamically added to and removed from the AP
+>    configuration via the SE or an SCLP command.
+> 
+> * AP resources that disappear and reappear due to hardware malfunctions.
+> 
+> * AP queues bound to and unbound from the vfio_ap device driver by a
+>    root user.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>   drivers/s390/crypto/vfio_ap_ops.c     | 91 ++++++++++++++++++++++++++++++++---
+>   drivers/s390/crypto/vfio_ap_private.h |  2 +
+>   2 files changed, 87 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index b88a2a2ba075..44a04b4aa9ae 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -297,6 +297,45 @@ static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned long apqi)
+>   	} while (--retry);
+>   }
+>   
+> +/*
+> + * vfio_ap_mdev_update_crycb
+> + *
+> + * @matrix_mdev: the mediated matrix device
+> + *
+> + * Updates the AP matrix in the guest's CRYCB from it's shadow masks.
+> + *
+> + * Returns zero if the guest's CRYCB is successfully updated; otherwise,
+> + * returns -ENODEV if a guest is not running or does not have a CRYCB.
+> + */
+> +static int vfio_ap_mdev_update_crycb(struct ap_matrix_mdev *matrix_mdev)
+> +{
+> +	if (!matrix_mdev->kvm || !matrix_mdev->kvm->arch.crypto.crycbd)
+> +		return -ENODEV;
+> +
+> +	kvm_arch_crypto_set_masks(matrix_mdev->kvm,
+> +				  matrix_mdev->shadow_crycb->apm,
+> +				  matrix_mdev->shadow_crycb->aqm,
+> +				  matrix_mdev->shadow_crycb->adm);
+> +
+> +	return 0;
+> +}
+> +
+> +static int match_apqn(struct device *dev, void *data)
+> +{
+> +	struct ap_queue *apq = to_ap_queue(dev);
+> +
+> +	return (apq->qid == *(unsigned long *)(data)) ? 1 : 0;
+> +}
+> +
+> +static struct device *vfio_ap_get_queue_dev(unsigned long apid,
+> +					     unsigned long apqi)
+> +{
+> +	unsigned long apqn = AP_MKQID(apid, apqi);
+> +
+> +	return driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+> +				  &apqn, match_apqn);
+> +}
+> +
+>   /**
+>    * assign_adapter_store
+>    *
+> @@ -805,14 +844,9 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>   	if (ret)
+>   		return NOTIFY_DONE;
+>   
+> -	/* If there is no CRYCB pointer, then we can't copy the masks */
+> -	if (!matrix_mdev->kvm->arch.crypto.crycbd)
+> +	if (vfio_ap_mdev_update_crycb(matrix_mdev))
+>   		return NOTIFY_DONE;
+>   
+> -	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
+> -				  matrix_mdev->matrix.aqm,
+> -				  matrix_mdev->matrix.adm);
+> -
+>   	return NOTIFY_OK;
+>   }
+>   
+> @@ -867,12 +901,55 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>   	return rc;
+>   }
+>   
+> +static int vfio_ap_mdev_create_shadow_crycb(struct ap_matrix_mdev *matrix_mdev)
+> +{
+> +	unsigned long apid, apqi, domid;
+> +	struct device *dev;
+> +
+> +	matrix_mdev->shadow_crycb = kzalloc(sizeof(*matrix_mdev->shadow_crycb),
+> +					    GFP_KERNEL);
+> +	if (!matrix_mdev->shadow_crycb)
+> +		return -ENOMEM;
+> +
+> +	vfio_ap_matrix_init(&matrix_dev->info, matrix_mdev->shadow_crycb);
+> +
+> +	/*
+> +	 * Examine each APQN assigned to the mdev device. Set the APID and APQI
+> +	 * in the shadow CRYCB if and only if the queue device identified by
+> +	 * the APQN is in the configuration.
+> +	 */
+> +	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
+> +			     matrix_mdev->matrix.apm_max + 1) {
+> +		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+> +				     matrix_mdev->matrix.aqm_max + 1) {
+> +			dev = vfio_ap_get_queue_dev(apid, apqi);
+> +			if (dev) {
+> +				set_bit_inv(apid,
+> +					    matrix_mdev->shadow_crycb->apm);
+> +				set_bit_inv(apqi,
+> +					    matrix_mdev->shadow_crycb->aqm);
+> +				put_device(dev);
+> +			}
 
-> While refreshing these patches, which were orignally just targeted at
-> x86-64, it occured to me that despite the implementation relying on
-> inline asm, there's nothing x86 specific about it, and indeed it seems
-> to work out-of-the-box for ppc64 and arm64 as well, but those have
-> only been compile-tested.
+I think that if we do not find a device here we have a problem.
+Don't we?
 
-So, apart from the Clang build failures for non-x86, I now also got a
-report that gcc 4.8 miscompiles this stuff in some cases [1], even for
-x86 - gcc 4.9 does not seem to have the problem. So, given that the 5.2
-merge window just opened, I suppose this is the point where I should
-pull the plug on this experiment :(
 
-Rasmus
+> +		}
+> +	}
+> +
+> +	/* Set all control domains assigned to the mdev in the shadow CRYCB */
+> +	for_each_set_bit_inv(domid, matrix_mdev->matrix.adm,
+> +			     matrix_mdev->matrix.adm_max + 1)
+> +		set_bit_inv(domid, matrix_mdev->shadow_crycb->adm);
+> +
+> +	return 0;
+> +}
+> +
+>   static int vfio_ap_mdev_open(struct mdev_device *mdev)
+>   {
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   	unsigned long events;
+>   	int ret;
+>   
+> +	ret = vfio_ap_mdev_create_shadow_crycb(matrix_mdev);
+> +	if (ret)
+> +		return ret;
+>   
+>   	if (!try_module_get(THIS_MODULE))
+>   		return -ENODEV;
+> @@ -902,6 +979,8 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
+>   				 &matrix_mdev->group_notifier);
+>   	matrix_mdev->kvm = NULL;
+>   	module_put(THIS_MODULE);
+> +	kfree(matrix_mdev->shadow_crycb);
+> +	matrix_mdev->shadow_crycb = NULL;
+>   }
+>   
+>   static int vfio_ap_mdev_get_device_info(unsigned long arg)
+> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+> index 76b7f98e47e9..e8457aa61976 100644
+> --- a/drivers/s390/crypto/vfio_ap_private.h
+> +++ b/drivers/s390/crypto/vfio_ap_private.h
+> @@ -72,6 +72,7 @@ struct ap_matrix {
+>    * @list:	allows the ap_matrix_mdev struct to be added to a list
+>    * @matrix:	the adapters, usage domains and control domains assigned to the
+>    *		mediated matrix device.
+> + * @shadow_crycb: a shadow copy of the crycb in use by a guest
+>    * @group_notifier: notifier block used for specifying callback function for
+>    *		    handling the VFIO_GROUP_NOTIFY_SET_KVM event
+>    * @kvm:	the struct holding guest's state
+> @@ -79,6 +80,7 @@ struct ap_matrix {
+>   struct ap_matrix_mdev {
+>   	struct list_head node;
+>   	struct ap_matrix matrix;
+> +	struct ap_matrix *shadow_crycb;
+>   	struct notifier_block group_notifier;
+>   	struct kvm *kvm;
+>   };
+> 
 
-[1] Specifically, the problem manifested in net/ipv4/tcp_input.c: Both
-uses of the static inline inet_csk_clear_xmit_timer() pass a
-compile-time constant 'what', so the ifs get folded away and both uses
-are completely inlined. Yet, gcc still decides to emit a copy of the
-final 'else' branch of inet_csk_clear_xmit_timer() as its own
-inet_csk_reset_xmit_timer.part.55 function, which is of course unused.
-And despite the asm() that defines the ddebug descriptor being an "asm
-volatile", gcc thinks it's fine to elide that (the code path is
-unreachable, after all....), so the entire asm for that function is
 
-        .section        .text.unlikely
-        .type   inet_csk_reset_xmit_timer.part.55, @function
-inet_csk_reset_xmit_timer.part.55:
-        movq    $.LC1, %rsi     #,
-        movq    $__UNIQUE_ID_ddebug160, %rdi    #,
-        xorl    %eax, %eax      #
-        jmp     __dynamic_pr_debug      #
-        .size   inet_csk_reset_xmit_timer.part.55,
-.-inet_csk_reset_xmit_timer.part.55
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
-which of course fails to link since the symbol __UNIQUE_ID_ddebug160 is
-nowhere defined.
