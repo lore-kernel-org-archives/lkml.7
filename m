@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F664C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE25C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01B18206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3E3206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tjt7JkG6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zR9YyaRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfEFTQe (ORCPT
+        id S1726681AbfEFTQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:16:34 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52828 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfEFTQZ (ORCPT
+        Mon, 6 May 2019 15:16:30 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45156 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbfEFTQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:16:25 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x46JG9gb075436;
+        Mon, 6 May 2019 15:16:26 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x46JG9sb023385;
         Mon, 6 May 2019 14:16:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
         s=ti-com-17Q1; t=1557170169;
-        bh=EOysHEmVprVHbA6cHKUPLGkNbCYJbZUuBPXeor5VM8A=;
+        bh=UEEu6EW5RKCMxXIvwGPUXJedNiwF4BNlTRlApjnyOo0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Tjt7JkG6HNcnWS3G9wg3FhqCdiA4YJFgvAHC3g5/dLkqNnVft4I+7/DrJNsig3J+3
-         ESOjNdMRunO2U8SWC0apZR2Jx45SGEpaepW3C/8tPWn8esR9pL8/56Vw1/87pgtI81
-         YRFynWzKZXY51gyGrj8iwJ1Tgpw/tvKfTR3u6a2o=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x46JG932074985
+        b=zR9YyaRARunEBzIGpN27QGOe6JJHXtji4e6efOfNhTMyqdgk+hLti6PSXtdU3ZuLu
+         MjD8MNHTYhRaTH90kG1lUbx52aJwmKdtpt9mVfJMjaalTToOTvyrkw+8Qbc+pVjfOW
+         QhBXIbPA/VPcIQL7zeIuCFUTp1ojq0EF5iOhGgiM=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x46JG94L099373
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
         Mon, 6 May 2019 14:16:09 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 6 May
  2019 14:16:09 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
  Frontend Transport; Mon, 6 May 2019 14:16:09 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x46JG9FH077967;
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x46JG9LI090692;
         Mon, 6 May 2019 14:16:09 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <lee.jones@linaro.org>, <rdunlap@infradead.org>,
         <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v4 4/7] leds: TI LMU: Add common code for TI LMU devices
-Date:   Mon, 6 May 2019 14:16:11 -0500
-Message-ID: <20190506191614.25051-5-dmurphy@ti.com>
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 2/7] dt-bindings: mfd: LMU: Add the ramp up/down property
+Date:   Mon, 6 May 2019 14:16:09 -0500
+Message-ID: <20190506191614.25051-3-dmurphy@ti.com>
 X-Mailer: git-send-email 2.21.0.5.gaeb582a983
 In-Reply-To: <20190506191614.25051-1-dmurphy@ti.com>
 References: <20190506191614.25051-1-dmurphy@ti.com>
@@ -68,281 +68,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a TI LMU common framework for TI LMU devices that share
-common features.
+Document the ramp-up and ramp-down property in the binding.
+Removing the "sec" from the property definition as seconds is
+implied.
 
-Currently the runtime ramp and brightness setting have
-been identified as common features with common register settings.
-
-This work is derived from Milo Kims TI LMU MFD code.
-
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
 
-v4 - Renamed the files from ti-lmu-led-common to leds-ti-lmu-common, updated the
-ramp-up/down variable from ms->us, fixed Kconfig, updated common header name -
-https://lore.kernel.org/patchwork/patch/1068615/
+v4 - Change property->properties, changed ramp-up/down-ms to ramp-up/down-us -
+https://lore.kernel.org/patchwork/patch/1068614/
 
-v3 - No changes - https://lore.kernel.org/patchwork/patch/1058764/
-v2 - Added support for the brightness resolution parameter as it is a global
-parameter for all LMU devices, no other changes were made -
-https://lore.kernel.org/patchwork/patch/1054500/
+v3 - No changes added Reviewed-by Rob - https://lore.kernel.org/patchwork/patch/1058759/
+v2 - Fixed commit message as this was not just a modification but adding documentation
+https://lore.kernel.org/patchwork/patch/1054504/
 
- drivers/leds/Kconfig               |   8 ++
- drivers/leds/Makefile              |   1 +
- drivers/leds/leds-ti-lmu-common.c  | 156 +++++++++++++++++++++++++++++
- include/linux/leds-ti-lmu-common.h |  47 +++++++++
- 4 files changed, 212 insertions(+)
- create mode 100644 drivers/leds/leds-ti-lmu-common.c
- create mode 100644 include/linux/leds-ti-lmu-common.h
+ .../devicetree/bindings/mfd/ti-lmu.txt        | 22 ++++++++++++-------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index da00b9ed5a5c..a88dad3be96c 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -776,6 +776,14 @@ config LEDS_NIC78BX
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called leds-nic78bx.
+diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+index 86ca786d54fc..160eb0a5e21a 100644
+--- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
++++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+@@ -23,8 +23,14 @@ Required properties:
+          0x36 for LM3633, LM3697
+          0x63 for LM3695
  
-+config LEDS_TI_LMU_COMMON
-+	tristate "LED driver for TI LMU"
-+	depends on REGMAP
-+	help
-+	  Say Y to enable the LED driver for TI LMU devices.
-+	  This supports common features between the TI LM3532, LM3631, LM3632,
-+	  LM3633, LM3695 and LM3697.
-+
- comment "LED Triggers"
- source "drivers/leds/trigger/Kconfig"
+-Optional property:
++Optional properties:
+   - enable-gpios: A GPIO specifier for hardware enable pin.
++  - ramp-up-us: Current ramping from one brightness level to
++		the a higher brightness level.
++		Range from 2048 us - 117.44 s
++  - ramp-down-us: Current ramping from one brightness level to
++		  the a lower brightness level.
++		  Range from 2048 us - 117.44 s
  
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 7a8b1f55d459..9d7cdd363603 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -80,6 +80,7 @@ obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
- obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
- obj-$(CONFIG_LEDS_SC27XX_BLTC)		+= leds-sc27xx-bltc.o
- obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
-+obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
+ Required node:
+   - backlight: All LMU devices have backlight child nodes.
+@@ -90,7 +96,7 @@ lm3631@29 {
  
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-diff --git a/drivers/leds/leds-ti-lmu-common.c b/drivers/leds/leds-ti-lmu-common.c
-new file mode 100644
-index 000000000000..adc7293004f1
---- /dev/null
-+++ b/drivers/leds/leds-ti-lmu-common.c
-@@ -0,0 +1,156 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright 2015 Texas Instruments
-+// Copyright 2018 Sebastian Reichel
-+// Copyright 2018 Pavel Machek <pavel@ucw.cz>
-+// TI LMU LED common framework, based on previous work from
-+// Milo Kim <milo.kim@ti.com>
-+
-+#include <linux/bitops.h>
-+#include <linux/err.h>
-+#include <linux/of_device.h>
-+
-+#include <linux/leds-ti-lmu-common.h>
-+
-+const static int ramp_table[16] = {2048, 262000, 524000, 1049000, 2090000,
-+				4194000, 8389000, 16780000, 33550000, 41940000,
-+				50330000, 58720000, 67110000, 83880000,
-+				100660000, 117440000};
-+
-+static int ti_lmu_common_update_brightness(struct ti_lmu_bank *lmu_bank,
-+					   int brightness)
-+{
-+	struct regmap *regmap = lmu_bank->regmap;
-+	u8 reg, val;
-+	int ret;
-+
-+	/*
-+	 * Brightness register update
-+	 *
-+	 * 11 bit dimming: update LSB bits and write MSB byte.
-+	 *		   MSB brightness should be shifted.
-+	 *  8 bit dimming: write MSB byte.
-+	 */
-+	if (lmu_bank->max_brightness == MAX_BRIGHTNESS_11BIT) {
-+		reg = lmu_bank->lsb_brightness_reg;
-+		ret = regmap_update_bits(regmap, reg,
-+					 LMU_11BIT_LSB_MASK,
-+					 brightness);
-+		if (ret)
-+			return ret;
-+
-+		val = brightness >> LMU_11BIT_MSB_SHIFT;
-+	} else {
-+		val = brightness;
-+	}
-+
-+	reg = lmu_bank->msb_brightness_reg;
-+
-+	return regmap_write(regmap, reg, val);
-+}
-+
-+int ti_lmu_common_set_brightness(struct ti_lmu_bank *lmu_bank, int brightness)
-+{
-+	return ti_lmu_common_update_brightness(lmu_bank, brightness);
-+}
-+EXPORT_SYMBOL(ti_lmu_common_set_brightness);
-+
-+static int ti_lmu_common_convert_ramp_to_index(unsigned int usec)
-+{
-+	int size = ARRAY_SIZE(ramp_table);
-+	int i;
-+
-+	if (usec <= ramp_table[0])
-+		return 0;
-+
-+	if (usec > ramp_table[size - 1])
-+		return size - 1;
-+
-+	for (i = 1; i < size; i++) {
-+		if (usec == ramp_table[i])
-+			return i;
-+
-+		/* Find an approximate index by looking up the table */
-+		if (usec > ramp_table[i - 1] && usec < ramp_table[i]) {
-+			if (usec - ramp_table[i - 1] < ramp_table[i] - usec)
-+				return i - 1;
-+			else
-+				return i;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank)
-+{
-+	struct regmap *regmap = lmu_bank->regmap;
-+	u8 ramp, ramp_up, ramp_down;
-+
-+	if (lmu_bank->ramp_up_usec == 0 && lmu_bank->ramp_down_usec == 0) {
-+		ramp_up = 0;
-+		ramp_down = 0;
-+	} else {
-+		ramp_up = ti_lmu_common_convert_ramp_to_index(lmu_bank->ramp_up_usec);
-+		ramp_down = ti_lmu_common_convert_ramp_to_index(lmu_bank->ramp_down_usec);
-+	}
-+
-+	if (ramp_up < 0 || ramp_down < 0)
-+		return -EINVAL;
-+
-+	ramp = (ramp_up << 4) | ramp_down;
-+
-+	return regmap_write(regmap, lmu_bank->runtime_ramp_reg, ramp);
-+
-+}
-+EXPORT_SYMBOL(ti_lmu_common_set_ramp);
-+
-+int ti_lmu_common_get_ramp_params(struct device *dev,
-+				  struct fwnode_handle *child,
-+				  struct ti_lmu_bank *lmu_data)
-+{
-+	int ret;
-+
-+	ret = fwnode_property_read_u32(child, "ramp-up-us",
-+				 &lmu_data->ramp_up_usec);
-+	if (ret)
-+		dev_warn(dev, "ramp-up-us property missing\n");
-+
-+
-+	ret = fwnode_property_read_u32(child, "ramp-down-us",
-+				 &lmu_data->ramp_down_usec);
-+	if (ret)
-+		dev_warn(dev, "ramp-down-us property missing\n");
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(ti_lmu_common_get_ramp_params);
-+
-+int ti_lmu_common_get_brt_res(struct device *dev, struct fwnode_handle *child,
-+				  struct ti_lmu_bank *lmu_data)
-+{
-+	int ret;
-+
-+	ret = device_property_read_u32(dev, "ti,brightness-resolution",
-+				       &lmu_data->max_brightness);
-+	if (ret)
-+		ret = fwnode_property_read_u32(child,
-+					       "ti,brightness-resolution",
-+					       &lmu_data->max_brightness);
-+	if (lmu_data->max_brightness <= 0) {
-+		lmu_data->max_brightness = MAX_BRIGHTNESS_8BIT;
-+		return ret;
-+	}
-+
-+	if (lmu_data->max_brightness > MAX_BRIGHTNESS_11BIT)
-+			lmu_data->max_brightness = MAX_BRIGHTNESS_11BIT;
-+
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(ti_lmu_common_get_brt_res);
-+
-+MODULE_DESCRIPTION("TI LMU common LED framework");
-+MODULE_AUTHOR("Sebastian Reichel");
-+MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("ti-lmu-led-common");
-diff --git a/include/linux/leds-ti-lmu-common.h b/include/linux/leds-ti-lmu-common.h
-new file mode 100644
-index 000000000000..5eb111f38803
---- /dev/null
-+++ b/include/linux/leds-ti-lmu-common.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+// TI LMU Common Core
-+// Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
-+
-+#ifndef _TI_LMU_COMMON_H_
-+#define _TI_LMU_COMMON_H_
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <uapi/linux/uleds.h>
-+
-+#define LMU_11BIT_LSB_MASK	(BIT(0) | BIT(1) | BIT(2))
-+#define LMU_11BIT_MSB_SHIFT	3
-+
-+#define MAX_BRIGHTNESS_8BIT	255
-+#define MAX_BRIGHTNESS_11BIT	2047
-+
-+struct ti_lmu_bank {
-+	struct regmap *regmap;
-+
-+	int max_brightness;
-+
-+	u8 lsb_brightness_reg;
-+	u8 msb_brightness_reg;
-+
-+	u8 runtime_ramp_reg;
-+	u32 ramp_up_usec;
-+	u32 ramp_down_usec;
-+};
-+
-+int ti_lmu_common_set_brightness(struct ti_lmu_bank *lmu_bank, int brightness);
-+
-+int ti_lmu_common_set_ramp(struct ti_lmu_bank *lmu_bank);
-+
-+int ti_lmu_common_get_ramp_params(struct device *dev,
-+				  struct fwnode_handle *child,
-+				  struct ti_lmu_bank *lmu_data);
-+
-+int ti_lmu_common_get_brt_res(struct device *dev, struct fwnode_handle *child,
-+			      struct ti_lmu_bank *lmu_data);
-+
-+#endif /* _TI_LMU_COMMON_H_ */
+ 		lcd_bl {
+ 			led-sources = <0 1>;
+-			ramp-up-msec = <300>;
++			ramp-up-us = <300000>;
+ 		};
+ 	};
+ };
+@@ -152,15 +158,15 @@ lm3633@36 {
+ 		main {
+ 			label = "main_lcd";
+ 			led-sources = <1 2>;
+-			ramp-up-msec = <500>;
+-			ramp-down-msec = <500>;
++			ramp-up-us = <500000>;
++			ramp-down-us = <500000>;
+ 		};
+ 
+ 		front {
+ 			label = "front_lcd";
+ 			led-sources = <0>;
+-			ramp-up-msec = <1000>;
+-			ramp-down-msec = <0>;
++			ramp-up-us = <1000000>;
++			ramp-down-us = <0>;
+ 		};
+ 	};
+ 
+@@ -212,8 +218,8 @@ lm3697@36 {
+ 
+ 		lcd {
+ 			led-sources = <0 1 2>;
+-			ramp-up-msec = <200>;
+-			ramp-down-msec = <200>;
++			ramp-up-us = <200000>;
++			ramp-down-us = <200000>;
+ 		};
+ 	};
+ 
 -- 
 2.21.0.5.gaeb582a983
 
