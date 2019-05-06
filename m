@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2162EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D79C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51282053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883572087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154069;
-	bh=VpXZ2qRJDONYeoNioZ39WcxB9mBuRiXlSs2Ja4DeRZI=;
+	s=default; t=1557154071;
+	bh=NDIZtBrMYSebn6+4DCLOthvqvCcmqnbKYh7GL0qOcak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kd6DnXDa8YmcNrx9qGRkEI/h3xL56mlgFZYY7v1ELyeHhcWvimC07O6ZbcVq6s6TN
-	 GKud0Pj1V6IRvU/kKpU+8qc/8L2aR5dOrsqoPpVsUhCXLq+pMrfVJx6wN0K572xv19
-	 wKBA9+te/oJcd6ohT0+eR1rPTJzVf9UPihPzS9wU=
+	b=iDpWezCOtfxLhmH1jDx8mx3684zfVsw3tYIcGMYmiN0UzrTt8e9u/ntOGh2R9/+q5
+	 WT1336W+S2pyVEwf3svSgBgrmgf3n/9SXFLcijrhGa/v1uC5hgICLgu8Yy/1VhW1go
+	 8GvcMXhFYuJF2ki0zO5Y+pakfYr0NyDa5kkDcb7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbfEFOrr (ORCPT
+        id S1729387AbfEFOru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:47:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47252 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:47:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728858AbfEFOrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:45 -0400
+        id S1729138AbfEFOrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E16120578;
-        Mon,  6 May 2019 14:47:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D60620C01;
+        Mon,  6 May 2019 14:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154065;
-        bh=VpXZ2qRJDONYeoNioZ39WcxB9mBuRiXlSs2Ja4DeRZI=;
+        s=default; t=1557154067;
+        bh=NDIZtBrMYSebn6+4DCLOthvqvCcmqnbKYh7GL0qOcak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gMX9A+XYjnJZ23dZBaELbqhk9Vwqbzb/0VYGU+JSiQvCkJt3iWTQwvPIe20c73c2D
-         HE3OIkvoQOIb0aqeCELkJH/ktyVJiz/DaFfJv5B/jTXGvQ1ONjKfr4DME/Ti1JCH0c
-         Aw5Sn8nqD47/ghpiYfeTD9PA+/NUhNVTac737nxc=
+        b=YilqzJzeOHb5lBB4jsw4GEGI1dUc2bxHU/n1PeiQZVWco4mcX5ppR68hzzXpCm423
+         EjEOiBG3rmr2VuuQdosESMcDmeQAXXebxLXrY3krLS0rZdKrqWjenzL6wetI1a+82x
+         GG/gg1eY+6AlTJEmrFK8K554njlytLKvTJ1RLLYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malte Leip <malte@leip.net>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH 4.9 24/62] usb: usbip: fix isoc packet num validation in get_pipe
-Date:   Mon,  6 May 2019 16:32:55 +0200
-Message-Id: <20190506143053.143577311@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 25/62] USB: core: Fix unterminated string returned by usb_string()
+Date:   Mon,  6 May 2019 16:32:56 +0200
+Message-Id: <20190506143053.224991030@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -59,77 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malte Leip <malte@leip.net>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit c409ca3be3c6ff3a1eeb303b191184e80d412862 upstream.
+commit c01c348ecdc66085e44912c97368809612231520 upstream.
 
-Change the validation of number_of_packets in get_pipe to compare the
-number of packets to a fixed maximum number of packets allowed, set to
-be 1024. This number was chosen due to it being used by other drivers as
-well, for example drivers/usb/host/uhci-q.c
+Some drivers (such as the vub300 MMC driver) expect usb_string() to
+return a properly NUL-terminated string, even when an error occurs.
+(In fact, vub300's probe routine doesn't bother to check the return
+code from usb_string().)  When the driver goes on to use an
+unterminated string, it leads to kernel errors such as
+stack-out-of-bounds, as found by the syzkaller USB fuzzer.
 
-Background/reason:
-The get_pipe function in stub_rx.c validates the number of packets in
-isochronous mode and aborts with an error if that number is too large,
-in order to prevent malicious input from possibly triggering large
-memory allocations. This was previously done by checking whether
-pdu->u.cmd_submit.number_of_packets is bigger than the number of packets
-that would be needed for pdu->u.cmd_submit.transfer_buffer_length bytes
-if all except possibly the last packet had maximum length, given by
-usb_endpoint_maxp(epd) *  usb_endpoint_maxp_mult(epd). This leads to an
-error if URBs with packets shorter than the maximum possible length are
-submitted, which is allowed according to
-Documentation/driver-api/usb/URB.rst and occurs for example with the
-snd-usb-audio driver.
+An out-of-range string index argument is not at all unlikely, given
+that some devices don't provide string descriptors and therefore list
+0 as the value for their string indexes.  This patch makes
+usb_string() return a properly terminated empty string along with the
+-EINVAL error code when an out-of-range index is encountered.
 
-Fixes: c6688ef9f297 ("usbip: fix stub_rx: harden CMD_SUBMIT path to handle malicious input")
-Signed-off-by: Malte Leip <malte@leip.net>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+And since a USB string index is a single-byte value, indexes >= 256
+are just as invalid as values of 0 or below.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/usbip/stub_rx.c      |   12 +++---------
- drivers/usb/usbip/usbip_common.h |    7 +++++++
- 2 files changed, 10 insertions(+), 9 deletions(-)
+ drivers/usb/core/message.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/usbip/stub_rx.c
-+++ b/drivers/usb/usbip/stub_rx.c
-@@ -383,16 +383,10 @@ static int get_pipe(struct stub_device *
- 	}
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -817,9 +817,11 @@ int usb_string(struct usb_device *dev, i
  
- 	if (usb_endpoint_xfer_isoc(epd)) {
--		/* validate packet size and number of packets */
--		unsigned int maxp, packets, bytes;
--
--		maxp = usb_endpoint_maxp(epd);
--		maxp *= usb_endpoint_maxp_mult(epd);
--		bytes = pdu->u.cmd_submit.transfer_buffer_length;
--		packets = DIV_ROUND_UP(bytes, maxp);
--
-+		/* validate number of packets */
- 		if (pdu->u.cmd_submit.number_of_packets < 0 ||
--		    pdu->u.cmd_submit.number_of_packets > packets) {
-+		    pdu->u.cmd_submit.number_of_packets >
-+		    USBIP_MAX_ISO_PACKETS) {
- 			dev_err(&sdev->udev->dev,
- 				"CMD_SUBMIT: isoc invalid num packets %d\n",
- 				pdu->u.cmd_submit.number_of_packets);
---- a/drivers/usb/usbip/usbip_common.h
-+++ b/drivers/usb/usbip/usbip_common.h
-@@ -136,6 +136,13 @@ extern struct device_attribute dev_attr_
- #define USBIP_DIR_OUT	0x00
- #define USBIP_DIR_IN	0x01
- 
-+/*
-+ * Arbitrary limit for the maximum number of isochronous packets in an URB,
-+ * compare for example the uhci_submit_isochronous function in
-+ * drivers/usb/host/uhci-q.c
-+ */
-+#define USBIP_MAX_ISO_PACKETS 1024
-+
- /**
-  * struct usbip_header_basic - data pertinent to every request
-  * @command: the usbip request type
+ 	if (dev->state == USB_STATE_SUSPENDED)
+ 		return -EHOSTUNREACH;
+-	if (size <= 0 || !buf || !index)
++	if (size <= 0 || !buf)
+ 		return -EINVAL;
+ 	buf[0] = 0;
++	if (index <= 0 || index >= 256)
++		return -EINVAL;
+ 	tbuf = kmalloc(256, GFP_NOIO);
+ 	if (!tbuf)
+ 		return -ENOMEM;
 
 
