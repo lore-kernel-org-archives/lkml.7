@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7868C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F373C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1B52087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2286E2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153976;
-	bh=4fNEhUpTSk6ioQrT4WYstrl6DKNkYCRJBUW7GwlqANI=;
+	s=default; t=1557153979;
+	bh=fPgT4HY0bky+EBue+zskn1nEizjuV4KXjab0xYNNJzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bQTG3GpS9Ra2AmTZUiyA13KwEjCjCJOBG5YyAf0QPkYtlivGYFDw6MMY1kuCR30Js
-	 V2akeH0qtorNoR8EtvHgXfhFQ2s6qUg648OSVBRzx3oHts+PsNrr6EPBlQb4XLq8MC
-	 Kbn0ZtEMOdfp7aJID+eHmGBdwRVn3exZSPmSkVZ4=
+	b=fmgeXoljPtmRzn5kzwgQC6J0KT2zRhin2M3bfQjlVYBD99JcUt8Q94DW/fQwc364+
+	 ivdGBVJiZer3YiSz5D9e/O/OnFfjz//zasW5V/BPWu/oflS39TWZ3iJ9uigGJlIBiK
+	 jrTkFobImKucpMuujgM3fatxNs5PqlHv5NlvYj7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbfEFOqP (ORCPT
+        id S1729108AbfEFOqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43736 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:46:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728600AbfEFOqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:46:10 -0400
+        id S1729089AbfEFOqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:46:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14D792053B;
-        Mon,  6 May 2019 14:46:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FB812053B;
+        Mon,  6 May 2019 14:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153969;
-        bh=4fNEhUpTSk6ioQrT4WYstrl6DKNkYCRJBUW7GwlqANI=;
+        s=default; t=1557153974;
+        bh=fPgT4HY0bky+EBue+zskn1nEizjuV4KXjab0xYNNJzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCMt0gX4nkBRa10jFbiRBYFGrVyMV0By/QLZuOIDIQDAW3+imGjrYTsrc71bqVRXU
-         vPZAkZMx+aM9CLPjbNjH9c8ZMSZpX/S/Qzav2azvsqu4T+NLpPBM5FT3pNI4jegx/u
-         seswzdqFzElIAsLadVe9YXQUtTP2M8prZ860jIb4=
+        b=Xh63Au69w5/YM53AmJo9wcwTSKEYrtQxVESUYFr80+PI983vi7GnpawSoaKipzqRD
+         UjRYpLIqjRc2NSodY5RsQbz1uIbd8A9xWvkssja6r1yN0mg+4ZP6oSlDDCGZ9SfLFv
+         cft4f9ojI5/r5FwBibzPLzOjIf2K6xvsipl0IQe0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 64/75] ASoC: stm32: fix sai driver name initialisation
-Date:   Mon,  6 May 2019 16:33:12 +0200
-Message-Id: <20190506143059.065468428@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Jurgens <danielj@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.14 66/75] IB/core: Fix potential memory leak while creating MAD agents
+Date:   Mon,  6 May 2019 16:33:14 +0200
+Message-Id: <20190506143059.235039238@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -59,40 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+From: Daniel Jurgens <danielj@mellanox.com>
 
-commit 17d3069ccf06970e2db3f7cbf4335f207524279e upstream.
+commit 6e88e672b69f0e627acdae74a527b730ea224b6b upstream.
 
-This patch fixes the sai driver structure overwriting which results in
-a cpu dai name equal NULL.
+If the MAD agents isn't allowed to manage the subnet, or fails to register
+for the LSM notifier, the security context is leaked. Free the context in
+these cases.
 
-Fixes: 3e086ed ("ASoC: stm32: add SAI driver")
-
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 47a2b338fe63 ("IB/core: Enforce security on management datagrams")
+Signed-off-by: Daniel Jurgens <danielj@mellanox.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Reported-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/stm/stm32_sai_sub.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/security.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -873,7 +873,6 @@ static int stm32_sai_sub_dais_init(struc
- 	if (!sai->cpu_dai_drv)
- 		return -ENOMEM;
+--- a/drivers/infiniband/core/security.c
++++ b/drivers/infiniband/core/security.c
+@@ -715,16 +715,20 @@ int ib_mad_agent_security_setup(struct i
+ 						agent->device->name,
+ 						agent->port_num);
+ 	if (ret)
+-		return ret;
++		goto free_security;
  
--	sai->cpu_dai_drv->name = dev_name(&pdev->dev);
- 	if (STM_SAI_IS_PLAYBACK(sai)) {
- 		memcpy(sai->cpu_dai_drv, &stm32_sai_playback_dai,
- 		       sizeof(stm32_sai_playback_dai));
-@@ -883,6 +882,7 @@ static int stm32_sai_sub_dais_init(struc
- 		       sizeof(stm32_sai_capture_dai));
- 		sai->cpu_dai_drv->capture.stream_name = sai->cpu_dai_drv->name;
- 	}
-+	sai->cpu_dai_drv->name = dev_name(&pdev->dev);
+ 	agent->lsm_nb.notifier_call = ib_mad_agent_security_change;
+ 	ret = register_lsm_notifier(&agent->lsm_nb);
+ 	if (ret)
+-		return ret;
++		goto free_security;
  
+ 	agent->smp_allowed = true;
+ 	agent->lsm_nb_reg = true;
  	return 0;
++
++free_security:
++	security_ib_free_security(agent->security);
++	return ret;
  }
+ 
+ void ib_mad_agent_security_cleanup(struct ib_mad_agent *agent)
 
 
