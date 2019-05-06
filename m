@@ -2,334 +2,104 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6880C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAA0C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8BB2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E192087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfEFPwb (ORCPT
+        id S1726960AbfEFPx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:52:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59544 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:53:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:3346 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbfEFPwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:52:30 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726321AbfEFPx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 11:53:58 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0805D2053B;
-        Mon,  6 May 2019 15:52:27 +0000 (UTC)
-Date:   Mon, 6 May 2019 11:52:26 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 7C482306D334;
+        Mon,  6 May 2019 15:53:57 +0000 (UTC)
+Received: from jsavitz.bos.com (dhcp-17-161.bos.redhat.com [10.18.17.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3793560BEC;
+        Mon,  6 May 2019 15:53:48 +0000 (UTC)
+From:   Joel Savitz <jsavitz@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Joel Savitz <jsavitz@redhat.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: Re: [RFC PATCH v6 4/6] tracing/probe: Support user-space
- dereference
-Message-ID: <20190506115226.70c62f7a@gandalf.local.home>
-In-Reply-To: <155289143224.7218.6083289081805224583.stgit@devnote2>
-References: <155289137555.7218.9282784065958321058.stgit@devnote2>
-        <155289143224.7218.6083289081805224583.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Sandeep Patil <sspatil@android.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v3] fs/proc: add VmTaskSize field to /proc/$$/status
+Date:   Mon,  6 May 2019 11:53:43 -0400
+Message-Id: <1557158023-23021-1-git-send-email-jsavitz@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 06 May 2019 15:53:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 18 Mar 2019 15:43:52 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+There is currently no easy and architecture-independent way to find the
+lowest unusable virtual address available to a process without
+brute-force calculation. This patch allows a user to easily retrieve
+this value via /proc/<pid>/status.
 
-> +.. _user_mem_access:
-> +User Memory Access
-> +------------------
-> +Kprobe events supports user-space memory access. For that purpose, you can use
-> +either user-space dereference syntax or 'ustring' type.
-> +
-> +The user-space dereference syntax allows you to access a field of a data
-> +structure in user-space. This is done by adding the "u" prefix to the
-> +dereference syntax. For example, +u4(%si) means it will read memory from the
-> +address in the register %si offset by 4, and the mory is expected to be in
+Using this patch, any program that previously needed to waste cpu cycles
+recalculating a non-sensitive process-dependent value already known to
+the kernel can now be optimized to use this mechanism.
 
-                                                    ^^^^
- "memory"
+Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+---
+ Documentation/filesystems/proc.txt | 2 ++
+ fs/proc/task_mmu.c                 | 2 ++
+ 2 files changed, 4 insertions(+)
 
-> +user-space. You can use this for strings too, e.g. +u0(%si):string will read
-> +a string from the address in the register %si that is expected to be in user-
-> +space. 'ustring' is a shortcut way of performing the same task. That is,
-> ++0(%si):ustring is equivalent to +u0(%si):string.
-> +
-> +Note that kprobe-event provides the user-memory access syntax but it doesn't
-> +use it transparently. This means if you use normal dereference or string type
-> +for user memory, it might fail, and always fails on some arch. So user has to
-
-  "and may always fail on some archs. The user has to carefully check
-  if the target data is in kernel or user space."
-
-
-> +check if the targe data is in kernel or in user space carefully.
->  
->  Per-Probe Event Filtering
->  -------------------------
-> diff --git a/Documentation/trace/uprobetracer.rst b/Documentation/trace/uprobetracer.rst
-> index 4346e23e3ae7..de8812c932bc 100644
-> --- a/Documentation/trace/uprobetracer.rst
-> +++ b/Documentation/trace/uprobetracer.rst
-> @@ -42,16 +42,17 @@ Synopsis of uprobe_tracer
->     @+OFFSET	: Fetch memory at OFFSET (OFFSET from same file as PATH)
->     $stackN	: Fetch Nth entry of stack (N >= 0)
->     $stack	: Fetch stack address.
-> -   $retval	: Fetch return value.(*)
-> +   $retval	: Fetch return value.(\*1)
->     $comm	: Fetch current task comm.
-> -   +|-offs(FETCHARG) : Fetch memory at FETCHARG +|- offs address.(**)
-> +   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*2)(\*3)
->     NAME=FETCHARG     : Set NAME as the argument name of FETCHARG.
->     FETCHARG:TYPE     : Set TYPE as the type of FETCHARG. Currently, basic types
->  		       (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
->  		       (x8/x16/x32/x64), "string" and bitfield are supported.
-
-Hmm, shouldn't uprobes default to userspace. Isn't the purpose mostly
-to find out what's going on in userspace. Perhaps we should add a 'k'
-annotation to uprobes to denote that it's for kernel space, as that
-should be the exception and not the norm.
-
->  
-> -  (*) only for return probe.
-> -  (**) this is useful for fetching a field of data structures.
-> +  (\*1) only for return probe.
-> +  (\*2) this is useful for fetching a field of data structures.
-> +  (\*3) Unlike kprobe event, "u" prefix will just be ignored.
->  
->  Types
->  -----
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 7a6ed76ba104..b595d5ef099a 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -4815,10 +4815,11 @@ static const char readme_msg[] =
->  	"\t     args: <name>=fetcharg[:type]\n"
->  	"\t fetcharg: %<register>, @<address>, @<symbol>[+|-<offset>],\n"
->  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
-> -	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>\n"
-> +	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>,\n"
->  #else
-> -	"\t           $stack<index>, $stack, $retval, $comm\n"
-> +	"\t           $stack<index>, $stack, $retval, $comm,\n"
->  #endif
-> +	"\t           +|-[u]<offset>(<fetcharg>)\n"
->  	"\t     type: s8/16/32/64, u8/16/32/64, x8/16/32/64, string, symbol,\n"
->  	"\t           b<bit-width>@<bit-offset>/<container-size>, ustring,\n"
->  	"\t           <type>\\[<array-size>\\]\n"
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index e346229ddbba..9456f4ca3b8a 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -930,6 +930,12 @@ probe_mem_read(void *dest, void *src, size_t size)
->  	return probe_kernel_read(dest, src, size);
->  }
->  
-> +static nokprobe_inline int
-> +probe_mem_read_user(void *dest, void *src, size_t size)
-> +{
-> +	return probe_user_read(dest, src, size);
-> +}
-> +
->  /* Note that we don't verify it, since the code does not come from user space */
->  static int
->  process_fetch_insn(struct fetch_insn *code, struct pt_regs *regs, void *dest,
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 30054136cfde..00771e7b6ef8 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -253,6 +253,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
->  {
->  	struct fetch_insn *code = *pcode;
->  	unsigned long param;
-> +	int deref = FETCH_OP_DEREF;
->  	long offset = 0;
->  	char *tmp;
->  	int ret = 0;
-> @@ -315,9 +316,14 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
->  		break;
->  
->  	case '+':	/* deref memory */
-> -		arg++;	/* Skip '+', because kstrtol() rejects it. */
-> -		/* fall through */
->  	case '-':
-> +		if (arg[1] == 'u') {
-> +			deref = FETCH_OP_UDEREF;
-> +			arg[1] = arg[0];
-> +			arg++;
-> +		}
-
-It should be fine to add a 'k' version here too.
-
-> +		if (arg[0] == '+')
-> +			arg++;	/* Skip '+', because kstrtol() rejects it. */
->  		tmp = strchr(arg, '(');
->  		if (!tmp)
->  			return -EINVAL;
-> @@ -343,7 +349,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
->  				return -E2BIG;
->  			*pcode = code;
->  
-> -			code->op = FETCH_OP_DEREF;
-> +			code->op = deref;
->  			code->offset = offset;
->  		}
->  		break;
-> @@ -459,13 +465,14 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
->  	/* Store operation */
->  	if (!strcmp(parg->type->name, "string") ||
->  	    !strcmp(parg->type->name, "ustring")) {
-> -		if (code->op != FETCH_OP_DEREF && code->op != FETCH_OP_IMM &&
-> -		    code->op != FETCH_OP_COMM) {
-> +		if (code->op != FETCH_OP_DEREF && code->op != FETCH_OP_UDEREF
-> +		    && code->op != FETCH_OP_IMM && code->op != FETCH_OP_COMM) {
->  			pr_info("string only accepts memory or address.\n");
->  			ret = -EINVAL;
->  			goto fail;
->  		}
-> -		if (code->op != FETCH_OP_DEREF || parg->count) {
-> +		if ((code->op == FETCH_OP_IMM || code->op == FETCH_OP_COMM)
-> +		    || parg->count) {
->  			/*
->  			 * IMM and COMM is pointing actual address, those must
->  			 * be kept, and if parg->count != 0, this is an array
-> @@ -478,7 +485,8 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
->  			}
->  		}
->  		/* If op == DEREF, replace it with STRING */
-> -		if (!strcmp(parg->type->name, "ustring"))
-> +		if (!strcmp(parg->type->name, "ustring") ||
-
-Perhaps have a "kstring" for kernel strings in uprobes.
-
-> +		    code->op == FETCH_OP_UDEREF)
->  			code->op = FETCH_OP_ST_USTRING;
->  		else
->  			code->op = FETCH_OP_ST_STRING;
-> @@ -487,6 +495,9 @@ static int traceprobe_parse_probe_arg_body(char *arg, ssize_t *size,
->  	} else if (code->op == FETCH_OP_DEREF) {
->  		code->op = FETCH_OP_ST_MEM;
->  		code->size = parg->type->size;
-> +	} else if (code->op == FETCH_OP_UDEREF) {
-> +		code->op = FETCH_OP_ST_UMEM;
-> +		code->size = parg->type->size;
->  	} else {
->  		code++;
->  		if (code->op != FETCH_OP_NOP) {
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 94cdcfdaced0..0feac0a81f82 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -92,9 +92,11 @@ enum fetch_op {
->  	FETCH_OP_FOFFS,		/* File offset: .immediate */
->  	// Stage 2 (dereference) op
->  	FETCH_OP_DEREF,		/* Dereference: .offset */
-> +	FETCH_OP_UDEREF,	/* User-space Dereference: .offset */
->  	// Stage 3 (store) ops
->  	FETCH_OP_ST_RAW,	/* Raw: .size */
->  	FETCH_OP_ST_MEM,	/* Mem: .offset, .size */
-> +	FETCH_OP_ST_UMEM,	/* Mem: .offset, .size */
->  	FETCH_OP_ST_STRING,	/* String: .offset, .size */
->  	FETCH_OP_ST_USTRING,	/* User String: .offset, .size */
->  	// Stage 4 (modify) op
-> diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-> index 7526f6f8d7b0..06f2d901c4cf 100644
-> --- a/kernel/trace/trace_probe_tmpl.h
-> +++ b/kernel/trace/trace_probe_tmpl.h
-> @@ -64,6 +64,8 @@ static nokprobe_inline int
->  fetch_store_string_user(unsigned long addr, void *dest, void *base);
->  static nokprobe_inline int
->  probe_mem_read(void *dest, void *src, size_t size);
-> +static nokprobe_inline int
-> +probe_mem_read_user(void *dest, void *src, size_t size);
->  
->  /* From the 2nd stage, routine is same */
->  static nokprobe_inline int
-> @@ -77,14 +79,21 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
->  
->  stage2:
->  	/* 2nd stage: dereference memory if needed */
-> -	while (code->op == FETCH_OP_DEREF) {
-> -		lval = val;
-> -		ret = probe_mem_read(&val, (void *)val + code->offset,
-> -					sizeof(val));
-> +	do {
-> +		if (code->op == FETCH_OP_DEREF) {
-> +			lval = val;
-> +			ret = probe_mem_read(&val, (void *)val + code->offset,
-> +					     sizeof(val));
-> +		} else if (code->op == FETCH_OP_UDEREF) {
-> +			lval = val;
-> +			ret = probe_mem_read_user(&val,
-> +				 (void *)val + code->offset, sizeof(val));
-> +		} else
-> +			break;
->  		if (ret)
->  			return ret;
->  		code++;
-> -	}
-> +	} while (1);
->  
->  	s3 = code;
->  stage3:
-> @@ -109,6 +118,10 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
->  	case FETCH_OP_ST_MEM:
->  		probe_mem_read(dest, (void *)val + code->offset, code->size);
->  		break;
-> +	case FETCH_OP_ST_UMEM:
-> +		probe_mem_read_user(dest, (void *)val + code->offset,
-> +				    code->size);
-> +		break;
->  	case FETCH_OP_ST_STRING:
->  		loc = *(u32 *)dest;
->  		ret = fetch_store_string(val + code->offset, dest, base);
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index f4e37c4f8a21..5bc8c3686f6f 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -140,6 +140,13 @@ probe_mem_read(void *dest, void *src, size_t size)
->  
->  	return copy_from_user(dest, vaddr, size) ? -EFAULT : 0;
->  }
-> +
-> +static nokprobe_inline int
-> +probe_mem_read_user(void *dest, void *src, size_t size)
-> +{
-> +	return probe_mem_read(dest, src, size);
-
-Hmm, if probe_mem_read() is the same as probe_mem_read_user(), perhaps
-not even have a 'u' version for uprobes.
-
--- Steve
-
-
-> +}
-> +
->  /*
->   * Fetch a null-terminated string. Caller MUST set *(u32 *)dest with max
->   * length and relative data location.
+diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+index 66cad5c86171..1c6a912e3975 100644
+--- a/Documentation/filesystems/proc.txt
++++ b/Documentation/filesystems/proc.txt
+@@ -187,6 +187,7 @@ read the file /proc/PID/status:
+   VmLib:      1412 kB
+   VmPTE:        20 kb
+   VmSwap:        0 kB
++  VmTaskSize:	137438953468 kB
+   HugetlbPages:          0 kB
+   CoreDumping:    0
+   THP_enabled:	  1
+@@ -263,6 +264,7 @@ Table 1-2: Contents of the status files (as of 4.19)
+  VmPTE                       size of page table entries
+  VmSwap                      amount of swap used by anonymous private data
+                              (shmem swap usage is not included)
++ VmTaskSize                  lowest unusable address in process virtual memory
+  HugetlbPages                size of hugetlb memory portions
+  CoreDumping                 process's memory is currently being dumped
+                              (killing the process may lead to a corrupted core)
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 95ca1fe7283c..0af7081f7b19 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -74,6 +74,8 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
+ 	seq_put_decimal_ull_width(m,
+ 		    " kB\nVmPTE:\t", mm_pgtables_bytes(mm) >> 10, 8);
+ 	SEQ_PUT_DEC(" kB\nVmSwap:\t", swap);
++	seq_put_decimal_ull_width(m,
++		    " kB\nVmTaskSize:\t", mm->task_size >> 10, 8);
+ 	seq_puts(m, " kB\n");
+ 	hugetlb_report_usage(m, mm);
+ }
+-- 
+2.18.1
 
