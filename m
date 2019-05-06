@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E237FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37822C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B110220B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B48204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153304;
-	bh=PuL3a0B9fgKz9ClSWerIzJ28wEGAGiOI9Ak3uVJSAKA=;
+	s=default; t=1557153308;
+	bh=c8WHNkHhCAP4uPgTZXAo+bwacVqNawGUyMttFTKJmYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dc4l9UJr6TWARin64uMzD/8Pb/Y1Vc1em7JYax+DEMejd5P9dM06vv5q4KQgmETYC
-	 oAIM4xCstnMXdG4hB62gAmhzqGCh52GAygt9FuaddD9ME0h19j1HaWGGhRAi6jTIN8
-	 Yf8Q7VYTYtZ4XZsvExnx2JLK7FFePYSSTPK/Bdkw=
+	b=iN+C3gFgAfyQV6FbQ7pf5GaPQPPd8It5JF5YaK/RrV04FOFbZ3vFX+Z+wBryVbRXc
+	 tpECb6hw91udJKt9lAbuEXoKzmEuNOTdVOmMOneQWakjIO5tQxjqpdVhIEWMArLDn8
+	 isK9O/aehbH5rboC9uP+pS3sfOC/FL9y3s2Hx+TI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfEFOfD (ORCPT
+        id S1726842AbfEFOfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:35:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54876 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:35:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbfEFOe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:34:58 -0400
+        id S1726804AbfEFOfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:35:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECDAC204EC;
-        Mon,  6 May 2019 14:34:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A94B204EC;
+        Mon,  6 May 2019 14:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153298;
-        bh=PuL3a0B9fgKz9ClSWerIzJ28wEGAGiOI9Ak3uVJSAKA=;
+        s=default; t=1557153303;
+        bh=c8WHNkHhCAP4uPgTZXAo+bwacVqNawGUyMttFTKJmYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EjhmIQROwZYP/msLfBM1hz7c53HrJbJDK9JwAspvUCjUqRLOJ2sbzsnP5X7UfbBre
-         13W9KWkBuOqcGpd4yeZxrEOU0TdD0P19xDa+YoUawzl10SgpnZkBrQrNq5M9cZavw0
-         lGYSrtwyQR8QnnSr3lYvZ6wWwJylOoI1pz1l7EaA=
+        b=rhjzXViUarTK+jYWypA0RlebQaErLQxcbH3ledLsuzWUqugjfweAPQbJ3Gei1aiYC
+         NX5V5p+DdYyoruiuUANi3n6gawtvY2xHBMielSuYsHk1IVBy2KmroGoBJmUK6Qhhd5
+         5O+fbqDSLx0Y53IIyE581taL4YSQEGvwDVvAfUc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 037/122] reset: meson-audio-arb: Fix missing .owner setting of reset_controller_dev
-Date:   Mon,  6 May 2019 16:31:35 +0200
-Message-Id: <20190506143058.220264188@linuxfoundation.org>
+Subject: [PATCH 5.0 038/122] ARM: dts: Fix dcan clkctrl clock for am3
+Date:   Mon,  6 May 2019 16:31:36 +0200
+Message-Id: <20190506143058.314174893@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,30 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 13e8a05b922457761ddef39cfff6231bd4ed9eef ]
+[ Upstream commit 7d56bedb2730dc2ea8abf0fd7240ee99ecfee3c9 ]
 
-Set .owner to prevent module unloading while being used.
+We must not use legacy clock defines for dts clckctrl clocks as the offsets
+will be wrong.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Fixes: d903779b58be ("reset: meson: add meson audio arb driver")
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: 87fc89ced3a7 ("ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc")
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/reset/reset-meson-audio-arb.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/am33xx-l4.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/reset/reset-meson-audio-arb.c b/drivers/reset/reset-meson-audio-arb.c
-index 91751617b37a..c53a2185a039 100644
---- a/drivers/reset/reset-meson-audio-arb.c
-+++ b/drivers/reset/reset-meson-audio-arb.c
-@@ -130,6 +130,7 @@ static int meson_audio_arb_probe(struct platform_device *pdev)
- 	arb->rstc.nr_resets = ARRAY_SIZE(axg_audio_arb_reset_bits);
- 	arb->rstc.ops = &meson_audio_arb_rstc_ops;
- 	arb->rstc.of_node = dev->of_node;
-+	arb->rstc.owner = THIS_MODULE;
- 
- 	/*
- 	 * Enable general :
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+index 7b818d9d2eab..8396faa9ac28 100644
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -1763,7 +1763,7 @@
+ 			reg = <0xcc000 0x4>;
+ 			reg-names = "rev";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+-			clocks = <&l4ls_clkctrl AM3_D_CAN0_CLKCTRL 0>;
++			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>;
+ 			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -1786,7 +1786,7 @@
+ 			reg = <0xd0000 0x4>;
+ 			reg-names = "rev";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+-			clocks = <&l4ls_clkctrl AM3_D_CAN1_CLKCTRL 0>;
++			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN1_CLKCTRL 0>;
+ 			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
 -- 
 2.20.1
 
