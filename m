@@ -2,52 +2,51 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9A5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F32C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02A620C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3615720C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153907;
-	bh=JK/v2MkIjQROkV0ZWEqSRpWKOhdaWykh5GI1KeZuzys=;
+	s=default; t=1557153913;
+	bh=CIKD/B1Zm0gtqABATy0oarRntlk7GQ5gB5VoW1963I4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SlrZ0iHJHFroY+vXAXqPoJ6DwxCsZK+YzfJip7h4KQvEVR5GvO3G0Qq/cpxsp12m/
-	 wWoV1FzyCeF4CVNLhfDlVLn2+8U7iJ83YNtkzsL8mv1MzREqnnUHK/5/pwn1QfExhs
-	 nLCTAVZYUip9Vgcyb/Gl5UH3FB4Bt2lC8DBs8KeM=
+	b=F355TIRXNbroRCbmBUeJ1lIsM1jPLJmPRkHW2YdoucGWx2q8vgsSjwzV/KkNklENa
+	 48vjgIlznUUWkqfxo0eg802R0VXxM/2gHcHa1xHYZ+r/YRwl0sdT54YimZt7fAp5kY
+	 +NOLxviDPqjJchYJbBq6Kat7w+3YwdkjKEb3twmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfEFOpH (ORCPT
+        id S1728919AbfEFOpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:45:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41576 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728626AbfEFOpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:45:02 -0400
+        id S1728901AbfEFOpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DD0720449;
-        Mon,  6 May 2019 14:45:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1B032087F;
+        Mon,  6 May 2019 14:45:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153902;
-        bh=JK/v2MkIjQROkV0ZWEqSRpWKOhdaWykh5GI1KeZuzys=;
+        s=default; t=1557153907;
+        bh=CIKD/B1Zm0gtqABATy0oarRntlk7GQ5gB5VoW1963I4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SGrPAsEJAcPtgOd+/YzjHKXWbsQMoJtA/CKT4ms0BnPiYRT4nyQAVwGD5c62GBkJY
-         UJzJ5WxZFggu26vuItCpQzC2PIUE35X4jHzDWKx1OHroGhzgem9jrBesbFg5pN+gMt
-         O8RfoX5HHbDeBph1U/8FqJeT0tasHt6ffAjwieW0=
+        b=UkAI97HGrd9vXolW/DPBhqGzMhOtfFwTiL2zEwuKak1i3WLs71qfoUudSXXRRmMgk
+         DnCWyqMTZNCckNKF1rMJ5ix4Wls7RTp5zzHTmmyFEMh8RZYAAWrz/w5inVpVxS5fbr
+         F0Wkdoi4UQ4/WSNdoOxK5/7DIe+0GqcP6y7k83po=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 38/75] net: stmmac: fix dropping of multi-descriptor RX frames
-Date:   Mon,  6 May 2019 16:32:46 +0200
-Message-Id: <20190506143056.677620529@linuxfoundation.org>
+        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 04/75] ipv6: invert flowlabel sharing check in process and user mode
+Date:   Mon,  6 May 2019 16:32:12 +0200
+Message-Id: <20190506143053.652343919@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -60,42 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ac0c24fe1c256af6644caf3d311029440ec2fbd ]
+From: Willem de Bruijn <willemb@google.com>
 
-Packets without the last descriptor set should be dropped early. If we
-receive a frame larger than the DMA buffer, the HW will continue using the
-next descriptor. Driver mistakes these as individual frames, and sometimes
-a truncated frame (without the LD set) may look like a valid packet.
+[ Upstream commit 95c169251bf734aa555a1e8043e4d88ec97a04ec ]
 
-This fixes a strange issue where the system replies to 4098-byte ping
-although the MTU/DMA buffer size is set to 4096, and yet at the same
-time it's logging an oversized packet.
+A request for a flowlabel fails in process or user exclusive mode must
+fail if the caller pid or uid does not match. Invert the test.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Previously, the test was unsafe wrt PID recycling, but indeed tested
+for inequality: fl1->owner != fl->owner
+
+Fixes: 4f82f45730c68 ("net ip6 flowlabel: Make owner a union of struct pid* and kuid_t")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/enh_desc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/ipv6/ip6_flowlabel.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-index cdfe9a350ac0..f2150efddc88 100644
---- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-@@ -201,6 +201,11 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
- 	if (unlikely(rdes0 & RDES0_OWN))
- 		return dma_own;
+--- a/net/ipv6/ip6_flowlabel.c
++++ b/net/ipv6/ip6_flowlabel.c
+@@ -640,9 +640,9 @@ recheck:
+ 				if (fl1->share == IPV6_FL_S_EXCL ||
+ 				    fl1->share != fl->share ||
+ 				    ((fl1->share == IPV6_FL_S_PROCESS) &&
+-				     (fl1->owner.pid == fl->owner.pid)) ||
++				     (fl1->owner.pid != fl->owner.pid)) ||
+ 				    ((fl1->share == IPV6_FL_S_USER) &&
+-				     uid_eq(fl1->owner.uid, fl->owner.uid)))
++				     !uid_eq(fl1->owner.uid, fl->owner.uid)))
+ 					goto release;
  
-+	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
-+		stats->rx_length_errors++;
-+		return discard_frame;
-+	}
-+
- 	if (unlikely(rdes0 & RDES0_ERROR_SUMMARY)) {
- 		if (unlikely(rdes0 & RDES0_DESCRIPTOR_ERROR)) {
- 			x->rx_desc++;
--- 
-2.20.1
-
+ 				err = -ENOMEM;
 
 
