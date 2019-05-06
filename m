@@ -2,112 +2,121 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35775C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459BEC04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C74820830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557141377;
-	bh=nL/tARHWQcVwZlZmn9EiUMz/HoqHnL6lCC9/1YCxvwY=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=cRrIVTSNZvUbkq3cvb/bghc3zz8/ik0SwaApfsA6VVA3l7fTQUQ9p4LXtaVhZXMUG
-	 dk/85C0CqcYflpHiDRshH38PKDw6BYWsol4cUcJ7HQ2NhHpFztGdQmQGUT1KWcNz5c
-	 pOxYl/FjDqxdUwdO29WK1EEs6Z/8Rdzrjdanu4d4=
+	by mail.kernel.org (Postfix) with ESMTP id 2142420830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:16:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfEFLQQ (ORCPT
+        id S1726519AbfEFLQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 07:16:16 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39438 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726476AbfEFLQO (ORCPT
+        Mon, 6 May 2019 07:16:27 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:44647 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbfEFLQH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 07:16:14 -0400
-Received: by mail-oi1-f193.google.com with SMTP id x16so3337468oic.6;
-        Mon, 06 May 2019 04:16:13 -0700 (PDT)
+        Mon, 6 May 2019 07:16:07 -0400
+Received: by mail-it1-f200.google.com with SMTP id v193so11233161itv.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 04:16:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=cJyYuADfEWn6fMmGuvdFVfwMOt9JIo6FdLSYJFZv93U=;
-        b=sFcXu5DBH4DZIQNKcwlTfi3IXSghmnsyIGfO3p6Cmz5FhlOiDKweetNAF2p0bMLb90
-         MGWpzeEyY2CykmGwZqCqVcRDPSDHtidIj5Dc9HLH2fTjpuXr8/JIF+hcb4Xp2RBh+WH3
-         yzDAvdYwPX+7nTYwjBY8h4rNi1NrwBCrYEHi/7KBjhe+Z68udy0/9JCAAu84CIW25Yg9
-         vSW7UVCnVhDLL5g5TQgGbh20YyViImp/bv7bR9BSPm60DQQaotSOOXNGltxw0157wvVc
-         +FpOICGvQMrpsPKcJeWrYiDYMqFIdI4feZNfoP96Y1tQYaVgYDgdZhw8BedBdOKASiZL
-         Y5ZQ==
-X-Gm-Message-State: APjAAAVY9zBOdHxEcQqsXIUGXeXCN6VEhl+48UzkKZkt6kw0hSy3+tgj
-        FJA7oSOwHphnjeZuze7DSwHze1EiaVWjkOl1zkmwG2rW
-X-Google-Smtp-Source: APXvYqxN3hKZvpklY46oOagbJEr8nc5+hFaglZLO3u+BsKoPOffBozEeNN1VQHV9n7k8AUQewslaSSvkUGEMDkndW48=
-X-Received: by 2002:aca:ba82:: with SMTP id k124mr822524oif.110.1557141373079;
- Mon, 06 May 2019 04:16:13 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=wfo46abTbmuRXvxeTUG8sMq7sgvtISG77eUoUAEQFR8=;
+        b=hvSt/92RHdPaTeBqKumiNtOC2kPK+HnrrSsPxnU8B0dupbk9yTzNHgL8iyltF88PNf
+         hLdsIhMhmgwLNlWAzaW6YDWjsvSun5eU2PfCsdCpg463Sw1Q9WtrwEo3XSDnAJSZoxF1
+         +wW9PhQpDUxP6yzkqbFOkYqkotXHACI23+FIlXHQSspqqDejkXI6bcJapPS270Ohedgk
+         siM5/CBU+WLe9P0EC6XxuJprGn61/4K69tVNFVa+3XbFZdEBIFWn5p66t+zlesM8sv/6
+         X5kTYbTawWxcUfI9Ujaf33f87z/Z1rSn4oDK3ZOlryJY69fFMPgz1FJHjue+HUohLbZR
+         G++g==
+X-Gm-Message-State: APjAAAXZ8FZz9y1LuwtiHuoW5YX+xrDGFeuZnv1yDT2uktLB7NjoNHbR
+        BOEuhqvNerHjdBCjSq9D1BplLxAdy9rkU8uS1j7LgVgH4+6L
+X-Google-Smtp-Source: APXvYqzztlzlI6lMg9dhbdBE2nMsatxOpEwiQJkKfQh2hgdzj0WiGZDn2eO24DJhUe9O8pBYwusHdq0rIw///dxTCUPu68EKeRG3
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 6 May 2019 13:16:02 +0200
-Message-ID: <CAJZ5v0jx12=bmcDaVkgd1=mocwPQ2MwMNHOE6KiTSyS+CdhRyQ@mail.gmail.com>
-Subject: [GIT PULL] Device properties framework updates for v5.2-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a6b:3ac3:: with SMTP id h186mr12861180ioa.63.1557141366572;
+ Mon, 06 May 2019 04:16:06 -0700 (PDT)
+Date:   Mon, 06 May 2019 04:16:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000050c5f0588363ad6@google.com>
+Subject: KASAN: use-after-free Read in p54u_load_firmware_cb
+From:   syzbot <syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, chunkeey@googlemail.com,
+        davem@davemloft.net, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hello,
 
-Please pull from the tag
+syzbot found the following crash on:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- devprop-5.2-rc1
+HEAD commit:    43151d6c usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=142b312ca00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
+dashboard link: https://syzkaller.appspot.com/bug?extid=200d4bb11b23d929335f
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-with top-most commit 23583f7795025e3c783b680d906509366b0906ad
+Unfortunately, I don't have any reproducer for this crash yet.
 
- ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+200d4bb11b23d929335f@syzkaller.appspotmail.com
 
-on top of commit dc4060a5dc2557e6b5aa813bf5b73677299d62d2
+usb 4-1: Direct firmware load for isl3887usb failed with error -2
+usb 4-1: Firmware not found.
+==================================================================
+BUG: KASAN: use-after-free in p54u_load_firmware_cb.cold+0x97/0x13a  
+drivers/net/wireless/intersil/p54/p54usb.c:936
+Read of size 8 at addr ffff888098bf3588 by task kworker/0:1/12
 
- Linux 5.1-rc5
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc3-319004-g43151d6 #6
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events request_firmware_work_func
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  print_address_description+0x6c/0x236 mm/kasan/report.c:187
+  kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
+  p54u_load_firmware_cb.cold+0x97/0x13a  
+drivers/net/wireless/intersil/p54/p54usb.c:936
+  request_firmware_work_func+0x12d/0x249  
+drivers/base/firmware_loader/main.c:785
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
-to receive device properties framework updates for 5.2-rc1.
+The buggy address belongs to the page:
+page:ffffea000262fcc0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0xfff00000000000()
+raw: 00fff00000000000 0000000000000000 ffffffff02620101 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
-These fix the handling of data nodes in the ACPI properties support
-code, add a new helper for endpoint lookup in property graphs and
-restore a comment inadvertently removed by one of previous changes.
-
-Specifics:
-
- - Fix the handling of data nodes in the ACPI properties support
-   code for devices with child devices and hierarchical _DSD
-   properties (Pierre-Louis Bossart).
-
- - Add fwnode_graph_get_endpoint_by_id() helper for endpoint lookup
-   in device property graphs (Sakari Ailus).
-
- - Restore the _DSD data subnodes GUID comment inadvertently removed
-   by one of previous changes (Shunyong Yang).
-
-Thanks!
+Memory state around the buggy address:
+  ffff888098bf3480: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+  ffff888098bf3500: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> ffff888098bf3580: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                       ^
+  ffff888098bf3600: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+  ffff888098bf3680: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
 
 
----------------
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Pierre-Louis Bossart (1):
-      ACPI / property: fix handling of data_nodes in acpi_get_next_subnode()
-
-Sakari Ailus (1):
-      device property: Add fwnode_graph_get_endpoint_by_id()
-
-Shunyong Yang (1):
-      ACPI: property: restore _DSD data subnodes GUID comment
-
----------------
-
- drivers/acpi/property.c  |  9 ++++++
- drivers/base/property.c  | 75 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/property.h | 18 ++++++++++++
- 3 files changed, 102 insertions(+)
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
