@@ -2,364 +2,162 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B792FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DF2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744992087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557141301;
-	bh=lqZ7/guTpo9niSFmM+E7Y9U0p4IPlQiDAZQzZqzNGEQ=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=xSt/CjLdXcmL5JdwjLBXAGJcbuLi09xhTKPgv0acFYx1N9AVIVzWJozq0yfynN6Iv
-	 Ea+G6fG7njVoIlH0Uv6E7Ed6Ti/hDUETZ1bRXsrmNZLLSIl4mI7FOaeHBSYYJJ2wpd
-	 PDtnUhT13YFeDArJUnKv6N5dbKHNWjV7Bw+koyZU=
+	by mail.kernel.org (Postfix) with ESMTP id 5B93820830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 11:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O4ELULrF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbfEFLPA (ORCPT
+        id S1726406AbfEFLQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 07:15:00 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45699 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfEFLO7 (ORCPT
+        Mon, 6 May 2019 07:16:05 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35404 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfEFLQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 07:14:59 -0400
-Received: by mail-oi1-f194.google.com with SMTP id u3so3417241oic.12;
-        Mon, 06 May 2019 04:14:59 -0700 (PDT)
+        Mon, 6 May 2019 07:16:05 -0400
+Received: by mail-io1-f67.google.com with SMTP id r18so10777591ioh.2;
+        Mon, 06 May 2019 04:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:newsgroups:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ll4tLtKAz5QfqQNpJ8SOOQ8DBmPbzjjbapAWPj5NxaA=;
+        b=O4ELULrFzjuXLVhmIJ0iWCRsqi2vpscptwlzxT8ncscRH0fiSg4ocaplwaW1Vq4DS8
+         8kknL+jkrRMKRGTlD20UwPPQ5wztsRxHlwnHaSfWjIR8Cz1tEneerB6MPBIm1mSY0f/W
+         bDswQ3/9zD164+sFqKRjjLNnLN2ThRE9FZCBJ3aIWN7hldnjnZPR4wFdsthmnJDzbU+q
+         VMDf3ulbbylpVBo4K92BKLw6cUEzFrDLDXop3FhLQw/gaxwMT+oSlR2zeHlixCM2ocDf
+         HjgkAVh+moZ67ZDzd43pQn0uFNSkzJnm2oMW1Hm76w1L5MrkS2AATYLINtXX/ggJfak+
+         6fsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=P4lMC6F6Cd1C6DhKl3ZTLOi8RjpWWmMw6rskcPZvVpQ=;
-        b=B57cgPKiwaYoyyzoGReAZY1mT385rn2UWlXBA7bc6X3CNJQl9ycVCHfHLEzyW8g5Vf
-         Cnek07rGLuZDCejLj4K/NtMJEUORrF7FDFKjyAhJP1TpTRMVsqZKg4+EPkASSgRknjkU
-         TpqEkEp4XG5QWh54AoeCTn74MFJt2hWpAmMkKuKBxt/RtvxTHIc9zTsyehroOJghuG91
-         S9Z2uloa/Rc46lMLGEKKiB3Y3vfSOMg2kNXUFA1QSNtmNGTWWXpzuGgWiwGF5L9F9Nfy
-         BNNE2f8dokaTmHNmYMKVn/JBmVT9qkYBk4Rm0J0kCLDUtBuVeKbqxs9h8lMWWfHeNXGt
-         271w==
-X-Gm-Message-State: APjAAAXPWlcNcGEc0kSvOk73SqZMI8+TE1AyZXV1kqGqeh5UUYY3jycL
-        WarZn0Bj6gJ7cEavQD4NWJ2KFiCUD8uxPMlKBCf9l/V9
-X-Google-Smtp-Source: APXvYqxLepGrUB5lAjii9pFqGZyAmhpaKIrfdBtHvxun0MvSjmYii97gi8CxJL8Bi1qYYBAGsOaPriqQaBM9k7eoH8Q=
-X-Received: by 2002:aca:f444:: with SMTP id s65mr717242oih.115.1557141298595;
- Mon, 06 May 2019 04:14:58 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:newsgroups:references
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Ll4tLtKAz5QfqQNpJ8SOOQ8DBmPbzjjbapAWPj5NxaA=;
+        b=hRI6RLupc1T0jH5tC+8Zt1Q8xI2PQHt1Ii6mxU/GfXyBkSa6wU4mW2PnwC/DEcioTp
+         rcA8xHABC/QVhzqpCFDBP8fhFBeeuka1yAwvyIKBbRQ+1YlcuMxOuK2EU4XaVRfMJUxA
+         P+Ih/xG5ym3FvSYgurRHDo9/iQFvjjcuibkFmfdMBMjKBdZ5e6ApuURDVqAc4zna7ciM
+         kI9sExpSC4PqPClx0JwtSYwX2l3NbQrLDYI06zqCpw1qTdnQ6XsvsXqnc/XW+XvUWy1O
+         /THIDxwnDJzpSSpnKFG3M/2QKRc0ji8pv7SQopfx1IzwqIGULODmp1Is5R6t/Hn8B0NX
+         iK5g==
+X-Gm-Message-State: APjAAAWgKRDFYCUD1FDwmFUknUpP97Xsm5OPtvM2rRxmwUaQnDLaODcG
+        LRSnpvGPtdst3jCtkhQz058MhUkN
+X-Google-Smtp-Source: APXvYqzaAZaaReBRZqOTq7QjKFbI3hBW0J8EDh/qu8rPIMmtrAExjTwBy18jZSWfdty949f+TWigcA==
+X-Received: by 2002:a5e:d503:: with SMTP id e3mr17129537iom.46.1557141363901;
+        Mon, 06 May 2019 04:16:03 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.googlemail.com with ESMTPSA id 12sm8361952itm.2.2019.05.06.04.16.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2019 04:16:03 -0700 (PDT)
+Subject: Re: [PATCH v1 3/3] drm/tegra: Support PM QoS memory bandwidth
+ management
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Newsgroups: gmane.linux.kernel,gmane.comp.video.dri.devel,gmane.linux.ports.tegra
+References: <20190505173707.29282-1-digetx@gmail.com>
+ <20190505173707.29282-4-digetx@gmail.com>
+Message-ID: <e1dc16d2-db9e-6869-81dc-8ffe5d5fd6fe@gmail.com>
+Date:   Mon, 6 May 2019 14:15:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 6 May 2019 13:14:47 +0200
-Message-ID: <CAJZ5v0ge6JhqYEAiFY9cVF5rMW1u_VgC1Cgi=XQOVt4kw0oKTw@mail.gmail.com>
-Subject: [GIT PULL] Power management updates for v5.2-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190505173707.29282-4-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+05.05.2019 20:37, Dmitry Osipenko пишет:
+> Display controller (DC) performs isochronous memory transfers and thus
+> has a requirement for a minimum memory bandwidth that shall be fulfilled,
+> otherwise framebuffer data can't be fetched fast enough and this results
+> in a DC's data-FIFO underflow that follows by a visual corruption.
+> 
+> The External Memory Controller drivers will provide memory bandwidth
+> management facility via the generic Power Management QoS API soonish.
+> This patch wires up the PM QoS API support for the display driver
+> beforehand.
+> 
+> Display won't have visual corruption on coming up from suspend state when
+> devfreq driver is active once all prerequisite bits will get upstreamed.
+> The devfreq reaction has a quite significant latency and it also doesn't
+> take into account the ISO transfers which may result in assumption about
+> lower memory bandwidth requirement than actually needed.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/gpu/drm/tegra/dc.c    | 216 +++++++++++++++++++++++++++++++++-
+>  drivers/gpu/drm/tegra/dc.h    |   8 ++
+>  drivers/gpu/drm/tegra/drm.c   |  18 +++
+>  drivers/gpu/drm/tegra/plane.c |   1 +
+>  drivers/gpu/drm/tegra/plane.h |   4 +-
+>  5 files changed, 245 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
+> index 41cb67db6dbc..8c5b9e71ca6f 100644
+> --- a/drivers/gpu/drm/tegra/dc.c
+> +++ b/drivers/gpu/drm/tegra/dc.c
+> @@ -514,6 +514,107 @@ static void tegra_dc_setup_window(struct tegra_plane *plane,
+>  		tegra_plane_setup_blending(plane, window);
+>  }
+>  
+> +static unsigned long
+> +tegra_plane_memory_bandwidth(struct drm_plane_state *state,
+> +			     struct tegra_dc_window *window)
+> +{
+> +	struct tegra_plane_state *tegra_state;
+> +	struct drm_crtc_state *crtc_state;
+> +	struct tegra_dc_window win;
+> +	unsigned int mul;
+> +	unsigned int bpp;
+> +	bool planar;
+> +	bool yuv;
+> +
+> +	if (!state->fb || !state->visible)
+> +		return 0;
+> +
+> +	crtc_state = drm_atomic_get_new_crtc_state(state->state, state->crtc);
+> +	tegra_state = to_tegra_plane_state(state);
+> +
+> +	if (!window)
+> +		window = &win;
+> +
+> +	window->src.w = drm_rect_width(&state->src) >> 16;
+> +	window->src.h = drm_rect_height(&state->src) >> 16;
+> +	window->dst.w = drm_rect_width(&state->dst);
+> +	window->dst.h = drm_rect_height(&state->dst);
+> +	window->format = tegra_state->format;
+> +	window->tiling = tegra_state->tiling;
+> +
+> +	yuv = tegra_plane_format_is_yuv(window->format, &planar);
+> +	if (!yuv || !planar)
+> +		bpp = state->fb->format->cpp[0] * 8;
+> +	else
+> +		bpp = 16;
 
-Please pull from the tag
+It occurred to me that it will be much better to use the drm_format_*
+helpers here to calculate the bits-per-pixel because the above variant
+isn't really good for all of possible formats. I'll switch to the
+generic helpers in v2.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.2-rc1
+Thierry, for now I'll wait for awhile for yours comments. Please let me
+know if you'll want to see anything else changed in v2. I think there is
+a good chance that we could get everything ready in regards to memory
+bandwidth management basics for v5.3, please help with reviewing and
+getting the patches upstreamed.
 
-with top-most commit e07095c9bbcd296401bec8b6852d258d7c926969
-
- Merge branches 'pm-devfreq' and 'pm-domains'
-
-on top of commit 37624b58542fb9f2d9a70e6ea006ef8a5f66c30b
-
- Linux 5.1-rc7
-
-to receive power management updates for 5.2-rc1.
-
-These fix the (Intel-specific) Performance and Energy Bias Hint (EPB)
-handling and expose it to user space via sysfs, fix and clean up
-several cpufreq drivers, add support for two new chips to the qoriq
-cpufreq driver, fix, simplify and clean up the cpufreq core and the
-schedutil governor, add support for "CPU" domains to the generic
-power domains (genpd) framework and provide low-level PSCI firmware
-support for that feature, fix the exynos cpuidle driver and fix a
-couple of issues in the devfreq subsystem and clean it up.
-
-Specifics:
-
- - Fix the handling of Performance and Energy Bias Hint (EPB) on
-   Intel processors and expose it to user space via sysfs to avoid
-   having to access it through the generic MSR I/F (Rafael Wysocki).
-
- - Improve the handling of global turbo changes made by the platform
-   firmware in the intel_pstate driver (Rafael Wysocki).
-
- - Convert some slow-path static_cpu_has() callers to boot_cpu_has()
-   in cpufreq (Borislav Petkov).
-
- - Fix the frequency calculation loop in the armada-37xx cpufreq
-   driver (Gregory CLEMENT).
-
- - Fix possible object reference leaks in multuple cpufreq drivers
-   (Wen Yang).
-
- - Fix kerneldoc comment in the centrino cpufreq driver (dongjian).
-
- - Clean up the ACPI and maple cpufreq drivers (Viresh Kumar, Mohan
-   Kumar).
-
- - Add support for lx2160a and ls1028a to the qoriq cpufreq driver
-   (Vabhav Sharma, Yuantian Tang).
-
- - Fix kobject memory leak in the cpufreq core (Viresh Kumar).
-
- - Simplify the IOwait boosting in the schedutil cpufreq governor
-   and rework the TSC cpufreq notifier on x86 (Rafael Wysocki).
-
- - Clean up the cpufreq core and statistics code (Yue Hu, Kyle Lin).
-
- - Improve the cpufreq documentation, add SPDX license tags to
-   some PM documentation files and unify copyright notices in
-   them (Rafael Wysocki).
-
- - Add support for "CPU" domains to the generic power domains (genpd)
-   framework and provide low-level PSCI firmware support for that
-   feature (Ulf Hansson).
-
- - Rearrange the PSCI firmware support code and add support for
-   SYSTEM_RESET2 to it (Ulf Hansson, Sudeep Holla).
-
- - Improve genpd support for devices in multiple power domains (Ulf
-   Hansson).
-
- - Unify target residency for the AFTR and coupled AFTR states in the
-   exynos cpuidle driver (Marek Szyprowski).
-
- - Introduce new helper routine in the operating performance points
-   (OPP) framework (Andrew-sh.Cheng).
-
- - Add support for passing on-die termination (ODT) and auto power
-   down parameters from the kernel to Trusted Firmware-A (TF-A) to
-   the rk3399_dmc devfreq driver (Enric Balletbo i Serra).
-
- - Add tracing to devfreq (Lukasz Luba).
-
- - Make the exynos-bus devfreq driver suspend all devices on system
-   shutdown (Marek Szyprowski).
-
- - Fix a few minor issues in the devfreq subsystem and clean it up
-   somewhat (Enric Balletbo i Serra, MyungJoo Ham, Rob Herring,
-   Saravana Kannan, Yangtao Li).
-
- - Improve system wakeup diagnostics (Stephen Boyd).
-
- - Rework filesystem sync messages emitted during system suspend and
-   hibernation (Harry Pan).
-
-Thanks!
-
-
----------------
-
-Andrew-sh.Cheng (1):
-      OPP: Introduce dev_pm_opp_find_freq_ceil_by_volt()
-
-Borislav Petkov (1):
-      drivers/cpufreq: Convert some slow-path static_cpu_has() callers
-to boot_cpu_has()
-
-Enric Balletbo i Serra (3):
-      PM / devfreq: Fix static checker warning in try_then_request_governor
-      PM / devfreq: rockchip-dfi: Move GRF definitions to a common place.
-      PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.
-
-Gregory CLEMENT (1):
-      cpufreq: armada-37xx: fix frequency calculation for opp
-
-Harry Pan (2):
-      PM / sleep: Refactor filesystems sync to reduce duplication
-      PM / sleep: Measure the time of filesystems syncing
-
-Kyle Lin (1):
-      cpufreq: stats: Use lock by stat to replace global spin lock
-
-Lukasz Luba (2):
-      trace: events: add devfreq trace event file
-      PM / devfreq: add tracing for scheduling work
-
-Marek Szyprowski (2):
-      cpuidle: exynos: Unify target residency for AFTR and coupled AFTR states
-      PM / devfreq: exynos-bus: Suspend all devices on system shutdown
-
-Mohan Kumar (1):
-      drivers/cpufreq/acpi-cpufreq.c: This fixes the following
-checkpatch warning
-
-MyungJoo Ham (1):
-      PM / devfreq: consistent indentation
-
-Rafael J. Wysocki (11):
-      cpufreq: intel_pstate: Driver-specific handling of _PPC updates
-      cpufreq: Add cpufreq_cpu_acquire() and cpufreq_cpu_release()
-      PM / arch: x86: Rework the MSR_IA32_ENERGY_PERF_BIAS handling
-      PM / arch: x86: MSR_IA32_ENERGY_PERF_BIAS sysfs interface
-      cpufreq: schedutil: Simplify iowait boosting
-      cpufreq: intel_pstate: Update max frequency on global turbo changes
-      cpufreq: intel_pstate: Documentation: Add references sections
-      Documentation: PM: Add SPDX license tags to multiple files
-      Documentation: PM: Unify copyright notices
-      admin-guide: pm: intel_epb: Add SPDX license tag and copyright notice
-      x86: tsc: Rework time_cpufreq_notifier()
-
-Rob Herring (1):
-      PM / devfreq: Use of_node_name_eq for node name comparisons
-
-Saravana Kannan (1):
-      PM / devfreq: Restart previous governor if new governor fails to start
-
-Stephen Boyd (1):
-      PM / wakeup: Use pm_pr_dbg() instead of pr_debug()
-
-Sudeep Holla (1):
-      firmware/psci: add support for SYSTEM_RESET2
-
-Ulf Hansson (17):
-      PM / Domains: Add generic data pointer to struct genpd_power_state
-      PM / Domains: Add support for CPU devices to genpd
-      cpuidle: Export the next timer expiration for CPUs
-      PM / Domains: Add genpd governor for CPUs
-      drivers: firmware: psci: Move psci to separate directory
-      MAINTAINERS: Update files for PSCI
-      drivers: firmware: psci: Split psci_dt_cpu_init_idle()
-      drivers: firmware: psci: Simplify error path of psci_dt_init()
-      drivers: firmware: psci: Announce support for OS initiated suspend mode
-      PM / core: Propagate dev->power.wakeup_path when no callbacks
-      PM / Domains: Don't kfree() the virtual device in the error path
-      PM / Domains: Allow OF lookup for multi PM domain case from ->attach_dev()
-      PM / Domains: Enable genpd_dev_pm_attach_by_id|name() for single PM domain
-      PM / Domains: Use the base device for driver_deferred_probe_check_state()
-      PM / Domains: Drop unused in-parameter to some genpd functions
-      PM / Domains: Search for the CPU device outside the genpd lock
-      PM / Domains: Allow to attach a CPU via genpd_dev_pm_attach_by_id|name()
-
-Vabhav Sharma (1):
-      cpufreq: qoriq: add support for lx2160a
-
-Viresh Kumar (2):
-      cpufreq: maple: Remove redundant code from maple_cpufreq_init()
-      cpufreq: Fix kobject memleak
-
-Wen Yang (7):
-      cpufreq: ap806: fix possible object reference leak
-      cpufreq: imx6q: fix possible object reference leak
-      cpufreq: kirkwood: fix possible object reference leak
-      cpufreq: maple: fix possible object reference leak
-      cpufreq/pasemi: fix possible object reference leak
-      cpufreq: pmac32: fix possible object reference leak
-      cpufreq: ppc_cbe: fix possible object reference leak
-
-Yangtao Li (9):
-      PM / core: fix kerneldoc comment for dpm_watchdog_handler()
-      PM / core: fix kerneldoc comment for device_pm_wait_for_dev()
-      PM / core: Introduce dpm_async_fn() helper
-      PM / devfreq: fix mem leak in devfreq_add_device()
-      PM / devfreq: fix missing check of return value in devfreq_add_device()
-      PM / devfreq: rk3399_dmc: remove unneeded semicolon
-      PM / devfreq: rockchip-dfi: remove unneeded semicolon
-      PM / devfreq: tegra: remove unneeded variable
-      PM / Domains: remove unnecessary unlikely()
-
-Yuantian Tang (1):
-      cpufreq: qoriq: Add ls1028a chip support
-
-Yue Hu (4):
-      cpufreq: Remove cpufreq_driver check in cpufreq_boost_supported()
-      cpufreq: boost: Remove CONFIG_CPU_FREQ_BOOST_SW Kconfig option
-      cpufreq: Remove needless bios_limit check in show_bios_limit()
-      cpufreq: Move ->get callback check outside of __cpufreq_get()
-
-dongjian (1):
-      cpufreq: centrino: Fix centrino_setpolicy() kerneldoc comment
-
----------------
-
- Documentation/ABI/testing/sysfs-devices-system-cpu |  18 ++
- Documentation/admin-guide/pm/cpufreq.rst           |  18 +-
- Documentation/admin-guide/pm/cpuidle.rst           |   8 +-
- Documentation/admin-guide/pm/index.rst             |   2 +
- Documentation/admin-guide/pm/intel_epb.rst         |  41 ++++
- Documentation/admin-guide/pm/intel_pstate.rst      |  32 +--
- Documentation/admin-guide/pm/sleep-states.rst      |   8 +-
- Documentation/admin-guide/pm/strategies.rst        |   8 +-
- Documentation/admin-guide/pm/system-wide.rst       |   2 +
- Documentation/admin-guide/pm/working-state.rst     |   3 +
- Documentation/driver-api/pm/cpuidle.rst            |   7 +-
- Documentation/driver-api/pm/devices.rst            |  12 +-
- Documentation/driver-api/pm/index.rst              |   2 +
- Documentation/driver-api/pm/notifiers.rst          |   8 +-
- Documentation/driver-api/pm/types.rst              |   2 +
- MAINTAINERS                                        |   3 +-
- arch/x86/kernel/cpu/Makefile                       |   2 +-
- arch/x86/kernel/cpu/common.c                       |  17 --
- arch/x86/kernel/cpu/cpu.h                          |   1 -
- arch/x86/kernel/cpu/intel.c                        |  34 ----
- arch/x86/kernel/cpu/intel_epb.c                    | 216 +++++++++++++++++++++
- arch/x86/kernel/tsc.c                              |  29 ++-
- drivers/acpi/processor_perflib.c                   |   2 +-
- drivers/base/power/domain.c                        | 118 ++++++++---
- drivers/base/power/domain_governor.c               |  67 ++++++-
- drivers/base/power/main.c                          |  70 +++----
- drivers/base/power/wakeup.c                        |   6 +-
- drivers/cpufreq/Kconfig                            |   4 -
- drivers/cpufreq/acpi-cpufreq.c                     |  19 +-
- drivers/cpufreq/amd_freq_sensitivity.c             |   2 +-
- drivers/cpufreq/armada-37xx-cpufreq.c              |  22 ++-
- drivers/cpufreq/armada-8k-cpufreq.c                |   1 +
- drivers/cpufreq/cpufreq.c                          | 100 +++++++---
- drivers/cpufreq/cpufreq_governor.c                 |   2 +
- drivers/cpufreq/cpufreq_stats.c                    |  15 +-
- drivers/cpufreq/freq_table.c                       |   3 -
- drivers/cpufreq/imx6q-cpufreq.c                    |   4 +-
- drivers/cpufreq/intel_pstate.c                     |  65 ++++++-
- drivers/cpufreq/kirkwood-cpufreq.c                 |  19 +-
- drivers/cpufreq/maple-cpufreq.c                    |   6 +-
- drivers/cpufreq/pasemi-cpufreq.c                   |   1 +
- drivers/cpufreq/pmac32-cpufreq.c                   |   2 +
- drivers/cpufreq/powernow-k8.c                      |   2 +-
- drivers/cpufreq/ppc_cbe_cpufreq.c                  |   1 +
- drivers/cpufreq/qoriq-cpufreq.c                    |   2 +
- drivers/cpufreq/speedstep-centrino.c               |   2 +-
- drivers/cpuidle/cpuidle-exynos.c                   |   2 +-
- drivers/cpuidle/cpuidle.c                          |  19 +-
- drivers/devfreq/devfreq-event.c                    |   2 +-
- drivers/devfreq/devfreq.c                          |  90 ++++++---
- drivers/devfreq/event/exynos-ppmu.c                |   2 +-
- drivers/devfreq/event/rockchip-dfi.c               |  25 +--
- drivers/devfreq/exynos-bus.c                       |   8 +
- drivers/devfreq/rk3399_dmc.c                       |  73 ++++++-
- drivers/devfreq/tegra-devfreq.c                    |   7 +-
- drivers/firmware/Kconfig                           |  15 +-
- drivers/firmware/Makefile                          |   3 +-
- drivers/firmware/psci/Kconfig                      |  13 ++
- drivers/firmware/psci/Makefile                     |   4 +
- drivers/firmware/{ => psci}/psci.c                 | 110 +++++++----
- drivers/firmware/{ => psci}/psci_checker.c         |   0
- drivers/opp/core.c                                 |  54 ++++++
- include/linux/cpufreq.h                            |  14 ++
- include/linux/cpuhotplug.h                         |   1 +
- include/linux/cpuidle.h                            |   1 +
- include/linux/pm_domain.h                          |  22 ++-
- include/linux/pm_opp.h                             |   8 +
- include/linux/suspend.h                            |   3 +
- include/linux/tick.h                               |   7 +-
- include/soc/rockchip/rk3399_grf.h                  |  21 ++
- include/soc/rockchip/rockchip_sip.h                |   1 +
- include/trace/events/devfreq.h                     |  40 ++++
- include/uapi/linux/psci.h                          |   7 +
- kernel/power/hibernate.c                           |   5 +-
- kernel/power/main.c                                |  14 ++
- kernel/power/suspend.c                             |  13 +-
- kernel/power/user.c                                |   5 +-
- kernel/sched/cpufreq_schedutil.c                   |  21 +-
- kernel/time/tick-sched.c                           |  12 ++
- 79 files changed, 1240 insertions(+), 390 deletions(-)
+-- 
+Dmitry
