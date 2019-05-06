@@ -2,48 +2,45 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182F8C46470
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD55C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42BF205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7288E205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfEFPg0 (ORCPT
+        id S1726801AbfEFPhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:36:26 -0400
-Received: from relay.sw.ru ([185.231.240.75]:36242 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbfEFPgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:36:25 -0400
-Received: from [172.16.25.12]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1hNff9-0004Zp-Q9; Mon, 06 May 2019 18:36:19 +0300
-Subject: Re: [PATCH 4.9 09/62] kasan: turn on
- -fsanitize-address-use-after-scope
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20190506143051.102535767@linuxfoundation.org>
- <20190506143051.888762392@linuxfoundation.org>
- <6636d7cf-03fe-e253-f981-e07d75858b33@virtuozzo.com>
- <20190506151026.GA12193@kroah.com>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <e3ea0e86-581e-a0e4-ea3a-c7a9322143b8@virtuozzo.com>
-Date:   Mon, 6 May 2019 18:36:45 +0300
+        Mon, 6 May 2019 11:37:45 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54566 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfEFPho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 11:37:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7C34374;
+        Mon,  6 May 2019 08:37:43 -0700 (PDT)
+Received: from [10.37.12.89] (unknown [10.37.12.89])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DE983F575;
+        Mon,  6 May 2019 08:37:41 -0700 (PDT)
+Subject: Re: [PATCH V2] ARM: mach-shmobile: Don't init CNTVOFF if PSCI is
+ available
+To:     Oleksandr Tyshchenko <olekstysh@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     horms@verge.net.au, magnus.damm@gmail.com, linux@armlinux.org.uk,
+        biju.das@bp.renesas.com,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+References: <1556882268-27451-1-git-send-email-olekstysh@gmail.com>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <b52a7c3f-6e10-b45e-4cb9-859ac4b468a8@arm.com>
+Date:   Mon, 6 May 2019 16:37:40 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190506151026.GA12193@kroah.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1556882268-27451-1-git-send-email-olekstysh@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,63 +48,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Oleksandr,
 
-
-On 5/6/19 6:10 PM, Greg Kroah-Hartman wrote:
-> On Mon, May 06, 2019 at 05:55:54PM +0300, Andrey Ryabinin wrote:
->>
->>
->> On 5/6/19 5:32 PM, Greg Kroah-Hartman wrote:
->>> From: Andrey Ryabinin <aryabinin@virtuozzo.com>
->>>
->>> commit c5caf21ab0cf884ef15b25af234f620e4a233139 upstream.
->>>
->>> In the upcoming gcc7 release, the -fsanitize=kernel-address option at
->>> first implied new -fsanitize-address-use-after-scope option.  This would
->>> cause link errors on older kernels because they don't have two new
->>> functions required for use-after-scope support.  Therefore, gcc7 changed
->>> default to -fno-sanitize-address-use-after-scope.
->>>
->>> Now the kernel has everything required for that feature since commit
->>> 828347f8f9a5 ("kasan: support use-after-scope detection").  So, to make it
->>> work, we just have to enable use-after-scope in CFLAGS.
->>>
->>> Link: http://lkml.kernel.org/r/1481207977-28654-1-git-send-email-aryabinin@virtuozzo.com
->>> Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
->>> Acked-by: Dmitry Vyukov <dvyukov@google.com>
->>> Cc: Alexander Potapenko <glider@google.com>
->>> Cc: Andrey Konovalov <andreyknvl@google.com>
->>> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
->>> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
->>> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
->>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>
->>> ---
->>>  scripts/Makefile.kasan |    2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> --- a/scripts/Makefile.kasan
->>> +++ b/scripts/Makefile.kasan
->>> @@ -29,6 +29,8 @@ else
->>>      endif
->>>  endif
->>>  
->>> +CFLAGS_KASAN += $(call cc-option, -fsanitize-address-use-after-scope)
->>> +
->>>  CFLAGS_KASAN_NOSANITIZE := -fno-builtin
->>>  
->>>  endif
->>>
->>>
->>
->> This shouldn't be in the -stable.
+On 5/3/19 12:17 PM, Oleksandr Tyshchenko wrote:
+> From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 > 
-> Why not?  Does no one use gcc7 with this kernel and kasan?
+> If PSCI is available then most likely we are running on PSCI-enabled
+> U-Boot which, we assume, has already taken care of resetting CNTVOFF
+> before switching to non-secure mode and we don't need to.
 > 
+> Also, don't init CNTVOFF if we are running on top of Xen hypervisor,
+> as CNTVOFF is controlled by hypervisor itself and shouldn't be touched
+> by Dom0 in such case.
+> 
+> Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+> CC: Julien Grall <julien.grall@arm.com>
+> 
+> ---
+>     You can find previous discussion here:
+>     https://lkml.org/lkml/2019/4/17/810
+> 
+>     Changes in v2:
+>        - Clarify patch subject/description
+>        - Don't use CONFIG_ARM_PSCI option, check whether the PSCI is available,
+>          by using psci_smp_available()
+>        - Check whether we are running on top of Xen, by using xen_domain()
+> ---
+>   arch/arm/mach-shmobile/setup-rcar-gen2.c | 13 ++++++++++++-
+>   1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+> index eea60b2..bc8537b 100644
+> --- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
+> +++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+> @@ -17,7 +17,9 @@
+>   #include <linux/of.h>
+>   #include <linux/of_fdt.h>
+>   #include <linux/of_platform.h>
+> +#include <xen/xen.h>
+>   #include <asm/mach/arch.h>
+> +#include <asm/psci.h>
+>   #include <asm/secure_cntvoff.h>
+>   #include "common.h"
+>   #include "rcar-gen2.h"
+> @@ -63,7 +65,16 @@ void __init rcar_gen2_timer_init(void)
+>   	void __iomem *base;
+>   	u32 freq;
+>   
+> -	secure_cntvoff_init();
+> +	/*
+> +	 * If PSCI is available then most likely we are running on PSCI-enabled
+> +	 * U-Boot which, we assume, has already taken care of resetting CNTVOFF
+> +	 * before switching to non-secure mode and we don't need to.
+> +	 * Another check is to be sure that we are not running on top of Xen
+> +	 * hypervisor, as CNTVOFF is controlled by hypervisor itself and
+> +	 * shouldn't be touched by Dom0 in such case.
 
-You don't need this patch to use kasan on this kernel with gcc7.
-This patch only enables detection of use-after-scope bugs. This feature appeared to be useless,
-hence it disabled recently by commit 7771bdbbfd3d ("kasan: remove use after scope bugs detection.")
+If you are running on top of Xen, then PSCI will be available. So is 
+there any real value to check the presence of Xen as well?
 
-The link errors mentioned in changelog was the problem only for some period of time in the development branch of GCC 7.
-The released GCC7 version doesn't have this problem.
+Cheers,
+
+-- 
+Julien Grall
