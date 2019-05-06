@@ -2,90 +2,128 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D48C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9841C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA38206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9212A206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:45:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6fz1yi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfEFUpO convert rfc822-to-8bit (ORCPT
+        id S1726621AbfEFUpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 16:45:14 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:35268 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfEFUpN (ORCPT
+        Mon, 6 May 2019 16:45:35 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34901 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbfEFUpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 16:45:13 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 7FAFB608A381;
-        Mon,  6 May 2019 22:45:11 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id EhAWvIAbFOvO; Mon,  6 May 2019 22:45:11 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 1A54D6083257;
-        Mon,  6 May 2019 22:45:11 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id TLHLxcvIUYPR; Mon,  6 May 2019 22:45:11 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id D52836083241;
-        Mon,  6 May 2019 22:45:10 +0200 (CEST)
-Date:   Mon, 6 May 2019 22:45:10 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Message-ID: <1062675236.47533.1557175510785.JavaMail.zimbra@nod.at>
-In-Reply-To: <20190507064008.1ecba58b@canb.auug.org.au>
-References: <20190507064008.1ecba58b@canb.auug.org.au>
-Subject: Re: linux-next: Fixes tags need some work in the mtd tree
+        Mon, 6 May 2019 16:45:35 -0400
+Received: by mail-ed1-f65.google.com with SMTP id p26so16664336edr.2;
+        Mon, 06 May 2019 13:45:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T0nHJ9khqFzYd9X1bGFM55dYV8Drkoa/Hw+bI+N/V5w=;
+        b=h6fz1yi/MJ5wJovCykD/1iOQnsTzXFfSRsjxb68Du13HmdUx3xKMKgJtVe/+XSJoHF
+         JAPoIOwErthkTls1yy1gJM62S7msSsh8wqreyrL3F/qaIlxiqnF5zAc/7qAPdOkFllgz
+         f+zemVeyHOmlcsDIBYHemNcI5r5LE7WuqO36f6bZjNKS5ngXnBKdtbOocyWItTjQrVHP
+         vi/tS53Mk1GooAkaogUjCsj3zLBuYk8emn/aBYMPntnQjnt9Wx77VQdl1nldkkhtZw0N
+         Cky7AW8QiFmFp5TiRC2pGb/l1O8yWlJq606fi1hSGFH8SkwzKu8Oz+k9fOsTWOptaPJT
+         YJ6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T0nHJ9khqFzYd9X1bGFM55dYV8Drkoa/Hw+bI+N/V5w=;
+        b=VKGpnYvb1CZG5HCxw57ru4oJmehhtF7kWbV6q/2TCsZTGZVYT2mOPKmR+YX8sIY5dR
+         Mx7DfDL//ZJN1pDoCPx6wzhzQVfgmit7xfABmRXCiQFXud9qwfcM/zx9kpNWvWRIG18j
+         Zd0zB8DELi3TreYQEAw+d92v6+jL5uzzGPHsnY190N2QAA2h7DPNyG5F+me3H9wZeWL+
+         mDknadqEsolvuG7nFSdl71MuDS2n87ttWEnxT+7afPSnKf5YjJbPh1xJAKrW7qwnVnnx
+         krHvA0lsQOXEl7twiryApn89zXzG/xXDCEn4cTFN47gKXQP/3lQflwYdNV9O8pfNkOR5
+         ebug==
+X-Gm-Message-State: APjAAAVVZVa/1UZ2t6GWNirsD8yxZvnPQE3xUw8TGwbfY6uivn+Bkkfn
+        7ejgTaufJYurW1BAK0zbnjP6pvmx+EnzRrQ3FRc=
+X-Google-Smtp-Source: APXvYqxafPtBl+3HWXW7hDxqDmr1hvHRlVnDeusFECLnBRyfxCF8K4AAyn/TXq04Gah1Ed9de0ZGLae9A+61+M2/iJg=
+X-Received: by 2002:a50:9177:: with SMTP id f52mr28874627eda.18.1557175533006;
+ Mon, 06 May 2019 13:45:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.8_GA_3025 (ZimbraWebClient - FF60 (Linux)/8.8.8_GA_1703)
-Thread-Topic: linux-next: Fixes tags need some work in the mtd tree
-Thread-Index: BpVQHcYW0b9Fd4Xem7ZvYI4wRFdP7g==
+References: <20190506202447.30907-1-natechancellor@gmail.com>
+In-Reply-To: <20190506202447.30907-1-natechancellor@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 6 May 2019 23:45:22 +0300
+Message-ID: <CA+h21hpODxkfP8c0CVZwfVpUs91U1REsc2vWMVBAOteDnkJJjQ@mail.gmail.com>
+Subject: Re: [PATCH] net: dsa: sja1105: Fix status initialization in sja1105_get_ethtool_stats
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen,
+On Mon, 6 May 2019 at 23:25, Nathan Chancellor <natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> drivers/net/dsa/sja1105/sja1105_ethtool.c:316:39: warning: suggest
+> braces around initialization of subobject [-Wmissing-braces]
+>         struct sja1105_port_status status = {0};
+>                                              ^
+>                                              {}
+> 1 warning generated.
+>
+> One way to fix these warnings is to add additional braces like Clang
+> suggests; however, there has been a bit of push back from some
+> maintainers[1][2], who just prefer memset as it is unambiguous, doesn't
+> depend on a particular compiler version[3], and properly initializes all
+> subobjects. Do that here so there are no more warnings.
+>
+> [1]: https://lore.kernel.org/lkml/022e41c0-8465-dc7a-a45c-64187ecd9684@amd.com/
+> [2]: https://lore.kernel.org/lkml/20181128.215241.702406654469517539.davem@davemloft.net/
+> [3]: https://lore.kernel.org/lkml/20181116150432.2408a075@redhat.com/
+>
+> Fixes: 52c34e6e125c ("net: dsa: sja1105: Add support for ethtool port counters")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/471
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/net/dsa/sja1105/sja1105_ethtool.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/dsa/sja1105/sja1105_ethtool.c b/drivers/net/dsa/sja1105/sja1105_ethtool.c
+> index 46d22be31309..ab581a28cd41 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_ethtool.c
+> +++ b/drivers/net/dsa/sja1105/sja1105_ethtool.c
+> @@ -313,9 +313,11 @@ static char sja1105pqrs_extra_port_stats[][ETH_GSTRING_LEN] = {
+>  void sja1105_get_ethtool_stats(struct dsa_switch *ds, int port, u64 *data)
+>  {
+>         struct sja1105_private *priv = ds->priv;
+> -       struct sja1105_port_status status = {0};
+> +       struct sja1105_port_status status;
+>         int rc, i, k = 0;
+>
+> +       memset(&status, 0, sizeof(status));
+> +
+>         rc = sja1105_port_status_get(priv, &status, port);
+>         if (rc < 0) {
+>                 dev_err(ds->dev, "Failed to read port %d counters: %d\n",
+> --
+> 2.21.0
+>
 
------ Ursprüngliche Mail -----
-> In commit
-> 
->  d41970097f10 ("mtd: maps: Allow MTD_PHYSMAP with MTD_RAM")
-> 
-> Fixes tag
-> 
->  Fixes: commit 642b1e8dbed7 ("mtd: maps: Merge physmap_of.c into physmap-core.c")
-> 
-> has these problem(s):
-> 
->  - leading word 'commit' unexpected
-> 
-> In commit
-> 
->  64d14c6fe040 ("mtd: maps: physmap: Store gpio_values correctly")
-> 
-> Fixes tag
-> 
->  Fixes: commit ba32ce95cbd9 ("mtd: maps: Merge gpio-addr-flash.c into
->  physmap-core.c")
-> 
-> has these problem(s):
-> 
->  - leading word 'commit' unexpected
+Acked-by: Vladimir Oltean <olteanv@gmail.com>
 
-What is the suggest approach to fix that?
-Rebase and force-push?
-
-Thanks,
-//richard
+Thanks Nathan, compound literals got me this time.
+-Vladimir
