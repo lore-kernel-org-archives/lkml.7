@@ -2,213 +2,150 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855D1C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A63C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3AD206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:43:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SZr/UgT/"
+	by mail.kernel.org (Postfix) with ESMTP id 42D99206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 10:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557139469;
+	bh=Bszxc6bqbpOzzzsSnYjG/7jD+352okK7kbVrrpj0D4A=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=btyrm8fPcAdgDoTvSw+aV5Lp5W7A4T81aIFG3okgKKhwXLU+BNbJHVfdLkcOR1FGZ
+	 mgDrEXHIHoa9vKTxKvuM5FivbdXQpexJA5OlNdI+qiIWb2pO1dpKfcXXnAhkXLwONS
+	 tFg/cAN/Uk4YOpsSTMHY8AlE7YJ7Jy1On8hIS9Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbfEFKnn (ORCPT
+        id S1726444AbfEFKo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 06:43:43 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41663 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfEFKnn (ORCPT
+        Mon, 6 May 2019 06:44:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52762 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfEFKo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 06:43:43 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c12so16600969wrt.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 03:43:41 -0700 (PDT)
+        Mon, 6 May 2019 06:44:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id o25so4022767wmf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 03:44:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uCi++m+hmflAtTf0wEp9JT3iL7NhPW7odYvIK611ma4=;
-        b=SZr/UgT/IQ9sh8lvU0B3M5ekEWd0V/Cm4RNDe4ul6z8F9ZavaeSx4eVJh/dWCzqJUo
-         oTscLrrY/6XZpLJTGkh9fAhyvrWiEEUWqYTiUjvzy7RILfvJUyKjB1lUQdxuFEYiil7r
-         nCRgmM4BL9sZ78L4/HF73e2hVRJEu3F3ab0ClPhoe37o6TOmB6DiBJXN8kcntvnM6pq4
-         gjSzS2FNGW7nUp5PX+fYaI5JzK7lhr7T8H89irVfl5xKre2OHu9snUmHscPcB8oaRGST
-         UiXkA8lKGhXNOuprkmPEtZIzhKhsohMtE5PnGSV2mAwj8RYU58yVfGXg269G2yVol4UM
-         YzLQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=F5AfuL7zt8o5dfccSY5UL2mBseC8RDufw18x0o3qLjs=;
+        b=oP6y+jdZqwB+6b6OUcuCypGjhR2aQ3HoMcZdVin8BU3kJbb2r/nUD67rx2UetthaQM
+         2hRKT2/GoNBracMj4x5GcuLLPaKP1bwGKoN7VqwEUAdL+V/NIwFXaPtUTgweww1oVlYb
+         FffUJK9aD5YRoTy7hXptRgB7aFTCe1L98GpvEJd6N6dlgl1bjEd/yo8nhQ5kDv+lw85d
+         whHnZfVtRWWgM6TnN9+N0xhLlCpHlJgfXZmSl7MLUIGweWlom4a2/dm2BkYm4IMhj6ZE
+         c6VtFO91O+IwRegCvFlClXIc+Hm//83vEHNzE+AJouQzGMwFiciqLuefi30GqPdOYvFt
+         mKKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uCi++m+hmflAtTf0wEp9JT3iL7NhPW7odYvIK611ma4=;
-        b=TqPwCJvLSGn0kLHFtcL2Ju7hiCxtUKveU/+FouUYNievMvHzs+IpSV39cHYNkkZhos
-         pwPqDyvdlA8alzRXmVXtSb7Cj/ZQaugu6JD3lo9KbBk9kYO4nTB4ePkNrm9Zbbba3aKl
-         nILDbd/Y9JdXUf/TTxTqY70b72F6fj9RwLzFzPZbbve6+5l0njtuU9OgyvINg5eME0qy
-         ODTfHOzcV+yJEuUL8hQ2DzCMQyuFgEOl5Yj2A/5byZ8HNoZRCFW1cJJXXd+xxMYHD2sh
-         fLUslMXjFt5Ml1J4NYLQVy4YkMl98z+UKYCBvpIC/7pV50rKP3dllmf1suBvRb2vkARk
-         SGzQ==
-X-Gm-Message-State: APjAAAXlxdNI/iCNOpE5fn0qMN/VCphrrf5pUpoFNdeGJsQaV0ytCOOQ
-        UNLEpTnC4oMbHG79cD0vwjjapg==
-X-Google-Smtp-Source: APXvYqxMdxGiwDUmRg23C6IamUTuPcgy9FIEmdOIgUAB7rWrlG9hpuSisSfXusd7mNEl3e66L2oRLQ==
-X-Received: by 2002:adf:ec0d:: with SMTP id x13mr17035465wrn.268.1557139421124;
-        Mon, 06 May 2019 03:43:41 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id t18sm18987347wrg.19.2019.05.06.03.43.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 03:43:40 -0700 (PDT)
-Subject: Re: [PATCH 1/8] arm64: dts: mt8183: add thermal zone node
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     "michael.kao" <michael.kao@mediatek.com>, fan.chen@mediatek.com,
-        jamesjj.liao@mediatek.com, dawei.chien@mediatek.com,
-        louis.yu@mediatek.com, roger.lu@mediatek.com,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
- <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
- <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
- <20190503164651.GB40515@google.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <c6cf6170-331d-8ffc-d272-e5d8ee648eda@linaro.org>
-Date:   Mon, 6 May 2019 12:43:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=F5AfuL7zt8o5dfccSY5UL2mBseC8RDufw18x0o3qLjs=;
+        b=jG2aLhTCOc0P2+qPXWCMDK7i0UGd+0qowGP4Qew8IEGo/NR2I7jmL+eegiuf31yDey
+         cbrmra5VTujkf0lRoKhG2QqdQjsHKRwoTAfYIKhO/qi8lrdgmSjFcMNZkWqhfPS13bzs
+         Z5q87M1SgVvzy6RAQ8j8UXLvShD0Vr7s71rEz5EaX87bmdzdYTGjy8iaEaIay3VvgBSe
+         uwAYfj4hg+/zf+ji7LU0zkFiSxWChfNUUYLlN0iOwt85CMMlXaLeX5Y+hW+a+GGfmcMe
+         Qcy/n8ja61ZNykBzy8ZT/RFiqwMxN+NUuGUE3Spi8LbbSJvUMGLzfw2UEVPA6SrnWV/4
+         ihnA==
+X-Gm-Message-State: APjAAAWhuUTaNoEfeBzGQsdOeIHH8/s5vvH/btB0NwjQxuQOYDnJfUPR
+        8WMx9Q0hPxVgEaDEeOLj3vk=
+X-Google-Smtp-Source: APXvYqx8bl89kt1xjI79oen/lc2djya5kMF2JV/2BF/NqEbq5NP6kYIWd6Kdw3cdwsF/n78SCW7+YA==
+X-Received: by 2002:a7b:cc12:: with SMTP id f18mr16505091wmh.40.1557139465751;
+        Mon, 06 May 2019 03:44:25 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id b12sm17787071wrf.21.2019.05.06.03.44.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 03:44:25 -0700 (PDT)
+Date:   Mon, 6 May 2019 12:44:23 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/platform changes for v5.2
+Message-ID: <20190506104423.GA86522@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190503164651.GB40515@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/05/2019 18:46, Matthias Kaehlcke wrote:
-> Hi,
-> 
-> On Fri, May 03, 2019 at 04:03:58PM +0800, Hsin-Yi Wang wrote:
->> On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
->>>
->>> Add thermal zone node to Mediatek MT8183 dts file.
->>>
->>> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
->>> ---
->>>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 64 ++++++++++++++++++++++++++++++++
->>>  1 file changed, 64 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
->>> index 926df75..b92116f 100644
->>> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
->>> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
->>> @@ -334,6 +334,67 @@
->>>                         status = "disabled";
->>>                 };
->>>
->>> +               thermal: thermal@1100b000 {
->>> +                       #thermal-sensor-cells = <1>;
->>> +                       compatible = "mediatek,mt8183-thermal";
->>> +                       reg = <0 0x1100b000 0 0x1000>;
->>> +                       interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>;
->>> +                       clocks = <&infracfg CLK_INFRA_THERM>,
->>> +                                <&infracfg CLK_INFRA_AUXADC>;
->>> +                       clock-names = "therm", "auxadc";
->>> +                       resets = <&infracfg  MT8183_INFRACFG_AO_THERM_SW_RST>;
->>> +                       mediatek,auxadc = <&auxadc>;
->>> +                       mediatek,apmixedsys = <&apmixedsys>;
->>> +                       mediatek,hw-reset-temp = <117000>;
->>> +                       nvmem-cells = <&thermal_calibration>;
->>> +                       nvmem-cell-names = "calibration-data";
->>> +               };
->>> +
->>> +               thermal-zones {
->>> +                       cpu_thermal: cpu_thermal {
->>> +                               polling-delay-passive = <1000>;
->>> +                               polling-delay = <1000>;
->>> +
->>> +                               thermal-sensors = <&thermal 0>;
->>> +                               sustainable-power = <1500>;
->>> +                       };
->>> +
->>> +                       tzts1: tzts1 {
->>> +                               polling-delay-passive = <1000>;
->>> +                               polling-delay = <1000>;
->>> +                               thermal-sensors = <&thermal 1>;
->> Is sustainable-power required for tzts? Though it's an optional
->> property, kernel would have warning:
->> [    0.631556] thermal thermal_zone1: power_allocator:
->> sustainable_power will be estimated
->> [    0.639586] thermal thermal_zone2: power_allocator:
->> sustainable_power will be estimated
->> [    0.647611] thermal thermal_zone3: power_allocator:
->> sustainable_power will be estimated
->> [    0.655635] thermal thermal_zone4: power_allocator:
->> sustainable_power will be estimated
->> [    0.663658] thermal thermal_zone5: power_allocator:
->> sustainable_power will be estimated
->> if no sustainable-power assigned.
-> 
-> The property is indeed optional, if it isn't specified IPA will use
-> the sum of the minimum power of all 'power actors' of the zone as
-> estimate (see estimate_sustainable_power()). This may lead to overly
-> agressive throttling, since the nominal sustainable power will always
-> be <= the requested power.
-> 
-> In my understanding the sustainable power may varies between devices,
-> even for the same SoC. One could have all the hardware crammed into a
-> tiny plastic enclosure (e.g. ASUS Chromebit), another might have a
-> laptop form factor and a metal enclosure (e.g. ASUS C201). Both
-> examples are based on an Rockchip rk3288, but they have completely
-> different thermal behavior, and would likely have different values for
-> 'sustainable-power'.
-> 
-> In this sense I tend to consider 'sustainable-power' more a device,
-> than a SoC property. You could specify a 'reasonable' value as a
-> starting point, but it will likely not be optimal for all or even most
-> devices. The warning might even be useful for device makers by
-> indicating them that there is room for tweaking.
+Linus,
+
+Please pull the latest x86-platform-for-linus git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-platform-for-linus
+
+   # HEAD: 14e581c381b942ce5463a7e61326d8ce1c843be7 x86/kvm: Make steal_time visible
+
+Smaller update for Hyper-V to support EOI assist, plus LTO fixes.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Andi Kleen (2):
+      x86/hyperv: Make hv_vcpu_is_preempted() visible
+      x86/kvm: Make steal_time visible
+
+Vitaly Kuznetsov (1):
+      x86/hyper-v: Implement EOI assist
 
 
-The sustainable power is the power dissipated by the devices belonging
-to the thermal zone at the given trip temperature.
+ arch/x86/hyperv/hv_apic.c     | 5 +++++
+ arch/x86/hyperv/hv_spinlock.c | 2 +-
+ arch/x86/kernel/kvm.c         | 2 +-
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
-With the power numbers and the cooling devices, the IPA will change the
-states of the cooling devices to leverage the dissipated power to the
-sustainable power.
-
-The contribution is the cooling effect of the cooling device.
-
-However, the IPA is limited to one thermal zone and the cooling device
-is the cpu cooling device. There is the devfreq cooling device but as
-the graphic driver is not upstream, it is found in the android tree only
-for the moment.
-
-As you mentioned the sustainable power can vary depending on the form
-factor and the production process for the same SoC (they can go to
-higher frequencies thus dissipate more power). That is the reason why we
-split the DT per SoC and we override the values on a per SoC version basis.
-
-You can have a look the rk3399.dtsi and their variant for experimental
-board (*-rock960.dts) and the chromebook version (*-gru-kevin.dts).
-
-Do you want a empiric procedure to find out the sustainable power ?
-
-
-
-
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index 8eb6fbee8e13..5c056b8aebef 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -86,6 +86,11 @@ static void hv_apic_write(u32 reg, u32 val)
+ 
+ static void hv_apic_eoi_write(u32 reg, u32 val)
+ {
++	struct hv_vp_assist_page *hvp = hv_vp_assist_page[smp_processor_id()];
++
++	if (hvp && (xchg(&hvp->apic_assist, 0) & 0x1))
++		return;
++
+ 	wrmsr(HV_X64_MSR_EOI, val, 0);
+ }
+ 
+diff --git a/arch/x86/hyperv/hv_spinlock.c b/arch/x86/hyperv/hv_spinlock.c
+index a861b0456b1a..07f21a06392f 100644
+--- a/arch/x86/hyperv/hv_spinlock.c
++++ b/arch/x86/hyperv/hv_spinlock.c
+@@ -56,7 +56,7 @@ static void hv_qlock_wait(u8 *byte, u8 val)
+ /*
+  * Hyper-V does not support this so far.
+  */
+-bool hv_vcpu_is_preempted(int vcpu)
++__visible bool hv_vcpu_is_preempted(int vcpu)
+ {
+ 	return false;
+ }
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 5c93a65ee1e5..3f0cc828cc36 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -67,7 +67,7 @@ static int __init parse_no_stealacc(char *arg)
+ early_param("no-steal-acc", parse_no_stealacc);
+ 
+ static DEFINE_PER_CPU_DECRYPTED(struct kvm_vcpu_pv_apf_data, apf_reason) __aligned(64);
+-static DEFINE_PER_CPU_DECRYPTED(struct kvm_steal_time, steal_time) __aligned(64);
++DEFINE_PER_CPU_DECRYPTED(struct kvm_steal_time, steal_time) __aligned(64) __visible;
+ static int has_steal_clock = 0;
+ 
+ /*
