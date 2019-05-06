@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929D8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5967C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D702087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8944B21479
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153925;
-	bh=xtUdkNT/I6ZoDVHE1IWYKYHYiIpasaIIC4p+C1QzlGs=;
+	s=default; t=1557153931;
+	bh=EfC+rTvkvgtF2c64+touIRCbnSPbW/2Jv0J9DZubt30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=muPjJyP/Ia53ZtCQepBW+c6fmfiFZjLZDSFhTZ0VmHNJt//oWhFIZtVdCJKpex1Di
-	 JB/+eNCJHos47TIqoVOKa9m0tOxFXhXNcJoXZcb4IOxks7qe1CnFWC4yxvwt/bvPbr
-	 AlaPttINmBRab28cwTPRcxHOzxGvxfJ/GYG5s/mM=
+	b=L0ctTdhZJ/qkhL9xTUUvyg5Uwx3tmVzOcvK+ts39yqrGpn4tbCNHySFMAD8jiMk14
+	 +HosJTdT2BSQPXaODQq66pvUE1CGzOX+Sco1RUSfFuroxYPiS3Ec5LxRPs4P8uPr9L
+	 uvedcPHirojqJNm/4aYg3sLRsvdRJIBA7fotnO/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbfEFOpY (ORCPT
+        id S1728420AbfEFOpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:45:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42084 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728939AbfEFOpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:45:21 -0400
+        id S1728947AbfEFOpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2946C2087F;
-        Mon,  6 May 2019 14:45:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD6CC20C01;
+        Mon,  6 May 2019 14:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153920;
-        bh=xtUdkNT/I6ZoDVHE1IWYKYHYiIpasaIIC4p+C1QzlGs=;
+        s=default; t=1557153923;
+        bh=EfC+rTvkvgtF2c64+touIRCbnSPbW/2Jv0J9DZubt30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c2HjSUAJxn5fOuEKH9e4zs8eFTXv9QAeOoJOg1mwoVL3jn0yrzuKJsG9eWSqGMoDG
-         8Rcp46M5UVLMBeX/K8II5ny2YZfeQ0Dgd1bUJVU5HkYIEUtpvzue2ZPdCUdYp9RUMW
-         RDkPHu3dSbSd/43nfbARywieQZqosNuBVQ1J0N1Q=
+        b=YPr2jM9JVGZZRLPxwDNFfsF3u7idB1HcaIEXxMrjjdz032LWi/72WpDHuPKOAdSY7
+         1ZgCwKh/U7IYFJqzQ38+iSPbtW6I8qGTnbOF5IqrUwmujHZty2libDkZooWOq00zjl
+         z+VYdNsWEGT6667zcG7w9Rdv+xIFZZJVZKo/YjPc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Laight <David.Laight@aculab.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 06/75] packet: validate msg_namelen in send directly
-Date:   Mon,  6 May 2019 16:32:14 +0200
-Message-Id: <20190506143053.811171616@linuxfoundation.org>
+Subject: [PATCH 4.14 07/75] bnxt_en: Improve multicast address setup logic.
+Date:   Mon,  6 May 2019 16:32:15 +0200
+Message-Id: <20190506143053.900726965@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -60,97 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 486efdc8f6ce802b27e15921d2353cc740c55451 ]
+[ Upstream commit b4e30e8e7ea1d1e35ffd64ca46f7d9a7f227b4bf ]
 
-Packet sockets in datagram mode take a destination address. Verify its
-length before passing to dev_hard_header.
+The driver builds a list of multicast addresses and sends it to the
+firmware when the driver's ndo_set_rx_mode() is called.  In rare
+cases, the firmware can fail this call if internal resources to
+add multicast addresses are exhausted.  In that case, we should
+try the call again by setting the ALL_MCAST flag which is more
+guaranteed to succeed.
 
-Prior to 2.6.14-rc3, the send code ignored sll_halen. This is
-established behavior. Directly compare msg_namelen to dev->addr_len.
-
-Change v1->v2: initialize addr in all paths
-
-Fixes: 6b8d95f1795c4 ("packet: validate address length if non-zero")
-Suggested-by: David Laight <David.Laight@aculab.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |   24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2641,8 +2641,8 @@ static int tpacket_snd(struct packet_soc
- 	void *ph;
- 	DECLARE_SOCKADDR(struct sockaddr_ll *, saddr, msg->msg_name);
- 	bool need_wait = !(msg->msg_flags & MSG_DONTWAIT);
-+	unsigned char *addr = NULL;
- 	int tp_len, size_max;
--	unsigned char *addr;
- 	void *data;
- 	int len_sum = 0;
- 	int status = TP_STATUS_AVAILABLE;
-@@ -2653,7 +2653,6 @@ static int tpacket_snd(struct packet_soc
- 	if (likely(saddr == NULL)) {
- 		dev	= packet_cached_dev_get(po);
- 		proto	= po->num;
--		addr	= NULL;
- 	} else {
- 		err = -EINVAL;
- 		if (msg->msg_namelen < sizeof(struct sockaddr_ll))
-@@ -2663,10 +2662,13 @@ static int tpacket_snd(struct packet_soc
- 						sll_addr)))
- 			goto out;
- 		proto	= saddr->sll_protocol;
--		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
- 		dev = dev_get_by_index(sock_net(&po->sk), saddr->sll_ifindex);
--		if (addr && dev && saddr->sll_halen < dev->addr_len)
--			goto out_put;
-+		if (po->sk.sk_socket->type == SOCK_DGRAM) {
-+			if (dev && msg->msg_namelen < dev->addr_len +
-+				   offsetof(struct sockaddr_ll, sll_addr))
-+				goto out_put;
-+			addr = saddr->sll_addr;
-+		}
- 	}
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -6768,8 +6768,15 @@ static int bnxt_cfg_rx_mode(struct bnxt
  
- 	err = -ENXIO;
-@@ -2838,7 +2840,7 @@ static int packet_snd(struct socket *soc
- 	struct sk_buff *skb;
- 	struct net_device *dev;
- 	__be16 proto;
--	unsigned char *addr;
-+	unsigned char *addr = NULL;
- 	int err, reserve = 0;
- 	struct sockcm_cookie sockc;
- 	struct virtio_net_hdr vnet_hdr = { 0 };
-@@ -2855,7 +2857,6 @@ static int packet_snd(struct socket *soc
- 	if (likely(saddr == NULL)) {
- 		dev	= packet_cached_dev_get(po);
- 		proto	= po->num;
--		addr	= NULL;
- 	} else {
- 		err = -EINVAL;
- 		if (msg->msg_namelen < sizeof(struct sockaddr_ll))
-@@ -2863,10 +2864,13 @@ static int packet_snd(struct socket *soc
- 		if (msg->msg_namelen < (saddr->sll_halen + offsetof(struct sockaddr_ll, sll_addr)))
- 			goto out;
- 		proto	= saddr->sll_protocol;
--		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
- 		dev = dev_get_by_index(sock_net(sk), saddr->sll_ifindex);
--		if (addr && dev && saddr->sll_halen < dev->addr_len)
--			goto out_unlock;
-+		if (sock->type == SOCK_DGRAM) {
-+			if (dev && msg->msg_namelen < dev->addr_len +
-+				   offsetof(struct sockaddr_ll, sll_addr))
-+				goto out_unlock;
-+			addr = saddr->sll_addr;
-+		}
- 	}
+ skip_uc:
+ 	rc = bnxt_hwrm_cfa_l2_set_rx_mask(bp, 0);
++	if (rc && vnic->mc_list_count) {
++		netdev_info(bp->dev, "Failed setting MC filters rc: %d, turning on ALL_MCAST mode\n",
++			    rc);
++		vnic->rx_mask |= CFA_L2_SET_RX_MASK_REQ_MASK_ALL_MCAST;
++		vnic->mc_list_count = 0;
++		rc = bnxt_hwrm_cfa_l2_set_rx_mask(bp, 0);
++	}
+ 	if (rc)
+-		netdev_err(bp->dev, "HWRM cfa l2 rx mask failure rc: %x\n",
++		netdev_err(bp->dev, "HWRM cfa l2 rx mask failure rc: %d\n",
+ 			   rc);
  
- 	err = -ENXIO;
+ 	return rc;
 
 
