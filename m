@@ -2,177 +2,101 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA93EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A649CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BCCD204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653FA204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:31:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XhpGpVKT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sll1RVUA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfEFO3O (ORCPT
+        id S1726302AbfEFObE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:29:14 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:22796 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfEFO3O (ORCPT
+        Mon, 6 May 2019 10:31:04 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:41499 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfEFObE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:29:14 -0400
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x46ESsXM029567
-        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 23:28:55 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x46ESsXM029567
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557152935;
-        bh=eqLFB0nVFnZiNimHn82KIGN7U2ZgzKcawlpMijhfc9w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XhpGpVKTClir5AxkSP7NnwHlzCdghMB4dNiu1+xGvHpE07nPSmbwmD1d2ynaoeOuB
-         FahHzJzl8/gkBMAQiJ9HlPTZjYwZ/r2pUzr9+aaAiL1ACzqOS3KkfF56H34Nr1BC4y
-         322kyQ0SfRdiY+J31kxWHBYV/ybhHi/TSvsr73oieLL1Xlgj8/ip0fIln4yCqlcx+p
-         VY6kPFU+PLyQ3w7QLHtVZ9jLKmbrL9Lqmli6uTbJeGowaqligirlscL9AZBW0cs084
-         q7bX8b937+hT3AodRM+O5sBL6ZWg/G7Bpc+wHmC+YK3ZNPKlMLthIyGryGKMTC7a+c
-         b8OIF2SoI285A==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id c24so1369101vsp.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 07:28:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAX4P+cz+EvAXtqCBuCMCcAP8Q5+LCqOcTuwMB4DNaqM1LSNOpOq
-        YUw15v/WprMSoLG/f0Bs4Xnt4ND6qhZpS68kWE0=
-X-Google-Smtp-Source: APXvYqxdltPkQPlIf2njpz+a8BUdQSjsHQ5lVipXcpd+mrcRcFhyBsTBof90IRV3XT2pIlW7uxsmlC28VFTtzEvAAEo=
-X-Received: by 2002:a67:fd89:: with SMTP id k9mr1073873vsq.54.1557152934032;
- Mon, 06 May 2019 07:28:54 -0700 (PDT)
+        Mon, 6 May 2019 10:31:04 -0400
+Received: by mail-vs1-f67.google.com with SMTP id g187so8256017vsc.8;
+        Mon, 06 May 2019 07:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vlVIw6vZVRSOd+U7atr+9c1eQwA07taQdyi0YQSxezc=;
+        b=sll1RVUAUXI6hmEPMAb7nMUvFPfC52yZbzrVrDlOe4udfQWSQeHtzag+DPSFEoIJL9
+         pFzEPWOFBqUJpAu7KYrNT/zfWi2/aQp0rNigOnLYk5WmVYLxS/bYrNxhlOBn9MJuXd2j
+         AGapMhYsP0tSavAAkIAwiK31jShxd9SvrskQVO33PFU+Q1M88/0qe4ilm5OkuIGnMQr6
+         rTRiwWDEc/4LPWQTROxjihR1YFl/vSr2njK2uNhmDAWMBrk1swpt/tgjCQAiygJ3wFa8
+         SJiqRwix3cy9eLObcVE9KJ9M7dcNF07TFr14v6kZVi9qy0nIlbizaaCEi4PfFMMTieb+
+         duug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vlVIw6vZVRSOd+U7atr+9c1eQwA07taQdyi0YQSxezc=;
+        b=E3VDoJ/MGNSufEX7Lr8PFuwiQUsk5HNOSfmIBz8Wa7keekP6qNNtatABfiSlqmiwGD
+         IW6M5UcugNX0F0yCG6/Ya3P1oJNuiFuhPgWkVSwclQGqlL41gVCD54USjARVfEx0rLKp
+         jaDIAhkQ386tXiAzZxBlq5LofY3FOO71PdVxK40KvhE657h/w/dW1mT4ymUwhbK095Bq
+         /ZWWwLTQT4MhbEZCy/bv34VwzyvAzSZyzKHdnfpycpAn5/XzItbZhgd+/Zm8BAJNOGsd
+         4RA3sL1g43TxL2+lc50YSnp/M/sH451oPUaHlTZeDVoDZr2x9e2JuSS3O4WIJACwTYB+
+         p3HQ==
+X-Gm-Message-State: APjAAAWE/QiDW1g29RXTJNpD2/01cUN1ZWICoPPq6aFhbBXWv0xAfAkJ
+        Wa3C2OyyPOlnJn6jBtOPABWOcBmXy2PN7GqL0coLUA==
+X-Google-Smtp-Source: APXvYqwSyY7J4ouI+5Trz/A/jLpV5Y7R4jongXOPkb4utCR+BNjaeweJZS+oVNu+eQWUwIkOcSqibzJiltv4cNYqx9E=
+X-Received: by 2002:a67:fbc4:: with SMTP id o4mr3075513vsr.30.1557153063423;
+ Mon, 06 May 2019 07:31:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190323015227.245455-1-dianders@chromium.org>
- <CAK7LNARYMy2=viA1et9tZk409M=OSteD5D675oAKQEs6SG77HQ@mail.gmail.com>
- <20190416163034.3e642818ebf27ed6891c1981@linux-foundation.org>
- <CAK7LNAR4Ty8835sfo4HSvBsMCsV65mY2HOajFSY2TOYurmkFdw@mail.gmail.com>
- <20190418160651.40cb6a11186a6c6028e9d20d@linux-foundation.org>
- <CAK7LNAQe2uaVfKee1F6R4siVvUSCMgSaYAnUQfz8MS5PeFqpGA@mail.gmail.com> <e5f29ca9b6067fff9ea68cb25e15906659cd51ad.camel@perches.com>
-In-Reply-To: <e5f29ca9b6067fff9ea68cb25e15906659cd51ad.camel@perches.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 6 May 2019 23:28:17 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATFrp=4JcqU2pFJ-+06HZ_6T+R75gwSF=ax-0yJZJ_rVg@mail.gmail.com>
-Message-ID: <CAK7LNATFrp=4JcqU2pFJ-+06HZ_6T+R75gwSF=ax-0yJZJ_rVg@mail.gmail.com>
-Subject: Re: [PATCH] kdb: Get rid of broken attempt to print CCVERSION in kdb summary
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joe Perches <joe@perches.com>
+References: <20190506151539.69ee75e8@endymion> <20190506151656.47494e56@endymion>
+ <04843f27-bb0f-d631-32c8-80cd122b7399@linux.intel.com>
+In-Reply-To: <04843f27-bb0f-d631-32c8-80cd122b7399@linux.intel.com>
+From:   Dreamcat4 <dreamcat4@gmail.com>
+Date:   Mon, 6 May 2019 15:30:26 +0100
+Message-ID: <CAN39uTpQj=ebjhydX2LnukkMAS-_Qi-nBMsUCjE4J-B_4HN8LQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] eeprom: ee1004: Deal with nack on page selection
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Jean Delvare <jdelvare@suse.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is technically super easy,
-but shows how difficult to apply a
-single patch in a correct manner.
+Don't mind either way, please do as you see fit
 
-
-The following showed up in today's linux-next,
-doubling
-"Signed-off-by: Douglas Anderson <dianders@chromium.org>"
-
-This is obviously caused by the committer.
-
-Do we need some check script for maintainers
-before "git push" ?
-
-
-
-
-
-commit 51fee3389d71bfd281df02c55546a6103779e145
-Author:     Douglas Anderson <dianders@chromium.org>
-AuthorDate: Fri Mar 22 18:52:27 2019 -0700
-Commit:     Daniel Thompson <daniel.thompson@linaro.org>
-CommitDate: Thu May 2 14:55:07 2019 +0100
-
-    kdb: Get rid of broken attempt to print CCVERSION in kdb summary
-
-    If you drop into kdb and type "summary", it prints out a line that
-    says this:
-
-      ccversion  CCVERSION
-
-    ...and I don't mean that it actually prints out the version of the C
-    compiler.  It literally prints out the string "CCVERSION".
-
-    The version of the C Compiler is already printed at boot up and it
-    doesn't seem useful to replicate this in kdb.  Let's just delete it.
-    We can also delete the bit of the Makefile that called the C compiler
-    in an attempt to pass this into kdb.  This will remove one extra call
-    to the C compiler at Makefile parse time and (very slightly) speed up
-    builds.
-
-    Signed-off-by: Douglas Anderson <dianders@chromium.org>
-    Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-    Signed-off-by: Douglas Anderson <dianders@chromium.org>
-    Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-
-
-
-
-
-
-
-On Sat, Apr 20, 2019 at 3:24 AM Joe Perches <joe@perches.com> wrote:
+On Mon, May 6, 2019 at 3:04 PM Jarkko Nikula
+<jarkko.nikula@linux.intel.com> wrote:
 >
-> On Fri, 2019-04-19 at 12:28 +0900, Masahiro Yamada wrote:
-> > Hi Joe,
+> On 5/6/19 4:16 PM, Jean Delvare wrote:
+> > Some EE1004 implementations will not properly ack page selection
+> > commands. They still set the page correctly, so there is no actual
+> > error. Deal with this case gracefully by checking the currently
+> > selected page after we receive a nack. If the page is set right then
+> > we can continue.
 > >
-> > Can you detect redundant Cc: by checkpatch?
+> > Signed-off-by: Jean Delvare <jdelvare@suse.de>
+> > Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> >   drivers/misc/eeprom/ee1004.c |   12 +++++++++++-
+> >   1 file changed, 11 insertions(+), 1 deletion(-)
 > >
-> > Please see below in details.
-> > Thanks.
+> Does Dreamcat4 deserve reported and tested by tags here? I guess
+> anonymous address is fine with those tags?
 >
-> Yes, but I'm not sure why it's useful or necessary.
-> git send-email using some scripts elides duplicate email addresses
-> ---
->  scripts/checkpatch.pl | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> (I re-tested these two patches on top of v5.1 and they make decode-dimms
+> working on a machine with 2-4 * Crucial DD4 dimms)
 >
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 1c421ac42b07..bedec83cb797 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2688,6 +2688,19 @@ sub process {
->                                 $signatures{$sig_nospace} = 1;
->                         }
->
-> +# Check for a cc: line with another signature -by: by the same author
-> +                       if ($sig_nospace =~ /^cc:/) {
-> +                               my $sig_email = substr($sig_nospace, 3);
-> +                               foreach my $sig (sort keys %signatures) {
-> +                                       next if ($sig =~ /^cc:/);
-> +                                       $sig =~ s/^[^:]+://;
-> +                                       if ($sig eq $sig_email) {
-> +                                               WARN("BAD_SIGN_OFF",
-> +                                                    "Unnecessary CC: as there is another signature with the same name/email address\n" . $herecurr);
-> +                                       }
-> +                               }
-> +                       }
-> +
->  # Check Co-developed-by: immediately followed by Signed-off-by: with same name and email
->                         if ($sign_off =~ /^co-developed-by:$/i) {
->                                 if ($email eq $author) {
->
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+> --
+> Jarkko
