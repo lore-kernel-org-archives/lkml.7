@@ -2,104 +2,107 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EE5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C001C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5D92087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF23220830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pjrJrSZz"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="c4w0kpu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbfEFMpc (ORCPT
+        id S1726322AbfEFMqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 08:45:32 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27616 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725994AbfEFMpb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 08:45:31 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46CaDeE002530;
-        Mon, 6 May 2019 14:44:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=eY0+5DYyMAqjb4Zccz3yB8/8lAlH/xHNJKu3nTKjXys=;
- b=pjrJrSZzywdlkGypwgTqgKHAqYlReBsynnO7GW5AnMK8onxlK8YjoWvcVJ84fv2OQrTz
- L1Um5HbKcgktE+wuAm1fbZkXgrVao4DL/LWf8BtWyMQaCOrS31WCZPdQV7EKgxqty0+r
- Wq5GzkV+b7YE+a6n7kzwjPwrfmZEOauza6uuHyh2cH8tuNPP9djkxN8iV0eubHoBw0L6
- g5cQSg9ITcAfuMPaHoFMYMj1Kb7iYpoIUcHf71++lsnJT+u+nzK3HkFtQFt7vRl+OATa
- mG+Ldc7CzUWHyG7KgV2f+qL1EhhnNU09eiFNBQ9RvG7+OQWFuUhJ3Oo3Jf1xEWbHNMj/ zw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2s94cb9en8-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 06 May 2019 14:44:13 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 38EE33D;
-        Mon,  6 May 2019 12:44:12 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D69A32586;
-        Mon,  6 May 2019 12:44:11 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 6 May 2019
- 14:44:11 +0200
-Received: from localhost (10.201.23.16) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 6 May 2019 14:44:11
- +0200
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>,
-        <arnaud.pouliquen@st.com>
-CC:     <benjamin.gaignard@st.com>
-Subject: [PATCH 1/3] ASoC: stm32: spdifrx: update pcm hardware constraints
-Date:   Mon, 6 May 2019 14:44:04 +0200
-Message-ID: <1557146646-18150-2-git-send-email-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557146646-18150-1-git-send-email-olivier.moysan@st.com>
-References: <1557146646-18150-1-git-send-email-olivier.moysan@st.com>
+        Mon, 6 May 2019 08:46:45 -0400
+Received: from mail-eopbgr00101.outbound.protection.outlook.com ([40.107.0.101]:24445
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726094AbfEFMqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 08:46:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q7VESdjmYVknS2+W0mLM0hgcakmO3WQxnvaLE6z/x18=;
+ b=c4w0kpu3/stiPfDt5n+TArnELe4yaVajzt35EuuP8+a889GfyoLwE+Bp4R/6/fFzyL0vzXZ4+88D81W8iB/C8EzOMVwWJ9zDJfZR6bex+gSe46zmcjHC5UEBC7Ih9aLVXnrlLapfwgyKfo6EQ/nfZ9U3WwGpWBb6YHXt1fikrxw=
+Received: from AM0PR02MB4563.eurprd02.prod.outlook.com (20.178.17.97) by
+ AM0PR02MB3667.eurprd02.prod.outlook.com (52.133.63.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.10; Mon, 6 May 2019 12:46:42 +0000
+Received: from AM0PR02MB4563.eurprd02.prod.outlook.com
+ ([fe80::59ed:e49a:eab8:168f]) by AM0PR02MB4563.eurprd02.prod.outlook.com
+ ([fe80::59ed:e49a:eab8:168f%3]) with mapi id 15.20.1856.012; Mon, 6 May 2019
+ 12:46:42 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Peter Rosin <peda@axentia.se>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH RESEND 0/3] lib/string: search for NUL with strchr/strnchr
+Thread-Topic: [PATCH RESEND 0/3] lib/string: search for NUL with
+ strchr/strnchr
+Thread-Index: AQHVBAnBV5sIuqHPzUWB1vgymfY6HA==
+Date:   Mon, 6 May 2019 12:46:42 +0000
+Message-ID: <20190506124634.6807-1-peda@axentia.se>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.11.0
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR0901CA0059.eurprd09.prod.outlook.com
+ (2603:10a6:3:45::27) To AM0PR02MB4563.eurprd02.prod.outlook.com
+ (2603:10a6:208:ec::33)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 10a2653c-bbdd-4ad5-3e51-08d6d220e3f2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:AM0PR02MB3667;
+x-ms-traffictypediagnostic: AM0PR02MB3667:
+x-microsoft-antispam-prvs: <AM0PR02MB36678F9CCD5CFF0162888572BC300@AM0PR02MB3667.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0029F17A3F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(346002)(39830400003)(396003)(189003)(199004)(26005)(4326008)(305945005)(508600001)(6506007)(6916009)(186003)(6116002)(5640700003)(256004)(14444005)(3846002)(52116002)(1076003)(2616005)(7736002)(54906003)(68736007)(8676002)(50226002)(99286004)(71200400001)(81156014)(81166006)(5660300002)(66066001)(102836004)(4744005)(14454004)(386003)(66446008)(64756008)(73956011)(25786009)(66946007)(66476007)(66556008)(6512007)(486006)(476003)(6436002)(6486002)(36756003)(2906002)(53936002)(8936002)(2351001)(316002)(2501003)(86362001)(71190400001)(74482002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR02MB3667;H:AM0PR02MB4563.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UnST1fVUpLRYrQjTbJmsS8Nhr4Sil2ysGZ5VmRZqsREZhQk4GTXnysV8zA3s0plkLMHudEAil0m1gKmQU9ESSuzeJdM4h6GgzRSzR1acZDtH9GN45/6chW0FCl1wuxtKfe1mGLSeNEfo8OEwu63DCzvxBfUNlVR6yJzMog5OBMywkf5EbACABWHFvcZV7MUTwCpk6kgGvaoqV3dql/0Xy0df1nriSoX+moOg2fNqd7dkPn0Q6QUJO+nvgZO/7027sIJuIPtA5VbP6Q+UML27rnBWHFEVlN1TRbHICL/PbG67YTFBEH4ufuHb6NqqhVMhNCLVnKXNGpdB7VoV3JKujDn0EfKOYJboAU9OX9nXkLD/whfvLFwKJimBKwYudhvR8pAqeOxGpl4q0lzeZRCUbIHaPvQSBoNGNt4GKWHrJN4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.16]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_08:,,
- signatures=0
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10a2653c-bbdd-4ad5-3e51-08d6d220e3f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 12:46:42.7222
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR02MB3667
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Set period minimum size. Ensure at least 5ms period
-up to 48kHz/16 bits to prevent underrun/overrun.
-- Remove MDMA constraints on period maximum size and
-set period maximum to half the buffer maximum size.
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- sound/soc/stm/stm32_spdifrx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/stm/stm32_spdifrx.c b/sound/soc/stm/stm32_spdifrx.c
-index b4c3d983e195..aa83b50efabb 100644
---- a/sound/soc/stm/stm32_spdifrx.c
-+++ b/sound/soc/stm/stm32_spdifrx.c
-@@ -845,7 +845,8 @@ static struct snd_soc_dai_driver stm32_spdifrx_dai[] = {
- static const struct snd_pcm_hardware stm32_spdifrx_pcm_hw = {
- 	.info = SNDRV_PCM_INFO_INTERLEAVED | SNDRV_PCM_INFO_MMAP,
- 	.buffer_bytes_max = 8 * PAGE_SIZE,
--	.period_bytes_max = 2048, /* MDMA constraint */
-+	.period_bytes_min = 1024,
-+	.period_bytes_max = 4 * PAGE_SIZE,
- 	.periods_min = 2,
- 	.periods_max = 8,
- };
--- 
-2.7.4
-
+W1dpdGggYmV0dGVyIGFkZHJlc3MgZm9yIE1hdHRoZXc/XQ0KDQpIaSENCg0KSSBub3RpY2VkIGFu
+IGluY29uc2lzdGVuY3kgd2hlcmUgc3RyY2hyIGFuZCBzdHJuY2hyIGRvIG5vdCBiZWhhdmUgdGhl
+DQpzYW1lIHdpdGggcmVzcGVjdCB0byB0aGUgdHJhaWxpbmcgTlVMLiBzdHJjaHIgaXMgc3RhbmRh
+cmRpc2VkIGFuZCB0aGUNCmtlcm5lbCBmdW5jdGlvbiBjb25mb3JtcywgYW5kIHRoZSBrZXJuZWwg
+cmVsaWVzIG9uIHRoZSBiZWhhdmlvci4NClNvLCBuYXR1cmFsbHkgc3RyY2hyIHN0YXlzIGFzLWlz
+IGFuZCBzdHJuY2hyIGlzIHdoYXQgSSBjaGFuZ2UuDQoNCldoaWxlIHdyaXRpbmcgYSBmZXcgdGVz
+dHMgdG8gdmVyaWZ5IHRoYXQgbXkgbmV3IHN0cm5jaHIgbG9vcCB3YXMgc2FuZSwgSQ0Kbm90aWNl
+ZCB0aGF0IHRoZSB0ZXN0cyBmb3IgbWVtc2V0MTYvMzIvNjQgaGFkIGEgcHJvYmxlbS4gU2luY2Ug
+aXQncyBhbGwNCmFib3V0IHRoZSBsaWIvc3RyaW5nLmMgZmlsZSBJIG1hZGUgYSBzaG9ydCBzZXJp
+ZXMgb2YgaXQgYWxsLi4uDQoNCkJ1dCB3aGVyZSB0byBzZW5kIGl0PyBnZXRfbWFpbnRhaW5lciBz
+dWdnZXN0cyBubyB2aWN0aW0sIHNvIEknbSBhaW1pbmcNCmF0IHRob3NlIHRoYXQgc2lnbmVkLW9m
+ZiBvbiB0aGUgbWVtc2V0MTYvMzIvNjQgYnVnLi4uDQoNCkNoZWVycywNClBldGVyDQoNClBldGVy
+IFJvc2luICgzKToNCiAgbGliL3N0cmluZzogYWxsb3cgc2VhcmNoaW5nIGZvciBOVUwgd2l0aCBz
+dHJuY2hyDQogIGxpYi90ZXN0X3N0cmluZzogYXZvaWQgbWFza2luZyBtZW1zZXQxNi8zMi82NCBm
+YWlsdXJlcw0KICBsaWIvdGVzdF9zdHJpbmc6IGFkZCBzb21lIHRlc3RjYXNlcyBmb3Igc3RyY2hy
+IGFuZCBzdHJuY2hyDQoNCiBsaWIvc3RyaW5nLmMgICAgICB8IDExICsrKysrKystDQogbGliL3Rl
+c3Rfc3RyaW5nLmMgfCA4MyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKy0tDQogMiBmaWxlcyBjaGFuZ2VkLCA5MCBpbnNlcnRpb25zKCspLCA0IGRl
+bGV0aW9ucygtKQ0KDQotLSANCjIuMTEuMA0KDQo=
