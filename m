@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F0BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB68C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA022053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281652054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154813;
-	bh=wdJHCb6eLGgZW6ZWOF9BARQq6nr5/scEFc8SspQFYfc=;
+	s=default; t=1557154825;
+	bh=NPJ3DpwJTS2Oi6ThWQAWVDa3v0iLtAEYsoJkBu8Lgrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mWE2r06lfdmno+fe33v/Id03Dzw6L0BYwN1Ds04f9hCbSMtTolI2MVgZDrYRyTsNr
-	 cseBi1kWNTXsvcSi8GO4X8xm7m0w/6OyZlFZ+c3zoCv5GQlcY5ui6/5pjOmEiKfFE/
-	 F4nk7hV/8FwpQVQVWcmR4hrQB9m/Rfvi5zThWgTE=
+	b=YlSqb3mdBm1aY5nd7G/BnCBu2ZrfrYfB02zAsrNPnZ7P5FbsJqSy1D3wvrCAdPcoE
+	 awvgOBPbIRtuSDfi/fOL9RuMSaClTpZuT7hCHF+pErmtkjiwtwqxjT2enl6+yvxq0U
+	 vDW3v5rMv8gNCZbBiQQkSwD14M9ehqOMffcLqAzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbfEFPAN (ORCPT
+        id S1726376AbfEFPAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:00:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37314 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:00:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728463AbfEFOm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:42:28 -0400
+        id S1727684AbfEFOmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 243E821019;
-        Mon,  6 May 2019 14:42:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A80C021019;
+        Mon,  6 May 2019 14:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153747;
-        bh=wdJHCb6eLGgZW6ZWOF9BARQq6nr5/scEFc8SspQFYfc=;
+        s=default; t=1557153737;
+        bh=NPJ3DpwJTS2Oi6ThWQAWVDa3v0iLtAEYsoJkBu8Lgrs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CcEbNVtvv7f1S584nh7JjlvtZ5xX3jk2ehYijcyTZyxdyA6rkeoN75ZxJVuwUU842
-         vi29bHAMb9f//tJfNJ7uRsrO6sRefR4N1VCw1ybQcMH00+uEW2q8S/XsPxyWhmS5x/
-         3cwZiDuVslM0PrjOvJkEqG1HjbmoLNl57ftBGc7w=
+        b=nFsMehdv5qjdgdIhvqPn2QeuCXe1bKRMKMlvcOPQ8Shc0w/BXvPjeHNMk8OjJo8Xy
+         aOcMUnsisFtO8s1Pqzk5uq+NZz0QIkgQvU3jFab2b4mSKj/eNhWtbBdrcgtCiaI9x/
+         CsoXMKMvDqo7yzgzFf9kX1x2Y/vVIey2LMda04NY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David E. Box" <david.e.box@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 81/99] platform/x86: intel_pmc_core: Fix PCH IP name
-Date:   Mon,  6 May 2019 16:32:54 +0200
-Message-Id: <20190506143101.396567680@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        Mike Christie <mchristi@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 77/99] scsi: RDMA/srpt: Fix a credit leak for aborted commands
+Date:   Mon,  6 May 2019 16:32:50 +0200
+Message-Id: <20190506143101.095873136@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,35 +65,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit d6827015e671cd17871c9b7a0fabe06c044f7470 upstream.
+commit 40ca8757291ca7a8775498112d320205b2a2e571 upstream.
 
-For Cannonlake and Icelake, the IP name for Res_6 should be SPF i.e.
-South Port F. No functional change is intended other than just renaming
-the IP appropriately.
+Make sure that the next time a response is sent to the initiator that the
+credit it had allocated for the aborted request gets freed.
 
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Fixes: 291101f6a735 ("platform/x86: intel_pmc_core: Add CannonLake PCH support")
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Doug Ledford <dledford@redhat.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Nicholas Bellinger <nab@linux-iscsi.org>
+Cc: Mike Christie <mchristi@redhat.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Fixes: 131e6abc674e ("target: Add TFO->abort_task for aborted task resources release") # v3.15
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/intel_pmc_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/ulp/srpt/ib_srpt.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -185,7 +185,7 @@ static const struct pmc_bit_map cnp_pfea
- 	{"CNVI",                BIT(3)},
- 	{"UFS0",                BIT(4)},
- 	{"EMMC",                BIT(5)},
--	{"Res_6",               BIT(6)},
-+	{"SPF",			BIT(6)},
- 	{"SBR6",                BIT(7)},
+--- a/drivers/infiniband/ulp/srpt/ib_srpt.c
++++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+@@ -2793,8 +2793,19 @@ static void srpt_queue_tm_rsp(struct se_
+ 	srpt_queue_response(cmd);
+ }
  
- 	{"SBR7",                BIT(0)},
++/*
++ * This function is called for aborted commands if no response is sent to the
++ * initiator. Make sure that the credits freed by aborting a command are
++ * returned to the initiator the next time a response is sent by incrementing
++ * ch->req_lim_delta.
++ */
+ static void srpt_aborted_task(struct se_cmd *cmd)
+ {
++	struct srpt_send_ioctx *ioctx = container_of(cmd,
++				struct srpt_send_ioctx, cmd);
++	struct srpt_rdma_ch *ch = ioctx->ch;
++
++	atomic_inc(&ch->req_lim_delta);
+ }
+ 
+ static int srpt_queue_status(struct se_cmd *cmd)
 
 
