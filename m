@@ -2,134 +2,68 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FDBC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F75BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F980206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:37:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TKUbYCig"
+	by mail.kernel.org (Postfix) with ESMTP id 2B5B520675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfEFNhX (ORCPT
+        id S1726322AbfEFNiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 09:37:23 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:48889 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfEFNhX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 09:37:23 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190506133722euoutp02bd260b4335c1fdc25076fbd293f5b9b1~cG4gDdEst1322513225euoutp02n
-        for <linux-kernel@vger.kernel.org>; Mon,  6 May 2019 13:37:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190506133722euoutp02bd260b4335c1fdc25076fbd293f5b9b1~cG4gDdEst1322513225euoutp02n
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557149842;
-        bh=ivWh3sjUT+u6aXhVBQL9PxM3YzbFcHNAqkhkMUc2tsY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=TKUbYCignlvBQl/XrqIS4eSybjl0dZPIWOgwmep+aEb3WKSQEkOhFsgIbFl+8MBpN
-         d4m534yyM1gLh/M0bbNk77gnmCjGz5UAUe5kIITO6ovj+mMqBUY6fqgAuP+clAMaSA
-         OtY2x/gprxbszYmprREJUtAXIXqehELwQu+jhSuw=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190506133721eucas1p27440dc17ceb96daa52db8e2efad45a99~cG4fr_4uq1303913039eucas1p2k;
-        Mon,  6 May 2019 13:37:21 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id E0.58.04377.19830DC5; Mon,  6
-        May 2019 14:37:21 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190506133720eucas1p21fdb024aa77d0318b927c4b5d11fd5b4~cG4e7mPNl0498204982eucas1p2F;
-        Mon,  6 May 2019 13:37:20 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190506133720eusmtrp14885154361cfd95b7e34325a802a35a4~cG4eti-rB1141011410eusmtrp1C;
-        Mon,  6 May 2019 13:37:20 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-cd-5cd038917450
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 60.42.04146.09830DC5; Mon,  6
-        May 2019 14:37:20 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190506133720eusmtip2cb2ea03a98a265454bba097b2b135ea9~cG4eOyX-y1092710927eusmtip24;
-        Mon,  6 May 2019 13:37:20 +0000 (GMT)
-Subject: Re: [PATCH v3 14/26] compat_ioctl: move ATYFB_CLK handling to atyfb
- driver
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
-        linux-kernel@vger.kernel.org,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <syrjala@sci.fi>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <28b28937-cd5c-61f4-6f84-c6108c006e21@samsung.com>
-Date:   Mon, 6 May 2019 15:37:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-        Thunderbird/45.3.0
+        Mon, 6 May 2019 09:38:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52212 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbfEFNiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 09:38:23 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7BE633019898;
+        Mon,  6 May 2019 13:38:23 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-45.ams2.redhat.com [10.36.116.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 18E5B27091;
+        Mon,  6 May 2019 13:38:23 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 412911747B; Mon,  6 May 2019 15:38:22 +0200 (CEST)
+Date:   Mon, 6 May 2019 15:38:22 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Robert Foss <robert.foss@collabora.com>
+Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Chia-I Wu <olvaffe@gmail.com>,
+        Emil Velikov <emil.velikov@collabora.com>
+Subject: Re: [PATCH v2] drm/virtio: Remove redundant return type
+Message-ID: <20190506133822.osgwr3rmqclyravf@sirius.home.kraxel.org>
+References: <20190506091034.30289-1-robert.foss@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20190416202701.127745-3-arnd@arndb.de>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAKsWRmVeSWpSXmKPExsWy7djP87oTLS7EGLybKm/xd9Ixdos551tY
-        LK58fc9mcaLvA6vFnr0nWSwu75rDZjGx4yqTxZLO90wW5/8eZ7W40rWSyYHL4/evSYweW1be
-        ZPK4332cyeP2v8fMHu/3XWXzOL5iDovH501yHpuevGUK4IjisklJzcksSy3St0vgyriy/i1L
-        wQTmikcfprM2MJ5i6mLk5JAQMJG4/OElkM3FISSwglGi90gvlPOFUWLOtvtQzmdGiV1vn7HB
-        tOzesJYdIrGcUWJ30wM2COcto8S36dNZQaqEBUIldu/7xghiiwgoSkx98YwZpIhZ4BSTxONd
-        XWCj2ASsJCa2rwIr4hWwk7h5ogUsziKgInH79nKg3RwcogIREv1n1CFKBCVOznzCAmJzAl0x
-        +9JUsFZmAQOJI4vmsELY8hLb384B2yUhcIld4sikTVCfukgcv/qRHcIWlnh1fAuULSNxenIP
-        C0TDOkaJvx0voLq3M0osn/wP6mlricPHL7JC2I4SfS/aGUGukxDgk7jxVhBiM5/EpG3TmSHC
-        vBIdbUIQ1WoSG5ZtYIPZ1bVzJTOE7SHxZOY5lgmMirOQ/DYLyT+zkPyzgJF5FaN4amlxbnpq
-        sVFearlecWJucWleul5yfu4mRmC6Ov3v+JcdjLv+JB1iFOBgVOLhXaByPkaINbGsuDL3EKME
-        B7OSCG/is3MxQrwpiZVVqUX58UWlOanFhxilOViUxHmrGR5ECwmkJ5akZqemFqQWwWSZODil
-        Ghgl09SnzDzCwlV9kz/ziM32xW1eCTdX8U/1Mzvvp9hx78BNv0SB6rBaz0//b1o/iOZTWy0m
-        EjSDyfxs5K9L8T8sbDtTzzVLMP1c21/x9FdJkPsFrb2HA0Vm2quEfP34O/LCk13ZC60PHIkr
-        aVPV3/jqqqBvgNcrrjcPVVRn+QY6fI08oG1YmK7EUpyRaKjFXFScCADNzKDUUwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsVy+t/xe7oTLC7EGNx8o2rxd9Ixdos551tY
-        LK58fc9mcaLvA6vFnr0nWSwu75rDZjGx4yqTxZLO90wW5/8eZ7W40rWSyYHL4/evSYweW1be
-        ZPK4332cyeP2v8fMHu/3XWXzOL5iDovH501yHpuevGUK4IjSsynKLy1JVcjILy6xVYo2tDDS
-        M7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy7iy/i1LwQTmikcfprM2MJ5i6mLk5JAQ
-        MJHYvWEtexcjF4eQwFJGiWcvWxi7GDmAEjISx9eXQdQIS/y51sUGUfOaUeLVvn+MIAlhgVCJ
-        3fu+gdkiAooSU188Y4YousMocfzVHFYQh1ngFJPE3Z3TWEGq2ASsJCa2rwLr4BWwk7h5ooUN
-        xGYRUJG4fXs52EmiAhEStx52sEDUCEqcnPkEzOYEOnX2palgvcwCehI7rv9ihbDlJba/ncM8
-        gVFwFpKWWUjKZiEpW8DIvIpRJLW0ODc9t9hQrzgxt7g0L10vOT93EyMwBrcd+7l5B+OljcGH
-        GAU4GJV4eD2UzscIsSaWFVfmHmKU4GBWEuFNfHYuRog3JbGyKrUoP76oNCe1+BCjKdATE5ml
-        RJPzgekhryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDo6DbE2/Z
-        ih8V3GrFp3+xTDid4f357cbLeU8vpDX1X5ddvPyd7D7Z3Q7MKknKDveUuCe0ezjPOMh5Leco
-        16THPtuYDmzfwpSyha+b61mIhcJErbJXjrf8i+ufvqt4p+bXdSvL1+XvxGNlOWlztW5Iz//U
-        cLnK46xEkvy62ML4CUXHJi+XUVi0UYmlOCPRUIu5qDgRABYE3tPXAgAA
-X-CMS-MailID: 20190506133720eucas1p21fdb024aa77d0318b927c4b5d11fd5b4
-X-Msg-Generator: CA
-X-RootMTR: 20190416202751epcas3p3655845bd23c19d035b72d9b178427e28
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190416202751epcas3p3655845bd23c19d035b72d9b178427e28
-References: <20190416202013.4034148-1-arnd@arndb.de>
-        <20190416202701.127745-1-arnd@arndb.de>
-        <CGME20190416202751epcas3p3655845bd23c19d035b72d9b178427e28@epcas3p3.samsung.com>
-        <20190416202701.127745-3-arnd@arndb.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506091034.30289-1-robert.foss@collabora.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 06 May 2019 13:38:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 04/16/2019 10:25 PM, Arnd Bergmann wrote:
-> These are two obscure ioctl commands, in a driver that only
-> has compatible commands, so just let the driver handle this
-> itself.
+On Mon, May 06, 2019 at 11:10:34AM +0200, Robert Foss wrote:
+> virtio_gpu_fence_emit() always returns 0, since it
+> has no error paths.
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Consequently no calls for virtio_gpu_fence_emit()
+> use the return value, and it can be removed.
+> 
+> Signed-off-by: Robert Foss <robert.foss@collabora.com>
+> Suggested-by: Emil Velikov <emil.velikov@collabora.com>
+> Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
 
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Pushed to drm-misc-next.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+thanks,
+  Gerd
+
