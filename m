@@ -2,214 +2,117 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43576C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16764C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10FDA2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB732082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfEFIVd (ORCPT
+        id S1726789AbfEFIVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:21:33 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7169 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726651AbfEFIUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:20:46 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B907F132402CA729FF3E;
-        Mon,  6 May 2019 16:20:43 +0800 (CST)
-Received: from euler.huawei.com (10.175.104.193) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 6 May 2019 16:20:41 +0800
-From:   Wei Li <liwei391@huawei.com>
-To:     <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <marc.zyngier@arm.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>
-CC:     <julien.thierry@arm.com>, <Suzuki.Poulose@arm.com>,
-        <sudeep.holla@arm.com>, <steve.capper@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <daniel.thompson@linaro.org>,
-        <james.morse@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/3] arm64: Add pseudo NMI support of GICv3 SGIs
-Date:   Mon, 6 May 2019 16:25:40 +0800
-Message-ID: <20190506082542.11357-2-liwei391@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190506082542.11357-1-liwei391@huawei.com>
-References: <20190506082542.11357-1-liwei391@huawei.com>
+        Mon, 6 May 2019 04:21:43 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:46026 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfEFIVl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 04:21:41 -0400
+Received: by mail-ua1-f68.google.com with SMTP id o33so4325767uae.12;
+        Mon, 06 May 2019 01:21:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S9nH2/USIL+iRP9MPRGrYGXOMekiKUf2TMy8HKrGO9M=;
+        b=UmkW6A3vMKPdlQLG1SUllwXpusbPoWD9J/1Y9ETccVBn/vGpyGsy+dyJv7dn0puYG8
+         cbH23D6UCvgL93GOanLGU6skr8E3n7nja5byu2XAlnlAg6/l3mp5xf0tZKVDTV7nmZy5
+         v4X0xu8DLuGo2tszd1cR9j77l0R/SUu2LeLDOfo0yd4e+Kv1J4nKIPa1O3iIVI2GEfQe
+         Rwb5PTrHc5GAsuI37NmI2650PojVUh7i/Zz8d7sp+jyWDOAlj3bqKTnVBN8z5/FPYv7s
+         BlcUkFy0QOYHj8w6PMqJahzS9Ljla3k5wJhwSBG5FrEoUR5hZbVc7e+/HhArPFBbZOu3
+         LPJg==
+X-Gm-Message-State: APjAAAWfijWihe9lbo3VdgloQcZq5gOt0qkR4qI9lGxQ+lD6bPDqWO0+
+        zadJN9Ujf50QrklrDnU/XRoNxzCnZ+RnsoEissY=
+X-Google-Smtp-Source: APXvYqxqv+fTd1rbHutpVs13X+K+M5qGvWiddcVBn8JlEOm5/Dn/AUyXEdYY45zzfeEUqaRkut2w+Y+OOuVsebvtV54=
+X-Received: by 2002:ab0:1646:: with SMTP id l6mr12236479uae.75.1557130900203;
+ Mon, 06 May 2019 01:21:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.104.193]
-X-CFilter-Loop: Reflected
+References: <20190502143339.434882399@linuxfoundation.org> <20190502143346.636141727@linuxfoundation.org>
+In-Reply-To: <20190502143346.636141727@linuxfoundation.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 6 May 2019 10:21:28 +0200
+Message-ID: <CAMuHMdVQWLfBOCyXza0bwG5-4FJ5z2gLjpsPEj8FaQepd5_nMA@mail.gmail.com>
+Subject: Re: [PATCH 5.0 100/101] leds: pca9532: fix a potential NULL pointer dereference
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, Kangjie Lu <kjlu@umn.edu>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, only PPIs and SPIs can be set as NMIs. IPIs being currently
-hardcoded IRQ numbers, there isn't a generic interface to set SGIs as NMI
-for now.
+Hi Greg,
 
-In this patch, we do:
-1. Add an interface for setting priority of SGIs.
-2. Export GICD_INT_NMI_PRI for setting priority of SGIs as NMI.
-3. Move the gic_enable_nmi_support() earlier to make the gic_supports_nmi()
-check works in gic_cpu_init().
+On Thu, May 2, 2019 at 5:34 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> [ Upstream commit 0aab8e4df4702b31314a27ec4b0631dfad0fae0a ]
+>
+> In case of_match_device cannot find a match, return -EINVAL to avoid
+> NULL pointer dereference.
+>
+> Fixes: fa4191a609f2 ("leds: pca9532: Add device tree support")
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Cc: Julien Thierry <julien.thierry@arm.com>
----
- arch/arm64/include/asm/smp.h           |  2 ++
- arch/arm64/kernel/smp.c                |  4 +++
- drivers/irqchip/irq-gic-v3.c           | 46 +++++++++++++++++++++-----
- include/linux/irqchip/arm-gic-common.h |  1 +
- include/linux/irqchip/arm-gic-v3.h     |  1 +
- 5 files changed, 45 insertions(+), 9 deletions(-)
+> --- a/drivers/leds/leds-pca9532.c
+> +++ b/drivers/leds/leds-pca9532.c
+> @@ -513,6 +513,7 @@ static int pca9532_probe(struct i2c_client *client,
+>         const struct i2c_device_id *id)
+>  {
+>         int devid;
+> +       const struct of_device_id *of_id;
+>         struct pca9532_data *data = i2c_get_clientdata(client);
+>         struct pca9532_platform_data *pca9532_pdata =
+>                         dev_get_platdata(&client->dev);
+> @@ -528,8 +529,11 @@ static int pca9532_probe(struct i2c_client *client,
+>                         dev_err(&client->dev, "no platform data\n");
+>                         return -EINVAL;
+>                 }
+> -               devid = (int)(uintptr_t)of_match_device(
+> -                       of_pca9532_leds_match, &client->dev)->data;
+> +               of_id = of_match_device(of_pca9532_leds_match,
+> +                               &client->dev);
+> +               if (unlikely(!of_id))
 
-diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-index 18553f399e08..84d7ea073d84 100644
---- a/arch/arm64/include/asm/smp.h
-+++ b/arch/arm64/include/asm/smp.h
-@@ -158,6 +158,8 @@ bool cpus_are_stuck_in_kernel(void);
- extern void crash_smp_send_stop(void);
- extern bool smp_crash_stop_failed(void);
- 
-+extern void ipi_gic_nmi_setup(void __iomem *base);
-+
- #endif /* ifndef __ASSEMBLY__ */
- 
- #endif /* ifndef __ASM_SMP_H */
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 824de7038967..bd8fdf6fcd8e 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -1067,3 +1067,7 @@ bool cpus_are_stuck_in_kernel(void)
- 
- 	return !!cpus_stuck_in_kernel || smp_spin_tables;
- }
-+
-+void ipi_gic_nmi_setup(void __iomem *base)
-+{
-+}
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 15e55d327505..394aa5668dd6 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -42,8 +42,6 @@
- 
- #include "irq-gic-common.h"
- 
--#define GICD_INT_NMI_PRI	(GICD_INT_DEF_PRI & ~0x80)
--
- #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996	(1ULL << 0)
- 
- struct redist_region {
-@@ -324,6 +322,23 @@ static int gic_irq_get_irqchip_state(struct irq_data *d,
- 	return 0;
- }
- 
-+void gic_sgi_set_prio(void __iomem *base, u32 irqnr, u8 prio)
-+{
-+	u32 val, offset;
-+
-+	offset = GICR_IPRIORITYR0 + ((irqnr / 4) * 4);
-+
-+	/*
-+	 * Using writeb here may cause hardware error on some CPUs,
-+	 * aovid this quirk by using writel.
-+	 */
-+	val = readl_relaxed(base + offset);
-+	val &= ~(0xff << ((irqnr % 4) * 8));
-+	val |= prio << ((irqnr % 4) * 8);
-+
-+	writel_relaxed(val, base + offset);
-+}
-+
- static void gic_irq_set_prio(struct irq_data *d, u8 prio)
- {
- 	void __iomem *base = gic_dist_base(d);
-@@ -474,6 +489,16 @@ static inline void gic_handle_nmi(u32 irqnr, struct pt_regs *regs)
- {
- 	int err;
- 
-+	if (unlikely(irqnr < 16)) {
-+		gic_write_eoir(irqnr);
-+		if (static_branch_likely(&supports_deactivate_key))
-+			gic_write_dir(irqnr);
-+#ifdef CONFIG_SMP
-+		handle_IPI(irqnr, regs);
-+#endif
-+		return;
-+	}
-+
- 	if (static_branch_likely(&supports_deactivate_key))
- 		gic_write_eoir(irqnr);
- 	/*
-@@ -859,6 +884,9 @@ static void gic_cpu_init(void)
- 
- 	gic_cpu_config(rbase, gic_redist_wait_for_rwp);
- 
-+	if (gic_supports_nmi())
-+		ipi_gic_nmi_setup(rbase);
-+
- 	/* initialise system registers */
- 	gic_cpu_sys_reg_init();
- }
-@@ -1335,6 +1363,13 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 
- 	gic_update_vlpi_properties();
- 
-+	if (gic_prio_masking_enabled()) {
-+		if (!gic_has_group0() || gic_dist_security_disabled())
-+			gic_enable_nmi_support();
-+		else
-+			pr_warn("SCR_EL3.FIQ is cleared, cannot enable use of pseudo-NMIs\n");
-+	}
-+
- 	gic_smp_init();
- 	gic_dist_init();
- 	gic_cpu_init();
-@@ -1345,13 +1380,6 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 		its_cpu_init();
- 	}
- 
--	if (gic_prio_masking_enabled()) {
--		if (!gic_has_group0() || gic_dist_security_disabled())
--			gic_enable_nmi_support();
--		else
--			pr_warn("SCR_EL3.FIQ is cleared, cannot enable use of pseudo-NMIs\n");
--	}
--
- 	return 0;
- 
- out_free:
-diff --git a/include/linux/irqchip/arm-gic-common.h b/include/linux/irqchip/arm-gic-common.h
-index 9a1a479a2bf4..d8c973295179 100644
---- a/include/linux/irqchip/arm-gic-common.h
-+++ b/include/linux/irqchip/arm-gic-common.h
-@@ -18,6 +18,7 @@
- 					(GICD_INT_DEF_PRI << 16) |\
- 					(GICD_INT_DEF_PRI << 8) |\
- 					GICD_INT_DEF_PRI)
-+#define GICD_INT_NMI_PRI	(GICD_INT_DEF_PRI & ~0x80)
- 
- enum gic_type {
- 	GIC_V2,
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index c848a7cc502e..dc1c418229e7 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -606,6 +606,7 @@ int its_cpu_init(void);
- int its_init(struct fwnode_handle *handle, struct rdists *rdists,
- 	     struct irq_domain *domain);
- int mbi_init(struct fwnode_handle *fwnode, struct irq_domain *parent);
-+void gic_sgi_set_prio(void __iomem *base, u32 irqnr, u8 prio);
- 
- static inline bool gic_enable_sre(void)
- {
--- 
-2.17.1
+This condition (1) can never be true, as of_pca9532_leds_match[]
+populates the .data field of all entries, and (2) is already checked for
+in pca9532_of_populate_pdata(), so pca9532_probe() would already
+have aborted with -ENODEV before.
 
+https://lore.kernel.org/lkml/CAMuHMdXELu2tcSB5C1yKUGft6sDGPAy997ApPzy17n0MssfyWA@mail.gmail.com/
+
+So please stop backporting this to even more stable trees.
+Thanks!
+
+> +                       return -EINVAL;
+> +               devid = (int)(uintptr_t) of_id->data;
+>         } else {
+>                 devid = id->driver_data;
+>         }
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
