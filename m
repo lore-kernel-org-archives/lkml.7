@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C88C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEAEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9A5214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04384204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153401;
-	bh=IVWKTLJ67r9Fag+JPkcDnWfalbUx2MqvHhQKGS417+s=;
+	s=default; t=1557153405;
+	bh=EQp7oXnTmCsCwvZ8Cp0LLZDWRQp/lNx09s7/4MGjgmg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ecx7cqkWfivhl/43N0jaqFsFVo47XVm0rQbQLDsoHDY6LfDiCeWUM7NRlxuZQ7+rM
-	 oINcgAtCmDpbqAdDmZspH2JCRFq6wiQFFi/ToyDqVeuhq+urzH0EdMq43LmWw6KWNE
-	 c6BvMzqJFT2fuTZU7JZPh41R2ds6WEFAI4bTDhcc=
+	b=pIv8YlBGjkE4sg1ySx9Au2tGUC8WY7RvKqSQ71wYxnZluSXr5JUOG6VU6ajmF4vnN
+	 O/TODbozSTgZcgP1uqqLPnob3DiWF0wpGvsviTGgaaYRvYmNvF65bgF7kWSmf03fkr
+	 dUqjI9irXv9c/mm4/sNYTQhIkO+JzOAZaRwDOYlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfEFOgk (ORCPT
+        id S1727229AbfEFOgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:36:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57010 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:36:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727188AbfEFOgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:36:36 -0400
+        id S1726755AbfEFOgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:36:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1A7320B7C;
-        Mon,  6 May 2019 14:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25A86204EC;
+        Mon,  6 May 2019 14:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153395;
-        bh=IVWKTLJ67r9Fag+JPkcDnWfalbUx2MqvHhQKGS417+s=;
+        s=default; t=1557153400;
+        bh=EQp7oXnTmCsCwvZ8Cp0LLZDWRQp/lNx09s7/4MGjgmg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KSs5uvnop+wqNCPv0ikPOBax8gsYE8Uf1HOAAGNx3gk19fbLczSxnhDoh3J0OzUe3
-         B6tqJX8Rcg2uQ7RlyDf47I0JGmJXfox0mBWZ+znKAwMLmZvG0rj6OK3MBYyKNlJF2e
-         9LQQFuakGAtSu65Nu8lpAZpaezPoBCa2Nie4AV8k=
+        b=AXpDTPIBa9DPYzuDhVc+GRh19XML8OFnL2Qp/7suWx21uUqVueWAnokvf2q9lzc+H
+         +D4AqOFUxweK6JmIKbfBCCFh6KhN0rozNos+fFbWkWlo26va0q4fyYXUDozhipZzAT
+         sPOw/VZZm1PDlSGi3LUeNq4LDZyu0xq449FZvBP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xi Wang <wangxi11@huawei.com>,
+        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 045/122] net: hns3: fix compile error
-Date:   Mon,  6 May 2019 16:31:43 +0200
-Message-Id: <20190506143058.973350300@linuxfoundation.org>
+Subject: [PATCH 5.0 073/122] libcxgb: fix incorrect ppmax calculation
+Date:   Mon,  6 May 2019 16:32:11 +0200
+Message-Id: <20190506143101.466252453@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,54 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 669efc76b317b3aa550ffbf0b79d064cb00a5f96 ]
+[ Upstream commit cc5a726c79158bd307150e8d4176ec79b52001ea ]
 
-Currently, the rules for configuring search paths in Kbuild have
-changed, this will lead some erros when compiling hns3 with the
-following command:
+BITS_TO_LONGS() uses DIV_ROUND_UP() because of
+this ppmax value can be greater than available
+per cpu page pods.
 
-make O=DIR M=drivers/net/ethernet/hisilicon/hns3
+This patch removes BITS_TO_LONGS() to fix this
+issue.
 
-drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c:11:10:
-fatal error: hnae3.h: No such file or directory
-
-This patch fix it by adding $(srctree)/ prefix to the serach paths.
-
-Signed-off-by: Xi Wang <wangxi11@huawei.com>
+Signed-off-by: Varun Prakash <varun@chelsio.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile b/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
-index fffe8c1c45d3..0fb61d440d3b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
-@@ -3,7 +3,7 @@
- # Makefile for the HISILICON network device drivers.
- #
+diff --git a/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c b/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c
+index 74849be5f004..e2919005ead3 100644
+--- a/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c
++++ b/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c
+@@ -354,7 +354,10 @@ static struct cxgbi_ppm_pool *ppm_alloc_cpu_pool(unsigned int *total,
+ 		ppmax = max;
  
--ccflags-y := -Idrivers/net/ethernet/hisilicon/hns3
-+ccflags-y := -I $(srctree)/drivers/net/ethernet/hisilicon/hns3
+ 	/* pool size must be multiple of unsigned long */
+-	bmap = BITS_TO_LONGS(ppmax);
++	bmap = ppmax / BITS_PER_TYPE(unsigned long);
++	if (!bmap)
++		return NULL;
++
+ 	ppmax = (bmap * sizeof(unsigned long)) << 3;
  
- obj-$(CONFIG_HNS3_HCLGE) += hclge.o
- hclge-objs = hclge_main.o hclge_cmd.o hclge_mdio.o hclge_tm.o hclge_mbx.o hclge_err.o  hclge_debugfs.o
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile b/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
-index fb93bbd35845..6193f8fa7cf3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
-@@ -3,7 +3,7 @@
- # Makefile for the HISILICON network device drivers.
- #
+ 	alloc_sz = sizeof(*pools) + sizeof(unsigned long) * bmap;
+@@ -402,6 +405,10 @@ int cxgbi_ppm_init(void **ppm_pp, struct net_device *ndev,
+ 	if (reserve_factor) {
+ 		ppmax_pool = ppmax / reserve_factor;
+ 		pool = ppm_alloc_cpu_pool(&ppmax_pool, &pool_index_max);
++		if (!pool) {
++			ppmax_pool = 0;
++			reserve_factor = 0;
++		}
  
--ccflags-y := -Idrivers/net/ethernet/hisilicon/hns3
-+ccflags-y := -I $(srctree)/drivers/net/ethernet/hisilicon/hns3
- 
- obj-$(CONFIG_HNS3_HCLGEVF) += hclgevf.o
- hclgevf-objs = hclgevf_main.o hclgevf_cmd.o hclgevf_mbx.o
-\ No newline at end of file
+ 		pr_debug("%s: ppmax %u, cpu total %u, per cpu %u.\n",
+ 			 ndev->name, ppmax, ppmax_pool, pool_index_max);
 -- 
 2.20.1
 
