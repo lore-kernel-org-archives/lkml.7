@@ -2,183 +2,139 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10645C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 22:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B48C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 22:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A1320675
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 22:01:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="oQfAPhS9"
+	by mail.kernel.org (Postfix) with ESMTP id 4557220675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 22:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfEFWBJ (ORCPT
+        id S1726546AbfEFWDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 18:01:09 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40593 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfEFWBJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 18:01:09 -0400
-Received: by mail-wm1-f67.google.com with SMTP id h11so17055180wmb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 15:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=S4Twu03W52bharsa28deUvAOBFbVqsnVCRBal8T2tGY=;
-        b=oQfAPhS9wEp2Hx/ijqq21cAV95YxIUG1647G9PtYOSSleuxp5mZrScRa0zZvp5VU5a
-         MKpOxUKUJ7zc0ntu3c3cyDm+S2AyISixmVGEwzG8+712WgunfQdFhpi+PrGqToLcXv9M
-         GEx2/yukVtl9b3MFysNmAE062B+zlYL3tnRlYu60m76PPeVPmnvBxvYGPqOEOcVKldQD
-         O6c/oR9fPpE35S2TTRjoS87gDt1zR04cFNPUwmbnsY7WSNlD+V2B5Ui9PoXDS8mRqM/z
-         w5GQuIEiH4OXDjZEq/qdJL6Qiqm/6SyMIUeVrXMglBGS+NSd7sChSMvfyS3tV9q0st7z
-         exUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
-        bh=S4Twu03W52bharsa28deUvAOBFbVqsnVCRBal8T2tGY=;
-        b=U3wak11gihqKU/J8En0nbMGnBopydoA2LIZ4QCMNklplrSW7CryOakfjq9U3rbN22t
-         Njyn4dPya9oOyODvfv0vcqJcg0cld4aA7vlmN3IZwCKjOLIbvI5qfvnZc0sNXs0r7OZQ
-         NHgEbiYSmQWhug0ONsETjK3HpnFQtvCUBwaD5izUAOaDtUExYmaRFHHyyzPFPPcVyyT6
-         0H1LXkDBtgnIcAMsIStx/XH8B3ACaXkfNdFL3wqNGhKc6RTCltoP4Bn7TDkCbesxtF4N
-         ecwlbNdiLm9tdn+23EZU+fbzAM+21kILEtQ0H92cgnvGMtltR20IrE1AbwCqhNh+PL4R
-         ruwQ==
-X-Gm-Message-State: APjAAAVoTvjXrjNgihQCfMM/UHlmfuDZo9U/8oqwDzHKDQDbtTl2KwdY
-        zMOdOuKzaE5A0CZ/rb1cxl3+bQ==
-X-Google-Smtp-Source: APXvYqy5MXXJj5NCf5sMcy/cSoD/6qHnzdqSqPsgxOtiPAMAiNdH/g9i6I8ljAUKBnOc3rJYLLw3uw==
-X-Received: by 2002:a1c:9ad8:: with SMTP id c207mr18282602wme.109.1557180066808;
-        Mon, 06 May 2019 15:01:06 -0700 (PDT)
-Received: from LAPTOP-V3S7NLPL (cpc1-cmbg19-2-0-cust104.5-4.cable.virginm.net. [82.27.180.105])
-        by smtp.gmail.com with ESMTPSA id r2sm27752186wrr.65.2019.05.06.15.01.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 15:01:05 -0700 (PDT)
-References: <673b885183fb64f1cbb3ed2387524077@natalenko.name>
-User-agent: mu4e 0.9.18; emacs 25.2.2
-From:   Jiong Wang <jiong.wang@netronome.com>
-To:     Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        oss-drivers@netronome.com, linux-kernel@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, valdis@vt.edu
-Subject: Re: [oss-drivers] netronome/nfp/bpf/jit.c cannot be build with -O3
-In-reply-to: <673b885183fb64f1cbb3ed2387524077@natalenko.name>
-Date:   Mon, 06 May 2019 23:01:03 +0100
-Message-ID: <87mujzutsw.fsf@netronome.com>
+        Mon, 6 May 2019 18:03:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54016 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbfEFWDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 18:03:14 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4A6B781E0F;
+        Mon,  6 May 2019 22:03:14 +0000 (UTC)
+Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D6C5C611C9;
+        Mon,  6 May 2019 22:03:13 +0000 (UTC)
+Date:   Mon, 6 May 2019 16:03:13 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kwankhede@nvidia.com, cjia@nvidia.com
+Subject: Re: [PATCHv2 00/10] vfio/mdev: Improve vfio/mdev core module
+Message-ID: <20190506160313.41c189f0@x1.home>
+In-Reply-To: <20190430224937.57156-1-parav@mellanox.com>
+References: <20190430224937.57156-1-parav@mellanox.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 06 May 2019 22:03:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 30 Apr 2019 17:49:27 -0500
+Parav Pandit <parav@mellanox.com> wrote:
 
-'Oleksandr Natalenko' via OSS Drivers writes:
+> As we would like to use mdev subsystem for wider use case as
+> discussed in [1], [2] apart from an offline discussion.
+> This use case is also discussed with wider forum in [4] in track
+> 'Lightweight NIC HW functions for container offload use cases'.
+> 
+> This series is prep-work and improves vfio/mdev module in following ways.
+> 
+> Patch-1 Fixes releasing parent dev reference during error unwinding
+>         mdev parent registration.
+> Patch-2 Simplifies mdev device for unused kref.
+> Patch-3 Drops redundant extern prefix of exported symbols.
+> Patch-4 Returns right error code from vendor driver.
+> Patch-5 Fixes to use right sysfs remove sequence.
+> Patch-6 Fixes removing all child devices if one of them fails.
+> Patch-7 Remove unnecessary inline
+> Patch-8 Improve the mdev create/remove sequence to match Linux
+>         bus, device model
+> Patch-9 Avoid recreating remove file on stale device to
+>         eliminate call trace
+> Patch-10 Fix race conditions of create/remove with parent removal
+> This is improved version than using srcu as srcu can take
+> seconds to minutes.
+> 
+> This series is tested using
+> (a) mtty with VM using vfio_mdev driver for positive tests and
+> device removal while device in use by VM using vfio_mdev driver
+> 
+> (b) mlx5 core driver using RFC patches [3] and internal patches.
+> Internal patches are large and cannot be combined with this
+> prep-work patches. It will posted once prep-work completes.
+> 
+> [1] https://www.spinics.net/lists/netdev/msg556978.html
+> [2] https://lkml.org/lkml/2019/3/7/696
+> [3] https://lkml.org/lkml/2019/3/8/819
+> [4] https://netdevconf.org/0x13/session.html?workshop-hardware-offload
+> 
+> ---
+> Changelog:
+> ---
+> v1->v2:
+>  - Addressed comments from Alex
+>  - Rebased
+>  - Inserted the device checking loop in Patch-6 as original code
+>  - Added patch 7 to 10
+>  - Added fixes for race condition in create/remove with parent removal
+>    Patch-10 uses simplified refcount and completion, instead of srcu
+>    which might take seconds to minutes on busy system.
+>  - Added fix for device create/remove sequence to match
+>    Linux device, bus model
+> v0->v1:
+>  - Dropped device placement on bus sequence patch for this series
+>  - Addressed below comments from Alex, Kirti, Maxim.
+>  - Added Review-by tag for already reviewed patches.
+>  - Dropped incorrect patch of put_device().
+>  - Corrected Fixes commit tag for sysfs remove sequence fix
+>  - Split last 8th patch to smaller refactor and fixes patch
+>  - Following coding style commenting format
+>  - Fixed accidental delete of mutex_lock in mdev_unregister_device
+>  - Renamed remove helped to mdev_device_remove_common().
+>  - Rebased for uuid/guid change
+> 
+> Parav Pandit (10):
+>   vfio/mdev: Avoid release parent reference during error path
+>   vfio/mdev: Removed unused kref
+>   vfio/mdev: Drop redundant extern for exported symbols
+>   vfio/mdev: Avoid masking error code to EBUSY
+>   vfio/mdev: Follow correct remove sequence
+>   vfio/mdev: Fix aborting mdev child device removal if one fails
+>   vfio/mdev: Avoid inline get and put parent helpers
+>   vfio/mdev: Improve the create/remove sequence
+>   vfio/mdev: Avoid creating sysfs remove file on stale device removal
+>   vfio/mdev: Synchronize device create/remove with parent removal
+> 
+>  drivers/vfio/mdev/mdev_core.c    | 162 +++++++++++++------------------
+>  drivers/vfio/mdev/mdev_private.h |   9 +-
+>  drivers/vfio/mdev/mdev_sysfs.c   |   8 +-
+>  include/linux/mdev.h             |  21 ++--
+>  4 files changed, 89 insertions(+), 111 deletions(-)
+> 
 
-> Hi.
->
-> Obligatory disclaimer: building the kernel with -O3 is a non-standard 
-> thing done via this patch [1], but I've asked people in #kernelnewbies, 
-> and it was suggested that the issue should be still investigated.
->
-> So, with v5.1 kernel release I cannot build the kernel with -O3 anymore. 
-> It fails as shown below:
+Hi Parav,
 
-I guess it's because constant prop. Could you try the following change to
-__emit_shift?
+I applied 1-7 to the vfio next branch for v5.2 since these are mostly
+previously reviewed or trivial.  I'm not ruling out the rest for v5.2
+as bug fixes yet, but they require a bit more to digest and hopefully
+we'll get some feedback from others as well.  Thanks,
 
-drivers/net/ethernet/netronome/nfp/bpf/jit.c
-__emit_shift:331
--       if (sc == SHF_SC_L_SHF)
-+       if (sc == SHF_SC_L_SHF && shift)
-                shift = 32 - shift;
-
-emit_shf_indir is passing "0" as shift to __emit_shift which will
-eventually be turned into 32 and it was OK because we truncate to 5-bit,
-but before truncation, it will overflow the shift mask.
-
-Regards,
-Jiong
-
->
-> ===
->    CC      drivers/net/ethernet/netronome/nfp/bpf/jit.o
-> In file included from ./include/asm-generic/bug.h:5,
->                   from ./arch/x86/include/asm/bug.h:83,
->                   from ./include/linux/bug.h:5,
->                   from drivers/net/ethernet/netronome/nfp/bpf/jit.c:6:
-> In function ‘__emit_shf’,
->      inlined from ‘emit_shf.constprop’ at 
-> drivers/net/ethernet/netronome/nfp/bpf/jit.c:364:2,
->      inlined from ‘shl_reg64_lt32_low’ at 
-> drivers/net/ethernet/netronome/nfp/bpf/jit.c:379:2,
->      inlined from ‘shl_reg’ at 
-> drivers/net/ethernet/netronome/nfp/bpf/jit.c:2506:2:
-> ./include/linux/compiler.h:344:38: error: call to 
-> ‘__compiletime_assert_341’ declared with attribute error: BUILD_BUG_ON 
-> failed: (((0x001f0000000ULL) + (1ULL << 
-> (__builtin_ffsll(0x001f0000000ULL) - 1))) & (((0x001f0000000ULL) + (1ULL 
-> << (__builtin_ffsll(0x001f0000000ULL) - 1))) - 1)) != 0
->    _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
->                                        ^
-> ./include/linux/compiler.h:325:4: note: in definition of macro 
-> ‘__compiletime_assert’
->      prefix ## suffix();    \
->      ^~~~~~
-> ./include/linux/compiler.h:344:2: note: in expansion of macro 
-> ‘_compiletime_assert’
->    _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
->    ^~~~~~~~~~~~~~~~~~~
-> ./include/linux/build_bug.h:39:37: note: in expansion of macro 
-> ‘compiletime_assert’
->   #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->                                       ^~~~~~~~~~~~~~~~~~
-> ./include/linux/bitfield.h:57:3: note: in expansion of macro 
-> ‘BUILD_BUG_ON_MSG’
->     BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?  \
->     ^~~~~~~~~~~~~~~~
-> ./include/linux/bitfield.h:89:3: note: in expansion of macro 
-> ‘__BF_FIELD_CHECK’
->     __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
->     ^~~~~~~~~~~~~~~~
-> drivers/net/ethernet/netronome/nfp/bpf/jit.c:341:3: note: in expansion 
-> of macro ‘FIELD_PREP’
->     FIELD_PREP(OP_SHF_SHIFT, shift) |
->     ^~~~~~~~~~
-> make[1]: *** [scripts/Makefile.build:276: 
-> drivers/net/ethernet/netronome/nfp/bpf/jit.o] Error 1
-> make: *** [Makefile:1726: drivers/net/ethernet/netronome/nfp/bpf/jit.o] 
-> Error 2
-> ===
->
-> Needless to say, with -O2 this file is built just fine. My compiler is:
->
-> ===
-> $ gcc --version
-> gcc (GCC) 8.3.0
-> Copyright (C) 2018 Free Software Foundation, Inc.
-> This is free software; see the source for copying conditions.  There is 
-> NO
-> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-> PURPOSE.
-> ===
->
-> I had no issues with -O3 before, so, maybe, this deserves a peek.
->
-> I'm open to testing patches and providing more info if needed.
->
-> Thanks.
->
-> [1] 
-> https://gitlab.com/post-factum/pf-kernel/commit/7fef93015ff1776d08119ef3d057a9e9433954a9
-
+Alex
