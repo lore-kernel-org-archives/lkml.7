@@ -2,106 +2,187 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D1CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F98C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6AD206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:17:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xxAg3lmL"
+	by mail.kernel.org (Postfix) with ESMTP id BA916206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:18:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfEFTQY (ORCPT
+        id S1726694AbfEFTSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:16:24 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60786 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfEFTQX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:16:23 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x46JG9Mx033100;
-        Mon, 6 May 2019 14:16:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557170169;
-        bh=fSCI3Xo/8gpQuK8AZ4vjT1KevGt34HUjLaa0gLu2rvY=;
-        h=From:To:CC:Subject:Date;
-        b=xxAg3lmL8t9Y21ALVkPt3azo4Hitd18Cp+187ZcMM1X68ztQR6y7eYD+t0ou4QxdS
-         MiMtCsLxvyC37iANy+QgPo44NWUzaS0bA1sPXYqgMRKskeq0f6QzV8zxzp6prDosDh
-         DpDeipdZiiLEOtBnq5p0fszvdzBH/ep7pjwKb0Lc=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x46JG9W0074952
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 May 2019 14:16:09 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 6 May
- 2019 14:16:08 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 6 May 2019 14:16:08 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x46JG84h002029;
-        Mon, 6 May 2019 14:16:08 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <lee.jones@linaro.org>, <rdunlap@infradead.org>,
-        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v4 0/7] LMU Rework
-Date:   Mon, 6 May 2019 14:16:07 -0500
-Message-ID: <20190506191614.25051-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.21.0.5.gaeb582a983
+        Mon, 6 May 2019 15:18:11 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:26234 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbfEFTSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 15:18:10 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 8683DA1093;
+        Mon,  6 May 2019 21:18:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id EKEQeCr6Tfp8; Mon,  6 May 2019 21:17:52 +0200 (CEST)
+Date:   Tue, 7 May 2019 05:17:35 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
+Message-ID: <20190506191735.nmzf7kwfh7b6e2tf@yavin>
+References: <20190506165439.9155-1-cyphar@cyphar.com>
+ <20190506165439.9155-6-cyphar@cyphar.com>
+ <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yezcske27bisu2pl"
+Content-Disposition: inline
+In-Reply-To: <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
 
-With this series there was an offline discussion that the filename of the LED
-portion of the driver did not adhere to the directory file naming convention so
-the file name has been changed
+--yezcske27bisu2pl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ti-lmu-led-common.c->leds-ti-lmu-common.c
-ti-lmu-led-common.h->leds-ti-lmu-common.h
+On 2019-05-06, Jann Horn <jannh@google.com> wrote:
+> On Mon, May 6, 2019 at 6:56 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > The need to be able to scope path resolution of interpreters became
+> > clear with one of the possible vectors used in CVE-2019-5736 (which
+> > most major container runtimes were vulnerable to).
+> >
+> > Naively, it might seem that openat(2) -- which supports path scoping --
+> > can be combined with execveat(AT_EMPTY_PATH) to trivially scope the
+> > binary being executed. Unfortunately, a "bad binary" (usually a symlink)
+> > could be written as a #!-style script with the symlink target as the
+> > interpreter -- which would be completely missed by just scoping the
+> > openat(2). An example of this being exploitable is CVE-2019-5736.
+> >
+> > In order to get around this, we need to pass down to each binfmt_*
+> > implementation the scoping flags requested in execveat(2). In order to
+> > maintain backwards-compatibility we only pass the scoping AT_* flags.
+> >
+> > To avoid breaking userspace (in the exceptionally rare cases where you
+> > have #!-scripts with a relative path being execveat(2)-ed with dfd !=3D
+> > AT_FDCWD), we only pass dfd down to binfmt_* if any of our new flags are
+> > set in execveat(2).
+>=20
+> This seems extremely dangerous. I like the overall series, but not this p=
+atch.
+>=20
+> > @@ -1762,6 +1774,12 @@ static int __do_execve_file(int fd, struct filen=
+ame *filename,
+> >
+> >         sched_exec();
+> >
+> > +       bprm->flags =3D flags & (AT_XDEV | AT_NO_MAGICLINKS | AT_NO_SYM=
+LINKS |
+> > +                              AT_THIS_ROOT);
+> [...]
+> > +#define AT_THIS_ROOT           0x100000 /* - Scope ".." resolution to =
+dirfd (like chroot(2)). */
+>=20
+> So now what happens if there is a setuid root ELF binary with program
+> interpreter "/lib64/ld-linux-x86-64.so.2" (like /bin/su), and an
+> unprivileged user runs it with execveat(..., AT_THIS_ROOT)? Is that
+> going to let the unprivileged user decide which interpreter the
+> setuid-root process should use? From a high-level perspective, opening
+> the interpreter should be controlled by the program that is being
+> loaded, not by the program that invoked it.
 
-Dan
+I went a bit nuts with openat_exec(), and I did end up adding it to the
+ELF interpreter lookup (and you're completely right that this is a bad
+idea -- I will drop it from this patch if it's included in the next
+series).
 
-Dan Murphy (7):
-  dt-bindings: mfd: LMU: Fix lm3632 dt binding example
-  dt-bindings: mfd: LMU: Add the ramp up/down property
-  dt-bindings: mfd: LMU: Add ti,brightness-resolution
-  leds: TI LMU: Add common code for TI LMU devices
-  dt-bindings: ti-lmu: Modify dt bindings for the LM3697
-  mfd: ti-lmu: Remove support for LM3697
-  leds: lm3697: Introduce the lm3697 driver
+The proposed solutions you give below are much nicer than this patch so
+I can drop it and work on fixing those issues separately.
 
- .../devicetree/bindings/leds/leds-lm3697.txt  |  73 ++++
- .../devicetree/bindings/mfd/ti-lmu.txt        |  58 ++-
- drivers/leds/Kconfig                          |  15 +
- drivers/leds/Makefile                         |   2 +
- drivers/leds/leds-lm3697.c                    | 395 ++++++++++++++++++
- drivers/leds/leds-ti-lmu-common.c             | 156 +++++++
- drivers/mfd/Kconfig                           |   2 +-
- drivers/mfd/ti-lmu.c                          |  17 -
- include/linux/leds-ti-lmu-common.h            |  47 +++
- include/linux/mfd/ti-lmu-register.h           |  44 --
- include/linux/mfd/ti-lmu.h                    |   1 -
- 11 files changed, 714 insertions(+), 96 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
- create mode 100644 drivers/leds/leds-lm3697.c
- create mode 100644 drivers/leds/leds-ti-lmu-common.c
- create mode 100644 include/linux/leds-ti-lmu-common.h
+> In my opinion, CVE-2019-5736 points out two different problems:
+>
+> The big problem: The __ptrace_may_access() logic has a special-case
+> short-circuit for "introspection" that you can't opt out of; this
+> makes it possible to open things in procfs that are related to the
+> current process even if the credentials of the process wouldn't permit
+> accessing another process like it. I think the proper fix to deal with
+> this would be to add a prctl() flag for "set whether introspection is
+> allowed for this process", and if userspace has manually un-set that
+> flag, any introspection special-case logic would be skipped.
 
--- 
-2.21.0.5.gaeb582a983
+We could do PR_SET_DUMPABLE=3D3 for this, I guess?
 
+> An additional problem: /proc/*/exe can be used to open a file for
+> writing; I think it may have been Andy Lutomirski who pointed out some
+> time ago that it would be nice if you couldn't use /proc/*/fd/* to
+> re-open files with more privileges, which is sort of the same thing.
+
+This is something I'm currently working on a series for, which would
+boil down to some restrictions on how re-opening of file descriptors
+works through procfs.
+
+However, execveat() of a procfs magiclink is a bit hard to block --
+there is no way for userspace to to represent a file being "open for
+execute" so they are all "open for execute" by default and blocking it
+outright seems a bit extreme (though I actually hope to eventually add
+the ability to mark an O_PATH as "open for X" to resolveat(2) -- hence
+why I've reserved some bits).
+
+(Thinking more about it, there is an argument that I should include the
+above patch into this series so that we can block re-opening of fds
+opened through resolveat(2) without explicit flags from the outset.)
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--yezcske27bisu2pl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzQiEwACgkQSnvnv3De
+m59OaBAAz2IFmbji63Cay/WhNNJQnxuHC886Ekc041hMJQn7ciW0w6zqI4hbIEHr
+/bI4P+8riONORm5RBnyRyLHLS8iaC1VZJmWbFnZM5h8j8++jA5f8qVaBpcGrXWrn
+d1d7ypyVWtxAQJmttIfxGy2d5xzqDpS99ZPnsthF1LQAW1HpKR8maW+Q/cqoTGK5
+X33vxwVJaFAatwFDRwsuztAt23m3sJouDvJMuAUOC7/SmQJX2ZI5NRJVUNQOX2Ch
+bvKadGzJ8wm31laLSTCDmH3mzKDGshuGCzsqoBgbjRG4s0jPQwAQcbGnj2gcf3gK
+1l1jTibk7oOecrUs/GV0++QEkt+mcSJjPsD2oqo9GczTWyPXxQowXJHyPnwhSB1R
+MRPZKsSDdTo6gX5hdTzSD/vqyFGtBZArR0h+KhtLs88ypfyd7Bn8cgRQ99bPK3Nb
+afiAPQoCyS+4LMLGvRhxuGwjzWvBNKaR463yygtqSfZDzqWLr7eTorj+0KuJhmvo
+zDJcj8wnUlWkRXS7Unpj6xy0vKX2mJrkxlOCi39DYYWNTQkj52qLZ+efH44ex0i9
+wqAXHmt07+ys/LvIDXHnFzyZSafLhKp7OTWXUiEhVDHCwxFbfQQmsP12pRuoJT9H
+OeQgWaVC58G2O4hlrjZBfowV1g9fLjVm/oj+CMVGdhrYyVYSuP4=
+=LRko
+-----END PGP SIGNATURE-----
+
+--yezcske27bisu2pl--
