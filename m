@@ -2,111 +2,96 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A457FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54614C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9512053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2761F2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557155159;
+	bh=l+vwBq8B0iCqSp7zzsk2DETMYixOA5pWhzYBakqzhJw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=V2N4Ba3TIQz6+gi4JAowIZ0FhntoAvzTcyFV2XTVZYJ1ohMx0g+JDSU0zzmcaXmT1
+	 8LFnCNieQnw3+Zg7LBcFYv5X414DxrJ3sNcnDVdAFPuUZLWFp8OBAZ/kITwyHbKind
+	 8QTMmDTgOgdce4A2bWCTBwRw2MQVj+gAh8lrZiq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfEFPF4 (ORCPT
+        id S1727680AbfEFPF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:05:56 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36982 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbfEFPFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:05:46 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w37so15661216edw.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 08:05:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EG9y7f+OaOLQCxmo5YAdYV2d8wQYYdrdIyT2YfdhqrA=;
-        b=F+4/Jl6/lvGeT+SS7vPjh+1b/nWrFBsxvd5B0DDbfxbrSS/DXDDTUUdplsPBDkiU9b
-         eHfG880v3EXk5/Puc8CtNV/4iCqMvwle6VBUsAsEed+STfBUZBk+KFcnonnwNgU/J1k4
-         UQ/NUbdxENW3ZMoOQ6AMDUfK3bzFY2WhDwiaE02NZfgWUbosa6HvaUgDzB/AkSCODn0/
-         xMIQXIKa9HvlFwSNs2wh8Zm+OSvKzPbNyWdIDqQO80GKSowsoevKXiXQ9BL+4OKipJOj
-         Yp4FRY5CewaBdha6ZLVG0TsyOkCmss6twrF9fuK4y3lAprCz5RdXzJY6/7DdcMCBOcMJ
-         w/kw==
-X-Gm-Message-State: APjAAAUG1IaxOoO47HdCHj0aXKLeru1tQR0gwMV9x1X09Wnu988gRfam
-        PaEDpRDOeHpubL5Nx3ojLPmHUQ==
-X-Google-Smtp-Source: APXvYqwG7U8NKXeMCYsnsKEeNFfADW0dBrFnKXzISgYtUcSEK+XfEplGea/2X6qLq5ujIDfyCx/gVw==
-X-Received: by 2002:a50:9007:: with SMTP id b7mr25564744eda.194.1557155144500;
-        Mon, 06 May 2019 08:05:44 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id b42sm2996983edd.83.2019.05.06.08.05.43
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 08:05:43 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: pmc_atom: Add Lex 3I380D industrial PC to
- critclk_systems DMI table
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Semyon Verchenko <semverchenko@factor-ts.ru>
-References: <20190429150135.15070-1-hdegoede@redhat.com>
- <CAHp75VeE=88mCcgVx3Y3PQJPQ819Z7=3s=jRGz1y=t09phk=rA@mail.gmail.com>
- <085c5b6e-d220-ebd1-38d2-def7efca24b8@redhat.com>
- <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <568ba27d-a6a5-b158-bab1-f22cd8ccb34e@redhat.com>
-Date:   Mon, 6 May 2019 17:05:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 6 May 2019 11:05:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727547AbfEFOiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:38:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1A1920449;
+        Mon,  6 May 2019 14:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557153495;
+        bh=l+vwBq8B0iCqSp7zzsk2DETMYixOA5pWhzYBakqzhJw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Fx15v/a2L1xN4Da0l14LrWpD9CtQyRz4Twb3j883wqaOp5KnZgHTNd/pLOzMlO0gJ
+         ZcMVCzxUu1SKX5Zcn71V+TGwwlV1rJWwZpSasXu+8uqEMWWHF+t9Kg51/YymHXWmV+
+         Homu4gM4cql0m6PqqKrQgYOyVZQlOs81YooPHfmE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.0 111/122] gpio: mxc: add check to return defer probe if clock tree NOT ready
+Date:   Mon,  6 May 2019 16:32:49 +0200
+Message-Id: <20190506143104.441736734@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
+References: <20190506143054.670334917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vfe9uK_b_V+uG29wb1L6J7u1hpbU+P4beXso9KNPM+8Rg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Anson Huang <anson.huang@nxp.com>
 
-On 06-05-19 16:59, Andy Shevchenko wrote:
-> On Mon, May 6, 2019 at 5:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 06-05-19 14:38, Andy Shevchenko wrote:
->>> On Mon, Apr 29, 2019 at 6:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>>>
->>>> The Lex 3I380D industrial PC has 4 ethernet controllers on board
->>>> which need pmc_plt_clk0 - 3 to function, add it to the critclk_systems
->>>> DMI table, so that drivers/clk/x86/clk-pmc-atom.c will mark the clocks
->>>> as CLK_CRITICAL and they will not get turned off.
->>>>
->>>
->>> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>> supposedly to go via CLK tree.
->>>
->>> P.S. If you want it through PDx86, I need immutable branch / tag from CLK.
->>
->> Stephen added the patches this depends on to his fixes branch, so they
->> are in the 5.1 / Torvald's master branch, since we are now in the 5.2 merge
->> window, you should be able to cleanly apply this directly.
-> 
-> We don't do back merges, so, our base is v5.1-rc1. Does it mean the
-> commit in question is in v5.1-rc1?
-> AFAICS it was appeared in v5.1-rc5.
+commit a329bbe707cee2cf8c660890ef2ad0d00ec7e8a3 upstream.
 
-Ah, I see, my bad.
+On i.MX8MQ platform, clock driver uses platform driver
+model and it is probed after GPIO driver, so when GPIO
+driver fails to get clock, it should check the error type
+to decide whether to return defer probe or just ignore
+the clock operation.
 
-Stephen can you pick up this patch and the
-"[PATCH 1/1] Add several Beckhoff Automation boards to critclk_systems DMI table"
-patch then?
+Fixes: 2808801aab8a ("gpio: mxc: add clock operation")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Regards,
+---
+ drivers/gpio/gpio-mxc.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Hans
+--- a/drivers/gpio/gpio-mxc.c
++++ b/drivers/gpio/gpio-mxc.c
+@@ -438,8 +438,11 @@ static int mxc_gpio_probe(struct platfor
+ 
+ 	/* the controller clock is optional */
+ 	port->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(port->clk))
++	if (IS_ERR(port->clk)) {
++		if (PTR_ERR(port->clk) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
+ 		port->clk = NULL;
++	}
+ 
+ 	err = clk_prepare_enable(port->clk);
+ 	if (err) {
+
 
