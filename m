@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18210C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42396C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9BA2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A24F2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153825;
-	bh=AY/rr051/mQLydbuvcB38cfBT+IR5wgcnc7nCqodeyQ=;
+	s=default; t=1557153829;
+	bh=GZicRqNn9ZT6vSMW7WqJ1/0qLzAwOZIQY7Zcggs9lfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P3KvJ3omrTGN60WkjRep1t5PrjZUxuz2dSRfCo39fqCuw7IooTniidH1+8HPW8BaO
-	 caC0stqVi5p7V7usg1YqA7QLGkxuzBqXdMRf3ssjzfI0WtyEdr9EyDwbG//k8Q0VL2
-	 W7fyXaa/F1XuVU8AEkp1ts432v8dpIL/0zN7oo0s=
+	b=KbXpaTtPgjTi57xiUFDFsgvX2dAJH1nnDeaGsxP6zlY2SPWwxITE0xbMJVp8cHHP4
+	 d/wevBzUbeue2zevi2vvhQcT6Pxf0+xUTRwpRVibrkTH4ax5+WaUbmlZABJtCjf4G4
+	 0fMUyeQpNnvQwRc1SOd11AZ50AIwwSaeCP3854LE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbfEFOno (ORCPT
+        id S1728720AbfEFOns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:43:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39360 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:43:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbfEFOni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:38 -0400
+        id S1727165AbfEFOnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48B8A2053B;
-        Mon,  6 May 2019 14:43:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4002C2053B;
+        Mon,  6 May 2019 14:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153817;
-        bh=AY/rr051/mQLydbuvcB38cfBT+IR5wgcnc7nCqodeyQ=;
+        s=default; t=1557153825;
+        bh=GZicRqNn9ZT6vSMW7WqJ1/0qLzAwOZIQY7Zcggs9lfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eupdRO8wh7mPR6kEa2VnGSuuiYN4x7MoIDD1i78porYcbEeMyYuooletgXds8WFda
-         /e71YS8c86qFbNSKa5tAMIZQzWKgkqTlQ0xWrnGWJCc+pok7EpqNwb5lUqQZQm+6mx
-         dskOzcFNVoKYIWzw3p6NCAW/xqgKgaKN5OJVCojs=
+        b=aWyvoDEtxto4VSQ+75ViLTALJpBX+X616tysj2rtEVB9PZFoPXKF/YzpOEFxGwg72
+         eRDybwljM31fNFtkzybdtFHMU7fL/NTc5xWd3VVEiLTqa8BHbiGD/p22YcaoT8RUa6
+         Z3JLSeVl0NEd6zdOdh1b/z5dkPoICYgwJhExUpWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Wetzel <alexander@wetzel-home.de>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 91/99] mac80211: Honor SW_CRYPTO_CONTROL for unicast keys in AP VLAN mode
-Date:   Mon,  6 May 2019 16:33:04 +0200
-Message-Id: <20190506143102.134860319@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 11/75] net: dsa: bcm_sf2: fix buffer overflow doing set_rxnfc
+Date:   Mon,  6 May 2019 16:32:19 +0200
+Message-Id: <20190506143054.230811036@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
-References: <20190506143053.899356316@linuxfoundation.org>
+In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
+References: <20190506143053.287515952@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,59 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Wetzel <alexander@wetzel-home.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 78ad2341521d5ea96cb936244ed4c4c4ef9ec13b upstream.
+[ Upstream commit f949a12fd697479f68d99dc65e9bbab68ee49043 ]
 
-Restore SW_CRYPTO_CONTROL operation on AP_VLAN interfaces for unicast
-keys, the original override was intended to be done for group keys as
-those are treated specially by mac80211 and would always have been
-rejected.
+The "fs->location" is a u32 that comes from the user in ethtool_set_rxnfc().
+We can't pass unclamped values to test_bit() or it results in an out of
+bounds access beyond the end of the bitmap.
 
-Now the situation is that AP_VLAN support must be enabled by the driver
-if it can support it (meaning it can support software crypto GTK TX).
-
-Thus, also simplify the code - if we get here with AP_VLAN and non-
-pairwise key, software crypto must be used (driver doesn't know about
-the interface) and can be used (driver must've advertised AP_VLAN if
-it also uses SW_CRYPTO_CONTROL).
-
-Fixes: db3bdcb9c3ff ("mac80211: allow AP_VLAN operation on crypto controlled devices")
-Signed-off-by: Alexander Wetzel <alexander@wetzel-home.de>
-[rewrite commit message]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 7318166cacad ("net: dsa: bcm_sf2: Add support for ethtool::rxnfc")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/mac80211/key.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/dsa/bcm_sf2_cfp.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/mac80211/key.c
-+++ b/net/mac80211/key.c
-@@ -167,8 +167,10 @@ static int ieee80211_key_enable_hw_accel
- 		 * The driver doesn't know anything about VLAN interfaces.
- 		 * Hence, don't send GTKs for VLAN interfaces to the driver.
- 		 */
--		if (!(key->conf.flags & IEEE80211_KEY_FLAG_PAIRWISE))
-+		if (!(key->conf.flags & IEEE80211_KEY_FLAG_PAIRWISE)) {
-+			ret = 1;
- 			goto out_unsupported;
-+		}
- 	}
+--- a/drivers/net/dsa/bcm_sf2_cfp.c
++++ b/drivers/net/dsa/bcm_sf2_cfp.c
+@@ -130,6 +130,9 @@ static int bcm_sf2_cfp_rule_set(struct d
+ 	    (fs->m_ext.vlan_etype || fs->m_ext.data[1]))
+ 		return -EINVAL;
  
- 	ret = drv_set_key(key->local, SET_KEY, sdata,
-@@ -213,11 +215,8 @@ static int ieee80211_key_enable_hw_accel
- 		/* all of these we can do in software - if driver can */
- 		if (ret == 1)
- 			return 0;
--		if (ieee80211_hw_check(&key->local->hw, SW_CRYPTO_CONTROL)) {
--			if (sdata->vif.type == NL80211_IFTYPE_AP_VLAN)
--				return 0;
-+		if (ieee80211_hw_check(&key->local->hw, SW_CRYPTO_CONTROL))
- 			return -EINVAL;
--		}
- 		return 0;
- 	default:
++	if (fs->location != RX_CLS_LOC_ANY && fs->location >= CFP_NUM_RULES)
++		return -EINVAL;
++
+ 	if (fs->location != RX_CLS_LOC_ANY &&
+ 	    test_bit(fs->location, priv->cfp.used))
+ 		return -EBUSY;
+@@ -330,6 +333,9 @@ static int bcm_sf2_cfp_rule_del(struct b
+ 	int ret;
+ 	u32 reg;
+ 
++	if (loc >= CFP_NUM_RULES)
++		return -EINVAL;
++
+ 	/* Refuse deletion of unused rules, and the default reserved rule */
+ 	if (!test_bit(loc, priv->cfp.used) || loc == 0)
  		return -EINVAL;
 
 
