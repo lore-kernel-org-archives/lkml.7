@@ -4,146 +4,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F2EC04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E12C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8720C205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E88412082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="frf8920I"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="INfFhdA7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbfEFGhC (ORCPT
+        id S1726229AbfEFGh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 02:37:02 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44511 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfEFGhB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 02:37:01 -0400
-Received: by mail-oi1-f194.google.com with SMTP id y25so1658135oih.11
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 23:37:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AsWrneXTR0dVmh3/0SghuMR1v5mpMf18phXdK8FnXQk=;
-        b=frf8920IMdLHYA/tNXNdbO5znbdlL6YbO1Vla6P0uim8zVqGlJzdIdUoD9WDeJS6R8
-         /s2Rt9jsQT/VZreSzLBh/1i1eBSmy3l3eHLvsSbEvK4Lgh1idRMTIPi0Z0JPe0rH4ybS
-         s5pg63tEF90wA1Dlko0cr/SnnAAMkGfWeP1OOqGYkrles+0m21rVkBrpgS/tmXcJ5e9W
-         XU7Dr5OGCdaMBI2txRDcgyJMb1dHaJiqoA32A0XpwSC5HhrYet6oFf5W4dHDv/jus9cM
-         7e9xPoBFDurVIDAXFUmnJWqlfxY28c5ML7kuJ7sANzrCi4znsOpJZHVEpgmvLIfgHo4K
-         QOvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AsWrneXTR0dVmh3/0SghuMR1v5mpMf18phXdK8FnXQk=;
-        b=X8I8VD+uLpTERLYdjJqGWzM/nEEEo60NyU2PDuL1VpK6tdr0qbdJQO9EQNtXkaWGqv
-         HM1oGojpRv0kO64YNKSZwYhyDcucm0Nv+B130GJ3zJqDCgP2ItOIxB8xLctZ1NDj38IH
-         okLIJyac+nfD0GwkqO6lyXfBew0Lsp8bB+RDDWqEwhzX5wp28sR7GKjRkvkkIVmug4Jt
-         FzC+Hf9ivFSCsgJ0UVeb7kEJ+owTeSMF4frawq5Ftpsh2vtMF0rKbvah31QyGUoSnr0A
-         gSAmzGSJ2GAd30/GllcjLam4L+w4/v/oOIeZWoG97+gpZAcuumayW02FmGCSrlf4rlmT
-         dXTg==
-X-Gm-Message-State: APjAAAUYMb/gim1qqEpdCkXLczeij+rI+vond04X6QpuNPKIoXRrqHV+
-        RzsDKkCnKmPqtJ01/zmoL1r9ownjuId5KK4fBjF0+w==
-X-Google-Smtp-Source: APXvYqwfACU3oJMu1A/L3M8/Z8X5tpHYCsDugmBY2FX4wctU4dLdhD5XkYMiUU6ywBQrmX0xNHQIVr4RhVDekURBAXk=
-X-Received: by 2002:aca:ba0b:: with SMTP id k11mr171531oif.57.1557124620939;
- Sun, 05 May 2019 23:37:00 -0700 (PDT)
+        Mon, 6 May 2019 02:37:57 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:8034 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbfEFGh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 02:37:57 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44yCjC05gSz9tyfp;
+        Mon,  6 May 2019 08:37:51 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=INfFhdA7; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id swq0gQX0qCwx; Mon,  6 May 2019 08:37:50 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44yCjB60m9z9tyfj;
+        Mon,  6 May 2019 08:37:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1557124670; bh=Fb/CfyK7JfRp2sW54fTJ+6Rf6oUelXmcXkT+5h/45/c=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=INfFhdA7tRmt1FVI8j3SqxuQQESHAfTtVhUtlil3cPOHCm6ZeNyBUx2GTo9b8jjLM
+         CEih9FbiXBnscjZCTE5xN3imiIYeWdQiTJI8c+bamoU0Cz40CVGCf1UnGqMrKYYsrq
+         K23LjJnza09GwLEh1xFaG9ksN2/rzstiozYsWndE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 57DD78B812;
+        Mon,  6 May 2019 08:37:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id V_RXAT8fPJk7; Mon,  6 May 2019 08:37:55 +0200 (CEST)
+Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.6])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2FA788B74F;
+        Mon,  6 May 2019 08:37:55 +0200 (CEST)
+Subject: Re: [PATCH v2 03/15] powerpc/mm: convert Book3E 64 to pte_fragment
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        aneesh.kumar@linux.ibm.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <cover.1556293738.git.christophe.leroy@c-s.fr>
+ <c440b242da6de3823c4ef51f35f38405bbd51430.1556293738.git.christophe.leroy@c-s.fr>
+Message-ID: <0076ad26-9d0e-e408-3521-b8e17669bb04@c-s.fr>
+Date:   Mon, 6 May 2019 08:37:55 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1246f7a9ce912458ea3b889b0c0e392897a664c8.1554879978.git.baolin.wang@linaro.org>
-In-Reply-To: <1246f7a9ce912458ea3b889b0c0e392897a664c8.1554879978.git.baolin.wang@linaro.org>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Mon, 6 May 2019 14:36:49 +0800
-Message-ID: <CAMz4ku+1-w8va__JNkBME5tPuG0AdhzksVbNbYomqY94JggPVg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: sprd: Add clock properties for serial devices
-To:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        DTML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c440b242da6de3823c4ef51f35f38405bbd51430.1556293738.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Olof,
 
-On Wed, 10 Apr 2019 at 15:23, Baolin Wang <baolin.wang@linaro.org> wrote:
->
-> We've introduced power management logics for the Spreadtrum serial
-> controller by commit 062ec2774c8a ("serial: sprd: Add power management
-> for the Spreadtrum serial controller"), thus add related clock properties
-> to support this feature.
->
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+
+Le 26/04/2019 à 17:58, Christophe Leroy a écrit :
+> Book3E 64 is the only subarch not using pte_fragment. In order
+> to allow refactorisation, this patch converts it to pte_fragment.
+> 
+> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > ---
+>   arch/powerpc/include/asm/mmu_context.h       |  6 -----
+>   arch/powerpc/include/asm/nohash/64/mmu.h     |  4 +++-
+>   arch/powerpc/include/asm/nohash/64/pgalloc.h | 33 ++++++++++------------------
+>   arch/powerpc/mm/Makefile                     |  4 ++--
+>   arch/powerpc/mm/mmu_context.c                |  2 +-
+>   5 files changed, 18 insertions(+), 31 deletions(-)
+> 
+[...]
 
-Could you take this patch through the arm-soc tree if no objections
-from you? Thanks.
+> diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
+> index 3c1bd9fa23cd..138c772d58d1 100644
+> --- a/arch/powerpc/mm/Makefile
+> +++ b/arch/powerpc/mm/Makefile
+> @@ -9,6 +9,7 @@ CFLAGS_REMOVE_slb.o = $(CC_FLAGS_FTRACE)
+>   
+>   obj-y				:= fault.o mem.o pgtable.o mmap.o \
+>   				   init_$(BITS).o pgtable_$(BITS).o \
+> +				   pgtable-frag.o \
+>   				   init-common.o mmu_context.o drmem.o
+>   obj-$(CONFIG_PPC_MMU_NOHASH)	+= mmu_context_nohash.o tlb_nohash.o \
+>   				   tlb_nohash_low.o
+> @@ -17,8 +18,7 @@ hash64-$(CONFIG_PPC_NATIVE)	:= hash_native_64.o
+>   obj-$(CONFIG_PPC_BOOK3E_64)   += pgtable-book3e.o
+>   obj-$(CONFIG_PPC_BOOK3S_64)	+= pgtable-hash64.o hash_utils_64.o slb.o \
+>   				   $(hash64-y) mmu_context_book3s64.o \
+> -				   pgtable-book3s64.o pgtable-frag.o
+> -obj-$(CONFIG_PPC32)		+= pgtable-frag.o
+> +				   pgtable-book3s64.o
 
->  arch/arm64/boot/dts/sprd/whale2.dtsi |   16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
-> index 34b6ca0..b5c5dce 100644
-> --- a/arch/arm64/boot/dts/sprd/whale2.dtsi
-> +++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
-> @@ -75,7 +75,9 @@
->                                              "sprd,sc9836-uart";
->                                 reg = <0x0 0x100>;
->                                 interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> -                               clocks = <&ext_26m>;
-> +                               clock-names = "enable", "uart", "source";
-> +                               clocks = <&apapb_gate CLK_UART0_EB>,
-> +                                      <&ap_clk CLK_UART0>, <&ext_26m>;
->                                 status = "disabled";
->                         };
->
-> @@ -84,7 +86,9 @@
->                                              "sprd,sc9836-uart";
->                                 reg = <0x100000 0x100>;
->                                 interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> -                               clocks = <&ext_26m>;
-> +                               clock-names = "enable", "uart", "source";
-> +                               clocks = <&apapb_gate CLK_UART1_EB>,
-> +                                      <&ap_clk CLK_UART1>, <&ext_26m>;
->                                 status = "disabled";
->                         };
->
-> @@ -93,7 +97,9 @@
->                                              "sprd,sc9836-uart";
->                                 reg = <0x200000 0x100>;
->                                 interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> -                               clocks = <&ext_26m>;
-> +                               clock-names = "enable", "uart", "source";
-> +                               clocks = <&apapb_gate CLK_UART2_EB>,
-> +                                      <&ap_clk CLK_UART2>, <&ext_26m>;
->                                 status = "disabled";
->                         };
->
-> @@ -102,7 +108,9 @@
->                                              "sprd,sc9836-uart";
->                                 reg = <0x300000 0x100>;
->                                 interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> -                               clocks = <&ext_26m>;
-> +                               clock-names = "enable", "uart", "source";
-> +                               clocks = <&apapb_gate CLK_UART3_EB>,
-> +                                      <&ap_clk CLK_UART3>, <&ext_26m>;
->                                 status = "disabled";
->                         };
->                 };
-> --
-> 1.7.9.5
->
+Looks like the removal of pgtable-frag.o for CONFIG_PPC_BOOK3S_64 didn't 
+survive the merge.
 
+Will send a patch to fix that.
 
--- 
-Baolin Wang
-Best Regards
+Christophe
+
+>   obj-$(CONFIG_PPC_RADIX_MMU)	+= pgtable-radix.o tlb-radix.o
+>   obj-$(CONFIG_PPC_BOOK3S_32)	+= ppc_mmu_32.o hash_low_32.o mmu_context_hash32.o
+>   obj-$(CONFIG_PPC_BOOK3S)	+= tlb_hash$(BITS).o
