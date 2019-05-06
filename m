@@ -2,135 +2,103 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIM_ADSP_ALL,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C61C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482C8C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E7D2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E7020830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:49:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557172182;
+	bh=N+qCpPipwaspF17fBy5LbpphIyDHNUlHNnmZs/BQbzQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GsalOZW+9FmIgb3wEtpvPSR4s1ARn2KS/2ZJXqUJAcC5bQ8jQcDPEngamzR2clSZw
+	 3fIhNdzqV9rZGetu8JYoJG4LBsaHG2KrR27Ljkej3gscKv43ZXinDXc1oQ8/gbfwX0
+	 z+jDSPCp+hCy3PTFi2qr9bmnBMeajJrskbqvm5jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfEFTs0 (ORCPT
+        id S1726437AbfEFTtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:48:26 -0400
-Received: from vulcan.natalenko.name ([104.207.131.136]:35728 "EHLO
-        vulcan.natalenko.name" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfEFTsZ (ORCPT
+        Mon, 6 May 2019 15:49:41 -0400
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:45471 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfEFTtk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:48:25 -0400
-X-Greylist: delayed 493 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 May 2019 15:48:23 EDT
-Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vulcan.natalenko.name (Postfix) with ESMTPSA id A9DEC53D2A2;
-        Mon,  6 May 2019 21:40:07 +0200 (CEST)
+        Mon, 6 May 2019 15:49:40 -0400
+Received: by mail-wr1-f49.google.com with SMTP id s15so18816597wra.12
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 12:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=66mlbL0CrJ7/fuI7SCKRUurSoskawyn/TvebHqiOTt8=;
+        b=FlXDTIis0m0j5kLiizL/QvH7mk4IWpAx57X9RljhmJQn1jHHcX2QlV1+UCcX/kOqXy
+         4jsJbJQANImituAVQ+nE5tOHnBMqPG7ibCwL4IILpy4hTszYW3kr1X2AEBfhJluyssZL
+         mNHUHFxT7GF8O++hCAdk2cYRiMKDPMlh+0Lh65cBhlSqO8y9Jv6gv1eeQYtwQenwSRcc
+         zjzw6zjabhucP+ZT0ZrnbsbIRkAtL/HqH98Egt0TdItAWYknFxwiYBt8YQ15do5I+MKj
+         Q8JRGsl4WNrhvwE/YVnQA75k8ZA9ltrM9IkssX5sbVf9Q6neS/Q2kUww1edOF4kt/eCn
+         1yvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=66mlbL0CrJ7/fuI7SCKRUurSoskawyn/TvebHqiOTt8=;
+        b=BTWMpTI0zOzSOYQXUNSDhbUSYQuXBFIj2p/J08i7BGxJUqz6vcwZB7i5e+cEV7AQDC
+         jmljIAIvPg8w9QmI18cBCWZGSBHkj+GCYCo3iC3npQmasfmgWul984RhuqR7SG+p8TcW
+         DMNP1R3QRcsMd5eg01sEHpJmRMr7PZztHXLXr545DUblP56qtte5nL0hSLdghaQt0zxw
+         H4F3tZ6FMdXNrYJqQTNbSEVjbBf0VOIJmMC2dop5hgljc9IUCzye6RKwn+/rhdJGo+3u
+         ZHRQpVQ2IfDyqQpprzUqFb2E7inubSf8wKnxwpka/GowpVcTTDWhhDNxPnci0iTuivi3
+         aouA==
+X-Gm-Message-State: APjAAAUGBWSu8/yNQwWIzlWLCv2wsIxDjzYzsf0Z7rKZilDWQqVtR2oF
+        xgcv2wxItHAp83zZBQKX0qpyvwZF
+X-Google-Smtp-Source: APXvYqz01qngGuY0hCwslSWQ48ISnDoheCvFT6fhoee9EhzVYjJ1GRWVZHVliPnRFQd9b70DWVN9Vw==
+X-Received: by 2002:adf:fe49:: with SMTP id m9mr1443607wrs.73.1557172179285;
+        Mon, 06 May 2019 12:49:39 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id a11sm8221615wmm.35.2019.05.06.12.49.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 12:49:38 -0700 (PDT)
+Date:   Mon, 6 May 2019 21:49:36 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Len Brown <lenb@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, linux-kernel@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Len Brown <len.brown@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 17/18] perf/x86/intel/rapl: Support multi-die/package
+Message-ID: <20190506194936.GA23707@gmail.com>
+References: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1556657368.git.len.brown@intel.com>
+ <da7518106ce152367457c014bc91281925ee9576.1556657368.git.len.brown@intel.com>
+ <20190506114819.GA24079@gmail.com>
+ <CAJvTdKnZhyk_aWjQP_dtnNjvV75MvXBEmXUjH=K0hu2Kb77pYQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 06 May 2019 21:40:07 +0200
-From:   Oleksandr Natalenko <oleksandr@natalenko.name>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        oss-drivers@netronome.com, linux-kernel@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, valdis@vt.edu
-Subject: netronome/nfp/bpf/jit.c cannot be build with -O3
-Message-ID: <673b885183fb64f1cbb3ed2387524077@natalenko.name>
-X-Sender: oleksandr@natalenko.name
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJvTdKnZhyk_aWjQP_dtnNjvV75MvXBEmXUjH=K0hu2Kb77pYQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
 
-Obligatory disclaimer: building the kernel with -O3 is a non-standard 
-thing done via this patch [1], but I've asked people in #kernelnewbies, 
-and it was suggested that the issue should be still investigated.
+* Len Brown <lenb@kernel.org> wrote:
 
-So, with v5.1 kernel release I cannot build the kernel with -O3 anymore. 
-It fails as shown below:
+> On Mon, May 6, 2019 at 7:48 AM Ingo Molnar <mingo@kernel.org> wrote:
+> 
+> > > -     unsigned int pkgid = topology_logical_package_id(cpu);
+> > > +     unsigned int pkgid = topology_logical_die_id(cpu);
+> 
+> > There's many such instances left in this series, please review the whole
+> > patchset for such problems.
+> 
+> I agree, the legacy names make the code read as if it were a bug, even
+> when it is correct.
+> I'll refresh the series with some re-names to make the end result ready clearly.
 
-===
-   CC      drivers/net/ethernet/netronome/nfp/bpf/jit.o
-In file included from ./include/asm-generic/bug.h:5,
-                  from ./arch/x86/include/asm/bug.h:83,
-                  from ./include/linux/bug.h:5,
-                  from drivers/net/ethernet/netronome/nfp/bpf/jit.c:6:
-In function ‘__emit_shf’,
-     inlined from ‘emit_shf.constprop’ at 
-drivers/net/ethernet/netronome/nfp/bpf/jit.c:364:2,
-     inlined from ‘shl_reg64_lt32_low’ at 
-drivers/net/ethernet/netronome/nfp/bpf/jit.c:379:2,
-     inlined from ‘shl_reg’ at 
-drivers/net/ethernet/netronome/nfp/bpf/jit.c:2506:2:
-./include/linux/compiler.h:344:38: error: call to 
-‘__compiletime_assert_341’ declared with attribute error: BUILD_BUG_ON 
-failed: (((0x001f0000000ULL) + (1ULL << 
-(__builtin_ffsll(0x001f0000000ULL) - 1))) & (((0x001f0000000ULL) + (1ULL 
-<< (__builtin_ffsll(0x001f0000000ULL) - 1))) - 1)) != 0
-   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-                                       ^
-./include/linux/compiler.h:325:4: note: in definition of macro 
-‘__compiletime_assert’
-     prefix ## suffix();    \
-     ^~~~~~
-./include/linux/compiler.h:344:2: note: in expansion of macro 
-‘_compiletime_assert’
-   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-   ^~~~~~~~~~~~~~~~~~~
-./include/linux/build_bug.h:39:37: note: in expansion of macro 
-‘compiletime_assert’
-  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-                                      ^~~~~~~~~~~~~~~~~~
-./include/linux/bitfield.h:57:3: note: in expansion of macro 
-‘BUILD_BUG_ON_MSG’
-    BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?  \
-    ^~~~~~~~~~~~~~~~
-./include/linux/bitfield.h:89:3: note: in expansion of macro 
-‘__BF_FIELD_CHECK’
-    __BF_FIELD_CHECK(_mask, 0ULL, _val, "FIELD_PREP: "); \
-    ^~~~~~~~~~~~~~~~
-drivers/net/ethernet/netronome/nfp/bpf/jit.c:341:3: note: in expansion 
-of macro ‘FIELD_PREP’
-    FIELD_PREP(OP_SHF_SHIFT, shift) |
-    ^~~~~~~~~~
-make[1]: *** [scripts/Makefile.build:276: 
-drivers/net/ethernet/netronome/nfp/bpf/jit.o] Error 1
-make: *** [Makefile:1726: drivers/net/ethernet/netronome/nfp/bpf/jit.o] 
-Error 2
-===
+Thanks a lot!
 
-Needless to say, with -O2 this file is built just fine. My compiler is:
-
-===
-$ gcc --version
-gcc (GCC) 8.3.0
-Copyright (C) 2018 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is 
-NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-PURPOSE.
-===
-
-I had no issues with -O3 before, so, maybe, this deserves a peek.
-
-I'm open to testing patches and providing more info if needed.
-
-Thanks.
-
-[1] 
-https://gitlab.com/post-factum/pf-kernel/commit/7fef93015ff1776d08119ef3d057a9e9433954a9
-
--- 
-   Oleksandr Natalenko (post-factum)
+	Ingo
