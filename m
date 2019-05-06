@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F44C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A032C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F4E214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E4620830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbfEFOCf (ORCPT
+        id S1726369AbfEFOCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:02:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60124 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfEFOCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726236AbfEFOCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 May 2019 10:02:34 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAF5A206BF;
-        Mon,  6 May 2019 14:02:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0356121479;
+        Mon,  6 May 2019 14:02:34 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hNeCO-0006yN-RJ; Mon, 06 May 2019 10:02:32 -0400
-Message-Id: <20190506140232.735699092@goodmis.org>
+        id 1hNeCP-0006zM-4l; Mon, 06 May 2019 10:02:33 -0400
+Message-Id: <20190506140233.037857277@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Mon, 06 May 2019 10:02:07 -0400
+Date:   Mon, 06 May 2019 10:02:09 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     "John Warthog9 Hawley" <warthog9@kernel.org>
-Subject: [for-next][PATCH 1/3] ktest: Show name and iteration on errors
+Cc:     "John Warthog9 Hawley" <warthog9@kernel.org>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Subject: [for-next][PATCH 3/3] ktest: introduce REBOOT_RETURN_CODE to confirm the result of REBOOT
 References: <20190506140206.573397982@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -42,92 +43,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-If a test has an error, display not only the what type of test failed, but
-if the test was giving a name, display that too, as well as the current
-iteration of the tests. Each test has an iteration number associated to it.
-For error messages display that iteration number along with the test type
-and test name. This includes the message that gets sent via email.
+Unexpected power cycle occurs while the installation of the
+kernel.
 
+   ssh root@Test sync ... [0 seconds] SUCCESS
+   ssh root@Test reboot ... [1 second] FAILED!
+   virsh destroy Test; sleep 5; virsh start Test ... [6 seconds] SUCCESS
+
+That is because REBOOT, the default is "ssh $SSH_USER@$MACHINE
+reboot", exits as 255 even if the reboot is successfully done,
+like as:
+
+   ]# ssh root@Test reboot
+   Connection to Test closed by remote host.
+   ]# echo $?
+   255
+   ]#
+
+To avoid the unexpected power cycle, introduce a new parameter,
+REBOOT_RETURN_CODE to judge whether REBOOT is successfully done
+or not.
+
+Link: http://lkml.kernel.org/r/20190418135943.12640-1-msys.mizuma@gmail.com
+
+Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- tools/testing/ktest/ktest.pl | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ tools/testing/ktest/ktest.pl    | 9 +++++++++
+ tools/testing/ktest/sample.conf | 4 ++++
+ 2 files changed, 13 insertions(+)
 
 diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-index 87af8a68ab25..75f8cecdd549 100755
+index 3bec099a6cf4..275ad8ac8872 100755
 --- a/tools/testing/ktest/ktest.pl
 +++ b/tools/testing/ktest/ktest.pl
-@@ -1437,16 +1437,27 @@ sub do_not_reboot {
+@@ -58,6 +58,7 @@ my %default = (
+     "SCP_TO_TARGET"		=> "scp \$SRC_FILE \$SSH_USER\@\$MACHINE:\$DST_FILE",
+     "SCP_TO_TARGET_INSTALL"	=> "\${SCP_TO_TARGET}",
+     "REBOOT"			=> "ssh \$SSH_USER\@\$MACHINE reboot",
++    "REBOOT_RETURN_CODE"	=> 255,
+     "STOP_AFTER_SUCCESS"	=> 10,
+     "STOP_AFTER_FAILURE"	=> 60,
+     "STOP_TEST_AFTER"		=> 600,
+@@ -105,6 +106,7 @@ my $reboot_type;
+ my $reboot_script;
+ my $power_cycle;
+ my $reboot;
++my $reboot_return_code;
+ my $reboot_on_error;
+ my $switch_to_good;
+ my $switch_to_test;
+@@ -278,6 +280,7 @@ my %option_map = (
+     "POST_BUILD_DIE"		=> \$post_build_die,
+     "POWER_CYCLE"		=> \$power_cycle,
+     "REBOOT"			=> \$reboot,
++    "REBOOT_RETURN_CODE"	=> \$reboot_return_code,
+     "BUILD_NOCLEAN"		=> \$noclean,
+     "MIN_CONFIG"		=> \$minconfig,
+     "OUTPUT_MIN_CONFIG"		=> \$output_minconfig,
+@@ -1749,6 +1752,7 @@ sub run_command {
+     my $dord = 0;
+     my $dostdout = 0;
+     my $pid;
++    my $command_orig = $command;
  
- my $in_die = 0;
+     $command =~ s/\$SSH_USER/$ssh_user/g;
+     $command =~ s/\$MACHINE/$machine/g;
+@@ -1803,6 +1807,11 @@ sub run_command {
+     # shift 8 for real exit status
+     $run_command_status = $? >> 8;
  
-+sub get_test_name() {
-+    my $name;
-+
-+    if (defined($test_name)) {
-+	$name = "$test_name:$test_type";
-+    } else {
-+	$name = $test_type;
++    if ($command_orig eq $default{REBOOT} &&
++	$run_command_status == $reboot_return_code) {
++	$run_command_status = 0;
 +    }
-+    return $name;
-+}
 +
- sub dodie {
+     close(CMD);
+     close(LOG) if ($dolog);
+     close(RD)  if ($dord);
+diff --git a/tools/testing/ktest/sample.conf b/tools/testing/ktest/sample.conf
+index 6ca6ca0ce695..8c893a58b68e 100644
+--- a/tools/testing/ktest/sample.conf
++++ b/tools/testing/ktest/sample.conf
+@@ -887,6 +887,10 @@
+ # The variables SSH_USER and MACHINE are defined.
+ #REBOOT = ssh $SSH_USER@$MACHINE reboot
  
-     # avoid recusion
-     return if ($in_die);
-     $in_die = 1;
- 
--    doprint "CRITICAL FAILURE... ", @_, "\n";
--
-     my $i = $iteration;
- 
-+    doprint "CRITICAL FAILURE... [TEST $i] ", @_, "\n";
++# The return code of REBOOT
++# (default 255)
++#REBOOT_RETURN_CODE = 255
 +
-     if ($reboot_on_error && !do_not_reboot) {
- 
- 	doprint "REBOOTING\n";
-@@ -1462,7 +1473,8 @@ sub dodie {
-     }
- 
-     if ($email_on_error) {
--        send_email("KTEST: critical failure for your [$test_type] test",
-+	my $name = get_test_name;
-+        send_email("KTEST: critical failure for test $i [$name]",
-                 "Your test started at $script_start_time has failed with:\n@_\n");
-     }
- 
-@@ -4193,7 +4205,8 @@ sub send_email {
- 
- sub cancel_test {
-     if ($email_when_canceled) {
--        send_email("KTEST: Your [$test_type] test was cancelled",
-+	my $name = get_test_name;
-+        send_email("KTEST: Your [$name] test was cancelled",
-                 "Your test started at $script_start_time was cancelled: sig int");
-     }
-     die "\nCaught Sig Int, test interrupted: $!\n"
-@@ -4247,7 +4260,8 @@ for (my $i = 1; $i <= $opt{"NUM_TESTS"}; $i++) {
-             run_command $pre_ktest;
-         }
-         if ($email_when_started) {
--            send_email("KTEST: Your [$test_type] test was started",
-+	    my $name = get_test_name;
-+            send_email("KTEST: Your [$name] test was started",
-                 "Your test was started on $script_start_time");
-         }
-     }
-@@ -4414,7 +4428,7 @@ if ($opt{"POWEROFF_ON_SUCCESS"}) {
- doprint "\n    $successes of $opt{NUM_TESTS} tests were successful\n\n";
- 
- if ($email_when_finished) {
--    send_email("KTEST: Your [$test_type] test has finished!",
-+    send_email("KTEST: Your test has finished!",
-             "$successes of $opt{NUM_TESTS} tests started at $script_start_time were successful!");
- }
- exit 0;
+ # The way triple faults are detected is by testing the kernel
+ # banner. If the kernel banner for the kernel we are testing is
+ # found, and then later a kernel banner for another kernel version
 -- 
 2.20.1
 
