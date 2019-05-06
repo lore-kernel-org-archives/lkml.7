@@ -2,193 +2,139 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77B4C04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929EEC04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74E720C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BEC21019
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:31:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="P5+DJ7Wb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hn4rH9KT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfEFQbq (ORCPT
+        id S1727315AbfEFQbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:31:46 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:42457 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfEFQbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:31:44 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44yStK1Tgsz9v0K7;
-        Mon,  6 May 2019 18:31:37 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=P5+DJ7Wb; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id CpNBf7_aZXGe; Mon,  6 May 2019 18:31:37 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44yStK0FMgz9v0K6;
-        Mon,  6 May 2019 18:31:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1557160297; bh=yRinLegSyNuQk1RUEKDqwhCd8nwbiVxqrPc16LJu4GU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=P5+DJ7WbCCG+/X0uMpSJWcr0mfyFEW5HxVlaji0QqDgeSWmgAwSXBwr6QvPxcUmo+
-         WfMLuJ2l4oWXBtaoH0Oman/cVy25hsthMVccUN+MJRH8DpX/32HySF9MgUN35bIhoZ
-         0SLSQMphHjygVMgYin2hepj2y/t4AWCMa0/wao5g=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 46BF28B8E9;
-        Mon,  6 May 2019 18:31:42 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id hGgPJhHpLTle; Mon,  6 May 2019 18:31:42 +0200 (CEST)
-Received: from localhost.localdomain (po15451.idsi0.si.c-s.fr [172.25.231.6])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 168478B8E7;
-        Mon,  6 May 2019 18:31:42 +0200 (CEST)
-Subject: Re: [PATCH] powerpc/32: Remove memory clobber asm constraint on
- dcbX() functions
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     linux-kernel@vger.kernel.org, Scott Wood <oss@buserror.net>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20180109065759.4E54B6C73D@localhost.localdomain>
- <e482662f-254c-4ab7-b0a8-966a3159d705@c-s.fr>
- <20190503181508.GQ8599@gate.crashing.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <c2391ff5-ae01-5a3c-ad87-9cbda82b36ab@c-s.fr>
-Date:   Mon, 6 May 2019 16:31:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190503181508.GQ8599@gate.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 6 May 2019 12:31:50 -0400
+Received: from mail-ot1-f74.google.com ([209.85.210.74]:33246 "EHLO
+        mail-ot1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727263AbfEFQbs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 12:31:48 -0400
+Received: by mail-ot1-f74.google.com with SMTP id 18so4466889otu.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:31:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=BvoYtYVsULamnYvbwO19c3h5oHA1gsMsAv5tZYbLYtI=;
+        b=hn4rH9KTek8R37jjBWMcf/SnTi9wO6imyjbK43Qo3YFFy0w0QB9ppRC7K8TE7v3vlN
+         nPLbzWoXhcOl9RZZTW0CT+GOCLOJRZHlTgH0IFE90/0mo3gA6Benvmv0xM9qlEM2L7iM
+         a5/5EdryhXK5o1zmP38+JskPbuvRNi2KBDqgGoYwdgZckW/t0t3zXYlgA28tCgQWx38p
+         zeMjQt/2TKtd8YWaOZqpDqkiV1tfPRGdf11R4Vmzgti01WpJ/ug4M22kRPfo4KNLvnrQ
+         G8KQ2Dx3TZLoioP3vZYIMjrpzIYzmaefwwMqniR4qNzu+AscTWd9F/aHBCgCKh66bnIf
+         LcNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=BvoYtYVsULamnYvbwO19c3h5oHA1gsMsAv5tZYbLYtI=;
+        b=QNvh96HJ0EJkuV2hiaLnxspUsNNnB2b/vPRU6jCX1aWmvqqRUEiZTMQ/FSPCOB6Osy
+         cxuWF52BVL7xO4KRYR7Wg9ScqLsLTlVEZXtyqz6bpG26W2mGARRq6kQAQGEfZeB6KqPX
+         nD2l9809N9cCX+H+56mhp3nx5wKBAzuESaHgnpj3vuWTwRr4I+7dTpU3ukOXXnbTnSUg
+         axuxUhxZCE2Xo3iQ+GaafX52QJXy8JTPftIRFNTlOLWwF7WoYph7eaVbJ/+WhmhfiMkP
+         HRa8wRz59mVpesvs399iqyKwaPc7V+g1whCxpeX7AfYNyC6lU4rB2S8uMpbWN3Zg2vp8
+         KKGA==
+X-Gm-Message-State: APjAAAXwhihLNOo6+f0XBmNpHknFMOv9fJwuWZxyEE2hwHqgoyQJ0PAi
+        /V6WYlsD542pHO9NZl/NdvCxmt1lzNulsmuY
+X-Google-Smtp-Source: APXvYqy3zk1gAf1HD3ERPdP+fu/IbJWPYjnwXEpH7KM/4Kolrw9tSDmooPMwqXT4nvIVhZWlBkow5/TqTCzeTPOv
+X-Received: by 2002:a9d:6008:: with SMTP id h8mr18251374otj.55.1557160307352;
+ Mon, 06 May 2019 09:31:47 -0700 (PDT)
+Date:   Mon,  6 May 2019 18:30:59 +0200
+In-Reply-To: <cover.1557160186.git.andreyknvl@google.com>
+Message-Id: <66d044ab9445dcf36a96205a109458ac23f38b73.1557160186.git.andreyknvl@google.com>
+Mime-Version: 1.0
+References: <cover.1557160186.git.andreyknvl@google.com>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH v15 13/17] IB, arm64: untag user pointers in ib_uverbs_(re)reg_mr()
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Segher,
+This patch is a part of a series that extends arm64 kernel ABI to allow to
+pass tagged user pointers (with the top byte set to something else other
+than 0x00) as syscall arguments.
 
+ib_uverbs_(re)reg_mr() use provided user pointers for vma lookups (through
+e.g. mlx4_get_umem_mr()), which can only by done with untagged pointers.
 
-On 05/03/2019 06:15 PM, Segher Boessenkool wrote:
-> Hi Christophe,
-> 
-> On Fri, May 03, 2019 at 04:14:13PM +0200, Christophe Leroy wrote:
->> A while ago I proposed the following patch, and didn't get any comment
->> back on it.
-> 
-> I didn't see it.  Maybe because of holiday :-)
+Untag user pointers in these functions.
 
-Thanks for this answer, I guess I'll drop it for the time being.
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+---
+ drivers/infiniband/core/uverbs_cmd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-However, I've tried your suggestion below and get unnexpected result.
+diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
+index 062a86c04123..36e7b52577d0 100644
+--- a/drivers/infiniband/core/uverbs_cmd.c
++++ b/drivers/infiniband/core/uverbs_cmd.c
+@@ -708,6 +708,8 @@ static int ib_uverbs_reg_mr(struct uverbs_attr_bundle *attrs)
+ 	if (ret)
+ 		return ret;
+ 
++	cmd.start = untagged_addr(cmd.start);
++
+ 	if ((cmd.start & ~PAGE_MASK) != (cmd.hca_va & ~PAGE_MASK))
+ 		return -EINVAL;
+ 
+@@ -790,6 +792,8 @@ static int ib_uverbs_rereg_mr(struct uverbs_attr_bundle *attrs)
+ 	if (ret)
+ 		return ret;
+ 
++	cmd.start = untagged_addr(cmd.start);
++
+ 	if (cmd.flags & ~IB_MR_REREG_SUPPORTED || !cmd.flags)
+ 		return -EINVAL;
+ 
+-- 
+2.21.0.1020.gf2820cf01a-goog
 
-[...]
-
-> 
-> 
-> [ Btw.  Instead of
-> 
-> 	__asm__ __volatile__ ("dcbf 0, %0" : : "r"(addr) : "memory");
-> 
-> you can do
-> 
-> 	__asm__ __volatile__ ("dcbf %0" : : "Z"(addr) : "memory");
-> 
-> to save some insns here and there. ]
-
-Tried that change on dcbz() and checked function clear_page()
-
-static inline void clear_page(void *addr)
-{
-	unsigned int i;
-
-	for (i = 0; i < PAGE_SIZE / L1_CACHE_BYTES; i++, addr += L1_CACHE_BYTES)
-		dcbz(addr);
-}
-
-void clear_user_page(void *page, unsigned long vaddr, struct page *pg)
-{
-	clear_page(page);
-
-	/*
-	 * We shouldn't have to do this, but some versions of glibc
-	 * require it (ld.so assumes zero filled pages are icache clean)
-	 * - Anton
-	 */
-	flush_dcache_page(pg);
-}
-EXPORT_SYMBOL(clear_user_page);
-
-
-Before the change,
-
-clear_user_page:
-	mflr 0
-	stw 0,4(1)
-	bl _mcount
-	stwu 1,-16(1)
-	li 9,128
-	mflr 0
-	mtctr 9
-	stw 0,20(1)
-.L46:
-#APP
-  # 88 "./arch/powerpc/include/asm/cache.h" 1
-	dcbz 0, 3
-  # 0 "" 2
-#NO_APP
-	addi 3,3,32
-	bdnz .L46
-	lwz 0,20(1)
-	mr 3,5
-	mtlr 0
-	addi 1,1,16
-	b flush_dcache_page
-
-
-After the change
-
-
-clear_user_page:
-	mflr 0
-	stw 0,4(1)
-	bl _mcount
-	stwu 1,-32(1)
-	li 9,128
-	mflr 0
-	mtctr 9
-	stw 0,36(1)
-.L46:
-	stw 3,8(1)
-	addi 9,1,8
-#APP
-  # 88 "./arch/powerpc/include/asm/cache.h" 1
-	dcbz 0(9)
-  # 0 "" 2
-#NO_APP
-	addi 3,3,32
-	bdnz .L46
-	mr 3,5
-	bl flush_dcache_page
-	lwz 0,36(1)
-	addi 1,1,32
-	mtlr 0
-	blr
-
-
-So first of all it uses an unexisting form of dcbz : "dcbz 0(9)"
-And in addition, it stores r3 somewhere and I guess expects to read it 
-with dcbz ???
-
-Looks like 'Z' is not the right constraint to use.
-
-Christophe
