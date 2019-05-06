@@ -2,133 +2,184 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72949C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDD6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4230E21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HbhLjJC8"
+	by mail.kernel.org (Postfix) with ESMTP id 1E478214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfEFRMR (ORCPT
+        id S1727644AbfEFRMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:12:17 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41367 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfEFRMP (ORCPT
+        Mon, 6 May 2019 13:12:32 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:57457 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfEFRMb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:12:15 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d9so6682095pls.8;
-        Mon, 06 May 2019 10:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YaNnLqU9o2lpY1nR/3WwmAgKR0IVYxRkeI3qUXiAw/Y=;
-        b=HbhLjJC8LFnPmOLID1sNlMNWwgmi/mqvze6SF86s6VVJoSgSecXo6yyXvyMjwoh617
-         cZeYp2Pb5C1C9hpjlqWa5KnDw84EUeTPwtOzbqbtijt3EfDIof/gx77ehYQIB0sIV6cg
-         i3/BMKt17F6j3V/YRUkXF65BBnPdGxg/yWmkFrOAd/5f8lrFk5I1jz/RTveByLdNte5l
-         gVr4zUPJX/AlT+ECAlq1nvD3OjWx/4IMrXQPmCKBwAFAFC/MNmETad5opUTWO6n/JPRH
-         tHbAM5neO+lCmlttQNau4liZG1+9/+5ytHokHVKCJb96eNOTgv0IpzY5GiQKXFQC56v5
-         ZIKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YaNnLqU9o2lpY1nR/3WwmAgKR0IVYxRkeI3qUXiAw/Y=;
-        b=g+CvtxZOZ//tjpkJOt57Fnk56yGbjzBJ20GqFVCy8G+VyxA/oxIHiLrsIXxIkeRS0r
-         Rv5HLjD8ylrJ5KBhqAgcUbi2lkSgPtkndIsTzvg4/HII/VoiuA8bC3tlQBVYOfCCxV+K
-         LguFU4EbfWDchPu7BobmxQmcrdOf54gVKM9ZSETyWMy94oDvRvNMdWFv4dc3y28i6aCD
-         fTAkbEVDQAPTkklIG7We8uymJyErD1MVBQpaPQjTuOwVSapSKSx6llDyqdG4GXaEMi/0
-         Aq/SONL51dD3Bddy88P0uLC+WAp8zZBzpoFPXn2V3LSZdJnZxr6KGwdjumoZSlrdkFHf
-         5ikQ==
-X-Gm-Message-State: APjAAAWusSuLSEOzYKWYdPYAhF14RkwsQliDfZi1I9T6EuW64ZFD7eJM
-        8rEyKZ3UN7v7HVsAMQyj3Wo=
-X-Google-Smtp-Source: APXvYqxZIUDk5OqDdjWEloO+8U12RC6IIdrfQ9bD4vKEgecCErpXS0sMvNF/eXSwSMSA5eBXOV9Adg==
-X-Received: by 2002:a17:902:9693:: with SMTP id n19mr33356286plp.92.1557162734908;
-        Mon, 06 May 2019 10:12:14 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id h13sm11045680pgk.55.2019.05.06.10.12.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 06 May 2019 10:12:14 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH v3 27/27] Documentation: x86: convert x86_64/machinecheck to reST
-Date:   Tue,  7 May 2019 01:09:23 +0800
-Message-Id: <20190506170923.7117-28-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190506170923.7117-1-changbin.du@gmail.com>
-References: <20190506170923.7117-1-changbin.du@gmail.com>
+        Mon, 6 May 2019 13:12:31 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 843383C00C6;
+        Mon,  6 May 2019 19:12:27 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tK9ZBC8iMECS; Mon,  6 May 2019 19:12:19 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 863563C004C;
+        Mon,  6 May 2019 19:12:19 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 6 May 2019
+ 19:12:19 +0200
+Date:   Mon, 6 May 2019 19:12:16 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Simon Horman <horms@verge.net.au>
+CC:     Simon Horman <horms@verge.net.au>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "George G . Davis" <george_davis@mentor.com>,
+        Andy Lowe <andy_lowe@mentor.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Helge Deller <deller@gmx.de>,
+        Michael Neuling <mikey@neuling.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Philip Yang <Philip.Yang@amd.com>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        Borislav Petkov <bp@suse.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH 1/6] serial: sh-sci: Reveal ptrval in dev_dbg
+Message-ID: <20190506171216.GA2181@vmlxhi-102.adit-jv.com>
+References: <20190504004258.23574-1-erosca@de.adit-jv.com>
+ <20190504004258.23574-2-erosca@de.adit-jv.com>
+ <20190506134700.ya565idfzzc3enbm@verge.net.au>
+ <20190506152433.GA22769@vmlxhi-102.adit-jv.com>
+ <CAMuHMdXJzEYL48qwHAxrRsurQLBipZsQpv+w8i=+B2XCM_CZng@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXJzEYL48qwHAxrRsurQLBipZsQpv+w8i=+B2XCM_CZng@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation to reStructuredText format and
-add it to Sphinx TOC tree. No essential content change.
+On Mon, May 06, 2019 at 06:46:57PM +0200, Geert Uytterhoeven wrote:
+> Hi Eugeniu,
+> 
+> On Mon, May 6, 2019 at 5:24 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> > On Mon, May 06, 2019 at 03:47:05PM +0200, Simon Horman wrote:
+> > > On Sat, May 04, 2019 at 02:42:53AM +0200, Eugeniu Rosca wrote:
+> > > > Starting with v4.15-rc2 commit ad67b74d2469d9 ("printk: hash addresses
+> > > > printed with %p"), enabling debug prints in sh-sci.c would generate
+> > > > output like below confusing the users who try to sneak into the
+> > > > internals of the driver:
+> > > >
+> > > > sh-sci e6e88000.serial: sci_request_dma: TX: got channel (____ptrval____)
+> > > > sh-sci e6e88000.serial: sci_request_dma: mapped 4096@(____ptrval____) to 0x00000006798bf000
+> > > > sh-sci e6e88000.serial: sci_request_dma: RX: got channel (____ptrval____)
+> > > > sh-sci e6e88000.serial: sci_dma_tx_work_fn: (____ptrval____): 0...2, cookie 2
+> > > >
+> > > > There are two possible fixes for that:
+> > > >  - get rid of '%p' prints if they don't reveal any useful information
+> > > >  - s/%p/%px/, since it is unlikely we have any concerns leaking the
+> > > >    pointer values when running a debug/non-production kernel
+> > >
+> > > I am concerned that this may expose information in circumstances
+> > > where it is undesirable. Is it generally accepted practice to
+> > > use %px in conjunction with dev_dbg() ?
+> > >
+> > > ...
+> >
+> > Below commits performed a similar s/%p/%px/ update in debug context:
+> >
+> > Authors (CC-ed)   Commit         Subject
+> > ----------------------------------------
+> > Christophe Leroy  b18f0ae92b0a1d ("powerpc/prom: fix early DEBUG messages")
+> > Helge Deller      3847dab7742186 ("parisc: Add alternative coding infrastructure")
+> > Michael Neuling   51c3c62b58b357 ("powerpc: Avoid code patching freed init sections")
+> > Kuninori Morimoto dabdbe3ae0cb9a ("ASoC: rsnd: don't use %p for dev_dbg()")
+> > Philip Yang       fa7e65147e5dca ("drm/amdkfd: use %px to print user space address instead of %p")
+> > Matthew Wilcox    68c1f08203f2b0 ("lib/list_debug.c: print unmangled addresses")
+> > Borislav Petkov   0e6c16c652cada ("x86/alternative: Print unadorned pointers")
+> > Darrick J. Wong   c96900435fa9fd ("xfs: use %px for data pointers when debugging")
+> > Helge Deller      04903c06b4854d ("parisc: Show unhashed HPA of Dino chip")
+> >
+> > To quote Matthew, with respect to any debug prints:
+> > If an attacker can force this message to be printed, we've already lost.
+> 
+> I think the issue with using %px in debug code is that a distro may enable
+> CONFIG_DYNAMIC_DEBUG (it is enabled in several defconfigs), after which
+> an attacker just has to convince/trick the system into enabling debug for that
+> particular driver.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/x86/x86_64/index.rst                   |  1 +
- .../x86/x86_64/{machinecheck => machinecheck.rst}    | 12 +++++++-----
- 2 files changed, 8 insertions(+), 5 deletions(-)
- rename Documentation/x86/x86_64/{machinecheck => machinecheck.rst} (92%)
+How about going the route of commit c96900435fa9fd ("xfs: use %px for
+data pointers when debugging"), i.e. s/%p/"PTR_FMT"/ like below (this
+would enable the expected debug output only on manually defining DEBUG
+in the *.c file, while still keeping the output hashed on
+DYNAMIC_DEBUG=y if DEBUG is undefined).
 
-diff --git a/Documentation/x86/x86_64/index.rst b/Documentation/x86/x86_64/index.rst
-index c04b6eab3c76..d6eaaa5a35fc 100644
---- a/Documentation/x86/x86_64/index.rst
-+++ b/Documentation/x86/x86_64/index.rst
-@@ -13,3 +13,4 @@ x86_64 Support
-    5level-paging
-    fake-numa-for-cpusets
-    cpu-hotplug-spec
-+   machinecheck
-diff --git a/Documentation/x86/x86_64/machinecheck b/Documentation/x86/x86_64/machinecheck.rst
-similarity index 92%
-rename from Documentation/x86/x86_64/machinecheck
-rename to Documentation/x86/x86_64/machinecheck.rst
-index d0648a74fceb..e189168406fa 100644
---- a/Documentation/x86/x86_64/machinecheck
-+++ b/Documentation/x86/x86_64/machinecheck.rst
-@@ -1,5 +1,8 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 3cd139752d3f..69cd87c5ef0c 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -56,6 +56,12 @@
+ #include <asm/sh_bios.h>
+ #endif
  
--Configurable sysfs parameters for the x86-64 machine check code.
-+===============================================================
-+Configurable sysfs parameters for the x86-64 machine check code
-+===============================================================
- 
- Machine checks report internal hardware error conditions detected
- by the CPU. Uncorrected errors typically cause a machine check
-@@ -16,14 +19,13 @@ log then mcelog should run to collect and decode machine check entries
- from /dev/mcelog. Normally mcelog should be run regularly from a cronjob.
- 
- Each CPU has a directory in /sys/devices/system/machinecheck/machinecheckN
--(N = CPU number)
-+(N = CPU number).
- 
- The directory contains some configurable entries:
- 
--Entries:
--
- bankNctl
--(N bank number)
-+	(N bank number)
++#ifdef DEBUG
++#define PTR_FMT "%px"
++#else
++#define PTR_FMT "%p"
++#endif
 +
- 	64bit Hex bitmask enabling/disabling specific subevents for bank N
- 	When a bit in the bitmask is zero then the respective
- 	subevent will not be reported.
--- 
-2.20.1
+ #include "serial_mctrl_gpio.h"
+ #include "sh-sci.h"
+ 
+@@ -1434,7 +1440,7 @@ static void sci_dma_tx_work_fn(struct work_struct *work)
+ 		goto switch_to_pio;
+ 	}
+ 
+-	dev_dbg(port->dev, "%s: %p: %d...%d, cookie %d\n",
++	dev_dbg(port->dev, "%s: "PTR_FMT": %d...%d, cookie %d\n",
+ 		__func__, xmit->buf, xmit->tail, xmit->head, s->cookie_tx);
+ 
+ 	dma_async_issue_pending(chan);
 
+> 
+> > In any case, I won't be affected much if the change is not accepted,
+> > since it doesn't resolve any major issue on my end. Thanks!
+> 
+> OK.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+-- 
+Best Regards,
+Eugeniu.
