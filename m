@@ -2,70 +2,115 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB960C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6200C46470
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1ACD2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 892DF20C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557154311;
+	bh=cwAnhsjms5JETVrm8lBnIu77/bq24kiXauUNJlo/6dk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JIl2FCfdOjt0SKQOOT84i8NTBbGxQgaOv9W6DAlFjsFozYTSXGPkZOH1fckvu+tKK
+	 k57LhzMLWhnTI5o8EiWv0TxcD/C1eZikU0cvsJn0SOK9ZsQjwSwlflg7BYKp1d1sGb
+	 UWjPVycB2TVZwBUypA+U9MP6YUuxG9k7LzI9U31o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbfEFOvp (ORCPT
+        id S1729524AbfEFOst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:51:45 -0400
-Received: from mga18.intel.com ([134.134.136.126]:25432 "EHLO mga18.intel.com"
+        Mon, 6 May 2019 10:48:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727127AbfEFOvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:51:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 07:51:38 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 06 May 2019 07:51:38 -0700
-Received: from slaugust-mobl.amr.corp.intel.com (unknown [10.254.21.102])
-        by linux.intel.com (Postfix) with ESMTP id D641258010A;
-        Mon,  6 May 2019 07:51:36 -0700 (PDT)
-Subject: Re: [alsa-devel] [RFC PATCH 7/7] soundwire: intel: add debugfs
- register dump
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com, joe@perches.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
- <20190504010030.29233-8-pierre-louis.bossart@linux.intel.com>
- <20190504070458.GG9770@kroah.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <b01b3d30-901a-f5dc-8526-32a6dad9afd0@linux.intel.com>
-Date:   Mon, 6 May 2019 09:51:36 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        id S1729508AbfEFOsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:48:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3D93216B7;
+        Mon,  6 May 2019 14:48:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557154122;
+        bh=cwAnhsjms5JETVrm8lBnIu77/bq24kiXauUNJlo/6dk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Tq9bb0NuKroikxPBcGMse/5Igze2MiMaWh8K/yZ9b2NsbuEU+b1RpfQSJdlVBOBxd
+         74kJUE3BDe6UPNvoxM4d5glvchjRXRujSKf3qpUGzk9Y2CnEx/Rp3LgINPB38UFOB9
+         bRH65aTQGqUoNo/tmMWhbB//jtipN0HnAgUQum2A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Liubin Shu <shuliubin@huawei.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 46/62] net: hns: fix KASAN: use-after-free in hns_nic_net_xmit_hw()
+Date:   Mon,  6 May 2019 16:33:17 +0200
+Message-Id: <20190506143055.229546324@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
+References: <20190506143051.102535767@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190504070458.GG9770@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[ Upstream commit 3a39a12ad364a9acd1038ba8da67cd8430f30de4 ]
 
->> +static void intel_debugfs_init(struct sdw_intel *sdw)
->> +{
->> +	struct dentry *root = sdw_bus_debugfs_get_root(sdw->cdns.bus.debugfs);
->> +
->> +	if (!root)
->> +		return;
->> +
->> +	sdw->fs = debugfs_create_dir("intel-sdw", root);
->> +	if (IS_ERR_OR_NULL(sdw->fs)) {
-> 
-> Again, you do not care, do not check this.
+This patch is trying to fix the issue due to:
+[27237.844750] BUG: KASAN: use-after-free in hns_nic_net_xmit_hw+0x708/0xa18[hns_enet_drv]
 
-yes will check all this.
-Thanks for all the comments, much appreciated.
+After hnae_queue_xmit() in hns_nic_net_xmit_hw(), can be
+interrupted by interruptions, and than call hns_nic_tx_poll_one()
+to handle the new packets, and free the skb. So, when turn back to
+hns_nic_net_xmit_hw(), calling skb->len will cause use-after-free.
+
+This patch update tx ring statistics in hns_nic_tx_poll_one() to
+fix the bug.
+
+Signed-off-by: Liubin Shu <shuliubin@huawei.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index ad8681cf5ef0..f77578a5ea9d 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -375,8 +375,6 @@ netdev_tx_t hns_nic_net_xmit_hw(struct net_device *ndev,
+ 	wmb(); /* commit all data before submit */
+ 	assert(skb->queue_mapping < priv->ae_handle->q_num);
+ 	hnae_queue_xmit(priv->ae_handle->qs[skb->queue_mapping], buf_num);
+-	ring->stats.tx_pkts++;
+-	ring->stats.tx_bytes += skb->len;
+ 
+ 	return NETDEV_TX_OK;
+ 
+@@ -916,6 +914,9 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
+ 		/* issue prefetch for next Tx descriptor */
+ 		prefetch(&ring->desc_cb[ring->next_to_clean]);
+ 	}
++	/* update tx ring statistics. */
++	ring->stats.tx_pkts += pkts;
++	ring->stats.tx_bytes += bytes;
+ 
+ 	NETIF_TX_UNLOCK(ndev);
+ 
+-- 
+2.20.1
+
+
+
