@@ -2,80 +2,140 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F34C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55DCC004C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4965205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:50:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WJA6/CXL"
+	by mail.kernel.org (Postfix) with ESMTP id A097F205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbfEFCuC (ORCPT
+        id S1726416AbfEFCuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 22:50:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33618 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbfEFCuC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 22:50:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SG/rqX2xe67P88isvEgP5AEb4JnGOKR0/Rffnrqoj/g=; b=WJA6/CXLEDQTYnpUBLJPsai+N
-        tCWHQkJK/nOPhgE2J9w19yZr4RUhQO7/0/IwTJLqgCuTfCQxH/eHVPJvP7h6oWfBgSnv94QCp/vi6
-        WJ6sBW/Rl/Xes4l/14jVYVmK2JA4L/i1D80nKfPHfqW4kC8N6waRFio0xrBSJWYq+hP9E/gFbmpbG
-        rHpJpHJHk4eJ/X9W2Y37xIWjIUWUg1eht2Nec79WPL8CbqrcG8xT1wpRBJrBJnbSs2SbFquvdTSKv
-        vyytHuXpCBy7svNsjBh0b+CuDVIdvLLpCXSrheUzo08JOd8t7aM0xWzJfIIMhfYt0GgkxPCEjKdRN
-        UA++FiZxA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hNThX-0000uE-3I; Mon, 06 May 2019 02:49:59 +0000
-Date:   Sun, 5 May 2019 19:49:58 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Tamir Carmeli <carmeli.tamir@gmail.com>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] Use list.h instead of file_system_type next
-Message-ID: <20190506024958.GC16963@bombadil.infradead.org>
-References: <20190504094549.10021-1-carmeli.tamir@gmail.com>
- <20190504094549.10021-2-carmeli.tamir@gmail.com>
- <20190504134503.GA16963@bombadil.infradead.org>
- <CAKxm1-H9cgym_RQ-oLcZWEPpyUf5NrZPt_Zu3U=mpU=E38SbvQ@mail.gmail.com>
+        Sun, 5 May 2019 22:50:22 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46888 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726149AbfEFCuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 22:50:20 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id BE8CDBA711E53CF67B7D;
+        Mon,  6 May 2019 10:50:18 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 6 May 2019 10:50:12 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, <nhorman@redhat.com>,
+        Yunsheng Lin <linyunsheng@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 08/12] net: hns3: fix error handling for desc filling
+Date:   Mon, 6 May 2019 10:48:48 +0800
+Message-ID: <1557110932-683-9-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1557110932-683-1-git-send-email-tanhuazhong@huawei.com>
+References: <1557110932-683-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKxm1-H9cgym_RQ-oLcZWEPpyUf5NrZPt_Zu3U=mpU=E38SbvQ@mail.gmail.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 05, 2019 at 09:25:21PM +0300, Tamir Carmeli wrote:
-> I just found it weird that there is a proprietary implementation of a
-> linked list while surely the kernel already offers well established
-> data structures.
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-It's a singly linked list rather than a doubly linked list.
+When desc filling fails in hns3_nic_net_xmit, it will call
+hns3_clear_desc to unmap the dma mapping. But currently the
+ring->next_to_use points to the desc where the desc filling
+or dma mapping return error, which means the desc that
+ring->next_to_use points to has not done the dma mapping,
+the desc that need unmapping is before the ring->next_to_use.
 
-> IMO, the current code is a bit hard to understand, especially the
-> addition of a new struct to the list in the line "*p = fs" after
-> find_filesystem returned the last member.
-> Correct, I'm not familiar with all the use cases of the code.
+This patch fixes it by calling ring_ptr_move_bw(next_to_use)
+before doing unmapping operation, and set desc_cb->dma to
+zero to avoid freeing it again when unloading.
 
-It looks like a fairly standard implementation of a singly-linked 
-list in C to me.
+Also, when filling skb head or frag fails, both need to unmap
+all the way back to next_to_use_head, so remove one desc filling
+error handling.
 
-> I'm not sure that XArray is a good choice since there is no notion of
-> an index attached to the pointer, it's really just a linked list of
-> pointers.
+Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
-You don't need to attach an index to the pointer; you can just use
-xa_alloc() to store it at the first available index.
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 7224b38..21eac68 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1224,6 +1224,9 @@ static void hns3_clear_desc(struct hns3_enet_ring *ring, int next_to_use_orig)
+ 		if (ring->next_to_use == next_to_use_orig)
+ 			break;
+ 
++		/* rollback one */
++		ring_ptr_move_bw(ring, next_to_use);
++
+ 		/* unmap the descriptor dma address */
+ 		if (ring->desc_cb[ring->next_to_use].type == DESC_TYPE_SKB)
+ 			dma_unmap_single(dev,
+@@ -1237,9 +1240,7 @@ static void hns3_clear_desc(struct hns3_enet_ring *ring, int next_to_use_orig)
+ 				       DMA_TO_DEVICE);
+ 
+ 		ring->desc_cb[ring->next_to_use].length = 0;
+-
+-		/* rollback one */
+-		ring_ptr_move_bw(ring, next_to_use);
++		ring->desc_cb[ring->next_to_use].dma = 0;
+ 	}
+ }
+ 
+@@ -1252,7 +1253,6 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	struct netdev_queue *dev_queue;
+ 	struct skb_frag_struct *frag;
+ 	int next_to_use_head;
+-	int next_to_use_frag;
+ 	int buf_num;
+ 	int seg_num;
+ 	int size;
+@@ -1291,9 +1291,8 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	ret = hns3_fill_desc(ring, skb, size, seg_num == 1 ? 1 : 0,
+ 			     DESC_TYPE_SKB);
+ 	if (unlikely(ret))
+-		goto head_fill_err;
++		goto fill_err;
+ 
+-	next_to_use_frag = ring->next_to_use;
+ 	/* Fill the fragments */
+ 	for (i = 1; i < seg_num; i++) {
+ 		frag = &skb_shinfo(skb)->frags[i - 1];
+@@ -1304,7 +1303,7 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 				     DESC_TYPE_PAGE);
+ 
+ 		if (unlikely(ret))
+-			goto frag_fill_err;
++			goto fill_err;
+ 	}
+ 
+ 	/* Complete translate all packets */
+@@ -1317,10 +1316,7 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 
+ 	return NETDEV_TX_OK;
+ 
+-frag_fill_err:
+-	hns3_clear_desc(ring, next_to_use_frag);
+-
+-head_fill_err:
++fill_err:
+ 	hns3_clear_desc(ring, next_to_use_head);
+ 
+ out_err_tx_ok:
+-- 
+2.7.4
 
