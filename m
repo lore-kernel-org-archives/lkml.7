@@ -2,92 +2,91 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F4CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66FAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAC12053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:50:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STLGVkk9"
+	by mail.kernel.org (Postfix) with ESMTP id 9C3DB205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557154261;
+	bh=UfssI2McWSk4xSq+ib9h55EucR/JvCGHpkdxHQJkJBU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RppZzfVE3fhQC2/ghd/v0P0vbXMxnKwz4aAl4RQ3IDhBSO0PJf54IKCYAyVAQ52he
+	 a0pHIFULjW85DqK9qSJUUcFysj0B5zFufZs2PguVam7/kgJkfIKw/5ngSp2qJV3wDb
+	 yS+bHLg6rIrH3dD9mq/nWvOLTNbXPah5GfmOwoOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbfEFOu6 (ORCPT
+        id S1729499AbfEFOvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:50:58 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38756 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfEFOu5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:50:57 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a59so6492682pla.5;
-        Mon, 06 May 2019 07:50:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yft7gFfFtwWc/a4cPI5/imyDvpQ6B50i8MJ8FHJY3Qs=;
-        b=STLGVkk9q3xG5XzEWIxDxCWzi7LbMYZk/zsgVLMCL4xGBxj0aS+nJAMPhJvVrh8ZZ5
-         tyWv/Cdqs+zOFxlkBgEgmvES139xCjiWTbeLWMB3i50jOyxm88aFFEbIjm0HVnFlaXhr
-         Bz7CDYehYQXVOmPoOXvPc+bfDchq+uKGmgI70iI3yk2t+/ElBy27YV3T8059gbL8drxm
-         phfRyQ8OlvTTKYppdrvKlcl0xpcJHkktMY3ianUgMFAOTO6mKeK1HgkSZOGGvK4yShTf
-         WucVDLAwRYwYS9sGY2k9EiifogAt7NurM4daSspYuJxu5lKI6qUrhWMlaF6hiGtgZRF3
-         k+3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yft7gFfFtwWc/a4cPI5/imyDvpQ6B50i8MJ8FHJY3Qs=;
-        b=UTKMdhpF5waoK3jN85LSv3dXPKBnArZNd+uPIRzwS5Rr7YF17MUuZTINPgsS9Kymjy
-         f4g0GBh4VrB3sadraIl1yTkH3Mi5KdU9A5ln/4O3zHYmxy1YcvBg+jOBy8DXSyokJ/pe
-         mXHtF5iWrbn71QOk2Z57MdlvacYOTo5Rl6a1/l8UN1lSKvtxylUMkSxanH0/gE5GRdGl
-         NAdZjR/6CwmCmyPLfpm+/XfThSHh1/ry0Ffo8/T7VbIzYylkpCanqQbmnCBSMFDe+I4H
-         ecr9zh8AVP7WHVs0LQ9ZOFznQXoB/7Br11WL4TBd62t8o+ce9pYgNvP81hkJhZ59gE9w
-         4HNA==
-X-Gm-Message-State: APjAAAUz6ZvDbzxOzlCzDCWOWehtOVM4BsGX2FHgPaRZwVJYUV68gMKW
-        XtR0J/hs6wnItLBIFpPGU6AH1cK653NWJbJEugdXw7HKu1lTkw==
-X-Google-Smtp-Source: APXvYqy8wpf4YDDJWESxP3aiIHocm0jQsnFWNLQ3cd6ry01eg907GSjDg7den4prkFMH+wV8/3Jw0LpLJV0BD5ifkqY=
-X-Received: by 2002:a17:902:758b:: with SMTP id j11mr33334728pll.87.1557154256970;
- Mon, 06 May 2019 07:50:56 -0700 (PDT)
+        Mon, 6 May 2019 10:51:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728719AbfEFOtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:49:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F222021019;
+        Mon,  6 May 2019 14:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557154149;
+        bh=UfssI2McWSk4xSq+ib9h55EucR/JvCGHpkdxHQJkJBU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yBAn/pprv4p01v+kPHCzcvHVTLNaGpxqvXpgPYIGDvctwF5vBjUIFrztHR+FZtPYP
+         Py6GnMT50KrgTnLK3rrWd5rIIOcFEmD/XIS71lvfxeZhZGNn89IRfjP67WUqcq3O0t
+         R9qddasC6GnBVPrIpz6/Fss9esG4sVJSRwswX+rE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.9 55/62] staging: iio: adt7316: allow adt751x to use internal vref for all dacs
+Date:   Mon,  6 May 2019 16:33:26 +0200
+Message-Id: <20190506143056.133484166@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
+References: <20190506143051.102535767@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190506232200.1acfe572@canb.auug.org.au>
-In-Reply-To: <20190506232200.1acfe572@canb.auug.org.au>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 6 May 2019 17:50:45 +0300
-Message-ID: <CAHp75VcbWN+--XSepr3Ea48cnfY3h7=TpmM2sEt0rJLZ_QX2rA@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the drivers-x86 tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 4:22 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commit
->
->   cc86bb923508 ("platform/x86: thinkpad_acpi: fix spelling mistake "capabilites" -> "capabilities"")
->
-> is missing a Signed-off-by from its committer.
+From: Jeremy Fertic <jeremyfertic@gmail.com>
 
-It's fixed now, thanks!
+commit 10bfe7cc1739c22f0aa296b39e53f61e9e3f4d99 upstream.
 
->
-> --
-> Cheers,
-> Stephen Rothwell
+With adt7516/7/9, internal vref is available for dacs a and b, dacs c and
+d, or all dacs. The driver doesn't currently support internal vref for all
+dacs. Change the else if to an if so both bits are checked rather than
+just one or the other.
+
+Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
+Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/staging/iio/addac/adt7316.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/staging/iio/addac/adt7316.c
++++ b/drivers/staging/iio/addac/adt7316.c
+@@ -1089,7 +1089,7 @@ static ssize_t adt7316_store_DAC_interna
+ 		ldac_config = chip->ldac_config & (~ADT7516_DAC_IN_VREF_MASK);
+ 		if (data & 0x1)
+ 			ldac_config |= ADT7516_DAC_AB_IN_VREF;
+-		else if (data & 0x2)
++		if (data & 0x2)
+ 			ldac_config |= ADT7516_DAC_CD_IN_VREF;
+ 	} else {
+ 		ret = kstrtou8(buf, 16, &data);
 
 
-
--- 
-With Best Regards,
-Andy Shevchenko
