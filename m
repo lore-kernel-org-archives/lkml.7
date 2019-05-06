@@ -2,171 +2,243 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.4 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB95C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0889C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 619D120675
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:05:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="J6LvUaUT";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="SNrFrGrC"
+	by mail.kernel.org (Postfix) with ESMTP id 7482B20675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfEFSFO (ORCPT
+        id S1726951AbfEFSFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 14:05:14 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:40804 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726327AbfEFSFN (ORCPT
+        Mon, 6 May 2019 14:05:25 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.228]:27726 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726883AbfEFSFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 14:05:13 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46I3x7U017490;
-        Mon, 6 May 2019 11:04:44 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=WswB3JwNzV3hpzJyfdoXN1OY9C50b9sg8xCmdLwKOUA=;
- b=J6LvUaUTs//UDiPAABgfokbD2aPPhRHv65que2APnt2qNkq2f7ct3KuQsBuGSw+SzVrj
- /n7RIDxeA3vKFgQWnWzVrrLBuFBNgZi/GKdafD8QWcl4GmY2VTer8c5+DwHsoAVAEG0m
- a8dO0GKNmxc4SDumWIoeg+cUKvkglO4g6tk= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sanejry91-9
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 06 May 2019 11:04:43 -0700
-Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
- ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 6 May 2019 11:04:41 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 6 May 2019 11:04:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WswB3JwNzV3hpzJyfdoXN1OY9C50b9sg8xCmdLwKOUA=;
- b=SNrFrGrCA6UoM9Ak+VLelsoQucNMtctC5qdDwdYWbTBsrckbj4qr9Bl/INP/hn8/X3o+8Q2kfxYNaBE4KniQ7Dd+x/0I7gkt8dTEF0IcnLw6H8X5U+iPUfp2hXi+RcbrF4Ri59+0vZxt3kTFVq9RY/ZMQZDAekt4SPL3zf18Wzg=
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com (10.172.177.11) by
- CY4PR15MB1237.namprd15.prod.outlook.com (10.172.177.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.12; Mon, 6 May 2019 18:04:40 +0000
-Received: from CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::1039:c5b1:f43e:14e9]) by CY4PR15MB1269.namprd15.prod.outlook.com
- ([fe80::1039:c5b1:f43e:14e9%3]) with mapi id 15.20.1856.012; Mon, 6 May 2019
- 18:04:40 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     Andrew Jeffery <andrew@aj.id.au>, Arnd Bergmann <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Sai Dasari <sdasari@fb.com>
-Subject: Re: [PATCH v2] misc: aspeed-lpc-ctrl: Correct return values
-Thread-Topic: [PATCH v2] misc: aspeed-lpc-ctrl: Correct return values
-Thread-Index: AQHVAdv4KLmFOVGoe0aPnHZnO5HqTqZdg2aAgABv4YA=
-Date:   Mon, 6 May 2019 18:04:39 +0000
-Message-ID: <FEC308F1-3AF0-4C0D-A082-59B4062A2F0F@fb.com>
-References: <20190503181336.579877-1-vijaykhemka@fb.com>
- <76491a70-01ca-4308-a09e-4f223ac49ebd@www.fastmail.com>
-In-Reply-To: <76491a70-01ca-4308-a09e-4f223ac49ebd@www.fastmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::2d00]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ec4d3cba-c22f-4b74-6847-08d6d24d4f0c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:CY4PR15MB1237;
-x-ms-traffictypediagnostic: CY4PR15MB1237:
-x-microsoft-antispam-prvs: <CY4PR15MB12375812DD885772EB9D92CEDD300@CY4PR15MB1237.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0029F17A3F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(366004)(396003)(39860400002)(346002)(189003)(199004)(51914003)(478600001)(6116002)(6506007)(81156014)(99286004)(316002)(102836004)(76176011)(76116006)(91956017)(66446008)(5660300002)(2501003)(33656002)(73956011)(66946007)(229853002)(64756008)(66556008)(66476007)(186003)(71200400001)(83716004)(256004)(6512007)(46003)(6486002)(6436002)(14454004)(71190400001)(305945005)(7736002)(2906002)(446003)(11346002)(68736007)(486006)(110136005)(8676002)(81166006)(8936002)(476003)(2616005)(86362001)(2201001)(82746002)(36756003)(25786009)(4326008)(6246003)(53936002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR15MB1237;H:CY4PR15MB1269.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: V4z8A1/tbzb2byoI3EqoufjmmZsyPZhMKPyuRflSX8TjnYrGP+5/bclu2acfkP0PpOldxxG0emI5lqWoVt7mOMQ8RdFBRYN8/BBW5ZC2hF0gVcQBMgYdtOKh8hGzFFM3mpDqLFerUUIfMn75fJ3Ry2GKMbkslXXLda6zUPhqapOr0AKb16dlAXTZVfuTAkVKsxLCmaU8FaaxTe4bVHYq1/g58jUsaHc4AS4UTl9KMoJdYEppMiheXTItOF6wfUeIiKP1TkbcjfzFVeC9G1TCe70YYUZaFnBYK1prlD6JxFUt7/yeXubpBzpWKECldWD/CMTaTN4FLK578E3MIOKljKAdHN5bqPdhSOmgkXso1+rHJu/si4bJKi7MUw2qVCcY2YbK7zXzoTP1qTiXhI9DLsK5F501/EuONXtHfyAnDqs=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <28CF54BBD5085B459A361ACBBF7B067A@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 6 May 2019 14:05:24 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 8408C16D7C
+        for <linux-kernel@vger.kernel.org>; Mon,  6 May 2019 13:05:23 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id NhzOhbqWC2PzONhzOh4J8A; Mon, 06 May 2019 13:05:22 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.110.31] (port=35824 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hNhzN-000Shq-W9; Mon, 06 May 2019 13:05:22 -0500
+Date:   Mon, 6 May 2019 13:05:21 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [GIT PULL] Wimplicit-fallthrough patches for 5.2-rc1
+Message-ID: <20190506180521.GA30749@embeddedor>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec4d3cba-c22f-4b74-6847-08d6d24d4f0c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 18:04:39.8360
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR15MB1237
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905060152
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.110.31
+X-Source-L: No
+X-Exim-ID: 1hNhzN-000Shq-W9
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.110.31]:35824
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7v09uIDUvNS8xOSwgOToyNCBQTSwgIkFuZHJldyBKZWZmZXJ5IiA8YW5kcmV3QGFqLmlk
-LmF1PiB3cm90ZToNCg0KICAgIA0KICAgIA0KICAgIE9uIFNhdCwgNCBNYXkgMjAxOSwgYXQgMDM6
-NDMsIFZpamF5IEtoZW1rYSB3cm90ZToNCiAgICA+IENvcnJlY3RlZCBzb21lIG9mIHJldHVybiB2
-YWx1ZXMgd2l0aCBhcHByb3ByaWF0ZSBtZWFuaW5ncyBhbmQgcmVwb3J0ZWQNCiAgICA+IHJlbGV2
-YW50IG1lc3NhZ2VzIGFzIGRlYnVnIGluZm9ybWF0aW9uLg0KICAgID4gDQogICAgPiBTaWduZWQt
-b2ZmLWJ5OiBWaWpheSBLaGVta2EgPHZpamF5a2hlbWthQGZiLmNvbT4NCiAgICANCiAgICBUaGFu
-a3MgZm9yIHRoZSBmaXhlcywgdGhpcyBsb29rcyBva2F5IG5vdy4gSG93ZXZlciwgd2FzIHRoZXJl
-IGEgcmVhc29uIGZvcg0KICAgIG5vdCBzcXVhc2hpbmcgY2hhbmdlIGludG8geW91ciBwcmV2aW91
-cyBwYXRjaCB0aGF0IGludHJvZHVjZWQgdGhlIGlzc3Vlcw0KICAgIHRoaXMgZml4ZXM/IFRoYXQg
-aGFzbid0IGJlZW4gYXBwbGllZCB5ZXQgZWl0aGVyIGFzIGZhciBhcyBJJ20gYXdhcmUuIEknZCBw
-cmVmZXINCiAgICB3ZSBkbyB0aGF0IGFuZCBzdWJtaXQgYSBzaW5nbGUsIGdvb2QgcGF0Y2ggaWYg
-d2UgY2FuLg0KDQpGaXJzdCBwYXRjaCBoYXMgYWxyZWFkeSBiZWVuIGFwcGxpZWQgdG8gTEYgb3Bl
-bmJtYyBrZXJuZWwgYW5kIGJlaW5nIHVzZWQgYnkgbWFueQ0KcGVvcGxlIHNvIEkgd2FudGVkIHRv
-IGtlZXAgdGhpcyBjbGVhbi4NCiAgICANCiAgICBBbmRyZXcNCiAgICANCiAgICA+IC0tLQ0KICAg
-ID4gIGRyaXZlcnMvbWlzYy9hc3BlZWQtbHBjLWN0cmwuYyB8IDE0ICsrKysrKystLS0tLS0tDQog
-ICAgPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkNCiAg
-ICA+IA0KICAgID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWlzYy9hc3BlZWQtbHBjLWN0cmwuYyAN
-CiAgICA+IGIvZHJpdmVycy9taXNjL2FzcGVlZC1scGMtY3RybC5jDQogICAgPiBpbmRleCAzMzIy
-MTBlMDZlOTguLmFjYTEzNzc5NzY0YSAxMDA2NDQNCiAgICA+IC0tLSBhL2RyaXZlcnMvbWlzYy9h
-c3BlZWQtbHBjLWN0cmwuYw0KICAgID4gKysrIGIvZHJpdmVycy9taXNjL2FzcGVlZC1scGMtY3Ry
-bC5jDQogICAgPiBAQCAtOTMsOCArOTMsOCBAQCBzdGF0aWMgbG9uZyBhc3BlZWRfbHBjX2N0cmxf
-aW9jdGwoc3RydWN0IGZpbGUgKmZpbGUsIA0KICAgID4gdW5zaWduZWQgaW50IGNtZCwNCiAgICA+
-ICANCiAgICA+ICAJCS8qIElmIG1lbW9yeS1yZWdpb24gaXMgbm90IGRlc2NyaWJlZCBpbiBkZXZp
-Y2UgdHJlZSAqLw0KICAgID4gIAkJaWYgKCFscGNfY3RybC0+bWVtX3NpemUpIHsNCiAgICA+IC0J
-CQlkZXZfZXJyKGRldiwgIkRpZG4ndCBmaW5kIHJlc2VydmVkIG1lbW9yeVxuIik7DQogICAgPiAt
-CQkJcmV0dXJuIC1FSU5WQUw7DQogICAgPiArCQkJZGV2X2RiZyhkZXYsICJEaWRuJ3QgZmluZCBy
-ZXNlcnZlZCBtZW1vcnlcbiIpOw0KICAgID4gKwkJCXJldHVybiAtRU5YSU87DQogICAgPiAgCQl9
-DQogICAgPiAgDQogICAgPiAgCQltYXAuc2l6ZSA9IGxwY19jdHJsLT5tZW1fc2l6ZTsNCiAgICA+
-IEBAIC0xMzQsMTYgKzEzNCwxNiBAQCBzdGF0aWMgbG9uZyBhc3BlZWRfbHBjX2N0cmxfaW9jdGwo
-c3RydWN0IGZpbGUgDQogICAgPiAqZmlsZSwgdW5zaWduZWQgaW50IGNtZCwNCiAgICA+ICANCiAg
-ICA+ICAJCWlmIChtYXAud2luZG93X3R5cGUgPT0gQVNQRUVEX0xQQ19DVFJMX1dJTkRPV19GTEFT
-SCkgew0KICAgID4gIAkJCWlmICghbHBjX2N0cmwtPnBub3Jfc2l6ZSkgew0KICAgID4gLQkJCQlk
-ZXZfZXJyKGRldiwgIkRpZG4ndCBmaW5kIGhvc3QgcG5vciBmbGFzaFxuIik7DQogICAgPiAtCQkJ
-CXJldHVybiAtRUlOVkFMOw0KICAgID4gKwkJCQlkZXZfZGJnKGRldiwgIkRpZG4ndCBmaW5kIGhv
-c3QgcG5vciBmbGFzaFxuIik7DQogICAgPiArCQkJCXJldHVybiAtRU5YSU87DQogICAgPiAgCQkJ
-fQ0KICAgID4gIAkJCWFkZHIgPSBscGNfY3RybC0+cG5vcl9iYXNlOw0KICAgID4gIAkJCXNpemUg
-PSBscGNfY3RybC0+cG5vcl9zaXplOw0KICAgID4gIAkJfSBlbHNlIGlmIChtYXAud2luZG93X3R5
-cGUgPT0gQVNQRUVEX0xQQ19DVFJMX1dJTkRPV19NRU1PUlkpIHsNCiAgICA+ICAJCQkvKiBJZiBt
-ZW1vcnktcmVnaW9uIGlzIG5vdCBkZXNjcmliZWQgaW4gZGV2aWNlIHRyZWUgKi8NCiAgICA+ICAJ
-CQlpZiAoIWxwY19jdHJsLT5tZW1fc2l6ZSkgew0KICAgID4gLQkJCQlkZXZfZXJyKGRldiwgIkRp
-ZG4ndCBmaW5kIHJlc2VydmVkIG1lbW9yeVxuIik7DQogICAgPiAtCQkJCXJldHVybiAtRUlOVkFM
-Ow0KICAgID4gKwkJCQlkZXZfZGJnKGRldiwgIkRpZG4ndCBmaW5kIHJlc2VydmVkIG1lbW9yeVxu
-Iik7DQogICAgPiArCQkJCXJldHVybiAtRU5YSU87DQogICAgPiAgCQkJfQ0KICAgID4gIAkJCWFk
-ZHIgPSBscGNfY3RybC0+bWVtX2Jhc2U7DQogICAgPiAgCQkJc2l6ZSA9IGxwY19jdHJsLT5tZW1f
-c2l6ZTsNCiAgICA+IEBAIC0yMzksNyArMjM5LDcgQEAgc3RhdGljIGludCBhc3BlZWRfbHBjX2N0
-cmxfcHJvYmUoc3RydWN0IA0KICAgID4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KICAgID4gIAkJ
-b2Zfbm9kZV9wdXQobm9kZSk7DQogICAgPiAgCQlpZiAocmMpIHsNCiAgICA+ICAJCQlkZXZfZXJy
-KGRldiwgIkNvdWxkbid0IGFkZHJlc3MgdG8gcmVzb3VyY2UgZm9yIHJlc2VydmVkIG1lbW9yeVxu
-Iik7DQogICAgPiAtCQkJcmV0dXJuIC1FTk9NRU07DQogICAgPiArCQkJcmV0dXJuIC1FTlhJTzsN
-CiAgICA+ICAJCX0NCiAgICA+ICANCiAgICA+ICAJCWxwY19jdHJsLT5tZW1fc2l6ZSA9IHJlc291
-cmNlX3NpemUoJnJlc20pOw0KICAgID4gLS0gDQogICAgPiAyLjE3LjENCiAgICA+IA0KICAgID4N
-CiAgICANCg0K
+The following changes since commit 17403fa277eda1328a7026dfca7e40249f27dc6b:
+
+  Merge tag 'ext4_for_linus_stable' of git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4 (2019-03-24 13:41:37 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/Wimplicit-fallthrough-5.2-rc1
+
+for you to fetch changes up to ccaa75187a5f1d8131b424160eb90a8a94be287f:
+
+  memstick: mark expected switch fall-throughs (2019-04-23 10:29:58 -0500)
+
+----------------------------------------------------------------
+Wimplicit-fallthrough patches for 5.2-rc1
+
+Hi Linus,
+
+This is my very first pull-request.  I've been working full-time as
+a kernel developer for more than two years now. During this time I've
+been fixing bugs reported by Coverity all over the tree and, as part
+of my work, I'm also contributing to the KSPP. My work in the kernel
+community has been supervised by Greg KH and Kees Cook.
+
+OK. So, after the quick introduction above, please, pull the following
+patches that mark switch cases where we are expecting to fall through.
+These patches are part of the ongoing efforts to enable -Wimplicit-fallthrough.
+They have been ignored for a long time (most of them more than 3 months,
+even after pinging multiple times), which is the reason why I've created
+this tree. Most of them have been baking in linux-next for a whole development
+cycle. And with Stephen Rothwell's help, we've had linux-next nag-emails
+going out for newly introduced code that triggers -Wimplicit-fallthrough
+to avoid gaining more of these cases while we work to remove the ones
+that are already present.
+
+I'm happy to let you know that we are getting close to completing this
+work.  Currently, there are only 32 of 2311 of these cases left to be
+addressed in linux-next.  I'm auditing every case; I take a look into
+the code and analyze it in order to determine if I'm dealing with an
+actual bug or a false positive, as explained here:
+
+https://lore.kernel.org/lkml/c2fad584-1705-a5f2-d63c-824e9b96cf50@embeddedor.com/
+
+While working on this, I've found and fixed the following missing
+break/return bugs, some of them introduced more than 5 years ago:
+
+84242b82d81c54e009a2aaa74d3d9eff70babf56
+7850b51b6c21812be96d0200b74cff1f40587d98
+5e420fe635813e5746b296cfc8fff4853ae205a2
+09186e503486da4a17f16f2f7c679e6e3e2a32f4
+b5be853181a8d4a6e20f2073ccd273d6280cad88
+7264235ee74f51d26fbdf97bf98c6102a460484f
+cc5034a5d293dd620484d1d836aa16c6764a1c8c
+479826cc86118e0d87e5cefb3df5b748e0480924
+5340f23df8fe27a270af3fa1a93cd07293d23dd9
+df997abeebadaa4824271009e2d2b526a70a11cb
+2f10d823739680d2477ce34437e8a08a53117f40
+307b00c5e695857ca92fc6a4b8ab6c48f988a1b1
+5d25ff7a544889bc4b749fda31778d6a18dddbcb
+a7ed5b3e7dca197de4da6273940a7ca6d1d756a1
+c24bfa8f21b59283580043dada19a6e943b6e426
+ad0eaee6195db1db1749dd46b9e6f4466793d178
+9ba8376ce1e2cbf4ce44f7e4bee1d0648e10d594
+dc586a60a11d0260308db1bebe788ad8973e2729
+a8e9b186f153a44690ad0363a56716e7077ad28c
+4e57562b4846e42cd1c2e556f0ece18c1154e116
+60747828eac28836b49bed214399b0c972f19df3
+c5b974bee9d2ceae4c441ae5a01e498c2674e100
+cc44ba91166beb78f9cb29d5e3d41c0a2d0a7329
+2c930e3d0aed1505e86e0928d323df5027817740
+
+Once this work is finish, we'll be able to universally enable
+"-Wimplicit-fallthrough" to avoid any of these kinds of bugs from
+entering the kernel again.
+
+Thanks
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (27):
+      fs: mark expected switch fall-throughs
+      afs: Mark expected switch fall-throughs
+      adfs: mark expected switch fall-throughs
+      scsi: aic7xxx: mark expected switch fall-throughs
+      scsi: be2iscsi: be_iscsi: Mark expected switch fall-through
+      scsi: be2iscsi: be_main: Mark expected switch fall-through
+      scsi: bfa: bfa_fcpim: Mark expected switch fall-throughs
+      scsi: csiostor: csio_wr: mark expected switch fall-through
+      scsi: imm: mark expected switch fall-throughs
+      scsi: lpfc: lpfc_ct: Mark expected switch fall-throughs
+      scsi: lpfc: lpfc_els: Mark expected switch fall-throughs
+      scsi: lpfc: lpfc_hbadisc: Mark expected switch fall-throughs
+      scsi: lpfc: lpfc_nportdisc: Mark expected switch fall-through
+      scsi: lpfc: lpfc_nvme: Mark expected switch fall-through
+      scsi: lpfc: lpfc_scsi: Mark expected switch fall-throughs
+      scsi: osst: mark expected switch fall-throughs
+      scsi: ppa: mark expected switch fall-through
+      scsi: sym53c8xx_2: sym_hipd: mark expected switch fall-throughs
+      scsi: sym53c8xx_2: sym_nvram: Mark expected switch fall-through
+      lib: zstd: Mark expected switch fall-throughs
+      lib/cmdline.c: mark expected switch fall-throughs
+      ASN.1: mark expected switch fall-through
+      block: Mark expected switch fall-throughs
+      NFC: pn533: mark expected switch fall-throughs
+      NFC: st21nfca: Fix fall-through warnings
+      drm/nouveau/nvkm: mark expected switch fall-throughs
+      memstick: mark expected switch fall-throughs
+
+ drivers/block/drbd/drbd_int.h                      |  2 +-
+ drivers/block/drbd/drbd_receiver.c                 |  4 +--
+ drivers/block/drbd/drbd_req.c                      |  2 +-
+ drivers/block/rsxx/core.c                          |  1 +
+ drivers/gpu/drm/nouveau/nvkm/engine/disp/hdmi.c    | 17 +++++++++++
+ drivers/gpu/drm/nouveau/nvkm/engine/dma/usernv04.c |  1 +
+ drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv04.c    |  2 ++
+ drivers/gpu/drm/nouveau/nvkm/engine/fifo/nv40.c    |  1 +
+ drivers/gpu/drm/nouveau/nvkm/subdev/bios/perf.c    |  1 +
+ drivers/gpu/drm/nouveau/nvkm/subdev/bios/pll.c     |  1 +
+ drivers/gpu/drm/nouveau/nvkm/subdev/clk/base.c     |  1 +
+ drivers/gpu/drm/nouveau/nvkm/subdev/clk/mcp77.c    |  1 +
+ drivers/gpu/drm/nouveau/nvkm/subdev/fb/ramnv40.c   |  2 ++
+ drivers/gpu/drm/nouveau/nvkm/subdev/mxm/nv50.c     |  1 +
+ drivers/memstick/host/jmb38x_ms.c                  |  2 ++
+ drivers/memstick/host/tifm_ms.c                    |  2 ++
+ drivers/nfc/pn533/pn533.c                          |  2 ++
+ drivers/nfc/st21nfca/dep.c                         |  2 ++
+ drivers/scsi/aic7xxx/aic7xxx_core.c                | 12 ++++++--
+ drivers/scsi/be2iscsi/be_iscsi.c                   |  1 +
+ drivers/scsi/be2iscsi/be_main.c                    |  1 +
+ drivers/scsi/bfa/bfa_fcpim.c                       |  6 ++--
+ drivers/scsi/csiostor/csio_wr.c                    |  1 +
+ drivers/scsi/imm.c                                 | 33 +++++++++++-----------
+ drivers/scsi/lpfc/lpfc_ct.c                        |  2 ++
+ drivers/scsi/lpfc/lpfc_els.c                       |  1 +
+ drivers/scsi/lpfc/lpfc_hbadisc.c                   |  4 ++-
+ drivers/scsi/lpfc/lpfc_nportdisc.c                 |  1 +
+ drivers/scsi/lpfc/lpfc_nvme.c                      |  1 +
+ drivers/scsi/lpfc/lpfc_scsi.c                      |  8 +++---
+ drivers/scsi/osst.c                                |  6 ++++
+ drivers/scsi/ppa.c                                 |  1 +
+ drivers/scsi/sym53c8xx_2/sym_hipd.c                |  2 ++
+ drivers/scsi/sym53c8xx_2/sym_nvram.c               |  1 +
+ fs/adfs/dir_f.c                                    |  6 ++++
+ fs/affs/super.c                                    |  3 +-
+ fs/afs/cmservice.c                                 |  8 ++++++
+ fs/afs/file.c                                      |  2 ++
+ fs/afs/flock.c                                     |  1 +
+ fs/afs/fsclient.c                                  | 31 ++++++++++++--------
+ fs/afs/misc.c                                      |  9 ++++++
+ fs/afs/rxrpc.c                                     |  1 +
+ fs/afs/vlclient.c                                  | 18 +++++++-----
+ fs/afs/yfsclient.c                                 | 30 +++++++++++++-------
+ fs/btrfs/ref-verify.c                              |  1 +
+ fs/btrfs/volumes.h                                 |  1 +
+ fs/ceph/file.c                                     |  1 +
+ fs/configfs/dir.c                                  |  2 ++
+ fs/f2fs/node.c                                     |  2 ++
+ fs/fcntl.c                                         |  2 +-
+ fs/gfs2/bmap.c                                     |  4 +--
+ fs/jffs2/fs.c                                      |  1 +
+ fs/libfs.c                                         |  2 ++
+ fs/locks.c                                         |  2 +-
+ fs/nfsd/nfs4proc.c                                 |  1 +
+ fs/nfsd/nfs4state.c                                |  1 +
+ fs/ocfs2/cluster/quorum.c                          |  1 +
+ fs/seq_file.c                                      |  1 +
+ fs/signalfd.c                                      |  1 +
+ fs/ufs/util.h                                      |  4 +--
+ lib/asn1_decoder.c                                 |  4 +++
+ lib/cmdline.c                                      |  5 ++++
+ lib/zstd/bitstream.h                               |  5 ++++
+ lib/zstd/compress.c                                |  1 +
+ lib/zstd/decompress.c                              |  5 +++-
+ lib/zstd/huf_compress.c                            |  2 ++
+ 66 files changed, 216 insertions(+), 68 deletions(-)
