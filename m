@@ -2,126 +2,194 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7E1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E835C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BBFB2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:31:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JKXYbZcb"
+	by mail.kernel.org (Postfix) with ESMTP id E1F4620830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfEFRbM (ORCPT
+        id S1726592AbfEFRd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:31:12 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:41344 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbfEFRbL (ORCPT
+        Mon, 6 May 2019 13:33:56 -0400
+Received: from smtp1.cloudbase.it ([46.107.15.2]:16077 "EHLO
+        smtp1.cloudbase.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726282AbfEFRd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:31:11 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x46HSZCi022951;
-        Tue, 7 May 2019 02:28:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x46HSZCi022951
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557163716;
-        bh=rLUuRSyxYbwt0UVs9QzxFKJlZ9BtLeDXvLxtcsNawRY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JKXYbZcbzekTUoL6mu+jZH4TU3MaGysbzm7unONRIccBJk6/UgXh6Bh9aTWwiW+Ky
-         A2ptFGi+J9bV+RT6ywYeX1Qnt4A6lFmUkq00Nd5GMuTOaW2tNCVATIqA4Fq/HRXLYr
-         WU81SQYU6DOjxjrRMurBKpCpPe/E/INWCawblX04Pp9cEBtDKms2OUowjOq9pQSTQC
-         GFNUMVWSuzcZ8Ufn0cOstMMRyrcrn34nrEuVi3uWWQ5qtTUX1Xyls6gAdGc4C672QN
-         4zLbnoRXV6315fHrM4TXSMkwwXikidN8W/U5/s7ksKIdmrtuC6xMxxiKny2sqkCqN3
-         eyh2vCnHuXi3w==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Tony Lindgren <tony@atomide.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH] Remove MODULE_ALIAS() calls that take undefined macro
-Date:   Tue,  7 May 2019 02:28:17 +0900
-Message-Id: <1557163697-17882-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 6 May 2019 13:33:56 -0400
+Received: from ader1990.cloudbase.it (unknown [89.46.161.178])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by smtp1.cloudbase.it (Postfix) with ESMTPSA id 780E250853;
+        Mon,  6 May 2019 19:38:06 +0300 (EEST)
+From:   Adrian Vladu <avladu@cloudbasesolutions.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Adrian Vladu <avladu@cloudbasesolutions.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Alessandro Pilotti <apilotti@cloudbasesolutions.com>
+Subject: [PATCH v2] hv: tools: fixed Python pep8/flake8 warnings for lsvmbus
+Date:   Mon,  6 May 2019 17:33:31 +0000
+Message-Id: <20190506173331.18906-1-avladu@cloudbasesolutions.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190506172737.18122-1-avladu@cloudbasesolutions.com>
+References: <20190506172737.18122-1-avladu@cloudbasesolutions.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These files do not define (USBHS_)DRIVER_NAME. Yet, they can be
-successfully compiled because they are never built as a module by
-anyone, i.e, the MODULE_ALIAS() calls are always no-op.
+Fixed pep8/flake8 python style code for lsvmbus tool.
 
-A problem showed up when a patch "moduleparam: Save information about
-built-in modules in separate file" is applied. With this new feature,
-MODULE_*() are populated even if the callers are built-in.
+The TAB indentation was on purpose ignored (pep8 rule W191) to make
+sure the code is complying with the Linux code guideline.
+The following command do not show any warnings now:
+pep8 --ignore=W191 lsvmbus
+flake8 --ignore=W191 lsvmbus
 
-To avoid the build errors, the lines referencing to the undefined
-macro must be removed.
+Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
 
-The complete fix is to remove all MODULE_* and #include <linux/module.h>
-like many "make ... explicitly non-modular" commits did.
-
-For now, I am touching the offending lines.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
 ---
+ tools/hv/lsvmbus | 75 +++++++++++++++++++++++++++---------------------
+ 1 file changed, 42 insertions(+), 33 deletions(-)
 
-I will insert this commit before
-"moduleparam: Save information about built-in modules in separate file"
-
-
- arch/arm/plat-omap/dma.c          | 1 -
- drivers/clocksource/timer-ti-dm.c | 1 -
- drivers/mfd/omap-usb-tll.c        | 1 -
- 3 files changed, 3 deletions(-)
-
-diff --git a/arch/arm/plat-omap/dma.c b/arch/arm/plat-omap/dma.c
-index d4012d6..5ca4c5f 100644
---- a/arch/arm/plat-omap/dma.c
-+++ b/arch/arm/plat-omap/dma.c
-@@ -1449,7 +1449,6 @@ static void __exit omap_system_dma_exit(void)
+diff --git a/tools/hv/lsvmbus b/tools/hv/lsvmbus
+index 55e7374bade0..099f2c44dbed 100644
+--- a/tools/hv/lsvmbus
++++ b/tools/hv/lsvmbus
+@@ -4,10 +4,10 @@
+ import os
+ from optparse import OptionParser
  
- MODULE_DESCRIPTION("OMAP SYSTEM DMA DRIVER");
- MODULE_LICENSE("GPL");
--MODULE_ALIAS("platform:" DRIVER_NAME);
- MODULE_AUTHOR("Texas Instruments Inc");
++help_msg = "print verbose messages. Try -vv, -vvv for  more verbose messages"
+ parser = OptionParser()
+-parser.add_option("-v", "--verbose", dest="verbose",
+-		   help="print verbose messages. Try -vv, -vvv for \
+-			more verbose messages", action="count")
++parser.add_option(
++	"-v", "--verbose", dest="verbose", help=help_msg, action="count")
  
- /*
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 3352da6..2b7cee81 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -998,5 +998,4 @@ module_platform_driver(omap_dm_timer_driver);
+ (options, args) = parser.parse_args()
  
- MODULE_DESCRIPTION("OMAP Dual-Mode Timer Driver");
- MODULE_LICENSE("GPL");
--MODULE_ALIAS("platform:" DRIVER_NAME);
- MODULE_AUTHOR("Texas Instruments Inc");
-diff --git a/drivers/mfd/omap-usb-tll.c b/drivers/mfd/omap-usb-tll.c
-index 446713d..93177d8 100644
---- a/drivers/mfd/omap-usb-tll.c
-+++ b/drivers/mfd/omap-usb-tll.c
-@@ -459,7 +459,6 @@ EXPORT_SYMBOL_GPL(omap_tll_disable);
+@@ -21,27 +21,28 @@ if not os.path.isdir(vmbus_sys_path):
+ 	exit(-1)
  
- MODULE_AUTHOR("Keshava Munegowda <keshava_mgowda@ti.com>");
- MODULE_AUTHOR("Roger Quadros <rogerq@ti.com>");
--MODULE_ALIAS("platform:" USBHS_DRIVER_NAME);
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("usb tll driver for TI OMAP EHCI and OHCI controllers");
+ vmbus_dev_dict = {
+-	'{0e0b6031-5213-4934-818b-38d90ced39db}' : '[Operating system shutdown]',
+-	'{9527e630-d0ae-497b-adce-e80ab0175caf}' : '[Time Synchronization]',
+-	'{57164f39-9115-4e78-ab55-382f3bd5422d}' : '[Heartbeat]',
+-	'{a9a0f4e7-5a45-4d96-b827-8a841e8c03e6}' : '[Data Exchange]',
+-	'{35fa2e29-ea23-4236-96ae-3a6ebacba440}' : '[Backup (volume checkpoint)]',
+-	'{34d14be3-dee4-41c8-9ae7-6b174977c192}' : '[Guest services]',
+-	'{525074dc-8985-46e2-8057-a307dc18a502}' : '[Dynamic Memory]',
+-	'{cfa8b69e-5b4a-4cc0-b98b-8ba1a1f3f95a}' : 'Synthetic mouse',
+-	'{f912ad6d-2b17-48ea-bd65-f927a61c7684}' : 'Synthetic keyboard',
+-	'{da0a7802-e377-4aac-8e77-0558eb1073f8}' : 'Synthetic framebuffer adapter',
+-	'{f8615163-df3e-46c5-913f-f2d2f965ed0e}' : 'Synthetic network adapter',
+-	'{32412632-86cb-44a2-9b5c-50d1417354f5}' : 'Synthetic IDE Controller',
+-	'{ba6163d9-04a1-4d29-b605-72e2ffb1dc7f}' : 'Synthetic SCSI Controller',
+-	'{2f9bcc4a-0069-4af3-b76b-6fd0be528cda}' : 'Synthetic fiber channel adapter',
+-	'{8c2eaf3d-32a7-4b09-ab99-bd1f1c86b501}' : 'Synthetic RDMA adapter',
+-	'{44c4f61d-4444-4400-9d52-802e27ede19f}' : 'PCI Express pass-through',
+-	'{276aacf4-ac15-426c-98dd-7521ad3f01fe}' : '[Reserved system device]',
+-	'{f8e65716-3cb3-4a06-9a60-1889c5cccab5}' : '[Reserved system device]',
+-	'{3375baf4-9e15-4b30-b765-67acb10d607b}' : '[Reserved system device]',
++	'{0e0b6031-5213-4934-818b-38d90ced39db}': '[Operating system shutdown]',
++	'{9527e630-d0ae-497b-adce-e80ab0175caf}': '[Time Synchronization]',
++	'{57164f39-9115-4e78-ab55-382f3bd5422d}': '[Heartbeat]',
++	'{a9a0f4e7-5a45-4d96-b827-8a841e8c03e6}': '[Data Exchange]',
++	'{35fa2e29-ea23-4236-96ae-3a6ebacba440}': '[Backup (volume checkpoint)]',
++	'{34d14be3-dee4-41c8-9ae7-6b174977c192}': '[Guest services]',
++	'{525074dc-8985-46e2-8057-a307dc18a502}': '[Dynamic Memory]',
++	'{cfa8b69e-5b4a-4cc0-b98b-8ba1a1f3f95a}': 'Synthetic mouse',
++	'{f912ad6d-2b17-48ea-bd65-f927a61c7684}': 'Synthetic keyboard',
++	'{da0a7802-e377-4aac-8e77-0558eb1073f8}': 'Synthetic framebuffer adapter',
++	'{f8615163-df3e-46c5-913f-f2d2f965ed0e}': 'Synthetic network adapter',
++	'{32412632-86cb-44a2-9b5c-50d1417354f5}': 'Synthetic IDE Controller',
++	'{ba6163d9-04a1-4d29-b605-72e2ffb1dc7f}': 'Synthetic SCSI Controller',
++	'{2f9bcc4a-0069-4af3-b76b-6fd0be528cda}': 'Synthetic fiber channel adapter',
++	'{8c2eaf3d-32a7-4b09-ab99-bd1f1c86b501}': 'Synthetic RDMA adapter',
++	'{44c4f61d-4444-4400-9d52-802e27ede19f}': 'PCI Express pass-through',
++	'{276aacf4-ac15-426c-98dd-7521ad3f01fe}': '[Reserved system device]',
++	'{f8e65716-3cb3-4a06-9a60-1889c5cccab5}': '[Reserved system device]',
++	'{3375baf4-9e15-4b30-b765-67acb10d607b}': '[Reserved system device]',
+ }
  
++
+ def get_vmbus_dev_attr(dev_name, attr):
+ 	try:
+ 		f = open('%s/%s/%s' % (vmbus_sys_path, dev_name, attr), 'r')
+@@ -52,6 +53,7 @@ def get_vmbus_dev_attr(dev_name, attr):
+ 
+ 	return lines
+ 
++
+ class VMBus_Dev:
+ 	pass
+ 
+@@ -66,12 +68,13 @@ for f in os.listdir(vmbus_sys_path):
+ 
+ 	chn_vp_mapping = get_vmbus_dev_attr(f, 'channel_vp_mapping')
+ 	chn_vp_mapping = [c.strip() for c in chn_vp_mapping]
+-	chn_vp_mapping = sorted(chn_vp_mapping,
+-		key = lambda c : int(c.split(':')[0]))
++	chn_vp_mapping = sorted(
++		chn_vp_mapping, key=lambda c: int(c.split(':')[0]))
+ 
+-	chn_vp_mapping = ['\tRel_ID=%s, target_cpu=%s' %
+-				(c.split(':')[0], c.split(':')[1])
+-					for c in chn_vp_mapping]
++	chn_vp_mapping = [
++		'\tRel_ID=%s, target_cpu=%s' %
++		(c.split(':')[0], c.split(':')[1]) for c in chn_vp_mapping
++	]
+ 	d = VMBus_Dev()
+ 	d.sysfs_path = '%s/%s' % (vmbus_sys_path, f)
+ 	d.vmbus_id = vmbus_id
+@@ -85,7 +88,7 @@ for f in os.listdir(vmbus_sys_path):
+ 	vmbus_dev_list.append(d)
+ 
+ 
+-vmbus_dev_list  = sorted(vmbus_dev_list, key = lambda d : int(d.vmbus_id))
++vmbus_dev_list = sorted(vmbus_dev_list, key=lambda d: int(d.vmbus_id))
+ 
+ format0 = '%2s: %s'
+ format1 = '%2s: Class_ID = %s - %s\n%s'
+@@ -95,9 +98,15 @@ for d in vmbus_dev_list:
+ 	if verbose == 0:
+ 		print(('VMBUS ID ' + format0) % (d.vmbus_id, d.dev_desc))
+ 	elif verbose == 1:
+-		print (('VMBUS ID ' + format1) %	\
+-			(d.vmbus_id, d.class_id, d.dev_desc, d.chn_vp_mapping))
++		print(
++			('VMBUS ID ' + format1) %
++			(d.vmbus_id, d.class_id, d.dev_desc, d.chn_vp_mapping)
++		)
+ 	else:
+-		print (('VMBUS ID ' + format2) % \
+-			(d.vmbus_id, d.class_id, d.dev_desc, \
+-			d.device_id, d.sysfs_path, d.chn_vp_mapping))
++		print(
++			('VMBUS ID ' + format2) %
++			(
++				d.vmbus_id, d.class_id, d.dev_desc,
++				d.device_id, d.sysfs_path, d.chn_vp_mapping
++			)
++		)
 -- 
-2.7.4
+2.19.1
 
