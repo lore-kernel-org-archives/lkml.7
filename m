@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9637C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96870C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D37421019
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40ABC206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WCAVYHVl"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s8eefizv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfEFMfn (ORCPT
+        id S1726503AbfEFMfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 08:35:43 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33816 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfEFMfk (ORCPT
+        Mon, 6 May 2019 08:35:50 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40712 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfEFMfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 08:35:40 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x46CZRod110974;
-        Mon, 6 May 2019 07:35:27 -0500
+        Mon, 6 May 2019 08:35:41 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x46CZ5lq066567;
+        Mon, 6 May 2019 07:35:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557146127;
-        bh=gcHJTzn/ad9fpmbq6OlOw+H1dNMZeARlPggnanOnKEI=;
+        s=ti-com-17Q1; t=1557146105;
+        bh=ytaaq+oeZvBDR6YoyYp9Hgqz7JQkkSx2RkejkBI2Ry8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=WCAVYHVldGpihgAYpQkE1DU1n8SdwJeacpQWv657kDxGZ6CN8CAaHX0ibDQtkd9qX
-         nAXnI7lxs/XnQVyUCL/zJftBAGAMnjKyhSQ+TxGsV5uPf6VZ1SQA4ielB/UkMG5ZIf
-         8ATxTryYIt8ovRu5kbV0QHLFox0wzfS5tJKyyaPo=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x46CZRtR024330
+        b=s8eefizvgytEO8rHHdfIBxAA0fQrOxcnTxbx2X5bOkTHnJnkAeb+8WDpJN1wCKr68
+         4bNCzMbb38UeCt42CoEV4ytMw+1BQY/tdS2ZSEdJ1ytTR6VXFwehvIKJjsn1BipYlU
+         esmUALsC5Q/mZJmRObvcfDgooWP/ZyBIp+fkvWSA=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x46CZ5ZA128305
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 May 2019 07:35:27 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 6 May 2019 07:35:05 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 6 May
- 2019 07:35:25 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 07:35:04 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 6 May 2019 07:35:25 -0500
+ Frontend Transport; Mon, 6 May 2019 07:35:04 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x46CYpUG110286;
-        Mon, 6 May 2019 07:35:22 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x46CYpU9110286;
+        Mon, 6 May 2019 07:35:01 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
         <ssantosh@kernel.org>
@@ -56,9 +56,9 @@ CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
         <t-kristo@ti.com>, <tony@atomide.com>
-Subject: [PATCH 10/16] dmaengine: ti: New driver for K3 UDMA - split#1: defines, structs, io func
-Date:   Mon, 6 May 2019 15:34:50 +0300
-Message-ID: <20190506123456.6777-11-peter.ujfalusi@ti.com>
+Subject: [PATCH 03/16] soc: ti: k3: add navss ringacc driver
+Date:   Mon, 6 May 2019 15:34:43 +0300
+Message-ID: <20190506123456.6777-4-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506123456.6777-1-peter.ujfalusi@ti.com>
 References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
@@ -71,1229 +71,1557 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split patch for review containing: defines, structs, io and low level
-functions and interrupt callbacks.
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-DMA driver for
-Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
+The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
+enable straightforward passing of work between a producer and a consumer.
+There is one RINGACC module per NAVSS on TI AM65x SoCs.
 
-The UDMA-P is intended to perform similar (but significantly upgraded) functions
-as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
-supports the transmission and reception of various packet types. The UDMA-P is
-architected to facilitate the segmentation and reassembly of SoC DMA data
-structure compliant packets to/from smaller data blocks that are natively
-compatible with the specific requirements of each connected peripheral. Multiple
-Tx and Rx channels are provided within the DMA which allow multiple segmentation
-or reassembly operations to be ongoing. The DMA controller maintains state
-information for each of the channels which allows packet segmentation and
-reassembly operations to be time division multiplexed between channels in order
-to share the underlying DMA hardware. An external DMA scheduler is used to
-control the ordering and rate at which this multiplexing occurs for Transmit
-operations. The ordering and rate of Receive operations is indirectly controlled
-by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
+The RINGACC converts constant-address read and write accesses to equivalent
+read or write accesses to a circular data structure in memory. The RINGACC
+eliminates the need for each DMA controller which needs to access ring
+elements from having to know the current state of the ring (base address,
+current offset). The DMA controller performs a read or write access to a
+specific address range (which maps to the source interface on the RINGACC)
+and the RINGACC replaces the address for the transaction with a new address
+which corresponds to the head or tail element of the ring (head for reads,
+tail for writes). Since the RINGACC maintains the state, multiple DMA
+controllers or channels are allowed to coherently share the same rings as
+applicable. The RINGACC is able to place data which is destined towards
+software into cached memory directly.
 
-The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
-channels. Channels in the UDMA-P can be configured to be either Packet-Based or
-Third-Party channels on a channel by channel basis.
+Supported ring modes:
+- Ring Mode
+- Messaging Mode
+- Credentials Mode
+- Queue Manager Mode
 
-The initial driver supports:
-- MEM_TO_MEM (TR mode)
-- DEV_TO_MEM (Packet / TR mode)
-- MEM_TO_DEV (Packet / TR mode)
-- Cyclic (Packet / TR mode)
-- Metadata for descriptors
+TI-SCI integration:
 
+Texas Instrument's System Control Interface (TI-SCI) Message Protocol now
+has control over Ringacc module resources management (RM) and Rings
+configuration.
+
+The corresponding support of TI-SCI Ringacc module RM protocol
+introduced as option through DT parameters:
+- ti,sci: phandle on TI-SCI firmware controller DT node
+- ti,sci-dev-id: TI-SCI device identifier as per TI-SCI firmware spec
+
+if both parameters present - Ringacc driver will configure/free/reset Rings
+using TI-SCI Message Ringacc RM Protocol.
+
+The Ringacc driver manages Rings allocation by itself now and requests
+TI-SCI firmware to allocate and configure specific Rings only. It's done
+this way because, Linux driver implements two stage Rings allocation and
+configuration (allocate ring and configure ring) while I-SCI Message
+Protocol supports only one combined operation (allocate+configure).
+
+Grygorii Strashko <grygorii.strashko@ti.com>
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/k3-udma.c          | 1008 +++++++++++++++++++++++++++++
- drivers/dma/ti/k3-udma.h          |  129 ++++
- include/dt-bindings/dma/k3-udma.h |   26 +
- 3 files changed, 1163 insertions(+)
- create mode 100644 drivers/dma/ti/k3-udma.c
- create mode 100644 drivers/dma/ti/k3-udma.h
- create mode 100644 include/dt-bindings/dma/k3-udma.h
+ drivers/soc/ti/Kconfig            |   17 +
+ drivers/soc/ti/Makefile           |    1 +
+ drivers/soc/ti/k3-ringacc.c       | 1190 +++++++++++++++++++++++++++++
+ include/linux/soc/ti/k3-ringacc.h |  258 +++++++
+ 4 files changed, 1466 insertions(+)
+ create mode 100644 drivers/soc/ti/k3-ringacc.c
+ create mode 100644 include/linux/soc/ti/k3-ringacc.h
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
+index dbd6c60b81db..2d0cdae14b75 100644
+--- a/drivers/soc/ti/Kconfig
++++ b/drivers/soc/ti/Kconfig
+@@ -80,4 +80,21 @@ config TI_SCI_INTA_MSI_DOMAIN
+ 	help
+ 	  Driver to enable Interrupt Aggregator specific MSI Domain.
+ 
++config TI_K3_RINGACC
++	tristate "K3 Ring accelerator Sub System"
++	depends on ARCH_K3 || COMPILE_TEST
++	depends on TI_SCI_INTA_IRQCHIP
++	default y
++	help
++	  Say y here to support the K3 Ring accelerator module.
++	  The Ring Accelerator (RINGACC or RA)  provides hardware acceleration
++	  to enable straightforward passing of work between a producer
++	  and a consumer. There is one RINGACC module per NAVSS on TI AM65x SoCs
++	  If unsure, say N.
++
++config TI_K3_RINGACC_DEBUG
++	tristate "K3 Ring accelerator Sub System tests and debug"
++	depends on TI_K3_RINGACC
++	default n
++
+ endif # SOC_TI
+diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
+index b3868d392d4f..cc4bc8b08bf5 100644
+--- a/drivers/soc/ti/Makefile
++++ b/drivers/soc/ti/Makefile
+@@ -9,3 +9,4 @@ obj-$(CONFIG_AMX3_PM)			+= pm33xx.o
+ obj-$(CONFIG_WKUP_M3_IPC)		+= wkup_m3_ipc.o
+ obj-$(CONFIG_TI_SCI_PM_DOMAINS)		+= ti_sci_pm_domains.o
+ obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)	+= ti_sci_inta_msi.o
++obj-$(CONFIG_TI_K3_RINGACC)		+= k3-ringacc.o
+diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
 new file mode 100644
-index 000000000000..81bc52f59044
+index 000000000000..632988de0523
 --- /dev/null
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -0,0 +1,1008 @@
++++ b/drivers/soc/ti/k3-ringacc.c
+@@ -0,0 +1,1190 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
-+ *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
++ * TI K3 NAVSS Ring Accelerator subsystem driver
++ *
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
 + */
 +
-+#include <linux/kernel.h>
-+#include <linux/delay.h>
-+#include <linux/dmaengine.h>
 +#include <linux/dma-mapping.h>
-+#include <linux/dmapool.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/list.h>
++#include <linux/io.h>
 +#include <linux/module.h>
++#include <linux/of.h>
 +#include <linux/platform_device.h>
 +#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/of.h>
-+#include <linux/of_dma.h>
-+#include <linux/of_device.h>
-+#include <linux/of_irq.h>
-+#include <linux/workqueue.h>
-+#include <linux/completion.h>
-+#include <dt-bindings/dma/k3-udma.h>
 +#include <linux/soc/ti/k3-ringacc.h>
 +#include <linux/soc/ti/ti_sci_protocol.h>
 +#include <linux/soc/ti/ti_sci_inta_msi.h>
-+#include <linux/dma/ti-cppi5.h>
++#include <linux/of_irq.h>
++#include <linux/irqdomain.h>
 +
-+#include "../virt-dma.h"
-+#include "k3-udma.h"
++static LIST_HEAD(k3_ringacc_list);
++static DEFINE_MUTEX(k3_ringacc_list_lock);
 +
-+struct udma_static_tr {
-+	u8 elsize; /* RPSTR0 */
-+	u16 elcnt; /* RPSTR0 */
-+	u16 bstcnt; /* RPSTR1 */
++#ifdef CONFIG_TI_K3_RINGACC_DEBUG
++#define	k3_nav_dbg(dev, arg...) dev_err(dev, arg)
++static	void dbg_writel(u32 v, void __iomem *reg)
++{
++	pr_err("WRITEL(32): v(%08X)-->reg(%p)\n", v, reg);
++	writel(v, reg);
++}
++
++static	u32 dbg_readl(void __iomem *reg)
++{
++	u32 v;
++
++	v = readl(reg);
++	pr_err("READL(32): v(%08X)<--reg(%p)\n", v, reg);
++	return v;
++}
++#else
++#define	k3_nav_dbg(dev, arg...) dev_dbg(dev, arg)
++#define dbg_writel(v, reg) writel(v, reg)
++
++#define dbg_readl(reg) readl(reg)
++#endif
++
++#define K3_RINGACC_CFG_RING_SIZE_ELCNT_MASK		GENMASK(19, 0)
++
++/**
++ * struct k3_ring_rt_regs -  The RA Control/Status Registers region
++ */
++struct k3_ring_rt_regs {
++	u32	resv_16[4];
++	u32	db;		/* RT Ring N Doorbell Register */
++	u32	resv_4[1];
++	u32	occ;		/* RT Ring N Occupancy Register */
++	u32	indx;		/* RT Ring N Current Index Register */
++	u32	hwocc;		/* RT Ring N Hardware Occupancy Register */
++	u32	hwindx;		/* RT Ring N Current Index Register */
 +};
 +
-+#define K3_UDMA_MAX_RFLOWS		1024
-+#define K3_UDMA_DEFAULT_RING_SIZE	16
++#define K3_RINGACC_RT_REGS_STEP	0x1000
 +
-+struct udma_chan;
-+
-+enum udma_mmr {
-+	MMR_GCFG = 0,
-+	MMR_RCHANRT,
-+	MMR_TCHANRT,
-+	MMR_LAST,
++/**
++ * struct k3_ring_fifo_regs -  The Ring Accelerator Queues Registers region
++ */
++struct k3_ring_fifo_regs {
++	u32	head_data[128];		/* Ring Head Entry Data Registers */
++	u32	tail_data[128];		/* Ring Tail Entry Data Registers */
++	u32	peek_head_data[128];	/* Ring Peek Head Entry Data Regs */
++	u32	peek_tail_data[128];	/* Ring Peek Tail Entry Data Regs */
 +};
 +
-+static const char * const mmr_names[] = { "gcfg", "rchanrt", "tchanrt" };
-+
-+struct udma_tchan {
-+	void __iomem *reg_rt;
-+
-+	int id;
-+	struct k3_ring *t_ring; /* Transmit ring */
-+	struct k3_ring *tc_ring; /* Transmit Completion ring */
++/**
++ * struct k3_ringacc_proxy_gcfg_regs - RA Proxy Global Config MMIO Region
++ */
++struct k3_ringacc_proxy_gcfg_regs {
++	u32	revision;	/* Revision Register */
++	u32	config;		/* Config Register */
 +};
 +
-+struct udma_rchan {
-+	void __iomem *reg_rt;
++#define K3_RINGACC_PROXY_CFG_THREADS_MASK		GENMASK(15, 0)
 +
-+	int id;
-+	struct k3_ring *fd_ring; /* Free Descriptor ring */
-+	struct k3_ring *r_ring; /* Receive ring*/
++/**
++ * struct k3_ringacc_proxy_target_regs -  Proxy Datapath MMIO Region
++ */
++struct k3_ringacc_proxy_target_regs {
++	u32	control;	/* Proxy Control Register */
++	u32	status;		/* Proxy Status Register */
++	u8	resv_512[504];
++	u32	data[128];	/* Proxy Data Register */
 +};
 +
-+struct udma_rflow {
-+	void __iomem *reg_rflow;
++#define K3_RINGACC_PROXY_TARGET_STEP	0x1000
++#define K3_RINGACC_PROXY_NOT_USED	(-1)
 +
-+	int id;
++enum k3_ringacc_proxy_access_mode {
++	PROXY_ACCESS_MODE_HEAD = 0,
++	PROXY_ACCESS_MODE_TAIL = 1,
++	PROXY_ACCESS_MODE_PEEK_HEAD = 2,
++	PROXY_ACCESS_MODE_PEEK_TAIL = 3,
 +};
 +
-+struct udma_match_data {
-+	bool enable_memcpy_support;
-+	u8 tpl_levels;
-+	u32 level_start_idx[];
++#define K3_RINGACC_FIFO_WINDOW_SIZE_BYTES  (512U)
++#define K3_RINGACC_FIFO_REGS_STEP	0x1000
++#define K3_RINGACC_MAX_DB_RING_CNT    (127U)
++
++/**
++ * struct k3_ring_ops -  Ring operations
++ */
++struct k3_ring_ops {
++	int (*push_tail)(struct k3_ring *ring, void *elm);
++	int (*push_head)(struct k3_ring *ring, void *elm);
++	int (*pop_tail)(struct k3_ring *ring, void *elm);
++	int (*pop_head)(struct k3_ring *ring, void *elm);
 +};
 +
-+struct udma_dev {
-+	struct dma_device ddev;
++/**
++ * struct k3_ring - RA Ring descriptor
++ *
++ * @rt - Ring control/status registers
++ * @fifos - Ring queues registers
++ * @proxy - Ring Proxy Datapath registers
++ * @ring_mem_dma - Ring buffer dma address
++ * @ring_mem_virt - Ring buffer virt address
++ * @ops - Ring operations
++ * @size - Ring size in elements
++ * @elm_size - Size of the ring element
++ * @mode - Ring mode
++ * @flags - flags
++ * @free - Number of free elements
++ * @occ - Ring occupancy
++ * @windex - Write index (only for @K3_RINGACC_RING_MODE_RING)
++ * @rindex - Read index (only for @K3_RINGACC_RING_MODE_RING)
++ * @ring_id - Ring Id
++ * @parent - Pointer on struct @k3_ringacc
++ * @use_count - Use count for shared rings
++ * @proxy_id - RA Ring Proxy Id (only if @K3_RINGACC_RING_USE_PROXY)
++ */
++struct k3_ring {
++	struct k3_ring_rt_regs __iomem *rt;
++	struct k3_ring_fifo_regs __iomem *fifos;
++	struct k3_ringacc_proxy_target_regs  __iomem *proxy;
++	dma_addr_t	ring_mem_dma;
++	void		*ring_mem_virt;
++	struct k3_ring_ops *ops;
++	u32		size;
++	enum k3_ring_size elm_size;
++	enum k3_ring_mode mode;
++	u32		flags;
++#define K3_RING_FLAG_BUSY	BIT(1)
++#define K3_RING_FLAG_SHARED	BIT(2)
++	u32		free;
++	u32		occ;
++	u32		windex;
++	u32		rindex;
++	u32		ring_id;
++	struct k3_ringacc	*parent;
++	u32		use_count;
++	int		proxy_id;
++};
++
++/**
++ * struct k3_ringacc - Rings accelerator descriptor
++ *
++ * @dev - pointer on RA device
++ * @proxy_gcfg - RA proxy global config registers
++ * @proxy_target_base - RA proxy datapath region
++ * @num_rings - number of ring in RA
++ * @rm_gp_range - general purpose rings range from tisci
++ * @dma_ring_reset_quirk - DMA reset w/a enable
++ * @num_proxies - number of RA proxies
++ * @rings - array of rings descriptors (struct @k3_ring)
++ * @list - list of RAs in the system
++ * @tisci - pointer ti-sci handle
++ * @tisci_ring_ops - ti-sci rings ops
++ * @tisci_dev_id - ti-sci device id
++ */
++struct k3_ringacc {
 +	struct device *dev;
-+	void __iomem *mmrs[MMR_LAST];
-+	const struct udma_match_data *match_data;
++	struct k3_ringacc_proxy_gcfg_regs __iomem *proxy_gcfg;
++	void __iomem *proxy_target_base;
++	u32 num_rings; /* number of rings in Ringacc module */
++	unsigned long *rings_inuse;
++	struct ti_sci_resource *rm_gp_range;
 +
-+	size_t desc_align; /* alignment to use for descriptors */
++	bool dma_ring_reset_quirk;
++	u32 num_proxies;
++	unsigned long *proxy_inuse;
 +
-+	struct udma_tisci_rm tisci_rm;
++	struct k3_ring *rings;
++	struct list_head list;
++	struct mutex req_lock; /* protect rings allocation */
 +
++	const struct ti_sci_handle *tisci;
++	const struct ti_sci_rm_ringacc_ops *tisci_ring_ops;
++	u32  tisci_dev_id;
++};
++
++static long k3_ringacc_ring_get_fifo_pos(struct k3_ring *ring)
++{
++	return K3_RINGACC_FIFO_WINDOW_SIZE_BYTES -
++	       (4 << ring->elm_size);
++}
++
++static void *k3_ringacc_get_elm_addr(struct k3_ring *ring, u32 idx)
++{
++	return (idx * (4 << ring->elm_size) + ring->ring_mem_virt);
++}
++
++static int k3_ringacc_ring_push_mem(struct k3_ring *ring, void *elem);
++static int k3_ringacc_ring_pop_mem(struct k3_ring *ring, void *elem);
++
++static struct k3_ring_ops k3_ring_mode_ring_ops = {
++		.push_tail = k3_ringacc_ring_push_mem,
++		.pop_head = k3_ringacc_ring_pop_mem,
++};
++
++static int k3_ringacc_ring_push_io(struct k3_ring *ring, void *elem);
++static int k3_ringacc_ring_pop_io(struct k3_ring *ring, void *elem);
++static int k3_ringacc_ring_push_head_io(struct k3_ring *ring, void *elem);
++static int k3_ringacc_ring_pop_tail_io(struct k3_ring *ring, void *elem);
++
++static struct k3_ring_ops k3_ring_mode_msg_ops = {
++		.push_tail = k3_ringacc_ring_push_io,
++		.push_head = k3_ringacc_ring_push_head_io,
++		.pop_tail = k3_ringacc_ring_pop_tail_io,
++		.pop_head = k3_ringacc_ring_pop_io,
++};
++
++static int k3_ringacc_ring_push_head_proxy(struct k3_ring *ring, void *elem);
++static int k3_ringacc_ring_push_tail_proxy(struct k3_ring *ring, void *elem);
++static int k3_ringacc_ring_pop_head_proxy(struct k3_ring *ring, void *elem);
++static int k3_ringacc_ring_pop_tail_proxy(struct k3_ring *ring, void *elem);
++
++static struct k3_ring_ops k3_ring_mode_proxy_ops = {
++		.push_tail = k3_ringacc_ring_push_tail_proxy,
++		.push_head = k3_ringacc_ring_push_head_proxy,
++		.pop_tail = k3_ringacc_ring_pop_tail_proxy,
++		.pop_head = k3_ringacc_ring_pop_head_proxy,
++};
++
++#ifdef CONFIG_TI_K3_RINGACC_DEBUG
++void k3_ringacc_ring_dump(struct k3_ring *ring)
++{
++	struct device *dev = ring->parent->dev;
++
++	k3_nav_dbg(dev, "dump ring: %d\n", ring->ring_id);
++	k3_nav_dbg(dev, "dump mem virt %p, dma %pad\n",
++		   ring->ring_mem_virt, &ring->ring_mem_dma);
++	k3_nav_dbg(dev, "dump elmsize %d, size %d, mode %d, proxy_id %d\n",
++		   ring->elm_size, ring->size, ring->mode, ring->proxy_id);
++
++	k3_nav_dbg(dev, "dump ring_rt_regs: db%08x\n",
++		   readl(&ring->rt->db));
++	k3_nav_dbg(dev, "dump occ%08x\n",
++		   readl(&ring->rt->occ));
++	k3_nav_dbg(dev, "dump indx%08x\n",
++		   readl(&ring->rt->indx));
++	k3_nav_dbg(dev, "dump hwocc%08x\n",
++		   readl(&ring->rt->hwocc));
++	k3_nav_dbg(dev, "dump hwindx%08x\n",
++		   readl(&ring->rt->hwindx));
++
++	if (ring->ring_mem_virt)
++		print_hex_dump(KERN_ERR, "dump ring_mem_virt ",
++			       DUMP_PREFIX_NONE, 16, 1,
++			       ring->ring_mem_virt, 16 * 8, false);
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_dump);
++#endif
++
++struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
++					int id, u32 flags)
++{
++	int proxy_id = K3_RINGACC_PROXY_NOT_USED;
++
++	mutex_lock(&ringacc->req_lock);
++
++	if (id == K3_RINGACC_RING_ID_ANY) {
++		/* Request for any general purpose ring */
++		struct ti_sci_resource_desc *gp_rings =
++						&ringacc->rm_gp_range->desc[0];
++		unsigned long size;
++
++		size = gp_rings->start + gp_rings->num;
++		id = find_next_zero_bit(ringacc->rings_inuse, size,
++					gp_rings->start);
++		if (id == size)
++			goto error;
++	} else if (id < 0) {
++		goto error;
++	}
++
++	if (test_bit(id, ringacc->rings_inuse) &&
++	    !(ringacc->rings[id].flags & K3_RING_FLAG_SHARED))
++		goto error;
++	else if (ringacc->rings[id].flags & K3_RING_FLAG_SHARED)
++		goto out;
++
++	if (flags & K3_RINGACC_RING_USE_PROXY) {
++		proxy_id = find_next_zero_bit(ringacc->proxy_inuse,
++					      ringacc->num_proxies, 0);
++		if (proxy_id == ringacc->num_proxies)
++			goto error;
++	}
++
++	if (!try_module_get(ringacc->dev->driver->owner))
++		goto error;
++
++	if (proxy_id != K3_RINGACC_PROXY_NOT_USED) {
++		set_bit(proxy_id, ringacc->proxy_inuse);
++		ringacc->rings[id].proxy_id = proxy_id;
++		k3_nav_dbg(ringacc->dev, "Giving ring#%d proxy#%d\n",
++			   id, proxy_id);
++	} else {
++		k3_nav_dbg(ringacc->dev, "Giving ring#%d\n", id);
++	}
++
++	set_bit(id, ringacc->rings_inuse);
++out:
++	ringacc->rings[id].use_count++;
++	mutex_unlock(&ringacc->req_lock);
++	return &ringacc->rings[id];
++
++error:
++	mutex_unlock(&ringacc->req_lock);
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_request_ring);
++
++static void k3_ringacc_ring_reset_sci(struct k3_ring *ring)
++{
++	struct k3_ringacc *ringacc = ring->parent;
++	int ret;
++
++	ret = ringacc->tisci_ring_ops->config(
++			ringacc->tisci,
++			TI_SCI_MSG_VALUE_RM_RING_COUNT_VALID,
++			ringacc->tisci_dev_id,
++			ring->ring_id,
++			0,
++			0,
++			ring->size,
++			0,
++			0,
++			0);
++	if (ret)
++		dev_err(ringacc->dev, "TISCI reset ring fail (%d) ring_idx %d\n",
++			ret, ring->ring_id);
++}
++
++void k3_ringacc_ring_reset(struct k3_ring *ring)
++{
++	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
++		return;
++
++	ring->occ = 0;
++	ring->free = 0;
++	ring->rindex = 0;
++	ring->windex = 0;
++
++	k3_ringacc_ring_reset_sci(ring);
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_reset);
++
++static void k3_ringacc_ring_reconfig_qmode_sci(struct k3_ring *ring,
++					       enum k3_ring_mode mode)
++{
++	struct k3_ringacc *ringacc = ring->parent;
++	int ret;
++
++	ret = ringacc->tisci_ring_ops->config(
++			ringacc->tisci,
++			TI_SCI_MSG_VALUE_RM_RING_MODE_VALID,
++			ringacc->tisci_dev_id,
++			ring->ring_id,
++			0,
++			0,
++			0,
++			mode,
++			0,
++			0);
++	if (ret)
++		dev_err(ringacc->dev, "TISCI reconf qmode fail (%d) ring_idx %d\n",
++			ret, ring->ring_id);
++}
++
++void k3_ringacc_ring_reset_dma(struct k3_ring *ring, u32 occ)
++{
++	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
++		return;
++
++	if (!ring->parent->dma_ring_reset_quirk)
++		return;
++
++	if (!occ)
++		occ = dbg_readl(&ring->rt->occ);
++
++	if (occ) {
++		u32 db_ring_cnt, db_ring_cnt_cur;
++
++		k3_nav_dbg(ring->parent->dev, "%s %u occ: %u\n", __func__,
++			   ring->ring_id, occ);
++		/* 2. Reset the ring */
++		k3_ringacc_ring_reset_sci(ring);
++
++		/*
++		 * 3. Setup the ring in ring/doorbell mode
++		 * (if not already in this mode)
++		 */
++		if (ring->mode != K3_RINGACC_RING_MODE_RING)
++			k3_ringacc_ring_reconfig_qmode_sci(
++					ring, K3_RINGACC_RING_MODE_RING);
++		/*
++		 * 4. Ring the doorbell 2**22 – ringOcc times.
++		 * This will wrap the internal UDMAP ring state occupancy
++		 * counter (which is 21-bits wide) to 0.
++		 */
++		db_ring_cnt = (1U << 22) - occ;
++
++		while (db_ring_cnt != 0) {
++			/*
++			 * Ring the doorbell with the maximum count each
++			 * iteration if possible to minimize the total
++			 * of writes
++			 */
++			if (db_ring_cnt > K3_RINGACC_MAX_DB_RING_CNT)
++				db_ring_cnt_cur = K3_RINGACC_MAX_DB_RING_CNT;
++			else
++				db_ring_cnt_cur = db_ring_cnt;
++
++			writel(db_ring_cnt_cur, &ring->rt->db);
++			db_ring_cnt -= db_ring_cnt_cur;
++		}
++
++		/* 5. Restore the original ring mode (if not ring mode) */
++		if (ring->mode != K3_RINGACC_RING_MODE_RING)
++			k3_ringacc_ring_reconfig_qmode_sci(ring, ring->mode);
++	}
++
++	/* 2. Reset the ring */
++	k3_ringacc_ring_reset(ring);
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_reset_dma);
++
++static void k3_ringacc_ring_free_sci(struct k3_ring *ring)
++{
++	struct k3_ringacc *ringacc = ring->parent;
++	int ret;
++
++	ret = ringacc->tisci_ring_ops->config(
++			ringacc->tisci,
++			TI_SCI_MSG_VALUE_RM_ALL_NO_ORDER,
++			ringacc->tisci_dev_id,
++			ring->ring_id,
++			0,
++			0,
++			0,
++			0,
++			0,
++			0);
++	if (ret)
++		dev_err(ringacc->dev, "TISCI ring free fail (%d) ring_idx %d\n",
++			ret, ring->ring_id);
++}
++
++int k3_ringacc_ring_free(struct k3_ring *ring)
++{
 +	struct k3_ringacc *ringacc;
 +
-+	struct work_struct purge_work;
-+	struct list_head desc_to_purge;
-+	spinlock_t lock;
++	if (!ring)
++		return -EINVAL;
 +
-+	int tchan_cnt;
-+	int echan_cnt;
-+	int rchan_cnt;
-+	int rflow_cnt;
-+	unsigned long *tchan_map;
-+	unsigned long *rchan_map;
-+	unsigned long *rflow_map;
-+	unsigned long *rflow_map_reserved;
++	ringacc = ring->parent;
 +
-+	struct udma_tchan *tchans;
-+	struct udma_rchan *rchans;
-+	struct udma_rflow *rflows;
++	k3_nav_dbg(ring->parent->dev, "flags: 0x%08x\n", ring->flags);
 +
-+	struct udma_chan *channels;
-+	u32 psil_base;
-+};
++	if (!test_bit(ring->ring_id, ringacc->rings_inuse))
++		return -EINVAL;
 +
-+struct udma_hwdesc {
-+	size_t cppi5_desc_size;
-+	void *cppi5_desc_vaddr;
-+	dma_addr_t cppi5_desc_paddr;
++	mutex_lock(&ringacc->req_lock);
 +
-+	/* TR descriptor internal pointers */
-+	void *tr_req_base;
-+	struct cppi5_tr_resp_t *tr_resp_base;
-+};
++	if (--ring->use_count)
++		goto out;
 +
-+struct udma_desc {
-+	struct virt_dma_desc vd;
++	if (!(ring->flags & K3_RING_FLAG_BUSY))
++		goto no_init;
 +
-+	bool terminated;
++	k3_ringacc_ring_free_sci(ring);
 +
-+	enum dma_transfer_direction dir;
-+
-+	struct udma_static_tr static_tr;
-+	u32 residue;
-+
-+	unsigned int sglen;
-+	unsigned int desc_idx; /* Only used for cyclic in packet mode */
-+	unsigned int tr_idx;
-+
-+	u32 metadata_size;
-+	void *metadata; /* pointer to provided metadata buffer (EPIP, PSdata) */
-+
-+	unsigned int hwdesc_count;
-+	struct udma_hwdesc hwdesc[0];
-+};
-+
-+enum udma_chan_state {
-+	UDMA_CHAN_IS_IDLE = 0, /* not active, no teardown is in progress */
-+	UDMA_CHAN_IS_ACTIVE, /* Normal operation */
-+	UDMA_CHAN_IS_ACTIVE_FLUSH, /* Flushing for delayed tx */
-+	UDMA_CHAN_IS_TERMINATING, /* channel is being terminated */
-+};
-+
-+struct udma_chan {
-+	struct virt_dma_chan vc;
-+	struct dma_slave_config	cfg;
-+	struct udma_dev *ud;
-+	struct udma_desc *desc;
-+	struct udma_desc *terminated_desc;
-+	struct udma_static_tr static_tr;
-+	char *name;
-+
-+	struct udma_tchan *tchan;
-+	struct udma_rchan *rchan;
-+	struct udma_rflow *rflow;
-+
-+	bool psil_paired;
-+
-+	int irq_num_ring;
-+	int irq_num_udma;
-+
-+	bool cyclic;
-+	bool paused;
-+
-+	enum udma_chan_state state;
-+	struct completion teardown_completed;
-+
-+	u32 bcnt; /* number of bytes completed since the start of the channel */
-+	u32 in_ring_cnt; /* number of descriptors in flight */
-+
-+	bool pkt_mode; /* TR or packet */
-+	bool needs_epib; /* EPIB is needed for the communication or not */
-+	u32 psd_size; /* size of Protocol Specific Data */
-+	u32 metadata_size; /* (needs_epib ? 16:0) + psd_size */
-+	u32 hdesc_size; /* Size of a packet descriptor in packet mode */
-+	int remote_thread_id;
-+	u32 src_thread;
-+	u32 dst_thread;
-+	u32 static_tr_type;
-+	enum udma_tp_level channel_tpl; /* Channel Throughput Level */
-+
-+	/* dmapool for packet mode descriptors */
-+	bool use_dma_pool;
-+	struct dma_pool *hdesc_pool;
-+
-+	u32 id;
-+	enum dma_transfer_direction dir;
-+};
-+
-+static inline struct udma_dev *to_udma_dev(struct dma_device *d)
-+{
-+	return container_of(d, struct udma_dev, ddev);
-+}
-+
-+static inline struct udma_chan *to_udma_chan(struct dma_chan *c)
-+{
-+	return container_of(c, struct udma_chan, vc.chan);
-+}
-+
-+static inline struct udma_desc *to_udma_desc(struct dma_async_tx_descriptor *t)
-+{
-+	return container_of(t, struct udma_desc, vd.tx);
-+}
-+
-+/* Generic register access functions */
-+static inline u32 udma_read(void __iomem *base, int reg)
-+{
-+	return __raw_readl(base + reg);
-+}
-+
-+static inline void udma_write(void __iomem *base, int reg, u32 val)
-+{
-+	__raw_writel(val, base + reg);
-+}
-+
-+static inline void udma_update_bits(void __iomem *base, int reg,
-+				    u32 mask, u32 val)
-+{
-+	u32 tmp, orig;
-+
-+	orig = __raw_readl(base + reg);
-+	tmp = orig & ~mask;
-+	tmp |= (val & mask);
-+
-+	if (tmp != orig)
-+		__raw_writel(tmp, base + reg);
-+}
-+
-+/* TCHANRT */
-+static inline u32 udma_tchanrt_read(struct udma_tchan *tchan, int reg)
-+{
-+	if (!tchan)
-+		return 0;
-+	return udma_read(tchan->reg_rt, reg);
-+}
-+
-+static inline void udma_tchanrt_write(struct udma_tchan *tchan, int reg,
-+				      u32 val)
-+{
-+	if (!tchan)
-+		return;
-+	udma_write(tchan->reg_rt, reg, val);
-+}
-+
-+static inline void udma_tchanrt_update_bits(struct udma_tchan *tchan, int reg,
-+					    u32 mask, u32 val)
-+{
-+	if (!tchan)
-+		return;
-+	udma_update_bits(tchan->reg_rt, reg, mask, val);
-+}
-+
-+/* RCHANRT */
-+static inline u32 udma_rchanrt_read(struct udma_rchan *rchan, int reg)
-+{
-+	if (!rchan)
-+		return 0;
-+	return udma_read(rchan->reg_rt, reg);
-+}
-+
-+static inline void udma_rchanrt_write(struct udma_rchan *rchan, int reg,
-+				      u32 val)
-+{
-+	if (!rchan)
-+		return;
-+	udma_write(rchan->reg_rt, reg, val);
-+}
-+
-+static inline void udma_rchanrt_update_bits(struct udma_rchan *rchan, int reg,
-+					    u32 mask, u32 val)
-+{
-+	if (!rchan)
-+		return;
-+	udma_update_bits(rchan->reg_rt, reg, mask, val);
-+}
-+
-+static int navss_psil_pair(struct udma_dev *ud, u32 src_thread, u32 dst_thread)
-+{
-+	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
-+
-+	dst_thread |= UDMA_PSIL_DST_THREAD_ID_OFFSET;
-+	return tisci_rm->tisci_psil_ops->pair(tisci_rm->tisci,
-+					      tisci_rm->tisci_navss_dev_id,
-+					      src_thread, dst_thread);
-+}
-+
-+static int navss_psil_unpair(struct udma_dev *ud, u32 src_thread,
-+			     u32 dst_thread)
-+{
-+	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
-+
-+	dst_thread |= UDMA_PSIL_DST_THREAD_ID_OFFSET;
-+	return tisci_rm->tisci_psil_ops->unpair(tisci_rm->tisci,
-+						tisci_rm->tisci_navss_dev_id,
-+						src_thread, dst_thread);
-+}
-+
-+static char *udma_get_dir_text(enum dma_transfer_direction dir)
-+{
-+	switch (dir) {
-+	case DMA_DEV_TO_MEM:
-+		return "DEV_TO_MEM";
-+	case DMA_MEM_TO_DEV:
-+		return "MEM_TO_DEV";
-+	case DMA_MEM_TO_MEM:
-+		return "MEM_TO_MEM";
-+	case DMA_DEV_TO_DEV:
-+		return "DEV_TO_DEV";
-+	default:
-+		break;
++	dma_free_coherent(ringacc->dev,
++			  ring->size * (4 << ring->elm_size),
++			  ring->ring_mem_virt, ring->ring_mem_dma);
++	ring->flags = 0;
++	ring->ops = NULL;
++	if (ring->proxy_id != K3_RINGACC_PROXY_NOT_USED) {
++		clear_bit(ring->proxy_id, ringacc->proxy_inuse);
++		ring->proxy = NULL;
++		ring->proxy_id = K3_RINGACC_PROXY_NOT_USED;
 +	}
 +
-+	return "invalid";
++no_init:
++	clear_bit(ring->ring_id, ringacc->rings_inuse);
++
++	module_put(ringacc->dev->driver->owner);
++
++out:
++	mutex_unlock(&ringacc->req_lock);
++	return 0;
 +}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_free);
 +
-+static void udma_dump_chan_stdata(struct udma_chan *uc)
++u32 k3_ringacc_get_ring_id(struct k3_ring *ring)
 +{
-+	struct device *dev = uc->ud->dev;
-+	u32 offset;
-+	int i;
++	if (!ring)
++		return -EINVAL;
 +
-+	if (uc->dir == DMA_MEM_TO_DEV || uc->dir == DMA_MEM_TO_MEM) {
-+		dev_dbg(dev, "TCHAN State data:\n");
-+		for (i = 0; i < 32; i++) {
-+			offset = UDMA_TCHAN_RT_STDATA_REG + i * 4;
-+			dev_dbg(dev, "TRT_STDATA[%02d]: 0x%08x\n", i,
-+				udma_tchanrt_read(uc->tchan, offset));
-+		}
-+	}
-+
-+	if (uc->dir == DMA_DEV_TO_MEM || uc->dir == DMA_MEM_TO_MEM) {
-+		dev_dbg(dev, "RCHAN State data:\n");
-+		for (i = 0; i < 32; i++) {
-+			offset = UDMA_RCHAN_RT_STDATA_REG + i * 4;
-+			dev_dbg(dev, "RRT_STDATA[%02d]: 0x%08x\n", i,
-+				udma_rchanrt_read(uc->rchan, offset));
-+		}
-+	}
++	return ring->ring_id;
 +}
++EXPORT_SYMBOL_GPL(k3_ringacc_get_ring_id);
 +
-+static inline dma_addr_t udma_curr_cppi5_desc_paddr(struct udma_desc *d,
-+						    int idx)
++u32 k3_ringacc_get_tisci_dev_id(struct k3_ring *ring)
 +{
-+	return d->hwdesc[idx].cppi5_desc_paddr;
++	if (!ring)
++		return -EINVAL;
++
++	return ring->parent->tisci_dev_id;
 +}
++EXPORT_SYMBOL_GPL(k3_ringacc_get_tisci_dev_id);
 +
-+static inline void *udma_curr_cppi5_desc_vaddr(struct udma_desc *d, int idx)
++int k3_ringacc_get_ring_irq_num(struct k3_ring *ring)
 +{
-+	return d->hwdesc[idx].cppi5_desc_vaddr;
++	int irq_num;
++
++	if (!ring)
++		return -EINVAL;
++
++	irq_num = ti_sci_inta_msi_get_virq(ring->parent->dev, ring->ring_id);
++	if (irq_num <= 0)
++		irq_num = -EINVAL;
++	return irq_num;
 +}
++EXPORT_SYMBOL_GPL(k3_ringacc_get_ring_irq_num);
 +
-+static struct udma_desc *udma_udma_desc_from_paddr(struct udma_chan *uc,
-+						   dma_addr_t paddr)
++static int k3_ringacc_ring_cfg_sci(struct k3_ring *ring)
 +{
-+	struct udma_desc *d = uc->terminated_desc;
++	struct k3_ringacc *ringacc = ring->parent;
++	u32 ring_idx;
++	int ret;
 +
-+	if (d) {
-+		dma_addr_t desc_paddr = udma_curr_cppi5_desc_paddr(d,
-+								   d->desc_idx);
++	if (!ringacc->tisci)
++		return -EINVAL;
 +
-+		if (desc_paddr != paddr)
-+			d = NULL;
-+	}
-+
-+	if (!d) {
-+		d = uc->desc;
-+		if (d) {
-+			dma_addr_t desc_paddr = udma_curr_cppi5_desc_paddr(d,
-+								d->desc_idx);
-+
-+			if (desc_paddr != paddr)
-+				d = NULL;
-+		}
-+	}
-+
-+	return d;
-+}
-+
-+static void udma_free_hwdesc(struct udma_chan *uc, struct udma_desc *d)
-+{
-+	if (uc->use_dma_pool) {
-+		int i;
-+
-+		for (i = 0; i < d->hwdesc_count; i++) {
-+			if (!d->hwdesc[i].cppi5_desc_vaddr)
-+				continue;
-+
-+			dma_pool_free(uc->hdesc_pool,
-+				      d->hwdesc[i].cppi5_desc_vaddr,
-+				      d->hwdesc[i].cppi5_desc_paddr);
-+
-+			d->hwdesc[i].cppi5_desc_vaddr = NULL;
-+		}
-+	} else if (d->hwdesc[0].cppi5_desc_vaddr) {
-+		struct udma_dev *ud = uc->ud;
-+
-+		dma_free_coherent(ud->dev, d->hwdesc[0].cppi5_desc_size,
-+				  d->hwdesc[0].cppi5_desc_vaddr,
-+				  d->hwdesc[0].cppi5_desc_paddr);
-+
-+		d->hwdesc[0].cppi5_desc_vaddr = NULL;
-+	}
-+}
-+
-+static void udma_purge_desc_work(struct work_struct *work)
-+{
-+	struct udma_dev *ud = container_of(work, typeof(*ud), purge_work);
-+	struct virt_dma_desc *vd, *_vd;
-+	unsigned long flags;
-+	LIST_HEAD(head);
-+
-+	spin_lock_irqsave(&ud->lock, flags);
-+	list_splice_tail_init(&ud->desc_to_purge, &head);
-+	spin_unlock_irqrestore(&ud->lock, flags);
-+
-+	list_for_each_entry_safe(vd, _vd, &head, node) {
-+		struct udma_chan *uc = to_udma_chan(vd->tx.chan);
-+		struct udma_desc *d = to_udma_desc(&vd->tx);
-+
-+		udma_free_hwdesc(uc, d);
-+		list_del(&vd->node);
-+		kfree(d);
-+	}
-+
-+	/* If more to purge, schedule the work again */
-+	if (!list_empty(&ud->desc_to_purge))
-+		schedule_work(&ud->purge_work);
-+}
-+
-+static void udma_desc_free(struct virt_dma_desc *vd)
-+{
-+	struct udma_dev *ud = to_udma_dev(vd->tx.chan->device);
-+	struct udma_chan *uc = to_udma_chan(vd->tx.chan);
-+	struct udma_desc *d = to_udma_desc(&vd->tx);
-+	unsigned long flags;
-+
-+	if (uc->terminated_desc == d)
-+		uc->terminated_desc = NULL;
-+
-+	if (uc->use_dma_pool) {
-+		udma_free_hwdesc(uc, d);
-+		kfree(d);
-+		return;
-+	}
-+
-+	spin_lock_irqsave(&ud->lock, flags);
-+	list_add_tail(&vd->node, &ud->desc_to_purge);
-+	spin_unlock_irqrestore(&ud->lock, flags);
-+
-+	schedule_work(&ud->purge_work);
-+}
-+
-+static bool udma_is_chan_running(struct udma_chan *uc)
-+{
-+	u32 trt_ctl = 0;
-+	u32 rrt_ctl = 0;
-+
-+	if (uc->tchan)
-+		trt_ctl = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_CTL_REG);
-+	if (uc->rchan)
-+		rrt_ctl = udma_rchanrt_read(uc->rchan, UDMA_RCHAN_RT_CTL_REG);
-+
-+	if (trt_ctl & UDMA_CHAN_RT_CTL_EN || rrt_ctl & UDMA_CHAN_RT_CTL_EN)
-+		return true;
-+
-+	return false;
-+}
-+
-+static void udma_sync_for_device(struct udma_chan *uc, int idx)
-+{
-+	struct udma_desc *d = uc->desc;
-+
-+	if (uc->cyclic && uc->pkt_mode) {
-+		dma_sync_single_for_device(uc->ud->dev,
-+					   d->hwdesc[idx].cppi5_desc_paddr,
-+					   d->hwdesc[idx].cppi5_desc_size,
-+					   DMA_TO_DEVICE);
-+	} else {
-+		int i;
-+
-+		for (i = 0; i < d->hwdesc_count; i++) {
-+			if (!d->hwdesc[i].cppi5_desc_vaddr)
-+				continue;
-+
-+			dma_sync_single_for_device(uc->ud->dev,
-+						d->hwdesc[i].cppi5_desc_paddr,
-+						d->hwdesc[i].cppi5_desc_size,
-+						DMA_TO_DEVICE);
-+		}
-+	}
-+}
-+
-+static int udma_push_to_ring(struct udma_chan *uc, int idx)
-+{
-+	struct udma_desc *d = uc->desc;
-+
-+	struct k3_ring *ring = NULL;
-+	int ret = -EINVAL;
-+
-+	switch (uc->dir) {
-+	case DMA_DEV_TO_MEM:
-+		ring = uc->rchan->fd_ring;
-+		break;
-+	case DMA_MEM_TO_DEV:
-+	case DMA_MEM_TO_MEM:
-+		ring = uc->tchan->t_ring;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	if (ring) {
-+		dma_addr_t desc_addr = udma_curr_cppi5_desc_paddr(d, idx);
-+
-+		wmb(); /* Ensure that writes are not moved over this point */
-+		udma_sync_for_device(uc, idx);
-+		ret = k3_ringacc_ring_push(ring, &desc_addr);
-+		uc->in_ring_cnt++;
-+	}
++	ring_idx = ring->ring_id;
++	ret = ringacc->tisci_ring_ops->config(
++			ringacc->tisci,
++			TI_SCI_MSG_VALUE_RM_ALL_NO_ORDER,
++			ringacc->tisci_dev_id,
++			ring_idx,
++			lower_32_bits(ring->ring_mem_dma),
++			upper_32_bits(ring->ring_mem_dma),
++			ring->size,
++			ring->mode,
++			ring->elm_size,
++			0);
++	if (ret)
++		dev_err(ringacc->dev, "TISCI config ring fail (%d) ring_idx %d\n",
++			ret, ring_idx);
 +
 +	return ret;
 +}
 +
-+static int udma_pop_from_ring(struct udma_chan *uc, dma_addr_t *addr)
++int k3_ringacc_ring_cfg(struct k3_ring *ring, struct k3_ring_cfg *cfg)
 +{
-+	struct k3_ring *ring = NULL;
-+	int ret = -ENOENT;
++	struct k3_ringacc *ringacc = ring->parent;
++	int ret = 0;
 +
-+	switch (uc->dir) {
-+	case DMA_DEV_TO_MEM:
-+		ring = uc->rchan->r_ring;
++	if (!ring || !cfg)
++		return -EINVAL;
++	if (cfg->elm_size > K3_RINGACC_RING_ELSIZE_256 ||
++	    cfg->mode > K3_RINGACC_RING_MODE_QM ||
++	    cfg->size & ~K3_RINGACC_CFG_RING_SIZE_ELCNT_MASK ||
++	    !test_bit(ring->ring_id, ringacc->rings_inuse))
++		return -EINVAL;
++
++	if (ring->use_count != 1)
++		return 0;
++
++	ring->size = cfg->size;
++	ring->elm_size = cfg->elm_size;
++	ring->mode = cfg->mode;
++	ring->occ = 0;
++	ring->free = 0;
++	ring->rindex = 0;
++	ring->windex = 0;
++
++	if (ring->proxy_id != K3_RINGACC_PROXY_NOT_USED)
++		ring->proxy = ringacc->proxy_target_base +
++			      ring->proxy_id * K3_RINGACC_PROXY_TARGET_STEP;
++
++	switch (ring->mode) {
++	case K3_RINGACC_RING_MODE_RING:
++		ring->ops = &k3_ring_mode_ring_ops;
 +		break;
-+	case DMA_MEM_TO_DEV:
-+	case DMA_MEM_TO_MEM:
-+		ring = uc->tchan->tc_ring;
++	case K3_RINGACC_RING_MODE_QM:
++		/*
++		 * In Queue mode elm_size can be 8 only and each operation
++		 * uses 2 element slots
++		 */
++		if (cfg->elm_size != K3_RINGACC_RING_ELSIZE_8 ||
++		    cfg->size % 2)
++			goto err_free_proxy;
++	case K3_RINGACC_RING_MODE_MESSAGE:
++		if (ring->proxy)
++			ring->ops = &k3_ring_mode_proxy_ops;
++		else
++			ring->ops = &k3_ring_mode_msg_ops;
 +		break;
 +	default:
-+		break;
++		ring->ops = NULL;
++		ret = -EINVAL;
++		goto err_free_proxy;
++	};
++
++	ring->ring_mem_virt =
++			dma_alloc_coherent(ringacc->dev,
++					   ring->size * (4 << ring->elm_size),
++					   &ring->ring_mem_dma, GFP_KERNEL);
++	if (!ring->ring_mem_virt) {
++		dev_err(ringacc->dev, "Failed to alloc ring mem\n");
++		ret = -ENOMEM;
++		goto err_free_ops;
 +	}
 +
-+	if (ring && k3_ringacc_ring_get_occ(ring)) {
-+		struct udma_desc *d = NULL;
++	ret = k3_ringacc_ring_cfg_sci(ring);
 +
-+		ret = k3_ringacc_ring_pop(ring, addr);
-+		if (ret)
-+			return ret;
++	if (ret)
++		goto err_free_mem;
 +
-+		/* Teardown completion */
-+		if (*addr & 0x1)
-+			return ret;
++	ring->flags |= K3_RING_FLAG_BUSY;
++	ring->flags |= (cfg->flags & K3_RINGACC_RING_SHARED) ?
++			K3_RING_FLAG_SHARED : 0;
 +
-+		d = udma_udma_desc_from_paddr(uc, *addr);
++	k3_ringacc_ring_dump(ring);
 +
-+		if (d)
-+			dma_sync_single_for_cpu(uc->ud->dev, *addr,
-+						d->hwdesc[0].cppi5_desc_size,
-+						DMA_FROM_DEVICE);
-+		rmb(); /* Ensure that reads are not moved before this point */
++	return 0;
 +
-+		if (!ret)
-+			uc->in_ring_cnt--;
-+	}
-+
++err_free_mem:
++	dma_free_coherent(ringacc->dev,
++			  ring->size * (4 << ring->elm_size),
++			  ring->ring_mem_virt,
++			  ring->ring_mem_dma);
++err_free_ops:
++	ring->ops = NULL;
++err_free_proxy:
++	ring->proxy = NULL;
 +	return ret;
 +}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_cfg);
 +
-+static void udma_reset_rings(struct udma_chan *uc)
++u32 k3_ringacc_ring_get_size(struct k3_ring *ring)
 +{
-+	struct k3_ring *ring1 = NULL;
-+	struct k3_ring *ring2 = NULL;
++	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
++		return -EINVAL;
 +
-+	switch (uc->dir) {
-+	case DMA_DEV_TO_MEM:
-+		if (uc->rchan) {
-+			ring1 = uc->rchan->fd_ring;
-+			ring2 = uc->rchan->r_ring;
-+		}
-+		break;
-+	case DMA_MEM_TO_DEV:
-+	case DMA_MEM_TO_MEM:
-+		if (uc->tchan) {
-+			ring1 = uc->tchan->t_ring;
-+			ring2 = uc->tchan->tc_ring;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	if (ring1)
-+		k3_ringacc_ring_reset_dma(ring1,
-+					  k3_ringacc_ring_get_occ(ring1));
-+	if (ring2)
-+		k3_ringacc_ring_reset(ring2);
-+
-+	/* make sure we are not leaking memory by stalled descriptor */
-+	if (uc->terminated_desc) {
-+		udma_desc_free(&uc->terminated_desc->vd);
-+		uc->terminated_desc = NULL;
-+	}
-+
-+	uc->in_ring_cnt = 0;
++	return ring->size;
 +}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_get_size);
 +
-+static void udma_reset_counters(struct udma_chan *uc)
++u32 k3_ringacc_ring_get_free(struct k3_ring *ring)
++{
++	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
++		return -EINVAL;
++
++	if (!ring->free)
++		ring->free = ring->size - dbg_readl(&ring->rt->occ);
++
++	return ring->free;
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_get_free);
++
++u32 k3_ringacc_ring_get_occ(struct k3_ring *ring)
++{
++	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
++		return -EINVAL;
++
++	return dbg_readl(&ring->rt->occ);
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_get_occ);
++
++u32 k3_ringacc_ring_is_full(struct k3_ring *ring)
++{
++	return !k3_ringacc_ring_get_free(ring);
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_is_full);
++
++enum k3_ringacc_access_mode {
++	K3_RINGACC_ACCESS_MODE_PUSH_HEAD,
++	K3_RINGACC_ACCESS_MODE_POP_HEAD,
++	K3_RINGACC_ACCESS_MODE_PUSH_TAIL,
++	K3_RINGACC_ACCESS_MODE_POP_TAIL,
++	K3_RINGACC_ACCESS_MODE_PEEK_HEAD,
++	K3_RINGACC_ACCESS_MODE_PEEK_TAIL,
++};
++
++static int k3_ringacc_ring_cfg_proxy(struct k3_ring *ring,
++				     enum k3_ringacc_proxy_access_mode mode)
 +{
 +	u32 val;
 +
-+	if (uc->tchan) {
-+		val = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_BCNT_REG);
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_BCNT_REG, val);
-+
-+		val = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_SBCNT_REG);
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_SBCNT_REG, val);
-+
-+		val = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_PCNT_REG);
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_PCNT_REG, val);
-+
-+		val = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_PEER_BCNT_REG);
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_PEER_BCNT_REG, val);
-+	}
-+
-+	if (uc->rchan) {
-+		val = udma_rchanrt_read(uc->rchan, UDMA_RCHAN_RT_BCNT_REG);
-+		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_BCNT_REG, val);
-+
-+		val = udma_rchanrt_read(uc->rchan, UDMA_RCHAN_RT_SBCNT_REG);
-+		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_SBCNT_REG, val);
-+
-+		val = udma_rchanrt_read(uc->rchan, UDMA_RCHAN_RT_PCNT_REG);
-+		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_PCNT_REG, val);
-+
-+		val = udma_rchanrt_read(uc->rchan, UDMA_RCHAN_RT_PEER_BCNT_REG);
-+		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_PEER_BCNT_REG, val);
-+	}
-+
-+	uc->bcnt = 0;
++	val = ring->ring_id;
++	val |= mode << 16;
++	val |= ring->elm_size << 24;
++	dbg_writel(val, &ring->proxy->control);
++	return 0;
 +}
 +
-+static int udma_reset_chan(struct udma_chan *uc, bool hard)
++static int k3_ringacc_ring_access_proxy(struct k3_ring *ring, void *elem,
++					enum k3_ringacc_access_mode access_mode)
 +{
-+	switch (uc->dir) {
-+	case DMA_DEV_TO_MEM:
-+		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_PEER_RT_EN_REG, 0);
-+		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_CTL_REG, 0);
++	void __iomem *ptr;
++
++	ptr = (void __iomem *)&ring->proxy->data;
++
++	switch (access_mode) {
++	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
++	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
++		k3_ringacc_ring_cfg_proxy(ring, PROXY_ACCESS_MODE_HEAD);
 +		break;
-+	case DMA_MEM_TO_DEV:
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_CTL_REG, 0);
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_PEER_RT_EN_REG, 0);
-+		break;
-+	case DMA_MEM_TO_MEM:
-+		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_CTL_REG, 0);
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_CTL_REG, 0);
++	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
++	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
++		k3_ringacc_ring_cfg_proxy(ring, PROXY_ACCESS_MODE_TAIL);
 +		break;
 +	default:
 +		return -EINVAL;
 +	}
 +
-+	/* Reset all counters */
-+	udma_reset_counters(uc);
++	ptr += k3_ringacc_ring_get_fifo_pos(ring);
 +
-+	/* Hard reset: re-initialize the channel to reset */
-+	if (hard) {
-+		struct udma_chan uc_backup = *uc;
-+		int ret;
-+
-+		uc->ud->ddev.device_free_chan_resources(&uc->vc.chan);
-+		/* restore the channel configuration */
-+		uc->dir = uc_backup.dir;
-+		uc->remote_thread_id = uc_backup.remote_thread_id;
-+		uc->pkt_mode = uc_backup.pkt_mode;
-+		uc->static_tr_type = uc_backup.static_tr_type;
-+		uc->channel_tpl = uc_backup.channel_tpl;
-+		uc->psd_size = uc_backup.psd_size;
-+		uc->metadata_size = uc_backup.metadata_size;
-+		uc->hdesc_size = uc_backup.hdesc_size;
-+
-+		ret = uc->ud->ddev.device_alloc_chan_resources(&uc->vc.chan);
-+		if (ret)
-+			return ret;
-+	}
-+	uc->state = UDMA_CHAN_IS_IDLE;
-+
-+	return 0;
-+}
-+
-+static void udma_start_desc(struct udma_chan *uc)
-+{
-+	if (uc->pkt_mode && (uc->cyclic || uc->dir == DMA_DEV_TO_MEM)) {
-+		int i;
-+
-+		/* Push all descriptors to ring for packet mode cyclic or RX */
-+		for (i = 0; i < uc->desc->sglen; i++)
-+			udma_push_to_ring(uc, i);
-+	} else {
-+		udma_push_to_ring(uc, 0);
-+	}
-+}
-+
-+static bool udma_chan_needs_reconfiguration(struct udma_chan *uc)
-+{
-+	/* Only PDMAs have staticTR */
-+	if (!uc->static_tr_type)
-+		return false;
-+
-+	/* Check if the staticTR configuration has changed for TX */
-+	if (memcmp(&uc->static_tr, &uc->desc->static_tr, sizeof(uc->static_tr)))
-+		return true;
-+
-+	return false;
-+}
-+
-+static int udma_start(struct udma_chan *uc)
-+{
-+	struct virt_dma_desc *vd = vchan_next_desc(&uc->vc);
-+
-+	if (!vd) {
-+		uc->desc = NULL;
-+		return -ENOENT;
-+	}
-+
-+	list_del(&vd->node);
-+
-+	uc->desc = to_udma_desc(&vd->tx);
-+
-+	/* Channel is already running and does not need reconfiguration */
-+	if (udma_is_chan_running(uc) && !udma_chan_needs_reconfiguration(uc)) {
-+		udma_start_desc(uc);
-+		goto out;
-+	}
-+
-+	/* Make sure that we clear the teardown bit, if it is set */
-+	udma_reset_chan(uc, false);
-+
-+	/* Push descriptors before we start the channel */
-+	udma_start_desc(uc);
-+
-+	switch (uc->desc->dir) {
-+	case DMA_DEV_TO_MEM:
-+		/* Config remote TR */
-+		if (uc->static_tr_type) {
-+			udma_rchanrt_write(uc->rchan,
-+				UDMA_RCHAN_RT_PEER_STATIC_TR_XY_REG,
-+				PDMA_STATIC_TR_Y(uc->desc->static_tr.elcnt) |
-+				PDMA_STATIC_TR_X(uc->desc->static_tr.elsize));
-+			udma_rchanrt_write(uc->rchan,
-+				UDMA_RCHAN_RT_PEER_STATIC_TR_Z_REG,
-+				PDMA_STATIC_TR_Z(uc->desc->static_tr.bstcnt));
-+
-+			/* save the current staticTR configuration */
-+			memcpy(&uc->static_tr, &uc->desc->static_tr,
-+			       sizeof(uc->static_tr));
-+		}
-+
-+		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_CTL_REG,
-+				   UDMA_CHAN_RT_CTL_EN);
-+
-+		/* Enable remote */
-+		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_PEER_RT_EN_REG,
-+				   UDMA_PEER_RT_EN_ENABLE);
-+
++	switch (access_mode) {
++	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
++	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
++		k3_nav_dbg(ring->parent->dev, "proxy:memcpy_fromio(x): --> ptr(%p), mode:%d\n",
++			   ptr, access_mode);
++		memcpy_fromio(elem, ptr, (4 << ring->elm_size));
++		ring->occ--;
 +		break;
-+	case DMA_MEM_TO_DEV:
-+		/* Config remote TR */
-+		if (uc->static_tr_type) {
-+			udma_tchanrt_write(uc->tchan,
-+				UDMA_TCHAN_RT_PEER_STATIC_TR_XY_REG,
-+				PDMA_STATIC_TR_Y(uc->desc->static_tr.elcnt) |
-+				PDMA_STATIC_TR_X(uc->desc->static_tr.elsize));
-+
-+			/* save the current staticTR configuration */
-+			memcpy(&uc->static_tr, &uc->desc->static_tr,
-+			       sizeof(uc->static_tr));
-+		}
-+
-+		/* Enable remote */
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_PEER_RT_EN_REG,
-+				   UDMA_PEER_RT_EN_ENABLE);
-+
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_CTL_REG,
-+				   UDMA_CHAN_RT_CTL_EN);
-+
-+		break;
-+	case DMA_MEM_TO_MEM:
-+		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_CTL_REG,
-+				   UDMA_CHAN_RT_CTL_EN);
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_CTL_REG,
-+				   UDMA_CHAN_RT_CTL_EN);
-+
++	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
++	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
++		k3_nav_dbg(ring->parent->dev, "proxy:memcpy_toio(x): --> ptr(%p), mode:%d\n",
++			   ptr, access_mode);
++		memcpy_toio(ptr, elem, (4 << ring->elm_size));
++		ring->free--;
 +		break;
 +	default:
 +		return -EINVAL;
 +	}
 +
-+	uc->state = UDMA_CHAN_IS_ACTIVE;
-+out:
-+
++	k3_nav_dbg(ring->parent->dev, "proxy: free%d occ%d\n",
++		   ring->free, ring->occ);
 +	return 0;
 +}
 +
-+static int udma_stop(struct udma_chan *uc)
++static int k3_ringacc_ring_push_head_proxy(struct k3_ring *ring, void *elem)
 +{
-+	enum udma_chan_state old_state = uc->state;
++	return k3_ringacc_ring_access_proxy(ring, elem,
++					    K3_RINGACC_ACCESS_MODE_PUSH_HEAD);
++}
 +
-+	uc->state = UDMA_CHAN_IS_TERMINATING;
-+	reinit_completion(&uc->teardown_completed);
++static int k3_ringacc_ring_push_tail_proxy(struct k3_ring *ring, void *elem)
++{
++	return k3_ringacc_ring_access_proxy(ring, elem,
++					    K3_RINGACC_ACCESS_MODE_PUSH_TAIL);
++}
 +
-+	switch (uc->dir) {
-+	case DMA_DEV_TO_MEM:
-+		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_PEER_RT_EN_REG,
-+				   UDMA_PEER_RT_EN_ENABLE |
-+				   UDMA_PEER_RT_EN_TEARDOWN);
++static int k3_ringacc_ring_pop_head_proxy(struct k3_ring *ring, void *elem)
++{
++	return k3_ringacc_ring_access_proxy(ring, elem,
++					    K3_RINGACC_ACCESS_MODE_POP_HEAD);
++}
++
++static int k3_ringacc_ring_pop_tail_proxy(struct k3_ring *ring, void *elem)
++{
++	return k3_ringacc_ring_access_proxy(ring, elem,
++					    K3_RINGACC_ACCESS_MODE_POP_HEAD);
++}
++
++static int k3_ringacc_ring_access_io(struct k3_ring *ring, void *elem,
++				     enum k3_ringacc_access_mode access_mode)
++{
++	void __iomem *ptr;
++
++	switch (access_mode) {
++	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
++	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
++		ptr = (void __iomem *)&ring->fifos->head_data;
 +		break;
-+	case DMA_MEM_TO_DEV:
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_PEER_RT_EN_REG,
-+				   UDMA_PEER_RT_EN_ENABLE |
-+				   UDMA_PEER_RT_EN_FLUSH);
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_CTL_REG,
-+				   UDMA_CHAN_RT_CTL_EN |
-+				   UDMA_CHAN_RT_CTL_TDOWN);
-+		break;
-+	case DMA_MEM_TO_MEM:
-+		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_CTL_REG,
-+				   UDMA_CHAN_RT_CTL_EN |
-+				   UDMA_CHAN_RT_CTL_TDOWN);
++	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
++	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
++		ptr = (void __iomem *)&ring->fifos->tail_data;
 +		break;
 +	default:
-+		uc->state = old_state;
-+		complete_all(&uc->teardown_completed);
 +		return -EINVAL;
 +	}
 +
++	ptr += k3_ringacc_ring_get_fifo_pos(ring);
++
++	switch (access_mode) {
++	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
++	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
++		k3_nav_dbg(ring->parent->dev, "memcpy_fromio(x): --> ptr(%p), mode:%d\n",
++			   ptr, access_mode);
++		memcpy_fromio(elem, ptr, (4 << ring->elm_size));
++		ring->occ--;
++		break;
++	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
++	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
++		k3_nav_dbg(ring->parent->dev, "memcpy_toio(x): --> ptr(%p), mode:%d\n",
++			   ptr, access_mode);
++		memcpy_toio(ptr, elem, (4 << ring->elm_size));
++		ring->free--;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	k3_nav_dbg(ring->parent->dev, "free%d index%d occ%d index%d\n",
++		   ring->free, ring->windex, ring->occ, ring->rindex);
 +	return 0;
 +}
 +
-+static void udma_cyclic_packet_elapsed(struct udma_chan *uc)
++static int k3_ringacc_ring_push_head_io(struct k3_ring *ring, void *elem)
 +{
-+	struct udma_desc *d = uc->desc;
-+	struct cppi5_host_desc_t *h_desc;
-+
-+	h_desc = d->hwdesc[d->desc_idx].cppi5_desc_vaddr;
-+	cppi5_hdesc_reset_to_original(h_desc);
-+	udma_push_to_ring(uc, d->desc_idx);
-+	d->desc_idx = (d->desc_idx + 1) % d->sglen;
++	return k3_ringacc_ring_access_io(ring, elem,
++					 K3_RINGACC_ACCESS_MODE_PUSH_HEAD);
 +}
 +
-+static inline void udma_fetch_epib(struct udma_chan *uc, struct udma_desc *d)
++static int k3_ringacc_ring_push_io(struct k3_ring *ring, void *elem)
 +{
-+	struct cppi5_host_desc_t *h_desc = d->hwdesc[0].cppi5_desc_vaddr;
-+
-+	memcpy(d->metadata, h_desc->epib, d->metadata_size);
++	return k3_ringacc_ring_access_io(ring, elem,
++					 K3_RINGACC_ACCESS_MODE_PUSH_TAIL);
 +}
 +
-+static bool udma_is_desc_really_done(struct udma_chan *uc,
-+					    struct udma_desc *d)
++static int k3_ringacc_ring_pop_io(struct k3_ring *ring, void *elem)
 +{
-+	u32 peer_bcnt, bcnt;
-+
-+	/* Only TX towards PDMA is affected */
-+	if (!uc->static_tr_type || uc->dir != DMA_MEM_TO_DEV)
-+		return true;
-+
-+	peer_bcnt = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_PEER_BCNT_REG);
-+	bcnt = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_BCNT_REG);
-+
-+	if (peer_bcnt < bcnt)
-+		return false;
-+
-+	return true;
++	return k3_ringacc_ring_access_io(ring, elem,
++					 K3_RINGACC_ACCESS_MODE_POP_HEAD);
 +}
 +
-+static void udma_flush_tx(struct udma_chan *uc)
++static int k3_ringacc_ring_pop_tail_io(struct k3_ring *ring, void *elem)
 +{
-+	if (uc->dir != DMA_MEM_TO_DEV)
-+		return;
-+
-+	uc->state = UDMA_CHAN_IS_ACTIVE_FLUSH;
-+
-+	udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_CTL_REG,
-+			   UDMA_CHAN_RT_CTL_EN |
-+			   UDMA_CHAN_RT_CTL_TDOWN);
++	return k3_ringacc_ring_access_io(ring, elem,
++					 K3_RINGACC_ACCESS_MODE_POP_HEAD);
 +}
 +
-+static void udma_ring_callback(struct udma_chan *uc, dma_addr_t paddr)
++static int k3_ringacc_ring_push_mem(struct k3_ring *ring, void *elem)
 +{
-+	struct udma_desc *d;
-+	unsigned long flags;
++	void *elem_ptr;
 +
-+	if (!paddr)
-+		return;
++	elem_ptr = k3_ringacc_get_elm_addr(ring, ring->windex);
 +
-+	spin_lock_irqsave(&uc->vc.lock, flags);
++	memcpy(elem_ptr, elem, (4 << ring->elm_size));
 +
-+	/* Teardown completion message */
-+	if (paddr & 0x1) {
-+		/* Compensate our internal pop/push counter */
-+		uc->in_ring_cnt++;
++	ring->windex = (ring->windex + 1) % ring->size;
++	ring->free--;
++	dbg_writel(1, &ring->rt->db);
 +
-+		complete_all(&uc->teardown_completed);
++	k3_nav_dbg(ring->parent->dev, "ring_push_mem: free%d index%d\n",
++		   ring->free, ring->windex);
 +
-+		if (uc->terminated_desc) {
-+			udma_desc_free(&uc->terminated_desc->vd);
-+			uc->terminated_desc = NULL;
++	return 0;
++}
++
++static int k3_ringacc_ring_pop_mem(struct k3_ring *ring, void *elem)
++{
++	void *elem_ptr;
++
++	elem_ptr = k3_ringacc_get_elm_addr(ring, ring->rindex);
++
++	memcpy(elem, elem_ptr, (4 << ring->elm_size));
++
++	ring->rindex = (ring->rindex + 1) % ring->size;
++	ring->occ--;
++	dbg_writel(-1, &ring->rt->db);
++
++	k3_nav_dbg(ring->parent->dev, "ring_pop_mem: occ%d index%d pos_ptr%p\n",
++		   ring->occ, ring->rindex, elem_ptr);
++	return 0;
++}
++
++int k3_ringacc_ring_push(struct k3_ring *ring, void *elem)
++{
++	int ret = -EOPNOTSUPP;
++
++	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
++		return -EINVAL;
++
++	k3_nav_dbg(ring->parent->dev, "ring_push: free%d index%d\n",
++		   ring->free, ring->windex);
++
++	if (k3_ringacc_ring_is_full(ring))
++		return -ENOMEM;
++
++	if (ring->ops && ring->ops->push_tail)
++		ret = ring->ops->push_tail(ring, elem);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_push);
++
++int k3_ringacc_ring_push_head(struct k3_ring *ring, void *elem)
++{
++	int ret = -EOPNOTSUPP;
++
++	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
++		return -EINVAL;
++
++	k3_nav_dbg(ring->parent->dev, "ring_push_head: free%d index%d\n",
++		   ring->free, ring->windex);
++
++	if (k3_ringacc_ring_is_full(ring))
++		return -ENOMEM;
++
++	if (ring->ops && ring->ops->push_head)
++		ret = ring->ops->push_head(ring, elem);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_push_head);
++
++int k3_ringacc_ring_pop(struct k3_ring *ring, void *elem)
++{
++	int ret = -EOPNOTSUPP;
++
++	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
++		return -EINVAL;
++
++	if (!ring->occ)
++		ring->occ = k3_ringacc_ring_get_occ(ring);
++
++	k3_nav_dbg(ring->parent->dev, "ring_pop: occ%d index%d\n",
++		   ring->occ, ring->rindex);
++
++	if (!ring->occ)
++		return -ENODATA;
++
++	if (ring->ops && ring->ops->pop_head)
++		ret = ring->ops->pop_head(ring, elem);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_pop);
++
++int k3_ringacc_ring_pop_tail(struct k3_ring *ring, void *elem)
++{
++	int ret = -EOPNOTSUPP;
++
++	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
++		return -EINVAL;
++
++	if (!ring->occ)
++		ring->occ = k3_ringacc_ring_get_occ(ring);
++
++	k3_nav_dbg(ring->parent->dev, "ring_pop_tail: occ%d index%d\n",
++		   ring->occ, ring->rindex);
++
++	if (!ring->occ)
++		return -ENODATA;
++
++	if (ring->ops && ring->ops->pop_tail)
++		ret = ring->ops->pop_tail(ring, elem);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(k3_ringacc_ring_pop_tail);
++
++struct k3_ringacc *of_k3_ringacc_get_by_phandle(struct device_node *np,
++						const char *property)
++{
++	struct device_node *ringacc_np;
++	struct k3_ringacc *ringacc = ERR_PTR(-EPROBE_DEFER);
++	struct k3_ringacc *entry;
++
++	ringacc_np = of_parse_phandle(np, property, 0);
++	if (!ringacc_np)
++		return ERR_PTR(-ENODEV);
++
++	mutex_lock(&k3_ringacc_list_lock);
++	list_for_each_entry(entry, &k3_ringacc_list, list)
++		if (entry->dev->of_node == ringacc_np) {
++			ringacc = entry;
++			break;
 +		}
++	mutex_unlock(&k3_ringacc_list_lock);
++	of_node_put(ringacc_np);
 +
-+		if (!uc->desc)
-+			udma_start(uc);
++	return ringacc;
++}
++EXPORT_SYMBOL_GPL(of_k3_ringacc_get_by_phandle);
 +
-+		if (uc->state != UDMA_CHAN_IS_ACTIVE_FLUSH)
-+			goto out;
-+		else if (uc->desc)
-+			paddr = udma_curr_cppi5_desc_paddr(uc->desc,
-+							   uc->desc->desc_idx);
++static int k3_ringacc_probe_dt(struct k3_ringacc *ringacc)
++{
++	struct device_node *node = ringacc->dev->of_node;
++	struct device *dev = ringacc->dev;
++	struct platform_device *pdev = to_platform_device(dev);
++	int ret;
++
++	if (!node) {
++		dev_err(dev, "device tree info unavailable\n");
++		return -ENODEV;
 +	}
 +
-+	d = udma_udma_desc_from_paddr(uc, paddr);
-+
-+	if (d) {
-+		dma_addr_t desc_paddr = udma_curr_cppi5_desc_paddr(d,
-+								   d->desc_idx);
-+		if (desc_paddr != paddr) {
-+			dev_err(uc->ud->dev, "not matching descriptors!\n");
-+			goto out;
-+		}
-+
-+		if (uc->cyclic) {
-+			/* push the descriptor back to the ring */
-+			if (d == uc->desc) {
-+				udma_cyclic_packet_elapsed(uc);
-+				vchan_cyclic_callback(&d->vd);
-+			}
-+		} else {
-+			bool desc_done = true;
-+
-+			if (d == uc->desc) {
-+				desc_done = udma_is_desc_really_done(uc, d);
-+
-+				if (desc_done) {
-+					uc->bcnt += d->residue;
-+					udma_start(uc);
-+				} else {
-+					udma_flush_tx(uc);
-+				}
-+			} else if (d == uc->terminated_desc) {
-+				uc->terminated_desc = NULL;
-+			}
-+
-+			if (desc_done)
-+				vchan_cookie_complete(&d->vd);
-+		}
-+	}
-+out:
-+	spin_unlock_irqrestore(&uc->vc.lock, flags);
-+}
-+
-+static void udma_tr_event_callback(struct udma_chan *uc)
-+{
-+	struct udma_desc *d;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&uc->vc.lock, flags);
-+	d = uc->desc;
-+	if (d) {
-+		d->tr_idx = (d->tr_idx + 1) % d->sglen;
-+
-+		if (uc->cyclic) {
-+			vchan_cyclic_callback(&d->vd);
-+		} else {
-+			/* TODO: figure out the real amount of data */
-+			uc->bcnt += d->residue;
-+			udma_start(uc);
-+			vchan_cookie_complete(&d->vd);
-+		}
++	ret = of_property_read_u32(node, "ti,num-rings", &ringacc->num_rings);
++	if (ret) {
++		dev_err(dev, "ti,num-rings read failure %d\n", ret);
++		return ret;
 +	}
 +
-+	spin_unlock_irqrestore(&uc->vc.lock, flags);
++	ringacc->dma_ring_reset_quirk =
++			of_property_read_bool(node, "ti,dma-ring-reset-quirk");
++
++	ringacc->tisci = ti_sci_get_by_phandle(node, "ti,sci");
++	if (IS_ERR(ringacc->tisci)) {
++		ret = PTR_ERR(ringacc->tisci);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "ti,sci read fail %d\n", ret);
++		ringacc->tisci = NULL;
++		return ret;
++	}
++
++	ret = of_property_read_u32(node, "ti,sci-dev-id",
++				   &ringacc->tisci_dev_id);
++	if (ret) {
++		dev_err(dev, "ti,sci-dev-id read fail %d\n", ret);
++		return ret;
++	}
++
++	pdev->id = ringacc->tisci_dev_id;
++
++	ringacc->rm_gp_range = devm_ti_sci_get_of_resource(ringacc->tisci, dev,
++						ringacc->tisci_dev_id,
++						"ti,sci-rm-range-gp-rings");
++	if (IS_ERR(ringacc->rm_gp_range)) {
++		dev_err(dev, "Failed to allocate MSI interrupts\n");
++		return PTR_ERR(ringacc->rm_gp_range);
++	}
++
++	return ti_sci_inta_msi_domain_alloc_irqs(ringacc->dev,
++						 ringacc->rm_gp_range);
 +}
 +
-+static irqreturn_t udma_ring_irq_handler(int irq, void *data)
++static int k3_ringacc_probe(struct platform_device *pdev)
 +{
-+	struct udma_chan *uc = data;
-+	dma_addr_t paddr = 0;
++	struct k3_ringacc *ringacc;
++	void __iomem *base_fifo, *base_rt;
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	int ret, i;
 +
-+	if (!udma_pop_from_ring(uc, &paddr))
-+		udma_ring_callback(uc, paddr);
++	ringacc = devm_kzalloc(dev, sizeof(*ringacc), GFP_KERNEL);
++	if (!ringacc)
++		return -ENOMEM;
 +
-+	return IRQ_HANDLED;
++	ringacc->dev = dev;
++	mutex_init(&ringacc->req_lock);
++
++	dev->msi_domain = of_msi_get_domain(dev, dev->of_node,
++					    DOMAIN_BUS_TI_SCI_INTA_MSI);
++	if (!dev->msi_domain) {
++		dev_err(dev, "Failed to get MSI domain\n");
++		return -EPROBE_DEFER;
++	}
++
++	ret = k3_ringacc_probe_dt(ringacc);
++	if (ret)
++		return ret;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rt");
++	base_rt = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base_rt))
++		return PTR_ERR(base_rt);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "fifos");
++	base_fifo = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base_fifo))
++		return PTR_ERR(base_fifo);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "proxy_gcfg");
++	ringacc->proxy_gcfg = devm_ioremap_resource(dev, res);
++	if (IS_ERR(ringacc->proxy_gcfg))
++		return PTR_ERR(ringacc->proxy_gcfg);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++					   "proxy_target");
++	ringacc->proxy_target_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(ringacc->proxy_target_base))
++		return PTR_ERR(ringacc->proxy_target_base);
++
++	ringacc->num_proxies = dbg_readl(&ringacc->proxy_gcfg->config) &
++					 K3_RINGACC_PROXY_CFG_THREADS_MASK;
++
++	ringacc->rings = devm_kzalloc(dev,
++				      sizeof(*ringacc->rings) *
++				      ringacc->num_rings,
++				      GFP_KERNEL);
++	ringacc->rings_inuse = devm_kcalloc(dev,
++					    BITS_TO_LONGS(ringacc->num_rings),
++					    sizeof(unsigned long), GFP_KERNEL);
++	ringacc->proxy_inuse = devm_kcalloc(dev,
++					    BITS_TO_LONGS(ringacc->num_proxies),
++					    sizeof(unsigned long), GFP_KERNEL);
++
++	if (!ringacc->rings || !ringacc->rings_inuse || !ringacc->proxy_inuse)
++		return -ENOMEM;
++
++	for (i = 0; i < ringacc->num_rings; i++) {
++		ringacc->rings[i].rt = base_rt +
++				       K3_RINGACC_RT_REGS_STEP * i;
++		ringacc->rings[i].fifos = base_fifo +
++					  K3_RINGACC_FIFO_REGS_STEP * i;
++		ringacc->rings[i].parent = ringacc;
++		ringacc->rings[i].ring_id = i;
++		ringacc->rings[i].proxy_id = K3_RINGACC_PROXY_NOT_USED;
++	}
++	dev_set_drvdata(dev, ringacc);
++
++	ringacc->tisci_ring_ops = &ringacc->tisci->ops.rm_ring_ops;
++
++	pm_runtime_enable(dev);
++	ret = pm_runtime_get_sync(dev);
++	if (ret < 0) {
++		pm_runtime_put_noidle(dev);
++		dev_err(dev, "Failed to enable pm %d\n", ret);
++		goto err;
++	}
++
++	mutex_lock(&k3_ringacc_list_lock);
++	list_add_tail(&ringacc->list, &k3_ringacc_list);
++	mutex_unlock(&k3_ringacc_list_lock);
++
++	dev_info(dev, "Ring Accelerator probed rings:%u, gp-rings[%u,%u] sci-dev-id:%u\n",
++		 ringacc->num_rings,
++		 ringacc->rm_gp_range->desc[0].start,
++		 ringacc->rm_gp_range->desc[0].num,
++		 ringacc->tisci_dev_id);
++	dev_info(dev, "dma-ring-reset-quirk: %s\n",
++		 ringacc->dma_ring_reset_quirk ? "enabled" : "disabled");
++	dev_info(dev, "RA Proxy rev. %08x, num_proxies:%u\n",
++		 dbg_readl(&ringacc->proxy_gcfg->revision),
++		 ringacc->num_proxies);
++	return 0;
++
++err:
++	pm_runtime_disable(dev);
++	return ret;
 +}
 +
-+static irqreturn_t udma_udma_irq_handler(int irq, void *data)
++static int k3_ringacc_remove(struct platform_device *pdev)
 +{
-+	struct udma_chan *uc = data;
++	struct k3_ringacc *ringacc = dev_get_drvdata(&pdev->dev);
 +
-+	udma_tr_event_callback(uc);
++	pm_runtime_put_sync(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
 +
-+	return IRQ_HANDLED;
++	mutex_lock(&k3_ringacc_list_lock);
++	list_del(&ringacc->list);
++	mutex_unlock(&k3_ringacc_list_lock);
++	return 0;
 +}
-diff --git a/drivers/dma/ti/k3-udma.h b/drivers/dma/ti/k3-udma.h
++
++/* Match table for of_platform binding */
++static const struct of_device_id k3_ringacc_of_match[] = {
++	{ .compatible = "ti,am654-navss-ringacc", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, k3_ringacc_of_match);
++
++static struct platform_driver k3_ringacc_driver = {
++	.probe		= k3_ringacc_probe,
++	.remove		= k3_ringacc_remove,
++	.driver		= {
++		.name	= "k3-ringacc",
++		.of_match_table = k3_ringacc_of_match,
++	},
++};
++module_platform_driver(k3_ringacc_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("TI Ringacc driver for K3 SOCs");
++MODULE_AUTHOR("Grygorii Strashko <grygorii.strashko@ti.com>");
+diff --git a/include/linux/soc/ti/k3-ringacc.h b/include/linux/soc/ti/k3-ringacc.h
 new file mode 100644
-index 000000000000..9704cb6ac855
+index 000000000000..7bdc85332e33
 --- /dev/null
-+++ b/drivers/dma/ti/k3-udma.h
-@@ -0,0 +1,129 @@
++++ b/include/linux/soc/ti/k3-ringacc.h
+@@ -0,0 +1,258 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
++ * K3 Ring Accelerator (RA) subsystem interface
++ *
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
 + */
 +
-+#ifndef K3_UDMA_H_
-+#define K3_UDMA_H_
++#ifndef __SOC_TI_K3_RINGACC_API_H_
++#define __SOC_TI_K3_RINGACC_API_H_
 +
-+#include <linux/soc/ti/ti_sci_protocol.h>
-+
-+#define UDMA_PSIL_DST_THREAD_ID_OFFSET 0x8000
-+
-+/* Global registers */
-+#define UDMA_REV_REG			0x0
-+#define UDMA_PERF_CTL_REG		0x4
-+#define UDMA_EMU_CTL_REG		0x8
-+#define UDMA_PSIL_TO_REG		0x10
-+#define UDMA_UTC_CTL_REG		0x1c
-+#define UDMA_CAP_REG(i)			(0x20 + (i * 4))
-+#define UDMA_RX_FLOW_ID_FW_OES_REG	0x80
-+#define UDMA_RX_FLOW_ID_FW_STATUS_REG	0x88
-+
-+/* TX chan RT regs */
-+#define UDMA_TCHAN_RT_CTL_REG		0x0
-+#define UDMA_TCHAN_RT_SWTRIG_REG	0x8
-+#define UDMA_TCHAN_RT_STDATA_REG	0x80
-+
-+#define UDMA_TCHAN_RT_PEERn_REG(i)	(0x200 + (i * 0x4))
-+#define UDMA_TCHAN_RT_PEER_STATIC_TR_XY_REG	\
-+	UDMA_TCHAN_RT_PEERn_REG(0)	/* PSI-L: 0x400 */
-+#define UDMA_TCHAN_RT_PEER_STATIC_TR_Z_REG	\
-+	UDMA_TCHAN_RT_PEERn_REG(1)	/* PSI-L: 0x401 */
-+#define UDMA_TCHAN_RT_PEER_BCNT_REG		\
-+	UDMA_TCHAN_RT_PEERn_REG(4)	/* PSI-L: 0x404 */
-+#define UDMA_TCHAN_RT_PEER_RT_EN_REG		\
-+	UDMA_TCHAN_RT_PEERn_REG(8)	/* PSI-L: 0x408 */
-+
-+#define UDMA_TCHAN_RT_PCNT_REG		0x400
-+#define UDMA_TCHAN_RT_BCNT_REG		0x408
-+#define UDMA_TCHAN_RT_SBCNT_REG		0x410
-+
-+/* RX chan RT regs */
-+#define UDMA_RCHAN_RT_CTL_REG		0x0
-+#define UDMA_RCHAN_RT_SWTRIG_REG	0x8
-+#define UDMA_RCHAN_RT_STDATA_REG	0x80
-+
-+#define UDMA_RCHAN_RT_PEERn_REG(i)	(0x200 + (i * 0x4))
-+#define UDMA_RCHAN_RT_PEER_STATIC_TR_XY_REG	\
-+	UDMA_RCHAN_RT_PEERn_REG(0)	/* PSI-L: 0x400 */
-+#define UDMA_RCHAN_RT_PEER_STATIC_TR_Z_REG	\
-+	UDMA_RCHAN_RT_PEERn_REG(1)	/* PSI-L: 0x401 */
-+#define UDMA_RCHAN_RT_PEER_BCNT_REG		\
-+	UDMA_RCHAN_RT_PEERn_REG(4)	/* PSI-L: 0x404 */
-+#define UDMA_RCHAN_RT_PEER_RT_EN_REG		\
-+	UDMA_RCHAN_RT_PEERn_REG(8)	/* PSI-L: 0x408 */
-+
-+#define UDMA_RCHAN_RT_PCNT_REG		0x400
-+#define UDMA_RCHAN_RT_BCNT_REG		0x408
-+#define UDMA_RCHAN_RT_SBCNT_REG		0x410
-+
-+/* UDMA_TCHAN_RT_CTL_REG/UDMA_RCHAN_RT_CTL_REG */
-+#define UDMA_CHAN_RT_CTL_EN		BIT(31)
-+#define UDMA_CHAN_RT_CTL_TDOWN		BIT(30)
-+#define UDMA_CHAN_RT_CTL_PAUSE		BIT(29)
-+#define UDMA_CHAN_RT_CTL_FTDOWN		BIT(28)
-+#define UDMA_CHAN_RT_CTL_ERROR		BIT(0)
-+
-+/* UDMA_TCHAN_RT_PEER_RT_EN_REG/UDMA_RCHAN_RT_PEER_RT_EN_REG (PSI-L: 0x408) */
-+#define UDMA_PEER_RT_EN_ENABLE		BIT(31)
-+#define UDMA_PEER_RT_EN_TEARDOWN	BIT(30)
-+#define UDMA_PEER_RT_EN_PAUSE		BIT(29)
-+#define UDMA_PEER_RT_EN_FLUSH		BIT(28)
-+#define UDMA_PEER_RT_EN_IDLE		BIT(1)
-+
-+/*
-+ * UDMA_TCHAN_RT_PEER_STATIC_TR_XY_REG /
-+ * UDMA_RCHAN_RT_PEER_STATIC_TR_XY_REG
++/**
++ * enum k3_ring_mode - &struct k3_ring_cfg mode
++ *
++ * RA ring operational modes
++ *
++ * @K3_RINGACC_RING_MODE_RING: Exposed Ring mode for SW direct access
++ * @K3_RINGACC_RING_MODE_MESSAGE: Messaging mode. Messaging mode requires
++ *	that all accesses to the queue must go through this IP so that all
++ *	accesses to the memory are controlled and ordered. This IP then
++ *	controls the entire state of the queue, and SW has no directly control,
++ *	such as through doorbells and cannot access the storage memory directly.
++ *	This is particularly useful when more than one SW or HW entity can be
++ *	the producer and/or consumer at the same time
++ * @K3_RINGACC_RING_MODE_CREDENTIALS: Credentials mode is message mode plus
++ *	stores credentials with each message, requiring the element size to be
++ *	doubled to fit the credentials. Any exposed memory should be protected
++ *	by a firewall from unwanted access
++ * @K3_RINGACC_RING_MODE_QM:  Queue manager mode. This takes the credentials
++ *	mode and adds packet length per element, along with additional read only
++ *	fields for element count and accumulated queue length. The QM mode only
++ *	operates with an 8 byte element size (any other element size is
++ *	illegal), and like in credentials mode each operation uses 2 element
++ *	slots to store the credentials and length fields
 + */
-+#define PDMA_STATIC_TR_X_MASK		GENMASK(26, 24)
-+#define PDMA_STATIC_TR_X_SHIFT		(24)
-+#define PDMA_STATIC_TR_Y_MASK		GENMASK(11, 0)
-+#define PDMA_STATIC_TR_Y_SHIFT		(0)
++enum k3_ring_mode {
++	K3_RINGACC_RING_MODE_RING = 0,
++	K3_RINGACC_RING_MODE_MESSAGE,
++	K3_RINGACC_RING_MODE_CREDENTIALS,
++	K3_RINGACC_RING_MODE_QM,
++	K3_RINGACC_RING_MODE_INVALID
++};
 +
-+#define PDMA_STATIC_TR_Y(x)	\
-+	(((x) << PDMA_STATIC_TR_Y_SHIFT) & PDMA_STATIC_TR_Y_MASK)
-+#define PDMA_STATIC_TR_X(x)	\
-+	(((x) << PDMA_STATIC_TR_X_SHIFT) & PDMA_STATIC_TR_X_MASK)
-+
-+/*
-+ * UDMA_TCHAN_RT_PEER_STATIC_TR_Z_REG /
-+ * UDMA_RCHAN_RT_PEER_STATIC_TR_Z_REG
++/**
++ * enum k3_ring_size - &struct k3_ring_cfg elm_size
++ *
++ * RA ring element's sizes in bytes.
 + */
-+#define PDMA_STATIC_TR_Z_MASK		GENMASK(11, 0)
-+#define PDMA_STATIC_TR_Z_SHIFT		(0)
-+#define PDMA_STATIC_TR_Z(x)	\
-+	(((x) << PDMA_STATIC_TR_Z_SHIFT) & PDMA_STATIC_TR_Z_MASK)
-+
-+struct udma_dev;
-+struct udma_tchan;
-+struct udma_rchan;
-+struct udma_rflow;
-+
-+enum udma_rm_range {
-+	RM_RANGE_TCHAN = 0,
-+	RM_RANGE_RCHAN,
-+	RM_RANGE_RFLOW,
-+	RM_RANGE_LAST,
++enum k3_ring_size {
++	K3_RINGACC_RING_ELSIZE_4 = 0,
++	K3_RINGACC_RING_ELSIZE_8,
++	K3_RINGACC_RING_ELSIZE_16,
++	K3_RINGACC_RING_ELSIZE_32,
++	K3_RINGACC_RING_ELSIZE_64,
++	K3_RINGACC_RING_ELSIZE_128,
++	K3_RINGACC_RING_ELSIZE_256,
++	K3_RINGACC_RING_ELSIZE_INVALID
 +};
 +
-+/* Channel Throughput Levels */
-+enum udma_tp_level {
-+	UDMA_TP_NORMAL = 0,
-+	UDMA_TP_HIGH = 1,
-+	UDMA_TP_LAST,
++struct k3_ringacc;
++struct k3_ring;
++
++/**
++ * enum k3_ring_cfg - RA ring configuration structure
++ *
++ * @size: Ring size, number of elements
++ * @elm_size: Ring element size
++ * @mode: Ring operational mode
++ * @flags: Ring configuration flags. Possible values:
++ *	 @K3_RINGACC_RING_SHARED: when set allows to request the same ring
++ *	 few times. It's usable when the same ring is used as Free Host PD ring
++ *	 for different flows, for example.
++ *	 Note: Locking should be done by consumer if required
++ */
++struct k3_ring_cfg {
++	u32 size;
++	enum k3_ring_size elm_size;
++	enum k3_ring_mode mode;
++#define K3_RINGACC_RING_SHARED BIT(1)
++	u32 flags;
 +};
 +
-+struct udma_tisci_rm {
-+	const struct ti_sci_handle *tisci;
-+	const struct ti_sci_rm_udmap_ops *tisci_udmap_ops;
-+	u32  tisci_dev_id;
++#define K3_RINGACC_RING_ID_ANY (-1)
 +
-+	/* tisci information for PSI-L thread pairing/unpairing */
-+	const struct ti_sci_rm_psil_ops *tisci_psil_ops;
-+	u32  tisci_navss_dev_id;
++/**
++ * of_k3_ringacc_get_by_phandle - find a RA by phandle property
++ * @np: device node
++ * @propname: property name containing phandle on RA node
++ *
++ * Returns pointer on the RA - struct k3_ringacc
++ * or -ENODEV if not found,
++ * or -EPROBE_DEFER if not yet registered
++ */
++struct k3_ringacc *of_k3_ringacc_get_by_phandle(struct device_node *np,
++						const char *property);
 +
-+	struct ti_sci_resource *rm_ranges[RM_RANGE_LAST];
-+};
++#define K3_RINGACC_RING_USE_PROXY BIT(1)
 +
-+#endif /* K3_UDMA_H_ */
-diff --git a/include/dt-bindings/dma/k3-udma.h b/include/dt-bindings/dma/k3-udma.h
-new file mode 100644
-index 000000000000..89ba6a9d4a8f
---- /dev/null
-+++ b/include/dt-bindings/dma/k3-udma.h
-@@ -0,0 +1,26 @@
-+#ifndef __DT_TI_UDMA_H
-+#define __DT_TI_UDMA_H
++/**
++ * k3_ringacc_request_ring - request ring from ringacc
++ * @ringacc: pointer on ringacc
++ * @id: ring id or K3_RINGACC_RING_ID_ANY for any general purpose ring
++ * @flags:
++ *	@K3_RINGACC_RING_USE_PROXY: if set - proxy will be allocated and
++ *		used to access ring memory. Sopported only for rings in
++ *		Message/Credentials/Queue mode.
++ *
++ * Returns pointer on the Ring - struct k3_ring
++ * or NULL in case of failure.
++ */
++struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
++					int id, u32 flags);
 +
-+#define UDMA_TR_MODE		0
-+#define UDMA_PKT_MODE		1
++/**
++ * k3_ringacc_ring_reset - ring reset
++ * @ring: pointer on Ring
++ *
++ * Resets ring internal state ((hw)occ, (hw)idx).
++ * TODO_GS: ? Ring can be reused without reconfiguration
++ */
++void k3_ringacc_ring_reset(struct k3_ring *ring);
++/**
++ * k3_ringacc_ring_reset - ring reset for DMA rings
++ * @ring: pointer on Ring
++ *
++ * Resets ring internal state ((hw)occ, (hw)idx). Should be used for rings
++ * which are read by K3 UDMA, like TX or Free Host PD rings.
++ */
++void k3_ringacc_ring_reset_dma(struct k3_ring *ring, u32 occ);
 +
-+#define UDMA_DIR_TX		0
-+#define UDMA_DIR_RX		1
++/**
++ * k3_ringacc_ring_free - ring free
++ * @ring: pointer on Ring
++ *
++ * Resets ring and free all alocated resources.
++ */
++int k3_ringacc_ring_free(struct k3_ring *ring);
 +
-+#define PSIL_STATIC_TR_NONE	0
-+#define PSIL_STATIC_TR_XY	1
-+#define PSIL_STATIC_TR_MCAN	2
++/**
++ * k3_ringacc_get_ring_id - Get the Ring ID
++ * @ring: pointer on ring
++ *
++ * Returns the Ring ID
++ */
++u32 k3_ringacc_get_ring_id(struct k3_ring *ring);
 +
-+#define UDMA_PDMA_TR_XY(id)				\
-+	ti,psil-config##id {				\
-+		linux,udma-mode = <UDMA_TR_MODE>;	\
-+		statictr-type = <PSIL_STATIC_TR_XY>;	\
-+	}
++/**
++ * k3_ringacc_get_ring_irq_num - Get the irq number for the ring
++ * @ring: pointer on ring
++ *
++ * Returns the interrupt number which can be used to request the interrupt
++ */
++int k3_ringacc_get_ring_irq_num(struct k3_ring *ring);
 +
-+#define UDMA_PDMA_PKT_XY(id)				\
-+	ti,psil-config##id {				\
-+		linux,udma-mode = <UDMA_PKT_MODE>;	\
-+		statictr-type = <PSIL_STATIC_TR_XY>;	\
-+	}
++/**
++ * k3_ringacc_ring_cfg - ring configure
++ * @ring: pointer on ring
++ * @cfg: Ring configuration parameters (see &struct k3_ring_cfg)
++ *
++ * Configures ring, including ring memory allocation.
++ * Returns 0 on success, errno otherwise.
++ */
++int k3_ringacc_ring_cfg(struct k3_ring *ring, struct k3_ring_cfg *cfg);
 +
-+#endif /* __DT_TI_UDMA_H */
++/**
++ * k3_ringacc_ring_get_size - get ring size
++ * @ring: pointer on ring
++ *
++ * Returns ring size in number of elements.
++ */
++u32 k3_ringacc_ring_get_size(struct k3_ring *ring);
++
++/**
++ * k3_ringacc_ring_get_free - get free elements
++ * @ring: pointer on ring
++ *
++ * Returns number of free elements in the ring.
++ */
++u32 k3_ringacc_ring_get_free(struct k3_ring *ring);
++
++/**
++ * k3_ringacc_ring_get_occ - get ring occupancy
++ * @ring: pointer on ring
++ *
++ * Returns total number of valid entries on the ring
++ */
++u32 k3_ringacc_ring_get_occ(struct k3_ring *ring);
++
++/**
++ * k3_ringacc_ring_is_full - checks if ring is full
++ * @ring: pointer on ring
++ *
++ * Returns true if the ring is full
++ */
++u32 k3_ringacc_ring_is_full(struct k3_ring *ring);
++
++/**
++ * k3_ringacc_ring_push - push element to the ring tail
++ * @ring: pointer on ring
++ * @elem: pointer on ring element buffer
++ *
++ * Push one ring element to the ring tail. Size of the ring element is
++ * determined by ring configuration &struct k3_ring_cfg elm_size.
++ *
++ * Returns 0 on success, errno otherwise.
++ */
++int k3_ringacc_ring_push(struct k3_ring *ring, void *elem);
++
++/**
++ * k3_ringacc_ring_pop - pop element from the ring head
++ * @ring: pointer on ring
++ * @elem: pointer on ring element buffer
++ *
++ * Push one ring element from the ring head. Size of the ring element is
++ * determined by ring configuration &struct k3_ring_cfg elm_size..
++ *
++ * Returns 0 on success, errno otherwise.
++ */
++int k3_ringacc_ring_pop(struct k3_ring *ring, void *elem);
++
++/**
++ * k3_ringacc_ring_push_head - push element to the ring head
++ * @ring: pointer on ring
++ * @elem: pointer on ring element buffer
++ *
++ * Push one ring element to the ring head. Size of the ring element is
++ * determined by ring configuration &struct k3_ring_cfg elm_size.
++ *
++ * Returns 0 on success, errno otherwise.
++ * Not Supported by ring modes: K3_RINGACC_RING_MODE_RING
++ */
++int k3_ringacc_ring_push_head(struct k3_ring *ring, void *elem);
++
++/**
++ * k3_ringacc_ring_pop_tail - pop element from the ring tail
++ * @ring: pointer on ring
++ * @elem: pointer on ring element buffer
++ *
++ * Push one ring element from the ring tail. Size of the ring element is
++ * determined by ring configuration &struct k3_ring_cfg elm_size.
++ *
++ * Returns 0 on success, errno otherwise.
++ * Not Supported by ring modes: K3_RINGACC_RING_MODE_RING
++ */
++int k3_ringacc_ring_pop_tail(struct k3_ring *ring, void *elem);
++
++u32 k3_ringacc_get_tisci_dev_id(struct k3_ring *ring);
++
++/**
++ * Debugging definitions
++ * TODO: might be removed
++ */
++#ifdef CONFIG_TI_K3_RINGACC_DEBUG
++void k3_ringacc_ring_dump(struct k3_ring *ring);
++#else
++static inline void k3_ringacc_ring_dump(struct k3_ring *ring) {};
++#endif
++
++#endif /* __SOC_TI_K3_RINGACC_API_H_ */
 -- 
 Peter
 
