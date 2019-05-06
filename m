@@ -2,126 +2,143 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DEFC04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7355C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B35A20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8265D20830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:05:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbfEFJF3 (ORCPT
+        id S1726411AbfEFJFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:05:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38680 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725851AbfEFJF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:05:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4282DAC5A;
-        Mon,  6 May 2019 09:05:27 +0000 (UTC)
-Subject: Re: Page Allocation Failure and Page allocation stalls
-To:     Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        kernelnewbies@kernelnewbies.org, Michal Hocko <mhocko@kernel.org>,
-        minchan@kernel.org
-References: <CACDBo57s_ZxmxjmRrCSwaqQzzO5r0SadzMhseeb9X0t0mOwJZA@mail.gmail.com>
- <11029.1556774479@turing-police>
- <CACDBo54xXk-68MTsxw2K12gD0eGO0Xpq0rw60E3AX+2OEi3igw@mail.gmail.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <26e83e08-3249-e73f-2049-f36b44af8d8a@suse.cz>
-Date:   Mon, 6 May 2019 11:05:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CACDBo54xXk-68MTsxw2K12gD0eGO0Xpq0rw60E3AX+2OEi3igw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 6 May 2019 05:05:44 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:57312 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbfEFJFn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 05:05:43 -0400
+Received: from ramsan ([84.194.111.163])
+        by laurent.telenet-ops.be with bizsmtp
+        id 8x5h200053XaVaC01x5hY4; Mon, 06 May 2019 11:05:41 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hNZZ6-0002Cn-Va; Mon, 06 May 2019 11:05:40 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hNZZ6-00018j-TI; Mon, 06 May 2019 11:05:40 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [git pull] m68k updates for 5.2
+Date:   Mon,  6 May 2019 11:05:39 +0200
+Message-Id: <20190506090539.4338-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/19 7:44 PM, Pankaj Suryawanshi wrote:
->> First possibility that comes to mind is that a usermodehelper got launched, and
->> it then tried to fork with a very large active process image.  Do we have any
->> clues what was going on?  Did a device get hotplugged?
-> 
-> Yes,The system is android and it tries to allocate memory for video
-> player from CMA reserved memory using custom octl call for dma apis.
+	Hi Linus,
 
-The stacktrace doesn't look like a CMA allocation though. That would be
-doing alloc_contig_range(), not kmalloc(). Could be some CMA area setup
-issue?
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
-> Please let me know how to overcome this issues, or how to reduce
-> fragmentation of memory so that higher order allocation get suuceed ?
-> 
-> Thanks
-> 
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v5.2-tag1
+
+for you to fetch changes up to fdd20ec8786ab2950439c7e78871618f7e51f18b:
+
+  Documentation/features/time: Mark m68k having modern-timekeeping (2019-05-06 10:58:37 +0200)
+
+----------------------------------------------------------------
+m68k updates for v5.2
+
+  - Drop arch_gettimeoffset and adopt clocksource API,
+  - Defconfig updates.
+
+Note that the top commit is not in linux-next, as I only realized we
+forgot to update the Documentation just before I prepared this pull
+request.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Finn Thain (14):
+      m68k: Call timer_interrupt() with interrupts disabled
+      m68k: mac: Fix VIA timer counter accesses
+      m68k: apollo, q40, sun3, sun3x: Remove arch_gettimeoffset implementations
+      m68k: Drop ARCH_USES_GETTIMEOFFSET
+      m68k: amiga: Convert to clocksource API
+      m68k: atari: Convert to clocksource API
+      m68k: bvme6000: Convert to clocksource API
+      m68k: hp300: Convert to clocksource API
+      m68k: hp300: Handle timer counter overflow
+      m68k: mac: Convert to clocksource API
+      m68k: mvme147: Convert to clocksource API
+      m68k: mvme147: Handle timer counter overflow
+      m68k: mvme16x: Convert to clocksource API
+      m68k: mvme16x: Handle timer counter overflow
+
+Geert Uytterhoeven (2):
+      m68k: defconfig: Update defconfigs for v5.1-rc1
+      Documentation/features/time: Mark m68k having modern-timekeeping
+
+ .../time/modern-timekeeping/arch-support.txt       |   2 +-
+ arch/m68k/Kconfig                                  |   1 -
+ arch/m68k/amiga/cia.c                              |   9 ++
+ arch/m68k/amiga/config.c                           |  49 +++++--
+ arch/m68k/apollo/config.c                          |   7 -
+ arch/m68k/atari/ataints.c                          |   4 +-
+ arch/m68k/atari/config.c                           |   2 -
+ arch/m68k/atari/time.c                             |  70 +++++++---
+ arch/m68k/bvme6000/config.c                        |  77 +++++++----
+ arch/m68k/configs/amiga_defconfig                  |  14 +-
+ arch/m68k/configs/apollo_defconfig                 |  14 +-
+ arch/m68k/configs/atari_defconfig                  |  14 +-
+ arch/m68k/configs/bvme6000_defconfig               |  14 +-
+ arch/m68k/configs/hp300_defconfig                  |  14 +-
+ arch/m68k/configs/mac_defconfig                    |  14 +-
+ arch/m68k/configs/multi_defconfig                  |  14 +-
+ arch/m68k/configs/mvme147_defconfig                |  14 +-
+ arch/m68k/configs/mvme16x_defconfig                |  14 +-
+ arch/m68k/configs/q40_defconfig                    |  14 +-
+ arch/m68k/configs/sun3_defconfig                   |  14 +-
+ arch/m68k/configs/sun3x_defconfig                  |  14 +-
+ arch/m68k/hp300/config.c                           |   1 -
+ arch/m68k/hp300/time.c                             |  73 ++++++++---
+ arch/m68k/hp300/time.h                             |   1 -
+ arch/m68k/include/asm/mvme147hw.h                  |   2 +-
+ arch/m68k/mac/config.c                             |   3 -
+ arch/m68k/mac/via.c                                | 146 ++++++++++++++-------
+ arch/m68k/mvme147/config.c                         |  73 +++++++----
+ arch/m68k/mvme16x/config.c                         |  97 ++++++++++----
+ arch/m68k/q40/config.c                             |   9 --
+ arch/m68k/q40/q40ints.c                            |  19 +--
+ arch/m68k/sun3/config.c                            |   2 -
+ arch/m68k/sun3/intersil.c                          |   7 -
+ arch/m68k/sun3/sun3ints.c                          |   3 +
+ arch/m68k/sun3x/config.c                           |   1 -
+ arch/m68k/sun3x/time.c                             |  21 ++-
+ arch/m68k/sun3x/time.h                             |   1 -
+ 37 files changed, 518 insertions(+), 330 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
