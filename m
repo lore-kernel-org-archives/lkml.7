@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5B3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA800C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 008F720C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25542053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153818;
-	bh=m8PUzezVg4mUsEUiPciQfr6l0rmMTKutw+jQ/sYN8D8=;
+	s=default; t=1557153823;
+	bh=8ouWa8sAEXd9Y+N7a4m1NSpyjsEb1Qcx/jrtP7u8oUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fveppG2v6blMZvcCLx6Spu+JMJkXFToL1WcVN8ay3Hnd871eO84CQdp98EUcbxAiW
-	 EAqHEiU7yi/Mq/1BwCUoavnvnKvRWEZ7/4wbZuzj2IvNhOXF6vJyTIIXGG4jnoctqU
-	 ov/cS8zgaE8p/jJUmnWHmM5kkPlDTBOtycBMzLgc=
+	b=G/m4r1nKUxbpI80DOzH/57gm8Betd64Z8VGl3vOx/dhpI2Ih+xI4IlH5Yja/dpwwl
+	 3BDGFjnlgrM5UYZ1kdho+7bRaBKQ/tlFtRIcw41Y1Cj457r8hnOlwj/eX+LUvmZoO5
+	 POZtfv3e4X/iES0LaB+ZCU6NkPaExg/m+rwBfL5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfEFOng (ORCPT
+        id S1728701AbfEFOnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:43:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39244 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:43:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728674AbfEFOnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:33 -0400
+        id S1727971AbfEFOng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1B7220C01;
-        Mon,  6 May 2019 14:43:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 982E621479;
+        Mon,  6 May 2019 14:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153812;
-        bh=m8PUzezVg4mUsEUiPciQfr6l0rmMTKutw+jQ/sYN8D8=;
+        s=default; t=1557153815;
+        bh=8ouWa8sAEXd9Y+N7a4m1NSpyjsEb1Qcx/jrtP7u8oUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uab24UkOsGv9WLGO/laCgQ9XQ76wdDprMJ3HlZfUga4KkMkO38ZEJ9lHAAkTEvcVL
-         mgUP286ZUNLNDr1PWNRgq/oZxWvMKInnKtd+ZXBsIa1//imiUonOn3OzdqdJlxtaPb
-         Au7sQN34SSUrhkvJ2l7Ey/0sFX+JuM5p16SWxnxM=
+        b=jhHB39sAmIDR5UWAkiIxjbQmeTe4+Sa4LsYTzstF5ZD+bOgqgoieIIFdvsM18GYVp
+         dgXJDddbFE3tw7app6houk/dcAkcJw/cgfDtJF1zqRUmrWU4YDp3UoFiOMNa+vJnPl
+         JUQFk85a1JHK9jF/f1AVhjIRbtAnR+zi9VCFrtlg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Le Bayon <nicolas.le.bayon@st.com>,
-        Bich Hemon <bich.hemon@st.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 4.19 98/99] i2c: i2c-stm32f7: Fix SDADEL minimum formula
-Date:   Mon,  6 May 2019 16:33:11 +0200
-Message-Id: <20190506143102.699671981@linuxfoundation.org>
+        stable@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.19 99/99] media: v4l2: i2c: ov7670: Fix PLL bypass register values
+Date:   Mon,  6 May 2019 16:33:12 +0200
+Message-Id: <20190506143102.774675709@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,33 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-commit c86da50cfd840edf223a242580913692acddbcf6 upstream.
+commit 61da76beef1e4f0b6ba7be4f8d0cf0dac7ce1f55 upstream.
 
-It conforms with Reference Manual I2C timing section.
+The following commits:
+commit f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
+commit 04ee6d92047e ("[media] media: ov7670: add possibility to bypass pll for ov7675")
+introduced the ability to bypass PLL multiplier and use input clock (xvclk)
+as pixel clock output frequency for ov7675 sensor.
 
-Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
-Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
-Signed-off-by: Bich Hemon <bich.hemon@st.com>
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+PLL is bypassed using register DBLV[7:6], according to ov7670 and ov7675
+sensor manuals. Macros used to set DBLV register seem wrong in the
+driver, as their values do not match what reported in the datasheet.
+
+Fix by changing DBLV_* macros to use bits [7:6] and set bits [3:0] to
+default 0x0a reserved value (according to datasheets).
+
+While at there, remove a write to DBLV register in
+"ov7675_set_framerate()" that over-writes the previous one to the same
+register that takes "info->pll_bypass" flag into account instead of setting PLL
+multiplier to 4x unconditionally.
+
+And, while at there, since "info->pll_bypass" is only used in
+set/get_framerate() functions used by ov7675 only, it is not necessary
+to check for the device id at probe time to make sure that when using
+ov7670 "info->pll_bypass" is set to false.
+
+Fixes: f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-stm32f7.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/ov7670.c |   16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -424,7 +424,7 @@ static int stm32f7_i2c_compute_timing(st
- 		 STM32F7_I2C_ANALOG_FILTER_DELAY_MAX : 0);
- 	dnf_delay = setup->dnf * i2cclk;
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -159,10 +159,10 @@ MODULE_PARM_DESC(debug, "Debug level (0-
+ #define REG_GFIX	0x69	/* Fix gain control */
  
--	sdadel_min = setup->fall_time - i2c_specs[setup->speed].hddat_min -
-+	sdadel_min = i2c_specs[setup->speed].hddat_min + setup->fall_time -
- 		af_delay_min - (setup->dnf + 3) * i2cclk;
+ #define REG_DBLV	0x6b	/* PLL control an debugging */
+-#define   DBLV_BYPASS	  0x00	  /* Bypass PLL */
+-#define   DBLV_X4	  0x01	  /* clock x4 */
+-#define   DBLV_X6	  0x10	  /* clock x6 */
+-#define   DBLV_X8	  0x11	  /* clock x8 */
++#define   DBLV_BYPASS	  0x0a	  /* Bypass PLL */
++#define   DBLV_X4	  0x4a	  /* clock x4 */
++#define   DBLV_X6	  0x8a	  /* clock x6 */
++#define   DBLV_X8	  0xca	  /* clock x8 */
  
- 	sdadel_max = i2c_specs[setup->speed].vddat_max - setup->rise_time -
+ #define REG_SCALING_XSC	0x70	/* Test pattern and horizontal scale factor */
+ #define   TEST_PATTTERN_0 0x80
+@@ -862,7 +862,7 @@ static int ov7675_set_framerate(struct v
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return ov7670_write(sd, REG_DBLV, DBLV_X4);
++	return 0;
+ }
+ 
+ static void ov7670_get_framerate_legacy(struct v4l2_subdev *sd,
+@@ -1797,11 +1797,7 @@ static int ov7670_probe(struct i2c_clien
+ 		if (config->clock_speed)
+ 			info->clock_speed = config->clock_speed;
+ 
+-		/*
+-		 * It should be allowed for ov7670 too when it is migrated to
+-		 * the new frame rate formula.
+-		 */
+-		if (config->pll_bypass && id->driver_data != MODEL_OV7670)
++		if (config->pll_bypass)
+ 			info->pll_bypass = true;
+ 
+ 		if (config->pclk_hb_disable)
 
 
