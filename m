@@ -2,180 +2,103 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA69C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 00:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2415DC004C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 00:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2F12082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 00:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60BE2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 00:06:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ulnKpUjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfEFABq (ORCPT
+        id S1727939AbfEFAGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 20:01:46 -0400
-Received: from foss.arm.com ([217.140.101.70]:39212 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727285AbfEFABp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 20:01:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9054374;
-        Sun,  5 May 2019 17:01:44 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FA823F238;
-        Sun,  5 May 2019 17:01:40 -0700 (PDT)
-Date:   Mon, 6 May 2019 01:01:38 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Michal Gregorczyk <michalgr@live.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
-Message-ID: <20190506000137.akzv4rj5sasy6fby@e107158-lin.cambridge.arm.com>
-References: <20190502204958.7868-1-joel@joelfernandes.org>
- <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
- <20190503134935.GA253329@google.com>
- <20190505110423.u7g3f2viovvgzbtn@e107158-lin.cambridge.arm.com>
- <20190505132949.GB3076@localhost>
- <20190505144608.u3vsxyz5huveuskx@e107158-lin.cambridge.arm.com>
- <20190505155223.GA4976@localhost>
- <20190505180313.GA80924@google.com>
+        Sun, 5 May 2019 20:06:46 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35958 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbfEFAGq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 20:06:46 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 85so5559325pgc.3;
+        Sun, 05 May 2019 17:06:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lPj1huXJr/S2Uba/xzc3MwDOA+d1UVBD7EVoVCzxZ3s=;
+        b=ulnKpUjZ2DYGF4G0QwuKvKlOCJBi+CayvUEKyxqdgsSGIhvTdFFhZfBItg+uipBZrh
+         MreexvWAtzWdWP60o8sBRt3aXMIV/fPFVA+2csjz21hM/DwmB/7k8IEZHHSNRb2/jnsG
+         LrwC2KVO72wlNtaBlpNdKFw5tjrmIYBRFEBQmH1j2prdewGMOzr1WFMMMWUzqqf5FX6C
+         5gayLXTu3RsoRU9+xoJ9KE7z2ozIAsonpKn/wrSKFTWwUcIfZfqUbMdGDSsdaM5mvx5s
+         1l+XkmLOoz/9xjrYfLPF4GgnEl9zlfnbLM6naducweIT90q6B0bJLxX5sZu7g/G5fnxM
+         baTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lPj1huXJr/S2Uba/xzc3MwDOA+d1UVBD7EVoVCzxZ3s=;
+        b=k8pR+lgjs+TmOvXuKeQKl1Z9ZKyHCVxJDcMP22qR1vVxtRWDvULGKq9P+9SQirx9wC
+         2kb0YnsihUsJj3rcUwV2xTQGsSA+Bw/JI3U4DywqrSi7XS6ZW+MHBhmFnPwtC03/eeEb
+         BDdWW4wVhtL9ZSaQY4/QCsRHtOYGyuAEMmCO2wn4FTgp6yR+tMrAADyr5leSTF0XsbaD
+         Y4x0c6dCvDRYZwJGPOxOaIgH7zWRITt+q90G/0Y2NZyQfV8zYvsvhx3JKw6ReNNX2Uyb
+         LrlRHbwQXCeftqDI+fmtUr/pBx87aO2nu4cUzhBHEypKAyDbCOm+eigE80AlRQ/UPabR
+         TsNQ==
+X-Gm-Message-State: APjAAAXdL1HYWD1Y77vtXklfbfTFiTUveqOgvwCHxj+9/9y9FwynmBUR
+        uzqUHTk6f9KsOWWeqcTed2Y=
+X-Google-Smtp-Source: APXvYqxY6R4fB1OBBDhpylDlbMrGQxT3o/02yuDwNMawkM9CJ79F/Zdx+6NGjxJ/5TDU88l80sJHbA==
+X-Received: by 2002:a65:5241:: with SMTP id q1mr7514612pgp.298.1557101205306;
+        Sun, 05 May 2019 17:06:45 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id e23sm10415448pfi.159.2019.05.05.17.06.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 05 May 2019 17:06:44 -0700 (PDT)
+Date:   Mon, 6 May 2019 00:06:42 +0000
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Changbin Du <changbin.du@gmail.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/27] Include linux x86 docs into Sphinx TOC tree
+Message-ID: <20190506000641.vno4r4ky7azd2ldl@mail.google.com>
+References: <20190502070633.9809-1-changbin.du@gmail.com>
+ <20190505130219.29bd72f8@lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190505180313.GA80924@google.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190505130219.29bd72f8@lwn.net>
+User-Agent: NeoMutt/20180716-508-7c9a6d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/05/19 14:03, Joel Fernandes wrote:
-> On Sun, May 05, 2019 at 03:52:23PM +0000, Joel Fernandes wrote:
-> > On Sun, May 05, 2019 at 03:46:08PM +0100, Qais Yousef wrote:
-> > > On 05/05/19 13:29, Joel Fernandes wrote:
-> > > > On Sun, May 05, 2019 at 12:04:24PM +0100, Qais Yousef wrote:
-> > > > > On 05/03/19 09:49, Joel Fernandes wrote:
-> > > > > > On Fri, May 03, 2019 at 01:12:34PM +0100, Qais Yousef wrote:
-> > > > > > > Hi Joel
-> > > > > > > 
-> > > > > > > On 05/02/19 16:49, Joel Fernandes (Google) wrote:
-> > > > > > > > The eBPF based opensnoop tool fails to read the file path string passed
-> > > > > > > > to the do_sys_open function. This is because it is a pointer to
-> > > > > > > > userspace address and causes an -EFAULT when read with
-> > > > > > > > probe_kernel_read. This is not an issue when running the tool on x86 but
-> > > > > > > > is an issue on arm64. This patch adds a new bpf function call based
-> > > > > > > 
-> > > > > > > I just did an experiment and if I use Android 4.9 kernel I indeed fail to see
-> > > > > > > PATH info when running opensnoop. But if I run on 5.1-rc7 opensnoop behaves
-> > > > > > > correctly on arm64.
-> > > > > > > 
-> > > > > > > My guess either a limitation that was fixed on later kernel versions or Android
-> > > > > > > kernel has some strict option/modifications that make this fail?
-> > > > > > 
-> > > > > > Thanks a lot for checking, yes I was testing 4.9 kernel with this patch (pixel 3).
-> > > > > > 
-> > > > > > I am not sure what has changed since then, but I still think it is a good
-> > > > > > idea to make the code more robust against such future issues anyway. In
-> > > > > > particular, we learnt with extensive discussions that user/kernel pointers
-> > > > > > are not necessarily distinguishable purely based on their address.
-> > > > > 
-> > > > > Yes I wasn't arguing against that. But the commit message is misleading or
-> > > > > needs more explanation at least. I tried 4.9.y stable and arm64 worked on that
-> > > > > too. Why do you think it's an arm64 problem?
-> > > > 
-> > > > Well it is broken on at least on at least one arm64 device and the patch I
-> > > > sent fixes it. We know that the bpf is using wrong kernel API so why not fix
-> > > > it? Are you saying we should not fix it like in this patch? Or do you have
-> > > > another fix in mind?
-> > > 
-> > > Again I have no issue with the new API. But the claim that it's a fix for
-> > > a broken arm64 is a big stretch. AFAICT you don't understand the root cause of
-> > > why copy_to_user_inatomic() fails in your case. Given that Android 4.9 has
-> > > its own patches on top of 4.9 stable, it might be something that was introduced
-> > > in one of these patches that breaks opensnoop, and by making it use the new API
-> > > you might be simply working around the problem. All I can see is that vanilla
-> > > 4.9 stable works on arm64.
+On Sun, May 05, 2019 at 01:02:19PM -0600, Jonathan Corbet wrote:
+> On Thu,  2 May 2019 15:06:06 +0800
+> Changbin Du <changbin.du@gmail.com> wrote:
+> 
+> > The kernel now uses Sphinx to generate intelligent and beautiful documentation
+> > from reStructuredText files. I converted all of the Linux x86 docs to rst
+> > format in this serias.
 > > 
-> > Agreed that commit message could be improved. I believe issue is something to
-> > do with differences in 4.9 PAN emulation backports. AIUI PAN was introduced
-> > in upstream only in 4.10 so 4.9 needed backports.
+> > For you to preview, please visit below url:
+> > http://www.bytemem.com:8080/kernel-doc/index.html
 > > 
-> > I did not root cause this completely because "doing the right thing" fixed
-> > the issue. I will look more closely once I am home.
-> > 
-> > Thank you.
+> > Thank you!
 > 
-> +Mark, Will since discussion is about arm64 arch code.
-> 
-> The difference between observing the bug and everything just working seems to
-> be the set_fs(USER_DS) as done by Masami's patch that this patch is based on.
-> The following diff shows 'ret' as 255 when set_fs(KERN_DS) is used, and then
-> after we retry with set_fs(USER_DS), the read succeeds.
-> 
-> diff --git a/mm/maccess.c b/mm/maccess.c
-> index 78f9274dd49d..d3e01a33c712 100644
-> --- a/mm/maccess.c
-> +++ b/mm/maccess.c
-> @@ -32,9 +32,20 @@ long __probe_kernel_read(void *dst, const void *src, size_t size)
->  	pagefault_disable();
->  	ret = __copy_from_user_inatomic(dst,
->  			(__force const void __user *)src, size);
-> +	trace_printk("KERNEL_DS: __copy_from_user_inatomic: ret=%d\n", ret);
->  	pagefault_enable();
->  	set_fs(old_fs);
->  
-> +	if (ret) {
-> +	set_fs(USER_DS);
-> +	pagefault_disable();
-> +	ret = __copy_from_user_inatomic(dst,
-> +			(__force const void __user *)src, size);
-> +	trace_printk("RETRY WITH USER_DS: __copy_from_user_inatomic: ret=%d\n", ret);
-> +	pagefault_enable();
-> +	set_fs(old_fs);
-> +	}
-> +
->  	return ret ? -EFAULT : 0;
->  }
->  EXPORT_SYMBOL_GPL(probe_kernel_read);
-> 
-> In initially thought this was because of the addr_limit pointer masking done
-> by this patch from Mark Rutland "arm64: Use pointer masking to limit uaccess
-> speculation"
-> 
-> However removing this masking still makes it fail with KERNEL_DS.
-> 
-> Fwiw, I am still curious which other paths in arm64 check the addr_limit
-> which might make the __copy_from_user_inatomic fail if the set_fs is not
-> setup correctly.
+> So which tree was this generated against?  I was gearing up to try it
+> out, but it doesn't really want to apply to docs-next...
+>
+This is against the mainline. Let me rebase to your tree so you can
+apply them clearly.
 
-PAN and UAO configs seem to affect its behavior. I lost access to my board to
-play with this myself and will have to wait until I get back to the office on
-Tuesday to revive it.
-
+> Thanks,
 > 
-> Either way, I will resubmit the patch with the commit message fixed correctly
-> as we agreed and also address Alexei's comments.
+> jon
 
-Thanks
-
---
-Qais Yousef
+-- 
+Cheers,
+Changbin Du
