@@ -2,144 +2,100 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B569CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550B1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893DE20578
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22FD920578
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:05:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h2G+g0f5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfEFQFU (ORCPT
+        id S1726814AbfEFQF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:05:20 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42195 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfEFQFU (ORCPT
+        Mon, 6 May 2019 12:05:28 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:33247 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfEFQF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:05:20 -0400
-Received: by mail-ed1-f65.google.com with SMTP id l25so15862124eda.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:05:19 -0700 (PDT)
+        Mon, 6 May 2019 12:05:27 -0400
+Received: by mail-vs1-f66.google.com with SMTP id z145so8475038vsc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:05:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rRFFU8Q/jQghW94GutkX/fzbuY9dKYgOCq1w5lys5os=;
+        b=h2G+g0f5qcaSkmO+aIkatHsodbmhrHyNCkxJUs1xGr5Fil8QSPcy2zpt/dYAmSjtoo
+         qNZIeF/MEpm8x3u4dQZ5NOzIxeuDUCemWdlh05SkylMyMccltrh9MUUIjiqdtgdyeb0D
+         x9EtOIkulHA5fOCXhXBT9wjgf5lZuGNPbi4BE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7kAz1+Z51tvw2opcrMQjw6Dq/g17HazdZTaAQbA0zpA=;
-        b=QdIo7bLyHNB8VtoEVEGMIf4+K1KdvC0BAq7RLP/8ruUhRYXtKaA7Bhj7RrX9eMiehr
-         NDZHPk+pNS+vXy0CKM7376V2Hh1Cz9moQ+i/LpxNsSlITwws1bNYgw3QnNSd5ebreWa6
-         FsHgBvlIOmpz3Ai/a9GDIHMpiQl+byPScyHN9u4QDgiyHZ0+AfGktxm/8Pjsq5aO8syi
-         QOu6gBAfCxWZXJ8WmH9ycBo/40e+kWTh8mkyzERGjT8YrMORrBZ2O84jT3d9BH9HcVRV
-         HdilhwvuoREiteMegsiIQx8w0vN6MEkYKpXftNQ0QcXIXAT6dnJ+ZKsK9bMFDQEDKndd
-         /vlg==
-X-Gm-Message-State: APjAAAU59EztttWEGjjLa1TunXJR0Ta5tX5+/48XC+kT2Mmvmy4d8joR
-        h/oNMb0/QOZnlU42oY1yCp4JiQ8WfhM=
-X-Google-Smtp-Source: APXvYqyKZiHoyTQVnVWoq+9/z12oY37alfcUhw1IsuXmlbo71MsqQkUjqe8oa0tPQsiQgwcy5rKKQQ==
-X-Received: by 2002:a50:deca:: with SMTP id d10mr26557704edl.25.1557158717949;
-        Mon, 06 May 2019 09:05:17 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id d17sm520436ejb.15.2019.05.06.09.05.16
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rRFFU8Q/jQghW94GutkX/fzbuY9dKYgOCq1w5lys5os=;
+        b=fQuWyZCfnbLglhUCKt+DBNGbn4CUcS4i5t+eFlJfGtIAj20nnfbQ/Qmnw9Ka+R1yRP
+         xYubBUV0zIix38Ux8iEEK9VzTSUOzLJ/Q2Xutoh9TulcGnwmOiSxN617Jnd0pYEmkmdO
+         KLmYdetsSqjvhPKvZQgzZoiZ82eTqbcr7xpwV/wp0mNWzbdM3K6lWWGfF2FakQhsHTKk
+         8q/nZM7X9A+JEnJMgvpTPKQdaW8MiN1ZakQuPEManxnmbX2r3rmOa1UN8S9X6IaVuDQV
+         yo9fOTWz1TAJIf4ShTPRS5dwOxO4+CpRTXl9ulNPGPFOuA77e3QmMmI2jHlFL50GIM8g
+         /Ccw==
+X-Gm-Message-State: APjAAAXTgdW7DR4KaVfGE0IFd2ipEOlcMlj2ip6Crx02R/n0jHECqjb1
+        N7TXf5Wo+/n+8dxjt5/o2TjJ7kXZZJI=
+X-Google-Smtp-Source: APXvYqz3xSf1hOkciDovAlHX0kDRAsgr2irMSx6/S6+xdhuHlf0Vq25PQ6ryiA1gnwou+GUnGoZ09w==
+X-Received: by 2002:a67:14c6:: with SMTP id 189mr13952935vsu.203.1557158725649;
+        Mon, 06 May 2019 09:05:25 -0700 (PDT)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id t12sm3121085vsc.30.2019.05.06.09.05.24
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 09:05:16 -0700 (PDT)
-Subject: Re: [PATCH RFC] brcmfmac: sanitize DMI strings v2
-To:     Victor Bravo <1905@spmblk.com>, Kalle Valo <kvalo@codeaurora.org>
-Cc:     Arend Van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org
-References: <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
- <20190504194440.4zcxjrtj2aft3ka4@localhost>
- <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <20190505150355.3fbng4ny34x255vk@localhost>
- <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
- <20190506090609.msudhncj7e5vdtzw@localhost>
- <70677dff-4336-28d5-7ab9-7ba7c3d74ebc@redhat.com>
- <20190506102032.3ximjecado4mz62j@localhost>
- <fb07ae01-4cca-98e7-1c2d-dfdf44909900@redhat.com>
- <87d0kvvkej.fsf@codeaurora.org> <20190506152441.ifjcdi73elxuq5it@localhost>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <3f3cca6e-50b7-c61d-4a62-26ce508af9e7@redhat.com>
-Date:   Mon, 6 May 2019 18:05:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 06 May 2019 09:05:24 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id v7so2550311ual.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:05:24 -0700 (PDT)
+X-Received: by 2002:ab0:d89:: with SMTP id i9mr13008936uak.96.1557158723903;
+ Mon, 06 May 2019 09:05:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190506152441.ifjcdi73elxuq5it@localhost>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20181018185616.14768-1-keescook@chromium.org> <20181018185616.14768-3-keescook@chromium.org>
+ <CAM0oz-91yjPQKnxGDjwFThs19U=+iziuUr=9z13NSibr_uRxZQ@mail.gmail.com>
+ <20190505131654.GC25640@kroah.com> <CAD=FV=UV7x-qJU86MzHxY8bqDV7rcc3XoyotKyy_+1MpMM22bA@mail.gmail.com>
+ <CAGXu5jKzH0Ttdtp5bXP_EAfp+fA+tEQwLXh=VmZ1r5q6wdpqaw@mail.gmail.com>
+In-Reply-To: <CAGXu5jKzH0Ttdtp5bXP_EAfp+fA+tEQwLXh=VmZ1r5q6wdpqaw@mail.gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Mon, 6 May 2019 09:05:12 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jKtteYVhB=jpjBBkGqW5_XK=zpCP24Fj+mM0L8RBnhh=A@mail.gmail.com>
+Message-ID: <CAGXu5jKtteYVhB=jpjBBkGqW5_XK=zpCP24Fj+mM0L8RBnhh=A@mail.gmail.com>
+Subject: Re: [PATCH pstore-next v2 2/4] pstore: Allocate compression during late_initcall()
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Doug said:
+> > > > I'd propose that these three patches:
+> > > >
+> > > > 95047b0519c1 pstore: Refactor compression initialization
+> > > > 416031653eb5 pstore: Allocate compression during late_initcall()
+> > > > cb095afd4476 pstore: Centralize init/exit routines
 
-On 06-05-19 17:24, Victor Bravo wrote:
-> On Mon, May 06, 2019 at 03:26:28PM +0300, Kalle Valo wrote:
->> Hans de Goede <hdegoede@redhat.com> writes:
->>
->>> If we're going to do some filtering, then I suggest we play it safe and also
->>> disallow other chars which may be used as a separator somewhere, specifically
->>> ':' and ','.
->>>
->>> Currently upstream linux-firmware has these files which rely on the DMI
->>> matching:
->>>
->>> brcmfmac4330-sdio.Prowise-PT301.txt
->>> brcmfmac43430-sdio.Hampoo-D2D3_Vi8A1.txt
->>> brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt
->>>
->>> The others are either part of the DMI override table for devices with unsuitable
->>> DMI strings like "Default String"; or are device-tree based.
->>>
->>> So as long as we don't break those 3 (or break the ONDA one but get a symlink
->>> in place) we can sanitize a bit more then just non-printable and '/'.
->>>
->>> Kalle, Arend, what is your opinion on this?
->>>
->>> Note I do not expect the ONDA V80 Plus to have a lot of Linux users,
->>> but it definitely has some.
->>
->> To me having spaces in filenames is a bad idea, but on the other hand we
->> do have the "don't break existing setups" rule, so it's not so simple. I
->> vote for not allowing spaces, I think that's the best for the long run,
->> but don't know what Arend thinks.
-> 
-> I have found a fresh judicate on this:
-> https://lkml.org/lkml/2018/12/22/221
-> 
-> It seems clear that we have to support at least spaces for some time
-> (maybe wih separate config option which will be deprecated but on by
-> defaut until old files are considered gone).
+Okay, confirmed. These look sufficient to me, and the resulting tree
+passes my pstore tests. Greg, can you please pull these into 4.19?
 
-Ah that issue, well that is not really comparable in that case a lot of
-peoples setups were completely broken by that commit and it was a
-quite surprising behavior change in a userspace facing API.
+Thanks!
 
-The nvram loading path already does 2 tries, I really don't want to
-unnecessary complicate it with a third try.
-
-The Onda V80 Plus is a X86 based Windows / Android dual boot tablet,
-as said before I do not expect a ton of users to be running regular
-Linux on it.
-
-Given Kalle's clear preference for getting rid of the spaces lets
-just do that. But first we must get a symlink added to linux-firmware
-using the name with the _, newer kernels requiring a newer linux-firmware
-to match is not unheard of AFAIK, so combined with the limited amount
-of users I think this is a reasonable compromise.
-
-Kalle, do you agree with getting the symlink added to linux-firmware
-ASAP as a fix for the V80 Plus issue; or do you want to see a fallback
-to the un-cleaned name as you suggested before ?
-
-Regards,
-
-Hans
+-- 
+Kees Cook
