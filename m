@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC87C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EFEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39EFD20C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9FC620C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153682;
-	bh=sx1pPAWwYCqiei8ugsKwF71A33BMH82+O9H5YI+MoGE=;
+	s=default; t=1557153684;
+	bh=RjMAvqx838rODCCwYMizeMBm2qO3TPGCYP0XQqTViGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CDUCF0kJIVZXF0pVzZ3ui2tC6pe+OjCv8QAtylJ+J+iQk38gKifIN+jqW50u/NkKZ
-	 tGmDHtl1yvGz+1QsT8n5tCGkyTSdvceItRMNaFH6MgPNVoHcFuFkRwPJFlbIrb6sBP
-	 VB1nGIHBJxAq4D7krCF/QCuHo78FDlJ+AB/V7zzI=
+	b=SXQmZ94k1EsAgTTTNcWbOHxq9nhhJ2U023SGiWoO1sefX+q+YvN3MJoUma43Z4Fcp
+	 U9BUK8gWpPWfSidhuBLcZJanTADjCr22EVe2h/6TN1fz69UvkNysQ+DAfHHgO1pSKo
+	 Y+Hjwljt5waQHfvYrtCbPfUsDj+HH8UOHH26OzGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfEFOlV (ORCPT
+        id S1728235AbfEFOlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:41:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35236 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:41:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728208AbfEFOlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:18 -0400
+        id S1727733AbfEFOlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:41:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4155A2087F;
-        Mon,  6 May 2019 14:41:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3D4A21479;
+        Mon,  6 May 2019 14:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153677;
-        bh=sx1pPAWwYCqiei8ugsKwF71A33BMH82+O9H5YI+MoGE=;
+        s=default; t=1557153680;
+        bh=RjMAvqx838rODCCwYMizeMBm2qO3TPGCYP0XQqTViGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oSqeyZzfwWYEXtLh+BIjVr44VTfk3uMw3YbCrbI8IJdoT2lkgOCRzT6n8z83s6au4
-         lv74ZoxpAUn9KsO32CBu/xGjLIQ/5qD8cZ28VAFliSgCbEZrAeBldyAreIt0viDwi8
-         ZOcA4KV8cnBF5ER+sEMbIdSwhqeesGC8JNN2sw+M=
+        b=i9y0EEEsfUlzQKVnMw0Z+pW9FIEudeUEPlisQXm9tOLEzIgAihUwG1L3hWWIJkaEn
+         +0y7yyMx9utTQp7F0E60NtzFBfY2db5LT5eJvtS9uIBPD0Ho+aUBVZI/791mMQoWy1
+         i63fZ5JYhCLgliAjw0a0iq1Kvh7i2LEOgnSHsZ4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julien Thierry <julien.thierry@arm.com>,
-        Wei Li <liwei391@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Liubin Shu <shuliubin@huawei.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 54/99] arm64: fix wrong check of on_sdei_stack in nmi context
-Date:   Mon,  6 May 2019 16:32:27 +0200
-Message-Id: <20190506143058.974732530@linuxfoundation.org>
+Subject: [PATCH 4.19 55/99] net: hns: fix KASAN: use-after-free in hns_nic_net_xmit_hw()
+Date:   Mon,  6 May 2019 16:32:28 +0200
+Message-Id: <20190506143059.065077774@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,45 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1c41860864c8ae0387ef7d44f0000e99cbb2e06d ]
+[ Upstream commit 3a39a12ad364a9acd1038ba8da67cd8430f30de4 ]
 
-When doing unwind_frame() in the context of pseudo nmi (need enable
-CONFIG_ARM64_PSEUDO_NMI), reaching the bottom of the stack (fp == 0,
-pc != 0), function on_sdei_stack() will return true while the sdei acpi
-table is not inited in fact. This will cause a "NULL pointer dereference"
-oops when going on.
+This patch is trying to fix the issue due to:
+[27237.844750] BUG: KASAN: use-after-free in hns_nic_net_xmit_hw+0x708/0xa18[hns_enet_drv]
 
-Reviewed-by: Julien Thierry <julien.thierry@arm.com>
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+After hnae_queue_xmit() in hns_nic_net_xmit_hw(), can be
+interrupted by interruptions, and than call hns_nic_tx_poll_one()
+to handle the new packets, and free the skb. So, when turn back to
+hns_nic_net_xmit_hw(), calling skb->len will cause use-after-free.
+
+This patch update tx ring statistics in hns_nic_tx_poll_one() to
+fix the bug.
+
+Signed-off-by: Liubin Shu <shuliubin@huawei.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/sdei.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/sdei.c b/arch/arm64/kernel/sdei.c
-index 5ba4465e44f0..ea94cf8f9dc6 100644
---- a/arch/arm64/kernel/sdei.c
-+++ b/arch/arm64/kernel/sdei.c
-@@ -94,6 +94,9 @@ static bool on_sdei_normal_stack(unsigned long sp, struct stack_info *info)
- 	unsigned long low = (unsigned long)raw_cpu_read(sdei_stack_normal_ptr);
- 	unsigned long high = low + SDEI_STACK_SIZE;
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index cc84133c184d..3a6e5cc76c5b 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -376,8 +376,6 @@ netdev_tx_t hns_nic_net_xmit_hw(struct net_device *ndev,
+ 	wmb(); /* commit all data before submit */
+ 	assert(skb->queue_mapping < priv->ae_handle->q_num);
+ 	hnae_queue_xmit(priv->ae_handle->qs[skb->queue_mapping], buf_num);
+-	ring->stats.tx_pkts++;
+-	ring->stats.tx_bytes += skb->len;
  
-+	if (!low)
-+		return false;
-+
- 	if (sp < low || sp >= high)
- 		return false;
+ 	return NETDEV_TX_OK;
  
-@@ -111,6 +114,9 @@ static bool on_sdei_critical_stack(unsigned long sp, struct stack_info *info)
- 	unsigned long low = (unsigned long)raw_cpu_read(sdei_stack_critical_ptr);
- 	unsigned long high = low + SDEI_STACK_SIZE;
+@@ -999,6 +997,9 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
+ 		/* issue prefetch for next Tx descriptor */
+ 		prefetch(&ring->desc_cb[ring->next_to_clean]);
+ 	}
++	/* update tx ring statistics. */
++	ring->stats.tx_pkts += pkts;
++	ring->stats.tx_bytes += bytes;
  
-+	if (!low)
-+		return false;
-+
- 	if (sp < low || sp >= high)
- 		return false;
+ 	NETIF_TX_UNLOCK(ring);
  
 -- 
 2.20.1
