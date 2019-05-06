@@ -2,201 +2,97 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D868FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8B1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF68214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CDF2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155050;
-	bh=tRlSznRaumGcbHiVq+BgNCif6kOGux2h+jcJd2wUAHE=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=MNIvVuxRXBl7GCG+2hbdizjPAvZAHsURL9EtRiGaCtH+mbNuaroreKL9mTD0ps9hC
-	 mV1uic9HS4OUW/ZLy4r/Z+ZKYzetIvircmKaN58OWN63lxEJJRfp4AeJenQVF0FsEY
-	 ifThNhXMZPQIwAKcdwS51J874topycc8Nh01CGsE=
+	s=default; t=1557155063;
+	bh=LpPfRNmlyWgRKQpclZBkufT7CTTBKC7Z/rwV7dZGWR8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tnUDQ9Ni+vaicgc+z1ihHEoA2jxM5YSuZJtrqPqPzRctZY4vbDEorEYAKOct/spdE
+	 q5waKv/A8JeJ+xtS6nTRbDM62ekd1nWpQQnUZ/H0gWP3J2CcogSDL1mWFoTyyfw4tZ
+	 ddnRq9VNO7ChaLgLnT09mbbITrGPZldghGiW2dRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbfEFPEJ (ORCPT
+        id S1727775AbfEFOjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:04:09 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53964 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728034AbfEFPD7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:03:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ulGxU59+SHg0LveLVxFzfgXsIwZDWNfvFJ6byVaTrN4=; b=NM7cVQmEeobn
-        o0U/OVzVq7HtcosM5EC+eu1pb3dJw4ER7LYUhWsCqnSicdu2yZoWP24syMOFiFi89+LJme7CThJat
-        SOhjX+AW0JE6H1G4CId6jsYhsvw9LVJolGztkwffkMi9a0GQ2JUO+WQKGdJTwNsChSEEWSSz3QbhU
-        jEqbQ=;
-Received: from [2001:268:c0e6:658d:8f3d:d90b:c4e4:2fdf] (helo=finisterre.ee.mobilebroadband)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hNf9d-0001uP-IN; Mon, 06 May 2019 15:03:46 +0000
-Received: by finisterre.ee.mobilebroadband (Postfix, from userid 1000)
-        id 26ACA440010; Mon,  6 May 2019 16:03:42 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
-        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
-        broonie@kernel.org, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
-        olivier.moysan@st.com, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: stm32: spdifrx: manage identification registers" to the asoc tree
-In-Reply-To: <1557146646-18150-4-git-send-email-olivier.moysan@st.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190506150342.26ACA440010@finisterre.ee.mobilebroadband>
-Date:   Mon,  6 May 2019 16:03:42 +0100 (BST)
+        Mon, 6 May 2019 10:39:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727742AbfEFOjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:39:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD01220449;
+        Mon,  6 May 2019 14:39:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557153548;
+        bh=LpPfRNmlyWgRKQpclZBkufT7CTTBKC7Z/rwV7dZGWR8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yvGj4tmUwkc/7Pp7tVAzdV0Tn1UVJGROU2MQ+hn1bxeG8ozLarxzvLSJQvPEHWZMB
+         KjHod5zeTR4mC4t8a9e47rnFAskWIDAHgWZBwjK/LkR/bjHnryX/NcR7TuMxIDFCwK
+         PID+eGw7EsgZAYPZjgAFJzublz1Z2dYQ6gyDPwAk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.0 099/122] ASoC: stm32: fix sai driver name initialisation
+Date:   Mon,  6 May 2019 16:32:37 +0200
+Message-Id: <20190506143103.624590586@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
+References: <20190506143054.670334917@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 
-   ASoC: stm32: spdifrx: manage identification registers
+commit 17d3069ccf06970e2db3f7cbf4335f207524279e upstream.
 
-has been applied to the asoc tree at
+This patch fixes the sai driver structure overwriting which results in
+a cpu dai name equal NULL.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+Fixes: 3e086ed ("ASoC: stm32: add SAI driver")
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 1a5c0b28fc56044737f988960f3bc5fdcdba0827 Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Mon, 6 May 2019 14:44:06 +0200
-Subject: [PATCH] ASoC: stm32: spdifrx: manage identification registers
-
-Add support of identification registers in STM32 SPDIFRX.
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/stm/stm32_spdifrx.c | 37 +++++++++++++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 2 deletions(-)
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/sound/soc/stm/stm32_spdifrx.c b/sound/soc/stm/stm32_spdifrx.c
-index b4c3d983e195..62a887ee4a03 100644
---- a/sound/soc/stm/stm32_spdifrx.c
-+++ b/sound/soc/stm/stm32_spdifrx.c
-@@ -16,6 +16,7 @@
-  * details.
-  */
+---
+ sound/soc/stm/stm32_sai_sub.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -1394,7 +1394,6 @@ static int stm32_sai_sub_dais_init(struc
+ 	if (!sai->cpu_dai_drv)
+ 		return -ENOMEM;
  
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
-@@ -36,6 +37,9 @@
- #define STM32_SPDIFRX_DR	0x10
- #define STM32_SPDIFRX_CSR	0x14
- #define STM32_SPDIFRX_DIR	0x18
-+#define STM32_SPDIFRX_VERR	0x3F4
-+#define STM32_SPDIFRX_IDR	0x3F8
-+#define STM32_SPDIFRX_SIDR	0x3FC
- 
- /* Bit definition for SPDIF_CR register */
- #define SPDIFRX_CR_SPDIFEN_SHIFT	0
-@@ -169,6 +173,18 @@
- #define SPDIFRX_SPDIFEN_SYNC	0x1
- #define SPDIFRX_SPDIFEN_ENABLE	0x3
- 
-+/* Bit definition for SPDIFRX_VERR register */
-+#define SPDIFRX_VERR_MIN_MASK	GENMASK(3, 0)
-+#define SPDIFRX_VERR_MAJ_MASK	GENMASK(7, 4)
-+
-+/* Bit definition for SPDIFRX_IDR register */
-+#define SPDIFRX_IDR_ID_MASK	GENMASK(31, 0)
-+
-+/* Bit definition for SPDIFRX_SIDR register */
-+#define SPDIFRX_SIDR_SID_MASK	GENMASK(31, 0)
-+
-+#define SPDIFRX_IPIDR_NUMBER	0x00130041
-+
- #define SPDIFRX_IN1		0x1
- #define SPDIFRX_IN2		0x2
- #define SPDIFRX_IN3		0x3
-@@ -607,6 +623,9 @@ static bool stm32_spdifrx_readable_reg(struct device *dev, unsigned int reg)
- 	case STM32_SPDIFRX_DR:
- 	case STM32_SPDIFRX_CSR:
- 	case STM32_SPDIFRX_DIR:
-+	case STM32_SPDIFRX_VERR:
-+	case STM32_SPDIFRX_IDR:
-+	case STM32_SPDIFRX_SIDR:
- 		return true;
- 	default:
- 		return false;
-@@ -642,10 +661,11 @@ static const struct regmap_config stm32_h7_spdifrx_regmap_conf = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
- 	.val_bits = 32,
--	.max_register = STM32_SPDIFRX_DIR,
-+	.max_register = STM32_SPDIFRX_SIDR,
- 	.readable_reg = stm32_spdifrx_readable_reg,
- 	.volatile_reg = stm32_spdifrx_volatile_reg,
- 	.writeable_reg = stm32_spdifrx_writeable_reg,
-+	.num_reg_defaults_raw = STM32_SPDIFRX_SIDR / sizeof(u32) + 1,
- 	.fast_io = true,
- 	.cache_type = REGCACHE_FLAT,
- };
-@@ -911,6 +931,7 @@ static int stm32_spdifrx_probe(struct platform_device *pdev)
- 	struct stm32_spdifrx_data *spdifrx;
- 	struct reset_control *rst;
- 	const struct snd_dmaengine_pcm_config *pcm_config = NULL;
-+	u32 ver, idr;
- 	int ret;
- 
- 	spdifrx = devm_kzalloc(&pdev->dev, sizeof(*spdifrx), GFP_KERNEL);
-@@ -967,7 +988,19 @@ static int stm32_spdifrx_probe(struct platform_device *pdev)
- 		goto error;
+-	sai->cpu_dai_drv->name = dev_name(&pdev->dev);
+ 	if (STM_SAI_IS_PLAYBACK(sai)) {
+ 		memcpy(sai->cpu_dai_drv, &stm32_sai_playback_dai,
+ 		       sizeof(stm32_sai_playback_dai));
+@@ -1404,6 +1403,7 @@ static int stm32_sai_sub_dais_init(struc
+ 		       sizeof(stm32_sai_capture_dai));
+ 		sai->cpu_dai_drv->capture.stream_name = sai->cpu_dai_drv->name;
  	}
++	sai->cpu_dai_drv->name = dev_name(&pdev->dev);
  
--	return 0;
-+	ret = regmap_read(spdifrx->regmap, STM32_SPDIFRX_IDR, &idr);
-+	if (ret)
-+		goto error;
-+
-+	if (idr == SPDIFRX_IPIDR_NUMBER) {
-+		ret = regmap_read(spdifrx->regmap, STM32_SPDIFRX_VERR, &ver);
-+
-+		dev_dbg(&pdev->dev, "SPDIFRX version: %lu.%lu registered\n",
-+			FIELD_GET(SPDIFRX_VERR_MAJ_MASK, ver),
-+			FIELD_GET(SPDIFRX_VERR_MIN_MASK, ver));
-+	}
-+
-+	return ret;
- 
- error:
- 	if (!IS_ERR(spdifrx->ctrl_chan))
--- 
-2.20.1
+ 	return 0;
+ }
+
 
