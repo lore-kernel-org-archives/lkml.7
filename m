@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064E4C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7EAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDFC3214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15EF204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153465;
-	bh=AAZ0+3CCjkRjj7MejXcIyv6OzHqSdH3G6jmknbtzS7g=;
+	s=default; t=1557153467;
+	bh=VlWkBUEImB78/og5ALQ2v1xG5jr0UAHU6iU6re1Vq5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rP87NczTrIFOzqiTaZLWoO8hLprKYAzfmANWr97Efs8SX7dGNjPAhVM1oOX4Y57G9
-	 X6fm+EvC1dudkbV8kSUiFnxqC0bOL7kI7mAYfpMxfVm/EuKnzyH82dEmZhrMsUiCQb
-	 FKvA+7+gVJvins+4x25pCIzx/G5dnPsPYelwLa34=
+	b=BXCaaYoKinoJdnJynh3PIdke7nyUozoZacrcVK0YrYvbpX046dB5/OR31gNiG/KW8
+	 Ul4kY9Ro14ndjKB4uiTf90HP4gdoW2ubZn4aC85D1qvpp01dgM7jPZ4zwV2hntFTPC
+	 XWDPMSqcc01cLD6AIJUXq0AMxSt+uLOnY4MpKXYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfEFOhp (ORCPT
+        id S1727469AbfEFOhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:37:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58508 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:37:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727435AbfEFOhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:37:41 -0400
+        id S1727447AbfEFOho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:37:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CC1721479;
-        Mon,  6 May 2019 14:37:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DB18204EC;
+        Mon,  6 May 2019 14:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153460;
-        bh=AAZ0+3CCjkRjj7MejXcIyv6OzHqSdH3G6jmknbtzS7g=;
+        s=default; t=1557153463;
+        bh=VlWkBUEImB78/og5ALQ2v1xG5jr0UAHU6iU6re1Vq5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HUJfbtgsI7W6tPEXvRwhYt7xYroW7afOmlEEWDY6kif9fkicVQ4om79EFG+rZdQGl
-         dB1XkRpBmtGFAVoNl4+UKtLH0UYkiFtNDQhQm8H3a0WzkbvUh5lmHgTGZ3G92y0ISa
-         T2kRYPQNV2Siaip9j1WKzFYxhnGeQzWQlmudKgu0=
+        b=qPCWpawv6Xf7EZAger1HMUauaIj2knqUtI/fLd/2VpGmIZP1iD/qkOrRDP6FwiQG1
+         f9/uPLZFQTinQfjk5oPpLOOwsKZdXmxT9HOd5cmm2o7/aVKBHoUj1ilv+kEqz95CO9
+         k8zXNrldZzsaYl6RFQz0WDPXQsSTECguUDXWhmBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 097/122] ASoC: wm_adsp: Correct handling of compressed streams that restart
-Date:   Mon,  6 May 2019 16:32:35 +0200
-Message-Id: <20190506143103.474087266@linuxfoundation.org>
+Subject: [PATCH 5.0 098/122] ASoC: dpcm: skip missing substream while applying symmetry
+Date:   Mon,  6 May 2019 16:32:36 +0200
+Message-Id: <20190506143103.555118908@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -59,46 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-commit 639e5eb3c7d67e407f2a71fccd95323751398f6f upstream.
+commit 6246f283d5e02ac757bd8d9bacde8fdc54c4582d upstream.
 
-Previously support was added to allow streams to be stopped and
-started again without the DSP being power cycled and this was done
-by clearing the buffer state in trigger start. Another supported
-use-case is using the DSP for a trigger event then opening the
-compressed stream later to receive the audio, unfortunately clearing
-the buffer state in trigger start destroys the data received
-from such a trigger. Correct this issue by moving the call to
-wm_adsp_buffer_clear to be in trigger stop instead.
+If for any reason, the backend does not have the requested substream
+(like capture on a playback only backend), the BE will be skipped in
+dpcm_be_dai_startup().
 
-Fixes: 61fc060c40e6 ("ASoC: wm_adsp: Support streams which can start/stop with DSP active")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+However, dpcm_apply_symmetry() does not skip those BE and will
+dereference the be_substream (NULL) pointer anyway.
+
+Like in dpcm_be_dai_startup(), just skip those BE.
+
+Fixes: 906c7d690c3b ("ASoC: dpcm: Apply symmetry for DPCM")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/codecs/wm_adsp.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ sound/soc/soc-pcm.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/sound/soc/codecs/wm_adsp.c
-+++ b/sound/soc/codecs/wm_adsp.c
-@@ -3443,8 +3443,6 @@ int wm_adsp_compr_trigger(struct snd_com
- 			}
- 		}
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -1895,10 +1895,15 @@ static int dpcm_apply_symmetry(struct sn
+ 		struct snd_soc_pcm_runtime *be = dpcm->be;
+ 		struct snd_pcm_substream *be_substream =
+ 			snd_soc_dpcm_get_substream(be, stream);
+-		struct snd_soc_pcm_runtime *rtd = be_substream->private_data;
++		struct snd_soc_pcm_runtime *rtd;
+ 		struct snd_soc_dai *codec_dai;
+ 		int i;
  
--		wm_adsp_buffer_clear(compr->buf);
--
- 		/* Trigger the IRQ at one fragment of data */
- 		ret = wm_adsp_buffer_write(compr->buf,
- 					   HOST_BUFFER_FIELD(high_water_mark),
-@@ -3456,6 +3454,7 @@ int wm_adsp_compr_trigger(struct snd_com
- 		}
- 		break;
- 	case SNDRV_PCM_TRIGGER_STOP:
-+		wm_adsp_buffer_clear(compr->buf);
- 		break;
- 	default:
- 		ret = -EINVAL;
++		/* A backend may not have the requested substream */
++		if (!be_substream)
++			continue;
++
++		rtd = be_substream->private_data;
+ 		if (rtd->dai_link->be_hw_params_fixup)
+ 			continue;
+ 
 
 
