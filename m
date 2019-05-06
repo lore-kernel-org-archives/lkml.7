@@ -2,67 +2,75 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C608C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A6CC04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289402082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2614C2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfEFI3Y (ORCPT
+        id S1726338AbfEFI3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:29:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60908 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725836AbfEFI3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:29:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 78725AC5A;
-        Mon,  6 May 2019 08:29:22 +0000 (UTC)
+        Mon, 6 May 2019 04:29:39 -0400
+Received: from mga18.intel.com ([134.134.136.126]:4122 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbfEFI3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 04:29:38 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 01:29:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,437,1549958400"; 
+   d="scan'208";a="229830002"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga001.jf.intel.com with ESMTP; 06 May 2019 01:29:35 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hNZ0A-00086o-9W; Mon, 06 May 2019 11:29:34 +0300
+Date:   Mon, 6 May 2019 11:29:34 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Frederick Lawler <fred@fredlawl.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com,
+        lukas@wunner.de, keith.busch@intel.com, mr.nuke.me@gmail.com,
+        liudongdong3@huawei.com, thesven73@gmail.com
+Subject: Re: [PATCH v2 6/9] PCI: hotplug: Prefix dmesg logs with PCIe service
+ name
+Message-ID: <20190506082934.GI9224@smile.fi.intel.com>
+References: <20190503035946.23608-1-fred@fredlawl.com>
+ <20190503035946.23608-7-fred@fredlawl.com>
+ <20190503200437.GD180403@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 06 May 2019 10:29:22 +0200
-From:   Michal Rostecki <mrostecki@opensuse.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Yonghong Song <yhs@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        bpf-owner@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2] bpf, libbpf: Add .so files to gitignore
-In-Reply-To: <CAADnVQ+exT+Jv=i9a4MWNB_eeO6ZeJWAm0=OL5_EZ1gQLvRk-w@mail.gmail.com>
-References: <20190502081453.25097-1-mrostecki@opensuse.org>
- <CAADnVQ+exT+Jv=i9a4MWNB_eeO6ZeJWAm0=OL5_EZ1gQLvRk-w@mail.gmail.com>
-Message-ID: <cbbbbc994750b8b34825fc1133d6282d@opensuse.org>
-X-Sender: mrostecki@opensuse.org
-User-Agent: Roundcube Webmail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190503200437.GD180403@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2019-05-05 09:03, schrieb Alexei Starovoitov:
-> Some folks build libbpf as part of selftests.
-> Please update .gitignore in tools/lib/bpf and
-> in tools/testing/selftests/bpf
+On Fri, May 03, 2019 at 03:04:37PM -0500, Bjorn Helgaas wrote:
+> On Thu, May 02, 2019 at 10:59:43PM -0500, Frederick Lawler wrote:
+
+> > +#define pr_fmt(fmt) "pciehp: " fmt
+> > +#define dev_fmt pr_fmt
 > 
-> Also instead of "bpf, libbpf:" subj prefix just mention "libbpf:"
+> Can these go in pciehp.h?
 
-Thanks for your review!
+In general, no, it can't. The pr_fmt() / dev_fmt() macro must precede any
+header inclusion, thus it makes them position dependent.
 
-I noticed that in the meantime the .gitignore file in tools/lib/bpf was 
-fixed
-by the other commit (39391377f8ec). Now I need to fix only .gitignore in
-tools/testing/selftests/bpf (where I need to add even more files, 
-because
-some test program binaries are not included too). I will send a patch 
-for that
-later today.
+Otherwise, one has to guarantee above by accurately keeping a header inclusion
+ordering.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
