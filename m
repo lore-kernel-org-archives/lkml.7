@@ -2,57 +2,51 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3FAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF5CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4622A2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805812054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155209;
-	bh=ploqfepncoVXrCe87IV0KnwkIwovppJmkPjVgS6u8tw=;
+	s=default; t=1557155221;
+	bh=2Gd0bH3/tO40zPJAXXvIBjHGlAEcOp4BKYcLxoT5HSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bcOnHR2Yaea0s9yCYjNCoi0ccwfI5aUwmNvHw9SBnz5BRdLCyGjo2GCYVhsYMA7a9
-	 RsgnY1WEu0q75lhtMpT9ZZ+PQa7/WDQxrZ9lDyKOl+vX0icS/s+6YLSHpFojKK9/Um
-	 2bBiM4RqDOe8WbPN3nXHdD92fAc+GQikooFdXtNY=
+	b=ZjBVnu4/njOAsqV90KXLGzU/TDzooxvzO6WhoaqRKngC6zrQcgiJERdSFlvbdFLVQ
+	 on8uNfWyOldCACY1lOJwWXvAocqpfuI6BjAlUYJZ21BnX7WX7LAH+LwpbPkvfWVgEC
+	 DsYV6nrxGTPuQMZ6MjAnNN2yOA4KKE+ReO/dBmWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfEFPGs (ORCPT
+        id S1727574AbfEFPHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:06:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58324 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:07:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbfEFOhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:37:33 -0400
+        id S1726909AbfEFOhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:37:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73A6E206A3;
-        Mon,  6 May 2019 14:37:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D8A8206A3;
+        Mon,  6 May 2019 14:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153452;
-        bh=ploqfepncoVXrCe87IV0KnwkIwovppJmkPjVgS6u8tw=;
+        s=default; t=1557153440;
+        bh=2Gd0bH3/tO40zPJAXXvIBjHGlAEcOp4BKYcLxoT5HSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TXOr6AhtrsnQi0FxlRLrUMM5IXm4o6FKZsE/DMtbGyFVlQ1VX6jR/EV1NYxn0gFbL
-         H29W38aNWzPld+ZpgwPZS1Nj5n3l8dtlCTDEAe2tPdmn1Y6a2HQnGRc0cDyWGRWZLj
-         KGDSdwL7R3anZZNPao4xSF0VLwHZ3usbh52lNRMc=
+        b=gWTNROQ1tiN2IuxGE4aCLhHnSLc8eL/S0Kark59XNnDsep9IlRV0oCIkuop2Sjx/G
+         1FaVKD4Tm9dPkI7I0okknJaYxlHgUcZJYgxNIbno7HQt2phPUKEhxgR1qzlxF2P1a3
+         gHnZ/znWAPkADp47JeEDo+hk0xVxoxq585Wu78io=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        kbuild test robot <lkp@intel.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 077/122] sh: fix multiple function definition build errors
-Date:   Mon,  6 May 2019 16:32:15 +0200
-Message-Id: <20190506143101.753765207@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.0 090/122] staging: iio: adt7316: fix handling of dac high resolution option
+Date:   Mon,  6 May 2019 16:32:28 +0200
+Message-Id: <20190506143102.784111183@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -65,57 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit acaf892ecbf5be7710ae05a61fd43c668f68ad95 ]
+From: Jeremy Fertic <jeremyfertic@gmail.com>
 
-Many of the sh CPU-types have their own plat_irq_setup() and
-arch_init_clk_ops() functions, so these same (empty) functions in
-arch/sh/boards/of-generic.c are not needed and cause build errors.
+commit 76b7fe8d6c4daf4db672eb953c892c6f6572a282 upstream.
 
-If there is some case where these empty functions are needed, they can
-be retained by marking them as "__weak" while at the same time making
-builds that do not need them succeed.
+The adt7316/7 and adt7516/7 have the option to output voltage proportional
+to temperature on dac a and/or dac b. The default dac resolution in this
+mode is 8 bits with the dac high resolution option enabling 10 bits. None
+of these settings affect dacs c and d. Remove the "1 (12 bits)" output from
+the show function since that is not an option for this mode. Return
+"1 (10 bits)" if the device is one of the above mentioned chips and the dac
+high resolution mode is enabled.
 
-Fixes these build errors:
+In the store function, the driver currently allows the user to write to the
+ADT7316_DA_HIGH_RESOLUTION bit regardless of the device in use. Add a check
+to return an error in the case of an adt7318 or adt7519. Remove the else
+statement that clears the ADT7316_DA_HIGH_RESOLUTION bit. Instead, clear it
+before conditionally enabling it, depending on user input. This matches the
+typical pattern in the driver when an attribute is a boolean.
 
-arch/sh/boards/of-generic.o: In function `plat_irq_setup':
-(.init.text+0x134): multiple definition of `plat_irq_setup'
-arch/sh/kernel/cpu/sh2/setup-sh7619.o:(.init.text+0x30): first defined here
-arch/sh/boards/of-generic.o: In function `arch_init_clk_ops':
-(.init.text+0x118): multiple definition of `arch_init_clk_ops'
-arch/sh/kernel/cpu/sh2/clock-sh7619.o:(.init.text+0x0): first defined here
+Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
+Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Link: http://lkml.kernel.org/r/9ee4e0c5-f100-86a2-bd4d-1d3287ceab31@infradead.org
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/sh/boards/of-generic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/iio/addac/adt7316.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/sh/boards/of-generic.c b/arch/sh/boards/of-generic.c
-index 958f46da3a79..d91065e81a4e 100644
---- a/arch/sh/boards/of-generic.c
-+++ b/arch/sh/boards/of-generic.c
-@@ -164,10 +164,10 @@ static struct sh_machine_vector __initmv sh_of_generic_mv = {
+--- a/drivers/staging/iio/addac/adt7316.c
++++ b/drivers/staging/iio/addac/adt7316.c
+@@ -634,9 +634,7 @@ static ssize_t adt7316_show_da_high_reso
+ 	struct adt7316_chip_info *chip = iio_priv(dev_info);
  
- struct sh_clk_ops;
+ 	if (chip->config3 & ADT7316_DA_HIGH_RESOLUTION) {
+-		if (chip->id == ID_ADT7316 || chip->id == ID_ADT7516)
+-			return sprintf(buf, "1 (12 bits)\n");
+-		if (chip->id == ID_ADT7317 || chip->id == ID_ADT7517)
++		if (chip->id != ID_ADT7318 && chip->id != ID_ADT7519)
+ 			return sprintf(buf, "1 (10 bits)\n");
+ 	}
  
--void __init arch_init_clk_ops(struct sh_clk_ops **ops, int idx)
-+void __init __weak arch_init_clk_ops(struct sh_clk_ops **ops, int idx)
- {
- }
+@@ -653,10 +651,12 @@ static ssize_t adt7316_store_da_high_res
+ 	u8 config3;
+ 	int ret;
  
--void __init plat_irq_setup(void)
-+void __init __weak plat_irq_setup(void)
- {
- }
--- 
-2.20.1
-
++	if (chip->id == ID_ADT7318 || chip->id == ID_ADT7519)
++		return -EPERM;
++
++	config3 = chip->config3 & (~ADT7316_DA_HIGH_RESOLUTION);
+ 	if (buf[0] == '1')
+-		config3 = chip->config3 | ADT7316_DA_HIGH_RESOLUTION;
+-	else
+-		config3 = chip->config3 & (~ADT7316_DA_HIGH_RESOLUTION);
++		config3 |= ADT7316_DA_HIGH_RESOLUTION;
+ 
+ 	ret = chip->bus.write(chip->bus.client, ADT7316_CONFIG3, config3);
+ 	if (ret)
 
 
