@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63565C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEBCC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287772054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982862054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155102;
-	bh=uKMG32aR6XD0AtLePyWTs52oPupPMpoNb530NBGu0Uo=;
+	s=default; t=1557155108;
+	bh=W5TbTrb9af3rDY6Npt3MT/GnE4ifQf79SZVKzKzGJO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fxrsF4loDBqChO4suupVyaLDCF2RppTuSqdS2jR+nBfcMhSjBCSwItn+HcZz/niNy
-	 LUiZXmhtTrUQGQQrv8dJsenBi12SrugaznHEMgAlpyJlpO8JwPsQddEcjnMuxTtr6k
-	 +UnrZh6v5EfbQDnlyg/xS51flCRYJYrA2NOn5jmQ=
+	b=JRlrm7G7zHxPPNf0DEKk9sxnSuqacBCiHUcenJQckaaH+w3++6F35IkjTyPtuvdM3
+	 ppZ0yOJbEfss9w54eXXLu4zEzOaKIu3Uks2jkmdJcfjgrRFpZZZFH0lNSVUtjngqrw
+	 YPHaJdFIAIaGzvTBNlCA7IAm0C2mPOy/blH46Jqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfEFPFA (ORCPT
+        id S1727958AbfEFPFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60356 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727704AbfEFOjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:39:00 -0400
+        id S1727669AbfEFOip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:38:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C73B020449;
-        Mon,  6 May 2019 14:38:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 240F8214AF;
+        Mon,  6 May 2019 14:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153540;
-        bh=uKMG32aR6XD0AtLePyWTs52oPupPMpoNb530NBGu0Uo=;
+        s=default; t=1557153524;
+        bh=W5TbTrb9af3rDY6Npt3MT/GnE4ifQf79SZVKzKzGJO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VEdqUyTLWucGBa4/M1hZICJmJvDzA8VoGfhoIkt1VniFvpoipCRJvnXT1riFBmKN4
-         4qYrR6gqegzotFfJFsLVT894UUsmHx1ie/CQaAAgZUm5UHFMosFJOQHZ4IAdmBADUd
-         B0wiHTptupJgIcwHTelO4zjMu7vVLfbmGk5wULtQ=
+        b=R+Mi31suHjVEiiEsm2Vq4S5ilXJMPuVCn6QJal+ovQ+42FnWpRvlKzMfGM1VE6LQ5
+         dl6UlXqmqJAdvo7ZS+u54oBc1zkC2Mbd8tRNVMjHUC+bvyKCNccMWYrFDKWW3Ct7gC
+         wzO+hR2p4rmsZRmQFV7a/4v71SPodKTLIsPsZ6ys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jurgens <danielj@mellanox.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.0 106/122] IB/core: Unregister notifier before freeing MAD security
-Date:   Mon,  6 May 2019 16:32:44 +0200
-Message-Id: <20190506143104.143017284@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Le Bayon <nicolas.le.bayon@st.com>,
+        Bich Hemon <bich.hemon@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.0 121/122] i2c: i2c-stm32f7: Fix SDADEL minimum formula
+Date:   Mon,  6 May 2019 16:32:59 +0200
+Message-Id: <20190506143105.168874070@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -61,37 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jurgens <danielj@mellanox.com>
+From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
 
-commit d60667fc398ed34b3c7456b020481c55c760e503 upstream.
+commit c86da50cfd840edf223a242580913692acddbcf6 upstream.
 
-If the notifier runs after the security context is freed an access of
-freed memory can occur.
+It conforms with Reference Manual I2C timing section.
 
-Fixes: 47a2b338fe63 ("IB/core: Enforce security on management datagrams")
-Signed-off-by: Daniel Jurgens <danielj@mellanox.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
+Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
+Signed-off-by: Bich Hemon <bich.hemon@st.com>
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/security.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-stm32f7.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/security.c
-+++ b/drivers/infiniband/core/security.c
-@@ -727,9 +727,10 @@ void ib_mad_agent_security_cleanup(struc
- 	if (!rdma_protocol_ib(agent->device, agent->port_num))
- 		return;
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -432,7 +432,7 @@ static int stm32f7_i2c_compute_timing(st
+ 		 STM32F7_I2C_ANALOG_FILTER_DELAY_MAX : 0);
+ 	dnf_delay = setup->dnf * i2cclk;
  
--	security_ib_free_security(agent->security);
- 	if (agent->lsm_nb_reg)
- 		unregister_lsm_notifier(&agent->lsm_nb);
-+
-+	security_ib_free_security(agent->security);
- }
+-	sdadel_min = setup->fall_time - i2c_specs[setup->speed].hddat_min -
++	sdadel_min = i2c_specs[setup->speed].hddat_min + setup->fall_time -
+ 		af_delay_min - (setup->dnf + 3) * i2cclk;
  
- int ib_mad_enforce_security(struct ib_mad_agent_private *map, u16 pkey_index)
+ 	sdadel_max = i2c_specs[setup->speed].vddat_max - setup->rise_time -
 
 
