@@ -4,134 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D29C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B37C04AAF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77212208C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBCA206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfEFHDo (ORCPT
+        id S1726386AbfEFHDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:03:44 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:50302 "EHLO mxhk.zte.com.cn"
+        Mon, 6 May 2019 03:03:40 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:58206 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbfEFHDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726298AbfEFHDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 May 2019 03:03:39 -0400
 Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
-        by Forcepoint Email with ESMTPS id AC99646E20D2C3CA686D;
-        Mon,  6 May 2019 15:03:36 +0800 (CST)
+        by Forcepoint Email with ESMTPS id 45A5C80D955ADEA13251;
+        Mon,  6 May 2019 15:03:34 +0800 (CST)
 Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse-fl2.zte.com.cn with ESMTP id x4673RgY076284;
-        Mon, 6 May 2019 15:03:27 +0800 (GMT-8)
+        by mse-fl2.zte.com.cn with ESMTP id x4673P5h076258;
+        Mon, 6 May 2019 15:03:25 +0800 (GMT-8)
         (envelope-from wen.yang99@zte.com.cn)
 Received: from fox-host8.localdomain ([10.74.120.8])
           by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019050615033117-10027951 ;
-          Mon, 6 May 2019 15:03:31 +0800 
+          with ESMTP id 2019050615032991-10027949 ;
+          Mon, 6 May 2019 15:03:29 +0800 
 From:   Wen Yang <wen.yang99@zte.com.cn>
 To:     linux-kernel@vger.kernel.org
 Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 4/4] media: xilinx: fix leaked of_node references
-Date:   Mon, 6 May 2019 15:05:18 +0800
-Message-Id: <1557126318-21487-5-git-send-email-wen.yang99@zte.com.cn>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH 2/4] media: mtk-vpu: fix leaked of_node references
+Date:   Mon, 6 May 2019 15:05:16 +0800
+Message-Id: <1557126318-21487-3-git-send-email-wen.yang99@zte.com.cn>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1557126318-21487-1-git-send-email-wen.yang99@zte.com.cn>
 References: <1557126318-21487-1-git-send-email-wen.yang99@zte.com.cn>
 X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-05-06 15:03:31,
+ 21, 2013) at 2019-05-06 15:03:30,
         Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-05-06 15:03:25,
-        Serialize complete at 2019-05-06 15:03:25
-X-MAIL: mse-fl2.zte.com.cn x4673RgY076284
+ 2019-05-06 15:03:23,
+        Serialize complete at 2019-05-06 15:03:23
+X-MAIL: mse-fl2.zte.com.cn x4673P5h076258
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The call to of_get_child_by_name returns a node pointer with refcount
+The call to of_parse_phandle returns a node pointer with refcount
 incremented thus it must be explicitly decremented after the last
 usage.
 
 Detected by coccinelle with the following warnings:
-drivers/media/platform/xilinx/xilinx-vipp.c:487:3-9: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 477, but without a corresponding object release within this function.
-drivers/media/platform/xilinx/xilinx-vipp.c:491:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 477, but without a corresponding object release within this function.
+drivers/media/platform/mtk-vpu/mtk_vpu.c:477:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 464, but without a corresponding object release within this function.
 
 Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Patrice Chotard <patrice.chotard@st.com>
-Cc: Hyun Kwon <hyun.kwon@xilinx.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Cc: Houlong Wei <houlong.wei@mediatek.com>
+Cc: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+Cc: Tiffany Lin <tiffany.lin@mediatek.com>
 Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
 Cc: linux-media@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/media/platform/exynos4-is/fimc-is.c   | 1 +
- drivers/media/platform/exynos4-is/media-dev.c | 1 +
- drivers/media/platform/xilinx/xilinx-vipp.c   | 8 +++++---
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ drivers/media/platform/mtk-vpu/mtk_vpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
-index 02da0b0..25df4c6 100644
---- a/drivers/media/platform/exynos4-is/fimc-is.c
-+++ b/drivers/media/platform/exynos4-is/fimc-is.c
-@@ -809,6 +809,7 @@ static int fimc_is_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 
- 	is->pmu_regs = of_iomap(node, 0);
-+	of_node_put(node);
- 	if (!is->pmu_regs)
- 		return -ENOMEM;
- 
-diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-index 463f2d8..a31dacf 100644
---- a/drivers/media/platform/exynos4-is/media-dev.c
-+++ b/drivers/media/platform/exynos4-is/media-dev.c
-@@ -450,6 +450,7 @@ static int fimc_md_parse_port_node(struct fimc_md *fmd,
- 	else
- 		pd->fimc_bus_type = pd->sensor_bus_type;
- 
-+	of_node_put(np);
- 	if (WARN_ON(index >= ARRAY_SIZE(fmd->sensor))) {
- 		of_node_put(rem);
- 		return -EINVAL;
-diff --git a/drivers/media/platform/xilinx/xilinx-vipp.c b/drivers/media/platform/xilinx/xilinx-vipp.c
-index edce040..307717c 100644
---- a/drivers/media/platform/xilinx/xilinx-vipp.c
-+++ b/drivers/media/platform/xilinx/xilinx-vipp.c
-@@ -472,7 +472,7 @@ static int xvip_graph_dma_init(struct xvip_composite_device *xdev)
- {
- 	struct device_node *ports;
- 	struct device_node *port;
--	int ret;
-+	int ret = 0;
- 
- 	ports = of_get_child_by_name(xdev->dev->of_node, "ports");
- 	if (ports == NULL) {
-@@ -484,11 +484,13 @@ static int xvip_graph_dma_init(struct xvip_composite_device *xdev)
- 		ret = xvip_graph_dma_init_one(xdev, port);
- 		if (ret < 0) {
- 			of_node_put(port);
--			return ret;
-+			goto out_put_node;
- 		}
+diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.c b/drivers/media/platform/mtk-vpu/mtk_vpu.c
+index 46c45f9..97dcb4c 100644
+--- a/drivers/media/platform/mtk-vpu/mtk_vpu.c
++++ b/drivers/media/platform/mtk-vpu/mtk_vpu.c
+@@ -468,9 +468,9 @@ struct platform_device *vpu_get_plat_device(struct platform_device *pdev)
  	}
  
--	return 0;
-+out_put_node:
-+	of_node_put(ports);
-+	return ret;
- }
+ 	vpu_pdev = of_find_device_by_node(vpu_node);
++	of_node_put(vpu_node);
+ 	if (WARN_ON(!vpu_pdev)) {
+ 		dev_err(dev, "vpu pdev failed\n");
+-		of_node_put(vpu_node);
+ 		return NULL;
+ 	}
  
- static void xvip_graph_cleanup(struct xvip_composite_device *xdev)
 -- 
 2.9.5
 
