@@ -4,70 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F47C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B0BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90FA02082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9782082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:31:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jOTljehK"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wHqNHSAs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfEFSa1 (ORCPT
+        id S1726853AbfEFSb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 14:30:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42246 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfEFSa0 (ORCPT
+        Mon, 6 May 2019 14:31:29 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38704 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbfEFSb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 14:30:26 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 13so6899726pfw.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 11:30:25 -0700 (PDT)
+        Mon, 6 May 2019 14:31:26 -0400
+Received: by mail-pg1-f194.google.com with SMTP id j26so6879268pgl.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 11:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=75ImqmVpanW8AKh7C/kPiDhvEBpTWl1hHz0h9oahWdQ=;
-        b=jOTljehKIVus8IoCk4zjOIKvXA4Iu083yyGLr/wr8Q85XcBDv+41sy9cUBsBFsBi0K
-         /ET0eL2OjJHV6JMTzGUnPOPBw6xj8b4pqb+U4ttdW5GLovyW3p/obSuuy77mXdjuCklR
-         6b4A2cAyt6TpYEVknc5bGuMJ1YkZGhMUti1lY=
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u2WJ5ZOtTqRCq2Bj3IyfnxMM9vIhsCBOCI54Jc0LH2Q=;
+        b=wHqNHSAsS23xI3ZnU/TXNpgHK+naa0sZTuUJTkw5wNoYxgD4TWaLI1PobG9xOoyzxQ
+         MlZh0VSWy8sGnbihqFf6QyghvhKC4Eqwjii6zk3RM5qxGJe67sI14zqOgLtNgMNcmq8G
+         ES2qaktt/Ae3srP88KrdZfDDVTvJNi1fLaaxo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=75ImqmVpanW8AKh7C/kPiDhvEBpTWl1hHz0h9oahWdQ=;
-        b=SH5VceC68DXdXlQewZAoePu8Fv1yjenYuO9BKMUYIHPAQuayQdLzkQEPf35CQsOZ46
-         NMsiTphH2DnUuNAauSMkKFQjQv0Vh9kmjEf77yusjgNTuAM56w7EYIeurbgSChYmFx/o
-         /ODYrRxsHyR+8zPy9ubw9FOgoa/x/XqorJu+Yc2hYhZVObI78VEIL2UApF7qRAZ8nqpB
-         3mmid7B2JXlxV9NVny5Q/ccgn8HMY5+TaYATE2trYsUNF+hBhLQKt0xLh9Z6p+yBmxAc
-         mjE6dWpO+lYLIvCy2CzmoPiyjnF3QfhyV+ngjRuRVbGTndle5bM3kIwSyX4zqlw5C9c7
-         Ja6Q==
-X-Gm-Message-State: APjAAAWGj0WKvZxBkEOfUdcNXE1MEdE9PmTrrqijdiBd00CctawuFdeK
-        pDDKOXd/5+Gav9EKcYYIesrijlczngg=
-X-Google-Smtp-Source: APXvYqxMWTOAHjugYuVOigsWKSgA7rZBZkfNZ/VPfc8SAuWHM1L3BxZ3JoAB7ZjXo/Q0rTzygXIphQ==
-X-Received: by 2002:a65:64ca:: with SMTP id t10mr34037891pgv.177.1557167425364;
-        Mon, 06 May 2019 11:30:25 -0700 (PDT)
-Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id o81sm18858033pfa.156.2019.05.06.11.30.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 06 May 2019 11:30:24 -0700 (PDT)
-From:   Evan Green <evgreen@chromium.org>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Martin K Petersen <martin.petersen@oracle.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Alexis Savery <asavery@chromium.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Evan Green <evgreen@chromium.org>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] loop: Better discard support for block devices
-Date:   Mon,  6 May 2019 11:27:36 -0700
-Message-Id: <20190506182736.21064-3-evgreen@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190506182736.21064-1-evgreen@chromium.org>
-References: <20190506182736.21064-1-evgreen@chromium.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u2WJ5ZOtTqRCq2Bj3IyfnxMM9vIhsCBOCI54Jc0LH2Q=;
+        b=DsozESAfAC+M8SZEVzTc9DQWjGWTYkx0kLyv8jOsW4C+A1xfvrXY7PT6wGTDEqiYjA
+         fR1iwdPR/1O+dGYfIKt2fAhcttsTVZI8VQFMopxapWaCgX0MRjyZkxfvhkvTkLllwYQU
+         bnAYBV6ewgi816BdiZ9soYTvNnwNvBjVl2593cU9zlnP6gGwYFq6YPOFPwG4+Rk3HH0P
+         clxyNQ1B7rQ3/EwgQ0OCyxvOUDI1gfgG6wmIgL72x4ZHVu34eae2IaoKgSqVp1PA/BFO
+         pNY//h+WDpGO+zytcl3jD3EfcscEhhSL7QRtSWyFnuLC9XAcFCgMRZtj5LnWxyj1y83o
+         /KZA==
+X-Gm-Message-State: APjAAAWDCFF/qa+jffipQPyZJTZ8C2HtLGZ1xAD7TC6oDRwZBov7BZNj
+        2uEEDHO7oaR1tvYrydljPtqkEFX7JPg=
+X-Google-Smtp-Source: APXvYqzCtja3Z7+DUcUlq2ExNEHUs7lMAhzHKGQIy9/x0+a2YCuTRp0jHZFxvINK29euToRW4QLdjA==
+X-Received: by 2002:a63:5c1b:: with SMTP id q27mr34566094pgb.127.1557167484501;
+        Mon, 06 May 2019 11:31:24 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id h30sm21412414pgi.38.2019.05.06.11.31.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 06 May 2019 11:31:23 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        duyuchao <yuchao.du@unisoc.com>,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Ziljstra <peterz@infradead.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
+        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>, netdev@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH v2 1/4] bpf: Add support for reading user pointers
+Date:   Mon,  6 May 2019 14:31:13 -0400
+Message-Id: <20190506183116.33014-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,144 +88,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the backing device for a loop device is a block device,
-then mirror the "write zeroes" capabilities of the underlying
-block device into the loop device. Copy this capability into both
-max_write_zeroes_sectors and max_discard_sectors of the loop device.
+The eBPF based opensnoop tool fails to read the file path string passed
+to the do_sys_open function. This is because it is a pointer to
+userspace address and causes an -EFAULT when read with
+probe_kernel_read. This is not an issue when running the tool on x86 but
+is an issue on arm64. This patch adds a new bpf function call based
+which calls the recently proposed probe_user_read function [1].
+Using this function call from opensnoop fixes the issue on arm64.
 
-The reason for this is that REQ_OP_DISCARD on a loop device translates
-into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
-presents a consistent interface for loop devices (that discarded data
-is zeroed), regardless of the backing device type of the loop device.
-There should be no behavior change for loop devices backed by regular
-files.
+[1] https://lore.kernel.org/patchwork/patch/1051588/
 
-While in there, differentiate between REQ_OP_DISCARD and
-REQ_OP_WRITE_ZEROES, which are different for block devices,
-but which the loop device had just been lumping together, since
-they're largely the same for files.
-
-This change fixes blktest block/003, and removes an extraneous
-error print in block/013 when testing on a loop device backed
-by a block device that does not support discard.
-
-Signed-off-by: Evan Green <evgreen@chromium.org>
+Cc: Michal Gregorczyk <michalgr@live.com>
+Cc: Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc: Mohammad Husain <russoue@gmail.com>
+Cc: Qais Yousef <qais.yousef@arm.com>
+Cc: Srinivas Ramana <sramana@codeaurora.org>
+Cc: duyuchao <yuchao.du@unisoc.com>
+Cc: Manjo Raja Rao <linux@manojrajarao.com>
+Cc: Karim Yaghmour <karim.yaghmour@opersys.com>
+Cc: Tamir Carmeli <carmeli.tamir@gmail.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Peter Ziljstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: kernel-team@android.com
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
+Masami, could you carry these patches in the series where are you add
+probe_user_read function?
 
-Changes in v5:
-- Don't mirror discard if lo_encrypt_key_size is non-zero (Gwendal)
+Previous submissions is here:
+https://lore.kernel.org/patchwork/patch/1069552/
+v1->v2: split tools uapi sync into separate commit, added deprecation
+warning for old bpf_probe_read function.
 
-Changes in v4:
-- Mirror blkdev's write_zeroes into loopdev's discard_sectors.
+ include/uapi/linux/bpf.h |  9 ++++++++-
+ kernel/trace/bpf_trace.c | 22 ++++++++++++++++++++++
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-Changes in v3:
-- Updated commit description
-
-Changes in v2: None
-
- drivers/block/loop.c | 57 ++++++++++++++++++++++++++++----------------
- 1 file changed, 37 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index bbf21ebeccd3..a147210ed009 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -417,19 +417,14 @@ static int lo_read_transfer(struct loop_device *lo, struct request *rq,
- 	return ret;
- }
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 929c8e537a14..8146784b9fe3 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -2431,6 +2431,12 @@ union bpf_attr {
+  *	Return
+  *		A **struct bpf_sock** pointer on success, or **NULL** in
+  *		case of failure.
++ *
++ * int bpf_probe_read_user(void *dst, int size, void *src)
++ *     Description
++ *             Read a userspace pointer safely.
++ *     Return
++ *             0 on success or negative error
+  */
+ #define __BPF_FUNC_MAPPER(FN)		\
+ 	FN(unspec),			\
+@@ -2531,7 +2537,8 @@ union bpf_attr {
+ 	FN(sk_fullsock),		\
+ 	FN(tcp_sock),			\
+ 	FN(skb_ecn_set_ce),		\
+-	FN(get_listener_sock),
++	FN(get_listener_sock),		\
++	FN(probe_read_user),
  
--static int lo_discard(struct loop_device *lo, struct request *rq, loff_t pos)
-+static int lo_discard(struct loop_device *lo, struct request *rq,
-+		int mode, loff_t pos)
+ /* integer value in 'imm' field of BPF_CALL instruction selects which helper
+  * function eBPF program intends to call
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index d64c00afceb5..7485deb0777f 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -153,6 +153,26 @@ static const struct bpf_func_proto bpf_probe_read_proto = {
+ 	.arg3_type	= ARG_ANYTHING,
+ };
+ 
++BPF_CALL_3(bpf_probe_read_user, void *, dst, u32, size, const void *, unsafe_ptr)
++{
++	int ret;
++
++	ret = probe_user_read(dst, unsafe_ptr, size);
++	if (unlikely(ret < 0))
++		memset(dst, 0, size);
++
++	return ret;
++}
++
++static const struct bpf_func_proto bpf_probe_read_user_proto = {
++	.func		= bpf_probe_read_user,
++	.gpl_only	= true,
++	.ret_type	= RET_INTEGER,
++	.arg1_type	= ARG_PTR_TO_UNINIT_MEM,
++	.arg2_type	= ARG_CONST_SIZE_OR_ZERO,
++	.arg3_type	= ARG_ANYTHING,
++};
++
+ BPF_CALL_3(bpf_probe_write_user, void *, unsafe_ptr, const void *, src,
+ 	   u32, size)
  {
--	/*
--	 * We use punch hole to reclaim the free space used by the
--	 * image a.k.a. discard. However we do not support discard if
--	 * encryption is enabled, because it may give an attacker
--	 * useful information.
--	 */
- 	struct file *file = lo->lo_backing_file;
--	int mode = FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE;
-+	struct request_queue *q = lo->lo_queue;
- 	int ret;
- 
--	if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
-+	if (!blk_queue_discard(q)) {
- 		ret = -EOPNOTSUPP;
- 		goto out;
- 	}
-@@ -599,8 +594,13 @@ static int do_req_filebacked(struct loop_device *lo, struct request *rq)
- 	case REQ_OP_FLUSH:
- 		return lo_req_flush(lo, rq);
- 	case REQ_OP_DISCARD:
-+		return lo_discard(lo, rq,
-+			FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, pos);
-+
- 	case REQ_OP_WRITE_ZEROES:
--		return lo_discard(lo, rq, pos);
-+		return lo_discard(lo, rq,
-+			FALLOC_FL_ZERO_RANGE | FALLOC_FL_KEEP_SIZE, pos);
-+
- 	case REQ_OP_WRITE:
- 		if (lo->transfer)
- 			return lo_write_transfer(lo, rq, pos);
-@@ -854,6 +854,21 @@ static void loop_config_discard(struct loop_device *lo)
- 	struct file *file = lo->lo_backing_file;
- 	struct inode *inode = file->f_mapping->host;
- 	struct request_queue *q = lo->lo_queue;
-+	struct request_queue *backingq;
-+
-+	/*
-+	 * If the backing device is a block device, mirror its zeroing
-+	 * capability. REQ_OP_DISCARD translates to a zero-out even when backed
-+	 * by block devices to keep consistent behavior with file-backed loop
-+	 * devices.
-+	 */
-+	if (S_ISBLK(inode->i_mode) && !lo->lo_encrypt_key_size) {
-+		backingq = bdev_get_queue(inode->i_bdev);
-+		blk_queue_max_discard_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
-+
-+		blk_queue_max_write_zeroes_sectors(q,
-+			backingq->limits.max_write_zeroes_sectors);
- 
- 	/*
- 	 * We use punch hole to reclaim the free space used by the
-@@ -861,22 +876,24 @@ static void loop_config_discard(struct loop_device *lo)
- 	 * encryption is enabled, because it may give an attacker
- 	 * useful information.
- 	 */
--	if ((!file->f_op->fallocate) ||
--	    lo->lo_encrypt_key_size) {
-+	} else if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
- 		q->limits.discard_granularity = 0;
- 		q->limits.discard_alignment = 0;
- 		blk_queue_max_discard_sectors(q, 0);
- 		blk_queue_max_write_zeroes_sectors(q, 0);
--		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
--		return;
--	}
- 
--	q->limits.discard_granularity = inode->i_sb->s_blocksize;
--	q->limits.discard_alignment = 0;
-+	} else {
-+		q->limits.discard_granularity = inode->i_sb->s_blocksize;
-+		q->limits.discard_alignment = 0;
-+
-+		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
-+		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
-+	}
- 
--	blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
--	blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
--	blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+	if (q->limits.max_write_zeroes_sectors)
-+		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
-+	else
-+		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
- }
- 
- static void loop_unprepare_queue(struct loop_device *lo)
+@@ -571,6 +591,8 @@ tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_map_delete_elem_proto;
+ 	case BPF_FUNC_probe_read:
+ 		return &bpf_probe_read_proto;
++	case BPF_FUNC_probe_read_user:
++		return &bpf_probe_read_user_proto;
+ 	case BPF_FUNC_ktime_get_ns:
+ 		return &bpf_ktime_get_ns_proto;
+ 	case BPF_FUNC_tail_call:
 -- 
-2.20.1
-
+2.21.0.1020.gf2820cf01a-goog
