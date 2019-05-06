@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B339C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 387F5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2072053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C932087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155447;
-	bh=JjMQHWf7en1JnPMl25Brc/ONJrEvJ0JAbONFCKfVaBs=;
+	s=default; t=1557155450;
+	bh=C1jL5xd+iDU1mafVM9Qi8hHy+7kHs/6vpAvJf3AD2h0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JHycSiYqeo0mb78cuA9WPGhwX2HghLESY8whZ6xx89Etf7L46oQeDLJU46i/x3AKc
-	 o2/5BuVyKcyBdC2otdgomrM2ZCjOmXtWF0mwHk8WzfWBEJ/Gm2FWONZRsG7WHzPgmT
-	 zHUTGXJv2xNKfU+FAyY/1XiBqmCJ9XaijbTCNhEs=
+	b=FKp7xLCUBFDLxomLZVT2dFIzLj4HHDaHhzdM3o/mtdCr/59MuHNhD4bgDyVOz+DsC
+	 VS6K5yWWLo0Hfc7KmRwtO/cyUCiYVIom7k8FlUTTAUj2Ibi5AdI2MKwBz0fSapu8M/
+	 pGwjxpL5bRQWoKwOnAMycQpNeG49Ov0rV/C/VGZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfEFOeJ (ORCPT
+        id S1726975AbfEFPKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:34:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53586 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:10:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbfEFOeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:34:04 -0400
+        id S1726520AbfEFOeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:34:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7ADD204EC;
-        Mon,  6 May 2019 14:34:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2110E20C01;
+        Mon,  6 May 2019 14:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153243;
-        bh=JjMQHWf7en1JnPMl25Brc/ONJrEvJ0JAbONFCKfVaBs=;
+        s=default; t=1557153248;
+        bh=C1jL5xd+iDU1mafVM9Qi8hHy+7kHs/6vpAvJf3AD2h0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wrjwHLyeqwIJRXPLLuKgd5U7OW8jP8mEQOG3+btqwsMf4bKmqNsJjRru9sYFGuLSD
-         tCRRY7d9GPLB18Oqsj2Y+Zvn96FM82Gg4vpr13o8TLFnm8T8U6u3/qDE/JU5vnkd4F
-         M1ZNVzTQHVOQZZUCvvr7VtBs/CEMhghs98GIWYlw=
+        b=OE3Egd00i5AwAOsIKHohaMaWt67kJVi8mvCmNGCRQ492PB3e6i/bHeAWqe1LGyJYf
+         WYqR8y1tiYjAdyLX8lPu2qNYtfOlRAYSLt8RVHPZSfyz4NeA1qK4P/R5ZkiNpD7AU3
+         csAQ1+ZfiNaMak7mPpbJRs12mgXmKLtSftYrwvqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com
-Subject: [PATCH 5.0 016/122] USB: dummy-hcd: Fix failure to give back unlinked URBs
-Date:   Mon,  6 May 2019 16:31:14 +0200
-Message-Id: <20190506143056.202398219@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com,
+        Tycho Andersen <tycho@tycho.ws>,
+        Kees Cook <keescook@chromium.org>,
+        James Morris <jamorris@linux.microsoft.com>
+Subject: [PATCH 5.0 002/122] seccomp: Make NEW_LISTENER and TSYNC flags exclusive
+Date:   Mon,  6 May 2019 16:31:00 +0200
+Message-Id: <20190506143054.928504763@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -59,84 +62,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Tycho Andersen <tycho@tycho.ws>
 
-commit fc834e607ae3d18e1a20bca3f9a2d7f52ea7a2be upstream.
+commit 7a0df7fbc14505e2e2be19ed08654a09e1ed5bf6 upstream.
 
-The syzkaller USB fuzzer identified a failure mode in which dummy-hcd
-would never give back an unlinked URB.  This causes usb_kill_urb() to
-hang, leading to WARNINGs and unkillable threads.
+As the comment notes, the return codes for TSYNC and NEW_LISTENER
+conflict, because they both return positive values, one in the case of
+success and one in the case of error. So, let's disallow both of these
+flags together.
 
-In dummy-hcd, all URBs are given back by the dummy_timer() routine as
-it scans through the list of pending URBS.  Failure to give back URBs
-can be caused by failure to start or early exit from the scanning
-loop.  The code currently has two such pathways: One is triggered when
-an unsupported bus transfer speed is encountered, and the other by
-exhausting the simulated bandwidth for USB transfers during a frame.
+While this is technically a userspace break, all the users I know
+of are still waiting on me to land this feature in libseccomp, so I
+think it'll be safe. Also, at present my use case doesn't require
+TSYNC at all, so this isn't a big deal to disallow. If someone
+wanted to support this, a path forward would be to add a new flag like
+TSYNC_AND_LISTENER_YES_I_UNDERSTAND_THAT_TSYNC_WILL_JUST_RETURN_EAGAIN,
+but the use cases are so different I don't see it really happening.
 
-This patch removes those two paths, thereby allowing all unlinked URBs
-to be given back in a timely manner.  It adds a check for the bus
-speed when the gadget first starts running, so that dummy_timer() will
-never thereafter encounter an unsupported speed.  And it prevents the
-loop from exiting as soon as the total bandwidth has been used up (the
-scanning loop continues, giving back unlinked URBs as they are found,
-but not transferring any more data).
+Finally, it's worth noting that this does actually fix a UAF issue: at the
+end of seccomp_set_mode_filter(), we have:
 
-Thanks to Andrey Konovalov for manually running the syzkaller fuzzer
-to help track down the source of the bug.
+        if (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) {
+                if (ret < 0) {
+                        listener_f->private_data = NULL;
+                        fput(listener_f);
+                        put_unused_fd(listener);
+                } else {
+                        fd_install(listener, listener_f);
+                        ret = listener;
+                }
+        }
+out_free:
+        seccomp_filter_free(prepared);
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
+But if ret > 0 because TSYNC raced, we'll install the listener fd and then
+free the filter out from underneath it, causing a UAF when the task closes
+it or dies. This patch also switches the condition to be simply if (ret),
+so that if someone does add the flag mentioned above, they won't have to
+remember to fix this too.
+
+Reported-by: syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com
+Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
+CC: stable@vger.kernel.org # v5.0+
+Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Acked-by: James Morris <jamorris@linux.microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/dummy_hcd.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ kernel/seccomp.c |   17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/gadget/udc/dummy_hcd.c
-+++ b/drivers/usb/gadget/udc/dummy_hcd.c
-@@ -979,8 +979,18 @@ static int dummy_udc_start(struct usb_ga
- 	struct dummy_hcd	*dum_hcd = gadget_to_dummy_hcd(g);
- 	struct dummy		*dum = dum_hcd->dum;
- 
--	if (driver->max_speed == USB_SPEED_UNKNOWN)
-+	switch (g->speed) {
-+	/* All the speeds we support */
-+	case USB_SPEED_LOW:
-+	case USB_SPEED_FULL:
-+	case USB_SPEED_HIGH:
-+	case USB_SPEED_SUPER:
-+		break;
-+	default:
-+		dev_err(dummy_dev(dum_hcd), "Unsupported driver max speed %d\n",
-+				driver->max_speed);
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -500,7 +500,10 @@ out:
+  *
+  * Caller must be holding current->sighand->siglock lock.
+  *
+- * Returns 0 on success, -ve on error.
++ * Returns 0 on success, -ve on error, or
++ *   - in TSYNC mode: the pid of a thread which was either not in the correct
++ *     seccomp mode or did not have an ancestral seccomp filter
++ *   - in NEW_LISTENER mode: the fd of the new listener
+  */
+ static long seccomp_attach_filter(unsigned int flags,
+ 				  struct seccomp_filter *filter)
+@@ -1256,6 +1259,16 @@ static long seccomp_set_mode_filter(unsi
+ 	if (flags & ~SECCOMP_FILTER_FLAG_MASK)
  		return -EINVAL;
-+	}
  
- 	/*
- 	 * SLAVE side init ... the layer above hardware, which
-@@ -1784,9 +1794,10 @@ static void dummy_timer(struct timer_lis
- 		/* Bus speed is 500000 bytes/ms, so use a little less */
- 		total = 490000;
- 		break;
--	default:
-+	default:	/* Can't happen */
- 		dev_err(dummy_dev(dum_hcd), "bogus device speed\n");
--		return;
-+		total = 0;
-+		break;
- 	}
- 
- 	/* FIXME if HZ != 1000 this will probably misbehave ... */
-@@ -1828,7 +1839,7 @@ restart:
- 
- 		/* Used up this frame's bandwidth? */
- 		if (total <= 0)
--			break;
-+			continue;
- 
- 		/* find the gadget's ep for this request (if configured) */
- 		address = usb_pipeendpoint (urb->pipe);
++	/*
++	 * In the successful case, NEW_LISTENER returns the new listener fd.
++	 * But in the failure case, TSYNC returns the thread that died. If you
++	 * combine these two flags, there's no way to tell whether something
++	 * succeeded or failed. So, let's disallow this combination.
++	 */
++	if ((flags & SECCOMP_FILTER_FLAG_TSYNC) &&
++	    (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER))
++		return -EINVAL;
++
+ 	/* Prepare the new filter before holding any locks. */
+ 	prepared = seccomp_prepare_user_filter(filter);
+ 	if (IS_ERR(prepared))
+@@ -1302,7 +1315,7 @@ out:
+ 		mutex_unlock(&current->signal->cred_guard_mutex);
+ out_put_fd:
+ 	if (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) {
+-		if (ret < 0) {
++		if (ret) {
+ 			listener_f->private_data = NULL;
+ 			fput(listener_f);
+ 			put_unused_fd(listener);
 
 
