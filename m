@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA18C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFA9C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 622222053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466A92053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:56:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154611;
-	bh=Gf/gTgeIoE4zABm9pswI2HzfvG1pzYaXciTyOVoaJ0M=;
+	s=default; t=1557154617;
+	bh=AvJIEhlcW/PNkCt7Wv2OLvO+rCk11nMG+gk94PHYdJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eArl57CQiQB9bs8xHtEwYsf4YcCbMuaUDvB1DpBcvgu6ZSGxXNUU+/HYR15eTAZKs
-	 0brmyKa7qtEW9Bkwcw/rAoaLER2ddEX5FNwnpU6829aQ2wlnbhmdi74p4AXiaKOG+6
-	 cyTxD88BT02vooR96I6x+vjr264SCzsxCIFAncfM=
+	b=D6G+5EJL3HDyibxVw9DMRVar/d04JIKvUuhmCuGEylAnFymzzMTNrQt0a194BEiQE
+	 MHk4ixMzGFdxqqXk8YaKHRMvDF6H4XSLNwxnmkDR/xClW4h+t7p5YQ3lLPewEi2jhm
+	 jzSakoefuo56s7PJBn4ziZtc9Pof1eaBOTFU9kOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbfEFO4u (ORCPT
+        id S1728961AbfEFO44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:56:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41314 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:56:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728178AbfEFOow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:52 -0400
+        id S1728851AbfEFOoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01EFD2053B;
-        Mon,  6 May 2019 14:44:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0874214C6;
+        Mon,  6 May 2019 14:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153891;
-        bh=Gf/gTgeIoE4zABm9pswI2HzfvG1pzYaXciTyOVoaJ0M=;
+        s=default; t=1557153886;
+        bh=AvJIEhlcW/PNkCt7Wv2OLvO+rCk11nMG+gk94PHYdJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0d6L+0RIfi8iJEzx874/Z4aQxKt6ZXAIQAID6deLoxAQGa7e/lIJwEuYir5Bf+pdB
-         2E1RUN/lYo+bN/is30vdyjT+pyBJ1dN6IQU/Q7cZyw3DrTT8dqzpu2w33WmzZY6WU6
-         n7E8TjF4gzuZl4/8wFh7VRxTwwXBotwIca/fQ6GY=
+        b=OpbMgUhU/ySrwca+zt45aUmqeHVQXRkaK47FcXc0MwKbCGnxYLDXgRyKXlHwiBr3y
+         SJ6Z1Qmp8IzzFXr7mUKHHa7lu43PfVZdUFubs74Phx1I9UKL9qyVMRkJnbPPeH0cdY
+         SYf6HZjGczESiAn1SbG6PP6a2Ju9v0gN1/xjE+Bw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Omri Kahalon <omrik@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 34/75] net/mlx5: E-Switch, Fix esw manager vport indication for more vport commands
-Date:   Mon,  6 May 2019 16:32:42 +0200
-Message-Id: <20190506143056.299952048@linuxfoundation.org>
+Subject: [PATCH 4.14 32/75] ARM: dts: rockchip: Fix gpu opp node names for rk3288
+Date:   Mon,  6 May 2019 16:32:40 +0200
+Message-Id: <20190506143056.105285763@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -61,48 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eca4a928585ac08147e5cc8e2111ecbc6279ee31 ]
+[ Upstream commit d040e4e8deeaa8257d6aa260e29ad69832b5d630 ]
 
-Traditionally, the PF (Physical Function) which resides on vport 0 was
-the E-switch manager. Since the ECPF (Embedded CPU Physical Function),
-which resides on vport 0xfffe, was introduced as the E-Switch manager,
-the assumption that the E-switch manager is on vport 0 is incorrect.
+The device tree compiler yells like this:
+  Warning (unit_address_vs_reg):
+  /gpu-opp-table/opp@100000000:
+  node has a unit name, but no reg property
 
-Since the eswitch code already uses the actual vport value, all we
-need is to always set other_vport=1.
+Let's match the cpu opp node names and use a dash.
 
-Signed-off-by: Omri Kahalon <omrik@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/rk3288.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index d2914116af8e..090d54275a7d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -79,8 +79,7 @@ static int arm_vport_context_events_cmd(struct mlx5_core_dev *dev, u16 vport,
- 		 opcode, MLX5_CMD_OP_MODIFY_NIC_VPORT_CONTEXT);
- 	MLX5_SET(modify_nic_vport_context_in, in, field_select.change_event, 1);
- 	MLX5_SET(modify_nic_vport_context_in, in, vport_number, vport);
--	if (vport)
--		MLX5_SET(modify_nic_vport_context_in, in, other_vport, 1);
-+	MLX5_SET(modify_nic_vport_context_in, in, other_vport, 1);
- 	nic_vport_ctx = MLX5_ADDR_OF(modify_nic_vport_context_in,
- 				     in, nic_vport_context);
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index f7a951afd281..5a7888581eea 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -1181,27 +1181,27 @@
+ 	gpu_opp_table: gpu-opp-table {
+ 		compatible = "operating-points-v2";
  
-@@ -108,8 +107,7 @@ static int modify_esw_vport_context_cmd(struct mlx5_core_dev *dev, u16 vport,
- 	MLX5_SET(modify_esw_vport_context_in, in, opcode,
- 		 MLX5_CMD_OP_MODIFY_ESW_VPORT_CONTEXT);
- 	MLX5_SET(modify_esw_vport_context_in, in, vport_number, vport);
--	if (vport)
--		MLX5_SET(modify_esw_vport_context_in, in, other_vport, 1);
-+	MLX5_SET(modify_esw_vport_context_in, in, other_vport, 1);
- 	return mlx5_cmd_exec(dev, in, inlen, out, sizeof(out));
- }
- 
+-		opp@100000000 {
++		opp-100000000 {
+ 			opp-hz = /bits/ 64 <100000000>;
+ 			opp-microvolt = <950000>;
+ 		};
+-		opp@200000000 {
++		opp-200000000 {
+ 			opp-hz = /bits/ 64 <200000000>;
+ 			opp-microvolt = <950000>;
+ 		};
+-		opp@300000000 {
++		opp-300000000 {
+ 			opp-hz = /bits/ 64 <300000000>;
+ 			opp-microvolt = <1000000>;
+ 		};
+-		opp@400000000 {
++		opp-400000000 {
+ 			opp-hz = /bits/ 64 <400000000>;
+ 			opp-microvolt = <1100000>;
+ 		};
+-		opp@500000000 {
++		opp-500000000 {
+ 			opp-hz = /bits/ 64 <500000000>;
+ 			opp-microvolt = <1200000>;
+ 		};
+-		opp@600000000 {
++		opp-600000000 {
+ 			opp-hz = /bits/ 64 <600000000>;
+ 			opp-microvolt = <1250000>;
+ 		};
 -- 
 2.20.1
 
