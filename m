@@ -2,52 +2,51 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A51BBC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E90C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7408020C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3DB2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155227;
-	bh=B2nWR6WrKtnSORYpw4xwpJdjE5H+1A10CRTXv2nIBbg=;
+	s=default; t=1557155235;
+	bh=dONN9DZiWm0DxeP39EVsGqhgAn8epP3pcjSbJ8wX0jY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G3NfpUM0+wemTiW45IHua0twlCcpzQ7I+l1Ud3rNOvE1mOk6veSH/TqqhKUXhDv9+
-	 v/Vy7deSsFemByxQrWQGuQZZl+4CJojR5B+RaUcAbaACUa6mi72KOMZ2+H54osOoew
-	 RIFRfnKOmcG9LhCKI66FyGnpqlzOMazNmeVGVpSc=
+	b=ZlS4J2vdsnQ9TJ/5qHVgHboFmf3lOtcoFSI2/vm4gP81ZA8yzGaB6Kj7pTCr3pCSK
+	 OlKCLP6L3g3N/GUE7uWZCVdt6ZQRll+6VKWSCpJeKFTTJfKqjyFhIvm4civy3Dcb3Z
+	 yOYTt9laclaxJvWrQaQ9QUKpufWfjVSxNwT+GJqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfEFPHG (ORCPT
+        id S1726553AbfEFOhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:07:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37692 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:37:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbfEFPHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:07:04 -0400
+        id S1726896AbfEFOhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:37:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E07B42054F;
-        Mon,  6 May 2019 15:07:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DCCC204EC;
+        Mon,  6 May 2019 14:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557155223;
-        bh=B2nWR6WrKtnSORYpw4xwpJdjE5H+1A10CRTXv2nIBbg=;
+        s=default; t=1557153432;
+        bh=dONN9DZiWm0DxeP39EVsGqhgAn8epP3pcjSbJ8wX0jY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f1noX/yNHihKbTSqpEpmUXiUSJ+aswhCvmWCtdsmfBKEmUp/ep338Sc3GIpI+GB3E
-         R3GYZhA5LAIvZUD4A0dGKuPZTeevYbgeMP+oO4c5qCq/uRBelQkZsczRLZnxFJzBVw
-         MMzN8ZigAtxg93/RZE9BwUV/MwaKzgg5ufGJoOe4=
+        b=ykHBRGXGU272QHHZFGhjtAw5+1kOXxLyJJ2ByvgcyPO00mIq0ZBf3Q1USLJtwGP0/
+         Nb3hxiZqPjx1GVUJ+koBwxOC9SntEfjUp1HvD9CIQNobnjIaPGw7V6tiSV8BWq09R7
+         hUvitYp5oPSSn53rllt5fCQLIkTw38pushj22xtk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "he, bo" <bo.he@intel.com>,
-        "Zhang, Jun" <jun.zhang@intel.com>, Jiri Kosina <jkosina@suse.cz>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 028/122] HID: debug: fix race condition with between rdesc_show() and device removal
-Date:   Mon,  6 May 2019 16:31:26 +0200
-Message-Id: <20190506143057.281139555@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 5.0 087/122] usb: dwc3: Reset num_trbs after skipping
+Date:   Mon,  6 May 2019 16:32:25 +0200
+Message-Id: <20190506143102.546646600@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,60 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cef0d4948cb0a02db37ebfdc320e127c77ab1637 ]
+From: Thinh Nguyen <thinh.nguyen@synopsys.com>
 
-There is a race condition that could happen if hid_debug_rdesc_show()
-is running while hdev is in the process of going away (device removal,
-system suspend, etc) which could result in NULL pointer dereference:
+commit c7152763f02e05567da27462b2277a554e507c89 upstream.
 
-	 BUG: unable to handle kernel paging request at 0000000783316040
-	 CPU: 1 PID: 1512 Comm: getevent Tainted: G     U     O 4.19.20-quilt-2e5dc0ac-00029-gc455a447dd55 #1
-	 RIP: 0010:hid_dump_device+0x9b/0x160
-	 Call Trace:
-	  hid_debug_rdesc_show+0x72/0x1d0
-	  seq_read+0xe0/0x410
-	  full_proxy_read+0x5f/0x90
-	  __vfs_read+0x3a/0x170
-	  vfs_read+0xa0/0x150
-	  ksys_read+0x58/0xc0
-	  __x64_sys_read+0x1a/0x20
-	  do_syscall_64+0x55/0x110
-	  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Currently req->num_trbs is not reset after the TRBs are skipped and
+processed from the cancelled list. The gadget driver may reuse the
+request with an invalid req->num_trbs, and DWC3 will incorrectly skip
+trbs. To fix this, simply reset req->num_trbs to 0 after skipping
+through all of them.
 
-Grab driver_input_lock to make sure the input device exists throughout the
-whole process of dumping the rdesc.
+Fixes: c3acd5901414 ("usb: dwc3: gadget: use num_trbs when skipping TRBs on ->dequeue()")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[jkosina@suse.cz: update changelog a bit]
-Signed-off-by: he, bo <bo.he@intel.com>
-Signed-off-by: "Zhang, Jun" <jun.zhang@intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/hid/hid-debug.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/dwc3/gadget.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
-index ac9fda1b5a72..1384e57182af 100644
---- a/drivers/hid/hid-debug.c
-+++ b/drivers/hid/hid-debug.c
-@@ -1060,10 +1060,15 @@ static int hid_debug_rdesc_show(struct seq_file *f, void *p)
- 	seq_printf(f, "\n\n");
- 
- 	/* dump parsed data and input mappings */
-+	if (down_interruptible(&hdev->driver_input_lock))
-+		return 0;
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1506,6 +1506,8 @@ static void dwc3_gadget_ep_skip_trbs(str
+ 		trb->ctrl &= ~DWC3_TRB_CTRL_HWO;
+ 		dwc3_ep_inc_deq(dep);
+ 	}
 +
- 	hid_dump_device(hdev, f);
- 	seq_printf(f, "\n");
- 	hid_dump_input_mapping(hdev, f);
- 
-+	up(&hdev->driver_input_lock);
-+
- 	return 0;
++	req->num_trbs = 0;
  }
  
--- 
-2.20.1
-
+ static void dwc3_gadget_ep_cleanup_cancelled_requests(struct dwc3_ep *dep)
 
 
