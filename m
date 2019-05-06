@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5A3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B784C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD70214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8F4214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153728;
-	bh=385CK5g0kpK3lqPM3QqwDpj3sUCE0y8wLuVdT640+NY=;
+	s=default; t=1557153734;
+	bh=cn+2FD0hR4u+vhdiujClravFnuCzalJNM2MzRT4xiNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gre39kzP1ReI14SAifXt+vgJq24oZw6eH3YnLva5RvkQHgLAqktnm8nLPlQ8/jpTZ
-	 c0i7NskWiC5T9pwP7QqbpUh+aBNeDLQoiwa6/VbuqfU7K8f1o35i+D6D9IYZywlZ+m
-	 svbZWOUZPhGebAehbKb675tu1RofCm0m/oWm4YCQ=
+	b=LJtQfpBx7aoBNU+UhWMK9K9FMhEPAbRG9qUcyWDeNU49QY7V9rgD29+LIWXJQXkP7
+	 /z/NjE2yKNzYwrzlYRLwk/c4Oe3fVAlWwapj/iwQfUXJ8cEUEgQ9I9k/iMtxdHgkWu
+	 dxs7B9XbbJeOZdxBqrRoeWx3w7sGZZunANIjpgxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfEFOmH (ORCPT
+        id S1728434AbfEFOmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:42:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36626 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:42:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbfEFOmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:42:04 -0400
+        id S1727642AbfEFOmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 970B221479;
-        Mon,  6 May 2019 14:42:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D02FF21479;
+        Mon,  6 May 2019 14:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153724;
-        bh=385CK5g0kpK3lqPM3QqwDpj3sUCE0y8wLuVdT640+NY=;
+        s=default; t=1557153729;
+        bh=cn+2FD0hR4u+vhdiujClravFnuCzalJNM2MzRT4xiNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FdjBNjfmVbrEl1QKBRQs5k0uBD5y63PfTzjTj+k9zuub/hIUpUZjD1iGK5e8YGJzR
-         vGrBjThXoNBkZXEn8kNU1uEluBbEd20nI21Si2TXSBYDeXm/XB8qaAGykyfUNlyavU
-         2F9vF5umbKvEFwbSx3Ea33msRnXHWGRdE8GQp+gk=
+        b=QlONo4od21gvQTjUFB+6jBdV/aoQ9kwcGGL1z3YU7png5bkevGPeT1KG752PnlrJM
+         CVcSAZf/83lmgn1NRLJhjBEUR36CbOGq9uSGelv50UtTnFqtGCgjKEncC1kCa5aU49
+         zvyFtxRC1bdMKLfPkJKO1wQZ6dmF5gCxdOHDy/nQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 4.19 73/99] clk: qcom: Add missing freq for usb30_master_clk on 8998
-Date:   Mon,  6 May 2019 16:32:46 +0200
-Message-Id: <20190506143100.745505322@linuxfoundation.org>
+        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 75/99] staging: iio: adt7316: fix the dac read calculation
+Date:   Mon,  6 May 2019 16:32:48 +0200
+Message-Id: <20190506143100.921216815@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -58,31 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jhugo@codeaurora.org>
+From: Jeremy Fertic <jeremyfertic@gmail.com>
 
-commit 0c8ff62504e3a667387e87889a259632c3199a86 upstream.
+commit 45130fb030aec26ac28b4bb23344901df3ec3b7f upstream.
 
-The usb30_master_clk supports a 60Mhz frequency, but that is missing from
-the table of supported frequencies.  Add it.
+The calculation of the current dac value is using the wrong bits of the
+dac lsb register. Create two macros to shift the lsb register value into
+lsb position, depending on whether the dac is 10 or 12 bit. Initialize
+data to 0 so, with an 8 bit dac, the msb register value can be bitwise
+ORed with data.
 
-Fixes: b5f5f525c547 (clk: qcom: Add MSM8998 Global Clock Control (GCC) driver)
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
+Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/qcom/gcc-msm8998.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/iio/addac/adt7316.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/clk/qcom/gcc-msm8998.c
-+++ b/drivers/clk/qcom/gcc-msm8998.c
-@@ -1101,6 +1101,7 @@ static struct clk_rcg2 ufs_axi_clk_src =
+--- a/drivers/staging/iio/addac/adt7316.c
++++ b/drivers/staging/iio/addac/adt7316.c
+@@ -47,6 +47,8 @@
+ #define ADT7516_MSB_AIN3		0xA
+ #define ADT7516_MSB_AIN4		0xB
+ #define ADT7316_DA_DATA_BASE		0x10
++#define ADT7316_DA_10_BIT_LSB_SHIFT	6
++#define ADT7316_DA_12_BIT_LSB_SHIFT	4
+ #define ADT7316_DA_MSB_DATA_REGS	4
+ #define ADT7316_LSB_DAC_A		0x10
+ #define ADT7316_MSB_DAC_A		0x11
+@@ -1408,7 +1410,7 @@ static IIO_DEVICE_ATTR(ex_analog_temp_of
+ static ssize_t adt7316_show_DAC(struct adt7316_chip_info *chip,
+ 		int channel, char *buf)
+ {
+-	u16 data;
++	u16 data = 0;
+ 	u8 msb, lsb, offset;
+ 	int ret;
  
- static const struct freq_tbl ftbl_usb30_master_clk_src[] = {
- 	F(19200000, P_XO, 1, 0, 0),
-+	F(60000000, P_GPLL0_OUT_MAIN, 10, 0, 0),
- 	F(120000000, P_GPLL0_OUT_MAIN, 5, 0, 0),
- 	F(150000000, P_GPLL0_OUT_MAIN, 4, 0, 0),
- 	{ }
+@@ -1433,7 +1435,11 @@ static ssize_t adt7316_show_DAC(struct a
+ 	if (ret)
+ 		return -EIO;
+ 
+-	data = (msb << offset) + (lsb & ((1 << offset) - 1));
++	if (chip->dac_bits == 12)
++		data = lsb >> ADT7316_DA_12_BIT_LSB_SHIFT;
++	else if (chip->dac_bits == 10)
++		data = lsb >> ADT7316_DA_10_BIT_LSB_SHIFT;
++	data |= msb << offset;
+ 
+ 	return sprintf(buf, "%d\n", data);
+ }
 
 
