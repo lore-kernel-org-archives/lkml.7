@@ -2,53 +2,51 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD6FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEC2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 191922053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A742053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:52:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154328;
-	bh=0sCxsk4ZhCr/cOB8EqI0wCflLdcv00pT061/03t1zBY=;
+	s=default; t=1557154343;
+	bh=V0HXgS5cL9B9SvKB1cc/CEQhrIEe7EaGF/Yh0vHBp2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NnLjeW+HxQTXZ8D9ahEutkDzFuTWAnhrl/BWnY8lQOIhci+CTiplkzrP1zJMO1d9A
-	 LevOeBYJrZFNzHme4rb6khiyjYGaSPH+IChA7HP5140Z9cycvnINEALRgSuPZ2rLsy
-	 d4haoqmnXEql+nOvpIxYiTq/5BySHL4vxJzfy6K8=
+	b=s07crhW0N7rY/nljXpkSbsVdd67NpQXc5KUCQCvkUT1+aiEDSbqQVL9eIh6ETKREG
+	 Um5+MG3Ajid6quoiqWNqA3+bBcNS8wIiJ4Z+66Zl0zVORMadPrOHqNw6rvcqJTO3mw
+	 qzW6vIO6KQVYzMO2B36DxP4Zg2zKTV1IlPYREMoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbfEFOwE (ORCPT
+        id S1729377AbfEFOwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:52:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49222 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:52:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729049AbfEFOsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:48:38 -0400
+        id S1729006AbfEFOsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:48:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEF8F20C01;
-        Mon,  6 May 2019 14:48:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FB9C205ED;
+        Mon,  6 May 2019 14:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154117;
-        bh=0sCxsk4ZhCr/cOB8EqI0wCflLdcv00pT061/03t1zBY=;
+        s=default; t=1557154104;
+        bh=V0HXgS5cL9B9SvKB1cc/CEQhrIEe7EaGF/Yh0vHBp2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCWk/B0/c4gPK2VE8WEae/a5bTI7Rp5rJP1Iq8H2icGqmCUerWZQ36bNmGCJS6q/H
-         Q4Iq1UtkQnUFla5XrWP+TH6PuxYO36uOH+Orp7Sps7LFssLaCX9IUL5eqVVSnu0rcO
-         xCLFe8ms+xkST7A0jsPFMsg92Fi1HO4g5LkaffwE=
+        b=yCyKQwK6Wk3a4kre1wzPSTMPZbwN4gQDv3kPjRagi5sL0VFvYZqpua5MVYL0Prl1Y
+         creFsfDFTG7p5BfjAIIMA5osL4saK13FGJ2WRRa9ulKTqS6FxdZmN/YFFSiT3z/ral
+         4eukFCAhmT2FZq7XgKvqbtgKE3Jub46/FXPDagJw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 36/62] bonding: show full hw address in sysfs for slave entries
-Date:   Mon,  6 May 2019 16:33:07 +0200
-Message-Id: <20190506143054.215161905@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 06/62] bnxt_en: Improve multicast address setup logic.
+Date:   Mon,  6 May 2019 16:32:37 +0200
+Message-Id: <20190506143051.646342236@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -61,43 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 18bebc6dd3281955240062655a4df35eef2c46b3 ]
+From: Michael Chan <michael.chan@broadcom.com>
 
-Bond expects ethernet hwaddr for its slave, but it can be longer than 6
-bytes - infiniband interface for example.
+[ Upstream commit b4e30e8e7ea1d1e35ffd64ca46f7d9a7f227b4bf ]
 
- # cat /sys/devices/<skipped>/net/ib0/address
- 80:00:02:08:fe:80:00:00:00:00:00:00:7c:fe:90:03:00:be:5d:e1
+The driver builds a list of multicast addresses and sends it to the
+firmware when the driver's ndo_set_rx_mode() is called.  In rare
+cases, the firmware can fail this call if internal resources to
+add multicast addresses are exhausted.  In that case, we should
+try the call again by setting the ALL_MCAST flag which is more
+guaranteed to succeed.
 
- # cat /sys/devices/<skipped>/net/ib0/bonding_slave/perm_hwaddr
- 80:00:02:08:fe:80
-
-So print full hwaddr in sysfs "bonding_slave/perm_hwaddr" as well.
-
-Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_sysfs_slave.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/bonding/bond_sysfs_slave.c b/drivers/net/bonding/bond_sysfs_slave.c
-index 7d16c51e6913..641a532b67cb 100644
---- a/drivers/net/bonding/bond_sysfs_slave.c
-+++ b/drivers/net/bonding/bond_sysfs_slave.c
-@@ -55,7 +55,9 @@ static SLAVE_ATTR_RO(link_failure_count);
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -5954,8 +5954,15 @@ static int bnxt_cfg_rx_mode(struct bnxt
  
- static ssize_t perm_hwaddr_show(struct slave *slave, char *buf)
- {
--	return sprintf(buf, "%pM\n", slave->perm_hwaddr);
-+	return sprintf(buf, "%*phC\n",
-+		       slave->dev->addr_len,
-+		       slave->perm_hwaddr);
- }
- static SLAVE_ATTR_RO(perm_hwaddr);
+ skip_uc:
+ 	rc = bnxt_hwrm_cfa_l2_set_rx_mask(bp, 0);
++	if (rc && vnic->mc_list_count) {
++		netdev_info(bp->dev, "Failed setting MC filters rc: %d, turning on ALL_MCAST mode\n",
++			    rc);
++		vnic->rx_mask |= CFA_L2_SET_RX_MASK_REQ_MASK_ALL_MCAST;
++		vnic->mc_list_count = 0;
++		rc = bnxt_hwrm_cfa_l2_set_rx_mask(bp, 0);
++	}
+ 	if (rc)
+-		netdev_err(bp->dev, "HWRM cfa l2 rx mask failure rc: %x\n",
++		netdev_err(bp->dev, "HWRM cfa l2 rx mask failure rc: %d\n",
+ 			   rc);
  
--- 
-2.20.1
-
+ 	return rc;
 
 
