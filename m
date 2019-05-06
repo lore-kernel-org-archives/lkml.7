@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33250C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201D2C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF45D20C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8B321019
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154157;
-	bh=YA3JNiVBYcitVvsZftvYLsftHrvJTf3e/D8Iz/Bsv4Q=;
+	s=default; t=1557154161;
+	bh=RyF1wlVi21/bLL3I5s5Ar3Bqp+a2A4TvDOvYubn9KjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gOdvEXlVakLSYBdWgpd5vbBxzWT/1+Iq7K0r6bPKn5E2qSxgRdqJnZH6xEknTuj45
-	 mEcFD1bJucvJtRXXzoggFtQSGNf3GXnXO+lNu/PvaN8Zcfa9dAfi5qsTekqoZH8QcQ
-	 PcX3J7soY8eI5VweCJHmCLgqEyUgp9u9sUfEFDyA=
+	b=SdxwzOHymqeGU+aGkYG4EJfQu2wubABgxhGZRjDRLHH4ipuqRYYG1Gswal+ZIy77d
+	 YYgJO2MZDqqGCnglyji9puEgWrCGw/7LCz43sKhuLvPB9aMPvB7e5cqVKsM/VEETGI
+	 OB2KrxUbFaxSKTtIMKuftbvwk7UJcIIvHd8nPaWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbfEFOtQ (ORCPT
+        id S1729559AbfEFOtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:49:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50498 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:49:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbfEFOtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:49:12 -0400
+        id S1728377AbfEFOtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:49:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9139B205ED;
-        Mon,  6 May 2019 14:49:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEC90205ED;
+        Mon,  6 May 2019 14:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154152;
-        bh=YA3JNiVBYcitVvsZftvYLsftHrvJTf3e/D8Iz/Bsv4Q=;
+        s=default; t=1557154157;
+        bh=RyF1wlVi21/bLL3I5s5Ar3Bqp+a2A4TvDOvYubn9KjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rn3hnmb+b9/GRFwQHMViINRrMfVdMR8fbMfD/O1R9qvyS61mYT1WrtbbVuGlIccAZ
-         /SmWADAkqJsjdIf837C0y87Y15z9Az/OU557aSWWIuCB4FA7T7GW7iatAii7uVa2pt
-         tvHSiNT5JCvmhy/PY8E8raqMeuTq8/qnJpgYZP2Y=
+        b=hURBCsDNwJPZoXtInqypMndYLEN1oppDcGE3ybjhakgKwb45MI6x+GmJ1favVQe8W
+         xwci8GQrY/LXPxc7l031+DYOQJ1krJ7FXsTsnCxRqVNqh130A3QhkVoM112yko+GDO
+         frBwraktxyDUjPMTS42Yh11An3HXXgE5+f+rUB0k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.9 56/62] staging: iio: adt7316: fix the dac read calculation
-Date:   Mon,  6 May 2019 16:33:27 +0200
-Message-Id: <20190506143056.239253328@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Nicholas Bellinger <nab@linux-iscsi.org>,
+        Mike Christie <mchristi@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 58/62] scsi: RDMA/srpt: Fix a credit leak for aborted commands
+Date:   Mon,  6 May 2019 16:33:29 +0200
+Message-Id: <20190506143056.425837830@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -59,57 +65,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Fertic <jeremyfertic@gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 45130fb030aec26ac28b4bb23344901df3ec3b7f upstream.
+commit 40ca8757291ca7a8775498112d320205b2a2e571 upstream.
 
-The calculation of the current dac value is using the wrong bits of the
-dac lsb register. Create two macros to shift the lsb register value into
-lsb position, depending on whether the dac is 10 or 12 bit. Initialize
-data to 0 so, with an 8 bit dac, the msb register value can be bitwise
-ORed with data.
+Make sure that the next time a response is sent to the initiator that the
+credit it had allocated for the aborted request gets freed.
 
-Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
-Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Doug Ledford <dledford@redhat.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Nicholas Bellinger <nab@linux-iscsi.org>
+Cc: Mike Christie <mchristi@redhat.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Fixes: 131e6abc674e ("target: Add TFO->abort_task for aborted task resources release") # v3.15
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/iio/addac/adt7316.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/infiniband/ulp/srpt/ib_srpt.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/staging/iio/addac/adt7316.c
-+++ b/drivers/staging/iio/addac/adt7316.c
-@@ -47,6 +47,8 @@
- #define ADT7516_MSB_AIN3		0xA
- #define ADT7516_MSB_AIN4		0xB
- #define ADT7316_DA_DATA_BASE		0x10
-+#define ADT7316_DA_10_BIT_LSB_SHIFT	6
-+#define ADT7316_DA_12_BIT_LSB_SHIFT	4
- #define ADT7316_DA_MSB_DATA_REGS	4
- #define ADT7316_LSB_DAC_A		0x10
- #define ADT7316_MSB_DAC_A		0x11
-@@ -1411,7 +1413,7 @@ static IIO_DEVICE_ATTR(ex_analog_temp_of
- static ssize_t adt7316_show_DAC(struct adt7316_chip_info *chip,
- 		int channel, char *buf)
- {
--	u16 data;
-+	u16 data = 0;
- 	u8 msb, lsb, offset;
- 	int ret;
- 
-@@ -1436,7 +1438,11 @@ static ssize_t adt7316_show_DAC(struct a
- 	if (ret)
- 		return -EIO;
- 
--	data = (msb << offset) + (lsb & ((1 << offset) - 1));
-+	if (chip->dac_bits == 12)
-+		data = lsb >> ADT7316_DA_12_BIT_LSB_SHIFT;
-+	else if (chip->dac_bits == 10)
-+		data = lsb >> ADT7316_DA_10_BIT_LSB_SHIFT;
-+	data |= msb << offset;
- 
- 	return sprintf(buf, "%d\n", data);
+--- a/drivers/infiniband/ulp/srpt/ib_srpt.c
++++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+@@ -2368,8 +2368,19 @@ static void srpt_queue_tm_rsp(struct se_
+ 	srpt_queue_response(cmd);
  }
+ 
++/*
++ * This function is called for aborted commands if no response is sent to the
++ * initiator. Make sure that the credits freed by aborting a command are
++ * returned to the initiator the next time a response is sent by incrementing
++ * ch->req_lim_delta.
++ */
+ static void srpt_aborted_task(struct se_cmd *cmd)
+ {
++	struct srpt_send_ioctx *ioctx = container_of(cmd,
++				struct srpt_send_ioctx, cmd);
++	struct srpt_rdma_ch *ch = ioctx->ch;
++
++	atomic_inc(&ch->req_lim_delta);
+ }
+ 
+ static int srpt_queue_status(struct se_cmd *cmd)
 
 
