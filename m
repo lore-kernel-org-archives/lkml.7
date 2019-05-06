@@ -2,89 +2,97 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4E7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB67C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3DC82054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:22:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="a4fF89Il"
+	by mail.kernel.org (Postfix) with ESMTP id 033FF206A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 13:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfEFNWF (ORCPT
+        id S1726298AbfEFNXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 09:22:05 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44333 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfEFNWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 09:22:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44yNgY75NTz9sBV;
-        Mon,  6 May 2019 23:22:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557148922;
-        bh=kfTLx+xXfJxD7LUn6+ixKHMZQDIcvXUReZ7bka84+Ng=;
-        h=Date:From:To:Cc:Subject:From;
-        b=a4fF89IlRD6iogSJHzwcHP8BbSq+TZrdP+hGuzvyMf1V8xYRR99XfWGygmtK45Hiu
-         LYBW8C1sNrZARfqkD41rkiZuedxgL7pP+KluYGxxSY/PvUuUmzCtRg82TjiYqHh5Th
-         t+0BU1pGmTVR6Whi3dYQJ2NsxJwqYJD2/NefCOJ3o3a07FQFDPDBfB3t7hyqOj0ftH
-         Uc18M/g4b/ncgUKr3lNYumpafvUzck90CFVnOwKlRokAizAPkF1ZCiGZD+99gD02Aa
-         Oxa7L5VbqhH4e/iaJNyFl3Wt4t/oFV7kFCUt5kb840NeCFxaKkq+fFsWE5LcfuYKpC
-         MEPY4nOtcjpFw==
-Date:   Mon, 6 May 2019 23:22:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the drivers-x86
- tree
-Message-ID: <20190506232200.1acfe572@canb.auug.org.au>
+        Mon, 6 May 2019 09:23:00 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:60339 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbfEFNXA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 09:23:00 -0400
+X-Originating-IP: 90.88.149.145
+Received: from localhost (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 1834E1BF211;
+        Mon,  6 May 2019 13:22:55 +0000 (UTC)
+Date:   Mon, 6 May 2019 15:22:55 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 18/20] lib: image-formats: Add v4l2 formats support
+Message-ID: <20190506132255.k5d4e6wcsy5ltjjk@flea>
+References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+ <a9af304793a38b6001c9155f36e370002926841c.1555487650.git-series.maxime.ripard@bootlin.com>
+ <5c904167-14f3-8e64-42f1-650d0689f78d@xs4all.nl>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/a28TwsnwpW9V5LZub9mSM0J"; protocol="application/pgp-signature"
+        protocol="application/pgp-signature"; boundary="elbcsaswnwcxysle"
+Content-Disposition: inline
+In-Reply-To: <5c904167-14f3-8e64-42f1-650d0689f78d@xs4all.nl>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/a28TwsnwpW9V5LZub9mSM0J
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+--elbcsaswnwcxysle
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Commit
+Hi Hans
 
-  cc86bb923508 ("platform/x86: thinkpad_acpi: fix spelling mistake "capabil=
-ites" -> "capabilities"")
+On Thu, May 02, 2019 at 10:24:00AM +0200, Hans Verkuil wrote:
+> On 4/17/19 9:54 AM, Maxime Ripard wrote:
+> > V4L2 uses different fourcc's than DRM, and has a different set of formats.
+> > For now, let's add the v4l2 fourcc's for the already existing formats.
+>
+> For this lib to be more useful for V4L2, would it be a good idea to add
+> Bayer formats as well? This can be done in a separate patch.
+>
+> Those formats are V4L specific, but are very common.
 
-is missing a Signed-off-by from its committer.
+Yeah, this was mostly to support the formats that are already
+supported as of today, but eventually more are going to be supported,
+and the bayer formats seems like a natural choice :)
 
---=20
-Cheers,
-Stephen Rothwell
+Maxime
 
---Sig_/a28TwsnwpW9V5LZub9mSM0J
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--elbcsaswnwcxysle
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzQNPgACgkQAVBC80lX
-0GxjGgf7BC+Atj5DkaYwW7NFNib74ZqV5RzKo8nHvbcWVOhZe5ifPqe81PVIUCKp
-tfNS+JNDiFm9SgGqPwzWwTCHMYW3WrHo4vDhG/JC7U9D/symqURSs8Qc4Kw22tl5
-yOBJPOcYGSOi8pP9S+ZYQ/YMFr7hyxxZQM4YPyhGBumZopP7qqNZ4hW7FDdBNrI9
-oMmQyvGKVtW/X1NBzqE5QlluzPa9WbZi7a2DNT19WHTE03ba16G4oPloNgeBd02g
-z3zrxYOHQUk1Pxhv+hCJCEbpS7+dni+aQLGFim4klF3i7do6bMreqr2v5QfrFbvn
-xsWwBRkS80m3eLEgHHPHMFPvZAnJUQ==
-=h3pg
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXNA1LwAKCRDj7w1vZxhR
+xQb1AP9+7X+VYpkwMiJLhzyVSkvkphWcjZ4tq9sc/yOP03E47AD/YZpmkkIpI1FW
+n04Y3eAA5DKrtCudeW0FjnAIclNJogs=
+=bYjp
 -----END PGP SIGNATURE-----
 
---Sig_/a28TwsnwpW9V5LZub9mSM0J--
+--elbcsaswnwcxysle--
