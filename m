@@ -2,150 +2,99 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF72C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BF1C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366E5205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F3B9205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:41:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jATk1C77"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Hi7o1FyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfEFIkp (ORCPT
+        id S1726340AbfEFIlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:40:45 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:35039 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfEFIko (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:40:44 -0400
-Received: by mail-it1-f193.google.com with SMTP id l140so18700388itb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E8NoodJz3Tyk7K1SdtPgr1wSQtdEp94KgYEW4R597E8=;
-        b=jATk1C77darD17jedT+v35FcfAnUSaDwzjZZMyFA6RNBWBR9GLFh6MrKGAek6gaqjP
-         WJ6ii/Acr4HRe2NQUDuP85bYPhp8GwKEYg56vXNOdJkQDmY3CEKYycFKA6tw8u0AT2ux
-         zeimwvmgvSKlmrHPQd37Opoq5rmItsMxTM48w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E8NoodJz3Tyk7K1SdtPgr1wSQtdEp94KgYEW4R597E8=;
-        b=FREEtntib40Rm4X/s2wJ2ZAgiWJ38xcTW7B5p08zx6c0y9gQltG4UNv0IP65DG45pg
-         uxqi3nmICOL41Snt3Y8m3rcai0hTBJYxU0uNryBYkMpeX/7h250cCWwt/LcXUskF7bFR
-         LIZnvRyWr/dvQ5vNTFS4LDh11tbG/+9xhGJhpeLciVBobCL+bmhF9H6qKp3yrnU0PySo
-         pz1QmQyNR16WYQ2gN1mu2uMidMm5UZWClUZszxDYE1d/dMHV79nXBBXQFao/ezPls9Uw
-         HHk/oc6XXFqjNhL8JGG2VWZoOVB2bGE17Mdm5wJHUOLBqjgP0nPlk3Wae47jC+U4cxfC
-         jfqw==
-X-Gm-Message-State: APjAAAXy8OPJ5aNkT2zWEOkEDVDr2g1f0CSYfCoz7kVJXI9dBGTOBwS3
-        h96yG9n0yA7R1BtlsU3xRKU4nAs1wh3S9+rj3CI8iQ==
-X-Google-Smtp-Source: APXvYqxIk196lXAtmsgY4J+3B7uPUVFG8JolEjHfu8ThOXPRJHWrZ3uHcwsYaAP6AVP9mbMCxNsOBGv9eICcrcGv6ts=
-X-Received: by 2002:a05:660c:4d0:: with SMTP id v16mr4955544itk.62.1557132043602;
- Mon, 06 May 2019 01:40:43 -0700 (PDT)
+        Mon, 6 May 2019 04:41:06 -0400
+Received: from mail-eopbgr140047.outbound.protection.outlook.com ([40.107.14.47]:51073
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725851AbfEFIlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 04:41:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BYAuytaKdTbfFDfpKrRiUutHT3PbAmEELR40NvmdQdg=;
+ b=Hi7o1FySJSBXUTlVsXdQaQRdSw0buPJX242mg0WTs7hOVsCuj20kl2OUU7LdrQiUsG+hbiVjKtRSPtWCawXu0sV17aWBaMLZ92d0smBQmnPp3lXXK+c0M3VF9Nq3V2GTJG2R15rODcKJX8G5quU2XX6Sxr0fEgobxBWqdf9PLpM=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB5523.eurprd04.prod.outlook.com (20.178.113.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.15; Mon, 6 May 2019 08:41:01 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::c415:3cab:a042:2e13]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::c415:3cab:a042:2e13%6]) with mapi id 15.20.1856.012; Mon, 6 May 2019
+ 08:41:01 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/2] ARM: dts: imx6sl: Assign corresponding clocks instead
+ of dummy clock
+Thread-Topic: [PATCH 1/2] ARM: dts: imx6sl: Assign corresponding clocks
+ instead of dummy clock
+Thread-Index: AQHVA7uKX2mzfOc840Ke1bKA2KP6TaZdxwNg
+Date:   Mon, 6 May 2019 08:41:01 +0000
+Message-ID: <AM0PR04MB42117D0A376B84EBFEE7AE9F80300@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1557112911-17115-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1557112911-17115-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6cc6504d-d3fa-4799-7afa-08d6d1fe91ef
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5523;
+x-ms-traffictypediagnostic: AM0PR04MB5523:
+x-microsoft-antispam-prvs: <AM0PR04MB55236A421348F4EAE8CFB9AD80300@AM0PR04MB5523.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:204;
+x-forefront-prvs: 0029F17A3F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(376002)(346002)(136003)(396003)(39860400002)(366004)(199004)(189003)(476003)(86362001)(2201001)(486006)(44832011)(4326008)(3846002)(99286004)(6246003)(558084003)(110136005)(6506007)(316002)(66066001)(256004)(25786009)(53936002)(14454004)(5660300002)(186003)(74316002)(71190400001)(71200400001)(8676002)(81156014)(6436002)(2906002)(478600001)(68736007)(7736002)(81166006)(8936002)(33656002)(26005)(52536014)(66476007)(229853002)(64756008)(66556008)(76176011)(66946007)(66446008)(446003)(11346002)(2501003)(7696005)(102836004)(73956011)(305945005)(55016002)(6116002)(9686003)(76116006)(921003)(32563001)(1121003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5523;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sm3YZs9i5O7cuwFU6j1F4g1/1WtURtCJH8WuX78cFG1bsNr2/RxDRiPuMXP8XAM6DlVPX9hi7WVuu/qF20src28n/d/u7XXR28fr1+QcqJ3ARAltRN0hi2T6uFqsVwHFm2rKxzuvYmJh1kiNq9Iwfpa3FIzoLrQhoiPZenhUpWr89i2JYFU/rzAhWAl5SWxhI2dpiNMeaw0lHFnI2bRpfDj1R8qpGH4UgqO3uy8S1/KZkXsU21Q/HHjPWqJuiD4PXeYVQ+rLD2f8eOLNoPV6hFgWDQYhGLybdbe/3S0zyIqXDD8jX7qJ7XeKEHUgcdzVBqQDWqJ6k1FMcz2k2gHj+RgBTGoVTgQBQ2qkzkJd8WVXU3nv4KdS2nZ+P0ukuoAM/VB2ADRCUptcu2CCgYP5aYrM2SA9mQndo32kDlHOPA4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
- <20190503151437.dc2ty2mnddabrz4r@pathway.suse.cz> <CAKMK7uF8AD6033_tJw1Y7VsAXb6OD_syZtG3a-JM2g9eEb-P9g@mail.gmail.com>
- <20190506074809.huawsdaynyci5kwz@pathway.suse.cz>
-In-Reply-To: <20190506074809.huawsdaynyci5kwz@pathway.suse.cz>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Mon, 6 May 2019 10:40:32 +0200
-Message-ID: <CAKMK7uE=vAewKNfN3Svw1L47cKv10umws1HdYTehnLBnTMp0mQ@mail.gmail.com>
-Subject: Re: [PATCH] RFC: console: hack up console_trylock more
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cc6504d-d3fa-4799-7afa-08d6d1fe91ef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2019 08:41:01.8713
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5523
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 6, 2019 at 9:48 AM Petr Mladek <pmladek@suse.com> wrote:
-> On Mon 2019-05-06 09:11:37, Daniel Vetter wrote:
-> > On Fri, May 3, 2019 at 5:14 PM Petr Mladek <pmladek@suse.com> wrote:
-> > > On Thu 2019-05-02 16:16:43, Daniel Vetter wrote:
-> > > > console_trylock, called from within printk, can be called from pretty
-> > > > much anywhere. Including try_to_wake_up. Note that this isn't common,
-> > > > usually the box is in pretty bad shape at that point already. But it
-> > > > really doesn't help when then lockdep jumps in and spams the logs,
-> > > > potentially obscuring the real backtrace we're really interested in.
-> > > > One case I've seen (slightly simplified backtrace):
-> > > >
-> > > >  Call Trace:
-> > > >   <IRQ>
-> > > >   console_trylock+0xe/0x60
-> > > >   vprintk_emit+0xf1/0x320
-> > > >   printk+0x4d/0x69
-> > > >   __warn_printk+0x46/0x90
-> > > >   native_smp_send_reschedule+0x2f/0x40
-> > > >   check_preempt_curr+0x81/0xa0
-> > > >   ttwu_do_wakeup+0x14/0x220
-> > > >   try_to_wake_up+0x218/0x5f0
-> > > >   pollwake+0x6f/0x90
-> > > >   credit_entropy_bits+0x204/0x310
-> > > >   add_interrupt_randomness+0x18f/0x210
-> > > >   handle_irq+0x67/0x160
-> > > >   do_IRQ+0x5e/0x130
-> > > >   common_interrupt+0xf/0xf
-> > > >   </IRQ>
-> > > >
-> > > > This alone isn't a problem, but the spinlock in the semaphore is also
-> > > > still held while waking up waiters (up() -> __up() -> try_to_wake_up()
-> > > > callchain), which then closes the runqueue vs. semaphore.lock loop,
-> > > > and upsets lockdep, which issues a circular locking splat to dmesg.
-> > > > Worse it upsets developers, since we don't want to spam dmesg with
-> > > > clutter when the machine is dying already.
-> > > >
-> > > > Fix this by creating a __down_trylock which only trylocks the
-> > > > semaphore.lock. This isn't correct in full generality, but good enough
-> > > > for console_lock:
-> > > >
-> > > > - there's only ever one console_lock holder, we won't fail spuriously
-> > > >   because someone is doing a down() or up() while there's still room
-> > > >   (unlike other semaphores with count > 1).
-> > > >
-> > > > - console_unlock() has one massive retry loop, which will catch anyone
-> > > >   who races the trylock against the up(). This makes sure that no
-> > > >   printk lines will get lost. Making the trylock more racy therefore
-> > > >   has no further impact.
-> > >
-> > > To be honest, I do not see how this could solve the problem.
-> > >
-> > > The circular dependency is still there. If the new __down_trylock()
-> > > succeeds then console_unlock() will get called in the same context
-> > > and it will still need to call up() -> try_to_wake_up().
-> > >
-> > > Note that there are many other console_lock() callers that might
-> > > happen in parallel and might appear in the wait queue.
-> >
-> > Hm right. It's very rare we hit this in our CI and I don't know how to
-> > repro otherwise, so just threw this out at the wall to see if it
-> > sticks. I'll try and come up with a new trick then.
->
-> Single messages are printed from scheduler via printk_deferred().
-> WARN() might be solved by introducing printk deferred context,
-> see the per-cpu variable printk_context.
-
-I convinced myself that I can take the wake_up_process out from under
-the spinlock, for the limited case of the console lock. I think that's
-a cleaner and more robust fix than leaking printk_context trickery
-into the console_unlock code.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+PiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50OiBNb25kYXksIE1heSA2LCAyMDE5IDExOjI3IEFN
+DQo+IA0KPiBpLk1YNlNMJ3MgS1BQIGFuZCBXRE9HIHVzZSBJTVg2U0xfQ0xLX0lQRyBhcyBjbG9j
+ayByb290LCBhc3NpZ24NCj4gSU1YNlNMX0NMS19JUEcgdG8gdGhlbSBpbnN0ZWFkIG9mIElNWDZT
+TF9DTEtfRFVNTVkuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVh
+bmdAbnhwLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54
+cC5jb20+DQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0K
