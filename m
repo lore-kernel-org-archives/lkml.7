@@ -2,82 +2,324 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09683C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F8AC04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C2C2082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E292082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557130686;
+	bh=pW0TkBC8ZGCAv8EOw/isaSC8xYrHMknYVF58lk63Ozc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=CoQSzYiCUZi7fvKajW3yA6s/7FWcZlp/1a8BwNt08L0/O69YCbPD/Kts3iVVUjcTr
+	 lUOwfhGWtPQw6XJe+Ons3ztf/iJwrYuZ+CPxl1E1XnR2Ke47MkARe2iZTWXjtJEpyE
+	 /7lyhJzzwc2Qdivt60p30tbRjNEfFeJ/nLh4OX+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfEFIQS (ORCPT
+        id S1726229AbfEFISF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:16:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58140 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725837AbfEFIQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:16:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DE611AEE8;
-        Mon,  6 May 2019 08:16:16 +0000 (UTC)
-Date:   Mon, 6 May 2019 10:16:14 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RFC: console: hack up console_lock more v2
-Message-ID: <20190506081614.b7b22k4prodskbiy@pathway.suse.cz>
-References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
- <20190506074553.21464-1-daniel.vetter@ffwll.ch>
+        Mon, 6 May 2019 04:18:05 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43665 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfEFISF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 04:18:05 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r4so736219wro.10;
+        Mon, 06 May 2019 01:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=EtQWlK7MWbGFL/+UPZ6+2MsDqXkrZm+Jh7YUBE4e58Q=;
+        b=H62LreGhGvhUyELhR1Pa3SNeqfU6jeWPZJG77C+YtLf1KM3miyZ5Mqya6EdqX/08EB
+         QcKMfbQzd309L85qdKKmDAOjeelZSzev2hURtIjxZNaOW/DIwaccctL1UPbbRNNQqCNh
+         nDXYz/nOBHbjQ/UmbEIhBawYnlR10buQhD1Z4cGmGvA6QRZa6tIKRpUItKwyQwJODsFt
+         DXIZMm8e30CzMz2NDbZWIt0z8iUQbhLNTd+dNtn2eVM6cRLKF9p28H4WZt6DIHIzEOHF
+         ANMgvyUYtyiot9jd2lqfCaLEHTwLCGk2DEjATj3lm8ZThpLp7td1WLkzrhpglVVWXVZ3
+         b5Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=EtQWlK7MWbGFL/+UPZ6+2MsDqXkrZm+Jh7YUBE4e58Q=;
+        b=kEc+xloBTMpVzSLJSqtrDRuhtN4CRYuRi657IogFqGMAsUyha5WuBz0wPGIOUQ67vy
+         MlQGqNbtMUxeTDqVMjvIrC+w4Mj/PTp33GQd6jnT9Wuw8Ozx6UllncKaYQIj/sPkDO6C
+         esNjozEW5Tm+a2Ku2zwzLGjcAUHNvtOylK6xU79C0KP4ycmDzvmTzPrHFi+0OHelYp8F
+         3h3m8UeG3xX3XMlP56AFXILexssWDYFdPpzychEb/qFJEOVrGsjrLdacjOngK3BdV/WM
+         NzJ9unss4GjpIl0P9rooRwPa/UGkI4BzsYmcc/Il4VokPeMi201hP+k4PSlwsJwpqyhI
+         G06w==
+X-Gm-Message-State: APjAAAXehmOqByoHs2MBYzO0M7R/dZwqnUSaJPLdfAjh507ratp0o2Cf
+        +4OYfXp2sbZqZFZ39MhIJwQ=
+X-Google-Smtp-Source: APXvYqyReuBc+h/d1ANtdvOn4zQMU4XlHt8pvRHD6t9aUW9EetsgmMQKsnUpfggOLsrRL20cu6oIsA==
+X-Received: by 2002:a5d:6a03:: with SMTP id m3mr12484203wru.135.1557130682573;
+        Mon, 06 May 2019 01:18:02 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id h81sm27734751wmf.33.2019.05.06.01.18.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 01:18:01 -0700 (PDT)
+Date:   Mon, 6 May 2019 10:17:59 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        James Morse <james.morse@arm.com>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: [GIT PULL] EFI changes for v5.2
+Message-ID: <20190506081759.GA30024@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190506074553.21464-1-daniel.vetter@ffwll.ch>
-User-Agent: NeoMutt/20170912 (1.9.0)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-05-06 09:45:53, Daniel Vetter wrote:
-> console_trylock, called from within printk, can be called from pretty
-> much anywhere. Including try_to_wake_up. Note that this isn't common,
-> usually the box is in pretty bad shape at that point already. But it
-> really doesn't help when then lockdep jumps in and spams the logs,
-> potentially obscuring the real backtrace we're really interested in.
-> One case I've seen (slightly simplified backtrace):
-> 
->  Call Trace:
->   <IRQ>
->   console_trylock+0xe/0x60
->   vprintk_emit+0xf1/0x320
->   printk+0x4d/0x69
->   __warn_printk+0x46/0x90
->   native_smp_send_reschedule+0x2f/0x40
->   check_preempt_curr+0x81/0xa0
->   ttwu_do_wakeup+0x14/0x220
->   try_to_wake_up+0x218/0x5f0
+Linus,
 
-try_to_wake_up() takes p->pi_lock. It could deadlock because it
-can get called recursively from printk_safe_up().
+Please pull the latest efi-core-for-linus git tree from:
 
-And there are more locks taken from try_to_wake_up(), for example,
-__task_rq_lock() taken from ttwu_remote().
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-core-for-linus
 
-IMHO, the most reliable solution would be do call the entire
-up_console_sem() from printk deferred context. We could assign
-few bytes for this context in the per-CPU printk_deferred
-variable.
+   # HEAD: 02562d0ca1084a688ac5c92e0e92947f62f13093 efi/libstub/arm: Omit unneeded stripping of ksymtab/kcrctab sections
 
-Best Regards,
-Petr
+The changes in this cycle were:
+
+ - Squash a spurious warning when using the EFI framebuffer on a non-EFI boot
+ - Use DMI data to annotate RAS memory errors on ARM just like we do on Intel
+ - Followup cleanups for DMI
+ - libstub Makefile cleanups
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Ard Biesheuvel (2):
+      efifb: Omit memory map check on legacy boot
+      efi/libstub/arm: Omit unneeded stripping of ksymtab/kcrctab sections
+
+Marcin Benka (1):
+      efi/arm: Show SMBIOS bank/device location in CPER and GHES error logs
+
+Masahiro Yamada (1):
+      efi/libstub: Refactor the cmd_stubcopy Makefile command
+
+Robert Richter (1):
+      efi: Unify DMI setup code over the arm/arm64, ia64 and x86 architectures
+
+
+ arch/ia64/kernel/setup.c              |  4 +---
+ arch/x86/kernel/setup.c               |  6 ++----
+ drivers/firmware/dmi_scan.c           | 28 +++++++++++++++-------------
+ drivers/firmware/efi/arm-runtime.c    |  6 ++----
+ drivers/firmware/efi/libstub/Makefile | 14 +++++++-------
+ drivers/video/fbdev/efifb.c           |  3 ++-
+ include/linux/dmi.h                   |  8 ++------
+ 7 files changed, 31 insertions(+), 38 deletions(-)
+
+diff --git a/arch/ia64/kernel/setup.c b/arch/ia64/kernel/setup.c
+index 583a3746d70b..c9cfa760cd57 100644
+--- a/arch/ia64/kernel/setup.c
++++ b/arch/ia64/kernel/setup.c
+@@ -1058,9 +1058,7 @@ check_bugs (void)
+ 
+ static int __init run_dmi_scan(void)
+ {
+-	dmi_scan_machine();
+-	dmi_memdev_walk();
+-	dmi_set_dump_stack_arch_desc();
++	dmi_setup();
+ 	return 0;
+ }
+ core_initcall(run_dmi_scan);
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 3d872a527cd9..3773905cd2c1 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -1005,13 +1005,11 @@ void __init setup_arch(char **cmdline_p)
+ 	if (efi_enabled(EFI_BOOT))
+ 		efi_init();
+ 
+-	dmi_scan_machine();
+-	dmi_memdev_walk();
+-	dmi_set_dump_stack_arch_desc();
++	dmi_setup();
+ 
+ 	/*
+ 	 * VMware detection requires dmi to be available, so this
+-	 * needs to be done after dmi_scan_machine(), for the boot CPU.
++	 * needs to be done after dmi_setup(), for the boot CPU.
+ 	 */
+ 	init_hypervisor_platform();
+ 
+diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+index 099d83e4e910..fae2d5c43314 100644
+--- a/drivers/firmware/dmi_scan.c
++++ b/drivers/firmware/dmi_scan.c
+@@ -416,11 +416,8 @@ static void __init save_mem_devices(const struct dmi_header *dm, void *v)
+ 	nr++;
+ }
+ 
+-void __init dmi_memdev_walk(void)
++static void __init dmi_memdev_walk(void)
+ {
+-	if (!dmi_available)
+-		return;
+-
+ 	if (dmi_walk_early(count_mem_devices) == 0 && dmi_memdev_nr) {
+ 		dmi_memdev = dmi_alloc(sizeof(*dmi_memdev) * dmi_memdev_nr);
+ 		if (dmi_memdev)
+@@ -614,7 +611,7 @@ static int __init dmi_smbios3_present(const u8 *buf)
+ 	return 1;
+ }
+ 
+-void __init dmi_scan_machine(void)
++static void __init dmi_scan_machine(void)
+ {
+ 	char __iomem *p, *q;
+ 	char buf[32];
+@@ -769,15 +766,20 @@ static int __init dmi_init(void)
+ subsys_initcall(dmi_init);
+ 
+ /**
+- * dmi_set_dump_stack_arch_desc - set arch description for dump_stack()
++ *	dmi_setup - scan and setup DMI system information
+  *
+- * Invoke dump_stack_set_arch_desc() with DMI system information so that
+- * DMI identifiers are printed out on task dumps.  Arch boot code should
+- * call this function after dmi_scan_machine() if it wants to print out DMI
+- * identifiers on task dumps.
++ *	Scan the DMI system information. This setups DMI identifiers
++ *	(dmi_system_id) for printing it out on task dumps and prepares
++ *	DIMM entry information (dmi_memdev_info) from the SMBIOS table
++ *	for using this when reporting memory errors.
+  */
+-void __init dmi_set_dump_stack_arch_desc(void)
++void __init dmi_setup(void)
+ {
++	dmi_scan_machine();
++	if (!dmi_available)
++		return;
++
++	dmi_memdev_walk();
+ 	dump_stack_set_arch_desc("%s", dmi_ids_string);
+ }
+ 
+@@ -841,7 +843,7 @@ static bool dmi_is_end_of_table(const struct dmi_system_id *dmi)
+  *	returns non zero or we hit the end. Callback function is called for
+  *	each successful match. Returns the number of matches.
+  *
+- *	dmi_scan_machine must be called before this function is called.
++ *	dmi_setup must be called before this function is called.
+  */
+ int dmi_check_system(const struct dmi_system_id *list)
+ {
+@@ -871,7 +873,7 @@ EXPORT_SYMBOL(dmi_check_system);
+  *	Walk the blacklist table until the first match is found.  Return the
+  *	pointer to the matching entry or NULL if there's no match.
+  *
+- *	dmi_scan_machine must be called before this function is called.
++ *	dmi_setup must be called before this function is called.
+  */
+ const struct dmi_system_id *dmi_first_match(const struct dmi_system_id *list)
+ {
+diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
+index 0c1af675c338..e2ac5fa5531b 100644
+--- a/drivers/firmware/efi/arm-runtime.c
++++ b/drivers/firmware/efi/arm-runtime.c
+@@ -162,13 +162,11 @@ void efi_virtmap_unload(void)
+ static int __init arm_dmi_init(void)
+ {
+ 	/*
+-	 * On arm64/ARM, DMI depends on UEFI, and dmi_scan_machine() needs to
++	 * On arm64/ARM, DMI depends on UEFI, and dmi_setup() needs to
+ 	 * be called early because dmi_id_init(), which is an arch_initcall
+ 	 * itself, depends on dmi_scan_machine() having been called already.
+ 	 */
+-	dmi_scan_machine();
+-	if (dmi_available)
+-		dmi_set_dump_stack_arch_desc();
++	dmi_setup();
+ 	return 0;
+ }
+ core_initcall(arm_dmi_init);
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index b0103e16fc1b..b1f7b64652db 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -71,7 +71,6 @@ CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
+ extra-$(CONFIG_EFI_ARMSTUB)	:= $(lib-y)
+ lib-$(CONFIG_EFI_ARMSTUB)	:= $(patsubst %.o,%.stub.o,$(lib-y))
+ 
+-STUBCOPY_RM-y			:= -R *ksymtab* -R *kcrctab*
+ STUBCOPY_FLAGS-$(CONFIG_ARM64)	+= --prefix-alloc-sections=.init \
+ 				   --prefix-symbols=__efistub_
+ STUBCOPY_RELOC-$(CONFIG_ARM64)	:= R_AARCH64_ABS
+@@ -86,12 +85,13 @@ $(obj)/%.stub.o: $(obj)/%.o FORCE
+ # this time, use objcopy and leave all sections in place.
+ #
+ quiet_cmd_stubcopy = STUBCPY $@
+-      cmd_stubcopy = if $(STRIP) --strip-debug $(STUBCOPY_RM-y) -o $@ $<; \
+-		     then if $(OBJDUMP) -r $@ | grep $(STUBCOPY_RELOC-y); \
+-		     then (echo >&2 "$@: absolute symbol references not allowed in the EFI stub"; \
+-			   rm -f $@; /bin/false);			  \
+-		     else $(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@; fi	  \
+-		     else /bin/false; fi
++      cmd_stubcopy =							\
++	$(STRIP) --strip-debug -o $@ $<;				\
++	if $(OBJDUMP) -r $@ | grep $(STUBCOPY_RELOC-y); then		\
++		echo "$@: absolute symbol references not allowed in the EFI stub" >&2; \
++		/bin/false;						\
++	fi;								\
++	$(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@
+ 
+ #
+ # ARM discards the .data section because it disallows r/w data in the
+diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+index ba906876cc45..9e529cc2b4ff 100644
+--- a/drivers/video/fbdev/efifb.c
++++ b/drivers/video/fbdev/efifb.c
+@@ -464,7 +464,8 @@ static int efifb_probe(struct platform_device *dev)
+ 	info->apertures->ranges[0].base = efifb_fix.smem_start;
+ 	info->apertures->ranges[0].size = size_remap;
+ 
+-	if (!efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
++	if (efi_enabled(EFI_BOOT) &&
++	    !efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+ 		if ((efifb_fix.smem_start + efifb_fix.smem_len) >
+ 		    (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
+ 			pr_err("efifb: video memory @ 0x%lx spans multiple EFI memory regions\n",
+diff --git a/include/linux/dmi.h b/include/linux/dmi.h
+index c46fdb36700b..8de8c4f15163 100644
+--- a/include/linux/dmi.h
++++ b/include/linux/dmi.h
+@@ -102,9 +102,7 @@ const struct dmi_system_id *dmi_first_match(const struct dmi_system_id *list);
+ extern const char * dmi_get_system_info(int field);
+ extern const struct dmi_device * dmi_find_device(int type, const char *name,
+ 	const struct dmi_device *from);
+-extern void dmi_scan_machine(void);
+-extern void dmi_memdev_walk(void);
+-extern void dmi_set_dump_stack_arch_desc(void);
++extern void dmi_setup(void);
+ extern bool dmi_get_date(int field, int *yearp, int *monthp, int *dayp);
+ extern int dmi_get_bios_year(void);
+ extern int dmi_name_in_vendors(const char *str);
+@@ -122,9 +120,7 @@ static inline int dmi_check_system(const struct dmi_system_id *list) { return 0;
+ static inline const char * dmi_get_system_info(int field) { return NULL; }
+ static inline const struct dmi_device * dmi_find_device(int type, const char *name,
+ 	const struct dmi_device *from) { return NULL; }
+-static inline void dmi_scan_machine(void) { return; }
+-static inline void dmi_memdev_walk(void) { }
+-static inline void dmi_set_dump_stack_arch_desc(void) { }
++static inline void dmi_setup(void) { }
+ static inline bool dmi_get_date(int field, int *yearp, int *monthp, int *dayp)
+ {
+ 	if (yearp)
