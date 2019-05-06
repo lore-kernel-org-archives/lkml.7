@@ -4,62 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C974C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9837C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9BB214AF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB478214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154035;
-	bh=u6zsrgbc/lo1IdgqzPtxPGcokxb+8OIYqG41zIYwrbw=;
+	s=default; t=1557154037;
+	bh=ZWme/I8XL5DLX6KM91dRGi4a4dE7wwzF7MHXMGfGN9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kYRlqqqPg7mY+AtO+jWL3pdePKQ0M67Cuhzmy0HHvuKVCZI5GAP90N52zF22mxS8u
-	 VFO43JLpUm1EeHGpBlIT2kac2qUZGsq+6h1SEVlnz38cdnt3Wxavufh5IS4uMi67Oh
-	 kkjx9VoythStPT4g8SVbo862/H32tLVMzr14OLJY=
+	b=t+vu/UFHkx74TQCqJsgcGrQxn+DrkWSH3sKfhoUqQCvP1FaKpGSB835usncfb1273
+	 iVcU0xiUG/j2kM+c7JBAJ9aHoZeSUCjBlgdv6U6dXboF+Rq4iN4AAlMJfD7PJ7XN1m
+	 GyD5i45KXRttoqVcR5iK05DzhDzerV/LtJ9+Nxrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbfEFOrN (ORCPT
+        id S1728771AbfEFOrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:47:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45966 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:47:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727528AbfEFOrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:11 -0400
+        id S1729267AbfEFOrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C67642087F;
-        Mon,  6 May 2019 14:47:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F0720449;
+        Mon,  6 May 2019 14:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154030;
-        bh=u6zsrgbc/lo1IdgqzPtxPGcokxb+8OIYqG41zIYwrbw=;
+        s=default; t=1557154032;
+        bh=ZWme/I8XL5DLX6KM91dRGi4a4dE7wwzF7MHXMGfGN9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nsdh32KBGbQrwXpeOK1cArqwdsGr0EJXaj5pkRr+YXK8B5wt4ax/LzQwpXix9zwJK
-         j0s9bI9ongtjD3o5L7t3bX9u0MMVnXTvXYXJYKkFtDRWYxadwr7B8dYLhHaPKGOsY2
-         BplUvJnAarl7TXu/4sc9oYRVzanDC8dbb88+tyOA=
+        b=obu/ygWjkqXN3BWalGEjXQYSsY6ht/3WCtLYa2Yusn9fiejiAhcrZUPLqn54yzLMy
+         f5dLd+u1/3P6WgsB5HFEXi2npGfQz1YyfT1Sk0LnHyfoNm2ozxt3yXHoNygd9UqWvT
+         7zV78hgU1N8P5ZyVAzq1ugt9N54uiqfnRbY0XgGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 4.9 12/62] x86/unwind: Disable KASAN checks for non-current tasks
-Date:   Mon,  6 May 2019 16:32:43 +0200
-Message-Id: <20190506143052.148955125@linuxfoundation.org>
+Subject: [PATCH 4.9 13/62] arm64: kasan: avoid bad virt_to_pfn()
+Date:   Mon,  6 May 2019 16:32:44 +0200
+Message-Id: <20190506143052.234114233@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -72,113 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-commit 84936118bdf37bda513d4a361c38181a216427e0 upstream.
+commit b0de0ccc8b9edd8846828e0ecdc35deacdf186b0 upstream.
 
-There are a handful of callers to save_stack_trace_tsk() and
-show_stack() which try to unwind the stack of a task other than current.
-In such cases, it's remotely possible that the task is running on one
-CPU while the unwinder is reading its stack from another CPU, causing
-the unwinder to see stack corruption.
+Booting a v4.11-rc1 kernel with DEBUG_VIRTUAL and KASAN enabled produces
+the following splat (trimmed for brevity):
 
-These cases seem to be mostly harmless.  The unwinder has checks which
-prevent it from following bad pointers beyond the bounds of the stack.
-So it's not really a bug as long as the caller understands that
-unwinding another task will not always succeed.
+[    0.000000] virt_to_phys used for non-linear address: ffff200008080000 (0xffff200008080000)
+[    0.000000] WARNING: CPU: 0 PID: 0 at arch/arm64/mm/physaddr.c:14 __virt_to_phys+0x48/0x70
+[    0.000000] PC is at __virt_to_phys+0x48/0x70
+[    0.000000] LR is at __virt_to_phys+0x48/0x70
+[    0.000000] Call trace:
+[    0.000000] [<ffff2000080b1ac0>] __virt_to_phys+0x48/0x70
+[    0.000000] [<ffff20000a03b86c>] kasan_init+0x1c0/0x498
+[    0.000000] [<ffff20000a034018>] setup_arch+0x2fc/0x948
+[    0.000000] [<ffff20000a030c68>] start_kernel+0xb8/0x570
+[    0.000000] [<ffff20000a0301e8>] __primary_switched+0x6c/0x74
 
-In such cases, it's possible that the unwinder may read a KASAN-poisoned
-region of the stack.  Account for that by using READ_ONCE_NOCHECK() when
-reading the stack of another task.
+This is because we use virt_to_pfn() on a kernel image address when
+trying to figure out its nid, so that we can allocate its shadow from
+the same node.
 
-Use READ_ONCE() when reading the stack of the current task, since KASAN
-warnings can still be useful for finding bugs in that case.
+As with other recent changes, this patch uses lm_alias() to solve this.
 
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Dave Jones <davej@codemonkey.org.uk>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miroslav Benes <mbenes@suse.cz>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/4c575eb288ba9f73d498dfe0acde2f58674598f1.1483978430.git.jpoimboe@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+We could instead use NUMA_NO_NODE, as x86 does for all shadow
+allocations, though we'll likely want the "real" memory shadow to be
+backed from its corresponding nid anyway, so we may as well be
+consistent and find the nid for the image shadow.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Acked-by: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/stacktrace.h |    5 ++++-
- arch/x86/kernel/unwind_frame.c    |   20 ++++++++++++++++++--
- 2 files changed, 22 insertions(+), 3 deletions(-)
+ arch/arm64/mm/kasan_init.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/stacktrace.h
-+++ b/arch/x86/include/asm/stacktrace.h
-@@ -55,13 +55,16 @@ extern int kstack_depth_to_print;
- static inline unsigned long *
- get_frame_pointer(struct task_struct *task, struct pt_regs *regs)
- {
-+	struct inactive_task_frame *frame;
-+
- 	if (regs)
- 		return (unsigned long *)regs->bp;
+--- a/arch/arm64/mm/kasan_init.c
++++ b/arch/arm64/mm/kasan_init.c
+@@ -153,7 +153,7 @@ void __init kasan_init(void)
+ 	clear_pgds(KASAN_SHADOW_START, KASAN_SHADOW_END);
  
- 	if (task == current)
- 		return __builtin_frame_address(0);
+ 	vmemmap_populate(kimg_shadow_start, kimg_shadow_end,
+-			 pfn_to_nid(virt_to_pfn(_text)));
++			 pfn_to_nid(virt_to_pfn(lm_alias(_text))));
  
--	return (unsigned long *)((struct inactive_task_frame *)task->thread.sp)->bp;
-+	frame = (struct inactive_task_frame *)task->thread.sp;
-+	return (unsigned long *)READ_ONCE_NOCHECK(frame->bp);
- }
- #else
- static inline unsigned long *
---- a/arch/x86/kernel/unwind_frame.c
-+++ b/arch/x86/kernel/unwind_frame.c
-@@ -6,6 +6,21 @@
- 
- #define FRAME_HEADER_SIZE (sizeof(long) * 2)
- 
-+/*
-+ * This disables KASAN checking when reading a value from another task's stack,
-+ * since the other task could be running on another CPU and could have poisoned
-+ * the stack in the meantime.
-+ */
-+#define READ_ONCE_TASK_STACK(task, x)			\
-+({							\
-+	unsigned long val;				\
-+	if (task == current)				\
-+		val = READ_ONCE(x);			\
-+	else						\
-+		val = READ_ONCE_NOCHECK(x);		\
-+	val;						\
-+})
-+
- unsigned long unwind_get_return_address(struct unwind_state *state)
- {
- 	unsigned long addr;
-@@ -14,7 +29,8 @@ unsigned long unwind_get_return_address(
- 	if (unwind_done(state))
- 		return 0;
- 
--	addr = ftrace_graph_ret_addr(state->task, &state->graph_idx, *addr_p,
-+	addr = READ_ONCE_TASK_STACK(state->task, *addr_p);
-+	addr = ftrace_graph_ret_addr(state->task, &state->graph_idx, addr,
- 				     addr_p);
- 
- 	return __kernel_text_address(addr) ? addr : 0;
-@@ -48,7 +64,7 @@ bool unwind_next_frame(struct unwind_sta
- 	if (unwind_done(state))
- 		return false;
- 
--	next_bp = (unsigned long *)*state->bp;
-+	next_bp = (unsigned long *)READ_ONCE_TASK_STACK(state->task,*state->bp);
- 
- 	/* make sure the next frame's data is accessible */
- 	if (!update_stack_state(state, next_bp, FRAME_HEADER_SIZE))
+ 	/*
+ 	 * vmemmap_populate() has populated the shadow region that covers the
 
 
