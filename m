@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620B3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E59EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7D020B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFCD20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153227;
-	bh=f11jp5pnuLRKWRjULmAaNIRfddqjIyIyxGbk8hTPxWE=;
+	s=default; t=1557153230;
+	bh=XViI8siM9t8Km8JK78U5QE8Ny1YHZh50Bn88VtjLptA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uGFGXXnIGHpwf951fuEi9nfQ/0wJeNddNWOJoOWmoFEa4ZmCAlHqDCaWd7cgGj+DV
-	 9AVR/O3H7nDLVKljWwx9imL/dtJXOlNipIpIp2PBALwd/U3hsBkHoi/VUUyOgsV0fB
-	 6zakq5sjck3BAe/C+O0JzHfYqyWEBFuSV1uqhTN8=
+	b=jsYn9EL47WwOQmLNc8kSDCqleKGgItF5zvI8VpxLsoy7oAE3cKDcPLQ8mDyuhNpcq
+	 nah1uIJ1UR5RG1cpKUGN1LBYh2C8SMJpzPHCTSFg+GGn1KEOkE/910RHpd4e6tO/OR
+	 QMlBPcyjd4MAXAb1RVULVDtF387IO5Nf7TZESTSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfEFOdq (ORCPT
+        id S1726399AbfEFOdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:33:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbfEFOdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:33:45 -0400
+        id S1726220AbfEFOdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:33:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8A61204EC;
-        Mon,  6 May 2019 14:33:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60B54204EC;
+        Mon,  6 May 2019 14:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153224;
-        bh=f11jp5pnuLRKWRjULmAaNIRfddqjIyIyxGbk8hTPxWE=;
+        s=default; t=1557153226;
+        bh=XViI8siM9t8Km8JK78U5QE8Ny1YHZh50Bn88VtjLptA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xJ4MlraK8Sl2EQn7N+Yb0q7nM80cBVJETE5BP/lJVSqXoWdNrdRPQRyCJL8XcRMCU
-         2jcZIwjJTmWY4h/+0bB0qn9yTx650GWNvqHuN3IqreSW3rU/iHpojeubsYzkfJBF8p
-         bzsjyPS8p30Ur9NQ3Q077MPDixvYvxE7lkezj7t4=
+        b=Dc0chQWNqmJ4N03Kmtsn5AlIHU2Si2oKC8QQ3UvQlknnrQT/YnOMNqVop8vCqpyO+
+         Ijc9oZS4OF49UHcKSihQ1i65JZZIcTu+cqEU3M9cg/b7TFpg6uwMaQOMR9v9s2xTfN
+         zFe+9mytNnUth4D1W1pXjyqSxh/NlC4Dmq8VbXek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        James Morris <jamorris@linux.microsoft.com>
-Subject: [PATCH 5.0 001/122] selftests/seccomp: Prepare for exclusive seccomp flags
-Date:   Mon,  6 May 2019 16:30:59 +0200
-Message-Id: <20190506143054.814812713@linuxfoundation.org>
+        stable@vger.kernel.org, Keijo Vaara <ferdasyn@rocketmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.0 010/122] i2c: Prevent runtime suspend of adapter when Host Notify is required
+Date:   Mon,  6 May 2019 16:31:08 +0200
+Message-Id: <20190506143055.639569756@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,79 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 
-commit 4ee0776760af03f181e6b80baf5fb1cc1a980f50 upstream.
+commit 72bfcee11cf89509795c56b0e40a3785ab00bbdd upstream.
 
-Some seccomp flags will become exclusive, so the selftest needs to
-be adjusted to mask those out and test them individually for the "all
-flags" tests.
+Multiple users have reported their Synaptics touchpad has stopped
+working between v4.20.1 and v4.20.2 when using SMBus interface.
 
-Cc: stable@vger.kernel.org # v5.0+
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Tycho Andersen <tycho@tycho.ws>
-Acked-by: James Morris <jamorris@linux.microsoft.com>
+The culprit for this appeared to be commit c5eb1190074c ("PCI / PM: Allow
+runtime PM without callback functions") that fixed the runtime PM for
+i2c-i801 SMBus adapter. Those Synaptics touchpad are using i2c-i801
+for SMBus communication and testing showed they are able to get back
+working by preventing the runtime suspend of adapter.
+
+Normally when i2c-i801 SMBus adapter transmits with the client it resumes
+before operation and autosuspends after.
+
+However, if client requires SMBus Host Notify protocol, what those
+Synaptics touchpads do, then the host adapter must not go to runtime
+suspend since then it cannot process incoming SMBus Host Notify commands
+the client may send.
+
+Fix this by keeping I2C/SMBus adapter active in case client requires
+Host Notify.
+
+Reported-by: Keijo Vaara <ferdasyn@rocketmail.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203297
+Fixes: c5eb1190074c ("PCI / PM: Allow runtime PM without callback functions")
+Cc: stable@vger.kernel.org # v4.20+
+Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Tested-by: Keijo Vaara <ferdasyn@rocketmail.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/seccomp/seccomp_bpf.c |   34 +++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 9 deletions(-)
+ drivers/i2c/i2c-core-base.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -2166,11 +2166,14 @@ TEST(detect_seccomp_filter_flags)
- 				 SECCOMP_FILTER_FLAG_LOG,
- 				 SECCOMP_FILTER_FLAG_SPEC_ALLOW,
- 				 SECCOMP_FILTER_FLAG_NEW_LISTENER };
--	unsigned int flag, all_flags;
-+	unsigned int exclusive[] = {
-+				SECCOMP_FILTER_FLAG_TSYNC,
-+				SECCOMP_FILTER_FLAG_NEW_LISTENER };
-+	unsigned int flag, all_flags, exclusive_mask;
- 	int i;
- 	long ret;
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -327,6 +327,8 @@ static int i2c_device_probe(struct devic
  
--	/* Test detection of known-good filter flags */
-+	/* Test detection of individual known-good filter flags */
- 	for (i = 0, all_flags = 0; i < ARRAY_SIZE(flags); i++) {
- 		int bits = 0;
+ 		if (client->flags & I2C_CLIENT_HOST_NOTIFY) {
+ 			dev_dbg(dev, "Using Host Notify IRQ\n");
++			/* Keep adapter active when Host Notify is required */
++			pm_runtime_get_sync(&client->adapter->dev);
+ 			irq = i2c_smbus_host_notify_to_irq(client);
+ 		} else if (dev->of_node) {
+ 			irq = of_irq_get_byname(dev->of_node, "irq");
+@@ -431,6 +433,8 @@ static int i2c_device_remove(struct devi
+ 	device_init_wakeup(&client->dev, false);
  
-@@ -2197,16 +2200,29 @@ TEST(detect_seccomp_filter_flags)
- 		all_flags |= flag;
- 	}
+ 	client->irq = client->init_irq;
++	if (client->flags & I2C_CLIENT_HOST_NOTIFY)
++		pm_runtime_put(&client->adapter->dev);
  
--	/* Test detection of all known-good filter flags */
--	ret = seccomp(SECCOMP_SET_MODE_FILTER, all_flags, NULL);
--	EXPECT_EQ(-1, ret);
--	EXPECT_EQ(EFAULT, errno) {
--		TH_LOG("Failed to detect that all known-good filter flags (0x%X) are supported!",
--		       all_flags);
-+	/*
-+	 * Test detection of all known-good filter flags combined. But
-+	 * for the exclusive flags we need to mask them out and try them
-+	 * individually for the "all flags" testing.
-+	 */
-+	exclusive_mask = 0;
-+	for (i = 0; i < ARRAY_SIZE(exclusive); i++)
-+		exclusive_mask |= exclusive[i];
-+	for (i = 0; i < ARRAY_SIZE(exclusive); i++) {
-+		flag = all_flags & ~exclusive_mask;
-+		flag |= exclusive[i];
-+
-+		ret = seccomp(SECCOMP_SET_MODE_FILTER, flag, NULL);
-+		EXPECT_EQ(-1, ret);
-+		EXPECT_EQ(EFAULT, errno) {
-+			TH_LOG("Failed to detect that all known-good filter flags (0x%X) are supported!",
-+			       flag);
-+		}
- 	}
- 
--	/* Test detection of an unknown filter flag */
-+	/* Test detection of an unknown filter flags, without exclusives. */
- 	flag = -1;
-+	flag &= ~exclusive_mask;
- 	ret = seccomp(SECCOMP_SET_MODE_FILTER, flag, NULL);
- 	EXPECT_EQ(-1, ret);
- 	EXPECT_EQ(EINVAL, errno) {
+ 	return status;
+ }
 
 
