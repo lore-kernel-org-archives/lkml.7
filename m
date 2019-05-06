@@ -4,51 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7203FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CFEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C282053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 245942054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154696;
-	bh=BCJyrJQC8pq+NG1HUdcgLrXOxTCc40nsDQ/UkAV12WQ=;
+	s=default; t=1557154702;
+	bh=4xYcLi0v/90g60aYbXadPiz+Amu7KqdU99q7SC1Cxl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GATaig+csgUO6F/jjcTQcluq3inzhFM97YA5VP7w51JLnT3A+H4o4B6dKIGLjdbu7
-	 QVHahM5qdVe6vueX66Y57svSTzJN2hbld63Dyn6PQN/PzveSjhlsVQAvWofoZwzCH1
-	 IUL6RX9IlNPzcZQDuyo9DKIOaCdMZmhoGT3a2lVo=
+	b=lU9MdO6qMkiveOP5CiVm7jsIOMgjrnXoQ284psgD7wAtmadOGJ7OjuOwhb3d4ghLR
+	 tX8vTVbHG8VSegmk3+R12xfsxJeu24Gv+YSjbKDt80O4+Xa6QWkg3xdG06evA8Rg7U
+	 /4ckFXoovXrzI6JvOdKYkWRdPdgpWt4BbjT4qB1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbfEFO6P (ORCPT
+        id S1728602AbfEFO6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:58:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39912 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:58:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728243AbfEFOn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:56 -0400
+        id S1728296AbfEFOnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D818A20449;
-        Mon,  6 May 2019 14:43:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EADF2053B;
+        Mon,  6 May 2019 14:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153836;
-        bh=BCJyrJQC8pq+NG1HUdcgLrXOxTCc40nsDQ/UkAV12WQ=;
+        s=default; t=1557153831;
+        bh=4xYcLi0v/90g60aYbXadPiz+Amu7KqdU99q7SC1Cxl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LsHUEMNb/LyOhV+nzrNVBm4TZhnaHzYl3lhUav/kUEuCV4edB0QixqVnXEFSjqye2
-         2c5C8KNM8m4dy5Up4bBMg/mYl8q/GiefjappX9QRx1pM7Cbx2mK4kUcOoSHA+5QlYt
-         9ESbv85Dgw7KGHFYzXNihBqCWyghDnTOOWq9wIZU=
+        b=UU9tnve7tTnDWVa4fU3NNQCnkLufrFWzRQt8vpf4TdgY1HXPxAxm16gEM4OkF+Vvm
+         +LNp9Ir5Y3e9Y7FcjsUVyrkUIpN+v9gNSBvHjGi7RpffW8VyEnvkOuWnGL/op2DtkD
+         LWTL5uhD2pJtSV5hS8v2dPsE9rUBzi/cuf6dGvss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.14 15/75] arm64: only advance singlestep for user instruction traps
-Date:   Mon,  6 May 2019 16:32:23 +0200
-Message-Id: <20190506143054.566908300@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nick Terrell <terrelln@fb.com>, Chris Mason <clm@fb.com>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Luis R . Rodriguez" <mcgrof@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 13/75] kasan: prevent compiler from optimizing away memset in tests
+Date:   Mon,  6 May 2019 16:32:21 +0200
+Message-Id: <20190506143054.399239912@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -61,46 +73,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-commit 9478f1927e6ef9ef5e1ad761af1c98aa8e40b7f5 upstream.
+commit 69ca372c100fba99c78ef826a1795aa86e4f01a8 upstream.
 
-Our arm64_skip_faulting_instruction() helper advances the userspace
-singlestep state machine, but this is also called by the kernel BRK
-handler, as used for WARN*().
+A compiler can optimize away memset calls by replacing them with mov
+instructions.  There are KASAN tests that specifically test that KASAN
+correctly handles memset calls so we don't want this optimization to
+happen.
 
-Thus, if we happen to hit a WARN*() while the user singlestep state
-machine is in the active-no-pending state, we'll advance to the
-active-pending state without having executed a user instruction, and
-will take a step exception earlier than expected when we return to
-userspace.
+The solution is to add -fno-builtin flag to test_kasan.ko
 
-Let's fix this by only advancing the state machine when skipping a user
-instruction.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Link: http://lkml.kernel.org/r/105ec9a308b2abedb1a0d1fdced0c22d765e4732.1519924383.git.andreyknvl@google.com
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Acked-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Nick Terrell <terrelln@fb.com>
+Cc: Chris Mason <clm@fb.com>
+Cc: Yury Norov <ynorov@caviumnetworks.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: "Luis R . Rodriguez" <mcgrof@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
+Cc: Jeff Layton <jlayton@redhat.com>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>
+Cc: Kostya Serebryany <kcc@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/traps.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/Makefile |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -304,7 +304,8 @@ void arm64_skip_faulting_instruction(str
- 	 * If we were single stepping, we want to get the step exception after
- 	 * we return from the trap.
- 	 */
--	user_fastforward_single_step(current);
-+	if (user_mode(regs))
-+		user_fastforward_single_step(current);
- }
- 
- static LIST_HEAD(undef_hook);
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -50,6 +50,7 @@ obj-$(CONFIG_TEST_FIRMWARE) += test_firm
+ obj-$(CONFIG_TEST_SYSCTL) += test_sysctl.o
+ obj-$(CONFIG_TEST_HASH) += test_hash.o test_siphash.o
+ obj-$(CONFIG_TEST_KASAN) += test_kasan.o
++CFLAGS_test_kasan.o += -fno-builtin
+ obj-$(CONFIG_TEST_KSTRTOX) += test-kstrtox.o
+ obj-$(CONFIG_TEST_LIST_SORT) += test_list_sort.o
+ obj-$(CONFIG_TEST_LKM) += test_module.o
 
 
