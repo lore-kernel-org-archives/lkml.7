@@ -2,63 +2,60 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1F5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D1CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32CFC206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6AD206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:17:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="t/dWa0Bk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xxAg3lmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfEFTQn (ORCPT
+        id S1726399AbfEFTQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:16:43 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45158 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbfEFTQ2 (ORCPT
+        Mon, 6 May 2019 15:16:24 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60786 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfEFTQX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:16:28 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x46JGA2x023390;
-        Mon, 6 May 2019 14:16:10 -0500
+        Mon, 6 May 2019 15:16:23 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x46JG9Mx033100;
+        Mon, 6 May 2019 14:16:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557170170;
-        bh=joTM0whnuH7gzNMVxKwNKb5uWvtOKPDEYbO5LEo4NSk=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=t/dWa0Bk6US1ij7V3cifsFKehN1cHVqXPL7VvWhWEpBNWonQsMXJR5GSZDSEyDmcp
-         tDhk52LOh2b/4SBJUdWsAx/Dffg8tBwKIBAMGRIzZIp1YLat4pk8FmXdpsMeLgLEr2
-         gG3pqQ5RW6txLqqFLJP2U738HXvSs8XdMChF63Wk=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x46JGAbN092534
+        s=ti-com-17Q1; t=1557170169;
+        bh=fSCI3Xo/8gpQuK8AZ4vjT1KevGt34HUjLaa0gLu2rvY=;
+        h=From:To:CC:Subject:Date;
+        b=xxAg3lmL8t9Y21ALVkPt3azo4Hitd18Cp+187ZcMM1X68ztQR6y7eYD+t0ou4QxdS
+         MiMtCsLxvyC37iANy+QgPo44NWUzaS0bA1sPXYqgMRKskeq0f6QzV8zxzp6prDosDh
+         DpDeipdZiiLEOtBnq5p0fszvdzBH/ep7pjwKb0Lc=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x46JG9W0074952
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 May 2019 14:16:10 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 6 May 2019 14:16:09 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 6 May
- 2019 14:16:09 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 14:16:08 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
  Frontend Transport; Mon, 6 May 2019 14:16:08 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x46JG92c009526;
-        Mon, 6 May 2019 14:16:09 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x46JG84h002029;
+        Mon, 6 May 2019 14:16:08 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <lee.jones@linaro.org>, <rdunlap@infradead.org>,
         <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 3/7] dt-bindings: mfd: LMU: Add ti,brightness-resolution
-Date:   Mon, 6 May 2019 14:16:10 -0500
-Message-ID: <20190506191614.25051-4-dmurphy@ti.com>
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v4 0/7] LMU Rework
+Date:   Mon, 6 May 2019 14:16:07 -0500
+Message-ID: <20190506191614.25051-1-dmurphy@ti.com>
 X-Mailer: git-send-email 2.21.0.5.gaeb582a983
-In-Reply-To: <20190506191614.25051-1-dmurphy@ti.com>
-References: <20190506191614.25051-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -68,52 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ti,brightness-resolution to the TI LMU binding to define
-whether the device uses 8-bit brightness or 11-bit brightness.
+Hello
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+With this series there was an offline discussion that the filename of the LED
+portion of the driver did not adhere to the directory file naming convention so
+the file name has been changed
 
-v4 - No changes - https://lore.kernel.org/patchwork/patch/1068617/
+ti-lmu-led-common.c->leds-ti-lmu-common.c
+ti-lmu-led-common.h->leds-ti-lmu-common.h
 
-v3 - No changes added Reviewed-by Rob - https://lore.kernel.org/patchwork/patch/1058763/
-v2 - New patch.  Add brightness resolution to ti-lmu.txt.  See patch comments
-for context. - https://lore.kernel.org/patchwork/patch/1054501/
+Dan
 
+Dan Murphy (7):
+  dt-bindings: mfd: LMU: Fix lm3632 dt binding example
+  dt-bindings: mfd: LMU: Add the ramp up/down property
+  dt-bindings: mfd: LMU: Add ti,brightness-resolution
+  leds: TI LMU: Add common code for TI LMU devices
+  dt-bindings: ti-lmu: Modify dt bindings for the LM3697
+  mfd: ti-lmu: Remove support for LM3697
+  leds: lm3697: Introduce the lm3697 driver
 
- Documentation/devicetree/bindings/mfd/ti-lmu.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../devicetree/bindings/leds/leds-lm3697.txt  |  73 ++++
+ .../devicetree/bindings/mfd/ti-lmu.txt        |  58 ++-
+ drivers/leds/Kconfig                          |  15 +
+ drivers/leds/Makefile                         |   2 +
+ drivers/leds/leds-lm3697.c                    | 395 ++++++++++++++++++
+ drivers/leds/leds-ti-lmu-common.c             | 156 +++++++
+ drivers/mfd/Kconfig                           |   2 +-
+ drivers/mfd/ti-lmu.c                          |  17 -
+ include/linux/leds-ti-lmu-common.h            |  47 +++
+ include/linux/mfd/ti-lmu-register.h           |  44 --
+ include/linux/mfd/ti-lmu.h                    |   1 -
+ 11 files changed, 714 insertions(+), 96 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
+ create mode 100644 drivers/leds/leds-lm3697.c
+ create mode 100644 drivers/leds/leds-ti-lmu-common.c
+ create mode 100644 include/linux/leds-ti-lmu-common.h
 
-diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-index 160eb0a5e21a..e3efefb194c5 100644
---- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-+++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-@@ -31,6 +31,16 @@ Optional properties:
-   - ramp-down-us: Current ramping from one brightness level to
- 		  the a lower brightness level.
- 		  Range from 2048 us - 117.44 s
-+  - ti,brightness-resolution - This determines whether to use 8 bit brightness
-+			       mode or 11 bit brightness mode.  If this value is
-+			       not set the device is defaulted to the preferred
-+			       8bit brightness mode per 7.3.4.1 of the data
-+			       sheet.  This setting can either be in the parent
-+			       node or as part of the LED child nodes.  This
-+			       is determined by the part itself if the strings
-+			       have a common brightness register or individual
-+			       brightness registers.
-+			       The values are 255 (8bit) or 2047 (11bit).
- 
- Required node:
-   - backlight: All LMU devices have backlight child nodes.
-@@ -217,6 +227,7 @@ lm3697@36 {
- 		compatible = "ti,lm3697-backlight";
- 
- 		lcd {
-+			ti,brightness-resolution = <255>;
- 			led-sources = <0 1 2>;
- 			ramp-up-us = <200000>;
- 			ramp-down-us = <200000>;
 -- 
 2.21.0.5.gaeb582a983
 
