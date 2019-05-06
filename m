@@ -2,111 +2,716 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C2FC004C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 03:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7B0C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 03:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFFB42082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 03:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817BE20675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 03:17:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ih7lsyup"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="H7ncfJY7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ageJBDZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbfEFDFj (ORCPT
+        id S1726160AbfEFDRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 23:05:39 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40953 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfEFDFj (ORCPT
+        Sun, 5 May 2019 23:17:34 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:39391 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbfEFDRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 23:05:39 -0400
-Received: by mail-qt1-f193.google.com with SMTP id k24so9375027qtq.7
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 20:05:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S0yjtj34v0KmK0weLTL4rbIhlVJ805Al3nS3amUErXQ=;
-        b=ih7lsyupSNv5hg3YmzD5rk1NfdethjHS9sb5M0UQvlIKR90WyGSWfzFFega1XhONum
-         cqwYcNXKqGyR3gRgC/bMDDgdYFsr8Q/C2X1TQ5UR4kYLlCeoeybVlGlkX3j7CbLlbMRq
-         DNwc7KEJdLSzf99yyQuX/OTJy1H22hLNIcpIbtDG387WrEdyeLr2osTbCMU0RJD97P9x
-         A6jFCNedAvuM3yLO+Bv6vCZp+gyYwbeomiW6A/e7it8tg9ltgfeO81h+bYOyDzVF2yQT
-         z9LGxw8wjZSoBHDeMAzcsXciMOTRLXpnIflhnJoGY2058PQutokc2XFYFMI1JfwItxdX
-         FpDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S0yjtj34v0KmK0weLTL4rbIhlVJ805Al3nS3amUErXQ=;
-        b=EHkDmZIZLuh0bo7ZT3P5qkTrboYXLxmbATj+d9qzqKs4Tco/0GDmAr7KUT4GWsX9NR
-         GeHNWtSio7i/bLE2NLz2w8ARemK+N+z5PqJGVg31FsbvrcKlpzPTbQ1s9ZU6tVMB6ZNI
-         eQLMEhjAnkMy2NrgO8CsGzDEr4HumQF5Lt++Jp+ns6Fbo7Gq61PEvyQqKu3NBixpZVYV
-         NjHFbsdRskLRGDyfXC7AP+u2wWkhtBajLqX+fkT3LytLzNfDsPWgulGeW1J8t0VIf8s4
-         zWd/Hga+RH5xjHiHlfw7zQWPx0yBeW+03vxRhoXSDGMuOdFVUtVu6Pu8sUKfsTDd580v
-         kMpA==
-X-Gm-Message-State: APjAAAVart/Ook8zzs/t8PXvy6NAmR6QHrb2QoiU1ZJsfqzUCXAXC0Ef
-        GufCWzOZj5dO7C0K8fpkJe0E9tuUgwfLaC+fJs4=
-X-Google-Smtp-Source: APXvYqyayGKIwROeN6+YvHwqzTFbhUdvSE5VjqmT1RuebSp2XW2ruKsQ7T4zygPx38PzdsdYWEex6lwXdtFIRk61Piw=
-X-Received: by 2002:a0c:af81:: with SMTP id s1mr19199265qvc.49.1557111938299;
- Sun, 05 May 2019 20:05:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190424101934.51535-1-duyuyang@gmail.com> <20190424101934.51535-20-duyuyang@gmail.com>
- <20190425193247.GU12232@hirez.programming.kicks-ass.net> <CAHttsrY4jK2cayBE8zNCSJKDAkzLiBb40GVfQHpJi2YK1nEZaQ@mail.gmail.com>
- <20190430121148.GV2623@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190430121148.GV2623@hirez.programming.kicks-ass.net>
-From:   Yuyang Du <duyuyang@gmail.com>
-Date:   Mon, 6 May 2019 11:05:27 +0800
-Message-ID: <CAHttsrYfCdpNwQ81ppFQ9b_57tuLYOb=xi=CbRBysnB+LgjGGg@mail.gmail.com>
-Subject: Re: [PATCH 19/28] locking/lockdep: Optimize irq usage check when
- marking lock usage bit
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     will.deacon@arm.com, Ingo Molnar <mingo@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>, ming.lei@redhat.com,
-        Frederic Weisbecker <frederic@kernel.org>, tglx@linutronix.de,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 5 May 2019 23:17:34 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 94DC61A42A;
+        Sun,  5 May 2019 23:17:29 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Sun, 05 May 2019 23:17:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=p0VoQwWMipQxERAxkJXwUVkIeUxx+N/
+        hZjozyofpy1k=; b=H7ncfJY7CLgJLf3ujL+9P35CRe3D9ftxirwoxyqGS2N0Gro
+        oNoEnUZTR1VMtFYu9lZs1jdklQWyiVe6mpDsetTJbR5kKtA43Nr1QHUO8riBjiKr
+        /9ScUDv+9FPXlDvij7Bf5KNMYJP1FhFbBQxx4tZ8caOHsB36wb1KrXtmsSXDproO
+        iM6yP2m3WqbbZWtNFta2fmawsmRDxpAnU3j6IlmejpclPVJJ6clAXWoSzqelZuuH
+        xwowaUn2P86xQ4tvEUpQ3HFeoSmdUr2c4HNkAw8phP8Z/sDfZfM5auOzBlw9wKMy
+        uFXFFl2TH/LhhFbPU6C4nqsPn1gR0empVCEVijw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=p0VoQw
+        WMipQxERAxkJXwUVkIeUxx+N/hZjozyofpy1k=; b=ageJBDZ79bg/0sY3chAa6t
+        S5Ib0R1nTx8vJDK6eb1Mc1MYxePXcjlisk/4ou59W09G9p68z5qqMMH7fLWU1M9C
+        5Ax1E6TAJ0C940gvT9gA0k+5wJse3HPIZC8alzHi8e1aAKnDTbroXjMRvQPDfg6D
+        o7ZFsCqLAy3FFDhoP7YTgEXaJ/LyggJg73BvP6WvYaUNCRLx2jo1EfQaztBe6GBp
+        Y+IGwdjMlZPp0yUrCYfCNI4FNUNXSPDhL1oqaTQbPiMg7DM8nR1trkxpTRqsxBLU
+        KvYmIHdxjZReSs8JEoA/Pd/q4VilRPIp67ZS+Gehr+/JO741adc0pxM+zIouuxwg
+        ==
+X-ME-Sender: <xms:Q6fPXP3SHFMH-yb7xG6ACEXaat49fwKjERyxxOkOUrYtroy0ep6dxg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrjeeigdejudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
+    ufhiiigvpedt
+X-ME-Proxy: <xmx:Q6fPXLR6SUYdTSV6Z8qSiN9dEm4s0SiCmZlFwZBv4P230v7LQefHuw>
+    <xmx:Q6fPXEZvLh-xbVjjqIuns8-AmPS_0L9RyGEoIvsBB19ZJrUsB0lz_Q>
+    <xmx:Q6fPXBBMD12bUd9Am3Px7qPP6SgHT0TyL7BiUJN6zgFhkywK6XdTYg>
+    <xmx:SafPXFLcPRg-DxcDwqJw2NP5s5rYYcjuNfmj_MGk7avszGPfFrImFw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id A94737C6D9; Sun,  5 May 2019 23:17:23 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-449-gfb3fc5a-fmstable-20190430v1
+Mime-Version: 1.0
+Message-Id: <00dfd048-d8f7-4f33-941d-ab5f2c507aae@www.fastmail.com>
+In-Reply-To: <1557036518-286348-1-git-send-email-pengms1@lenovo.com>
+References: <1557036518-286348-1-git-send-email-pengms1@lenovo.com>
+Date:   Sun, 05 May 2019 23:17:23 -0400
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Andrew Peng" <pengms1@lenovo.com>,
+        "Patrick Venture" <venture@google.com>,
+        "Benjamin Fair" <benjaminfair@google.com>,
+        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, "Rob Herring" <robh+dt@kernel.org>
+Cc:     liuyj19@lenovo.com, dukh@lenovo.com, liuyh21@lenovo.com,
+        hsung1@lenovo.com, "Joel Stanley" <joel@jms.id.au>,
+        openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v6] ARM: dts: aspeed: Adding Lenovo Hr630 BMC
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Apr 2019 at 20:12, Peter Zijlstra <peterz@infradead.org> wrote:
-> > > IOW he's going to massively explode this storage.
-> >
-> > If I understand correctly, he is not going to.
-> >
-> > First of all, we can divide the whole usage thing into tracking and checking.
-> >
-> > Frederic's fine-grained soft vector state is applied to usage
-> > tracking, i.e., which specific vectors a lock is used or enabled.
-> >
-> > But for usage checking, which vectors are does not really matter. So,
-> > the current size of the arrays and bitmaps are good enough. Right?
+
+
+On Sun, 5 May 2019, at 15:38, Andrew Peng wrote:
+> Initial introduction of Lenovo Hr630 family equipped with
+> Aspeed 2500 BMC SoC. Hr630 is a x86 server development kit
+> with a ASPEED ast2500 BMC manufactured by Lenovo.
+> Specifically, This adds the Hr630 platform device tree file
+> used by the Hr630 BMC machines.
+> 
+> This also adds an entry of Hr630 device tree file in Makefile
+> 
+> Signed-off-by: Andrew Peng <pengms1@lenovo.com>
+> Signed-off-by: Yonghui Liu <liuyh21@lenovo.com>
+> Signed-off-by: Lisa Liu <liuyj19@lenovo.com>
+
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+> ---
+> Changes in v6:
+>  - add appropriate pinctrl property for uar1, uart2, uart3 and adc.
+>  - remove vhub definition and comment.
+>  - remove some GPIO definitions.
+>  - revise Makefile according to sort alphabetically.
+> Changes in v5:
+>  - revise pca9545 and pca9546 switch aliases name.
+> Changes in v4:
+>  - add pca9546 switch aliases name.
+> Changes in v3:
+>  - revise i2c switch aliases name.
+> Changes in v2:
+>  - add i2c switch aliases name.
+>  - remove the unused eeprom device from DT file.
+>  - remove "Licensed under..." sentence.
+> 
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts | 566 ++++++++++++++++++++++++++
+>  2 files changed, 567 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index f4f5aea..1276167 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1255,6 +1255,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+>  	aspeed-bmc-facebook-cmm.dtb \
+>  	aspeed-bmc-facebook-tiogapass.dtb \
+>  	aspeed-bmc-intel-s2600wf.dtb \
+> +	aspeed-bmc-lenovo-hr630.dtb \
+>  	aspeed-bmc-opp-lanyang.dtb \
+>  	aspeed-bmc-opp-palmetto.dtb \
+>  	aspeed-bmc-opp-romulus.dtb \
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts 
+> b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+> new file mode 100644
+> index 0000000..d3695a3
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+> @@ -0,0 +1,566 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Device Tree file for Lenovo Hr630 platform
+> + *
+> + * Copyright (C) 2019-present Lenovo
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "aspeed-g5.dtsi"
+> +#include <dt-bindings/gpio/aspeed-gpio.h>
+> +
+> +/ {
+> +	model = "HR630 BMC";
+> +	compatible = "lenovo,hr630-bmc", "aspeed,ast2500";
+> +
+> +	aliases {
+> +		i2c14 = &i2c_rbp;
+> +		i2c15 = &i2c_fbp1;
+> +		i2c16 = &i2c_fbp2;
+> +		i2c17 = &i2c_fbp3;
+> +		i2c18 = &i2c_riser2;
+> +		i2c19 = &i2c_pcie4;
+> +		i2c20 = &i2c_riser1;
+> +		i2c21 = &i2c_ocp;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = &uart5;
+> +		bootargs = "console=tty0 console=ttyS4,115200 earlyprintk";
+> +	};
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		reg = <0x80000000 0x20000000>;
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		flash_memory: region@98000000 {
+> +			no-map;
+> +			reg = <0x98000000 0x00100000>; /* 1M */
+> +		};
+> +
+> +		gfx_memory: framebuffer {
+> +			size = <0x01000000>;
+> +			alignment = <0x01000000>;
+> +			compatible = "shared-dma-pool";
+> +			reusable;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		heartbeat {
+> +			gpios = <&gpio ASPEED_GPIO(J, 1) GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		fault {
+> +			gpios = <&gpio ASPEED_GPIO(J, 0) GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	iio-hwmon {
+> +		compatible = "iio-hwmon";
+> +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
+> +		<&adc 4>, <&adc 5>, <&adc 6>, <&adc 7>,
+> +		<&adc 8>, <&adc 9>, <&adc 10>,
+> +		<&adc 12>, <&adc 13>, <&adc 14>;
+> +	};
+> +
+> +};
+> +
+> +&fmc {
+> +	status = "okay";
+> +	flash@0 {
+> +		status = "okay";
+> +		m25p,fast-read;
+> +		label = "bmc";
+> +		spi-max-frequency = <50000000>;
+> +#include "openbmc-flash-layout.dtsi"
+> +	};
+> +};
+> +
+> +&lpc_ctrl {
+> +	status = "okay";
+> +	memory-region = <&flash_memory>;
+> +	flash = <&spi1>;
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_txd1_default
+> +			&pinctrl_rxd1_default>;
+> +};
+> +
+> +&uart2 {
+> +	/* Rear RS-232 connector */
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_txd2_default
+> +			&pinctrl_rxd2_default
+> +			&pinctrl_nrts2_default
+> +			&pinctrl_ndtr2_default
+> +			&pinctrl_ndsr2_default
+> +			&pinctrl_ncts2_default
+> +			&pinctrl_ndcd2_default
+> +			&pinctrl_nri2_default>;
+> +};
+> +
+> +&uart3 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_txd3_default
+> +			&pinctrl_rxd3_default>;
+> +};
+> +
+> +&uart5 {
+> +	status = "okay";
+> +};
+> +
+> +&ibt {
+> +	status = "okay";
+> +};
+> +
+> +&mac0 {
+> +	status = "okay";
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_rmii1_default>;
+> +	use-ncsi;
+> +};
+> +
+> +&mac1 {
+> +	status = "okay";
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
+> +};
+> +
+> +&adc {
+> +	status = "okay";
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_adc0_default
+> +			&pinctrl_adc1_default
+> +			&pinctrl_adc2_default
+> +			&pinctrl_adc3_default
+> +			&pinctrl_adc4_default
+> +			&pinctrl_adc5_default
+> +			&pinctrl_adc6_default
+> +			&pinctrl_adc7_default
+> +			&pinctrl_adc8_default
+> +			&pinctrl_adc9_default
+> +			&pinctrl_adc10_default
+> +			&pinctrl_adc12_default
+> +			&pinctrl_adc13_default
+> +			&pinctrl_adc14_default>;
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +	/* temp1 inlet */
+> +	tmp75@4e {
+> +		compatible = "national,lm75";
+> +		reg = <0x4e>;
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +	/* temp2 outlet */
+> +	tmp75@4d {
+> +		compatible = "national,lm75";
+> +		reg = <0x4d>;
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c3 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c4 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c5 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c6 {
+> +	status = "okay";
+> +	/*	Slot 0,
+> +	 *	Slot 1,
+> +	 *	Slot 2,
+> +	 *	Slot 3
+> +	 */
+> +
+> +	i2c-switch@70 {
+> +		compatible = "nxp,pca9545";
+> +		reg = <0x70>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		i2c-mux-idle-disconnect;	/* may use mux@70 next. */
+> +
+> +		i2c_rbp: i2c@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +		};
+> +
+> +		i2c_fbp1: i2c@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <1>;
+> +		};
+> +
+> +		i2c_fbp2: i2c@2 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <2>;
+> +		};
+> +
+> +		i2c_fbp3: i2c@3 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <3>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c7 {
+> +	status = "okay";
+> +
+> +	/*	Slot 0,
+> +	 *	Slot 1,
+> +	 *	Slot 2,
+> +	 *	Slot 3
+> +	 */
+> +	i2c-switch@76 {
+> +		compatible = "nxp,pca9546";
+> +		reg = <0x76>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		i2c-mux-idle-disconnect;  /* may use mux@76 next. */
+> +
+> +		i2c_riser2: i2c@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +		};
+> +
+> +		i2c_pcie4: i2c@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <1>;
+> +		};
+> +
+> +		i2c_riser1: i2c@2 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <2>;
+> +		};
+> +
+> +		i2c_ocp: i2c@3 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <3>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c8 {
+> +	status = "okay";
+> +
+> +	eeprom@57 {
+> +		compatible = "atmel,24c256";
+> +		reg = <0x57>;
+> +		pagesize = <16>;
+> +	};
+> +};
+> +
+> +&i2c9 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c10 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c11 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c12 {
+> +	status = "okay";
+> +};
+> +
+> +&ehci1 {
+> +	status = "okay";
+> +};
+> +
+> +&uhci {
+> +	status = "okay";
+> +};
+> +
+> +&gfx {
+> +	status = "okay";
+> +	memory-region = <&gfx_memory>;
+> +};
+> +
+> +&pwm_tacho {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm0_default
+> +	&pinctrl_pwm1_default
+> +	&pinctrl_pwm2_default
+> +	&pinctrl_pwm3_default
+> +	&pinctrl_pwm4_default
+> +	&pinctrl_pwm5_default
+> +	&pinctrl_pwm6_default>;
+> +
+> +	fan@0 {
+> +		reg = <0x00>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+> +	};
+> +
+> +	fan@1 {
+> +		reg = <0x00>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
+> +	};
+> +
+> +	fan@2 {
+> +		reg = <0x01>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
+> +	};
+> +
+> +	fan@3 {
+> +		reg = <0x01>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
+> +	};
+> +
+> +	fan@4 {
+> +		reg = <0x02>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
+> +	};
+> +
+> +	fan@5 {
+> +		reg = <0x02>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
+> +	};
+> +
+> +	fan@6 {
+> +		reg = <0x03>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
+> +	};
+> +
+> +	fan@7 {
+> +		reg = <0x03>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
+> +	};
+> +
+> +	fan@8 {
+> +		reg = <0x04>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x08>;
+> +	};
+> +
+> +	fan@9 {
+> +		reg = <0x04>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x09>;
+> +	};
+> +
+> +	fan@10 {
+> +		reg = <0x05>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x0a>;
+> +	};
+> +
+> +	fan@11 {
+> +		reg = <0x05>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x0b>;
+> +	};
+> +
+> +	fan@12 {
+> +		reg = <0x06>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x0c>;
+> +	};
+> +
+> +	fan@13 {
+> +		reg = <0x06>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x0d>;
+> +	};
+> +};
+> +
+> +&gpio {
+> +
+> +	pin_gpio_b5 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(B, 5) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "IRQ_BMC_PCH_SMI_LPC_N";
+> +	};
+> +
+> +	pin_gpio_f0 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(F, 0) GPIO_ACTIVE_HIGH>;
+> +		output-low;
+> +		line-name = "IRQ_BMC_PCH_NMI_R";
+> +	};
+> +
+> +	pin_gpio_f3 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(F, 3) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "I2C_BUS0_RST_OUT_N";
+> +	};
+> +
+> +	pin_gpio_f4 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(F, 4) GPIO_ACTIVE_HIGH>;
+> +		output-low;
+> +		line-name = "FM_SKT0_FAULT_LED";
+> +	};
+> +
+> +	pin_gpio_f5 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(F, 5) GPIO_ACTIVE_HIGH>;
+> +		output-low;
+> +		line-name = "FM_SKT1_FAULT_LED";
+> +	};
+> +
+> +	pin_gpio_g4 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(G, 4) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "FAN_PWR_CTL_N";
+> +	};
+> +
+> +	pin_gpio_g7 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(G, 7) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "RST_BMC_PCIE_I2CMUX_N";
+> +	};
+> +
+> +	pin_gpio_h2 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(H, 2) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "PSU1_FFS_N_R";
+> +	};
+> +
+> +	pin_gpio_h3 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(H, 3) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "PSU2_FFS_N_R";
+> +	};
+> +
+> +	pin_gpio_i3 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(I, 3) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "BMC_INTRUDED_COVER";
+> +	};
+> +
+> +	pin_gpio_j2 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(J, 2) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "BMC_BIOS_UPDATE_N";
+> +	};
+> +
+> +	pin_gpio_j3 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(J, 3) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "RST_BMC_HDD_I2CMUX_N";
+> +	};
+> +
+> +	pin_gpio_s2 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(S, 2) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "BMC_VGA_SW";
+> +	};
+> +
+> +	pin_gpio_s4 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(S, 4) GPIO_ACTIVE_HIGH>;
+> +		output;
+> +		line-name = "VBAT_EN_N";
+> +	};
+> +
+> +	pin_gpio_s6 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(S, 6) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "PU_BMC_GPIOS6";
+> +	};
+> +
+> +	pin_gpio_y0 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(Y, 0) GPIO_ACTIVE_HIGH>;
+> +		output-low;
+> +		line-name = "BMC_NCSI_MUX_CTL_S0";
+> +	};
+> +
+> +	pin_gpio_y1 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(Y, 1) GPIO_ACTIVE_HIGH>;
+> +		output-low;
+> +		line-name = "BMC_NCSI_MUX_CTL_S1";
+> +	};
+> +
+> +	pin_gpio_z0 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(Z, 0) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "I2C_RISER2_INT_N";
+> +	};
+> +
+> +	pin_gpio_z2 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "I2C_RISER2_RESET_N";
+> +	};
+> +
+> +	pin_gpio_z3 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(Z, 3) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "FM_BMC_PCH_SCI_LPC_N";
+> +	};
+> +
+> +	pin_gpio_z7 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(Z, 7) GPIO_ACTIVE_HIGH>;
+> +		output-low;
+> +		line-name = "BMC_POST_CMPLT_N";
+> +	};
+> +
+> +	pin_gpio_aa0 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
+> +		output-low;
+> +		line-name = "HOST_BMC_USB_SEL";
+> +	};
+> +
+> +	pin_gpio_aa5 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(AA, 5) GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +		line-name = "I2C_BUS1_RST_OUT_N";
+> +	};
+> +
+> +};
+> --
+> 2.7.4
+> 
 >
-> Frederic? My understanding was that he really was going to split the
-> whole thing. The moment you allow masking individual soft vectors, you
-> get per-vector dependency chains.
-
-It seems so. What I understand is: for IRQ usage, the difference is:
-
-Each lock has a new usage mask:
-
-        softirq10, ..., softirq1, hardirq
-
-where softirq1 | softirq2 | ... | softirq10 = softirq
-
-where softirq, exactly what was, virtually is used in the checking.
-This is mainly because, any irq vector has any usage, the lock has
-that usage, be it hard or soft.
-
-If that is right, hardirq can be split too (why not if softirq does
-:)). So, maybe a bitmap to do them all for tracking, and optionally
-maintain aggregate softirq and hardirq for checking as before.
-Regardless, may irq-safe reachability thing is not affected.
-
-And for the chain, which is mainly for caching does not really matter
-split or not (either way, the outcome will be the same?), because
-there will be a hash for a chain anyway, which is the same. Right?
