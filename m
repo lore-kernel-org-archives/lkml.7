@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9227DC04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43576C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7085C2082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10FDA2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfEFIV0 (ORCPT
+        id S1726783AbfEFIVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:21:26 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7171 "EHLO huawei.com"
+        Mon, 6 May 2019 04:21:33 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7169 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726657AbfEFIUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726651AbfEFIUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 May 2019 04:20:46 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 510C3F015AB8680A8616;
-        Mon,  6 May 2019 16:20:44 +0800 (CST)
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B907F132402CA729FF3E;
+        Mon,  6 May 2019 16:20:43 +0800 (CST)
 Received: from euler.huawei.com (10.175.104.193) by
  DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
  14.3.439.0; Mon, 6 May 2019 16:20:41 +0800
@@ -34,9 +34,9 @@ CC:     <julien.thierry@arm.com>, <Suzuki.Poulose@arm.com>,
         <lorenzo.pieralisi@arm.com>, <daniel.thompson@linaro.org>,
         <james.morse@arm.com>, <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/3] arm64: Add support for on-demand backtrace of other CPUs
-Date:   Mon, 6 May 2019 16:25:41 +0800
-Message-ID: <20190506082542.11357-3-liwei391@huawei.com>
+Subject: [PATCH 1/3] arm64: Add pseudo NMI support of GICv3 SGIs
+Date:   Mon, 6 May 2019 16:25:40 +0800
+Message-ID: <20190506082542.11357-2-liwei391@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190506082542.11357-1-liwei391@huawei.com>
 References: <20190506082542.11357-1-liwei391@huawei.com>
@@ -49,107 +49,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To support backtracing of other CPUs in the system on lockups, add the
-implementation of arch_trigger_cpumask_backtrace() for arm64.
+Currently, only PPIs and SPIs can be set as NMIs. IPIs being currently
+hardcoded IRQ numbers, there isn't a generic interface to set SGIs as NMI
+for now.
 
-In this patch, we add an arm64 NMI-like IPI based backtracer, referring
-to the implementation on arm by Russell King and Chris Metcalf.
+In this patch, we do:
+1. Add an interface for setting priority of SGIs.
+2. Export GICD_INT_NMI_PRI for setting priority of SGIs as NMI.
+3. Move the gic_enable_nmi_support() earlier to make the gic_supports_nmi()
+check works in gic_cpu_init().
 
 Signed-off-by: Wei Li <liwei391@huawei.com>
+Cc: Julien Thierry <julien.thierry@arm.com>
 ---
- arch/arm64/include/asm/hardirq.h |  2 +-
- arch/arm64/include/asm/irq.h     |  6 ++++++
- arch/arm64/kernel/smp.c          | 22 +++++++++++++++++++++-
- 3 files changed, 28 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/smp.h           |  2 ++
+ arch/arm64/kernel/smp.c                |  4 +++
+ drivers/irqchip/irq-gic-v3.c           | 46 +++++++++++++++++++++-----
+ include/linux/irqchip/arm-gic-common.h |  1 +
+ include/linux/irqchip/arm-gic-v3.h     |  1 +
+ 5 files changed, 45 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/include/asm/hardirq.h b/arch/arm64/include/asm/hardirq.h
-index 89691c86640a..a5d94aa59c7c 100644
---- a/arch/arm64/include/asm/hardirq.h
-+++ b/arch/arm64/include/asm/hardirq.h
-@@ -24,7 +24,7 @@
- #include <asm/kvm_arm.h>
- #include <asm/sysreg.h>
+diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+index 18553f399e08..84d7ea073d84 100644
+--- a/arch/arm64/include/asm/smp.h
++++ b/arch/arm64/include/asm/smp.h
+@@ -158,6 +158,8 @@ bool cpus_are_stuck_in_kernel(void);
+ extern void crash_smp_send_stop(void);
+ extern bool smp_crash_stop_failed(void);
  
--#define NR_IPI	7
-+#define NR_IPI	8
++extern void ipi_gic_nmi_setup(void __iomem *base);
++
+ #endif /* ifndef __ASSEMBLY__ */
  
- typedef struct {
- 	unsigned int __softirq_pending;
-diff --git a/arch/arm64/include/asm/irq.h b/arch/arm64/include/asm/irq.h
-index b2b0c6405eb0..28471df488c0 100644
---- a/arch/arm64/include/asm/irq.h
-+++ b/arch/arm64/include/asm/irq.h
-@@ -13,5 +13,11 @@ static inline int nr_legacy_irqs(void)
+ #endif /* ifndef __ASM_SMP_H */
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 824de7038967..bd8fdf6fcd8e 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -1067,3 +1067,7 @@ bool cpus_are_stuck_in_kernel(void)
+ 
+ 	return !!cpus_stuck_in_kernel || smp_spin_tables;
+ }
++
++void ipi_gic_nmi_setup(void __iomem *base)
++{
++}
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index 15e55d327505..394aa5668dd6 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -42,8 +42,6 @@
+ 
+ #include "irq-gic-common.h"
+ 
+-#define GICD_INT_NMI_PRI	(GICD_INT_DEF_PRI & ~0x80)
+-
+ #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996	(1ULL << 0)
+ 
+ struct redist_region {
+@@ -324,6 +322,23 @@ static int gic_irq_get_irqchip_state(struct irq_data *d,
  	return 0;
  }
  
-+#ifdef CONFIG_SMP
-+extern void arch_trigger_cpumask_backtrace(const cpumask_t *mask,
-+					   bool exclude_self);
-+#define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
-+#endif
++void gic_sgi_set_prio(void __iomem *base, u32 irqnr, u8 prio)
++{
++	u32 val, offset;
 +
- #endif /* !__ASSEMBLER__ */
- #endif
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index bd8fdf6fcd8e..7e862f9124f3 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -35,6 +35,7 @@
- #include <linux/smp.h>
- #include <linux/seq_file.h>
- #include <linux/irq.h>
-+#include <linux/nmi.h>
- #include <linux/irqchip/arm-gic-v3.h>
- #include <linux/percpu.h>
- #include <linux/clockchips.h>
-@@ -83,7 +84,8 @@ enum ipi_msg_type {
- 	IPI_CPU_CRASH_STOP,
- 	IPI_TIMER,
- 	IPI_IRQ_WORK,
--	IPI_WAKEUP
-+	IPI_WAKEUP,
-+	IPI_CPU_BACKTRACE
- };
- 
- #ifdef CONFIG_HOTPLUG_CPU
-@@ -787,6 +789,7 @@ static const char *ipi_types[NR_IPI] __tracepoint_string = {
- 	S(IPI_TIMER, "Timer broadcast interrupts"),
- 	S(IPI_IRQ_WORK, "IRQ work interrupts"),
- 	S(IPI_WAKEUP, "CPU wake-up interrupts"),
-+	S(IPI_CPU_BACKTRACE, "Backtrace interrupts"),
- };
- 
- static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
-@@ -946,6 +949,12 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
- 		break;
- #endif
- 
-+	case IPI_CPU_BACKTRACE:
-+		nmi_enter();
-+		nmi_cpu_backtrace(regs);
-+		nmi_exit();
-+		break;
++	offset = GICR_IPRIORITYR0 + ((irqnr / 4) * 4);
 +
- 	default:
- 		pr_crit("CPU%u: Unknown IPI message 0x%x\n", cpu, ipinr);
- 		break;
-@@ -1070,4 +1079,15 @@ bool cpus_are_stuck_in_kernel(void)
- 
- void ipi_gic_nmi_setup(void __iomem *base)
++	/*
++	 * Using writeb here may cause hardware error on some CPUs,
++	 * aovid this quirk by using writel.
++	 */
++	val = readl_relaxed(base + offset);
++	val &= ~(0xff << ((irqnr % 4) * 8));
++	val |= prio << ((irqnr % 4) * 8);
++
++	writel_relaxed(val, base + offset);
++}
++
+ static void gic_irq_set_prio(struct irq_data *d, u8 prio)
  {
-+	gic_sgi_set_prio(base, IPI_CPU_BACKTRACE, GICD_INT_NMI_PRI);
-+}
+ 	void __iomem *base = gic_dist_base(d);
+@@ -474,6 +489,16 @@ static inline void gic_handle_nmi(u32 irqnr, struct pt_regs *regs)
+ {
+ 	int err;
+ 
++	if (unlikely(irqnr < 16)) {
++		gic_write_eoir(irqnr);
++		if (static_branch_likely(&supports_deactivate_key))
++			gic_write_dir(irqnr);
++#ifdef CONFIG_SMP
++		handle_IPI(irqnr, regs);
++#endif
++		return;
++	}
 +
-+static void raise_nmi(cpumask_t *mask)
-+{
-+	smp_cross_call(mask, IPI_CPU_BACKTRACE);
-+}
+ 	if (static_branch_likely(&supports_deactivate_key))
+ 		gic_write_eoir(irqnr);
+ 	/*
+@@ -859,6 +884,9 @@ static void gic_cpu_init(void)
+ 
+ 	gic_cpu_config(rbase, gic_redist_wait_for_rwp);
+ 
++	if (gic_supports_nmi())
++		ipi_gic_nmi_setup(rbase);
 +
-+void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
-+{
-+	nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_nmi);
+ 	/* initialise system registers */
+ 	gic_cpu_sys_reg_init();
  }
+@@ -1335,6 +1363,13 @@ static int __init gic_init_bases(void __iomem *dist_base,
+ 
+ 	gic_update_vlpi_properties();
+ 
++	if (gic_prio_masking_enabled()) {
++		if (!gic_has_group0() || gic_dist_security_disabled())
++			gic_enable_nmi_support();
++		else
++			pr_warn("SCR_EL3.FIQ is cleared, cannot enable use of pseudo-NMIs\n");
++	}
++
+ 	gic_smp_init();
+ 	gic_dist_init();
+ 	gic_cpu_init();
+@@ -1345,13 +1380,6 @@ static int __init gic_init_bases(void __iomem *dist_base,
+ 		its_cpu_init();
+ 	}
+ 
+-	if (gic_prio_masking_enabled()) {
+-		if (!gic_has_group0() || gic_dist_security_disabled())
+-			gic_enable_nmi_support();
+-		else
+-			pr_warn("SCR_EL3.FIQ is cleared, cannot enable use of pseudo-NMIs\n");
+-	}
+-
+ 	return 0;
+ 
+ out_free:
+diff --git a/include/linux/irqchip/arm-gic-common.h b/include/linux/irqchip/arm-gic-common.h
+index 9a1a479a2bf4..d8c973295179 100644
+--- a/include/linux/irqchip/arm-gic-common.h
++++ b/include/linux/irqchip/arm-gic-common.h
+@@ -18,6 +18,7 @@
+ 					(GICD_INT_DEF_PRI << 16) |\
+ 					(GICD_INT_DEF_PRI << 8) |\
+ 					GICD_INT_DEF_PRI)
++#define GICD_INT_NMI_PRI	(GICD_INT_DEF_PRI & ~0x80)
+ 
+ enum gic_type {
+ 	GIC_V2,
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index c848a7cc502e..dc1c418229e7 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -606,6 +606,7 @@ int its_cpu_init(void);
+ int its_init(struct fwnode_handle *handle, struct rdists *rdists,
+ 	     struct irq_domain *domain);
+ int mbi_init(struct fwnode_handle *fwnode, struct irq_domain *parent);
++void gic_sgi_set_prio(void __iomem *base, u32 irqnr, u8 prio);
+ 
+ static inline bool gic_enable_sre(void)
+ {
 -- 
 2.17.1
 
