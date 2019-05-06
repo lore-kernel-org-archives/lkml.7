@@ -2,108 +2,87 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3AFC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDB4C46460
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791B120830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5023D214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:27:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DkeyWD7R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbfEFRXl (ORCPT
+        id S1726568AbfEFR1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:23:41 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56778 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbfEFRXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:23:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97678374;
-        Mon,  6 May 2019 10:23:40 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FBF13F575;
-        Mon,  6 May 2019 10:23:39 -0700 (PDT)
-Date:   Mon, 6 May 2019 18:23:36 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 4/7] sched: Add sched_load_rq tracepoint
-Message-ID: <20190506172336.cxbfwasv7rfegbi3@e107158-lin.cambridge.arm.com>
-References: <20190505115732.9844-1-qais.yousef@arm.com>
- <20190505115732.9844-5-qais.yousef@arm.com>
- <20190506090859.GK2606@hirez.programming.kicks-ass.net>
- <20190506095239.08577b3e@gandalf.local.home>
- <20190506144200.z4s63nm7untol2tr@e107158-lin.cambridge.arm.com>
- <20190506104618.2fa49e13@gandalf.local.home>
- <20190506153317.fv73wpdwsn7xcyc4@e107158-lin.cambridge.arm.com>
- <20190506120119.12d98042@gandalf.local.home>
+        Mon, 6 May 2019 13:27:49 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:32813 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfEFR1t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 13:27:49 -0400
+Received: by mail-it1-f193.google.com with SMTP id u16so10067255itc.0;
+        Mon, 06 May 2019 10:27:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hrn4nDHLtIMhzMGRLfGe5OwhTlrLcnKtSdjsnoP6xiM=;
+        b=DkeyWD7RBFpR9tT6CP4d99Vm+FIBqsrtXbFyfCEIPIzWYYg9bbTURlXAU8G/p6U9w2
+         GziT77do1ZGEqVTuzqStaSYxaynb3jE/5CRgWR+6HsUnK9wpDg9WoUmqleUe+7x9SmZ9
+         KMN3fF4itf4zL0p6O8w5nwPtvotWnbJiPWTlES8b9AJiNShEel/YDJ+E3smvvFHgH2hD
+         NYDI5nFzZArpKH0MyxzorQff6KMSg8JYschfAlDcc8RdBrh+12kZWEz9+Lcw8w2VqcMO
+         /AYw0i9RgHqNlneApOcM/7Vs3X8OBziWx+ka5+cBzM/B79yWieEyYBuYoXqCqPo2tkLA
+         QtkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hrn4nDHLtIMhzMGRLfGe5OwhTlrLcnKtSdjsnoP6xiM=;
+        b=ibPdwpBZvEq7xvuFM02v/0OQdIL8Ce9O2f4B3qLaz9rREQYx2euUlrMJNXoozMA0q6
+         FjjxN5eWt5WubTnkhFXWftLl1dXBFUIqQQWvGEbB2eDf7lr1zZZRhpq0cJAAwqQq/Qjn
+         WPZ1QuP8fHM9oIxWBvOCdfV7tHbQLrpwPmZTRyCHRmDJxSfY/PLK+nJ6YKOMBOkiZ9yV
+         QLhGDQr+Nl0IcTd0dQdEdB6OkNXwvBBg+U054CO9b3ZYU7wmVn/jciBM5bAHqvkkNkoE
+         W8+J5zJv9EPGW3kq2V8WadmXQTUh+kiYXGPW3seVebkeZnUbuM3SJCI7znOimcZ+vMSn
+         m3YQ==
+X-Gm-Message-State: APjAAAX7wxep1D3AQG7vJjhThm2dNLNqi+MOhLn+j7+0dyVrZ6jdvAQ7
+        /bkx3dUyDvDGhoXFTW6JmLKhEI9MObTY1hyIUes=
+X-Google-Smtp-Source: APXvYqypzmeE+Qzmq7cAlI69wXa0fQ7lASmzZADHAmtTVDFoQy6R0N49XZu+0BmBEs+grTENfcg1LgcH5YN+XV/QXYg=
+X-Received: by 2002:a24:6c54:: with SMTP id w81mr18770409itb.78.1557163668187;
+ Mon, 06 May 2019 10:27:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190506120119.12d98042@gandalf.local.home>
-User-Agent: NeoMutt/20171215
+References: <20190410174139.20012-1-tiny.windzz@gmail.com> <20190410174139.20012-3-tiny.windzz@gmail.com>
+ <20190426211540.GA890@bogus> <CAEExFWs2UwPLzgyO0apMOZf56um5isdZmf+7-wj_TqMozxZJQg@mail.gmail.com>
+ <CAL_Jsq+0mQYyAqfY3nmF-oFx2X4qHU567chQ1s8p-rgD2GEFnw@mail.gmail.com>
+ <20190430044245.s4viduudej6q2eq6@vireshk-i7> <CAEExFWsAQ3b42YqfW-b8vuq_NZgfDe+0D5TzP09ber0Ljvv43g@mail.gmail.com>
+In-Reply-To: <CAEExFWsAQ3b42YqfW-b8vuq_NZgfDe+0D5TzP09ber0Ljvv43g@mail.gmail.com>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Tue, 7 May 2019 01:27:36 +0800
+Message-ID: <CAEExFWsVgAV=br1kAfgMTLnS6ELfMjFegiusUYPK6A3k7Nq9Mg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: cpufreq: Document allwinner,cpu-operating-points-v2
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        David Miller <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/19 12:01, Steven Rostedt wrote:
-> On Mon, 6 May 2019 16:33:17 +0100
-> Qais Yousef <qais.yousef@arm.com> wrote:
-> 
-> > On 05/06/19 10:46, Steven Rostedt wrote:
-> > > On Mon, 6 May 2019 15:42:00 +0100
-> > > Qais Yousef <qais.yousef@arm.com> wrote:
-> > >   
-> > > > I can control that for the wrappers I'm introducing. But the actual tracepoint
-> > > > get the 'trace_' part prepended automatically by the macros.
-> > > > 
-> > > > ie DECLARE_TRACE(pelt_rq, ...) will automatically generate a function called
-> > > > trace_pelt_se(...)
-> > > > 
-> > > > Or am I missing something?  
-> > > 
-> > > No trace comes from the trace points.  
-> 
-> Re-reading that line, I see I totally didn't express what I meant :-p
-> 
-> > 
-> > If you want I can do something like below to help create a distinction. It is
-> > none enforcing though.
-> > 
-> > diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-> > index 9c3186578ce0..f654ced20045 100644
-> > --- a/include/linux/tracepoint.h
-> > +++ b/include/linux/tracepoint.h
-> > @@ -232,6 +232,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-> >   */
-> >  #define __DECLARE_TRACE(name, proto, args, cond, data_proto, data_args) \
-> >         extern struct tracepoint __tracepoint_##name;                   \
-> > +       static inline void tp_##name(proto) __alias(trace_##name);      \
-> >         static inline void trace_##name(proto)                          \
-> >         {                                                               \
-> >                 if (static_key_false(&__tracepoint_##name.key))         \
-> > 
-> > 
-> > Another option is to extend DECLARE_TRACE() to take a new argument IS_TP and
-> > based on that select the function name. This will be enforcing but I will have
-> > to go fixup many places.
-> > 
-> > Of course 'TP' can be replaced with anything more appealing.
-> 
-> No no no, I meant to say...
-> 
->  "No that's OK. The "trace_" *is* from the trace points, and trace
->  events build on top of them."
+Hi Rob,
 
-I did have to stare at the original statement for a bit :-)
-This makes more sense now. Thanks for the clarification.
-
---
-Qais Yousef
+PING...
