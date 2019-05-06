@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579DFC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9427BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A43E21530
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6919D214C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153759;
-	bh=kHPUHyvhntNx/u4JJbUbu/sAkYPFW0akYta476j60QU=;
+	s=default; t=1557153761;
+	bh=6uI36CmgJ0/VrUNZlPf6wESC6TuMMxW77eB9pdUVEBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cEPIaR45syoAcW1SVN2GYagbxxhq71qPgsTDDQM6UlW0OCQACnKhrsHWL5FjJH+Dc
-	 TitneZrA+OvW4ZCXqRANdEwFO6mqH9gDtkLrRf76LQ9NQTni02rOj9yVXwRqp6Vz7x
-	 x+WZgvQk12sW5DHrTyLmMeNVpofo/gZAPe3XntSw=
+	b=FNgSGx91CH25Degrr9od4TtkevwI4zwDQaxKscNbGIq8EKuaTUptzZMmHGP5z6QJz
+	 XC0myuzDzzH6e4zrWC01yPQZP6RlI17XwpHUJpOWP9930jyAEXImQBLUAUstrucSu9
+	 Gjd+4i4QVmLQp8kMY6HdsZepmwfbpc12e7YKtmMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbfEFOmi (ORCPT
+        id S1728523AbfEFOmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:42:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37530 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727204AbfEFOmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:42:36 -0400
+        id S1728510AbfEFOmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:42:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0B6C20C01;
-        Mon,  6 May 2019 14:42:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60B4821479;
+        Mon,  6 May 2019 14:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153755;
-        bh=kHPUHyvhntNx/u4JJbUbu/sAkYPFW0akYta476j60QU=;
+        s=default; t=1557153757;
+        bh=6uI36CmgJ0/VrUNZlPf6wESC6TuMMxW77eB9pdUVEBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dakampvHBn1zlDV6dvx4JEBuqLuNnRU2YG+1Crj06n6ffKJZxxd9purkivlcXqV5+
-         Ja/HxxheUwyg4IerBhF/jOEU87ZYR+nYtiYhj6ZMhgPmBdqoEIKGWyYCN2z7dCxJC9
-         0fZTX1LYVHFMBr3ZCDJfRDszNYC8+j/TdXsAIi9s=
+        b=JjP5Kk3R9mpZX1x/J3wg16ewNSy3nMKthLBr8vGdwXyVImFYSUTGjg6Z2jqHqRwJ8
+         972kMMbfXIrQQZKqp43L4RSt1Hxurfmjqs/Rg1NYGZvk/4C2khmWDLAh7RMBmSIxkv
+         qClsB223JzrxGRQ074byLfuqK/fbcUuysLGVTrJI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jurgens <danielj@mellanox.com>,
-        Parav Pandit <parav@mellanox.com>,
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Yuval Avnery <yuvalav@mellanox.com>,
+        Daniel Jurgens <danielj@mellanox.com>,
         Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 84/99] IB/core: Fix potential memory leak while creating MAD agents
-Date:   Mon,  6 May 2019 16:32:57 +0200
-Message-Id: <20190506143101.610098947@linuxfoundation.org>
+Subject: [PATCH 4.19 85/99] IB/core: Destroy QP if XRC QP fails
+Date:   Mon,  6 May 2019 16:32:58 +0200
+Message-Id: <20190506143101.688736872@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -60,50 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jurgens <danielj@mellanox.com>
+From: Yuval Avnery <yuvalav@mellanox.com>
 
-commit 6e88e672b69f0e627acdae74a527b730ea224b6b upstream.
+commit 535005ca8e5e71918d64074032f4b9d4fef8981e upstream.
 
-If the MAD agents isn't allowed to manage the subnet, or fails to register
-for the LSM notifier, the security context is leaked. Free the context in
-these cases.
+The open-coded variant missed destroy of SELinux created QP, reuse already
+existing ib_detroy_qp() call and use this opportunity to clean
+ib_create_qp() from double prints and unclear exit paths.
 
-Fixes: 47a2b338fe63 ("IB/core: Enforce security on management datagrams")
-Signed-off-by: Daniel Jurgens <danielj@mellanox.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
 Reported-by: Parav Pandit <parav@mellanox.com>
+Fixes: d291f1a65232 ("IB/core: Enforce PKey security on QPs")
+Signed-off-by: Yuval Avnery <yuvalav@mellanox.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
 Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/security.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/verbs.c |   41 +++++++++++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 17 deletions(-)
 
---- a/drivers/infiniband/core/security.c
-+++ b/drivers/infiniband/core/security.c
-@@ -711,16 +711,20 @@ int ib_mad_agent_security_setup(struct i
- 						agent->device->name,
- 						agent->port_num);
- 	if (ret)
--		return ret;
-+		goto free_security;
+--- a/drivers/infiniband/core/verbs.c
++++ b/drivers/infiniband/core/verbs.c
+@@ -1087,8 +1087,8 @@ struct ib_qp *ib_open_qp(struct ib_xrcd
+ }
+ EXPORT_SYMBOL(ib_open_qp);
  
- 	agent->lsm_nb.notifier_call = ib_mad_agent_security_change;
- 	ret = register_lsm_notifier(&agent->lsm_nb);
- 	if (ret)
--		return ret;
-+		goto free_security;
+-static struct ib_qp *ib_create_xrc_qp(struct ib_qp *qp,
+-		struct ib_qp_init_attr *qp_init_attr)
++static struct ib_qp *create_xrc_qp(struct ib_qp *qp,
++				   struct ib_qp_init_attr *qp_init_attr)
+ {
+ 	struct ib_qp *real_qp = qp;
  
- 	agent->smp_allowed = true;
- 	agent->lsm_nb_reg = true;
- 	return 0;
+@@ -1103,10 +1103,10 @@ static struct ib_qp *ib_create_xrc_qp(st
+ 
+ 	qp = __ib_open_qp(real_qp, qp_init_attr->event_handler,
+ 			  qp_init_attr->qp_context);
+-	if (!IS_ERR(qp))
+-		__ib_insert_xrcd_qp(qp_init_attr->xrcd, real_qp);
+-	else
+-		real_qp->device->destroy_qp(real_qp);
++	if (IS_ERR(qp))
++		return qp;
 +
-+free_security:
-+	security_ib_free_security(agent->security);
-+	return ret;
++	__ib_insert_xrcd_qp(qp_init_attr->xrcd, real_qp);
+ 	return qp;
  }
  
- void ib_mad_agent_security_cleanup(struct ib_mad_agent *agent)
+@@ -1137,10 +1137,8 @@ struct ib_qp *ib_create_qp(struct ib_pd
+ 		return qp;
+ 
+ 	ret = ib_create_qp_security(qp, device);
+-	if (ret) {
+-		ib_destroy_qp(qp);
+-		return ERR_PTR(ret);
+-	}
++	if (ret)
++		goto err;
+ 
+ 	qp->real_qp    = qp;
+ 	qp->qp_type    = qp_init_attr->qp_type;
+@@ -1153,8 +1151,15 @@ struct ib_qp *ib_create_qp(struct ib_pd
+ 	INIT_LIST_HEAD(&qp->sig_mrs);
+ 	qp->port = 0;
+ 
+-	if (qp_init_attr->qp_type == IB_QPT_XRC_TGT)
+-		return ib_create_xrc_qp(qp, qp_init_attr);
++	if (qp_init_attr->qp_type == IB_QPT_XRC_TGT) {
++		struct ib_qp *xrc_qp = create_xrc_qp(qp, qp_init_attr);
++
++		if (IS_ERR(xrc_qp)) {
++			ret = PTR_ERR(xrc_qp);
++			goto err;
++		}
++		return xrc_qp;
++	}
+ 
+ 	qp->event_handler = qp_init_attr->event_handler;
+ 	qp->qp_context = qp_init_attr->qp_context;
+@@ -1181,11 +1186,8 @@ struct ib_qp *ib_create_qp(struct ib_pd
+ 
+ 	if (qp_init_attr->cap.max_rdma_ctxs) {
+ 		ret = rdma_rw_init_mrs(qp, qp_init_attr);
+-		if (ret) {
+-			pr_err("failed to init MR pool ret= %d\n", ret);
+-			ib_destroy_qp(qp);
+-			return ERR_PTR(ret);
+-		}
++		if (ret)
++			goto err;
+ 	}
+ 
+ 	/*
+@@ -1198,6 +1200,11 @@ struct ib_qp *ib_create_qp(struct ib_pd
+ 				 device->attrs.max_sge_rd);
+ 
+ 	return qp;
++
++err:
++	ib_destroy_qp(qp);
++	return ERR_PTR(ret);
++
+ }
+ EXPORT_SYMBOL(ib_create_qp);
+ 
 
 
