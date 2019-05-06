@@ -2,257 +2,598 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BAEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9D4C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 785FA21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aIQvJMFd"
+	by mail.kernel.org (Postfix) with ESMTP id D3A962087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557153277;
+	bh=Q5SHAohQTPTYgp/txwM6iilizpyOCnEuHs5qK9lJmW4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=03CYDJcuZlmIlXqt4sNFcM89eJkTwrmHM++6N03/QhqIZVJFAhQ0lVsNLkLkK2ON8
+	 cu6QqH5olwIULlkyoQ+JvRAleZKRz9MnY6TbEstocisBId2u3VWBGH4ZwP6A6hEzYn
+	 ai+csIHxOLaEBYyEJObwoxwcGUNwpYO2yM5SbO4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfEFOee (ORCPT
+        id S1726683AbfEFOeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:34:34 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:5366 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbfEFOec (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:34:32 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd045d40000>; Mon, 06 May 2019 07:33:56 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 May 2019 07:34:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 May 2019 07:34:30 -0700
-Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 May
- 2019 14:34:29 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 6 May 2019 14:34:29 +0000
-Received: from jilin-desktop.nvidia.com (Not Verified[10.19.120.147]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cd045f30000>; Mon, 06 May 2019 07:34:29 -0700
-From:   Jim Lin <jilin@nvidia.com>
-To:     <gregkh@linuxfoundation.org>, <mathias.nyman@intel.com>,
-        <stern@rowland.harvard.edu>, <hminas@synopsys.com>,
-        <kai.heng.feng@canonical.com>, <drinkcat@chromium.org>,
-        <prime.zeng@hisilicon.com>, <malat@debian.org>,
-        <nsaenzjulienne@suse.de>, <jflat@chromium.org>,
-        <linus.walleij@linaro.org>, <clabbe@baylibre.com>,
-        <colin.king@canonical.com>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jim Lin <jilin@nvidia.com>
-Subject: [PATCH v4 1/1] usb: xhci: Add Clear_TT_Buffer
-Date:   Mon, 6 May 2019 22:34:22 +0800
-Message-ID: <1557153262-22972-1-git-send-email-jilin@nvidia.com>
-X-Mailer: git-send-email 2.1.4
+        Mon, 6 May 2019 10:34:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54168 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726635AbfEFOeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:34:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42BB5204EC;
+        Mon,  6 May 2019 14:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557153269;
+        bh=Q5SHAohQTPTYgp/txwM6iilizpyOCnEuHs5qK9lJmW4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=D8halO1OSO43fMrwiEdRzZHvRtQgyB+qrd5vDFzltID0gtw7dAkk2XRFQN5cxrgLa
+         LMui+MUaFd3ITxGMlMGllVmALbG2GoWL4mLbzam3yCZggb5wTW7hOj4KrhpBARL0tt
+         5y3J2zzb/Zv2YsPipdyKCb/ksJAWWAXQDeKW5RXA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.0 000/122] 5.0.14-stable review
+Date:   Mon,  6 May 2019 16:30:58 +0200
+Message-Id: <20190506143054.670334917@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557153236; bh=Q/DEh0KWbfxsLAH92wY6N5X/0pxwczeiWJVLn2rXiz0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=aIQvJMFdJT/Bxvg9Dzyu2zyfHOxF4gVaoLQabwfl2LTdgtZ6e9Q3/8waaiO3VO2O0
-         QS0qR05gslyEQVeHTHNhSPfnQY+3oaFdUGqiQMBnmhKOnSiKClZwQQCj4CzLw075Nc
-         yzefh3hABlD35I/1iOOzvW96rVDaIHWP+PPdXT4wKUvn2WHUZhL2mR5tV4E29jwzdl
-         jToknEh0Wt8KZLHphNSC//f83UVGCG6JzwRlNS+zcn6idAgiMQCbz497pRDq0YQO+4
-         Rs95Nhtet9stpgC5EfkT5o5qZ4aP8v38pvxIZnfQ9DcRcC+5aSW8znl1pJ/ARUF+5t
-         2Zh/XDrdiyc7g==
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.0.14-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.0.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.0.14-rc1
+X-KernelTest-Deadline: 2019-05-08T14:31+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
-processing for full-/low-speed endpoints connected via a TT, the host
-software must use the Clear_TT_Buffer request to the TT to ensure
-that the buffer is not in the busy state".
+This is the start of the stable review cycle for the 5.0.14 release.
+There are 122 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-In our case, a full-speed speaker (ConferenceCam) is behind a high-
-speed hub (ConferenceCam Connect), sometimes once we get STALL on a
-request we may continue to get STALL with the folllowing requests,
-like Set_Interface.
+Responses should be made by Wed 08 May 2019 02:29:09 PM UTC.
+Anything received after that time might be too late.
 
-Here we add Clear_TT_Buffer for the following Set_Interface requests
-to get ACK successfully.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.14-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+and the diffstat can be found below.
 
-Originally usb_hub_clear_tt_buffer uses urb->dev->devnum as device
-address while sending Clear_TT_Buffer command, but this doesn't work
-for XHCI.
-We have to extend usb_hub_clear_tt_buffer parameter to specify device
-number that will have the TT state of its hub cleared.
+thanks,
 
-Signed-off-by: Jim Lin <jilin@nvidia.com>
----
-v2: xhci_clear_tt_buffer_complete: add static, shorter indentation
-    , remove its claiming in xhci.h
-v3: Add description for clearing_tt (xhci.h)
-v4: Remove clearing_tt flag because hub_tt_work has hub->tt.lock
-    to protect for Clear_TT_Buffer to be run serially.
-    Remove xhci_clear_tt_buffer_complete as it's not necessary.
-    Same reason as the above.
-    Extend usb_hub_clear_tt_buffer parameter
+greg k-h
 
- drivers/usb/core/hub.c            |  5 +++--
- drivers/usb/dwc2/hcd_intr.c       |  2 +-
- drivers/usb/host/ehci-q.c         |  2 +-
- drivers/usb/host/fotg210-hcd.c    |  2 +-
- drivers/usb/host/xhci-ring.c      | 22 ++++++++++++++++++++++
- drivers/usb/isp1760/isp1760-hcd.c |  5 +++--
- include/linux/usb/hcd.h           |  2 +-
- 7 files changed, 32 insertions(+), 8 deletions(-)
+-------------
+Pseudo-Shortlog of commits:
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 15a2934dc29d..4dec054c9776 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -840,6 +840,7 @@ int usb_hub_set_port_power(struct usb_device *hdev, struct usb_hub *hub,
- /**
-  * usb_hub_clear_tt_buffer - clear control/bulk TT state in high speed hub
-  * @urb: an URB associated with the failed or incomplete split transaction
-+ * @devnum : device number that will have the TT state of its hub cleared
-  *
-  * High speed HCDs use this to tell the hub driver that some split control or
-  * bulk transaction failed in a way that requires clearing internal state of
-@@ -851,7 +852,7 @@ int usb_hub_set_port_power(struct usb_device *hdev, struct usb_hub *hub,
-  *
-  * Return: 0 if successful. A negative error code otherwise.
-  */
--int usb_hub_clear_tt_buffer(struct urb *urb)
-+int usb_hub_clear_tt_buffer(struct urb *urb, int devnum)
- {
- 	struct usb_device	*udev = urb->dev;
- 	int			pipe = urb->pipe;
-@@ -873,7 +874,7 @@ int usb_hub_clear_tt_buffer(struct urb *urb)
- 	/* info that CLEAR_TT_BUFFER needs */
- 	clear->tt = tt->multi ? udev->ttport : 1;
- 	clear->devinfo = usb_pipeendpoint (pipe);
--	clear->devinfo |= udev->devnum << 4;
-+	clear->devinfo |= devnum << 4;
- 	clear->devinfo |= usb_pipecontrol(pipe)
- 			? (USB_ENDPOINT_XFER_CONTROL << 11)
- 			: (USB_ENDPOINT_XFER_BULK << 11);
-diff --git a/drivers/usb/dwc2/hcd_intr.c b/drivers/usb/dwc2/hcd_intr.c
-index 88b5dcf3aefc..a3bb6911a62a 100644
---- a/drivers/usb/dwc2/hcd_intr.c
-+++ b/drivers/usb/dwc2/hcd_intr.c
-@@ -125,7 +125,7 @@ static void dwc2_hc_handle_tt_clear(struct dwc2_hsotg *hsotg,
- 
- 	if (qtd->urb->status != -EPIPE && qtd->urb->status != -EREMOTEIO) {
- 		chan->qh->tt_buffer_dirty = 1;
--		if (usb_hub_clear_tt_buffer(usb_urb))
-+		if (usb_hub_clear_tt_buffer(usb_urb, usb_urb->dev->devnum))
- 			/* Clear failed; let's hope things work anyway */
- 			chan->qh->tt_buffer_dirty = 0;
- 	}
-diff --git a/drivers/usb/host/ehci-q.c b/drivers/usb/host/ehci-q.c
-index aa2f77f1506d..9f64c260239e 100644
---- a/drivers/usb/host/ehci-q.c
-+++ b/drivers/usb/host/ehci-q.c
-@@ -169,7 +169,7 @@ static void ehci_clear_tt_buffer(struct ehci_hcd *ehci, struct ehci_qh *qh,
- 		if (!ehci_is_TDI(ehci)
- 				|| urb->dev->tt->hub !=
- 				   ehci_to_hcd(ehci)->self.root_hub) {
--			if (usb_hub_clear_tt_buffer(urb) == 0)
-+			if (!usb_hub_clear_tt_buffer(urb, urb->dev->devnum))
- 				qh->clearing_tt = 1;
- 		} else {
- 
-diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
-index 0da68df259c8..bd29ed0fbd46 100644
---- a/drivers/usb/host/fotg210-hcd.c
-+++ b/drivers/usb/host/fotg210-hcd.c
-@@ -2123,7 +2123,7 @@ static void fotg210_clear_tt_buffer(struct fotg210_hcd *fotg210,
- 
- 		if (urb->dev->tt->hub !=
- 				fotg210_to_hcd(fotg210)->self.root_hub) {
--			if (usb_hub_clear_tt_buffer(urb) == 0)
-+			if (!usb_hub_clear_tt_buffer(urb, urb->dev->devnum))
- 				qh->clearing_tt = 1;
- 		}
- 	}
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 9215a28dad40..aa2a21e6cde3 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1786,6 +1786,27 @@ struct xhci_segment *trb_in_td(struct xhci_hcd *xhci,
- 	return NULL;
- }
- 
-+static void xhci_clear_hub_tt_buffer(struct xhci_hcd *xhci,
-+	unsigned int slot_id, struct xhci_td *td)
-+{
-+	struct xhci_virt_device *dev;
-+	struct xhci_slot_ctx *slot_ctx;
-+	int devnum;
-+
-+	/*
-+	 * As part of low/full-speed endpoint-halt processing
-+	 * we must clear the TT buffer (USB 2.0 specification 11.17.5).
-+	 */
-+	if (td->urb->dev->tt && !usb_pipeint(td->urb->pipe) &&
-+	    (td->urb->dev->tt->hub != xhci_to_hcd(xhci)->self.root_hub)) {
-+		dev = xhci->devs[slot_id];
-+		slot_ctx = xhci_get_slot_ctx(xhci, dev->out_ctx);
-+		devnum = (int) le32_to_cpu(slot_ctx->dev_state) &
-+			DEV_ADDR_MASK;
-+		usb_hub_clear_tt_buffer(td->urb, devnum);
-+	}
-+}
-+
- static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 		unsigned int slot_id, unsigned int ep_index,
- 		unsigned int stream_id, struct xhci_td *td,
-@@ -1804,6 +1825,7 @@ static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 	if (reset_type == EP_HARD_RESET) {
- 		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
- 		xhci_cleanup_stalled_ring(xhci, ep_index, stream_id, td);
-+		xhci_clear_hub_tt_buffer(xhci, slot_id, td);
- 	}
- 	xhci_ring_cmd_db(xhci);
- }
-diff --git a/drivers/usb/isp1760/isp1760-hcd.c b/drivers/usb/isp1760/isp1760-hcd.c
-index 8142c6b4c4cf..f1d68092becb 100644
---- a/drivers/usb/isp1760/isp1760-hcd.c
-+++ b/drivers/usb/isp1760/isp1760-hcd.c
-@@ -1166,7 +1166,8 @@ static void handle_done_ptds(struct usb_hcd *hcd)
- 					(qtd->urb->status != -EPIPE) &&
- 					(qtd->urb->status != -EREMOTEIO)) {
- 				qh->tt_buffer_dirty = 1;
--				if (usb_hub_clear_tt_buffer(qtd->urb))
-+				if (usb_hub_clear_tt_buffer(qtd->urb,
-+						qtd->urb->dev->devnum))
- 					/* Clear failed; let's hope things work
- 					   anyway */
- 					qh->tt_buffer_dirty = 0;
-@@ -1633,7 +1634,7 @@ static void dequeue_urb_from_qtd(struct usb_hcd *hcd, struct isp1760_qh *qh,
- 
- 	if ((urb->dev->speed != USB_SPEED_HIGH) && urb_was_running) {
- 		qh->tt_buffer_dirty = 1;
--		if (usb_hub_clear_tt_buffer(urb))
-+		if (usb_hub_clear_tt_buffer(urb, urb->dev->devnum))
- 			/* Clear failed; let's hope things work anyway */
- 			qh->tt_buffer_dirty = 0;
- 	}
-diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-index 695931b03684..01720f1f7d62 100644
---- a/include/linux/usb/hcd.h
-+++ b/include/linux/usb/hcd.h
-@@ -559,7 +559,7 @@ struct usb_tt_clear {
- 	struct usb_host_endpoint	*ep;
- };
- 
--extern int usb_hub_clear_tt_buffer(struct urb *urb);
-+extern int usb_hub_clear_tt_buffer(struct urb *urb, int devnum);
- extern void usb_ep0_reinit(struct usb_device *);
- 
- /* (shifted) direction/type/recipient from the USB 2.0 spec, table 9.2 */
--- 
-2.1.4
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.0.14-rc1
+
+Jacopo Mondi <jacopo+renesas@jmondi.org>
+    media: v4l2: i2c: ov7670: Fix PLL bypass register values
+
+Nicolas Le Bayon <nicolas.le.bayon@st.com>
+    i2c: i2c-stm32f7: Fix SDADEL minimum formula
+
+Peter Zijlstra <peterz@infradead.org>
+    x86/mm/tlb: Revert "x86/mm: Align TLB invalidation info"
+
+Qian Cai <cai@lca.pw>
+    x86/mm: Fix a crash with kmemleak_scan()
+
+Baoquan He <bhe@redhat.com>
+    x86/mm/KASLR: Fix the size of the direct mapping section
+
+David Müller <dave.mueller@gmx.ch>
+    clk: x86: Add system specific quirk to mark clocks as critical
+
+Tony Luck <tony.luck@intel.com>
+    x86/mce: Improve error message when kernel cannot recover, p2
+
+Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+    powerpc/mm/hash: Handle mmap_min_addr correctly in get_unmapped_area topdown search
+
+Alexander Wetzel <alexander@wetzel-home.de>
+    mac80211: Honor SW_CRYPTO_CONTROL for unicast keys in AP VLAN mode
+
+Ondrej Mosnacek <omosnace@redhat.com>
+    selinux: never allow relabeling on context mounts
+
+Stephen Smalley <sds@tycho.nsa.gov>
+    selinux: avoid silent denials in permissive mode under RCU walk
+
+Anson Huang <anson.huang@nxp.com>
+    gpio: mxc: add check to return defer probe if clock tree NOT ready
+
+Dmitry Torokhov <dmitry.torokhov@gmail.com>
+    Input: stmfts - acknowledge that setting brightness is a blocking call
+
+Anson Huang <anson.huang@nxp.com>
+    Input: snvs_pwrkey - initialize necessary driver data before enabling IRQ
+
+Yuval Avnery <yuvalav@mellanox.com>
+    IB/core: Destroy QP if XRC QP fails
+
+Daniel Jurgens <danielj@mellanox.com>
+    IB/core: Fix potential memory leak while creating MAD agents
+
+Daniel Jurgens <danielj@mellanox.com>
+    IB/core: Unregister notifier before freeing MAD security
+
+Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+    platform/x86: intel_pmc_core: Handle CFL regmap properly
+
+Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+    platform/x86: intel_pmc_core: Fix PCH IP name
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: lapic: Check for in-kernel LAPIC before deferencing apic pointer
+
+Yu Zhang <yu.c.zhang@linux.intel.com>
+    kvm: vmx: Fix typos in vmentry/vmexit control setting
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: nVMX: Remove a rogue "rax" clobber from nested_vmx_check_vmentry_hw()
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: VMX: Save RSI to an unused output in the vCPU-run asm blob
+
+Arnaud Pouliquen <arnaud.pouliquen@st.com>
+    ASoC: stm32: fix sai driver name initialisation
+
+Jerome Brunet <jbrunet@baylibre.com>
+    ASoC: dpcm: skip missing substream while applying symmetry
+
+Charles Keepax <ckeepax@opensource.cirrus.com>
+    ASoC: wm_adsp: Correct handling of compressed streams that restart
+
+Chen-Yu Tsai <wens@csie.org>
+    ASoC: sunxi: sun50i-codec-analog: Rename hpvcc regulator supply to cpvdd
+
+Jiada Wang <jiada_wang@mentor.com>
+    ASoC: rsnd: gen: fix SSI9 4/5/6/7 busif related register address
+
+Hans de Goede <hdegoede@redhat.com>
+    ASoC: Intel: bytcr_rt5651: Revert "Fix DMIC map headsetmic mapping"
+
+Bart Van Assche <bvanassche@acm.org>
+    scsi: RDMA/srpt: Fix a credit leak for aborted commands
+
+John Garry <john.garry@huawei.com>
+    scsi: hisi_sas: Fix to only call scsi_get_prot_op() for non-NULL scsi_cmnd
+
+Jeremy Fertic <jeremyfertic@gmail.com>
+    staging: iio: adt7316: fix the dac write calculation
+
+Jeremy Fertic <jeremyfertic@gmail.com>
+    staging: iio: adt7316: fix handling of dac high resolution option
+
+Jeremy Fertic <jeremyfertic@gmail.com>
+    staging: iio: adt7316: fix the dac read calculation
+
+Jeremy Fertic <jeremyfertic@gmail.com>
+    staging: iio: adt7316: allow adt751x to use internal vref for all dacs
+
+Thinh Nguyen <thinh.nguyen@synopsys.com>
+    usb: dwc3: Reset num_trbs after skipping
+
+Jeffrey Hugo <jhugo@codeaurora.org>
+    clk: qcom: Add missing freq for usb30_master_clk on 8998
+
+Sean Wang <sean.wang@mediatek.com>
+    Bluetooth: mediatek: fix up an error path to restore bdev->tx_state
+
+Brian Norris <briannorris@chromium.org>
+    Bluetooth: btusb: request wake pin with NOAUTOEN
+
+Kim Phillips <kim.phillips@amd.com>
+    perf/x86/amd: Update generic hardware cache events for Family 17h
+
+Arnd Bergmann <arnd@arndb.de>
+    ARM: iop: don't use using 64-bit DMA masks
+
+Arnd Bergmann <arnd@arndb.de>
+    ARM: orion: don't use using 64-bit DMA masks
+
+Kirill Smelkov <kirr@nexedi.com>
+    fs: stream_open - opener for stream-like files so that read and write can run simultaneously without deadlock
+
+Guenter Roeck <linux@roeck-us.net>
+    xsysace: Fix error handling in ace_setup
+
+John Pittman <jpittman@redhat.com>
+    null_blk: prevent crash from bad home_node value
+
+Randy Dunlap <rdunlap@infradead.org>
+    sh: fix multiple function definition build errors
+
+Mike Kravetz <mike.kravetz@oracle.com>
+    hugetlbfs: fix memory leak for resv_map
+
+Catalin Marinas <catalin.marinas@arm.com>
+    kmemleak: powerpc: skip scanning holes in the .bss section
+
+David Rientjes <rientjes@google.com>
+    KVM: SVM: prevent DBG_DECRYPT and DBG_ENCRYPT overflow
+
+Varun Prakash <varun@chelsio.com>
+    libcxgb: fix incorrect ppmax calculation
+
+Yonglong Liu <liuyonglong@huawei.com>
+    net: hns: Fix WARNING when remove HNS driver with SMMU enabled
+
+Yonglong Liu <liuyonglong@huawei.com>
+    net: hns: fix ICMP6 neighbor solicitation messages discard problem
+
+Yonglong Liu <liuyonglong@huawei.com>
+    net: hns: Fix probabilistic memory overwrite when HNS driver initialized
+
+Yonglong Liu <liuyonglong@huawei.com>
+    net: hns: Use NAPI_POLL_WEIGHT for hns driver
+
+Liubin Shu <shuliubin@huawei.com>
+    net: hns: fix KASAN: use-after-free in hns_nic_net_xmit_hw()
+
+Wei Li <liwei391@huawei.com>
+    arm64: fix wrong check of on_sdei_stack in nmi context
+
+Dongli Zhang <dongli.zhang@oracle.com>
+    blk-mq: do not reset plug->rq_count before the list is sorted
+
+Peng Hao <peng.hao2@zte.com.cn>
+    arm/mach-at91/pm : fix possible object reference leak
+
+Michael Kelley <mikelley@microsoft.com>
+    scsi: storvsc: Fix calculation of sub-channel count
+
+Xose Vazquez Perez <xose.vazquez@gmail.com>
+    scsi: core: add new RDAC LENOVO/DE_Series device
+
+Louis Taylor <louis@kragniz.eu>
+    vfio/pci: use correct format characters
+
+Dmitry Torokhov <dmitry.torokhov@gmail.com>
+    HID: input: add mapping for Assistant key
+
+Alexandre Belloni <alexandre.belloni@bootlin.com>
+    rtc: da9063: set uie_unsupported when relevant
+
+Shenghui Wang <shhuiw@foxmail.com>
+    block: use blk_free_flush_queue() to free hctx->fq in blk_mq_init_hctx
+
+Andreas Kemnade <andreas@kemnade.info>
+    mfd: twl-core: Disable IRQ while suspended
+
+Al Viro <viro@zeniv.linux.org.uk>
+    debugfs: fix use-after-free on symlink traversal
+
+Al Viro <viro@zeniv.linux.org.uk>
+    jffs2: fix use-after-free on symlink traversal
+
+Aaro Koskinen <aaro.koskinen@nokia.com>
+    net: stmmac: don't log oversized frames
+
+Aaro Koskinen <aaro.koskinen@nokia.com>
+    net: stmmac: fix dropping of multi-descriptor RX frames
+
+Aaro Koskinen <aaro.koskinen@nokia.com>
+    net: stmmac: don't overwrite discard_frame status
+
+Aaro Koskinen <aaro.koskinen@nokia.com>
+    net: stmmac: don't stop NAPI processing when dropping a packet
+
+Aaro Koskinen <aaro.koskinen@nokia.com>
+    net: stmmac: ratelimit RX error logs
+
+Aaro Koskinen <aaro.koskinen@nokia.com>
+    net: stmmac: use correct DMA buffer size in the RX descriptor
+
+Konstantin Khorenko <khorenko@virtuozzo.com>
+    bonding: show full hw address in sysfs for slave entries
+
+Omri Kahalon <omrik@mellanox.com>
+    net/mlx5: E-Switch, Fix esw manager vport indication for more vport commands
+
+Roi Dayan <roid@mellanox.com>
+    net/mlx5: E-Switch, Protect from invalid memory access in offload fdb table
+
+Jesper Dangaard Brouer <brouer@redhat.com>
+    xdp: fix cpumap redirect SKB creation bug
+
+Xi Wang <wangxi11@huawei.com>
+    net: hns3: fix compile error
+
+Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+    HID: quirks: Fix keyboard + touchpad on Lenovo Miix 630
+
+Alan Kao <alankao@andestech.com>
+    riscv: fix accessing 8-byte variable from RV32
+
+Stefan Assmann <sassmann@kpanic.de>
+    i40e: fix WoL support check
+
+Ivan Vecera <ivecera@redhat.com>
+    ixgbe: fix mdio bus registration
+
+Arvind Sankar <niveditas98@gmail.com>
+    igb: Fix WARN_ONCE on runtime suspend
+
+Jacob Keller <jacob.e.keller@intel.com>
+    i40e: fix i40e_ptp_adjtime when given a negative delta
+
+Tony Lindgren <tony@atomide.com>
+    ARM: dts: Fix dcan clkctrl clock for am3
+
+Axel Lin <axel.lin@ingics.com>
+    reset: meson-audio-arb: Fix missing .owner setting of reset_controller_dev
+
+Douglas Anderson <dianders@chromium.org>
+    ARM: dts: rockchip: Fix gpu opp node names for rk3288
+
+Anders Roxell <anders.roxell@linaro.org>
+    batman-adv: fix warning in function batadv_v_elp_get_throughput
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Reduce tt_global hash refcnt only for removed entry
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Reduce tt_local hash refcnt only for removed entry
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Reduce claim hash refcnt only for removed entry
+
+Julia Lawall <Julia.Lawall@lip6.fr>
+    ARM: OMAP2+: add missing of_node_put after of_device_is_available
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    rtc: sh: Fix invalid alarm warning for non-enabled alarm
+
+Stephen Boyd <swboyd@chromium.org>
+    rtc: cros-ec: Fail suspend/resume if wake IRQ can't be configured
+
+He, Bo <bo.he@intel.com>
+    HID: debug: fix race condition with between rdesc_show() and device removal
+
+Kangjie Lu <kjlu@umn.edu>
+    HID: logitech: check the return value of create_singlethread_workqueue
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    HID: Increase maximum report size allowed by hid_field_extract()
+
+Leonidas P. Papadakos <papadakospan@gmail.com>
+    arm64: dts: rockchip: fix rk3328-roc-cc gmac2io tx/rx_delay
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: lapic: Convert guest TSC to host time domain if necessary
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: lapic: Allow user to disable adaptive tuning of timer advancement
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: lapic: Track lapic timer advance per vCPU
+
+Liran Alon <liran.alon@oracle.com>
+    KVM: x86: Consider LAPIC TSC-Deadline timer expired if deadline too short
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: lapic: Disable timer advancement if adaptive tuning goes haywire
+
+Alan Stern <stern@rowland.harvard.edu>
+    USB: core: Fix bug caused by duplicate interface PM usage counter
+
+Alan Stern <stern@rowland.harvard.edu>
+    USB: core: Fix unterminated string returned by usb_string()
+
+Malte Leip <malte@leip.net>
+    usb: usbip: fix isoc packet num validation in get_pipe
+
+Alan Stern <stern@rowland.harvard.edu>
+    USB: dummy-hcd: Fix failure to give back unlinked URBs
+
+Alan Stern <stern@rowland.harvard.edu>
+    USB: w1 ds2490: Fix bug caused by improper use of altsetting array
+
+Alan Stern <stern@rowland.harvard.edu>
+    USB: yurex: Fix protection fault after device removal
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: hda/realtek - Apply the fixup for ASUS Q325UAR
+
+Kailang Yang <kailang@realtek.com>
+    ALSA: hda/realtek - Fixed Dell AIO speaker noise
+
+Kailang Yang <kailang@realtek.com>
+    ALSA: hda/realtek - Add new Dell platform for headset mode
+
+Jarkko Nikula <jarkko.nikula@linux.intel.com>
+    i2c: Prevent runtime suspend of adapter when Host Notify is required
+
+Anson Huang <anson.huang@nxp.com>
+    i2c: imx: correct the method of getting private data in notifier_call
+
+Ard Biesheuvel <ard.biesheuvel@linaro.org>
+    i2c: synquacer: fix enumeration of slave devices
+
+Johannes Berg <johannes.berg@intel.com>
+    mac80211: don't attempt to rename ERR_PTR() debugfs dirs
+
+Miquel Raynal <miquel.raynal@bootlin.com>
+    mtd: rawnand: marvell: Clean the controller state before each operation
+
+Douglas Anderson <dianders@chromium.org>
+    mwifiex: Make resume actually do something useful again on SDIO cards
+
+Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+    iwlwifi: fix driver operation for 5350
+
+Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+    ARC: memset: fix build with L1_CACHE_SHIFT != 6
+
+Tycho Andersen <tycho@tycho.ws>
+    seccomp: Make NEW_LISTENER and TSYNC flags exclusive
+
+Kees Cook <keescook@chromium.org>
+    selftests/seccomp: Prepare for exclusive seccomp flags
+
+
+-------------
+
+Diffstat:
+
+ Documentation/driver-api/usb/power-management.rst  |  14 +-
+ Makefile                                           |   4 +-
+ arch/arc/lib/memset-archs.S                        |   4 +-
+ arch/arm/boot/dts/am33xx-l4.dtsi                   |   4 +-
+ arch/arm/boot/dts/rk3288.dtsi                      |  12 +-
+ arch/arm/mach-at91/pm.c                            |   6 +-
+ arch/arm/mach-iop13xx/setup.c                      |   8 +-
+ arch/arm/mach-iop13xx/tpmi.c                       |  10 +-
+ arch/arm/mach-omap2/display.c                      |   4 +-
+ arch/arm/plat-iop/adma.c                           |   6 +-
+ arch/arm/plat-orion/common.c                       |   4 +-
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts     |   4 +-
+ arch/arm64/kernel/sdei.c                           |   6 +
+ arch/powerpc/kernel/kvm.c                          |   7 +
+ arch/powerpc/mm/slice.c                            |  10 +-
+ arch/riscv/include/asm/uaccess.h                   |   2 +-
+ arch/sh/boards/of-generic.c                        |   4 +-
+ arch/x86/events/amd/core.c                         | 111 ++++++-
+ arch/x86/kernel/cpu/mce/severity.c                 |   5 +
+ arch/x86/kvm/lapic.c                               |  73 +++--
+ arch/x86/kvm/lapic.h                               |   4 +-
+ arch/x86/kvm/svm.c                                 |  12 +-
+ arch/x86/kvm/vmx/nested.c                          |   2 +-
+ arch/x86/kvm/vmx/vmx.c                             |   6 +-
+ arch/x86/kvm/vmx/vmx.h                             |   8 +-
+ arch/x86/kvm/x86.c                                 |  15 +-
+ arch/x86/kvm/x86.h                                 |   2 -
+ arch/x86/mm/init.c                                 |   6 +
+ arch/x86/mm/kaslr.c                                |   2 +-
+ arch/x86/mm/tlb.c                                  |   2 +-
+ block/blk-mq.c                                     |   5 +-
+ drivers/block/null_blk_main.c                      |   5 +
+ drivers/block/xsysace.c                            |   2 +
+ drivers/bluetooth/btmtkuart.c                      |   2 +
+ drivers/bluetooth/btusb.c                          |   2 +-
+ drivers/clk/qcom/gcc-msm8998.c                     |   1 +
+ drivers/clk/x86/clk-pmc-atom.c                     |  14 +-
+ drivers/gpio/gpio-mxc.c                            |   5 +-
+ drivers/hid/hid-core.c                             |   6 +-
+ drivers/hid/hid-debug.c                            |   5 +
+ drivers/hid/hid-input.c                            |   1 +
+ drivers/hid/hid-logitech-hidpp.c                   |   8 +-
+ drivers/hid/hid-quirks.c                           |   5 +-
+ drivers/i2c/busses/i2c-imx.c                       |   4 +-
+ drivers/i2c/busses/i2c-stm32f7.c                   |   2 +-
+ drivers/i2c/busses/i2c-synquacer.c                 |   2 +
+ drivers/i2c/i2c-core-base.c                        |   4 +
+ drivers/infiniband/core/security.c                 |  11 +-
+ drivers/infiniband/core/verbs.c                    |  41 ++-
+ drivers/infiniband/ulp/srpt/ib_srpt.c              |  11 +
+ drivers/input/keyboard/snvs_pwrkey.c               |   6 +-
+ drivers/input/touchscreen/stmfts.c                 |  30 +-
+ drivers/media/i2c/ov7670.c                         |  16 +-
+ drivers/mfd/twl-core.c                             |  23 ++
+ drivers/mtd/nand/raw/marvell_nand.c                |  12 +-
+ drivers/net/bonding/bond_sysfs_slave.c             |   4 +-
+ drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c |   9 +-
+ drivers/net/ethernet/hisilicon/hns/hnae.c          |   4 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c |  33 +-
+ .../net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c    |   2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c      |  12 +-
+ .../net/ethernet/hisilicon/hns3/hns3pf/Makefile    |   2 +-
+ .../net/ethernet/hisilicon/hns3/hns3vf/Makefile    |   2 +-
+ drivers/net/ethernet/intel/i40e/i40e_ethtool.c     |   3 +-
+ drivers/net/ethernet/intel/i40e/i40e_ptp.c         |   5 +-
+ drivers/net/ethernet/intel/igb/e1000_defines.h     |   2 +
+ drivers/net/ethernet/intel/igb/igb_main.c          |  57 +---
+ drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c       |  16 +-
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c  |   6 +-
+ .../ethernet/mellanox/mlx5/core/eswitch_offloads.c |   1 +
+ drivers/net/ethernet/stmicro/stmmac/descs_com.h    |  22 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c |   2 +-
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/enh_desc.c     |  22 +-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/norm_desc.c    |  12 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  34 +-
+ drivers/net/wireless/intel/iwlwifi/cfg/5000.c      |   3 +-
+ drivers/net/wireless/marvell/mwifiex/sdio.c        |   2 +-
+ drivers/platform/x86/intel_pmc_core.c              |   4 +-
+ drivers/platform/x86/pmc_atom.c                    |  21 ++
+ drivers/reset/reset-meson-audio-arb.c              |   1 +
+ drivers/rtc/rtc-cros-ec.c                          |   4 +-
+ drivers/rtc/rtc-da9063.c                           |   7 +
+ drivers/rtc/rtc-sh.c                               |   2 +-
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c             |   3 +-
+ drivers/scsi/scsi_devinfo.c                        |   1 +
+ drivers/scsi/scsi_dh.c                             |   1 +
+ drivers/scsi/storvsc_drv.c                         |  13 +-
+ drivers/staging/iio/addac/adt7316.c                |  34 +-
+ drivers/usb/core/driver.c                          |  13 -
+ drivers/usb/core/message.c                         |   4 +-
+ drivers/usb/dwc3/gadget.c                          |   2 +
+ drivers/usb/gadget/udc/dummy_hcd.c                 |  19 +-
+ drivers/usb/misc/yurex.c                           |   1 +
+ drivers/usb/storage/realtek_cr.c                   |  13 +-
+ drivers/usb/usbip/stub_rx.c                        |  12 +-
+ drivers/usb/usbip/usbip_common.h                   |   7 +
+ drivers/vfio/pci/vfio_pci.c                        |   4 +-
+ drivers/w1/masters/ds2490.c                        |   6 +-
+ drivers/xen/xenbus/xenbus_dev_frontend.c           |   4 +-
+ fs/debugfs/inode.c                                 |  13 +-
+ fs/hugetlbfs/inode.c                               |  20 +-
+ fs/jffs2/readinode.c                               |   5 -
+ fs/jffs2/super.c                                   |   5 +-
+ fs/open.c                                          |  18 +
+ fs/read_write.c                                    |   5 +-
+ include/linux/fs.h                                 |   4 +
+ include/linux/platform_data/x86/clk-pmc-atom.h     |   3 +
+ include/linux/usb.h                                |   2 -
+ kernel/bpf/cpumap.c                                |  13 +-
+ kernel/seccomp.c                                   |  17 +-
+ mm/kmemleak.c                                      |  16 +-
+ net/batman-adv/bat_v_elp.c                         |   6 +-
+ net/batman-adv/bridge_loop_avoidance.c             |  16 +-
+ net/batman-adv/translation-table.c                 |  32 +-
+ net/mac80211/debugfs_netdev.c                      |   2 +-
+ net/mac80211/key.c                                 |   9 +-
+ scripts/coccinelle/api/stream_open.cocci           | 363 +++++++++++++++++++++
+ security/selinux/avc.c                             |  23 +-
+ security/selinux/hooks.c                           |  44 ++-
+ security/selinux/include/avc.h                     |   1 +
+ sound/pci/hda/patch_realtek.c                      |  13 +
+ sound/soc/codecs/wm_adsp.c                         |   3 +-
+ sound/soc/intel/boards/bytcr_rt5651.c              |   2 +-
+ sound/soc/sh/rcar/gen.c                            |  24 ++
+ sound/soc/sh/rcar/rsnd.h                           |  27 ++
+ sound/soc/sh/rcar/ssiu.c                           |  24 +-
+ sound/soc/soc-pcm.c                                |   7 +-
+ sound/soc/stm/stm32_sai_sub.c                      |   2 +-
+ sound/soc/sunxi/sun50i-codec-analog.c              |   4 +-
+ tools/testing/selftests/seccomp/seccomp_bpf.c      |  34 +-
+ 132 files changed, 1343 insertions(+), 429 deletions(-)
+
 
