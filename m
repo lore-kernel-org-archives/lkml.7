@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A95AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CDBC04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13EB20C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EEEE2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154623;
-	bh=FwKT+klbAU6IuKJGLc8X7ttbHeesRLveH+crazINx7U=;
+	s=default; t=1557154633;
+	bh=Pr1LtSHc2bo73ZK8wLXKDfcWUUJtPTBkPTdCdsGOCto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U4H66cioxipopZ3HEMgb3UsirnwBiF/UmffZ29Dt/GGcq5d8Ca6iOZ1EaovHiSwMZ
-	 hsM75c+pkjVg11ROvTJU8kCM+anRuH/MG6sP/OEuS8TcWLYY+3UI3Z/x4CQSZzQUbw
-	 K+GnBRZaXES9Q2HSSSJqmcfxQ8Nh0I3LT5EYIrc8=
+	b=Wj8NSUcwdyk2CylluIlmgvdMEdsD1yTgYMeNn43KxCIjuKxRcXfyYps4+7oC7Ro3w
+	 Ka8s+OUhD5WvEV6sz7L0k/LxgjfoU+VxlTtygeto9/hPQ384L1etR0MenEoz/RR/qn
+	 4OHk7sltyBtKosnR6CAarFk/SzcNqGkr4ECckIzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbfEFOon (ORCPT
+        id S1728055AbfEFOo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41006 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:44:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbfEFOoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:39 -0400
+        id S1728778AbfEFOoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAC31214AE;
-        Mon,  6 May 2019 14:44:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3619120449;
+        Mon,  6 May 2019 14:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153878;
-        bh=FwKT+klbAU6IuKJGLc8X7ttbHeesRLveH+crazINx7U=;
+        s=default; t=1557153860;
+        bh=Pr1LtSHc2bo73ZK8wLXKDfcWUUJtPTBkPTdCdsGOCto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wj1T8EbeBwfPGVKwZ9NtOgF3WcmTozFs85XrCnLK0XzDFKWOz1uCnMz3HvLLxN4vv
-         qGhLSruarbl4DNc6p8yusmKI7cRrujRHX9IYLWe8vtgyZhtEh9tFSKMp7lEn/9LdZe
-         MEG7uGUP3HzCNEJpCQG5E55TIenR0bqTBen4zWUQ=
+        b=2TrsFE1AVEMsNCNXgGl0AepeRZlbqIDk1vlyXMHP+4ZLSg0Z6leV9e1c77z/UmMdz
+         YE2OO3msMqRRWfyb7PSnOYgvtJBguhD3BGOn8Da7Er0ZzpIwsbKuGBnR2RJaqb9oBU
+         Z0ZuxAeaLSgjOQaOXpCeG72SVw/mgh6i4CnJ5gvA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 03/75] ipv6/flowlabel: wait rcu grace period before put_pid()
-Date:   Mon,  6 May 2019 16:32:11 +0200
-Message-Id: <20190506143053.574284681@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+7634edaea4d0b341c625@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 23/75] USB: core: Fix bug caused by duplicate interface PM usage counter
+Date:   Mon,  6 May 2019 16:32:31 +0200
+Message-Id: <20190506143055.261521937@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -61,151 +59,211 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit 6c0afef5fb0c27758f4d52b2210c61b6bd8b4470 ]
+commit c2b71462d294cf517a0bc6e4fd6424d7cee5596f upstream.
 
-syzbot was able to catch a use-after-free read in pid_nr_ns() [1]
+The syzkaller fuzzer reported a bug in the USB hub driver which turned
+out to be caused by a negative runtime-PM usage counter.  This allowed
+a hub to be runtime suspended at a time when the driver did not expect
+it.  The symptom is a WARNING issued because the hub's status URB is
+submitted while it is already active:
 
-ip6fl_seq_show() seems to use RCU protection, dereferencing fl->owner.pid
-but fl_free() releases fl->owner.pid before rcu grace period is started.
+	URB 0000000031fb463e submitted while active
+	WARNING: CPU: 0 PID: 2917 at drivers/usb/core/urb.c:363
 
-[1]
+The negative runtime-PM usage count was caused by an unfortunate
+design decision made when runtime PM was first implemented for USB.
+At that time, USB class drivers were allowed to unbind from their
+interfaces without balancing the usage counter (i.e., leaving it with
+a positive count).  The core code would take care of setting the
+counter back to 0 before allowing another driver to bind to the
+interface.
 
-BUG: KASAN: use-after-free in pid_nr_ns+0x128/0x140 kernel/pid.c:407
-Read of size 4 at addr ffff888094012a04 by task syz-executor.0/18087
+Later on when runtime PM was implemented for the entire kernel, the
+opposite decision was made: Drivers were required to balance their
+runtime-PM get and put calls.  In order to maintain backward
+compatibility, however, the USB subsystem adapted to the new
+implementation by keeping an independent usage counter for each
+interface and using it to automatically adjust the normal usage
+counter back to 0 whenever a driver was unbound.
 
-CPU: 0 PID: 18087 Comm: syz-executor.0 Not tainted 5.1.0-rc6+ #89
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
- kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
- __asan_report_load4_noabort+0x14/0x20 mm/kasan/generic_report.c:131
- pid_nr_ns+0x128/0x140 kernel/pid.c:407
- ip6fl_seq_show+0x2f8/0x4f0 net/ipv6/ip6_flowlabel.c:794
- seq_read+0xad3/0x1130 fs/seq_file.c:268
- proc_reg_read+0x1fe/0x2c0 fs/proc/inode.c:227
- do_loop_readv_writev fs/read_write.c:701 [inline]
- do_loop_readv_writev fs/read_write.c:688 [inline]
- do_iter_read+0x4a9/0x660 fs/read_write.c:922
- vfs_readv+0xf0/0x160 fs/read_write.c:984
- kernel_readv fs/splice.c:358 [inline]
- default_file_splice_read+0x475/0x890 fs/splice.c:413
- do_splice_to+0x12a/0x190 fs/splice.c:876
- splice_direct_to_actor+0x2d2/0x970 fs/splice.c:953
- do_splice_direct+0x1da/0x2a0 fs/splice.c:1062
- do_sendfile+0x597/0xd00 fs/read_write.c:1443
- __do_sys_sendfile64 fs/read_write.c:1498 [inline]
- __se_sys_sendfile64 fs/read_write.c:1490 [inline]
- __x64_sys_sendfile64+0x15a/0x220 fs/read_write.c:1490
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458da9
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f300d24bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000000458da9
-RDX: 00000000200000c0 RSI: 0000000000000008 RDI: 0000000000000007
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000000000005a R11: 0000000000000246 R12: 00007f300d24c6d4
-R13: 00000000004c5fa3 R14: 00000000004da748 R15: 00000000ffffffff
+This approach involves duplicating information, but what is worse, it
+doesn't work properly in cases where a USB class driver delays
+decrementing the usage counter until after the driver's disconnect()
+routine has returned and the counter has been adjusted back to 0.
+Doing so would cause the usage counter to become negative.  There's
+even a warning about this in the USB power management documentation!
 
-Allocated by task 17543:
- save_stack+0x45/0xd0 mm/kasan/common.c:75
- set_track mm/kasan/common.c:87 [inline]
- __kasan_kmalloc mm/kasan/common.c:497 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:470
- kasan_slab_alloc+0xf/0x20 mm/kasan/common.c:505
- slab_post_alloc_hook mm/slab.h:437 [inline]
- slab_alloc mm/slab.c:3393 [inline]
- kmem_cache_alloc+0x11a/0x6f0 mm/slab.c:3555
- alloc_pid+0x55/0x8f0 kernel/pid.c:168
- copy_process.part.0+0x3b08/0x7980 kernel/fork.c:1932
- copy_process kernel/fork.c:1709 [inline]
- _do_fork+0x257/0xfd0 kernel/fork.c:2226
- __do_sys_clone kernel/fork.c:2333 [inline]
- __se_sys_clone kernel/fork.c:2327 [inline]
- __x64_sys_clone+0xbf/0x150 kernel/fork.c:2327
- do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+As it happens, this is exactly what the hub driver does.  The
+kick_hub_wq() routine increments the runtime-PM usage counter, and the
+corresponding decrement is carried out by hub_event() in the context
+of the hub_wq work-queue thread.  This work routine may sometimes run
+after the driver has been unbound from its interface, and when it does
+it causes the usage counter to go negative.
 
-Freed by task 7789:
- save_stack+0x45/0xd0 mm/kasan/common.c:75
- set_track mm/kasan/common.c:87 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:459
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:467
- __cache_free mm/slab.c:3499 [inline]
- kmem_cache_free+0x86/0x260 mm/slab.c:3765
- put_pid.part.0+0x111/0x150 kernel/pid.c:111
- put_pid+0x20/0x30 kernel/pid.c:105
- fl_free+0xbe/0xe0 net/ipv6/ip6_flowlabel.c:102
- ip6_fl_gc+0x295/0x3e0 net/ipv6/ip6_flowlabel.c:152
- call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
- expire_timers kernel/time/timer.c:1362 [inline]
- __run_timers kernel/time/timer.c:1681 [inline]
- __run_timers kernel/time/timer.c:1649 [inline]
- run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
- __do_softirq+0x266/0x95a kernel/softirq.c:293
+It is not possible for hub_disconnect() to wait for a pending
+hub_event() call to finish, because hub_disconnect() is called with
+the device lock held and hub_event() acquires that lock.  The only
+feasible fix is to reverse the original design decision: remove the
+duplicate interface-specific usage counter and require USB drivers to
+balance their runtime PM gets and puts.  As far as I know, all
+existing drivers currently do this.
 
-The buggy address belongs to the object at ffff888094012a00
- which belongs to the cache pid_2 of size 88
-The buggy address is located 4 bytes inside of
- 88-byte region [ffff888094012a00, ffff888094012a58)
-The buggy address belongs to the page:
-page:ffffea0002500480 count:1 mapcount:0 mapping:ffff88809a483080 index:0xffff888094012980
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea00018a3508 ffffea0002524a88 ffff88809a483080
-raw: ffff888094012980 ffff888094012000 000000010000001b 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888094012900: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
- ffff888094012980: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
->ffff888094012a00: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
-                   ^
- ffff888094012a80: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
- ffff888094012b00: fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc fc
-
-Fixes: 4f82f45730c6 ("net ip6 flowlabel: Make owner a union of struct pid * and kuid_t")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+7634edaea4d0b341c625@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/ip6_flowlabel.c |   18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/net/ipv6/ip6_flowlabel.c
-+++ b/net/ipv6/ip6_flowlabel.c
-@@ -94,15 +94,21 @@ static struct ip6_flowlabel *fl_lookup(s
- 	return fl;
+---
+ Documentation/driver-api/usb/power-management.rst |   14 +++++++++-----
+ drivers/usb/core/driver.c                         |   13 -------------
+ drivers/usb/storage/realtek_cr.c                  |   13 +++++--------
+ include/linux/usb.h                               |    2 --
+ 4 files changed, 14 insertions(+), 28 deletions(-)
+
+--- a/Documentation/driver-api/usb/power-management.rst
++++ b/Documentation/driver-api/usb/power-management.rst
+@@ -370,11 +370,15 @@ autosuspend the interface's device.  Whe
+ then the interface is considered to be idle, and the kernel may
+ autosuspend the device.
+ 
+-Drivers need not be concerned about balancing changes to the usage
+-counter; the USB core will undo any remaining "get"s when a driver
+-is unbound from its interface.  As a corollary, drivers must not call
+-any of the ``usb_autopm_*`` functions after their ``disconnect``
+-routine has returned.
++Drivers must be careful to balance their overall changes to the usage
++counter.  Unbalanced "get"s will remain in effect when a driver is
++unbound from its interface, preventing the device from going into
++runtime suspend should the interface be bound to a driver again.  On
++the other hand, drivers are allowed to achieve this balance by calling
++the ``usb_autopm_*`` functions even after their ``disconnect`` routine
++has returned -- say from within a work-queue routine -- provided they
++retain an active reference to the interface (via ``usb_get_intf`` and
++``usb_put_intf``).
+ 
+ Drivers using the async routines are responsible for their own
+ synchronization and mutual exclusion.
+--- a/drivers/usb/core/driver.c
++++ b/drivers/usb/core/driver.c
+@@ -473,11 +473,6 @@ static int usb_unbind_interface(struct d
+ 		pm_runtime_disable(dev);
+ 	pm_runtime_set_suspended(dev);
+ 
+-	/* Undo any residual pm_autopm_get_interface_* calls */
+-	for (r = atomic_read(&intf->pm_usage_cnt); r > 0; --r)
+-		usb_autopm_put_interface_no_suspend(intf);
+-	atomic_set(&intf->pm_usage_cnt, 0);
+-
+ 	if (!error)
+ 		usb_autosuspend_device(udev);
+ 
+@@ -1628,7 +1623,6 @@ void usb_autopm_put_interface(struct usb
+ 	int			status;
+ 
+ 	usb_mark_last_busy(udev);
+-	atomic_dec(&intf->pm_usage_cnt);
+ 	status = pm_runtime_put_sync(&intf->dev);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+@@ -1657,7 +1651,6 @@ void usb_autopm_put_interface_async(stru
+ 	int			status;
+ 
+ 	usb_mark_last_busy(udev);
+-	atomic_dec(&intf->pm_usage_cnt);
+ 	status = pm_runtime_put(&intf->dev);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+@@ -1679,7 +1672,6 @@ void usb_autopm_put_interface_no_suspend
+ 	struct usb_device	*udev = interface_to_usbdev(intf);
+ 
+ 	usb_mark_last_busy(udev);
+-	atomic_dec(&intf->pm_usage_cnt);
+ 	pm_runtime_put_noidle(&intf->dev);
  }
+ EXPORT_SYMBOL_GPL(usb_autopm_put_interface_no_suspend);
+@@ -1710,8 +1702,6 @@ int usb_autopm_get_interface(struct usb_
+ 	status = pm_runtime_get_sync(&intf->dev);
+ 	if (status < 0)
+ 		pm_runtime_put_sync(&intf->dev);
+-	else
+-		atomic_inc(&intf->pm_usage_cnt);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+ 			status);
+@@ -1745,8 +1735,6 @@ int usb_autopm_get_interface_async(struc
+ 	status = pm_runtime_get(&intf->dev);
+ 	if (status < 0 && status != -EINPROGRESS)
+ 		pm_runtime_put_noidle(&intf->dev);
+-	else
+-		atomic_inc(&intf->pm_usage_cnt);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+ 			status);
+@@ -1770,7 +1758,6 @@ void usb_autopm_get_interface_no_resume(
+ 	struct usb_device	*udev = interface_to_usbdev(intf);
  
-+static void fl_free_rcu(struct rcu_head *head)
-+{
-+	struct ip6_flowlabel *fl = container_of(head, struct ip6_flowlabel, rcu);
-+
-+	if (fl->share == IPV6_FL_S_PROCESS)
-+		put_pid(fl->owner.pid);
-+	kfree(fl->opt);
-+	kfree(fl);
-+}
-+
- 
- static void fl_free(struct ip6_flowlabel *fl)
- {
--	if (fl) {
--		if (fl->share == IPV6_FL_S_PROCESS)
--			put_pid(fl->owner.pid);
--		kfree(fl->opt);
--		kfree_rcu(fl, rcu);
--	}
-+	if (fl)
-+		call_rcu(&fl->rcu, fl_free_rcu);
+ 	usb_mark_last_busy(udev);
+-	atomic_inc(&intf->pm_usage_cnt);
+ 	pm_runtime_get_noresume(&intf->dev);
  }
+ EXPORT_SYMBOL_GPL(usb_autopm_get_interface_no_resume);
+--- a/drivers/usb/storage/realtek_cr.c
++++ b/drivers/usb/storage/realtek_cr.c
+@@ -775,18 +775,16 @@ static void rts51x_suspend_timer_fn(unsi
+ 		break;
+ 	case RTS51X_STAT_IDLE:
+ 	case RTS51X_STAT_SS:
+-		usb_stor_dbg(us, "RTS51X_STAT_SS, intf->pm_usage_cnt:%d, power.usage:%d\n",
+-			     atomic_read(&us->pusb_intf->pm_usage_cnt),
++		usb_stor_dbg(us, "RTS51X_STAT_SS, power.usage:%d\n",
+ 			     atomic_read(&us->pusb_intf->dev.power.usage_count));
  
- static void fl_release(struct ip6_flowlabel *fl)
+-		if (atomic_read(&us->pusb_intf->pm_usage_cnt) > 0) {
++		if (atomic_read(&us->pusb_intf->dev.power.usage_count) > 0) {
+ 			usb_stor_dbg(us, "Ready to enter SS state\n");
+ 			rts51x_set_stat(chip, RTS51X_STAT_SS);
+ 			/* ignore mass storage interface's children */
+ 			pm_suspend_ignore_children(&us->pusb_intf->dev, true);
+ 			usb_autopm_put_interface_async(us->pusb_intf);
+-			usb_stor_dbg(us, "RTS51X_STAT_SS 01, intf->pm_usage_cnt:%d, power.usage:%d\n",
+-				     atomic_read(&us->pusb_intf->pm_usage_cnt),
++			usb_stor_dbg(us, "RTS51X_STAT_SS 01, power.usage:%d\n",
+ 				     atomic_read(&us->pusb_intf->dev.power.usage_count));
+ 		}
+ 		break;
+@@ -819,11 +817,10 @@ static void rts51x_invoke_transport(stru
+ 	int ret;
+ 
+ 	if (working_scsi(srb)) {
+-		usb_stor_dbg(us, "working scsi, intf->pm_usage_cnt:%d, power.usage:%d\n",
+-			     atomic_read(&us->pusb_intf->pm_usage_cnt),
++		usb_stor_dbg(us, "working scsi, power.usage:%d\n",
+ 			     atomic_read(&us->pusb_intf->dev.power.usage_count));
+ 
+-		if (atomic_read(&us->pusb_intf->pm_usage_cnt) <= 0) {
++		if (atomic_read(&us->pusb_intf->dev.power.usage_count) <= 0) {
+ 			ret = usb_autopm_get_interface(us->pusb_intf);
+ 			usb_stor_dbg(us, "working scsi, ret=%d\n", ret);
+ 		}
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -200,7 +200,6 @@ usb_find_last_int_out_endpoint(struct us
+  * @dev: driver model's view of this device
+  * @usb_dev: if an interface is bound to the USB major, this will point
+  *	to the sysfs representation for that device.
+- * @pm_usage_cnt: PM usage counter for this interface
+  * @reset_ws: Used for scheduling resets from atomic context.
+  * @resetting_device: USB core reset the device, so use alt setting 0 as
+  *	current; needs bandwidth alloc after reset.
+@@ -257,7 +256,6 @@ struct usb_interface {
+ 
+ 	struct device dev;		/* interface specific device info */
+ 	struct device *usb_dev;
+-	atomic_t pm_usage_cnt;		/* usage counter for autosuspend */
+ 	struct work_struct reset_ws;	/* for resets in atomic context */
+ };
+ #define	to_usb_interface(d) container_of(d, struct usb_interface, dev)
 
 
