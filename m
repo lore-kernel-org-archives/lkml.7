@@ -2,51 +2,53 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD769C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A715BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E89B21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ABA721479
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153935;
-	bh=ac8+ottuAzNNDDHobrSZSOlMjZQau3zVmBG2sTcIjeY=;
+	s=default; t=1557153939;
+	bh=gayqogWeaoXwcCQx1yzFUiUarQ1AJbH0Dw+KMKkYVXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0IP20mwEq50ANpnH4aorLf5f9bT2DwalhvndSnNOsCbKJjPkX2ZkdG2Ke0ByZpANL
-	 iYEtidu2AxifAQAOfbhfTxC9aknmRw9oWnXNPcU3Yr9QtHVGWGbIKJ9w4y+8jZcDzZ
-	 Ai/y/U3xsVW6au1xIEVwVWJF8he/OeJmqjBdXeQo=
+	b=sHMjQmEGdfUrKs0aijrv609OA59ZLJHM0OIEDb1h5zB9vfJmyfQ8S1Dyihk6cA6T6
+	 AA/wyMpl1WYfKTVu02g6bVoYqfvvnCl5JWCMnWorRLlAwU4Kb8nFf5ORc8Z0Qp3Jqi
+	 lSxLRxHO0aotmMRd9F950eE+0ELoAIB8GaFaxnEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbfEFOpd (ORCPT
+        id S1727843AbfEFOph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:45:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42302 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:45:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbfEFOp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:45:29 -0400
+        id S1728965AbfEFOpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C43D2087F;
-        Mon,  6 May 2019 14:45:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 578EB20C01;
+        Mon,  6 May 2019 14:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153928;
-        bh=ac8+ottuAzNNDDHobrSZSOlMjZQau3zVmBG2sTcIjeY=;
+        s=default; t=1557153933;
+        bh=gayqogWeaoXwcCQx1yzFUiUarQ1AJbH0Dw+KMKkYVXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E7kmJ0c+1+YLa3Si/xIx+ph4Ykx825tWD06CvtsBunGwLtFEhfYemPXCp4xqme+Ql
-         vfGbpgwDhAl4W5gr/+J+M0oQGyfRNuUJ1fmXoN1Lvxe4Og1jgnU9hHI9FMX7Tl5Y2w
-         E3jYpdlDCPxJK1qWOWQdkbPq8YzcgiLGKjIgZ7eg=
+        b=BWXP0P+ZD7O522BqpcL+EdAAYCBJG+k5zqemkLCd+qF/srNk4AfkV2mNIzBg2LLNy
+         9vIaMYRJJVPwWM47uXL1g3bhPqLVCTlzO7CNiiUjOmtS2aip6GGpW435cTUnfae5Wj
+         JmEXsM2dQs1Rw036C9oOTb5tzA39jkhqQC5DB/Z0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 09/75] rxrpc: Fix net namespace cleanup
-Date:   Mon,  6 May 2019 16:32:17 +0200
-Message-Id: <20190506143054.066122957@linuxfoundation.org>
+        stable@vger.kernel.org, Louis Taylor <louis@kragniz.eu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 44/75] vfio/pci: use correct format characters
+Date:   Mon,  6 May 2019 16:32:52 +0200
+Message-Id: <20190506143057.210575988@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -59,89 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+[ Upstream commit 426b046b748d1f47e096e05bdcc6fb4172791307 ]
 
-[ Upstream commit b13023421b5179413421333f602850914f6a7ad8 ]
+When compiling with -Wformat, clang emits the following warnings:
 
-In rxrpc_destroy_all_calls(), there are two phases: (1) make sure the
-->calls list is empty, emitting error messages if not, and (2) wait for the
-RCU cleanup to happen on outstanding calls (ie. ->nr_calls becomes 0).
+drivers/vfio/pci/vfio_pci.c:1601:5: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                ^~~~~~
 
-To avoid taking the call_lock, the function prechecks ->calls and if empty,
-it returns to avoid taking the lock - this is wrong, however: it still
-needs to go and do the second phase and wait for ->nr_calls to become 0.
+drivers/vfio/pci/vfio_pci.c:1601:13: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                        ^~~~~~
 
-Without this, the rxrpc_net struct may get deallocated before we get to the
-RCU cleanup for the last calls.  This can lead to:
+drivers/vfio/pci/vfio_pci.c:1601:21: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                                ^~~~~~~~~
 
-  Slab corruption (Not tainted): kmalloc-16k start=ffff88802b178000, len=16384
-  050: 6b 6b 6b 6b 6b 6b 6b 6b 61 6b 6b 6b 6b 6b 6b 6b  kkkkkkkkakkkkkkk
+drivers/vfio/pci/vfio_pci.c:1601:32: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                                           ^~~~~~~~~
 
-Note the "61" at offset 0x58.  This corresponds to the ->nr_calls member of
-struct rxrpc_net (which is >9k in size, and thus allocated out of the 16k
-slab).
+drivers/vfio/pci/vfio_pci.c:1605:5: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                ^~~~~~
 
-Fix this by flipping the condition on the if-statement, putting the locked
-section inside the if-body and dropping the return from there.  The
-function will then always go on to wait for the RCU cleanup on outstanding
-calls.
+drivers/vfio/pci/vfio_pci.c:1605:13: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                        ^~~~~~
 
-Fixes: 2baec2c3f854 ("rxrpc: Support network namespacing")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+drivers/vfio/pci/vfio_pci.c:1605:21: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                                ^~~~~~~~~
+
+drivers/vfio/pci/vfio_pci.c:1605:32: warning: format specifies type
+      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
+                                vendor, device, subvendor, subdevice,
+                                                           ^~~~~~~~~
+The types of these arguments are unconditionally defined, so this patch
+updates the format character to the correct ones for unsigned ints.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/378
+Signed-off-by: Louis Taylor <louis@kragniz.eu>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/call_object.c |   38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ drivers/vfio/pci/vfio_pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -684,27 +684,27 @@ void rxrpc_destroy_all_calls(struct rxrp
- 
- 	_enter("");
- 
--	if (list_empty(&rxnet->calls))
--		return;
--
--	write_lock(&rxnet->call_lock);
-+	if (!list_empty(&rxnet->calls)) {
-+		write_lock(&rxnet->call_lock);
- 
--	while (!list_empty(&rxnet->calls)) {
--		call = list_entry(rxnet->calls.next, struct rxrpc_call, link);
--		_debug("Zapping call %p", call);
--
--		rxrpc_see_call(call);
--		list_del_init(&call->link);
--
--		pr_err("Call %p still in use (%d,%s,%lx,%lx)!\n",
--		       call, atomic_read(&call->usage),
--		       rxrpc_call_states[call->state],
--		       call->flags, call->events);
-+		while (!list_empty(&rxnet->calls)) {
-+			call = list_entry(rxnet->calls.next,
-+					  struct rxrpc_call, link);
-+			_debug("Zapping call %p", call);
-+
-+			rxrpc_see_call(call);
-+			list_del_init(&call->link);
-+
-+			pr_err("Call %p still in use (%d,%s,%lx,%lx)!\n",
-+			       call, atomic_read(&call->usage),
-+			       rxrpc_call_states[call->state],
-+			       call->flags, call->events);
-+
-+			write_unlock(&rxnet->call_lock);
-+			cond_resched();
-+			write_lock(&rxnet->call_lock);
-+		}
- 
- 		write_unlock(&rxnet->call_lock);
--		cond_resched();
--		write_lock(&rxnet->call_lock);
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 695b9d1a1aae..6f5cc67e343e 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -1443,11 +1443,11 @@ static void __init vfio_pci_fill_ids(void)
+ 		rc = pci_add_dynid(&vfio_pci_driver, vendor, device,
+ 				   subvendor, subdevice, class, class_mask, 0);
+ 		if (rc)
+-			pr_warn("failed to add dynamic id [%04hx:%04hx[%04hx:%04hx]] class %#08x/%08x (%d)\n",
++			pr_warn("failed to add dynamic id [%04x:%04x[%04x:%04x]] class %#08x/%08x (%d)\n",
+ 				vendor, device, subvendor, subdevice,
+ 				class, class_mask, rc);
+ 		else
+-			pr_info("add [%04hx:%04hx[%04hx:%04hx]] class %#08x/%08x\n",
++			pr_info("add [%04x:%04x[%04x:%04x]] class %#08x/%08x\n",
+ 				vendor, device, subvendor, subdevice,
+ 				class, class_mask);
  	}
--
--	write_unlock(&rxnet->call_lock);
- }
+-- 
+2.20.1
+
 
 
