@@ -4,41 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D14C04AAE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7469C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F54020830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E9420C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfEFXx0 (ORCPT
+        id S1726650AbfEFXxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 19:53:26 -0400
-Received: from mga02.intel.com ([134.134.136.20]:16582 "EHLO mga02.intel.com"
+        Mon, 6 May 2019 19:53:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:21846 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfEFXxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 19:53:24 -0400
+        id S1726452AbfEFXx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 19:53:29 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 16:53:23 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 16:53:28 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,439,1549958400"; 
+   d="scan'208";a="147053295"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga002.jf.intel.com with ESMTP; 06 May 2019 16:53:23 -0700
-Subject: [PATCH v8 02/12] mm/memremap: Rename and consolidate SECTION_SIZE
+  by fmsmga008.fm.intel.com with ESMTP; 06 May 2019 16:53:28 -0700
+Subject: [PATCH v8 03/12] mm/sparsemem: Add helpers track active portions of
+ a section at boot
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     akpm@linux-foundation.org
-Cc:     Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
+Cc:     Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Logan Gunthorpe <logang@deltatee.com>,
         Oscar Salvador <osalvador@suse.de>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, osalvador@suse.de, mhocko@suse.com
-Date:   Mon, 06 May 2019 16:39:37 -0700
-Message-ID: <155718597703.130019.5955560833756434949.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Jane Chu <jane.chu@oracle.com>, linux-nvdimm@lists.01.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        osalvador@suse.de, mhocko@suse.com
+Date:   Mon, 06 May 2019 16:39:42 -0700
+Message-ID: <155718598213.130019.10989541248734713186.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <155718596657.130019.17139634728875079809.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <155718596657.130019.17139634728875079809.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-2-gc94f
@@ -50,91 +52,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+Prepare for hot{plug,remove} of sub-ranges of a section by tracking a
+sub-section active bitmask, each bit representing a PMD_SIZE span of the
+architecture's memory hotplug section size.
 
-Trying to activate ZONE_DEVICE for arm64 reveals that memremap's
-internal helpers for sparsemem sections conflict with and arm64's
-definitions for hugepages, which inherit the name of "sections" from
-earlier versions of the ARM architecture.
+The implications of a partially populated section is that pfn_valid()
+needs to go beyond a valid_section() check and read the sub-section
+active ranges from the bitmask. The expectation is that the bitmask
+(subsection_map) fits in the same cacheline as the valid_section() data,
+so the incremental performance overhead to pfn_valid() should be
+negligible.
 
-Disambiguate memremap (and now HMM too) by propagating sparsemem's PA_
-prefix, to clarify that these values are in terms of addresses rather
-than PFNs (and because it's a heck of a lot easier than changing all the
-arch code). SECTION_MASK is unused, so it can just go.
-
-[anshuman: Consolidated mm/hmm.c instance and updated the commit message]
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Logan Gunthorpe <logang@deltatee.com>
 Cc: Oscar Salvador <osalvador@suse.de>
 Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Tested-by: Jane Chu <jane.chu@oracle.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- include/linux/mmzone.h |    1 +
- kernel/memremap.c      |   10 ++++------
- mm/hmm.c               |    2 --
- 3 files changed, 5 insertions(+), 8 deletions(-)
+ include/linux/mmzone.h |   29 ++++++++++++++++++++++++++++-
+ mm/page_alloc.c        |    4 +++-
+ mm/sparse.c            |   29 +++++++++++++++++++++++++++++
+ 3 files changed, 60 insertions(+), 2 deletions(-)
 
 diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index ef8d878079f9..ac163f2f274f 100644
+index ac163f2f274f..6dd52d544857 100644
 --- a/include/linux/mmzone.h
 +++ b/include/linux/mmzone.h
-@@ -1134,6 +1134,7 @@ static inline unsigned long early_pfn_to_nid(unsigned long pfn)
-  * PFN_SECTION_SHIFT		pfn to/from section number
-  */
- #define PA_SECTION_SHIFT	(SECTION_SIZE_BITS)
-+#define PA_SECTION_SIZE		(1UL << PA_SECTION_SHIFT)
- #define PFN_SECTION_SHIFT	(SECTION_SIZE_BITS - PAGE_SHIFT)
+@@ -1199,6 +1199,8 @@ struct mem_section_usage {
+ 	unsigned long pageblock_flags[0];
+ };
  
- #define NR_MEM_SECTIONS		(1UL << SECTIONS_SHIFT)
-diff --git a/kernel/memremap.c b/kernel/memremap.c
-index 4e59d29245f4..f355586ea54a 100644
---- a/kernel/memremap.c
-+++ b/kernel/memremap.c
-@@ -14,8 +14,6 @@
- #include <linux/hmm.h>
++void subsection_map_init(unsigned long pfn, unsigned long nr_pages);
++
+ struct page;
+ struct page_ext;
+ struct mem_section {
+@@ -1336,12 +1338,36 @@ static inline struct mem_section *__pfn_to_section(unsigned long pfn)
  
- static DEFINE_XARRAY(pgmap_array);
--#define SECTION_MASK ~((1UL << PA_SECTION_SHIFT) - 1)
--#define SECTION_SIZE (1UL << PA_SECTION_SHIFT)
+ extern int __highest_present_section_nr;
  
- #if IS_ENABLED(CONFIG_DEVICE_PRIVATE)
- vm_fault_t device_private_entry_fault(struct vm_area_struct *vma,
-@@ -98,8 +96,8 @@ static void devm_memremap_pages_release(void *data)
- 		put_page(pfn_to_page(pfn));
++static inline int subsection_map_index(unsigned long pfn)
++{
++	return (pfn & ~(PAGE_SECTION_MASK)) / PAGES_PER_SUBSECTION;
++}
++
++#ifdef CONFIG_SPARSEMEM_VMEMMAP
++static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
++{
++	int idx = subsection_map_index(pfn);
++
++	return test_bit(idx, ms->usage->subsection_map);
++}
++#else
++static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
++{
++	return 1;
++}
++#endif
++
+ #ifndef CONFIG_HAVE_ARCH_PFN_VALID
+ static inline int pfn_valid(unsigned long pfn)
+ {
++	struct mem_section *ms;
++
+ 	if (pfn_to_section_nr(pfn) >= NR_MEM_SECTIONS)
+ 		return 0;
+-	return valid_section(__nr_to_section(pfn_to_section_nr(pfn)));
++	ms = __nr_to_section(pfn_to_section_nr(pfn));
++	if (!valid_section(ms))
++		return 0;
++	return pfn_section_valid(ms, pfn);
+ }
+ #endif
  
- 	/* pages are dead and unused, undo the arch mapping */
--	align_start = res->start & ~(SECTION_SIZE - 1);
--	align_size = ALIGN(res->start + resource_size(res), SECTION_SIZE)
-+	align_start = res->start & ~(PA_SECTION_SIZE - 1);
-+	align_size = ALIGN(res->start + resource_size(res), PA_SECTION_SIZE)
- 		- align_start;
+@@ -1373,6 +1399,7 @@ void sparse_init(void);
+ #define sparse_init()	do {} while (0)
+ #define sparse_index_init(_sec, _nid)  do {} while (0)
+ #define pfn_present pfn_valid
++#define subsection_map_init(_pfn, _nr_pages) do {} while (0)
+ #endif /* CONFIG_SPARSEMEM */
  
- 	nid = page_to_nid(pfn_to_page(align_start >> PAGE_SHIFT));
-@@ -160,8 +158,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 	if (!pgmap->ref || !pgmap->kill)
- 		return ERR_PTR(-EINVAL);
+ /*
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 61c2b54a5b61..13816c5a51eb 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7291,10 +7291,12 @@ void __init free_area_init_nodes(unsigned long *max_zone_pfn)
  
--	align_start = res->start & ~(SECTION_SIZE - 1);
--	align_size = ALIGN(res->start + resource_size(res), SECTION_SIZE)
-+	align_start = res->start & ~(PA_SECTION_SIZE - 1);
-+	align_size = ALIGN(res->start + resource_size(res), PA_SECTION_SIZE)
- 		- align_start;
- 	align_end = align_start + align_size - 1;
+ 	/* Print out the early node map */
+ 	pr_info("Early memory node ranges\n");
+-	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid)
++	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+ 		pr_info("  node %3d: [mem %#018Lx-%#018Lx]\n", nid,
+ 			(u64)start_pfn << PAGE_SHIFT,
+ 			((u64)end_pfn << PAGE_SHIFT) - 1);
++		subsection_map_init(start_pfn, end_pfn - start_pfn);
++	}
  
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 0db8491090b8..a7e7f8e33c5f 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -34,8 +34,6 @@
- #include <linux/mmu_notifier.h>
- #include <linux/memory_hotplug.h>
+ 	/* Initialise every node */
+ 	mminit_verify_pageflags_layout();
+diff --git a/mm/sparse.c b/mm/sparse.c
+index f87de7ad32c8..ac47a48050c7 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -210,6 +210,35 @@ static inline unsigned long first_present_section_nr(void)
+ 	return next_present_section_nr(-1);
+ }
  
--#define PA_SECTION_SIZE (1UL << PA_SECTION_SHIFT)
--
- #if IS_ENABLED(CONFIG_HMM_MIRROR)
- static const struct mmu_notifier_ops hmm_mmu_notifier_ops;
- 
++void subsection_map_init(unsigned long pfn, unsigned long nr_pages)
++{
++	int end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
++	int i, start_sec = pfn_to_section_nr(pfn);
++
++	if (!nr_pages)
++		return;
++
++	for (i = start_sec; i <= end_sec; i++) {
++		int idx, end;
++		unsigned long pfns;
++		struct mem_section *ms;
++
++		idx = subsection_map_index(pfn);
++		pfns = min(nr_pages, PAGES_PER_SECTION
++				- (pfn & ~PAGE_SECTION_MASK));
++		end = subsection_map_index(pfn + pfns - 1);
++
++		ms = __nr_to_section(i);
++		bitmap_set(ms->usage->subsection_map, idx, end - idx + 1);
++
++		pr_debug("%s: sec: %d pfns: %ld set(%d, %d)\n", __func__, i,
++				pfns, idx, end - idx + 1);
++
++		pfn += pfns;
++		nr_pages -= pfns;
++	}
++}
++
+ /* Record a memory area against a node. */
+ void __init memory_present(int nid, unsigned long start, unsigned long end)
+ {
 
