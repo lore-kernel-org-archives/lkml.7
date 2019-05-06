@@ -3,99 +3,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78686C04AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66913C04AAE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFC0205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40022205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfEFH4f (ORCPT
+        id S1726340AbfEFH4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:56:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44380 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbfEFH4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:56:34 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 04CB43086227;
-        Mon,  6 May 2019 07:56:34 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 921CE5DA35;
-        Mon,  6 May 2019 07:56:22 +0000 (UTC)
-Message-ID: <599086a07da9943e1748d5608357ebc85b2330db.camel@redhat.com>
-Subject: Re: [PATCH v2 08/10] nvme/pci: implement the mdev external queue
- allocation interface
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Fam Zheng <fam@euphon.net>, kvm@vger.kernel.org,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Keith Busch <keith.busch@intel.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Liang Cunming <cunming.liang@intel.com>,
-        Jens Axboe <axboe@fb.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        John Ferlan <jferlan@redhat.com>,
-        Liu Changpeng <changpeng.liu@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Heitke, Kenneth" <kenneth.heitke@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Amnon Ilan <ailan@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Date:   Mon, 06 May 2019 10:55:19 +0300
-In-Reply-To: <20190503120915.GA30013@localhost.localdomain>
-References: <20190502114801.23116-1-mlevitsk@redhat.com>
-         <20190502114801.23116-9-mlevitsk@redhat.com>
-         <63a499c3-25be-5c5b-5822-124854945279@intel.com>
-         <f1f471e0b734413e6c0f7a8bb1a03041b1d12d6d.camel@redhat.com>
-         <20190503120915.GA30013@localhost.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 06 May 2019 07:56:34 +0000 (UTC)
+        Mon, 6 May 2019 03:56:48 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:49692 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbfEFH4r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 03:56:47 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x467uWU0014879, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtitcasv01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x467uWU0014879
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NOT);
+        Mon, 6 May 2019 15:56:32 +0800
+Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
+ RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0415.000; Mon, 6 May
+ 2019 15:56:31 +0800
+From:   Pkshih <pkshih@realtek.com>
+To:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
+        "Larry.Finger@lwfinger.net" <Larry.Finger@lwfinger.net>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: static analysis issue in rtl8188de driver
+Thread-Topic: static analysis issue in rtl8188de driver
+Thread-Index: AQHVAsNxM98Kauqi0ket4FYZEsHsOaZdNsoA
+Date:   Mon, 6 May 2019 07:56:30 +0000
+Message-ID: <1557129390.28660.4.camel@realtek.com>
+References: <a1842b3e-f0af-d1a1-8609-a76c25dfd37b@canonical.com>
+In-Reply-To: <a1842b3e-f0af-d1a1-8609-a76c25dfd37b@canonical.com>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.69.114]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <087B30BC917E234B836B5C961AEB8BAF@realtek.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-03 at 06:09 -0600, Keith Busch wrote:
-> On Fri, May 03, 2019 at 12:20:17AM +0300, Maxim Levitsky wrote:
-> > On Thu, 2019-05-02 at 15:12 -0600, Heitke, Kenneth wrote:
-> > > On 5/2/2019 5:47 AM, Maxim Levitsky wrote:
-> > > > +static void nvme_ext_queue_free(struct nvme_ctrl *ctrl, u16 qid)
-> > > > +{
-> > > > +	struct nvme_dev *dev = to_nvme_dev(ctrl);
-> > > > +	struct nvme_queue *nvmeq;
-> > > > +
-> > > > +	mutex_lock(&dev->ext_dev_lock);
-> > > > +	nvmeq = &dev->queues[qid];
-> > > > +
-> > > > +	if (WARN_ON(!test_bit(NVMEQ_EXTERNAL, &nvmeq->flags)))
-> > > > +		return;
-> > > 
-> > > This condition is probably not expected to happen (since its a warning)
-> > > but do you need to unlock the ext_dev_lock before returning?
-> > 
-> > This is true, I will fix this. This used to be BUG_ON, but due to
-> > checkpatch.pl
-> > complains I turned them all to WARN_ON, and missed this.
-> 
-> Gentle reminder to trim your replies to the relevant context. It's
-> much easier to read when we don't need to scroll through hundreds of
-> unnecessary lines.
-
-I fully agree, sorry! Next time I will do this.
-Best regards,
-	Maxim Levitsky
-
+T24gU2F0LCAyMDE5LTA1LTA0IGF0IDIxOjUwICswMDAwLCBDb2xpbiBJYW4gS2luZyB3cm90ZToN
+Cj4gSGksDQo+IA0KPiBTdGF0aWMgYW5hbHlzaXMgd2l0aCBDb3Zlcml0eSBoYXMgZm91bmQgYW4g
+aXNzdWUgaW4gdGhlIHJ0bDgxODhkZQ0KPiB3aXJlbGVzcyBkcml2ZXIgaW4gZHJpdmVycy9uZXQv
+d2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDgxOTJkZS9kbS5jDQo+IGluIGZ1bmN0aW9uIHRs
+OTJkX2RtX3R4cG93ZXJfdHJhY2tpbmdfY2FsbGJhY2tfdGhlcm1hbG1ldGVyLg0KPiANCj4gVGhl
+IGlzc3VlIGlzIHRoYXQgdTggYXJyYXkgb2ZkbV9pbmRleFszXSBpcyBuZXZlciBpbml0aWFsaXpl
+ZCwgaG93ZXZlcg0KPiBpdCBpcyBkZWNyZW1lbnRlZCBhbmQgaW5jcmVtZW50ZWQgaW4gdHdvIHBs
+YWNlcyByZXN1bHRpbmcgaW4gZ2FyYmFnZQ0KPiB2YWx1ZSBmcm9tIHRoZSBzdGFjayBiZWluZyB1
+cGRhdGVkIGluIHRoZSBmb2xsb3dpbmcgY29kZToNCj4gDQo+IAlpZiAodGhlcm1hbHZhbHVlID4g
+cnRscHJpdi0+ZG0udGhlcm1hbHZhbHVlKSB7DQo+IMKgwqDCoMKgwqDCoMKgwqAJZm9yIChpID0g
+MDsgaSA8IHJmOyBpKyspDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgCW9mZG1f
+aW5kZXhbaV0gLT0gZGVsdGE7DQo+IMKgwqDCoMKgwqDCoMKgwqAJY2NrX2luZGV4IC09IGRlbHRh
+Ow0KPiAJfSBlbHNlIHsNCj4gwqDCoMKgwqDCoMKgwqDCoAlmb3IgKGkgPSAwOyBpIDwgcmY7IGkr
+KykNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAJb2ZkbV9pbmRleFtpXSArPSBp
+bmRleDsNCj4gwqDCoMKgwqDCoMKgwqDCoAljY2tfaW5kZXggKz0gaW5kZXg7CQ0KPiAJfQ0KPiAN
+Cj4gQXQgbXkgZmlyc3QgbG9vayBhdCB0aGUgY29kZSBJIGJlbGlldmUgb2ZkbV9pbmRleCBzaG91
+bGQgYmUganVzdA0KPiB6ZXJvLWluaXRpYWxpemVkIGF0IGRlY2xhcmF0aW9uIHRpbWUsIGJ1dCBJ
+IHN1c3BlY3QgdGhhdCBJJ20gb3Zlcmxvb2tpbmcNCj4gc29tZXRoaW5nIG1heWJlIGEgYml0IGRl
+ZXBlci4gQW55IGlkZWFzPw0KPiANCg0KDQpIaSBDb2xpbiwNCg0KVGhhbmtzIGZvciB5b3VyIHJl
+cG9ydC4NCg0KQWZ0ZXIgbXkgcXVpY2sgbG9vaywgdGhlcmUgYXJlIGF0IGxlYXN0IHR3byBvYnZp
+b3VzIHByb2JsZW1zLg0KT25lIGlzIGFycmF5IHNpemUgb2bCoG9mZG1faW5kZXhbXSBzaG91bGQg
+YmUgdHdvIGluc3RlYWQuIEFub3RoZXIgaXMgdGhlIHZhbHVlDQpvZiBvZmRtX2luZGV4W10gc2hv
+dWxkIGJlIG9idGFpbmVkIGZyb20gcnRscHJpdi0+ZG0ub2ZkbV9pbmRleFtdLsKgDQpTaW5jZSB0
+aGUgbG9naWMgaXMgcXVpdGUgY29tcGxleCwgSSBuZWVkIHNvbWUgdGltZSB0byBmaXggaXQuDQoN
+ClBLDQoNCg==
