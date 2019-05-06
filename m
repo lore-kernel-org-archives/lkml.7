@@ -2,68 +2,68 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCEBC04AAE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEED0C04AB2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33962082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57E92082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QM6C/+Cx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jo3K4Scd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbfEFH26 (ORCPT
+        id S1726484AbfEFH3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:28:58 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39865 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbfEFH25 (ORCPT
+        Mon, 6 May 2019 03:29:12 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45583 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfEFH3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 03:28:57 -0400
-Received: by mail-pl1-f195.google.com with SMTP id e92so5926469plb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 00:28:57 -0700 (PDT)
+        Mon, 6 May 2019 03:29:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i21so6017173pgi.12
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 00:29:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=XiE8oaht+rMtBmlWqUkyAiRGtKqurxER2iPBNv/AZyQ=;
-        b=QM6C/+CxMNKnMh006FzIBzR75xV6ddm6r2gjuSGSnBTOuDfQ0qvMZAiep9jBsBelyX
-         teqGh33rlt74rnloK7VIXqKkie8/XG90UQlY9PEUqS5i6oYPFe1u9h3hNCHny+nnwi01
-         sqd4g8X8ILX5QLXgsR+H16BiiIRX3xekPo/+zeuPEtWO8CBbs1UhDfu7RtPcFiwhRs+s
-         xl5tF5Punv/vtUbqy/LiKvRqzGspIdKQN8b6+bHCzCbWHN+D+1W4fnyPKnGz1w98WLXf
-         AXbuaK9LrIvC7nQKLYh/0PJxEvCq+BkYvRi/lRTtC5YWoagquPmnnPC/pTgi4/ky7SnV
-         p3cQ==
+        bh=211d8ZTQI3btAur7YnSUlr/RUpH4zvR8vL+Saj1rS5o=;
+        b=jo3K4Scdrs1k7OvhlUC3Vu6KN+wS+aF0U3qudxCeN/Ts9VlRxCjFMr46/su1MGI9mX
+         B0I01reNOOD0ZaHGwco7gr4FJEycBmyHjrgjB07y+GEf+NVM1lLsbzAl3Qr5gulmikdj
+         uXIBABZq+91UQZ8NFVIO/bkfFlr7jv0PgZvAemLVWFjoH+9+a3KT7mH1nQuyqXXcZ4w6
+         zie4wrpqjqHhXytnykFQHis0Y/66Wq3JVD0ZIiRXGfxkWnCKzWH00MK5kQA4RQ6LQu6t
+         8Gj30YLpIu1qPXyFyhtZWQ/cgOeplpaBP5FvMx6XM4wIqI9yM91uhnJjppwLhjkU/a0q
+         5bCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=XiE8oaht+rMtBmlWqUkyAiRGtKqurxER2iPBNv/AZyQ=;
-        b=fuHF05LvWzE6kl92x9PB61GsiHksmrZuSilyy5xuQtI3aS5JLWDIa0omM4Gz1HLd+e
-         O26yRJuY1Bes6Wu44YHa+UuFUyJpWq1iSptxth1pPyNlXwsciiZyijAa+bPCrb44Bolu
-         SsqjaU/gD57OjOSbu9ll+msDDbsp3fZuAUbph2+6lH96vR43jxNtyj4bm0tkqUY9LvdF
-         uQ7dFfCWSLk9DCFNF3vGGJvMI+0npQ6VrlQ26YVvPOxTs/6RS8sGKGaBpHynx+Yolhnu
-         5QEvVGXcx1dFs9V1uf1+06yGv7XMDCyk1jvjAVZIkfQXLxN/VMYRYRQvxTIh1pDNBo+x
-         iR8g==
-X-Gm-Message-State: APjAAAV/9yISIiZwpGM6TGOkdSYp3airrqkHc8pJYR50DKDF+wRJrhDt
-        Q0NJxXZ5x2CxDW/6aLIcmZewOw==
-X-Google-Smtp-Source: APXvYqyBQXCG2IHBXGY3XWmAbAAHiq6tcvTP9kRhpMo9V9eQzxxH1EXyIhGDtVHdER/iEPX7+cT3qQ==
-X-Received: by 2002:a17:902:7883:: with SMTP id q3mr30341452pll.60.1557127736687;
-        Mon, 06 May 2019 00:28:56 -0700 (PDT)
+        bh=211d8ZTQI3btAur7YnSUlr/RUpH4zvR8vL+Saj1rS5o=;
+        b=K1tfJfUWvubFvylHdJPRlm65qMHiXEEb/Dgz0U1EGPnigF2Lsq52dS/mcPXPTiHFk+
+         qM2R3AhMZI4ls0sOEiNyqtxSOs0gx2/Tu9d4WAr2rCf+HovZgL6lsV6nt665pesz+Fr6
+         hkqC6JCrUvm/fOmoR4ERI9ro0zgqQlR6GCj0s+S0KzEpbXcfHk1hMxKH8udrxNTpIAFt
+         ySw8dLzlJ+Wi+wIc7xxwo2G5Kr0QXhaOgOleVBD38upWMx9GUuRF6i2zubPobAAEIq9E
+         NEMM4zjMswWD1P3Vqx73FK/RVHobFeYk/1L4oXGbSXgwDzjkh5ZxRlIz47kutD16PMDU
+         HJdA==
+X-Gm-Message-State: APjAAAUbU1aADWBisrM+Arzs5DQEu8CjhOfaMjMAD7g9nrZ0NHrF5KGi
+        WDXtqrBPERk7sREggyksPKB86g==
+X-Google-Smtp-Source: APXvYqxuZVpXjI9hNU1TBDdPuWhKxlPJ1PqiM3uimd5q/iX+ojTZItgChQGwubcXQg5brQKglhy9Rw==
+X-Received: by 2002:a63:1cf:: with SMTP id 198mr22124192pgb.155.1557127750187;
+        Mon, 06 May 2019 00:29:10 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id w38sm21700894pgk.90.2019.05.06.00.28.53
+        by smtp.gmail.com with ESMTPSA id w38sm21700894pgk.90.2019.05.06.00.29.07
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 06 May 2019 00:28:56 -0700 (PDT)
+        Mon, 06 May 2019 00:29:09 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     dan.j.williams@intel.com, vkoul@kernel.org
 Cc:     eric.long@unisoc.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
         vincent.guittot@linaro.org, baolin.wang@linaro.org,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/6] dmaengine: sprd: Add validation of current descriptor in irq handler
-Date:   Mon,  6 May 2019 15:28:29 +0800
-Message-Id: <6eee7d5ad68d60ebedf443e24678e5b467fcf0e6.1557127239.git.baolin.wang@linaro.org>
+Subject: [PATCH v2 6/6] dmaengine: sprd: Add interrupt support for 2-stage transfer
+Date:   Mon,  6 May 2019 15:28:33 +0800
+Message-Id: <23f960d05bc30a93fb128cde53ad798cc6c7c19d.1557127239.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1557127239.git.baolin.wang@linaro.org>
 References: <cover.1557127239.git.baolin.wang@linaro.org>
@@ -74,40 +74,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When user terminates one DMA channel to free all its descriptors, but
-at the same time one transaction interrupt was triggered possibly, now
-we should not handle this interrupt by validating if the 'schan->cur_desc'
-was set as NULL to avoid crashing the kernel.
+For 2-stage transfer, some users like Audio still need transaction interrupt
+to notify when the 2-stage transfer is completed. Thus we should enable
+2-stage transfer interrupt to support this feature.
 
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/dma/sprd-dma.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/dma/sprd-dma.c |   22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index e29342a..431e289 100644
+index 01abed5..baac476 100644
 --- a/drivers/dma/sprd-dma.c
 +++ b/drivers/dma/sprd-dma.c
-@@ -552,12 +552,17 @@ static irqreturn_t dma_irq_handle(int irq, void *dev_id)
- 		schan = &sdev->channels[i];
+@@ -62,6 +62,8 @@
+ /* SPRD_DMA_GLB_2STAGE_GRP register definition */
+ #define SPRD_DMA_GLB_2STAGE_EN		BIT(24)
+ #define SPRD_DMA_GLB_CHN_INT_MASK	GENMASK(23, 20)
++#define SPRD_DMA_GLB_DEST_INT		BIT(22)
++#define SPRD_DMA_GLB_SRC_INT		BIT(20)
+ #define SPRD_DMA_GLB_LIST_DONE_TRG	BIT(19)
+ #define SPRD_DMA_GLB_TRANS_DONE_TRG	BIT(18)
+ #define SPRD_DMA_GLB_BLOCK_DONE_TRG	BIT(17)
+@@ -135,6 +137,7 @@
+ /* define DMA channel mode & trigger mode mask */
+ #define SPRD_DMA_CHN_MODE_MASK		GENMASK(7, 0)
+ #define SPRD_DMA_TRG_MODE_MASK		GENMASK(7, 0)
++#define SPRD_DMA_INT_TYPE_MASK		GENMASK(7, 0)
  
- 		spin_lock(&schan->vc.lock);
-+
-+		sdesc = schan->cur_desc;
-+		if (!sdesc) {
-+			spin_unlock(&schan->vc.lock);
-+			return IRQ_HANDLED;
-+		}
-+
- 		int_type = sprd_dma_get_int_type(schan);
- 		req_type = sprd_dma_get_req_type(schan);
- 		sprd_dma_clear_int(schan);
+ /* define the DMA transfer step type */
+ #define SPRD_DMA_NONE_STEP		0
+@@ -190,6 +193,7 @@ struct sprd_dma_chn {
+ 	u32			dev_id;
+ 	enum sprd_dma_chn_mode	chn_mode;
+ 	enum sprd_dma_trg_mode	trg_mode;
++	enum sprd_dma_int_type	int_type;
+ 	struct sprd_dma_desc	*cur_desc;
+ };
  
--		sdesc = schan->cur_desc;
--
- 		/* cyclic mode schedule callback */
- 		cyclic = schan->linklist.phy_addr ? true : false;
- 		if (cyclic == true) {
+@@ -429,6 +433,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+ 		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+ 		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
+ 		val |= SPRD_DMA_GLB_2STAGE_EN;
++		if (schan->int_type != SPRD_DMA_NO_INT)
++			val |= SPRD_DMA_GLB_SRC_INT;
++
+ 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
+ 		break;
+ 
+@@ -436,6 +443,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+ 		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+ 		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
+ 		val |= SPRD_DMA_GLB_2STAGE_EN;
++		if (schan->int_type != SPRD_DMA_NO_INT)
++			val |= SPRD_DMA_GLB_SRC_INT;
++
+ 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
+ 		break;
+ 
+@@ -443,6 +453,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+ 		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
+ 			SPRD_DMA_GLB_DEST_CHN_MASK;
+ 		val |= SPRD_DMA_GLB_2STAGE_EN;
++		if (schan->int_type != SPRD_DMA_NO_INT)
++			val |= SPRD_DMA_GLB_DEST_INT;
++
+ 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
+ 		break;
+ 
+@@ -450,6 +463,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+ 		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
+ 			SPRD_DMA_GLB_DEST_CHN_MASK;
+ 		val |= SPRD_DMA_GLB_2STAGE_EN;
++		if (schan->int_type != SPRD_DMA_NO_INT)
++			val |= SPRD_DMA_GLB_DEST_INT;
++
+ 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
+ 		break;
+ 
+@@ -911,11 +927,15 @@ static int sprd_dma_fill_linklist_desc(struct dma_chan *chan,
+ 		schan->linklist.virt_addr = 0;
+ 	}
+ 
+-	/* Set channel mode and trigger mode for 2-stage transfer */
++	/*
++	 * Set channel mode, interrupt mode and trigger mode for 2-stage
++	 * transfer.
++	 */
+ 	schan->chn_mode =
+ 		(flags >> SPRD_DMA_CHN_MODE_SHIFT) & SPRD_DMA_CHN_MODE_MASK;
+ 	schan->trg_mode =
+ 		(flags >> SPRD_DMA_TRG_MODE_SHIFT) & SPRD_DMA_TRG_MODE_MASK;
++	schan->int_type = flags & SPRD_DMA_INT_TYPE_MASK;
+ 
+ 	sdesc = kzalloc(sizeof(*sdesc), GFP_NOWAIT);
+ 	if (!sdesc)
 -- 
 1.7.9.5
 
