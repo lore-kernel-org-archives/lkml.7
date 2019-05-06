@@ -2,122 +2,112 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC409C04AB0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BEDC04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD0182082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:26:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BNjPq9C+"
+	by mail.kernel.org (Postfix) with ESMTP id 7281C2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 07:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbfEFH0D (ORCPT
+        id S1726412AbfEFH0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 03:26:03 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35681 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfEFH0D (ORCPT
+        Mon, 6 May 2019 03:26:05 -0400
+Received: from smtp-sp200-211.kinghost.net ([177.185.200.211]:52689 "EHLO
+        smtp-sp200-211.kinghost.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbfEFH0D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 May 2019 03:26:03 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d20so3557157qto.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 00:26:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WNzn2D4LRFx0zq3ZMJPIJy2EHlJS0W/qRQO2E0djUbU=;
-        b=BNjPq9C+fBd/dv+/34M6FL3Z2Pm8FqkPX6Z0HermdNoQMhO2azmmLW0MQfnj03p0b7
-         G6hf2mwmU8G01N1ZkBrVVnNTG3r/otxtMeOTBFZyxhj9vjvZCeYarFlh3Z+YyBY0s7Q/
-         n5Ij8Ly4cHNdL1GIhiFJUJEIk2EyVcRbn5+YyKfmsJgOjDdssNnRASzFPFZlWcaJ1nZL
-         6qsOPoYcGCuqWRDZU55zWXSw6lOexvFw8+spMo1mmr7iFZQvKXYQdHz2IovIeSjmrZGM
-         B4ttVnpCIIV/hKVyr9iZSiQvZCjroyPAYOk7dvqikc9cLkahrr/tOydJFEwW4Kjn48A2
-         qiAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WNzn2D4LRFx0zq3ZMJPIJy2EHlJS0W/qRQO2E0djUbU=;
-        b=tClw+cLsgwUelZPTLvwZay1m41W1T+j64VmtwzsiVUcq0Td/eu2YlkmcYsOTbp2TB+
-         mnjDYAp2+HxHsG8SbIYqd4dOUjFqNcgttq92PFnS+kh0RLkmHS6U/uJy7J7e/LQPkxs5
-         MYBZ/TvOFvzesmjcmV/SP4U44BQ6+iICO1Rx6GNeKXOnUPuYQutA1/8mAaLgodKmxNrL
-         W1nLpA1ZBCrS0KfufwuH9kstogLbpyUKQz/RU03qfBM4edpzaF3X5PT7n6C6sLzl3Hal
-         zPInELe84j+ZuRCxGZ83GYbw0EFbwzvzH+FjcJ/D4OEyhpQgE1h/zE1+N08ZTce2xD3K
-         OzGA==
-X-Gm-Message-State: APjAAAUyvqIJI2s7nq0gIzcQWZYcJgcpo0+YiPwBI9IbdoN+dXcgdBYH
-        /KlZQeQ4wJFEPtP8lpftYIASbm1YjgewhZMPWDd6pA==
-X-Google-Smtp-Source: APXvYqw4GFj4q4UVpUiDKBHF6OghiHzU5JrTfWPLaCo7KAV2UX+jBKeVBbLTsVkPr/PjAhKVuoZEyF0uUBi9eKD6m8o=
-X-Received: by 2002:aed:3fad:: with SMTP id s42mr20026506qth.335.1557127562156;
- Mon, 06 May 2019 00:26:02 -0700 (PDT)
+X-Greylist: delayed 511 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 May 2019 03:26:02 EDT
+Received: from smtpi-sp-236.kinghost.net (smtpi-sp-236.kinghost.net [177.185.201.236])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by smtp-sp200-211.kinghost.net (Postfix) with ESMTPS id A250A1028C563;
+        Mon,  6 May 2019 04:17:28 -0300 (-03)
+Received: from t460s.bristot.redhat.com (host49-62-dynamic.23-79-r.retail.telecomitalia.it [79.23.62.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: daniel@bristot.eti.br)
+        by smtpi-sp-236.kinghost.net (Postfix) with ESMTPSA id CAF936000E09;
+        Mon,  6 May 2019 04:17:10 -0300 (-03)
+Subject: Re: [patch 0/3] do not raise timer softirq unconditionally
+ (spinlockless version)
+To:     Marcelo Tosatti <mtosatti@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Haris Okanovic <haris.okanovic@ni.com>
+References: <20190415201213.600254019@amt.cnet>
+ <20190506032234.GA31395@amt.cnet>
+From:   Daniel Bristot de Oliveira <daniel@bristot.me>
+Message-ID: <a6be2e0e-52a8-f711-ac37-23f267864710@bristot.me>
+Date:   Mon, 6 May 2019 09:17:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1556114601-30936-1-git-send-email-fabien.dessenne@st.com>
- <1556114601-30936-3-git-send-email-fabien.dessenne@st.com> <03f53dcc-816f-c017-f420-5eacc1fa486d@st.com>
-In-Reply-To: <03f53dcc-816f-c017-f420-5eacc1fa486d@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Mon, 6 May 2019 09:25:51 +0200
-Message-ID: <CA+M3ks6bGqux=D+8PgEn9ovGBEbUzkWSshB81Zy1OTG+U4Ww-w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/stm: ltdc: return appropriate error code during probe
-To:     Philippe CORNU <philippe.cornu@st.com>
-Cc:     Fabien DESSENNE <fabien.dessenne@st.com>,
-        Yannick FERTRE <yannick.fertre@st.com>,
-        Vincent ABRIOU <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190506032234.GA31395@amt.cnet>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SND-ID: E3DhL4HZvWApxdeEu0+R3k19tF2vhIUMcvigv4x0qidpkEMv/61pVU+Ic2kX
+        C2E5z/9xJ4WEtUyKW/eV3FZ7zhqtVpQq2rjAS9f/ld8u8XLveOASo+XsFvtl
+        fyg1Roh2/gu+MMqdAzdRWQS+64XBwkZTLUA7Ph3GQXSsMww6UD/8S+aanUho
+        IQ7tGG0VakRWx37deil8OFZrQKJQyN4BocczqtMGU2CiI3RLchuLbPCoCmKi
+        KqI9xnpV7BuyRt6tR5iO/zIbR6bdAogIXhE6ZlJYAlQxzpwu99C3N3CJ08kC
+        iVSrHZCwPpv4j9CFgUIqLRaYZ3IZWQH5oknHgj+u36l4SjejbQIvFm5obt98
+        575EsUIkk0HIfVdbYdHsx1tgX75FMt0Qvnfc1js83zgnxBdDfA+9852OfC8s
+        nH+nsJpoNDaVrjiOj996yvUM33s9yqwtuvfAl2xL0Sp5Mf+3xAjkLEOl7R+y
+        X+eLIOXKjqXyvZMlHOmAkAU/GmKsHJXFg6xcnlCUg2ZEbsu7vTG7HTcv/Env
+        7SoqTSFM2XKRP6Uv7/3WPxyafXnIFxTm79V0f9heYXZeGAqKnQZD+Inx6rIl
+        6m4wHWfHR4bNpgWNWrPobW9jve0ZMORBaQFDAaY1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le ven. 26 avr. 2019 =C3=A0 14:30, Philippe CORNU <philippe.cornu@st.com> a=
- =C3=A9crit :
->
-> Hi Fabien,
-> and thank you for your patch,
->
-> Acked-by: Philippe Cornu <philippe.cornu@st.com>
->
-> Philippe :-)
->
-> On 4/24/19 4:03 PM, Fabien Dessenne wrote:
-> > During probe, return the "clk_get" error value instead of -ENODEV.
-> >
-> > Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 
-Applied on drm-misc-next.
-Thanks,
-Benjamin
 
-> > ---
-> >   drivers/gpu/drm/stm/ltdc.c | 5 +++--
-> >   1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> > index 521ba83..97912e2 100644
-> > --- a/drivers/gpu/drm/stm/ltdc.c
-> > +++ b/drivers/gpu/drm/stm/ltdc.c
-> > @@ -1145,8 +1145,9 @@ int ltdc_load(struct drm_device *ddev)
-> >
-> >       ldev->pixel_clk =3D devm_clk_get(dev, "lcd");
-> >       if (IS_ERR(ldev->pixel_clk)) {
-> > -             DRM_ERROR("Unable to get lcd clock\n");
-> > -             return -ENODEV;
-> > +             if (PTR_ERR(ldev->pixel_clk) !=3D -EPROBE_DEFER)
-> > +                     DRM_ERROR("Unable to get lcd clock\n");
-> > +             return PTR_ERR(ldev->pixel_clk);
-> >       }
-> >
-> >       if (clk_prepare_enable(ldev->pixel_clk)) {
-> >
+On 5/6/19 5:22 AM, Marcelo Tosatti wrote:
+> On Mon, Apr 15, 2019 at 05:12:13PM -0300, Marcelo Tosatti wrote:
+>> For isolated CPUs, we'd like to skip awakening ktimersoftd
+>> (the switch to and then back from ktimersoftd takes 10us in
+>> virtualized environments, in addition to other OS overhead,
+>> which exceeds telco requirements for packet forwarding for
+>> 5G) from the sched tick.
+>>
+>> The patch "timers: do not raise softirq unconditionally" from Thomas
+>> attempts to address that by checking, in the sched tick, whether its
+>> necessary to raise the timer softirq. Unfortunately, it attempts to grab
+>> the tvec base spinlock which generates the issue described in the patch
+>> "Revert "timers: do not raise softirq unconditionally"".
+>>
+>> tvec_base->lock protects addition of timers to the wheel versus
+>> timer interrupt execution.
+>>
+>> This patch does not grab the tvec base spinlock from irq context,
+>> but rather performs a lockless access to base->pending_map.
+>>
+>> It handles the the race between timer addition and timer interrupt
+>> execution by unconditionally (in case of isolated CPUs) raising the
+>> timer softirq after making sure the updated bitmap is visible
+>> on remote CPUs.
+>>
+>> This patchset reduces cyclictest latency from 25us to 14us
+>> on my testbox. 
+>>
+>>
+> 
+> Ping?
+> 
+
+Hi Marcelo,
+
+I've been running your patches with lockdep and other debug options and did not
+find any problem of this kind. Also, I did not find any kind of timing
+regressions in tests with the PREEMPT RT...
+
+-- Daniel
