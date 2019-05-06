@@ -2,94 +2,227 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F93EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773D2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5848A205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4640F205ED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfEFQyP (ORCPT
+        id S1726754AbfEFQzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:54:15 -0400
-Received: from mga07.intel.com ([134.134.136.100]:29193 "EHLO mga07.intel.com"
+        Mon, 6 May 2019 12:55:33 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:57688 "EHLO mx2.mailbox.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726413AbfEFQyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:54:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 09:54:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
-   d="scan'208";a="171358620"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 06 May 2019 09:54:13 -0700
-Received: from slaugust-mobl.amr.corp.intel.com (unknown [10.254.21.102])
-        by linux.intel.com (Postfix) with ESMTP id 5F620580238;
-        Mon,  6 May 2019 09:54:12 -0700 (PDT)
-Subject: Re: [alsa-devel] [RFC PATCH 5/7] soundwire: add debugfs support
-To:     Vinod Koul <vkoul@kernel.org>, Greg KH <gregkh@linuxfoundation.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, joe@perches.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
- <20190504010030.29233-6-pierre-louis.bossart@linux.intel.com>
- <20190504070301.GD9770@kroah.com>
- <a9e1c3d2-fe29-1683-9253-b66034c62010@linux.intel.com>
- <20190506163810.GK3845@vkoul-mobl.Dlink>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <f1b632e7-e62d-bbd4-e160-36009ee57249@linux.intel.com>
-Date:   Mon, 6 May 2019 11:54:11 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        id S1726287AbfEFQzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 12:55:32 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id DE0B5A1167;
+        Mon,  6 May 2019 18:55:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id IVJ6tn_By9w9; Mon,  6 May 2019 18:55:06 +0200 (CEST)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: [PATCH v6 0/6] namei: resolveat(2) path resolution restriction API
+Date:   Tue,  7 May 2019 02:54:33 +1000
+Message-Id: <20190506165439.9155-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-In-Reply-To: <20190506163810.GK3845@vkoul-mobl.Dlink>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/6/19 11:38 AM, Vinod Koul wrote:
-> On 06-05-19, 09:48, Pierre-Louis Bossart wrote:
-> 
->>>> +struct dentry *sdw_bus_debugfs_get_root(struct sdw_bus_debugfs *d)
->>>> +{
->>>> +	if (d)
->>>> +		return d->fs;
->>>> +	return NULL;
->>>> +}
->>>> +EXPORT_SYMBOL(sdw_bus_debugfs_get_root);
->>>
->>> _GPL()?
->>
->> Oops, that's a big miss. will fix, thanks for spotting this.
-> 
-> Not really. The Soundwire code is dual licensed. Many of the soundwire
-> symbols are indeed exported as EXPORT_SYMBOL. But I agree this one is
-> 'linux' specific so can be made _GPL.
-> 
-> Pierre, does Intel still care about this being dual licensed or not?
+Patch changelog:
+  v6:
+    * Drop O_* flags API to the new LOOKUP_ path scoping bits and
+      instead introduce resolveat(2) as an alternative method of
+      obtaining an O_PATH. The justification for this is included in
+      patch 6 (though switching back to O_* flags is trivial).
+  v5:
+    * In response to CVE-2019-5736 (one of the vectors showed that
+      open(2)+fexec(3) cannot be used to scope binfmt_script's implicit
+      open_exec()), AT_* flags have been re-added and are now piped
+      through to binfmt_script (and other binfmt_* that use open_exec)
+      but are only supported for execveat(2) for now.
+  v4:
+    * Remove AT_* flag reservations, as they require more discussion.
+    * Switch to path_is_under() over __d_path() for breakout checking.
+    * Make O_XDEV no longer block openat("/tmp", "/", O_XDEV) -- dirfd
+      is now ignored for absolute paths to match other flags.
+    * Improve the dirfd_path_init() refactor and move it to a separate
+      commit.
+    * Remove reference to Linux-capsicum.
+    * Switch "proclink" name to "magic link".
+  v3: [resend]
+  v2:
+    * Made ".." resolution with AT_THIS_ROOT and AT_BENEATH safe(r) with
+      some semi-aggressive __d_path checking (see patch 3).
+    * Disallowed "proclinks" with AT_THIS_ROOT and AT_BENEATH, in the
+      hopes they can be re-enabled once safe.
+    * Removed the selftests as they will be reimplemented as xfstests.
+    * Removed stat(2) support, since you can already get it through
+      O_PATH and fstatat(2).
 
-Debugfs was never in scope for the dual-licensed parts, we've already 
-agreed for SOF to move to _GPL.
+The need for some sort of control over VFS's path resolution (to avoid
+malicious paths resulting in inadvertent breakouts) has been a very
+long-standing desire of many userspace applications. This patchset is a
+revival of Al Viro's old AT_NO_JUMPS[1,2] patchset (which was a variant
+of David Drysdale's O_BENEATH patchset[3] which was a spin-off of the
+Capsicum project[4]) with a few additions and changes made based on the
+previous discussion within [5] as well as others I felt were useful.
 
-> 
->>
->>>
->>> But why is this exported at all?  No one calls this function.
->>
->> I will have to check.
-> 
-> It is used by codec driver which are not upstream yet. So my suggestion
-> would be NOT to export this and only do so when we have users for it
-> That would be true for other APIs exported out as well.
+In line with the conclusions of the original discussion of AT_NO_JUMPS,
+the flag has been split up into separate flags. However, instead of
+being an openat(2) flag it is provided through a new syscall
+resolveat(2) which provides an alternative way to get an O_PATH file
+descriptor (the reasoning for doing this is included in patch 6). The
+following new LOOKUP_ (and corresponding uapi) flags are added:
 
-It'll just make the first codec driver patchset more complicated but fine.
+  * LOOKUP_XDEV blocks all mountpoint crossings (upwards, downwards, or
+    through absolute links). Absolute pathnames alone in openat(2) do
+    not trigger this.
+
+  * LOOKUP_NO_MAGICLINKS blocks resolution through /proc/$pid/fd-style
+    links. This is done by blocking the usage of nd_jump_link() during
+    resolution in a filesystem. The term "magic links" is used to match
+    with the only reference to these links in Documentation/, but I'm
+    happy to change the name.
+
+    It should be noted that this is different to the scope of
+    ~LOOKUP_FOLLOW in that it applies to all path components. However,
+    you can do resolveat(NOFOLLOW|NO_MAGICLINKS) on a "magic link" and
+    it will *not* fail (assuming that no parent component was a "magic
+    link"), and you will have an fd for the "magic link".
+
+  * LOOKUP_BENEATH disallows escapes to outside the starting dirfd's
+    tree, using techniques such as ".." or absolute links. Absolute
+    paths in openat(2) are also disallowed. Conceptually this flag is to
+    ensure you "stay below" a certain point in the filesystem tree --
+    but this requires some additional to protect against various races
+    that would allow escape using ".." (see patch 4 for more detail).
+
+    Currently LOOKUP_BENEATH implies LOOKUP_NO_MAGICLINKS, because it
+    can trivially beam you around the filesystem (breaking the
+    protection). In future, there might be similar safety checks as in
+    patch 4, but that requires more discussion.
+
+In addition, two new flags were added that expand on the above ideas:
+
+  * LOOKUP_NO_SYMLINKS does what it says on the tin. No symlink
+    resolution is allowed at all, including "magic links". Just as with
+    LOOKUP_NO_MAGICLINKS this can still be used with NOFOLLOW to open an
+    fd for the symlink as long as no parent path had a symlink
+    component.
+
+  * LOOKUP_IN_ROOT is an extension of LOOKUP_BENEATH that, rather than
+    blocking attempts to move past the root, forces all such movements
+    to be scoped to the starting point. This provides chroot(2)-like
+    protection but without the cost of a chroot(2) for each filesystem
+    operation, as well as being safe against race attacks that chroot(2)
+    is not.
+
+    If a race is detected (as with LOOKUP_BENEATH) then an error is
+    generated, and similar to LOOKUP_BENEATH it is not permitted to cross
+    "magic links" with LOOKUP_IN_ROOT.
+
+    The primary need for this is from container runtimes, which
+    currently need to do symlink scoping in userspace[6] when opening
+    paths in a potentially malicious container. There is a long list of
+    CVEs that could have bene mitigated by having O_THISROOT (such as
+    CVE-2017-1002101, CVE-2017-1002102, CVE-2018-15664, and
+    CVE-2019-5736, just to name a few).
+
+In addition, a mirror set of AT_* flags have been added (though
+currently these are only supported for execveat(2) -- and not for any
+other syscall). The need for these is explained in patch 5 (it's
+motivated by CVE-2019-5736).
+
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Christian Brauner <christian@brauner.io>
+Cc: David Drysdale <drysdale@google.com>
+Cc: Tycho Andersen <tycho@tycho.ws>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <containers@lists.linux-foundation.org>
+Cc: <linux-fsdevel@vger.kernel.org>
+Cc: <linux-api@vger.kernel.org>
+
+[1]: https://lwn.net/Articles/721443/
+[2]: https://lore.kernel.org/patchwork/patch/784221/
+[3]: https://lwn.net/Articles/619151/
+[4]: https://lwn.net/Articles/603929/
+[5]: https://lwn.net/Articles/723057/
+[6]: https://github.com/cyphar/filepath-securejoin
+
+Aleksa Sarai (6):
+  namei: split out nd->dfd handling to dirfd_path_init
+  namei: O_BENEATH-style path resolution flags
+  namei: LOOKUP_IN_ROOT: chroot-like path resolution
+  namei: aggressively check for nd->root escape on ".." resolution
+  binfmt_*: scope path resolution of interpreters
+  namei: resolveat(2) syscall
+
+ arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
+ arch/arm/tools/syscall.tbl                  |   1 +
+ arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
+ fs/binfmt_elf.c                             |   2 +-
+ fs/binfmt_elf_fdpic.c                       |   2 +-
+ fs/binfmt_em86.c                            |   4 +-
+ fs/binfmt_misc.c                            |   2 +-
+ fs/binfmt_script.c                          |   2 +-
+ fs/exec.c                                   |  26 +-
+ fs/namei.c                                  | 251 +++++++++++++++-----
+ include/linux/binfmts.h                     |   1 +
+ include/linux/fs.h                          |   9 +-
+ include/linux/namei.h                       |   8 +
+ include/uapi/linux/fcntl.h                  |  18 ++
+ 27 files changed, 270 insertions(+), 71 deletions(-)
+
+-- 
+2.21.0
+
