@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C33BC04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD7FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D58205ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042AB2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154885;
-	bh=tVT4BUfcBUytwcxsLLXjx+9CLdXeN8ftHXA5BRVr70w=;
+	s=default; t=1557154893;
+	bh=TfJ5KHkL1zHX9fsEI4Y7iL8punVmYs3scVECbtPu8WE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XK7R6VduG117YvUiaQWyCLoSiTJLJbgW3kUUiNaAN1RdrkAlLWZ++NQXU0E3jbRrz
-	 AFIT4e7xIr4bQPaLL5VNs9Nu8ZRKOPakI3BltZgV72629KASkQksxv9pVfICwvL0Pz
-	 gvTF/87jlGy7Xrl+AWqdSceDaR3DAQNpRv6Hlw34=
+	b=y/yVrZEGlzupuGwLHO9IyaQ9UTnv3iurJ3tmXdUXZMFRdKdL9BV6RxmzDWOxuYh+N
+	 cgHsQImzLujT94xWHrkAWOWoDhU8sqplynaAPfErvpyK2hPvAW3GXc9Iw5hZy9RbQB
+	 8zPeHtnAte8LH2duf+aAMFgY8ZcXVTvt2326HvlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbfEFOl0 (ORCPT
+        id S1727603AbfEFOlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:41:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35384 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:41:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728229AbfEFOlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:23 -0400
+        id S1727417AbfEFOlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:41:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 822622087F;
-        Mon,  6 May 2019 14:41:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A158E20449;
+        Mon,  6 May 2019 14:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153683;
-        bh=tVT4BUfcBUytwcxsLLXjx+9CLdXeN8ftHXA5BRVr70w=;
+        s=default; t=1557153675;
+        bh=TfJ5KHkL1zHX9fsEI4Y7iL8punVmYs3scVECbtPu8WE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GI0xKHyRV7O15aO4Dau4GSFQnJ2NlC5w5EwwRKkwSijvQmiI9oTJ9UPrX6Tp3Su3s
-         cIOPCPCGwG6OP50pUHXvelQlMo7JpoVAOyj9K3J2NC1DkbVbgBrAu+NLrt1X//m2Tm
-         R9NFqV7Y54D4hBrCGLLD38B/wg6L1WiI309+O7Mg=
+        b=XrDSLfdzcwyW4F0KjEoo3Ug3PB9sfvAlNmJxMJgB3RaZ9NkGXTO9tMjG7bFdoCjda
+         QF08ErTb7QhkN+hes2186FjZtVmRhHGVZy15l8/Ow6VWTLqDmfxIOf5kMfy9g9eJRS
+         MUGwI7l9MBOjiKK575uO71i32h5pSA/b6TFJkwQc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Mukesh Ojha <mojha@codeaurora.org>,
+        Peng Hao <peng.hao2@zte.com.cn>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 56/99] net: hns: Use NAPI_POLL_WEIGHT for hns driver
-Date:   Mon,  6 May 2019 16:32:29 +0200
-Message-Id: <20190506143059.143338658@linuxfoundation.org>
+Subject: [PATCH 4.19 53/99] arm/mach-at91/pm : fix possible object reference leak
+Date:   Mon,  6 May 2019 16:32:26 +0200
+Message-Id: <20190506143058.874499949@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -61,57 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit acb1ce15a61154aa501891d67ebf79bc9ea26818 ]
+[ Upstream commit ba5e60c9b75dec92d4c695b928f69300b17d7686 ]
 
-When the HNS driver loaded, always have an error print:
-"netif_napi_add() called with weight 256"
+of_find_device_by_node() takes a reference to the struct device
+when it finds a match via get_device. When returning error we should
+call put_device.
 
-This is because the kernel checks the NAPI polling weights
-requested by drivers and it prints an error message if a driver
-requests a weight bigger than 64.
-
-So use NAPI_POLL_WEIGHT to fix it.
-
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/arm/mach-at91/pm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index 3a6e5cc76c5b..1c70f9aa0aa7 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -29,9 +29,6 @@
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index 32fae4dbd63b..0921e2c10edf 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -594,13 +594,13 @@ static int __init at91_pm_backup_init(void)
  
- #define SERVICE_TIMER_HZ (1 * HZ)
+ 	np = of_find_compatible_node(NULL, NULL, "atmel,sama5d2-securam");
+ 	if (!np)
+-		goto securam_fail;
++		goto securam_fail_no_ref_dev;
  
--#define NIC_TX_CLEAN_MAX_NUM 256
--#define NIC_RX_CLEAN_MAX_NUM 64
--
- #define RCB_IRQ_NOT_INITED 0
- #define RCB_IRQ_INITED 1
- #define HNS_BUFFER_SIZE_2048 2048
-@@ -2151,7 +2148,7 @@ static int hns_nic_init_ring_data(struct hns_nic_priv *priv)
- 			hns_nic_tx_fini_pro_v2;
- 
- 		netif_napi_add(priv->netdev, &rd->napi,
--			       hns_nic_common_poll, NIC_TX_CLEAN_MAX_NUM);
-+			       hns_nic_common_poll, NAPI_POLL_WEIGHT);
- 		rd->ring->irq_init_flag = RCB_IRQ_NOT_INITED;
- 	}
- 	for (i = h->q_num; i < h->q_num * 2; i++) {
-@@ -2164,7 +2161,7 @@ static int hns_nic_init_ring_data(struct hns_nic_priv *priv)
- 			hns_nic_rx_fini_pro_v2;
- 
- 		netif_napi_add(priv->netdev, &rd->napi,
--			       hns_nic_common_poll, NIC_RX_CLEAN_MAX_NUM);
-+			       hns_nic_common_poll, NAPI_POLL_WEIGHT);
- 		rd->ring->irq_init_flag = RCB_IRQ_NOT_INITED;
+ 	pdev = of_find_device_by_node(np);
+ 	of_node_put(np);
+ 	if (!pdev) {
+ 		pr_warn("%s: failed to find securam device!\n", __func__);
+-		goto securam_fail;
++		goto securam_fail_no_ref_dev;
  	}
  
+ 	sram_pool = gen_pool_get(&pdev->dev, NULL);
+@@ -623,6 +623,8 @@ static int __init at91_pm_backup_init(void)
+ 	return 0;
+ 
+ securam_fail:
++	put_device(&pdev->dev);
++securam_fail_no_ref_dev:
+ 	iounmap(pm_data.sfrbu);
+ 	pm_data.sfrbu = NULL;
+ 	return ret;
 -- 
 2.20.1
 
