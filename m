@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DF5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2235CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC16F2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F872053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154063;
-	bh=X/bvWcZjlXeIMLrwmuCEXq0NPlqn86uuGONRxZlPlzQ=;
+	s=default; t=1557154067;
+	bh=Nq5g+FcXcN8sgE2vPPqNBhPp7NQ0UqVZLrGtpsz1Z/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C49JaMbpzF2HYh1zHVGFwsUqrQhdaVYEDndFhLI9lr+LOn5kUOSGdbwK2OnfxTl5D
-	 NucvqlGq7YInGJCF6qw5/OgJq3XrTNEiLF18e55gRGJHs7cjQwjJkzKnjZZnPSs6pU
-	 CHnTeFeIx2dWFcDfli9taejfvUiob6XrU2+mE+94=
+	b=rbCkHVsQlsROFtwhEhnIS4lzUGPHv7LfM4RtrBG4M5lDhgVQdoHWApzrcbsDgNwkU
+	 nvBYqPiXXMY5SlzsLsEBMo47z+KYSHOxmZMZuj7BlQEuMqrhcJZbFIPXSfAhQpyH4j
+	 WBX/0ZURuhNFJv0NJC10AFq2JD1/0KteI93ZVdkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfEFOrl (ORCPT
+        id S1729370AbfEFOrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:47:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47088 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:47:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728468AbfEFOrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:47:40 -0400
+        id S1727976AbfEFOrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F3662087F;
-        Mon,  6 May 2019 14:47:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4FE720578;
+        Mon,  6 May 2019 14:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557154059;
-        bh=X/bvWcZjlXeIMLrwmuCEXq0NPlqn86uuGONRxZlPlzQ=;
+        s=default; t=1557154062;
+        bh=Nq5g+FcXcN8sgE2vPPqNBhPp7NQ0UqVZLrGtpsz1Z/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LWCfcaBCAoxEhG3nMIIwfsRJh3EKmYj3WnvQNTbHLe6E+xfkiR1o6LNBORBHlSA7o
-         E3RFXwlAX1RVf0gxd8156FWMlXBCFfoPzYP6/u9+V6I1CUhv7tetnsrGlkcJlONmlO
-         zaRcOItPppVqaDXKT94RaIjPLhTXk0hxeGdJkJyM=
+        b=fbPrj21wxJ8HhX0oG/ftApsmfkDlkU8Jgm4Y6DD4krHsQ57iKxbWI6ZFQmV3Qn0Ee
+         Uf5gzhVlathHlAuTB2XNPl7ye7+ZwpW4jQ9+BhDs2Yk1oBiDg9vQD76gplievKUyHI
+         oT3lV3vvUOianDX12LT8ZeMTi3OBY+PU+6tnFroA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 22/62] USB: yurex: Fix protection fault after device removal
-Date:   Mon,  6 May 2019 16:32:53 +0200
-Message-Id: <20190506143052.974180184@linuxfoundation.org>
+        syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 23/62] USB: w1 ds2490: Fix bug caused by improper use of altsetting array
+Date:   Mon,  6 May 2019 16:32:54 +0200
+Message-Id: <20190506143053.056065786@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
 References: <20190506143051.102535767@linuxfoundation.org>
@@ -61,38 +61,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alan Stern <stern@rowland.harvard.edu>
 
-commit ef61eb43ada6c1d6b94668f0f514e4c268093ff3 upstream.
+commit c114944d7d67f24e71562fcfc18d550ab787e4d4 upstream.
 
-The syzkaller USB fuzzer found a general-protection-fault bug in the
-yurex driver.  The fault occurs when a device has been unplugged; the
-driver's interrupt-URB handler logs an error message referring to the
-device by name, after the device has been unregistered and its name
-deallocated.
+The syzkaller USB fuzzer spotted a slab-out-of-bounds bug in the
+ds2490 driver.  This bug is caused by improper use of the altsetting
+array in the usb_interface structure (the array's entries are not
+always stored in numerical order), combined with a naive assumption
+that all interfaces probed by the driver will have the expected number
+of altsettings.
 
-This problem is caused by the fact that the interrupt URB isn't
-cancelled until the driver's private data structure is released, which
-can happen long after the device is gone.  The cure is to make sure
-that the interrupt URB is killed before yurex_disconnect() returns;
-this is exactly the sort of thing that usb_poison_urb() was meant for.
+The bug can be fixed by replacing references to the possibly
+non-existent intf->altsetting[alt] entry with the guaranteed-to-exist
+intf->cur_altsetting entry.
 
 Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
 CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/yurex.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/w1/masters/ds2490.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -324,6 +324,7 @@ static void yurex_disconnect(struct usb_
- 	usb_deregister_dev(interface, &yurex_class);
+--- a/drivers/w1/masters/ds2490.c
++++ b/drivers/w1/masters/ds2490.c
+@@ -1039,15 +1039,15 @@ static int ds_probe(struct usb_interface
+ 	/* alternative 3, 1ms interrupt (greatly speeds search), 64 byte bulk */
+ 	alt = 3;
+ 	err = usb_set_interface(dev->udev,
+-		intf->altsetting[alt].desc.bInterfaceNumber, alt);
++		intf->cur_altsetting->desc.bInterfaceNumber, alt);
+ 	if (err) {
+ 		dev_err(&dev->udev->dev, "Failed to set alternative setting %d "
+ 			"for %d interface: err=%d.\n", alt,
+-			intf->altsetting[alt].desc.bInterfaceNumber, err);
++			intf->cur_altsetting->desc.bInterfaceNumber, err);
+ 		goto err_out_clear;
+ 	}
  
- 	/* prevent more I/O from starting */
-+	usb_poison_urb(dev->urb);
- 	mutex_lock(&dev->io_mutex);
- 	dev->interface = NULL;
- 	mutex_unlock(&dev->io_mutex);
+-	iface_desc = &intf->altsetting[alt];
++	iface_desc = intf->cur_altsetting;
+ 	if (iface_desc->desc.bNumEndpoints != NUM_EP-1) {
+ 		pr_info("Num endpoints=%d. It is not DS9490R.\n",
+ 			iface_desc->desc.bNumEndpoints);
 
 
