@@ -2,50 +2,52 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7EAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111E5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D15EF204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7123214AF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153467;
-	bh=VlWkBUEImB78/og5ALQ2v1xG5jr0UAHU6iU6re1Vq5E=;
+	s=default; t=1557153471;
+	bh=7OxJbkyPyhXvXcm9b2wqW0qcqTSUjNm69XWQPModrrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BXCaaYoKinoJdnJynh3PIdke7nyUozoZacrcVK0YrYvbpX046dB5/OR31gNiG/KW8
-	 Ul4kY9Ro14ndjKB4uiTf90HP4gdoW2ubZn4aC85D1qvpp01dgM7jPZ4zwV2hntFTPC
-	 XWDPMSqcc01cLD6AIJUXq0AMxSt+uLOnY4MpKXYk=
+	b=a+syA64pLACKlVgKdRh1Ir0ev81v8mJmYMWqnz9uxejnaJiKCiZKHkMupHXs/+nQf
+	 GSnXXihtK2Drd1c/hKoWOLAXCzE+usX0cD16EX7oO9I44aB8Ie1Z/1df/KZ7SoJ3SB
+	 vQUm5vLfiOOTa24Cl+BcqFdOqtH4H7gfVAYeiWuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfEFOhr (ORCPT
+        id S1727471AbfEFOhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:37:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58564 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:37:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727447AbfEFOho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:37:44 -0400
+        id S1726418AbfEFOhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:37:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DB18204EC;
-        Mon,  6 May 2019 14:37:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC446204EC;
+        Mon,  6 May 2019 14:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153463;
-        bh=VlWkBUEImB78/og5ALQ2v1xG5jr0UAHU6iU6re1Vq5E=;
+        s=default; t=1557153466;
+        bh=7OxJbkyPyhXvXcm9b2wqW0qcqTSUjNm69XWQPModrrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qPCWpawv6Xf7EZAger1HMUauaIj2knqUtI/fLd/2VpGmIZP1iD/qkOrRDP6FwiQG1
-         f9/uPLZFQTinQfjk5oPpLOOwsKZdXmxT9HOd5cmm2o7/aVKBHoUj1ilv+kEqz95CO9
-         k8zXNrldZzsaYl6RFQz0WDPXQsSTECguUDXWhmBQ=
+        b=RfFhi8niW4jC0Q+yX3cg5HBf2uFgbjmx5rwIWMeNARXFB/irLNlgirrqa/DsKUj5A
+         2gCGHVUfrPvshuMpIAeup1QsngerCF3O5nwM3tYCtslDU69/6nXycWRStP8OGzIQlb
+         T9d8VSnNkaF3+oikMh0rEH7kDw5N9aU30mWFiUdw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 098/122] ASoC: dpcm: skip missing substream while applying symmetry
-Date:   Mon,  6 May 2019 16:32:36 +0200
-Message-Id: <20190506143103.555118908@linuxfoundation.org>
+        stable@vger.kernel.org, John Pittman <jpittman@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 5.0 078/122] null_blk: prevent crash from bad home_node value
+Date:   Mon,  6 May 2019 16:32:16 +0200
+Message-Id: <20190506143101.836774644@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -58,46 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jerome Brunet <jbrunet@baylibre.com>
+[ Upstream commit 7ff684a683d777c4956fce93e60accbab2bd7696 ]
 
-commit 6246f283d5e02ac757bd8d9bacde8fdc54c4582d upstream.
+At module load, if the selected home_node value is greater than
+the available numa nodes, the system will crash in
+__alloc_pages_nodemask() due to a bad paging request.  Prevent this
+user error crash by detecting the bad value, logging an error, and
+setting g_home_node back to the default of NUMA_NO_NODE.
 
-If for any reason, the backend does not have the requested substream
-(like capture on a playback only backend), the BE will be skipped in
-dpcm_be_dai_startup().
-
-However, dpcm_apply_symmetry() does not skip those BE and will
-dereference the be_substream (NULL) pointer anyway.
-
-Like in dpcm_be_dai_startup(), just skip those BE.
-
-Fixes: 906c7d690c3b ("ASoC: dpcm: Apply symmetry for DPCM")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: John Pittman <jpittman@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/block/null_blk_main.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -1895,10 +1895,15 @@ static int dpcm_apply_symmetry(struct sn
- 		struct snd_soc_pcm_runtime *be = dpcm->be;
- 		struct snd_pcm_substream *be_substream =
- 			snd_soc_dpcm_get_substream(be, stream);
--		struct snd_soc_pcm_runtime *rtd = be_substream->private_data;
-+		struct snd_soc_pcm_runtime *rtd;
- 		struct snd_soc_dai *codec_dai;
- 		int i;
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 62c9654b9ce8..fd7a9be54595 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -1749,6 +1749,11 @@ static int __init null_init(void)
+ 		return -EINVAL;
+ 	}
  
-+		/* A backend may not have the requested substream */
-+		if (!be_substream)
-+			continue;
++	if (g_home_node != NUMA_NO_NODE && g_home_node >= nr_online_nodes) {
++		pr_err("null_blk: invalid home_node value\n");
++		g_home_node = NUMA_NO_NODE;
++	}
 +
-+		rtd = be_substream->private_data;
- 		if (rtd->dai_link->be_hw_params_fixup)
- 			continue;
- 
+ 	if (g_queue_mode == NULL_Q_RQ) {
+ 		pr_err("null_blk: legacy IO path no longer available\n");
+ 		return -EINVAL;
+-- 
+2.20.1
+
 
 
