@@ -2,491 +2,355 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D354C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561B5C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3982F205F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557104850;
-	bh=omNfA9r3QjAQ41EzHBVP9bShbPHl8ZwtqWgrpZiHH3o=;
-	h=From:Date:Subject:To:List-ID:From;
-	b=tB6aP9LMmt9pwh+8972COZab72dtQo1zMQKORlJajp4p8idA5Dfikm/zsunxqx+lS
-	 dtEOrp8JHxK4FM1P5KnpLoS7S2r23eNwrL98cMOcjlL0FIVm+w9RSriZjA90c7QvMd
-	 WWHPmFPNlzu636jJhD+ljjWghbpnsXZlDrhfjUbs=
+	by mail.kernel.org (Postfix) with ESMTP id 19ECF205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 01:08:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MehMSNyz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbfEFBH2 (ORCPT
+        id S1726175AbfEFBI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 21:07:28 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44721 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfEFBH1 (ORCPT
+        Sun, 5 May 2019 21:08:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33910 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfEFBIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 21:07:27 -0400
-Received: by mail-lf1-f65.google.com with SMTP id n134so6085232lfn.11
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 18:07:25 -0700 (PDT)
+        Sun, 5 May 2019 21:08:25 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f7so4750125wrq.1;
+        Sun, 05 May 2019 18:08:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=f/rE6DeN0iVdguQ5LHTA7Ek22x6R5R52ANCYQcVsHiE=;
-        b=X0vlonGv0hrWwnM+PlN0XYy2au7VEyobccBNm0KQs2vpt16IUOiV/8QC/Vy7vlnBzp
-         Ax/rAP9MqrxcUjM+HIQBTzxZqCQ8whvwF1rVO/NIIOpZueGxm2Ua+zQGCiwiWlSZrcFq
-         UR4yizYZ1tfPgOK0C1LYrTUmt5MoPGB9kReTY=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=FKTE+cin9FPr9rrkGNck3/B4OfvJ0E5J1uTuf06jUr0=;
+        b=MehMSNyzIm3kJejGtxa1wWUuqoTT5OAVQGn9fTLAIffKTMQLBF+NbfWEbor8EuslcC
+         iKIUF7ahkSIa0y41I/OT2kD80+GkBhtk6K2pgRrn/MZ/yhlbHjxNzQ18tcsjL7FLesi3
+         NIDBLxN3V1n3LbdkMPhK7bNofEyByqeo2kskg2ITd0exWD4zcfnmRcrbBjXzu8bT10mP
+         iG/EoXIRB+GTn9xlUjGOpfoz6aiJ1cHN7cBONIbwtl9AtnYXG8hGJGAwd83FLyPV0Wfh
+         zz0Zu1d6FOH09WUcPgP1PJCXTyXem9vReqgvI/WuWToBVwAvoaShiMej0L3KtAo8YXkX
+         rNMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=f/rE6DeN0iVdguQ5LHTA7Ek22x6R5R52ANCYQcVsHiE=;
-        b=G++B+7nY2lcqZj9ypbt0Wo87hcickkbSsAK7KtyAwJZ4mgYhkOqPu4U9eE681RIVga
-         9pOeK4LG9qMvBuoS7bPRvQPAb8EWI3nhQ7gYFcsGg7VwMF0Hxsvk9xCkiepO1PceTdjk
-         OzExcnB4CDYHvMJX6JnIh2IsrYaAtvrDiCKX4YBU2AD3VUj8coENkYtmVUSBKfEhrLQa
-         maSjIqFIW0dKycRyl0pS0hig0gmznGcllEvrNzrlab9U6ihLIZXocN2N/d1qR+76zdL6
-         9zJQm9CGa0DJLokGjnahhqRyctCgyIi6ZxdFj/htT/kL8KsKxf3aezlj7afmNTwXWLLv
-         5Wsg==
-X-Gm-Message-State: APjAAAWNG0bpF0nm6GY2FadbOOsg2cs3SadI6ZUaQyF/04fHXZqZv9Ht
-        7/s4q21ufg8E4+c+qSE36rYpAf6oJv4=
-X-Google-Smtp-Source: APXvYqwRn2jBIE3ilWglttdCxszWW6yCw5ikJATTcC/QUbkCTKCIgHD2R6QCFVwFa1KDV/d3RKlOpw==
-X-Received: by 2002:ac2:5446:: with SMTP id d6mr908152lfn.47.1557104844090;
-        Sun, 05 May 2019 18:07:24 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id m3sm1888503lfh.94.2019.05.05.18.07.22
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FKTE+cin9FPr9rrkGNck3/B4OfvJ0E5J1uTuf06jUr0=;
+        b=T72BjtYgZAJzcuKWp+EUEwxsVNiFzAdyPEaLb8IA/7DIF39IiSVhTSMuApvplI6hyK
+         pi4sIlt1bGdexV1Yqt0eGZiXg2dQuIuASW4Yms5K/rHmqBZM2QJ590sglAzN/+nIe21t
+         nOzE7ndqw7m5j8vBsu36ZeRd+qhmwMNrmNiLTJt0OIMUHXe+zSXDWd7PP0zjETB20jEN
+         0uErjCZqO1h+cWZ3Pp0dbTR2FlcLK2az7084WDx9BMRkza/3WDOuZt52eGDMeM9Hmkj8
+         bZP0KDsaeUi+FMb0cJlBWCeDp6ftCvQkv+FkAuM89G0r662lDhkFKwlOJVRufetNJSCt
+         EQ7g==
+X-Gm-Message-State: APjAAAWhHIKCrY2ClEKusGhHLtaVFl8egnIsefXx1F8u2j0d8yx3dj0x
+        bTV0Ku0xaXqV+rl6/kdIchM=
+X-Google-Smtp-Source: APXvYqzUAV/YDoSG4WtLzgy5WotRZ7dUv3Ed9/JUh+5zCDDk/CuWb3I8YDOI/iPHXky47Z359+REAg==
+X-Received: by 2002:adf:f383:: with SMTP id m3mr2298118wro.164.1557104902871;
+        Sun, 05 May 2019 18:08:22 -0700 (PDT)
+Received: from localhost.localdomain (5-12-225-227.residential.rdsnet.ro. [5.12.225.227])
+        by smtp.gmail.com with ESMTPSA id z5sm20955384wre.70.2019.05.05.18.08.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 May 2019 18:07:22 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id k18so7894007lfj.13
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 18:07:22 -0700 (PDT)
-X-Received: by 2002:ac2:547a:: with SMTP id e26mr11230662lfn.148.1557104842233;
- Sun, 05 May 2019 18:07:22 -0700 (PDT)
-MIME-Version: 1.0
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 5 May 2019 18:07:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whsbDxdapMJGvy9OkVSrKMsKRJBTrH-Qj-qTbkMUGnWUw@mail.gmail.com>
-Message-ID: <CAHk-=whsbDxdapMJGvy9OkVSrKMsKRJBTrH-Qj-qTbkMUGnWUw@mail.gmail.com>
-Subject: Linux 5.1
-To:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 05 May 2019 18:08:22 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     shawnguo@kernel.org
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH] ARM: dts: Introduce the NXP LS1021A-TSN board
+Date:   Mon,  6 May 2019 04:08:00 +0300
+Message-Id: <20190506010800.2433-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So it's a bit later in the day than I usually do this, just because I
-was waffling about the release. Partly because I got some small pull
-requests today, but mostly just because I wasn't looking forward to
-the timing of this upcoming 5.2 merge window.
+The LS1021A-TSN is a development board built by VVDN/Argonboards in
+partnership with NXP.
 
-But the last-minute pull requests really weren't big enough to justify
-delaying things over, and hopefully the merge window timing won't be
-all that painful either. I just happen to have the college graduation
-of my oldest happen right smack dab in the middle of the upcoming
-merge window, so I might be effectively offline for a few days there.
-If worst comes to worst, I'll extend it to make it all work, but I
-don't think it will be needed.
+It features the LS1021A SoC and the first-generation SJA1105T Ethernet
+switch for prototyping implementations of a subset of IEEE 802.1 TSN
+standards.
 
-Anyway, on to 5.1 itself. The past week has been pretty calm, and the
-final patch from rc6 is not all that big. The shortlog is appended,
-but it's small changes all over. Networking, filesystem code, drivers,
-tooling, arch updates. Nothing particularly odd stands out.
+It has two regular Ethernet ports and four switched, TSN-capable ports.
 
-Of course, the shortlog below is just for that final calm week. On the
-whole, 5.1 looks very normal with just over 13k commits (plus another
-1k+ if you count merges). Which is pretty much our normal size these
-days. No way to boil that down to a sane shortlog, with work all over.
+It also features:
+- One Arduino header
+- One expansion header
+- Two USB 3.0 ports
+- One mini PCIe slot
+- One SATA interface
+- Accelerometer, gyroscope, temperature sensors
 
-Go out and test,
-
-                Linus
-
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
 ---
+ arch/arm/boot/dts/Makefile        |   3 +-
+ arch/arm/boot/dts/ls1021a-tsn.dts | 238 ++++++++++++++++++++++++++++++
+ 2 files changed, 240 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/ls1021a-tsn.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f4f5aeaf3298..529f0150f6b4 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -593,7 +593,8 @@ dtb-$(CONFIG_SOC_IMX7ULP) += \
+ dtb-$(CONFIG_SOC_LS1021A) += \
+ 	ls1021a-moxa-uc-8410a.dtb \
+ 	ls1021a-qds.dtb \
+-	ls1021a-twr.dtb
++	ls1021a-twr.dtb \
++	ls1021a-tsn.dtb
+ dtb-$(CONFIG_SOC_VF610) += \
+ 	vf500-colibri-eval-v3.dtb \
+ 	vf610-bk4.dtb \
+diff --git a/arch/arm/boot/dts/ls1021a-tsn.dts b/arch/arm/boot/dts/ls1021a-tsn.dts
+new file mode 100644
+index 000000000000..5269486699bd
+--- /dev/null
++++ b/arch/arm/boot/dts/ls1021a-tsn.dts
+@@ -0,0 +1,238 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright 2016-2018 NXP Semiconductors
++ * Copyright 2019 Vladimir Oltean <olteanv@gmail.com>
++ */
++
++/dts-v1/;
++#include "ls1021a.dtsi"
++
++/ {
++	model = "NXP LS1021A-TSN Board";
++
++	sys_mclk: clock-mclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24576000>;
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_3p3v: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "3P3V";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++		reg_2p5v: regulator@1 {
++			compatible = "regulator-fixed";
++			reg = <1>;
++			regulator-name = "2P5V";
++			regulator-min-microvolt = <2500000>;
++			regulator-max-microvolt = <2500000>;
++			regulator-always-on;
++		};
++	};
++};
++
++&enet0 {
++	tbi-handle = <&tbi0>;
++	phy-handle = <&sgmii_phy2>;
++	phy-mode = "sgmii";
++	status = "ok";
++};
++
++&enet1 {
++	tbi-handle = <&tbi1>;
++	phy-handle = <&sgmii_phy1>;
++	phy-mode = "sgmii";
++	status = "ok";
++};
++
++/* RGMII delays added via PCB traces */
++&enet2 {
++	phy-mode = "rgmii";
++	status = "ok";
++	fixed-link {
++		speed = <1000>;
++		full-duplex;
++	};
++};
++
++&dspi0 {
++	bus-num = <0>;
++	status = "ok";
++
++	/* ADG704BRMZ 1:4 mux/demux */
++	tsn_switch: sja1105@1 {
++		reg = <0x1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "nxp,sja1105t";
++		/* 12 MHz */
++		spi-max-frequency = <12000000>;
++		/* Sample data on trailing clock edge */
++		spi-cpha;
++		fsl,spi-cs-sck-delay = <1000>;
++		fsl,spi-sck-cs-delay = <1000>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				/* ETH5 written on chassis */
++				label = "swp5";
++				phy-handle = <&rgmii_phy6>;
++				phy-mode = "rgmii-id";
++				reg = <0>;
++			};
++			port@1 {
++				/* ETH2 written on chassis */
++				label = "swp2";
++				phy-handle = <&rgmii_phy3>;
++				phy-mode = "rgmii-id";
++				reg = <1>;
++			};
++			port@2 {
++				/* ETH3 written on chassis */
++				label = "swp3";
++				phy-handle = <&rgmii_phy4>;
++				phy-mode = "rgmii-id";
++				reg = <2>;
++			};
++			port@3 {
++				/* ETH4 written on chassis */
++				phy-handle = <&rgmii_phy5>;
++				label = "swp4";
++				phy-mode = "rgmii-id";
++				reg = <3>;
++			};
++			port@4 {
++				/* Internal port connected to eth2 */
++				ethernet = <&enet2>;
++				phy-mode = "rgmii";
++				reg = <4>;
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++		};
++	};
++};
++
++&mdio0 {
++	/* AR8031 */
++	sgmii_phy1: ethernet-phy@1 {
++		reg = <0x1>;
++	};
++	/* AR8031 */
++	sgmii_phy2: ethernet-phy@2 {
++		reg = <0x2>;
++	};
++	/* BCM5464 */
++	rgmii_phy3: ethernet-phy@3 {
++		reg = <0x3>;
++	};
++	rgmii_phy4: ethernet-phy@4 {
++		reg = <0x4>;
++	};
++	rgmii_phy5: ethernet-phy@5 {
++		reg = <0x5>;
++	};
++	rgmii_phy6: ethernet-phy@6 {
++		reg = <0x6>;
++	};
++	/* SGMII PCS for enet0 */
++	tbi0: tbi-phy@1f {
++		reg = <0x1f>;
++		device_type = "tbi-phy";
++	};
++};
++
++&mdio1 {
++	/* SGMII PCS for enet1 */
++	tbi1: tbi-phy@1f {
++		reg = <0x1f>;
++		device_type = "tbi-phy";
++	};
++};
++
++&i2c0 {
++	status = "ok";
++
++	/* 3 axis accelerometer */
++	accelerometer@1e {
++		compatible = "fsl,fxls8471";
++		reg = <0x1e>;
++		position = <0>;
++	};
++	/* Gyroscope is at 0x20 but not supported */
++	/* Audio codec (SAI2) */
++	codec@2a {
++		#sound-dai-cells = <0>;
++		compatible = "fsl,sgtl5000";
++		reg = <0x2a>;
++		VDDA-supply = <&reg_3p3v>;
++		VDDIO-supply = <&reg_2p5v>;
++		clocks = <&sys_mclk>;
++	};
++	/* Current sensing circuit for 1V VDDCORE PMIC rail */
++	current-sensor@44 {
++		compatible = "ti,ina220";
++		reg = <0x44>;
++		shunt-resistor = <1000>;
++	};
++	/* Current sensing circuit for 12V VCC rail */
++	current-sensor@45 {
++		compatible = "ti,ina220";
++		reg = <0x45>;
++		shunt-resistor = <1000>;
++	};
++	/* Thermal monitor - case */
++	temperature-sensor@48 {
++		compatible = "national,lm75";
++		reg = <0x48>;
++	};
++	/* Thermal monitor - chip */
++	temperature-sensor@4c {
++		compatible = "ti,tmp451";
++		reg = <0x4c>;
++	};
++	/* 4-channel ADC */
++	adc@49 {
++		compatible = "ad7924";
++		reg = <0x49>;
++	};
++};
++
++&ifc {
++	status = "disabled";
++};
++
++&esdhc {
++	status = "ok";
++};
++
++&uart0 {
++	status = "ok";
++};
++
++&lpuart0 {
++	status = "ok";
++};
++
++&lpuart3 {
++	status = "ok";
++};
++
++&sai2 {
++	status = "ok";
++};
++
++&sata {
++	status = "ok";
++};
+-- 
+2.17.1
 
-Al Viro (4):
-      securityfs: fix use-after-free on symlink traversal
-      apparmorfs: fix use-after-free on symlink traversal
-      [fix] get rid of checking for absent device name in vfs_get_tree()
-      ufs: fix braino in ufs_get_inode_gid() for solaris UFS flavour
-
-Alan Stern (5):
-      USB: core: Fix unterminated string returned by usb_string()
-      USB: dummy-hcd: Fix failure to give back unlinked URBs
-      USB: core: Fix bug caused by duplicate interface PM usage counter
-      USB: yurex: Fix protection fault after device removal
-      USB: w1 ds2490: Fix bug caused by improper use of altsetting array
-
-Alban Crequy (1):
-      tools: bpftool: fix infinite loop in map create
-
-Alex Williamson (1):
-      PCI/portdrv: Use shared MSI/MSI-X vector for Bandwidth Management
-
-Alexander Lochmann (1):
-      Abort file_remove_privs() for non-reg. files
-
-Alexander Shishkin (2):
-      perf/ring_buffer: Fix AUX software double buffering
-      perf/x86/intel/pt: Remove software double buffering PMU capability
-
-Alexey Kardashevskiy (1):
-      KVM: PPC: Book3S: Protect memslots while validating user address
-
-Andrew Jones (2):
-      KVM: arm/arm64: Ensure vcpu target is unset on reset failure
-      Documentation: kvm: fix dirty log ioctl arch lists
-
-Andrew Lunn (1):
-      net: phy: marvell: Fix buffer overrun with stats counters
-
-Andrey Smirnov (1):
-      power: supply: sysfs: prevent endless uevent loop with
-CONFIG_POWER_SUPPLY_DEBUG
-
-Anson Huang (1):
-      i2c: imx: correct the method of getting private data in notifier_call
-
-Ard Biesheuvel (1):
-      i2c: synquacer: fix enumeration of slave devices
-
-Arnaldo Carvalho de Melo (5):
-      tools uapi x86: Sync vmx.h with the kernel
-      perf bench numa: Add define for RUSAGE_THREAD if not present
-      tools build: Add -ldl to the disassembler-four-args feature test
-      tools arch uapi: Copy missing unistd.h headers for arc, hexagon and r=
-iscv
-      perf tools: Remove needless asm/unistd.h include fixing build in
-some places
-
-Bhagavathi Perumal S (1):
-      mac80211: Fix kernel panic due to use of txq after free
-
-Bj=C3=B8rn Mork (1):
-      qmi_wwan: new Wistron, ZTE and D-Link devices
-
-Bo YU (1):
-      perf bpf: Return value with unlocking in perf_env__find_btf()
-
-Brian Norris (1):
-      ath10k: perform crash dump collection in workqueue
-
-Christoffer Dall (1):
-      KVM: arm/arm64: Don't emulate virtual timers on userspace ioctls
-
-Christophe Leroy (1):
-      powerpc/32s: Fix BATs setting with CONFIG_STRICT_KERNEL_RWX
-
-Cong Wang (1):
-      xfrm: clean up xfrm protocol checks
-
-Dan Carpenter (1):
-      net: dsa: bcm_sf2: fix buffer overflow doing set_rxnfc
-
-David Ahern (1):
-      selftests: fib_rule_tests: Fix icmp proto with ipv6
-
-David Howells (1):
-      rxrpc: Fix net namespace cleanup
-
-Dmitry Osipenko (1):
-      clk: Add missing stubs for a few functions
-
-Douglas Anderson (1):
-      mwifiex: Make resume actually do something useful again on SDIO cards
-
-Emmanuel Grumbach (1):
-      iwlwifi: fix driver operation for 5350
-
-Eric Dumazet (6):
-      l2tp: use rcu_dereference_sk_user_data() in l2tp_udp_encap_recv()
-      tcp: add sanity tests in tcp_add_backlog()
-      ipv6/flowlabel: wait rcu grace period before put_pid()
-      l2ip: fix possible use-after-free
-      ipv6: fix races in ip6_dst_destroy()
-      udp: fix GRO packet of death
-
-Eugeniy Paltsev (1):
-      ARC: memset: fix build with L1_CACHE_SHIFT !=3D 6
-
-Fabien Dessenne (1):
-      net: ethernet: stmmac: manage the get_irq probe defer case
-
-Gary Hook (1):
-      x86/mm/mem_encrypt: Disable all instrumentation for early SME setup
-
-Gerd Hoffmann (1):
-      Revert "drm/qxl: drop prime import/export callbacks"
-
-Greg Kroah-Hartman (2):
-      iwlwifi: mvm: properly check debugfs dentry before using it
-      ALSA: line6: use dynamic buffers
-
-Hangbin Liu (1):
-      selftests: fib_rule_tests: print the result and return 1 if any
-tests failed
-
-Jakub Kicinski (3):
-      net/tls: don't copy negative amounts of data in reencrypt
-      net/tls: fix copy to fragments in reencrypt
-      net/tls: avoid NULL pointer deref on nskb->sk in fallback
-
-Jan Kara (1):
-      fsnotify: Fix NULL ptr deref in fanotify_get_fsid()
-
-Jan Kiszka (1):
-      stmmac: pci: Fix typo in IOT2000 comment
-
-Jarkko Nikula (1):
-      i2c: Prevent runtime suspend of adapter when Host Notify is required
-
-Jens Axboe (2):
-      io_uring: have submission side sqe errors post a cqe
-      io_uring: drop req submit reference always in async punt
-
-Jeremy Sowden (2):
-      vti4: ipip tunnel deregistration fixes.
-      vti4: removed duplicate log message.
-
-Jernej Skrabec (2):
-      clk: sunxi-ng: nkmp: Avoid GENMASK(-1, 0)
-      clk: sunxi-ng: nkmp: Explain why zero width check is needed
-
-Jim Mattson (1):
-      KVM: nVMX: Fix size checks in vmx_set_nested_state
-
-Jiri Olsa (1):
-      perf/x86/intel: Fix race in intel_pmu_disable_event()
-
-Johannes Berg (3):
-      mac80211: fix RX STBC override byte order
-      iwlwifi: mvm: don't attempt debug collection in rfkill
-      mac80211: don't attempt to rename ERR_PTR() debugfs dirs
-
-Kailang Yang (2):
-      ALSA: hda/realtek - Add new Dell platform for headset mode
-      ALSA: hda/realtek - Fixed Dell AIO speaker noise
-
-Kangjie Lu (1):
-      net: ieee802154: fix missing checks for regmap_update_bits
-
-Kees Cook (1):
-      selftests/seccomp: Prepare for exclusive seccomp flags
-
-Keith Busch (1):
-      PCI/LINK: Add Kconfig option (default off)
-
-Kim Phillips (2):
-      perf/x86/amd: Update generic hardware cache events for Family 17h
-      MAINTAINERS: Include vendor specific files under arch/*/events/*
-
-Leo Yan (3):
-      tools lib traceevent: Change tag string for error
-      perf cs-etm: Don't check cs_etm_queue::prev_packet validity
-      perf cs-etm: Always allocate memory for cs_etm_queue::prev_packet
-
-Linus Torvalds (7):
-      rdma: fix build errors on s390 and MIPS due to bad ZERO_PAGE use
-      x86: make ZERO_PAGE() at least parse its argument
-      gcc-9: silence 'address-of-packed-member' warning
-      gcc-9: don't warn about uninitialized variable
-      gcc-9: properly declare the {pv,hv}clock_page storage
-      gcc-9: don't warn about uninitialized btrfs extent_type variable
-      Linux 5.1
-
-Liran Alon (1):
-      KVM: x86: Consider LAPIC TSC-Deadline timer expired if deadline too s=
-hort
-
-Logan Gunthorpe (1):
-      PCI: Fix issue with "pci=3Ddisable_acs_redir" parameter being ignored
-
-Luca Coelho (2):
-      iwlwifi: mvm: check for length correctness in iwl_mvm_create_skb()
-      iwlwifi: mvm: fix merge damage in iwl_mvm_vif_dbgfs_register()
-
-Malte Leip (1):
-      usb: usbip: fix isoc packet num validation in get_pipe
-
-Marc Zyngier (1):
-      KVM: arm/arm64: vgic-v3: Retire pending interrupts on disabling LPIs
-
-Marcel Holtmann (1):
-      genetlink: use idr_alloc_cyclic for family->id assignment
-
-Mark Rutland (3):
-      io_uring: fix SQPOLL cpu validation
-      io_uring: free allocated io_memory once
-      io_uring: avoid page allocation warnings
-
-Martin KaFai Lau (1):
-      ipv6: A few fixes on dereferencing rt->from
-
-Martin Willi (1):
-      xfrm: Honor original L3 slave device in xfrmi policy lookup
-
-Matteo Croce (1):
-      libbpf: add binary to gitignore
-
-Michael Chan (5):
-      bnxt_en: Improve multicast address setup logic.
-      bnxt_en: Fix possible crash in bnxt_hwrm_ring_free() under error
-conditions.
-      bnxt_en: Pass correct extended TX port statistics size to firmware.
-      bnxt_en: Fix statistics context reservation logic.
-      bnxt_en: Fix uninitialized variable usage in bnxt_rx_pkt().
-
-Ming Lei (2):
-      block: fix handling for BIO_NO_PAGE_REF
-      iov_iter: fix iov_iter_type
-
-Miquel Raynal (1):
-      mtd: rawnand: marvell: Clean the controller state before each operati=
-on
-
-Myungho Jung (1):
-      xfrm: Reset secpath in xfrm failure
-
-Nicholas Mc Guire (1):
-      rds: ib: force endiannes annotation
-
-Nicolas Dichtel (1):
-      xfrm: update doc about xfrm[46]_gc_thresh
-
-Paolo Abeni (1):
-      udp: fix GRO reception in case of length mismatch
-
-Paolo Bonzini (1):
-      KVM: fix KVM_CLEAR_DIRTY_LOG for memory slots of unaligned size
-
-Paul Chaignon (2):
-      bpf: mark registers in all frames after pkt/null checks
-      selftests/bpf: test cases for pkt/null checks in subprogs
-
-Paulo Alcantara (1):
-      selinux: use kernel linux/socket.h for genheaders and mdp
-
-Peter Zijlstra (1):
-      bpf: Fix preempt_enable_no_resched() abuse
-
-Rafael J. Wysocki (2):
-      ath10k: Drop WARN_ON()s that always trigger during system resume
-      Revert "ACPICA: Clear status of GPEs before enabling them"
-
-Randy Dunlap (1):
-      Documentation: fix netdev-FAQ.rst markup warning
-
-Rick Edgecombe (1):
-      KVM: VMX: Move RSB stuffing to before the first RET after VM-Exit
-
-Sabrina Dubroca (1):
-      esp4: add length check for UDP encapsulation
-
-Sean Christopherson (6):
-      KVM: lapic: Disable timer advancement if adaptive tuning goes haywire
-      KVM: lapic: Track lapic timer advance per vCPU
-      KVM: lapic: Allow user to disable adaptive tuning of timer advancemen=
-t
-      KVM: lapic: Convert guest TSC to host time domain if necessary
-      KVM: x86: Whitelist port 0x7e for pre-incrementing %rip
-      KVM: lapic: Check for in-kernel LAPIC before deferencing apic pointer
-
-Shahar S Matityahu (2):
-      iwlwifi: don't panic in error path on non-msix systems
-      iwlwifi: dbg_ini: check debug TLV type explicitly
-
-Shaul Triebitz (1):
-      iwlwifi: cfg: use family 22560 based_params for AX210 family
-
-Shmulik Ladkani (1):
-      ipv4: ip_do_fragment: Preserve skb_iif during fragmentation
-
-Sriram R (1):
-      cfg80211: Notify previous user request during self managed wiphy
-registration
-
-Stefan B=C3=BChler (8):
-      io_uring: fix handling SQEs requesting NOWAIT
-      io_uring: fix notes on barriers
-      io_uring: remove unnecessary barrier before wq_has_sleeper
-      io_uring: remove unnecessary barrier before reading cq head
-      io_uring: remove unnecessary barrier after updating SQ head
-      io_uring: remove unnecessary barrier before reading SQ tail
-      io_uring: remove unnecessary barrier after incrementing dropped count=
-er
-      io_uring: remove unnecessary barrier after unsetting IORING_SQ_NEED_W=
-AKEUP
-
-Steffen Klassert (2):
-      Revert "net: xfrm: Add '_rcu' tag for rcu protected pointer in netns_=
-xfrm"
-      xfrm4: Fix uninitialized memory read in _decode_session4
-
-Stephen Boyd (1):
-      clkdev: Hold clocks_mutex while iterating clocks list
-
-Stephen Suryaputra (1):
-      vrf: Use orig netdev to count Ip6InNoRoutes and a fresh route
-lookup when sending dest unreach
-
-Su Yanjun (2):
-      net: xfrm: Add '_rcu' tag for rcu protected pointer in netns_xfrm
-      xfrm6_tunnel: Fix potential panic when unloading xfrm6_tunnel module
-
-Suraj Jitindar Singh (1):
-      KVM: PPC: Book3S HV: Perserve PSSCR FAKE_SUSPEND bit on guest exit
-
-Suzuki K Poulose (1):
-      kvm: arm: Skip stage2 huge mappings for unaligned ipa backed by THP
-
-Takashi Iwai (1):
-      ALSA: hda/realtek - Apply the fixup for ASUS Q325UAR
-
-Thadeu Lima de Souza Cascardo (1):
-      perf annotate: Fix build on 32 bit for BPF annotation
-
-Thomas Richter (1):
-      perf report: Report OOM in status line in the GTK UI
-
-Tobin C. Harding (1):
-      sched/cpufreq: Fix kobject memleak
-
-Tony Lindgren (1):
-      power: supply: cpcap-battery: Fix division by zero
-
-Tycho Andersen (1):
-      seccomp: Make NEW_LISTENER and TSYNC flags exclusive
-
-Vasundhara Volam (1):
-      bnxt_en: Free short FW command HWRM memory in error path in
-bnxt_init_one()
-
-Vineet Gupta (2):
-      ARC: PAE40: don't panic and instead turn off hw ioc
-      ARC: [hsdk] Make it easier to add PAE40 region to DTB
-
-Vitaly Kuznetsov (3):
-      x86: kvm: hyper-v: deal with buggy TLB flush requests from WS2012
-      x86/kvm/mmu: reset MMU context when 32-bit guest switches PAE
-      KVM: selftests: make hyperv_cpuid test pass on AMD
-
-Wei Huang (1):
-      KVM: arm/arm64: arch_timer: Fix CNTP_TVAL calculation
-
-Willem de Bruijn (3):
-      ipv6: invert flowlabel sharing check in process and user mode
-      packet: in recvmsg msg_name return at least sizeof sockaddr_ll
-      packet: validate msg_namelen in send directly
-
-Wolfram Sang (2):
-      i2c: designware: ratelimit 'transfer when suspended' errors
-      MAINTAINERS: friendly takeover of i2c-gpio driver
-
-Xin Long (1):
-      sctp: avoid running the sctp state machine recursively
-
-YueHaibing (3):
-      xfrm: policy: Fix out-of-bound array accesses in __xfrm_policy_unlink
-      MIPS: eBPF: Make ebpf_to_mips_reg() static
-      appletalk: Set error code if register_snap_client failed
