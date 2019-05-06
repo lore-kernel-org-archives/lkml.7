@@ -2,121 +2,80 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AC6C004C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F34C004C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B264B20675
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4965205F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 02:50:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WJA6/CXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbfEFC26 (ORCPT
+        id S1726085AbfEFCuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 22:28:58 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:56748 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbfEFC26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 22:28:58 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E7870200100;
-        Mon,  6 May 2019 04:28:55 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D1CB92001A2;
-        Mon,  6 May 2019 04:28:52 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A9B25402A6;
-        Mon,  6 May 2019 10:28:48 +0800 (SGT)
-From:   Peng Ma <peng.ma@nxp.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com, leoyang.li@nxp.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peng Ma <peng.ma@nxp.com>
-Subject: [V2 1/2] dmaengine: fsl-qdma: fixed the source/destination descriptor format
-Date:   Mon,  6 May 2019 10:21:10 +0800
-Message-Id: <20190506022111.31751-1-peng.ma@nxp.com>
-X-Mailer: git-send-email 2.14.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 5 May 2019 22:50:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33618 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbfEFCuC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 May 2019 22:50:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SG/rqX2xe67P88isvEgP5AEb4JnGOKR0/Rffnrqoj/g=; b=WJA6/CXLEDQTYnpUBLJPsai+N
+        tCWHQkJK/nOPhgE2J9w19yZr4RUhQO7/0/IwTJLqgCuTfCQxH/eHVPJvP7h6oWfBgSnv94QCp/vi6
+        WJ6sBW/Rl/Xes4l/14jVYVmK2JA4L/i1D80nKfPHfqW4kC8N6waRFio0xrBSJWYq+hP9E/gFbmpbG
+        rHpJpHJHk4eJ/X9W2Y37xIWjIUWUg1eht2Nec79WPL8CbqrcG8xT1wpRBJrBJnbSs2SbFquvdTSKv
+        vyytHuXpCBy7svNsjBh0b+CuDVIdvLLpCXSrheUzo08JOd8t7aM0xWzJfIIMhfYt0GgkxPCEjKdRN
+        UA++FiZxA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hNThX-0000uE-3I; Mon, 06 May 2019 02:49:59 +0000
+Date:   Sun, 5 May 2019 19:49:58 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Tamir Carmeli <carmeli.tamir@gmail.com>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] Use list.h instead of file_system_type next
+Message-ID: <20190506024958.GC16963@bombadil.infradead.org>
+References: <20190504094549.10021-1-carmeli.tamir@gmail.com>
+ <20190504094549.10021-2-carmeli.tamir@gmail.com>
+ <20190504134503.GA16963@bombadil.infradead.org>
+ <CAKxm1-H9cgym_RQ-oLcZWEPpyUf5NrZPt_Zu3U=mpU=E38SbvQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKxm1-H9cgym_RQ-oLcZWEPpyUf5NrZPt_Zu3U=mpU=E38SbvQ@mail.gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CMD of Source/Destination descriptor format should be lower of
-struct fsl_qdma_engine number data address.
+On Sun, May 05, 2019 at 09:25:21PM +0300, Tamir Carmeli wrote:
+> I just found it weird that there is a proprietary implementation of a
+> linked list while surely the kernel already offers well established
+> data structures.
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
-changed for V2:
-	- Fix descriptor spelling
+It's a singly linked list rather than a doubly linked list.
 
- drivers/dma/fsl-qdma.c |   25 +++++++++++++++++--------
- 1 files changed, 17 insertions(+), 8 deletions(-)
+> IMO, the current code is a bit hard to understand, especially the
+> addition of a new struct to the list in the line "*p = fs" after
+> find_filesystem returned the last member.
+> Correct, I'm not familiar with all the use cases of the code.
 
-diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
-index aa1d0ae..2e8b46b 100644
---- a/drivers/dma/fsl-qdma.c
-+++ b/drivers/dma/fsl-qdma.c
-@@ -113,6 +113,7 @@
- /* Field definition for Descriptor offset */
- #define QDMA_CCDF_STATUS		20
- #define QDMA_CCDF_OFFSET		20
-+#define QDMA_SDDF_CMD(x)		(((u64)(x)) << 32)
- 
- /* Field definition for safe loop count*/
- #define FSL_QDMA_HALT_COUNT		1500
-@@ -214,6 +215,12 @@ struct fsl_qdma_engine {
- 
- };
- 
-+static inline void
-+qdma_sddf_set_cmd(struct fsl_qdma_format *sddf, u32 val)
-+{
-+	sddf->data = QDMA_SDDF_CMD(val);
-+}
-+
- static inline u64
- qdma_ccdf_addr_get64(const struct fsl_qdma_format *ccdf)
- {
-@@ -341,6 +348,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
- static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
- 				      dma_addr_t dst, dma_addr_t src, u32 len)
- {
-+	u32 cmd;
- 	struct fsl_qdma_format *sdf, *ddf;
- 	struct fsl_qdma_format *ccdf, *csgf_desc, *csgf_src, *csgf_dest;
- 
-@@ -353,6 +361,7 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
- 
- 	memset(fsl_comp->virt_addr, 0, FSL_QDMA_COMMAND_BUFFER_SIZE);
- 	memset(fsl_comp->desc_virt_addr, 0, FSL_QDMA_DESCRIPTOR_BUFFER_SIZE);
-+
- 	/* Head Command Descriptor(Frame Descriptor) */
- 	qdma_desc_addr_set64(ccdf, fsl_comp->bus_addr + 16);
- 	qdma_ccdf_set_format(ccdf, qdma_ccdf_get_offset(ccdf));
-@@ -369,14 +378,14 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
- 	/* This entry is the last entry. */
- 	qdma_csgf_set_f(csgf_dest, len);
- 	/* Descriptor Buffer */
--	sdf->data =
--		cpu_to_le64(FSL_QDMA_CMD_RWTTYPE <<
--			    FSL_QDMA_CMD_RWTTYPE_OFFSET);
--	ddf->data =
--		cpu_to_le64(FSL_QDMA_CMD_RWTTYPE <<
--			    FSL_QDMA_CMD_RWTTYPE_OFFSET);
--	ddf->data |=
--		cpu_to_le64(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
-+	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
-+			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
-+	qdma_sddf_set_cmd(sdf, cmd);
-+
-+	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
-+			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
-+	cmd |= cpu_to_le32(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
-+	qdma_sddf_set_cmd(ddf, cmd);
- }
- 
- /*
--- 
-1.7.1
+It looks like a fairly standard implementation of a singly-linked 
+list in C to me.
+
+> I'm not sure that XArray is a good choice since there is no notion of
+> an index attached to the pointer, it's really just a linked list of
+> pointers.
+
+You don't need to attach an index to the pointer; you can just use
+xa_alloc() to store it at the first available index.
 
