@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603BDC46470
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBECC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28CEC2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47FBC2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154853;
-	bh=jxET2lkC8axXa57NGv2c8LLSq54+oEHQi4BAnWts6Mc=;
+	s=default; t=1557154861;
+	bh=iQRuPbmdXIi0lGoFvr2R2Tz7DVczw5Bk8bNILLR9LVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WvQFU6f5qBVaTil1tD/aid4KJfU5mtu4BDTrEe8jsB+20oc50Tl3p4DQfHL1E1Ski
-	 gpes5Ve7qHwKXwIAaO50n8riPW5KuVeUl9y0Qw11qaVjlO5HK1xNdfn87YY6s4vG58
-	 gOVzMYj7MP1hHY9l9rsblOeZp1/yCGVUIm335Xtw=
+	b=olJD+FU2NrrofwG0xArOLU0lnKRNeEtW7iZ+ds1lWgPYVx4pv7G4S1vlKhyf+oo7A
+	 TWK3b/OCMr3ndLjC+6aP0gk4jQLTQaUn/KN/SSUKfjx5biB/l63VwG+kjzwiToDKG/
+	 8nH6DiljQ2wvzP8gjOdNPMaxWr35ADcE9sjcRv50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727619AbfEFOl5 (ORCPT
+        id S1728327AbfEFOlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:41:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36278 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:41:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728364AbfEFOly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:54 -0400
+        id S1727832AbfEFOlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:41:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CEAC21019;
-        Mon,  6 May 2019 14:41:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CFB021019;
+        Mon,  6 May 2019 14:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153713;
-        bh=jxET2lkC8axXa57NGv2c8LLSq54+oEHQi4BAnWts6Mc=;
+        s=default; t=1557153705;
+        bh=iQRuPbmdXIi0lGoFvr2R2Tz7DVczw5Bk8bNILLR9LVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fuZXM7gLylJZnNholcJIFNCAS70XQnWfe5JCD22Ugy62Ji9v30SctKgRPHef7PlpU
-         /qyHoquk2zH4xIdnuVAyeoTiz5x2Nv6LbKutyXadDEfFP/qrl+R7wTLX9d34veNOVH
-         pHJStEykRtivmFT9vUa7m912RjLQE3JxK6NAEV8o=
+        b=PyGoFdoSn0gCj/MNM0KyLdr373ccNhxYGhV6RsbMszw5vANzCuOfLBcVVcMCe+YYK
+         W0UTrB8YBavW2GbjevEpPagzJEmNMskEbrsn94G2MWX5facsdhFlZQN/2vZk1QA01p
+         k2SE1TH3bCmgWCZVWMDFYPXmFepzI0gegJAAaSZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot <syzbot+ba2a929dcf8e704c180e@syzkaller.appspotmail.com>
-Subject: [PATCH 4.19 69/99] block: pass no-op callback to INIT_WORK().
-Date:   Mon,  6 May 2019 16:32:42 +0200
-Message-Id: <20190506143100.414365876@linuxfoundation.org>
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 58/99] net: hns: fix ICMP6 neighbor solicitation messages discard problem
+Date:   Mon,  6 May 2019 16:32:31 +0200
+Message-Id: <20190506143059.319853587@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -62,50 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e3c18d0ada16f145087b2687afcad1748c0827c ]
+[ Upstream commit f058e46855dcbc28edb2ed4736f38a71fd19cadb ]
 
-syzbot is hitting flush_work() warning caused by commit 4d43d395fed12463
-("workqueue: Try to catch flush_work() without INIT_WORK().") [1].
-Although that commit did not expect INIT_WORK(NULL) case, calling
-flush_work() without setting a valid callback should be avoided anyway.
-Fix this problem by setting a no-op callback instead of NULL.
+ICMP6 neighbor solicitation messages will be discard by the Hip06
+chips, because of not setting forwarding pool. Enable promisc mode
+has the same problem.
 
-[1] https://syzkaller.appspot.com/bug?id=e390366bc48bc82a7c668326e0663be3b91cbd29
+This patch fix the wrong forwarding table configs for the multicast
+vague matching when enable promisc mode, and add forwarding pool
+for the forwarding table.
 
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reported-and-tested-by: syzbot <syzbot+ba2a929dcf8e704c180e@syzkaller.appspotmail.com>
-Cc: Tejun Heo <tj@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-[sl: rename blk_timeout_work]
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-core.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../ethernet/hisilicon/hns/hns_dsaf_main.c    | 33 +++++++++++++++----
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index eb8b52241453..33488b1426b7 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -980,6 +980,10 @@ static void blk_rq_timed_out_timer(struct timer_list *t)
- 	kblockd_schedule_work(&q->timeout_work);
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+index b8155f5e71b4..fdff5526d2e8 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+@@ -2750,6 +2750,17 @@ int hns_dsaf_get_regs_count(void)
+ 	return DSAF_DUMP_REGS_NUM;
  }
  
-+static void blk_timeout_work_dummy(struct work_struct *work)
++static int hns_dsaf_get_port_id(u8 port)
 +{
++	if (port < DSAF_SERVICE_NW_NUM)
++		return port;
++
++	if (port >= DSAF_BASE_INNER_PORT_NUM)
++		return port - DSAF_BASE_INNER_PORT_NUM + DSAF_SERVICE_NW_NUM;
++
++	return -EINVAL;
 +}
 +
- /**
-  * blk_alloc_queue_node - allocate a request queue
-  * @gfp_mask: memory allocation flags
-@@ -1034,7 +1038,7 @@ struct request_queue *blk_alloc_queue_node(gfp_t gfp_mask, int node_id,
- 	timer_setup(&q->backing_dev_info->laptop_mode_wb_timer,
- 		    laptop_mode_timer_fn, 0);
- 	timer_setup(&q->timeout, blk_rq_timed_out_timer, 0);
--	INIT_WORK(&q->timeout_work, NULL);
-+	INIT_WORK(&q->timeout_work, blk_timeout_work_dummy);
- 	INIT_LIST_HEAD(&q->timeout_list);
- 	INIT_LIST_HEAD(&q->icq_list);
- #ifdef CONFIG_BLK_CGROUP
+ static void set_promisc_tcam_enable(struct dsaf_device *dsaf_dev, u32 port)
+ {
+ 	struct dsaf_tbl_tcam_ucast_cfg tbl_tcam_ucast = {0, 1, 0, 0, 0x80};
+@@ -2815,23 +2826,33 @@ static void set_promisc_tcam_enable(struct dsaf_device *dsaf_dev, u32 port)
+ 	memset(&temp_key, 0x0, sizeof(temp_key));
+ 	mask_entry.addr[0] = 0x01;
+ 	hns_dsaf_set_mac_key(dsaf_dev, &mask_key, mask_entry.in_vlan_id,
+-			     port, mask_entry.addr);
++			     0xf, mask_entry.addr);
+ 	tbl_tcam_mcast.tbl_mcast_item_vld = 1;
+ 	tbl_tcam_mcast.tbl_mcast_old_en = 0;
+ 
+-	if (port < DSAF_SERVICE_NW_NUM) {
+-		mskid = port;
+-	} else if (port >= DSAF_BASE_INNER_PORT_NUM) {
+-		mskid = port - DSAF_BASE_INNER_PORT_NUM + DSAF_SERVICE_NW_NUM;
+-	} else {
++	/* set MAC port to handle multicast */
++	mskid = hns_dsaf_get_port_id(port);
++	if (mskid == -EINVAL) {
+ 		dev_err(dsaf_dev->dev, "%s,pnum(%d)error,key(%#x:%#x)\n",
+ 			dsaf_dev->ae_dev.name, port,
+ 			mask_key.high.val, mask_key.low.val);
+ 		return;
+ 	}
++	dsaf_set_bit(tbl_tcam_mcast.tbl_mcast_port_msk[mskid / 32],
++		     mskid % 32, 1);
+ 
++	/* set pool bit map to handle multicast */
++	mskid = hns_dsaf_get_port_id(port_num);
++	if (mskid == -EINVAL) {
++		dev_err(dsaf_dev->dev,
++			"%s, pool bit map pnum(%d)error,key(%#x:%#x)\n",
++			dsaf_dev->ae_dev.name, port_num,
++			mask_key.high.val, mask_key.low.val);
++		return;
++	}
+ 	dsaf_set_bit(tbl_tcam_mcast.tbl_mcast_port_msk[mskid / 32],
+ 		     mskid % 32, 1);
++
+ 	memcpy(&temp_key, &mask_key, sizeof(mask_key));
+ 	hns_dsaf_tcam_mc_cfg_vague(dsaf_dev, entry_index, &tbl_tcam_data_mc,
+ 				   (struct dsaf_tbl_tcam_data *)(&mask_key),
 -- 
 2.20.1
 
