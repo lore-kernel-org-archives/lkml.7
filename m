@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11402C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41706C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2442054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0913B2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154515;
-	bh=3Ca6qMXXyzzlbNgKoHpmWEQMnGIcdn4oM83zHpLqnTk=;
+	s=default; t=1557154531;
+	bh=UukgufM9/vhDOz0WdQ0i3a4zD1CH0CaTiYFaHkKz0a0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AmsppFsePCMQJjVB0roU+c3eGlCA2voe7tTJXFrMY5UwaMAPsAB96to57Y9bvsNaG
-	 XQGUqm2kcgcPZOZn0GhF+ic/52we692POcFiS76mJcmaSr1EJKwrcNE8A5KEVcjsdn
-	 hHnyKvjmAllu8WXHRtTgOdK63LGBB5jtbb+qZKj4=
+	b=v11wYkFai+iARqVrTJpLKzIEVRQDrSisrKz6hw5scotvruzm5U/PcGrSBJS1usoeJ
+	 Crd2EDk4RxNcFRW8ILrJc7gUF9XVJ49iVshgBBBRkV7pZClgCPBBeEBH5JCiQHZvpC
+	 ivEwfiW9/zIXbLlKCOj4ee/CFFtf7xWvlAcK8p7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbfEFOqJ (ORCPT
+        id S1728606AbfEFOza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:46:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43596 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:55:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728489AbfEFOqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:46:06 -0400
+        id S1727188AbfEFOpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:45:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6378521479;
-        Mon,  6 May 2019 14:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C33A2053B;
+        Mon,  6 May 2019 14:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153965;
-        bh=3Ca6qMXXyzzlbNgKoHpmWEQMnGIcdn4oM83zHpLqnTk=;
+        s=default; t=1557153953;
+        bh=UukgufM9/vhDOz0WdQ0i3a4zD1CH0CaTiYFaHkKz0a0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ocXc07/VfoOzXt3yR8KwRrH6LatNMf2k0vwSrBiBLXaDWxLJCJxJzA0gthKqqFkkj
-         uAQbwaJGearQSwpIT1VvecFbemkhyslrxGw7iA+rE+DIIVpcHvDKhlMFykaqWlWwGf
-         v4HSkjP/wXfQ94skTC2ivhaswOQuavsSgfglTquE=
+        b=gqRHk5pzU1/0oRxA1xWoRtIJR59vmOW+t2rSsmjnp2qKNaghmtrKWc0p2b1GEHC/R
+         9bms3BFw8L2+NIqQCoAtIe5BbeUUf2FJYuEwj1VAvaZ7vSaU35mzv7h7nncGdaoe45
+         VosjWsVorUVSOlznIQASShhsjxjH7j6nd2zCPKqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Mike Christie <mchristi@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.14 63/75] scsi: RDMA/srpt: Fix a credit leak for aborted commands
-Date:   Mon,  6 May 2019 16:33:11 +0200
-Message-Id: <20190506143058.977870720@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 59/75] Bluetooth: btusb: request wake pin with NOAUTOEN
+Date:   Mon,  6 May 2019 16:33:07 +0200
+Message-Id: <20190506143058.626686512@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -65,49 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Brian Norris <briannorris@chromium.org>
 
-commit 40ca8757291ca7a8775498112d320205b2a2e571 upstream.
+commit 771acc7e4a6e5dba779cb1a7fd851a164bc81033 upstream.
 
-Make sure that the next time a response is sent to the initiator that the
-credit it had allocated for the aborted request gets freed.
+Badly-designed systems might have (for example) active-high wake pins
+that default to high (e.g., because of external pull ups) until they
+have an active firmware which starts driving it low.  This can cause an
+interrupt storm in the time between request_irq() and disable_irq().
 
-Cc: Doug Ledford <dledford@redhat.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Nicholas Bellinger <nab@linux-iscsi.org>
-Cc: Mike Christie <mchristi@redhat.com>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Fixes: 131e6abc674e ("target: Add TFO->abort_task for aborted task resources release") # v3.15
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+We don't support shared interrupts here, so let's just pre-configure the
+interrupt to avoid auto-enabling it.
+
+Fixes: fd913ef7ce61 ("Bluetooth: btusb: Add out-of-band wakeup support")
+Fixes: 5364a0b4f4be ("arm64: dts: rockchip: move QCA6174A wakeup pin into its USB node")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/ulp/srpt/ib_srpt.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/bluetooth/btusb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-+++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-@@ -2381,8 +2381,19 @@ static void srpt_queue_tm_rsp(struct se_
- 	srpt_queue_response(cmd);
- }
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2893,6 +2893,7 @@ static int btusb_config_oob_wake(struct
+ 		return 0;
+ 	}
  
-+/*
-+ * This function is called for aborted commands if no response is sent to the
-+ * initiator. Make sure that the credits freed by aborting a command are
-+ * returned to the initiator the next time a response is sent by incrementing
-+ * ch->req_lim_delta.
-+ */
- static void srpt_aborted_task(struct se_cmd *cmd)
- {
-+	struct srpt_send_ioctx *ioctx = container_of(cmd,
-+				struct srpt_send_ioctx, cmd);
-+	struct srpt_rdma_ch *ch = ioctx->ch;
-+
-+	atomic_inc(&ch->req_lim_delta);
- }
++	irq_set_status_flags(irq, IRQ_NOAUTOEN);
+ 	ret = devm_request_irq(&hdev->dev, irq, btusb_oob_wake_handler,
+ 			       0, "OOB Wake-on-BT", data);
+ 	if (ret) {
+@@ -2907,7 +2908,6 @@ static int btusb_config_oob_wake(struct
+ 	}
  
- static int srpt_queue_status(struct se_cmd *cmd)
+ 	data->oob_wake_irq = irq;
+-	disable_irq(irq);
+ 	bt_dev_info(hdev, "OOB Wake-on-BT configured at IRQ %u", irq);
+ 	return 0;
+ }
 
 
