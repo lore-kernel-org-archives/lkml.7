@@ -2,218 +2,135 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65963C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499B3C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EC02082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOYQkoIe"
+	by mail.kernel.org (Postfix) with ESMTP id 1AE602082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbfEFJ0N (ORCPT
+        id S1726156AbfEFJ2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:26:13 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43562 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfEFJ0N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:26:13 -0400
-Received: by mail-pl1-f195.google.com with SMTP id n8so6069568plp.10;
-        Mon, 06 May 2019 02:26:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SGOZ5+NdqMpJLrU4CaMy17CdDX8diVXHj58x8U+Awp8=;
-        b=AOYQkoIeXCioWtq/D99TmWzPoDa1LZbJRtPpXnIAR7ty/VHcvOvAExl2ELuuCAXuTS
-         zqealCDMPdk8CYB2wB1UEVX696dJDeCYt7PBHAyfANlVgulek/fNuvQZRRh34Gcdygqe
-         wG7nbJipuBB5XUrYv5LdQVMo9vU4tfahZ+Jvfri4PcN43ShmjhHZS7uyhnNiuZros0Uu
-         vjAlg7RZcCqNS1StM7CCTjUgqxea7VdmYAU1Us7IZRwdRg+N18I5J2xKKWEqVko0X+ar
-         dElhMBQFUD48XecdqHQtMql2RuqJoN2fcWFOMXapb+i5OS+3Z9AGJWPR+vJxMcXjh08F
-         lnAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SGOZ5+NdqMpJLrU4CaMy17CdDX8diVXHj58x8U+Awp8=;
-        b=LVOWYmVsNS6Wa2HgjDXWp5HDXi5fNNZeqvIAl3iTIKR+SxPcJGO77x4KM0gQondWsd
-         +jqtX/D/ZZY+r2Th1WiKbFr/TNxWx6GWQeai8Ya7NKSR5xNwlQkikbDfb26yU9ojJbi6
-         mKWdhZigNKjaR/UXajOnGson1aPDVwtqisP7lPJcsyDyqY0LIv3CkvYl0GcPwVPLve1e
-         sLATiOCGzVm+9fRKBlnpM4TMB3ZKkajpvq7a8L+v9GkUCRmfm9g3jubzlqBoAJsj2JCE
-         5O2G12yhakUT9WsxWB6dVGVU1KU3UrDScB+zXoGCNxIl7CuDqsQouBWzBJ2hX9ueetvF
-         XzdA==
-X-Gm-Message-State: APjAAAWKlVTKAOveefbnLX/bfNm9XtTKkCAsaGxRd8c1JDuNilj41z+u
-        F6I1pgyTk1Ac+oKs+xl9DrtI1NA79iZIfcrUYvJpicpciYphrw==
-X-Google-Smtp-Source: APXvYqxDXYKUe86e9zPA+B/RVkzp4tTUm4DgXoJnjMrb5YLrfmxmZHr/Iw5xvjt8pZOO5i0gFKe98gM5Y5AroWHR1xI=
-X-Received: by 2002:a17:902:8349:: with SMTP id z9mr30509309pln.144.1557134772204;
- Mon, 06 May 2019 02:26:12 -0700 (PDT)
+        Mon, 6 May 2019 05:28:41 -0400
+Received: from relay.sw.ru ([185.231.240.75]:51292 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbfEFJ2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 05:28:41 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hNZv4-0002jm-38; Mon, 06 May 2019 12:28:22 +0300
+Subject: Re: [PATCH v3 2/2] prctl_set_mm: downgrade mmap_sem to read lock
+To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        gorcunov@gmail.com
+Cc:     akpm@linux-foundation.org, arunks@codeaurora.org, brgl@bgdev.pl,
+        geert+renesas@glider.be, ldufour@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mguzik@redhat.com, mhocko@kernel.org, rppt@linux.ibm.com,
+        vbabka@suse.cz
+References: <0a48e0a2-a282-159e-a56e-201fbc0faa91@virtuozzo.com>
+ <20190502125203.24014-1-mkoutny@suse.com>
+ <20190502125203.24014-3-mkoutny@suse.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <961c4d8a-982f-720b-490b-dfb4dae7be25@virtuozzo.com>
+Date:   Mon, 6 May 2019 12:28:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190418064648.25706-1-chiu@endlessm.com> <CAB4CAwfsbgP9DrYEHs2c9HRc5MS_k-BfZ9EOhmUu7XsJ9pHh4g@mail.gmail.com>
-In-Reply-To: <CAB4CAwfsbgP9DrYEHs2c9HRc5MS_k-BfZ9EOhmUu7XsJ9pHh4g@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 6 May 2019 12:26:01 +0300
-Message-ID: <CAHp75VcxcxiiJ3jFs8ZNxkJtf=W4Gkav88PK_fZu9fKJHqxFpw@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Add fn-lock mode switch support
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190502125203.24014-3-mkoutny@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 3:54 AM Chris Chiu <chiu@endlessm.com> wrote:
->
-> On Thu, Apr 18, 2019 at 2:46 PM Chris Chiu <chiu@endlessm.com> wrote:
-> >
-> > Some of latest ASUS laptops support new fn-lock mode switching.
-> > This commit detect whether if the fn-lock option is enabled in
-> > BIOS setting, and toggle the fn-lock mode via a new WMI DEVID
-> > 0x00100023 when the corresponding notify code captured.
-> >
-> > The ASUS fn-lock mode switch is activated by pressing Fn+Esc.
-> > When on, keys F1 to F12 behave as applicable, with meanings
-> > defined by the application being used at the time. When off,
-> > F1 to F12 directly triggers hardware features, well known audio
-> > volume up/down, brightness up/down...etc, which were triggered
-> > by holding down Fn key and F-keys.
-> >
-> > Because there's no way to retrieve the fn-lock mode via existing
-> > WMI methods per ASUS spec, driver need to initialize and keep the
-> > fn-lock mode by itself.
-> >
+On 02.05.2019 15:52, Michal Koutný wrote:
+> The commit a3b609ef9f8b ("proc read mm's {arg,env}_{start,end} with mmap
+> semaphore taken.") added synchronization of reading argument/environment
+> boundaries under mmap_sem. Later commit 88aa7cc688d4 ("mm: introduce
+> arg_lock to protect arg_start|end and env_start|end in mm_struct")
+> avoided the coarse use of mmap_sem in similar situations. But there
+> still remained two places that (mis)use mmap_sem.
+> 
+> get_cmdline should also use arg_lock instead of mmap_sem when it reads the
+> boundaries.
+> 
+> The second place that should use arg_lock is in prctl_set_mm. By
+> protecting the boundaries fields with the arg_lock, we can downgrade
+> mmap_sem to reader lock (analogous to what we already do in
+> prctl_set_mm_map).
+> 
+> v2: call find_vma without arg_lock held
+> v3: squashed get_cmdline arg_lock patch
+> 
+> Fixes: 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|end and env_start|end in mm_struct")
+> Cc: Yang Shi <yang.shi@linux.alibaba.com>
+> Cc: Mateusz Guzik <mguzik@redhat.com>
+> CC: Cyrill Gorcunov <gorcunov@gmail.com>
+> Co-developed-by: Laurent Dufour <ldufour@linux.ibm.com>
+> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> Signed-off-by: Michal Koutný <mkoutny@suse.com>
 
-Pushed to my review and testing queue, thanks!
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 
+> ---
+>  kernel/sys.c | 10 ++++++++--
+>  mm/util.c    |  4 ++--
+>  2 files changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/sys.c b/kernel/sys.c
+> index 5e0a5edf47f8..14be57840511 100644
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -2122,9 +2122,14 @@ static int prctl_set_mm(int opt, unsigned long addr,
+>  
+>  	error = -EINVAL;
+>  
+> -	down_write(&mm->mmap_sem);
+> +	/*
+> +	 * arg_lock protects concurent updates of arg boundaries, we need mmap_sem for
+> +	 * a) concurrent sys_brk, b) finding VMA for addr validation.
+> +	 */
+> +	down_read(&mm->mmap_sem);
+>  	vma = find_vma(mm, addr);
+>  
+> +	spin_lock(&mm->arg_lock);
+>  	prctl_map.start_code	= mm->start_code;
+>  	prctl_map.end_code	= mm->end_code;
+>  	prctl_map.start_data	= mm->start_data;
+> @@ -2212,7 +2217,8 @@ static int prctl_set_mm(int opt, unsigned long addr,
+>  
+>  	error = 0;
+>  out:
+> -	up_write(&mm->mmap_sem);
+> +	spin_unlock(&mm->arg_lock);
+> +	up_read(&mm->mmap_sem);
+>  	return error;
+>  }
+>  
+> diff --git a/mm/util.c b/mm/util.c
+> index 43a2984bccaa..5cf0e84a0823 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -758,12 +758,12 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen)
+>  	if (!mm->arg_end)
+>  		goto out_mm;	/* Shh! No looking before we're done */
+>  
+> -	down_read(&mm->mmap_sem);
+> +	spin_lock(&mm->arg_lock);
+>  	arg_start = mm->arg_start;
+>  	arg_end = mm->arg_end;
+>  	env_start = mm->env_start;
+>  	env_end = mm->env_end;
+> -	up_read(&mm->mmap_sem);
+> +	spin_unlock(&mm->arg_lock);
+>  
+>  	len = arg_end - arg_start;
+>  
+> 
 
-> > Signed-off-by: Chris Chiu <chiu@endlessm.com>
-> > ---
-> >  drivers/platform/x86/asus-wmi.c            | 36 ++++++++++++++++++++++++++++++
-> >  include/linux/platform_data/x86/asus-wmi.h |  1 +
-> >  2 files changed, 37 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> > index 37b5de541270..5f52b66e40cb 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
-> >  #define NOTIFY_KBD_BRTUP               0xc4
-> >  #define NOTIFY_KBD_BRTDWN              0xc5
-> >  #define NOTIFY_KBD_BRTTOGGLE           0xc7
-> > +#define NOTIFY_FNLOCK_TOGGLE           0x4e
-> >
-> >  #define ASUS_FAN_DESC                  "cpu_fan"
-> >  #define ASUS_FAN_MFUN                  0x13
-> > @@ -177,6 +178,8 @@ struct asus_wmi {
-> >         struct workqueue_struct *hotplug_workqueue;
-> >         struct work_struct hotplug_work;
-> >
-> > +       bool fnlock_locked;
-> > +
-> >         struct asus_wmi_debug debug;
-> >
-> >         struct asus_wmi_driver *driver;
-> > @@ -1619,6 +1622,24 @@ static int is_display_toggle(int code)
-> >         return 0;
-> >  }
-> >
-> > +static bool asus_wmi_has_fnlock_key(struct asus_wmi *asus)
-> > +{
-> > +#define ASUS_WMI_FNLOCK_BIOS_DISABLED  BIT(0)
-> > +       u32 result;
-> > +
-> > +       asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_FNLOCK, &result);
-> > +
-> > +       return (result & ASUS_WMI_DSTS_PRESENCE_BIT) &&
-> > +               !(result & ASUS_WMI_FNLOCK_BIOS_DISABLED);
-> > +}
-> > +
-> > +static void asus_wmi_fnlock_update(struct asus_wmi *asus)
-> > +{
-> > +       int mode = asus->fnlock_locked;
-> > +
-> > +       asus_wmi_set_devstate(ASUS_WMI_DEVID_FNLOCK, mode, NULL);
-> > +}
-> > +
-> >  static void asus_wmi_notify(u32 value, void *context)
-> >  {
-> >         struct asus_wmi *asus = context;
-> > @@ -1680,6 +1701,12 @@ static void asus_wmi_notify(u32 value, void *context)
-> >                 goto exit;
-> >         }
-> >
-> > +       if (code == NOTIFY_FNLOCK_TOGGLE) {
-> > +               asus->fnlock_locked = !asus->fnlock_locked;
-> > +               asus_wmi_fnlock_update(asus);
-> > +               goto exit;
-> > +       }
-> > +
-> >         if (is_display_toggle(code) &&
-> >             asus->driver->quirks->no_display_toggle)
-> >                 goto exit;
-> > @@ -2134,6 +2161,11 @@ static int asus_wmi_add(struct platform_device *pdev)
-> >         } else
-> >                 err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
-> >
-> > +       if (asus_wmi_has_fnlock_key(asus)) {
-> > +               asus->fnlock_locked = true;
-> > +               asus_wmi_fnlock_update(asus);
-> > +       }
-> > +
-> >         status = wmi_install_notify_handler(asus->driver->event_guid,
-> >                                             asus_wmi_notify, asus);
-> >         if (ACPI_FAILURE(status)) {
-> > @@ -2213,6 +2245,8 @@ static int asus_hotk_resume(struct device *device)
-> >         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
-> >                 kbd_led_update(asus);
-> >
-> > +       if (asus_wmi_has_fnlock_key(asus))
-> > +               asus_wmi_fnlock_update(asus);
-> >         return 0;
-> >  }
-> >
-> > @@ -2249,6 +2283,8 @@ static int asus_hotk_restore(struct device *device)
-> >         if (!IS_ERR_OR_NULL(asus->kbd_led.dev))
-> >                 kbd_led_update(asus);
-> >
-> > +       if (asus_wmi_has_fnlock_key(asus))
-> > +               asus_wmi_fnlock_update(asus);
-> >         return 0;
-> >  }
-> >
-> > diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> > index 53dfc2541960..bfba245636a7 100644
-> > --- a/include/linux/platform_data/x86/asus-wmi.h
-> > +++ b/include/linux/platform_data/x86/asus-wmi.h
-> > @@ -67,6 +67,7 @@
-> >  /* Input */
-> >  #define ASUS_WMI_DEVID_TOUCHPAD                0x00100011
-> >  #define ASUS_WMI_DEVID_TOUCHPAD_LED    0x00100012
-> > +#define ASUS_WMI_DEVID_FNLOCK          0x00100023
-> >
-> >  /* Fan, Thermal */
-> >  #define ASUS_WMI_DEVID_THERMAL_CTRL    0x00110011
-> > --
-> > 2.11.0
-> >
->
-> Gentle ping. Any comments or suggestions for this are appreciated.
->
-> Chris
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
