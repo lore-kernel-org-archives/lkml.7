@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEAEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3510EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04384204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07250204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153405;
-	bh=EQp7oXnTmCsCwvZ8Cp0LLZDWRQp/lNx09s7/4MGjgmg=;
+	s=default; t=1557153407;
+	bh=twzR8Q0I0GB4/XJdHRqv2wG4hGGwxgBwJ7gzfKh5E9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pIv8YlBGjkE4sg1ySx9Au2tGUC8WY7RvKqSQ71wYxnZluSXr5JUOG6VU6ajmF4vnN
-	 O/TODbozSTgZcgP1uqqLPnob3DiWF0wpGvsviTGgaaYRvYmNvF65bgF7kWSmf03fkr
-	 dUqjI9irXv9c/mm4/sNYTQhIkO+JzOAZaRwDOYlA=
+	b=0120wRB87jVtKmiVk1fszuiWXwld7Se95lreq/mGE+4zWSndhsmC322qNg3Srn4zf
+	 eNPA+HfFlTsf8tLxiwLSuhpH7QyL6ZqKcxPAE36yHrwc4ApBgwQwCVwfjK5wIb79rW
+	 j4rs28+CYo8vSBvmckJfJFMeMjwZmZ5lxt5tCCKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfEFOgo (ORCPT
+        id S1727241AbfEFOgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:36:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57106 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfEFOgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:36:41 -0400
+        id S1727224AbfEFOgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:36:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25A86204EC;
-        Mon,  6 May 2019 14:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2C2820B7C;
+        Mon,  6 May 2019 14:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153400;
-        bh=EQp7oXnTmCsCwvZ8Cp0LLZDWRQp/lNx09s7/4MGjgmg=;
+        s=default; t=1557153403;
+        bh=twzR8Q0I0GB4/XJdHRqv2wG4hGGwxgBwJ7gzfKh5E9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXpDTPIBa9DPYzuDhVc+GRh19XML8OFnL2Qp/7suWx21uUqVueWAnokvf2q9lzc+H
-         +D4AqOFUxweK6JmIKbfBCCFh6KhN0rozNos+fFbWkWlo26va0q4fyYXUDozhipZzAT
-         sPOw/VZZm1PDlSGi3LUeNq4LDZyu0xq449FZvBP0=
+        b=Ei++EUW5HPdS8dNVMtpYYXFSm/HwuBPtksRqPYMOy96tUy48BqRQ5wZ7/5NxInGvM
+         BOM9IxTA7NRtMNljke9/f1QU6AECNwbT9aRQmSx7C4NsiWU3JXt/YZvFESYPGTJFCb
+         JW5bwRj18EuJ7bvCtkilzbB6/EOCKXj7y/GXNnpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Cfir Cohen <cfir@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 073/122] libcxgb: fix incorrect ppmax calculation
-Date:   Mon,  6 May 2019 16:32:11 +0200
-Message-Id: <20190506143101.466252453@linuxfoundation.org>
+Subject: [PATCH 5.0 074/122] KVM: SVM: prevent DBG_DECRYPT and DBG_ENCRYPT overflow
+Date:   Mon,  6 May 2019 16:32:12 +0200
+Message-Id: <20190506143101.546803164@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,49 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cc5a726c79158bd307150e8d4176ec79b52001ea ]
+[ Upstream commit b86bc2858b389255cd44555ce4b1e427b2b770c0 ]
 
-BITS_TO_LONGS() uses DIV_ROUND_UP() because of
-this ppmax value can be greater than available
-per cpu page pods.
+This ensures that the address and length provided to DBG_DECRYPT and
+DBG_ENCRYPT do not cause an overflow.
 
-This patch removes BITS_TO_LONGS() to fix this
-issue.
+At the same time, pass the actual number of pages pinned in memory to
+sev_unpin_memory() as a cleanup.
 
-Signed-off-by: Varun Prakash <varun@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Cfir Cohen <cfir@google.com>
+Signed-off-by: David Rientjes <rientjes@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/x86/kvm/svm.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c b/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c
-index 74849be5f004..e2919005ead3 100644
---- a/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c
-+++ b/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c
-@@ -354,7 +354,10 @@ static struct cxgbi_ppm_pool *ppm_alloc_cpu_pool(unsigned int *total,
- 		ppmax = max;
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index e544cec812f9..2a07e43ee666 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6815,7 +6815,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+ 	struct page **src_p, **dst_p;
+ 	struct kvm_sev_dbg debug;
+ 	unsigned long n;
+-	int ret, size;
++	unsigned int size;
++	int ret;
  
- 	/* pool size must be multiple of unsigned long */
--	bmap = BITS_TO_LONGS(ppmax);
-+	bmap = ppmax / BITS_PER_TYPE(unsigned long);
-+	if (!bmap)
-+		return NULL;
+ 	if (!sev_guest(kvm))
+ 		return -ENOTTY;
+@@ -6823,6 +6824,11 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+ 	if (copy_from_user(&debug, (void __user *)(uintptr_t)argp->data, sizeof(debug)))
+ 		return -EFAULT;
+ 
++	if (!debug.len || debug.src_uaddr + debug.len < debug.src_uaddr)
++		return -EINVAL;
++	if (!debug.dst_uaddr)
++		return -EINVAL;
 +
- 	ppmax = (bmap * sizeof(unsigned long)) << 3;
+ 	vaddr = debug.src_uaddr;
+ 	size = debug.len;
+ 	vaddr_end = vaddr + size;
+@@ -6873,8 +6879,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+ 						     dst_vaddr,
+ 						     len, &argp->error);
  
- 	alloc_sz = sizeof(*pools) + sizeof(unsigned long) * bmap;
-@@ -402,6 +405,10 @@ int cxgbi_ppm_init(void **ppm_pp, struct net_device *ndev,
- 	if (reserve_factor) {
- 		ppmax_pool = ppmax / reserve_factor;
- 		pool = ppm_alloc_cpu_pool(&ppmax_pool, &pool_index_max);
-+		if (!pool) {
-+			ppmax_pool = 0;
-+			reserve_factor = 0;
-+		}
+-		sev_unpin_memory(kvm, src_p, 1);
+-		sev_unpin_memory(kvm, dst_p, 1);
++		sev_unpin_memory(kvm, src_p, n);
++		sev_unpin_memory(kvm, dst_p, n);
  
- 		pr_debug("%s: ppmax %u, cpu total %u, per cpu %u.\n",
- 			 ndev->name, ppmax, ppmax_pool, pool_index_max);
+ 		if (ret)
+ 			goto err;
 -- 
 2.20.1
 
