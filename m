@@ -2,92 +2,224 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE30EC04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4B9C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB7A62082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568482082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557130361;
+	bh=ujRXtNseWHYzyAqmy+mroJJZsY/+L41sUVWf9lkFOH8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=il7kMnTIPniGvHgY2//vJK15D3PasoxixaP5oyW9J8I0HBxEWTfuSSl4zPAo+RpMw
+	 NhFyNpiEINUknq7U62oAbHN5VthInoxB6hhxRTtmP8RWeprQk/vfRfBeMxd/nnLe73
+	 582F7whq2EzcfYcNqE+a/swbfK/Y80R4ylKn94A4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbfEFILW (ORCPT
+        id S1726255AbfEFIMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:11:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57362 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725836AbfEFILW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:11:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DB53EAED7;
-        Mon,  6 May 2019 08:11:20 +0000 (UTC)
-Subject: Re: [PATCH] xen-blkfront: switch kcalloc to kvcalloc for large array
- allocation
-To:     Roger Pau Monne <roger.pau@citrix.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, xen-devel@lists.xenproject.org,
-        linux-block@vger.kernel.org, stable@vger.kernel.org
-References: <20190503150401.15904-1-roger.pau@citrix.com>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <f4b944e8-6678-a921-e2b2-aaeb00c0d5e1@suse.com>
-Date:   Mon, 6 May 2019 10:11:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 6 May 2019 04:12:40 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34975 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbfEFIMk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 04:12:40 -0400
+Received: by mail-wm1-f68.google.com with SMTP id y197so13991739wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:12:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=BC77NUTKaDpF37KYLTtxTjLD9VgTpMXCW8lMUp57UCQ=;
+        b=e4r/JGBYDH49cPrP58BIdJz0KI8n6fO1xwMogLUNfBNqrOBzQQa4afmqezyiW4/KDa
+         P4ko9WmWBO85xX7pV3PEKcr8M3aLOFPDM7ZsrschJLgi/DoZcoVGqNRmZszwNv9OjvpL
+         2VHiwImaL0asf4HYkyo6123yX5o30FbXiCuTMw0gGj1Z0iE8Po3IxsNFDHTQmLv0m3Vw
+         Tzg5ceIPoNr7B4QOzNDz7J3DtIq557wH2X7zqeYtfk60fN/zk7AVgrt5BEXF5KP4ltCZ
+         2VJYXiW7oJK+QS4Tqtht13lAwuNPQDMwd2z3rDdltfvzDhgf3CPFGRxg7QzGiuZdJJBf
+         fXjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=BC77NUTKaDpF37KYLTtxTjLD9VgTpMXCW8lMUp57UCQ=;
+        b=RTJycfNOd9Xa4fmeOKVjtQtNxM9VQ9OEfcVchVK5GVzZ68sc20fjZV+o7ieYgIvgVb
+         08s5tELqhA9sl66bD9MlE3S5i/tH0tKGWpN5JxQ/CYM/SdFY8RMABBYxIer35KsTo4sO
+         bFXnsGMrCjfGr35sKyffXQc2m787WsCF51Ql9Gcs6Jpcb5Dn8jdLOL8F4UZqZjFs0dUX
+         4jOPO6yyGCoUbHPXyvZMILKPjsgDLvz8gwCD+/ZuWDi6ywEzdQy2nH7HgatNdQsKHf0A
+         kvzy6bRyGcqYUmPz5RsbE/TKgDp5rJVRto3jsBwmg1ys+T93nFkBsdlmJ6QA/AETOwih
+         oDqQ==
+X-Gm-Message-State: APjAAAV/3UAILqDCqiIEhqkt+w14U5CD+KMkwYW3/Dax1h5XcIzyR4JY
+        GXJz4/J8oFqm+ZILba+B4HTsCJFm
+X-Google-Smtp-Source: APXvYqx/AidS8fbTvWU/hh6LBf7CRPgV9KQYV8++alNqnt+QvWr2rTtzbSmcExrBxQyIRyU9AFPdLw==
+X-Received: by 2002:a7b:c7d4:: with SMTP id z20mr1970607wmk.66.1557130357282;
+        Mon, 06 May 2019 01:12:37 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id o130sm8422844wmo.43.2019.05.06.01.12.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 May 2019 01:12:36 -0700 (PDT)
+Date:   Mon, 6 May 2019 10:12:34 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: [GIT PULL] core/stacktrace updates for v5.2
+Message-ID: <20190506081234.GA69602@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190503150401.15904-1-roger.pau@citrix.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/05/2019 17:04, Roger Pau Monne wrote:
-> There's no reason to request physically contiguous memory for those
-> allocations.
-> 
-> Reported-by: Ian Jackson <ian.jackson@citrix.com>
-> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+Linus,
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+Please pull the latest core-stacktrace-for-linus git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-stacktrace-for-linus
+
+   # HEAD: 3599fe12a125fa7118da2bcc5033d7741fb5f3a1 x86/stacktrace: Use common infrastructure
+
+So Thomas looked at the stacktrace code recently and noticed a few 
+weirdnesses, and we all know how such stories of crummy kernel code 
+meeting German engineering perfection end: a 45-patch series to clean it 
+all up! :-)
+
+Here's the changes in Thomas's words:
+
+ "Struct stack_trace is a sinkhole for input and output parameters which is
+  largely pointless for most usage sites. In fact if embedded into other data
+  structures it creates indirections and extra storage overhead for no benefit.
+
+  Looking at all usage sites makes it clear that they just require an
+  interface which is based on a storage array. That array is either on stack,
+  global or embedded into some other data structure.
+
+  Some of the stack depot usage sites are outright wrong, but fortunately the
+  wrongness just causes more stack being used for nothing and does not have
+  functional impact.
+
+  Another oddity is the inconsistent termination of the stack trace with
+  ULONG_MAX. It's pointless as the number of entries is what determines the
+  length of the stored trace. In fact quite some call sites remove the
+  ULONG_MAX marker afterwards with or without nasty comments about it. Not
+  all architectures do that and those which do, do it inconsistenly either
+  conditional on nr_entries == 0 or unconditionally.
+
+  The following series cleans that up by:
+
+      1) Removing the ULONG_MAX termination in the architecture code
+
+      2) Removing the ULONG_MAX fixups at the call sites
+
+      3) Providing plain storage array based interfaces for stacktrace and
+         stackdepot.
+
+      4) Cleaning up the mess at the callsites including some related
+         cleanups.
+
+      5) Removing the struct stack_trace based interfaces
+
+  This is not changing the struct stack_trace interfaces at the architecture
+  level, but it removes the exposure to the generic code."
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Thomas Gleixner (45):
+      um/stacktrace: Remove the pointless ULONG_MAX marker
+      x86/stacktrace: Remove the pointless ULONG_MAX marker
+      arm/stacktrace: Remove the pointless ULONG_MAX marker
+      sh/stacktrace: Remove the pointless ULONG_MAX marker
+      unicore32/stacktrace: Remove the pointless ULONG_MAX marker
+      riscv/stacktrace: Remove the pointless ULONG_MAX marker
+      arm64/stacktrace: Remove the pointless ULONG_MAX marker
+      parisc/stacktrace: Remove the pointless ULONG_MAX marker
+      s390/stacktrace: Remove the pointless ULONG_MAX marker
+      lockdep: Remove the ULONG_MAX stack trace hackery
+      mm/slub: Remove the ULONG_MAX stack trace hackery
+      mm/page_owner: Remove the ULONG_MAX stack trace hackery
+      mm/kasan: Remove the ULONG_MAX stack trace hackery
+      latency_top: Remove the ULONG_MAX stack trace hackery
+      drm: Remove the ULONG_MAX stack trace hackery
+      tracing: Remove the ULONG_MAX stack trace hackery
+      tracing: Cleanup stack trace code
+      stacktrace: Provide helpers for common stack trace operations
+      lib/stackdepot: Provide functions which operate on plain storage arrays
+      backtrace-test: Simplify stack trace handling
+      proc: Simplify task stack retrieval
+      latency_top: Simplify stack trace handling
+      mm/slub: Simplify stack trace retrieval
+      mm/kmemleak: Simplify stacktrace handling
+      mm/kasan: Simplify stacktrace handling
+      mm/page_owner: Simplify stack trace handling
+      fault-inject: Simplify stacktrace retrieval
+      dma/debug: Simplify stracktrace retrieval
+      btrfs: ref-verify: Simplify stack trace retrieval
+      dm bufio: Simplify stack trace retrieval
+      dm persistent data: Simplify stack trace handling
+      drm: Simplify stacktrace handling
+      lockdep: Remove unused trace argument from print_circular_bug()
+      lockdep: Remove save argument from check_prev_add()
+      lockdep: Simplify stack trace handling
+      tracing: Simplify stacktrace retrieval in histograms
+      tracing: Use percpu stack trace buffer more intelligently
+      tracing: Make ftrace_trace_userstack() static and conditional
+      tracing: Simplify stack trace retrieval
+      tracing: Remove the last struct stack_trace usage
+      livepatch: Simplify stack trace retrieval
+      stacktrace: Remove obsolete functions
+      lib/stackdepot: Remove obsolete functions
+      stacktrace: Provide common infrastructure
+      x86/stacktrace: Use common infrastructure
 
 
-Juergen
+ arch/arm/kernel/stacktrace.c                  |   6 -
+ arch/arm64/kernel/stacktrace.c                |   4 -
+ arch/parisc/kernel/stacktrace.c               |   5 -
+ arch/riscv/kernel/stacktrace.c                |   2 -
+ arch/s390/kernel/stacktrace.c                 |   6 -
+ arch/sh/kernel/stacktrace.c                   |   4 -
+ arch/um/kernel/stacktrace.c                   |   2 -
+ arch/unicore32/kernel/stacktrace.c            |   2 -
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/kernel/stacktrace.c                  | 128 ++--------
+ drivers/gpu/drm/drm_mm.c                      |  25 +-
+ drivers/gpu/drm/i915/i915_vma.c               |  11 +-
+ drivers/gpu/drm/i915/intel_runtime_pm.c       |  25 +-
+ drivers/md/dm-bufio.c                         |  15 +-
+ drivers/md/persistent-data/dm-block-manager.c |  19 +-
+ fs/btrfs/ref-verify.c                         |  15 +-
+ fs/proc/base.c                                |  17 +-
+ include/linux/ftrace.h                        |  18 +-
+ include/linux/lockdep.h                       |   9 +-
+ include/linux/stackdepot.h                    |   8 +-
+ include/linux/stacktrace.h                    |  81 +++++--
+ kernel/backtracetest.c                        |  11 +-
+ kernel/dma/debug.c                            |  14 +-
+ kernel/latencytop.c                           |  29 +--
+ kernel/livepatch/transition.c                 |  22 +-
+ kernel/locking/lockdep.c                      |  87 +++----
+ kernel/stacktrace.c                           | 333 ++++++++++++++++++++++++--
+ kernel/trace/trace.c                          | 105 ++++----
+ kernel/trace/trace.h                          |   8 -
+ kernel/trace/trace_events_hist.c              |  14 +-
+ kernel/trace/trace_stack.c                    |  85 +++----
+ lib/Kconfig                                   |   4 +
+ lib/fault-inject.c                            |  12 +-
+ lib/stackdepot.c                              |  54 +++--
+ mm/kasan/common.c                             |  35 +--
+ mm/kasan/report.c                             |   7 +-
+ mm/kmemleak.c                                 |  24 +-
+ mm/page_owner.c                               |  82 +++----
+ mm/slub.c                                     |  21 +-
+ 39 files changed, 694 insertions(+), 656 deletions(-)
