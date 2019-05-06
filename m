@@ -2,140 +2,94 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5818AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7DFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3286C20578
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCB620830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557161345;
+	bh=A2ZU/b3h0mxlEc0X8cpHPYUJ57458AgZno287cDLTqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Lb2tavpU17EEX86ZWpFmngqotMCRf7eaOiAD4vwri1V2tfll4516wfxrXnmQ9/OSw
+	 UrxvlGpHvDHjIjrA/Bopjtva6kKtAgMnVnQJiOmQo1n+T85YDRI+n6Ru1v2J1HqwsU
+	 OsYcSV2PVJhTKWuOzO+KRxOFVGlIaSlKqHSEVjPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfEFQrL (ORCPT
+        id S1726579AbfEFQtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:47:11 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:46315 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfEFQrL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:47:11 -0400
-Received: by mail-ua1-f65.google.com with SMTP id n23so4879131uap.13;
-        Mon, 06 May 2019 09:47:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KRsp84CR/wZjf7JSxDT5PziM3wZtSANeGjBl9N5WJPY=;
-        b=M2WAm3zKsvX/U5EO7RnbWnpV7F70x5KP9SwdmROsIEe7qOoeXWRK/+dzNYEuN7DLdf
-         KDiyG3t+V1q1W/2lcHpFRCAjPDRAece4OzP3HgQ70yac83vwQH2I7qeyWnOZxbjGxSry
-         uNssbiAoB9NF16QnVpDN0lkqrY4gbxmqhiQUth7bzjspFgVUdVufYKb7yy5gav8ib7va
-         fCM6mIluYhwjk0tIbKmyO+xtf0Q1hpTY1re0EL819Pxrdtgft9vI+diJeECilhTadEvt
-         Ou3xkObFCbrw1QKB6/KPuTzovxu/Q6hq3ZYypnLNHgSO21EaBxgw908AnK1j75jnyKNX
-         x0vw==
-X-Gm-Message-State: APjAAAXDkuZUo++LyflJ+YmIvW2c76Sg4eQTkYA8HIZJzlLFcRI3A6E9
-        6Ld0RkJ1Iktz1RK0weH0ap6sPSvnq24muHlImOc=
-X-Google-Smtp-Source: APXvYqxivUBYKeylf06dc/FajmKOGINCDT9FRcHViFrODon94uEeIITcByJUAga3hTH23Y3VDVffI/Cm5Acd2hQyJVE=
-X-Received: by 2002:a9f:2b84:: with SMTP id y4mr10578570uai.28.1557161229621;
- Mon, 06 May 2019 09:47:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190504004258.23574-1-erosca@de.adit-jv.com> <20190504004258.23574-2-erosca@de.adit-jv.com>
- <20190506134700.ya565idfzzc3enbm@verge.net.au> <20190506152433.GA22769@vmlxhi-102.adit-jv.com>
-In-Reply-To: <20190506152433.GA22769@vmlxhi-102.adit-jv.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 6 May 2019 18:46:57 +0200
-Message-ID: <CAMuHMdXJzEYL48qwHAxrRsurQLBipZsQpv+w8i=+B2XCM_CZng@mail.gmail.com>
-Subject: Re: [PATCH 1/6] serial: sh-sci: Reveal ptrval in dev_dbg
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Simon Horman <horms@verge.net.au>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
+        Mon, 6 May 2019 12:49:04 -0400
+Received: from mga14.intel.com ([192.55.52.115]:25683 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbfEFQtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 12:49:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 09:49:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
+   d="scan'208";a="230002448"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga001.jf.intel.com with ESMTP; 06 May 2019 09:49:01 -0700
+Date:   Mon, 6 May 2019 10:43:25 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Maxim Levitsky <mlevitsk@redhat.com>, Fam Zheng <fam@euphon.net>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andy Lowe <andy_lowe@mentor.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Helge Deller <deller@gmx.de>,
-        Michael Neuling <mikey@neuling.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Philip Yang <Philip.Yang@amd.com>,
-        Matthew Wilcox <mawilcox@microsoft.com>,
-        Borislav Petkov <bp@suse.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Liang, Cunming" <cunming.liang@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jens Axboe <axboe@fb.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Amnon Ilan <ailan@redhat.com>, John Ferlan <jferlan@redhat.com>
+Subject: Re: [PATCH v2 00/10] RFC: NVME MDEV
+Message-ID: <20190506164325.GB2219@localhost.localdomain>
+References: <20190502114801.23116-1-mlevitsk@redhat.com>
+ <20190503121838.GA21041@lst.de>
+ <e8f6981863bdbba89adcba1c430083e68546ac1a.camel@redhat.com>
+ <20190506125752.GA5288@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506125752.GA5288@lst.de>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugeniu,
+On Mon, May 06, 2019 at 05:57:52AM -0700, Christoph Hellwig wrote:
+> > However, similar to the (1), when the driver will support the devices with
+> > hardware based passthrough, it will have to dedicate a bunch of queues to the
+> > guest, configure them with the appropriate PASID, and then let the guest useA
+> > these queues directly.
+> 
+> We will not let you abuse the nvme queues for anything else.  We had
+> that discussion with the mellanox offload and it not only unsafe but
+> also adds way to much crap to the core nvme code for corner cases.
+> 
+> Or to put it into another way:  unless your paravirt interface requires
+> zero specific changes to the core nvme code it is not acceptable at all.
 
-On Mon, May 6, 2019 at 5:24 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> On Mon, May 06, 2019 at 03:47:05PM +0200, Simon Horman wrote:
-> > On Sat, May 04, 2019 at 02:42:53AM +0200, Eugeniu Rosca wrote:
-> > > Starting with v4.15-rc2 commit ad67b74d2469d9 ("printk: hash addresses
-> > > printed with %p"), enabling debug prints in sh-sci.c would generate
-> > > output like below confusing the users who try to sneak into the
-> > > internals of the driver:
-> > >
-> > > sh-sci e6e88000.serial: sci_request_dma: TX: got channel (____ptrval____)
-> > > sh-sci e6e88000.serial: sci_request_dma: mapped 4096@(____ptrval____) to 0x00000006798bf000
-> > > sh-sci e6e88000.serial: sci_request_dma: RX: got channel (____ptrval____)
-> > > sh-sci e6e88000.serial: sci_dma_tx_work_fn: (____ptrval____): 0...2, cookie 2
-> > >
-> > > There are two possible fixes for that:
-> > >  - get rid of '%p' prints if they don't reveal any useful information
-> > >  - s/%p/%px/, since it is unlikely we have any concerns leaking the
-> > >    pointer values when running a debug/non-production kernel
-> >
-> > I am concerned that this may expose information in circumstances
-> > where it is undesirable. Is it generally accepted practice to
-> > use %px in conjunction with dev_dbg() ?
-> >
-> > ...
->
-> Below commits performed a similar s/%p/%px/ update in debug context:
->
-> Authors (CC-ed)   Commit         Subject
-> ----------------------------------------
-> Christophe Leroy  b18f0ae92b0a1d ("powerpc/prom: fix early DEBUG messages")
-> Helge Deller      3847dab7742186 ("parisc: Add alternative coding infrastructure")
-> Michael Neuling   51c3c62b58b357 ("powerpc: Avoid code patching freed init sections")
-> Kuninori Morimoto dabdbe3ae0cb9a ("ASoC: rsnd: don't use %p for dev_dbg()")
-> Philip Yang       fa7e65147e5dca ("drm/amdkfd: use %px to print user space address instead of %p")
-> Matthew Wilcox    68c1f08203f2b0 ("lib/list_debug.c: print unmangled addresses")
-> Borislav Petkov   0e6c16c652cada ("x86/alternative: Print unadorned pointers")
-> Darrick J. Wong   c96900435fa9fd ("xfs: use %px for data pointers when debugging")
-> Helge Deller      04903c06b4854d ("parisc: Show unhashed HPA of Dino chip")
->
-> To quote Matthew, with respect to any debug prints:
-> If an attacker can force this message to be printed, we've already lost.
+I agree we shouldn't specialize generic queues for this, but I think
+it is worth revisiting driver support for assignable hardware resources
+iff the specification defines it.
 
-I think the issue with using %px in debug code is that a distro may enable
-CONFIG_DYNAMIC_DEBUG (it is enabled in several defconfigs), after which
-an attacker just has to convince/trick the system into enabling debug for that
-particular driver.
-
-> In any case, I won't be affected much if the change is not accepted,
-> since it doesn't resolve any major issue on my end. Thanks!
-
-OK.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Until then, you can always steer processes to different queues by
+assigning them to different CPUs.
