@@ -2,97 +2,112 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D89BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEFBC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011B020B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155999;
-	bh=qjmx5CCEvPOYN+9XFMOjhWS/7gmlubDSJs+Xfcsz1HQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pQ2uiKmrVpKHCSntERBihhsvx2Dc65sY64zjT4VQlGgc20yciGyS5YFpkTYXd33nj
-	 p95zK8kq7IEEgWuJWNqM4+dw6puyAWV0VFRdVda+3kYUJHHK2oIFbCFyjjDiGwhyRD
-	 KYrV6yRZ4Qf9jwejQYj92lTjtIpQpAZQpzqc4MIg=
+	by mail.kernel.org (Postfix) with ESMTP id D07782053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:21:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o+//pkDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfEFPT5 (ORCPT
+        id S1726594AbfEFPVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:19:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfEFPT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:19:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C31C42053B;
-        Mon,  6 May 2019 15:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557155996;
-        bh=qjmx5CCEvPOYN+9XFMOjhWS/7gmlubDSJs+Xfcsz1HQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o7BNpL7DyjFLGVMv7Juaj9HOoId2/EZ+35z4VYo7rSb8fjMuA5tNPuzy29ecaVrcD
-         KMAw4jxnLysy5Ah4cFZ3aiXCxJRUULqvf0b6gdWNNe8zQ9b1C5yQ17DjpijYCg/wXM
-         O68tSsU3MHwddeK1Vmo4hcyxJvbSBHxIC2wuguKg=
-Date:   Mon, 6 May 2019 17:19:53 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com, joe@perches.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 2/7] soundwire: add Slave sysfs support
-Message-ID: <20190506151953.GA13178@kroah.com>
-References: <20190504010030.29233-1-pierre-louis.bossart@linux.intel.com>
- <20190504010030.29233-3-pierre-louis.bossart@linux.intel.com>
- <20190504065444.GC9770@kroah.com>
- <c675ea60-5bfa-2475-8878-c589b8d20b32@linux.intel.com>
+        Mon, 6 May 2019 11:21:13 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57828 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbfEFPVN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 11:21:13 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x46FJUE9100526;
+        Mon, 6 May 2019 15:20:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=EMVZPLqed0spBkywKOWEg6NbdmaW+XOPtfLd8HpUuQA=;
+ b=o+//pkDQTwrEiN/m7EtTacjF2kEO4BVGJ863xaNH+7J97F7Q005ch5iCjuEBzkSVpTVs
+ 1o4SQYO/i591KoUMPrShWoengb/1w9HObMGuowgIZp9I2MWLRwFwaizoxaR7PnMpj2wc
+ /30HeJBHaBZ6unYXinEL1fj03mHtUiJW5YAozN7NrV3x+6JO5oGc6eZBxzBjEG7SQ0lf
+ eVAobDru/jZMNGlGeAyDs2bPRxY7maYxTkckQbC0FthV1n2VJoACoATVCydYFrlkrwGf
+ QTR/SArMQxNOXRus8ZE0fVlekFK+rd3vu7o0ttzXZeR2Unc8d97ymTc1S4XjDvUBIhTJ UA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2s94bfq9xx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 06 May 2019 15:20:57 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x46FJpM2086866;
+        Mon, 6 May 2019 15:20:57 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2sagytdvgm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 06 May 2019 15:20:56 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x46FKrgf007496;
+        Mon, 6 May 2019 15:20:53 GMT
+Received: from kadam (/196.110.137.40)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 06 May 2019 08:20:52 -0700
+Date:   Mon, 6 May 2019 18:20:39 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-kernel@vger.kernel.org, phil@raspberrypi.org,
+        stefan.wahren@i2se.com, Eric Anholt <eric@anholt.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
+Subject: Re: [PATCH v2 2/3] staging: vchiq: revert "switch to
+ wait_for_completion_killable"
+Message-ID: <20190506152039.GT2239@kadam>
+References: <20190506144030.29056-1-nsaenzjulienne@suse.de>
+ <20190506144030.29056-3-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c675ea60-5bfa-2475-8878-c589b8d20b32@linux.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190506144030.29056-3-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905060131
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905060131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 09:42:35AM -0500, Pierre-Louis Bossart wrote:
-> > > +
-> > > +int sdw_sysfs_slave_init(struct sdw_slave *slave)
-> > > +{
-> > > +	struct sdw_slave_sysfs *sysfs;
-> > > +	unsigned int src_dpns, sink_dpns, i, j;
-> > > +	int err;
-> > > +
-> > > +	if (slave->sysfs) {
-> > > +		dev_err(&slave->dev, "SDW Slave sysfs is already initialized\n");
-> > > +		err = -EIO;
-> > > +		goto err_ret;
-> > > +	}
-> > > +
-> > > +	sysfs = kzalloc(sizeof(*sysfs), GFP_KERNEL);
-> > 
-> > Same question as patch 1, why a new device?
-> 
-> yes it's the same open. In this case, the slave devices are defined at a
-> different level so it's also confusing to create a device to represent the
-> slave properties. The code works but I am not sure the initial directions
-> are correct.
+On Mon, May 06, 2019 at 04:40:29PM +0200, Nicolas Saenz Julienne wrote:
+> @@ -1740,7 +1740,8 @@ parse_rx_slots(struct vchiq_state *state)
+>  					&service->bulk_rx : &service->bulk_tx;
+>  
+>  				DEBUG_TRACE(PARSE_LINE);
+> -				if (mutex_lock_killable(&service->bulk_mutex)) {
+> +				if (mutex_lock_killable(
+> +					&service->bulk_mutex) != 0) {
 
-You can just make a subdir for your attributes by using the attribute
-group name, if a subdirectory is needed just to keep things a bit more
-organized.
+This series does't add != 0 consistently...  Personally, I would prefer
+we just leave it out.  I use != 0 for two things.  1)  When I'm talking
+about the number zero.
 
-Otherwise, you need to mess with having multiple "types" of struct
-device all associated with the same bus.  It is possible, and not that
-hard, but I don't think you are doing that here.
+	if (len == 0) {
 
-thnaks,
+Or with strcmp():
 
-greg k-h
+	if (strcmp(a, b) == 0) { // a equals b
+	if (strcmp(a, b) < 0) {  // a less than b.
+
+But here zero means no errors, so I would just leave it out...
+
+regards,
+dan carpenter
+
