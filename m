@@ -2,160 +2,82 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB05C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DDFC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D732082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:21:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hv00WVo5"
+	by mail.kernel.org (Postfix) with ESMTP id 604852087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfEFIUa (ORCPT
+        id S1726534AbfEFIUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:20:30 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44636 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfEFIU2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:20:28 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z16so6081048pgv.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:20:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8oVvJ9mj35Lp12Pvnx1rYrM9wXOWQruIs8G8w3waPxY=;
-        b=Hv00WVo5hgfQYhK/g33jV6jD7uZtD18fCtp+V11I//o27F4G8pmpRuSwdCRafyPyfB
-         1MU7A0CyOcwqTjHClv/SFN4ufVwl6aBkI5MTpN1NYpQcvxWxhMRJZ1oPz3G13M8cW/Ji
-         vUZjnqVk7fEuuDLl2DDs1chBHRoh8VcuIes3CI/RFayxbjxEkg4x3O0+8GLxcq5P00Z8
-         SWdfy0R+j87dkZ1m8F8OyL/u58D0NfJ0DDz2x73RZNUO9bPfr2s2qv0oSCBbh+Yb2efT
-         +l1rEWiXqVOlReGOh5LmOW3iJQHJPGJ8MphZv/LO2b42oijB4puz0duKNSLEXOtVkVCS
-         EXGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8oVvJ9mj35Lp12Pvnx1rYrM9wXOWQruIs8G8w3waPxY=;
-        b=UuH6qKsZiEgoPSh9rml4KymPgfczHPk0INflsxaqPPPwffFgQEBxTYwUwHEOVXZ+63
-         DoW64rdb/jLIIqoPufeZHFpIHTser6TgEHlIw3JEjEAv0oIDHFe3ULzcLejUDfdB9nuN
-         JtWbOeRJsW0YIAv7TsjOwoUFOVI350fhEOK6tWxsW1Q307M9XZfRSBaaktl1x8eMbtz4
-         uvf1D/wmaFiVQE/gr/5hh7sQzAnFm6vwGNBcIIt2w0pea6WkzXkzG9eFUup5JMiQXdmI
-         hlnoYOGk0rWCTJ79bTN3VS891J2aCa0O95TjU/t/CyqfwNml+fxtLfIatIzX8XreXwzZ
-         47gg==
-X-Gm-Message-State: APjAAAWV7VbnDuLrXrqys0QcNnKvNSQw1jM6Ds8WIotEkmFluw1FyZG3
-        lNQ5oZQ8Whejbrqs+bH6GeY=
-X-Google-Smtp-Source: APXvYqwPwveOBDJYOjJvpw5a2qU/GjOSBqZJeYG8THQe/E81zIH4QtChGC6q60P84cHzN+vUlRKt9g==
-X-Received: by 2002:a62:4602:: with SMTP id t2mr31626278pfa.26.1557130827633;
-        Mon, 06 May 2019 01:20:27 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v19sm20958013pfa.138.2019.05.06.01.20.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 01:20:27 -0700 (PDT)
-From:   Yuyang Du <duyuyang@gmail.com>
-To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v2 12/23] locking/lockdep: Change type of the element field in circular_queue
-Date:   Mon,  6 May 2019 16:19:28 +0800
-Message-Id: <20190506081939.74287-13-duyuyang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20190506081939.74287-1-duyuyang@gmail.com>
-References: <20190506081939.74287-1-duyuyang@gmail.com>
+        Mon, 6 May 2019 04:20:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58746 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726197AbfEFIUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 04:20:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 900D3AEE8;
+        Mon,  6 May 2019 08:20:20 +0000 (UTC)
+Date:   Mon, 6 May 2019 10:20:20 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RFC: console: hack up console_lock more v2
+Message-ID: <20190506082020.zobcuhiy6bkdekv3@pathway.suse.cz>
+References: <20190502141643.21080-1-daniel.vetter@ffwll.ch>
+ <20190506074553.21464-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506074553.21464-1-daniel.vetter@ffwll.ch>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The element field is an array in struct circular_queue to keep track of locks
-in the search. Making it the same type as the locks avoids type cast. Also
-fix a typo and elaborate the comment above struct circular_queue.
+On Mon 2019-05-06 09:45:53, Daniel Vetter wrote:
+> console_trylock, called from within printk, can be called from pretty
+> much anywhere. Including try_to_wake_up. Note that this isn't common,
+> usually the box is in pretty bad shape at that point already. But it
+> really doesn't help when then lockdep jumps in and spams the logs,
+> potentially obscuring the real backtrace we're really interested in.
+> One case I've seen (slightly simplified backtrace):
+> 
+>  Call Trace:
+>   <IRQ>
+>   console_trylock+0xe/0x60
+>   vprintk_emit+0xf1/0x320
+>   printk+0x4d/0x69
+>   __warn_printk+0x46/0x90
+>   native_smp_send_reschedule+0x2f/0x40
+>   check_preempt_curr+0x81/0xa0
+>   ttwu_do_wakeup+0x14/0x220
+>   try_to_wake_up+0x218/0x5f0
 
-No functional change.
+try_to_wake_up() takes p->pi_lock. It could deadlock because it
+can get called recursively from printk_safe_up().
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
----
- kernel/locking/lockdep.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+And there are more locks taken from try_to_wake_up(), for example,
+__task_rq_lock() taken from ttwu_remote().
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index b8e6ba3..eb8b190 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1257,13 +1257,17 @@ static int add_lock_to_list(struct lock_class *this,
- #define CQ_MASK				(MAX_CIRCULAR_QUEUE_SIZE-1)
- 
- /*
-- * The circular_queue and helpers is used to implement the
-- * breadth-first search(BFS)algorithem, by which we can build
-- * the shortest path from the next lock to be acquired to the
-- * previous held lock if there is a circular between them.
-+ * The circular_queue and helpers are used to implement graph
-+ * breadth-first search (BFS) algorithm, by which we can determine
-+ * whether there is a path from a lock to another. In deadlock checks,
-+ * a path from the next lock to be acquired to a previous held lock
-+ * indicates that adding the <prev> -> <next> lock dependency will
-+ * produce a circle in the graph. Breadth-first search instead of
-+ * depth-first search is used in order to find the shortest (circular)
-+ * path.
-  */
- struct circular_queue {
--	unsigned long element[MAX_CIRCULAR_QUEUE_SIZE];
-+	struct lock_list *element[MAX_CIRCULAR_QUEUE_SIZE];
- 	unsigned int  front, rear;
- };
- 
-@@ -1289,7 +1293,7 @@ static inline int __cq_full(struct circular_queue *cq)
- 	return ((cq->rear + 1) & CQ_MASK) == cq->front;
- }
- 
--static inline int __cq_enqueue(struct circular_queue *cq, unsigned long elem)
-+static inline int __cq_enqueue(struct circular_queue *cq, struct lock_list *elem)
- {
- 	if (__cq_full(cq))
- 		return -1;
-@@ -1299,7 +1303,7 @@ static inline int __cq_enqueue(struct circular_queue *cq, unsigned long elem)
- 	return 0;
- }
- 
--static inline int __cq_dequeue(struct circular_queue *cq, unsigned long *elem)
-+static inline int __cq_dequeue(struct circular_queue *cq, struct lock_list **elem)
- {
- 	if (__cq_empty(cq))
- 		return -1;
-@@ -1377,12 +1381,12 @@ static int __bfs(struct lock_list *source_entry,
- 		goto exit;
- 
- 	__cq_init(cq);
--	__cq_enqueue(cq, (unsigned long)source_entry);
-+	__cq_enqueue(cq, source_entry);
- 
- 	while (!__cq_empty(cq)) {
- 		struct lock_list *lock;
- 
--		__cq_dequeue(cq, (unsigned long *)&lock);
-+		__cq_dequeue(cq, &lock);
- 
- 		if (!lock->class) {
- 			ret = -2;
-@@ -1406,7 +1410,7 @@ static int __bfs(struct lock_list *source_entry,
- 					goto exit;
- 				}
- 
--				if (__cq_enqueue(cq, (unsigned long)entry)) {
-+				if (__cq_enqueue(cq, entry)) {
- 					ret = -1;
- 					goto exit;
- 				}
--- 
-1.8.3.1
+IMHO, the most reliable solution would be do call the entire
+up_console_sem() from printk deferred context. We could assign
+few bytes for this context in the per-CPU printk_deferred
+variable.
 
+Best Regards,
+Petr
