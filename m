@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DE2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E63BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B465621479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F9721479
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153445;
-	bh=EJNks6oQRfwFiHCaA3iNcKyx/VTPfSwq9cHjpSIFI2w=;
+	s=default; t=1557153450;
+	bh=pajcmLcPQKgbIqeJurlmK4vrFJz+RTfrxOKFhXUH0RQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lyfNP47LQJRj0XQIiMiCHUux0ZhfDJEn5CvtK9oyF+uInWFbkLnq/K2n0SJwzdBFv
-	 5y/EuYdI5GQsuhR1Ldqmw1QA6XtFxycSa1sbqwlAXej5z3s9pn/F2CUnKfVVfjQobF
-	 S/irIQE/JtNmPYDFVdwoBYIwsTGG7I7MoGDGcXKA=
+	b=XiiM50ISx/wnncwfxBxZAqPgYhfUdhY5NrY43T+Pa8Yrv/R/MaFqwoiXeNGdsfe82
+	 s2QrxYxEwKI5/SY0ARIo/HR7pHNEBzkzr+9tnetDktJDrQICpYjvX4FDPm1TVxbhXi
+	 AEFPfS/dMBIqkp/6/oaPZ+rRAvLFvSy8nn+lKt+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbfEFOhY (ORCPT
+        id S1727403AbfEFOh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:37:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58050 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:37:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbfEFOhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:37:23 -0400
+        id S1726308AbfEFOh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:37:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A4AF20449;
-        Mon,  6 May 2019 14:37:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7A44206A3;
+        Mon,  6 May 2019 14:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153442;
-        bh=EJNks6oQRfwFiHCaA3iNcKyx/VTPfSwq9cHjpSIFI2w=;
+        s=default; t=1557153445;
+        bh=pajcmLcPQKgbIqeJurlmK4vrFJz+RTfrxOKFhXUH0RQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EUHeg1FnBKMjtA00yc1qo7zw4Na+g4hsDJOMzmPbgY+2lco9OdiavKwJp4ZwvZ/Vh
-         izHdYZOw3bVdFupkxENoNtWUvSuAiKnuWQd0+hzYasc5l/mIlIdMeohpWSUWRJ413H
-         W+t4Y3QyNw5vEp7gZ6EVr9kuCDGxGWDTdtcpOTUk=
+        b=rtzN5zJv6EdTimq9kBh5073QC3N9QREKBR5Ht8pJiWu86NqKsE20cVyzSZM2rWARY
+         gYILsdMmPkdbjIy8/T/OKt/6fJV5iHPVR1uaRAYJb967q5vxockc9/WIikgOPh+Bzb
+         qsmTS99mcScYabVALtor4aseh+xpVWob65GeV0pw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.0 091/122] staging: iio: adt7316: fix the dac write calculation
-Date:   Mon,  6 May 2019 16:32:29 +0200
-Message-Id: <20190506143102.862115202@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.0 092/122] scsi: hisi_sas: Fix to only call scsi_get_prot_op() for non-NULL scsi_cmnd
+Date:   Mon,  6 May 2019 16:32:30 +0200
+Message-Id: <20190506143102.943296271@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -59,54 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Fertic <jeremyfertic@gmail.com>
+From: John Garry <john.garry@huawei.com>
 
-commit 78accaea117c1ae878774974fab91ac4a0b0e2b0 upstream.
+commit e1ba0b0b44512c5a209526c09ea3eb7d256b6951 upstream.
 
-The lsb calculation is not masking the correct bits from the user input.
-Subtract 1 from (1 << offset) to correctly set up the mask to be applied
-to user input.
+A NULL-pointer dereference was introduced for TMF SSP commands from the
+upstreaming reworking.
 
-The lsb register stores its value starting at the bit 7 position.
-adt7316_store_DAC() currently assumes the value is at the other end of the
-register. Shift the lsb value before storing it in a new variable lsb_reg,
-and write this variable to the lsb register.
+Fix this by relocating the scsi_get_prot_op() callsite.
 
-Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
-Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: d6a9000b81be ("scsi: hisi_sas: Add support for DIF feature for v2 hw")
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/iio/addac/adt7316.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/iio/addac/adt7316.c
-+++ b/drivers/staging/iio/addac/adt7316.c
-@@ -1442,7 +1442,7 @@ static ssize_t adt7316_show_DAC(struct a
- static ssize_t adt7316_store_DAC(struct adt7316_chip_info *chip,
- 				 int channel, const char *buf, size_t len)
- {
--	u8 msb, lsb, offset;
-+	u8 msb, lsb, lsb_reg, offset;
- 	u16 data;
- 	int ret;
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -1033,8 +1033,8 @@ static void prep_ssp_v3_hw(struct hisi_h
+ 	struct sas_ssp_task *ssp_task = &task->ssp_task;
+ 	struct scsi_cmnd *scsi_cmnd = ssp_task->cmd;
+ 	struct hisi_sas_tmf_task *tmf = slot->tmf;
+-	unsigned char prot_op = scsi_get_prot_op(scsi_cmnd);
+ 	int has_data = 0, priority = !!tmf;
++	unsigned char prot_op;
+ 	u8 *buf_cmd;
+ 	u32 dw1 = 0, dw2 = 0, len = 0;
  
-@@ -1460,9 +1460,13 @@ static ssize_t adt7316_store_DAC(struct
- 		return -EINVAL;
- 
- 	if (chip->dac_bits > 8) {
--		lsb = data & (1 << offset);
-+		lsb = data & ((1 << offset) - 1);
-+		if (chip->dac_bits == 12)
-+			lsb_reg = lsb << ADT7316_DA_12_BIT_LSB_SHIFT;
-+		else
-+			lsb_reg = lsb << ADT7316_DA_10_BIT_LSB_SHIFT;
- 		ret = chip->bus.write(chip->bus.client,
--			ADT7316_DA_DATA_BASE + channel * 2, lsb);
-+			ADT7316_DA_DATA_BASE + channel * 2, lsb_reg);
- 		if (ret)
- 			return -EIO;
- 	}
+@@ -1049,6 +1049,7 @@ static void prep_ssp_v3_hw(struct hisi_h
+ 		dw1 |= 2 << CMD_HDR_FRAME_TYPE_OFF;
+ 		dw1 |= DIR_NO_DATA << CMD_HDR_DIR_OFF;
+ 	} else {
++		prot_op = scsi_get_prot_op(scsi_cmnd);
+ 		dw1 |= 1 << CMD_HDR_FRAME_TYPE_OFF;
+ 		switch (scsi_cmnd->sc_data_direction) {
+ 		case DMA_TO_DEVICE:
 
 
