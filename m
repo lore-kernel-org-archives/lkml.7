@@ -3,97 +3,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E91CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91175C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7DDF2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661A32087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 18:18:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=babayev.com header.i=@babayev.com header.b="TJRCGKtE"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="ZO0IGp0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfEFSOT (ORCPT
+        id S1726418AbfEFSSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 14:14:19 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37973 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbfEFSOS (ORCPT
+        Mon, 6 May 2019 14:18:33 -0400
+Received: from mail-ed1-f44.google.com ([209.85.208.44]:37412 "EHLO
+        mail-ed1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfEFSSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 14:14:18 -0400
-Received: by mail-io1-f66.google.com with SMTP id y6so11955880ior.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 11:14:18 -0700 (PDT)
+        Mon, 6 May 2019 14:18:33 -0400
+Received: by mail-ed1-f44.google.com with SMTP id w37so16228066edw.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 11:18:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=babayev.com; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=bi1X8E2iJDbOTLkAMJo/IBi1WYDSDyokTPbiJ53Ivxs=;
-        b=TJRCGKtEXJDmSGGyA07GXyq5cu9+tq3LBaNSRxUT0BZZDVFM4LmrCmly/KfJo84I5Z
-         3auKvn5kVMlG32tq7aHcagk45FMqrBYza/Oa9XxyvV7ozMKX8cASX53o8SHr2ccIUDmD
-         pUk3zaZhy4m5wrR6xFY3/mEHVvkOvddzct5hk=
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HayB7sQuY+v6EOo4zgx5AzoxFFOqeB4N5OR8XF6r5Uc=;
+        b=ZO0IGp0OlSdXA+IWacCTnCe28YL0KDN5WLR0iOy2RQwLUXZVopK4KJfjY+7Q/z9X6s
+         SjuXLmGb7eUbUPJHlvDgd+B3s08Ybui1oQ9ioaIhBcDsAz6stlJCXGs9JZSL5YKh43lu
+         Nwu+fb1XhtGFgnaFbhK852KIcA+Hirr1L1Uu2CPoxojTIdKceAWJbAZ7TBO6HNLfSXLH
+         IqZeQ9Y3ShvtCySSy+qfuIwbk91roy5qHtFp8zbKkADnaXx4F2yKU1KCdSog3LdNJZ0V
+         /oPFwD9Z4Ilb/jEbM5g4Mp2y3Hs7tChLQ697C0ly3r+YHVZPXTFzV9DXetIRIhfLCKSy
+         AKNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=bi1X8E2iJDbOTLkAMJo/IBi1WYDSDyokTPbiJ53Ivxs=;
-        b=qR2PZcoEDgO2OxV2FIHjhmjgfOyOWl4LSdmz9CGSF3PgQ0IfYApU9EFacp0J3DkAsE
-         SocN6JB616JEhfUpsNzXbryHGBaLqPL7YHjxBmUW0uoaAwwDBXKjb3lideAjOCybKYM3
-         1DaXtLJNyqd+qPz6/WLRuDkHq5DkOnxIO+hpC/8HrenHYAl2/lqyZvLdWZlTKKZo6T56
-         Ipf3x7nX0bJUCrDxqCqyoo6Y9e7uA/K/4fwFHQewSEe0oBneaRiX8oM2RFos/jGUo860
-         SLg3PA5yt+BcTR5k6d4XfU5CTz5P3mqarCMknTdmqq1u8EaNmmb1kbJ72kNy9kH+5S1b
-         jWBA==
-X-Gm-Message-State: APjAAAVWpuw1rDpo/OBjSssOmdOSOO2iE5/GvQ/GhvqK26QyY1ALQcv+
-        o4nD6Vj8W/oEUB2WTXTXfe056g==
-X-Google-Smtp-Source: APXvYqxmH1MfnNyv9pTsAAZjt8KEU+PLQD878IbPuF3Kcy0xI+f0xrPj83IaLJSfaeDvvPIweCR+EQ==
-X-Received: by 2002:a6b:8ec4:: with SMTP id q187mr11218439iod.280.1557166457616;
-        Mon, 06 May 2019 11:14:17 -0700 (PDT)
-Received: from localhost (50-46-216-15.evrt.wa.frontiernet.net. [50.46.216.15])
-        by smtp.gmail.com with ESMTPSA id d133sm5546120ita.5.2019.05.06.11.14.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 11:14:16 -0700 (PDT)
-References: <20190505220524.37266-3-ruslan@babayev.com> <20190506045951.GB2895@lahna.fi.intel.com>
-User-agent: mu4e 1.0; emacs 26.1
-From:   Ruslan Babayev <ruslan@babayev.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Ruslan Babayev <ruslan@babayev.com>, linux@armlinux.org.uk,
-        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        wsa@the-dreams.de, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, xe-linux-external@cisco.com
-Subject: Re: [PATCH net-next 2/2] net: phy: sfp: enable i2c-bus detection on ACPI based systems
-In-reply-to: <20190506045951.GB2895@lahna.fi.intel.com>
-Date:   Mon, 06 May 2019 11:14:15 -0700
-Message-ID: <871s1bv4aw.fsf@babayev.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HayB7sQuY+v6EOo4zgx5AzoxFFOqeB4N5OR8XF6r5Uc=;
+        b=ZFu/xHdKqpWYdoJEhgwcsVu3B5y51HRXy2gF1PNYGm59UWQgcA2evCHBEbL82wnCe6
+         rAscL/beP9kpVzUgmgX8ze7hJggG5RluH0Vv4tIGmzUx/bl1tBL+YZ3RrUiwLxN9htYr
+         eBNYAVSbJoaamyzDGhxM5dT0zb/kJtrTN3Gj0GlEo0LeIMYimpZKzvlR0Q0oIkO8q3PF
+         1pAJfxjScu1iatC+pjXKwi2dKuTDSho2ma7fSBDyNXV+mCshRfAuJ2tHw5YYfPFfRW7z
+         lGmcyAKmKLdLujaFUAxZGD/i9mKcovG3s9wAYl7QLPJGkBEf9Bz9rsi2OHO6tSwtkQa/
+         ySLw==
+X-Gm-Message-State: APjAAAU/N0nRe97SDsxMTtjTZUCypG7uy9prSs4/3UVUfL6dhkgdnFLk
+        /c9SJc7zOOrJsJag4zJArqOF+hksNamYWL9dVInSfg==
+X-Google-Smtp-Source: APXvYqwHXBTigtDuKWMtEhHCcYHo0Ym7KuPj7imSV/QN0gZyF9gZvmtmygbEq5LNv1SmyCzL2+klGlSO4LgamYmNN1E=
+X-Received: by 2002:a17:906:5c0f:: with SMTP id e15mr20354898ejq.151.1557166711352;
+ Mon, 06 May 2019 11:18:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190502184337.20538-1-pasha.tatashin@soleen.com>
+ <20190502184337.20538-3-pasha.tatashin@soleen.com> <cac721ed-c404-19d1-71d1-37c66df9b2a8@intel.com>
+ <CAPcyv4greisKBSorzQWebcVOf2AqUH6DwbvNKMW0MQ5bCwYZrw@mail.gmail.com> <cf793443-c14a-a1e0-856e-15e416c7f874@intel.com>
+In-Reply-To: <cf793443-c14a-a1e0-856e-15e416c7f874@intel.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Mon, 6 May 2019 14:18:20 -0400
+Message-ID: <CA+CK2bAfjXCtRRV2DWy8huCvJ-y0L5cMvOh+9CS40WZfhx-aeg@mail.gmail.com>
+Subject: Re: [v5 2/3] mm/hotplug: make remove_memory() interface useable
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Mika Westerberg writes:
-
-> On Sun, May 05, 2019 at 03:05:23PM -0700, Ruslan Babayev wrote:
->> Lookup I2C adapter using the "i2c-bus" device property on ACPI based
->> systems similar to how it's done with DT.
->> 
->> An example DSD describing an SFP on an ACPI based system:
->> 
->> Device (SFP0)
->> {
->>     Name (_HID, "PRP0001")
->>     Name (_DSD, Package ()
->>     {
->>         ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->>         Package () {
->>             Package () { "compatible", "sff,sfp" },
->>             Package () { "i2c-bus", \_SB.PCI0.RP01.I2C.MUX.CH0 },
+On Mon, May 6, 2019 at 2:04 PM Dave Hansen <dave.hansen@intel.com> wrote:
 >
-> Hmm, ACPI has I2cSerialBusV2() resource for this purpose. Why you are not
-> using that?
+> On 5/6/19 11:01 AM, Dan Williams wrote:
+> >>> +void __remove_memory(int nid, u64 start, u64 size)
+> >>>  {
+> >>> +
+> >>> +     /*
+> >>> +      * trigger BUG() is some memory is not offlined prior to calling this
+> >>> +      * function
+> >>> +      */
+> >>> +     if (try_remove_memory(nid, start, size))
+> >>> +             BUG();
+> >>> +}
+> >> Could we call this remove_offline_memory()?  That way, it makes _some_
+> >> sense why we would BUG() if the memory isn't offline.
+> > Please WARN() instead of BUG() because failing to remove memory should
+> > not be system fatal.
+>
+> That is my preference as well.  But, the existing code BUG()s, so I'm
+> OK-ish with this staying for the moment until we have a better handle on
+> what all the callers do if this fails.
 
-I am not an ACPI expert, but my understanding is I2cSerialBusV2() is
-used for slave connections. I am trying to reference an I2C controller
-here.
+Yes, this is the reason why I BUG() here. The current code does this,
+and I was not sure what would happen if we simply continue executing.
+Of course, I would prefer to return failure, so the callers can act
+appropriately, but let's make one thing at a time, this should not be
+part of this series.
+
+Thank you,
+Pasha
