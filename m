@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1265DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391D5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D71522087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D482087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153239;
-	bh=c7+759KtWeqIy6/qDK5HB8WPLHOClRZMOyll85UC/p8=;
+	s=default; t=1557153244;
+	bh=7ZemQmt0cOHyrYretRO4V8+S59a+oJa/34ZCLJ348R4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dd9YdJ0au7IEaulzc94emt4POoH3sP5iV5J/n2pYUEQdU2/LzKE4eZ/tg1ODKLfPJ
-	 3tVoRohjBP2ZcK038NV0WI4CipffuuKVmxdPxwndVcXWYa5CMMisc214oNudd+8XbB
-	 c7cwJ8x36ZBdX+YpWCxyPsn9REkaSbHvKfOKD4vw=
+	b=U6+tGdS6f86xkoq7SnQUrT/entDMdQDZYgqzil9hbBqhE9QYCQN+tGlc0bWuLkUa0
+	 eJMEkdgnQGg1nATCtKMmBlHJfbmLiN+nQWotCBhkfmxxgGtFES/lKsBuh+4estGA8h
+	 yowLo1p62h2kqihSM75LKwaKoqS5m0Uf6Ogq0cck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726468AbfEFOd7 (ORCPT
+        id S1726488AbfEFOeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:33:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53424 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:34:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbfEFOd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:33:56 -0400
+        id S1726094AbfEFOeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:34:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31BA9204EC;
-        Mon,  6 May 2019 14:33:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E2D9204EC;
+        Mon,  6 May 2019 14:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153235;
-        bh=c7+759KtWeqIy6/qDK5HB8WPLHOClRZMOyll85UC/p8=;
+        s=default; t=1557153240;
+        bh=7ZemQmt0cOHyrYretRO4V8+S59a+oJa/34ZCLJ348R4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ium4B5zycQlTC8hN6DCnsB+cglMB7a9ghNBZ+NG/ayuUA5jvoIyFrBRdtszm+W2im
-         z4nw99eyQ3P8w5HoNFyNdj8aFhVfuPtLcBkAd+1FekA7lIP2qa5rcisHRn3P+nMLId
-         A+9CDLDEGtJlkga6H70lVTRzROLgsr4hZHG5d4wU=
+        b=HmvWzvGU1oHBCftzHw5pSyFL9JhDRuo9yPnlADw72TCtAXgUqOVqGt7PpYqTmjy2E
+         OAIvaP+MV35XHIpUd4Gf8wY7Q7nwsKIGv/jXX43/M9BxuIr/qMkWK3R/1tou2SuUUl
+         SCSYPIPIKoeJednK+4tlfTr0p+/WTqM03OXr4q/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 013/122] ALSA: hda/realtek - Apply the fixup for ASUS Q325UAR
-Date:   Mon,  6 May 2019 16:31:11 +0200
-Message-Id: <20190506143055.913264975@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
+Subject: [PATCH 5.0 015/122] USB: w1 ds2490: Fix bug caused by improper use of altsetting array
+Date:   Mon,  6 May 2019 16:31:13 +0200
+Message-Id: <20190506143056.112875886@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -58,35 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 3887c26c0e24d50a4d0ce20cf4726737cee1a2fd upstream.
+commit c114944d7d67f24e71562fcfc18d550ab787e4d4 upstream.
 
-Some ASUS models like Q325UAR with ALC295 codec requires the same
-fixup that has been applied to ALC294 codec.  Just copy the entry with
-the pin matching to cover ALC295 too.
+The syzkaller USB fuzzer spotted a slab-out-of-bounds bug in the
+ds2490 driver.  This bug is caused by improper use of the altsetting
+array in the usb_interface structure (the array's entries are not
+always stored in numerical order), combined with a naive assumption
+that all interfaces probed by the driver will have the expected number
+of altsettings.
 
-BugLink: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1784485
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+The bug can be fixed by replacing references to the possibly
+non-existent intf->altsetting[alt] entry with the guaranteed-to-exist
+intf->cur_altsetting entry.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/w1/masters/ds2490.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7545,6 +7545,10 @@ static const struct snd_hda_pin_quirk al
- 		{0x12, 0x90a60130},
- 		{0x17, 0x90170110},
- 		{0x21, 0x04211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC294_FIXUP_ASUS_SPK,
-+		{0x12, 0x90a60130},
-+		{0x17, 0x90170110},
-+		{0x21, 0x03211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1028, "Dell", ALC269_FIXUP_DELL1_MIC_NO_PRESENCE,
- 		{0x14, 0x90170110},
- 		{0x21, 0x04211020}),
+--- a/drivers/w1/masters/ds2490.c
++++ b/drivers/w1/masters/ds2490.c
+@@ -1016,15 +1016,15 @@ static int ds_probe(struct usb_interface
+ 	/* alternative 3, 1ms interrupt (greatly speeds search), 64 byte bulk */
+ 	alt = 3;
+ 	err = usb_set_interface(dev->udev,
+-		intf->altsetting[alt].desc.bInterfaceNumber, alt);
++		intf->cur_altsetting->desc.bInterfaceNumber, alt);
+ 	if (err) {
+ 		dev_err(&dev->udev->dev, "Failed to set alternative setting %d "
+ 			"for %d interface: err=%d.\n", alt,
+-			intf->altsetting[alt].desc.bInterfaceNumber, err);
++			intf->cur_altsetting->desc.bInterfaceNumber, err);
+ 		goto err_out_clear;
+ 	}
+ 
+-	iface_desc = &intf->altsetting[alt];
++	iface_desc = intf->cur_altsetting;
+ 	if (iface_desc->desc.bNumEndpoints != NUM_EP-1) {
+ 		pr_info("Num endpoints=%d. It is not DS9490R.\n",
+ 			iface_desc->desc.bNumEndpoints);
 
 
