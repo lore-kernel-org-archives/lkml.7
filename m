@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E657C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76184C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F28B21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422F921479
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153425;
-	bh=rLDf/z599L+TxF1cg/rwNNt0iqybU0xScUBZmXOil6A=;
+	s=default; t=1557153429;
+	bh=glLK+raQEfAk5jr74YgUHbUWQ+yroWY8+n58sJG65A4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HEfXRc8dyg2FVxT3PSKWVRn6iOfqQdydSsZyofbm32Y8rvPjgBFMdOgaAlWZY3T6D
-	 vewmUpnxwtq25ihMLG7fZ/VwxWNpQUYhVtTH79J1GEvvBuJCVff7nuuJOFNbBSFqfm
-	 mvGlW57orhCec3cNIibJgwwOn78BzElCI7kFtLGQ=
+	b=zYrL0+yIReLCT5QJwGy+c8Krdr5wmbNaCGJpQtj2goPDyDMfQpa5lRut/p8U+JuSA
+	 58rWDcOLBWpIzqerg0eyIWn1l6efAyNjzsITdf3F772Tvlvrg+ttiFExosRz/9gL6l
+	 SGHc6aP9DJ/VIJTzzQYkWD4717TsTJZJiSc/j6ZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfEFOhE (ORCPT
+        id S1727330AbfEFOhI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:37:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57596 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:37:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727291AbfEFOhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:37:02 -0400
+        id S1726821AbfEFOhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:37:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47F49206A3;
-        Mon,  6 May 2019 14:37:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3A70204EC;
+        Mon,  6 May 2019 14:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153421;
-        bh=rLDf/z599L+TxF1cg/rwNNt0iqybU0xScUBZmXOil6A=;
+        s=default; t=1557153424;
+        bh=glLK+raQEfAk5jr74YgUHbUWQ+yroWY8+n58sJG65A4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q5VXfRvNZhuykYh2ikc+ZKwpZ+Or7MkpIKsUMTQLlxKYW1Ry+EckhJGaP5tj+j/RM
-         AQYHKyqFohPRKfrHgO/iCYtJlawVvxnL8yub5GlvkTDdMLfmAY7rhPtqXBqVNbml9d
-         4pFkqfumNpbLizuQZvUpcdnq5ScDPjIaWotN1rh0=
+        b=T4gmM8ITZ6GSL1093eAJHQ8ZZOLE9EGQwk+ilWk0WgkqoYv8DAdiQIuavJ7jyIhsQ
+         idnUDw4xTOV49/mfb4j3cJa617MoLEdPSkp/easNKtW0OzPvpACsQLUEy9+QtSosZo
+         7leNDAdexQDOCvjfUMSLXh1xKxuUMLnfAG+pVBZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Assmann <sassmann@kpanic.de>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yufen Yu <yuyufen@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 042/122] i40e: fix WoL support check
-Date:   Mon,  6 May 2019 16:31:40 +0200
-Message-Id: <20190506143058.693436013@linuxfoundation.org>
+Subject: [PATCH 5.0 076/122] hugetlbfs: fix memory leak for resv_map
+Date:   Mon,  6 May 2019 16:32:14 +0200
+Message-Id: <20190506143101.684861447@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,34 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f669d24f3dd00beab452c0fc9257f6a942ffca9b ]
+[ Upstream commit 58b6e5e8f1addd44583d61b0a03c0f5519527e35 ]
 
-The current check for WoL on i40e is broken. Code comment says only
-magic packet is supported, so only check for that.
+When mknod is used to create a block special file in hugetlbfs, it will
+allocate an inode and kmalloc a 'struct resv_map' via resv_map_alloc().
+inode->i_mapping->private_data will point the newly allocated resv_map.
+However, when the device special file is opened bd_acquire() will set
+inode->i_mapping to bd_inode->i_mapping.  Thus the pointer to the
+allocated resv_map is lost and the structure is leaked.
 
-Fixes: 540a152da762 (i40e/ixgbe/igb: fail on new WoL flag setting WAKE_MAGICSECURE)
+Programs to reproduce:
+        mount -t hugetlbfs nodev hugetlbfs
+        mknod hugetlbfs/dev b 0 0
+        exec 30<> hugetlbfs/dev
+        umount hugetlbfs/
 
-Signed-off-by: Stefan Assmann <sassmann@kpanic.de>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+resv_map structures are only needed for inodes which can have associated
+page allocations.  To fix the leak, only allocate resv_map for those
+inodes which could possibly be associated with page allocations.
+
+Link: http://lkml.kernel.org/r/20190401213101.16476-1-mike.kravetz@oracle.com
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Reported-by: Yufen Yu <yuyufen@huawei.com>
+Suggested-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_ethtool.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/hugetlbfs/inode.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-index a6bc7847346b..5d544e661445 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-@@ -2378,8 +2378,7 @@ static int i40e_set_wol(struct net_device *netdev, struct ethtool_wolinfo *wol)
- 		return -EOPNOTSUPP;
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index a7fa037b876b..a3a3d256fb0e 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -741,11 +741,17 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 					umode_t mode, dev_t dev)
+ {
+ 	struct inode *inode;
+-	struct resv_map *resv_map;
++	struct resv_map *resv_map = NULL;
  
- 	/* only magic packet is supported */
--	if (wol->wolopts && (wol->wolopts != WAKE_MAGIC)
--			  | (wol->wolopts != WAKE_FILTER))
-+	if (wol->wolopts & ~WAKE_MAGIC)
- 		return -EOPNOTSUPP;
+-	resv_map = resv_map_alloc();
+-	if (!resv_map)
+-		return NULL;
++	/*
++	 * Reserve maps are only needed for inodes that can have associated
++	 * page allocations.
++	 */
++	if (S_ISREG(mode) || S_ISLNK(mode)) {
++		resv_map = resv_map_alloc();
++		if (!resv_map)
++			return NULL;
++	}
  
- 	/* is this a new value? */
+ 	inode = new_inode(sb);
+ 	if (inode) {
+@@ -780,8 +786,10 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 			break;
+ 		}
+ 		lockdep_annotate_inode_mutex_key(inode);
+-	} else
+-		kref_put(&resv_map->refs, resv_map_release);
++	} else {
++		if (resv_map)
++			kref_put(&resv_map->refs, resv_map_release);
++	}
+ 
+ 	return inode;
+ }
 -- 
 2.20.1
 
