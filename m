@@ -2,120 +2,119 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE265C04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF79BC04AAE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808C520830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C10142082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 06:48:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="D8snUQHA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbfEFGsC (ORCPT
+        id S1726276AbfEFGsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 02:48:02 -0400
-Received: from mga01.intel.com ([192.55.52.88]:64911 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725851AbfEFGsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 02:48:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 May 2019 23:47:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,437,1549958400"; 
-   d="scan'208";a="141672937"
-Received: from irsmsx103.ger.corp.intel.com ([163.33.3.157])
-  by orsmga006.jf.intel.com with ESMTP; 05 May 2019 23:47:55 -0700
-Received: from irsmsx102.ger.corp.intel.com ([169.254.2.21]) by
- IRSMSX103.ger.corp.intel.com ([169.254.3.30]) with mapi id 14.03.0415.000;
- Mon, 6 May 2019 07:47:55 +0100
-From:   "Reshetova, Elena" <elena.reshetova@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>
-CC:     Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon
- syscall
-Thread-Index: AQHU81HQwzT9MH4dM0y/JZXnSwiYT6Y8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAAQuGgIAAYQuAgAAKhwCACsPi4IADJTwAgAAcagCAAExngIAEBbGAgACIbACAAbyQ8IAA626AgAGZfXCAAARpgIAAWpuAgAAF74CAABf/AIAAAvkAgAGZnrD///dzgIAAKeMAgAPw2NA=
-Date:   Mon, 6 May 2019 06:47:54 +0000
-Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4C71202@IRSMSX102.ger.corp.intel.com>
-References: <57357E35-3D9B-4CA7-BAB9-0BE89E0094D2@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C66A8A@IRSMSX102.ger.corp.intel.com>
- <6860856C-6A92-4569-9CD8-FF6C5C441F30@amacapital.net>
- <2236FBA76BA1254E88B949DDB74E612BA4C6A4D7@IRSMSX102.ger.corp.intel.com>
- <303fc4ee5ac04e4fac104df1188952e8@AcuMS.aculab.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C6C2C3@IRSMSX102.ger.corp.intel.com>
- <2e55aeb3b39440c0bebf47f0f9522dd8@AcuMS.aculab.com>
- <CALCETrXjGvWVgZHrKCfH6RBsnYOyD2+Mey1Esw7BsA4Eg6PS0A@mail.gmail.com>
- <20190502150853.GA16779@gmail.com>
- <d64b3562d179430f9bdd8712999ff98a@AcuMS.aculab.com>
- <20190502164524.GB115950@gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C6F523@IRSMSX102.ger.corp.intel.com>
- <e4fbad8c51284a0583b98c52de4a207d@AcuMS.aculab.com>
- <CAHk-=wjb9c4JV5xOWp5VMGTzgCmpFCegf2MydVwbvjr5gnBV9A@mail.gmail.com>
-In-Reply-To: <CAHk-=wjb9c4JV5xOWp5VMGTzgCmpFCegf2MydVwbvjr5gnBV9A@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZWQzMmVlOGQtZWYyYy00NzllLTlmNGItMDNhMTRmYjc3N2QxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMGczT0xObzFmdENESlNtXC9cL0EzZ3lBUnBYK01BcE1keEZIYUphcDlueU8zUDI2NHJLbmVZYzF2ZGpUdEx4ejJ3In0=
-x-originating-ip: [163.33.239.182]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 6 May 2019 02:48:19 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37551 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfEFGsT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 02:48:19 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 132so2334264ljj.4
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 23:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=C2U/Y3HrsZsGwgSrYLbL41jSdN4fVhl+NLwRQdY4iqY=;
+        b=D8snUQHAfdzQm9GkWQI34dkVAxrAJuZkmWsqO5irUHT1hWyV2hkSyYSsSclecD9gti
+         eZwTtFWJLX5djPnJJpwa1CrKEH1nOO0tvUGWucaebAmsJGSDQJQdRdXKpwRfY3sKAUYf
+         4wqO50fRoeyvl+KoXsP2lu7dYVZcoUzjU59UA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=C2U/Y3HrsZsGwgSrYLbL41jSdN4fVhl+NLwRQdY4iqY=;
+        b=SQ3Ud71MjHcViVo+hIEEKtU/mWjfLeCaUCaNqvRYAMRoLOuWlXh8MzPTWYVGAFD6qE
+         /Jp/5J5lf9NnZ8ULcCVE/et7Jp31nogGSAMPWqvE2qeiMwVscDCXDkHheiY8pknXIucJ
+         53XOm87+Z3lrUGv9Un/qyG+PYEeswyN19S1jYuVIsAyRI5Q3G+X6Us8J9DqN24HQ/Gpq
+         qtWlXQ8Age3uvKWays7v6t7OaoXrKlrhRtAbgXdBh8bm3HyU5Uf3NWV9ONFVfRIWEBZf
+         w1CaA5gPnFBfZ6Glj0Rr11bmOAqLlEsRqt4nJkaWdfLXVQMy4oog+pn6xIkopOYFWl99
+         A8ow==
+X-Gm-Message-State: APjAAAVuDouTauvNT2XEbOXAdY6a2y7P1hiVqAMWu64hDkd0u5MBS0jh
+        Ug5iaVYA232dQ7AlOXwQkGdN/A==
+X-Google-Smtp-Source: APXvYqzZ60bhW+zmKxgQWKFu3bPVmpIDGkgZaXEtzr6qDGU0QdrT3fUUEmHHE44uPUNcpPCQcav0rQ==
+X-Received: by 2002:a2e:7503:: with SMTP id q3mr587089ljc.190.1557125297062;
+        Sun, 05 May 2019 23:48:17 -0700 (PDT)
+Received: from [172.16.11.26] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id j13sm2142583lfb.34.2019.05.05.23.48.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 05 May 2019 23:48:16 -0700 (PDT)
+Subject: Re: [PATCH 00/10] implement DYNAMIC_DEBUG_RELATIVE_POINTERS
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Baron <jbaron@akamai.com>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+References: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <1afb0702-3cc5-ba4f-2bdd-604d9da2b846@rasmusvillemoes.dk>
+Date:   Mon, 6 May 2019 08:48:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190409212517.7321-1-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pj4gT24gRnJpLCBNYXkgMywgMjAxOSBhdCA5OjQwIEFNIERhdmlkIExhaWdodCA8RGF2aWQuTGFp
-Z2h0QGFjdWxhYi5jb20+IHdyb3RlOg0KPiA+DQo+ID4gVGhhdCBnaXZlcyB5b3UgMTAgc3lzdGVt
-IGNhbGxzIHBlciByZHJhbmQgaW5zdHJ1Y3Rpb24NCj4gPiBhbmQgbW9zdGx5IHRha2VzIHRoZSBs
-YXRlbmN5IG91dCBvZiBsaW5lLg0KPiANCj4gRG8gd2UgcmVhbGx5IHdhbnQgdG8gZG8gdGhpcz8g
-V2hhdCBpcyB0aGUgYXR0YWNrIHNjZW5hcmlvPw0KPiANCj4gV2l0aCBubyBWTEEncywgYW5kIHRo
-ZSBzdGFja2xlYWsgcGx1Z2luLCB3aGF0J3MgdGhlIHVwc2lkZT8gQXJlIHdlDQo+IGFkZGluZyBy
-YW5kb20gY29kZSAobGl0ZXJhbGx5KSAianVzdCBiZWNhdXNlIj8NCj4gDQo+ICAgICAgICAgICAg
-ICAgICAgICBMaW51cw0KDQpIaSBMaW51cywgDQoNClNvLCBpZiB5b3VyIHF1ZXN0aW9uIGlzICJk
-byB3ZSBrbm93IGEgdGhyZWFkIHN0YWNrLWJhc2VkDQphdHRhY2sgdGhhdCB3b3VsZCBzdWNjZWVk
-IGdpdmVuIHRoYXQgYWxsIGNvdW50ZXJtZWFzdXJlcyBhcmUgYWN0aXZlDQooc3RhY2tsZWFrLCBD
-T05GSUdfR0NDX1BMVUdJTl9TVFJVQ1RMRUFLX0JZUkVGX0FMTD15LA0KYXNzdW1lIG5vIFZMQXMg
-bGVmdCwgZXRjLikgPyIgVGhlbiB0aGUgYW5zd2VyIGlzICJubyIsIEkgZG9uJ3Qga25vdw0KYW5k
-IHBlb3BsZSBJIGhhdmUgYXNrZWQgYWxzbyAodGhpcyBvZiBjb3Vyc2UgYnkgaXRzZWxmIGRvZXMg
-bm90IHByb3ZpZGUgYW55IA0KZ3VhcmFudGVlcyBvZiBhbnkga2luZCBpbiBzZWN1cml0eSB3b3Js
-ZCkuDQoNCkhvd2V2ZXIsIHRoZSB3aG9sZSBuYXR1cmUgb2YgdGhlIHRocmVhZCBzdGFjayBpcyBp
-dHMgcHJlZGljdGFibGUgYW5kIGRldGVybWluaXN0aWMNCnN0cnVjdHVyZSB0aGF0IGF0dHJhY3Rl
-ZCBhdHRhY2tlcnMgb3ZlciBkZWNhZGVzIHRvIG1vdW50IHZhcmlvdXMgYXR0YWNrcw0KKGFiKXVz
-aW5nIGl0LiBTbywgd2hpbGUgc3RhY2tsZWFrIGFuZCBvdGhlcnMgYWRkcmVzcyBjb25jcmV0ZSBh
-dHRhY2sgcGF0aHMsDQpzdWNoIGFzIHVuaW5pdGlhbGl6ZWQgdmFyaWFibGVzIG9uIHRoZSBzdGFj
-aywgYXJiaXRyYXJ5IHN0YWNrIGp1bXAgcHJpbWl0aXZlcyAoVkxBcyksDQpldGMuIFdlIGRvbid0
-IHJlYWxseSBoYXZlIGFueXRoaW5nIGluIHBsYWNlIHRoYXQgYWRkcmVzc2VzIHRoZSBjb3JlIGZl
-YXR1cmU6DQoic2ltcGxlIGFuZCBkZXRlcm1pbmlzdGljIHN0cnVjdHVyZSB0aGF0IGlzIHBlcnNp
-c3RlbnQgYWNyb3NzIHN5c2NhbGxzIi4gDQoNClNvLCB0aGlzIGZlYXR1cmUgaXMgYW4gYXR0ZW1w
-dCB0byBiZSBtb3JlIHByb2FjdGl2ZSAodnMuIHJlYWN0aW5nIHRvIGFscmVhZHkgcHVibGlzaGVk
-DQphdHRhY2spIGFuZCBhZGQgcmFuZG9taXphdGlvbiBpbiBhIHBsYWNlIHdoZXJlIGl0IHdvdWxk
-IGxpa2VseSBtYWtlIG1vc3Qgb2YgdGhyZWFkLWJhc2VkDQphdHRhY2tzIGhhcmRlciBmb3IgYXR0
-YWNrZXJzLiBJZiB3ZSBjYW4gbWFrZSB0aGUgbWVhc3VyZSBjaGVhcCBlbm91Z2ggbm90IHRvIGFm
-ZmVjdA0KcGVyZm9ybWFuY2UgY29uc2lkZXJhYmx5IGFuZCBnZXQgYSBzZWN1cml0eSBiZW5lZml0
-LCB3aHkgbm90PyANCg0KQmVzdCBSZWdhcmRzLA0KRWxlbmEuDQo=
+On 09/04/2019 23.25, Rasmus Villemoes wrote:
+
+> While refreshing these patches, which were orignally just targeted at
+> x86-64, it occured to me that despite the implementation relying on
+> inline asm, there's nothing x86 specific about it, and indeed it seems
+> to work out-of-the-box for ppc64 and arm64 as well, but those have
+> only been compile-tested.
+
+So, apart from the Clang build failures for non-x86, I now also got a
+report that gcc 4.8 miscompiles this stuff in some cases [1], even for
+x86 - gcc 4.9 does not seem to have the problem. So, given that the 5.2
+merge window just opened, I suppose this is the point where I should
+pull the plug on this experiment :(
+
+Rasmus
+
+[1] Specifically, the problem manifested in net/ipv4/tcp_input.c: Both
+uses of the static inline inet_csk_clear_xmit_timer() pass a
+compile-time constant 'what', so the ifs get folded away and both uses
+are completely inlined. Yet, gcc still decides to emit a copy of the
+final 'else' branch of inet_csk_clear_xmit_timer() as its own
+inet_csk_reset_xmit_timer.part.55 function, which is of course unused.
+And despite the asm() that defines the ddebug descriptor being an "asm
+volatile", gcc thinks it's fine to elide that (the code path is
+unreachable, after all....), so the entire asm for that function is
+
+        .section        .text.unlikely
+        .type   inet_csk_reset_xmit_timer.part.55, @function
+inet_csk_reset_xmit_timer.part.55:
+        movq    $.LC1, %rsi     #,
+        movq    $__UNIQUE_ID_ddebug160, %rdi    #,
+        xorl    %eax, %eax      #
+        jmp     __dynamic_pr_debug      #
+        .size   inet_csk_reset_xmit_timer.part.55,
+.-inet_csk_reset_xmit_timer.part.55
+
+which of course fails to link since the symbol __UNIQUE_ID_ddebug160 is
+nowhere defined.
