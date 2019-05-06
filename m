@@ -2,73 +2,74 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39F7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3130C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B2E21479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747BD2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557178007;
-	bh=CJNN3CImdez765ALcbxyKx3ccs91hAGS/vspbXpFebM=;
+	s=default; t=1557178009;
+	bh=Mg455CaQtrldQHNm99B2B+0lwo+ctvkfUKnaVrDevLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:List-ID:
 	 From;
-	b=kO4gFySpGQvi4aqfgs4B404fxUm4JeeJK87DzCLrsNMDpH3nx1GlNP3qqhFfJZOg0
-	 zFW5fp9YmyOs2XFiPGGflCg8DnoF0qrO+km/ge1Rwd1XKyAxIXEQvHMAcBLC5AIAyN
-	 xxyQnFCDRNrzntpSvTddc5Xbt9eCnzC2887NPflY=
+	b=XR9RnAdY+oX3O+tmTc4ZyLRi9wz6a2SS1ZZbCAnM4J1HxBFPg/hETN1EJbReeywMi
+	 7cYHwZxj72S5LDto1DddL1dGk/esoFMoh/dnEabpLYZZFN0lYauMiarlwU8fnmjrDD
+	 TSV/vo8woqa7Bo+eBgIRD83YTvU0h6atM9N6nTFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfEFV0q (ORCPT
+        id S1727021AbfEFV0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 17:26:46 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:36810 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbfEFV0l (ORCPT
+        Mon, 6 May 2019 17:26:48 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:52506 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726989AbfEFV0q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 17:26:41 -0400
-Received: by mail-it1-f193.google.com with SMTP id o190so5226535itc.1;
-        Mon, 06 May 2019 14:26:40 -0700 (PDT)
+        Mon, 6 May 2019 17:26:46 -0400
+Received: by mail-it1-f195.google.com with SMTP id q65so21434307itg.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 14:26:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :reply-to:organization;
-        bh=7fof8gmlqFrlN3tjmdJFzcPdOK3UTzw80TgmMMhQvqE=;
-        b=gTH/lEGh82vXO1uYay+5xgNbMYVx5HCMYqBEkggsBNHT8HXvSdCQo6sGPM5ao9DP8d
-         qAAgQUStLDOn9UdX9WyzUGYla5zZY6GKdLs5L05isArmxmBCdL2rzazavrBHS8LAEq/A
-         uEUXQlPf5H5oRHz9F6Japx5hK94TaQRUYf5RDXwYy8bErXKaU4uvUVFjusW5cw/umNWE
-         WH2/YClU0KZHRrtrxlgk/HOnVNi+Z7rwF+wRasDlGvD6hXsKz6rOwIERLw7vZNdbC7+z
-         1qrddGory7uQtPeerY+JIOIQVsHk11xUkjbPAANU0ASBPLsZKFZ8Fb9HjuZbf3yP7oor
-         HhIw==
+        bh=xc8GKgAhN2BvbVtHbXIFXp3HIXwPjdL/8iP1wX8Tn7g=;
+        b=ozFQSbOZOyhObe/no7EhClYnzFZzOsCbgo4msZ+u1fLhicbN21oM6AcTsExK91rdfm
+         +fd2ZYhdfc1ENDRemCuw90t6iFB2kxr/M4UEI/n50xyxxONR5P1en9MSoLwTBqo6UTJM
+         iFF6tNPbknYhDiFetefa0H6devKafP72nRFJgEYqIXHEDkYSEQ1cR2B/4B3nncGSDCEE
+         /W9jvzmMy6tczOttS/cQo3oQxb7DXtFxVY3uH1dFwVZZrvX4dnlo1Sb3xRySj7tJ5fz8
+         J86Jcy7BD6NS5kds6a7j7+KKKQU6kwsq6V0BmY0ibj+rLOaBKxXOJ5tGEU8QSJmVT8Hq
+         88Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:reply-to:organization;
-        bh=7fof8gmlqFrlN3tjmdJFzcPdOK3UTzw80TgmMMhQvqE=;
-        b=j8mXikygT1TGygZKlcjDmctbwmlx+BpP5P9dYWvWCF3l8oqUCM1uTanrlR1psUK2Ro
-         3J2uK8Hn7OzjIf6eA7euTtyqUzE1IjqmkquGTsipJNWcqLoNzTTgo+VPcn4zi4+R6WKt
-         7K5FpweZfebyv50Rsrb7bHYaubnycRKmv9ABab1fOxtC8l4tINMjAIV1xAyXxxZfCvUX
-         jm6D9uf8GX1G3ugNAzd+PLNS1WlO1sctOEC9K50wT0s13iTlO1mMhgRqDmgw7BdpERPX
-         7kQqU8FTTZKzFyq7eC7/wS180URFJ77+daY9uB2HXkURZ522Z4JhZMSY4S1N5sFGC3/u
-         OL0g==
-X-Gm-Message-State: APjAAAW+WQER9LI758g3ksgmWXVejFcMab0pltg9pmxxnGW4YV26xmlI
-        SvOG97Kga/zOMl8MID2atx8eHDMd
-X-Google-Smtp-Source: APXvYqwkEuAZA85xkUvd4cRsMsyo4MPtvYYgbRKu1IWXws4weWTH6BL7ZXOzEavwOHhTVGYWFSQdxA==
-X-Received: by 2002:a02:52c9:: with SMTP id d192mr20648795jab.53.1557178000303;
-        Mon, 06 May 2019 14:26:40 -0700 (PDT)
+        bh=xc8GKgAhN2BvbVtHbXIFXp3HIXwPjdL/8iP1wX8Tn7g=;
+        b=PKFb8c13aUCh91M6GrBSbSrCO5ba2FTGLH5UovrJlTIlQqWvtlF+9Xt/haE7rkrzAJ
+         Kk1uybinx/Ogif/nd+wuvZ7XW0Q74P/Uy85nzS2OtEmwlDIEw3smW9bxZj3h3TTXiigG
+         6HU8Toc5p9QAhQxQ4FaVNVz+UDZMYxugaGX0a3z7bxAMufCCP0q4jN278fxo7ao0wK1H
+         RZn3UC78sAYAw3kg+nG3QUvq+zCFhJYk69ux4r9VjOn8qaE4Q+nDMu6hFmGBLNlTtNUw
+         MLPgx95QzI/PKNrrcakL+33lHC0EZgcPmnr8ndbvXuHg+9k9rWtESK50aZ6+2d2zbccq
+         ZpxA==
+X-Gm-Message-State: APjAAAVTjc5mw4IV/UXGLhiYQcgyGBAzqWaIc7QDEWKiIKFcxq+zmkCl
+        63uwiTG2XrmppppQEMXYJEM=
+X-Google-Smtp-Source: APXvYqygrG8Bj0hd8b9f6a8cGA8LyqsJ5nXu/CF7g9z3/v2GelvFtbElk0TBz6cXZlTaVLTMyd56yg==
+X-Received: by 2002:a24:4161:: with SMTP id x94mr19479400ita.83.1557178005568;
+        Mon, 06 May 2019 14:26:45 -0700 (PDT)
 Received: from nuc8.lan (h69-131-112-51.cntcnh.dsl.dynamic.tds.net. [69.131.112.51])
-        by smtp.gmail.com with ESMTPSA id v25sm4268009ioh.81.2019.05.06.14.26.39
+        by smtp.gmail.com with ESMTPSA id v25sm4268009ioh.81.2019.05.06.14.26.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 14:26:39 -0700 (PDT)
+        Mon, 06 May 2019 14:26:44 -0700 (PDT)
 From:   Len Brown <lenb@kernel.org>
 To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
-Subject: [PATCH 12/22] powercap/intel_rapl: update rapl domain name and debug messages
-Date:   Mon,  6 May 2019 17:26:07 -0400
-Message-Id: <0274c268be3c15d5e6e199b1de46e83a550247bc.1557177585.git.len.brown@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Len Brown <len.brown@intel.com>
+Subject: [PATCH 16/22] perf/x86/intel/uncore: Support multi-die/package
+Date:   Mon,  6 May 2019 17:26:11 -0400
+Message-Id: <1d7c4d47cfca91c11b0e078d86a8f7f7da6d862a.1557177585.git.len.brown@intel.com>
 X-Mailer: git-send-email 2.18.0-rc0
 In-Reply-To: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1557177585.git.len.brown@intel.com>
 References: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1557177585.git.len.brown@intel.com>
@@ -79,196 +80,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Rui <rui.zhang@intel.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-The RAPL domain "name" attribute contains "Package-N",
-which is ambiguous on multi-die per-package systems.
+Uncore becomes die-scope on Xeon Cascade Lake-AP. Uncore driver needs to
+support die-scope uncore units.
 
-Update the name to "package-X-die-Y" on those systems.
+Use topology_logical_die_id() to replace topology_logical_package_id().
+For previous platforms which doesn't have multi-die,
+topology_logical_die_id() is identical as topology_logical_package_id().
 
-No change on systems without multi-die/package.
+In pci_probe/remove, the group id reads from PCI BUS is logical die id
+for multi-die systems.
 
-Update driver debug messages.
+Use topology_die_cpumask() to replace topology_core_cpumask().
+For previous platforms which doesn't have multi-die,
+topology_die_cpumask() is identical as topology_core_cpumask().
 
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+There is no functional change for previous platforms.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Len Brown <len.brown@intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: linux-pm@vger.kernel.org
 ---
- drivers/powercap/intel_rapl.c | 57 ++++++++++++++++++++---------------
- 1 file changed, 32 insertions(+), 25 deletions(-)
+ arch/x86/events/intel/uncore.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/powercap/intel_rapl.c b/drivers/powercap/intel_rapl.c
-index 9202dbcef96d..ad78c1d08260 100644
---- a/drivers/powercap/intel_rapl.c
-+++ b/drivers/powercap/intel_rapl.c
-@@ -178,12 +178,15 @@ struct rapl_domain {
- #define power_zone_to_rapl_domain(_zone) \
- 	container_of(_zone, struct rapl_domain, power_zone)
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 9fe64c01a2e5..a6461ff85a32 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -100,7 +100,7 @@ ssize_t uncore_event_show(struct kobject *kobj,
  
-+/* maximum rapl package domain name: package-%d-die-%d */
-+#define PACKAGE_DOMAIN_NAME_LENGTH 30
- 
--/* Each physical package contains multiple domains, these are the common
-+
-+/* Each rapl package contains multiple domains, these are the common
-  * data across RAPL domains within a package.
-  */
- struct rapl_package {
--	unsigned int id; /* physical package/socket id */
-+	unsigned int id; /* logical die id, equals physical 1-die systems */
- 	unsigned int nr_domains;
- 	unsigned long domain_map; /* bit map of active domains */
- 	unsigned int power_unit;
-@@ -198,6 +201,7 @@ struct rapl_package {
- 	int lead_cpu; /* one active cpu per package for access */
- 	/* Track active cpus */
- 	struct cpumask cpumask;
-+	char name[PACKAGE_DOMAIN_NAME_LENGTH];
- };
- 
- struct rapl_defaults {
-@@ -926,8 +930,8 @@ static int rapl_check_unit_core(struct rapl_package *rp, int cpu)
- 	value = (msr_val & TIME_UNIT_MASK) >> TIME_UNIT_OFFSET;
- 	rp->time_unit = 1000000 / (1 << value);
- 
--	pr_debug("Core CPU package %d energy=%dpJ, time=%dus, power=%duW\n",
--		rp->id, rp->energy_unit, rp->time_unit, rp->power_unit);
-+	pr_debug("Core CPU %s energy=%dpJ, time=%dus, power=%duW\n",
-+		rp->name, rp->energy_unit, rp->time_unit, rp->power_unit);
- 
- 	return 0;
- }
-@@ -951,8 +955,8 @@ static int rapl_check_unit_atom(struct rapl_package *rp, int cpu)
- 	value = (msr_val & TIME_UNIT_MASK) >> TIME_UNIT_OFFSET;
- 	rp->time_unit = 1000000 / (1 << value);
- 
--	pr_debug("Atom package %d energy=%dpJ, time=%dus, power=%duW\n",
--		rp->id, rp->energy_unit, rp->time_unit, rp->power_unit);
-+	pr_debug("Atom %s energy=%dpJ, time=%dus, power=%duW\n",
-+		rp->name, rp->energy_unit, rp->time_unit, rp->power_unit);
- 
- 	return 0;
- }
-@@ -1181,7 +1185,7 @@ static void rapl_update_domain_data(struct rapl_package *rp)
- 	u64 val;
- 
- 	for (dmn = 0; dmn < rp->nr_domains; dmn++) {
--		pr_debug("update package %d domain %s data\n", rp->id,
-+		pr_debug("update %s domain %s data\n", rp->name,
- 			 rp->domains[dmn].name);
- 		/* exclude non-raw primitives */
- 		for (prim = 0; prim < NR_RAW_PRIMITIVES; prim++) {
-@@ -1206,7 +1210,6 @@ static void rapl_unregister_powercap(void)
- static int rapl_package_register_powercap(struct rapl_package *rp)
+ struct intel_uncore_box *uncore_pmu_to_box(struct intel_uncore_pmu *pmu, int cpu)
  {
- 	struct rapl_domain *rd;
--	char dev_name[17]; /* max domain name = 7 + 1 + 8 for int + 1 for null*/
- 	struct powercap_zone *power_zone = NULL;
- 	int nr_pl, ret;
+-	unsigned int pkgid = topology_logical_package_id(cpu);
++	unsigned int pkgid = topology_logical_die_id(cpu);
  
-@@ -1217,20 +1220,16 @@ static int rapl_package_register_powercap(struct rapl_package *rp)
- 	for (rd = rp->domains; rd < rp->domains + rp->nr_domains; rd++) {
- 		if (rd->id == RAPL_DOMAIN_PACKAGE) {
- 			nr_pl = find_nr_power_limit(rd);
--			pr_debug("register socket %d package domain %s\n",
--				rp->id, rd->name);
--			memset(dev_name, 0, sizeof(dev_name));
--			snprintf(dev_name, sizeof(dev_name), "%s-%d",
--				rd->name, rp->id);
-+			pr_debug("register package domain %s\n", rp->name);
- 			power_zone = powercap_register_zone(&rd->power_zone,
- 							control_type,
--							dev_name, NULL,
-+							rp->name, NULL,
- 							&zone_ops[rd->id],
- 							nr_pl,
- 							&constraint_ops);
- 			if (IS_ERR(power_zone)) {
--				pr_debug("failed to register package, %d\n",
--					rp->id);
-+				pr_debug("failed to register power zone %s\n",
-+					rp->name);
- 				return PTR_ERR(power_zone);
- 			}
- 			/* track parent zone in per package/socket data */
-@@ -1256,8 +1255,8 @@ static int rapl_package_register_powercap(struct rapl_package *rp)
- 						&constraint_ops);
- 
- 		if (IS_ERR(power_zone)) {
--			pr_debug("failed to register power_zone, %d:%s:%s\n",
--				rp->id, rd->name, dev_name);
-+			pr_debug("failed to register power_zone, %s:%s\n",
-+				rp->name, rd->name);
- 			ret = PTR_ERR(power_zone);
- 			goto err_cleanup;
- 		}
-@@ -1270,7 +1269,7 @@ static int rapl_package_register_powercap(struct rapl_package *rp)
- 	 * failed after the first domain setup.
- 	 */
- 	while (--rd >= rp->domains) {
--		pr_debug("unregister package %d domain %s\n", rp->id, rd->name);
-+		pr_debug("unregister %s domain %s\n", rp->name, rd->name);
- 		powercap_unregister_zone(control_type, &rd->power_zone);
- 	}
- 
-@@ -1380,8 +1379,8 @@ static void rapl_detect_powerlimit(struct rapl_domain *rd)
- 	/* check if the domain is locked by BIOS, ignore if MSR doesn't exist */
- 	if (!rapl_read_data_raw(rd, FW_LOCK, false, &val64)) {
- 		if (val64) {
--			pr_info("RAPL package %d domain %s locked by BIOS\n",
--				rd->rp->id, rd->name);
-+			pr_info("RAPL %s domain %s locked by BIOS\n",
-+				rd->rp->name, rd->name);
- 			rd->state |= DOMAIN_STATE_BIOS_LOCKED;
- 		}
- 	}
-@@ -1410,10 +1409,10 @@ static int rapl_detect_domains(struct rapl_package *rp, int cpu)
- 	}
- 	rp->nr_domains = bitmap_weight(&rp->domain_map,	RAPL_DOMAIN_MAX);
- 	if (!rp->nr_domains) {
--		pr_debug("no valid rapl domains found in package %d\n", rp->id);
-+		pr_debug("no valid rapl domains found in %s\n", rp->name);
+ 	/*
+ 	 * The unsigned check also catches the '-1' return value for non
+@@ -942,7 +942,8 @@ static int uncore_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id
+ 	if (phys_id < 0)
  		return -ENODEV;
- 	}
--	pr_debug("found %d domains on package %d\n", rp->nr_domains, rp->id);
-+	pr_debug("found %d domains on %s\n", rp->nr_domains, rp->name);
  
- 	rp->domains = kcalloc(rp->nr_domains + 1, sizeof(struct rapl_domain),
- 			GFP_KERNEL);
-@@ -1446,8 +1445,8 @@ static void rapl_remove_package(struct rapl_package *rp)
- 			rd_package = rd;
- 			continue;
- 		}
--		pr_debug("remove package, undo power limit on %d: %s\n",
--			 rp->id, rd->name);
-+		pr_debug("remove package, undo power limit on %s: %s\n",
-+			 rp->name, rd->name);
- 		powercap_unregister_zone(control_type, &rd->power_zone);
- 	}
- 	/* do parent zone last */
-@@ -1461,6 +1460,7 @@ static struct rapl_package *rapl_add_package(int cpu)
- {
- 	int id = topology_logical_die_id(cpu);
- 	struct rapl_package *rp;
-+	struct cpuinfo_x86 *c = &cpu_data(cpu);
- 	int ret;
+-	pkg = topology_phys_to_logical_pkg(phys_id);
++	pkg = (topology_max_die_per_package() > 1) ? phys_id :
++					topology_phys_to_logical_pkg(phys_id);
+ 	if (pkg < 0)
+ 		return -EINVAL;
  
- 	rp = kzalloc(sizeof(struct rapl_package), GFP_KERNEL);
-@@ -1471,6 +1471,13 @@ static struct rapl_package *rapl_add_package(int cpu)
- 	rp->id = id;
- 	rp->lead_cpu = cpu;
+@@ -1033,7 +1034,8 @@ static void uncore_pci_remove(struct pci_dev *pdev)
  
-+	if (topology_max_die_per_package() > 1)
-+		snprintf(rp->name, PACKAGE_DOMAIN_NAME_LENGTH,
-+			"package-%d-die-%d", c->phys_proc_id, c->cpu_die_id);
-+	else
-+		snprintf(rp->name, PACKAGE_DOMAIN_NAME_LENGTH, "package-%d",
-+			c->phys_proc_id);
-+
- 	/* check if the package contains valid domains */
- 	if (rapl_detect_domains(rp, cpu) ||
- 		rapl_defaults->check_unit(rp, cpu)) {
+ 	box = pci_get_drvdata(pdev);
+ 	if (!box) {
+-		pkg = topology_phys_to_logical_pkg(phys_id);
++		pkg = (topology_max_die_per_package() > 1) ? phys_id :
++					topology_phys_to_logical_pkg(phys_id);
+ 		for (i = 0; i < UNCORE_EXTRA_PCI_DEV_MAX; i++) {
+ 			if (uncore_extra_pci_dev[pkg].dev[i] == pdev) {
+ 				uncore_extra_pci_dev[pkg].dev[i] = NULL;
+@@ -1110,7 +1112,7 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
+ 	struct intel_uncore_box *box;
+ 	int i, pkg;
+ 
+-	pkg = topology_logical_package_id(old_cpu < 0 ? new_cpu : old_cpu);
++	pkg = topology_logical_die_id(old_cpu < 0 ? new_cpu : old_cpu);
+ 	for (i = 0; i < type->num_boxes; i++, pmu++) {
+ 		box = pmu->boxes[pkg];
+ 		if (!box)
+@@ -1151,7 +1153,7 @@ static int uncore_event_cpu_offline(unsigned int cpu)
+ 	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
+ 		goto unref;
+ 	/* Find a new cpu to collect uncore events */
+-	target = cpumask_any_but(topology_core_cpumask(cpu), cpu);
++	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
+ 
+ 	/* Migrate uncore events to the new target */
+ 	if (target < nr_cpu_ids)
+@@ -1164,7 +1166,7 @@ static int uncore_event_cpu_offline(unsigned int cpu)
+ 
+ unref:
+ 	/* Clear the references */
+-	pkg = topology_logical_package_id(cpu);
++	pkg = topology_logical_die_id(cpu);
+ 	for (; *types; types++) {
+ 		type = *types;
+ 		pmu = type->pmus;
+@@ -1223,7 +1225,7 @@ static int uncore_event_cpu_online(unsigned int cpu)
+ 	struct intel_uncore_box *box;
+ 	int i, ret, pkg, target;
+ 
+-	pkg = topology_logical_package_id(cpu);
++	pkg = topology_logical_die_id(cpu);
+ 	ret = allocate_boxes(types, pkg, cpu);
+ 	if (ret)
+ 		return ret;
+@@ -1242,7 +1244,7 @@ static int uncore_event_cpu_online(unsigned int cpu)
+ 	 * Check if there is an online cpu in the package
+ 	 * which collects uncore events already.
+ 	 */
+-	target = cpumask_any_and(&uncore_cpu_mask, topology_core_cpumask(cpu));
++	target = cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask(cpu));
+ 	if (target < nr_cpu_ids)
+ 		return 0;
+ 
+@@ -1411,7 +1413,7 @@ static int __init intel_uncore_init(void)
+ 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+ 		return -ENODEV;
+ 
+-	max_packages = topology_max_packages();
++	max_packages = topology_max_packages() * topology_max_die_per_package();
+ 
+ 	uncore_init = (struct intel_uncore_init_fun *)id->driver_data;
+ 	if (uncore_init->pci_init) {
 -- 
 2.18.0-rc0
 
