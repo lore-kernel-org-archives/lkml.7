@@ -2,68 +2,68 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCABBC04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06763C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE0B21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F93208C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:58:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WouC9aTp"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tcCdgTG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfEFJ63 (ORCPT
+        id S1726501AbfEFJ6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:58:29 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56050 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfEFJ61 (ORCPT
+        Mon, 6 May 2019 05:58:36 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42567 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbfEFJ63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:58:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y2so14658078wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:58:25 -0700 (PDT)
+        Mon, 6 May 2019 05:58:29 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l2so16454394wrb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:58:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jFAZLM2HXuFCxb/qpIKx/Zvd6z+9jBXknwydcf65Gow=;
-        b=WouC9aTpP+JbWnMYvxrFG/C6chBDo+e5JZjiNsYqbm1PNvq2E6DI/tdFgRaefTjk7i
-         dNjc79J6JQivuiOzumg4tKN6nqc9pthH/ZXoBubgM1z73EO/P6ZuoANyqjt8AFGtzrox
-         Vql+EhiR33zOisnT0IV4X/4e/92L5bH6IDmnx+zE3q6H5MoMovyn0VzUkQNR0OE90imA
-         eT4RaWKVBYJJ80/h7P2uUdpWyPEvjwJ/iuM/hwMegTQpfDHfRPtK0uzeM1OoO9aVsaLZ
-         trtYy11H5oiseOjLJjgK+D80szm9pmKtydFxdC4+PqhUTs3pbDpBur1EV1ejfQ49DpP6
-         S0BA==
+        bh=spyvVZOA092Rq/pDhbTlA8tcvHt4DyPzwJ7M6MsQeGA=;
+        b=tcCdgTG8H8MAKQGHBtyfaqhZgC9xPbMemqlo38nW50o2fdg9QUHXNAT05F4uz1pgJc
+         g27KbxkrZLb3kgtKhQgpVmDkVX6BEU/+azucdZWPCLyIqEu8rt7mTwuKWkekCiUD0ED/
+         P/RJu8RgYwvRkf2APWHfhpQOGR7yjvjvY3DTseJwtmVY96NxWYu22fLGqSWGTQcY3MeW
+         Gd+KQkz69EtpMjAk9S69OuaY5tVbutsWwasUcqwjWM04T12h4yasr9m/1FVxUZZqJn+1
+         MKzAqrgvTZpvR0csyALcM4iwqJ1spJwi1ENeVtpWdrFy6QLquyNyi1EsnxIFXyRB1ImH
+         sdsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jFAZLM2HXuFCxb/qpIKx/Zvd6z+9jBXknwydcf65Gow=;
-        b=YTv8YQ40b3p0JEJct6fCniCyiMaUxsRBTZHnGCfGHxFQddfSg1dVrQkb7+uButhiTu
-         bVkaqjggR/dckIQRW32+JG/2MdFtKPsCySIBpPJV16vmRbPWR0a6t3nq78iVcol1wKnd
-         HhxM5ee2/FJvf+/qndfPp/Zvrqh8VnuyMXcbYOtCqTheRkIM0m+NcFdj9RtLODmjYB5n
-         Kf3iyKdLe8lvjTMTaEO2sv8Ynlfs91Xy5TbATJXzk27z5cQFhN4QwrVcC1+3br7F56eO
-         69dCfA7f51S46TWS7GIMNLnT5OeyJDiu8rrH8JTG5/iEl/IWfXThGn2oC7w00pLHqEQ/
-         1qog==
-X-Gm-Message-State: APjAAAUzpGihjG/ad/VV5YNik82wYAwele9RRO2CxAmBs/C37R335Evb
-        4LIe3gtCBjnWZ/wn+UKQS0z+rIKikh0=
-X-Google-Smtp-Source: APXvYqwMyYmowFoyRxcASiMYF+mzRuRWL8uRd4dpCJhtQaVbJecrErQbWHTZ6vSNWIk7d0OmBHTuZQ==
-X-Received: by 2002:a1c:67c1:: with SMTP id b184mr15691569wmc.12.1557136704663;
-        Mon, 06 May 2019 02:58:24 -0700 (PDT)
+        bh=spyvVZOA092Rq/pDhbTlA8tcvHt4DyPzwJ7M6MsQeGA=;
+        b=b9q4VGi2wYEGU09E7auIazMPaY9EwcIM51v9YPN8Je3mHaPeTJnmQ0xVe6x+qr0VIf
+         VkkZJECQfO6LNNMTK4cr/GDWeCUrQNLIdiVDCnPNJxFG3cPAFaincNTwclmUeBbyrYoy
+         YCMeJ6LwnA71nmJWZi06ho0b7bTj3mb0DDlL7EhfDdjFQjOk7qrRqTz0IthtpBzilmvF
+         Q4vnynxUhD7Q3C7U0/YR4NPIqamiLBo/j9+HahXyh4wSw8vYvoJRgdzKem3hFdbsNbKq
+         Y6m1E2ayJpqxXrawIA0Wdvvm8Zlw1TH4h+FfKyUC7D2H47Wy3LN10kP+HnT35P4vmEXe
+         FTPg==
+X-Gm-Message-State: APjAAAWZfw8tz2mstMnITcLM3zjn3sc6qkZ0Vvto73Yirc3aOJv+/I9k
+        AX5N930IbJc/Z1kYelruqTX3UQ==
+X-Google-Smtp-Source: APXvYqx0DOK7WHFX9ytkejwPIliORawCMPCyR4HJ+H09HoIufnGhw37LS35rMEm75u7m8KRZrZHuMA==
+X-Received: by 2002:a5d:5108:: with SMTP id s8mr115083wrt.99.1557136706779;
+        Mon, 06 May 2019 02:58:26 -0700 (PDT)
 Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id c10sm23409791wrd.69.2019.05.06.02.58.23
+        by smtp.googlemail.com with ESMTPSA id c10sm23409791wrd.69.2019.05.06.02.58.25
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 02:58:24 -0700 (PDT)
+        Mon, 06 May 2019 02:58:26 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
-Subject: [PATCH v2 2/4] ASoC: hdmi-codec: remove reference to the current substream
-Date:   Mon,  6 May 2019 11:58:13 +0200
-Message-Id: <20190506095815.24578-3-jbrunet@baylibre.com>
+Subject: [PATCH v2 4/4] ASoC: hdmi-codec: remove ops dependency on the dai id
+Date:   Mon,  6 May 2019 11:58:15 +0200
+Message-Id: <20190506095815.24578-5-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190506095815.24578-1-jbrunet@baylibre.com>
 References: <20190506095815.24578-1-jbrunet@baylibre.com>
@@ -74,139 +74,244 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the hdmi-codec is on a codec-to-codec link, the substream pointer
-it receives is completely made up by snd_soc_dai_link_event().
-The pointer will be different between startup() and shutdown().
-
-The hdmi-codec complains when this happens even if it is not really a
-problem. The current_substream pointer is not used for anything useful
-apart from getting the exclusive ownership of the device.
-
-Remove current_substream pointer and replace the exclusive locking
-mechanism with a simple variable and some atomic operations.
+The dependency on the dai_id can be removed by setting different ops
+for the i2s and spdif dai and storing the dai format information in
+each dai structure. It simplies the code a bit.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- sound/soc/codecs/hdmi-codec.c | 58 ++++++++++-------------------------
- 1 file changed, 16 insertions(+), 42 deletions(-)
+ sound/soc/codecs/hdmi-codec.c | 100 +++++++++++++++++++++++-----------
+ 1 file changed, 67 insertions(+), 33 deletions(-)
 
 diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index eb31d7eddcbf..4d32f93f6be6 100644
+index 9408e6bc4d3e..90a892766625 100644
 --- a/sound/soc/codecs/hdmi-codec.c
 +++ b/sound/soc/codecs/hdmi-codec.c
-@@ -280,11 +280,10 @@ struct hdmi_codec_priv {
+@@ -278,7 +278,6 @@ static const struct hdmi_codec_cea_spk_alloc hdmi_codec_channel_alloc[] = {
+ 
+ struct hdmi_codec_priv {
  	struct hdmi_codec_pdata hcd;
- 	struct snd_soc_dai_driver *daidrv;
- 	struct hdmi_codec_daifmt daifmt[2];
--	struct mutex current_stream_lock;
--	struct snd_pcm_substream *current_stream;
+-	struct hdmi_codec_daifmt daifmt[2];
  	uint8_t eld[MAX_ELD_BYTES];
  	struct snd_pcm_chmap *chmap_info;
  	unsigned int chmap_idx;
-+	unsigned long busy;
+@@ -445,6 +444,7 @@ static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
+ 				struct snd_soc_dai *dai)
+ {
+ 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
++	struct hdmi_codec_daifmt *cf = dai->playback_dma_data;
+ 	struct hdmi_codec_params hp = {
+ 		.iec = {
+ 			.status = { 0 },
+@@ -489,28 +489,27 @@ static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
+ 	hp.channels = params_channels(params);
+ 
+ 	return hcp->hcd.ops->hw_params(dai->dev->parent, hcp->hcd.data,
+-				       &hcp->daifmt[dai->id], &hp);
++				       cf, &hp);
+ }
+ 
+-static int hdmi_codec_set_fmt(struct snd_soc_dai *dai,
+-			      unsigned int fmt)
++static int hdmi_codec_i2s_set_fmt(struct snd_soc_dai *dai,
++				  unsigned int fmt)
+ {
+-	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+-	struct hdmi_codec_daifmt cf = { 0 };
++	struct hdmi_codec_daifmt *cf = dai->playback_dma_data;
+ 
+-	if (dai->id == DAI_ID_SPDIF)
+-		return 0;
++	/* Reset daifmt */
++	memset(cf, 0, sizeof(*cf));
+ 
+ 	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+ 	case SND_SOC_DAIFMT_CBM_CFM:
+-		cf.bit_clk_master = 1;
+-		cf.frame_clk_master = 1;
++		cf->bit_clk_master = 1;
++		cf->frame_clk_master = 1;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBS_CFM:
+-		cf.frame_clk_master = 1;
++		cf->frame_clk_master = 1;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBM_CFS:
+-		cf.bit_clk_master = 1;
++		cf->bit_clk_master = 1;
+ 		break;
+ 	case SND_SOC_DAIFMT_CBS_CFS:
+ 		break;
+@@ -522,43 +521,41 @@ static int hdmi_codec_set_fmt(struct snd_soc_dai *dai,
+ 	case SND_SOC_DAIFMT_NB_NF:
+ 		break;
+ 	case SND_SOC_DAIFMT_NB_IF:
+-		cf.frame_clk_inv = 1;
++		cf->frame_clk_inv = 1;
+ 		break;
+ 	case SND_SOC_DAIFMT_IB_NF:
+-		cf.bit_clk_inv = 1;
++		cf->bit_clk_inv = 1;
+ 		break;
+ 	case SND_SOC_DAIFMT_IB_IF:
+-		cf.frame_clk_inv = 1;
+-		cf.bit_clk_inv = 1;
++		cf->frame_clk_inv = 1;
++		cf->bit_clk_inv = 1;
+ 		break;
+ 	}
+ 
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+ 	case SND_SOC_DAIFMT_I2S:
+-		cf.fmt = HDMI_I2S;
++		cf->fmt = HDMI_I2S;
+ 		break;
+ 	case SND_SOC_DAIFMT_DSP_A:
+-		cf.fmt = HDMI_DSP_A;
++		cf->fmt = HDMI_DSP_A;
+ 		break;
+ 	case SND_SOC_DAIFMT_DSP_B:
+-		cf.fmt = HDMI_DSP_B;
++		cf->fmt = HDMI_DSP_B;
+ 		break;
+ 	case SND_SOC_DAIFMT_RIGHT_J:
+-		cf.fmt = HDMI_RIGHT_J;
++		cf->fmt = HDMI_RIGHT_J;
+ 		break;
+ 	case SND_SOC_DAIFMT_LEFT_J:
+-		cf.fmt = HDMI_LEFT_J;
++		cf->fmt = HDMI_LEFT_J;
+ 		break;
+ 	case SND_SOC_DAIFMT_AC97:
+-		cf.fmt = HDMI_AC97;
++		cf->fmt = HDMI_AC97;
+ 		break;
+ 	default:
+ 		dev_err(dai->dev, "Invalid DAI interface format\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	hcp->daifmt[dai->id] = cf;
+-
+ 	return 0;
+ }
+ 
+@@ -573,14 +570,20 @@ static int hdmi_codec_digital_mute(struct snd_soc_dai *dai, int mute)
+ 	return 0;
+ }
+ 
+-static const struct snd_soc_dai_ops hdmi_dai_ops = {
++static const struct snd_soc_dai_ops hdmi_codec_i2s_dai_ops = {
+ 	.startup	= hdmi_codec_startup,
+ 	.shutdown	= hdmi_codec_shutdown,
+ 	.hw_params	= hdmi_codec_hw_params,
+-	.set_fmt	= hdmi_codec_set_fmt,
++	.set_fmt	= hdmi_codec_i2s_set_fmt,
+ 	.digital_mute	= hdmi_codec_digital_mute,
  };
  
- static const struct snd_soc_dapm_widget hdmi_widgets[] = {
-@@ -392,42 +391,22 @@ static int hdmi_codec_chmap_ctl_get(struct snd_kcontrol *kcontrol,
- 	return 0;
- }
++static const struct snd_soc_dai_ops hdmi_codec_spdif_dai_ops = {
++	.startup	= hdmi_codec_startup,
++	.shutdown	= hdmi_codec_shutdown,
++	.hw_params	= hdmi_codec_hw_params,
++	.digital_mute	= hdmi_codec_digital_mute,
++};
  
--static int hdmi_codec_new_stream(struct snd_pcm_substream *substream,
--				 struct snd_soc_dai *dai)
--{
--	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
--	int ret = 0;
--
--	mutex_lock(&hcp->current_stream_lock);
--	if (!hcp->current_stream) {
--		hcp->current_stream = substream;
--	} else if (hcp->current_stream != substream) {
--		dev_err(dai->dev, "Only one simultaneous stream supported!\n");
--		ret = -EINVAL;
--	}
--	mutex_unlock(&hcp->current_stream_lock);
--
--	return ret;
--}
--
- static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 			      struct snd_soc_dai *dai)
+ #define HDMI_RATES	(SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 |\
+ 			 SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_88200 |\
+@@ -648,20 +651,52 @@ static int hdmi_codec_pcm_new(struct snd_soc_pcm_runtime *rtd,
+ static int hdmi_dai_probe(struct snd_soc_dai *dai)
  {
- 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
- 	int ret = 0;
+ 	struct snd_soc_dapm_context *dapm;
++	struct hdmi_codec_daifmt *daifmt;
+ 	struct snd_soc_dapm_route route = {
+ 		.sink = "TX",
+ 		.source = dai->driver->playback.stream_name,
+ 	};
++	int ret;
  
--	ret = hdmi_codec_new_stream(substream, dai);
--	if (ret)
--		return ret;
-+	ret = test_and_set_bit(0, &hcp->busy);
-+	if (ret) {
-+		dev_err(dai->dev, "Only one simultaneous stream supported!\n");
-+		return -EINVAL;
-+	}
- 
- 	if (hcp->hcd.ops->audio_startup) {
- 		ret = hcp->hcd.ops->audio_startup(dai->dev->parent, hcp->hcd.data);
--		if (ret) {
--			mutex_lock(&hcp->current_stream_lock);
--			hcp->current_stream = NULL;
--			mutex_unlock(&hcp->current_stream_lock);
--			return ret;
--		}
-+		if (ret)
-+			goto err;
- 	}
- 
- 	if (hcp->hcd.ops->get_eld) {
-@@ -437,17 +416,18 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 		if (!ret) {
- 			ret = snd_pcm_hw_constraint_eld(substream->runtime,
- 							hcp->eld);
--			if (ret) {
--				mutex_lock(&hcp->current_stream_lock);
--				hcp->current_stream = NULL;
--				mutex_unlock(&hcp->current_stream_lock);
--				return ret;
--			}
-+			if (ret)
-+				goto err;
- 		}
- 		/* Select chmap supported */
- 		hdmi_codec_eld_chmap(hcp);
- 	}
- 	return 0;
+ 	dapm = snd_soc_component_get_dapm(dai->component);
++	ret = snd_soc_dapm_add_routes(dapm, &route, 1);
++	if (ret)
++		return ret;
 +
-+err:
-+	/* Release the exclusive lock on error */
-+	clear_bit(0, &hcp->busy);
-+	return ret;
++	daifmt = kzalloc(sizeof(*daifmt), GFP_KERNEL);
++	if (!daifmt)
++		return -ENOMEM;
+ 
+-	return snd_soc_dapm_add_routes(dapm, &route, 1);
++	dai->playback_dma_data = daifmt;
++	return 0;
++}
++
++static int hdmi_dai_spdif_probe(struct snd_soc_dai *dai)
++{
++	struct hdmi_codec_daifmt *cf = dai->playback_dma_data;
++	int ret;
++
++	ret = hdmi_dai_probe(dai);
++	if (ret)
++		return ret;
++
++	cf = dai->playback_dma_data;
++	cf->fmt = HDMI_SPDIF;
++
++	return 0;
++}
++
++static int hdmi_codec_dai_remove(struct snd_soc_dai *dai)
++{
++	kfree(dai->playback_dma_data);
++	return 0;
  }
  
- static void hdmi_codec_shutdown(struct snd_pcm_substream *substream,
-@@ -455,14 +435,10 @@ static void hdmi_codec_shutdown(struct snd_pcm_substream *substream,
- {
- 	struct hdmi_codec_priv *hcp = snd_soc_dai_get_drvdata(dai);
+ static const struct snd_soc_dai_driver hdmi_i2s_dai = {
+ 	.name = "i2s-hifi",
+ 	.id = DAI_ID_I2S,
+ 	.probe = hdmi_dai_probe,
++	.remove = hdmi_codec_dai_remove,
+ 	.playback = {
+ 		.stream_name = "I2S Playback",
+ 		.channels_min = 2,
+@@ -670,14 +705,15 @@ static const struct snd_soc_dai_driver hdmi_i2s_dai = {
+ 		.formats = I2S_FORMATS,
+ 		.sig_bits = 24,
+ 	},
+-	.ops = &hdmi_dai_ops,
++	.ops = &hdmi_codec_i2s_dai_ops,
+ 	.pcm_new = hdmi_codec_pcm_new,
+ };
  
--	WARN_ON(hcp->current_stream != substream);
--
- 	hcp->chmap_idx = HDMI_CODEC_CHMAP_IDX_UNKNOWN;
- 	hcp->hcd.ops->audio_shutdown(dai->dev->parent, hcp->hcd.data);
+ static const struct snd_soc_dai_driver hdmi_spdif_dai = {
+ 	.name = "spdif-hifi",
+ 	.id = DAI_ID_SPDIF,
+-	.probe = hdmi_dai_probe,
++	.probe = hdmi_dai_spdif_probe,
++	.remove = hdmi_codec_dai_remove,
+ 	.playback = {
+ 		.stream_name = "SPDIF Playback",
+ 		.channels_min = 2,
+@@ -685,7 +721,7 @@ static const struct snd_soc_dai_driver hdmi_spdif_dai = {
+ 		.rates = HDMI_RATES,
+ 		.formats = SPDIF_FORMATS,
+ 	},
+-	.ops = &hdmi_dai_ops,
++	.ops = &hdmi_codec_spdif_dai_ops,
+ 	.pcm_new = hdmi_codec_pcm_new,
+ };
  
--	mutex_lock(&hcp->current_stream_lock);
--	hcp->current_stream = NULL;
--	mutex_unlock(&hcp->current_stream_lock);
-+	clear_bit(0, &hcp->busy);
- }
+@@ -747,10 +783,8 @@ static int hdmi_codec_probe(struct platform_device *pdev)
+ 		i++;
+ 	}
  
- static int hdmi_codec_hw_params(struct snd_pcm_substream *substream,
-@@ -761,8 +737,6 @@ static int hdmi_codec_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+-	if (hcd->spdif) {
++	if (hcd->spdif)
+ 		daidrv[i] = hdmi_spdif_dai;
+-		hcp->daifmt[DAI_ID_SPDIF].fmt = HDMI_SPDIF;
+-	}
  
- 	hcp->hcd = *hcd;
--	mutex_init(&hcp->current_stream_lock);
--
- 	hcp->daidrv = devm_kcalloc(dev, dai_count, sizeof(*hcp->daidrv),
- 				   GFP_KERNEL);
- 	if (!hcp->daidrv)
+ 	dev_set_drvdata(dev, hcp);
+ 
 -- 
 2.20.1
 
