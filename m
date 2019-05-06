@@ -2,94 +2,136 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C736C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED33C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB76205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE5D12087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557157230;
-	bh=k53muG351YKN4iAvGAecgOqqhpBLzFePRIBfR6USQKI=;
+	s=default; t=1557157326;
+	bh=+YHeFNqCK/5U0tlr+IeuSEUFN3ecIaKPcoM27J6rAhw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cO+r3CFn6Fzn+BGL9bYUs2rdeSMepdhb63gc9wGLkMJ7yN4kZg3+PJXCi7CG4ZcVu
-	 afhQ+BYW5tmNx3lUc8Ts0588goO+Fx/VMlrr6GLk20Wek5ld+1d4AwcpPXVI1sNkPU
-	 eaIJ6CxtEO4HQyfsFbwfs9dXqcl/fqg8yEMNR9uY=
+	b=fkwMkno/4EVtsw6ZEIs6+CIF/0Q3RpO5eVUMusq/5SFl9Vsah1pZlVRdZRM0VsGmZ
+	 40BhpoSBONbCw3IARlrO583t/Hn33hRJA/Uz9rWU9KTjMjGh2HO/jf5BMlGFuUR+zu
+	 lVlm2wqwnb1D0aSh4OaW7MjXnHonjF3PRnkXxBBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfEFPk2 (ORCPT
+        id S1726871AbfEFPmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:40:28 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39136 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfEFPk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:40:27 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y42so15204378qtk.6;
-        Mon, 06 May 2019 08:40:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z/JZRQAUubCvOOmwPXa9vzQ22nhQDYk8gbHs+6tTepg=;
-        b=u7pVVXVWWeyXope1cvFsPdbqh1azIgGjmAJyXSzAwwrh4VZcnx4EH5gFy3+S4dIgPw
-         rvuk1XWasLvn2RAB1cqGA4n4Pn42rLDS/nTz7oB0VY4R0UzuEifmx6bcHid1eRcLOZcc
-         gxTjnES/yBuyVtEdt+fZ2h3ZA42RXU3pCgPCn8YvfKht6KVCa0Cn1DnH/pqjdE6l/x/R
-         80Vq5+BTRc/X/rQl3vKMlTF+e1uyTDJYSg4XRRtCP7YpD3rtOYD9xrVu8MLTsi5RNUM8
-         Lfr+nVaGmea1gc9njhmP1lbBoeWBeEiKyRoq3N19cQb6leF8p5l3FjTK93TkggBgbceq
-         Brdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z/JZRQAUubCvOOmwPXa9vzQ22nhQDYk8gbHs+6tTepg=;
-        b=Xi2CiXGcYAHjbseH9wXzIA79yEwrdqtuNJYM38V3XpbhfDdhXRtshyerN5GcN2s55s
-         cu6iuUzTdBx2vTJiHQtH8ACRsdStowGoEuF2xUcMNqcmkl/APgoHaTVXy09o0wX8jYuy
-         qk8QqHR/k5886ogvGbfX+K90W0gW2ihkXisa7UqgX8dAYuZjfSMYdgYBDyTuUIiIAhRy
-         WxXyWOOf0HAeG80tQ3bFcjr4TFjjNai7Er4EsdEeCFcMqDwb+4oE5mMixw+BK28JmVtW
-         y7EJq7cC3Tt/Apn75DePmnLPloJgKCd2qwgQGXfFsHkEagfyYF8+nr+baw3nFYTmhivt
-         AbkA==
-X-Gm-Message-State: APjAAAXKdmcDHZ0tqs8rU7frlKXBziaoJoZOo7zXH6dp64Bd8oeL0ycB
-        Zg+kkMVtOncR6AGRQVyEiRE=
-X-Google-Smtp-Source: APXvYqwriADhrMfecK4z1JVst3Y9W3mVkJA/H9252dZdqIEhAu8AgHryG+q22oiYGwFU6dCicSxMoA==
-X-Received: by 2002:a0c:89c8:: with SMTP id 8mr21201893qvs.149.1557157226441;
-        Mon, 06 May 2019 08:40:26 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:34f3])
-        by smtp.gmail.com with ESMTPSA id r1sm5498369qtp.77.2019.05.06.08.40.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 08:40:25 -0700 (PDT)
-Date:   Mon, 6 May 2019 08:40:23 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, kernel-team@fb.com,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] cgroup v2 freezer follow-up patches
-Message-ID: <20190506154023.GP374014@devbig004.ftw2.facebook.com>
-References: <20190426175945.2559865-1-guro@fb.com>
+        Mon, 6 May 2019 11:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726413AbfEFPmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 11:42:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECAEB205C9;
+        Mon,  6 May 2019 15:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557157323;
+        bh=+YHeFNqCK/5U0tlr+IeuSEUFN3ecIaKPcoM27J6rAhw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cx1qRw1HZDSbf4Ilvwj4EbMDs+rhawm/ZXJi75zdTrCCaCDN6AfuVvzjHn1Vce/En
+         ep8clwz5pYSZfjSvJXEhqBXURT8BDeHmkiRkU9GluLLt1gabZ+237+jyjQCBq0H1iv
+         6aFdB3wivtAEk2wF1OPHBqJWHULfW6m2+QcN5228=
+Date:   Mon, 6 May 2019 17:42:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 4.9 09/62] kasan: turn on
+ -fsanitize-address-use-after-scope
+Message-ID: <20190506154200.GA14919@kroah.com>
+References: <20190506143051.102535767@linuxfoundation.org>
+ <20190506143051.888762392@linuxfoundation.org>
+ <6636d7cf-03fe-e253-f981-e07d75858b33@virtuozzo.com>
+ <20190506151026.GA12193@kroah.com>
+ <e3ea0e86-581e-a0e4-ea3a-c7a9322143b8@virtuozzo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190426175945.2559865-1-guro@fb.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <e3ea0e86-581e-a0e4-ea3a-c7a9322143b8@virtuozzo.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 10:59:43AM -0700, Roman Gushchin wrote:
-> Hi, Tejun!
+On Mon, May 06, 2019 at 06:36:45PM +0300, Andrey Ryabinin wrote:
 > 
-> Please, pull these two follow-up patches for the cgroup v2 freezer.
 > 
-> These are a fix for a spurious state transition, which could happen
-> due to a race condition, and a cleanup of some dead code. Both patches
-> were suggested by Oleg Nesterov.
+> On 5/6/19 6:10 PM, Greg Kroah-Hartman wrote:
+> > On Mon, May 06, 2019 at 05:55:54PM +0300, Andrey Ryabinin wrote:
+> >>
+> >>
+> >> On 5/6/19 5:32 PM, Greg Kroah-Hartman wrote:
+> >>> From: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> >>>
+> >>> commit c5caf21ab0cf884ef15b25af234f620e4a233139 upstream.
+> >>>
+> >>> In the upcoming gcc7 release, the -fsanitize=kernel-address option at
+> >>> first implied new -fsanitize-address-use-after-scope option.  This would
+> >>> cause link errors on older kernels because they don't have two new
+> >>> functions required for use-after-scope support.  Therefore, gcc7 changed
+> >>> default to -fno-sanitize-address-use-after-scope.
+> >>>
+> >>> Now the kernel has everything required for that feature since commit
+> >>> 828347f8f9a5 ("kasan: support use-after-scope detection").  So, to make it
+> >>> work, we just have to enable use-after-scope in CFLAGS.
+> >>>
+> >>> Link: http://lkml.kernel.org/r/1481207977-28654-1-git-send-email-aryabinin@virtuozzo.com
+> >>> Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> >>> Acked-by: Dmitry Vyukov <dvyukov@google.com>
+> >>> Cc: Alexander Potapenko <glider@google.com>
+> >>> Cc: Andrey Konovalov <andreyknvl@google.com>
+> >>> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> >>> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> >>> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> >>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >>>
+> >>> ---
+> >>>  scripts/Makefile.kasan |    2 ++
+> >>>  1 file changed, 2 insertions(+)
+> >>>
+> >>> --- a/scripts/Makefile.kasan
+> >>> +++ b/scripts/Makefile.kasan
+> >>> @@ -29,6 +29,8 @@ else
+> >>>      endif
+> >>>  endif
+> >>>  
+> >>> +CFLAGS_KASAN += $(call cc-option, -fsanitize-address-use-after-scope)
+> >>> +
+> >>>  CFLAGS_KASAN_NOSANITIZE := -fno-builtin
+> >>>  
+> >>>  endif
+> >>>
+> >>>
+> >>
+> >> This shouldn't be in the -stable.
+> > 
+> > Why not?  Does no one use gcc7 with this kernel and kasan?
+> > 
+> 
+> You don't need this patch to use kasan on this kernel with gcc7.
+> This patch only enables detection of use-after-scope bugs. This feature appeared to be useless,
+> hence it disabled recently by commit 7771bdbbfd3d ("kasan: remove use after scope bugs detection.")
 
-Applied to cgroup/for-5.2.
+Ah, didn't notice that, nice!
 
-Thanks.
+Ok, I'll go drop this, thanks for letting me know.
 
--- 
-tejun
+> The link errors mentioned in changelog was the problem only for some period of time in the development branch of GCC 7.
+> The released GCC7 version doesn't have this problem.
+
+Also good to know, thanks!
+
+greg k-h
