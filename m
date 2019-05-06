@@ -2,115 +2,108 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA094C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3AFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C640A20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791B120830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfEFRWm (ORCPT
+        id S1726600AbfEFRXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:22:42 -0400
-Received: from mga07.intel.com ([134.134.136.100]:31139 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbfEFRWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:22:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 10:22:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
-   d="scan'208";a="230014475"
-Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by orsmga001.jf.intel.com with ESMTP; 06 May 2019 10:22:15 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v2 4/5] PCI/ATS: Disable PF/VF ATS service independently
-Date:   Mon,  6 May 2019 10:20:06 -0700
-Message-Id: <c4cb504dfe4f6463d799e95b01d7ea0713ca5d6d.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1557162861.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Mon, 6 May 2019 13:23:41 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56778 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726407AbfEFRXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 13:23:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97678374;
+        Mon,  6 May 2019 10:23:40 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FBF13F575;
+        Mon,  6 May 2019 10:23:39 -0700 (PDT)
+Date:   Mon, 6 May 2019 18:23:36 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 4/7] sched: Add sched_load_rq tracepoint
+Message-ID: <20190506172336.cxbfwasv7rfegbi3@e107158-lin.cambridge.arm.com>
+References: <20190505115732.9844-1-qais.yousef@arm.com>
+ <20190505115732.9844-5-qais.yousef@arm.com>
+ <20190506090859.GK2606@hirez.programming.kicks-ass.net>
+ <20190506095239.08577b3e@gandalf.local.home>
+ <20190506144200.z4s63nm7untol2tr@e107158-lin.cambridge.arm.com>
+ <20190506104618.2fa49e13@gandalf.local.home>
+ <20190506153317.fv73wpdwsn7xcyc4@e107158-lin.cambridge.arm.com>
+ <20190506120119.12d98042@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190506120119.12d98042@gandalf.local.home>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On 05/06/19 12:01, Steven Rostedt wrote:
+> On Mon, 6 May 2019 16:33:17 +0100
+> Qais Yousef <qais.yousef@arm.com> wrote:
+> 
+> > On 05/06/19 10:46, Steven Rostedt wrote:
+> > > On Mon, 6 May 2019 15:42:00 +0100
+> > > Qais Yousef <qais.yousef@arm.com> wrote:
+> > >   
+> > > > I can control that for the wrappers I'm introducing. But the actual tracepoint
+> > > > get the 'trace_' part prepended automatically by the macros.
+> > > > 
+> > > > ie DECLARE_TRACE(pelt_rq, ...) will automatically generate a function called
+> > > > trace_pelt_se(...)
+> > > > 
+> > > > Or am I missing something?  
+> > > 
+> > > No trace comes from the trace points.  
+> 
+> Re-reading that line, I see I totally didn't express what I meant :-p
+> 
+> > 
+> > If you want I can do something like below to help create a distinction. It is
+> > none enforcing though.
+> > 
+> > diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> > index 9c3186578ce0..f654ced20045 100644
+> > --- a/include/linux/tracepoint.h
+> > +++ b/include/linux/tracepoint.h
+> > @@ -232,6 +232,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> >   */
+> >  #define __DECLARE_TRACE(name, proto, args, cond, data_proto, data_args) \
+> >         extern struct tracepoint __tracepoint_##name;                   \
+> > +       static inline void tp_##name(proto) __alias(trace_##name);      \
+> >         static inline void trace_##name(proto)                          \
+> >         {                                                               \
+> >                 if (static_key_false(&__tracepoint_##name.key))         \
+> > 
+> > 
+> > Another option is to extend DECLARE_TRACE() to take a new argument IS_TP and
+> > based on that select the function name. This will be enforcing but I will have
+> > to go fixup many places.
+> > 
+> > Of course 'TP' can be replaced with anything more appealing.
+> 
+> No no no, I meant to say...
+> 
+>  "No that's OK. The "trace_" *is* from the trace points, and trace
+>  events build on top of them."
 
-Currently all VF's needs to be disable their ATS service before
-disabling the ATS service in corresponding PF device. But this logic is
-incorrect and does not align with the spec. Also it might lead to
-some power and performance impact in the system. As per PCIe spec r4.0,
-sec 9.3.7.8, ATS Capabilities in VFs and their associated PFs may be
-enabled/disabled independently. So remove this dependency logic in
-enable/disable code.
+I did have to stare at the original statement for a bit :-)
+This makes more sense now. Thanks for the clarification.
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/ats.c   | 11 -----------
- include/linux/pci.h |  1 -
- 2 files changed, 12 deletions(-)
-
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index 718e6f414680..977f5a1ace40 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -72,8 +72,6 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
- 		pdev = pci_physfn(dev);
- 		if (pdev->ats_stu != ps)
- 			return -EINVAL;
--
--		atomic_inc(&pdev->ats_ref_cnt);  /* count enabled VFs */
- 	} else {
- 		dev->ats_stu = ps;
- 		ctrl |= PCI_ATS_CTRL_STU(dev->ats_stu - PCI_ATS_MIN_STU);
-@@ -91,20 +89,11 @@ EXPORT_SYMBOL_GPL(pci_enable_ats);
-  */
- void pci_disable_ats(struct pci_dev *dev)
- {
--	struct pci_dev *pdev;
- 	u16 ctrl;
- 
- 	if (WARN_ON(!dev->ats_enabled))
- 		return;
- 
--	if (atomic_read(&dev->ats_ref_cnt))
--		return;		/* VFs still enabled */
--
--	if (dev->is_virtfn) {
--		pdev = pci_physfn(dev);
--		atomic_dec(&pdev->ats_ref_cnt);
--	}
--
- 	pci_read_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, &ctrl);
- 	ctrl &= ~PCI_ATS_CTRL_ENABLE;
- 	pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 2a761ea63f8d..c38cbf8fa03b 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -446,7 +446,6 @@ struct pci_dev {
- 	};
- 	u16		ats_cap;	/* ATS Capability offset */
- 	u8		ats_stu;	/* ATS Smallest Translation Unit */
--	atomic_t	ats_ref_cnt;	/* Number of VFs with ATS enabled */
- #endif
- #ifdef CONFIG_PCI_PRI
- 	u32		pri_reqs_alloc; /* Number of PRI requests allocated */
--- 
-2.20.1
-
+--
+Qais Yousef
