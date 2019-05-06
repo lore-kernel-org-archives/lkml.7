@@ -2,187 +2,89 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F98C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A5BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA916206BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E082206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 19:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfEFTSL (ORCPT
+        id S1726465AbfEFTUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 15:18:11 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:26234 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbfEFTSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 15:18:10 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 8683DA1093;
-        Mon,  6 May 2019 21:18:06 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id EKEQeCr6Tfp8; Mon,  6 May 2019 21:17:52 +0200 (CEST)
-Date:   Tue, 7 May 2019 05:17:35 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
-Message-ID: <20190506191735.nmzf7kwfh7b6e2tf@yavin>
-References: <20190506165439.9155-1-cyphar@cyphar.com>
- <20190506165439.9155-6-cyphar@cyphar.com>
- <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yezcske27bisu2pl"
-Content-Disposition: inline
-In-Reply-To: <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
+        Mon, 6 May 2019 15:20:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41084 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726145AbfEFTUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 15:20:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 893FFAEA1;
+        Mon,  6 May 2019 19:20:01 +0000 (UTC)
+From:   Joao Moreira <jmoreira@suse.de>
+To:     kernel-hardening@lists.openwall.com
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        gregkh@linuxfoundation.org, keescook@chromium.org
+Subject: [RFC PATCH v2 0/4] x86/crypto: Fix crypto function casts
+Date:   Mon,  6 May 2019 16:19:46 -0300
+Message-Id: <20190506191950.9521-1-jmoreira@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It is possible to indirectly invoke functions with prototypes that do not
+match those of the respectively used function pointers by using void types.
+This feature is frequently used as a way of relaxing function invocation,
+making it possible that different data structures are passed to different
+functions through the same pointer.
 
---yezcske27bisu2pl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Despite the benefits, this can lead to a situation where functions with a
+given prototype are invoked by pointers with a different prototype, what is
+undesirable as it may prevent the use of heuristics such as prototype
+matching-based Control-Flow Integrity, which can be used to prevent
+ROP-based attacks.
 
-On 2019-05-06, Jann Horn <jannh@google.com> wrote:
-> On Mon, May 6, 2019 at 6:56 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > The need to be able to scope path resolution of interpreters became
-> > clear with one of the possible vectors used in CVE-2019-5736 (which
-> > most major container runtimes were vulnerable to).
-> >
-> > Naively, it might seem that openat(2) -- which supports path scoping --
-> > can be combined with execveat(AT_EMPTY_PATH) to trivially scope the
-> > binary being executed. Unfortunately, a "bad binary" (usually a symlink)
-> > could be written as a #!-style script with the symlink target as the
-> > interpreter -- which would be completely missed by just scoping the
-> > openat(2). An example of this being exploitable is CVE-2019-5736.
-> >
-> > In order to get around this, we need to pass down to each binfmt_*
-> > implementation the scoping flags requested in execveat(2). In order to
-> > maintain backwards-compatibility we only pass the scoping AT_* flags.
-> >
-> > To avoid breaking userspace (in the exceptionally rare cases where you
-> > have #!-scripts with a relative path being execveat(2)-ed with dfd !=3D
-> > AT_FDCWD), we only pass dfd down to binfmt_* if any of our new flags are
-> > set in execveat(2).
->=20
-> This seems extremely dangerous. I like the overall series, but not this p=
-atch.
->=20
-> > @@ -1762,6 +1774,12 @@ static int __do_execve_file(int fd, struct filen=
-ame *filename,
-> >
-> >         sched_exec();
-> >
-> > +       bprm->flags =3D flags & (AT_XDEV | AT_NO_MAGICLINKS | AT_NO_SYM=
-LINKS |
-> > +                              AT_THIS_ROOT);
-> [...]
-> > +#define AT_THIS_ROOT           0x100000 /* - Scope ".." resolution to =
-dirfd (like chroot(2)). */
->=20
-> So now what happens if there is a setuid root ELF binary with program
-> interpreter "/lib64/ld-linux-x86-64.so.2" (like /bin/su), and an
-> unprivileged user runs it with execveat(..., AT_THIS_ROOT)? Is that
-> going to let the unprivileged user decide which interpreter the
-> setuid-root process should use? From a high-level perspective, opening
-> the interpreter should be controlled by the program that is being
-> loaded, not by the program that invoked it.
+One way of fixing this situation is through the use of helper functions
+with prototypes that match the one in the respective invoking pointer.
 
-I went a bit nuts with openat_exec(), and I did end up adding it to the
-ELF interpreter lookup (and you're completely right that this is a bad
-idea -- I will drop it from this patch if it's included in the next
-series).
+Given the above, the current efforts to improve the Linux security, and the
+upcoming kernel support to compilers with CFI features, fix the prototype
+casting of x86/crypto algorithms camellia, cast6, serpent and twofish with
+the use of a macro that generates the helper function.
 
-The proposed solutions you give below are much nicer than this patch so
-I can drop it and work on fixing those issues separately.
+This patch does not introduce semantic changes to the cryptographic
+algorithms, yet, if someone finds relevant, the affected algorithms were
+tested with the help of tcrypt.ko without any visible harm.
 
-> In my opinion, CVE-2019-5736 points out two different problems:
->
-> The big problem: The __ptrace_may_access() logic has a special-case
-> short-circuit for "introspection" that you can't opt out of; this
-> makes it possible to open things in procfs that are related to the
-> current process even if the credentials of the process wouldn't permit
-> accessing another process like it. I think the proper fix to deal with
-> this would be to add a prctl() flag for "set whether introspection is
-> allowed for this process", and if userspace has manually un-set that
-> flag, any introspection special-case logic would be skipped.
 
-We could do PR_SET_DUMPABLE=3D3 for this, I guess?
+Joao Moreira (4):
+  Fix serpent crypto function prototypes
+  Fix camellia crypto function prototypes
+  Fix twofish crypto function prototypes
+  Fix cast6 crypto function prototypes
 
-> An additional problem: /proc/*/exe can be used to open a file for
-> writing; I think it may have been Andy Lutomirski who pointed out some
-> time ago that it would be nice if you couldn't use /proc/*/fd/* to
-> re-open files with more privileges, which is sort of the same thing.
+ arch/x86/crypto/camellia_aesni_avx2_glue.c | 69 ++++++++--------------
+ arch/x86/crypto/camellia_aesni_avx_glue.c  | 45 +++++++--------
+ arch/x86/crypto/camellia_glue.c            | 19 +++---
+ arch/x86/crypto/cast6_avx_glue.c           | 54 +++++++----------
+ arch/x86/crypto/serpent_avx2_glue.c        | 68 ++++++++++------------
+ arch/x86/crypto/serpent_avx_glue.c         | 63 ++++++++------------
+ arch/x86/crypto/serpent_sse2_glue.c        | 24 +++++---
+ arch/x86/crypto/twofish_avx_glue.c         | 65 ++++++++++-----------
+ arch/x86/crypto/twofish_glue_3way.c        | 33 ++++++-----
+ arch/x86/include/asm/crypto/camellia.h     | 93 +++++++++++++++---------------
+ arch/x86/include/asm/crypto/serpent-avx.h  | 39 ++++++++-----
+ arch/x86/include/asm/crypto/serpent-sse2.h | 10 ++++
+ arch/x86/include/asm/crypto/twofish.h      | 33 ++++++++---
+ include/crypto/cast6.h                     | 23 +++++++-
+ 14 files changed, 320 insertions(+), 318 deletions(-)
 
-This is something I'm currently working on a series for, which would
-boil down to some restrictions on how re-opening of file descriptors
-works through procfs.
+-- 
+2.16.4
 
-However, execveat() of a procfs magiclink is a bit hard to block --
-there is no way for userspace to to represent a file being "open for
-execute" so they are all "open for execute" by default and blocking it
-outright seems a bit extreme (though I actually hope to eventually add
-the ability to mark an O_PATH as "open for X" to resolveat(2) -- hence
-why I've reserved some bits).
-
-(Thinking more about it, there is an argument that I should include the
-above patch into this series so that we can block re-opening of fds
-opened through resolveat(2) without explicit flags from the outset.)
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---yezcske27bisu2pl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzQiEwACgkQSnvnv3De
-m59OaBAAz2IFmbji63Cay/WhNNJQnxuHC886Ekc041hMJQn7ciW0w6zqI4hbIEHr
-/bI4P+8riONORm5RBnyRyLHLS8iaC1VZJmWbFnZM5h8j8++jA5f8qVaBpcGrXWrn
-d1d7ypyVWtxAQJmttIfxGy2d5xzqDpS99ZPnsthF1LQAW1HpKR8maW+Q/cqoTGK5
-X33vxwVJaFAatwFDRwsuztAt23m3sJouDvJMuAUOC7/SmQJX2ZI5NRJVUNQOX2Ch
-bvKadGzJ8wm31laLSTCDmH3mzKDGshuGCzsqoBgbjRG4s0jPQwAQcbGnj2gcf3gK
-1l1jTibk7oOecrUs/GV0++QEkt+mcSJjPsD2oqo9GczTWyPXxQowXJHyPnwhSB1R
-MRPZKsSDdTo6gX5hdTzSD/vqyFGtBZArR0h+KhtLs88ypfyd7Bn8cgRQ99bPK3Nb
-afiAPQoCyS+4LMLGvRhxuGwjzWvBNKaR463yygtqSfZDzqWLr7eTorj+0KuJhmvo
-zDJcj8wnUlWkRXS7Unpj6xy0vKX2mJrkxlOCi39DYYWNTQkj52qLZ+efH44ex0i9
-wqAXHmt07+ys/LvIDXHnFzyZSafLhKp7OTWXUiEhVDHCwxFbfQQmsP12pRuoJT9H
-OeQgWaVC58G2O4hlrjZBfowV1g9fLjVm/oj+CMVGdhrYyVYSuP4=
-=LRko
------END PGP SIGNATURE-----
-
---yezcske27bisu2pl--
