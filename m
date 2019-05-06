@@ -2,118 +2,152 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99129C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 03:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B08EDC04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 04:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A0F2082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 03:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B96C20675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 04:01:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YK8OVjTB"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fQDIf4oo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726016AbfEFDmR (ORCPT
+        id S1725856AbfEFEBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 May 2019 23:42:17 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36030 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbfEFDmR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 May 2019 23:42:17 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c14so3280919qke.3
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2019 20:42:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=evolvfc+v/PDNzMrluV2UQ6Ca3y538x1hstsH93Ra8w=;
-        b=YK8OVjTBIW7T1GEvXYMhHWYCjfY3CgPx2TBCu4U4XnziD9WfeBWmRvw2MH656182yn
-         v5E0ELEy7ybRGIf2LIaEXC7e1+AM0CnRv5xRiw1C471J0xEK8w1mhdkecvwfAYvxvjDY
-         yEi6/iycQ4h9EvgcyvKoe2ixzmmhGCYpefZa5Z+PLYdasB/4vegCtIs2bXERfCL4hSay
-         UXvHLowEBEas4JJHnZhu0G8PzVTc/fIyGDuHJ45a68VqBtnLLtlGc6xoy1ALDydOn6jo
-         WSh7oYMiR6uJnW4+hL/thRHdHwH9vVKxcgfV2U2qQsp4JbN+vWZh7cOIaPCJ9+1SOKs2
-         MF1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=evolvfc+v/PDNzMrluV2UQ6Ca3y538x1hstsH93Ra8w=;
-        b=GIqfRaA6s2C4uvaTTDsfpAUb3YKH9l2M9tc3MgbT1/APwFlsUVd0n6zXxVsyajYo5t
-         bA76pngmGGFI7wXMQiHTwcoYOAgd5C+Qjjv5L69RuKQXNcftFIXwtSI1O4kGKlZzB8ej
-         20aXjk1YcAJpmdMLYdXscMwxRWfez9bapZcyxGj9H0Ah5I5k/Q18NGuH1wQX1TzqYnGY
-         CrMSG8fA5inbB9Sy7kpyohv4I84WT8/SYJUiEygIz63XIDHubQSMD1W8d/4f9NrinWLb
-         9Gi572hp16JubYYmUAZ2UG05dqd4eWEaNERYZRmqdxvL+ozc/C35h1WSK08YIXbWtItx
-         G3pQ==
-X-Gm-Message-State: APjAAAWc5+G0NlstmFFkhe+WrXhtf3ajXu63XlX2890VlAEn0+1yMeYV
-        ItgyHexPiSrz1/hU8PZmhR5LIHmmhqVEoK4FcwaBjg4QQ/ICJg==
-X-Google-Smtp-Source: APXvYqzU2ai2PliPSf6C3qkb0Wsn8YH7PTRkcyfGmoYYVW+WtUlIKFpIeosC5YtXgT9nqOiKc5vDmanRuyCqoRkt7eg=
-X-Received: by 2002:a37:404b:: with SMTP id n72mr18080998qka.98.1557114136488;
- Sun, 05 May 2019 20:42:16 -0700 (PDT)
+        Mon, 6 May 2019 00:01:53 -0400
+Received: from ozlabs.org ([203.11.71.1]:60797 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725710AbfEFEBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 00:01:52 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44y8F822jhz9s9y;
+        Mon,  6 May 2019 14:01:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557115309;
+        bh=rgj1QEiHtv32sP/0bA6Oo89nP54c8y/a8Bke4LC1GuQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fQDIf4ooi7pE3dOtu1OJF04FUlFr+5b3JOOK44NQt4y8Lm6ApBGhs33pzQ3C8SGN6
+         /IPAEE0aS2TdHD8NTExLe91UZGFC6q4xiHDPN8M3m1ETJ7Cdx3smJ5hCG54Lwd+h9E
+         0ACyYLZQKm9SnoafxzJwRQgoNHOUjN9tm8W3V777ajCuPlIxSa+pFMpvdkXicQZYCr
+         SELt5oWUC52uG/1WNsl/eccNHJ/9EJckACDo8AApyZS1CeKFBxP5LDJcPZuB9Nflcn
+         aZr5hzRabYQGHvELLQwi3M7TfnyRJYBULTuYKVisZt8xNAYAPJSJF6ZCSClLbQv6IV
+         P3GUlfoQRTOVQ==
+Date:   Mon, 6 May 2019 14:01:47 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vu Pham <vuhuong@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Mark Bloch <markb@mellanox.com>
+Subject: Re: linux-next: manual merge of the mlx5-next tree with the rdma
+ tree
+Message-ID: <20190506140147.23d41ac1@canb.auug.org.au>
+In-Reply-To: <20190430135846.0c17df6e@canb.auug.org.au>
+References: <20190430135846.0c17df6e@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190424101934.51535-1-duyuyang@gmail.com> <20190424101934.51535-20-duyuyang@gmail.com>
- <20190425193247.GU12232@hirez.programming.kicks-ass.net> <CAHttsrY4jK2cayBE8zNCSJKDAkzLiBb40GVfQHpJi2YK1nEZaQ@mail.gmail.com>
- <20190430121148.GV2623@hirez.programming.kicks-ass.net> <CAHttsrYfCdpNwQ81ppFQ9b_57tuLYOb=xi=CbRBysnB+LgjGGg@mail.gmail.com>
-In-Reply-To: <CAHttsrYfCdpNwQ81ppFQ9b_57tuLYOb=xi=CbRBysnB+LgjGGg@mail.gmail.com>
-From:   Yuyang Du <duyuyang@gmail.com>
-Date:   Mon, 6 May 2019 11:42:05 +0800
-Message-ID: <CAHttsrZKx0cgs6t9ahxmV7ENp6QWG4H9N7KMvsgrucQ_rsqTJQ@mail.gmail.com>
-Subject: Re: [PATCH 19/28] locking/lockdep: Optimize irq usage check when
- marking lock usage bit
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     will.deacon@arm.com, Ingo Molnar <mingo@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>, ming.lei@redhat.com,
-        Frederic Weisbecker <frederic@kernel.org>, tglx@linutronix.de,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/vW/eo0iJa5WsE4O1KPNByGd"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019 at 11:05, Yuyang Du <duyuyang@gmail.com> wrote:
->
-> On Tue, 30 Apr 2019 at 20:12, Peter Zijlstra <peterz@infradead.org> wrote:
-> > > > IOW he's going to massively explode this storage.
-> > >
-> > > If I understand correctly, he is not going to.
-> > >
-> > > First of all, we can divide the whole usage thing into tracking and checking.
-> > >
-> > > Frederic's fine-grained soft vector state is applied to usage
-> > > tracking, i.e., which specific vectors a lock is used or enabled.
-> > >
-> > > But for usage checking, which vectors are does not really matter. So,
-> > > the current size of the arrays and bitmaps are good enough. Right?
-> >
-> > Frederic? My understanding was that he really was going to split the
-> > whole thing. The moment you allow masking individual soft vectors, you
-> > get per-vector dependency chains.
->
-> It seems so. What I understand is: for IRQ usage, the difference is:
->
-> Each lock has a new usage mask:
->
->         softirq10, ..., softirq1, hardirq
->
-> where softirq1 | softirq2 | ... | softirq10 = softirq
->
-> where softirq, exactly what was, virtually is used in the checking.
-> This is mainly because, any irq vector has any usage, the lock has
-> that usage, be it hard or soft.
->
-> If that is right, hardirq can be split too (why not if softirq does
-> :)). So, maybe a bitmap to do them all for tracking, and optionally
-> maintain aggregate softirq and hardirq for checking as before.
-> Regardless, may irq-safe reachability thing is not affected.
->
-> And for the chain, which is mainly for caching does not really matter
-> split or not (either way, the outcome will be the same?), because
-> there will be a hash for a chain anyway, which is the same. Right?
+--Sig_/vW/eo0iJa5WsE4O1KPNByGd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Oh, another look at the patch, I was wrong, it can be very different
-if consider: used in vector X vs. enabled on vector Y (which is ok),
-when enablement can be so fine-grained as well, which is actually the
-point of the patch, though no difference for now :(
+Hi all,
+
+On Tue, 30 Apr 2019 13:58:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Hi Leon,
+>=20
+> Today's linux-next merge of the mlx5-next tree got a conflict in:
+>=20
+>   drivers/infiniband/hw/mlx5/main.c
+>=20
+> between commit:
+>=20
+>   35b0aa67b298 ("RDMA/mlx5: Refactor netdev affinity code")
+>=20
+> from the rdma tree and commit:
+>=20
+>   c42260f19545 ("net/mlx5: Separate and generalize dma device from pci de=
+vice")
+>=20
+> from the mlx5-next tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc drivers/infiniband/hw/mlx5/main.c
+> index 6135a0b285de,fae6a6a1fbea..000000000000
+> --- a/drivers/infiniband/hw/mlx5/main.c
+> +++ b/drivers/infiniband/hw/mlx5/main.c
+> @@@ -200,12 -172,18 +200,12 @@@ static int mlx5_netdev_event(struct not
+>  =20
+>   	switch (event) {
+>   	case NETDEV_REGISTER:
+>  +		/* Should already be registered during the load */
+>  +		if (ibdev->is_rep)
+>  +			break;
+>   		write_lock(&roce->netdev_lock);
+> - 		if (ndev->dev.parent =3D=3D &mdev->pdev->dev)
+>  -		if (ibdev->rep) {
+>  -			struct mlx5_eswitch *esw =3D ibdev->mdev->priv.eswitch;
+>  -			struct net_device *rep_ndev;
+>  -
+>  -			rep_ndev =3D mlx5_ib_get_rep_netdev(esw,
+>  -							  ibdev->rep->vport);
+>  -			if (rep_ndev =3D=3D ndev)
+>  -				roce->netdev =3D ndev;
+>  -		} else if (ndev->dev.parent =3D=3D mdev->device) {
+> ++		if (ndev->dev.parent =3D=3D mdev->device)
+>   			roce->netdev =3D ndev;
+>  -		}
+>   		write_unlock(&roce->netdev_lock);
+>   		break;
+>  =20
+
+This is now a conflict between the net-next tree and the rdma tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/vW/eo0iJa5WsE4O1KPNByGd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzPsasACgkQAVBC80lX
+0GzZWgf/eqG/54nzJcLhDHl6eODVDtlhnjK246o4r1hZcOY9BPPCZzfnt7UhQeuZ
+bgrHLsNtf80Et97a6omcAWmIhsIthwgYj9TMet67FdHov8m81rPnOrcewGjoXVLZ
+t43y04hZRMdyrMAaPyHYl2O9O/aYRAgPvn7kWZYzpruvmLm/dRE4kNRO40PDA3mz
+3CaaFAbKgowu+T6W77q6NZeNhW6z5mi1lWIx8ODd2nGLrIawX4NtlXmZ7kNZRFZQ
+Ckerg8IawE08QNoj7f11Fe+DdOcQdbdS8gtzZvlQ09rUPA6MqtT4yFn//JnPlFcR
+PUreXiO2/oZ/+NKszPVhyG5n44X8bw==
+=wKty
+-----END PGP SIGNATURE-----
+
+--Sig_/vW/eo0iJa5WsE4O1KPNByGd--
