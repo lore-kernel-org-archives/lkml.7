@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF1FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7203FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F652053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C282053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154685;
-	bh=N9J1O/dinkSCatUPCOSKp6J9RJCLyqj8e+wbFW+y2hU=;
+	s=default; t=1557154696;
+	bh=BCJyrJQC8pq+NG1HUdcgLrXOxTCc40nsDQ/UkAV12WQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=woZVJbA4ORshlHvqKP/Hqx4GdOrKvejZhOaMa7vSO+j84D82xYVLaU6/qJy9TXaCJ
-	 x1VLt/PM02CxmX4I4dbXBFVLGDoINP0oLCdasu/f4K2fsy+WJazbFb/8neVDgKAt0J
-	 wkdnkZh0e0ewDxCi+0Pn0y0n1Qr3+HebewDb4xKU=
+	b=GATaig+csgUO6F/jjcTQcluq3inzhFM97YA5VP7w51JLnT3A+H4o4B6dKIGLjdbu7
+	 QVHahM5qdVe6vueX66Y57svSTzJN2hbld63Dyn6PQN/PzveSjhlsVQAvWofoZwzCH1
+	 IUL6RX9IlNPzcZQDuyo9DKIOaCdMZmhoGT3a2lVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbfEFO6D (ORCPT
+        id S1728616AbfEFO6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:58:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40186 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:58:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728081AbfEFOoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:44:08 -0400
+        id S1728243AbfEFOn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA58920449;
-        Mon,  6 May 2019 14:44:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D818A20449;
+        Mon,  6 May 2019 14:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153847;
-        bh=N9J1O/dinkSCatUPCOSKp6J9RJCLyqj8e+wbFW+y2hU=;
+        s=default; t=1557153836;
+        bh=BCJyrJQC8pq+NG1HUdcgLrXOxTCc40nsDQ/UkAV12WQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aH24t3smp9HE9oNkBHig2RkZKXCOOBtvkKbvWxrq2wwbteF4sGTMiOfmQM6OKy/Db
-         QmIvz8ARbESxIfUNBV8AwEMh32+rsY9pJIP/oJTIKf2yCp3wt9vZU4+Ea7pCnNjOEu
-         gstGKlYaqrpUyPK6O43xEqKreFkLOxpYSg2UjBdQ=
+        b=LsHUEMNb/LyOhV+nzrNVBm4TZhnaHzYl3lhUav/kUEuCV4edB0QixqVnXEFSjqye2
+         2c5C8KNM8m4dy5Up4bBMg/mYl8q/GiefjappX9QRx1pM7Cbx2mK4kUcOoSHA+5QlYt
+         9ESbv85Dgw7KGHFYzXNihBqCWyghDnTOOWq9wIZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 19/75] USB: yurex: Fix protection fault after device removal
-Date:   Mon,  6 May 2019 16:32:27 +0200
-Message-Id: <20190506143054.895240578@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 4.14 15/75] arm64: only advance singlestep for user instruction traps
+Date:   Mon,  6 May 2019 16:32:23 +0200
+Message-Id: <20190506143054.566908300@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -59,40 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Mark Rutland <mark.rutland@arm.com>
 
-commit ef61eb43ada6c1d6b94668f0f514e4c268093ff3 upstream.
+commit 9478f1927e6ef9ef5e1ad761af1c98aa8e40b7f5 upstream.
 
-The syzkaller USB fuzzer found a general-protection-fault bug in the
-yurex driver.  The fault occurs when a device has been unplugged; the
-driver's interrupt-URB handler logs an error message referring to the
-device by name, after the device has been unregistered and its name
-deallocated.
+Our arm64_skip_faulting_instruction() helper advances the userspace
+singlestep state machine, but this is also called by the kernel BRK
+handler, as used for WARN*().
 
-This problem is caused by the fact that the interrupt URB isn't
-cancelled until the driver's private data structure is released, which
-can happen long after the device is gone.  The cure is to make sure
-that the interrupt URB is killed before yurex_disconnect() returns;
-this is exactly the sort of thing that usb_poison_urb() was meant for.
+Thus, if we happen to hit a WARN*() while the user singlestep state
+machine is in the active-no-pending state, we'll advance to the
+active-pending state without having executed a user instruction, and
+will take a step exception earlier than expected when we return to
+userspace.
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
+Let's fix this by only advancing the state machine when skipping a user
+instruction.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/yurex.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/kernel/traps.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -318,6 +318,7 @@ static void yurex_disconnect(struct usb_
- 	usb_deregister_dev(interface, &yurex_class);
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -304,7 +304,8 @@ void arm64_skip_faulting_instruction(str
+ 	 * If we were single stepping, we want to get the step exception after
+ 	 * we return from the trap.
+ 	 */
+-	user_fastforward_single_step(current);
++	if (user_mode(regs))
++		user_fastforward_single_step(current);
+ }
  
- 	/* prevent more I/O from starting */
-+	usb_poison_urb(dev->urb);
- 	mutex_lock(&dev->io_mutex);
- 	dev->interface = NULL;
- 	mutex_unlock(&dev->io_mutex);
+ static LIST_HEAD(undef_hook);
 
 
