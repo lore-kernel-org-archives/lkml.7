@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8503FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5525AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5889D2087F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2865C2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:09:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557155374;
-	bh=IhMrdxYw7BZjtqmi2BAZfg1TqFu9OA85yOul+YcPvms=;
+	s=default; t=1557155393;
+	bh=jKk82LfyayqAJiEj9IJ9TqTSLS0pT1DNZIhKW01x/Eg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZBskLiF/7kvcx/flDpEhzFIhtMEZcw4QoOrSL/HNiDzJeEwTK3AOtw3Wn87VgN4Sp
-	 RVT87i/aOzlQQ8qd/4pozxaUQUn5oSnC7kUZWXrR09qkNaEHsLaLT63wFjPIifkD6v
-	 aVbSFsFNOW5pemuGhE6zs5gJsPvDnhXA0PRLeUiE=
+	b=qzOWCKxZuzMTgWMXeOGXxcNK6p+cxz7SBWg/TKmHX1ETbxJqx8rhHZd04UKgEJ2J2
+	 KxQ0aThJHyEzluvDgtOl4Ln8nSjY/Qi9rJOkbgo0/Do1IKoWjfy532ZvA5seXjuts/
+	 KFz7QvaYtu0uEy8w9oYxgBEvyrrnC0fEqCTc0Ha4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfEFPJd (ORCPT
+        id S1727235AbfEFPJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:09:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55422 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 11:09:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbfEFOfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:35:23 -0400
+        id S1726218AbfEFOfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:35:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A46C8214C6;
-        Mon,  6 May 2019 14:35:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A48422087F;
+        Mon,  6 May 2019 14:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153322;
-        bh=IhMrdxYw7BZjtqmi2BAZfg1TqFu9OA85yOul+YcPvms=;
+        s=default; t=1557153301;
+        bh=jKk82LfyayqAJiEj9IJ9TqTSLS0pT1DNZIhKW01x/Eg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uTXK7weI1jQbPYNnIwe4QriaU2uaCoa+fMSGUGavj4yq+Z3k0n2RzeI1tLMU0FmLj
-         UKdXO1YVWXw6ObZwX5rZz9SCLhvpXfzy4/FjphEzMrc9MpqhwHNsUK/d0oYzU9FLx6
-         o9GvGX6FC5lHrrlrgwh9jtJkhQNT+0M5hCxpl1Cw=
+        b=hLkMns0y86Ph8p9fi45jLZgnzxSV3M3yvmpP2LEguWJ2807t8LtnsKrRMmRTq/TQD
+         vURkAK+gIgqntIs9QIPoBdMGRcJNDWQaok1PgEODZqSSGS81jNuWCWWooAEORcU194
+         LW4JLw9DGB/GdKxHeo6NRtGVY+1mkx/7OgLI9QiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Wanpeng Li <wanpengli@tencent.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.0 024/122] KVM: lapic: Convert guest TSC to host time domain if necessary
-Date:   Mon,  6 May 2019 16:31:22 +0200
-Message-Id: <20190506143056.922875731@linuxfoundation.org>
+Subject: [PATCH 5.0 020/122] KVM: lapic: Disable timer advancement if adaptive tuning goes haywire
+Date:   Mon,  6 May 2019 16:31:18 +0200
+Message-Id: <20190506143056.555695715@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -63,28 +63,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit b6aa57c69cb26ea0160c51f7cf45f1af23542686 upstream.
+commit 57bf67e73ce9bcce2258890f5abf2adf5f619f1a upstream.
 
 To minimize the latency of timer interrupts as observed by the guest,
 KVM adjusts the values it programs into the host timers to account for
-the host's overhead of programming and handling the timer event.  In
-the event that the adjustments are too aggressive, i.e. the timer fires
-earlier than the guest expects, KVM busy waits immediately prior to
-entering the guest.
+the host's overhead of programming and handling the timer event.  Now
+that the timer advancement is automatically tuned during runtime, it's
+effectively unbounded by default, e.g. if KVM is running as L1 the
+advancement can measure in hundreds of milliseconds.
 
-Currently, KVM manually converts the delay from nanoseconds to clock
-cycles.  But, the conversion is done in the guest's time domain, while
-the delay occurs in the host's time domain.  This is perfectly ok when
-the guest and host are using the same TSC ratio, but if the guest is
-using a different ratio then the delay may not be accurate and could
-wait too little or too long.
+Disable timer advancement if adaptive tuning yields an advancement of
+more than 5000ns, as large advancements can break reasonable assumptions
+of the guest, e.g. that a timer configured to fire after 1ms won't
+arrive on the next instruction.  Although KVM busy waits to mitigate the
+case of a timer event arriving too early, complications can arise when
+shifting the interrupt too far, e.g. kvm-unit-test's vmx.interrupt test
+will fail when its "host" exits on interrupts as KVM may inject the INTR
+before the guest executes STI+HLT.   Arguably the unit test is "broken"
+in the sense that delaying a timer interrupt by 1ms doesn't technically
+guarantee the interrupt will arrive after STI+HLT, but it's a reasonable
+assumption that KVM should support.
 
-When the guest is not using the host's ratio, convert the delay from
-guest clock cycles to host nanoseconds and use ndelay() instead of
-__delay() to provide more accurate timing.  Because converting to
-nanoseconds is relatively expensive, e.g. requires division and more
-multiplication ops, continue using __delay() directly when guest and
-host TSCs are running at the same ratio.
+Furthermore, an unbounded advancement also effectively unbounds the time
+spent busy waiting, e.g. if the guest programs a timer with a very large
+delay.
+
+5000ns is a somewhat arbitrary threshold.  When running on bare metal,
+which is the intended use case, timer advancement is expected to be in
+the general vicinity of 1000ns.  5000ns is high enough that false
+positives are unlikely, while not being so high as to negatively affect
+the host's performance/stability.
+
+Note, a future patch will enable userspace to disable KVM's adaptive
+tuning, which will allow priveleged userspace will to specifying an
+advancement value in excess of this arbitrary threshold in order to
+satisfy an abnormal use case.
 
 Cc: Liran Alon <liran.alon@oracle.com>
 Cc: Wanpeng Li <wanpengli@tencent.com>
@@ -95,49 +108,21 @@ Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/lapic.c |   24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ arch/x86/kvm/lapic.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 --- a/arch/x86/kvm/lapic.c
 +++ b/arch/x86/kvm/lapic.c
-@@ -1478,6 +1478,26 @@ static bool lapic_timer_int_injected(str
- 	return false;
+@@ -1519,6 +1519,10 @@ void wait_lapic_expire(struct kvm_vcpu *
+ 		}
+ 		if (abs(guest_tsc - tsc_deadline) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+ 			lapic_timer_advance_adjust_done = true;
++		if (unlikely(lapic_timer_advance_ns > 5000)) {
++			lapic_timer_advance_ns = 0;
++			lapic_timer_advance_adjust_done = true;
++		}
+ 	}
  }
  
-+static inline void __wait_lapic_expire(struct kvm_vcpu *vcpu, u64 guest_cycles)
-+{
-+	u64 timer_advance_ns = vcpu->arch.apic->lapic_timer.timer_advance_ns;
-+
-+	/*
-+	 * If the guest TSC is running at a different ratio than the host, then
-+	 * convert the delay to nanoseconds to achieve an accurate delay.  Note
-+	 * that __delay() uses delay_tsc whenever the hardware has TSC, thus
-+	 * always for VMX enabled hardware.
-+	 */
-+	if (vcpu->arch.tsc_scaling_ratio == kvm_default_tsc_scaling_ratio) {
-+		__delay(min(guest_cycles,
-+			nsec_to_cycles(vcpu, timer_advance_ns)));
-+	} else {
-+		u64 delay_ns = guest_cycles * 1000000ULL;
-+		do_div(delay_ns, vcpu->arch.virtual_tsc_khz);
-+		ndelay(min_t(u32, delay_ns, timer_advance_ns));
-+	}
-+}
-+
- void wait_lapic_expire(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_lapic *apic = vcpu->arch.apic;
-@@ -1498,10 +1518,8 @@ void wait_lapic_expire(struct kvm_vcpu *
- 	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
- 	trace_kvm_wait_lapic_expire(vcpu->vcpu_id, guest_tsc - tsc_deadline);
- 
--	/* __delay is delay_tsc whenever the hardware has TSC, thus always.  */
- 	if (guest_tsc < tsc_deadline)
--		__delay(min(tsc_deadline - guest_tsc,
--			nsec_to_cycles(vcpu, timer_advance_ns)));
-+		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
- 
- 	if (!apic->lapic_timer.timer_advance_adjust_done) {
- 		/* too early */
 
 
