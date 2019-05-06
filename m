@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD39C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FD7C04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C948F2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF12E2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557154735;
-	bh=e5OyHT0kIM9tCgtPrUtYgCVbFfRiUBN5ta8F6o2joag=;
+	s=default; t=1557154745;
+	bh=JoJB5VMng8NPu4tyyX+HHPyVO3AaIoTy9QwqCQI1tTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K13nODcFuKjoKHZW2pQ2XRIHYFM/8IIU4Kuo/GWyTnHn34zdTEVVbYhFxwTJXVFz7
-	 hMrwp96/19vUPGupvR7PTQGhxlVEAJHjjvsw0QK82pAu2IOXAso5kqMjzJacUfgEmU
-	 ggWanZ+Rl2N18fSMFYr8c/Fmkw2EclzBWbxnbu6U=
+	b=R32JbNGH0K7Rs+5pUTBR7r4RgVKI8TBOO0qQrdwwu3uqZlVl3OXtbS7vrRvXfhKoi
+	 tYtOHL21jUQmtrlmH9bU+tRCVWMNR+/Ukxx8+C9m2hJZZ2iCF3MhLaPvmfhrAyhBY/
+	 9olErGEUyy/CS7uuZ7z9ht07SX93u8G7AqN5juSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbfEFO6y (ORCPT
+        id S1728647AbfEFOnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:58:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39164 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:43:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728664AbfEFOna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:30 -0400
+        id S1728639AbfEFOnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:43:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48C3021019;
-        Mon,  6 May 2019 14:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52B0221479;
+        Mon,  6 May 2019 14:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153809;
-        bh=e5OyHT0kIM9tCgtPrUtYgCVbFfRiUBN5ta8F6o2joag=;
+        s=default; t=1557153796;
+        bh=JoJB5VMng8NPu4tyyX+HHPyVO3AaIoTy9QwqCQI1tTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KsXscSj2T+78rgDrhkSbhQBmaYtlD0fV2A8EwBUJPJoBr1xTSBlyE06fg+EZQq8TX
-         vBrwFoCEkYw/BrUS2U3S2E4RziqOlSjH4ZJGf16caBuPYe/o7Hcbzl4c2Y+owAvQbz
-         U8iFyNjj7AIdRqgZ0lapmDT7MrAG/w3yyDrmKLpw=
+        b=Ua5BmdUsegcU6xxjIImAdD1PwL7pkYAHES+qvaejJgsJQBFPruwKZxt6X0UCYSbrk
+         7lTdO0JXrivCOpwr6W+x6GO5OpZJxtZOnqXkdcFme/2hSLL4ExoK6ilXYmxCsSNJhD
+         bgkG+seZreW9iyxuE0Xn+TT1VMBnWxxI4OWZzJsg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nadav Amit <namit@vmware.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 97/99] x86/mm/tlb: Revert "x86/mm: Align TLB invalidation info"
-Date:   Mon,  6 May 2019 16:33:10 +0200
-Message-Id: <20190506143102.620292973@linuxfoundation.org>
+        Laurent Dufour <ldufour@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 92/99] powerpc/mm/hash: Handle mmap_min_addr correctly in get_unmapped_area topdown search
+Date:   Mon,  6 May 2019 16:33:05 +0200
+Message-Id: <20190506143102.210573858@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -66,49 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit 780e0106d468a2962b16b52fdf42898f2639e0a0 upstream.
+commit 3b4d07d2674f6b4a9281031f99d1f7efd325b16d upstream.
 
-Revert the following commit:
+When doing top-down search the low_limit is not PAGE_SIZE but rather
+max(PAGE_SIZE, mmap_min_addr). This handle cases in which mmap_min_addr >
+PAGE_SIZE.
 
-  515ab7c41306: ("x86/mm: Align TLB invalidation info")
-
-I found out (the hard way) that under some .config options (notably L1_CACHE_SHIFT=7)
-and compiler combinations this on-stack alignment leads to a 320 byte
-stack usage, which then triggers a KASAN stack warning elsewhere.
-
-Using 320 bytes of stack space for a 40 byte structure is ludicrous and
-clearly not right.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Acked-by: Nadav Amit <namit@vmware.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 515ab7c41306 ("x86/mm: Align TLB invalidation info")
-Link: http://lkml.kernel.org/r/20190416080335.GM7905@worktop.programming.kicks-ass.net
-[ Minor changelog edits. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: fba2369e6ceb ("mm: use vm_unmapped_area() on powerpc architecture")
+Reviewed-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/mm/tlb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/slice.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -694,7 +694,7 @@ void flush_tlb_mm_range(struct mm_struct
- {
- 	int cpu;
+--- a/arch/powerpc/mm/slice.c
++++ b/arch/powerpc/mm/slice.c
+@@ -31,6 +31,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/export.h>
+ #include <linux/hugetlb.h>
++#include <linux/security.h>
+ #include <asm/mman.h>
+ #include <asm/mmu.h>
+ #include <asm/copro.h>
+@@ -376,6 +377,7 @@ static unsigned long slice_find_area_top
+ 	int pshift = max_t(int, mmu_psize_defs[psize].shift, PAGE_SHIFT);
+ 	unsigned long addr, found, prev;
+ 	struct vm_unmapped_area_info info;
++	unsigned long min_addr = max(PAGE_SIZE, mmap_min_addr);
  
--	struct flush_tlb_info info __aligned(SMP_CACHE_BYTES) = {
-+	struct flush_tlb_info info = {
- 		.mm = mm,
- 	};
+ 	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
+ 	info.length = len;
+@@ -392,7 +394,7 @@ static unsigned long slice_find_area_top
+ 	if (high_limit > DEFAULT_MAP_WINDOW)
+ 		addr += mm->context.slb_addr_limit - DEFAULT_MAP_WINDOW;
  
+-	while (addr > PAGE_SIZE) {
++	while (addr > min_addr) {
+ 		info.high_limit = addr;
+ 		if (!slice_scan_available(addr - 1, available, 0, &addr))
+ 			continue;
+@@ -404,8 +406,8 @@ static unsigned long slice_find_area_top
+ 		 * Check if we need to reduce the range, or if we can
+ 		 * extend it to cover the previous available slice.
+ 		 */
+-		if (addr < PAGE_SIZE)
+-			addr = PAGE_SIZE;
++		if (addr < min_addr)
++			addr = min_addr;
+ 		else if (slice_scan_available(addr - 1, available, 0, &prev)) {
+ 			addr = prev;
+ 			goto prev_slice;
+@@ -527,7 +529,7 @@ unsigned long slice_get_unmapped_area(un
+ 		addr = _ALIGN_UP(addr, page_size);
+ 		slice_dbg(" aligned addr=%lx\n", addr);
+ 		/* Ignore hint if it's too large or overlaps a VMA */
+-		if (addr > high_limit - len ||
++		if (addr > high_limit - len || addr < mmap_min_addr ||
+ 		    !slice_area_is_free(mm, addr, len))
+ 			addr = 0;
+ 	}
 
 
