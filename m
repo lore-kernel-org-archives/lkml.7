@@ -2,120 +2,102 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3E0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC1DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A652F20578
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AE7B2087F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 15:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbfEFP7B (ORCPT
+        id S1726986AbfEFP7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 11:59:01 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55684 "EHLO huawei.com"
+        Mon, 6 May 2019 11:59:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60760 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726413AbfEFP7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 11:59:01 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B0D711A05372C52917E0;
-        Mon,  6 May 2019 23:58:57 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 6 May 2019
- 23:58:50 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <vishal@chelsio.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] cxgb4: Fix error path in cxgb4_init_module
-Date:   Mon, 6 May 2019 23:57:54 +0800
-Message-ID: <20190506155754.42464-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1726413AbfEFP7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 11:59:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4DCC3ADDC;
+        Mon,  6 May 2019 15:59:07 +0000 (UTC)
+Message-ID: <686a4d50696a87b9cbe2a5908737ce91faec5313.camel@suse.de>
+Subject: Re: [PATCH v2 2/3] staging: vchiq: revert "switch to
+ wait_for_completion_killable"
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, phil@raspberrypi.org,
+        stefan.wahren@i2se.com, Eric Anholt <eric@anholt.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
+Date:   Mon, 06 May 2019 17:59:04 +0200
+In-Reply-To: <20190506152039.GT2239@kadam>
+References: <20190506144030.29056-1-nsaenzjulienne@suse.de>
+         <20190506144030.29056-3-nsaenzjulienne@suse.de>
+         <20190506152039.GT2239@kadam>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-HWk7wVSA1bmO90ELmSsB"
+User-Agent: Evolution 3.30.5 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BUG: unable to handle kernel paging request at ffffffffa016a270
-PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bbd067 PTE 0
-Oops: 0000 [#1
-CPU: 0 PID: 6134 Comm: modprobe Not tainted 5.1.0+ #33
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:atomic_notifier_chain_register+0x24/0x60
-Code: 1f 80 00 00 00 00 55 48 89 e5 41 54 49 89 f4 53 48 89 fb e8 ae b4 38 01 48 8b 53 38 48 8d 4b 38 48 85 d2 74 20 45 8b 44 24 10 <44> 3b 42 10 7e 08 eb 13 44 39 42 10 7c 0d 48 8d 4a 08 48 8b 52 08
-RSP: 0018:ffffc90000e2bc60 EFLAGS: 00010086
-RAX: 0000000000000292 RBX: ffffffff83467240 RCX: ffffffff83467278
-RDX: ffffffffa016a260 RSI: ffffffff83752140 RDI: ffffffff83467240
-RBP: ffffc90000e2bc70 R08: 0000000000000000 R09: 0000000000000001
-R10: 0000000000000000 R11: 00000000014fa61f R12: ffffffffa01c8260
-R13: ffff888231091e00 R14: 0000000000000000 R15: ffffc90000e2be78
-FS:  00007fbd8d7cd540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa016a270 CR3: 000000022c7e3000 CR4: 00000000000006f0
-Call Trace:
- register_inet6addr_notifier+0x13/0x20
- cxgb4_init_module+0x6c/0x1000 [cxgb4
- ? 0xffffffffa01d7000
- do_one_initcall+0x6c/0x3cc
- ? do_init_module+0x22/0x1f1
- ? rcu_read_lock_sched_held+0x97/0xb0
- ? kmem_cache_alloc_trace+0x325/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-If pci_register_driver fails, register inet6addr_notifier is
-pointless. This patch fix the error path in cxgb4_init_module.
+--=-HWk7wVSA1bmO90ELmSsB
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: b5a02f503caa ("cxgb4 : Update ipv6 address handling api")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+Hi Dan, thanks for reviewing.
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-index 89179e3..4bc0c35 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
-@@ -6161,15 +6161,24 @@ static int __init cxgb4_init_module(void)
- 
- 	ret = pci_register_driver(&cxgb4_driver);
- 	if (ret < 0)
--		debugfs_remove(cxgb4_debugfs_root);
-+		goto err_pci;
- 
- #if IS_ENABLED(CONFIG_IPV6)
- 	if (!inet6addr_registered) {
--		register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
--		inet6addr_registered = true;
-+		ret = register_inet6addr_notifier(&cxgb4_inet6addr_notifier);
-+		if (ret)
-+			pci_unregister_driver(&cxgb4_driver);
-+		else
-+			inet6addr_registered = true;
- 	}
- #endif
- 
-+	if (ret == 0)
-+		return ret;
-+
-+err_pci:
-+	debugfs_remove(cxgb4_debugfs_root);
-+
- 	return ret;
- }
- 
--- 
-1.8.3.1
+On Mon, 2019-05-06 at 18:20 +0300, Dan Carpenter wrote:
+> On Mon, May 06, 2019 at 04:40:29PM +0200, Nicolas Saenz Julienne wrote:
+> > @@ -1740,7 +1740,8 @@ parse_rx_slots(struct vchiq_state *state)
+> >  					&service->bulk_rx : &service->bulk_tx;
+> > =20
+> >  				DEBUG_TRACE(PARSE_LINE);
+> > -				if (mutex_lock_killable(&service->bulk_mutex)) {
+> > +				if (mutex_lock_killable(
+> > +					&service->bulk_mutex) !=3D 0) {
+>=20
+> This series does't add !=3D 0 consistently...  Personally, I would prefer
+> we just leave it out.  I use !=3D 0 for two things.  1)  When I'm talking
+> about the number zero.
+>=20
+> 	if (len =3D=3D 0) {
+>=20
+> Or with strcmp():
+>=20
+> 	if (strcmp(a, b) =3D=3D 0) { // a equals b
+> 	if (strcmp(a, b) < 0) {  // a less than b.
+>=20
+> But here zero means no errors, so I would just leave it out...
 
+I agree, I'll fix it.
+
+Regards,
+Nicolas
+
+
+--=-HWk7wVSA1bmO90ELmSsB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAlzQWcgACgkQlfZmHno8
+x/5C3Qf+L5Sma8zaKvvi3d9DSw4lZXBIQpyTCI5G81wW2l+4ax2oZnUNZlLpu7lj
+sRJy5o+hSJExXkx/3b3oBUEojchKWCZPC7ZI76aq7uhRK93Q7Yf4jem9wUJvsOwf
+kvsdFhSIO7F/gxfNfZUDn2whfAN5FPBvSTBqq3e++k/1+RTqe/y65rAbJIeIkmrL
+s9qVV+DWownkHzfGwsVJ1paJmvrLuwYOlfsPXIlQk3y8g+GSClXRsCWvPJxeS4vi
+2Qzs/+AB6kDiVzDdxj7YDF1puf1d4xliFfvMJnUR7iEdzOG0IQZAp+qMktTvOKX8
+n//mOh1eQcHx4P/2ajTxj8/5P5Wieg==
+=QGu9
+-----END PGP SIGNATURE-----
+
+--=-HWk7wVSA1bmO90ELmSsB--
 
