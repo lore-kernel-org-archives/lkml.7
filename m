@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EFEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F33C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9FC620C01
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F552177B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153684;
-	bh=RjMAvqx838rODCCwYMizeMBm2qO3TPGCYP0XQqTViGo=;
+	s=default; t=1557153689;
+	bh=jJDHQBwI6tjM+j4UyZaLTGK23NMyvFGa1FsmZwlo0lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SXQmZ94k1EsAgTTTNcWbOHxq9nhhJ2U023SGiWoO1sefX+q+YvN3MJoUma43Z4Fcp
-	 U9BUK8gWpPWfSidhuBLcZJanTADjCr22EVe2h/6TN1fz69UvkNysQ+DAfHHgO1pSKo
-	 Y+Hjwljt5waQHfvYrtCbPfUsDj+HH8UOHH26OzGw=
+	b=b/sIv3qTut+30AzonFVTYEIl9aD/oMeMRCAzLhch2dJhTnzw3IEW41zGH14Kn9j7c
+	 UhufJvtuCIldjgFFwFkkquzAKubYcqmOAMURYXJWOL+3UNBlrdTNLB/MZY1l3/SP3L
+	 9gKm8L96OiuKs7tV4bEgSb6ldlbPhYdZEZw9hMAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfEFOlX (ORCPT
+        id S1728256AbfEFOl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:41:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:41:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727733AbfEFOlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:41:21 -0400
+        id S1727489AbfEFOl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:41:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3D4A21479;
-        Mon,  6 May 2019 14:41:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B470217D4;
+        Mon,  6 May 2019 14:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153680;
-        bh=RjMAvqx838rODCCwYMizeMBm2qO3TPGCYP0XQqTViGo=;
+        s=default; t=1557153685;
+        bh=jJDHQBwI6tjM+j4UyZaLTGK23NMyvFGa1FsmZwlo0lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i9y0EEEsfUlzQKVnMw0Z+pW9FIEudeUEPlisQXm9tOLEzIgAihUwG1L3hWWIJkaEn
-         +0y7yyMx9utTQp7F0E60NtzFBfY2db5LT5eJvtS9uIBPD0Ho+aUBVZI/791mMQoWy1
-         i63fZ5JYhCLgliAjw0a0iq1Kvh7i2LEOgnSHsZ4Q=
+        b=Y02MBk76YwHTbWxlU+ZlW6+GH+CYgsiNB1MzDBUcEH+gZsr0vX05srzriB5sd+UOl
+         dlNF/vGGagUFvN9UjjLuYGEwVCfx4lZkb7bEA2YKp9J4/300VFPS7T5TUo54TKnpXo
+         YXjxMjxUU6BXNzhPJctFJH9t6rw40tM09dfGpHWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liubin Shu <shuliubin@huawei.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Evan Green <evgreen@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 55/99] net: hns: fix KASAN: use-after-free in hns_nic_net_xmit_hw()
-Date:   Mon,  6 May 2019 16:32:28 +0200
-Message-Id: <20190506143059.065077774@linuxfoundation.org>
+Subject: [PATCH 4.19 24/99] rtc: cros-ec: Fail suspend/resume if wake IRQ cant be configured
+Date:   Mon,  6 May 2019 16:31:57 +0200
+Message-Id: <20190506143056.133283565@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.899356316@linuxfoundation.org>
 References: <20190506143053.899356316@linuxfoundation.org>
@@ -63,52 +65,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3a39a12ad364a9acd1038ba8da67cd8430f30de4 ]
+[ Upstream commit d6752e185c3168771787a02dc6a55f32260943cc ]
 
-This patch is trying to fix the issue due to:
-[27237.844750] BUG: KASAN: use-after-free in hns_nic_net_xmit_hw+0x708/0xa18[hns_enet_drv]
+If we encounter a failure during suspend where this RTC was programmed
+to wakeup the system from suspend, but that wakeup couldn't be
+configured because the system didn't support wakeup interrupts, we'll
+run into the following warning:
 
-After hnae_queue_xmit() in hns_nic_net_xmit_hw(), can be
-interrupted by interruptions, and than call hns_nic_tx_poll_one()
-to handle the new packets, and free the skb. So, when turn back to
-hns_nic_net_xmit_hw(), calling skb->len will cause use-after-free.
+	Unbalanced IRQ 166 wake disable
+	WARNING: CPU: 7 PID: 3071 at kernel/irq/manage.c:669 irq_set_irq_wake+0x108/0x278
 
-This patch update tx ring statistics in hns_nic_tx_poll_one() to
-fix the bug.
+This happens because the suspend process isn't aborted when the RTC
+fails to configure the wakeup IRQ. Instead, we continue suspending the
+system and then another suspend callback fails the suspend process and
+"unwinds" the previously suspended drivers by calling their resume
+callbacks. When we get back to resuming this RTC driver, we'll call
+disable_irq_wake() on an IRQ that hasn't been configured for wake.
 
-Signed-off-by: Liubin Shu <shuliubin@huawei.com>
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Let's just fail suspend/resume here if we can't configure the system to
+wake and the user has chosen to wakeup with this device. This fixes this
+warning and makes the code more robust in case there are systems out
+there that can't wakeup from suspend on this line but the user has
+chosen to do so.
+
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Benson Leung <bleung@chromium.org>
+Cc: Guenter Roeck <groeck@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Acked-By: Benson Leung <bleung@chromium.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-cros-ec.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index cc84133c184d..3a6e5cc76c5b 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -376,8 +376,6 @@ netdev_tx_t hns_nic_net_xmit_hw(struct net_device *ndev,
- 	wmb(); /* commit all data before submit */
- 	assert(skb->queue_mapping < priv->ae_handle->q_num);
- 	hnae_queue_xmit(priv->ae_handle->qs[skb->queue_mapping], buf_num);
--	ring->stats.tx_pkts++;
--	ring->stats.tx_bytes += skb->len;
+diff --git a/drivers/rtc/rtc-cros-ec.c b/drivers/rtc/rtc-cros-ec.c
+index e5444296075e..4d6bf9304ceb 100644
+--- a/drivers/rtc/rtc-cros-ec.c
++++ b/drivers/rtc/rtc-cros-ec.c
+@@ -298,7 +298,7 @@ static int cros_ec_rtc_suspend(struct device *dev)
+ 	struct cros_ec_rtc *cros_ec_rtc = dev_get_drvdata(&pdev->dev);
  
- 	return NETDEV_TX_OK;
+ 	if (device_may_wakeup(dev))
+-		enable_irq_wake(cros_ec_rtc->cros_ec->irq);
++		return enable_irq_wake(cros_ec_rtc->cros_ec->irq);
  
-@@ -999,6 +997,9 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
- 		/* issue prefetch for next Tx descriptor */
- 		prefetch(&ring->desc_cb[ring->next_to_clean]);
- 	}
-+	/* update tx ring statistics. */
-+	ring->stats.tx_pkts += pkts;
-+	ring->stats.tx_bytes += bytes;
+ 	return 0;
+ }
+@@ -309,7 +309,7 @@ static int cros_ec_rtc_resume(struct device *dev)
+ 	struct cros_ec_rtc *cros_ec_rtc = dev_get_drvdata(&pdev->dev);
  
- 	NETIF_TX_UNLOCK(ring);
+ 	if (device_may_wakeup(dev))
+-		disable_irq_wake(cros_ec_rtc->cros_ec->irq);
++		return disable_irq_wake(cros_ec_rtc->cros_ec->irq);
  
+ 	return 0;
+ }
 -- 
 2.20.1
 
