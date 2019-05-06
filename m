@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300A3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DFCC04AAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E25214AE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A517920C01
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153345;
-	bh=aBS23To4zgYe4FkCBU84AS1SB4OpLcZTHtMQFMMKQ1M=;
+	s=default; t=1557153352;
+	bh=9zeHQlPijgcf6JRRmHXC/9ChAO8zIEKZhkj2hr+EehI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WiVCSnLC5Zn24wojeKi/xkDWSfNECheHK8zHE37Dh8RF/9us4BZGFyQ3/iOpbDbQf
-	 M8hr+nkPHN2Y0eGQK/C6DXeZVaWhYRQsNpOqt5UQeqBqucS9yBvzSX9iZofVTmdDo7
-	 1hifl32dmuwGegw+zt6k1DXqyQ/1E0IgoGZqpesE=
+	b=Ea1gHfC4N8AYAQ7lT57S0z2BzPGb3Op9z2jLLTsZVx204ZJZQm8XdFPeg6eTKpRiG
+	 eJNrigYjltALFTmZ3ighSjLH4DubySBpvThhjBwOATX1l6BnETMhFz0nE/Pljc64Nn
+	 0KgZ1JZnX37HlofAfxxLfrt2E/Tr/EpfArN90P+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfEFOfo (ORCPT
+        id S1727021AbfEFOfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:35:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55818 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:35:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726983AbfEFOfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:35:40 -0400
+        id S1726984AbfEFOfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:35:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA17A214AE;
-        Mon,  6 May 2019 14:35:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB589204EC;
+        Mon,  6 May 2019 14:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153339;
-        bh=aBS23To4zgYe4FkCBU84AS1SB4OpLcZTHtMQFMMKQ1M=;
+        s=default; t=1557153342;
+        bh=9zeHQlPijgcf6JRRmHXC/9ChAO8zIEKZhkj2hr+EehI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=egEzfc61qeUVUhX1Xl1gkOoOH6jsuIUHLc84ivWpVps70IuPF6ZLjdmWSxqrHpZXZ
-         wcsgT18HipuvrZ6UGUM8Z/vpOHfmZI5lzD53cUGhiXGZSG9fWHlSUkFoyWEi4IDsTN
-         W/wkdfyRd2p7La3VzAZ7+IRxAI4rqzzw2F8/IeQA=
+        b=Oy7tBKZTztXOeWLoWUbfgsgkGlOmiLYtCEjFxvf0AlM9UYMVor7MgUzX2x55L0OXw
+         HE6ctd9tWcc7nYVYaGPd/1BvalYJuz3FgK0lYprTKA0QWAEsYWIPPM5weG4VRxqfn8
+         7S+VBPNAWcJaw+Ic3nQTYVexiq5v6F5ZAr2u1aBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
         "David S. Miller" <davem@davemloft.net>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 5.0 052/122] net: stmmac: dont stop NAPI processing when dropping a packet
-Date:   Mon,  6 May 2019 16:31:50 +0200
-Message-Id: <20190506143059.586115083@linuxfoundation.org>
+Subject: [PATCH 5.0 053/122] net: stmmac: dont overwrite discard_frame status
+Date:   Mon,  6 May 2019 16:31:51 +0200
+Message-Id: <20190506143059.681026572@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,87 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 07b3975352374c3f5ebb4a42ef0b253fe370542d ]
+[ Upstream commit 1b746ce8b397e58f9e40ce5c63b7198de6930482 ]
 
-Currently, if we drop a packet, we exit from NAPI loop before the budget
-is consumed. In some situations this will make the RX processing stall
-e.g. when flood pinging the system with oversized packets, as the
-errorneous packets are not dropped efficiently.
-
-If we drop a packet, we should just continue to the next one as long as
-the budget allows.
+If we have error bits set, the discard_frame status will get overwritten
+by checksum bit checks, which might set the status back to good one.
+Fix by checking the COE status only if the frame is good.
 
 Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/enh_desc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 0ccf91a08290..f0e0593e54f3 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3328,9 +3328,8 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- {
- 	struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
- 	struct stmmac_channel *ch = &priv->channel[queue];
--	unsigned int entry = rx_q->cur_rx;
-+	unsigned int next_entry = rx_q->cur_rx;
- 	int coe = priv->hw->rx_csum;
--	unsigned int next_entry;
- 	unsigned int count = 0;
- 	bool xmac;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+index e8855e6adb48..c42ef6c729c0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+@@ -231,9 +231,10 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ 	 * It doesn't match with the information reported into the databook.
+ 	 * At any rate, we need to understand if the CSUM hw computation is ok
+ 	 * and report this info to the upper layers. */
+-	ret = enh_desc_coe_rdes0(!!(rdes0 & RDES0_IPC_CSUM_ERROR),
+-				 !!(rdes0 & RDES0_FRAME_TYPE),
+-				 !!(rdes0 & ERDES0_RX_MAC_ADDR));
++	if (likely(ret == good_frame))
++		ret = enh_desc_coe_rdes0(!!(rdes0 & RDES0_IPC_CSUM_ERROR),
++					 !!(rdes0 & RDES0_FRAME_TYPE),
++					 !!(rdes0 & ERDES0_RX_MAC_ADDR));
  
-@@ -3348,10 +3347,12 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 		stmmac_display_ring(priv, rx_head, DMA_RX_SIZE, true);
- 	}
- 	while (count < limit) {
--		int status;
-+		int entry, status;
- 		struct dma_desc *p;
- 		struct dma_desc *np;
- 
-+		entry = next_entry;
-+
- 		if (priv->extend_desc)
- 			p = (struct dma_desc *)(rx_q->dma_erx + entry);
- 		else
-@@ -3412,7 +3413,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 						   "len %d larger than size (%d)\n",
- 						   frame_len, priv->dma_buf_sz);
- 				priv->dev->stats.rx_length_errors++;
--				break;
-+				continue;
- 			}
- 
- 			/* ACS is set; GMAC core strips PAD/FCS for IEEE 802.3
-@@ -3447,7 +3448,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 						dev_warn(priv->device,
- 							 "packet dropped\n");
- 					priv->dev->stats.rx_dropped++;
--					break;
-+					continue;
- 				}
- 
- 				dma_sync_single_for_cpu(priv->device,
-@@ -3472,7 +3473,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 							   "%s: Inconsistent Rx chain\n",
- 							   priv->dev->name);
- 					priv->dev->stats.rx_dropped++;
--					break;
-+					continue;
- 				}
- 				prefetch(skb->data - NET_IP_ALIGN);
- 				rx_q->rx_skbuff[entry] = NULL;
-@@ -3507,7 +3508,6 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
- 			priv->dev->stats.rx_packets++;
- 			priv->dev->stats.rx_bytes += frame_len;
- 		}
--		entry = next_entry;
- 	}
- 
- 	stmmac_rx_refill(priv, queue);
+ 	if (unlikely(rdes0 & RDES0_DRIBBLING))
+ 		x->dribbling_bit++;
 -- 
 2.20.1
 
