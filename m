@@ -2,130 +2,124 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962E5C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D69C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 669492082F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D008C2082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 08:36:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557131789;
-	bh=eiHzQyhOzQwPHF0TrCSrS4fRs0LrHViKmLji29sFVz4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=gxMzR1aTqQOYEPZ2RBXVi3pRitLOtzRLxHR863Lk0w5Zbs3ihBFCXpHb8a7XbzWV3
-	 2xH6Dw6yTIEwHyuCUWrbvnCjTjGxMeOD7lIIWcHzo4v3x2NaTeGldeSclq2YW0CUy1
-	 Jk0IlbN4g1mJPfZGqjH8kimjUjTKrOvb3vWK4bOg=
+	s=default; t=1557131795;
+	bh=Xie4xG0RLezY+DRQysOQWyOLJNloPi0zoQSlt1lxeKc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KMntJLewYxfmQs3cHzy3wAglZZSqXpEK/bXDqhojTK3SBHeiQFLJvCHEPwNlyr8BI
+	 Re08dPN12KZ1hJjqb+VUtNbTSjFwex6jzLqawoEHPGs+NSV/sT0Gp+KI1//TK74Cj3
+	 p4TeTrj3au9GTKAFIwQib+EneCHvWaXtIF4dcNhg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbfEFIg2 (ORCPT
+        id S1726394AbfEFIge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 04:36:28 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53592 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfEFIg1 (ORCPT
+        Mon, 6 May 2019 04:36:34 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39232 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfEFIge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 04:36:27 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q15so14648748wmf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 01:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Vr3HSOZeAFS/QzpsD/zE0Dg61yyqMnbP1Rtp6v4+Bo4=;
-        b=q/wFSA13l9AHYurSqWKz8gSkgWJKFqFqPqTY7pGTEAkCzrS2NP0P8AIiMjjEg72bdx
-         JJYgyc59sa3+jUuAmbgLtAnkbJQEtKUolzzgCRKkMJVTJC6YSkr0DEFQeFpkTOoT8wYk
-         QQrXdvs4RjNt0dhgWelew2XHncY0TomnJ46V4imqzboMfJT9OAJuekWppUASURsMPXMp
-         fkYZydYI6KArKCGwiP1Gu6XuX496iv6m5GOb25B5ON1QJ5Rld3wLRSmvvmyw2gMVPv5a
-         fQfTHfxi+c9p+Ns87LLVfdJRvr4aWlQSHqpDVQAKcA/ts4E26VPlj4EpbT7IstpX6LSl
-         jQAA==
+        Mon, 6 May 2019 04:36:34 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x16so3046701oic.6;
+        Mon, 06 May 2019 01:36:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=Vr3HSOZeAFS/QzpsD/zE0Dg61yyqMnbP1Rtp6v4+Bo4=;
-        b=iZgD09RhYHSlXwOtaHcHom3xFlDvFHYZ8j6/9GNsZ2dAzLEXk5l7FMyAfFcf/sRMpp
-         1MfDLnRi5TUz3rfjSGtRNi0hqOe7qnjNQDmIU+8T856lamz3FfyR2nwvIXpCtm1z4ZDi
-         da1J8SEor43j20rtGi5JS7dbM7KgT0ox/qvlTJk2o+tU6Vx3EE6PO+zzi7KMZCVFs3Pn
-         YS7WUtwjhfeU9zP6t5v9Qk/GQmcJVL83BIfiGgR9/P81GMbJj93etdA9/RfH9ZjCCFvO
-         BZCH7iPi/acXrK714KMMG7Qx+7ahX/d4Ezq1UlH4YonNzRtSZocdsRhuEYl2+c7d80A5
-         6W+Q==
-X-Gm-Message-State: APjAAAUkDszO80xnz2DIzkYmQWuNzQZAZfrmNObG/TUSXa5urbLXkWk5
-        jO5JcVKNK/ISY6EjBqLguOg=
-X-Google-Smtp-Source: APXvYqxitRNtPsDM1X2YoD8ZGSnklPNKoyNHD0b+8IrdzNlgdCvzBe1TxZVSwCh4OxYpSesT9ggwCw==
-X-Received: by 2002:a1c:cf83:: with SMTP id f125mr14620192wmg.96.1557131785957;
-        Mon, 06 May 2019 01:36:25 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id y184sm9420014wmg.7.2019.05.06.01.36.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 May 2019 01:36:25 -0700 (PDT)
-Date:   Mon, 6 May 2019 10:36:23 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [GIT PULL] IRQ changes for v5.2
-Message-ID: <20190506083623.GA127408@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RI5tWDg9So1VuC7W9/kUG69QrGBsy3wNS2QspBOJr3w=;
+        b=XbBzkcntIQ8KvmGHRNmMqBg7DNzXmU/7Xy2HR1LvaBM56eKmeIhF68IME/HdMknXnb
+         eAfkHKq7rzRhaH7VbsGV+6VyKfdV228y27Y+IlxW2kVGJ2bRevVUza67cn4P6UhqsWIC
+         xoUu00HdWF1+5+O4Sa1/qMgu+Ux+tRS1MFC0kdsj4zgV1q/fCE/5nT4vVFvJvnm+9LQ4
+         z3rHUH7qJX/+qAw4b7B4kKyVG6yzu6XIz7hWsmXPJVFmrkdfhhB5q6SxvsSlkXjL9Czg
+         hIYzZK99AOTq7Hj4uLc1kwN84KjtObZbV9shZibaJeVo189qzXefOxrTAKG3B5H0/WQo
+         xvaw==
+X-Gm-Message-State: APjAAAV+WIOtpiX1b9iW6NnyVMk6AeFVIKy3MbYRWpqYH7GLPpZ3TymM
+        wmiNU8R4MrK2OHJCxTa8y7VVpykBax5b59aAO6Q=
+X-Google-Smtp-Source: APXvYqwAJUUjNvKVg6KZ3xRKyBM0B1Mi/aBfBkvmIKfrou4l4YatPD9RnwfhnPr74P6+x5gOB/MDST+7GGsfyLwLVXk=
+X-Received: by 2002:aca:f01:: with SMTP id 1mr387656oip.68.1557131793348; Mon,
+ 06 May 2019 01:36:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190501125322.23791-1-pierre-louis.bossart@linux.intel.com> <20190502045817.GZ3845@vkoul-mobl.Dlink>
+In-Reply-To: <20190502045817.GZ3845@vkoul-mobl.Dlink>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 6 May 2019 10:36:22 +0200
+Message-ID: <CAJZ5v0i+M8y3ddr+Z5o5af8OatMXq3xqCF5CUg5PjnANrTOSHw@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI / device_sysfs: change _ADR representation to 64 bits
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        jank@cadence.com, Joe Perches <joe@perches.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Thu, May 2, 2019 at 6:58 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 01-05-19, 07:53, Pierre-Louis Bossart wrote:
+> > Standards such as the MIPI DisCo for SoundWire 1.0 specification
+> > assume the _ADR field is 64 bits.
+> >
+> > _ADR is defined as an "Integer" represented as 64 bits since ACPI 2.0
+> > released in 2002. The low levels already use _ADR as 64 bits, e.g. in
+> > struct acpi_device_info.
+> >
+> > This patch bumps the representation used for sysfs to 64 bits. To
+> > avoid any compatibility/ABI issues, the printf format is only extended
+> > to 16 characters when the actual _ADR value exceeds the 32 bit
+> > maximum.
+> >
+> > Example with a SoundWire device, the results show the complete
+> > vendorID and linkID which were omitted before:
+> >
+> > Before:
+> > $ more /sys/bus/acpi/devices/device\:38/adr
+> > 0x5d070000
+> > After:
+> > $ more /sys/bus/acpi/devices/device\:38/adr
+> > 0x000010025d070000
+> >
+> > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > ---
+> > v2: only use 64 bits when required to avoid compatibility issues
+> > (feedback from Vinod and Rafael)
+> >
+> >  drivers/acpi/device_sysfs.c | 6 ++++--
+> >  include/acpi/acpi_bus.h     | 2 +-
+> >  2 files changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
+> > index 8940054d6250..7dda0ee05cd1 100644
+> > --- a/drivers/acpi/device_sysfs.c
+> > +++ b/drivers/acpi/device_sysfs.c
+> > @@ -428,8 +428,10 @@ static ssize_t acpi_device_adr_show(struct device *dev,
+> >  {
+> >       struct acpi_device *acpi_dev = to_acpi_device(dev);
+> >
+> > -     return sprintf(buf, "0x%08x\n",
+> > -                    (unsigned int)(acpi_dev->pnp.bus_address));
+> > +     if (acpi_dev->pnp.bus_address > 0xFFFFFFFF)
+>
+> Would prefer to use U32_MAX instead of 0xFFFFFFFF
 
-Please pull the latest irq-core-for-linus git tree from:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-core-for-linus
-
-   # HEAD: 471ba0e686cb13752bc1ff3216c54b69a2d250ea irq_work: Do not raise an IPI when queueing work on the local CPU
-
-The changes in this cycle were:
-
- - Remove the irq timings/variance statistics code that tried to predict 
-   when the next interrupt would occur, which didn't work out as hoped 
-   and will is replaced by another mechanism.
-
- - This new mechanism is the 'array suffix computation' estimate, which 
-   is superior to the previous one as it can detect not just a single 
-   periodic pattern, but independent periodic patterns along a log-2 
-   scale of bucketing and exponential moving average. The comments are 
-   longer than the code - and it works better at predicting various 
-   complex interrupt patterns from real-world devices than the previous 
-   estimate.
-
- - avoid IRQ-work self-IPIs on the local CPU
-
- - fix work-list corruption in irq_set_affinity_notifier()
-
- Thanks,
-
-	Ingo
-
------------------->
-Daniel Lezcano (2):
-      genirq/timings: Remove variance computation code
-      genirq/timings: Add array suffix computation code
-
-Gustavo A. R. Silva (1):
-      genirq/devres: Use struct_size() in devm_kzalloc()
-
-Nicholas Piggin (1):
-      irq_work: Do not raise an IPI when queueing work on the local CPU
-
-Prasad Sodagudi (1):
-      genirq: Prevent use-after-free and work list corruption
-
-
- kernel/irq/devres.c  |   3 +-
- kernel/irq/manage.c  |   4 +-
- kernel/irq/timings.c | 522 +++++++++++++++++++++++++++++++++++----------------
- kernel/irq_work.c    |  75 ++++----
- 4 files changed, 409 insertions(+), 195 deletions(-)
+I would.
