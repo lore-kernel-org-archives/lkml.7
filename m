@@ -2,274 +2,203 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFEFC04AAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08741C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAA020B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2F420830
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 20:32:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="jamnwn5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfEFU3V (ORCPT
+        id S1726491AbfEFUc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 16:29:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbfEFU3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 16:29:21 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C47F20830;
-        Mon,  6 May 2019 20:29:17 +0000 (UTC)
-Date:   Mon, 6 May 2019 16:29:15 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [RFC][PATCH 1/2] x86: Allow breakpoints to emulate call
- functions
-Message-ID: <20190506162915.380993f9@gandalf.local.home>
-In-Reply-To: <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
-References: <20190502181811.GY2623@hirez.programming.kicks-ass.net>
-        <CAHk-=wi6A9tgw=kkPh5Ywqt687VvsVEjYXVkAnq0jpt0u0tk6g@mail.gmail.com>
-        <20190502202146.GZ2623@hirez.programming.kicks-ass.net>
-        <20190502185225.0cdfc8bc@gandalf.local.home>
-        <20190502193129.664c5b2e@gandalf.local.home>
-        <20190502195052.0af473cf@gandalf.local.home>
-        <20190503092959.GB2623@hirez.programming.kicks-ass.net>
-        <20190503092247.20cc1ff0@gandalf.local.home>
-        <2045370D-38D8-406C-9E94-C1D483E232C9@amacapital.net>
-        <CAHk-=wjrOLqBG1qe9C3T=fLN0m=78FgNOGOEL22gU=+Pw6Mu9Q@mail.gmail.com>
-        <20190506081951.GJ2606@hirez.programming.kicks-ass.net>
-        <20190506095631.6f71ad7c@gandalf.local.home>
-        <CAHk-=wgw_Jmn1iJWanoSFb1QZn3mbTD_JEoMsWcWj5QPeyHZHA@mail.gmail.com>
-        <20190506130643.62c35eeb@gandalf.local.home>
-        <CAHk-=whesas+GDtHZks62wqXWXe4d_g3XJ359GX81qj=Fgs6qQ@mail.gmail.com>
-        <20190506145745.17c59596@gandalf.local.home>
-        <CAHk-=witfFBW2O5v6g--FmqnAFsMkKNLosTFfWyaoJ7euQF8kQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 6 May 2019 16:32:57 -0400
+Received: from mail.efficios.com ([167.114.142.138]:40208 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbfEFUc5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 16:32:57 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 572A61E0D28;
+        Mon,  6 May 2019 16:32:55 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id a9NS-zVfljiK; Mon,  6 May 2019 16:32:54 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 6B03D1E0D1F;
+        Mon,  6 May 2019 16:32:54 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 6B03D1E0D1F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1557174774;
+        bh=BYvMNDDLG8Btx2+MJ23qT1uNxMmPkWNKPuhMmXOQ5ko=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=jamnwn5fwm/aR0gXfoK2HG/1mvDvFu9FdlrOdBBi3BeDXgel8tSRLEHyfj9GFIGO1
+         o0pM06FqOKafwniVkq8mrZoZ3hykGJCohZrWMeJHDNFrdGIRzgukL4Mp1zwle0QT8K
+         x7mTCSiJjQfCsFgDClv7nHHN/MtCFe1HhzDLmsHHYPdHFttMM2O0E/aSJ0YTYfsYRz
+         qxGNIoeeBa9RpVfszLIS7t78evGa+M5+Df9n/CsGZQ6JREModr3RG3PAeeT4GA/ePR
+         rArpciZZw6ay/JS+jra/zLtyWu2TPhYSIIfp9YRmDzk9plwdKRLvoFAM/3jVFoaFbi
+         caV19KbTPXdMQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id iPKMjiVeMDFT; Mon,  6 May 2019 16:32:54 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 530241E0D18;
+        Mon,  6 May 2019 16:32:54 -0400 (EDT)
+Date:   Mon, 6 May 2019 16:32:54 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     linux-kernel@vger.kernel.org, lttng-dev@lists.lttng.org,
+        rp@svcs.cs.pdx.edu
+Cc:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Message-ID: <990796059.510.1557174774246.JavaMail.zimbra@efficios.com>
+Subject: [RELEASE] Userspace RCU 0.11
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Index: 2Iev/flw77z+21I02ATmbGCqmUpBFA==
+Thread-Topic: Userspace RCU 0.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2019 12:46:11 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hi,
 
-> On Mon, May 6, 2019 at 11:57 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > You should have waited another week to open that merge window ;-)  
-> 
-> Hmm. I'm looking at it while the test builds happen, and since I don't
-> see what's wrong in the low-level entry code, I'm looking at the
-> ftrace code instead.
-> 
-> What's going on here?
-> 
->                *pregs = int3_emulate_call(regs, (unsigned
-> long)ftrace_regs_caller);
-> 
-> that line makes no sense. Why would we emulate a call to
-> ftrace_regs_caller()? That function sets up a pt_regs, and then calls
-> ftrace_stub().
+This is a 0.11 release of the Userspace RCU project.
 
-Because that call to ftrace_stub is also dynamic.
+liburcu is a LGPLv2.1 userspace RCU (read-copy-update) library. This
+data synchronization library provides read-side access which scales
+linearly with the number of cores. It does so by allowing multiple
+copies of a given data structure to live at the same time, and by
+monitoring the data structure accesses to detect grace periods after
+which memory reclamation is possible.
 
-In entry_32.S
+liburcu-cds provides efficient data structures based on RCU and
+lock-free algorithms. Those structures include hash tables, queues,
+stacks, and doubly-linked lists.
 
-.globl ftrace_call
-ftrace_call:
-	call	ftrace_stub
+Here is the high-level view of the changes introduced in this release:
 
+* Allow combining many urcu flavors within the same
+  compile unit. Prefix public APIs with urcu_<flavor>_ prefix. Keep old
+  symbols as aliases for backward compatibility.
 
-update_ftrace_func()
-{
-  [..]
-	} else if (is_ftrace_caller(ip)) {
-		if (!ftrace_update_func_call) {
-			int3_emulate_jmp(regs, ip + CALL_INSN_SIZE);
-			return 1;
-		}
-		*pregs = int3_emulate_call(regs, ftrace_update_func_call);
-		return 1;
-	}
+* liburcu flavors public headers are moved, including them from previous
+  headers for backward compatibility:
 
-Part of the code will change it to call the function needed directly.
+  urcu-bp.h -> urcu/urcu-bp.h
+  urcu-qsbr.h -> urcu/urcu-qsbr.h
+  urcu.h -> urcu/urcu-memb.h
+  urcu.h (after #define RCU_MEMBARRIER) -> urcu/urcu-memb.h
+  urcu.h (after #define RCU_MB) -> urcu/urcu-mb.h
+  urcu.h (after #define RCU_SIGNAL) -> urcu/urcu-mb.h
 
-struct ftrace_ops my_ops {
-	.func = my_handler
-};
+* The library liburcu is renamed to liburcu-memb, keeping the old
+  library name as alias for backward compatibility.
 
-	register_ftrace_function(&my_ops);
+* RCU lock-free hash table debugging:
 
-Will change "call ftrace_stub" into "call my_handler"
+  --enable-cds-lfht-iter-debug is introduced.
 
-If you register another ftrace_ops, it will change that to
+  Building liburcu with --enable-cds-lfht-iter-debug and rebuilding
+  application to match the ABI change allows finding cases where the hash
+  table iterator is re-purposed to be used on a different hash table
+  while still being used to iterate on a hash table.
 
-	call ftrace_ops_list_func
+  This option alters the rculfhash ABI. Make sure to compile both library
+  and application with matching configuration.
 
-Which will iterate over all registered ftrace_ops, and depending on the
-hashs in ftrace_ops, will call the registered handler for them.
+* Added support for RISC-V architecture.
 
+* Use membarrier PRIVATE_EXPEDITED when available from liburcu-bp and
+  liburcu-memb flavors.
 
-> 
-> But we *have* pt_regs here already with the right values. Why isn't
-> this just a direct call to ftrace_stub() from within the int3 handler?
-> 
-> And the thing is, calling ftrace_regs_caller() looks wrong, because
-> that's not what happens for *real* mcount handling, which uses that
-> "create_trampoline()" to create the thing we're supposed to really
-> use?
+The backward compatibility header files, library shared objects, and
+symbols will be kept for a few liburcu versions before being removed, at
+which point a major soname bump will happen.
 
-The ftrace_regs_caller() is what is called if there's two or more
-callbacks registered to a single function. For example, you have a
-function that is being lived patch (it uses the ftrace_regs_caller copy
-of the trampoline). But if you enable function tracing (which doesn't
-need a copy of regs), it will call the ftrace_regs_caller, which will
-call a ftrace_ops_list_func() which will look at the ftrace_ops (which
-is the descriptor representing registered callbacks to ftrace), and
-based on the hash value in them, will call their handler if the
-ftrace_ops hashes match the function being called.
+As always, feedback is welcome!
 
+Thanks,
 
-> 
-> Anyway, I simply don't understand the code, so I'm confused. But why
-> is the int3 emulation creating a call that doesn't seem to match what
-> the instruction that we're actually rewriting is supposed to do?
-> 
-> IOW, it looks to me like ftrace_int3_handler() is actually emulating
-> something different than what ftrace_modify_code() is actually
-> modifying the code to do!
-> 
-> Since the only caller of ftrace_modify_code() is update_ftrace_func(),
-> why is that function not just saving the target and we'd emulate the
-> call to that? Using anything else looks crazy?
-> 
-> But as mentioned, I just don't understand the ftrace logic. It looks
-> insane to me, and much more likely to be buggy than the very simple
-> entry code.
+Mathieu
 
+Changelog:
 
-Let's go an example. Let's say we live patched do_IRQ() and
-__migrate_task(). We would have this:
-
-live_patch_trampoline:
-   (which is a modified copy of the ftrace_regs_caller)
-	pushl	$__KERNEL_CS
-	pushl	4(%esp)
-	pushl	$0
-	pushl	%gs
-	pushl	%fs
-	pushl	%es
-	pushl	%ds
-	pushl	%eax
-	pushf
-	popl	%eax
-	movl	%eax, 8*4(%esp)
-	pushl	%ebp
-	pushl	%edi
-	pushl	%esi
-	pushl	%edx
-	pushl	%ecx
-	pushl	%ebx
-	movl	12*4(%esp), %eax
-	subl	$MCOUNT_INSN_SIZE, %eax
-	movl	15*4(%esp), %edx		/* Load parent ip (2nd parameter) */
-	movl	function_trace_op, %ecx		/* Save ftrace_pos in 3rd parameter */
-	pushl	%esp				/* Save pt_regs as 4th parameter */
-
-	call	live_kernel_patch_func
-
-	addl	$4, %esp			/* Skip pt_regs */
-	push	14*4(%esp)
-	popf
-	movl	12*4(%esp), %eax
-	movl	%eax, 14*4(%esp)
-	popl	%ebx
-	popl	%ecx
-	popl	%edx
-	popl	%esi
-	popl	%edi
-	popl	%ebp
-	popl	%eax
-	popl	%ds
-	popl	%es
-	popl	%fs
-	popl	%gs
-	lea	3*4(%esp), %esp			/* Skip orig_ax, ip and cs */
-	jmp	.Lftrace_ret
+2019-05-06 Userspace RCU 0.11.0
+        * Bump library version to 6:0:1
+        * Cleanup: update code layout to fix old gcc warning
+        * Fix: typo CPPLAGS in examples Makefile
+        * Harmonize pprint macro across projects
+        * Check for TLS support after CC detection
+        * Update macros from the autotools archive
+        * tap-driver.sh: flush stdout after each test result
+        * Update dead link in lgpl-relicensing.txt
+        * Add multiflavor compat identifiers
+        * Cleanup: missing sign compare fixes
+        * Cleanup: enable signed/unsigned compare compiler warning
+        * Cleanup: compiler warning on 32-bit architectures
+        * config.h.in: rename CONFIG_RCU_MULTIFLAVOR to CONFIG_RCU_HAVE_MULTIFLAVOR
+        * rculfhash: implement iterator debugging config option
+        * Fix: examples silent rules on Solaris
+        * Add missing fall through annotations
+        * Fix: symbol aliases with TLS compat
+        * Port: no symbols aliases on MacOS
+        * Add -Wextra to CFLAGS
+        * Add silent mode to examples Makefiles
+        * doc: update examples to API changes
+        * test multiflavor single compile unit
+        * Update README following API changes
+        * Use new header locations for includes from urcu code
+        * Update call-rcu.h and defer.h comments and include guards
+        * rculfqueue.h: do not include urcu-call-rcu.h
+        * rculfhash: support use with multiple flavors per compile unit
+        * rculfhash: do not include urcu-call-rcu.h from public API
+        * Refactor liburcu to support many flavors per compile unit
+        * Fix: only wait if work queue is empty in real-time mode
+        * Fix: don't wait after completion of a work queue job batch
+        * Fix: don't wait after completion of job batch if work queue is empty
+        * Fix: workqueue: struct urcu_work vs rcu_head mixup
+        * Cleanup: workqueue: update comments referring to call-rcu
+        * Fix: mixup between URCU_WORKQUEUE_RT and URCU_CALL_RCU_RT
+        * test_rwlock: Add per-thread count to verbose output
+        * Add *.exe to gitignore for Cygwin
+        * Fix: pthread_rwlock initialization on Cygwin
+        * Fix: compat_futex_noasync on Cygwin
+        * wfcqueue: allow defining CDS_WFCQ_WAIT_SLEEP to override `poll'
+        * Update documentation for call_rcu before/after fork
+        * Add support for the RISC-V architecture
+        * Tests: Add tap-driver.sh for automake < 1.12
+        * Tests: Replace prove by autotools tap runner
+        * liburcu-bp: Use membarrier private expedited when available
+        * liburcu: Use membarrier private expedited when available
+        * rculfhash: improve error handling of mmap backend
+        * Fix: don't use overlapping mmap mappings on Cygwin
+        * Tests fix: errors in shell scripts
+        * Revert "Use initial-exec tls model"
+        * Use initial-exec tls model
+        * Fix: don't use membarrier SHARED syscall command in liburcu-bp
+        * Tests fix: add missing Cygwin thread id
+        * Fix: assignment from incompatible pointer type warnings
+        * Tests fix: unused variable warnings
+        * Fix: add missing m68k headers to dist
+        * Bump version to 0.11-pre
 
 
-<do_IRQ>:
-	call live_patch_trampoline
-	[..]
+Project website: http://liburcu.org
+Git repository: git://git.liburcu.org/urcu.git
 
-<__migrate_task>:
-	call_live_patch_trampoline
-
-
-Now we enable function tracing on all functions that can be traced, and
-this includes do_IRQ() and __migrate_task(). Thus, we first modify that
-call to ftrace_stub in the ftrace_regs_caller to point to the
-ftrace_ops_list_func() as that will iterate over the ftrace_ops for
-live kernel patching, and the ftrace_ops for the function tracer. That
-iterator will check the hashes against the called functions, and for
-live kernel patching, it will it will call its handler if the passed in
-ip matches either do_IRQ() or __migrate_task(). It will see that the
-ftrace_ops for function tracing is set to trace all functions and just
-call its handler in that loop too.
-
-Today, when we place an int3 on those functions, we basically turn them
-into nops.
-
-<do_IRQ>:
-	<int3>(convert from call live_patch_trampoline
-	                 to call ftrace_regs_caller)
-	[..]
-
-But that int3 handler, doesn't call either the live_patch_trampoline or
-ftrace_regs_caller, which means, the live kernel patching doesn't get
-to make that function call something different. We basically, just
-disabled tracing completely for those functions during that transition.
-
-Remember that ftrace_regs_caller gets updated to not call ftrace_stub,
-but to the list iterator if there's more than one handler registered
-with ftrace (and so does ftrace_caller). By making the int3 handler
-call it, will do the iteration over all registered ftrace_ops and
-nothing will be missed.
-
-Does that help explain what's going on?
-
--- Steve
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
