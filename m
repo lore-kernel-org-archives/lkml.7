@@ -2,124 +2,105 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D05C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131CBC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6242053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C182053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 17:54:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ReHS99co"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="puewRPLH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbfEFRxY (ORCPT
+        id S1726932AbfEFRyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 13:53:24 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43054 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbfEFRxY (ORCPT
+        Mon, 6 May 2019 13:54:16 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41647 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbfEFRyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 13:53:24 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x46HrJMZ056191;
-        Mon, 6 May 2019 12:53:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557165199;
-        bh=CaNopjjkKRCvRZjxlcGvzB6zVq2/clvaGGd6ocsNFa4=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=ReHS99coaRenvoGCmrDPgktftCx5kM5fNoN/Q+7uc9yEfRRpi0FYAlFqwZuE2kAqe
-         kiisYUCq0mOuhB9CE5es6TInrQtgYg9XWsHU4K0rHKOKg6Not+YdaKNnBgTiJebMRn
-         J6yRcwTK+nlirlWE875XnjDmeiMAujaSYAlrPGb0=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x46HrJjU007670
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 May 2019 12:53:19 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 6 May
- 2019 12:53:19 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 6 May 2019 12:53:19 -0500
-Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x46HrJsb031096;
-        Mon, 6 May 2019 12:53:19 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 2/7] dt-bindings: mfd: LMU: Add the ramp up/down
- property
-To:     Pavel Machek <pavel@ucw.cz>
-CC:     <jacek.anaszewski@gmail.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
-References: <20190430191730.19450-1-dmurphy@ti.com>
- <20190430191730.19450-3-dmurphy@ti.com> <20190430220140.GB20410@amd>
-Message-ID: <7712d911-7ef3-e273-2cdc-89c5b56369cb@ti.com>
-Date:   Mon, 6 May 2019 12:53:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 6 May 2019 13:54:16 -0400
+Received: by mail-qt1-f196.google.com with SMTP id c13so15778201qtn.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 10:54:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=QhugHBuoBeAcIwpcanoLwTWHJfxQHnSCegSWAvWi8kU=;
+        b=puewRPLH4Nh/tosb7+eyKJyRGegVRvwvSe51SQhwLutt2q6m0+ltEOplW8mkMCUoiz
+         c9A02CPaqRZaZExZZ8hjy1+Wi12kEipDiFDwJcKNFhoYqxwGNA1xnN+PTUvHSBW+mTrl
+         v1C3cZHCAz+/YObFqsrKCorzir4viKXiogisTmNG/II+6qOgGMez0Dw7PhiX/pfAw5B1
+         G7jbTG1mSlgyh4DlZaMPtF8WXUwxSHowOeYCVHwF/XVuecLJTzzwrfjLPxAp6kildygK
+         GIZFmG5d6/N8z6/CATq1ii4dfcJvhKRsjRhdbbyGk8DFEDIsTchK0gjtvUxpC+iDOC1q
+         vnEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=QhugHBuoBeAcIwpcanoLwTWHJfxQHnSCegSWAvWi8kU=;
+        b=UxqYNd6vZojixHq8y3J07t3bKE6SUqqoAqwe/+jn/5OPiDMhCgKL1HzjBxH5zCf5Gx
+         lEJuo6iD4Bl93adcH/1dx45CcAfEycYP84+K19svVwIanYFJ8pIKGMPIXkeC2orky39S
+         7vCo9bukEQC6wHUmMtzbgpHQU3Lm/mhv51Zj8FFAPkoMFKVTj0fABPs82zZWxNohufX9
+         PEmemjFjO957KuXBUx4biINIJsE4m53Asi62TCMLQ11ZpQvNvJUljPgXG1hJUWUIxPzo
+         6M5bautQKZlJSpRIZzOY38rpshA3kTxNvXHnl/Qeq+yHvusyF6PAj2TE8uEpS6VsudSI
+         RwrQ==
+X-Gm-Message-State: APjAAAWVumciISJ2+OSGBKIa2ljAIU1eQO96L1/5+rItWlpKwIbNUdy0
+        ZGXYK+VG+MSCgNpnD2SBjDXwOw==
+X-Google-Smtp-Source: APXvYqy5PtVe8FLAX6kDTgdUP43dSzUlx/5JyN5cnA6nyK/VlRdXqugen7LkGUTYbhAIs7gMXx0zyg==
+X-Received: by 2002:ac8:3157:: with SMTP id h23mr84589qtb.248.1557165255314;
+        Mon, 06 May 2019 10:54:15 -0700 (PDT)
+Received: from cakuba.hsd1.ca.comcast.net ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id f6sm6382006qti.4.2019.05.06.10.54.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 06 May 2019 10:54:15 -0700 (PDT)
+Date:   Mon, 6 May 2019 10:54:07 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
+        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
+        mw@semihalf.com, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: Re: [PATCH net-next 0/4] net: mvpp2: cls: Add classification
+Message-ID: <20190506105407.69ff9a08@cakuba.hsd1.ca.comcast.net>
+In-Reply-To: <20190506100026.7d0094fc@bootlin.com>
+References: <20190430131429.19361-1-maxime.chevallier@bootlin.com>
+        <20190504025353.74acbb6d@cakuba.netronome.com>
+        <20190506100026.7d0094fc@bootlin.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <20190430220140.GB20410@amd>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
-
-On 4/30/19 5:01 PM, Pavel Machek wrote:
-> On Tue 2019-04-30 14:17:25, Dan Murphy wrote:
->> Document the ramp-up and ramp-down property in the binding.
->> Removing the "sec" from the property definition as seconds is
->> implied.
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>
->> v3 - No changes added Reviewed-by Rob - https://lore.kernel.org/patchwork/patch/1058759/
->>
->> v2 - Fixed commit message as this was not just a modification but adding documentation
->> https://lore.kernel.org/patchwork/patch/1054504/
->>
->>  .../devicetree/bindings/mfd/ti-lmu.txt        | 20 ++++++++++++-------
->>  1 file changed, 13 insertions(+), 7 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
->> index 86ca786d54fc..adae96c79d39 100644
->> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
->> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
->> @@ -25,6 +25,12 @@ Required properties:
->>  
->>  Optional property:
+On Mon, 6 May 2019 10:00:26 +0200, Maxime Chevallier wrote:
+> Hello Jakub,
 > 
-> "properties".
+> On Sat, 4 May 2019 02:53:53 -0400
+> Jakub Kicinski <jakub.kicinski@netronome.com> wrote:
 > 
-
-Ack
-
->>    - enable-gpios: A GPIO specifier for hardware enable pin.
->> +  - ramp-up-ms: Current ramping from one brightness level to
->> +		the a higher brightness level.
->> +		Range from 2048 us - 117.44 s
->> +  - ramp-down-ms: Current ramping from one brightness level to
->> +		  the a lower brightness level.
->> +		  Range from 2048 us - 117.44 s
+> >On Tue, 30 Apr 2019 15:14:25 +0200, Maxime Chevallier wrote:  
+> >> Compared to the first submissions, the NETIF_F_NTUPLE flag was also
+> >> removed, following Saeed's comment.    
+> >
+> >You should probably add it back, even though the stack only uses
+> >NETIF_F_NTUPLE for aRFS the ethtool APIs historically depend on the
+> >drivers doing a lot of the validation.  
 > 
-> Can you use ramp-up/down-us for consistency?
-
-Sure I can change it to ramp-up/down-us.
-I just converted it ramp-up/down-msec to ramp-ramp-up/down-ms.
-
-Probably makes more sense anyway with the range actually given is in us.
-
-Dan
-
-> 								Pavel
+> OK my bad, reading your previous comments again, I should indeed have
+> left it.
 > 
+> I'll re-add the flag, do you think this should go through -net or wait
+> until net-next reopens ?
+
+I think the patch should be relatively simple and clean?  So I'd try for
+net, with a Fixes tag, it's a slight ABI correction and we are still
+in the merge window period.  So I'd go for net :)
