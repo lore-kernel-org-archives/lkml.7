@@ -2,89 +2,99 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7C9C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04038C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509A920830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7628206BF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 12:54:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Pa0zYFao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbfEFMuZ (ORCPT
+        id S1726156AbfEFMyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 08:50:25 -0400
-Received: from mga03.intel.com ([134.134.136.65]:34370 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfEFMuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 08:50:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 May 2019 05:50:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,438,1549958400"; 
-   d="scan'208";a="168404200"
-Received: from lilitang-mobl.ccr.corp.intel.com ([10.249.168.111])
-  by fmsmga002.fm.intel.com with ESMTP; 06 May 2019 05:50:22 -0700
-Message-ID: <1557147020.2456.5.camel@intel.com>
-Subject: Re: [PATCH] drivers: thermal: processor_thermal: Downgrade error
- message
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        edubezval@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 06 May 2019 20:50:20 +0800
-In-Reply-To: <20190430034213.40028-1-srinivas.pandruvada@linux.intel.com>
-References: <20190430034213.40028-1-srinivas.pandruvada@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 6 May 2019 08:54:25 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39702 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbfEFMyZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 08:54:25 -0400
+Received: by mail-pl1-f194.google.com with SMTP id e92so6343998plb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 05:54:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:subject:date:message-id;
+        bh=mCH1PNSxZO8UcLFwRskob8mKkP1s690Icm959QBwtxU=;
+        b=Pa0zYFaooyEYnq8TNhjhsXUlNZTUn09rsJ8MbLtbutJ3aBNJVK6GoB0Ieeo+ivQPKH
+         c29gKxZLq9jfmaUkDPJXGoeQHFZ+BqEepzvbmCpuhplKrHOfsUx5dtQ2hoWnuP3KSMmi
+         3MQrQ34bAG4govn9tRpYpXMp4e+AIB/LMZZy1ddaiJJL3MkeNGe/nFKNsR+1CxPEQgz4
+         M1D8ORQk6cXBjqrBe0oduIqsMaZvCY0bSEx1GxZ4JiISvRxvYjeJnlcfs/i8rRRkSG6j
+         nlv88TJUpQauJaa04VxyQrfrXjIRfJHUolR7Wt1P1ld8gBk+MTDanS7ULH4jCR6an06c
+         GhDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=mCH1PNSxZO8UcLFwRskob8mKkP1s690Icm959QBwtxU=;
+        b=A3YA1mdQsD0h3UGgNwNoLl10UKb6AhYD0Kj+W8W0zLoyLISOeCDb29WCMjQv7Fpk4c
+         olzA3qlwucMk315zVMoP4GMeH3Yr43nBFoQ4N+erH0EZzmhRg7uSHlIT/ZBZQFG0z2Rq
+         bZDQUH7BgY0ORfpF8rx4lUWEqzyTtDEoSXkifx9211j5N2geiQso0Bt87VXzFjiiNN0L
+         tewS1+egtVDay8M11s2Fw2k/cZnHzDZvuKRGXW/aCbRjaYCUndNp7xklGN4OZm4k1K+f
+         TSOjR6N1as7V9LTqNL2hq513zzsQ1t7ebp/TyzS9nm0oMUp0tyueX2vLEPSMgjn/8MEd
+         6RSw==
+X-Gm-Message-State: APjAAAUwCtNQpzfuLI9sEbI0Zb8U6MjfO16GIo9+YE/3Us2g4s0wd4ws
+        ydqo92yCoKtLg8VlqRCzkxmDnA==
+X-Google-Smtp-Source: APXvYqzA7OlsB9Sxuwz64C70xfdtuDDDGNwfRbcLFQfRJu2C+ztVPX59gkK/uUwSuBXaxJYg8WdB9g==
+X-Received: by 2002:a17:902:2dc3:: with SMTP id p61mr31847462plb.308.1557147264714;
+        Mon, 06 May 2019 05:54:24 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id p81sm18031132pfa.26.2019.05.06.05.54.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 06 May 2019 05:54:24 -0700 (PDT)
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, palmer@sifive.com,
+        paul.walmsley@sifive.com, sagar.kadam@sifive.com,
+        peter@korsgaard.com, andrew@lunn.ch, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 v1 0/3] Add dt bindings to support I2C on sifive devices and a fix for polling mode i2c transfers.
+Date:   Mon,  6 May 2019 18:23:57 +0530
+Message-Id: <1557147240-29551-1-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 一, 2019-04-29 at 20:42 -0700, Srinivas Pandruvada wrote:
-> Downgrade "Unsupported event" message from dev_err to dev_dbg.
-> Otherwise it
-> floods with this message one some platforms.
-> 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.c
-> om>
-> ---
->  .../thermal/intel/int340x_thermal/processor_thermal_device.c    | 2
-> +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git
-> a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> index 4b206b594825..436c256f111d 100644
-> ---
-> a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> +++
-> b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> @@ -275,7 +275,7 @@ static void proc_thermal_notify(acpi_handle
-> handle, u32 event, void *data)
->  				THERMAL_DEVICE_POWER_CAPABILITY_CHAN
-> GED);
->  		break;
->  	default:
-> -		dev_err(proc_priv->dev, "Unsupported event
-> [0x%x]\n", event);
-> +		dev_dbg(proc_priv->dev, "Unsupported event
-> [0x%x]\n", event);
->  		break;
->  	}
->  }
+The patch is based on mainline v5.1 and is intended to add DT-bindings for Opencore based I2C device 
+support in FU540 SoC, available on HiFive unleashed board (Rev A00), and also provide a workaround to 
+make I2C polling mode interface work with FU540 chipsets.
 
-a similar patch has been applied, the only difference is that I'm using
-dev_notice instead.
-https://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux.git/commit
-/?h=next&id=3c7110fab805766450c5d2eac1c994d4c8c230d3
+The polling mode workaround patch fixes the CPU stall issue, when-ever i2c transfer are initiated 
 
-thanks,
-rui
+This workaround checks if it's a FU540 chipset based on device tree information, and check's for open
+core's IF(interrupt flag) and TIP flags to break from the polling loop upon completion of transfer.
+
+To test the patch, a PMOD-AD2 sensor is connected to HiFive Unleashed board over J1 connector, and 
+appropriate device node is added into board specific device tree as per the information provided in 
+dt-bindings in Documentation/devicetree/bindings/i2c/i2c-sifive.txt.
+Without this workaround, the CPU stall's infinitely.
+
+Busybox i2c utilities used to verify workaround : i2cdetect, i2cdump, i2cset, i2cget
+
+
+Sagar Shrikant Kadam (3):
+  dt-bindings: i2c: add documentation for adding SiFive I2C driver
+  i2c-ocore: sifive: add support for i2c device on FU540-c000 SoC.
+  i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC.
+
+ .../devicetree/bindings/i2c/i2c-sifive.txt         | 29 +++++++++++++++++++
+ drivers/i2c/busses/i2c-ocores.c                    | 33 +++++++++++++++++++---
+ 2 files changed, 58 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sifive.txt
+
+-- 
+1.9.1
+
