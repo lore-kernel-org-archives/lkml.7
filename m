@@ -2,266 +2,176 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DA9C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAB5C04AAB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A301208C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AB32082F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 09:33:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="HKsFzThl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbfEFJd1 (ORCPT
+        id S1726450AbfEFJd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 05:33:27 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35522 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfEFJdZ (ORCPT
+        Mon, 6 May 2019 05:33:29 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:54174 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfEFJd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 05:33:25 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p26so14596481edr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:33:23 -0700 (PDT)
+        Mon, 6 May 2019 05:33:27 -0400
+Received: by mail-it1-f195.google.com with SMTP id l10so19198110iti.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 02:33:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gyd/Ti2kNFqn57KrY+jJie0lDAypj1lVK7fphS1Bm7M=;
+        b=HKsFzThl5UWeChygjAOtiRYkHMtsyGBOPTcSmC+vo3Rm32ECFjRyNUWDPcIzhoy4Wf
+         YYkKqERL30biuuTmsK95DtLtLhsfmquox7B7WsSAMs92vIvpxcFh9m4T2bkRn8Bjn5lN
+         zE1+piUwnv4R43r5rHaMnAB+nQRO/IT8RT7Ig=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=G0XYBH52ucBUD953mXrmSQQF5BnxjfabJRIahkcnQTg=;
-        b=GhYFJzn5N+4Ly4Z4ZW4zo9LDQpjKKwU1EPG0PTrEcoRsRvrrO6wt1GfUz/oTBxGvZM
-         X6HRniKGOFukRpbwDuR4VhF7/uaGslHlr8D4XDMi0ney1hMIAjrCqHqPjhuZTBfrRcnU
-         B9nmlqpfPUgjFRquzjHQUMn8MEPFdm3IT+9JfcnyqA7VusPzdSupQX3G15vR36eDE/No
-         aN0xX0CRr/tuXXpG8FsI0A0G8eHwMWX7su4bZNFlA/npKcVB7nPI4thLbWGnkMEz/N/c
-         wxR/tLckkjut8Zhmh7mSnCXPZPLKHZPkDMKUeBQqZKdN8GRulhyoTJF5gDsLya6L9MfJ
-         pjIA==
-X-Gm-Message-State: APjAAAVuhv+1++QC/Naig0n0pAx6DH4ZtyFUVPCIWpIYpGbJg8kVHkus
-        1lvO6qbhiDVPRpVX5VeOrmqCueqVW8Q=
-X-Google-Smtp-Source: APXvYqyBYlSVwVv58BhbYj0+wirL+diFLAP8Rvk2Cv9EL+vNUW2t6UyC3DpIIV2WTBtx00vPFgD/3Q==
-X-Received: by 2002:a17:906:1343:: with SMTP id x3mr17834323ejb.218.1557135202165;
-        Mon, 06 May 2019 02:33:22 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id d28sm1465969ejl.83.2019.05.06.02.33.21
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 02:33:21 -0700 (PDT)
-Subject: Re: [PATCH RFC] brcmfmac: sanitize DMI strings v2
-To:     Victor Bravo <1905@spmblk.com>
-Cc:     Arend Van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org
-References: <20190504162633.ldrz2nqfocg55grb@localhost>
- <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
- <20190504194440.4zcxjrtj2aft3ka4@localhost>
- <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <20190505150355.3fbng4ny34x255vk@localhost>
- <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
- <20190506090609.msudhncj7e5vdtzw@localhost>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <70677dff-4336-28d5-7ab9-7ba7c3d74ebc@redhat.com>
-Date:   Mon, 6 May 2019 11:33:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gyd/Ti2kNFqn57KrY+jJie0lDAypj1lVK7fphS1Bm7M=;
+        b=U2/Rxb2Vgp65vj60nBAerUm+GO4dFyDGqmwXxUUg9qh/yWEcz568AFAoTe+mqfn6aO
+         SDA5bcC3+Yqh19Ra6OuPCxfMfopVtux3Fq3VTs9K3HOT+pV9npbEUIt/G6bkdhtsTcbg
+         vIb7c8ZnrXLte19uXE6L1GrHZZ19PJopziPHF4JiYw2LPAcSSqHTOKkwTkAoeEZkf924
+         lcFEFTyTlPquX+/eGxe9NBd+LG3GEekTVjsftsO7wewDdNOfSE9Tebko1bXjhaLCjtbj
+         ybW7ciUjJqpIjCOoEZOWtWGL5kel9JLYhCS89H12APe8Pm34AaKPYzuIXHKKr6/H8Zba
+         2MXg==
+X-Gm-Message-State: APjAAAVugUVbg1qGDeIOAwI+wL8tlYKkHvTQCh7BrWWLKAhmxHrS+4uA
+        kBxEp5woGWIgFnrRZaGOaNNiIYcLPIrlKXgpkHkC8g==
+X-Google-Smtp-Source: APXvYqx/SnEtjDy0ciVF4+liqkodEYASR4S6w603/eqwIhIS2Lvf6CSIQVgbf5ng1w20fkg51AF8ckTTLJqxn2r59Ac=
+X-Received: by 2002:a24:65cf:: with SMTP id u198mr6958544itb.32.1557135206826;
+ Mon, 06 May 2019 02:33:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190506090609.msudhncj7e5vdtzw@localhost>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190503115928.27662-1-jagan@amarulasolutions.com> <20190503144651.ttqfha656dykqjzo@flea>
+In-Reply-To: <20190503144651.ttqfha656dykqjzo@flea>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Mon, 6 May 2019 15:03:15 +0530
+Message-ID: <CAMty3ZCQTiX5OvCG_uMRS02vFu0c1-bkcyauLD6oaFcd=y3RNA@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: allwinner: h6: orangepi-one-plus: Add Ethernet support
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, May 3, 2019 at 8:16 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Fri, May 03, 2019 at 05:29:28PM +0530, Jagan Teki wrote:
+> > Add Ethernet support for orangepi-one-plus board,
+> >
+> > - Ethernet port connected via RTL8211E PHY
+> > - PHY suppiled with
+> >   GMAC-2V5, fixed regulator with GMAC_EN pin via PD6
+> >   GMAC-3V, which is supplied by VCC3V3-MAC via aldo2
+> > - RGMII-RESET pin connected via PD14
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>
+> Your commit log should be improved. We can get those informations from
+> the patch itself...
 
-On 06-05-19 11:06, Victor Bravo wrote:
-> On Mon, May 06, 2019 at 10:13:38AM +0200, Hans de Goede wrote:
->> Hi,
-> 
-> Hi,
-> 
->> On 05-05-19 17:03, Victor Bravo wrote:
->>> Sanitize DMI strings in brcmfmac driver to make resulting filenames
->>> contain only safe characters. This version replaces all non-printable
->>> characters incl. delete (0-31, 127-255), spaces and slashes with
->>> underscores.
->>>
->>> This change breaks backward compatibility, but adds control over strings
->>> passed to firmware loader and compatibility with CONFIG_EXTRA_FIRMWARE
->>> which doesn't support spaces in filenames.
->>>
->>> Changes from v1: don't revert fresh commit by someone else
->>>
->>> Signed-off-by: Victor Bravo <1905@spmblk.com>
->>
->> Thank you for the patch, but I'm sorry to say this patch cannot go in as is,
->> because it will break existing systems.
->>
->> If you look here:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/brcm
->>
->> You will see a file named: "brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt" there, which
->> has a space in its name (and which works fine).
-> 
-> Thanks for the updates. Spaces are actually a problem as files with spaces
-> don't work when built-in with CONFIG_EXTRA_FIRMWARE (which is used with
-> non-modular kernel containing brcmfmac driver).
-> 
-> If the DMI string contains slashes, they will cause problems
-> for obvious reasons too.
+Thought it was a clear commit log :)  will update anyway.
 
-Right, as said I'm fine with sanitizing the names, so dropping e.g. / chars,
-but replacing space with _ will cause wifi to stop working on Onda V80 Plus devices and
-we have a clear no regressions policy in the kernel.
+>
+> > ---
+> > Changes for v2:
+> > - emac changes on top of https://patchwork.kernel.org/cover/10899529/
+> >   series
+> >
+> >  .../allwinner/sun50i-h6-orangepi-one-plus.dts |  8 ++++
+> >  .../dts/allwinner/sun50i-h6-orangepi.dtsi     | 42 +++++++++++++++++++
+> >  2 files changed, 50 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+> > index 12e17567ab56..9e8ed1053715 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+> > @@ -9,4 +9,12 @@
+> >  / {
+> >       model = "OrangePi One Plus";
+> >       compatible = "xunlong,orangepi-one-plus", "allwinner,sun50i-h6";
+> > +
+> > +     aliases {
+> > +             ethernet0 = &emac;
+> > +     };
+> > +};
+> > +
+> > +&emac {
+> > +     status = "okay";
+> >  };
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+> > index 62e27948a3fa..c48e24acaf8a 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+> > @@ -45,6 +45,48 @@
+> >               regulator-max-microvolt = <5000000>;
+> >               regulator-always-on;
+> >       };
+> > +
+> > +     /*
+> > +      * The board uses 2.5V RGMII signalling. Power sequence to enable
+> > +      * the phy is to enable GMAC-2V5 and GMAC-3V (aldo2) power rails
+> > +      * at the same time and to wait 100ms.
+> > +      */
+> > +     reg_gmac_2v5: gmac-2v5 {
+> > +             compatible = "regulator-fixed";
+> > +             regulator-name = "gmac-2v5";
+> > +             regulator-min-microvolt = <2500000>;
+> > +             regulator-max-microvolt = <2500000>;
+> > +             startup-delay-us = <100000>;
+> > +             enable-active-high;
+> > +             gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* GMAC_EN: PD6 */
+> > +
+> > +             /* The real parent of gmac-2v5 is reg_vcc5v, but we need to
+> > +              * enable two regulators to power the phy. This is one way
+> > +              * to achieve that.
+> > +              */
+> > +             vin-supply = <&reg_aldo2>; /* VCC3V3-MAC: GMAC-3V */
+> > +     };
+> > +};
+> > +
+> > +&emac {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&ext_rgmii_pins>;
+> > +     phy-mode = "rgmii";
+> > +     phy-handle = <&ext_rgmii_phy>;
+> > +     phy-supply = <&reg_gmac_2v5>;
+> > +     allwinner,rx-delay-ps = <1500>;
+> > +     allwinner,tx-delay-ps = <700>;
+> > +};
+> > +
+> > +&mdio {
+> > +     ext_rgmii_phy: ethernet-phy@1 {
+> > +             compatible = "ethernet-phy-ieee802.3-c22";
+> > +             reg = <1>;
+> > +
+> > +             reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* RGMII-RESET: PD14 */
+> > +             reset-assert-us = <15000>;
+> > +             reset-deassert-us = <40000>;
+> > +     };
+> >  };
+>
+> ... however, at no point in time you explain why you made that switch,
+> and while most of the definition of the EMAC nodes is in the DTSI, you
+> only enable it in one DTS.
 
->> I'm fine with doing some sanitizing of the strings, but replacing spaces with _
->> breaks existing use-cases (will cause a regression for them) and a space is absolutely
->> a valid character in a filename and the firmware-loader can deal with this just fine.
->>
->> If the code for building firmwares into the kernel cannot deal with spaces then IMHO
->> that code should be fixed instead. Have you looked into fixing that?
-> 
-> Yes, but updating CONFIG_EXTRA_FIRMWARE to support spaces because of
-> this looks much like
-
-<snip off-topic remark>
-
-> Do you really think it's a good idea to propose that in
-> this case?
-
-I think expecting spaces in filenames to just work is quite reasonable, after all
-its been a long time since we've left DOS-es 8.3 filename limitations.
-
-Have you actually looked at how hard it would be to make filenames with spaces work
-with CONFIG_EXTRA_FIRMWARE ?
-
-No matter how you spin it, the space problem is a CONFIG_EXTRA_FIRMWARE bug, not an
-issue with the brcmfmac code.
-
->> As for your T100HA example from earlier in this thread, the brcmfmac driver now
->> also supports getting the firmware from a special EFI nvram variable, which the
->> T100HA sets, so you do not need to provide a nvram file on the T100HA and things
->> will still work.
-> 
-> I don't really get this. Can you please suggest how do I make the driver
-> use something different than "brcmfmac43340-sdio.txt" or
-> "brcmfmac43340-sdio.ASUSTeK COMPUTER INC.-T100HAN.txt" on T100HAN?
-
-If you leave out either file, then with a recent kernel you should see this
-brcm_info trigger:
-
-         brcmf_info("Using nvram EFI variable\n");
-
-So you should see this message when you do:
-
-dmesg | grep "Using nvram EFI variable"
-
-And the wifi on the T100HAN should just work, without needing to do any
-manual config / provide an nvram file in anyway.
-
-I always strive to make hardware just work with Linux and any UEFI x86 machine
-using brcmfmac which provides the necessary nvram EFI variable in its firmware
-should now just work when booting say a Fedora 30 livecd.
-
-The EFI nvram var support has been tested successfully on the following models:
-
-Acer Iconia Tab8 w1-8
-Acer One 10
-Asus T100CHI
-Asus T100HA
-Asus T100TA
-Asus T200TA
-Lenovo Mixx 2 8
-Lenovo Yoga2 tablet 10
-
-Regards,
-
-Hans
-
-
-
->>> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
->>> index 7535cb0d4ac0..84571e09b465 100644
->>> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
->>> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/dmi.c
->>> @@ -23,6 +23,14 @@
->>>    /* The DMI data never changes so we can use a static buf for this */
->>>    static char dmi_board_type[128];
->>> +/* Array of 128 bits representing 7-bit characters allowed in DMI strings. */
->>> +static unsigned char brcmf_dmi_allowed_chars[] = {
->>> +	0x00, 0x00, 0x00, 0x00, 0xfe, 0x7f, 0xff, 0xff,
->>> +	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f
->>> +};
->>> +
->>> +#define BRCMF_DMI_SAFE_CHAR '_'
->>> +
->>>    struct brcmf_dmi_data {
->>>    	u32 chip;
->>>    	u32 chiprev;
->>> @@ -99,6 +107,15 @@ static const struct dmi_system_id dmi_platform_data[] = {
->>>    	{}
->>>    };
->>> +void brcmf_dmi_sanitize(char *dst, const unsigned char *allowed, char safe)
->>> +{
->>> +	while (*dst) {
->>> +		if ((*dst < 0) || !(allowed[*dst / 8] & (1 << (*dst % 8))))
->>
->> At a first look I have no clue what this code is doing and I honestly do not feel
->> like figuring it out, this is clever, but IMHO not readable.
-> 
-> Understood. The cluless part actually checks corresponding bit
-> in allowed array, which is a bit mask describing what characters
-> are allowed or not.
-> 
->> Please just write this as if (*dst < 0x21 || (*dst > foo && < bar) || etc,
->> so that a human can actually see in one look what the code is doing.
->>
->> You may want to wait for Arend to give his opinion before changing this though,
->> maybe he likes the code as is.
->>
->> Also note that that should be < 0x20 of course, since we need to preserve spaces
->> as is to avoid a regression.
-> 
-> This has been already discussed, spaces are a problem. There even was an
-> opinion that adding the code that doesn't bother with spaces and slashes
-> might be a regression as well.
-> 
-> Regards,
-> 
-> v.
-> 
->> Regards,
->>
->> Hans
->>
->>
->>
->>
->>
->>> +			*dst = safe;
->>> +		dst++;
->>> +	}
->>> +}
->>> +
->>>    void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
->>>    {
->>>    	const struct dmi_system_id *match;
->>> @@ -126,6 +143,9 @@ void brcmf_dmi_probe(struct brcmf_mp_device *settings, u32 chip, u32 chiprev)
->>>    	if (sys_vendor && product_name) {
->>>    		snprintf(dmi_board_type, sizeof(dmi_board_type), "%s-%s",
->>>    			 sys_vendor, product_name);
->>> +		brcmf_dmi_sanitize(dmi_board_type,
->>> +				   brcmf_dmi_allowed_chars,
->>> +				   BRCMF_DMI_SAFE_CHAR);
->>>    		settings->board_type = dmi_board_type;
->>>    	}
->>>    }
->>>
->>
+The dtsi is shared b/w 1+ and lite2 and 1+ has emac, so I enabled the
+status directly on dts and keeping the relevant nodes on dtsi just
+like SoC dtsi does. do I need to mention this in commit log?
