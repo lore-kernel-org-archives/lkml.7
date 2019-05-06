@@ -6,48 +6,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A98C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064E4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4304521479
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDFC3214AE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153463;
-	bh=DmHmbU3AzP84s+PL91C4nDMowyLRZYOkoJ+z5IWsmoo=;
+	s=default; t=1557153465;
+	bh=AAZ0+3CCjkRjj7MejXcIyv6OzHqSdH3G6jmknbtzS7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NIp4X6ow7ak5fj+V4L1sYYpKaRoxwv5mJ0ZoMVlzU4JFvcbvx5N5UF2C7lxtu5vYn
-	 h1XFZKvLFgRi36hkr6sX7bPeMgdQoxjKUG5XspgbgaYcLG3qaruaAoa0yI+Nd5Xlvo
-	 tHZCzT0qa5Ra+atx/yhXqpx+pQ/m/hhwhSIEBNRg=
+	b=rP87NczTrIFOzqiTaZLWoO8hLprKYAzfmANWr97Efs8SX7dGNjPAhVM1oOX4Y57G9
+	 X6fm+EvC1dudkbV8kSUiFnxqC0bOL7kI7mAYfpMxfVm/EuKnzyH82dEmZhrMsUiCQb
+	 FKvA+7+gVJvins+4x25pCIzx/G5dnPsPYelwLa34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfEFOhm (ORCPT
+        id S1727458AbfEFOhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:37:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58386 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:37:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbfEFOhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:37:36 -0400
+        id S1727435AbfEFOhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:37:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11B3621479;
-        Mon,  6 May 2019 14:37:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CC1721479;
+        Mon,  6 May 2019 14:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153455;
-        bh=DmHmbU3AzP84s+PL91C4nDMowyLRZYOkoJ+z5IWsmoo=;
+        s=default; t=1557153460;
+        bh=AAZ0+3CCjkRjj7MejXcIyv6OzHqSdH3G6jmknbtzS7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GWX0aNDAqwDtnqkfC2SZm4irrB/yJm6esgDxc4NRFiGjAb53UZOCccppWpGlDYfyW
-         3NlgsC63LZOmK/+4jWDyAx6c+XyJdXWnF3jrnrzhjeu88iyCsUR/UkJ464HYVdWRGa
-         1RWQqmT20NPh5sdPj7PxhAZdfGT0C9LrusQ8tvj8=
+        b=HUJfbtgsI7W6tPEXvRwhYt7xYroW7afOmlEEWDY6kif9fkicVQ4om79EFG+rZdQGl
+         dB1XkRpBmtGFAVoNl4+UKtLH0UYkiFtNDQhQm8H3a0WzkbvUh5lmHgTGZ3G92y0ISa
+         T2kRYPQNV2Siaip9j1WKzFYxhnGeQzWQlmudKgu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
-        Timo Wischer <twischer@de.adit-jv.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 095/122] ASoC: rsnd: gen: fix SSI9 4/5/6/7 busif related register address
-Date:   Mon,  6 May 2019 16:32:33 +0200
-Message-Id: <20190506143103.352183878@linuxfoundation.org>
+Subject: [PATCH 5.0 097/122] ASoC: wm_adsp: Correct handling of compressed streams that restart
+Date:   Mon,  6 May 2019 16:32:35 +0200
+Message-Id: <20190506143103.474087266@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 References: <20190506143054.670334917@linuxfoundation.org>
@@ -60,155 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiada Wang <jiada_wang@mentor.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-commit 8af6c521cc236534093f9e744cfa004314bfe5ae upstream.
+commit 639e5eb3c7d67e407f2a71fccd95323751398f6f upstream.
 
-Currently each SSI unit 's busif mode/adinr/dalign address is
-registered by: (in busif4 case)
-RSND_GEN_M_REG(SSI_BUSIF4_MODE, 0x500, 0x80)
-RSND_GEN_M_REG(SSI_BUSIF4_ADINR,0x504, 0x80)
-RSND_GEN_M_REG(SSI_BUSIF4_DALIGN, 0x508, 0x80)
+Previously support was added to allow streams to be stopped and
+started again without the DSP being power cycled and this was done
+by clearing the buffer state in trigger start. Another supported
+use-case is using the DSP for a trigger event then opening the
+compressed stream later to receive the audio, unfortunately clearing
+the buffer state in trigger start destroys the data received
+from such a trigger. Correct this issue by moving the call to
+wm_adsp_buffer_clear to be in trigger stop instead.
 
-But according to user manual 41.1.4 Register Configuration
-ssi9 4/5/6/7 busif mode/adinr/dalign register address
-( SSI9-[4/5/6/7]_BUSIF_[MODE/ADINR/DALIGN] )
-are out of this rule.
-
-This patch registers ssi9 4/5/6/7 mode/adinr/dalign register
-as single register, and access these registers in case of
-SSI9 BUSIF 4/5/6/7.
-
-Fixes: commit 8c9d75033340 ("ASoC: rsnd: ssiu: Support BUSIF other than BUSIF0")
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Fixes: 61fc060c40e6 ("ASoC: wm_adsp: Support streams which can start/stop with DSP active")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/sh/rcar/gen.c  |   24 ++++++++++++++++++++++++
- sound/soc/sh/rcar/rsnd.h |   27 +++++++++++++++++++++++++++
- sound/soc/sh/rcar/ssiu.c |   24 +++++++++++-------------
- 3 files changed, 62 insertions(+), 13 deletions(-)
+ sound/soc/codecs/wm_adsp.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/sound/soc/sh/rcar/gen.c
-+++ b/sound/soc/sh/rcar/gen.c
-@@ -255,6 +255,30 @@ static int rsnd_gen2_probe(struct rsnd_p
- 		RSND_GEN_M_REG(SSI_MODE,		0xc,	0x80),
- 		RSND_GEN_M_REG(SSI_CTRL,		0x10,	0x80),
- 		RSND_GEN_M_REG(SSI_INT_ENABLE,		0x18,	0x80),
-+		RSND_GEN_S_REG(SSI9_BUSIF0_MODE,	0x48c),
-+		RSND_GEN_S_REG(SSI9_BUSIF0_ADINR,	0x484),
-+		RSND_GEN_S_REG(SSI9_BUSIF0_DALIGN,	0x488),
-+		RSND_GEN_S_REG(SSI9_BUSIF1_MODE,	0x4a0),
-+		RSND_GEN_S_REG(SSI9_BUSIF1_ADINR,	0x4a4),
-+		RSND_GEN_S_REG(SSI9_BUSIF1_DALIGN,	0x4a8),
-+		RSND_GEN_S_REG(SSI9_BUSIF2_MODE,	0x4c0),
-+		RSND_GEN_S_REG(SSI9_BUSIF2_ADINR,	0x4c4),
-+		RSND_GEN_S_REG(SSI9_BUSIF2_DALIGN,	0x4c8),
-+		RSND_GEN_S_REG(SSI9_BUSIF3_MODE,	0x4e0),
-+		RSND_GEN_S_REG(SSI9_BUSIF3_ADINR,	0x4e4),
-+		RSND_GEN_S_REG(SSI9_BUSIF3_DALIGN,	0x4e8),
-+		RSND_GEN_S_REG(SSI9_BUSIF4_MODE,	0xd80),
-+		RSND_GEN_S_REG(SSI9_BUSIF4_ADINR,	0xd84),
-+		RSND_GEN_S_REG(SSI9_BUSIF4_DALIGN,	0xd88),
-+		RSND_GEN_S_REG(SSI9_BUSIF5_MODE,	0xda0),
-+		RSND_GEN_S_REG(SSI9_BUSIF5_ADINR,	0xda4),
-+		RSND_GEN_S_REG(SSI9_BUSIF5_DALIGN,	0xda8),
-+		RSND_GEN_S_REG(SSI9_BUSIF6_MODE,	0xdc0),
-+		RSND_GEN_S_REG(SSI9_BUSIF6_ADINR,	0xdc4),
-+		RSND_GEN_S_REG(SSI9_BUSIF6_DALIGN,	0xdc8),
-+		RSND_GEN_S_REG(SSI9_BUSIF7_MODE,	0xde0),
-+		RSND_GEN_S_REG(SSI9_BUSIF7_ADINR,	0xde4),
-+		RSND_GEN_S_REG(SSI9_BUSIF7_DALIGN,	0xde8),
- 	};
- 
- 	static const struct rsnd_regmap_field_conf conf_scu[] = {
---- a/sound/soc/sh/rcar/rsnd.h
-+++ b/sound/soc/sh/rcar/rsnd.h
-@@ -191,6 +191,30 @@ enum rsnd_reg {
- 	SSI_SYS_STATUS7,
- 	HDMI0_SEL,
- 	HDMI1_SEL,
-+	SSI9_BUSIF0_MODE,
-+	SSI9_BUSIF1_MODE,
-+	SSI9_BUSIF2_MODE,
-+	SSI9_BUSIF3_MODE,
-+	SSI9_BUSIF4_MODE,
-+	SSI9_BUSIF5_MODE,
-+	SSI9_BUSIF6_MODE,
-+	SSI9_BUSIF7_MODE,
-+	SSI9_BUSIF0_ADINR,
-+	SSI9_BUSIF1_ADINR,
-+	SSI9_BUSIF2_ADINR,
-+	SSI9_BUSIF3_ADINR,
-+	SSI9_BUSIF4_ADINR,
-+	SSI9_BUSIF5_ADINR,
-+	SSI9_BUSIF6_ADINR,
-+	SSI9_BUSIF7_ADINR,
-+	SSI9_BUSIF0_DALIGN,
-+	SSI9_BUSIF1_DALIGN,
-+	SSI9_BUSIF2_DALIGN,
-+	SSI9_BUSIF3_DALIGN,
-+	SSI9_BUSIF4_DALIGN,
-+	SSI9_BUSIF5_DALIGN,
-+	SSI9_BUSIF6_DALIGN,
-+	SSI9_BUSIF7_DALIGN,
- 
- 	/* SSI */
- 	SSICR,
-@@ -209,6 +233,9 @@ enum rsnd_reg {
- #define SSI_BUSIF_MODE(i)	(SSI_BUSIF0_MODE + (i))
- #define SSI_BUSIF_ADINR(i)	(SSI_BUSIF0_ADINR + (i))
- #define SSI_BUSIF_DALIGN(i)	(SSI_BUSIF0_DALIGN + (i))
-+#define SSI9_BUSIF_MODE(i)	(SSI9_BUSIF0_MODE + (i))
-+#define SSI9_BUSIF_ADINR(i)	(SSI9_BUSIF0_ADINR + (i))
-+#define SSI9_BUSIF_DALIGN(i)	(SSI9_BUSIF0_DALIGN + (i))
- #define SSI_SYS_STATUS(i)	(SSI_SYS_STATUS0 + (i))
- 
- 
---- a/sound/soc/sh/rcar/ssiu.c
-+++ b/sound/soc/sh/rcar/ssiu.c
-@@ -181,28 +181,26 @@ static int rsnd_ssiu_init_gen2(struct rs
- 	if (rsnd_ssi_use_busif(io)) {
- 		int id = rsnd_mod_id(mod);
- 		int busif = rsnd_mod_id_sub(mod);
-+		enum rsnd_reg adinr_reg, mode_reg, dalign_reg;
- 
--		/*
--		 * FIXME
--		 *
--		 * We can't support SSI9-4/5/6/7, because its address is
--		 * out of calculation rule
--		 */
- 		if ((id == 9) && (busif >= 4)) {
--			struct device *dev = rsnd_priv_to_dev(priv);
--
--			dev_err(dev, "This driver doesn't support SSI%d-%d, so far",
--				id, busif);
-+			adinr_reg = SSI9_BUSIF_ADINR(busif);
-+			mode_reg = SSI9_BUSIF_MODE(busif);
-+			dalign_reg = SSI9_BUSIF_DALIGN(busif);
-+		} else {
-+			adinr_reg = SSI_BUSIF_ADINR(busif);
-+			mode_reg = SSI_BUSIF_MODE(busif);
-+			dalign_reg = SSI_BUSIF_DALIGN(busif);
+--- a/sound/soc/codecs/wm_adsp.c
++++ b/sound/soc/codecs/wm_adsp.c
+@@ -3443,8 +3443,6 @@ int wm_adsp_compr_trigger(struct snd_com
+ 			}
  		}
  
--		rsnd_mod_write(mod, SSI_BUSIF_ADINR(busif),
-+		rsnd_mod_write(mod, adinr_reg,
- 			       rsnd_get_adinr_bit(mod, io) |
- 			       (rsnd_io_is_play(io) ?
- 				rsnd_runtime_channel_after_ctu(io) :
- 				rsnd_runtime_channel_original(io)));
--		rsnd_mod_write(mod, SSI_BUSIF_MODE(busif),
-+		rsnd_mod_write(mod, mode_reg,
- 			       rsnd_get_busif_shift(io, mod) | 1);
--		rsnd_mod_write(mod, SSI_BUSIF_DALIGN(busif),
-+		rsnd_mod_write(mod, dalign_reg,
- 			       rsnd_get_dalign(mod, io));
- 	}
- 
+-		wm_adsp_buffer_clear(compr->buf);
+-
+ 		/* Trigger the IRQ at one fragment of data */
+ 		ret = wm_adsp_buffer_write(compr->buf,
+ 					   HOST_BUFFER_FIELD(high_water_mark),
+@@ -3456,6 +3454,7 @@ int wm_adsp_compr_trigger(struct snd_com
+ 		}
+ 		break;
+ 	case SNDRV_PCM_TRIGGER_STOP:
++		wm_adsp_buffer_clear(compr->buf);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
 
 
