@@ -2,82 +2,80 @@ Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35553C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E815C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FED20675
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0AE20675
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 21:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfEFV5o (ORCPT
+        id S1726669AbfEFV6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 17:57:44 -0400
-Received: from foss.arm.com ([217.140.101.70]:34236 "EHLO foss.arm.com"
+        Mon, 6 May 2019 17:58:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48874 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbfEFV5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 17:57:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB3D280D;
-        Mon,  6 May 2019 14:57:43 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 238503F238;
-        Mon,  6 May 2019 14:57:40 -0700 (PDT)
-Date:   Mon, 6 May 2019 22:57:37 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org,
-        Michal Gregorczyk <michalgr@live.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Ziljstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>, kernel-team@android.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Ingo Molnar <mingo@redhat.com>, netdev@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH RFC] bpf: Add support for reading user pointers
-Message-ID: <20190506215737.cuugrrxbhkp2uknn@e107158-lin.cambridge.arm.com>
-References: <20190502204958.7868-1-joel@joelfernandes.org>
- <20190503121234.6don256zuvfjtdg6@e107158-lin.cambridge.arm.com>
- <20190503134935.GA253329@google.com>
- <20190505110423.u7g3f2viovvgzbtn@e107158-lin.cambridge.arm.com>
- <20190505132949.GB3076@localhost>
- <20190505144608.u3vsxyz5huveuskx@e107158-lin.cambridge.arm.com>
- <20190505155223.GA4976@localhost>
- <20190505180313.GA80924@google.com>
- <20190506183506.GD2875@brain-police>
- <20190506205807.GA223956@google.com>
+        id S1726197AbfEFV6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 17:58:47 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 451D33087932;
+        Mon,  6 May 2019 21:58:47 +0000 (UTC)
+Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1868260BEC;
+        Mon,  6 May 2019 21:58:46 +0000 (UTC)
+Date:   Mon, 6 May 2019 15:58:45 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Greg Kurz <groug@kaod.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH] vfio-pci/nvlink2: Fix potential VMA leak
+Message-ID: <20190506155845.70f3b01d@x1.home>
+In-Reply-To: <155568823785.601037.2151744205292679252.stgit@bahia.lan>
+References: <155568823785.601037.2151744205292679252.stgit@bahia.lan>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190506205807.GA223956@google.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 06 May 2019 21:58:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/06/19 16:58, Joel Fernandes wrote:
-> > If you're trying to dereference a pointer to userspace using
-> > probe_kernel_read(), that clearly isn't going to work.
+On Fri, 19 Apr 2019 17:37:17 +0200
+Greg Kurz <groug@kaod.org> wrote:
+
+> If vfio_pci_register_dev_region() fails then we should rollback
+> previous changes, ie. unmap the ATSD registers.
 > 
-> Ok. Thanks for confirming as well. The existing code has this bug and these
-> patches fix it.
+> Signed-off-by: Greg Kurz <groug@kaod.org>
+> ---
 
-5.1-rc7 and 4.9.173 stable both managed to read the path in do_sys_open() on my
-Juno-r2 board using the defconfig in the tree.
+Applied to vfio next branch for v5.2 with Alexey's R-b.  Thanks!
 
---
-Qais Yousef
+Alex
+
+>  drivers/vfio/pci/vfio_pci_nvlink2.c |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_nvlink2.c b/drivers/vfio/pci/vfio_pci_nvlink2.c
+> index 32f695ffe128..50fe3c4f7feb 100644
+> --- a/drivers/vfio/pci/vfio_pci_nvlink2.c
+> +++ b/drivers/vfio/pci/vfio_pci_nvlink2.c
+> @@ -472,6 +472,8 @@ int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev)
+>  	return 0;
+>  
+>  free_exit:
+> +	if (data->base)
+> +		memunmap(data->base);
+>  	kfree(data);
+>  
+>  	return ret;
+> 
+
