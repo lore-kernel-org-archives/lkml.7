@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE065C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CE5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B635F20449
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2EA2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 14:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557153839;
-	bh=Anbqk/0kGfZhabFXywOM8sZ195ri9Pr7rlLUW3zeX7c=;
+	s=default; t=1557153844;
+	bh=p4k4VEEcg6/JvNjILCfPYUNlLZeYKtbYzZxS21BDptg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ha3lxcwkkB9/JhLt+UVMbPi6eymr6aYFS3yfZCpmhS4QWyjPs6OHibBxrV3AI4LwJ
-	 04udpsexuIYQg/PWcR6zWQxNa/HncRn6EpkiotdBHqMGYTHe+CmNXBaRnwIzyNSBex
-	 3I6YrQBuLB40uV2dDr4nfh/JiHsfJq1smD4TTWlU=
+	b=AlqKzjJm2+YDgps7caG0eFVVBYZZRcI3rhmE13GNb6biOtUK0GxCRTYWo6mcRVDFa
+	 RySKN7keAE8ya6Q/27xqB3GssemX0J0XVf/w826M9hY5oMSW7jMVD26QbqFiGlOwsu
+	 S1tTlLb5MyVWiFxtNOEPJNJBxavyFhPY0PZTiTqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbfEFOn6 (ORCPT
+        id S1728743AbfEFOoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 10:43:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39840 "EHLO mail.kernel.org"
+        Mon, 6 May 2019 10:44:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727165AbfEFOnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 10:43:55 -0400
+        id S1727165AbfEFOoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 May 2019 10:44:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4895320C01;
-        Mon,  6 May 2019 14:43:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A89E120C01;
+        Mon,  6 May 2019 14:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557153833;
-        bh=Anbqk/0kGfZhabFXywOM8sZ195ri9Pr7rlLUW3zeX7c=;
+        s=default; t=1557153839;
+        bh=p4k4VEEcg6/JvNjILCfPYUNlLZeYKtbYzZxS21BDptg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F3Ik2cqTWl5TAAW15I9JGA+6iSe8NRzDr6/yOm9t6fXT41Nw4ksPZlFmHCKnni2yL
-         wmMZxNlggANeT1N00NXGe9Spq9jJDExcG8XK2Wf3TDep5k8HkUIgiNoIGFwg1TEXiS
-         l7oBE72UB8bJxbrNJFZruFCfOYyVKrHo57c/zc8M=
+        b=LpN5HpvTzt+fHkyUCqxTivxJJrgB2oS3j80JNWtHJrGClAc1zNrxAvqP2mpXLiNzL
+         o6uWm1mIDnMFSHJkrQ86ZWw5eES7NktSiu0Ifi0uDNu8ZHpD+ojnjI/Xcy8WNZP0hM
+         XiK81hrau6yjjf1VIdlXWCjJzZiy5cTO49l7JHN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 4.14 14/75] arm64: Fix single stepping in kernel traps
-Date:   Mon,  6 May 2019 16:32:22 +0200
-Message-Id: <20190506143054.480275434@linuxfoundation.org>
+Subject: [PATCH 4.14 16/75] caif: reduce stack size with KASAN
+Date:   Mon,  6 May 2019 16:32:24 +0200
+Message-Id: <20190506143054.648064741@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
 References: <20190506143053.287515952@linuxfoundation.org>
@@ -63,158 +60,226 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Thierry <julien.thierry@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 6436beeee5721a8e906e9eabf866f12d04470437 upstream.
+commit ce6289661b14a8b391d90db918c91b6d6da6540a upstream.
 
-Software Step exception is missing after stepping a trapped instruction.
+When CONFIG_KASAN is set, we can use relatively large amounts of kernel
+stack space:
 
-Ensure SPSR.SS gets set to 0 after emulating/skipping a trapped instruction
-before doing ERET.
+net/caif/cfctrl.c:555:1: warning: the frame size of 1600 bytes is larger than 1280 bytes [-Wframe-larger-than=]
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Julien Thierry <julien.thierry@arm.com>
-Reviewed-by: Alex Bennée <alex.bennee@linaro.org>
-[will: replaced AARCH32_INSN_SIZE with 4]
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+This adds convenience wrappers around cfpkt_extr_head(), which is responsible
+for most of the stack growth. With those wrapper functions, gcc apparently
+starts reusing the stack slots for each instance, thus avoiding the
+problem.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/traps.h       |    6 ++++++
- arch/arm64/kernel/armv8_deprecated.c |    8 ++++----
- arch/arm64/kernel/cpufeature.c       |    2 +-
- arch/arm64/kernel/traps.c            |   21 ++++++++++++++++-----
- 4 files changed, 27 insertions(+), 10 deletions(-)
+ include/net/caif/cfpkt.h |   27 +++++++++++++++++++++++++
+ net/caif/cfctrl.c        |   50 ++++++++++++++++++++---------------------------
+ 2 files changed, 49 insertions(+), 28 deletions(-)
 
---- a/arch/arm64/include/asm/traps.h
-+++ b/arch/arm64/include/asm/traps.h
-@@ -37,6 +37,12 @@ void unregister_undef_hook(struct undef_
+--- a/include/net/caif/cfpkt.h
++++ b/include/net/caif/cfpkt.h
+@@ -32,6 +32,33 @@ void cfpkt_destroy(struct cfpkt *pkt);
+  */
+ int cfpkt_extr_head(struct cfpkt *pkt, void *data, u16 len);
  
- void arm64_notify_segfault(struct pt_regs *regs, unsigned long addr);
- 
-+/*
-+ * Move regs->pc to next instruction and do necessary setup before it
-+ * is executed.
-+ */
-+void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size);
-+
- static inline int __in_irqentry_text(unsigned long ptr)
- {
- 	return ptr >= (unsigned long)&__irqentry_text_start &&
---- a/arch/arm64/kernel/armv8_deprecated.c
-+++ b/arch/arm64/kernel/armv8_deprecated.c
-@@ -431,7 +431,7 @@ ret:
- 	pr_warn_ratelimited("\"%s\" (%ld) uses obsolete SWP{B} instruction at 0x%llx\n",
- 			current->comm, (unsigned long)current->pid, regs->pc);
- 
--	regs->pc += 4;
-+	arm64_skip_faulting_instruction(regs, 4);
- 	return 0;
- 
- fault:
-@@ -512,7 +512,7 @@ ret:
- 	pr_warn_ratelimited("\"%s\" (%ld) uses deprecated CP15 Barrier instruction at 0x%llx\n",
- 			current->comm, (unsigned long)current->pid, regs->pc);
- 
--	regs->pc += 4;
-+	arm64_skip_faulting_instruction(regs, 4);
- 	return 0;
- }
- 
-@@ -586,14 +586,14 @@ static int compat_setend_handler(struct
- static int a32_setend_handler(struct pt_regs *regs, u32 instr)
- {
- 	int rc = compat_setend_handler(regs, (instr >> 9) & 1);
--	regs->pc += 4;
-+	arm64_skip_faulting_instruction(regs, 4);
- 	return rc;
- }
- 
- static int t16_setend_handler(struct pt_regs *regs, u32 instr)
- {
- 	int rc = compat_setend_handler(regs, (instr >> 3) & 1);
--	regs->pc += 2;
-+	arm64_skip_faulting_instruction(regs, 2);
- 	return rc;
- }
- 
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1398,7 +1398,7 @@ static int emulate_mrs(struct pt_regs *r
- 	if (!rc) {
- 		dst = aarch64_insn_decode_register(AARCH64_INSN_REGTYPE_RT, insn);
- 		pt_regs_write_reg(regs, dst, val);
--		regs->pc += 4;
-+		arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
- 	}
- 
- 	return rc;
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -296,6 +296,17 @@ void arm64_notify_die(const char *str, s
- 	}
- }
- 
-+void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
++static inline u8 cfpkt_extr_head_u8(struct cfpkt *pkt)
 +{
-+	regs->pc += size;
++	u8 tmp;
 +
-+	/*
-+	 * If we were single stepping, we want to get the step exception after
-+	 * we return from the trap.
-+	 */
-+	user_fastforward_single_step(current);
++	cfpkt_extr_head(pkt, &tmp, 1);
++
++	return tmp;
 +}
 +
- static LIST_HEAD(undef_hook);
- static DEFINE_RAW_SPINLOCK(undef_lock);
++static inline u16 cfpkt_extr_head_u16(struct cfpkt *pkt)
++{
++	__le16 tmp;
++
++	cfpkt_extr_head(pkt, &tmp, 2);
++
++	return le16_to_cpu(tmp);
++}
++
++static inline u32 cfpkt_extr_head_u32(struct cfpkt *pkt)
++{
++	__le32 tmp;
++
++	cfpkt_extr_head(pkt, &tmp, 4);
++
++	return le32_to_cpu(tmp);
++}
++
+ /*
+  * Peek header from packet.
+  * Reads data from packet without changing packet.
+--- a/net/caif/cfctrl.c
++++ b/net/caif/cfctrl.c
+@@ -352,15 +352,14 @@ static int cfctrl_recv(struct cflayer *l
+ 	u8 cmdrsp;
+ 	u8 cmd;
+ 	int ret = -1;
+-	u16 tmp16;
+ 	u8 len;
+ 	u8 param[255];
+-	u8 linkid;
++	u8 linkid = 0;
+ 	struct cfctrl *cfctrl = container_obj(layer);
+ 	struct cfctrl_request_info rsp, *req;
  
-@@ -483,7 +494,7 @@ static void user_cache_maint_handler(uns
- 	if (ret)
- 		arm64_notify_segfault(regs, address);
- 	else
--		regs->pc += 4;
-+		arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
- }
  
- static void ctr_read_handler(unsigned int esr, struct pt_regs *regs)
-@@ -493,7 +504,7 @@ static void ctr_read_handler(unsigned in
+-	cfpkt_extr_head(pkt, &cmdrsp, 1);
++	cmdrsp = cfpkt_extr_head_u8(pkt);
+ 	cmd = cmdrsp & CFCTRL_CMD_MASK;
+ 	if (cmd != CFCTRL_CMD_LINK_ERR
+ 	    && CFCTRL_RSP_BIT != (CFCTRL_RSP_BIT & cmdrsp)
+@@ -378,13 +377,12 @@ static int cfctrl_recv(struct cflayer *l
+ 			u8 physlinkid;
+ 			u8 prio;
+ 			u8 tmp;
+-			u32 tmp32;
+ 			u8 *cp;
+ 			int i;
+ 			struct cfctrl_link_param linkparam;
+ 			memset(&linkparam, 0, sizeof(linkparam));
  
- 	pt_regs_write_reg(regs, rt, val);
+-			cfpkt_extr_head(pkt, &tmp, 1);
++			tmp = cfpkt_extr_head_u8(pkt);
  
--	regs->pc += 4;
-+	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
- }
+ 			serv = tmp & CFCTRL_SRV_MASK;
+ 			linkparam.linktype = serv;
+@@ -392,13 +390,13 @@ static int cfctrl_recv(struct cflayer *l
+ 			servtype = tmp >> 4;
+ 			linkparam.chtype = servtype;
  
- static void cntvct_read_handler(unsigned int esr, struct pt_regs *regs)
-@@ -501,7 +512,7 @@ static void cntvct_read_handler(unsigned
- 	int rt = (esr & ESR_ELx_SYS64_ISS_RT_MASK) >> ESR_ELx_SYS64_ISS_RT_SHIFT;
+-			cfpkt_extr_head(pkt, &tmp, 1);
++			tmp = cfpkt_extr_head_u8(pkt);
+ 			physlinkid = tmp & 0x07;
+ 			prio = tmp >> 3;
  
- 	pt_regs_write_reg(regs, rt, arch_counter_get_cntvct());
--	regs->pc += 4;
-+	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
- }
+ 			linkparam.priority = prio;
+ 			linkparam.phyid = physlinkid;
+-			cfpkt_extr_head(pkt, &endpoint, 1);
++			endpoint = cfpkt_extr_head_u8(pkt);
+ 			linkparam.endpoint = endpoint & 0x03;
  
- static void cntfrq_read_handler(unsigned int esr, struct pt_regs *regs)
-@@ -509,7 +520,7 @@ static void cntfrq_read_handler(unsigned
- 	int rt = (esr & ESR_ELx_SYS64_ISS_RT_MASK) >> ESR_ELx_SYS64_ISS_RT_SHIFT;
+ 			switch (serv) {
+@@ -407,45 +405,43 @@ static int cfctrl_recv(struct cflayer *l
+ 				if (CFCTRL_ERR_BIT & cmdrsp)
+ 					break;
+ 				/* Link ID */
+-				cfpkt_extr_head(pkt, &linkid, 1);
++				linkid = cfpkt_extr_head_u8(pkt);
+ 				break;
+ 			case CFCTRL_SRV_VIDEO:
+-				cfpkt_extr_head(pkt, &tmp, 1);
++				tmp = cfpkt_extr_head_u8(pkt);
+ 				linkparam.u.video.connid = tmp;
+ 				if (CFCTRL_ERR_BIT & cmdrsp)
+ 					break;
+ 				/* Link ID */
+-				cfpkt_extr_head(pkt, &linkid, 1);
++				linkid = cfpkt_extr_head_u8(pkt);
+ 				break;
  
- 	pt_regs_write_reg(regs, rt, arch_timer_get_rate());
--	regs->pc += 4;
-+	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
- }
+ 			case CFCTRL_SRV_DATAGRAM:
+-				cfpkt_extr_head(pkt, &tmp32, 4);
+ 				linkparam.u.datagram.connid =
+-				    le32_to_cpu(tmp32);
++				    cfpkt_extr_head_u32(pkt);
+ 				if (CFCTRL_ERR_BIT & cmdrsp)
+ 					break;
+ 				/* Link ID */
+-				cfpkt_extr_head(pkt, &linkid, 1);
++				linkid = cfpkt_extr_head_u8(pkt);
+ 				break;
+ 			case CFCTRL_SRV_RFM:
+ 				/* Construct a frame, convert
+ 				 * DatagramConnectionID
+ 				 * to network format long and copy it out...
+ 				 */
+-				cfpkt_extr_head(pkt, &tmp32, 4);
+ 				linkparam.u.rfm.connid =
+-				  le32_to_cpu(tmp32);
++				    cfpkt_extr_head_u32(pkt);
+ 				cp = (u8 *) linkparam.u.rfm.volume;
+-				for (cfpkt_extr_head(pkt, &tmp, 1);
++				for (tmp = cfpkt_extr_head_u8(pkt);
+ 				     cfpkt_more(pkt) && tmp != '\0';
+-				     cfpkt_extr_head(pkt, &tmp, 1))
++				     tmp = cfpkt_extr_head_u8(pkt))
+ 					*cp++ = tmp;
+ 				*cp = '\0';
  
- struct sys64_hook {
-@@ -756,7 +767,7 @@ static int bug_handler(struct pt_regs *r
- 	}
+ 				if (CFCTRL_ERR_BIT & cmdrsp)
+ 					break;
+ 				/* Link ID */
+-				cfpkt_extr_head(pkt, &linkid, 1);
++				linkid = cfpkt_extr_head_u8(pkt);
  
- 	/* If thread survives, skip over the BUG instruction and continue: */
--	regs->pc += AARCH64_INSN_SIZE;	/* skip BRK and resume */
-+	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
- 	return DBG_HOOK_HANDLED;
- }
- 
+ 				break;
+ 			case CFCTRL_SRV_UTIL:
+@@ -454,13 +450,11 @@ static int cfctrl_recv(struct cflayer *l
+ 				 * to network format long and copy it out...
+ 				 */
+ 				/* Fifosize KB */
+-				cfpkt_extr_head(pkt, &tmp16, 2);
+ 				linkparam.u.utility.fifosize_kb =
+-				    le16_to_cpu(tmp16);
++				    cfpkt_extr_head_u16(pkt);
+ 				/* Fifosize bufs */
+-				cfpkt_extr_head(pkt, &tmp16, 2);
+ 				linkparam.u.utility.fifosize_bufs =
+-				    le16_to_cpu(tmp16);
++				    cfpkt_extr_head_u16(pkt);
+ 				/* name */
+ 				cp = (u8 *) linkparam.u.utility.name;
+ 				caif_assert(sizeof(linkparam.u.utility.name)
+@@ -468,24 +462,24 @@ static int cfctrl_recv(struct cflayer *l
+ 				for (i = 0;
+ 				     i < UTILITY_NAME_LENGTH
+ 				     && cfpkt_more(pkt); i++) {
+-					cfpkt_extr_head(pkt, &tmp, 1);
++					tmp = cfpkt_extr_head_u8(pkt);
+ 					*cp++ = tmp;
+ 				}
+ 				/* Length */
+-				cfpkt_extr_head(pkt, &len, 1);
++				len = cfpkt_extr_head_u8(pkt);
+ 				linkparam.u.utility.paramlen = len;
+ 				/* Param Data */
+ 				cp = linkparam.u.utility.params;
+ 				while (cfpkt_more(pkt) && len--) {
+-					cfpkt_extr_head(pkt, &tmp, 1);
++					tmp = cfpkt_extr_head_u8(pkt);
+ 					*cp++ = tmp;
+ 				}
+ 				if (CFCTRL_ERR_BIT & cmdrsp)
+ 					break;
+ 				/* Link ID */
+-				cfpkt_extr_head(pkt, &linkid, 1);
++				linkid = cfpkt_extr_head_u8(pkt);
+ 				/* Length */
+-				cfpkt_extr_head(pkt, &len, 1);
++				len = cfpkt_extr_head_u8(pkt);
+ 				/* Param Data */
+ 				cfpkt_extr_head(pkt, &param, len);
+ 				break;
+@@ -522,7 +516,7 @@ static int cfctrl_recv(struct cflayer *l
+ 		}
+ 		break;
+ 	case CFCTRL_CMD_LINK_DESTROY:
+-		cfpkt_extr_head(pkt, &linkid, 1);
++		linkid = cfpkt_extr_head_u8(pkt);
+ 		cfctrl->res.linkdestroy_rsp(cfctrl->serv.layer.up, linkid);
+ 		break;
+ 	case CFCTRL_CMD_LINK_ERR:
 
 
