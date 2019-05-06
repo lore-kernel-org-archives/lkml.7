@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-16.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929EEC04AAB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518EBC04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BEC21019
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E9420B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 16:31:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hn4rH9KT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="smw+2+ze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfEFQbu (ORCPT
+        id S1727359AbfEFQbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 12:31:50 -0400
-Received: from mail-ot1-f74.google.com ([209.85.210.74]:33246 "EHLO
-        mail-ot1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727263AbfEFQbs (ORCPT
+        Mon, 6 May 2019 12:31:53 -0400
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:51250 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727316AbfEFQbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 12:31:48 -0400
-Received: by mail-ot1-f74.google.com with SMTP id 18so4466889otu.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:31:47 -0700 (PDT)
+        Mon, 6 May 2019 12:31:51 -0400
+Received: by mail-yw1-f74.google.com with SMTP id k10so2260184ywb.18
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 09:31:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=BvoYtYVsULamnYvbwO19c3h5oHA1gsMsAv5tZYbLYtI=;
-        b=hn4rH9KTek8R37jjBWMcf/SnTi9wO6imyjbK43Qo3YFFy0w0QB9ppRC7K8TE7v3vlN
-         nPLbzWoXhcOl9RZZTW0CT+GOCLOJRZHlTgH0IFE90/0mo3gA6Benvmv0xM9qlEM2L7iM
-         a5/5EdryhXK5o1zmP38+JskPbuvRNi2KBDqgGoYwdgZckW/t0t3zXYlgA28tCgQWx38p
-         zeMjQt/2TKtd8YWaOZqpDqkiV1tfPRGdf11R4Vmzgti01WpJ/ug4M22kRPfo4KNLvnrQ
-         G8KQ2Dx3TZLoioP3vZYIMjrpzIYzmaefwwMqniR4qNzu+AscTWd9F/aHBCgCKh66bnIf
-         LcNw==
+        bh=qJJU2gbhvvSzaaRZNAk/AylUL7YQ1I9YBdVQ8VYA/h0=;
+        b=smw+2+zeQRYDg9lMdhXKhP6q2UgWQk5tdiALYOGrpKFur5CJhfOg9OO/PZTfQT7ZwY
+         RvP2Hk/sSL7ML8WOTNeWv38qmUNAe4g4KhC0ua28+5atrFm7K5fmvkLjk0Db/ljqag0b
+         dQjecdgCCDsZyAajxBKxJc7LsxcMY95MEt9IiglDE0kwt30ExqYblax2XRbyRPQRXMO4
+         E+sey04rspIj0vK4v2o8+jJjIqc7WmoTjK96Ljfvnn/wyfRgdPoxhrZ+nqZ5Pgf+9DsA
+         QtQ6iTRFCgpCJVB7xCQGyTJqnI3tF0Os9MEQkOzATYUN++U4ys3fnY4AQGWE9mngxzPC
+         elwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=BvoYtYVsULamnYvbwO19c3h5oHA1gsMsAv5tZYbLYtI=;
-        b=QNvh96HJ0EJkuV2hiaLnxspUsNNnB2b/vPRU6jCX1aWmvqqRUEiZTMQ/FSPCOB6Osy
-         cxuWF52BVL7xO4KRYR7Wg9ScqLsLTlVEZXtyqz6bpG26W2mGARRq6kQAQGEfZeB6KqPX
-         nD2l9809N9cCX+H+56mhp3nx5wKBAzuESaHgnpj3vuWTwRr4I+7dTpU3ukOXXnbTnSUg
-         axuxUhxZCE2Xo3iQ+GaafX52QJXy8JTPftIRFNTlOLWwF7WoYph7eaVbJ/+WhmhfiMkP
-         HRa8wRz59mVpesvs399iqyKwaPc7V+g1whCxpeX7AfYNyC6lU4rB2S8uMpbWN3Zg2vp8
-         KKGA==
-X-Gm-Message-State: APjAAAXwhihLNOo6+f0XBmNpHknFMOv9fJwuWZxyEE2hwHqgoyQJ0PAi
-        /V6WYlsD542pHO9NZl/NdvCxmt1lzNulsmuY
-X-Google-Smtp-Source: APXvYqy3zk1gAf1HD3ERPdP+fu/IbJWPYjnwXEpH7KM/4Kolrw9tSDmooPMwqXT4nvIVhZWlBkow5/TqTCzeTPOv
-X-Received: by 2002:a9d:6008:: with SMTP id h8mr18251374otj.55.1557160307352;
- Mon, 06 May 2019 09:31:47 -0700 (PDT)
-Date:   Mon,  6 May 2019 18:30:59 +0200
+        bh=qJJU2gbhvvSzaaRZNAk/AylUL7YQ1I9YBdVQ8VYA/h0=;
+        b=fuSlcDCFtPINGdITYA9mWBovXExZ8RyG0CiBjrYp/P8LLBC2iWSogJ7RVhULgMPBwn
+         ti4odO/ttb02XIHcD2VX5TmqaRoeVR3xpOcy9tAGUIj1g1JX61fzJb0eT8vCC4FOh0zV
+         3jKRMgPjKcfpv29wTuQD8Gmpsdchmd0GDdXYqpu9QNdqXB0u0GwWNdSfMEPA98tHILVD
+         DzZpgcrsP2qnMXIqSiGFw/jSMZhfjo70ANcsI1/haSk2RDOostBnuA6I/bi0ihjblAFP
+         lNd2JsBKGC3CSie/GV5MQ5DvD6pDg1PQ6Aw33Sgh6XKsxt5u5TYg10aLLdRweAbZI3qj
+         zGHA==
+X-Gm-Message-State: APjAAAXCc3/zSmgNOHovL9b4oP2R4NTyeUnsWAtNZ4MdsGdoAKURM9FS
+        4op2fX3d5Fz9sboxEPCEQ+UXqinjlqWPj2B2
+X-Google-Smtp-Source: APXvYqx1X9tJcqBzNMWoEfXSSulDx8NO+a1TdtkQwmCv7glkGcm++BXem7IIU8nDFZviDaBVQ7bW4qmRV4r3Auad
+X-Received: by 2002:a25:2a17:: with SMTP id q23mr16755885ybq.195.1557160310462;
+ Mon, 06 May 2019 09:31:50 -0700 (PDT)
+Date:   Mon,  6 May 2019 18:31:00 +0200
 In-Reply-To: <cover.1557160186.git.andreyknvl@google.com>
-Message-Id: <66d044ab9445dcf36a96205a109458ac23f38b73.1557160186.git.andreyknvl@google.com>
+Message-Id: <b7999d13af54eb3ed8d7b0192397c7cde3df0b28.1557160186.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1557160186.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH v15 13/17] IB, arm64: untag user pointers in ib_uverbs_(re)reg_mr()
+Subject: [PATCH v15 14/17] media/v4l2-core, arm64: untag user pointers in videobuf_dma_contig_user_get
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
@@ -103,38 +103,55 @@ This patch is a part of a series that extends arm64 kernel ABI to allow to
 pass tagged user pointers (with the top byte set to something else other
 than 0x00) as syscall arguments.
 
-ib_uverbs_(re)reg_mr() use provided user pointers for vma lookups (through
-e.g. mlx4_get_umem_mr()), which can only by done with untagged pointers.
+videobuf_dma_contig_user_get() uses provided user pointers for vma
+lookups, which can only by done with untagged pointers.
 
-Untag user pointers in these functions.
+Untag the pointers in this function.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- drivers/infiniband/core/uverbs_cmd.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/v4l2-core/videobuf-dma-contig.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
-index 062a86c04123..36e7b52577d0 100644
---- a/drivers/infiniband/core/uverbs_cmd.c
-+++ b/drivers/infiniband/core/uverbs_cmd.c
-@@ -708,6 +708,8 @@ static int ib_uverbs_reg_mr(struct uverbs_attr_bundle *attrs)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/media/v4l2-core/videobuf-dma-contig.c b/drivers/media/v4l2-core/videobuf-dma-contig.c
+index e1bf50df4c70..8a1ddd146b17 100644
+--- a/drivers/media/v4l2-core/videobuf-dma-contig.c
++++ b/drivers/media/v4l2-core/videobuf-dma-contig.c
+@@ -160,6 +160,7 @@ static void videobuf_dma_contig_user_put(struct videobuf_dma_contig_memory *mem)
+ static int videobuf_dma_contig_user_get(struct videobuf_dma_contig_memory *mem,
+ 					struct videobuf_buffer *vb)
+ {
++	unsigned long untagged_baddr = untagged_addr(vb->baddr);
+ 	struct mm_struct *mm = current->mm;
+ 	struct vm_area_struct *vma;
+ 	unsigned long prev_pfn, this_pfn;
+@@ -167,22 +168,22 @@ static int videobuf_dma_contig_user_get(struct videobuf_dma_contig_memory *mem,
+ 	unsigned int offset;
+ 	int ret;
  
-+	cmd.start = untagged_addr(cmd.start);
-+
- 	if ((cmd.start & ~PAGE_MASK) != (cmd.hca_va & ~PAGE_MASK))
- 		return -EINVAL;
+-	offset = vb->baddr & ~PAGE_MASK;
++	offset = untagged_baddr & ~PAGE_MASK;
+ 	mem->size = PAGE_ALIGN(vb->size + offset);
+ 	ret = -EINVAL;
  
-@@ -790,6 +792,8 @@ static int ib_uverbs_rereg_mr(struct uverbs_attr_bundle *attrs)
- 	if (ret)
- 		return ret;
+ 	down_read(&mm->mmap_sem);
  
-+	cmd.start = untagged_addr(cmd.start);
-+
- 	if (cmd.flags & ~IB_MR_REREG_SUPPORTED || !cmd.flags)
- 		return -EINVAL;
+-	vma = find_vma(mm, vb->baddr);
++	vma = find_vma(mm, untagged_baddr);
+ 	if (!vma)
+ 		goto out_up;
  
+-	if ((vb->baddr + mem->size) > vma->vm_end)
++	if ((untagged_baddr + mem->size) > vma->vm_end)
+ 		goto out_up;
+ 
+ 	pages_done = 0;
+ 	prev_pfn = 0; /* kill warning */
+-	user_address = vb->baddr;
++	user_address = untagged_baddr;
+ 
+ 	while (pages_done < (mem->size >> PAGE_SHIFT)) {
+ 		ret = follow_pfn(vma, user_address, &this_pfn);
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
