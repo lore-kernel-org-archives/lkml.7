@@ -2,190 +2,173 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFF1C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A61C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FFF7205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:23:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="ARRkitV0"
+	by mail.kernel.org (Postfix) with ESMTP id A8C5E205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 17:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfEGRXU (ORCPT
+        id S1727343AbfEGRYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 13:23:20 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45686 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfEGRXT (ORCPT
+        Tue, 7 May 2019 13:24:45 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:46096 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726473AbfEGRYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 13:23:19 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r76so3978593lja.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 10:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=u1BdfLbHAFQuPdTVB1WpvhAvzRrkkmJNUU8PH36DDjI=;
-        b=ARRkitV0i38mi6ZYOWCQaRHdnDGOk/yUclCi0dkSPC291twr3CC18Z4lvRh/wlcRdY
-         5IevgfijwFnUWyObhxfleMfJ7z8CZs7ChXp6CpA6Jnm+j6evE3dIXWlsvBdTuoyIkm84
-         grqurOh7AGpkmWtonVe7Us5hW1YR+VgTiYIpKbz2HfVG6LekZr+aCK0lnN8mc4C0E8aX
-         lC/9BZ8LGTsfhdq/vVNlmmzM17VjGQdNMKScGCt7pzgwUfOx6+LqIzemWw7lILOPGG7B
-         yow36NzfOPHB8rGxzuJyMlob0yDov1nO8gv9w3pcCAp5eQr4xx8CtWI7v2cSD+9alYbf
-         Q7LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=u1BdfLbHAFQuPdTVB1WpvhAvzRrkkmJNUU8PH36DDjI=;
-        b=fjWb1/DaIPrrahaRPR6lM9bFXBFl/IInpyVCf0gP90906VkWJ4CSE5niQk/w/OePLl
-         ZDQ4aaXH3GHQ+R6Tw8JZCont/znVzLeWKp9ltL9KHQkDVBS9evk8HNnFnQhEW95/MrjS
-         GsxXeC6mGd6Jpat8EBcoIvddRtWbfjuHzCawxOMfXx3ZIU2Sf2EU91HasH8AS0sM7IsN
-         d7fDsUiliorz+aZI3Ng2dQucBsDQaDB43VWPExGeJFaCh/Bj7Fyy8USpCX/fHUYAvjRU
-         AzAbG5NH8FbbO3wQc5i+M9spNz/5rK7si7jRwlG1hSfC0oJJV12igsCfhy1l+DBvToYX
-         p2/Q==
-X-Gm-Message-State: APjAAAU7Do4YpWscc8MnfGtYjnubHXMzC4K/JnWvCjfTvt+W2zj2BlnT
-        pbp64/a77EwDAOlfrQM9h1KU8l7NNHvA3+da5OKg
-X-Google-Smtp-Source: APXvYqytjtDNglgXvF6NDMnQSfRPy3x8pQ+7EN589dt1d0roPS0kOWlTbsE2cw5bGycgpVEYD5HHtlDqwm9tPvucuME=
-X-Received: by 2002:a2e:9d0a:: with SMTP id t10mr3155031lji.95.1557249796468;
- Tue, 07 May 2019 10:23:16 -0700 (PDT)
+        Tue, 7 May 2019 13:24:45 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x47HMurS031460
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 7 May 2019 13:22:59 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 7D6D5420024; Tue,  7 May 2019 13:22:56 -0400 (EDT)
+Date:   Tue, 7 May 2019 13:22:56 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Message-ID: <20190507172256.GB5900@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org,
+        sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
 MIME-Version: 1.0
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 7 May 2019 13:23:05 -0400
-Message-ID: <CAHC9VhQ8aEqiKo6oj8-qMTzbs73ipEbTf5akENYc-m6xg7JRXg@mail.gmail.com>
-Subject: [GIT PULL] Audit patches for v5.2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-audit@redhat.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507080119.GB28121@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, May 07, 2019 at 10:01:19AM +0200, Greg KH wrote:
+> > My understanding is that the intent of KUnit is to avoid booting a kernel on
+> > real hardware or in a virtual machine.  That seems to be a matter of semantics
+> > to me because isn't invoking a UML Linux just running the Linux kernel in
+> > a different form of virtualization?
+> > 
+> > So I do not understand why KUnit is an improvement over kselftest.
+> > 
+> > It seems to me that KUnit is just another piece of infrastructure that I
+> > am going to have to be familiar with as a kernel developer.  More overhead,
+> > more information to stuff into my tiny little brain.
+> > 
+> > I would guess that some developers will focus on just one of the two test
+> > environments (and some will focus on both), splitting the development
+> > resources instead of pooling them on a common infrastructure.
+> > 
+> > What am I missing?
+> 
+> kselftest provides no in-kernel framework for testing kernel code
+> specifically.  That should be what kunit provides, an "easy" way to
+> write in-kernel tests for things.
+> 
+> Brendan, did I get it right?
 
-We've got a reasonably broad set of audit patches for the v5.2 merge
-window, the highlights are below:
+Yes, that's basically right.  You don't *have* to use KUnit.  It's
+supposed to be a simple way to run a large number of small tests that
+for specific small components in a system.
 
-- The biggest change, and the source of all the arch/* changes, is the
-patchset from Dmitry to help enable some of the work he is doing
-around PTRACE_GET_SYSCALL_INFO.  To be honest, including this in the
-audit tree is a bit of a stretch, but it does help move audit a little
-further along towards proper syscall auditing for all arches, and
-everyone else seemed to agree that audit was a "good" spot for this to
-land (or maybe they just didn't want to merge it?  dunno.).
+For example, I currently use xfstests using KVM and GCE to test all of
+ext4.  These tests require using multiple 5 GB and 20GB virtual disks,
+and it works by mounting ext4 file systems and exercising ext4 through
+the system call interfaces, using userspace tools such as fsstress,
+fsx, fio, etc.  It requires time overhead to start the VM, create and
+allocate virtual disks, etc.  For example, to run a single 3 seconds
+xfstest (generic/001), it requires full 10 seconds to run it via
+kvm-xfstests.
 
-- We can now audit time/NTP adjustments.
+KUnit is something else; it's specifically intended to allow you to
+create lightweight tests quickly and easily, and by reducing the
+effort needed to write and run unit tests, hopefully we'll have a lot
+more of them and thus improve kernel quality.
 
-- We continue the work to connect associated audit records into a single event.
+As an example, I have a volunteer working on developing KUinit tests
+for ext4.  We're going to start by testing the ext4 extent status
+tree.  The source code is at fs/ext4/extent_status.c; it's
+approximately 1800 LOC.  The Kunit tests for the extent status tree
+will exercise all of the corner cases for the various extent status
+tree functions --- e.g., ext4_es_insert_delayed_block(),
+ext4_es_remove_extent(), ext4_es_cache_extent(), etc.  And it will do
+this in isolation without our needing to create a test file system or
+using a test block device.
 
-As a FYI, you will likely run into two minor merge problems in
-kernel/seccomp.c and arch/mips/kernel/ptrace.c; both are very similar
-and have to do with the change to syscall_get_arch() and
-syscall_get_arguments().  It should be easy to sort this out (you'll
-see what I mean), but if you have any questions just let us know.
+Next we'll test the ext4 block allocator, again in isolation.  To test
+the block allocator we will have to write "mock functions" which
+simulate reading allocation bitmaps from disk.  Again, this will allow
+the test writer to explicitly construct corner cases and validate that
+the block allocator works as expected without having to reverese
+engineer file system data structures which will force a particular
+code path to be executed.
 
-Please pull this for v5.2,
--Paul
+So this is why it's largely irrelevant to me that KUinit uses UML.  In
+fact, it's a feature.  We're not testing device drivers, or the
+scheduler, or anything else architecture-specific.  UML is not about
+virtualization.  What it's about in this context is allowing us to
+start running test code as quickly as possible.  Booting KVM takes
+about 3-4 seconds, and this includes initializing virtio_scsi and
+other device drivers.  If by using UML we can hold the amount of
+unnecessary kernel subsystem initialization down to the absolute
+minimum, and if it means that we can communicating to the test
+framework via a userspace "printf" from UML/KUnit code, as opposed to
+via a virtual serial port to KVM's virtual console, it all makes for
+lighter weight testing.
 
---
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+Why did I go looking for a volunteer to write KUnit tests for ext4?
+Well, I have a plan to make some changes in restructing how ext4's
+write path works, in order to support things like copy-on-write, a
+more efficient delayed allocation system, etc.  This will require
+making changes to the extent status tree, and by having unit tests for
+the extent status tree, we'll be able to detect any bugs that we might
+accidentally introduce in the es tree far more quickly than if we
+didn't have those tests available.  Google has long found that having
+these sorts of unit tests is a real win for developer velocity for any
+non-trivial code module (or C++ class), even when you take into
+account the time it takes to create the unit tests.
 
- Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+					- Ted
 
-are available in the Git repository at:
+P.S.  Many thanks to Brendan for finding such a volunteer for me; the
+person in question is a SRE from Switzerland who is interested in
+getting involved with kernel testing, and this is going to be their
+20% project.  :-)
 
- git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git
-   tags/audit-pr-20190507
-
-for you to fetch changes up to 70c4cf17e445264453bc5323db3e50aa0ac9e81f:
-
- audit: fix a memory leak bug (2019-04-22 11:22:03 -0400)
-
-----------------------------------------------------------------
-audit/stable-5.2 PR 20190507
-
-----------------------------------------------------------------
-Dmitry V. Levin (13):
-     Move EM_ARCOMPACT and EM_ARCV2 to uapi/linux/elf-em.h
-     arc: define syscall_get_arch()
-     c6x: define syscall_get_arch()
-     h8300: define syscall_get_arch()
-     Move EM_HEXAGON to uapi/linux/elf-em.h
-     hexagon: define syscall_get_arch()
-     m68k: define syscall_get_arch()
-     Move EM_NDS32 to uapi/linux/elf-em.h
-     nds32: define syscall_get_arch()
-     nios2: define syscall_get_arch()
-     Move EM_UNICORE to uapi/linux/elf-em.h
-     unicore32: define syscall_get_arch()
-     syscall_get_arch: add "struct task_struct *" argument
-
-Li RongQing (1):
-     audit: fix a memleak caused by auditing load module
-
-Ondrej Mosnacek (2):
-     timekeeping: Audit clock adjustments
-     ntp: Audit NTP parameters adjustment
-
-Richard Guy Briggs (3):
-     audit: connect LOGIN record to its syscall record
-     audit: link integrity evm_write_xattrs record to syscall event
-     audit: purge unnecessary list_empty calls
-
-Wenwen Wang (1):
-     audit: fix a memory leak bug
-
-YueHaibing (1):
-     audit: Make audit_log_cap and audit_copy_inode static
-
-arch/alpha/include/asm/syscall.h      |   2 +-
-arch/arc/include/asm/elf.h            |   6 +-
-arch/arc/include/asm/syscall.h        |  11 ++++
-arch/arm/include/asm/syscall.h        |   2 +-
-arch/arm64/include/asm/syscall.h      |   4 +-
-arch/c6x/include/asm/syscall.h        |   7 +++
-arch/csky/include/asm/syscall.h       |   2 +-
-arch/h8300/include/asm/syscall.h      |   6 ++
-arch/hexagon/include/asm/elf.h        |   6 +-
-arch/hexagon/include/asm/syscall.h    |   8 +++
-arch/ia64/include/asm/syscall.h       |   2 +-
-arch/m68k/include/asm/syscall.h       |  12 ++++
-arch/microblaze/include/asm/syscall.h |   2 +-
-arch/mips/include/asm/syscall.h       |   6 +-
-arch/mips/kernel/ptrace.c             |   2 +-
-arch/nds32/include/asm/elf.h          |   3 +-
-arch/nds32/include/asm/syscall.h      |   9 +++
-arch/nios2/include/asm/syscall.h      |   6 ++
-arch/openrisc/include/asm/syscall.h   |   2 +-
-arch/parisc/include/asm/syscall.h     |   4 +-
-arch/powerpc/include/asm/syscall.h    |  10 ++-
-arch/riscv/include/asm/syscall.h      |   2 +-
-arch/s390/include/asm/syscall.h       |   4 +-
-arch/sh/include/asm/syscall_32.h      |   2 +-
-arch/sh/include/asm/syscall_64.h      |   2 +-
-arch/sparc/include/asm/syscall.h      |   5 +-
-arch/unicore32/include/asm/elf.h      |   3 +-
-arch/unicore32/include/asm/syscall.h  |  12 ++++
-arch/x86/include/asm/syscall.h        |   8 ++-
-arch/x86/um/asm/syscall.h             |   2 +-
-arch/xtensa/include/asm/syscall.h     |   2 +-
-include/asm-generic/syscall.h         |   5 +-
-include/linux/audit.h                 |  75 +++++++++++++++++++++++
-include/uapi/linux/audit.h            |  14 +++++
-include/uapi/linux/elf-em.h           |   6 ++
-kernel/audit.c                        |   2 +-
-kernel/auditfilter.c                  |  14 ++---
-kernel/auditsc.c                      | 115 +++++++++++++++++++++------------
-kernel/seccomp.c                      |   4 +-
-kernel/time/ntp.c                     |  22 ++++++-
-kernel/time/ntp_internal.h            |   4 +-
-kernel/time/timekeeping.c             |  13 +++-
-security/integrity/evm/evm_secfs.c    |  10 +--
-43 files changed, 331 insertions(+), 107 deletions(-)
-create mode 100644 arch/m68k/include/asm/syscall.h
-create mode 100644 arch/unicore32/include/asm/syscall.h
-
--- 
-paul moore
-www.paul-moore.com
