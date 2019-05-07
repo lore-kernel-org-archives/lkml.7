@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A272C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C33C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 407DF20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9FB22054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208550;
-	bh=ejnkGt10CVUeV3b08a7mML8ViNQJMeaXbDDDt2m66aQ=;
+	s=default; t=1557208553;
+	bh=X+Td5GnClZk7jhagbMANLkJXafEsuhdlrC4IbZEKbGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y9Hm3ErYoosIVTX9nCpI/06/5TiVkI+NL/CWNEq4AyX6zf+5yWSO96WsxdzbdM9WJ
-	 IgEgVTy3Tgz81fsdfhAb+ADf/IZxjMzqH9yYeaqH7KZ/OYi1hUN3dLpfXcxsPk3Xz/
-	 3N6MczlJFqdGZ/bG+P3T/9s3s/KuyU/hMVUzBGrM=
+	b=cUP6rQI68kS5KwT+OZvw2W5fqFiJOtzAicRHsQWOhz+wtSJqp1bKuP/v7zgGmd35z
+	 FwL18qNYDgDUU3TV1kFVI0maRz45Wc93UNmPG+eTE6hCF8ENzjXmezdK5mCvuuAq4a
+	 iMD3M3Z6QotwCUrewQ+z6EkrBgqCGanO/EeZbOWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbfEGFiK (ORCPT
+        id S1728697AbfEGFzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:38:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57870 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:55:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727969AbfEGFiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:04 -0400
+        id S1728528AbfEGFiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 418F32087F;
-        Tue,  7 May 2019 05:38:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 532FD216F4;
+        Tue,  7 May 2019 05:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207484;
-        bh=ejnkGt10CVUeV3b08a7mML8ViNQJMeaXbDDDt2m66aQ=;
+        s=default; t=1557207489;
+        bh=X+Td5GnClZk7jhagbMANLkJXafEsuhdlrC4IbZEKbGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m11+7MWROt3Wa5pz0h6YYzZFH/RuAeQb5Bbf/lprsGMW+mkoQmAz86sAqg5BHM1Bf
-         pAmiYuy38xYaKIjfUn8Dpc4b+QLdJ2hYJwVjJneReQQZuIlT0Oh/9PklVGIoR8OQS5
-         g0nr20xpw5q4GyqATMXAGJTDbmf5eCSGtD7IO+Uo=
+        b=QsczW7A/iwjISG3zoW1GTdA1rDIDoXvj0Z62ccZD9tinvPj2t45WHnmz4FSWouECJ
+         YhZLU61N3Lu0YxvzvGUuMjAz5tta9anIco791IClCw4EL27S8uMydBcgTJ2Nq/ktuq
+         Km7YQYUswLnmEcyb3Dv0e/1okY6SoI/sTL3Jo9qQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Andy Duan <fugang.duan@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 68/81] usb: typec: Fix unchecked return value
-Date:   Tue,  7 May 2019 01:35:39 -0400
-Message-Id: <20190507053554.30848-68-sashal@kernel.org>
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 72/81] net: fec: manage ahb clock in runtime pm
+Date:   Tue,  7 May 2019 01:35:43 -0400
+Message-Id: <20190507053554.30848-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -62,50 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Andy Duan <fugang.duan@nxp.com>
 
-[ Upstream commit e82adc1074a7356f1158233551df9e86b7ebfb82 ]
+[ Upstream commit d7c3a206e6338e4ccdf030719dec028e26a521d5 ]
 
-Currently there is no check on platform_get_irq() return value
-in case it fails, hence never actually reporting any errors and
-causing unexpected behavior when using such value as argument
-for function regmap_irq_get_virq().
+Some SOC like i.MX6SX clock have some limits:
+- ahb clock should be disabled before ipg.
+- ahb and ipg clocks are required for MAC MII bus.
+So, move the ahb clock to runtime management together with
+ipg clock.
 
-Fix this by adding a proper check, a message error and return
-*irq* in case platform_get_irq() fails.
-
-Addresses-Coverity-ID: 1443899 ("Improper use of negative value")
-Fixes: d2061f9cc32d ("usb: typec: add driver for Intel Whiskey Cove PMIC USB Type-C PHY")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/usb/typec/typec_wcove.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/freescale/fec_main.c | 30 ++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/usb/typec/typec_wcove.c b/drivers/usb/typec/typec_wcove.c
-index 423208e19383..6770afd40765 100644
---- a/drivers/usb/typec/typec_wcove.c
-+++ b/drivers/usb/typec/typec_wcove.c
-@@ -615,8 +615,13 @@ static int wcove_typec_probe(struct platform_device *pdev)
- 	wcove->dev = &pdev->dev;
- 	wcove->regmap = pmic->regmap;
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 7b98bb75ba8a..ad41ace0a27a 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1850,13 +1850,9 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
+ 	int ret;
  
--	irq = regmap_irq_get_virq(pmic->irq_chip_data_chgr,
--				  platform_get_irq(pdev, 0));
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", irq);
-+		return irq;
-+	}
+ 	if (enable) {
+-		ret = clk_prepare_enable(fep->clk_ahb);
+-		if (ret)
+-			return ret;
+-
+ 		ret = clk_prepare_enable(fep->clk_enet_out);
+ 		if (ret)
+-			goto failed_clk_enet_out;
++			return ret;
+ 
+ 		if (fep->clk_ptp) {
+ 			mutex_lock(&fep->ptp_clk_mutex);
+@@ -1876,7 +1872,6 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
+ 
+ 		phy_reset_after_clk_enable(ndev->phydev);
+ 	} else {
+-		clk_disable_unprepare(fep->clk_ahb);
+ 		clk_disable_unprepare(fep->clk_enet_out);
+ 		if (fep->clk_ptp) {
+ 			mutex_lock(&fep->ptp_clk_mutex);
+@@ -1895,8 +1890,6 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
+ failed_clk_ptp:
+ 	if (fep->clk_enet_out)
+ 		clk_disable_unprepare(fep->clk_enet_out);
+-failed_clk_enet_out:
+-		clk_disable_unprepare(fep->clk_ahb);
+ 
+ 	return ret;
+ }
+@@ -3485,6 +3478,9 @@ fec_probe(struct platform_device *pdev)
+ 	ret = clk_prepare_enable(fep->clk_ipg);
+ 	if (ret)
+ 		goto failed_clk_ipg;
++	ret = clk_prepare_enable(fep->clk_ahb);
++	if (ret)
++		goto failed_clk_ahb;
+ 
+ 	fep->reg_phy = devm_regulator_get(&pdev->dev, "phy");
+ 	if (!IS_ERR(fep->reg_phy)) {
+@@ -3578,6 +3574,9 @@ fec_probe(struct platform_device *pdev)
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ failed_regulator:
++	clk_disable_unprepare(fep->clk_ahb);
++failed_clk_ahb:
++	clk_disable_unprepare(fep->clk_ipg);
+ failed_clk_ipg:
+ 	fec_enet_clk_enable(ndev, false);
+ failed_clk:
+@@ -3701,6 +3700,7 @@ static int __maybe_unused fec_runtime_suspend(struct device *dev)
+ 	struct net_device *ndev = dev_get_drvdata(dev);
+ 	struct fec_enet_private *fep = netdev_priv(ndev);
+ 
++	clk_disable_unprepare(fep->clk_ahb);
+ 	clk_disable_unprepare(fep->clk_ipg);
+ 
+ 	return 0;
+@@ -3710,8 +3710,20 @@ static int __maybe_unused fec_runtime_resume(struct device *dev)
+ {
+ 	struct net_device *ndev = dev_get_drvdata(dev);
+ 	struct fec_enet_private *fep = netdev_priv(ndev);
++	int ret;
+ 
+-	return clk_prepare_enable(fep->clk_ipg);
++	ret = clk_prepare_enable(fep->clk_ahb);
++	if (ret)
++		return ret;
++	ret = clk_prepare_enable(fep->clk_ipg);
++	if (ret)
++		goto failed_clk_ipg;
 +
-+	irq = regmap_irq_get_virq(pmic->irq_chip_data_chgr, irq);
- 	if (irq < 0)
- 		return irq;
++	return 0;
++
++failed_clk_ipg:
++	clk_disable_unprepare(fep->clk_ahb);
++	return ret;
+ }
  
+ static const struct dev_pm_ops fec_pm_ops = {
 -- 
 2.20.1
 
