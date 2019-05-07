@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A68C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42381C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9884521530
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0212220B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207486;
-	bh=dxV053zhGb4G++2yO2/3vvKS9KiYcm1mq0KoO8T0WdY=;
+	s=default; t=1557207496;
+	bh=kOLUyk1rW/joIcGgjq1GyO15f9JdqdFBELSxyRbWFYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l5yBCO+FWfhLhAmxqY6hCOlwyQFvW/7diLoVDZkiOUfLvbWXtdzq0KtdivuQkchGT
-	 YMApfqRC0fx8R2rgvtoMokLW9YwCJOPfN6cPINUopHRbvQ9gqAtS0KStK5C9On1pTQ
-	 o4/2MrlbBQW76hqDENZn35yffoYWSn5c6NUA6a78=
+	b=YGzLSSG684cwyQzfCZNfRqcHITSLS880eeoic2NGFmC7Q6OkTDbt9Hq/oFaSoq0h4
+	 yz+jGzYPB3G6Y8GtoR5rdORLgFXiTiiLywDBT4DX30nVE1VvwpVqZQyWGoCpLYgGTk
+	 CndwhrhKO/hk2KoNwyPuaHtV5STTzzvgZsD0Trr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfEGFiF (ORCPT
+        id S1728572AbfEGFiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57814 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:38:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728499AbfEGFiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:01 -0400
+        id S1728552AbfEGFiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77C2521530;
-        Tue,  7 May 2019 05:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC89121655;
+        Tue,  7 May 2019 05:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207480;
-        bh=dxV053zhGb4G++2yO2/3vvKS9KiYcm1mq0KoO8T0WdY=;
+        s=default; t=1557207491;
+        bh=kOLUyk1rW/joIcGgjq1GyO15f9JdqdFBELSxyRbWFYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mw8amyw9NJum7BkuRZ/pGbXJCo+VEj0fWcTzbNbTOB18w9/HTW5PIiiQi/xFTaSHr
-         bRmzO/NKSAwTZNCfCA6I9GH9OCBqPJ6JJAR4DYHdphXEMFIg98t7OKBVPGF9XbR4G+
-         Zgw2m4QLISqJZVfe+kJE0s+3Iwkp6knzm3RZc8zg=
+        b=RuutzQ0/usfyHll5rxhU7d25LGYNUR0XQzLboJZMMtZ4Mz84dygy3Bb6NGdzuyove
+         Eapyfll5ICGxuhdQ3W+G7TjnXEzY+e8uUJ5Q59LN2z/HydS7/BIYaB3OvuxNWhXhPp
+         k9DTc1amvQKMYnctlYW78sZ+qaMA7jusq0GHstgA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 66/81] net: dsa: mv88e6xxx: fix few issues in mv88e6390x_port_set_cmode
-Date:   Tue,  7 May 2019 01:35:37 -0400
-Message-Id: <20190507053554.30848-66-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 74/81] mlxsw: core: Do not use WQ_MEM_RECLAIM for EMAD workqueue
+Date:   Tue,  7 May 2019 01:35:45 -0400
+Message-Id: <20190507053554.30848-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053554.30848-1-sashal@kernel.org>
 References: <20190507053554.30848-1-sashal@kernel.org>
@@ -60,98 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 5ceaeb99ffb4dc002d20f6ac243c19a85e2c7a76 ]
+[ Upstream commit a8c133b06183c529c51cd0d54eb57d6b7078370c ]
 
-This patches fixes few issues in mv88e6390x_port_set_cmode().
+The EMAD workqueue is used to handle retransmission of EMAD packets that
+contain configuration data for the device's firmware.
 
-1. When entering the function the old cmode may be 0, in this case
-   mv88e6390x_serdes_get_lane() returns -ENODEV. As result we bail
-   out and have no chance to set a new mode. Therefore deal properly
-   with -ENODEV.
+Given the workers need to allocate these packets and that the code is
+not called as part of memory reclaim path, remove the WQ_MEM_RECLAIM
+flag.
 
-2. Once we have disabled power and irq, let's set the cached cmode to 0.
-   This reflects the actual status and is cleaner if we bail out with an
-   error in the following function calls.
-
-3. The cached cmode is used by mv88e6390x_serdes_get_lane(),
-   mv88e6390_serdes_power_lane() and mv88e6390_serdes_irq_enable().
-   Currently we set the cached mode to the new one at the very end of
-   the function only, means until then we use the old one what may be
-   wrong.
-
-4. When calling mv88e6390_serdes_irq_enable() we use the lane value
-   belonging to the old cmode. Get the lane belonging to the new cmode
-   before calling this function.
-
-It's hard to provide a good "Fixes" tag because quite a few smaller
-changes have been done to the code in question recently.
-
-Fixes: d235c48b40d3 ("net: dsa: mv88e6xxx: power serdes on/off for 10G interfaces on 6390X")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: d965465b60ba ("mlxsw: core: Fix possible deadlock")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/net/dsa/mv88e6xxx/port.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/port.c b/drivers/net/dsa/mv88e6xxx/port.c
-index 7fffce734f0a..fdeddbfa829d 100644
---- a/drivers/net/dsa/mv88e6xxx/port.c
-+++ b/drivers/net/dsa/mv88e6xxx/port.c
-@@ -379,18 +379,22 @@ int mv88e6390x_port_set_cmode(struct mv88e6xxx_chip *chip, int port,
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+index f7154f358f27..426aea8ad72c 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -568,7 +568,7 @@ static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
+ 	if (!(mlxsw_core->bus->features & MLXSW_BUS_F_TXRX))
  		return 0;
  
- 	lane = mv88e6390x_serdes_get_lane(chip, port);
--	if (lane < 0)
-+	if (lane < 0 && lane != -ENODEV)
- 		return lane;
- 
--	if (chip->ports[port].serdes_irq) {
--		err = mv88e6390_serdes_irq_disable(chip, port, lane);
-+	if (lane >= 0) {
-+		if (chip->ports[port].serdes_irq) {
-+			err = mv88e6390_serdes_irq_disable(chip, port, lane);
-+			if (err)
-+				return err;
-+		}
-+
-+		err = mv88e6390x_serdes_power(chip, port, false);
- 		if (err)
- 			return err;
- 	}
- 
--	err = mv88e6390x_serdes_power(chip, port, false);
--	if (err)
--		return err;
-+	chip->ports[port].cmode = 0;
- 
- 	if (cmode) {
- 		err = mv88e6xxx_port_read(chip, port, MV88E6XXX_PORT_STS, &reg);
-@@ -404,6 +408,12 @@ int mv88e6390x_port_set_cmode(struct mv88e6xxx_chip *chip, int port,
- 		if (err)
- 			return err;
- 
-+		chip->ports[port].cmode = cmode;
-+
-+		lane = mv88e6390x_serdes_get_lane(chip, port);
-+		if (lane < 0)
-+			return lane;
-+
- 		err = mv88e6390x_serdes_power(chip, port, true);
- 		if (err)
- 			return err;
-@@ -415,8 +425,6 @@ int mv88e6390x_port_set_cmode(struct mv88e6xxx_chip *chip, int port,
- 		}
- 	}
- 
--	chip->ports[port].cmode = cmode;
--
- 	return 0;
- }
- 
+-	emad_wq = alloc_workqueue("mlxsw_core_emad", WQ_MEM_RECLAIM, 0);
++	emad_wq = alloc_workqueue("mlxsw_core_emad", 0, 0);
+ 	if (!emad_wq)
+ 		return -ENOMEM;
+ 	mlxsw_core->emad_wq = emad_wq;
 -- 
 2.20.1
 
