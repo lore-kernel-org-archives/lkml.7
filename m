@@ -2,251 +2,133 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D4CC46460
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BF3C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D0A20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5889205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 15:15:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ClkS187g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbfEGPPi (ORCPT
+        id S1726862AbfEGPPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 11:15:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60664 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726617AbfEGPPh (ORCPT
+        Tue, 7 May 2019 11:15:43 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41646 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfEGPPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 11:15:37 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x47F3IQd093078
-        for <linux-kernel@vger.kernel.org>; Tue, 7 May 2019 11:15:35 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sbbj5u2fq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 11:15:35 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Tue, 7 May 2019 16:15:34 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 May 2019 16:15:30 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x47FFS3v32243896
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 May 2019 15:15:28 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16FECB2064;
-        Tue,  7 May 2019 15:15:28 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63485B2067;
-        Tue,  7 May 2019 15:15:27 +0000 (GMT)
-Received: from [9.85.152.217] (unknown [9.85.152.217])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  7 May 2019 15:15:27 +0000 (GMT)
-Subject: Re: [PATCH v2 2/7] s390: vfio-ap: maintain a shadow of the guest's
- CRYCB
-To:     pmorel@linux.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
- <1556918073-13171-3-git-send-email-akrowiak@linux.ibm.com>
- <2f980dbc-4765-aba8-46fc-848ee66854d6@linux.ibm.com>
- <a47e980e-95e5-f44c-b8fd-e8a7d3d9b625@linux.ibm.com>
- <9d467999-21db-e362-0b65-f0826c6b485d@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Tue, 7 May 2019 11:15:27 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 7 May 2019 11:15:41 -0400
+Received: by mail-pf1-f194.google.com with SMTP id l132so3868936pfc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 08:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:from:to:subject:date:message-id:in-reply-to:references;
+        bh=hsW4nLPXM+q/uY8MZYS1nps05YO+5x2cf5Nbss6qqYE=;
+        b=ClkS187gzhi/j1pAPSt6DjelbgpPXv7fjPdfzDV5qJFZvVL/W1eB6MRvaIHMkL1YlF
+         pAjVyMroQ4MkU/9oeDSWhJa17pUefKXId6mr8kgz0EEGuZQFP91sS1XfCqcXs47UF9rQ
+         7dEymJY2nJgMLXRvZ0fz7wBEFuXsMuNoe8NdOShlmskNuDYYeOiJ8Tzj34QdKU5d8j4r
+         ENTIm4l6tM2JOx2x+Lg4mIDkpXINbB8YaavDO/p+RBL4hjLoibx0xK8XVVqWMnaC7MdM
+         DOogTingeVjfEUlirlITsKl3ddLCz/Y6H7rIgtRBx0P0UXMf6Ql3bnHCqLwkJSmQ09Of
+         PJEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=mime-version:x-gm-message-state:from:to:subject:date:message-id
+         :in-reply-to:references;
+        bh=hsW4nLPXM+q/uY8MZYS1nps05YO+5x2cf5Nbss6qqYE=;
+        b=K5YQV5Kcli38lMATSwTz20mYuEe/TigC9d3jhoWzTNGn5BPA8nXaULFqslHhJz2EpZ
+         L2skOrNKXCMOdRQ8ukZH5A8FdMGEmUA/hfyB12YlG8B/MYbaIxoYKa63z6D0zT3kxU62
+         sA6lcN5o7pfx6Q08OL4ctdBzPKaAGuBhDSBpLlaRtY8MOf0d2+SSzFidy+kprH4fambC
+         Ccl4VkqPe019taBs8JdknyE02StAgkyVGg4dzdcxgERqCTRb1HujGaxJC0sx4l7awvsn
+         FsTpElU7eT7nsyXu2TgVZ0V9y+edIxh8FYBgrZeMWQ/BsDqG2xf0IALS60KMvk54VUCW
+         K9EQ==
 MIME-Version: 1.0
-In-Reply-To: <9d467999-21db-e362-0b65-f0826c6b485d@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050715-0064-0000-0000-000003DB22C8
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011066; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01199923; UDB=6.00629553; IPR=6.00980805;
- MB=3.00026770; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-07 15:15:33
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050715-0065-0000-0000-00003D60FFDD
-Message-Id: <f956b4c9-1323-871e-46e2-8c91b1c16dc9@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905070098
+X-Gm-Message-State: APjAAAXOEJIM0TIMDN1lWHOBzl+4QOaa3Oxeyk4AcUS9EAY4ssLqzQZI
+        BoWxwr77WWinieuZ8owjXf8ssgXWjtoKMoOxapH392DcGAiRnIPklSYNQeBGZsYTh1MzHRTfYmu
+        F/vsax8OLLiu5Fq5slQ==
+X-Google-Smtp-Source: APXvYqxmlABOO00POLT4NWe6l6j+ZCfYLjr32u7zp94znUQbwT5xkhl7TAvUrQu4mpR/mTRnSdE+1g==
+X-Received: by 2002:aa7:8046:: with SMTP id y6mr42416829pfm.251.1557242140707;
+        Tue, 07 May 2019 08:15:40 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id 2sm5397398pgc.49.2019.05.07.08.15.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 07 May 2019 08:15:40 -0700 (PDT)
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
+        sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 v2 1/3] dt-bindings: i2c: extend existing opencore bindings.
+Date:   Tue,  7 May 2019 20:45:06 +0530
+Message-Id: <1557242108-13580-2-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com>
+References: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com>
+Content-Type: text/plain; charset="US-ASCII"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/7/19 4:22 AM, Pierre Morel wrote:
-> On 06/05/2019 21:53, Tony Krowiak wrote:
->> On 5/6/19 2:49 AM, Pierre Morel wrote:
->>> On 03/05/2019 23:14, Tony Krowiak wrote:
->>>> This patch introduces a shadow of the CRYCB being used by a guest. This
->>>> will enable to more effectively manage dynamic changes to the AP
->>>> resources installed on the host that may be assigned to an mdev device
->>>> and being used by a guest. For example:
->>>>
->>>> * AP adapter cards can be dynamically added to and removed from the AP
->>>>    configuration via the SE or an SCLP command.
->>>>
->>>> * AP resources that disappear and reappear due to hardware 
->>>> malfunctions.
->>>>
->>>> * AP queues bound to and unbound from the vfio_ap device driver by a
->>>>    root user.
->>>>
->>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->>>> ---
->>>>   drivers/s390/crypto/vfio_ap_ops.c     | 91 
->>>> ++++++++++++++++++++++++++++++++---
->>>>   drivers/s390/crypto/vfio_ap_private.h |  2 +
->>>>   2 files changed, 87 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
->>>> b/drivers/s390/crypto/vfio_ap_ops.c
->>>> index b88a2a2ba075..44a04b4aa9ae 100644
->>>> --- a/drivers/s390/crypto/vfio_ap_ops.c
->>>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->>>> @@ -297,6 +297,45 @@ static void 
->>>> vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned long apqi)
->>>>       } while (--retry);
->>>>   }
->>>> +/*
->>>> + * vfio_ap_mdev_update_crycb
->>>> + *
->>>> + * @matrix_mdev: the mediated matrix device
->>>> + *
->>>> + * Updates the AP matrix in the guest's CRYCB from it's shadow masks.
->>>> + *
->>>> + * Returns zero if the guest's CRYCB is successfully updated; 
->>>> otherwise,
->>>> + * returns -ENODEV if a guest is not running or does not have a CRYCB.
->>>> + */
->>>> +static int vfio_ap_mdev_update_crycb(struct ap_matrix_mdev 
->>>> *matrix_mdev)
->>>> +{
->>>> +    if (!matrix_mdev->kvm || !matrix_mdev->kvm->arch.crypto.crycbd)
->>>> +        return -ENODEV;
->>>> +
->>>> +    kvm_arch_crypto_set_masks(matrix_mdev->kvm,
->>>> +                  matrix_mdev->shadow_crycb->apm,
->>>> +                  matrix_mdev->shadow_crycb->aqm,
->>>> +                  matrix_mdev->shadow_crycb->adm);
->>>> +
->>>> +    return 0;
->>>> +}
->>>> +
->>>> +static int match_apqn(struct device *dev, void *data)
->>>> +{
->>>> +    struct ap_queue *apq = to_ap_queue(dev);
->>>> +
->>>> +    return (apq->qid == *(unsigned long *)(data)) ? 1 : 0;
->>>> +}
->>>> +
->>>> +static struct device *vfio_ap_get_queue_dev(unsigned long apid,
->>>> +                         unsigned long apqi)
->>>> +{
->>>> +    unsigned long apqn = AP_MKQID(apid, apqi);
->>>> +
->>>> +    return driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
->>>> +                  &apqn, match_apqn);
->>>> +}
->>>> +
->>>>   /**
->>>>    * assign_adapter_store
->>>>    *
->>>> @@ -805,14 +844,9 @@ static int vfio_ap_mdev_group_notifier(struct 
->>>> notifier_block *nb,
->>>>       if (ret)
->>>>           return NOTIFY_DONE;
->>>> -    /* If there is no CRYCB pointer, then we can't copy the masks */
->>>> -    if (!matrix_mdev->kvm->arch.crypto.crycbd)
->>>> +    if (vfio_ap_mdev_update_crycb(matrix_mdev))
->>>>           return NOTIFY_DONE;
->>>> -    kvm_arch_crypto_set_masks(matrix_mdev->kvm, 
->>>> matrix_mdev->matrix.apm,
->>>> -                  matrix_mdev->matrix.aqm,
->>>> -                  matrix_mdev->matrix.adm);
->>>> -
->>>>       return NOTIFY_OK;
->>>>   }
->>>> @@ -867,12 +901,55 @@ static int vfio_ap_mdev_reset_queues(struct 
->>>> mdev_device *mdev)
->>>>       return rc;
->>>>   }
->>>> +static int vfio_ap_mdev_create_shadow_crycb(struct ap_matrix_mdev 
->>>> *matrix_mdev)
->>>> +{
->>>> +    unsigned long apid, apqi, domid;
->>>> +    struct device *dev;
->>>> +
->>>> +    matrix_mdev->shadow_crycb = 
->>>> kzalloc(sizeof(*matrix_mdev->shadow_crycb),
->>>> +                        GFP_KERNEL);
->>>> +    if (!matrix_mdev->shadow_crycb)
->>>> +        return -ENOMEM;
->>>> +
->>>> +    vfio_ap_matrix_init(&matrix_dev->info, matrix_mdev->shadow_crycb);
->>>> +
->>>> +    /*
->>>> +     * Examine each APQN assigned to the mdev device. Set the APID 
->>>> and APQI
->>>> +     * in the shadow CRYCB if and only if the queue device 
->>>> identified by
->>>> +     * the APQN is in the configuration.
->>>> +     */
->>>> +    for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
->>>> +                 matrix_mdev->matrix.apm_max + 1) {
->>>> +        for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
->>>> +                     matrix_mdev->matrix.aqm_max + 1) {
->>>> +            dev = vfio_ap_get_queue_dev(apid, apqi);
->>>> +            if (dev) {
->>>> +                set_bit_inv(apid,
->>>> +                        matrix_mdev->shadow_crycb->apm);
->>>> +                set_bit_inv(apqi,
->>>> +                        matrix_mdev->shadow_crycb->aqm);
->>>> +                put_device(dev);
->>>> +            }
->>>
->>> I think that if we do not find a device here we have a problem.
->>> Don't we?
->>
->> Other than the fact that the guest will not have any AP devices,
->> what would be the problem? What would you suggest?
->>
-> 
-> Suppose we have in matrix_mdev->matrix:
-> 1-2
-> 1-3
-> 2-2
-> 2-3
-> 
-> We set the shadow_crycb with:
-> we find 1-2 we set 1 2
-> we find 1-3 we se 1 3
-> we find 2-2 we set 2 2
-> we do not find 2-3
-> 
-> we have set apm(1,2) aqm(2,3)
-> the guest can access 2-3 but we do not have the device.
+Add FU540-C000 specific device tree bindings to already
+available i2-ocores file. This device is available on
+HiFive Unleashed Rev A00 board.
 
-Good point. I'll fix this for v4.
+Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-> 
-> Pierre
-> 
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+index 17bef9a..f6bcf90 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+@@ -2,6 +2,7 @@ Device tree configuration for i2c-ocores
+ 
+ Required properties:
+ - compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
++                    "sifive,fu540-c000-i2c" or "sifive,i2c0"
+ - reg             : bus address start and address range size of device
+ - interrupts      : interrupt number
+ - clocks          : handle to the controller clock; see the note below.
+@@ -67,3 +68,22 @@ or
+ 			reg = <0x60>;
+ 		};
+ 	};
++or
++	/*
++	  An Opencore based I2C node in FU540-C000 chip from SiFive
++	  This chip has a hardware erratum for broken IRQ
++	  so it's recommended not to define interrupt in the device node
++	*/
++	i2c@10030000 {
++			compatible = "sifive,i2c0","sifive,fu540-c000-i2c";
++			reg = <0x0 0x10030000 0x0 0x1000>;
++			reg-names = "i2c-control";
++			clocks = <&tlclk>;
++			clock-frequency = <100000>;
++
++			reg-shift = <2>;
++			reg-io-width = <1>;
++
++			#address-cells = <1>;
++			#size-cells = <0>;
++	};
+-- 
+1.9.1
 
+
+-- 
+The information transmitted is intended only for the person or entity to 
+which it is addressed and may contain confidential and/or privileged 
+material. If you are not the intended recipient of this message please do 
+not read, copy, use or disclose this communication and notify the sender 
+immediately. It should be noted that any review, retransmission, 
+dissemination or other use of, or taking action or reliance upon, this 
+information by persons or entities other than the intended recipient is 
+prohibited.
