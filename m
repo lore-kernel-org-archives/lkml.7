@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AC6C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F75DC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E2F216B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731A02087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557207310;
-	bh=1vZz/Jewo+yp+EJ+sf4G3CsR6Ir32kRIJt59tst0XvU=;
+	s=default; t=1557207312;
+	bh=jLmyqPYi3A2ppOJa+HCdiRXXIVzEb4yxF0qDFHX80us=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kAqCoHPtNoiBSNKK/vx33OM0Im0Kmd9lZaw/cH+u/v2seTCSbPZF9cA/UfpkSpKjD
-	 ZB7oJBsFZQPFQXSf38k/ZEOV8sE0WfLqLHQ4OZX87ZKFYuWGjj0sy8pYvIfufGlaZl
-	 Zis+BvFuJIbJOE5Uq3k+8OYscJwYryGnk4ne7zUU=
+	b=0qCiV0wII8SP6pYE8qiznQtpC/piz1peM2nGz6Xnb4ooE9x90HXkMug7C1/7bE0Zq
+	 U1gUOCwXwkfP6/vQbZst55BPEqUM6prpf0Z6iEhFxeohIW/QQ8L+K/tFgoPh211Oqs
+	 9tvicMLLQRxpD5wf1Fw6BBV74UyCSOQvwTRB/+do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727727AbfEGFfJ (ORCPT
+        id S1727740AbfEGFfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:35:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55096 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:35:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727699AbfEGFfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:35:05 -0400
+        id S1727718AbfEGFfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:35:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65D6E21479;
-        Tue,  7 May 2019 05:35:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65EF7214AE;
+        Tue,  7 May 2019 05:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207304;
-        bh=1vZz/Jewo+yp+EJ+sf4G3CsR6Ir32kRIJt59tst0XvU=;
+        s=default; t=1557207308;
+        bh=jLmyqPYi3A2ppOJa+HCdiRXXIVzEb4yxF0qDFHX80us=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NL3K71XyVn70krjcS8SQ8hEjtv3rUIGiuAf58UVEP60krtzR9qiKiaWeDfoDmRUnK
-         2f4npxtuSHBwryW7Qws72n8Hcg365djF/fTMbHFwbMEDbTA9sqN/SAL4ap8ttdJ9L+
-         UHfnCBLzBLrQmtRKwqEPN3PRXZwyoYfNSPn4t7Ww=
+        b=zX/7Z3M2M+fzkPwzDs4MO6vvfraK9eqxwwwdh0JvxkrQxgLFqdrfnvz3g4/3jZR8e
+         84XhMFuvtguVgwuMbZUpO/JfNNEDJP/2Z8za7HcccSx0wssKeTf1jplgo3+pZEP/g1
+         h4WZlBesgnwggu1+A5zmlRRLmMh4t0Mg/GL6LqNI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Eric Dumazet <edumazet@google.com>,
-        Michal Soltys <soltys@ziu.info>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 74/99] netfilter: never get/set skb->tstamp
-Date:   Tue,  7 May 2019 01:32:08 -0400
-Message-Id: <20190507053235.29900-74-sashal@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        dann frazier <dann.frazier@canonical.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 77/99] arm64/module: ftrace: deal with place relative nature of PLTs
+Date:   Tue,  7 May 2019 01:32:11 -0400
+Message-Id: <20190507053235.29900-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
 References: <20190507053235.29900-1-sashal@kernel.org>
@@ -63,121 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-[ Upstream commit 916f6efae62305796e012e7c3a7884a267cbacbf ]
+[ Upstream commit 4e69ecf4da1ee0b2ac735e1f1bb13935acd5a38d ]
 
-setting net.netfilter.nf_conntrack_timestamp=1 breaks xmit with fq
-scheduler.  skb->tstamp might be "refreshed" using ktime_get_real(),
-but fq expects CLOCK_MONOTONIC.
+Another bodge for the ftrace PLT code: plt_entries_equal() now takes
+the place relative nature of the ADRP/ADD based PLT entries into
+account, which means that a struct trampoline instance on the stack
+is no longer equal to the same set of opcodes in the module struct,
+given that they don't point to the same place in memory anymore.
 
-This patch removes all places in netfilter that check/set skb->tstamp:
+Work around this by using memcmp() in the ftrace PLT handling code.
 
-1. To fix the bogus "start" time seen with conntrack timestamping for
-   outgoing packets, never use skb->tstamp and always use current time.
-2. In nfqueue and nflog, only use skb->tstamp for incoming packets,
-   as determined by current hook (prerouting, input, forward).
-3. xt_time has to use system clock as well rather than skb->tstamp.
-   We could still use skb->tstamp for prerouting/input/foward, but
-   I see no advantage to make this conditional.
-
-Fixes: fb420d5d91c1 ("tcp/fq: move back to CLOCK_MONOTONIC")
-Cc: Eric Dumazet <edumazet@google.com>
-Reported-by: Michal Soltys <soltys@ziu.info>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Acked-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Tested-by: dann frazier <dann.frazier@canonical.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_core.c |  7 ++-----
- net/netfilter/nfnetlink_log.c     |  2 +-
- net/netfilter/nfnetlink_queue.c   |  2 +-
- net/netfilter/xt_time.c           | 23 ++++++++++++++---------
- 4 files changed, 18 insertions(+), 16 deletions(-)
+ arch/arm64/kernel/ftrace.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 1982faf21ebb..d7ac2f82bb6d 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -983,12 +983,9 @@ __nf_conntrack_confirm(struct sk_buff *skb)
- 
- 	/* set conntrack timestamp, if enabled. */
- 	tstamp = nf_conn_tstamp_find(ct);
--	if (tstamp) {
--		if (skb->tstamp == 0)
--			__net_timestamp(skb);
-+	if (tstamp)
-+		tstamp->start = ktime_get_real_ns();
- 
--		tstamp->start = ktime_to_ns(skb->tstamp);
--	}
- 	/* Since the lookup is lockless, hash insertion must be done after
- 	 * starting the timer and setting the CONFIRMED bit. The RCU barriers
- 	 * guarantee that no other CPU can find the conntrack before the above
-diff --git a/net/netfilter/nfnetlink_log.c b/net/netfilter/nfnetlink_log.c
-index b1f9c5303f02..0b3347570265 100644
---- a/net/netfilter/nfnetlink_log.c
-+++ b/net/netfilter/nfnetlink_log.c
-@@ -540,7 +540,7 @@ __build_packet_message(struct nfnl_log_net *log,
- 			goto nla_put_failure;
- 	}
- 
--	if (skb->tstamp) {
-+	if (hooknum <= NF_INET_FORWARD && skb->tstamp) {
- 		struct nfulnl_msg_packet_timestamp ts;
- 		struct timespec64 kts = ktime_to_timespec64(skb->tstamp);
- 		ts.sec = cpu_to_be64(kts.tv_sec);
-diff --git a/net/netfilter/nfnetlink_queue.c b/net/netfilter/nfnetlink_queue.c
-index 0dcc3592d053..e057b2961d31 100644
---- a/net/netfilter/nfnetlink_queue.c
-+++ b/net/netfilter/nfnetlink_queue.c
-@@ -582,7 +582,7 @@ nfqnl_build_packet_message(struct net *net, struct nfqnl_instance *queue,
- 	if (nfqnl_put_bridge(entry, skb) < 0)
- 		goto nla_put_failure;
- 
--	if (entskb->tstamp) {
-+	if (entry->state.hook <= NF_INET_FORWARD && entskb->tstamp) {
- 		struct nfqnl_msg_packet_timestamp ts;
- 		struct timespec64 kts = ktime_to_timespec64(entskb->tstamp);
- 
-diff --git a/net/netfilter/xt_time.c b/net/netfilter/xt_time.c
-index c13bcd0ab491..8dbb4d48f2ed 100644
---- a/net/netfilter/xt_time.c
-+++ b/net/netfilter/xt_time.c
-@@ -163,19 +163,24 @@ time_mt(const struct sk_buff *skb, struct xt_action_param *par)
- 	s64 stamp;
- 
- 	/*
--	 * We cannot use get_seconds() instead of __net_timestamp() here.
-+	 * We need real time here, but we can neither use skb->tstamp
-+	 * nor __net_timestamp().
-+	 *
-+	 * skb->tstamp and skb->skb_mstamp_ns overlap, however, they
-+	 * use different clock types (real vs monotonic).
-+	 *
- 	 * Suppose you have two rules:
--	 * 	1. match before 13:00
--	 * 	2. match after 13:00
-+	 *	1. match before 13:00
-+	 *	2. match after 13:00
-+	 *
- 	 * If you match against processing time (get_seconds) it
- 	 * may happen that the same packet matches both rules if
--	 * it arrived at the right moment before 13:00.
-+	 * it arrived at the right moment before 13:00, so it would be
-+	 * better to check skb->tstamp and set it via __net_timestamp()
-+	 * if needed.  This however breaks outgoing packets tx timestamp,
-+	 * and causes them to get delayed forever by fq packet scheduler.
- 	 */
--	if (skb->tstamp == 0)
--		__net_timestamp((struct sk_buff *)skb);
--
--	stamp = ktime_to_ns(skb->tstamp);
--	stamp = div_s64(stamp, NSEC_PER_SEC);
-+	stamp = get_seconds();
- 
- 	if (info->flags & XT_TIME_LOCAL_TZ)
- 		/* Adjust for local timezone */
+diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+index 07b298120182..65a51331088e 100644
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -103,10 +103,15 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ 		 * to be revisited if support for multiple ftrace entry points
+ 		 * is added in the future, but for now, the pr_err() below
+ 		 * deals with a theoretical issue only.
++		 *
++		 * Note that PLTs are place relative, and plt_entries_equal()
++		 * checks whether they point to the same target. Here, we need
++		 * to check if the actual opcodes are in fact identical,
++		 * regardless of the offset in memory so use memcmp() instead.
+ 		 */
+ 		trampoline = get_plt_entry(addr, mod->arch.ftrace_trampoline);
+-		if (!plt_entries_equal(mod->arch.ftrace_trampoline,
+-				       &trampoline)) {
++		if (memcmp(mod->arch.ftrace_trampoline, &trampoline,
++			   sizeof(trampoline))) {
+ 			if (plt_entry_is_initialized(mod->arch.ftrace_trampoline)) {
+ 				pr_err("ftrace: far branches to multiple entry points unsupported inside a single module\n");
+ 				return -EINVAL;
 -- 
 2.20.1
 
