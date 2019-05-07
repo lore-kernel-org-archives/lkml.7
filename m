@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8FEC004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0CAC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A31206A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6BF206A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208133;
-	bh=C/SEdJvcztVmaWYIHppHb6GDJ7iOjWkEKhogPF8LK1I=;
+	s=default; t=1557208138;
+	bh=V0Bzwzhga6ZuygMd0DR5+U69a8sqREB1MyEM7/MSUCs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zhi8p/61b9T0/gtGApBM5xSiDlZMhd3R166peMMkc0Er2Qzl0V5c/+Q66pk+x2urE
-	 DyacnxqCWaWvpVznNuZn76pB2tH407dVG6qxYHBjcEZ+PTwvTLVbWlPOv3n1DWOznc
-	 vWXsUbYy4mDnvj+WCt0WgjD1ZcJapIzetq1Huqvk=
+	b=wN7UIoap3LGyAcuYM0M/G+OdHmqvgXCxJ7hpWlg3RyrdioEU1Hh8m9ChOT+MUwPCA
+	 M5/JAZNwGQmB/u444Dvw3oz4q8a4cU4w+uJ3csEnrRDeZcD4QdLGGwbcMGHQ8PV+ow
+	 dTa77ZLwfICtjICB3S3y6nj73NihduxfLSPbF0cY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbfEGFkl (ORCPT
+        id S1728923AbfEGFs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:40:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59996 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:48:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729119AbfEGFka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:40:30 -0400
+        id S1729145AbfEGFkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:40:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F8DC2087F;
-        Tue,  7 May 2019 05:40:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A59B42087F;
+        Tue,  7 May 2019 05:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207629;
-        bh=C/SEdJvcztVmaWYIHppHb6GDJ7iOjWkEKhogPF8LK1I=;
+        s=default; t=1557207640;
+        bh=V0Bzwzhga6ZuygMd0DR5+U69a8sqREB1MyEM7/MSUCs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GzLugjq8V/bTzbg43eUiU523ZrMeJwpsfGuXMzckElO7DXJomqN+NW2UIm8pAkKLX
-         P8PJcWgoVtZwneNDn/RzqxYprPZOMjqwTh2QRLvazvthMHftSn+VDRaPacvKN9DB/S
-         ZnuI51kryP7CnSTdJMEXm+769qAfAvPj1/1zVw+s=
+        b=Lsp3QM6did6cVGul66y5brNO6EBs/yJo22HtIyYnWnxZKI+jyZ0Bh2VYhTuzc7vgg
+         dZiKyi+B26bWQJcdttURXUYU3WOJLAi/2F+OgbIt0vSepQnvwMyH8qOsoV3IcyY68b
+         GyxO+pTflkHv15AhK0B+40brjddTxMgjel+eHnxk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+Cc:     Max Filippov <jcmvbkbc@gmail.com>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 67/95] drm/rockchip: psr: do not dereference encoder before it is null checked.
-Date:   Tue,  7 May 2019 01:37:56 -0400
-Message-Id: <20190507053826.31622-67-sashal@kernel.org>
+        devicetree@vger.kernel.org, linux-xtensa@linux-xtensa.org
+Subject: [PATCH AUTOSEL 4.14 73/95] xtensa: xtfpga.dtsi: fix dtc warnings about SPI
+Date:   Tue,  7 May 2019 01:38:02 -0400
+Message-Id: <20190507053826.31622-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -60,46 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-[ Upstream commit 4eda776c3cefcb1f01b2d85bd8753f67606282b5 ]
+[ Upstream commit f37598be4e3896359e87c824be57ddddc280cc3f ]
 
-'encoder' is dereferenced before it is null sanity checked, hence we
-potentially have a null pointer dereference bug. Instead, initialise
-drm_drv from encoder->dev->dev_private after we are sure 'encoder' is
-not null.
+Rename SPI controller node in the XTFPGA DTS to spi@...
+This fixes the following build warnings:
 
-Fixes: 5182c1a556d7f ("drm/rockchip: add an common abstracted PSR driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://patchwork.freedesktop.org/patch/msgid/20181013105654.11827-1-enric.balletbo@collabora.com
+arch/xtensa/boot/dts/kc705_nommu.dtb: Warning (spi_bus_bridge):
+ /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
+arch/xtensa/boot/dts/kc705_nommu.dtb: Warning (spi_bus_reg):
+ Failed prerequisite 'spi_bus_bridge'
+arch/xtensa/boot/dts/lx200mx.dtb: Warning (spi_bus_bridge):
+ /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
+arch/xtensa/boot/dts/lx200mx.dtb: Warning (spi_bus_reg):
+ Failed prerequisite 'spi_bus_bridge'
+arch/xtensa/boot/dts/kc705.dtb: Warning (spi_bus_bridge):
+ /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
+arch/xtensa/boot/dts/kc705.dtb: Warning (spi_bus_reg):
+ Failed prerequisite 'spi_bus_bridge'
+arch/xtensa/boot/dts/ml605.dtb: Warning (spi_bus_bridge):
+ /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
+arch/xtensa/boot/dts/ml605.dtb: Warning (spi_bus_reg):
+ Failed prerequisite 'spi_bus_bridge'
+arch/xtensa/boot/dts/lx60.dtb: Warning (spi_bus_bridge):
+ /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
+arch/xtensa/boot/dts/lx60.dtb: Warning (spi_bus_reg):
+ Failed prerequisite 'spi_bus_bridge'
+
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_psr.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/xtensa/boot/dts/xtfpga.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_psr.c b/drivers/gpu/drm/rockchip/rockchip_drm_psr.c
-index a553e182ff53..32e7dba2bf5e 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_psr.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_psr.c
-@@ -221,13 +221,15 @@ EXPORT_SYMBOL(rockchip_drm_psr_flush_all);
- int rockchip_drm_psr_register(struct drm_encoder *encoder,
- 			void (*psr_set)(struct drm_encoder *, bool enable))
- {
--	struct rockchip_drm_private *drm_drv = encoder->dev->dev_private;
-+	struct rockchip_drm_private *drm_drv;
- 	struct psr_drv *psr;
- 	unsigned long flags;
+diff --git a/arch/xtensa/boot/dts/xtfpga.dtsi b/arch/xtensa/boot/dts/xtfpga.dtsi
+index 1090528825ec..e46ae07bab05 100644
+--- a/arch/xtensa/boot/dts/xtfpga.dtsi
++++ b/arch/xtensa/boot/dts/xtfpga.dtsi
+@@ -103,7 +103,7 @@
+ 			};
+ 		};
  
- 	if (!encoder || !psr_set)
- 		return -EINVAL;
- 
-+	drm_drv = encoder->dev->dev_private;
-+
- 	psr = kzalloc(sizeof(struct psr_drv), GFP_KERNEL);
- 	if (!psr)
- 		return -ENOMEM;
+-		spi0: spi-master@0d0a0000 {
++		spi0: spi@0d0a0000 {
+ 			compatible = "cdns,xtfpga-spi";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
 2.20.1
 
