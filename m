@@ -6,45 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B94C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E61C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAB32054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75C372054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 05:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557208449;
-	bh=GxIBnSzM/Q4l/moetJ0QVlX3E6qoBypJ92Yl/HEOshE=;
+	s=default; t=1557208452;
+	bh=PW6Dq3u+5YpdL/+bsGeaSx88pl/wIIV32YGgc1wg/z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0bc5UBge+lLRhnKnp+BhQ09V8uOjkHU2jUavL/qnyDSxAcDkYVxA5pgeP/46iaxs9
-	 pcGd/Tco1VVQTs2EbOwwjJg7ossU3VI7JQEF3i40xW+x4gf7sBMYBbsTJdgIGKSEqR
-	 vwCKZC2xj/bdrIMQDUoIQyqwt5RQl5Se6CwCBgfc=
+	b=dI31eLmdeGB8YJXeKn2+6elx5UdhA1l/Lw/j+Mmmrg74HfvCvCEwVsK1/WRlYn0vj
+	 5WYyKg5y28aoi+KX4vMD8RHiStN98x1Kxq5dOkaQpgxH0ZiUe6/ookWKbgj426fTky
+	 UZmiQkKF4HXkOKxHNueRjMNK8AlIXjjTWa2wYdoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbfEGFif (ORCPT
+        id S1728974AbfEGFyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 01:38:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58308 "EHLO mail.kernel.org"
+        Tue, 7 May 2019 01:54:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727897AbfEGFic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 01:38:32 -0400
+        id S1728690AbfEGFif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 01:38:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B683D206A3;
-        Tue,  7 May 2019 05:38:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE0DA205ED;
+        Tue,  7 May 2019 05:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557207511;
-        bh=GxIBnSzM/Q4l/moetJ0QVlX3E6qoBypJ92Yl/HEOshE=;
+        s=default; t=1557207514;
+        bh=PW6Dq3u+5YpdL/+bsGeaSx88pl/wIIV32YGgc1wg/z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NLPov88c2mo/+0HjWx2XiVyGrho1S5Ur6cuhldZSCWBtSWMZ71uy/ypwrzORL63W3
-         8UoGJGY9CxedGzxAgvqKj22TIzTXtMMgdbw0dY0CDWQ5BEFDaqZP6Xmu+hzCTkKNFQ
-         zYTuBySRsKptowhK6sXA+tBPii+CwkAw0DZ25NOk=
+        b=ccbL84kZ/5E2iZuJhdAnou/E6xEVAjydfoe7rqNwtQiD0/ZwTJHA0YWz/cXt36dvG
+         OFq+cORC2EP7aIFxhYcb1Kmx2OWnH5CO+jtDC9fui7y5N81wlVMzMS5qv98bLE8E8E
+         WEq/IIFLAiZeYFE6AHQ6fxt3sfoszLSxcPsYgMcQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 04/95] HID: input: add mapping for keyboard Brightness Up/Down/Toggle keys
-Date:   Tue,  7 May 2019 01:36:53 -0400
-Message-Id: <20190507053826.31622-4-sashal@kernel.org>
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 07/95] s390/dasd: Fix capacity calculation for large volumes
+Date:   Tue,  7 May 2019 01:36:56 -0400
+Message-Id: <20190507053826.31622-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190507053826.31622-1-sashal@kernel.org>
 References: <20190507053826.31622-1-sashal@kernel.org>
@@ -57,34 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Peter Oberparleiter <oberpar@linux.ibm.com>
 
-[ Upstream commit 7975a1d6a7afeb3eb61c971a153d24dd8fa032f3 ]
+[ Upstream commit 2cc9637ce825f3a9f51f8f78af7474e9e85bfa5f ]
 
-According to HUTRR73 usages 0x79, 0x7a and 0x7c from the consumer page
-correspond to Brightness Up/Down/Toggle keys, so let's add the mappings.
+The DASD driver incorrectly limits the maximum number of blocks of ECKD
+DASD volumes to 32 bit numbers. Volumes with a capacity greater than
+2^32-1 blocks are incorrectly recognized as smaller volumes.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This results in the following volume capacity limits depending on the
+formatted block size:
+
+  BLKSIZE  MAX_GB   MAX_CYL
+      512    2047   5843492
+     1024    4095   8676701
+     2048    8191  13634816
+     4096   16383  23860929
+
+The same problem occurs when a volume with more than 17895697 cylinders
+is accessed in raw-track-access mode.
+
+Fix this problem by adding an explicit type cast when calculating the
+maximum number of blocks.
+
+Signed-off-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/s390/block/dasd_eckd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 35422c419f52..9eeac82e9542 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -886,6 +886,10 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x074: map_key_clear(KEY_BRIGHTNESS_MAX);		break;
- 		case 0x075: map_key_clear(KEY_BRIGHTNESS_AUTO);		break;
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index 0a1e7f9b5239..0d5e2d92e05b 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -2001,14 +2001,14 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
+ 	blk_per_trk = recs_per_track(&private->rdc_data, 0, block->bp_block);
  
-+		case 0x079: map_key_clear(KEY_KBDILLUMUP);	break;
-+		case 0x07a: map_key_clear(KEY_KBDILLUMDOWN);	break;
-+		case 0x07c: map_key_clear(KEY_KBDILLUMTOGGLE);	break;
-+
- 		case 0x082: map_key_clear(KEY_VIDEO_NEXT);	break;
- 		case 0x083: map_key_clear(KEY_LAST);		break;
- 		case 0x084: map_key_clear(KEY_ENTER);		break;
+ raw:
+-	block->blocks = (private->real_cyl *
++	block->blocks = ((unsigned long) private->real_cyl *
+ 			  private->rdc_data.trk_per_cyl *
+ 			  blk_per_trk);
+ 
+ 	dev_info(&device->cdev->dev,
+-		 "DASD with %d KB/block, %d KB total size, %d KB/track, "
++		 "DASD with %u KB/block, %lu KB total size, %u KB/track, "
+ 		 "%s\n", (block->bp_block >> 10),
+-		 ((private->real_cyl *
++		 (((unsigned long) private->real_cyl *
+ 		   private->rdc_data.trk_per_cyl *
+ 		   blk_per_trk * (block->bp_block >> 9)) >> 1),
+ 		 ((blk_per_trk * block->bp_block) >> 10),
 -- 
 2.20.1
 
