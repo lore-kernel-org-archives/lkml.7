@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46D6C46470
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E008EC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D38B20825
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1A59206BF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 11:57:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GxZ8mG5C"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eVnhrsbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfEGL5i (ORCPT
+        id S1726816AbfEGL5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 07:57:38 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37628 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726649AbfEGL5g (ORCPT
+        Tue, 7 May 2019 07:57:53 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55324 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbfEGL5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 07:57:36 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y5so19703933wma.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 04:57:34 -0700 (PDT)
+        Tue, 7 May 2019 07:57:34 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y2so19777083wmi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2019 04:57:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=TgidlaKzgQwGW8rBle7+Rb5UgxddgAg0ttaBd2ZhPpw=;
-        b=GxZ8mG5CdJj0/3hsJm4xE9pmO+J3k7VkanROz5FMPJfU6QvCCnUA+XfVS6UYy3arUP
-         W1ygSwa935+3jP8ZmfBwRUNTxTZ8YstF1S5UXDACb0BeDZQEPn/+rJRS5bbCZwpAdBX9
-         phZy8SQtBmNUJWMt1nQIHGPhXoyXxTXWv54/KasLBunJlRptPyck3e0vrMaqlkUHK9Ql
-         DRMecLhfkL6gdTz2CpheKgJwQNO18mfVkAGGnEk93Fqm2UO0endMNcN8yqRVq1FiEsHT
-         zHvGAhqAsXLMQh82mTaVKAJ0De06pJRJQ7fv27C/r2HG2wJu4Ol7uSxCaW0Dzpt1D6rH
-         AU0A==
+        bh=/Ryaw0CwF3TL07iEm7ZRTzsdOIYoEQ5xbLX69lpJF4M=;
+        b=eVnhrsbD0eL9XxWgaC4xyCq3cICT92y5RNfh7j5ubwQ4rKvO2lpin4vROxI5x7x0/V
+         LQ7N3YZAw55ojIg14I4t1OjfbqUv5YoN7mWIRoHIUsxy3l+8CB+adcnjf3BOFB9Rx4bK
+         5B8lwt5+7NsdSpzDSYBxqJgrrxb6Ovt7grrBVN3Ct2dcvAgqPIKzzfNhaBOA38WywQcW
+         Dqb0MAL751uovhqSYERs+EWp8L2RmC1GXWxYq/gRuFXJeU2x7AOm7Pr/Hy3SmhxR9U2l
+         5X2SD9U9Y5LWYpIg+of1Qr5b0Oy7AnfCqkmkg+V+kmphYWFxBbd7w/HTaWVxKecUSFV4
+         /79w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=TgidlaKzgQwGW8rBle7+Rb5UgxddgAg0ttaBd2ZhPpw=;
-        b=FSwwDRQnnw2qyw1X9Diw6Aav3x3o56eSfz7Ot4LkN/IEi4wn85R95XtwPE0olujugq
-         ahc36sbJWLF/AC0V+73USmE+edWsWbV+I5eNkA90sImMbDepRhXfj5C83cFREpoB+OFr
-         lmXXNbvNVz1pKa52bpzmWZL9rD80/FXQKMyhx/85bsFOGLv9zaZ121hlSqGd/ehUluTB
-         XCiNeYGt6qCe2aFbJupDN4NBNFLDUtS5TmoBvr7BxSvKq+F7MuwZAXohvzyfY+hZgmbD
-         Ql7uFXn3EQPH+P256qENGlyRR7bW9u6LN49fpm6f70/RootD7F4aOHOdaezHP1YKgkJa
-         BXdA==
-X-Gm-Message-State: APjAAAWqfZcAb/dE5B8xO/CMoJ9cC+U/WiGw1t8OFHHwLZydFTOJnXdU
-        hQxJp1eXzM62ghLx4ZANmq9hQA==
-X-Google-Smtp-Source: APXvYqxKKF7BLfg65dNWccehmqfPR9xjSO8Wy3Kx6h06/o1+0xHX2+sDulxWV6pEa6BkH6smZU2MpQ==
-X-Received: by 2002:a1c:4406:: with SMTP id r6mr1782798wma.130.1557230253769;
-        Tue, 07 May 2019 04:57:33 -0700 (PDT)
+        bh=/Ryaw0CwF3TL07iEm7ZRTzsdOIYoEQ5xbLX69lpJF4M=;
+        b=oaxtHKyyAU9euNUai1q9K7EZ15gvRfxhyl0fdWnBXKbdLvZ/pC0gSiOdmVFuHpV7dg
+         jOAsyuu92Om9Y5pgElRH9tRe+2BPeBylhQiDfnHRaHUTX6YbhaGB8Nb613lUlGvhNoz3
+         dttQzizZsQgzSVuGnZ77fFCbQvUf9nY/CzC3j0dOx0UEr25zUePCPtBFTtBZflua6zg2
+         ZU6845v0I9AWs0Zmz5zo96b8msa6ZFMIoRXEr5dezK1X4as7Z4VOJgWBJhHcQ0aNtFyj
+         8Q4UV2u3fdLDuk+IVHSVU/3599pGcMny1hyL4vRiG7W28neCynMUVHowkeIq9hS+xHCU
+         vP5w==
+X-Gm-Message-State: APjAAAUdHZc2qgLmjUCHfZw6Rj8pmzAkY4VjxRfi8sYnPS/P6vhErIfk
+        1NQuxpYAfspQ7Alak4WFpPxyMA==
+X-Google-Smtp-Source: APXvYqzEacsy89ALKCTymPo15I4g3w8N3ARKDejdEEc425gQlSCFtRO3sTNSphkl0j6dxmMWGolZjA==
+X-Received: by 2002:a1c:f205:: with SMTP id s5mr19644763wmc.131.1557230252671;
+        Tue, 07 May 2019 04:57:32 -0700 (PDT)
 Received: from glaroque-ThinkPad-T480.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id s11sm7120274wrb.71.2019.05.07.04.57.32
+        by smtp.gmail.com with ESMTPSA id s11sm7120274wrb.71.2019.05.07.04.57.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2019 04:57:33 -0700 (PDT)
+        Tue, 07 May 2019 04:57:31 -0700 (PDT)
 From:   Guillaume La Roque <glaroque@baylibre.com>
 To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
         khilman@baylibre.com
 Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/6] pinctrl: meson: add support of drive-strength-microamp
-Date:   Tue,  7 May 2019 13:57:25 +0200
-Message-Id: <20190507115726.23714-6-glaroque@baylibre.com>
+Subject: [PATCH v3 4/6] pinctrl: meson: Rework enable/disable bias part
+Date:   Tue,  7 May 2019 13:57:24 +0200
+Message-Id: <20190507115726.23714-5-glaroque@baylibre.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190507115726.23714-1-glaroque@baylibre.com>
 References: <20190507115726.23714-1-glaroque@baylibre.com>
@@ -71,62 +71,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drive-strength-microamp is a new feature needed for G12A SoC.
-the default DS setting after boot is usually 500uA and it is not enough for
-many functions. We need to be able to set the drive strength to reliably
-enable things like MMC, I2C, etc ...
+rework bias enable/disable part to prepare drive-strength integration
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- drivers/pinctrl/meson/pinctrl-meson.c | 102 ++++++++++++++++++++++++++
- drivers/pinctrl/meson/pinctrl-meson.h |  18 ++++-
- 2 files changed, 119 insertions(+), 1 deletion(-)
+ drivers/pinctrl/meson/pinctrl-meson.c | 79 ++++++++++++++++-----------
+ 1 file changed, 48 insertions(+), 31 deletions(-)
 
 diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index a216a7537564..3da867c13f47 100644
+index 96a4a72708e4..a216a7537564 100644
 --- a/drivers/pinctrl/meson/pinctrl-meson.c
 +++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -219,12 +219,56 @@ static int meson_pinconf_enable_bias(struct meson_pinctrl *pc, unsigned int pin,
+@@ -174,13 +174,57 @@ int meson_pmx_get_groups(struct pinctrl_dev *pcdev, unsigned selector,
  	return 0;
  }
  
-+static int meson_pinconf_set_drive_strength(struct meson_pinctrl *pc,
-+					    unsigned int pin,
-+					    u16 drive_strength_ua)
++static int meson_pinconf_disable_bias(struct meson_pinctrl *pc,
++				      unsigned int pin)
 +{
 +	struct meson_bank *bank;
-+	unsigned int reg, bit;
-+	unsigned int ds_val;
++	unsigned int reg, bit = 0;
 +	int ret;
 +
-+	if (!pc->reg_ds) {
-+		dev_err(pc->dev, "drive-strength not supported\n");
-+		return -ENOTSUPP;
-+	}
++	ret = meson_get_bank(pc, pin, &bank);
++	if (ret)
++		return ret;
++	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
++	ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit), 0);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int meson_pinconf_enable_bias(struct meson_pinctrl *pc, unsigned int pin,
++				     bool pull_up)
++{
++	struct meson_bank *bank;
++	unsigned int reg, bit, val = 0;
++	int ret;
 +
 +	ret = meson_get_bank(pc, pin, &bank);
 +	if (ret)
 +		return ret;
 +
-+	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
-+	bit = bit << 1;
++	meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
++	if (pull_up)
++		val = BIT(bit);
 +
-+	if (drive_strength_ua <= 500) {
-+		ds_val = MESON_PINCONF_DRV_500UA;
-+	} else if (drive_strength_ua <= 2500) {
-+		ds_val = MESON_PINCONF_DRV_2500UA;
-+	} else if (drive_strength_ua <= 3000) {
-+		ds_val = MESON_PINCONF_DRV_3000UA;
-+	} else if (drive_strength_ua <= 4000) {
-+		ds_val = MESON_PINCONF_DRV_4000UA;
-+	} else {
-+		dev_warn_once(pc->dev,
-+			      "pin %u: invalid drive-strength : %d , default to 4mA\n",
-+			      pin, drive_strength_ua);
-+		ds_val = MESON_PINCONF_DRV_4000UA;
-+	}
++	ret = regmap_update_bits(pc->reg_pull, reg, BIT(bit), val);
++	if (ret)
++		return ret;
 +
-+	ret = regmap_update_bits(pc->reg_ds, reg, 0x3 << bit, ds_val << bit);
++	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
++	ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit),	BIT(bit));
 +	if (ret)
 +		return ret;
 +
@@ -139,144 +137,58 @@ index a216a7537564..3da867c13f47 100644
  	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
  	struct meson_bank *bank;
  	enum pin_config_param param;
-+	unsigned int drive_strength_ua;
+-	unsigned int reg, bit;
  	int i, ret;
  
  	ret = meson_get_bank(pc, pin, &bank);
-@@ -250,6 +294,14 @@ static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
+@@ -192,44 +236,17 @@ static int meson_pinconf_set(struct pinctrl_dev *pcdev, unsigned int pin,
+ 
+ 		switch (param) {
+ 		case PIN_CONFIG_BIAS_DISABLE:
+-			dev_dbg(pc->dev, "pin %u: disable bias\n", pin);
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg,
+-					       &bit);
+-			ret = regmap_update_bits(pc->reg_pullen, reg,
+-						 BIT(bit), 0);
++			ret = meson_pinconf_disable_bias(pc, pin);
  			if (ret)
  				return ret;
  			break;
-+		case PIN_CONFIG_DRIVE_STRENGTH_UA:
-+			drive_strength_ua =
-+				pinconf_to_config_argument(configs[i]);
-+			ret = meson_pinconf_set_drive_strength
-+				(pc, pin, drive_strength_ua);
-+			if (ret)
-+				return ret;
-+			break;
- 		default:
- 			return -ENOTSUPP;
- 		}
-@@ -292,12 +344,57 @@ static int meson_pinconf_get_pull(struct meson_pinctrl *pc, unsigned int pin)
- 	return conf;
- }
- 
-+static int meson_pinconf_get_drive_strength(struct meson_pinctrl *pc,
-+					    unsigned int pin,
-+					    u16 *drive_strength_ua)
-+{
-+	struct meson_bank *bank;
-+	unsigned int reg, bit;
-+	unsigned int val;
-+	int ret;
-+
-+	if (!pc->reg_ds) {
-+		dev_err(pc->dev, "drive-strength not supported\n");
-+		return -ENOTSUPP;
-+	}
-+
-+	ret = meson_get_bank(pc, pin, &bank);
-+	if (ret)
-+		return ret;
-+
-+	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
-+
-+	ret = regmap_read(pc->reg_ds, reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	switch ((val >> bit) & 0x3) {
-+	case MESON_PINCONF_DRV_500UA:
-+		*drive_strength_ua = 500;
-+		break;
-+	case MESON_PINCONF_DRV_2500UA:
-+		*drive_strength_ua = 2500;
-+		break;
-+	case MESON_PINCONF_DRV_3000UA:
-+		*drive_strength_ua = 3000;
-+		break;
-+	case MESON_PINCONF_DRV_4000UA:
-+		*drive_strength_ua = 4000;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int meson_pinconf_get(struct pinctrl_dev *pcdev, unsigned int pin,
- 			     unsigned long *config)
- {
- 	struct meson_pinctrl *pc = pinctrl_dev_get_drvdata(pcdev);
- 	enum pin_config_param param = pinconf_to_config_param(*config);
- 	u16 arg;
-+	int ret;
- 
- 	switch (param) {
- 	case PIN_CONFIG_BIAS_DISABLE:
-@@ -308,6 +405,11 @@ static int meson_pinconf_get(struct pinctrl_dev *pcdev, unsigned int pin,
- 		else
- 			return -EINVAL;
- 		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH_UA:
-+		ret = meson_pinconf_get_drive_strength(pc, pin, &arg);
-+		if (ret)
-+			return ret;
-+		break;
- 	default:
- 		return -ENOTSUPP;
- 	}
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
-index 5eaab925f427..cd955fb7c2ce 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.h
-+++ b/drivers/pinctrl/meson/pinctrl-meson.h
-@@ -71,9 +71,20 @@ enum meson_reg_type {
- 	REG_DIR,
- 	REG_OUT,
- 	REG_IN,
-+	REG_DS,
- 	NUM_REG,
- };
- 
-+/**
-+ * enum meson_pinconf_drv - value of drive-strength supported
-+ */
-+enum meson_pinconf_drv {
-+	MESON_PINCONF_DRV_500UA,
-+	MESON_PINCONF_DRV_2500UA,
-+	MESON_PINCONF_DRV_3000UA,
-+	MESON_PINCONF_DRV_4000UA,
-+};
-+
- /**
-  * struct meson bank
-  *
-@@ -132,7 +143,8 @@ struct meson_pinctrl {
- 		.num_groups = ARRAY_SIZE(fn ## _groups),		\
- 	}
- 
--#define BANK(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib)	\
-+#define BANK_DS(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib,     \
-+		dsr, dsb)                                                      \
- 	{								\
- 		.name		= n,					\
- 		.first		= f,					\
-@@ -145,9 +157,13 @@ struct meson_pinctrl {
- 			[REG_DIR]	= { dr, db },			\
- 			[REG_OUT]	= { or, ob },			\
- 			[REG_IN]	= { ir, ib },			\
-+			[REG_DS]	= { dsr, dsb },			\
- 		},							\
- 	 }
- 
-+#define BANK(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib) \
-+	BANK_DS(n, f, l, fi, li, per, peb, pr, pb, dr, db, or, ob, ir, ib, 0, 0)
-+
- #define MESON_PIN(x) PINCTRL_PIN(x, #x)
- 
- /* Common pmx functions */
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			dev_dbg(pc->dev, "pin %u: enable pull-up\n", pin);
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
+-					       &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pullen, reg,
+-						 BIT(bit), BIT(bit));
+-			if (ret)
+-				return ret;
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pull, reg,
+-						 BIT(bit), BIT(bit));
++			ret = meson_pinconf_enable_bias(pc, pin, 1);
+ 			if (ret)
+ 				return ret;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_DOWN:
+-			dev_dbg(pc->dev, "pin %u: enable pull-down\n", pin);
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULLEN,
+-					       &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pullen, reg,
+-						 BIT(bit), BIT(bit));
+-			if (ret)
+-				return ret;
+-
+-			meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
+-			ret = regmap_update_bits(pc->reg_pull, reg,
+-						 BIT(bit), 0);
++			ret = meson_pinconf_enable_bias(pc, pin, 0);
+ 			if (ret)
+ 				return ret;
+ 			break;
 -- 
 2.17.1
 
