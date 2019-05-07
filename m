@@ -2,136 +2,107 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEB7C004C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28AEC004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8181C21479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:20:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zw74HRlL"
+	by mail.kernel.org (Postfix) with ESMTP id 96855214C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 09:20:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfEGJUo (ORCPT
+        id S1726901AbfEGJUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 05:20:44 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42108 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfEGJUo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 05:20:44 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x479IokU168106;
-        Tue, 7 May 2019 09:20:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=qbFEsJg/nIhTtjMlz/VATRzBrxKNJiG2UvySEgqTcVk=;
- b=zw74HRlLkATCn0QV/mxGuvztFHZV5X+uVB0J4W+i2UZIE3LybvupffeEh8ykRdBTMibk
- vtb3CwAVckfgr1sb/rC+/5ReBrqDCdBF6qlfWlR6EGabdnSoWrdespq5pMjx+Ct9GewZ
- LGDEzLYLsy2hepdpD6fkzYhOmLjZm7UuGQHjuPNLH7T8oi6IcWCxYIe0IdkvOc2WyqkG
- eAfgvEyF+pM5NEHtMSL4FbFlMixrwv1jAKeXFx3mHrJdvFui5+VFru8TrXvlvPalb5zh
- JgPE+pC/X3f4E/Y1tBXyz4GMvbfnVpNZFoZaurmvIte8ljDa94JwhjEJ2ZIA4fgCpQcv iw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2s94b0kure-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 May 2019 09:20:31 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x479Jqmm007090;
-        Tue, 7 May 2019 09:20:30 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2sagyttxwr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 May 2019 09:20:30 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x479KPwO021159;
-        Tue, 7 May 2019 09:20:25 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 May 2019 02:20:25 -0700
-Date:   Tue, 7 May 2019 12:20:12 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH][next] net: dsa: sja1105: fix comparisons against
- uninitialized status fields
-Message-ID: <20190507092012.GL2269@kadam>
-References: <20190507084458.22520-1-colin.king@canonical.com>
+        Tue, 7 May 2019 05:20:50 -0400
+Received: from mx.socionext.com ([202.248.49.38]:3523 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbfEGJUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 05:20:49 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 07 May 2019 18:20:47 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 07BFC6117D;
+        Tue,  7 May 2019 18:20:48 +0900 (JST)
+Received: from 10.213.24.1 (10.213.24.1) by m-FILTER with ESMTP; Tue, 7 May 2019 18:20:48 +0900
+Received: from SOC-EX02V.e01.socionext.com (10.213.24.22) by
+ SOC-EX03V.e01.socionext.com (10.213.24.23) with Microsoft SMTP Server (TLS)
+ id 15.0.995.29; Tue, 7 May 2019 18:20:47 +0900
+Received: from SOC-EX02V.e01.socionext.com ([10.213.25.22]) by
+ SOC-EX02V.e01.socionext.com ([10.213.25.22]) with mapi id 15.00.0995.028;
+ Tue, 7 May 2019 18:20:47 +0900
+From:   <orito.takao@socionext.com>
+To:     <robh@kernel.org>
+CC:     <ulf.hansson@linaro.org>, <mark.rutland@arm.com>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <masami.hiramatsu@linaro.org>,
+        <jaswinder.singh@linaro.org>, <sugaya.taichi@socionext.com>,
+        <kasai.kazuhiro@socionext.com>, <kanematsu.shinji@socionext.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: add DT bindings for Milbeaut SD
+ controller
+Thread-Topic: [PATCH 1/2] dt-bindings: mmc: add DT bindings for Milbeaut SD
+ controller
+Thread-Index: AQHU+9RXOLUG4XsvaU+oK6YWULWxq6ZWcdUAgAhr8AA=
+Date:   Tue, 7 May 2019 09:20:46 +0000
+Message-ID: <20190507182039.9D78.F0D17A80@socionext.com>
+References: <1556244392-15822-1-git-send-email-orito.takao@socionext.com>
+ <20190502004422.GA2242@bogus>
+In-Reply-To: <20190502004422.GA2242@bogus>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Becky! ver. 2.74.02 [ja] (Unregistered)
+x-originating-ip: [10.213.24.1]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <CB4FF968706BD5458AC0FE498EB10D30@socionext.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190507084458.22520-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905070061
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9249 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905070061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 09:44:58AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The call to sja1105_status_get to set various fields in the status
-> structure can potentially be skipped in a while-loop because of a couple
-> of prior continuation jump paths. This can potientially lead to checking
-> be checking against an uninitialized fields in the structure which may
-> lead to unexpected results.  Fix this by ensuring all the fields in status
-> are initialized to zero to be safe.
-> 
-> Addresses-Coverity: ("Uninitialized scalar variable")
-> Fixes: 8aa9ebccae87 ("net: dsa: Introduce driver for NXP SJA1105 5-port L2 switch")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/net/dsa/sja1105/sja1105_spi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
-> index 244a94ccfc18..76f6a51e10d9 100644
-> --- a/drivers/net/dsa/sja1105/sja1105_spi.c
-> +++ b/drivers/net/dsa/sja1105/sja1105_spi.c
-> @@ -394,7 +394,7 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
->  	struct sja1105_static_config *config = &priv->static_config;
->  	const struct sja1105_regs *regs = priv->info->regs;
->  	struct device *dev = &priv->spidev->dev;
-> -	struct sja1105_status status;
-> +	struct sja1105_status status = {};
-
-The exit condition isn't right.  It should continue if ret is negative
-or the CRC stuff is invalid but right now it's ignoring ret.  It would
-be better could just add a break statement at the very end and remove
-the status checks.  Like so:
-
-diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
-index 244a94ccfc18..3af3b0f3cc44 100644
---- a/drivers/net/dsa/sja1105/sja1105_spi.c
-+++ b/drivers/net/dsa/sja1105/sja1105_spi.c
-@@ -466,8 +466,9 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
- 				"invalid, retrying...\n");
- 			continue;
- 		}
--	} while (--retries && (status.crcchkl == 1 || status.crcchkg == 1 ||
--		 status.configs == 0 || status.ids == 1));
-+		/* Success! */
-+		break;
-+	} while (--retries);
- 
- 	if (!retries) {
- 		rc = -EIO;
+VGhhbmsgeW91IGZvciByZXZpZXdpbmcgbXkgcGF0Y2hlcy4NClNvcnJ5IGZvciBteSBsYXRlIHJl
+cGx5LiBKYXBhbiB3YXMgaW4gU3ByaW5nIFZhY2F0aW9uLg0KDQo+IE9uIEZyaSwgQXByIDI2LCAy
+MDE5IGF0IDExOjA2OjMyQU0gKzA5MDAsIFRha2FvIE9yaXRvIHdyb3RlOg0KPiANCj4gTmVlZHMg
+YSBjb21taXQgbXNnLg0KDQpJIHNlZS4gSSB3aWxsIGFkZCBtZXNzYWdlLg0KDQo+IA0KPiA+IFNp
+Z25lZC1vZmYtYnk6IFRha2FvIE9yaXRvIDxvcml0by50YWthb0Bzb2Npb25leHQuY29tPg0KPiA+
+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvc2RoY2ktbWlsYmVhdXQudHh0
+ICAgICB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDM1
+IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tbWMvc2RoY2ktbWlsYmVhdXQudHh0DQo+ID4gDQo+ID4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvc2RoY2ktbWlsYmVh
+dXQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9zZGhjaS1taWxi
+ZWF1dC50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjcw
+MDg0NjINCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21tYy9zZGhjaS1taWxiZWF1dC50eHQNCj4gPiBAQCAtMCwwICsxLDM1IEBA
+DQo+ID4gKyogU09DSU9ORVhUIFNESENJIGNvbnRyb2xsZXINCj4gPiArDQo+ID4gK1RoaXMgZmls
+ZSBkb2N1bWVudHMgZGlmZmVyZW5jZXMgYmV0d2VlbiB0aGUgY29yZSBwcm9wZXJ0aWVzIGluIG1t
+Yy50eHQNCj4gPiArYW5kIHRoZSBwcm9wZXJ0aWVzIHVzZWQgYnkgdGhlIHNkaGNpX21pbGJlYXV0
+IGRyaXZlci4NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0
+aWJsZTogInNvY2lvbmV4dCxtaWxiZWF1dC1tMTB2LXNkaGNpLTMuMCINCj4gPiArLSBjbG9ja3M6
+IE11c3QgY29udGFpbiBhbiBlbnRyeSBmb3IgZWFjaCBlbnRyeSBpbiBjbG9jay1uYW1lcy4gSXQg
+aXMgYQ0KPiA+ICsgIGxpc3Qgb2YgcGhhbmRsZXMgYW5kIGNsb2NrLXNwZWNpZmllciBwYWlycy4N
+Cj4gPiArICBTZWUgLi4vY2xvY2tzL2Nsb2NrLWJpbmRpbmdzLnR4dCBmb3IgZGV0YWlscy4NCj4g
+PiArLSBjbG9jay1uYW1lczogU2hvdWxkIGNvbnRhaW4gdGhlIGZvbGxvd2luZyB0d28gZW50cmll
+czoNCj4gPiArCSJpZmFjZSIgLSBjbG9jayB1c2VkIGZvciBzZGhjaSBpbnRlcmZhY2UNCj4gPiAr
+CSJjb3JlIiAgLSBjb3JlIGNsb2NrIGZvciBzZGhjaSBjb250cm9sbGVyDQo+ID4gKw0KPiA+ICtP
+cHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICstIHZxbW1jLXN1cHBseTogcGhhbmRsZSB0byB0aGUg
+cmVndWxhdG9yIGRldmljZSB0cmVlIG5vZGUsIG1lbnRpb25lZA0KPiA+ICsgIGFzIHRoZSBWQ0NR
+L1ZERF9JTyBzdXBwbHkgaW4gdGhlIGVNTUMvU0Qgc3BlY3MuDQo+ID4gKy0gZnVqaXRzdSxjbWQt
+ZGF0LWRlbGF5LXNlbGVjdDogYm9vbGVhbiBwcm9wZXJ0eSBpbmRpY2F0aW5nIHRoYXQgdGhpcyBo
+b3N0DQo+ID4gKyAgcmVxdWlyZXMgdGhlIENNRF9EQVRfREVMQVkgY29udHJvbCB0byBiZSBlbmFi
+bGVkLg0KPiA+ICstIHNuaSxtbWMtcG93ZXItZ3Bpbzogc2V0IHByb3BlcnR5IGluZGljYXRpbmcg
+dGhhdCBwb3dlciBvbiBvciBvZmYgbmVlZHMNCj4gPiArICBjb250cm9sIG9mIGdwaW9zLg0KPiA+
+ICsNCj4gPiArRXhhbXBsZToNCj4gPiArCXNkaGNpMzogbW1jQDFiMDEwMDAwIHsNCj4gPiArCQlj
+b21wYXRpYmxlID0gInNvY2lvbmV4dCxtaWxiZWF1dC1tMTB2LXNkaGNpLTMuMCI7DQo+ID4gKwkJ
+cmVnID0gPDB4MWIwMTAwMDAgMHgxMDAwMD47DQo+ID4gKwkJaW50ZXJydXB0cyA9IDwwIDI2NSAw
+eDQ+Ow0KPiA+ICsJCXZvbHRhZ2UtcmFuZ2VzID0gPDMzMDAgMzMwMD47DQo+ID4gKwkJYnVzLXdp
+ZHRoID0gPDQ+Ow0KPiA+ICsJCWNsb2NrcyA9IDwmY2xrIDc+LCA8JmFoYl9jbGs+Ow0KPiA+ICsJ
+CWNsb2NrLW5hbWVzID0gImNvcmUiLCAiaWZhY2UiOw0KPiA+ICsJCWNhcC1zZGlvLWlycTsNCj4g
+PiArCQlzbmksbW1jLXBvd2VyLWdwaW8gPSA8JnBpbmN0cmwgNTMgR1BJT19BQ1RJVkVfSElHSD47
+DQo+ID4gKwkJCWZ1aml0c3UsY21kLWRhdC1kZWxheS1zZWxlY3Q7DQo+IA0KPiBXaGl0ZXNwYWNl
+IHByb2JsZW0uDQoNClNvcnJ5LCBJIHdpbGwgZml4Lg0KDQpUaGFua3MNCk9yaXRvDQoNCj4gDQo+
+ID4gKwl9Ow0KPiA+IC0tIA0KPiA+IDEuOS4xDQo+ID4gDQo+ID4gDQoNCi0tIA0KVGFrYW8gT3Jp
+dG8gPG9yaXRvLnRha2FvQHNvY2lvbmV4dC5jb20+DQo=
