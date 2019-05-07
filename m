@@ -2,138 +2,185 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AD4C04AAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A893C004C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCFF205ED
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:10:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZPB44Zla"
+	by mail.kernel.org (Postfix) with ESMTP id 3655020675
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 10:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfEGKK3 (ORCPT
+        id S1726836AbfEGKKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 06:10:29 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14359 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbfEGKK2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 06:10:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd159700000>; Tue, 07 May 2019 03:09:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 May 2019 03:10:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 May 2019 03:10:27 -0700
-Received: from [10.25.73.250] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 May
- 2019 10:10:22 +0000
-Subject: Re: [PATCH V5 12/16] arm64: tegra: Add P2U and PCIe controller nodes
- to Tegra194 DT
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-13-vidyas@nvidia.com> <20190503112637.GF32400@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <d2c6dedd-05ed-d8f8-4e3a-e782e5d3806e@nvidia.com>
-Date:   Tue, 7 May 2019 15:40:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 May 2019 06:10:47 -0400
+Received: from foss.arm.com ([217.140.101.70]:49178 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726340AbfEGKKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 May 2019 06:10:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FE5F374;
+        Tue,  7 May 2019 03:10:46 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A6553F5AF;
+        Tue,  7 May 2019 03:10:43 -0700 (PDT)
+Date:   Tue, 7 May 2019 11:10:37 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>
+Subject: Re: [PATCH v8 03/16] sched/core: uclamp: Enforce last task's
+ UCLAMP_MAX
+Message-ID: <20190507101037.zmkp4trqr4de5yws@e110439-lin>
+References: <20190402104153.25404-1-patrick.bellasi@arm.com>
+ <20190402104153.25404-4-patrick.bellasi@arm.com>
+ <CAJuCfpHN4kMBScdEdJodtmbHQ2qhVDnXrJKFDdaSYyjWH0JH5Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190503112637.GF32400@ulmo>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557223793; bh=I7FKGwlXUUIi3Ic8/bqewqRmtRJND8Hs1jm4hHNZSVM=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ZPB44Zla0Hj6jvONalz/wZSPhhaBAYtPa8kjQQSqVqWBU2SmihsmZB9V6xdg+Yx8N
-         lVEuLvk02RTLft8E7zc6OVbyun28y0wxzIyYLmAaDTcb0L9ZDEVDrGyoU5/RF59PeG
-         Twz5ho4omO9hHiyOSIbgh7eYKlb+esqBrkfFIOUEnwCNF0DPYJETBbi2O/dGWy+cTv
-         nP0kIWKfkt+ZDtGFIwR3gOb5MZkaKUIOSNfTHkyBQzK1j5BfZrsqJr5WV1HAnlUJST
-         7l6HFXPHBbCAcc3HuZtDkucg8jOLtPZegeZ5W9BN1xMo0q4ZZORFe3LV1l19u0Uf7+
-         9CDFsL/MbZ0tw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpHN4kMBScdEdJodtmbHQ2qhVDnXrJKFDdaSYyjWH0JH5Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/3/2019 4:56 PM, Thierry Reding wrote:
-> On Wed, Apr 24, 2019 at 10:50:00AM +0530, Vidya Sagar wrote:
->> Add P2U (PIPE to UPHY) and PCIe controller nodes to device tree.
->> The Tegra194 SoC contains six PCIe controllers and twenty P2U instances
->> grouped into two different PHY bricks namely High-Speed IO (HSIO-12 P2Us)
->> and NVIDIA High Speed (NVHS-8 P2Us) respectively.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v4]:
->> * None
->>
->> Changes since [v3]:
->> * None
->>
->> Changes since [v2]:
->> * Included 'hsio' or 'nvhs' in P2U node's label names to reflect which brick
->>    they belong to
->> * Removed leading zeros in unit address
->>
->> Changes since [v1]:
->> * Flattened all P2U nodes by removing 'hsio-p2u' and 'nvhs-p2u' super nodes
->> * Changed P2U nodes compatible string from 'nvidia,tegra194-phy-p2u' to 'nvidia,tegra194-p2u'
->> * Changed reg-name from 'base' to 'ctl'
->> * Updated all PCIe nodes according to the changes made to DT documentation file
->>
->>   arch/arm64/boot/dts/nvidia/tegra194.dtsi | 449 +++++++++++++++++++++++
->>   1 file changed, 449 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> index c77ca211fa8f..dc433b446ff5 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> [...]
->> +	pcie@14180000 {
-> [...]
->> +		ranges = <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000    /* downstream I/O (1MB) */
->> +			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000  /* prefetchable memory (13GB) */
->> +			  0x82000000 0x0 0x40000000 0x1B 0x40000000 0x0 0xC0000000>; /* non-prefetchable memory (3GB) */
+On 17-Apr 13:36, Suren Baghdasaryan wrote:
+>  Hi Patrick,
 > 
-> Please be consistent in the capitalization of hexadecimal numbers. You
-> use lowercase hexdigits in one place and upprecase in others. Just stick
-> to one (preferably lowercase since that's already used elsewhere in this
-> file).
-Ok.
+> On Tue, Apr 2, 2019 at 3:42 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+> >
+> > When a task sleeps it removes its max utilization clamp from its CPU.
+> > However, the blocked utilization on that CPU can be higher than the max
+> > clamp value enforced while the task was running. This allows undesired
+> > CPU frequency increases while a CPU is idle, for example, when another
+> > CPU on the same frequency domain triggers a frequency update, since
+> > schedutil can now see the full not clamped blocked utilization of the
+> > idle CPU.
+> >
+> > Fix this by using
+> >   uclamp_rq_dec_id(p, rq, UCLAMP_MAX)
+> >     uclamp_rq_max_value(rq, UCLAMP_MAX, clamp_value)
+> > to detect when a CPU has no more RUNNABLE clamped tasks and to flag this
+> > condition.
+> >
+> 
+> If I understand the intent correctly, you are trying to exclude idle
+> CPUs from affecting calculations of rq UCLAMP_MAX value. If that is
+> true I think description can be simplified a bit :)
 
-> 
->> +	};
->> +
->> +	pcie@14100000 {
-> 
-> Also, entries should be sorted by unit-address, so controller 0 above
-> needs to go further down.
-Ok.
+That's not entirely correct. What I want to avoid is an OPP increase
+because of an idle CPU. Maybe an example can explain it better,
+consider this sequence:
 
-> 
-> Thierry
-> 
+ 1. A task is running unconstrained on a CPUx and it generates a 100%
+    utilization
+ 2. The task is now constrained by setting util_max=20
+ 3. We now select an OPP which provides 20% capacity on CPUx
 
+In this scenario the task is still running flat out on that CPUx which
+will keep it's util_avg to 1024. Note that after Vincet's PELT rewrite
+we don't converge down to the current capacity.
+
+ 4. The task sleep, it's removed from CPUx but the "blocked
+    utilization" is still 1024
+
+After this point: the CPU is idle, its "blocked utilization" starts
+to "slowly" decay but we _already_ removed the 20% util_max constraint
+on that CPU since there are no RUNNABLE tasks (i.e no active buckets).
+
+At this point in time, if there is a schedutil update requested from
+another CPU of the same frequency domain, by looking at CPUx we will
+see its full "blocked utilization" signal, which can be above 20%.
+
+> In particular it took me some time to understand what "blocked
+> utilization" means, however if it's a widely accepted term then feel
+> free to ignore my input.
+
+Yes, "blocked utilization" is a commonly used term to refer to the
+utilization generated by tasks executed on a CPU.
+
+[...]
+
+> > +static inline unsigned int
+> > +uclamp_idle_value(struct rq *rq, unsigned int clamp_id, unsigned int clamp_value)
+> > +{
+> > +       /*
+> > +        * Avoid blocked utilization pushing up the frequency when we go
+> > +        * idle (which drops the max-clamp) by retaining the last known
+> > +        * max-clamp.
+> > +        */
+> > +       if (clamp_id == UCLAMP_MAX) {
+> > +               rq->uclamp_flags |= UCLAMP_FLAG_IDLE;
+> > +               return clamp_value;
+> > +       }
+> > +
+> > +       return uclamp_none(UCLAMP_MIN);
+> > +}
+> > +
+> > +static inline void uclamp_idle_reset(struct rq *rq, unsigned int clamp_id,
+> > +                                    unsigned int clamp_value)
+> > +{
+> > +       /* Reset max-clamp retention only on idle exit */
+> > +       if (!(rq->uclamp_flags & UCLAMP_FLAG_IDLE))
+> > +               return;
+> > +
+> > +       WRITE_ONCE(rq->uclamp[clamp_id].value, clamp_value);
+> > +}
+> > +
+> >  static inline
+> > -unsigned int uclamp_rq_max_value(struct rq *rq, unsigned int clamp_id)
+> > +unsigned int uclamp_rq_max_value(struct rq *rq, unsigned int clamp_id,
+> > +                                unsigned int clamp_value)
+> 
+> IMHO the name of uclamp_rq_max_value() is a bit misleading because:
+
+That's very similar to what you proposed in:
+
+   https://lore.kernel.org/lkml/20190314122256.7wb3ydswpkfmntvf@e110439-lin/
+
+> 1. It does not imply that it has to be called only when there are no
+> more runnable tasks on a CPU. This is currently the case because it's
+> called only from uclamp_rq_dec_id() and only when bucket->tasks==0 but
+> nothing in the name of this function indicates that it can't be called
+> from other places.
+> 2. It does not imply that it marks rq UCLAMP_FLAG_IDLE.
+
+Even if you call it from other places, which is not required, it does
+not arm. That function still return the current max clamp for a CPU
+given its current state. If the CPU is idle we set the flag one more
+time but that's not a problem too.
+
+However, do you have any other proposal for a better name ?
+
+> >  {
+> >         struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+> >         int bucket_id = UCLAMP_BUCKETS - 1;
+> > @@ -771,7 +798,7 @@ unsigned int uclamp_rq_max_value(struct rq *rq, unsigned int clamp_id)
+> >         }
+> >
+> >         /* No tasks -- default clamp values */
+> > -       return uclamp_none(clamp_id);
+> > +       return uclamp_idle_value(rq, clamp_id, clamp_value);
+> >  }
+
+[...]
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
