@@ -2,114 +2,114 @@ Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E489C04AAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB490C46470
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E6FF21479
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADBB620989
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 06:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S9Cy/p1G"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="AS1BO+Qb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i7ncgJF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfEGGKu (ORCPT
+        id S1726470AbfEGGPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 May 2019 02:10:50 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38252 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbfEGGKt (ORCPT
+        Tue, 7 May 2019 02:15:16 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:58495 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726253AbfEGGPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 May 2019 02:10:49 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 10so8081878pfo.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 23:10:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=kSx/2bQ8k2nUJmyS2liy45fCcO2iYHSDnrOKKw/RGV4=;
-        b=S9Cy/p1GeoEOtS8YQZgB0lYyFi1dHKS/HGpgplRm+Jl+6OwdRLa3AqzF/D5EUzwLum
-         6hKH5eF/hHqGo6nqyFFDunpeoF4PfUOZ4/3aiB1lh7Zg+TO0UrCiOOaD7NClpHGZAiY0
-         TW96Fv/P4Z05tGlR7xVhb505XEaI4omMP478SFFOL/CUS/3EEQurGtDg+8HfcBpLYr8W
-         Sk+/f/aBON9i+QLuBzR1USCQJWELEUjdKzeNLt2a/DSVGTvrqPvpmw3vwNaYio7Muj4g
-         1s+6KN1usY/566XMORgT84favpF5luB63k/rnOCSRzVpCQhtbAJPLNl4Coh1vz8pOguZ
-         +IIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=kSx/2bQ8k2nUJmyS2liy45fCcO2iYHSDnrOKKw/RGV4=;
-        b=UX14eARs7lWm8IdNL/DgVpFaht2oI9BAvAWk2MIo5LZF9dt4FdLqPP2LOkg0or48zK
-         tvKU5GGb5+6ls3hcrsqMo2oTdnxQGgZwEdy8q+kqNxC+Z/g9lqljg4AyT8Dt/QI+WB9a
-         Dj/8CKZwOQlXnylbtWw5bHwtbNJ15nxWVVbSwBqtyPIUqMbNqZC6aF+fO6x0m8IRfRIU
-         +1o6ixZRuJV0Mw/S6MsgNmfKR0/3V4PyMJ182GQHjkG7AEzshv3dG1SfpZfc2CW8XaF0
-         tplfoQGKXHqHTnAWGzlw4Kuh+CanGmmcMP2/noCQVpwe4quOPSt/htTNMHj8u9SYw91h
-         OTpQ==
-X-Gm-Message-State: APjAAAWv+j2IfzWBhgBVPq4mXUZPA1GxG4fHBXstdkYFutCSRq6tcqbV
-        99bToFMb2frQsvmxdnKj9XTdrA==
-X-Google-Smtp-Source: APXvYqzZDYlq7eyLwOtGEhDSsOmFAWA99COPckp4Min5Ajit5tRyKl66VcQ9loYKdX1dxZ/egVqG6g==
-X-Received: by 2002:a63:1706:: with SMTP id x6mr4603838pgl.280.1557209449086;
-        Mon, 06 May 2019 23:10:49 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id e184sm30786325pfc.102.2019.05.06.23.10.43
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 06 May 2019 23:10:48 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     dan.j.williams@intel.com, vkoul@kernel.org
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-tegra@vger.kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, Zubair.Kakakhel@imgtec.com,
-        wsa+renesas@sang-engineering.com, jroedel@suse.de,
-        vincent.guittot@linaro.org, baolin.wang@linaro.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 8/8] dmaengine: sh: usb-dmac: Let the core do the device node validation
-Date:   Tue,  7 May 2019 14:09:45 +0800
-Message-Id: <6dc4f90df68276e6c21f7e0087b91e95b153f85f.1557206859.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1557206859.git.baolin.wang@linaro.org>
-References: <cover.1557206859.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1557206859.git.baolin.wang@linaro.org>
-References: <cover.1557206859.git.baolin.wang@linaro.org>
+        Tue, 7 May 2019 02:15:15 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 341441601A;
+        Tue,  7 May 2019 02:15:12 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Tue, 07 May 2019 02:15:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=rUkopSZotbELjC7owtPyRjHNKJ3
+        xdDhDqSCz9ET9utg=; b=AS1BO+QbYPt06V80kSVUyssGF4Ba2f9z0Yh9quhHxX7
+        zrTPAu78fNvUrbRquynL/OWR/4IEEMzcBsbZpmAu/T4N0OQWXP2TbpaZL/67OAhQ
+        AMamKUBgCjwff5oVKKTOEy6EwglIpjt3hdXh9xMBRCkVveX7JxHP6YYZsqz+B7yJ
+        /AulUBJNufJAwBfc1oRE1bbq/iVhrAXm2F2mxOyJ86zthq+zNVT6L7PBGqcM3XDA
+        yLpCCiHazFsBS6/rBZ9253l7AbuuRSLqZUDSY38j0Cm7YKPDX8d7WnnOEwd3Zsp4
+        H0iMIUQe9hopOSO2NoJT8PcIXgNSVkduzqx39088lJQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=rUkopS
+        ZotbELjC7owtPyRjHNKJ3xdDhDqSCz9ET9utg=; b=i7ncgJF/yfrNdTLwnNSNGZ
+        uPVA6ji2AnBVDI9n0r1y8pCK2yJNpSm7dQviwp0p4pawb8AQa9Vbho1pjtq0d9w6
+        SthRziw6x+GHcMq7GS4kSzIn2isTqgz2I+FZYAL17RIsTws3jDF0qX4BU8Vw2DuY
+        vrtCY+9WMmoOVmqv0UNVszGHh3+7HZxrUemQS8arYvwnDGndOxPKYPyxdBAX0NA2
+        dVQzxz6Kebs3eu/f1S4gDNexxDJNCUv0wNXPIxfSqq1NkF/SBe99LBCL2fPaM/jE
+        qMqjvpS1OMdgFqqsG41aexJD8oPWgSd8N1d+1k/8U7Y6puDsF2Nol6M61BfKJMGg
+        ==
+X-ME-Sender: <xms:byLRXO9BhqWoYOI1nD7awYSzoJh7Ykz-O04r0agOBB0_KZ-4c4GSZA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrjeelgddutdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
+    vehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:byLRXC_C38TiyAvlCphEyaoBx2a4x19dVVLKoPi8hI9gDTgiZuWEJQ>
+    <xmx:byLRXPDUumKl0Lwt1Ff01r_ny4oSa8EB8q_pjjZs5b1ZPEYEG9Tv4w>
+    <xmx:byLRXKxTG2F7U2_wTmi4XGEK9Ymk8EJh6XiN7LmdDQAI7h7c_5Z2kQ>
+    <xmx:cCLRXDVh-v28OmP-Eopnv_AALi3F7RfEzPEvMJkEHBXZMavn-R0Dwg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 813DDE4693;
+        Tue,  7 May 2019 02:15:10 -0400 (EDT)
+Date:   Tue, 7 May 2019 08:15:03 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: Re: [PATCH AUTOSEL 4.14 79/95] x86/asm: Remove dead __GNUC__
+ conditionals
+Message-ID: <20190507061503.GA20385@kroah.com>
+References: <20190507053826.31622-1-sashal@kernel.org>
+ <20190507053826.31622-79-sashal@kernel.org>
+ <d18bba8c-0d2c-03bd-0098-5f39ad726b01@rasmusvillemoes.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d18bba8c-0d2c-03bd-0098-5f39ad726b01@rasmusvillemoes.dk>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let the DMA engine core do the device node validation instead of drivers.
+On Tue, May 07, 2019 at 07:57:01AM +0200, Rasmus Villemoes wrote:
+> On 07/05/2019 07.38, Sasha Levin wrote:
+> > From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > 
+> > [ Upstream commit 88ca66d8540ca26119b1428cddb96b37925bdf01 ]
+> > 
+> > The minimum supported gcc version is >= 4.6, so these can be removed.
+> 
+> Eh, that bump happened for the 4.19 kernel, so this is not true for the
+> 4.14 branch. Has cafa0010cd51fb711fdcb50fc55f394c5f167a0a been applied
+> to 4.14.y? Otherwise I don't think this is appropriate.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/dma/sh/usb-dmac.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+No, that commit is not in 4.14, so we still have to "support" older
+versions of gcc there :(
 
-diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
-index 59403f6..0afabf3 100644
---- a/drivers/dma/sh/usb-dmac.c
-+++ b/drivers/dma/sh/usb-dmac.c
-@@ -636,9 +636,6 @@ static bool usb_dmac_chan_filter(struct dma_chan *chan, void *arg)
- 	struct usb_dmac_chan *uchan = to_usb_dmac_chan(chan);
- 	struct of_phandle_args *dma_spec = arg;
- 
--	if (dma_spec->np != chan->device->dev->of_node)
--		return false;
--
- 	/* USB-DMAC should be used with fixed usb controller's FIFO */
- 	if (uchan->index != dma_spec->args[0])
- 		return false;
-@@ -659,7 +656,8 @@ static struct dma_chan *usb_dmac_of_xlate(struct of_phandle_args *dma_spec,
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
- 
--	chan = dma_request_channel(mask, usb_dmac_chan_filter, dma_spec);
-+	chan = __dma_request_channel(&mask, usb_dmac_chan_filter, dma_spec,
-+				     ofdma->of_node);
- 	if (!chan)
- 		return NULL;
- 
--- 
-1.7.9.5
+Sasha, can you drop this?
 
+thanks,
+
+greg k-h
