@@ -1,140 +1,141 @@
-Return-Path: <SRS0=ecL9=TG=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=RyeP=TH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D4FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E98FC04AAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD0E20830
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 May 2019 23:58:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XJNA4uFR"
+	by mail.kernel.org (Postfix) with ESMTP id CF7A620835
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 May 2019 00:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbfEFX6p (ORCPT
+        id S1726510AbfEGAFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 May 2019 19:58:45 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:39667 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfEFX6p (ORCPT
+        Mon, 6 May 2019 20:05:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44430 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726400AbfEGAE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 May 2019 19:58:45 -0400
-Received: by mail-vs1-f67.google.com with SMTP id g127so9251002vsd.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 16:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mx65sXO1r4vrgQ2kHviuuHpS6yfDT9JxVfsYUs6Yhno=;
-        b=XJNA4uFR67wlqSxbXVvJFANNEYgMlJH7KBPzpr3b7DMeji4eUc4UYf6iB8tdfjqLj2
-         77oM72iVyJUyg5ERdVepbiioCfuJrdGT64WpTPel7XkYiuWgcVFuRGXKqFaYf/alwG8G
-         nTnfmO7nurua4ICMHXTiKYOqKMonbeIU+6AIo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mx65sXO1r4vrgQ2kHviuuHpS6yfDT9JxVfsYUs6Yhno=;
-        b=gWHDKz84ZJa7/BGJg/zSGkyNPW56mkCIB81E93iE7fBxP/h7ixHR5GR02i8FDL6K1m
-         a6HyEktWevcQ4diQsJmA1LkJIC6rmzsWmxXlXkddpINjLWu+tsQZkPitUy1QxATGvqk2
-         nqyQ5bBOQX7ggN5FSC7idIOW386l4dCpO0MwHvVV2k8Z9X0vKC+qDhHvwJnxCUPLSElw
-         /2q5z4WCECucbOXYB3xe9+4O8Gu6Ds0m6Cq3LWEuTZ6OgSmYk48XKun/n86ytqHJLyyE
-         G9JpkdXRoLR3Ohor+Xor4YDZUUM9cC9kxSKuNXWa7QjwxCSSKbCb84HgToBuXMigJkws
-         dRpA==
-X-Gm-Message-State: APjAAAUm5InBTCuPhjEs6isx4htYMLkYYyI4g4wR42VMN+2rVCbFViqf
-        QAF/S1utEjpMOhDqE2d6vMTRO1B9Zi4=
-X-Google-Smtp-Source: APXvYqydYDTVYjl6p1jZTQmOu97kjpi8gcX9YfyxRUx7ivkMWj8hfduGJkuywgwag3sgo6ZycEuyxg==
-X-Received: by 2002:a67:c508:: with SMTP id e8mr15890339vsk.230.1557187124096;
-        Mon, 06 May 2019 16:58:44 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id g3sm1169499vkb.9.2019.05.06.16.58.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 May 2019 16:58:43 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id z145so9265714vsc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 16:58:43 -0700 (PDT)
-X-Received: by 2002:a67:af10:: with SMTP id v16mr9106628vsl.149.1557187122785;
- Mon, 06 May 2019 16:58:42 -0700 (PDT)
+        Mon, 6 May 2019 20:04:59 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4702GYK005105
+        for <linux-kernel@vger.kernel.org>; Mon, 6 May 2019 20:04:58 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2saujq7nts-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2019 20:04:58 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 7 May 2019 01:04:57 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 7 May 2019 01:04:53 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4704qw327984092
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 May 2019 00:04:52 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DB21B2072;
+        Tue,  7 May 2019 00:04:52 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 19F2FB205F;
+        Tue,  7 May 2019 00:04:52 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  7 May 2019 00:04:52 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 89AFB16C5DD3; Mon,  6 May 2019 17:04:53 -0700 (PDT)
+Date:   Mon, 6 May 2019 17:04:53 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] doc/rcu: Correct field_count field naming in examples
+Reply-To: paulmck@linux.ibm.com
+References: <20190505020328.165839-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-References: <20190503174730.245762-1-dianders@chromium.org> <CAGXu5jL9cJ+8scZ+Cg9yqdc9+rb563xs-qVjXXuPRJYjNa4Y8w@mail.gmail.com>
-In-Reply-To: <CAGXu5jL9cJ+8scZ+Cg9yqdc9+rb563xs-qVjXXuPRJYjNa4Y8w@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 6 May 2019 16:58:29 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WcjfUwH62bHVELOmzViv7d329r6+HfPqAyXMjKCO7LeQ@mail.gmail.com>
-Message-ID: <CAD=FV=WcjfUwH62bHVELOmzViv7d329r6+HfPqAyXMjKCO7LeQ@mail.gmail.com>
-Subject: Re: [PATCH] pstore/ram: Improve backward compatibility with older Chromebooks
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Rob Herring <robh@kernel.org>, Anton Vorontsov <anton@enomsg.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Julius Werner <jwerner@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190505020328.165839-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19050700-0072-0000-0000-000004289D4B
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011062; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01199625; UDB=6.00629371; IPR=6.00980501;
+ MB=3.00026763; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-07 00:04:55
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050700-0073-0000-0000-00004C1EC4B0
+Message-Id: <20190507000453.GB3923@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, May 04, 2019 at 10:03:10PM -0400, Joel Fernandes (Google) wrote:
+> I believe this field should be called field_count instead of file_count.
+> Correct the doc with the same.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-On Mon, May 6, 2019 at 2:10 PM Kees Cook <keescook@chromium.org> wrote:
->
-> From: Douglas Anderson <dianders@chromium.org>
-> Date: Fri, May 3, 2019 at 10:48 AM
-> To: Kees Cook, Anton Vorontsov
-> Cc: <linux-rockchip@lists.infradead.org>, <jwerner@chromium.org>,
-> <groeck@chromium.org>, <mka@chromium.org>, <briannorris@chromium.org>,
-> Douglas Anderson, Colin Cross, Tony Luck,
-> <linux-kernel@vger.kernel.org>
->
-> > When you try to run an upstream kernel on an old ARM-based Chromebook
-> > you'll find that console-ramoops doesn't work.
-> >
-> > Old ARM-based Chromebooks, before <https://crrev.com/c/439792>
-> > ("ramoops: support upstream {console,pmsg,ftrace}-size properties")
-> > used to create a "ramoops" node at the top level that looked like:
-> >
-> > / {
-> >   ramoops {
-> >     compatible = "ramoops";
-> >     reg = <...>;
-> >     record-size = <...>;
-> >     dump-oops;
-> >   };
-> > };
-> >
-> > ...and these Chromebooks assumed that the downstream kernel would make
-> > console_size / pmsg_size match the record size.  The above ramoops
-> > node was added by the firmware so it's not easy to make any changes.
-> >
-> > Let's match the expected behavior, but only for those using the old
-> > backward-compatible way of working where ramoops is right under the
-> > root node.
-> >
-> > NOTE: if there are some out-of-tree devices that had ramoops at the
-> > top level, left everything but the record size as 0, and somehow
-> > doesn't want this behavior, we can try to add more conditions here.
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
->
-> I like this; thanks! Rob is this okay by you? I just want to
-> double-check since it's part of the DT parsing logic.
->
-> I'll pick it up and add a Cc: stable.
+But if we are going to update this, why not update it with the current
+audit_filter_task(), audit_del_rule(), and audit_add_rule() code?
 
-Hold off a second--I may need to send out a v2 but out of time for the
-day.  I think I need a #include file to fix errors on x86:
+Hmmm...  One reason is that some of them have changed beyond recognition.
 
-> implicit declaration of function 'of_node_is_root' [-Werror,-Wimplicit-function-declaration
+And this example code predates v2.6.12.  ;-)
 
-I'm unfortunately out of time for now, but I'll post a v2 within the next day.
+So good eyes, but I believe that this really does reflect the ancient
+code...
 
+On the other hand, would you have ideas for more modern replacement
+examples?
 
--Doug
+							Thanx, Paul
+
+> ---
+>  Documentation/RCU/listRCU.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/RCU/listRCU.txt b/Documentation/RCU/listRCU.txt
+> index adb5a3782846..190e666fc359 100644
+> --- a/Documentation/RCU/listRCU.txt
+> +++ b/Documentation/RCU/listRCU.txt
+> @@ -175,7 +175,7 @@ otherwise, the added fields would need to be filled in):
+>  		list_for_each_entry(e, list, list) {
+>  			if (!audit_compare_rule(rule, &e->rule)) {
+>  				e->rule.action = newaction;
+> -				e->rule.file_count = newfield_count;
+> +				e->rule.field_count = newfield_count;
+>  				write_unlock(&auditsc_lock);
+>  				return 0;
+>  			}
+> @@ -204,7 +204,7 @@ RCU ("read-copy update") its name.  The RCU code is as follows:
+>  					return -ENOMEM;
+>  				audit_copy_rule(&ne->rule, &e->rule);
+>  				ne->rule.action = newaction;
+> -				ne->rule.file_count = newfield_count;
+> +				ne->rule.field_count = newfield_count;
+>  				list_replace_rcu(&e->list, &ne->list);
+>  				call_rcu(&e->rcu, audit_free_rule);
+>  				return 0;
+> -- 
+> 2.21.0.1020.gf2820cf01a-goog
+> 
+
